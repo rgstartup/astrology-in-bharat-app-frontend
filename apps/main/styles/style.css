@@ -1,0 +1,797 @@
+body {
+  font-family: "Outfit", sans-serif;
+  background-image: url("/images/white-background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+img {
+  max-width: 100%;
+}
+ul {
+  padding: 0;
+  margin: 0;
+}
+.align {
+  align-items: center;
+}
+a {
+  text-decoration: none;
+}
+.navbar-toggler {
+  background: #ffd281;
+}
+.color-primary {
+  color: #3dc9a1 !important;
+}
+
+.color-secondary {
+  color: #daa23e !important;
+}
+
+.color-black {
+  color: #1a1a1a !important;
+}
+
+.color-light {
+  color: #fff !important;
+}
+
+.background-primary {
+  background: #3dc9a1 !important;
+}
+
+.background-secondary {
+  background: #11564f !important;
+}
+
+.background-black {
+  background: #1a1a1a !important;
+}
+
+.background-light {
+  background: #fff !important;
+}
+/**/
+
+.p-xl {
+  font-size: 25px;
+}
+.p-lg {
+  font-size: 20px;
+}
+.p-md {
+  font-size: 18px;
+  line-height: 24px;
+}
+.p-sm {
+  font-size: 16px;
+}
+.p-xs {
+  font-size: 14px;
+}
+.p-xxs {
+  font-size: 12px;
+}
+/*End font-size*/
+
+/*Start font-weight*/
+.fw-light {
+  font-weight: 300;
+}
+.fw-regular {
+  font-weight: 400;
+}
+.fw-medium {
+  font-weight: 500;
+}
+.fw-semi-bold {
+  font-weight: 600;
+}
+.fw-bold {
+  font-weight: 700;
+}
+.fw-extra-bold {
+  font-weight: 900;
+}
+
+/**/
+
+.top-head {
+  background: #411f1f;
+}
+.top-head {
+  background: #411f1f;
+  padding: 7px 0;
+}
+
+/**/
+.logo {
+  width: 170px;
+  background: #fff;
+  border-radius: 15px;
+  padding: 9px;
+  box-shadow: 0 4px 6px 3px #0000000d;
+  margin-top: -60px;
+}
+.top-head {
+  padding: 7px 0;
+  background-image: linear-gradient(to right, #d08830, #daa23e);
+  /*  background-image: linear-gradient(to right, #762782, #176593);*/
+}
+.top-text {
+  margin: 0;
+  font-size: 18px;
+  color: #fff;
+}
+.top-menu-main li a {
+  color: #000 !important;
+  font-size: 16px;
+  padding: 9px 15px !important;
+}
+.top-menu-main li a:hover {
+  color: #702b83 !important;
+}
+.btn-link {
+  background: #732882;
+  color: #fff;
+  width: 100%;
+  padding: 14px 13px;
+  border-radius: 100px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+.btn-link img {
+  margin-right: 5px;
+  filter: brightness(0) invert(1);
+}
+.btn-link:hover {
+  color: #fff;
+  background: #186593;
+}
+ul.dropdown-menu {
+  padding: 0;
+}
+.top-menu-main li ul.dropdown-menu li a {
+  transition: 0.6s;
+  border-bottom: solid 1px #7328821c;
+}
+.top-menu-main li ul.dropdown-menu li a:hover {
+  background: #732882;
+  color: #fff !important;
+}
+
+/**/
+.lang-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.lang-toggle {
+  background: #030303;
+  color: #ffffff;
+  padding: 8px 13px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+  font-size: 14px;
+}
+.lang-menu {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 120px;
+  z-index: 10;
+}
+
+.lang-menu a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+}
+
+.lang-menu a:hover {
+  background: #f1f1f1;
+}
+
+/* Hover effect */
+.lang-dropdown:hover .lang-menu {
+  display: block;
+}
+/**/
+.cart-top {
+  color: #fff;
+  font-size: 14px;
+  position: relative;
+}
+.cart-top:hover {
+  color: #fff;
+}
+.value {
+  display: block;
+  position: absolute;
+  left: 5px;
+  top: -12px;
+  background: #fd0c38;
+  width: 17px;
+  height: 17px;
+  border-radius: 100px;
+  text-align: center;
+  font-size: 10px;
+}
+/**/
+.account-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.account-btn {
+  background: #030303;
+  color: #ffffff;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 20px;
+}
+.account-menu {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  min-width: 140px;
+  z-index: 10;
+}
+
+.account-menu a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+}
+
+.account-menu a:hover {
+  background: #f1f1f1;
+}
+
+.account-dropdown.show .account-menu {
+  display: block;
+}
+/*banner part css*/
+.banner-part {
+  background-image: url("/images/back-over.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.overlay-hero {
+  background: #000000c4;
+  padding: 45px 0;
+}
+.banner-part h1 {
+  font-size: 45px;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.card-title {
+  background: #7328823d;
+  width: fit-content;
+  padding: 8px 15px;
+  color: #fff;
+  border-left: solid #daa23e;
+  font-size: 23px;
+}
+.banner-part p {
+  color: #fff;
+  font-size: 16px;
+}
+
+.list-check li {
+  list-style: none;
+  position: relative;
+  color: #fff;
+  font-size: 16px;
+  padding: 7px 0px;
+}
+
+.list-check li i {
+  color: #ffffff;
+  margin-right: 5px;
+  background: #d08830;
+  padding: 4px;
+  border-radius: 100px;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+}
+.wfc {
+  width: fit-content;
+  padding: 15px 23px;
+  letter-spacing: 1px;
+}
+.card-hero {
+  background: #73288217;
+  border-radius: 15px;
+  padding: 9px;
+  box-shadow: 0 4px 6px 3px #0000000d;
+  border: solid 1px #daa23e;
+  margin: 13px 0;
+  text-align: center;
+  min-height: 216px;
+}
+.card-hero h5 {
+  color: #daa23e;
+  font-size: 22px;
+}
+.card-hero p {
+  font-size: 16px;
+}
+.card-hero img {
+  width: 77px;
+  margin: 11px 0;
+}
+
+/*astrologer-list css*/
+
+.astrologer-list h2 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.search-box input {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 30px 0 0 30px;
+  outline: none;
+  font-size: 16px;
+}
+
+.search-box button {
+  padding: 12px 24px;
+  background: #732882;
+  color: #fff;
+  border: none;
+  border-radius: 0 30px 30px 0;
+  cursor: pointer;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.astro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.astro-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 14px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  background-image: linear-gradient(to right, #fffcf6, #fff2da);
+  border: solid 1px #daa23e45;
+}
+
+.astro-card:hover {
+  transform: translateY(-5px);
+}
+.rating-star {
+  color: #daa23e;
+  font-size: 22px;
+}
+
+.astro-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #732882;
+}
+.vid-part {
+  position: relative;
+  width: 150px;
+  margin: 0 auto;
+}
+.play-vid {
+  position: absolute;
+  bottom: 6px;
+  right: 18px;
+  font-size: 19px;
+  background: #daa23e;
+  width: 35px;
+  height: 35px;
+  padding-top: 4px;
+  border-radius: 100px;
+  color: #fff;
+  cursor: pointer;
+}
+.modal-title-astro-about {
+  font-size: 25px;
+  padding: 0;
+  margin: 0;
+  color: #732882;
+  font-weight: 700;
+}
+.astro-card .astro-profile-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  border: solid 1px #daa23e;
+}
+button.btn-close {
+  background: #daa23e;
+  opacity: 1;
+  border-radius: 100px;
+  color: #fff;
+  font-size: 22px;
+  padding: 10px !important;
+  line-height: 1;
+}
+.modal-content {
+  background-image: url("/images/white-background.png") !important;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.checkmark {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.astro-tags {
+  display: inline-block;
+  background: #daa23e;
+  color: #fff;
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 0px;
+  margin-top: 5px;
+}
+.astro-info {
+  font-size: 16px;
+  margin: 8px 0;
+  color: #333;
+}
+
+.astro-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.astro-actions button {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 25px;
+  border: 1px solid #732882;
+  background: #fff0;
+  color: #732882;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.astro-actions button.call {
+  border-color: #1a1a1a;
+  color: #1a1a1a;
+}
+
+.astro-actions button:hover {
+  background: #732882;
+  color: #fff;
+}
+
+.astro-actions button.call:hover {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.view-all {
+  text-align: center;
+  margin-top: 40px;
+}
+
+@media (max-width: 991px) {
+  .modal-title-astro-about {
+    font-size: 17px;
+  }
+  .modal-body iframe {
+    height: 290px;
+  }
+}
+
+@media (max-width: 500px) {
+  .search-box {
+    flex-direction: column;
+  }
+  .search-box input,
+  .search-box button {
+    border-radius: 30px;
+    width: 100%;
+  }
+  .search-box button {
+    margin-top: 10px;
+    border-radius: 30px;
+  }
+  .modal-body iframe {
+    height: 220px;
+  }
+}
+
+.astrologer-list {
+  padding: 50px 0;
+}
+
+/**/
+
+/* Horoscopes-section css start */
+
+.horoscopes-container {
+  background: #ffe3b852;
+  padding: 50px 0;
+}
+.horoscopes-container h2 {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0;
+}
+.horoscopes-items {
+  background-color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px 0px 20px 0px;
+  border: solid 1px #daa23e73;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  transition: all 0.4s ease;
+  color: #1a1a1a;
+}
+.horoscopes-items h3 {
+  font-size: 18px;
+  padding-top: 10px;
+}
+
+.horoscopes-items p {
+  font-size: 15px;
+  margin-bottom: 0;
+}
+
+.horoscopes-items img {
+  width: 80px;
+  height: 80px;
+  transition: transform 0.4s ease;
+}
+
+.horoscopes-items h3,
+.horoscopes-items p {
+  transition: color 0.4s ease;
+  margin-bottom: 0;
+}
+
+/* Hover Effect */
+.horoscopes-items:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.horoscopes-items:hover img {
+  transform: scale(1.1);
+}
+
+/* Horoscopes-section css end */
+
+/*services css */
+
+.ser-card {
+  background-color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px 0px 20px 0px;
+  border: solid 1px #daa23e73;
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  transition: all 0.4s ease;
+}
+.astrology-services h2 {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.services-img {
+  border-radius: 10px;
+  border: solid 1px #daa23ea1;
+}
+.ser-card h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #daa23e;
+  margin-top: 10px;
+}
+.ser-card p {
+  margin: 0;
+  font-size: 16px;
+  color: #1a1a1a;
+}
+
+.ser-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/**/
+@media (min-width: 1199px) {
+  .ser-card {
+    min-height: 280px;
+  }
+}
+@media (min-width: 1400px) {
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container-xl,
+  .container-xxl {
+    max-width: 1140px;
+  }
+}
+@media (max-width: 1199px) {
+  .top-text {
+    font-size: 12px;
+  }
+  .top-menu-main li a {
+    font-size: 14px;
+    padding: 9px 12px !important;
+  }
+  .logo {
+    width: 100px;
+    margin-top: 0;
+    box-shadow: unset;
+    padding: 0;
+  }
+  .btn-link {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 991px) {
+  .main-head nav.navbar {
+    position: relative;
+  }
+  #navbarSupportedContent {
+    position: absolute;
+    top: 100px;
+    width: 100%;
+    background: #fff;
+    border-radius: 15px;
+    padding: 6px;
+    box-shadow: 0 4px 6px 3px #0000000d;
+    z-index: 9;
+    border: solid 2px #daa23e;
+  }
+  .navbar-toggler:focus {
+    box-shadow: unset;
+  }
+  .top-menu-main li a {
+    border-bottom: solid 1px #efefef;
+  }
+}
+
+@media (min-width: 768px) {
+  .logo-mobile {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  .top-text {
+    font-size: 16px;
+    text-align: center;
+    line-height: 1.4;
+    padding: 0 30px;
+  }
+  .list-top-bar-mobile {
+    width: 310px;
+    margin: 5px auto;
+    margin-top: 10px;
+    background: #0000001c;
+    border-radius: 100px;
+    border: solid 1px #eeeeee24;
+  }
+  .account-menu {
+    min-width: 100%;
+  }
+  .lang-menu {
+    top: 110%;
+  }
+  .mobile-space {
+    padding: 0 6px;
+    text-align: center;
+    margin: 7px 0 4px 0;
+  }
+  .top-menu-main li a {
+    font-size: 16px;
+    padding: 9px 12px !important;
+  }
+  .logo-mobile {
+    display: unset;
+  }
+  .logo-dask {
+    display: none !important;
+  }
+  .mobile-none {
+    display: none !important;
+  }
+
+  .logo {
+    width: 225px;
+  }
+  .banner-part h1 {
+    font-size: 30px;
+  }
+  .card-title {
+    padding: 8px 12px;
+    font-size: 16px;
+  }
+  .card-hero img {
+    width: 70px;
+    margin: 10px 0;
+  }
+  .card-hero h5 {
+    font-size: 18px;
+  }
+  .card-hero p {
+    font-size: 14px;
+  }
+  .card-hero {
+    padding: 6px;
+    min-height: 255px;
+  }
+}
+
+@media (max-width: 360px) {
+  .card-hero h5 {
+    font-size: 16px;
+  }
+  .card-hero p {
+    font-size: 10px;
+  }
+  .card-hero {
+    padding: 6px;
+    min-height: 210px;
+  }
+  .logo {
+    width: 198px;
+  }
+}

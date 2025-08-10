@@ -1,83 +1,135 @@
-# Astrology in Bharat
+# Turborepo starter
 
-A comprehensive platform connecting users with professional astrologers for personalized consultations and astrological products. This platform is similar to AstroTalk, offering a variety of services including chat, voice calls, and video calls with verified astrologers.
+This Turborepo starter is maintained by the Turborepo core team.
 
-## 🚀 Technologies
+## Using this example
 
-This project is built using a modern and scalable stack to ensure high performance and maintainability.
+Run the following command:
 
-- **Frontend:** [Next.js](https://nextjs.org/) (v15.4)
-- **Backend:** [NestJS](https://nestjs.com/)
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **Monorepo:** [TurboRepo](https://turborepo.org/)
+```sh
+npx create-turbo@latest
+```
 
-## 📁 Project Structure
+## What's inside?
 
-The project is organized as a monorepo using TurboRepo, which allows us to manage multiple applications and shared packages within a single repository. The main applications are located in the `apps/` directory.
+This Turborepo includes the following packages/apps:
 
-- `/apps`
-    - `/consultation`: A dedicated application for all real-time communication features, including chat, voice calls, and video calls between users and astrologers.
-    - `/ecommerce`: An e-commerce platform for selling astrology-related products, with secure transaction processing and order management.
-    - `/main`: The primary public-facing website, including the landing page, astrologer listings, and user authentication.
+### Apps and Packages
 
-## ✨ Features
+- `docs`: a [Next.js](https://nextjs.org/) app
+- `web`: another [Next.js](https://nextjs.org/) app
+- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
+- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
-- **Astrologer Listings:** Browse and filter a wide range of professional astrologers based on their expertise, ratings, and experience.
-- **Consultation Services:**
-    - **Chat:** Real-time chat with astrologers for quick queries and detailed discussions.
-    - **Voice Call:** Schedule and conduct one-on-one voice calls for in-depth consultations.
-    - **Video Call:** Face-to-face video consultations for a more personal and interactive experience.
-- **E-commerce:**
-    - **Astrology Products:** Shop for a variety of products like birthstones, yantras, and books.
-    - **Secure Payments:** Integrated payment gateways for safe and easy transactions.
-- **User Dashboard:** A personalized dashboard for users to manage their bookings, view consultation history, and track orders.
-- **Astrologer Panel:** A dedicated dashboard for astrologers to manage their profiles, schedules, and earnings.
+Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
-## ⚙️ Getting Started
+### Utilities
 
-To get the project up and running on your local machine, follow these steps.
+This Turborepo has some additional tools already setup for you:
 
-### Prerequisites
+- [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
+- [Prettier](https://prettier.io) for code formatting
 
-- [Node.js](https://nodejs.org/en/) (v18 or higher)
+### Build
 
-### Installation
+To build all apps and packages, run the following command:
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/your-username/astrology-in-bharat.git](https://github.com/your-username/astrology-in-bharat.git)
-    cd astrology-in-bharat
-    ```
+```
+cd my-turborepo
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo build
 
-3.  **Setup environment variables:**
-    Create a `.env` file at the root of each application (`apps/consultation`, `apps/ecommerce`, `apps/main`) and configure the necessary environment variables (e.g., database connection strings, API keys).
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo build
+yarn dlx turbo build
+pnpm exec turbo build
+```
 
-4.  **Run the development servers:**
-    You can start all applications simultaneously using TurboRepo's command:
-    ```bash
-    npm run dev
-    ```
-    Alternatively, you can run each application individually:
-    ```bash
-    # Run the main application
-    npm run dev --workspace=main
+You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
 
-    # Run the consultation application
-    npm run dev --workspace=consultation
+```
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo build --filter=docs
 
-    # Run the ecommerce application
-    npm run dev --workspace=ecommerce
-    ```
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo build --filter=docs
+yarn exec turbo build --filter=docs
+pnpm exec turbo build --filter=docs
+```
 
-## 🤝 Contributing
+### Develop
 
-We welcome contributions from the community! If you'd like to contribute, please follow our [Contribution Guidelines](CONTRIBUTING.md).
+To develop all apps and packages, run the following command:
 
-## 📄 License
+```
+cd my-turborepo
 
-This project is licensed under the [MIT License](LICENSE).
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo dev
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo dev
+yarn exec turbo dev
+pnpm exec turbo dev
+```
+
+You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+
+```
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo dev --filter=web
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo dev --filter=web
+yarn exec turbo dev --filter=web
+pnpm exec turbo dev --filter=web
+```
+
+### Remote Caching
+
+> [!TIP]
+> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+
+Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+
+By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+
+```
+cd my-turborepo
+
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo login
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo login
+yarn exec turbo login
+pnpm exec turbo login
+```
+
+This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+
+Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+
+```
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo link
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo link
+yarn exec turbo link
+pnpm exec turbo link
+```
+
+## Useful Links
+
+Learn more about the power of Turborepo:
+
+- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
+- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
+- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
+- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
+- [Configuration Options](https://turborepo.com/docs/reference/configuration)
+- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
