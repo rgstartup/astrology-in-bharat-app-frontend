@@ -377,3 +377,50 @@ export const AstrologyServicesData: ServiceData[] = [
     description: "Read your destiny through the lines and mounts of your hand.",
   },
 ];
+
+// Products Data
+interface ProductsData {
+  id: number;
+  title: string;
+  image: string;
+  price: string;
+  description: string;
+}
+
+export const products: ProductsData[] = [
+  {
+    id: 1,
+    title: "Horoscope Reading",
+    image: "/images/ser1.jpg",
+    price: "₹499",
+    description: "Detailed insights into your future and life path.",
+  },
+  {
+    id: 2,
+    title: "Kundli Matching",
+    image: "/images/ser2.jpg",
+    price: "₹799",
+    description: "Comprehensive compatibility analysis for marriage.",
+  },
+  {
+    id: 3,
+    title: "Gemstone ",
+    image: "/images/ser3.jpg",
+    price: "₹1,299",
+    description: "Find the perfect gemstone to enhance your luck and energy.",
+  },
+  {
+    id: 4,
+    title: "Vastu Consultation",
+    image: "/images/ser4.jpg",
+    price: "₹1,999",
+    description: "Harmonize your living space for prosperity and peace.",
+  },
+  {
+    id: 5,
+    title: "Palm Reading",
+    image: "/images/ser5.jpg",
+    price: "₹399",
+    description: "Discover your destiny through the lines of your palm.",
+  },
+];
