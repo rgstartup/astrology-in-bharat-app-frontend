@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
                 <img
                   src="/images/logo2.png"
                   alt="Logo Not Found"
-                  className="mb-3 logo logo-dask"
+                  className="mb-2 footer-logo"
                   style={{
                     maxHeight: "70px",
                     objectFit: "cover",

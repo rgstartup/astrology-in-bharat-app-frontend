@@ -550,17 +550,59 @@ button.btn-close {
   padding: 50px 0;
 }
 
-/**/
+/* utils class start*/
+.bg-cream {
+  background: #ffe3b852;
+}
+.py-50 {
+  padding: 50px 0;
+}
+
+.min-vh-80 {
+  min-height: 80vh;
+}
+.heading {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0;
+}
+.vert-move {
+  transition: transform 0.3s ease;
+}
+.vert-move:hover {
+  transform: translateY(-5px);
+}
+.text-sand {
+  color: #daa23e;
+  font-style: inherit;
+  font-weight: inherit;
+}
+.bg-sand {
+  background-color: #732882;
+}
+/* utils class*/
+
+/* Custom buttons Css Start*/
+.orderNowbtn {
+  border: none;
+  border-radius: 5px;
+  padding: 7px 15px;
+  background-color: #732882;
+}
+.orderNowbtn:hover {
+  border: none;
+  border-radius: 5px;
+  padding: 7px 15px;
+  background-color: #642172;
+}
+/* Custom buttons Css End */
 
 /* Horoscopes-section css start */
-
-.horoscopes-container,
-.testimonials-section {
+.horoscopes-container {
   background: #ffe3b852;
   padding: 50px 0;
 }
-.horoscopes-container,
-.testimonials-section h2 {
+.horoscopes-container h2 {
   font-size: 32px;
   font-weight: 600;
   margin: 0;
@@ -804,6 +846,12 @@ button.btn-close {
   color: white;
   padding-top: 35px;
 }
+.footer-logo {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+  object-fit: cover;
+}
 
 /*old design */
 .newsletter {
@@ -858,3 +906,19 @@ button.btn-close {
   font-weight: 600;
   font-size: 0.91rem !important;
 }
+
+/* Thirds Party Libraries CSS */
+/* ************* */
+/* 1 Swiper JS */
+.swiper-button-prev {
+  float: left;
+
+  color: #000000 !important;
+}
+.swiper-button-next {
+  position: relative;
+  right: 20px !important;
+  color: #000000 !important;
+}
+
+/* 2 Swiper JS */
