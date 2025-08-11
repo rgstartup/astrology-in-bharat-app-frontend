@@ -554,11 +554,13 @@ button.btn-close {
 
 /* Horoscopes-section css start */
 
-.horoscopes-container {
+.horoscopes-container,
+.testimonials-section {
   background: #ffe3b852;
   padding: 50px 0;
 }
-.horoscopes-container h2 {
+.horoscopes-container,
+.testimonials-section h2 {
   font-size: 32px;
   font-weight: 600;
   margin: 0;
@@ -795,3 +797,5 @@ button.btn-close {
     width: 198px;
   }
 }
+
+

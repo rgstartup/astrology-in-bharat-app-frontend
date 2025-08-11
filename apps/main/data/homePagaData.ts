@@ -218,7 +218,7 @@ export const ZodiacSignsData: ZodiaData[] = [
     id: 6,
     image: "/images/icon/virgo.webp",
     title: "Virgo",
-    date: "August 23 - September 22",
+    date: "Aug 23 - Sept 22",
   },
   {
     id: 7,

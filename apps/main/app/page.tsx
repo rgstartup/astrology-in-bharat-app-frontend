@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   featuredCardsHeroSection,
@@ -9,6 +10,7 @@ import {
 const Page: React.FC = () => {
   return (
     <>
+      {/* Hero Section */}
       <section className="banner-part ">
         <div className="overlay-hero">
           <div className="container">
@@ -84,6 +86,7 @@ const Page: React.FC = () => {
         </div>
       </section>
 
+      {/* Astrologer Listing */}
       <section className="astrologer-list">
         <div className="container">
           <h2>Find Your Astrologer</h2>
@@ -192,7 +195,7 @@ const Page: React.FC = () => {
         </div>
       </section>
 
-      {/* <!-- Horoscopes-section --> */}
+      {/* <!--Zodiac Signs & Horoscopes-section --> */}
       <section className="horoscopes-container">
         <div className="container">
           <div className="row">
@@ -210,7 +213,7 @@ const Page: React.FC = () => {
                     <div className="horoscopes-items">
                       <img src={item.image} alt="Image Not Found" />
                       <h3>{item.title}</h3>
-                      <p>{item.date}</p>
+                      <p className="fw-normal">{item.date}</p>
                     </div>
                   </a>
                 </div>
@@ -220,6 +223,7 @@ const Page: React.FC = () => {
         </div>
       </section>
 
+      {/* Astrology Servicees */}
       <section className="astrology-services py-5">
         <div className="container">
           <h2>Astrology Services</h2>
@@ -239,6 +243,175 @@ const Page: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="testimonials-section py-5">
+        <div className="container text-center">
+          <h2 className="section-heading">What Our Clients Say</h2>
+          <div className="row">
+            {[
+              {
+                id: 1,
+                name: "Rahul Verma",
+                review:
+                  "Amazing experience! The astrologer was very accurate and gave me practical solutions. Highly recommended.",
+                image: "images/client1.jpg",
+                rating: 5,
+              },
+              {
+                id: 2,
+                name: "Priya Sharma",
+                review:
+                  "Very satisfied! The consultation was insightful and helped me make better decisions in my career.",
+                image: "images/client2.jpg",
+                rating: 5,
+              },
+              {
+                id: 3,
+                name: "Ankit Singh",
+                review:
+                  "Great guidance and very polite. The remedies suggested worked really well for me.",
+                image: "images/client3.jpg",
+                rating: 4.5,
+              },
+            ].map((client) => (
+              <div className="col-lg-4 col-md-6 mb-4" key={client.id}>
+                <div className="ser-card p-4 h-100">
+                  <i
+                    className="fa-solid fa-quote-left fa-2x mb-3"
+                    style={{ color: "#daa23e" }}
+                  ></i>
+                  <p>{client.review}</p>
+                  <div className="mt-3 d-flex align-items-center justify-content-center flex-column">
+                    <img
+                      src="images/astro-img1.png"
+                      alt={client.name}
+                      className="rounded-circle mb-2"
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <strong>{client.name}</strong>
+                    <div className="rating-star">
+                      {"★".repeat(Math.floor(client.rating))}
+                      {client.rating % 1 !== 0 ? "½" : ""}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Astrologers List */}
+      <section className="featured-astrologers py-5">
+        <div className="container text-center">
+          <h2 className="section-heading mb-5">Meet Our Trusted Astrologers</h2>
+          <div className="row justify-content-center">
+            {ListOfAllAstrologers.filter((astro) => astro.ratings >= 4.5)
+              .slice(0, 3)
+              .map((item) => (
+                <div className="col-lg-4 col-md-6 mb-4 " key={item.id}>
+                  <div
+                    className="astro-card  ser-card card h-100 border-0 shadow-lg position-relative overflow-hidden"
+                    style={{
+                      borderRadius: "15px",
+                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                    }}
+                  >
+                    {/* Profile Image */}
+                    <div className="position-relative p-4 pb-0">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="rounded-circle border border-3 border-warning shadow"
+                        style={{
+                          width: "120px",
+                          height: "120px",
+                          objectFit: "cover",
+                        }}
+                      />
+                      <span
+                        className="badge position-absolute"
+                        style={{
+                          background:
+                            "linear-gradient(45deg, #f7d774, #e0a800)",
+                          color: "#000",
+                          top: "20px",
+                          right: "20px",
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        ⭐ Top Rated
+                      </span>
+                    </div>
+
+                    {/* Card Body */}
+                    <div className="card-body mt-3">
+                      <h5 className="fw-bold astro-name">{item.name}</h5>
+                      <p className="card-subtitle mb-2 text-muted">
+                        {item.expertise}
+                      </p>
+
+                      {/* Ratings */}
+                      <div className="d-flex justify-content-center align-items-center mb-3">
+                        <div
+                          className="rating-star text-warning"
+                          style={{ fontSize: "1.1rem" }}
+                        >
+                          {"★".repeat(Math.floor(item.ratings))}
+                        </div>
+                        <small className="ms-2 text-muted">
+                          {item.ratings.toFixed(1)} / 5 ({item.ratings} reviews)
+                        </small>
+                      </div>
+
+                      {/* Details */}
+                      <div className="d-flex justify-content-between text-muted small mb-2">
+                        <span>
+                          Experience:{" "}
+                          <span className="fw-bold">{item.experience}</span>
+                        </span>
+                        <span>
+                          Consultations:{" "}
+                          <span className="fw-bold">{item.ratings}</span>
+                        </span>
+                      </div>
+
+                      {/* Price & Status */}
+                      <div className="d-flex justify-content-between align-items-center mb-3">
+                        <h6 className="mb-0 fw-bold text-success">
+                          ₹{item.price}/min
+                        </h6>
+                        <span className="badge bg-success">● Online</span>
+                      </div>
+
+                      {/* CTA Button */}
+                      <div className="d-grid">
+                        <button
+                          className="btn"
+                          style={{
+                            background:
+                              "linear-gradient(45deg, #ff9800, #f57c00)",
+                            color: "white",
+                            fontWeight: "600",
+                            borderRadius: "25px",
+                            padding: "10px",
+                          }}
+                        >
+                          <i className="bi bi-chat-dots-fill me-2"></i> Chat Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       </section>
