@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "ui": "workspace:*",
     "@fortawesome/fontawesome-free": "^7.0.0",
     "bootstrap": "^5.3.7",
     "next": "15.4.6",

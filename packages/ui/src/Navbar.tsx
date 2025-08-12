@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import React from "react";
+
 const Header: React.FC = () => {
   return (
     <>
@@ -53,7 +54,7 @@ const Header: React.FC = () => {
         </div>
       </header>
 
-      <header className="main-head  border-bottom border-secondary-subtle">
+      <header className="main-head">
         <div className="container">
           <div className="row align">
             <div className="col-lg-9 col-md-7">
