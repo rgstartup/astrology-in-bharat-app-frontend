@@ -1,3 +1,4 @@
+
 "use client";
 import Link from "next/link";
 import React from "react";
@@ -87,9 +88,12 @@ const Header: React.FC = () => {
                 >
                   <ul className="navbar-nav ms-auto top-menu-main">
                     <li className="nav-item">
-                      <Link className="nav-link" href="/">
+                      <a
+                        className="nav-link"
+                        href={`${process.env.NEXT_PUBLIC_MAIN_APP_URL}`}
+                      >
                         Home
-                      </Link>
+                      </a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" href="#">
@@ -186,9 +190,11 @@ const Header: React.FC = () => {
                       </a>
                     </li>
                     <li className="nav-item">
-                      <Link className="nav-link" href="/product">
-                        {/* Kundli Prediction */}
-                        Products
+                      <Link
+                        className="nav-link"
+                        href="https://www.youtube.com/"
+                      >
+                        Kundli Prediction{" "}
                       </Link>
                     </li>
                   </ul>

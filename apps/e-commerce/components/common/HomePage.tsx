@@ -5,13 +5,8 @@ import {
   ListOfAllAstrologers,
   ZodiacSignsData,
   AstrologyServicesData,
-  products,
-  ClientsTestimoinialData,
 } from "@/data/homePagaData";
-import "swiper/css";
-import "swiper/css/navigation";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+import ProductsList from "@/components/common/ProductsList";
 
 const HomePage: React.FC = () => {
   return (
@@ -237,7 +232,7 @@ const HomePage: React.FC = () => {
             {AstrologyServicesData.map((item) => {
               return (
                 <div className="col-lg-3 col-md-6" key={item.id}>
-                  <div className="ser-card vert-move">
+                  <div className="ser-card">
                     <img
                       src={item.image}
                       alt="Kundli"
@@ -253,64 +248,8 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Prodcuts list Section */}
-      <section className="product-slider-section py-50 bg-cream">
-        <div className="container">
-          <h2 className="text-center mb-5 heading section-title">
-            🔮 Our Astrological Products
-          </h2>
-          <div className="product-slider-container">
-            <Swiper
-              modules={[Navigation, Autoplay]}
-              speed={1500}
-              spaceBetween={30}
-              slidesPerView={4}
-              autoplay={{
-                delay: 3000,
-                disableOnInteraction: false,
-              }}
-              navigation={{
-                nextEl: ".swiper-button-next-unique",
-                prevEl: ".swiper-button-prev-unique",
-              }}
-              loop={true}
-              breakpoints={{
-                320: { slidesPerView: 1, spaceBetween: 20 },
-                768: { slidesPerView: 2, spaceBetween: 30 },
-                1024: { slidesPerView: 4, spaceBetween: 30 },
-              }}
-            >
-              {products.map((product) => (
-                <SwiperSlide key={product.id}>
-                  <div className="ser-card vert-move h-100">
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="services-img w-100 mb-3"
-                    />
-                    <h4>{product.title}</h4>
-                    <p className="p-sm text-muted">{product.description}</p>
-                    <div className=" mt-auto pt-3">
-                      <h5 className="mb-0 fw-bold">{product.price}</h5>
-                      <button className="btn btn-primary orderNowbtn mt-3">
-                        <i className="fas fa-shopping-cart me-2"></i>
-                        Order Now
-                      </button>
-                    </div>
-                  </div>
-                </SwiperSlide>
-              ))}
-              {/* Custom Navigation Arrows */}
-              <div className="swiper-button-prev-unique">
-                <i className="fa-solid fa-arrow-left-long"></i>
-              </div>
-              <div className="swiper-button-next-unique">
-                <i className="fa-solid fa-arrow-right"></i>
-              </div>
-            </Swiper>
-          </div>
-        </div>
-      </section>
+      {/* Prodcuts list */}
+      <ProductsList />
 
       {/* Why Talk to our astrologer*/}
       <section className="py-50 why-choose-us text-white">
@@ -417,9 +356,34 @@ const HomePage: React.FC = () => {
         <div className="container text-center">
           <h2 className="section-heading heading mb-5">What Our Clients Say</h2>
           <div className="row">
-            {ClientsTestimoinialData.map((client) => (
+            {[
+              {
+                id: 1,
+                name: "Rahul Verma",
+                review:
+                  "Amazing experience! The astrologer was very accurate and gave me practical solutions. Highly recommended.",
+                image: "images/client1.jpg",
+                rating: 5,
+              },
+              {
+                id: 2,
+                name: "Priya Sharma",
+                review:
+                  "Very satisfied! The consultation was insightful and helped me make better decisions in my career.",
+                image: "images/client2.jpg",
+                rating: 5,
+              },
+              {
+                id: 3,
+                name: "Ankit Singh",
+                review:
+                  "Great guidance and very polite. The remedies suggested worked really well for me.",
+                image: "images/client3.jpg",
+                rating: 4.5,
+              },
+            ].map((client) => (
               <div className="col-lg-4 col-md-6 mb-4" key={client.id}>
-                <div className="ser-card p-4 h-100 vert-move">
+                <div className="ser-card p-4 h-100">
                   <i
                     className="fa-solid fa-quote-left fa-2x mb-3"
                     style={{ color: "#daa23e" }}

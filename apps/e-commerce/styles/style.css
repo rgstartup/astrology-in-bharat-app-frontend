@@ -567,7 +567,7 @@ button.btn-close {
   margin: 0;
 }
 .vert-move {
-  transition: all 0.4s ease;
+  transition: transform 0.3s ease;
 }
 .vert-move:hover {
   transform: translateY(-5px);
@@ -579,10 +579,6 @@ button.btn-close {
 }
 .bg-sand {
   background-color: #732882;
-}
-a{
-  text-decoration: none;
-  color: white;
 }
 /* utils class*/
 
@@ -668,6 +664,7 @@ a{
   text-align: center;
   padding: 12px;
   border-radius: 10px;
+  transition: all 0.4s ease;
 }
 .astrology-services h2 {
   font-size: 32px;
@@ -694,6 +691,7 @@ a{
 }
 
 .ser-card:hover {
+  transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
@@ -912,46 +910,14 @@ a{
 /* Thirds Party Libraries CSS */
 /* ************* */
 /* 1 Swiper JS */
-/* Swiper JS Custom Navigation Buttons */
+.swiper-button-prev {
+  float: left;
 
-.swiper-button-prev-unique,
-.swiper-button-next-unique {
-  background-color: black !important;
-  color: #ffffff !important;
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 010 !important;
-  position: absolute;
-  top: 100px;
+  color: #000000 !important;
 }
-
-.swiper-button-prev-unique::after,
-.swiper-button-next-unique::after {
-  font-size: 16px !important;
-
-  font-weight: bold !important;
-}
-
-/* Position the buttons */
-
-.swiper-button-prev-unique {
-  left: 10px !important;
-}
-
-.swiper-button-next-unique {
-  right: 10px !important;
-}
-
-/* Hide the default Swiper buttons if you are using custom ones */
-
-.swiper-button-prev,
 .swiper-button-next {
-  display: none !important;
+  position: relative;
+  right: 20px !important;
+  color: #000000 !important;
 }
+
