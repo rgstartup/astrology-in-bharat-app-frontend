@@ -97,16 +97,16 @@ const Header: React.FC = () => {
                       </a>
                     </li>
                     <li className="nav-item dropdown">
-                      <a
+                      <Link
                         className="nav-link dropdown-toggle"
-                        href="#"
+                        href="/our-astrologers"
                         id="navbarDropdown"
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
-                        Astrology Consult
-                      </a>
+                        Our Astrologers
+                      </Link>
                       <ul
                         className="dropdown-menu"
                         aria-labelledby="navbarDropdown"

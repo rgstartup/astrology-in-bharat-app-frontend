@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Outfit } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
-import BootstrapScriptLoader from "@/libs/BootstrapScriptLoader";
+// import BootstrapScriptLoader from "@/libs/BootstrapScriptLoader";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome
 import "@/styles/style.css";
 import Header from "@/components/common/Header";
@@ -41,7 +41,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        <BootstrapScriptLoader />
+        {/* <BootstrapScriptLoader /> */}
       </body>
     </html>
   );

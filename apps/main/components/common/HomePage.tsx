@@ -12,6 +12,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
+import Link from "next/link";
 
 const HomePage: React.FC = () => {
   return (
@@ -79,7 +80,7 @@ const HomePage: React.FC = () => {
               {featuredCardsHeroSection.map((card) => (
                 <div key={card.id} className="col-sm-3 col-6">
                   <a href={card.link}>
-                    <div className="card-hero">
+                    <div className="card-hero vert-move">
                       <img src={card.image} alt={card.altText} />
                       <h5>{card.title}</h5>
                       <p>{card.description}</p>
@@ -109,7 +110,7 @@ const HomePage: React.FC = () => {
           <div className="astro-grid">
             {ListOfAllAstrologers.map((item) => {
               return (
-                <div className="grid-item" key={item.id}>
+                <Link href="/astrologer-details" className="grid-item" key={item.id}>
                   <div className="astro-card">
                     <div className="vid-part">
                       <img
@@ -188,7 +189,7 @@ const HomePage: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -282,7 +283,7 @@ const HomePage: React.FC = () => {
             >
               {products.map((product) => (
                 <SwiperSlide key={product.id}>
-                  <div className="ser-card vert-move h-100">
+                  <div className=" product-card h-100">
                     <img
                       src={product.image}
                       alt={product.title}

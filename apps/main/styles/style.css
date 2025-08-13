@@ -399,7 +399,7 @@ ul.dropdown-menu {
 }
 
 .astro-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 .rating-star {
   color: #daa23e;
@@ -570,7 +570,7 @@ button.btn-close {
   transition: all 0.4s ease;
 }
 .vert-move:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 .text-sand {
   color: #daa23e;
@@ -580,7 +580,7 @@ button.btn-close {
 .bg-sand {
   background-color: #732882;
 }
-a{
+a {
   text-decoration: none;
   color: white;
 }
@@ -622,6 +622,21 @@ a{
   border-radius: 10px;
   transition: all 0.4s ease;
   color: #1a1a1a;
+  /* animation: pulse 2s infinite ease-in-out; */
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 }
 .horoscopes-items h3 {
   font-size: 18px;
@@ -647,7 +662,7 @@ a{
 
 /* Hover Effect */
 .horoscopes-items:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
@@ -660,6 +675,16 @@ a{
 /*services css */
 
 .ser-card {
+  background-color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px 0px 20px 0px;
+  border: solid 1px #daa23e73;
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+}
+.product-card {
   background-color: #ffffff;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -954,4 +979,744 @@ a{
 .swiper-button-prev,
 .swiper-button-next {
   display: none !important;
+}
+
+/* Astrolgoer Details */
+img {
+  max-width: 100%;
+}
+ul {
+  padding: 0;
+  margin: 0;
+}
+.align {
+  align-items: center;
+}
+a {
+  text-decoration: none;
+}
+
+.color-primary {
+  color: #3dc9a1 !important;
+}
+
+.color-secondary {
+  color: #11564f !important;
+}
+
+.color-black {
+  color: #1a1a1a !important;
+}
+
+.color-light {
+  color: #fff !important;
+}
+
+.background-primary {
+  background: #3dc9a1 !important;
+}
+
+.background-secondary {
+  background: #11564f !important;
+}
+
+.background-black {
+  background: #1a1a1a !important;
+}
+
+.background-light {
+  background: #fff !important;
+}
+/**/
+
+.p-xl {
+  font-size: 25px;
+}
+.p-lg {
+  font-size: 20px;
+}
+.p-md {
+  font-size: 18px;
+  line-height: 24px;
+}
+.p-sm {
+  font-size: 16px;
+}
+.p-xs {
+  font-size: 14px;
+}
+.p-xxs {
+  font-size: 12px;
+}
+/*End font-size*/
+
+/*Start font-weight*/
+.fw-light {
+  font-weight: 300;
+}
+.fw-regular {
+  font-weight: 400;
+}
+.fw-medium {
+  font-weight: 500;
+}
+.fw-semi-bold {
+  font-weight: 600;
+}
+.fw-bold {
+  font-weight: 700;
+}
+.fw-extra-bold {
+  font-weight: 900;
+}
+
+/**/
+
+.top-head {
+  background: #411f1f;
+}
+.top-head {
+  background: #411f1f;
+  padding: 7px 0;
+}
+
+/**/
+.logo {
+  width: 170px;
+  background: #fff;
+  border-radius: 15px;
+  padding: 9px;
+  box-shadow: 0 4px 6px 3px #0000000d;
+  margin-top: -60px;
+}
+.top-head {
+  padding: 7px 0;
+  background-image: linear-gradient(to right, #762782, #176593);
+  background-image: linear-gradient(to right, #d08830, #daa23e);
+}
+.top-text {
+  margin: 0;
+  font-size: 18px;
+  color: #fff;
+}
+.top-menu-main li a {
+  color: #000 !important;
+  font-size: 16px;
+  padding: 9px 15px !important;
+}
+.top-menu-main li a:hover {
+  color: #702b83 !important;
+}
+.btn-link {
+  background: #732882;
+  color: #fff;
+  width: 100%;
+  padding: 14px 13px;
+  border-radius: 100px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+.btn-link img {
+  margin-right: 5px;
+  filter: brightness(0) invert(1);
+}
+.btn-link:hover {
+  color: #fff;
+  background: #186593;
+}
+ul.dropdown-menu {
+  padding: 0;
+}
+.top-menu-main li ul.dropdown-menu li a {
+  transition: 0.6s;
+  border-bottom: solid 1px #7328821c;
+}
+.top-menu-main li ul.dropdown-menu li a:hover {
+  background: #732882;
+  color: #fff !important;
+}
+
+/**/
+.lang-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.lang-toggle {
+  background: #186593;
+  color: #ffffff;
+  padding: 8px 13px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+  font-size: 14px;
+}
+.lang-menu {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 120px;
+  z-index: 10;
+}
+
+.lang-menu a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+}
+
+.lang-menu a:hover {
+  background: #f1f1f1;
+}
+
+/* Hover effect */
+.lang-dropdown:hover .lang-menu {
+  display: block;
+}
+/**/
+.cart-top {
+  color: #fff;
+  font-size: 14px;
+  position: relative;
+}
+.cart-top:hover {
+  color: #fff;
+}
+.value {
+  display: block;
+  position: absolute;
+  left: 5px;
+  top: -12px;
+  background: #fd0c38;
+  width: 17px;
+  height: 17px;
+  border-radius: 100px;
+  text-align: center;
+  font-size: 10px;
+}
+/**/
+.account-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.account-btn {
+  background: #186593;
+  color: #ffffff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.account-menu {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  min-width: 140px;
+  z-index: 10;
+}
+
+.account-menu a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+}
+
+.account-menu a:hover {
+  background: #f1f1f1;
+}
+
+.account-dropdown.show .account-menu {
+  display: block;
+}
+
+/* Card section css start */
+
+/* .card-data{
+  height: 100px;
+  width: 100px;
+  background-color: #3dc9a1;
+} */
+
+/* ================================
+   ABOUT SECTION
+=================================== */
+
+/* Card styling */
+.profile-card {
+  background: linear-gradient(to right, rgb(255, 252, 246), rgb(255, 242, 218))
+    rgb(255, 255, 255);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile image */
+.profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* Rating badge */
+.rating-badge {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border-radius: 50px;
+  padding: 2px 12px;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rating-badge img {
+  width: 16px;
+  height: 16px;
+}
+
+/* Buttons */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-call {
+  background: #f8f9fa;
+}
+.btn-video {
+  background: #ff4d4d;
+  color: white;
+}
+.btn-chat {
+  background: #ffcc66;
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+  border-radius: 50px;
+  padding: 5px 16px;
+  font-weight: 500;
+  color: black;
+}
+.nav-tabs .nav-link.active {
+  background: #a23d2d;
+  color: white;
+}
+
+/* No scrollbar on right */
+.profile-content {
+  overflow-y: scroll;
+  max-height: none;
+}
+
+.astro-tags {
+  color: rgb(0, 0, 0);
+  font-size: 14px;
+  margin-bottom: 0px;
+  margin-top: 5px;
+  background: rgb(218, 162, 62);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.astro-call {
+  border: none;
+  border-radius: 12px;
+  background-color: rgb(115, 40, 130);
+  color: white;
+  padding: 10px 30px;
+}
+
+.astro-videocall {
+  border: none;
+  border-radius: 12px;
+  background-color: rgb(218, 162, 62);
+  color: white;
+  padding: 10px 30px;
+}
+
+.astro-chat {
+  border: black;
+  border-radius: 12px;
+  color: rgb(0, 0, 0);
+  border: 2px solid black;
+  padding: 10px 30px;
+}
+
+.astro-chat:hover {
+  background-color: #186593;
+  color: white;
+  border: none;
+  transition: all 0.6s ease;
+}
+
+.play-vid {
+  position: absolute;
+  bottom: 28px;
+  right: 58px;
+  font-size: 19px;
+  background: #daa23e;
+  width: 35px;
+  height: 35px;
+  padding-top: 4px;
+  border-radius: 100px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.play-vid i {
+  padding-left: 7px;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: start;
+  gap: 20px;
+}
+
+.nav-links .nav-item {
+  list-style: none;
+  color: black;
+}
+
+.nav-links .about {
+  padding: 8px 10px;
+  background-color: purple;
+  border: none;
+  border-radius: 15px;
+  color: white;
+}
+
+.nav-links .experience {
+  padding: 8px 10px;
+  background-color: rgb(218, 162, 62);
+  border: none;
+  border-radius: 15px;
+  color: white;
+}
+
+/* Fixed height scrollable section */
+.custom-scroll {
+  max-height: 290px; /* Adjust to match left section height */
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* Custom scrollbar */
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgb(115, 40, 130);
+  border-radius: 4px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Custom buttons in this section */
+.custom-btn-primary {
+  background: rgb(115, 40, 130);
+  color: white;
+  border-radius: 12px;
+  padding: 8px 18px;
+  border: none;
+  transition: 0.3s ease;
+}
+.custom-btn-primary:hover {
+  background: rgb(218, 162, 62);
+}
+
+.custom-btn-secondary {
+  background: rgb(218, 162, 62);
+  color: white;
+  border-radius: 12px;
+  padding: 8px 18px;
+  border: none;
+  transition: 0.3s ease;
+}
+.custom-btn-secondary:hover {
+  background: rgb(115, 40, 130);
+}
+
+/* ================================
+   YOUTUBE VIDEO
+=================================== */
+.video-wrapper {
+  position: relative;
+  right: 10%;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 350px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  margin-top: 20px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90%;
+  border: none;
+  border-radius: 10px;
+}
+
+/* ================================
+   BUTTONS & TABS
+=================================== */
+.btn-group .btn {
+  font-size: 14px;
+  padding: 6px 12px;
+}
+
+.tabs button {
+  font-size: 13px;
+  padding: 5px 10px;
+}
+
+.submit-button {
+  background-color: #732882;
+  border: none;
+  border-radius: 12px;
+  margin-right: 14rem;
+  margin-top: 20px;
+}
+
+.submit-button:hover {
+  background-color: #186593;
+}
+
+.meeting-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.book-button,
+.meeting-buttons a {
+  border: 2px solid #732882;
+  border-radius: 20px;
+  color: black;
+  padding: 7px 15px;
+}
+
+/* ================================
+   SCROLL BOX
+=================================== */
+.scroll-box {
+  max-height: 300px;
+  overflow-y: auto;
+  background: linear-gradient(to right, rgb(255, 252, 246), rgb(255, 242, 218))
+    rgb(255, 255, 255);
+}
+
+.scroll-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-box::-webkit-scrollbar-thumb {
+  background-color: #732882;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+/* Column custom scrollbar */
+.col-lg-5::-webkit-scrollbar {
+  width: 6px;
+}
+
+.col-lg-5::-webkit-scrollbar-thumb {
+  background-color: #ffffff70;
+  border-radius: 10px;
+}
+
+.testimonial-card {
+  background: none; /* Transparent background */
+  border-radius: 20px;
+  border: solid rgba(218, 162, 62, 0.45);
+}
+
+.testimonial-card img {
+  border: 2px solid #ffcc00; /* Profile border */
+}
+
+.testimonial-card .text-warning {
+  font-size: 1.2rem;
+}
+
+.testimonial-card p {
+  font-style: italic;
+  color: #333;
+}
+
+.story-btn {
+  display: inline-block;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background-color: #762782;
+  color: white;
+  border: none;
+  margin-top: 20px;
+  margin-left: 9rem;
+}
+
+.story-btn a {
+  color: white;
+}
+
+/* ================================
+   PRODUCTS
+=================================== */
+.product-part {
+  background-image: url("/images/back-image.webp");
+}
+
+.product-card {
+  width: 100%;
+  max-width: 28rem;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 20px;
+  border: solid rgba(218, 162, 62, 0.45);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.product-img {
+  height: 12rem;
+  object-fit: cover;
+  width: 100%;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.product-price-part {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-description {
+  color: #1e293b;
+  font-weight: 500;
+  margin: 0.5rem 0;
+}
+
+.product-price {
+  color: rgb(218, 162, 62);
+  font-size: x-large;
+  font-weight: 700;
+}
+
+.product-button {
+  padding: 10px 13px;
+  border: none;
+  background-color: rgb(218, 162, 62);
+  color: black !important;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-outline-slate {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: none;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.btn-outline-slate:hover {
+  background-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.btn-slate-dark {
+  background-color: #1e293b;
+  color: white;
+  border: none;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.btn-slate-dark:hover {
+  background-color: #334155;
+  transform: translateY(-2px);
+}
+
+.stars {
+  color: #ffc850;
+  font-size: 1.2rem;
+}
+
+/* ================================
+   More Videos section
+=================================== */
+.testimonial-part {
+  background-image: url("/images/back-image.webp");
+}
+
+.card-body,
+.rightcard {
+  border-radius: 20px;
+}
+
+.card {
+  transition: transform 0.3s ease;
+  border-radius: 10px;
+  /* background-color: white; */
+  padding: 5px;
+  border: solid rgba(218, 162, 62, 0.45);
+}
+
+.card:hover {
+  transform: translateY(-5px);
 }
