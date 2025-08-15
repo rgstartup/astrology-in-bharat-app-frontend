@@ -1,13 +1,13 @@
-"use client";
+// "use client";
 
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
-const BootstrapScriptLoader: React.FC = () => {
-  useEffect(() => {
-    import("bootstrap/dist/js/bootstrap.bundle.min.js");
-  }, []);
+// const BootstrapScriptLoader: React.FC = () => {
+//   useEffect(() => {
+//     import("bootstrap/dist/js/bootstrap.bundle.min.js");
+//   }, []);
 
-  return null;
-};
+//   return null;
+// };
 
-export default BootstrapScriptLoader;
+// export default BootstrapScriptLoader;

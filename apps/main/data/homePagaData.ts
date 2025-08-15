@@ -218,7 +218,7 @@ export const ZodiacSignsData: ZodiaData[] = [
     id: 6,
     image: "/images/icon/virgo.webp",
     title: "Virgo",
-    date: "August 23 - September 22",
+    date: "Aug 23 - Sept 22",
   },
   {
     id: 7,
@@ -375,5 +375,87 @@ export const AstrologyServicesData: ServiceData[] = [
     image: "images/ser16.jpg",
     title: "Palmistry",
     description: "Read your destiny through the lines and mounts of your hand.",
+  },
+];
+
+// Products Data
+interface ProductsData {
+  id: number;
+  title: string;
+  image: string;
+  price: string;
+  description: string;
+}
+
+export const products: ProductsData[] = [
+  {
+    id: 1,
+    title: "Horoscope Reading",
+    image: "/images/ser1.jpg",
+    price: "₹499",
+    description: "Detailed insights into your future and life path.",
+  },
+  {
+    id: 2,
+    title: "Kundli Matching",
+    image: "/images/ser2.jpg",
+    price: "₹799",
+    description: "Comprehensive compatibility analysis for marriage.",
+  },
+  {
+    id: 3,
+    title: "Gemstone ",
+    image: "/images/ser3.jpg",
+    price: "₹1,299",
+    description: "Find the perfect gemstone to enhance your luck and energy.",
+  },
+  {
+    id: 4,
+    title: "Vastu Consultation",
+    image: "/images/ser4.jpg",
+    price: "₹1,999",
+    description: "Harmonize your living space for prosperity and peace.",
+  },
+  {
+    id: 5,
+    title: "Palm Reading",
+    image: "/images/ser5.jpg",
+    price: "₹399",
+    description: "Discover your destiny through the lines of your palm.",
+  },
+];
+
+//  Clients Testimoinial Data
+interface TestimoinialData {
+  id: number;
+  name: string;
+  review: string;
+  image: string;
+  rating: number;
+}
+export const ClientsTestimoinialData: TestimoinialData[] = [
+  {
+    id: 1,
+    name: "Rahul Verma",
+    review:
+      "Amazing experience! The astrologer was very accurate and gave me practical solutions. Highly recommended.",
+    image: "images/client1.jpg",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Priya Sharma",
+    review:
+      "Very satisfied! The consultation was insightful and helped me make better decisions in my career.",
+    image: "images/client2.jpg",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Ankit Singh",
+    review:
+      "Great guidance and very polite. The remedies suggested worked really well for me.",
+    image: "images/client3.jpg",
+    rating: 4.5,
   },
 ];

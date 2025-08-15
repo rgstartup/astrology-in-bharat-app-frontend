@@ -1,6 +1,6 @@
 "use client";
+import Link from "next/link";
 import React from "react";
-
 const Header: React.FC = () => {
   return (
     <>
@@ -53,7 +53,7 @@ const Header: React.FC = () => {
         </div>
       </header>
 
-      <header className="main-head">
+      <header className="main-head  border-bottom border-secondary-subtle">
         <div className="container">
           <div className="row align">
             <div className="col-lg-9 col-md-7">
@@ -87,9 +87,9 @@ const Header: React.FC = () => {
                 >
                   <ul className="navbar-nav ms-auto top-menu-main">
                     <li className="nav-item">
-                      <a className="nav-link" href="#">
+                      <Link className="nav-link" href="/">
                         Home
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" href="#">
@@ -97,16 +97,16 @@ const Header: React.FC = () => {
                       </a>
                     </li>
                     <li className="nav-item dropdown">
-                      <a
+                      <Link
                         className="nav-link dropdown-toggle"
-                        href="#"
+                        href="/our-astrologers"
                         id="navbarDropdown"
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
-                        Astrology Consult
-                      </a>
+                        Our Astrologers
+                      </Link>
                       <ul
                         className="dropdown-menu"
                         aria-labelledby="navbarDropdown"
@@ -186,9 +186,10 @@ const Header: React.FC = () => {
                       </a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="#">
-                        Kundli Prediction{" "}
-                      </a>
+                      <Link className="nav-link" href="/product">
+                        {/* Kundli Prediction */}
+                        Products
+                      </Link>
                     </li>
                   </ul>
                 </div>
