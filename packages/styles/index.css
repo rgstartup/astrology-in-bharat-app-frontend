@@ -161,6 +161,19 @@ ul.dropdown-menu {
   background: #732882;
   color: #fff !important;
 }
+a.nav-link {
+  color: black;
+  padding: 9px 15px !important;
+}
+a.nav-link :hover {
+  color: #702b83 !important;
+  padding: 9px 15px !important;
+}
+
+.nav-link:focus,
+.nav-link:hover {
+  color: #702b83;
+}
 
 /**/
 .lang-dropdown {
@@ -182,7 +195,7 @@ ul.dropdown-menu {
 .lang-menu {
   display: none;
   position: absolute;
-  top: 110%;
+  top: 107%;
   left: 0;
   background: white;
   border-radius: 8px;
@@ -200,6 +213,7 @@ ul.dropdown-menu {
 
 .lang-menu a:hover {
   background: #f1f1f1;
+  border-radius: 8px;
 }
 
 /* Hover effect */
@@ -446,14 +460,16 @@ ul.dropdown-menu {
   border: solid 1px #daa23e;
 }
 button.btn-close {
-  background: #daa23e;
+  /* background: #daa23e; */
   opacity: 1;
+  z-index: 0;
   border-radius: 100px;
   color: #fff;
   font-size: 22px;
   padding: 10px !important;
   line-height: 1;
 }
+
 .modal-content {
   background-image: url("/images/white-background.png") !important;
   background-size: cover;
@@ -589,14 +605,14 @@ a {
 /* Custom buttons Css Start*/
 .orderNowbtn {
   border: none;
-  border-radius: 5px;
-  padding: 7px 15px;
+  border-radius: 50px;
+  padding: 7px 20px;
   background-color: #732882;
 }
 .orderNowbtn:hover {
   border: none;
-  border-radius: 5px;
-  padding: 7px 15px;
+  border-radius: 50px;
+  padding: 7px 20px;
   background-color: #642172;
 }
 /* Custom buttons Css End */
@@ -982,8 +998,6 @@ a {
 }
 
 /* Astrolgoer Details Page */
-
-/* Card styling */
 .profile-card {
   background: linear-gradient(to right, rgb(255, 252, 246), rgb(255, 242, 218))
     rgb(255, 255, 255);
@@ -992,7 +1006,6 @@ a {
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Profile image */
 .profile-img {
   width: 120px;
   height: 120px;
@@ -1093,10 +1106,10 @@ a {
 }
 
 .astro-chat {
-  border: black;
+  background-color: #186593;
+  color: white;
+  border: none;
   border-radius: 12px;
-  color: rgb(0, 0, 0);
-  border: 2px solid black;
   padding: 10px 30px;
 }
 
@@ -1105,24 +1118,6 @@ a {
   color: white;
   border: none;
   transition: all 0.6s ease;
-}
-
-.play-vid {
-  position: absolute;
-  bottom: 28px;
-  right: 58px;
-  font-size: 19px;
-  background: #daa23e;
-  width: 35px;
-  height: 35px;
-  padding-top: 4px;
-  border-radius: 100px;
-  color: #fff;
-  cursor: pointer;
-}
-
-.play-vid i {
-  padding-left: 7px;
 }
 
 .nav-links {
@@ -1326,104 +1321,8 @@ a {
   color: white;
 }
 
-/* ================================
-   PRODUCTS
-=================================== */
-.product-part {
-  background-image: url("/images/back-image.webp");
-}
+/* More Videos section */
 
-.product-card {
-  width: 100%;
-  max-width: 28rem;
-  background-color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  border-radius: 10px;
-  overflow: hidden;
-  padding: 20px;
-  border: solid rgba(218, 162, 62, 0.45);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.product-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.product-img {
-  height: 12rem;
-  object-fit: cover;
-  width: 100%;
-  border-radius: 12px;
-  transition: transform 0.3s ease;
-}
-
-.product-price-part {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.product-description {
-  color: #1e293b;
-  font-weight: 500;
-  margin: 0.5rem 0;
-}
-
-.product-price {
-  color: rgb(218, 162, 62);
-  font-size: x-large;
-  font-weight: 700;
-}
-
-.product-button {
-  padding: 10px 13px;
-  border: none;
-  background-color: rgb(218, 162, 62);
-  color: black !important;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.btn-outline-slate {
-  background-color: #f1f5f9;
-  color: #475569;
-  border: none;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-.btn-outline-slate:hover {
-  background-color: #cbd5e1;
-  color: #1e293b;
-}
-
-.btn-slate-dark {
-  background-color: #1e293b;
-  color: white;
-  border: none;
-  transition:
-    background-color 0.3s ease,
-    transform 0.3s ease;
-}
-
-.btn-slate-dark:hover {
-  background-color: #334155;
-  transform: translateY(-2px);
-}
-
-.stars {
-  color: #ffc850;
-  font-size: 1.2rem;
-}
-
-/* ================================
-   More Videos section
-=================================== */
 .testimonial-part {
   background-image: url("/images/back-image.webp");
 }

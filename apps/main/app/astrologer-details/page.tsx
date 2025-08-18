@@ -1,13 +1,73 @@
 import React from "react";
+import Link from "next/link";
 
 const page = () => {
+  const products = [
+    {
+      id: 1,
+      title: "Original Rudraksha Mala",
+      image: "/images/product-1.webp",
+      price: 899,
+      description: "Authentic energised Rudraksha for peace and prosperity.",
+    },
+    {
+      id: 2,
+      title: "Astrology Kundli Report",
+      image: "/images/product-2.webp",
+      price: 499,
+      description: "Detailed horoscope report by our expert astrologers.",
+    },
+    {
+      id: 3,
+      title: "Energised Gemstone Ring",
+      image: "/images/product-3.jpg",
+      price: 1599,
+      description: "Certified natural gemstone ring for positive energy.",
+    },
+    {
+      id: 4,
+      title: "Vastu Yantra",
+      image: "/images/product-4.jpg",
+      price: 699,
+      description: "Bring harmony in your home with sacred Vastu Yantra.",
+    },
+    {
+      id: 5,
+      title: "Crystal Healing Bracelet",
+      image: "/images/product-5.jpg",
+      price: 349,
+      description: "Enhance health and wealth with crystal healing energy.",
+    },
+    {
+      id: 6,
+      title: "Hanuman Chalisa  Book",
+      image: "/images/product-6.jpg",
+      price: 149,
+      description: "Carry divine blessings always with you.",
+    },
+    {
+      id: 7,
+      title: "Astrology Kundli Report",
+      image: "/images/product-2.webp",
+      price: 499,
+      description: "Detailed horoscope report by our expert astrologers.",
+    },
+    {
+      id: 8,
+      title: "Energised Gemstone Ring",
+      image: "/images/product-3.jpg",
+      price: 1599,
+      description: "Certified natural gemstone ring for positive energy.",
+    },
+  ];
   return (
     <>
       <div className="container mt-5">
         <div className="row profile-card align-items-start">
           <div className="col-lg-6 col-md-12 p-2">
             <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start text-center text-md-start">
-              <div className="position-relative me-md-3 mb-3 mb-md-0">
+              <div className="position-relative me-md-3 mb-3 mb-md-0 text-center">
+                {/* Image */}
                 <img
                   src="/images/astro-img1.png"
                   alt="Amita Sharma"
@@ -20,15 +80,40 @@ const page = () => {
                   }}
                 />
 
+                {/* Play Button */}
                 <span
-                  className="play-vid fa-beat"
+                  className="fa-beat d-flex align-items-center justify-content-center"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
+                  style={{
+                    position: "absolute",
+                    bottom: "30px", // slightly above image edge
+                    left: "70%",
+                    backgroundColor: "#DAA23E",
+                    width: "35px",
+                    height: "35px",
+                    borderRadius: "50%",
+                    color: "#fff",
+                    fontSize: "18px",
+                    cursor: "pointer",
+                  }}
                 >
                   <i className="fa-solid fa-circle-play"></i>
                 </span>
-                <div className="stars mt-2">★★★★★</div>
+
+                {/* Stars */}
+                <div
+                  style={{
+                    marginTop: "8px",
+                    fontSize: "18px",
+                    color: "#DAA23E",
+                    letterSpacing: "3px",
+                  }}
+                >
+                  ★★★★★
+                </div>
               </div>
+
 
               <div>
                 <h5 className="fw-bold text-black">Amita Sharma</h5>
@@ -163,11 +248,7 @@ const page = () => {
                       <label className="form-label">
                         Birth Time <span className="text-danger">*</span>
                       </label>
-                      <input
-                        type="time"
-                        className="form-control form-inputs"
-                        required
-                      />
+                      <input type="time" className="form-control form-inputs" required />
                     </div>
 
                     <div className="col-md-6">
@@ -183,21 +264,24 @@ const page = () => {
                     </div>
 
                     <div className="col-md-6">
-                      <label className="form-label">Gender</label>
-                      <select className="form-select">
-                        <option selected disabled>
+                      <label className="form-label" htmlFor="gender">
+                        Gender
+                      </label>
+                      <select className="form-select" id="gender" required defaultValue="">
+                        <option value="" disabled hidden>
                           Select
                         </option>
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
                       </select>
+                      <div className="invalid-feedback">Please select a gender.</div>
                     </div>
 
                     <div className="col-md-6">
                       <label className="form-label">Marital Status</label>
                       <select className="form-select">
-                        <option selected disabled>
+                        <option value="" disabled hidden>
                           Select
                         </option>
                         <option>Single</option>
@@ -210,7 +294,7 @@ const page = () => {
                     <div className="col-md-6">
                       <label className="form-label">Occupation</label>
                       <select className="form-select form-inputs">
-                        <option selected disabled>
+                        <option value="" disabled hidden>
                           Select
                         </option>
                         <option>Student</option>
@@ -304,92 +388,36 @@ const page = () => {
         </div>
       </div>
 
-      <section className="product-part">
-        <div className="container py-5">
-          <h2 className="text-center gy-2">
-            The<span style={{ color: "#732882" }}> Astrology Bharat</span>
-            <span style={{ color: "#000000" }}>Product</span>
-            <span style={{ color: "#732882" }}>Store</span>
+      <section className="store-products py-5 ">
+        <div className="container">
+          <h2 className="section-heading text-center mb-5 display-6 fw-semibold text-center mb-5">
+            Best <span style={{ color: "#732882" }}>Sellers</span>
           </h2>
-          <div className="row justify-content-center gap-4 gap-lg-0">
-            <div className="col-lg-3 col-md-6 mb-4 d-flex justify-content-center">
-              <div className="product-card">
-                <img
-                  src="/images/astro-img1.png"
-                  className="product-img"
-                  alt="Product"
-                />
-                <div className="pt-3 text-sm">
-                  <h5 className="text-black">Premium Crystal Ball</h5>
-                  <p className="product-description text-black">
-                    Professional grade crystal for divination and meditation
-                  </p>
-                  <div className="product-price-part gap-2 mt-3">
-                    <a className="product-price py-2"> ₹359 </a>
-                    <a className="product-button py-2 fs-5">Buy Now</a>
+          <div className="product-slider-container">
+            <div className="row ">
+              {products.map((product) => (
+                <div key={product.id} className="col-lg-3 col-md-4 col-sm-6">
+                  <div className="ser-card vert-move">
+                    <img
+                      src={product.image}
+                      alt="Image Not Found"
+                      className="services-img w-100 mb-3"
+                      style={{ height: "160px", objectFit: "cover" }}
+                    />
+                    <h4>{product.title}</h4>
+                    <p className="p-sm text-muted">{product.description}</p>
+                    <div className=" mt-auto pt-3">
+                      <h5 className="mb-0 fw-bold">{product.price}</h5>
+                      <button className="btn btn-primary orderNowbtn mt-3">
+                        <Link href="/product/id">
+                          <i className="fas fa-shopping-cart me-2"></i>
+                          Add To Cart
+                        </Link>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div className="col-lg-3 col-md-6 mb-4 d-flex justify-content-center">
-              <div className="product-card">
-                <img
-                  src="/images/astro-img1.png"
-                  className="product-img"
-                  alt="Product"
-                />
-                <div className="pt-3 text-sm">
-                  <h5 className="text-black">Premium Crystal Ball</h5>
-                  <p className="product-description text-black">
-                    Professional grade crystal for divination and meditation
-                  </p>
-                  <div className="product-price-part gap-2 mt-3">
-                    <a className="product-price py-2"> ₹359 </a>
-                    <a className="product-button py-2 fs-5">Buy Now</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-3 col-md-6 mb-4 d-flex justify-content-center">
-              <div className="product-card">
-                <img
-                  src="/images/astro-img1.png"
-                  className="product-img"
-                  alt="Product"
-                />
-                <div className="pt-3 text-sm">
-                  <h5 className="text-black">Premium Crystal Ball</h5>
-                  <p className="product-description text-black">
-                    Professional grade crystal for divination and meditation
-                  </p>
-                  <div className="product-price-part gap-2 mt-3">
-                    <a className="product-price py-2"> ₹359 </a>
-                    <a className="product-button py-2 fs-5">Buy Now</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-3 col-md-6 mb-4 d-flex justify-content-center">
-              <div className="product-card">
-                <img
-                  src="/images/astro-img1.png"
-                  className="product-img"
-                  alt="Product"
-                />
-                <div className="pt-3 text-sm">
-                  <h5 className="text-black">Premium Crystal Ball</h5>
-                  <p className="product-description text-black">
-                    Professional grade crystal for divination and meditation
-                  </p>
-                  <div className="product-price-part gap-2 mt-3">
-                    <a className="product-price py-2"> ₹359 </a>
-                    <a className="product-button py-2 fs-5">Buy Now</a>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

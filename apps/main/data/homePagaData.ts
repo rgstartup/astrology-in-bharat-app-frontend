@@ -10,7 +10,7 @@ interface CardData {
 export const featuredCardsHeroSection: CardData[] = [
   {
     id: 1,
-    image: "images/icon1.png",
+    image: "/images/icon1.png",
     altText: "Live Chat Support icon",
     title: "Live Chat Support",
     description:
@@ -19,7 +19,7 @@ export const featuredCardsHeroSection: CardData[] = [
   },
   {
     id: 2,
-    image: "images/icon2.png",
+    image: "/images/icon2.png",
     altText: "Speak with Astrologer icon",
     title: "Speak with Astrologer",
     description:
@@ -28,7 +28,7 @@ export const featuredCardsHeroSection: CardData[] = [
   },
   {
     id: 3,
-    image: "images/icon3.png",
+    image: "/images/icon3.png",
     altText: "Astrology Product Store icon",
     title: "Astrology Product Store",
     description:
@@ -37,7 +37,7 @@ export const featuredCardsHeroSection: CardData[] = [
   },
   {
     id: 4,
-    image: "images/icon4.png",
+    image: "/images/icon4.png",
     altText: "Book A Pooja icon",
     title: "Book A Pooja",
     description:
@@ -64,7 +64,7 @@ interface AstrologerData {
 export const ListOfAllAstrologers: AstrologerData[] = [
   {
     id: 1,
-    image: "images/astro-img1.png",
+    image: "/images/astro-img1.png",
     ratings: 5,
     name: "Parbhat Sharma",
     expertise: "Vedic | Numerology",
@@ -78,7 +78,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
   },
   {
     id: 2,
-    image: "images/astro-img1.png",
+    image: "/images/astro-img1.png",
     ratings: 5,
     name: "Parbhat Sharma",
     expertise: "Vedic | Numerology",
@@ -92,7 +92,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
   },
   {
     id: 3,
-    image: "images/astro-img1.png",
+    image: "/images/astro-img1.png",
     ratings: 5,
     name: "Parbhat Sharma",
     expertise: "Vedic | Numerology",
@@ -106,7 +106,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
   },
   {
     id: 4,
-    image: "images/astro-img1.png",
+    image: "/images/astro-img1.png",
     ratings: 5,
     name: "Parbhat Sharma",
     expertise: "Vedic | Numerology",
@@ -120,7 +120,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
   },
   {
     id: 5,
-    image: "images/astro-img1.png",
+    image: "/images/astro-img1.png",
     ratings: 5,
     name: "Parbhat Sharma",
     expertise: "Vedic | Numerology",
@@ -134,7 +134,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
   },
   {
     id: 6,
-    image: "images/astro-img1.png",
+    image: "/images/astro-img1.png",
     ratings: 5,
     name: "Parbhat Sharma",
     expertise: "Vedic | Numerology",
@@ -148,7 +148,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
   },
   {
     id: 7,
-    image: "images/astro-img1.png",
+    image: "/images/astro-img1.png",
     ratings: 5,
     name: "Parbhat Sharma",
     expertise: "Vedic | Numerology",
@@ -162,7 +162,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
   },
   {
     id: 8,
-    image: "images/astro-img1.png",
+    image: "/images/astro-img1.png",
     ratings: 5,
     name: "Parbhat Sharma",
     expertise: "Vedic | Numerology",
@@ -268,111 +268,111 @@ interface ServiceData {
 export const AstrologyServicesData: ServiceData[] = [
   {
     id: 1,
-    image: "images/ser1.jpg",
+    image: "/images/ser1.jpg",
     title: "Kundli (Birth Chart)",
     description:
       "Unlock the secrets of your destiny with a personalized birth chart.",
   },
   {
     id: 2,
-    image: "images/ser2.jpg",
+    image: "/images/ser2.jpg",
     title: "Panchang",
     description:
       "Daily planetary timings and festivals stay aligned with cosmic time.",
   },
   {
     id: 3,
-    image: "images/ser3.jpg",
+    image: "/images/ser3.jpg",
     title: "Numerology",
     description:
       "Discover the power of numbers and what they reveal about your life.",
   },
   {
     id: 4,
-    image: "images/ser4.jpg",
+    image: "/images/ser4.jpg",
     title: "Vedic Astrology",
     description:
       "Ancient Vedic wisdom to guide your present and shape your future.",
   },
   {
     id: 5,
-    image: "images/ser5.jpg",
+    image: "/images/ser5.jpg",
     title: "Matchmaking",
     description:
       "Check marriage compatibility based on traditional astrological methods.",
   },
   {
     id: 6,
-    image: "images/ser6.jpg",
+    image: "/images/ser6.jpg",
     title: "Relationship Guidance",
     description:
       "Strengthen bonds and resolve love challenges through astrology.",
   },
   {
     id: 7,
-    image: "images/ser7.jpg",
+    image: "/images/ser7.jpg",
     title: "Muhurat (Auspicious Timing)",
     description:
       "Choose the perfect time for important events with expert muhurat analysis.",
   },
   {
     id: 8,
-    image: "images/ser8.jpg",
+    image: "/images/ser8.jpg",
     title: "Nakshatra",
     description:
       "Know your nakshatra traits and their influence on your personality.",
   },
   {
     id: 9,
-    image: "images/ser9.jpg",
+    image: "/images/ser9.jpg",
     title: "Career Astrology",
     description: "Make smarter career moves with insights based on your stars.",
   },
   {
     id: 10,
-    image: "images/ser10.jpg",
+    image: "/images/ser10.jpg",
     title: "Finance Astrology",
     description:
       "Predict financial highs and lows — align actions with planetary cycles.",
   },
   {
     id: 11,
-    image: "images/ser11.jpg",
+    image: "/images/ser11.jpg",
     title: "Family Astrology",
     description:
       "Ensure harmony at home by understanding family dynamics astrologically.",
   },
   {
     id: 12,
-    image: "images/ser12.jpg",
+    image: "/images/ser12.jpg",
     title: "Health Astrology",
     description:
       "Identify potential health concerns through your planetary chart.",
   },
   {
     id: 13,
-    image: "images/ser13.jpg",
+    image: "/images/ser13.jpg",
     title: "Zodiac Signs",
     description:
       "Explore personality traits, strengths, and challenges of each sign.",
   },
   {
     id: 14,
-    image: "images/ser14.jpg",
+    image: "/images/ser14.jpg",
     title: "Tarot Reading",
     description:
       "Get intuitive guidance and answers through powerful tarot insights.",
   },
   {
     id: 15,
-    image: "images/ser15.jpg",
+    image: "/images/ser15.jpg",
     title: "Online Pooja",
     description:
       "Book Vedic rituals online for prosperity, peace, and protection.",
   },
   {
     id: 16,
-    image: "images/ser16.jpg",
+    image: "/images/ser16.jpg",
     title: "Palmistry",
     description: "Read your destiny through the lines and mounts of your hand.",
   },
@@ -439,7 +439,7 @@ export const ClientsTestimoinialData: TestimoinialData[] = [
     name: "Rahul Verma",
     review:
       "Amazing experience! The astrologer was very accurate and gave me practical solutions. Highly recommended.",
-    image: "images/client1.jpg",
+    image: "/images/client1.jpg",
     rating: 5,
   },
   {
@@ -447,7 +447,7 @@ export const ClientsTestimoinialData: TestimoinialData[] = [
     name: "Priya Sharma",
     review:
       "Very satisfied! The consultation was insightful and helped me make better decisions in my career.",
-    image: "images/client2.jpg",
+    image: "/images/client2.jpg",
     rating: 5,
   },
   {
@@ -455,7 +455,7 @@ export const ClientsTestimoinialData: TestimoinialData[] = [
     name: "Ankit Singh",
     review:
       "Great guidance and very polite. The remedies suggested worked really well for me.",
-    image: "images/client3.jpg",
+    image: "/images/client3.jpg",
     rating: 4.5,
   },
 ];

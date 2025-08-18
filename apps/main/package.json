@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@repo/styles": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "react-bootstrap": "^2.10.10",
     "swiper": "^11.2.10",
-    "@repo/typescript-config": "workspace:*",
     "react": "latest",
     "react-dom": "latest",
     "next": "latest",

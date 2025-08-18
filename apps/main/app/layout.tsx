@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Poppins, Outfit } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome
-import "@/styles/style.css";
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+// import "@/styles/style.css";
+import "@repo/styles"
+import { Header, Footer } from "@repo/ui";
 
 const outfit = Outfit({
   subsets: ["latin"],
