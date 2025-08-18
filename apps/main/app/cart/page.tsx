@@ -58,12 +58,12 @@ const CartPage: React.FC = () => {
   const grandTotal = subtotal + shipping + tax;
 
   return (
-    <div style={{ background: "#f9fafb", minHeight: "100vh" }}>
+    <div >
       <div className="container py-5">
         {/* Title */}
         <div className="d-flex align-items-center mb-4">
           <i className="fas fa-shopping-cart me-2 text-dark fs-4"></i>
-          <h2 className="fw-bold mb-0">Your Shopping Cart</h2>
+          <h2 className="fw-semibold mb-0">Your Shopping Cart</h2>
         </div>
 
         {cartItems.length === 0 ? (
@@ -110,7 +110,7 @@ const CartPage: React.FC = () => {
                         type="text"
                         value={item.quantity}
                         readOnly
-                        className="mx-2 text-center border-0 fw-bold"
+                        className="mx-2 text-center border-0 fw-semibold"
                         style={{
                           width: "45px",
                           background: "#f1f3f5",
@@ -128,7 +128,7 @@ const CartPage: React.FC = () => {
                     </div>
 
                     {/* Price */}
-                    <div className="fw-bold text-dark mx-3">
+                    <div className="fw-semibold text-dark mx-3">
                       ₹{item.price * item.quantity}
                     </div>
 
@@ -149,7 +149,7 @@ const CartPage: React.FC = () => {
             {/* Summary */}
             <div className="col-lg-4">
               <div className="p-4 rounded shadow-sm bg-white">
-                <h4 className="fw-bold mb-3">Order Summary</h4>
+                <h4 className="fw-semibold mb-3">Order Summary</h4>
                 <ul className="list-unstyled mb-4">
                   <li className="d-flex justify-content-between mb-2">
                     <span>Subtotal</span>
@@ -165,13 +165,13 @@ const CartPage: React.FC = () => {
                   </li>
                   <hr />
                   <li className="d-flex justify-content-between mb-3">
-                    <span className="fw-bold">Total</span>
-                    <span className="fw-bold fs-5">₹{grandTotal.toFixed(0)}</span>
+                    <span className="fw-semibold">Total</span>
+                    <span className="fw-semibold fs-5">₹{grandTotal.toFixed(0)}</span>
                   </li>
                 </ul>
                 <Button
                   variant="warning"
-                  className="w-100 text-white fw-bold py-2"
+                  className="w-100 text-white fw-semibold py-2"
                   style={{ background: "#d9a03d", border: "none" }}
                 >
                   Proceed to Checkout <i className="fas fa-arrow-right ms-2"></i>
@@ -183,7 +183,7 @@ const CartPage: React.FC = () => {
 
         {/* Suggested Products */}
         <div className="mt-5">
-          <h4 className="fw-bold mb-3">You may also like</h4>
+          <h2 className="fw-semibold mb-3">You may also like</h2>
           <ProductsCarousel />
         </div>
       </div>

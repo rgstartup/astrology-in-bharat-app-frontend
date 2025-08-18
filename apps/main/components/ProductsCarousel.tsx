@@ -7,7 +7,7 @@ import { Navigation, Autoplay } from "swiper/modules";
 import { products } from '@/data/homePagaData';
 
 const ProductsCarousel = () => {
-   
+
     return (
         <Swiper
             modules={[Navigation, Autoplay]}

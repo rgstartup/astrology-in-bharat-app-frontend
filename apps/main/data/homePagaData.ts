@@ -378,52 +378,116 @@ export const AstrologyServicesData: ServiceData[] = [
   },
 ];
 
-// Products Data
+// Products Card Data
 interface ProductsData {
   id: number;
   title: string;
   image: string;
-  price: string;
+  price: number;
   description: string;
 }
 
 export const products: ProductsData[] = [
   {
     id: 1,
-    title: "Horoscope Reading",
-    image: "/images/ser1.jpg",
-    price: "₹499",
-    description: "Detailed insights into your future and life path.",
+    title: "Original Rudraksha Mala",
+    image: "/images/product-1.webp",
+    price: 899,
+    description: "Authentic energised Rudraksha for peace and prosperity.",
   },
   {
     id: 2,
-    title: "Kundli Matching",
-    image: "/images/ser2.jpg",
-    price: "₹799",
-    description: "Comprehensive compatibility analysis for marriage.",
+    title: "Astrology Kundli Report",
+    image: "/images/product-2.webp",
+    price: 499,
+    description: "Detailed horoscope report by our expert astrologers.",
   },
   {
     id: 3,
-    title: "Gemstone ",
-    image: "/images/ser3.jpg",
-    price: "₹1,299",
-    description: "Find the perfect gemstone to enhance your luck and energy.",
+    title: "Energised Gemstone Ring",
+    image: "/images/product-3.jpg",
+    price: 1599,
+    description: "Certified natural gemstone ring for positive energy.",
   },
   {
     id: 4,
-    title: "Vastu Consultation",
-    image: "/images/ser4.jpg",
-    price: "₹1,999",
-    description: "Harmonize your living space for prosperity and peace.",
+    title: "Vastu Yantra",
+    image: "/images/product-4.jpg",
+    price: 699,
+    description: "Bring harmony in your home with sacred Vastu Yantra.",
   },
   {
     id: 5,
-    title: "Palm Reading",
-    image: "/images/ser5.jpg",
-    price: "₹399",
-    description: "Discover your destiny through the lines of your palm.",
+    title: "Crystal Healing Bracelet",
+    image: "/images/product-5.jpg",
+    price: 349,
+    description: "Enhance health and wealth with crystal healing energy.",
+  },
+  {
+    id: 6,
+    title: "Hanuman Chalisa  Book",
+    image: "/images/product-6.jpg",
+    price: 149,
+    description: "Carry divine blessings always with you.",
+  },
+  {
+    id: 7,
+    title: "Astrology Kundli Report",
+    image: "/images/product-2.webp",
+    price: 499,
+    description: "Detailed horoscope report by our expert astrologers.",
+  },
+  {
+    id: 8,
+    title: "Energised Gemstone Ring",
+    image: "/images/product-3.jpg",
+    price: 1599,
+    description: "Certified natural gemstone ring for positive energy.",
   },
 ];
+
+// Shop By Purpose Data
+interface PurposeData {
+  id: number;
+  title: string;
+  image: string;
+}
+
+export const purpose: PurposeData[] = [
+  {
+    id: 1,
+    image: "/images/money.webp",
+    title: "Money",
+  },
+  {
+    id: 2,
+    image: "/images/Love.webp",
+    title: "Love",
+  },
+  {
+    id: 3,
+    image: "/images/Career.webp",
+    title: "Career",
+  },
+  {
+    id: 4,
+    image: "/images/evil_eye.webp",
+    title: "Evil Eye",
+  },
+  {
+    id: 5,
+    image: "/images/Health.webp",
+    title: "Health",
+  },
+  {
+    id: 6,
+    image: "/images/Gifting.webp",
+    title: "Gifting",
+  },
+];
+
+
+
 
 //  Clients Testimoinial Data
 interface TestimoinialData {

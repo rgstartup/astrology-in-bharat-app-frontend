@@ -180,7 +180,7 @@ const Page = () => {
 
             {/* Popular Astrology Section */}
             <div className="popular-astrology m-hidden pt-3">
-              <h3 className="astrology-heading mb-3">Popular Astrology</h3>
+              <h3 className="text-purple mb-3 text-left">Popular Astrology</h3>
               <div className="row g-3">
                 {[
                   { name: "Aries", desc: "Vastu, Vedic" },
@@ -207,8 +207,8 @@ const Page = () => {
           </div>
 
           {/* Right Side - Sign In Form */}
-          <div className="col-lg-6 col-sm-12 ms-auto">
-            <div className="form-data shadow-sm p-4 rounded bg-white">
+          <div className="col-lg-7 col-sm-12 ms-auto">
+            <div className="form-data shadow-sm p-4 rounded-xl bg-white">
               {/* Heading */}
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h6 className="mb-0">

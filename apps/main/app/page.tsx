@@ -2,6 +2,7 @@ import React from "react";
 import { AstrologyServicesData, ClientsTestimoinialData, ListOfAllAstrologers, ZodiacSignsData, featuredCardsHeroSection } from "@/data/homePagaData";
 import AstrologerCard from "@/components/AstrologerCard";
 import SearchBar from "@/components/SearchBar";
+import ProductsCarousel from "@/components/ProductsCarousel";
 
 const Page: React.FC = () => {
   return (
@@ -160,6 +161,20 @@ const Page: React.FC = () => {
           </div>
         </div>
       </section>
+
+
+{/* Products Listing page */}
+      < section className="product-slider-section py-50 bg-cream" >
+        <div className="container">
+          <h2 className="text-center mb-5 heading section-title">
+            🔮 Our Astrological Products
+          </h2>
+          <div className="product-slider-container">
+            <ProductsCarousel />
+          </div>
+        </div>
+      </ section>
+
 
       {/* Why Talk to our astrologer*/}
       <section className="py-50 why-choose-us text-white">

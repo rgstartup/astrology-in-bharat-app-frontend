@@ -12,7 +12,8 @@
   --testimonial-bg-color: #ffcc00;
   --background-gradient: linear-gradient(to right, #fffcf6, #fff2da);
   --google-color: #e9f1ff;
-  --facebook-color: rgba(0, 162, 255, 0.555);
+  --facebook-color: #00a2ff8e;
+  --button-hover: #186593;
 }
 
 .signin-part {
@@ -134,6 +135,14 @@
   border: none;
   border-radius: 20px;
   background-color: var(--primary-color);
+  width: 100%;
+}
+.sign-button:hover {
+  margin-top: 20px;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 20px;
+  background-color: var(--button-hover);
   width: 100%;
 }
 

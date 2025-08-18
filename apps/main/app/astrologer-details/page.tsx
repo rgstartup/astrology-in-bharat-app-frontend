@@ -1,65 +1,9 @@
 import React from "react";
 import Link from "next/link";
+import { products } from "@/data/homePagaData";
 
 const page = () => {
-  const products = [
-    {
-      id: 1,
-      title: "Original Rudraksha Mala",
-      image: "/images/product-1.webp",
-      price: 899,
-      description: "Authentic energised Rudraksha for peace and prosperity.",
-    },
-    {
-      id: 2,
-      title: "Astrology Kundli Report",
-      image: "/images/product-2.webp",
-      price: 499,
-      description: "Detailed horoscope report by our expert astrologers.",
-    },
-    {
-      id: 3,
-      title: "Energised Gemstone Ring",
-      image: "/images/product-3.jpg",
-      price: 1599,
-      description: "Certified natural gemstone ring for positive energy.",
-    },
-    {
-      id: 4,
-      title: "Vastu Yantra",
-      image: "/images/product-4.jpg",
-      price: 699,
-      description: "Bring harmony in your home with sacred Vastu Yantra.",
-    },
-    {
-      id: 5,
-      title: "Crystal Healing Bracelet",
-      image: "/images/product-5.jpg",
-      price: 349,
-      description: "Enhance health and wealth with crystal healing energy.",
-    },
-    {
-      id: 6,
-      title: "Hanuman Chalisa  Book",
-      image: "/images/product-6.jpg",
-      price: 149,
-      description: "Carry divine blessings always with you.",
-    },
-    {
-      id: 7,
-      title: "Astrology Kundli Report",
-      image: "/images/product-2.webp",
-      price: 499,
-      description: "Detailed horoscope report by our expert astrologers.",
-    },
-    {
-      id: 8,
-      title: "Energised Gemstone Ring",
-      image: "/images/product-3.jpg",
-      price: 1599,
-      description: "Certified natural gemstone ring for positive energy.",
-    },
-  ];
+
   return (
     <>
       <div className="container mt-5">
@@ -348,9 +292,7 @@ const page = () => {
                     <div className="ms-auto text-warning">★★★★★</div>
                   </div>
                   <p className="mb-0">
-                    "The birth chart reading was incredibly detailed and
-                    accurate. It helped me understand my life path and make
-                    important career decisions."
+                    {"The birth chart reading was incredibly detailed and accurate. It helped me understand my life path and make important career decisions."}
                   </p>
                 </div>
 
@@ -372,10 +314,7 @@ const page = () => {
                     <div className="ms-auto text-warning">★★★★★</div>
                   </div>
                   <p className="mb-0">
-                    "The planetary transit analysis provided invaluable timing
-                    for my business decisions. The accuracy of predictions and
-                    professional guidance has been truly remarkable."
-                  </p>
+                    {"The planetary transit analysis provided invaluable timing for my business decisions. The accuracy of predictions and professional guidance has been truly remarkable."}</p>
                 </div>
 
                 <button className="story-btn mt-4">
@@ -434,7 +373,7 @@ const page = () => {
               className="text-center"
               style={{ fontSize: " 18px", color: "rgb(0, 0, 0)" }}
             >
-              Let’s see what our customers say about us: <br />
+              Lets see what our customers say about us: <br />
               Real stories of how our astrology and Vastu services have made a
               positive difference in their lives.
             </p>

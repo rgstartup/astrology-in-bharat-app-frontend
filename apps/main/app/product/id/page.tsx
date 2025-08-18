@@ -3,11 +3,11 @@ import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs, FreeMode, Autoplay } from "swiper/modules";
 import { Accordion } from "react-bootstrap";
-
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/free-mode";
+import { purpose } from "@/data/homePagaData";
 
 const Page = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -78,44 +78,13 @@ const Page = () => {
       dimensions: "Adjustable size, fits most wrist sizes.",
     },
   };
-  const purpose = [
-    {
-      id: 1,
-      image: "/images/money.webp",
-      title: "Money",
-    },
-    {
-      id: 2,
-      image: "/images/Love.webp",
-      title: "Love",
-    },
-    {
-      id: 3,
-      image: "/images/Career.webp",
-      title: "Career",
-    },
-    {
-      id: 4,
-      image: "/images/evil_eye.webp",
-      title: "Evil Eye",
-    },
-    {
-      id: 5,
-      image: "/images/Health.webp",
-      title: "Health",
-    },
-    {
-      id: 6,
-      image: "/images/Gifting.webp",
-      title: "Gifting",
-    },
-  ];
 
-  const relatedProducts = [
-    { name: "Healing Stone Pendant", price: 299, image: "/images/product-6.jpg" },
-    { name: "Aura Cleansing Kit", price: 549, image: "/images/product-6.jpg" },
-    { name: "Zodiac Crystal Set", price: 699, image: "/images/product-6.jpg" },
-  ];
+
+  // const relatedProducts = [
+  //   { name: "Healing Stone Pendant", price: 299, image: "/images/product-6.jpg" },
+  //   { name: "Aura Cleansing Kit", price: 549, image: "/images/product-6.jpg" },
+  //   { name: "Zodiac Crystal Set", price: 699, image: "/images/product-6.jpg" },
+  // ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -149,7 +118,7 @@ const Page = () => {
 
   return (
     <>
-      <div style={{ background: "#fcfcfb" }}>
+      <div>
         <div className="container py-5">
           <div className="row g-5">
             {/* LEFT: Product Gallery */}
@@ -490,7 +459,7 @@ const Page = () => {
                               <StarRating rating={review.rating} />
                             </div>
                             <p className="text-muted" style={{ fontSize: "0.95rem" }}>
-                              "{review.text}"
+                              {review.text}
                             </p>
                           </div>
                         </div>

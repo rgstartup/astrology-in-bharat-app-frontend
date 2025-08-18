@@ -5,13 +5,12 @@ import {
   ListOfAllAstrologers,
   ZodiacSignsData,
   AstrologyServicesData,
-  products,
   ClientsTestimoinialData,
 } from "@/data/homePagaData";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+// import { Swiper, SwiperSlide } from "swiper/react";
+// import { Navigation, Autoplay } from "swiper/modules";
 import Link from "next/link";
 import ProductsCarousel from "./ProductsCarousel";
 
