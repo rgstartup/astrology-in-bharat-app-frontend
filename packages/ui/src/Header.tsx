@@ -1,11 +1,18 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
 
 
 const Header: React.FC = () => {
   const [showAstrologer, setShowAstrologer] = useState(false);
+  const [isClient, setIsClient] = useState(false); // New state to track client-side rendering
+
+  // Use useEffect to ensure this part only runs on the client
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <>
       <header className="top-head">
@@ -34,22 +41,26 @@ const Header: React.FC = () => {
                   </div>
 
                   <div className="col-3 mobile-space text-center">
-                    <a href="#" className="cart-top">
+                    <Link href="/cart" className="cart-top">
                       <i className="fa-solid fa-cart-shopping"></i> Cart
-                      <span className="value">10</span>
-                    </a>
+                      <span className="value">4</span>
+                    </Link>
                   </div>
+
+
                   <div className="col-5 mobile-space">
-                    <div className="account-dropdown">
+                    <div className="lang-dropdown">
                       <button className="account-btn" id="accountToggle">
                         <i className="fa-solid fa-user"></i> Account
+                        <i className="fa-solid fa-angle-down"></i>
                       </button>
-                      <div className="account-menu" id="accountMenu">
-                        <a href="#">Sign In</a>
-                        <a href="#">Register</a>
+                      <div className="lang-menu" id="accountMenu">
+                        <Link href="/sign-in">Sign In</Link>
+                        <Link href="/register">Register</Link>
                       </div>
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -75,11 +86,12 @@ const Header: React.FC = () => {
                     className="logo logo-mobile"
                   />
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls="navbarSupportedContent" />
+                {/* Conditionally render the Navbar.Toggle to fix the hydration error */}
+                {isClient && <Navbar.Toggle aria-controls="navbarSupportedContent" />}
                 <Navbar.Collapse id="navbarSupportedContent">
                   <Nav className="ms-auto top-menu-main">
                     <Nav.Link as={Link} href="/">Home</Nav.Link>
-                    <Nav.Link href="/our-astrologers">Our Astrologers</Nav.Link>
+                    <Nav.Link as={Link} href="/our-astrologers">Our Astrologers</Nav.Link>
 
                     {/* DROPDOWN ON HOVER */}
                     <NavDropdown

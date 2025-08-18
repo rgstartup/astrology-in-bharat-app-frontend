@@ -7,10 +7,11 @@ import { Navigation, Autoplay } from "swiper/modules";
 import { products } from '@/data/homePagaData';
 
 const ProductsCarousel = () => {
+   
     return (
         <Swiper
             modules={[Navigation, Autoplay]}
-            speed={1500}
+            speed={1200}
             spaceBetween={30}
             slidesPerView={4}
             autoplay={{

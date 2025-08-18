@@ -1,0 +1,194 @@
+/* CSS For Sign In Page */
+
+:root {
+  --primary-color: #732882;
+  --secondary-color: #daa23e;
+  --black-color: black;
+  --border-color: #daa23e73;
+  --color-white: white;
+  --close-button: red;
+  --star-color: #ffc850;
+  --product-background: #ffe3b852;
+  --testimonial-bg-color: #ffcc00;
+  --background-gradient: linear-gradient(to right, #fffcf6, #fff2da);
+  --google-color: #e9f1ff;
+  --facebook-color: rgba(0, 162, 255, 0.555);
+}
+
+.signin-part {
+  background: var(--background-gradient);
+  width: 100%;
+  height: auto;
+  padding-top: 30px;
+  padding-bottom: 120px;
+  margin-bottom: -100px;
+}
+
+.banner-data {
+  padding-top: 2rem;
+}
+
+.form-data {
+  margin: 5rem 0px 0px 10rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background-color: white;
+  padding: 20px;
+}
+
+.sign-form-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5rem;
+}
+
+.sign-up {
+  text-decoration: none;
+  color: var(--secondary-color);
+}
+
+.social-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--google-color);
+  color: var(--black-color);
+  width: 50%;
+  padding: 5px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.links-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.social-button2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background: var(--facebook-color);
+  border-radius: 12px;
+  padding: 7px 30px;
+  cursor: pointer;
+}
+
+.form-email input {
+  width: 90%;
+  padding: 8px 10px;
+  border-radius: 15px;
+  border: none;
+  border: 2px solid var(--border-color);
+  margin-top: 5px;
+}
+
+.form-email input:focus {
+  border-color: #732882; /* custom border color */
+  outline: none; /* removes default black/blue outline */
+  box-shadow: 0 0 5px rgba(115, 40, 130, 0.3); /* optional glow */
+}
+
+.form-password input {
+  width: 90%;
+  padding: 8px 10px;
+  border-radius: 15px;
+  border: none;
+  border: 2px solid var(--border-color);
+  margin-top: 5px;
+}
+
+.form-password input:focus {
+  border-color: var(--primary-color); /* custom border color */
+  outline: none; /* removes default black/blue outline */
+  box-shadow: 0 0 5px rgba(115, 40, 130, 0.3);
+}
+
+.form-password {
+  flex-direction: column;
+}
+
+.form-password label,
+.form-email label {
+  font-size: 14px;
+}
+
+.forget-password {
+  display: flex;
+  justify-content: flex-end;
+  text-decoration: none;
+  align-items: end;
+  padding-top: 10px;
+  color: var(--secondary-color);
+  font-weight: 500;
+}
+
+.sign-button {
+  margin-top: 20px;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 20px;
+  background-color: var(--primary-color);
+  width: 100%;
+}
+
+.sign-button a {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+}
+
+.astrology-heading {
+  color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+}
+
+.horoscopes-items {
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+}
+
+.horoscopes-items h6 {
+  color: var(--black-color);
+  padding-top: 10px;
+}
+
+.horoscopes-items img {
+  border-radius: 50%;
+}
+
+.popular-astrology span {
+  color: var(--primary-color);
+  font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .m-hidden {
+    display: none;
+  }
+  .banner-data p {
+    display: none;
+  }
+  .social-button {
+    width: 80%;
+  }
+  .form-data {
+    position: relative;
+    right: 50%;
+    width: 100%;
+  }
+  .social-links {
+    flex-direction: column;
+  }
+  .social-button2 {
+    margin-top: 20px;
+    width: 100%;
+  }
+}
