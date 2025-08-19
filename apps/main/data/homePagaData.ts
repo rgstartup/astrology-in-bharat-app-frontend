@@ -87,7 +87,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     price: 25,
     chat: true,
     call: true,
-    video: "https://www.youtube.com/embed/INoPh_oRooU",
+    video: "https://www.youtube.com/embed/29qnXTw0qr0?si=yvrCW0my0JN_D1Yn",
     modalId: "exampleModal2",
   },
   {
@@ -186,73 +186,73 @@ interface ZodiaData {
 export const ZodiacSignsData: ZodiaData[] = [
   {
     id: 1,
-    image: "/images/icon/aries.webp",
+    image: "/images/icon/Aries.webp",
     title: "Aries",
     date: "March 21 - April 19",
   },
   {
     id: 2,
-    image: "/images/icon/taurus.webp",
+    image: "/images/icon/Taurus.webp",
     title: "Taurus",
     date: "April 20 - May 20",
   },
   {
     id: 3,
-    image: "/images/icon/gemini.webp",
+    image: "/images/icon/Gemini.webp",
     title: "Gemini",
     date: "May 21 - June 20",
   },
   {
     id: 4,
-    image: "/images/icon/cancer.webp",
+    image: "/images/icon/Cancer.webp",
     title: "Cancer",
     date: "June 21 - July 22",
   },
   {
     id: 5,
-    image: "/images/icon/leo.webp",
+    image: "/images/icon/Leo.webp",
     title: "Leo",
     date: "July 23 - August 22",
   },
   {
     id: 6,
-    image: "/images/icon/virgo.webp",
+    image: "/images/icon/Virgo.webp",
     title: "Virgo",
     date: "Aug 23 - Sept 22",
   },
   {
     id: 7,
-    image: "/images/icon/libra.webp",
+    image: "/images/icon/Libra.webp",
     title: "Libra",
     date: "September 23 - October 22",
   },
   {
     id: 8,
-    image: "/images/icon/scorpio.webp",
+    image: "/images/icon/Scorpio.webp",
     title: "Scorpio",
     date: "October 23 - November 21",
   },
   {
     id: 9,
-    image: "/images/icon/sagittarius.webp",
+    image: "/images/icon/Sagittarius.webp",
     title: "Sagittarius",
     date: "November 22 - December 21",
   },
   {
     id: 10,
-    image: "/images/icon/capricorn.webp",
+    image: "/images/icon/Capricorn.webp",
     title: "Capricorn",
     date: "December 22 - January 19",
   },
   {
     id: 11,
-    image: "/images/icon/aquarius.webp",
+    image: "/images/icon/Aquarius.webp",
     title: "Aquarius",
     date: "January 20 - February 18",
   },
   {
     id: 12,
-    image: "/images/icon/pisces.webp",
+    image: "/images/icon/Pisces.webp",
     title: "Pisces",
     date: "February 19 - March 20",
   },
@@ -411,7 +411,7 @@ export const products: ProductsData[] = [
   },
   {
     id: 4,
-    title: "Vastu Yantra",
+    title: "Vastu Yantra Bracelet",
     image: "/images/product-4.jpg",
     price: 699,
     description: "Bring harmony in your home with sacred Vastu Yantra.",
@@ -485,9 +485,6 @@ export const purpose: PurposeData[] = [
     title: "Gifting",
   },
 ];
-
-
-
 
 //  Clients Testimoinial Data
 interface TestimoinialData {
