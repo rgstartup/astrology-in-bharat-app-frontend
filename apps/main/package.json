@@ -15,9 +15,9 @@
     "@repo/eslint-config": "workspace:*",
     "react-bootstrap": "^2.10.10",
     "swiper": "^11.2.10",
-    "react": "latest",
-    "react-dom": "latest",
-    "next": "latest",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "next": "15.4.6",
     "@fortawesome/fontawesome-free": "^7.0.0",
     "bootstrap": "^5.3.7"
   },
