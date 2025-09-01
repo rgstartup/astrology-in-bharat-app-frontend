@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown, Filter, Plus } from 'lucide-react';
+import { ChevronDown,  Plus } from 'lucide-react';
 
 export const ProductsGrid: React.FC = () => {
   const products = [

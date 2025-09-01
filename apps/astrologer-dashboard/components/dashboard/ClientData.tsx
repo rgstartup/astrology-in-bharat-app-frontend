@@ -3,9 +3,6 @@
 import React, { useState, useMemo } from "react";
 import { Phone, Mail, MessageSquare, Video, Star, Search, ArrowDown, ArrowUp } from "lucide-react";
 
-// Assuming a central utility function
-const cn = (...classes: (string | undefined | null | boolean)[]) =>
-  classes.filter(Boolean).join(" ");
 
 const clientsData = [
   {
@@ -73,21 +70,13 @@ const clientsData = [
 type SortKey = "lastConsultation.date" | "payment" | null;
 
 export default function ClientsPage() {
-  const [notes, setNotes] = useState(
-    // clientsData.map((c) => ({ id: c.id, text: c.notes }))
-    clientsData.map((c) => ({ id: c.id }))
-  );
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: SortKey;
     direction: "ascending" | "descending";
   }>({ key: null, direction: "ascending" });
 
-  const handleNoteChange = (id: number, newText: string) => {
-    setNotes((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, text: newText } : n))
-    );
-  };
+
 
   const sortedAndFilteredClients = useMemo(() => {
     let sortableItems = [...clientsData];
@@ -110,6 +99,8 @@ export default function ClientsPage() {
         } else if (sortConfig.key === "payment") {
           aValue = a.payment;
           bValue = b.payment;
+          console.log("From ClientData.tsx", aValue, bValue);
+
         }
 
         // if (aValue < bValue) {
@@ -123,7 +114,7 @@ export default function ClientsPage() {
     }
 
     return sortableItems;
-  }, [clientsData, searchTerm, sortConfig]);
+  }, [searchTerm, sortConfig]);
 
   const requestSort = (key: SortKey) => {
     let direction: "ascending" | "descending" = "ascending";
@@ -193,7 +184,7 @@ export default function ClientsPage() {
                 Rating & Review
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Support
+                Expert Notes
               </th>
             </tr>
           </thead>
@@ -257,9 +248,9 @@ export default function ClientsPage() {
                 <td className="px-6 py-4">
                   <textarea
                     // value={notes.find((n) => n.id === client.id)?.text || ""}
-                    onChange={(e) =>
-                      handleNoteChange(client.id, e.target.value)
-                    }
+                    // onChange={(e) =>
+                    //   handleNoteChange(client.id, e.target.value)
+                    // }
                     className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
                     rows={2}
                     placeholder="How can we assist you..."
@@ -338,7 +329,7 @@ export default function ClientsPage() {
               <label className="block text-sm font-medium text-gray-700">Expert Notes:</label>
               <textarea
                 // value={notes.find((n) => n.id === client.id)?.text || ""}
-                onChange={(e) => handleNoteChange(client.id, e.target.value)}
+                // onChange={(e) => handleNoteChange(client.id, e.target.value)}
                 className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-yellow-500"
                 rows={3}
                 placeholder="Add private notes about this client..."

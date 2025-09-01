@@ -1,16 +1,17 @@
 'use client'
 import React, { useState } from "react";
 import { Search } from "lucide-react";
+import { cn } from "@/utils/cn";
 
-export const UserTable: React.FC = () => {
+
+export const UpcomingAppointments: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const users = [
-    { name: "Avni Pandit", email: "avni@gluxaan.com", date: "August, 2023", status: "Active" },
-    { name: "Mahesh Joshi", email: "mahesh@ioshi.com", date: "August, 2023", status: "Active" },
-    { name: "Vijay Sharma", email: "vijay@taug.com", date: "August, 2023", status: "Inactive" },
-    { name: "Yash Bhagat", email: "yash@bhagat.com", date: "August, 2023", status: "Active" },
-    { name: "Mrinalini Rai", email: "mrinalini@rai.com", date: "August, 2023", status: "Active" },
+    { name: "Avni Pandit", email: "avni@gluxaan.com", date: "Aug 20, 2025", status: "Ongoing" },
+    { name: "Mahesh Joshi", email: "mahesh@ioshi.com", date: "Aug 18, 2025", status: "Completed" },
+    { name: "Vijay Sharma", email: "vijay@taug.com", date: "Aug 15, 2025", status: "Cancelled" },
+    { name: "Yash Bhagat", email: "yash@bhagat.com", date: "Aug 12, 2025", status: "Completed" },
   ];
 
   const filteredUsers = users.filter(
@@ -22,7 +23,7 @@ export const UserTable: React.FC = () => {
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Upcoming Appointments</h3>
         <div className="flex items-center space-x-3">
           {/* Search Input */}
           <div className="relative">
@@ -45,8 +46,8 @@ export const UserTable: React.FC = () => {
               <th className="text-left py-3 px-4 font-medium text-gray-700">Name</th>
               <th className="text-left py-3 px-4 font-medium text-gray-700">Email</th>
               <th className="text-left py-3 px-4 font-medium text-gray-700">Registration Date</th>
-              {/* <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th> */}
-              <th className="text-right py-3 px-4 font-medium text-gray-700">Action</th>
+              <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
+              {/* <th className="text-right py-3 px-4 font-medium text-gray-700">Action</th> */}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -56,21 +57,23 @@ export const UserTable: React.FC = () => {
                   <td className="py-4 px-4 font-medium text-gray-900">{user.name}</td>
                   <td className="py-4 px-4 text-gray-600">{user.email}</td>
                   <td className="py-4 px-4 text-gray-600">{user.date}</td>
-                  {/* <td className="py-4 px-4">
+                  <td className="py-4 px-4">
                     <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${user.status === "Active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-600"
-                        }`}
+                      className={cn(
+                        "px-2.5 py-0.5 rounded-xl text-xs font-medium",
+                        user.status === "Ongoing" && "bg-blue-100 text-blue-800",
+                        user.status === "Completed" && "bg-green-100 text-green-800",
+                        user.status === "Cancelled" && "bg-red-100 text-red-800"
+                      )}
                     >
                       {user.status}
                     </span>
-                  </td> */}
-                  <td className="py-4 px-4 text-right">
+                  </td>
+                  {/* <td className="py-4 px-4 text-right">
                     <button className="bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-700 transition-colors">
                       View Details
                     </button>
-                  </td>
+                  </td> */}
                 </tr>
               ))
             ) : (

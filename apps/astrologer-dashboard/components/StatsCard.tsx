@@ -1,7 +1,5 @@
-import React from 'react';
+import React from 'react'
 import { TrendingUp, TrendingDown } from 'lucide-react';
-
-// Utility function to replace clsx
 const cn = (...classes: (string | undefined | null | boolean)[]) => {
   return classes.filter(Boolean).join(' ');
 };
@@ -10,20 +8,20 @@ interface StatsCardProps {
   title: string;
   value: string;
   change: string;
-  changeType: 'up' | 'down';
+  changeType: string;
   icon: React.ElementType;
   iconBg: string;
   iconColor: string;
 }
 
-export const StatsCard: React.FC<StatsCardProps> = ({ 
-  title, 
-  value, 
-  change, 
-  changeType, 
-  icon: Icon, 
-  iconBg, 
-  iconColor 
+const StatsCard: React.FC<StatsCardProps> = ({
+  title,
+  value,
+  change,
+  changeType,
+  icon: Icon,
+  iconBg,
+  iconColor
 }) => {
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200">
@@ -51,5 +49,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
+
+export default StatsCard

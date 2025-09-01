@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/utils/cn";
 import React, { useState, useMemo } from "react";
 import {
   LineChart,
@@ -14,6 +15,7 @@ import {
   Cell,
   Legend,
 } from "recharts";
+
 
 // Mock Earnings Data
 const earningsData = [
@@ -97,9 +99,9 @@ export default function EarningsPage() {
       .reduce((sum, p) => sum + parseInt(p.amount.replace('₹', '')), 0);
     const totalReceived = earningsData.reduce((sum, item) => sum + item.earnings, 0);
     return totalReceived - totalProcessed;
-  }, [payoutHistory, earningsData]);
+  }, []);
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }:any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-2 border border-gray-300 rounded shadow-md text-sm">
@@ -159,7 +161,7 @@ export default function EarningsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Earnings Chart */}
-        <div className="bg-white rounded-2xl shadow p-6 h-80">
+        <div className="bg-white rounded-2xl shadow p-6 h-80 pb-10">
           <h2 className="text-lg font-semibold mb-4">
             Earnings Overview
           </h2>
@@ -208,44 +210,42 @@ export default function EarningsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-lg p-6 mt-6 border border-gray-100">
-        <h2 className="text-xl font-bold text-gray-800 mb-6">Withdrawal History</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left border-separate border-spacing-y-2">
+      <div className="bg-white rounded-2xl shadow-xl p-8 mt-8 border border-gray-200">
+        <h2 className="text-2xl font-extrabold text-gray-900 mb-8 tracking-wide">
+          Withdrawal History
+        </h2>
+
+        <div className="overflow-x-auto rounded-lg border border-gray-200">
+          <table className="min-w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 text-gray-600 text-xs uppercase tracking-wide">
-                <th className="p-4 font-semibold rounded-l-lg">Date</th>
-                <th className="p-4 font-semibold">Amount</th>
-                <th className="p-4 font-semibold rounded-r-lg">Status</th>
+              <tr className="bg-gray-200 text-gray-700 text-xs uppercase tracking-wider">
+                <th className="p-5 font-semibold rounded-tl-lg">Date</th>
+                <th className="p-5 font-semibold">Amount</th>
+                <th className="p-5 font-semibold rounded-tr-lg">Status</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {payoutHistory.map((row, i) => (
                 <tr
                   key={i}
-                  className="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200 ease-in-out"
+                  className="hover:bg-gray-50 transition-colors duration-300"
                 >
-                  <td className="p-4 text-sm text-gray-700 bg-gray-50 rounded-l-lg">
+                  <td className="p-5 text-sm text-gray-800 font-medium  rounded-l-lg">
                     {row.date}
                   </td>
-                  <td className="p-4 text-sm text-gray-700 bg-gray-50">
+                  <td className="p-5 text-sm text-gray-700 ">
                     {row.amount}
                   </td>
-                  <td
-                    className={`p-4 text-sm font-medium bg-gray-50 rounded-r-lg ${row.status === "Processed"
-                      ? "text-green-600"
-                      : row.status === "Pending"
-                        ? "text-yellow-600"
-                        : "text-red-600"
-                      }`}
-                  >
+                  <td className="p-5 text-sm font-semibold rounded-r-lg ">
                     <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${row.status === "Processed"
-                        ? "bg-green-100"
-                        : row.status === "Pending"
-                          ? "bg-yellow-100"
-                          : "bg-red-100"
-                        }`}
+                      className={cn(
+                        "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ring-1 ring-inset",
+                        row.status === "Processed"
+                          ? "bg-green-50 text-green-700 ring-green-600"
+                          : row.status === "Pending"
+                            ? "bg-yellow-50 text-yellow-700 ring-yellow-600"
+                            : "bg-red-50 text-red-700 ring-red-600"
+                      )}
                     >
                       {row.status}
                     </span>
@@ -256,15 +256,18 @@ export default function EarningsPage() {
           </table>
         </div>
 
-        {/* Request Withdrawal */}
-        <div className="mt-8 flex justify-end">
+        {/* Request Withdrawal Button */}
+        <div className="mt-10 flex justify-end">
           <button
-            className="px-6 py-2.5 bg-yellow-600 text-white font-medium rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105"
+            className="px-8 py-3 bg-yellow-600 text-white font-semibold rounded-2xl shadow-lg hover:bg-yellow-700 focus:outline-none focus:ring-4  focus:ring-opacity-50 transform transition-all duration-300 "
+            type="button"
+            aria-label="Request Withdrawal"
           >
             Request Withdrawal
           </button>
         </div>
       </div>
+
     </div>
   );
 }

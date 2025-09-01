@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Clock,
   Video,
@@ -10,61 +10,62 @@ import {
   LayoutGrid,
   CalendarDays,
   CheckCircle,
-  XOctagon,
   ArrowUpRight,
+  Search,
+  CircleX,
 } from "lucide-react";
 import Calendar from "react-calendar";
 import { format } from "date-fns";
-
-// Utility function for classnames
-const cn = (...classes: (string | undefined | null | boolean)[]) =>
-  classes.filter(Boolean).join(" ");
-
-interface Appointment {
-  id: number;
-  name: string;
-  service: string;
-  date: string;
-  status: "confirmed" | "pending" | "cancelled";
-  type: "new" | "follow-up";
-  reminder: boolean;
-  meetingLink: string;
-}
-
-const mockAppointments: Appointment[] = [
-  {
-    id: 1,
-    name: "Dr. Sharma",
-    service: "Astrology Consultation",
-    date: "2025-08-19 10:00",
-    status: "confirmed",
-    type: "new",
-    reminder: true,
-    meetingLink: "#",
-  },
-  {
-    id: 2,
-    name: "Dr. Patel",
-    service: "Follow-up Consultation",
-    date: "2025-08-20 14:30",
-    status: "pending",
-    type: "follow-up",
-    reminder: false,
-    meetingLink: "#",
-  },
-  {
-    id: 3,
-    name: "Dr. Khan",
-    service: "Career Guidance",
-    date: "2025-08-26 16:00",
-    status: "cancelled",
-    type: "new",
-    reminder: true,
-    meetingLink: "#",
-  },
-];
+import StatsCard from "../StatsCard";
 
 export default function AppointmentsPage() {
+  // Utility function for classnames
+  const cn = (...classes: (string | undefined | null | boolean)[]) =>
+    classes.filter(Boolean).join(" ");
+
+  interface Appointment {
+    id: number;
+    name: string;
+    service: string;
+    date: string;
+    status: "confirmed" | "pending" | "cancelled";
+    type: "new" | "follow-up";
+    reminder: boolean;
+    meetingLink: string;
+  }
+
+  const mockAppointments: Appointment[] = [
+    {
+      id: 1,
+      name: "Dr. Sharma",
+      service: "Astrology Consultation",
+      date: "2025-08-19 10:00",
+      status: "confirmed",
+      type: "new",
+      reminder: true,
+      meetingLink: "#",
+    },
+    {
+      id: 2,
+      name: "Dr. Patel",
+      service: "Follow-up Consultation",
+      date: "2025-08-20 14:30",
+      status: "pending",
+      type: "follow-up",
+      reminder: false,
+      meetingLink: "#",
+    },
+    {
+      id: 3,
+      name: "Dr. Khan",
+      service: "Career Guidance",
+      date: "2025-08-26 16:00",
+      status: "cancelled",
+      type: "new",
+      reminder: true,
+      meetingLink: "#",
+    },
+  ];
   const [view, setView] = useState<"list" | "calendar">("list");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
@@ -77,6 +78,45 @@ export default function AppointmentsPage() {
     pending: "bg-yellow-100 text-yellow-600",
     cancelled: "bg-red-100 text-red-600",
   };
+
+  const statsData = [
+    {
+      title: "Total Appointments",
+      value: "32",
+      change: "+12%",
+      changeType: "up",
+      icon: CalendarDays,
+      iconBg: "bg-blue-100",
+      iconColor: "text-blue-600",
+    },
+    {
+      title: "Completed",
+      value: "20",
+      change: "+5%",
+      changeType: "up",
+      icon: CheckCircle,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
+    },
+    {
+      title: "Cancelled",
+      value: "5",
+      change: "-2%",
+      changeType: "down",
+      icon: CircleX,
+      iconBg: "bg-red-100",
+      iconColor: "text-red-600",
+    },
+    {
+      title: "Upcoming",
+      value: "7",
+      change: "+3%",
+      changeType: "up",
+      icon: ArrowUpRight,
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
+    },
+  ];
 
   const openRescheduleModal = (appt: Appointment) => {
     setSelectedAppointment(appt);
@@ -95,57 +135,36 @@ export default function AppointmentsPage() {
     setIsModalOpen(false);
   };
 
-  const formatDateWithTime = (date: Date, time: string) => {
-    if (!date) return "";
-    const dateString = format(date, "dd-MMMM-yyyy");
-    if (!time) return dateString;
-    return `${dateString} ${time}`;
-  };
-
   return (
-    <div className=" space-y-6 bg-gray-50 min-h-screen">
+    <div className="space-y-6 bg-gray-50 min-h-screen">
       {/* Stats Section */}
       <section aria-labelledby="appointment-stats-heading">
         <h2 id="appointment-stats-heading" className="sr-only">
           Appointment Statistics
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatsCard
-            title="Total Appointments"
-            value="32"
-            change="+12%"
-            changeType="up"
-            icon={CalendarDays}
-            iconBg="bg-blue-100"
-            iconColor="text-blue-600"
-          />
-          <StatsCard
-            title="Completed"
-            value="20"
-            change="+5%"
-            changeType="up"
-            icon={CheckCircle}
-            iconBg="bg-green-100"
-            iconColor="text-green-600"
-          />
-          <StatsCard
-            title="Cancelled"
-            value="5"
-            change="-2%"
-            changeType="down"
-            icon={XOctagon}
-            iconBg="bg-red-100"
-            iconColor="text-red-600"
-          />
-          <StatsCard
-            title="Upcoming"
-            value="7"
-            change="+3%"
-            changeType="up"
-            icon={ArrowUpRight}
-            iconBg="bg-purple-100"
-            iconColor="text-purple-600"
-          />
+          {statsData.map(
+            ({
+              title,
+              value,
+              change,
+              changeType,
+              icon: Icon,
+              iconBg,
+              iconColor,
+            }) => (
+              <StatsCard
+                key={title}
+                title={title}
+                value={value}
+                change={change}
+                changeType={changeType as "up" | "down"}
+                icon={Icon}
+                iconBg={iconBg}
+                iconColor={iconColor}
+              />
+            )
+          )}
         </div>
       </section>
 
@@ -156,24 +175,16 @@ export default function AppointmentsPage() {
         </h2>
 
         <div className="flex flex-col sm:flex-row flex-wrap items-center justify-between gap-4 bg-gradient-to-br from-white to-gray-50 p-5 rounded-xl shadow-lg border border-gray-200">
-
           {/* Search Input */}
           <div className="flex-1 min-w-[220px] relative">
             <input
               type="text"
               placeholder="Search by name or service..."
               className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-all"
+              aria-label="Search appointments"
             />
             <span className="absolute left-3 top-2.5 text-gray-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
-              </svg>
+              <Search size={20} />
             </span>
           </div>
 
@@ -187,9 +198,10 @@ export default function AppointmentsPage() {
               type="date"
               className="px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
             />
-
             <select
               className="px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
+              aria-label="Sort appointments"
+              defaultValue="earliest"
             >
               <option value="earliest">Sort by Time (Earliest)</option>
               <option value="latest">Sort by Time (Latest)</option>
@@ -226,10 +238,12 @@ export default function AppointmentsPage() {
         </div>
       </section>
 
-
       {/* Appointment List or Calendar */}
       {view === "list" ? (
-        <section aria-labelledby="appointment-list-heading" className="space-y-4">
+        <section
+          aria-labelledby="appointment-list-heading"
+          className="space-y-4"
+        >
           <h2 id="appointment-list-heading" className="sr-only">
             Appointment List
           </h2>
@@ -241,56 +255,66 @@ export default function AppointmentsPage() {
                 key={appt.id}
                 className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
               >
-                {/* Left Content */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{appt.name}</h3>
-                  <p className="text-sm text-gray-600">{appt.service}</p>
-
-                  <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
-                    <Clock className="w-4 h-4" />
-                    <span>
-                      {format(new Date(appt.date), "dd MMM yyyy, hh:mm a")}
-                    </span>
+                {/* Left Section: Client Info & Details */}
+                <div className="flex items-start lg:items-center gap-5 flex-1 min-w-0">
+                  {/* Avatar */}
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-600 text-white flex items-center justify-center font-bold text-2xl ring-2 ring-yellow-500">
+                    {appt.name.charAt(0)}
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2 mt-3">
-                    <span
-                      className={cn(
-                        "inline-block px-3 py-1 text-xs rounded-full font-medium shadow-sm",
-                        statusColors[appt.status]
-                      )}
-                    >
-                      {appt.status}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {appt.type === "new" ? "🆕 New" : "🔄 Follow-up"}
-                    </span>
-                    {appt.reminder && (
-                      <span className="text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-medium border border-blue-200">
-                        🔔 Reminder Sent
+                  {/* Text Content */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl md:text-xl font-bold text-gray-900 truncate">
+                      {appt.name}
+                    </h3>
+                    <p className="text-sm font-medium text-gray-600 truncate">{appt.service}</p>
+                    <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
+                      <Clock className="w-4 h-4 text-gray-400" />
+                      <span>
+                        {format(new Date(appt.date), "dd MMM yyyy 'at' hh:mm a")}
                       </span>
-                    )}
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2 mt-3">
+                      <span
+                        className={cn(
+                          "inline-block px-3 py-1 text-xs rounded-full font-medium shadow-sm capitalize border border-current",
+                          statusColors[appt.status]
+                        )}
+                      >
+                        {appt.status}
+                      </span>
+                      <span className="text-xs bg-purple-100 text-purple-600 px-3 py-1 rounded-full font-medium">
+                        {appt.type === "new" ? "🆕 New Client" : "Follow-up"}
+                      </span>
+                      {appt.reminder && (
+                        <span className="text-xs bg-blue-100 text-blue-600 px-3 py-1 rounded-full font-medium border border-blue-200">
+                          🔔 Reminder Sent
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Actions */}
-                <div className="flex gap-3 flex-shrink-0">
+                {/* Right Section: Actions */}
+                <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3 w-full lg:w-auto mt-4 lg:mt-0">
                   <a
                     href={appt.meetingLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2.5 text-sm bg-teal-600 text-white rounded-xl flex items-center gap-2 hover:bg-teal-700 shadow-sm transition-all"
+                    className="px-5 py-3 text-sm bg-yellow-600 text-white rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-yellow-700 shadow-sm transition-all w-full sm:w-auto"
                   >
-                    <Video className="w-4 h-4" /> Join
+                    <Video className="w-5 h-5" /> Join Meeting
                   </a>
                   <button
                     onClick={() => openRescheduleModal(appt)}
-                    className="px-4 py-2.5 text-sm bg-yellow-600 text-white rounded-xl flex items-center gap-2 hover:bg-yellow-700 shadow-sm transition-all"
+                    className="px-5 py-3 text-sm bg-gray-200 text-gray-800 rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-gray-300 shadow-sm transition-all w-full sm:w-auto"
                   >
-                    <RefreshCw className="w-4 h-4" /> Reschedule
+                    <RefreshCw className="w-5 h-5" /> Reschedule
                   </button>
-                  <button className="px-4 py-2.5 text-sm bg-red-600 text-white rounded-xl flex items-center gap-2 hover:bg-red-700 shadow-sm transition-all">
-                    <XCircle className="w-4 h-4" /> Cancel
+                  <button
+                    className="px-5 py-3 text-sm bg-red-600 text-white rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-red-700 shadow-sm transition-all w-full sm:w-auto"
+                  >
+                    <XCircle className="w-5 h-5" /> Cancel
                   </button>
                 </div>
               </div>
@@ -365,7 +389,8 @@ export default function AppointmentsPage() {
             className="w-full"
             tileContent={({ date }) => {
               const dayAppointments = mockAppointments.filter(
-                (appt) => new Date(appt.date).toDateString() === date.toDateString()
+                (appt) =>
+                  new Date(appt.date).toDateString() === date.toDateString()
               );
               return (
                 <div>
@@ -380,7 +405,6 @@ export default function AppointmentsPage() {
           />
         </div>
       )}
-
 
       {/* Reschedule Modal */}
       {isModalOpen && selectedAppointment && (
@@ -480,55 +504,6 @@ export default function AppointmentsPage() {
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-// StatsCard component unchanged
-function StatsCard({
-  title,
-  value,
-  change,
-  changeType,
-  icon: Icon,
-  iconBg,
-  iconColor,
-}: {
-  title: string;
-  value: string;
-  change: string;
-  changeType: "up" | "down";
-  icon: React.ElementType;
-  iconBg: string;
-  iconColor: string;
-}) {
-  return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 mb-2">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 mb-2">{value}</p>
-          <div className="flex items-center space-x-1">
-            {changeType === "up" ? (
-              <ArrowUpRight className="w-4 h-4 text-green-500" />
-            ) : (
-              <ArrowUpRight className="w-4 h-4 text-red-500 rotate-180" />
-            )}
-            <span
-              className={cn(
-                "text-sm font-medium",
-                changeType === "up" ? "text-green-600" : "text-red-600"
-              )}
-            >
-              {change}
-            </span>
-            <span className="text-sm text-gray-500">last week</span>
-          </div>
-        </div>
-        <div className={cn("p-3 rounded-lg", iconBg)}>
-          <Icon className={cn("w-6 h-6", iconColor)} />
-        </div>
-      </div>
     </div>
   );
 }

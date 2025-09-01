@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FiSearch, FiBell, FiMenu, FiUser } from "react-icons/fi";
+import React, { useState, useRef } from "react";
+import { FiSearch, FiBell, FiMenu } from "react-icons/fi";
 import Link from "next/link";
 
 interface HeaderProps {
@@ -9,6 +9,10 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
+  // Track whether mouse is on icon or on popup
+  const isHoveringIcon = useRef(false);
+  const isHoveringPopup = useRef(false);
+
   // Sample notifications data
   const notifications = [
     { id: 1, message: "New user registered", time: "2m ago" },
@@ -16,8 +20,11 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
     { id: 3, message: "Task assigned to you", time: "1h ago" },
   ];
 
-  const toggleNotifications = () => {
-    setIsNotificationOpen(!isNotificationOpen);
+  const checkClosePopup = () => {
+    // Close only if mouse on neither icon nor popup
+    if (!isHoveringIcon.current && !isHoveringPopup.current) {
+      setIsNotificationOpen(false);
+    }
   };
 
   return (
@@ -55,9 +62,19 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
             {/* Notifications & User Profile */}
             <div className="flex items-center space-x-2">
               {/* Notifications Button */}
-              <div className="relative">
+              <div
+                className="relative"
+                onMouseEnter={() => {
+                  isHoveringIcon.current = true;
+                  setIsNotificationOpen(true);
+                }}
+                onMouseLeave={() => {
+                  isHoveringIcon.current = false;
+                  // Delay slightly to allow move to popup
+                  setTimeout(checkClosePopup, 100);
+                }}
+              >
                 <button
-                  onClick={toggleNotifications}
                   className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200"
                   aria-label="Notifications"
                 >
@@ -69,7 +86,18 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
                 {/* Notification Popup */}
                 {isNotificationOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                  <div
+                    className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
+                    onMouseEnter={() => {
+                      isHoveringPopup.current = true;
+                      setIsNotificationOpen(true);
+                    }}
+                    onMouseLeave={() => {
+                      isHoveringPopup.current = false;
+                      // Delay slightly to allow move back to icon
+                      setTimeout(checkClosePopup, 100);
+                    }}
+                  >
                     <div className="p-4">
                       <h3 className="text-sm font-semibold text-gray-800 mb-2">
                         Notifications
@@ -93,7 +121,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
                       )}
                       <div className="mt-3">
                         <Link
-                          href="/notifications"
+                          href="/dashboard/notifications"
                           className="text-sm text-yellow-600 hover:text-yellow-700 font-medium"
                           onClick={() => setIsNotificationOpen(false)}
                         >
@@ -112,13 +140,13 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
             className="p-0 hover:bg-gray-100 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100"
             aria-label="User Menu"
           >
-            {/* <FiUser className="w-5 h-5 text-gray-600" /> */}
-            <Link href="/dashboard/profilemanagement">  <img
-              src="/images/profile.jpg"
-              alt="Profile"
-              className="w-10 h-10 text-gray-600 object-cover rounded-full border-2 border-yellow-500 shadow-md bg-top
-                "
-            /></Link>
+            <Link href="/dashboard/profilemanagement">
+              <img
+                src="/images/profile.jpg"
+                alt="Profile"
+                className="w-10 h-10 text-gray-600 object-cover rounded-full border-2 border-yellow-500 shadow-md bg-top"
+              />
+            </Link>
           </button>
         </div>
       </div>

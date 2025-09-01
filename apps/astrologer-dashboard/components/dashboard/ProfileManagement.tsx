@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { User, Clock, Award, Upload, CreditCard, Edit3, Save, XCircle, ChevronRight } from "lucide-react";
+import { User, Clock, Award, Upload, CreditCard, Edit3, Save,  ChevronRight } from "lucide-react";
 
-// Assuming a central utility function
-const cn = (...classes: (string | undefined | null | boolean)[]) =>
-  classes.filter(Boolean).join(" ");
+
 
 const ProfileManagement = () => {
   const [profile, setProfile] = useState({

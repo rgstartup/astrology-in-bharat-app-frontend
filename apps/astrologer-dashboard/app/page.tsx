@@ -1,14 +1,9 @@
-"use client";
-
 import React from "react";
 import Head from "next/head";
 import { Lock, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-// Utility function to combine classes
-const cn = (...classes: (string | undefined | null | boolean)[]) =>
-    classes.filter(Boolean).join(" ");
 
 const LoginPage: React.FC = () => {
     return (
