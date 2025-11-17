@@ -1,339 +1,400 @@
-
-// import Image from 'next/image'
-// import Link from 'next/link'
-// import React from 'react'
-
-
-// const page = () => {
-//     return (
-//         <section className="signin-part">
-//             <div className="container">
-//                 <div className="row">
-//                     <div className="col-lg-5">
-
-//                         <div className="banner-data">
-//                             <h3>
-//                                 <span style={{ color: 'var(--secondary-color)' }}>Sign In</span> to
-//                                 <br />
-//                                 <span style={{ color: 'var(--primary-color)' }}>
-//                                     Astrology Bharat
-//                                 </span>
-//                             </h3>
-//                             <p>
-//                                 Join us and unlock personalized astrology insights just for you.
-//                                 <br />
-//                                 Create your free account in seconds and start your journey
-//                                 today!
-//                             </p>
-//                         </div>
-//                         <div className="popular-astrology m-hidden pt-2">
-//                             <h3 className="astrology-heading">Popular Astrology</h3>
-//                             <div className="row pt-3">
-//                                 <div className="col-lg-4 col-sm-6 col-md-4 col-6">
-//                                     <div className="horoscopes-link">
-//                                         <div className="horoscopes-items">
-//                                             <Image
-//                                                 src="/images/astro-img1.png"
-//                                                 alt="Popular Astrology"
-//                                                 height={80}
-//                                                 width={80}
-//                                             />
-//                                             <h6>Aries</h6>
-//                                             <small style={{ fontSize: '15px' }}>Vastu, Vedic</small>
-//                                         </div>
-//                                     </div>
-//                                 </div>
-
-//                                 <div className="col-lg-4 col-sm-6 col-md-4 col-6">
-//                                     <div>
-//                                         <div className="horoscopes-items">
-//                                             <Image
-//                                                 src="/images/astro-img1.png"
-//                                                 alt="Popular Astrology"
-//                                                 height={80}
-//                                                 width={80}
-//                                             />
-//                                             <h6>Tarus</h6>
-//                                             <small style={{ fontSize: '12px' }}>Vastu, Vedic</small>
-//                                         </div>
-//                                     </div>
-//                                 </div>
-
-//                                 <div className="col-lg-4 col-sm-6 col-md-4 col-6">
-//                                     <div>
-//                                         <div className="horoscopes-items">
-//                                             <Image
-//                                                 src="/images/astro-img1.png"
-//                                                 alt="Popular Astrology"
-//                                                 height={80}
-//                                                 width={80}
-//                                             />
-//                                             <h6>Tarus</h6>
-//                                             <small style={{ fontSize: '12px' }}>Vedic, Vastu</small>
-//                                         </div>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                     <div className="col-lg-6 col-sm-12">
-//                         <div className="form-data">
-//                             <div className="sign-form-heading">
-//                                 <h6>
-//                                     Welcome to <br />
-//                                     <span style={{ color: 'var(--primary-color)' }}>
-//                                         Astrology Bharat
-//                                     </span>
-//                                 </h6>
-//                                 <h6>
-//                                     No Account <br />
-//                                     <Link href="#" className="sign-up">Sign Up</Link>
-//                                 </h6>
-//                             </div>
-//                             <div className="sign-in-heading">
-//                                 <h2 style={{ color: 'var(--primary-color)' }}>Sign In</h2>
-//                             </div>
-//                             <div className="social-links d-flex pt-3">
-//                                 <div className="social-button">
-//                                     <Image
-//                                         src="/images/google-color-svgrepo-com.svg"
-//                                         alt=""
-//                                         height={25}
-//                                         width={25}
-//                                     />
-//                                     <small>Sign In Google</small>
-//                                 </div>
-//                                 <div className="links-images">
-//                                     <div className="social-button2">
-//                                         <Image
-//                                             src="/images/facebook-1-svgrepo-com.svg"
-//                                             alt=""
-//                                             height={30}
-//                                             width={30}
-//                                         />
-//                                         <small>Facebook</small>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             <div className="form-email mt-4">
-//                                 <label htmlFor="email">Enter your username or email address</label>
-//                                 <input
-//                                     type="email"
-//                                     name="email"
-//                                     id="email"
-//                                     placeholder="Username or email address"
-//                                 />
-//                             </div>
-//                             <div className="form-password mt-4">
-//                                 <label htmlFor="password">Enter Your Password Here</label>
-//                                 <input
-//                                     type="password"
-//                                     name="password"
-//                                     id="password"
-//                                     placeholder="Enter Password"
-//                                 />
-//                             </div>
-//                             <Link href="#" className="forget-password">
-//                                 Forget Password
-//                             </Link>
-//                             <button className="sign-button">
-//                                 <Link href="#">Sign In</Link>
-//                             </button>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </section>
-//     )
-// }
-
-// export default page
-
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState, useCallback, FormEvent } from "react";
+import axios, { AxiosError } from "axios";
 
-const Page = () => {
-    return (
-        <section className="signin-part">
-            <div className="container">
-                <div className="row">
-                    {/* Left Side */}
-                    <div className="col-lg-5">
-                        <div className="banner-data">
-                            <h3>
-                                <span style={{ color: "var(--secondary-color)" }}>Sign Up</span>{" "}
-                                to
-                                <br />
-                                <span style={{ color: "var(--primary-color)" }}>
-                                    Astrology Bharat
-                                </span>
-                            </h3>
-                            <p className="text-muted">
-                                Join us and unlock personalized astrology insights just for you.
-                                <br />
-                                Create your free account in seconds and start your journey
-                                today!
-                            </p>
-                        </div>
+// --- 1. Define Typescript Interfaces for Type Safety ---
 
-                        {/* Popular Astrology Section */}
-                        <div className="popular-astrology m-hidden pt-3">
-                            <h3 className="text-left text-purple mb-3">Popular Astrology</h3>
-                            <div className="row g-3">
-                                {[
-                                    { name: "Aries", desc: "Vastu, Vedic" },
-                                    { name: "Tarus", desc: "Vastu, Vedic" },
-                                    { name: "Tarus", desc: "Vedic, Vastu" },
-                                ].map((item, idx) => (
-                                    <div className="col-lg-4 col-sm-6 col-md-4 col-6" key={idx}>
-                                        <div className="horoscopes-items text-center">
-                                            <Image
-                                                src="/images/astro-img1.png"
-                                                alt="Popular Astrology"
-                                                height={80}
-                                                width={80}
-                                            />
-                                            <h6 className="fw-bold mt-2">{item.name}</h6>
-                                            <small className="text-muted" style={{ fontSize: "13px" }}>
-                                                {item.desc}
-                                            </small>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+/** The shape of the data sent to the server (request body). */
+interface RegistrationPayload {
+  name: string;
+  email: string;
+  password: string;
+}
 
-                    {/* Right Side - Sign In Form */}
-                    <div className="col-lg-7 col-sm-12 ms-auto">
-                        <div className="form-data shadow-sm p-4 rounded-xl bg-white">
-                            {/* Heading */}
-                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                <h6 className="mb-0">
-                                    Welcome to <br />
-                                    <span style={{ color: "var(--primary-color)" }}>
-                                        Astrology Bharat
-                                    </span>
-                                </h6>
-                                <h6 className="mb-0">
-                                    Already Account? <br />
-                                    <Link href="#" className="sign-up fw-bold">
-                                        Sign In
-                                    </Link>
-                                </h6>
-                            </div>
+/** The shape of the expected successful server response. */
+interface RegistrationSuccessResponse {
+  message: string;
+  // Add other relevant fields you expect from the server
+}
 
-                            <div className="sign-in-heading mb-4">
-                                <h2 style={{ color: "var(--primary-color)" }}>Sign Up</h2>
-                            </div>
+/** The shape of the data managed in the component state (all form fields). */
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
-                            {/* Social Login */}
-                            <div className="social-links d-flex gap-3 mb-4">
-                                <div className="social-button d-flex align-items-center gap-2 border px-3 py-2 rounded">
-                                    <Image
-                                        src="/images/google-color-svgrepo-com.svg"
-                                        alt="Google"
-                                        height={22}
-                                        width={22}
-                                    />
-                                    <small>Sign in with Google</small>
-                                </div>
-                                <div className="social-button2 d-flex align-items-center gap-2 border px-3 py-2 rounded">
-                                    <Image
-                                        src="/images/facebook-1-svgrepo-com.svg"
-                                        alt="Facebook"
-                                        height={22}
-                                        width={22}
-                                    />
-                                    <small>Facebook</small>
-                                </div>
-                            </div>
+// --- API Endpoint Constant ---
+const API_ENDPOINT = "http://localhost:4000/api/v1/auth/email/register";
 
-                            <form>
-                                <div className="row g-3">
-                                    <div className="col-md-6">
-                                        <label htmlFor="firstName" className="form-label fw-semibold">
-                                            First Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="firstName"
-                                            name="firstName"
-                                            className="form-control"
-                                            placeholder="Enter First Name"
-                                        />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <label htmlFor="lastName" className="form-label fw-semibold">
-                                            Last Name (Optional)
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="lastName"
-                                            name="lastName"
-                                            className="form-control"
-                                            placeholder="Enter Last Name"
-                                        />
-                                    </div>
-                                    <div className="col-12">
-                                        <label htmlFor="email" className="form-label fw-semibold">
-                                            Email Address
-                                        </label>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            name="email"
-                                            className="form-control"
-                                            placeholder="Enter Email Address"
-                                        />
-                                    </div>
-                                    <div className="col-12">
-                                        <label htmlFor="password" className="form-label fw-semibold">
-                                            Password
-                                        </label>
-                                        <input
-                                            type="password"
-                                            id="password"
-                                            name="password"
-                                            className="form-control"
-                                            placeholder="Enter Password"
-                                        />
-                                    </div>
-                                    <div className="col-12">
-                                        <label htmlFor="confirmPassword" className="form-label fw-semibold">
-                                            Confirm Password
-                                        </label>
-                                        <input
-                                            type="password"
-                                            id="confirmPassword"
-                                            name="confirmPassword"
-                                            className="form-control"
-                                            placeholder="Confirm Password"
-                                        />
-                                    </div>
-                                </div>
+const Page: React.FC = () => {
+  // --- 2. State Management ---
+  const [formData, setFormData] = useState<FormData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-                                <button type="submit" className="btn  w-100 mt-4 py-2 fw-semibold sign-button w-100 btn btn-primary">
-                                    Sign Up
-                                </button>
-                            </form>
+  // --- Handlers ---
 
-                            {/* Forget password */}
-                            {/* <div className="d-flex justify-content-end mb-3">
-                                <Link href="#" className="forget-password text-decoration-none">
-                                    Forget Password?
-                                </Link>
-                            </div> */}
+  // Input Change Handler (Uses useCallback for performance)
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    },
+    []
+  );
 
+  // Form Validation Logic
+  const validateForm = (): boolean => {
+    setError(null);
+    setSuccessMessage(null);
 
-                        </div>
-                    </div>
-                </div>
+    if (
+      !formData.firstName ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
+      setError("All fields marked * are required.");
+      console.error("Validation Error: Missing required field.");
+      return false;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      console.error("Validation Error: Password too short.");
+      return false;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Password and Confirm Password do not match.");
+      console.error("Validation Error: Passwords do not match.");
+      return false;
+    }
+
+    return true;
+  };
+
+  // 3. Form Submission Handler with API Call and Error Handling
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+    const payload: RegistrationPayload = {
+      name: fullName,
+      email: formData.email,
+      password: formData.password,
+    };
+
+    console.log("API Request Start. Endpoint:", API_ENDPOINT);
+    console.log("Request Payload (Body):", payload);
+
+    try {
+      const response = await axios.post<RegistrationSuccessResponse>(
+        API_ENDPOINT,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("API Request Success. Status:", response.status);
+      console.log("Server Response Data:", response.data);
+
+      setSuccessMessage(
+        response.data.message || "Registration successful! You can now sign in."
+      );
+
+      // Clear passwords for security
+      setFormData((prev) => ({ ...prev, password: "", confirmPassword: "" }));
+    } catch (err) {
+      const error = err as AxiosError;
+      console.error("API Request Failed. Error object:", error);
+
+      if (error.response) {
+        const status = error.response.status;
+        const serverMessage =
+          (error.response.data as any)?.message ||
+          (error.response.data as any)?.error ||
+          `Server responded with status ${status}.`;
+
+        console.error(
+          `Server Error Details: Status ${status}. Message: ${serverMessage}`
+        );
+
+        if (status === 400 || status === 409) {
+          setError(`Error: ${serverMessage}`);
+        } else if (status >= 500) {
+          setError("A critical server error occurred. Please try again later.");
+        } else {
+          setError(`Registration failed: ${serverMessage}`);
+        }
+      } else if (error.request) {
+        setError(
+          "Network Error: Could not reach the server. Please check your connection."
+        );
+        console.error("Network Error: No response received from server.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+        console.error("Request Setup Error:", error.message);
+      }
+    } finally {
+      setIsLoading(false);
+      console.log("API Request Finished.");
+    }
+  };
+
+  // --- Render ---
+
+  return (
+    <section className="signin-part">
+      <div className="container">
+        <div className="row">
+          {/* Left Side: Branding and Astrology Info */}
+          <div className="col-lg-5">
+            <div className="banner-data">
+              <h3>
+                {/* Use consistent color variables */}
+                <span style={{ color: "var(--secondary-color)" }}>
+                  Sign Up
+                </span>{" "}
+                to
+                <br />
+                <span style={{ color: "var(--primary-color)" }}>
+                  Astrology Bharat
+                </span>
+              </h3>
+              <p className="text-muted">
+                Join us and unlock personalized astrology insights just for you.
+                <br />
+                Create your free account in seconds and start your journey
+                today!
+              </p>
             </div>
-        </section>
-    );
+
+            {/* Popular Astrology Section */}
+            <div className="popular-astrology m-hidden pt-3">
+              <h3 className="text-left text-purple mb-3">Popular Astrology</h3>
+              <div className="row g-3">
+                {[
+                  { name: "Aries", desc: "Vastu, Vedic" },
+                  { name: "Tarus", desc: "Vastu, Vedic" },
+                  { name: "Tarus", desc: "Vedic, Vastu" },
+                ].map((item, idx) => (
+                  <div className="col-lg-4 col-sm-6 col-md-4 col-6" key={idx}>
+                    <div className="horoscopes-items text-center">
+                      <Image
+                        src="/images/astro-img1.png"
+                        alt="Popular Astrology"
+                        height={80}
+                        width={80}
+                      />
+                      <h6 className="fw-bold mt-2">{item.name}</h6>
+                      <small
+                        className="text-muted"
+                        style={{ fontSize: "13px" }}
+                      >
+                        {item.desc}
+                      </small>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side: Registration Form */}
+          <div className="col-lg-7 col-sm-12 ms-auto">
+            <div className="form-data shadow-sm p-4 rounded-xl bg-white">
+              {/* Header */}
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h6 className="mb-0">
+                  Welcome to <br />
+                  <span style={{ color: "var(--primary-color)" }}>
+                    Astrology Bharat
+                  </span>
+                </h6>
+                <h6 className="mb-0">
+                  Already Account? <br />
+                  <Link href="#" className="sign-up fw-bold">
+                    Sign In
+                  </Link>
+                </h6>
+              </div>
+
+              <div className="sign-in-heading mb-4">
+                <h2 style={{ color: "var(--primary-color)" }}>Sign Up</h2>
+              </div>
+
+              {/* Social Login */}
+              <div className="social-links d-flex gap-3 mb-4">
+                <div className="social-button d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
+                  <Image
+                    src="/images/google-color-svgrepo-com.svg"
+                    alt="Google"
+                    height={22}
+                    width={22}
+                  />
+                  <small>Sign in with Google</small>
+                </div>
+                <div className="social-button2 d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
+                  <Image
+                    src="/images/facebook-1-svgrepo-com.svg"
+                    alt="Facebook"
+                    height={22}
+                    width={22}
+                  />
+                  <small>Facebook</small>
+                </div>
+              </div>
+
+              {/* Status Messages for Error/Success - Use Bootstrap Alert Classes */}
+              {error && (
+                <div className="alert alert-danger mb-3" role="alert">
+                  <b>Error:</b> {error}
+                </div>
+              )}
+              {successMessage && (
+                <div className="alert alert-success mb-3" role="alert">
+                  <b>Success:</b> {successMessage}
+                </div>
+              )}
+
+              {/* Registration Form */}
+              <form onSubmit={handleSubmit}>
+                <div className="row g-3">
+                  {/* First Name */}
+                  <div className="col-md-6">
+                    <label
+                      htmlFor="firstName"
+                      className="form-label fw-semibold"
+                    >
+                      First Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      className="form-control"
+                      placeholder="Enter First Name"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  {/* Last Name */}
+                  <div className="col-md-6">
+                    <label
+                      htmlFor="lastName"
+                      className="form-label fw-semibold"
+                    >
+                      Last Name (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      className="form-control"
+                      placeholder="Enter Last Name"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  {/* Email Address */}
+                  <div className="col-12">
+                    <label htmlFor="email" className="form-label fw-semibold">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="form-control"
+                      placeholder="Enter Email Address"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  {/* Password */}
+                  <div className="col-12">
+                    <label
+                      htmlFor="password"
+                      className="form-label fw-semibold"
+                    >
+                      Password *
+                    </label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      className="form-control"
+                      placeholder="Enter Password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  {/* Confirm Password */}
+                  <div className="col-12">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="form-label fw-semibold"
+                    >
+                      Confirm Password *
+                    </label>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      className="form-control"
+                      placeholder="Confirm Password"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Sign Up Button */}
+                <button
+                  type="submit"
+                  // Consolidated and simplified class names
+                  className="btn btn-primary w-100 mt-4 py-2 fw-semibold sign-button"
+                  disabled={isLoading} // Disabled during API call
+                >
+                  {isLoading ? "Signing Up..." : "Sign Up"}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default Page;
