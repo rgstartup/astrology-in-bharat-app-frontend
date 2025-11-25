@@ -118,6 +118,7 @@ const Page: React.FC = () => {
           headers: {
             "Content-Type": "application/json",
           },
+           withCredentials: true, 
         }
       );
 

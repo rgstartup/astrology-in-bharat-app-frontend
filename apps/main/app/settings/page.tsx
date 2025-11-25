@@ -1,23 +1,117 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function ClientSettingsPage() {
+  const API = "http://localhost:4000/api/v1/client/profile";
+
   const [preview, setPreview] = useState("");
   const [status, setStatus] = useState("");
 
   const [formData, setFormData] = useState({
-    full_name: "New Name",
-    email: "client@example.com",
-    phone: "9876543210",
-    date_of_birth: "1990-01-01",
-    language: "English",
-    preferences: "Astrology",
+    full_name: "",
+    email: "",
+    date_of_birth: "",
+    gender: "",
+    phone: "",
+    preferences: "",
+    language_preference: "",
+    addresses: [
+      {
+        street: "",
+        city: "",
+        state: "",
+        postal_code: "",
+        country: "",
+        tag: "",
+      },
+    ],
   });
 
+  function convertIsoToDisplayDate(isoDateString) {
+    // 1. Create a Date object from the ISO string
+    const date = new Date(isoDateString);
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      return "Invalid Date";
+    }
+
+    // 2. Define formatting options
+    const options = {
+      day: "numeric", // Day of the month (e.g., 15)
+      month: "long", // Full month name (e.g., August)
+      year: "numeric", // Full year (e.g., 1995)
+      timeZone: "UTC", // Ensures the date is interpreted as UTC to avoid local timezone shifting the date
+    };
+
+    // 3. Format the date using Intl.DateTimeFormat
+    // 'en-US' locale is used for standard English names (e.g., "December")
+    const formatter = new Intl.DateTimeFormat("en-US", options);
+
+    return formatter.format(date);
+  }
+  // ------------------------------------
+  // GET PROFILE DATA ON PAGE LOAD
+  // ------------------------------------
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get(API, {
+          withCredentials: true, // ALWAYS IMPORTANT FOR COOKIES
+        });
+
+        const data = res.data;
+        console.log(data);
+
+        setFormData({
+          full_name: data.user.name || "",
+          email: data.user.email || "",
+          date_of_birth: data.date_of_birth || "",
+          gender: data.gender || "",
+          phone: data.phone || "",
+          preferences: data.preferences || "",
+          language_preference: data.language_preference || "",
+          addresses: data.addresses?.length
+            ? data.addresses
+            : [
+                {
+                  street: "",
+                  city: "",
+                  state: "",
+                  postal_code: "",
+                  country: "",
+                  tag: "",
+                },
+              ],
+        });
+      } catch (err) {
+        console.log("Error fetching profile:", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // ------------------------------------
+  // HANDLE GENERAL INPUT CHANGE
+  // ------------------------------------
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // ------------------------------------
+  // HANDLE ADDRESS CHANGE
+  // ------------------------------------
+  const handleAddressChange = (e: any, index: number) => {
+    const updated = [...formData.addresses];
+    updated[index][e.target.name] = e.target.value;
+    setFormData({ ...formData, addresses: updated });
+  };
+
+  // ------------------------------------
+  // IMAGE PREVIEW
+  // ------------------------------------
   const handleImage = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -27,10 +121,23 @@ export default function ClientSettingsPage() {
     }
   };
 
-  const handleSubmit = (e: any) => {
+  // ------------------------------------
+  // PATCH REQUEST – UPDATE PROFILE
+  // ------------------------------------
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setStatus("Saving...");
-    setTimeout(() => setStatus("Saved Successfully!"), 1200);
+
+    try {
+      await axios.patch(API, formData, {
+        withCredentials: true,
+      });
+
+      setStatus("Saved Successfully!");
+    } catch (err) {
+      console.log("Update failed:", err);
+      setStatus("Update Failed!");
+    }
   };
 
   return (
@@ -67,13 +174,14 @@ export default function ClientSettingsPage() {
               </div>
 
               <div className="profile-text">
-                <h3>{formData.full_name}</h3>
+                <h3>{formData.full_name || "Loading..."}</h3>
                 <span>Update your personal information</span>
               </div>
             </div>
 
             {/* -------- FORM -------- */}
             <form onSubmit={handleSubmit} className="profile-form">
+              {/* FULL NAME */}
               <div className="form-group">
                 <label>Full Name</label>
                 <input
@@ -84,6 +192,7 @@ export default function ClientSettingsPage() {
                 />
               </div>
 
+              {/* EMAIL */}
               <div className="form-group">
                 <label>Email Address</label>
                 <input
@@ -94,6 +203,7 @@ export default function ClientSettingsPage() {
                 />
               </div>
 
+              {/* PHONE */}
               <div className="form-group">
                 <label>Phone Number</label>
                 <input
@@ -104,26 +214,40 @@ export default function ClientSettingsPage() {
                 />
               </div>
 
+              {/* DOB */}
               <div className="form-group">
                 <label>Date of Birth</label>
                 <input
                   type="date"
                   name="date_of_birth"
-                  value={formData.date_of_birth}
+                  value={convertIsoToDisplayDate(formData.date_of_birth)}
                   onChange={handleChange}
                 />
               </div>
 
+              {/* GENDER */}
+              <div className="form-group">
+                <label>Gender</label>
+                <input
+                  type="text"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                />
+              </div>
+
+              {/* LANGUAGE */}
               <div className="form-group">
                 <label>Language Preference</label>
                 <input
                   type="text"
-                  name="language"
-                  value={formData.language}
+                  name="language_preference"
+                  value={formData.language_preference}
                   onChange={handleChange}
                 />
               </div>
 
+              {/* PREFERENCES */}
               <div className="form-group">
                 <label>Astrology Preferences</label>
                 <textarea
@@ -134,7 +258,67 @@ export default function ClientSettingsPage() {
                 ></textarea>
               </div>
 
-              {/* -------- BUTTONS -------- */}
+              {/* ADDRESS BLOCK */}
+              <h4 style={{ marginTop: "20px" }}>Address</h4>
+              {formData.addresses.map((addr, index) => (
+                <div key={index} className="address-section">
+                  <div className="form-group">
+                    <label>Street</label>
+                    <input
+                      name="street"
+                      value={addr.street}
+                      onChange={(e) => handleAddressChange(e, index)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>City</label>
+                    <input
+                      name="city"
+                      value={addr.city}
+                      onChange={(e) => handleAddressChange(e, index)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>State</label>
+                    <input
+                      name="state"
+                      value={addr.state}
+                      onChange={(e) => handleAddressChange(e, index)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Postal Code</label>
+                    <input
+                      name="postal_code"
+                      value={addr.postal_code}
+                      onChange={(e) => handleAddressChange(e, index)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Country</label>
+                    <input
+                      name="country"
+                      value={addr.country}
+                      onChange={(e) => handleAddressChange(e, index)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Tag</label>
+                    <input
+                      name="tag"
+                      value={addr.tag}
+                      onChange={(e) => handleAddressChange(e, index)}
+                    />
+                  </div>
+                </div>
+              ))}
+
+              {/* BUTTONS */}
               <div className="form-actions">
                 <button type="button" className="cancel-btn">
                   Cancel
