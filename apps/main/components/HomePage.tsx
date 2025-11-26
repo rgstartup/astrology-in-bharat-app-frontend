@@ -101,7 +101,7 @@ const HomePage: React.FC = () => {
           <div className="search-box">
             <input
               type="text"
-              placeholder="Search Astrologer, Type, Language..."
+              placeholder="Search Astrologer By Name..."
             />
             <button>Search</button>
           </div>
@@ -126,7 +126,7 @@ const HomePage: React.FC = () => {
                         <i className="fa-solid fa-circle-play"></i>
                       </span>
                     </div>
-                    <div className="rating-star">★★★★★</div>
+                    <div className="rating-star">★★★</div>
                     <div className="astro-name">{item.name}</div>
                     <div className="astro-tags">{item.expertise}</div>
                     <div className="astro-info">
