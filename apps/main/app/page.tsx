@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import {
   AstrologyServicesData,
   ClientsTestimoinialData,
@@ -12,6 +13,7 @@ import SearchBar from "@/components/SearchBar";
 import ProductsCarousel from "@/components/ProductsCarousel";
 import FilterModal from "@/components/FilterModal";
 import SortModal from "@/components/SortModal";
+import CompleteProfileModal from "@/components/CompleteProfileModal";
 
 interface FilterState {
   location: string;
@@ -22,8 +24,10 @@ interface FilterState {
 }
 
 const Page: React.FC = () => {
+  const pathname = usePathname();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const [showCompleteProfile, setShowCompleteProfile] = useState(false);
   const [experts, setExperts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -101,6 +105,42 @@ const Page: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Check if user should see the complete profile modal
+  useEffect(() => {
+    // Only show on the root route "/"
+    if (pathname === "/") {
+      // Check if modal was already shown (stored in localStorage)
+      const hasSeenModal = localStorage.getItem("completeProfileModalShown");
+      
+      if (!hasSeenModal) {
+        // Set a timeout to show the modal after 10 seconds
+        const timer = setTimeout(() => {
+          setShowCompleteProfile(true);
+        }, 10000); // 10 seconds
+
+        // Cleanup timer on unmount or pathname change
+        return () => clearTimeout(timer);
+      }
+    } else {
+      // Reset state when navigating away
+      setShowCompleteProfile(false);
+    }
+  }, [pathname]);
+
+  // Handle modal close
+  const handleCloseCompleteProfile = () => {
+    setShowCompleteProfile(false);
+    // Mark as shown so it doesn't appear again
+    localStorage.setItem("completeProfileModalShown", "true");
+  };
+
+  // Handle skip button
+  const handleSkipCompleteProfile = () => {
+    setShowCompleteProfile(false);
+    // Mark as shown so it doesn't appear again
+    localStorage.setItem("completeProfileModalShown", "true");
   };
 
   React.useEffect(() => {
@@ -534,7 +574,7 @@ const Page: React.FC = () => {
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="rounded-circle border border-3 border-warning shadow"
+                        className="rounded-circle  border-3 border-warning shadow"
                         style={{
                           width: "120px",
                           height: "120px",
@@ -619,6 +659,13 @@ const Page: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Complete Profile Modal */}
+      <CompleteProfileModal
+        isOpen={showCompleteProfile}
+        onClose={handleCloseCompleteProfile}
+        onSkip={handleSkipCompleteProfile}
+      />
     </>
   );
 };
