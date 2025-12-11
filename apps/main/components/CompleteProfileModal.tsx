@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, FormEvent } from "react";
 import axios, { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 interface AddressDto {
   line1: string;
@@ -30,6 +31,7 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
   onClose,
   onSkip,
 }) => {
+  const router = useRouter();
   const API_ENDPOINT = "http://localhost:4000/api/v1/client/profile";
 
   const [formData, setFormData] = useState<ProfileFormData>({
@@ -52,7 +54,9 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
 
   // Handle main form field changes
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -69,19 +73,25 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
     index: number
   ) => {
     const { name, value, type, checked } = e.target;
-    const updatedAddresses = [...(formData.addresses || [])];
-    
-    if (type === "checkbox") {
+
+    const updatedAddresses: AddressDto[] = [...(formData.addresses || [])];
+
+    // Ensure the index exists
+    if (!updatedAddresses[index]) {
       updatedAddresses[index] = {
-        ...updatedAddresses[index],
-        [name]: checked,
-      };
-    } else {
-      updatedAddresses[index] = {
-        ...updatedAddresses[index],
-        [name]: value,
+        line1: "",
+        city: "",
+        state: "",
+        country: "",
+        zipCode: "",
+        isPrimary: false,
       };
     }
+
+    updatedAddresses[index] = {
+      ...updatedAddresses[index],
+      [name]: type === "checkbox" ? checked : value,
+    } as AddressDto;
 
     setFormData((prev) => ({
       ...prev,
@@ -114,16 +124,19 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
     updatedAddresses.splice(index, 1);
     setFormData((prev) => ({
       ...prev,
-      addresses: updatedAddresses.length > 0 ? updatedAddresses : [
-        {
-          line1: "",
-          city: "",
-          state: "",
-          country: "",
-          zipCode: "",
-          isPrimary: false,
-        },
-      ],
+      addresses:
+        updatedAddresses.length > 0
+          ? updatedAddresses
+          : [
+              {
+                line1: "",
+                city: "",
+                state: "",
+                country: "",
+                zipCode: "",
+                isPrimary: false,
+              },
+            ],
     }));
   };
 
@@ -138,8 +151,16 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
 
     if (formData.addresses && formData.addresses.length > 0) {
       for (const addr of formData.addresses) {
-        if (!addr.line1 || !addr.city || !addr.state || !addr.country || !addr.zipCode) {
-          setError("Please fill all required address fields (Address Line 1, City, State, Country, Zip Code).");
+        if (
+          !addr.line1 ||
+          !addr.city ||
+          !addr.state ||
+          !addr.country ||
+          !addr.zipCode
+        ) {
+          setError(
+            "Please fill all required address fields (Address Line 1, City, State, Country, Zip Code)."
+          );
           return false;
         }
       }
@@ -160,32 +181,53 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
     setError(null);
     setSuccessMessage(null);
 
-    // Prepare payload according to DTO
-    const payload: ProfileFormData = {
+    // Prepare payload according to backend DTO
+    const payload: any = {
       gender: formData.gender as "male" | "female" | "other",
     };
 
-    if (formData.date_of_birth) {
+    // Add optional date_of_birth if provided
+    if (formData.date_of_birth && formData.date_of_birth.trim() !== "") {
       payload.date_of_birth = formData.date_of_birth;
     }
 
-    if (formData.preferences) {
-      payload.preferences = formData.preferences;
+    // Add optional preferences if provided
+    if (formData.preferences && formData.preferences.trim() !== "") {
+      payload.preferences = formData.preferences.trim();
     }
 
+    // Add addresses if provided and valid
     if (formData.addresses && formData.addresses.length > 0) {
-      // Filter out empty addresses and map to DTO format
       const validAddresses = formData.addresses
-        .filter((addr) => addr.line1 && addr.city && addr.state && addr.country && addr.zipCode)
-        .map((addr) => ({
-          line1: addr.line1,
-          line2: addr.line2 || undefined,
-          city: addr.city,
-          state: addr.state,
-          country: addr.country,
-          zipCode: addr.zipCode,
-          isPrimary: addr.isPrimary || false,
-        }));
+        .filter(
+          (addr) =>
+            addr.line1?.trim() &&
+            addr.city?.trim() &&
+            addr.state?.trim() &&
+            addr.country?.trim() &&
+            addr.zipCode?.trim()
+        )
+        .map((addr) => {
+          const addressDto: any = {
+            line1: addr.line1.trim(), // REQUIRED by backend
+            city: addr.city.trim(),
+            state: addr.state.trim(),
+            country: addr.country.trim(),
+            zipCode: addr.zipCode.trim(),
+          };
+
+          // Add optional line2 if provided
+          if (addr.line2 && addr.line2.trim() !== "") {
+            addressDto.line2 = addr.line2.trim();
+          }
+
+          // Add optional isPrimary if provided (default to false)
+          if (addr.isPrimary !== undefined) {
+            addressDto.isPrimary = addr.isPrimary;
+          }
+
+          return addressDto;
+        });
 
       if (validAddresses.length > 0) {
         payload.addresses = validAddresses;
@@ -200,9 +242,10 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
         withCredentials: true,
       });
 
-      setSuccessMessage("Profile updated successfully!");
-      
-      // Close modal after a short delay
+      setSuccessMessage(
+        response.data?.message || "Profile saved successfully!"
+      );
+
       setTimeout(() => {
         onClose();
       }, 1500);
@@ -210,16 +253,52 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
       const error = err as AxiosError;
       if (error.response) {
         const status = error.response.status;
-        const msg =
-          (error.response.data as any)?.message ||
-          (error.response.data as any)?.error ||
-          `Server responded with status ${status}.`;
+        const errorData = error.response.data as any;
 
-        setError(msg);
+        if (status === 401) {
+          setError("You are not authenticated. Please sign in first.");
+          setTimeout(() => {
+            onClose();
+            router.push("/sign-in");
+          }, 3000);
+          setIsLoading(false);
+          return;
+        }
+
+        let msg: string = "";
+
+        if (typeof errorData === "string") {
+          msg = errorData;
+        } else if (errorData?.message) {
+          if (typeof errorData.message === "string") {
+            msg = errorData.message;
+          } else if (Array.isArray(errorData.message)) {
+            msg = errorData.message.join(", ");
+          } else if (typeof errorData.message === "object") {
+            msg = JSON.stringify(errorData.message);
+          }
+        } else if (errorData?.error) {
+          if (typeof errorData.error === "string") {
+            msg = errorData.error;
+          } else if (
+            errorData.error?.message &&
+            typeof errorData.error.message === "string"
+          ) {
+            msg = errorData.error.message;
+          } else {
+            msg = JSON.stringify(errorData.error);
+          }
+        } else {
+          msg = `Server responded with status ${status}.`;
+        }
+
+        setError(msg || `An error occurred (${status})`);
       } else if (error.request) {
-        setError("Network Error: Could not reach the server.");
+        setError(
+          "Network Error: Could not reach the server. Please check your connection."
+        );
       } else {
-        setError("An unexpected error occurred.");
+        setError("An unexpected error occurred. Please try again.");
       }
     } finally {
       setIsLoading(false);
@@ -265,12 +344,18 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
         aria-modal="true"
         role="dialog"
       >
-        <div className="modal-dialog modal-dialog-centered modal-lg" style={{ maxWidth: "800px" }}>
+        <div
+          className="modal-dialog modal-dialog-centered modal-lg"
+          style={{ maxWidth: "800px" }}
+        >
           <div className="modal-content">
             {/* Modal Header */}
             <div className="modal-header">
               <h5 className="modal-title" id="completeProfileModalLabel">
-                <i className="fa-solid fa-user-edit me-2" style={{ color: "#daa23e" }}></i>
+                <i
+                  className="fa-solid fa-user-edit me-2"
+                  style={{ color: "#daa23e" }}
+                ></i>
                 Complete Your Profile
               </h5>
               <button
@@ -282,7 +367,10 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
             </div>
 
             {/* Modal Body */}
-            <div className="modal-body" style={{ maxHeight: "70vh", overflowY: "auto" }}>
+            <div
+              className="modal-body"
+              style={{ maxHeight: "70vh", overflowY: "auto" }}
+            >
               <form onSubmit={handleSubmit} id="profile-form">
                 {/* Date of Birth */}
                 <div className="mb-4">
@@ -355,7 +443,8 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
                       className="btn btn-sm"
                       onClick={handleAddAddress}
                       style={{
-                        background: "linear-gradient(45deg, #daa23e, #e0a800)",
+                        background:
+                          "linear-gradient(45deg, #daa23e, #e0a800)",
                         color: "white",
                         border: "none",
                       }}
@@ -368,25 +457,31 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
                     <div
                       key={index}
                       className="border rounded p-3 mb-3"
-                      style={{ borderColor: "#daa23e", borderWidth: "2px" }}
+                      style={{
+                        borderColor: "#daa23e",
+                        borderWidth: "2px",
+                      }}
                     >
                       <div className="d-flex justify-content-between align-items-center mb-2">
                         <h6 className="mb-0">Address {index + 1}</h6>
-                        {formData.addresses && formData.addresses.length > 1 && (
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-danger"
-                            onClick={() => handleRemoveAddress(index)}
-                          >
-                            <i className="fa-solid fa-trash"></i>
-                          </button>
-                        )}
+                        {formData.addresses &&
+                          formData.addresses.length > 1 && (
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-danger"
+                              onClick={() => handleRemoveAddress(index)}
+                            >
+                              <i className="fa-solid fa-trash"></i>
+                            </button>
+                          )}
                       </div>
 
                       <div className="row">
+                        {/* Address Line 1 (REQUIRED) */}
                         <div className="col-md-12 mb-3">
                           <label className="form-label">
-                            Address Line 1 <span className="text-danger">*</span>
+                            Address Line 1{" "}
+                            <span className="text-danger">*</span>
                           </label>
                           <input
                             type="text"
@@ -394,14 +489,16 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
                             name="line1"
                             value={address.line1}
                             onChange={(e) => handleAddressChange(e, index)}
-                            placeholder="Street address"
                             required={index === 0}
+                            placeholder="Street address, house no., etc."
                           />
                         </div>
 
+                        {/* Address Line 2 */}
                         <div className="col-md-12 mb-3">
                           <label className="form-label">
-                            Address Line 2 <span className="text-muted">(Optional)</span>
+                            Address Line 2{" "}
+                            <span className="text-muted">(Optional)</span>
                           </label>
                           <input
                             type="text"
@@ -479,7 +576,10 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
                               onChange={(e) => handleAddressChange(e, index)}
                               id={`isPrimary-${index}`}
                             />
-                            <label className="form-check-label" htmlFor={`isPrimary-${index}`}>
+                            <label
+                              className="form-check-label"
+                              htmlFor={`isPrimary-${index}`}
+                            >
                               Set as Primary Address
                             </label>
                           </div>
@@ -544,7 +644,11 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
               >
                 {isLoading ? (
                   <>
-                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
                     Saving...
                   </>
                 ) : (

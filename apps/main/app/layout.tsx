@@ -6,6 +6,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "@repo/styles"
 import { Header, Footer } from "@repo/ui";
 
+
 const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",

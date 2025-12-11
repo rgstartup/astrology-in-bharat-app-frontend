@@ -426,7 +426,7 @@ const HomePage: React.FC = () => {
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="rounded-circle border border-3 border-warning shadow"
+                        className="rounded-circle  border-3 border-warning shadow"
                         style={{
                           width: "120px",
                           height: "120px",
