@@ -8,6 +8,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState(false); // Toggle state
 
   // Track whether mouse is on icon or on popup
   const isHoveringIcon = useRef(false);
@@ -25,6 +26,10 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
     if (!isHoveringIcon.current && !isHoveringPopup.current) {
       setIsNotificationOpen(false);
     }
+  };
+
+  const handleToggle = () => {
+    setIsOnline(!isOnline);
   };
 
   return (
@@ -57,6 +62,28 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
                 className="w-40 sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-colors duration-200"
                 aria-label="Search dashboard"
               />
+            </div>
+
+            {/* Toggle Button */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-gray-700 hidden sm:inline">
+                {isOnline ? "Online" : "Offline"}
+              </span>
+              <button
+                onClick={handleToggle}
+                className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                  isOnline
+                    ? "bg-green-500 focus:ring-green-500"
+                    : "bg-red-500 focus:ring-red-500"
+                }`}
+                aria-label={isOnline ? "Go Offline" : "Go Online"}
+              >
+                <span
+                  className={`inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full shadow-md ${
+                    isOnline ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
             </div>
 
             {/* Notifications & User Profile */}

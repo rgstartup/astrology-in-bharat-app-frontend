@@ -7,6 +7,7 @@ import "@repo/styles";
 import { Header, Footer } from "@repo/ui";
 import QuotesLoader from "@/components/QuotesLoader";
 
+
 const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useCallback, FormEvent } from "react";
 import axios, { AxiosError } from "axios";
-
+import { useRouter } from "next/navigation";
 // --- 1. Define Typescript Interfaces ---
 
 /** The shape of the data sent to the server (request body). */
@@ -30,6 +30,7 @@ interface FormData {
 const API_ENDPOINT = "http://localhost:4000/api/v1/auth/email/login";
 
 const Page: React.FC = () => {
+  const router = useRouter();
   // --- 2. State Management ---
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -111,6 +112,7 @@ const Page: React.FC = () => {
 
       // Optionally redirect the user after success
       // router.push('/dashboard');
+      router.push('/')
     } catch (err) {
       const error = err as AxiosError;
       console.error("Login API Request Failed. Error object:", error);
@@ -220,7 +222,7 @@ const Page: React.FC = () => {
                 </h6>
                 <h6 className="mb-0">
                   No Account? <br />
-                  <Link href="#" className="sign-up fw-bold">
+                  <Link href="/register" className="sign-up fw-bold">
                     Sign Up
                   </Link>
                 </h6>

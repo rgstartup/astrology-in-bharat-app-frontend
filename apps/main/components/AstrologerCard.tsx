@@ -10,6 +10,7 @@ interface Astrologer {
   language: string;
   price: number;
   video: string;
+  ratings?: number;
 }
 
 interface AstrologerCardProps {
@@ -17,7 +18,7 @@ interface AstrologerCardProps {
 }
 
 const AstrologerCard: React.FC<AstrologerCardProps> = ({ astrologerData }) => {
-  const { image, name, expertise, experience, language, price, video } = astrologerData;
+  const { image, name, expertise, experience, language, price, video, ratings = 0 } = astrologerData as any;
 
   const [show, setShow] = useState(false);
 
@@ -33,7 +34,19 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({ astrologerData }) => {
             <i className="fa-solid fa-circle-play"></i>
           </span>
         </div>
-        <div className="rating-star">★★★★★</div>
+        <div className="rating-star text-warning d-flex align-items-center" style={{ gap: 6, fontSize: "1.05rem" }}>
+          {Array.from({ length: 5 }).map((_, i) => {
+            const starIndex = i + 1;
+            if (ratings >= starIndex) {
+              return <i key={i} className="fa-solid fa-star" style={{ color: "#f6c84c" }}></i>;
+            }
+            if (ratings >= starIndex - 0.5) {
+              return <i key={i} className="fa-solid fa-star-half-stroke" style={{ color: "#f6c84c" }}></i>;
+            }
+            return <i key={i} className="fa-regular fa-star" style={{ color: "#ccc" }}></i>;
+          })}
+          <span className="text-muted small ms-2">{ratings.toFixed(1)} / 5</span>
+        </div>
         <div className="astro-name">{name}</div>
         <div className="astro-tags">{expertise}</div>
         <div className="astro-info">
