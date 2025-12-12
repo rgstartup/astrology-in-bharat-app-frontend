@@ -14,11 +14,11 @@ import ProductsCarousel from "@/components/ProductsCarousel";
 import FilterModal from "@/components/FilterModal";
 import SortModal from "@/components/SortModal";
 import CompleteProfileModal from "@/components/CompleteProfileModal";
-import SpecializationCarousel from "@/components/SpecializationCarousel";
 
 interface FilterState {
   location: string;
   language: string;
+  specialization: string;
   rating: number;
   price: number;
 }
@@ -36,18 +36,6 @@ const Page: React.FC = () => {
   const [total, setTotal] = useState<number | null>(null);
   const [appliedFilters, setAppliedFilters] = useState<Partial<FilterState>>({});
   const [appliedSort, setAppliedSort] = useState<string | null>(null);
-  const [searchInput, setSearchInput] = useState<string>(""); // Immediate input value
-  const [searchQuery, setSearchQuery] = useState<string>(""); // Debounced search query
-  const [selectedSpecialization, setSelectedSpecialization] = useState<string>("");
-
-  // Debounce search input with 0.8 second delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSearchQuery(searchInput);
-    }, 800); // 0.8 seconds
-
-    return () => clearTimeout(timer);
-  }, [searchInput]);
 
   const handleApplyFilters = (filters: FilterState) => {
     // store applied filters and reset pagination
@@ -55,7 +43,6 @@ const Page: React.FC = () => {
     setOffset(0);
     setIsFilterOpen(false);
   };
-  
   const handleApplySorts = (sorts: { experience: string; price: string; rating: string }) => {
     // sorts is a SortState-like object with one field set
     console.log("Applied sorts:", sorts);
@@ -68,28 +55,16 @@ const Page: React.FC = () => {
     setIsSortOpen(false);
   };
 
-  const handleSearchChange = (query: string) => {
-    setSearchInput(query); // Update input immediately for responsive typing
-    // Debounced search query will update after 0.8s via useEffect
-  };
-
-  const handleSpecializationChange = (specialization: string) => {
-    setSelectedSpecialization(specialization);
-    setOffset(0); // Reset pagination when specialization changes
-  };
-
   const buildQueryString = () => {
     const params: Record<string, any> = {};
     params.limit = limit;
     params.offset = offset;
 
-    // Specialization from carousel (backend supports this)
-    if (selectedSpecialization) params.specializations = selectedSpecialization;
-    
     if (appliedFilters.location) params.location = appliedFilters.location;
     if (appliedFilters.language) params.languages = appliedFilters.language;
+    if (appliedFilters.specialization) params.specializations = appliedFilters.specialization;
     if (appliedFilters.rating) params.minRating = appliedFilters.rating;
-    if (appliedFilters.price) params.maxPrice = appliedFilters.price;
+    if (appliedFilters.price) params.maxPrice = appliedFilters.price; // backend may ignore
     if (appliedSort) params.sort = appliedSort;
 
     const esc = encodeURIComponent;
@@ -132,26 +107,6 @@ const Page: React.FC = () => {
     }
   };
 
-  // Client-side filtering for search query
-  const getFilteredExperts = () => {
-    if (!searchQuery.trim()) {
-      return experts;
-    }
-
-    const query = searchQuery.toLowerCase();
-    return experts.filter((expert) => {
-      const name = expert.name?.toLowerCase() || "";
-      const language = expert.language?.toLowerCase() || "";
-      const expertise = expert.expertise?.toLowerCase() || "";
-      
-      return (
-        name.includes(query) ||
-        language.includes(query) ||
-        expertise.includes(query)
-      );
-    });
-  };
-
   // Check if user should see the complete profile modal
   useEffect(() => {
     // Only show on the root route "/"
@@ -190,7 +145,7 @@ const Page: React.FC = () => {
 
   React.useEffect(() => {
     fetchExperts();
-  }, [appliedFilters, appliedSort, limit, offset, selectedSpecialization]);
+  }, [appliedFilters, appliedSort, limit, offset]);
   return (
     <>
       {/* Hero Section */}
@@ -272,46 +227,76 @@ const Page: React.FC = () => {
       {/* Find Your Astrologer */}
       <section className="astrologer-list">
         <div className="container">
-          {/* Image placeholder with text */}
-          <div className="talk-to-astrologer-banner">
-            <div className="banner-image-placeholder">
-              {/* User will paste their image here */}
-              <h2 className="banner-text">Talk to Astrologer</h2>
-            </div>
-          </div>
+          <h2>Find Your Astrologer</h2>
 
           <div style={{ position: "relative" }}>
-            {/* Search, Filter, and Sort Row */}
-            <div className="search-filter-row">
-              <div className="search-wrapper">
-                <SearchBar 
-                  searchQuery={searchInput}
-                  onSearchChange={handleSearchChange}
-                />
+            <div
+              className="search-filter-container"
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  gap: "10px",
+                  alignItems: "center",
+                }}
+              >
+                <div style={{ flex: 1 }}>
+                  <SearchBar />
+                </div>
+
+                <button
+                  className="btn btn-filter"
+                  onClick={() => setIsFilterOpen(true)}
+                  style={{
+                    background: "#732882",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "30px",
+                    padding: "12px 24px",
+                    fontWeight: "500",
+                    fontFamily: "inherit",
+                    cursor: "pointer",
+                    transition: "background 0.15s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    marginBottom:"36px"
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "#5a1f6b")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "#732882")}
+                >
+                  <i className="fa-solid fa-filter"></i>
+                  Filters
+                </button>
+
+                <button
+                  className="btn btn-sort"
+                  onClick={() => setIsSortOpen(true)}
+                  style={{
+                    background: "#732882",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "30px",
+                    padding: "12px 24px",
+                    fontWeight: "500",
+                    fontFamily: "inherit",
+                    cursor: "pointer",
+                    transition: "background 0.15s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                     marginBottom:"36px"
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "#5a1f6b")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "#732882")}
+                >
+                  <i className="fa-solid fa-sort"></i>
+                  Sort
+                </button>
               </div>
-
-              <button
-                className="btn btn-filter"
-                onClick={() => setIsFilterOpen(true)}
-              >
-                <i className="fa-solid fa-filter"></i>
-                Filter
-              </button>
-
-              <button
-                className="btn btn-sort"
-                onClick={() => setIsSortOpen(true)}
-              >
-                <i className="fa-solid fa-sort"></i>
-                Sort
-              </button>
             </div>
-
-            {/* Specialization Carousel */}
-            <SpecializationCarousel 
-              selectedSpecialization={selectedSpecialization}
-              onSpecializationChange={handleSpecializationChange}
-            />
 
             <FilterModal
               isOpen={isFilterOpen}
@@ -329,10 +314,10 @@ const Page: React.FC = () => {
           <div className="astro-grid">
             {loading && <div>Loading...</div>}
             {error && <div className="text-danger">{error}</div>}
-            {!loading && !error && getFilteredExperts().length === 0 && (
+            {!loading && !error && experts.length === 0 && (
               <div>No astrologers found.</div>
             )}
-            {!loading && getFilteredExperts().map((item, idx) => {
+            {!loading && experts.map((item, idx) => {
               return <AstrologerCard astrologerData={item} key={idx} />;
             })}
           </div>

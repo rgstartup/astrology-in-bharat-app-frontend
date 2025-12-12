@@ -98,7 +98,7 @@ const HomePage: React.FC = () => {
         <div className="container">
           <h2>Find Your Astrologer</h2>
 
-          <div className="search-box">
+          <div className="search-box"  >
             <input
               type="text"
               placeholder="Search Astrologer By Name..."
@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
                     <div className="vid-part">
                       <img
                         src={item.image}
-                        alt="Pandit Sharma"
+                        alt=""
                         className="astro-profile-img"
                       />
                       <span
