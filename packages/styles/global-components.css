@@ -1,0 +1,109 @@
+/* Global Button Styles */
+.btn-global {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 24px;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    text-decoration: none;
+    font-size: 16px;
+    gap: 8px;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+    color: var(--color-white);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    border-color: var(--color-secondary);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-secondary-dark);
+    /* You might need to define this variable or use a hardcoded value if acceptable */
+    border-color: var(--color-secondary-dark);
+    color: var(--color-white);
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.btn-outline-secondary {
+    background-color: transparent;
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+}
+
+/* Global Title Styles */
+.title-xl {
+    font-size: 45px;
+    font-weight: 700;
+    color: var(--color-primary);
+    /* Defaulting to white per banner, but usually primary or black. Let's stick to base styling and let color be overridden or set contextually */
+    line-height: 1.2;
+}
+
+.title-lg {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 20px;
+}
+
+.title-md {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-secondary);
+}
+
+.title-sm {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text-dark);
+}
+
+/* Background Utility Classes */
+.bg-primary-main {
+    background-color: var(--color-primary);
+}
+
+.bg-secondary-main {
+    background-color: var(--color-secondary);
+}
+
+.bg-cream-light {
+    background-color: var(--bg-cream);
+}
+
+.bg-gradient-main {
+    background-image: var(--bg-gradient-light);
+}

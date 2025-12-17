@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 const BootstrapScriptLoader: React.FC = () => {
   useEffect(() => {
-    import("bootstrap/dist/js/bootstrap.bundle.min.js");
+    // import("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
 
   return null;

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Poppins, Outfit } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
-import BootstrapScriptLoader from "@/libs/BootstrapScriptLoader";
-import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome
-import "@/styles/style.css";
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+// import "@/styles/style.css";
+import "@repo/styles";
+import { Header, Footer } from "@repo/ui";
+import QuotesLoader from "@/components/QuotesLoader";
+
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -38,10 +39,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${outfit.variable} ${poppins.variable} `}>
+        <QuotesLoader />
         <Header />
         {children}
         <Footer />
-        <BootstrapScriptLoader />
       </body>
     </html>
   );

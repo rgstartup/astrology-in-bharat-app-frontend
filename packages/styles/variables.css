@@ -1,0 +1,46 @@
+:root {
+    /* Brand Colors */
+    --color-primary: #732882;
+    --color-primary-dark: #5a1f6b;
+    /* Darker shade for hover */
+    --color-secondary: #daa23e;
+    --color-secondary-dark: #b8862d;
+    /* Darker shade for hover */
+
+    /* Neutral Colors */
+    --color-black: #1a1a1a;
+    --color-white: #ffffff;
+    --color-grey-light: #f8f9fa;
+    --color-grey: #ccc;
+    --color-text-dark: #333;
+
+    /* Backgrounds */
+    --bg-cream: #ffe3b852;
+    --bg-gradient-light: linear-gradient(to right, #fffcf6, #fff2da);
+
+    /* Legacy/Specific Variables (from signin.css & others) */
+    --primary-color: var(--color-primary);
+    --secondary-color: var(--color-secondary);
+    --black-color: var(--color-black);
+    --border-color: rgba(218, 162, 62, 0.45);
+    /* #daa23e73 */
+    --color-white-legacy: white;
+    /* kept as 'color-white' is already defined differently */
+    --close-button: red;
+    --star-color: #ffc850;
+    --product-background: var(--bg-cream);
+    --testimonial-bg-color: #ffcc00;
+    --background-gradient: var(--bg-gradient-light);
+    --google-color: #e9f1ff;
+    --facebook-color: #00a2ff8e;
+    --button-hover: #186593;
+
+    /* Typography */
+    --font-main: "Outfit", sans-serif;
+
+    /* Spacing & Borders */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-full: 50px;
+}
