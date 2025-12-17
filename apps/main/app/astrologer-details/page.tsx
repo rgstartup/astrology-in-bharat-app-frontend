@@ -1,8 +1,63 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { products } from "@/data/homePagaData";
+import { useSearchParams } from "next/navigation";
 
-const page = () => {
+interface AstrologerData {
+  name: string;
+  image: string;
+  expertise: string;
+  experience: number;
+  language: string;
+  price: number;
+  video: string;
+  ratings: number;
+}
+
+const Page = () => {
+  const searchParams = useSearchParams();
+  const [astrologer, setAstrologer] = useState<AstrologerData>({
+    name: "Amita Sharma",
+    image: "/images/astro-img1.png",
+    expertise: "Vedic, Numero, Vastu",
+    experience: 4,
+    language: "Hindi, English",
+    price: 50,
+    video: "",
+    ratings: 5,
+  });
+
+  useEffect(() => {
+    // Read query parameters
+    const name = searchParams.get('name');
+    const image = searchParams.get('image');
+    const expertise = searchParams.get('expertise');
+    const experience = searchParams.get('experience');
+    const language = searchParams.get('language');
+    const price = searchParams.get('price');
+    const video = searchParams.get('video');
+    const ratings = searchParams.get('ratings');
+
+    // Update state if parameters exist
+    if (name) {
+      setAstrologer({
+        name: name || "Amita Sharma",
+        image: image || "/images/astro-img1.png",
+        expertise: expertise || "Vedic, Numero, Vastu",
+        experience: Number(experience) || 4,
+        language: language || "Hindi, English",
+        price: Number(price) || 50,
+        video: video || "",
+        ratings: Number(ratings) || 5,
+      });
+    }
+  }, [searchParams]);
+
+  // Generate star rating
+  const renderStars = (rating: number) => {
+    return "★".repeat(Math.floor(rating));
+  };
 
   return (
     <>
@@ -13,8 +68,8 @@ const page = () => {
               <div className="position-relative me-md-3 mb-3 mb-md-0 text-center">
                 {/* Image */}
                 <img
-                  src="/images/astro-img1.png"
-                  alt="Amita Sharma"
+                  src={astrologer.image}
+                  alt={astrologer.name}
                   className="rounded-circle"
                   style={{
                     width: "150px",
@@ -60,16 +115,16 @@ const page = () => {
 
 
               <div>
-                <h5 className="fw-bold text-black">Amita Sharma</h5>
+                <h5 className="fw-bold text-black">{astrologer.name}</h5>
                 <div className="mb-1 text-black">
-                  <strong>Lang.</strong> Hindi, English
+                  <strong>Lang.</strong> {astrologer.language}
                 </div>
-                <div className="mb-1 astro-tags">Vedic, Numero, Vastu</div>
+                <div className="mb-1 astro-tags">{astrologer.expertise}</div>
                 <div className="mb-1 text-black">
-                  <strong>Exp.</strong> 4 years
+                  <strong>Exp.</strong> {astrologer.experience} years
                 </div>
                 <div className="text-black">
-                  <strong>Call.</strong> ₹50.00/min
+                  <strong>Call.</strong> ₹{astrologer.price.toFixed(2)}/min
                 </div>
               </div>
             </div>
@@ -450,4 +505,5 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
+

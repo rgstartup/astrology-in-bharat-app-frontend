@@ -6,6 +6,7 @@
   color: white;
   padding-top: 35px;
 }
+
 .footer-logo {
   background-color: #fff;
   border-radius: 5px;
@@ -15,13 +16,13 @@
 
 /*old design */
 .newsletter {
-  background-color: #daa23e;
-  color: #fff;
+  background-color: var(--color-secondary);
+  color: var(--color-white);
 }
 
 .newsletter {
-  color: #fff;
-  background-color: #daa23e;
+  color: var(--color-white);
+  background-color: var(--color-secondary);
   padding: 20px 40px !important;
   width: 70vw !important;
   border-radius: 50px;
@@ -37,7 +38,7 @@
 }
 
 .footer-main h6 {
-  color: #daa23e;
+  color: var(--color-secondary);
 }
 
 .footer-main a {
@@ -57,7 +58,7 @@
 }
 
 .subscribe-btn {
-  background: #daa23e;
+  background: var(--color-secondary);
   /* background: linear-gradient(to right, #ff9800, #f44336); */
 
   color: #fff !important;

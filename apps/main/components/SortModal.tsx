@@ -43,7 +43,7 @@ const SortModal: React.FC<SortModalProps> = ({ isOpen, onClose, onApply }) => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">
-                <i className="fa-solid fa-sort me-2" style={{ color: "#daa23e" }}></i>
+                <i className="fa-solid fa-sort me-2 color-secondary"></i>
                 Sort Astrologers
               </h5>
               <button type="button" className="btn-close" onClick={onClose} aria-label="Close"></button>
@@ -75,7 +75,7 @@ const SortModal: React.FC<SortModalProps> = ({ isOpen, onClose, onApply }) => {
             </div>
 
             <div className="modal-footer">
-              <button type="button" className="btn btn-outline-secondary" onClick={handleReset}>
+              <button type="button" className="btn-global btn-outline-secondary" onClick={handleReset}>
                 <i className="fa-solid fa-rotate-left me-2"></i>
                 Reset
               </button>
@@ -84,9 +84,8 @@ const SortModal: React.FC<SortModalProps> = ({ isOpen, onClose, onApply }) => {
               </button>
               <button
                 type="button"
-                className="btn"
+                className="btn-global btn-secondary"
                 onClick={handleApply}
-                style={{ background: "linear-gradient(45deg, #daa23e, #e0a800)", color: "white", border: "none" }}
               >
                 <i className="fa-solid fa-filter me-2"></i>
                 Apply Sorts

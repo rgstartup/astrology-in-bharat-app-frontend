@@ -55,14 +55,14 @@ const Page: React.FC = () => {
     setOffset(0);
     setIsFilterOpen(false);
   };
-  
+
   const handleApplySorts = (sorts: { experience: string; price: string; rating: string }) => {
     // sorts is a SortState-like object with one field set
     console.log("Applied sorts:", sorts);
     // determine which sort is applied
     const sortKey = sorts.experience && sorts.experience !== "none" ? "experience"
       : sorts.rating && sorts.rating !== "none" ? "rating"
-      : null;
+        : null;
     setAppliedSort(sortKey);
     setOffset(0);
     setIsSortOpen(false);
@@ -85,7 +85,7 @@ const Page: React.FC = () => {
 
     // Specialization from carousel (backend supports this)
     if (selectedSpecialization) params.specializations = selectedSpecialization;
-    
+
     if (appliedFilters.location) params.location = appliedFilters.location;
     if (appliedFilters.language) params.languages = appliedFilters.language;
     if (appliedFilters.rating) params.minRating = appliedFilters.rating;
@@ -143,7 +143,7 @@ const Page: React.FC = () => {
       const name = expert.name?.toLowerCase() || "";
       const language = expert.language?.toLowerCase() || "";
       const expertise = expert.expertise?.toLowerCase() || "";
-      
+
       return (
         name.includes(query) ||
         language.includes(query) ||
@@ -158,7 +158,7 @@ const Page: React.FC = () => {
     if (pathname === "/") {
       // Check if modal was already shown (stored in localStorage)
       const hasSeenModal = localStorage.getItem("completeProfileModalShown");
-      
+
       if (!hasSeenModal) {
         // Set a timeout to show the modal after 10 seconds
         const timer = setTimeout(() => {
@@ -199,14 +199,14 @@ const Page: React.FC = () => {
           <div className="container">
             <div className="row align">
               <div className="col-lg-7 col-md-12">
-                <h1>
+                <h1 className="title-xl">
                   Connect with
-                  <span style={{ color: "#daa23e" }}>
+                  <span className="color-secondary">
                     Verified <br /> Astrologers{" "}
                   </span>
                   Online
                 </h1>
-                <h4 className="card-title mt-4 mb-4">
+                <h4 className="card-title title-md mt-4 mb-4">
                   Instant Chat, Call, or Video Consultations
                 </h4>
                 <p>
@@ -237,7 +237,7 @@ const Page: React.FC = () => {
                     Across India
                   </li>
                 </ul>
-                <a href="#" className="btn-link wfc mt-4 mb-4">
+                <a href="#" className="btn-global btn-primary wfc mt-4 mb-4">
                   Start Consultation
                 </a>
               </div>
@@ -284,7 +284,7 @@ const Page: React.FC = () => {
             {/* Search, Filter, and Sort Row */}
             <div className="search-filter-row">
               <div className="search-wrapper">
-                <SearchBar 
+                <SearchBar
                   searchQuery={searchInput}
                   onSearchChange={handleSearchChange}
                 />
@@ -308,7 +308,7 @@ const Page: React.FC = () => {
             </div>
 
             {/* Specialization Carousel */}
-            <SpecializationCarousel 
+            <SpecializationCarousel
               selectedSpecialization={selectedSpecialization}
               onSpecializationChange={handleSpecializationChange}
             />
@@ -340,21 +340,11 @@ const Page: React.FC = () => {
           <div className="view-all">
             {(total === null || experts.length < total) && (
               <button
-                className="btn-load-more wfc m-auto"
+                className="btn-global btn-secondary wfc m-auto"
                 onClick={() => setOffset((prev) => prev + limit)}
                 disabled={loading}
                 aria-label="Load more astrologers"
                 style={{
-                  display: "inline-block",
-                  padding: "10px 24px",
-                  borderRadius: "25px",
-                  border: "none",
-                  background: loading
-                    ? "linear-gradient(45deg, #e0a800, #f0c04a)"
-                    : "linear-gradient(45deg, #ff9800, #f57c00)",
-                  color: "#fff",
-                  fontWeight: 600,
-                  cursor: loading ? "not-allowed" : "pointer",
                   boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
                 }}
               >
@@ -369,7 +359,7 @@ const Page: React.FC = () => {
       <section className="horoscopes-container">
         <div className="container">
           <div className="row">
-            <h2 className="text-center mt-3 mb-2 horoscopes-heading">
+            <h2 className="text-center mt-3 mb-2 horoscopes-heading title-lg">
               Choose Your Zodiac Sign
             </h2>
             <p className="text-center horoscopes-heading">
@@ -396,7 +386,7 @@ const Page: React.FC = () => {
       {/* Astrology Servicees */}
       <section className="astrology-services py-5">
         <div className="container">
-          <h2>Astrology Services</h2>
+          <h2 className="title-lg">Astrology Services</h2>
           <div className="row">
             {AstrologyServicesData.map((item) => {
               return (
@@ -432,7 +422,7 @@ const Page: React.FC = () => {
       {/* Why Talk to our astrologer*/}
       <section className="py-50 why-choose-us text-white">
         <div className="container">
-          <h2 className="text-center  mb-5 heading text-black">
+          <h2 className="text-center mb-5 heading text-black title-lg">
             Why Talk to Our Astrologer?
           </h2>
           <div className="row d-flex align-items-center">
@@ -532,14 +522,13 @@ const Page: React.FC = () => {
       {/* Clients Testimonials Section */}
       <section className="testimonials-section bg-cream py-50">
         <div className="container text-center">
-          <h2 className="section-heading heading mb-5">What Our Clients Say</h2>
+          <h2 className="section-heading heading mb-5 title-lg">What Our Clients Say</h2>
           <div className="row">
             {ClientsTestimoinialData.map((client) => (
               <div className="col-lg-4 col-md-6 mb-4" key={client.id}>
                 <div className="ser-card p-4 h-100 vert-move">
                   <i
-                    className="fa-solid fa-quote-left fa-2x mb-3"
-                    style={{ color: "#daa23e" }}
+                    className="fa-solid fa-quote-left fa-2x mb-3 color-secondary"
                   ></i>
                   <p>{client.review}</p>
                   <div className="mt-3 d-flex align-items-center justify-content-center flex-column">
@@ -556,7 +545,7 @@ const Page: React.FC = () => {
                     <strong>{client.name}</strong>
                     <div className="rating-star">
                       {"★".repeat(Math.floor(client.rating))}
-                    
+
                     </div>
                   </div>
                 </div>
@@ -569,7 +558,7 @@ const Page: React.FC = () => {
       {/* Featured Astrologers List */}
       <section className="featured-astrologers  py-50 ">
         <div className="container text-center">
-          <h2 className="section-heading heading mb-5">
+          <h2 className="section-heading heading mb-5 title-lg">
             Meet Our Trusted Astrologers
           </h2>
           <div className="row justify-content-center">
@@ -654,15 +643,7 @@ const Page: React.FC = () => {
                       {/* CTA Button */}
                       <div className="d-grid">
                         <button
-                          className="btn"
-                          style={{
-                            background:
-                              "linear-gradient(45deg, #ff9800, #f57c00)",
-                            color: "white",
-                            fontWeight: "600",
-                            borderRadius: "25px",
-                            padding: "10px",
-                          }}
+                          className="btn-global btn-primary w-100"
                         >
                           <i className="bi bi-chat-dots-fill me-2"></i> Chat Now
                         </button>

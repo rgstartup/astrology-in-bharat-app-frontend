@@ -14,8 +14,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, onSearchChange }) =>
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
             />
-            <button className="search-icon-btn" style={{backgroundColor: "#732882" }}>
-                <i className="fa-solid fa-magnifying-glass" style={{color: "#fff" }} ></i>
+            <button className="search-icon-btn">
+                <i className="fa-solid fa-magnifying-glass"></i>
             </button>
         </div>
     )

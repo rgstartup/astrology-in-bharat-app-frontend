@@ -83,7 +83,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, onApply }) =
             {/* Modal Header */}
             <div className="modal-header">
               <h5 className="modal-title" id="filterModalLabel">
-                <i className="fa-solid fa-filter me-2" style={{ color: "#daa23e" }}></i>
+                <i className="fa-solid fa-filter me-2 color-secondary"></i>
                 Filter Astrologers
               </h5>
               <button
@@ -100,7 +100,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, onApply }) =
                 {/* Location */}
                 <div className="col-md-6 mb-4">
                   <label className="form-label fw-bold">
-                    <i className="fa-solid fa-location-dot me-2" style={{ color: "#daa23e" }}></i>
+                    <i className="fa-solid fa-location-dot me-2 color-secondary"></i>
                     Location
                   </label>
                   <input
@@ -120,7 +120,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, onApply }) =
                 {/* Language */}
                 <div className="col-md-6 mb-4">
                   <label className="form-label fw-bold">
-                    <i className="fa-solid fa-language me-2" style={{ color: "#daa23e" }}></i>
+                    <i className="fa-solid fa-language me-2 color-secondary"></i>
                     Language
                   </label>
                   <input
@@ -142,7 +142,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, onApply }) =
                 {/* Rating */}
                 <div className="col-md-6 mb-4">
                   <label className="form-label fw-bold">
-                    <i className="fa-solid fa-star me-2" style={{ color: "#daa23e" }}></i>
+                    <i className="fa-solid fa-star me-2 color-secondary"></i>
                     Rating: {filters.rating} / 5
                   </label>
                   <input
@@ -164,7 +164,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, onApply }) =
                 {/* Price */}
                 <div className="col-md-6 mb-4">
                   <label className="form-label fw-bold">
-                    <i className="fa-solid fa-rupee-sign me-2" style={{ color: "#daa23e" }}></i>
+                    <i className="fa-solid fa-rupee-sign me-2 color-secondary"></i>
                     Max Price: ₹{filters.price}/min
                   </label>
                   <input
@@ -189,7 +189,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, onApply }) =
             <div className="modal-footer">
               <button
                 type="button"
-                className="btn btn-outline-secondary"
+                className="btn-global btn-outline-secondary"
                 onClick={handleReset}
               >
                 <i className="fa-solid fa-rotate-left me-2"></i>
@@ -209,13 +209,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, onClose, onApply }) =
               </button>
               <button
                 type="button"
-                className="btn"
+                className="btn-global btn-secondary"
                 onClick={handleApply}
-                style={{
-                  background: "linear-gradient(45deg, #daa23e, #e0a800)",
-                  color: "white",
-                  border: "none",
-                }}
               >
                 <i className="fa-solid fa-filter me-2"></i>
                 Apply Filters

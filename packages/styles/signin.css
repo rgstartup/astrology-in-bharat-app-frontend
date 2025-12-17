@@ -1,20 +1,6 @@
 /* CSS For Sign In Page */
 
-:root {
-  --primary-color: #732882;
-  --secondary-color: #daa23e;
-  --black-color: black;
-  --border-color: #daa23e73;
-  --color-white: white;
-  --close-button: red;
-  --star-color: #ffc850;
-  --product-background: #ffe3b852;
-  --testimonial-bg-color: #ffcc00;
-  --background-gradient: linear-gradient(to right, #fffcf6, #fff2da);
-  --google-color: #e9f1ff;
-  --facebook-color: #00a2ff8e;
-  --button-hover: #186593;
-}
+/* :root moved to variables.css */
 
 .signin-part {
   background: var(--background-gradient);
@@ -90,9 +76,12 @@
 }
 
 .form-email input:focus {
-  border-color: #732882; /* custom border color */
-  outline: none; /* removes default black/blue outline */
-  box-shadow: 0 0 5px rgba(115, 40, 130, 0.3); /* optional glow */
+  border-color: #732882;
+  /* custom border color */
+  outline: none;
+  /* removes default black/blue outline */
+  box-shadow: 0 0 5px rgba(115, 40, 130, 0.3);
+  /* optional glow */
 }
 
 .form-password input {
@@ -105,8 +94,10 @@
 }
 
 .form-password input:focus {
-  border-color: var(--primary-color); /* custom border color */
-  outline: none; /* removes default black/blue outline */
+  border-color: var(--primary-color);
+  /* custom border color */
+  outline: none;
+  /* removes default black/blue outline */
   box-shadow: 0 0 5px rgba(115, 40, 130, 0.3);
 }
 
@@ -137,6 +128,7 @@
   background-color: var(--primary-color);
   width: 100%;
 }
+
 .sign-button:hover {
   margin-top: 20px;
   padding: 10px 10px;
@@ -182,20 +174,25 @@
   .m-hidden {
     display: none;
   }
+
   .banner-data p {
     display: none;
   }
+
   .social-button {
     width: 80%;
   }
+
   .form-data {
     position: relative;
     right: 50%;
     width: 100%;
   }
+
   .social-links {
     flex-direction: column;
   }
+
   .social-button2 {
     margin-top: 20px;
     width: 100%;

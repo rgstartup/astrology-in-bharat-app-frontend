@@ -30,35 +30,35 @@ a {
 }
 
 .color-primary {
-  color: #3dc9a1 !important;
+  color: var(--color-primary) !important;
 }
 
 .color-secondary {
-  color: #daa23e !important;
+  color: var(--color-secondary) !important;
 }
 
 .color-black {
-  color: #1a1a1a !important;
+  color: var(--color-black) !important;
 }
 
 .color-light {
-  color: #fff !important;
+  color: var(--color-white) !important;
 }
 
 .background-primary {
-  background: #3dc9a1 !important;
+  background: var(--color-primary) !important;
 }
 
 .background-secondary {
-  background: #11564f !important;
+  background: var(--color-secondary) !important;
 }
 
 .background-black {
-  background: #1a1a1a !important;
+  background: var(--color-black) !important;
 }
 
 .background-light {
-  background: #fff !important;
+  background: var(--color-white) !important;
 }
 
 /**/
@@ -239,7 +239,7 @@ a {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 5px;
-  color: #732882;
+  color: var(--color-primary);
 }
 
 .vid-part {
@@ -266,7 +266,7 @@ a {
   font-size: 25px;
   padding: 0;
   margin: 0;
-  color: #732882;
+  color: var(--color-primary);
   font-weight: 700;
 }
 
@@ -330,27 +330,27 @@ button.btn-close {
   flex: 1;
   padding: 8px 12px;
   border-radius: 25px;
-  border: 1px solid #732882;
+  border: 1px solid var(--color-primary);
   background: #fff0;
-  color: #732882;
+  color: var(--color-primary);
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
 }
 
 .astro-actions button.call {
-  border-color: #1a1a1a;
-  color: #1a1a1a;
+  border-color: var(--color-black);
+  color: var(--color-black);
 }
 
 .astro-actions button:hover {
-  background: #732882;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 
 .astro-actions button.call:hover {
-  background: #1a1a1a;
-  color: #fff;
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
 .view-all {
@@ -547,8 +547,8 @@ button.btn-close {
 }
 
 .specialization-btn.active:hover {
-  background: #5a1f6b;
-  border-color: #5a1f6b;
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
 }
 
 .spec-icon {
@@ -563,7 +563,7 @@ button.btn-close {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: #732882;
+  background: var(--color-primary);
   color: white;
   border: none;
   border-radius: 50%;
@@ -579,7 +579,7 @@ button.btn-close {
 }
 
 .carousel-arrow:hover {
-  background: #5a1f6b;
+  background: var(--color-primary-dark);
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -709,14 +709,14 @@ a {
   border: none;
   border-radius: 50px;
   padding: 7px 20px;
-  background-color: #732882;
+  background-color: var(--color-primary);
 }
 
 .orderNowbtn:hover {
   border: none;
   border-radius: 50px;
   padding: 7px 20px;
-  background-color: #642172;
+  background-color: var(--color-primary-dark);
 }
 
 /* Custom buttons Css End */

@@ -7,27 +7,32 @@
   box-shadow: 0 4px 6px 3px #0000000d;
   margin-top: -60px;
 }
+
 .top-head {
   padding: 7px 0;
-  background-image: linear-gradient(to right, #d08830, #daa23e);
+  background-image: linear-gradient(to right, var(--color-secondary-dark), var(--color-secondary));
   /*  background-image: linear-gradient(to right, #762782, #176593);*/
 }
+
 .top-text {
   margin: 0;
   font-size: 18px;
   color: #fff;
 }
+
 .top-menu-main li a {
   color: #000 !important;
   font-size: 16px;
   padding: 9px 15px !important;
 }
+
 .top-menu-main li a:hover {
-  color: #702b83 !important;
+  color: var(--color-primary) !important;
 }
+
 .btn-link {
-  background: #732882;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-white);
   width: 100%;
   padding: 14px 13px;
   border-radius: 100px;
@@ -35,29 +40,36 @@
   display: block;
   text-align: center;
 }
+
 .btn-link img {
   margin-right: 5px;
   filter: brightness(0) invert(1);
 }
+
 .btn-link:hover {
   color: #fff;
   background: #186593;
 }
+
 ul.dropdown-menu {
   padding: 0;
 }
+
 .top-menu-main li ul.dropdown-menu li a {
   transition: 0.6s;
-  border-bottom: solid 1px #7328821c;
+  border-bottom: solid 1px var(--border-color);
 }
+
 .top-menu-main li ul.dropdown-menu li a:hover {
-  background: #732882;
-  color: #fff !important;
+  background: var(--color-primary);
+  color: var(--color-white) !important;
 }
+
 a.nav-link {
-  color: black;
+  color: var(--color-black);
   padding: 9px 15px !important;
 }
+
 a.nav-link :hover {
   color: #702b83 !important;
   padding: 9px 15px !important;
@@ -65,7 +77,7 @@ a.nav-link :hover {
 
 .nav-link:focus,
 .nav-link:hover {
-  color: #702b83;
+  color: var(--color-primary);
 }
 
 /**/
@@ -74,6 +86,7 @@ a.nav-link :hover {
   display: inline-block;
   width: 100%;
 }
+
 .lang-toggle {
   background: #030303;
   color: #ffffff;
@@ -85,6 +98,7 @@ a.nav-link :hover {
   width: 100%;
   font-size: 14px;
 }
+
 .lang-menu {
   display: none;
   position: absolute;
@@ -113,15 +127,18 @@ a.nav-link :hover {
 .lang-dropdown:hover .lang-menu {
   display: block;
 }
+
 /**/
 .cart-top {
   color: #fff;
   font-size: 14px;
   position: relative;
 }
+
 .cart-top:hover {
   color: #fff;
 }
+
 .value {
   display: block;
   position: absolute;
@@ -134,6 +151,7 @@ a.nav-link :hover {
   text-align: center;
   font-size: 10px;
 }
+
 /**/
 .account-dropdown {
   position: relative;
@@ -152,6 +170,7 @@ a.nav-link :hover {
   gap: 6px;
   border-radius: 20px;
 }
+
 .account-menu {
   display: none;
   position: absolute;
