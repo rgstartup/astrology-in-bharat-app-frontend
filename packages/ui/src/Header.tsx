@@ -353,11 +353,7 @@ const Header: React.FC = () => {
                     alt="logo"
                     className="logo logo-dask"
                   />
-                  <img
-                    src="/images/logo2.png"
-                    alt="logo"
-                    className="logo logo-mobile"
-                  />
+               
                 </Navbar.Brand>
                 {/* Conditionally render the Navbar.Toggle to fix the hydration error */}
                 {isClient && <Navbar.Toggle aria-controls="navbarSupportedContent" />}
