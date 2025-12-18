@@ -24,25 +24,26 @@ import {
   BarChart3,
   Ticket,
   User,
+  Menu,
+  Bell,
+  Search,
 } from "lucide-react";
-
-
-// Utility function for className merging
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(' ');
-}
+import { cn } from "@/utils/cn";
 
 interface MenuItem {
   label: string;
   href: string;
-  icon: React.ElementType;  // ✅ Change from string to React.ElementType
+  icon: React.ElementType;
   submenu?: Omit<MenuItem, "submenu">[];
 }
+
 const menuItems: MenuItem[] = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+   { label: "User Management", href: "/admin/users", icon: Users },
+   { label: "Expert Management", href: "/admin/experts", icon: UserCheck },
   { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
-  { label: "User Management", href: "/admin/users", icon: Users },
-  { label: "Expert Management", href: "/admin/experts", icon: UserCheck },
+ 
+  
   { label: "Expert KYC Review", href: "/admin/kyc", icon: FileText },
   { label: "Service & Pricing", href: "/admin/pricing", icon: Tag },
   { label: "Promo Configuration", href: "/admin/promos", icon: Ticket },
@@ -69,6 +70,7 @@ const menuItems: MenuItem[] = [
     ],
   },
 ];
+
 interface SidebarProps {
   isOpen: boolean;
   toggleSidebar: () => void;
@@ -102,7 +104,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         )}
         aria-current={isActiveLink ? "page" : undefined}
       >
-        <i className={`bi ${item.icon} w-5 h-5 flex-shrink-0`}></i>
+        <item.icon className="w-5 h-5 flex-shrink-0" />
         <span>{item.label}</span>
       </Link>
     );
@@ -120,10 +122,14 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         aria-controls={`submenu-${item.label.replace(/\s/g, "-").toLowerCase()}`}
       >
         <div className="flex items-center space-x-3">
-          <i className={`bi ${item.icon} w-5 h-5 flex-shrink-0`}></i>
+          <item.icon className="w-5 h-5 flex-shrink-0" />
           <span>{item.label}</span>
         </div>
-        <i className={`bi bi-chevron-${isSubmenuOpen ? "up" : "down"} w-4 h-4`}></i>
+        {isSubmenuOpen ? (
+          <ChevronUp className="w-4 h-4" />
+        ) : (
+          <ChevronDown className="w-4 h-4" />
+        )}
       </button>
       {isSubmenuOpen && (
         <div
@@ -179,44 +185,44 @@ const Sidebar: React.FC<SidebarProps> = memo(
         )}
 
         {/* Sidebar */}
-       <aside
-  className={cn(
-    "fixed left-0 top-0 h-full w-64 flex flex-col bg-yellow-600 text-white transition-transform duration-300 ease-in-out z-50 shadow-xl shadow-gray-400",
-    isOpen ? "translate-x-0" : "-translate-x-full",
-    "lg:translate-x-0"
-  )}
-  aria-label="Sidebar navigation"
->
-  {/* Logo Section - Fixed */}
-  <div className="flex items-center justify-between p-6 bg-gray-50 border-r border-gray-200 flex-shrink-0">
-    <img
-      src="/images/logo.png"
-      alt="Logo"
-      className="rounded-2xl"
-    />
-    <button
-      onClick={toggleSidebar}
-      className="lg:hidden p-1 hover:bg-yellow-700 rounded transition-colors duration-200 text-gray-800"
-      aria-label="Close sidebar"
-    >
-      <X className="w-5 h-5" />
-    </button>
-  </div>
+        <aside
+          className={cn(
+            "fixed left-0 top-0 h-full w-64 flex flex-col bg-yellow-600 text-white transition-transform duration-300 ease-in-out z-50 shadow-xl shadow-gray-400",
+            isOpen ? "translate-x-0" : "-translate-x-full",
+            "lg:translate-x-0"
+          )}
+          aria-label="Sidebar navigation"
+        >
+          {/* Logo Section - Fixed */}
+          <div className="flex items-center justify-between p-6 bg-gray-50 border-r border-gray-200 flex-shrink-0">
+            <img
+              src="/images/logo.png"
+              alt="Logo"
+              className="rounded-2xl"
+            />
+            <button
+              onClick={toggleSidebar}
+              className="lg:hidden p-1 hover:bg-yellow-700 rounded transition-colors duration-200 text-gray-800"
+              aria-label="Close sidebar"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
-  {/* Navigation Menu - Scrollable */}
-  <nav className="mt-8 px-4 flex-1 overflow-y-auto pb-6" aria-label="Main navigation">
-    {menuItems.map((item) => (
-      <div key={item.label} className="mb-2">
-        <SidebarMenuItem
-          item={item}
-          pathname={pathname}
-          openSubmenu={openSubmenu}
-          onToggleSubmenu={handleToggleSubmenu}
-        />
-      </div>
-    ))}
-  </nav>
-</aside>
+          {/* Navigation Menu - Scrollable */}
+          <nav className="mt-8 px-4 flex-1 overflow-y-auto pb-6" aria-label="Main navigation">
+            {menuItems.map((item) => (
+              <div key={item.label} className="mb-2">
+                <SidebarMenuItem
+                  item={item}
+                  pathname={pathname}
+                  openSubmenu={openSubmenu}
+                  onToggleSubmenu={handleToggleSubmenu}
+                />
+              </div>
+            ))}
+          </nav>
+        </aside>
       </>
     );
   }
@@ -236,77 +242,90 @@ export default function AdminLayout({
     setSidebarOpen((prev) => !prev);
   }, []);
 
-  const adminRoutes = ["/admin/dashboard", "/admin/appointment", "/admin/pricing", "/admin/clients", "/admin/earnings"];
-  const shouldShowSidebar = adminRoutes.some(route => pathname?.startsWith(route));
+  const adminRoutes = [
+    "/admin/dashboard",
+    "/admin/appointments",
+    "/admin/users",
+    "/admin/experts",
+    "/admin/kyc",
+    "/admin/pricing",
+    "/admin/promos",
+    "/admin/coupons",
+    "/admin/live-sessions",
+    "/admin/session-logs",
+    "/admin/payouts",
+    "/admin/refunds",
+    "/admin/disputes",
+    "/admin/reviews",
+    "/admin/analytics",
+    "/admin/earnings",
+    "/admin/profile",
+  ];
+
+  const shouldShowSidebar = adminRoutes.some((route) =>
+    pathname?.startsWith(route)
+  );
 
   if (!shouldShowSidebar) {
     return <>{children}</>;
   }
 
   return (
-    <>
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
-      />
-      
-      <div className="flex min-h-screen bg-gray-50">
-        {/* Sidebar Component */}
-        <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar Component */}
+      <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
-        {/* Main Content */}
-        <div className="flex-1 lg:ml-64">
-          {/* Top Header */}
-          <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={toggleSidebar}
-                  className="lg:hidden text-gray-800 text-2xl"
-                  aria-label="Toggle sidebar"
-                >
-                  <i className="bi bi-list"></i>
-                </button>
-                <h1 className="text-2xl font-semibold text-gray-800">
-                  {menuItems.find(item => item.href === pathname)?.label || "Dashboard"}
-                </h1>
-              </div>
+      {/* Main Content */}
+      <div className="flex-1 lg:ml-64">
+        {/* Top Header */}
+        <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={toggleSidebar}
+                className="lg:hidden text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors"
+                aria-label="Toggle sidebar"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+              <h1 className="text-2xl font-semibold text-gray-800">
+                {menuItems.find((item) => item.href === pathname)?.label ||
+                  "Dashboard"}
+              </h1>
+            </div>
 
-              <div className="flex items-center space-x-4">
-                {/* Search */}
-                <div className="hidden md:flex items-center relative">
-                  <i className="bi bi-search absolute left-3 text-gray-400"></i>
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                  />
-                </div>
-
-              
-
-                {/* Notifications */}
-                <button className="relative text-gray-600 hover:text-gray-800">
-                  <i className="bi bi-bell text-xl"></i>
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                </button>
-
-                {/* Profile */}
-                <img
-                  src="https://i.pravatar.cc/150?img=12"
-                  alt="Profile"
-                  className="w-10 h-10 rounded-full cursor-pointer hover:ring-2 hover:ring-yellow-500"
+            <div className="flex items-center space-x-4">
+              {/* Search */}
+              <div className="hidden md:flex items-center relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent w-64"
                 />
               </div>
-            </div>
-          </header>
 
-          {/* Main Content */}
-          <main className="p-6">
-            {children}
-          </main>
-        </div>
+              {/* Notifications */}
+              <button className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                  3
+                </span>
+              </button>
+
+              {/* Profile */}
+              <img
+                src="https://i.pravatar.cc/150?img=12"
+                alt="Profile"
+                className="w-10 h-10 rounded-full cursor-pointer hover:ring-2 hover:ring-yellow-500 transition-all"
+              />
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="p-6">{children}</main>
       </div>
-    </>
+    </div>
   );
 }

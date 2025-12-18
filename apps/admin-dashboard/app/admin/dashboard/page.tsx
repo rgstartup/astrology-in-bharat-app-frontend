@@ -1,58 +1,79 @@
 "use client";
 import React, { useState } from "react";
+import { StatsCards } from "@/app/components/admin/StatsCard";
 import {
   Calendar,
   Clock,
   Users,
   Wallet,
-  ArrowUp,
-  ArrowDown,
   MoreVertical,
-  Search,
+  TrendingUp,
 } from "lucide-react";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 export default function DashboardPage() {
-  // Stats data
+  // Stats configuration for StatsCards component
   const stats = [
     {
       title: "Total Consultations",
       value: "12.5k",
-      change: "+2.3%",
-      period: "last week",
-      isPositive: true,
       icon: Calendar,
-      color: "bg-purple-100",
       iconColor: "text-purple-600",
+      iconBgColor: "bg-purple-100",
+      trend: {
+        value: "+2.3%",
+        isPositive: true,
+        period: "last week",
+      },
     },
     {
       title: "Total Astrologers",
       value: "9.1k",
-      change: "+9.1%",
-      period: "last week",
-      isPositive: true,
       icon: Clock,
-      color: "bg-orange-100",
       iconColor: "text-orange-600",
+      iconBgColor: "bg-orange-100",
+      trend: {
+        value: "+9.1%",
+        isPositive: true,
+        period: "last week",
+      },
     },
     {
       title: "Total Users",
       value: "3.2k",
-      change: "-19%",
-      period: "last week",
-      isPositive: false,
       icon: Users,
-      color: "bg-green-100",
       iconColor: "text-green-600",
+      iconBgColor: "bg-green-100",
+      trend: {
+        value: "-19%",
+        isPositive: false,
+        period: "last week",
+      },
     },
     {
       title: "Earnings This Month",
       value: "₹945k",
-      change: "+12%",
-      period: "last week",
-      isPositive: true,
       icon: Wallet,
-      color: "bg-blue-100",
       iconColor: "text-blue-600",
+      iconBgColor: "bg-blue-100",
+      trend: {
+        value: "+12%",
+        isPositive: true,
+        period: "last week",
+      },
     },
   ];
 
@@ -79,88 +100,63 @@ export default function DashboardPage() {
       avatar: "V",
       color: "bg-yellow-600",
     },
-  ];
-
-  // Upcoming appointments
-  const appointments = [
     {
-      name: "Avni Pandit",
-      email: "avni@gluxaan.com",
-      date: "Aug 20, 2025",
-      status: "Ongoing",
-      statusColor: "bg-blue-100 text-blue-700",
+      name: "Priya Desai",
+      action: "Left a 5-star review",
+      time: "8h ago",
+      avatar: "P",
+      color: "bg-yellow-600",
     },
     {
-      name: "Mahesh Joshi",
-      email: "mahesh@joshi.com",
-      date: "Aug 18, 2025",
-      status: "Completed",
-      statusColor: "bg-green-100 text-green-700",
-    },
-    {
-      name: "Vijay Sharma",
-      email: "vijay@aug.com",
-      date: "Aug 15, 2025",
-      status: "Cancelled",
-      statusColor: "bg-red-100 text-red-700",
-    },
-    {
-      name: "Yash Bhagat",
-      email: "yash@bhagat.com",
-      date: "Aug 12, 2025",
-      status: "Completed",
-      statusColor: "bg-green-100 text-green-700",
+      name: "Rahul Gupta",
+      action: "Payment received",
+      time: "10h ago",
+      avatar: "R",
+      color: "bg-yellow-600",
     },
   ];
 
-  const [searchTerm, setSearchTerm] = useState("");
+  // Revenue data for Area Chart
+  const revenueData = [
+    { month: "Jan", revenue: 45000, consultations: 120 },
+    { month: "Feb", revenue: 52000, consultations: 145 },
+    { month: "Mar", revenue: 48000, consultations: 130 },
+    { month: "Apr", revenue: 61000, consultations: 170 },
+    { month: "May", revenue: 55000, consultations: 155 },
+    { month: "Jun", revenue: 67000, consultations: 190 },
+    { month: "Jul", revenue: 73000, consultations: 210 },
+  ];
+
+  // Consultation types data for Bar Chart
+  const consultationData = [
+    { type: "Horoscope", count: 450 },
+    { type: "Palm Reading", count: 320 },
+    { type: "Tarot", count: 280 },
+    { type: "Numerology", count: 190 },
+    { type: "Vastu", count: 150 },
+  ];
+
+  // User growth data for Line Chart
+  const userGrowthData = [
+    { month: "Jan", users: 1200, astrologers: 45 },
+    { month: "Feb", users: 1450, astrologers: 52 },
+    { month: "Mar", users: 1680, astrologers: 58 },
+    { month: "Apr", users: 1920, astrologers: 65 },
+    { month: "May", users: 2350, astrologers: 71 },
+    { month: "Jun", users: 2780, astrologers: 78 },
+    { month: "Jul", users: 3200, astrologers: 85 },
+  ];
+
+  const [activeTab, setActiveTab] = useState("revenue");
 
   return (
     <div className="space-y-6">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-600 mb-2">
-                  {stat.title}
-                </p>
-                <h3 className="text-3xl font-bold text-gray-900 mb-3">
-                  {stat.value}
-                </h3>
-                <div className="flex items-center space-x-1">
-                  {stat.isPositive ? (
-                    <ArrowUp className="w-4 h-4 text-green-600" />
-                  ) : (
-                    <ArrowDown className="w-4 h-4 text-red-600" />
-                  )}
-                  <span
-                    className={`text-sm font-semibold ${
-                      stat.isPositive ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {stat.change}
-                  </span>
-                  <span className="text-sm text-gray-500">{stat.period}</span>
-                </div>
-              </div>
-              <div
-                className={`${stat.color} p-3 rounded-lg flex items-center justify-center`}
-              >
-                <stat.icon className={`w-6 h-6 ${stat.iconColor}`} />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Stats Cards - Using Reusable Component */}
+      <StatsCards stats={stats} columns={4} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Recent Activity */}
-        <div className="lg:col-span-5">
+        <div className="lg:col-span-4">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <h5 className="text-lg font-semibold text-gray-900">
@@ -170,7 +166,7 @@ export default function DashboardPage() {
                 <MoreVertical className="w-5 h-5" />
               </button>
             </div>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100 max-h-96 overflow-y-auto">
               {activities.map((activity, index) => (
                 <div
                   key={index}
@@ -196,84 +192,183 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Upcoming Appointments */}
-        <div className="lg:col-span-7">
+        {/* Analytics Charts */}
+        <div className="lg:col-span-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-              <h5 className="text-lg font-semibold text-gray-900">
-                Upcoming Appointments
-              </h5>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search users..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent w-64"
-                />
+            <div className="px-6 py-4 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h5 className="text-lg font-semibold text-gray-900">
+                  Analytics Overview
+                </h5>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setActiveTab("revenue")}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      activeTab === "revenue"
+                        ? "bg-yellow-600 text-white"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    Revenue
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("consultations")}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      activeTab === "consultations"
+                        ? "bg-yellow-600 text-white"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    Consultations
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("growth")}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      activeTab === "growth"
+                        ? "bg-yellow-600 text-white"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    Growth
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Email
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Registration Date
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {appointments
-                    .filter(
-                      (apt) =>
-                        apt.name
-                          .toLowerCase()
-                          .includes(searchTerm.toLowerCase()) ||
-                        apt.email
-                          .toLowerCase()
-                          .includes(searchTerm.toLowerCase())
-                    )
-                    .map((appointment, index) => (
-                      <tr
-                        key={index}
-                        className="hover:bg-gray-50 transition-colors"
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm font-semibold text-gray-900">
-                            {appointment.name}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-gray-600">
-                            {appointment.email}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-gray-600">
-                            {appointment.date}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span
-                            className={`px-3 py-1 rounded-full text-xs font-semibold ${appointment.statusColor}`}
-                          >
-                            {appointment.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+
+            <div className="p-6">
+              {/* Revenue Chart */}
+              {activeTab === "revenue" && (
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h6 className="text-sm font-medium text-gray-600">
+                        Monthly Revenue & Consultations
+                      </h6>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Last 7 months performance
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2 text-green-600">
+                      <TrendingUp className="w-4 h-4" />
+                      <span className="text-sm font-semibold">+15.3%</span>
+                    </div>
+                  </div>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <AreaChart data={revenueData}>
+                      <defs>
+                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#d97706" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#d97706" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <XAxis
+                        dataKey="month"
+                        stroke="#9ca3af"
+                        style={{ fontSize: "12px" }}
+                      />
+                      <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#fff",
+                          border: "1px solid #e5e7eb",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="revenue"
+                        stroke="#d97706"
+                        strokeWidth={2}
+                        fillOpacity={1}
+                        fill="url(#colorRevenue)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+
+              {/* Consultation Types Chart */}
+              {activeTab === "consultations" && (
+                <div>
+                  <div className="mb-4">
+                    <h6 className="text-sm font-medium text-gray-600">
+                      Consultation Types Distribution
+                    </h6>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Most popular services
+                    </p>
+                  </div>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={consultationData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <XAxis
+                        dataKey="type"
+                        stroke="#9ca3af"
+                        style={{ fontSize: "12px" }}
+                      />
+                      <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#fff",
+                          border: "1px solid #e5e7eb",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <Bar dataKey="count" fill="#d97706" radius={[8, 8, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+
+              {/* User Growth Chart */}
+              {activeTab === "growth" && (
+                <div>
+                  <div className="mb-4">
+                    <h6 className="text-sm font-medium text-gray-600">
+                      User & Astrologer Growth
+                    </h6>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Platform expansion over time
+                    </p>
+                  </div>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={userGrowthData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <XAxis
+                        dataKey="month"
+                        stroke="#9ca3af"
+                        style={{ fontSize: "12px" }}
+                      />
+                      <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#fff",
+                          border: "1px solid #e5e7eb",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <Legend />
+                      <Line
+                        type="monotone"
+                        dataKey="users"
+                        stroke="#10b981"
+                        strokeWidth={2}
+                        dot={{ r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="astrologers"
+                        stroke="#d97706"
+                        strokeWidth={2}
+                        dot={{ r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
             </div>
           </div>
         </div>
