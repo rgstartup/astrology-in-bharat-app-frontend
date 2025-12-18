@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+"use client";
+import { usePathname } from "next/navigation";
 import { Poppins, Outfit } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -7,12 +8,12 @@ import "@repo/styles";
 import { Header, Footer } from "@repo/ui";
 import QuotesLoader from "@/components/QuotesLoader";
 
-
 const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-outfit",
 });
+
 const poppins = Poppins({
   subsets: ["latin"],
   display: "swap",
@@ -20,16 +21,14 @@ const poppins = Poppins({
   weight: ["400", "700"],
 });
 
-export const metadata: Metadata = {
-  title: "Astrology In Bharat",
-  description: "Astrology In Bharat",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isAdminRoute = pathname?.startsWith("/admin");
+
   return (
     <html lang="en">
       <head>
@@ -39,10 +38,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${outfit.variable} ${poppins.variable} `}>
-        <QuotesLoader />
-        <Header />
+        {!isAdminRoute && <QuotesLoader />}
+        {!isAdminRoute && <Header />}
         {children}
-        <Footer />
+        {!isAdminRoute && <Footer />}
       </body>
     </html>
   );
