@@ -30,80 +30,58 @@ const ProductsCarousel = () => {
     >
       {products.map((product, index) => (
         <SwiperSlide key={product.id}>
-          <div className="product-card-luxury h-100">
-            <div className="product-img-luxury">
+          <div className="cosmic-product-card">
+            <div className="cosmic-product-img">
               <img src={product.image} alt={product.title} />
-              <span className="product-badge-luxury">
-                {index === 0
-                  ? "BEST SELLER"
-                  : index === 1
-                    ? "NEW"
-                    : "EXCLUSIVE"}
+              <span className="cosmic-product-badge">
+                {index === 0 ? "Bestseller" : index === 1 ? "New" : "Premium"}
               </span>
             </div>
-            <div className="product-body-luxury">
-              <h4 className="product-name-luxury">{product.title}</h4>
-              <p className="product-desc-luxury">{product.description}</p>
-              <h5 className="product-price-luxury">{product.price}</h5>
-              <button className="product-btn-luxury">
-                <i className="fas fa-shopping-cart"></i> Add to Cart
+            <div className="cosmic-product-body">
+              <h4 className="cosmic-product-name">{product.title}</h4>
+              <p className="cosmic-product-desc">{product.description}</p>
+              <h5 className="cosmic-product-price">{product.price}</h5>
+              <button className="cosmic-product-btn">
+                <i className="fas fa-shopping-cart"></i> Buy Now
               </button>
             </div>
           </div>
         </SwiperSlide>
       ))}
-      {/* Custom Navigation Arrows */}
+      {/* Custom Navigation Arrows - Cosmic Style */}
       <div
-        className="swiper-button-prev-unique"
-        style={
-          {
-            background: "rgba(218, 162, 62, 0.9)",
-            color: "#fff",
-            width: "50px",
-            height: "50px",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            boxShadow: "0 4px 20px rgba(218, 162, 62, 0.4)",
-            transition: "all 0.3s ease",
-            position: "absolute",
-            left: "-70px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            zIndex: 10,
-            border: "2px solid rgba(255, 255, 255, 0.2)",
-          } as React.CSSProperties
-        }
+        className="swiper-button-prev-unique swiper-nav-cosmic"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          borderRadius: "50%",
+          position: "absolute",
+          left: "-25px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          zIndex: 10,
+        }}
       >
-        <i className="fa-solid fa-arrow-left"></i>
+        <i className="fa-solid fa-chevron-left"></i>
       </div>
       <div
-        className="swiper-button-next-unique"
-        style={
-          {
-            background: "rgba(218, 162, 62, 0.9)",
-            color: "#fff",
-            width: "50px",
-            height: "50px",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            boxShadow: "0 4px 20px rgba(218, 162, 62, 0.4)",
-            transition: "all 0.3s ease",
-            position: "absolute",
-            right: "-70px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            zIndex: 10,
-            border: "2px solid rgba(255, 255, 255, 0.2)",
-          } as React.CSSProperties
-        }
+        className="swiper-button-next-unique swiper-nav-cosmic"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          borderRadius: "50%",
+          position: "absolute",
+          right: "-25px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          zIndex: 10,
+        }}
       >
-        <i className="fa-solid fa-arrow-right"></i>
+        <i className="fa-solid fa-chevron-right"></i>
       </div>
     </Swiper>
   );

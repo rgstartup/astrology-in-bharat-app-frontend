@@ -279,8 +279,7 @@ const Page: React.FC = () => {
                   <i className="fa-solid fa-sliders"></i>
                   <span>Options</span>
                   <i
-                    className={`fa-solid fa-chevron-down ${isDropdownOpen ? "rotate-180" : ""}`}
-                    style={{ transition: "transform 0.3s" }}
+                    className={`fa-solid fa-chevron-down transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
                   ></i>
                 </button>
                 <div
@@ -369,14 +368,8 @@ const Page: React.FC = () => {
 
           {/* No Results State */}
           {!loading && !error && getFilteredExperts().length === 0 && (
-            <div
-              className="error-state mt-4"
-              style={{
-                background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
-                borderColor: "#3b82f6",
-              }}
-            >
-              <div className="error-state-icon" style={{ color: "#3b82f6" }}>
+            <div className="error-state mt-4 error-state-blue">
+              <div className="error-state-icon error-state-icon-blue">
                 <i className="fas fa-search"></i>
               </div>
               <h3 className="error-state-title">No Astrologers Found</h3>
@@ -451,12 +444,9 @@ const Page: React.FC = () => {
           {!loading && !error && (total === null || experts.length < total) && (
             <div className="text-center mt-5">
               <button
-                className="btn-global btn-secondary wfc"
+                className="btn-global btn-secondary wfc btn-shadow-soft"
                 onClick={() => setOffset((prev) => prev + limit)}
                 disabled={loading}
-                style={{
-                  boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
-                }}
               >
                 {loading ? "Loading..." : "Load More Astrologers"}
               </button>
@@ -495,9 +485,11 @@ const Page: React.FC = () => {
 
       {/* Astrology Services - ULTRA PREMIUM WOW DESIGN */}
       <section className="services-premium-section">
-        <div className="container position-relative py-5" style={{ zIndex: 1 }}>
+        <div className="container position-relative py-5 z-index-1">
           <div className="services-header-premium">
-            <h2 className="text-center mt-3 mb-2 horoscopes-heading title-lg">Astrology Services</h2>
+            <h2 className="text-center mt-3 mb-2 horoscopes-heading title-lg">
+              Astrology Services
+            </h2>
             <p>
               Discover the ancient wisdom of Vedic astrology combined with
               modern precision. Our expert astrologers provide transformative
@@ -543,16 +535,16 @@ const Page: React.FC = () => {
         </div>
       </section>
 
-      {/* Products Listing - LUXURY COSMIC DESIGN */}
-      <section className="products-luxury-section">
-        <div className="stars-bg"></div>
-        <div className="cosmic-glow"></div>
-        <div className="container position-relative" style={{ zIndex: 1 }}>
-          <div className="products-header-luxury">
-            <h2>Our Astrological Products</h2>
+      {/* Products Listing - COSMIC DARK LUXURY */}
+      <section className="cosmic-products-section">
+        <div className="container">
+          <div className="cosmic-products-header">
+            <h2>
+              Our <span>Astrological Products</span>
+            </h2>
             <p>
-              Sacred tools and divine artifacts to enhance your spiritual
-              journey
+              Embrace the power of the cosmos with our sacred, energized tools
+              designed to bring balance and prosperity to your life.
             </p>
           </div>
           <div className="product-slider-container">
@@ -614,8 +606,7 @@ const Page: React.FC = () => {
               <img
                 src="/images/Astrologer.png"
                 alt="Astrologer talking"
-                className="img-fluid rounded-circle border border-gray"
-                style={{ width: "300px", height: "300px", objectFit: "cover" }}
+                className="img-fluid rounded-circle border border-gray astro-talk-img"
               />
             </div>
 
@@ -677,12 +668,7 @@ const Page: React.FC = () => {
                     <img
                       src="images/astro-img1.png"
                       alt={client.name}
-                      className="rounded-circle mb-2"
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        objectFit: "cover",
-                      }}
+                      className="rounded-circle mb-2 client-img-small"
                     />
                     <strong>{client.name}</strong>
                     <div className="rating-star">
@@ -707,35 +693,14 @@ const Page: React.FC = () => {
               .slice(0, 3)
               .map((item) => (
                 <div className="col-lg-4 col-md-6 mb-4" key={item.id}>
-                  <div
-                    className="astro-card ser-card card h-100 border border-gray shadow position-relative overflow-hidden"
-                    style={{
-                      borderRadius: "15px",
-                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    }}
-                  >
+                  <div className="astro-card ser-card card h-100 border border-gray shadow position-relative overflow-hidden astro-card-featured">
                     <div className="position-relative p-4 pb-0">
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="rounded-circle border-3 border-warning shadow"
-                        style={{
-                          width: "120px",
-                          height: "120px",
-                          objectFit: "cover",
-                        }}
+                        className="rounded-circle border-3 border-warning shadow astro-featured-img"
                       />
-                      <span
-                        className="badge position-absolute"
-                        style={{
-                          background:
-                            "linear-gradient(45deg, #f7d774, #e0a800)",
-                          color: "#000",
-                          top: "20px",
-                          right: "20px",
-                          fontSize: "0.8rem",
-                        }}
-                      >
+                      <span className="badge position-absolute badge-top-rated">
                         ⭐ Top Rated
                       </span>
                     </div>
@@ -747,10 +712,7 @@ const Page: React.FC = () => {
                       </p>
 
                       <div className="d-flex justify-content-center align-items-center mb-3">
-                        <div
-                          className="rating-star text-warning"
-                          style={{ fontSize: "1.1rem" }}
-                        >
+                        <div className="rating-star text-warning font-1-1">
                           {"★".repeat(Math.floor(item.ratings))}
                         </div>
                         <small className="ms-2 text-muted">
