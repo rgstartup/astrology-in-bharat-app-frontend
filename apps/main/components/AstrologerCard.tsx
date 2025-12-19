@@ -91,7 +91,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({ astrologerData }) => {
           <button onClick={handleChatClick} className="btn-global btn-outline-primary">
             <i className="fa-regular fa-comment-dots"></i> Chat
           </button>
-          <button className="call btn-global btn-outline-secondary">
+          <button className="call btn-global btn-outline-secondary" onClick={handleChatClick} >
             <i className="fa-solid fa-phone-volume"></i> Call
           </button>
         </div>

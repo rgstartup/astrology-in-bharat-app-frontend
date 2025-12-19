@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
   return (
     <>
       {/* Newsletter Section */}
-      <div className="newsletter py-4">
+      <div className="newsletter py-4" >
         <div className="container d-flex flex-column flex-lg-row align-items-center justify-content-between">
           <div>
             <h4 className="fw-bold mb-1">JOIN OUR NEWSLETTER</h4>
@@ -25,9 +25,9 @@ const Footer: React.FC = () => {
           </form>
         </div>
       </div>
-      <footer className="footer-section">
+      <footer className="footer-section" style={{ marginTop: "-93px" }} >
         {/* Footer Content */}
-        <div className="footer-main py-5">
+        <div className="footer-main py-4" >
           <div className="container">
             <div className="row">
               {/* About */}
@@ -90,6 +90,9 @@ const Footer: React.FC = () => {
                   </li>
                   <li>
                     <a href="#">Blog</a>
+                  </li>
+                  <li>
+                    <a href="#">Help/Support</a>
                   </li>
                 </ul>
               </div>

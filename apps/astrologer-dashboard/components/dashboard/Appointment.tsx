@@ -298,7 +298,7 @@ export default function AppointmentsPage() {
                 {/* Right Section: Actions */}
                 <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3 w-full lg:w-auto mt-4 lg:mt-0">
                   <a
-                    href={appt.meetingLink}
+                    href={"http://localhost:3003/join-live-session"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-5 py-3 text-sm bg-yellow-600 text-white rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-yellow-700 shadow-sm transition-all w-full sm:w-auto"
