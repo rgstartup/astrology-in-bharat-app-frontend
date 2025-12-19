@@ -3,8 +3,9 @@ import { Poppins, Outfit } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 // import "@/styles/style.css";
-import "@repo/styles"
+import "@repo/styles";
 import { Header, Footer } from "@repo/ui";
+import QuotesLoader from "@/components/QuotesLoader";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${outfit.variable} ${poppins.variable} `}>
+        {/* <QuotesLoader /> */}
         <Header />
         {children}
         <Footer />

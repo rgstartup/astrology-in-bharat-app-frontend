@@ -19,6 +19,8 @@ const page = () => {
         {/* <!-- Astrologer Card 1 --> */}
         <div className="astro-grid">
           {ListOfAllAstrologers.map((item) => {
+            const modalId = `astro-video-${item.id}`;
+            const modalLabelId = `astro-video-label-${item.id}`;
             return (
               <Link
                 href="/astrologer-details"
@@ -35,7 +37,7 @@ const page = () => {
                     <span
                       className="play-vid fa-beat"
                       data-bs-toggle="modal"
-                      data-bs-target="#exampleModal"
+                      data-bs-target={`#${modalId}`}
                     >
                       <i className="fa-solid fa-circle-play"></i>
                     </span>
@@ -62,12 +64,12 @@ const page = () => {
                   </div>
                 </div>
 
-                {/* <!-- Modal --> */}
+                {/* Modal per astrologer */}
                 <div
                   className="modal fade"
-                  id="exampleModal"
+                  id={modalId}
                   tabIndex={-1}
-                  aria-labelledby="exampleModalLabel"
+                  aria-labelledby={modalLabelId}
                   aria-hidden="true"
                 >
                   <div className="modal-dialog modal-dialog-centered modal-xl">
@@ -75,9 +77,9 @@ const page = () => {
                       <div className="modal-header">
                         <h4
                           className="modal-title-astro-about"
-                          id="exampleModalLabel"
+                          id={modalLabelId}
                         >
-                          Meet Astrologer Parbhata Giri Introduction Video
+                          Meet Astrologer {item.name} Introduction Video
                         </h4>
                         <button
                           type="button"
@@ -93,7 +95,7 @@ const page = () => {
                           width="100%"
                           height="500"
                           src={item.video}
-                          title="शिव जी ने माता पार्वती को क्यों दिया ये भयंकर श्राप 😱😱 ?  #shivshankar #mataparvati"
+                          title={item.name}
                           frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                           referrerPolicy="strict-origin-when-cross-origin"
@@ -109,7 +111,7 @@ const page = () => {
         </div>
 
         <div className="view-all">
-          <a href="#" className="btn-link wfc m-auto">
+          <a href="#" className="btn-link wfc m-auto w-20">
             View All Astrologers
           </a>
         </div>
