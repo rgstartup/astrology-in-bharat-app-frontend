@@ -57,7 +57,7 @@ const Page: React.FC = () => {
                     Across India
                   </li>
                 </ul>
-                <a href="#" className="btn-link wfc mt-4 mb-4">
+                <a href="#" className="btn-link wfc mt-4 mb-4 w-40">
                   Start Consultation
                 </a>
               </div>
@@ -104,7 +104,7 @@ const Page: React.FC = () => {
           </div>
 
           <div className="view-all">
-            <a href="#" className="btn-link wfc m-auto">
+            <a href="#" className="btn-link wfc m-auto w-30">
               View All Astrologers
             </a>
           </div>
@@ -167,7 +167,7 @@ const Page: React.FC = () => {
       <section className="product-slider-section py-50 bg-cream">
         <div className="container">
           <h2 className="text-center mb-5 heading section-title">
-            🔮 Our Astrological Products
+             Our Astrological Products
           </h2>
           <div className="product-slider-container">
             <ProductsCarousel />

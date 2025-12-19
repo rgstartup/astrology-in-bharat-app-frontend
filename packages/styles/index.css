@@ -1,8 +1,40 @@
 /* =========================================
    1. GLOBAL RESET & BASE STYLES
    ========================================= */
+:root {
+  /* Brand Palette */
+  --primary-color: #732882;
+  --secondary-color: #daa23e;
+  --primary-gradient: linear-gradient(45deg, #d08830, #daa23e);
+  --accent-blue: #0b4f6c;
+  --black-color: #1a1a1a;
+  --border-color: #daa23e73;
+  --color-white: #ffffff;
+  --close-button: #e63946;
+  --star-color: #ffc850;
+  --product-background: #ffe3b852;
+  --testimonial-bg-color: #ffcc00;
+  --background-gradient: linear-gradient(to right, #fffcf6, #fff2da);
+  --google-color: #e9f1ff;
+  --facebook-color: #00a2ff8e;
+  --button-hover: #186593;
+
+  /* Surface / Elevation */
+  --surface: #ffffff;
+  --surface-subtle: #faf6ef;
+  --shadow-soft: 0 12px 35px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 10px 28px rgba(0, 0, 0, 0.08);
+
+  /* Sizing */
+  --radius-lg: 14px;
+  --radius-md: 12px;
+  --radius-sm: 10px;
+  --container-max: 1140px;
+}
+
 body {
   font-family: "Outfit", sans-serif;
+  background-color: #faf6ef;
   background-image: url("/images/white-background.png");
   background-size: cover;
   background-repeat: no-repeat;
@@ -10,6 +42,7 @@ body {
   margin: 0;
   padding: 0;
   color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
 }
 
 img {
@@ -30,6 +63,22 @@ a {
 
 a:hover {
   text-decoration: none;
+}
+
+.w-fit-content {
+  width: fit-content;
+}
+.w-100{
+  width: 100%;
+}
+.w-40{
+  width: 40% !important;
+}
+.w-30{
+  width: 30% !important;
+}
+.w-20{
+  width: 20% !important;
 }
 
 /* =========================================
@@ -340,20 +389,25 @@ a.nav-link:focus {
 
 /* Buttons */
 .btn-link {
-  background: #732882;
+  background: var(--primary-color);
   color: #fff;
   width: 100%;
-  padding: 14px 13px;
-  border-radius: 100px;
+  padding: 14px 16px;
+  border-radius: 999px;
   text-decoration: none;
-  display: block;
-  text-align: center;
-  transition: 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
 }
 
 .btn-link:hover {
   color: #fff;
-  background: #186593;
+  background: var(--button-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .btn-link img {
@@ -361,18 +415,32 @@ a.nav-link:focus {
   filter: brightness(0) invert(1);
 }
 
+.btn-link:focus-visible {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
 .orderNowbtn {
   border: none;
   border-radius: 50px;
-  padding: 7px 20px;
-  background-color: #732882;
+  padding: 9px 22px;
+  background-color: var(--primary-color);
   color: #fff;
-  transition: 0.3s;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  transition: all 0.25s ease;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
 }
 
 .orderNowbtn:hover {
   background-color: #642172;
   color: #fff;
+  transform: translateY(-1px);
+}
+
+.orderNowbtn:focus-visible {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
 }
 
 .btn-close {
@@ -476,11 +544,13 @@ a.nav-link:focus {
   background-image: url("/images/back-over.jpg");
   background-size: cover;
   background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
 }
 
 .overlay-hero {
-  background: #000000c4;
-  padding: 45px 0;
+  background: linear-gradient(115deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.6));
+  padding: 60px 0 50px;
 }
 
 .banner-part h1 {
@@ -493,6 +563,14 @@ a.nav-link:focus {
 .banner-part p {
   color: #fff;
   font-size: 16px;
+}
+
+.banner-part .card-title {
+  max-width: 460px;
+}
+
+.banner-part .col-lg-7 p {
+  max-width: 520px;
 }
 
 .card-title {
@@ -591,18 +669,18 @@ a.nav-link:focus {
 }
 
 .astro-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 14px;
+  background: linear-gradient(to right, #fffcf6, #fff2da);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  padding: 16px;
   text-align: center;
-  transition: transform 0.3s ease;
-  background-image: linear-gradient(to right, #fffcf6, #fff2da);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: solid 1px #daa23e45;
 }
 
 .astro-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
 }
 
 .rating-star {
@@ -729,13 +807,13 @@ a.nav-link:focus {
 .horoscopes-items {
   background-color: #ffffff;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
   margin: 10px 0px 20px 0px;
   border: solid 1px #daa23e73;
   text-align: center;
-  padding: 20px;
-  border-radius: 10px;
-  transition: all 0.4s ease;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  transition: all 0.35s ease;
   color: #1a1a1a;
 }
 
@@ -775,18 +853,69 @@ a.nav-link:focus {
 
 .ser-card,
 .product-card {
-  background-color: #ffffff;
+  background-color: var(--surface);
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
   margin: 10px 0px 20px 0px;
-  border: solid 1px #daa23e73;
+  border: solid 1px var(--border-color);
   text-align: center;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 14px;
+  border-radius: var(--radius-md);
   min-height: 280px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .product-card {
-  min-height: auto;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.product-card__badge {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.product-card__media {
+  width: 100%;
+  height: 180px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #f8f5ef;
+  border: 1px solid rgba(218, 162, 62, 0.25);
+}
+.product-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.product-card h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  min-height: 46px;
+}
+.product-card .p-sm {
+  margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.product-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.product-card__price {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+.ser-card:hover,
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
 }
 
 .services-img {
@@ -816,6 +945,153 @@ a.nav-link:focus {
 }
 .vert-move:hover {
   transform: translateY(-5px);
+}
+
+.section-heading,
+.heading,
+.section-title {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.section-subtitle {
+  color: #6c6c6c;
+  font-size: 16px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.card-surface {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+.soft-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #e5dcc7, transparent);
+  margin: 24px 0;
+}
+
+.subtle-tag {
+  background: rgba(218, 162, 62, 0.12);
+  color: var(--black-color);
+  border: 1px solid rgba(218, 162, 62, 0.25);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(115, 40, 130, 0.08);
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.card-meta {
+  font-size: 13px;
+  color: #6c757d;
+}
+
+.gradient-underline {
+  position: relative;
+  display: inline-block;
+}
+.gradient-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 100%;
+  height: 6px;
+  background: var(--primary-gradient);
+  border-radius: 999px;
+  opacity: 0.35;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(218, 162, 62, 0.2);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(6px);
+  border-radius: var(--radius-lg);
+}
+
+/* Form refinements */
+.form-control {
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  padding: 12px 14px;
+  box-shadow: none;
+}
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(115, 40, 130, 0.15);
+}
+
+.form-label {
+  font-weight: 600;
+  color: #2c2c2c;
+  font-size: 14px;
+}
+
+.alert {
+  border-radius: 12px;
+}
+
+/* Search box improvements */
+.search-box {
+  gap: 10px;
+}
+.search-box input {
+  border: 1px solid #e2e2e2;
+  box-shadow: none;
+}
+.search-box input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(115, 40, 130, 0.15);
+}
+.search-box button {
+  border: none;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+}
+
+/* Product carousel navigation */
+.swiper-button-prev-unique,
+.swiper-button-next-unique {
+  position: absolute;
+  top: 40%;
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary-gradient);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.swiper-button-prev-unique {
+  left: -16px;
+}
+.swiper-button-next-unique {
+  right: -16px;
+}
+.swiper-button-prev-unique:hover,
+.swiper-button-next-unique:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.2);
 }
 
 .text-sand {
@@ -924,16 +1200,22 @@ a.nav-link:focus {
   color: white;
   font-weight: 600;
   border-radius: 25px;
-  padding: 10px;
+  padding: 12px;
   width: 100%;
   border: none;
   transition: 0.3s;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
 }
 
 .btn-chat:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   color: white;
+}
+
+.btn-chat:focus-visible {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
 }
 
 .img-circle-lg {
@@ -1026,30 +1308,12 @@ a.nav-link:focus {
    8. SIGN IN PAGE STYLES
    ========================================= */
 /* CSS For Sign In Page */
-
-:root {
-  --primary-color: #732882;
-  --secondary-color: #daa23e;
-  --black-color: black;
-  --border-color: #daa23e73;
-  --color-white: white;
-  --close-button: red;
-  --star-color: #ffc850;
-  --product-background: #ffe3b852;
-  --testimonial-bg-color: #ffcc00;
-  --background-gradient: linear-gradient(to right, #fffcf6, #fff2da);
-  --google-color: #e9f1ff;
-  --facebook-color: #00a2ff8e;
-  --button-hover: #186593;
-}
-
 .signin-part {
   background: var(--background-gradient);
   width: 100%;
   height: auto;
-  padding-top: 30px;
-  padding-bottom: 120px;
-  margin-bottom: -100px;
+  padding-top: 40px;
+  padding-bottom: 80px;
 }
 
 .banner-data {
@@ -1057,11 +1321,12 @@ a.nav-link:focus {
 }
 
 .form-data {
-  margin: 5rem 0px 0px 10rem;
+  margin: 4rem 0 0 4rem;
   border: 2px solid var(--border-color);
-  border-radius: 12px;
-  background-color: white;
-  padding: 20px;
+  border-radius: 18px;
+  background-color: #ffffff;
+  padding: 24px;
+  box-shadow: var(--shadow-card);
 }
 
 .sign-form-heading {
@@ -1216,8 +1481,8 @@ a.nav-link:focus {
     width: 80%;
   }
   .form-data {
-    position: relative;
-    right: 50%;
+    position: static;
+    margin: 2rem 0 0 0;
     width: 100%;
   }
   .social-links {
@@ -1234,9 +1499,9 @@ a.nav-link:focus {
    ========================================= */
 .astro-profile-main-card {
   background-color: #fff8f0; /* Cream/Beige Background */
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 30px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   position: relative;
 }
 
@@ -1306,8 +1571,8 @@ a.nav-link:focus {
 
 .btn-astro-action {
   flex: 1;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px 10px;
+  border-radius: 12px;
   border: none;
   font-weight: 600;
   color: #fff;
@@ -1315,12 +1580,18 @@ a.nav-link:focus {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: 0.3s;
+  transition: all 0.25s ease;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
 }
 
 .btn-astro-action:hover {
   transform: translateY(-2px);
   color: #fff;
+}
+
+.btn-astro-action:focus-visible {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
 }
 
 .btn-purple {
@@ -1339,6 +1610,28 @@ a.nav-link:focus {
   font-weight: 800;
   color: #202020;
   margin-bottom: 15px;
+}
+
+.astro-stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+.astro-stat-pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(115, 40, 130, 0.05);
+  border: 1px solid rgba(115, 40, 130, 0.16);
+  font-size: 13px;
+  font-weight: 500;
+}
+.astro-section-card {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(218, 162, 62, 0.35);
 }
 
 .profile-tab-btn {

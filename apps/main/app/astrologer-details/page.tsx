@@ -1,13 +1,19 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import { products } from "@/data/homePagaData";
+import { Modal } from "react-bootstrap";
 
 const page = () => {
+  const [showVideo, setShowVideo] = useState(false);
+  const introVideo = "https://www.youtube.com/embed/INoPh_oRooU";
+
   return (
     <>
       {/* ================= ASTRO PROFILE ================= */}
       <div className="container mt-40">
-        <div className="row astro-profile-main-card align-items-start">
+        <div className="row astro-profile-main-card card-surface align-items-start p-3 p-md-4">
           {/* LEFT */}
           <div className="col-lg-6 col-md-12 p-2 astro-profile-right-border">
             <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start text-center text-md-start">
@@ -20,8 +26,8 @@ const page = () => {
 
                 <span
                   className="play-btn-overlay fa-beat"
-                  data-bs-toggle="modal"
-                  data-bs-target="#exampleModal"
+                  role="button"
+                  onClick={() => setShowVideo(true)}
                 >
                   <i className="fa-solid fa-circle-play"></i>
                 </span>
@@ -31,19 +37,18 @@ const page = () => {
 
               <div>
                 <h4 className="astro-name-lg">Amita Sharma</h4>
+                <p className="card-meta mb-2">Vedic Astrology • Numerology • Vastu</p>
 
-                <div className="mb-1">
-                  <span className="astro-meta-label">Lang.</span> Hindi, English
+                <div className="astro-stats-row">
+                  <span className="astro-stat-pill">⭐ 4.9 • 5,200+ readings</span>
+                  <span className="astro-stat-pill">Experience: 12+ years</span>
+                  <span className="astro-stat-pill">Languages: Hindi, English</span>
+                  <span className="astro-stat-pill">₹50.00/min consultation</span>
                 </div>
 
-                <div className="astro-tags-pill">Vedic, Numero, Vastu</div>
-
-                <div className="mb-1">
-                  <span className="astro-meta-label">Exp.</span> 4 years
-                </div>
-
-                <div>
-                  <span className="astro-meta-label">Call.</span> ₹50.00/min
+                <div className="mt-3">
+                  <span className="astro-meta-label">Specialties:</span>{" "}
+                  Career, Relationships, Marriage, Health, Finance, Vastu Remedies
                 </div>
               </div>
             </div>
@@ -99,7 +104,7 @@ const page = () => {
         <div className="row">
           {/* FORM */}
           <div className="col-lg-6">
-            <div className="ser-card h-100 p-20">
+            <div className="astro-section-card h-100 p-20">
               <h4 className="title-secondary color-secondary mb-20">
                 Please share your birth details
               </h4>
@@ -130,7 +135,7 @@ const page = () => {
 
           {/* TESTIMONIAL */}
           <div className="col-lg-6">
-            <div className="ser-card h-100 p-20">
+            <div className="astro-section-card h-100 p-20">
               <h4 className="text-center title-secondary color-secondary">
                 Client Success Stories
               </h4>
@@ -225,6 +230,33 @@ const page = () => {
           </div>
         </div>
       </section>
+
+      {/* Intro Video Modal */}
+      <Modal
+        show={showVideo}
+        onHide={() => setShowVideo(false)}
+        centered
+        size="xl"
+        contentClassName="astro-modal-content"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title className="modal-title-astro-about">
+            Meet Astrologer Amita Sharma - Introduction Video
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <iframe
+            width="100%"
+            height="500"
+            src={introVideo}
+            title="Astrologer Intro"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          ></iframe>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
