@@ -1,37 +1,6 @@
 /* =========================================
    1. GLOBAL RESET & BASE STYLES
    ========================================= */
-:root {
-  /* Brand Palette */
-  --primary-color: #732882;
-  --secondary-color: #daa23e;
-  --primary-gradient: linear-gradient(45deg, #d08830, #daa23e);
-  --accent-blue: #0b4f6c;
-  --black-color: #1a1a1a;
-  --border-color: #daa23e73;
-  --color-white: #ffffff;
-  --close-button: #e63946;
-  --star-color: #ffc850;
-  --product-background: #ffe3b852;
-  --testimonial-bg-color: #ffcc00;
-  --background-gradient: linear-gradient(to right, #fffcf6, #fff2da);
-  --google-color: #e9f1ff;
-  --facebook-color: #00a2ff8e;
-  --button-hover: #186593;
-
-  /* Surface / Elevation */
-  --surface: #ffffff;
-  --surface-subtle: #faf6ef;
-  --shadow-soft: 0 12px 35px rgba(0, 0, 0, 0.08);
-  --shadow-card: 0 10px 28px rgba(0, 0, 0, 0.08);
-
-  /* Sizing */
-  --radius-lg: 14px;
-  --radius-md: 12px;
-  --radius-sm: 10px;
-  --container-max: 1140px;
-}
-
 body {
   font-family: "Outfit", sans-serif;
   background-color: #faf6ef;
@@ -68,16 +37,16 @@ a:hover {
 .w-fit-content {
   width: fit-content;
 }
-.w-100{
+.w-100 {
   width: 100%;
 }
-.w-40{
+.w-40 {
   width: 40% !important;
 }
-.w-30{
+.w-30 {
   width: 30% !important;
 }
-.w-20{
+.w-20 {
   width: 20% !important;
 }
 
@@ -389,7 +358,7 @@ a.nav-link:focus {
 
 /* Buttons */
 .btn-link {
-  background: var(--primary-color);
+  background: #732882;
   color: #fff;
   width: 100%;
   padding: 14px 16px;
@@ -405,7 +374,7 @@ a.nav-link:focus {
 
 .btn-link:hover {
   color: #fff;
-  background: var(--button-hover);
+  background: #186593;
   transform: translateY(-1px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
@@ -416,7 +385,7 @@ a.nav-link:focus {
 }
 
 .btn-link:focus-visible {
-  outline: 2px solid var(--secondary-color);
+  outline: 2px solid #daa23e;
   outline-offset: 2px;
 }
 
@@ -424,7 +393,7 @@ a.nav-link:focus {
   border: none;
   border-radius: 50px;
   padding: 9px 22px;
-  background-color: var(--primary-color);
+  background-color: #732882;
   color: #fff;
   font-weight: 600;
   letter-spacing: 0.2px;
@@ -439,7 +408,7 @@ a.nav-link:focus {
 }
 
 .orderNowbtn:focus-visible {
-  outline: 2px solid var(--secondary-color);
+  outline: 2px solid #daa23e;
   outline-offset: 2px;
 }
 
@@ -670,11 +639,13 @@ a.nav-link:focus {
 
 .astro-card {
   background: linear-gradient(to right, #fffcf6, #fff2da);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
   padding: 16px;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   border: solid 1px #daa23e45;
 }
 
@@ -812,7 +783,7 @@ a.nav-link:focus {
   border: solid 1px #daa23e73;
   text-align: center;
   padding: 18px;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   transition: all 0.35s ease;
   color: #1a1a1a;
 }
@@ -853,16 +824,18 @@ a.nav-link:focus {
 
 .ser-card,
 .product-card {
-  background-color: var(--surface);
+  background-color: #ffffff;
   overflow: hidden;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
   margin: 10px 0px 20px 0px;
-  border: solid 1px var(--border-color);
+  border: solid 1px #daa23e73;
   text-align: center;
   padding: 14px;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   min-height: 280px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 .product-card {
   min-height: 320px;
@@ -877,7 +850,7 @@ a.nav-link:focus {
 .product-card__media {
   width: 100%;
   height: 180px;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   overflow: hidden;
   background: #f8f5ef;
   border: 1px solid rgba(218, 162, 62, 0.25);
@@ -910,7 +883,7 @@ a.nav-link:focus {
 .product-card__price {
   font-size: 18px;
   font-weight: 700;
-  color: var(--primary-color);
+  color: #732882;
 }
 .ser-card:hover,
 .product-card:hover {
@@ -962,8 +935,8 @@ a.nav-link:focus {
 }
 
 .card-surface {
-  background: var(--surface);
-  border-radius: var(--radius-lg);
+  background: #ffffff;
+  border-radius: 14px;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
 }
 
@@ -976,7 +949,7 @@ a.nav-link:focus {
 
 .subtle-tag {
   background: rgba(218, 162, 62, 0.12);
-  color: var(--black-color);
+  color: #1a1a1a;
   border: 1px solid rgba(218, 162, 62, 0.25);
   padding: 6px 14px;
   border-radius: 999px;
@@ -991,7 +964,7 @@ a.nav-link:focus {
   padding: 6px 12px;
   border-radius: 999px;
   background: rgba(115, 40, 130, 0.08);
-  color: var(--primary-color);
+  color: #732882;
   font-weight: 600;
   font-size: 13px;
 }
@@ -1012,7 +985,7 @@ a.nav-link:focus {
   bottom: -8px;
   width: 100%;
   height: 6px;
-  background: var(--primary-gradient);
+  background: linear-gradient(45deg, #d08830, #daa23e);
   border-radius: 999px;
   opacity: 0.35;
 }
@@ -1022,7 +995,7 @@ a.nav-link:focus {
   border: 1px solid rgba(218, 162, 62, 0.2);
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(6px);
-  border-radius: var(--radius-lg);
+  border-radius: 14px;
 }
 
 /* Form refinements */
@@ -1033,7 +1006,7 @@ a.nav-link:focus {
   box-shadow: none;
 }
 .form-control:focus {
-  border-color: var(--primary-color);
+  border-color: #732882;
   box-shadow: 0 0 0 3px rgba(115, 40, 130, 0.15);
 }
 
@@ -1056,7 +1029,7 @@ a.nav-link:focus {
   box-shadow: none;
 }
 .search-box input:focus {
-  border-color: var(--primary-color);
+  border-color: #732882;
   box-shadow: 0 0 0 3px rgba(115, 40, 130, 0.15);
 }
 .search-box button {
@@ -1074,13 +1047,15 @@ a.nav-link:focus {
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: var(--primary-gradient);
+  background: linear-gradient(45deg, #d08830, #daa23e);
   color: #fff;
   display: grid;
   place-items: center;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .swiper-button-prev-unique {
   left: -16px;
@@ -1214,7 +1189,7 @@ a.nav-link:focus {
 }
 
 .btn-chat:focus-visible {
-  outline: 2px solid var(--secondary-color);
+  outline: 2px solid #daa23e;
   outline-offset: 2px;
 }
 
@@ -1309,7 +1284,7 @@ a.nav-link:focus {
    ========================================= */
 /* CSS For Sign In Page */
 .signin-part {
-  background: var(--background-gradient);
+  background: linear-gradient(to right, #fffcf6, #fff2da);
   width: 100%;
   height: auto;
   padding-top: 40px;
@@ -1322,11 +1297,11 @@ a.nav-link:focus {
 
 .form-data {
   margin: 4rem 0 0 4rem;
-  border: 2px solid var(--border-color);
+  border: 2px solid #daa23e73;
   border-radius: 18px;
   background-color: #ffffff;
   padding: 24px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
 }
 
 .sign-form-heading {
@@ -1338,7 +1313,7 @@ a.nav-link:focus {
 
 .sign-up {
   text-decoration: none;
-  color: var(--secondary-color);
+  color: #daa23e;
 }
 
 .social-button {
@@ -1346,8 +1321,8 @@ a.nav-link:focus {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  background-color: var(--google-color);
-  color: var(--black-color);
+  background-color: #e9f1ff;
+  color: #1a1a1a;
   width: 50%;
   padding: 5px 20px;
   border-radius: 12px;
@@ -1366,7 +1341,7 @@ a.nav-link:focus {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  background: var(--facebook-color);
+  background: #00a2ff8e;
   border-radius: 12px;
   padding: 7px 30px;
   cursor: pointer;
@@ -1377,7 +1352,7 @@ a.nav-link:focus {
   padding: 8px 10px;
   border-radius: 15px;
   border: none;
-  border: 2px solid var(--border-color);
+  border: 2px solid #daa23e73;
   margin-top: 5px;
 }
 
@@ -1392,12 +1367,12 @@ a.nav-link:focus {
   padding: 8px 10px;
   border-radius: 15px;
   border: none;
-  border: 2px solid var(--border-color);
+  border: 2px solid #daa23e73;
   margin-top: 5px;
 }
 
 .form-password input:focus {
-  border-color: var(--primary-color); /* custom border color */
+  border-color: #732882; /* custom border color */
   outline: none; /* removes default black/blue outline */
   box-shadow: 0 0 5px rgba(115, 40, 130, 0.3);
 }
@@ -1417,7 +1392,7 @@ a.nav-link:focus {
   text-decoration: none;
   align-items: end;
   padding-top: 10px;
-  color: var(--secondary-color);
+  color: #daa23e;
   font-weight: 500;
 }
 
@@ -1426,7 +1401,7 @@ a.nav-link:focus {
   padding: 10px 10px;
   border: none;
   border-radius: 20px;
-  background-color: var(--primary-color);
+  background-color: #732882;
   width: 100%;
 }
 .sign-button:hover {
@@ -1434,7 +1409,7 @@ a.nav-link:focus {
   padding: 10px 10px;
   border: none;
   border-radius: 20px;
-  background-color: var(--button-hover);
+  background-color: #186593;
   width: 100%;
 }
 
@@ -1444,20 +1419,20 @@ a.nav-link:focus {
 }
 
 .astrology-heading {
-  color: var(--primary-color);
+  color: #732882;
   display: flex;
   justify-content: center;
 }
 
 .horoscopes-items {
-  border: 2px solid var(--border-color);
+  border: 2px solid #daa23e73;
   border-radius: 10px;
   text-align: center;
   padding: 20px;
 }
 
 .horoscopes-items h6 {
-  color: var(--black-color);
+  color: #1a1a1a;
   padding-top: 10px;
 }
 
@@ -1466,7 +1441,7 @@ a.nav-link:focus {
 }
 
 .popular-astrology span {
-  color: var(--primary-color);
+  color: #732882;
   font-size: 15px;
 }
 
@@ -1499,9 +1474,9 @@ a.nav-link:focus {
    ========================================= */
 .astro-profile-main-card {
   background-color: #fff8f0; /* Cream/Beige Background */
-  border-radius: var(--radius-lg);
+  border-radius: 14px;
   padding: 30px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
   position: relative;
 }
 
@@ -1590,7 +1565,7 @@ a.nav-link:focus {
 }
 
 .btn-astro-action:focus-visible {
-  outline: 2px solid var(--secondary-color);
+  outline: 2px solid #daa23e;
   outline-offset: 2px;
 }
 
@@ -1628,9 +1603,9 @@ a.nav-link:focus {
 }
 .astro-section-card {
   background: #ffffff;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   padding: 18px 20px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(218, 162, 62, 0.35);
 }
 
@@ -1694,4 +1669,718 @@ a.nav-link:focus {
   padding: 70px 0;
   /* background-image: linear-gradient(-90deg, #0b4f6c 0%, #4a89a3 100%); */
   color: white;
+}
+
+/* =========================================
+   PREMIUM REDESIGN ADDITIONS
+   ========================================= */
+
+/* 1. Why Talk to Our Astrologer (Feature Section) */
+.featured-astrologers {
+  position: relative;
+  z-index: 1;
+}
+
+.why-choose-us {
+  position: relative;
+  /* background: #2e0d36; */
+  background: #110615;
+  padding: 80px 0;
+  overflow: hidden;
+}
+
+.why-choose-us::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background-image:
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(218, 162, 62, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(115, 40, 130, 0.2) 0%,
+      transparent 50%
+    ); */
+  z-index: 1;
+}
+
+.why-choose-us .container {
+  position: relative;
+  z-index: 2;
+}
+
+.feature-card-premium {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 25px;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.feature-card-premium:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px);
+  border-color: #daa23e;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.feature-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(45deg, #d08830, #f8d57e, #daa23e);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(218, 162, 62, 0.3);
+}
+
+.feature-icon-wrapper i {
+  font-size: 24px;
+  color: #fff;
+}
+
+.feature-title {
+  color: #daa23e;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.feature-desc {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* 2. Testimonials Section */
+.testimonials-section {
+  position: relative;
+  background: #faf6ef;
+  padding: 80px 0;
+}
+
+.testimonial-card-premium {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(115, 40, 130, 0.1);
+  transition: all 0.3s ease;
+}
+
+.testimonial-card-premium:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+}
+
+.quote-icon-large {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 80px;
+  color: rgba(218, 162, 62, 0.1);
+  font-family: serif;
+}
+
+.client-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.client-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid #daa23e;
+  object-fit: cover;
+}
+
+.client-details h5 {
+  color: #2e0d36;
+  margin: 0;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.testimonial-text {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.7;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+/* 3. Meet Our Trusted Astrologers */
+.astro-card-premium {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(218, 162, 62, 0.15);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.astro-card-premium:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(115, 40, 130, 0.1);
+  border-color: #daa23e;
+}
+
+.astro-profile-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.astro-profile-img-premium {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: #f8f8f8;
+}
+
+.status-indicator {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 14px;
+  height: 14px;
+  background: #27ae60;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+}
+
+.verified-badge-premium {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #fff;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  color: #1a73e8;
+  font-size: 16px;
+}
+
+.badges-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.badge-item {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.badge-top-rated {
+  background: #fff8e1;
+  color: #f57c00;
+  border: 1px solid #ffe082;
+}
+
+.astro-premium-body {
+  text-align: center;
+  flex-grow: 1;
+}
+
+.astro-premium-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #2e0d36;
+  margin-bottom: 4px;
+}
+
+.astro-premium-expertise {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.astro-stats-premium {
+  background: rgba(250, 246, 239, 0.6);
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #eee; /* for thin divider line */
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+  overflow: hidden;
+}
+
+.stat-box {
+  background: #fafafc;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-box strong {
+  font-size: 15px;
+  color: #2e0d36;
+  font-weight: 700;
+}
+
+.stat-box span {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-container-premium {
+  margin-bottom: 20px;
+}
+
+.price-tag-premium {
+  font-size: 22px;
+  font-weight: 800;
+  color: #daa23e;
+}
+
+.price-tag-premium span {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+
+.action-buttons-grid {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-premium-action {
+  flex: 1;
+  padding: 12px 10px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+}
+
+.btn-chat-primary {
+  background: #2e0d36;
+  color: #fff;
+}
+
+.btn-chat-primary:hover {
+  background: #4a1555;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(115, 40, 130, 0.2);
+  color: white;
+}
+
+.btn-call-outline {
+  background: #fff;
+  color: #2e0d36;
+  border: 2px solid #2e0d36;
+}
+
+.btn-call-outline:hover {
+  background: #2e0d36;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(115, 40, 130, 0.1);
+}
+
+/* 4. Footer Premium */
+.footer-premium {
+  background: #110615;
+  color: #fff;
+  /* position: relative; */
+  z-index: 10;
+  /* overflow: hidden; */ /* Removed to allow newsletter-box margin-top to work */
+}
+
+.footer-premium-top {
+  padding: 80px 0 50px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-logo-premium {
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  width: 180px;
+  margin-bottom: 25px;
+}
+
+.footer-desc {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.footer-heading {
+  color: #daa23e;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.footer-heading::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 2px;
+  background: #daa23e;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.footer-links a:hover {
+  color: #daa23e;
+  padding-left: 5px;
+}
+
+.social-icons-premium {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.social-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+.social-icon-btn:hover {
+  background: #daa23e;
+  color: #1a0b1c;
+  transform: translateY(-3px);
+}
+
+.newsletter-box {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* margin-top: -80px; */
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 20;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.input-premium {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 50px;
+  width: 100%;
+}
+.input-premium::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-premium-gold {
+  background: #daa23e;
+  color: #1a0b1c;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 12px 30px;
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-premium-gold:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+/* Feature Astrolgoer */
+.featured-astrologers-elite {
+  background-color: #ffffff;
+  position: relative;
+}
+
+.astro-card-elite {
+  background: #ffffff;
+  border-radius: 32px;
+  padding: 24px;
+  border: 1px solid rgba(218, 162, 62, 0.2);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 520px;
+}
+
+.astro-card-elite:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 30px 60px rgba(218, 162, 62, 0.15);
+  border-color: #daa23e;
+}
+
+.price-chip {
+  position: absolute;
+  top: 82px;
+  right: 20px;
+  background: rgba(218, 162, 62, 0.1);
+  color: #b8860b;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 14px;
+  border: 1px solid rgba(218, 162, 62, 0.3);
+  z-index: 5;
+}
+
+.profile-section-elite {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.img-frame-elite {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+}
+
+.img-frame-elite img {
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.online-dot-elite {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  background: #27ae60;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+}
+
+.name-info-elite h3 {
+  font-size: 21px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.expertise-elite {
+  color: #daa23e;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-top: 5px;
+}
+
+.elite-tagline {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(to right, rgba(218, 162, 62, 0.4), transparent);
+  margin: 20px 0;
+}
+
+.details-grid-elite {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.detail-item-elite {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-box-elite {
+  width: 36px;
+  height: 36px;
+  background: #fdfaf5;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #daa23e;
+  font-size: 14px;
+  border: 1px solid rgba(218, 162, 62, 0.1);
+}
+
+.detail-text-elite {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-text-elite strong {
+  font-size: 14px;
+  color: #1a1a1a;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.detail-text-elite span {
+  font-size: 10px;
+  color: #888;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.topics-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 25px;
+}
+
+.topic-pill {
+  background: #f8f9fa;
+  color: #444;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #eee;
+}
+
+.actions-elite {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn-elite {
+  padding: 14px;
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 13px;
+  border: none;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.btn-elite-gold {
+  background: #daa23e;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(218, 162, 62, 0.2);
+}
+
+.btn-elite-gold:hover {
+  background: #1a1a1a;
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.btn-elite-dark {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.btn-elite-dark:hover {
+  background: #daa23e;
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(218, 162, 62, 0.2);
+}
+
+.badge-verified-elite {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #27ae60;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 8px;
 }
