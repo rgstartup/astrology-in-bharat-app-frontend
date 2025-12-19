@@ -167,7 +167,7 @@ const Page: React.FC = () => {
       <section className="product-slider-section py-50 bg-cream">
         <div className="container">
           <h2 className="text-center mb-5 heading section-title">
-             Our Astrological Products
+            Our Astrological Products
           </h2>
           <div className="product-slider-container">
             <ProductsCarousel />
@@ -176,98 +176,86 @@ const Page: React.FC = () => {
       </section>
 
       {/* Why Talk to our astrologer*/}
-      <section className="py-50 why-choose-us text-white">
+      {/* Why Talk to our astrologer - PREMIUM REDESIGN */}
+      <section className="why-choose-us text-white">
         <div className="container">
-          <h2 className="text-center  mb-5 heading text-black">
-            Why Talk to Our Astrologer?
-          </h2>
-          <div className="row d-flex align-items-center">
-            {/* Left Column of Promises */}
-            <div className="col-lg-4 col-md-12 mb-4 mb-lg-0">
-              <div className="d-flex flex-column gap-3">
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-chart-line fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Accurate Predictions
-                    </h6>
-                    <small className="text-muted">
-                      Gain clarity with precise and insightful astrological
-                      readings.
-                    </small>
-                  </div>
+          <div className="text-center mb-5">
+            <h2 className="heading text-white title-secondary mb-2">
+              Why Choose Astrology in Bharat?
+            </h2>
+            <p className="text-white-50">
+              Experience the difference with our premium astrological services.
+            </p>
+          </div>
+
+          <div className="row g-4 justify-content-center">
+            {/* Feature 1 */}
+            <div className="col-lg-4 col-md-6">
+              <div className="feature-card-premium text-center">
+                <div className="feature-icon-wrapper mx-auto">
+                  <i className="fas fa-chart-line"></i>
                 </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-lock fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      100% Confidentiality
-                    </h6>
-                    <small className="text-muted">
-                      Your conversations and data are completely private.
-                    </small>
-                  </div>
-                </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-history fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Vedic & Modern Approach
-                    </h6>
-                    <small className="text-muted">
-                      Our experts blend traditional wisdom with contemporary
-                      insights.
-                    </small>
-                  </div>
-                </div>
+                <h5 className="feature-title">Accurate Predictions</h5>
+                <p className="feature-desc">
+                  Gain clarity with precise and insightful astrological readings
+                  rooted in Vedic wisdom.
+                </p>
               </div>
             </div>
 
-            {/* Center Image */}
-            <div className="col-lg-4 col-md-12 text-center my-4 my-lg-0">
-              <img
-                src="/images/Astrologer.png" // Replace with your image path
-                alt="Astrologer talking"
-                className="img-fluid border border-gray img-circle-lg"
-              />
+            {/* Feature 2 */}
+            <div className="col-lg-4 col-md-6">
+              <div className="feature-card-premium text-center">
+                <div className="feature-icon-wrapper mx-auto">
+                  <i className="fas fa-user-shield"></i>
+                </div>
+                <h5 className="feature-title">100% Confidentiality</h5>
+                <p className="feature-desc">
+                  Your privacy is our priority. Talk freely in a secure and
+                  private environment.
+                </p>
+              </div>
             </div>
 
-            {/* Right Column of Promises */}
-            <div className="col-lg-4 col-md-12">
-              <div className="d-flex flex-column gap-3">
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-gem fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Remedial Solutions
-                    </h6>
-                    <small className="text-muted">
-                      Receive practical solutions to mitigate planetary effects.
-                    </small>
-                  </div>
+            {/* Feature 3 */}
+            <div className="col-lg-4 col-md-6">
+              <div className="feature-card-premium text-center">
+                <div className="feature-icon-wrapper mx-auto">
+                  <i className="fas fa-gem"></i>
                 </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-star fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Personalized Consultations
-                    </h6>
-                    <small className="text-muted">
-                      Get tailored advice for your unique birth chart.
-                    </small>
-                  </div>
+                <h5 className="feature-title">Premium Remedies</h5>
+                <p className="feature-desc">
+                  Get effective, practical solutions to mitigate planetary
+                  effects and enhance your life.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="col-lg-4 col-md-6">
+              <div className="feature-card-premium text-center">
+                <div className="feature-icon-wrapper mx-auto">
+                  <i className="fas fa-star"></i>
                 </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-comments fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Accessible Anytime
-                    </h6>
-                    <small className="text-muted">
-                      Connect with our astrologers on your schedule.
-                    </small>
-                  </div>
+                <h5 className="feature-title">Verified Experts</h5>
+                <p className="feature-desc">
+                  Connect with India&apos;s most trusted and experienced
+                  astrologers, verified for quality.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 5 */}
+            <div className="col-lg-4 col-md-6">
+              <div className="feature-card-premium text-center">
+                <div className="feature-icon-wrapper mx-auto">
+                  <i className="fas fa-comments"></i>
                 </div>
+                <h5 className="feature-title">Instant Access</h5>
+                <p className="feature-desc">
+                  Chat, call, or video consult with astrologers anytime,
+                  anywhere on your schedule.
+                </p>
               </div>
             </div>
           </div>
@@ -275,25 +263,44 @@ const Page: React.FC = () => {
       </section>
 
       {/* Clients Testimonials Section */}
-      <section className="testimonials-section bg-cream py-50">
-        <div className="container text-center">
-          <h2 className="section-heading heading mb-5">What Our Clients Say</h2>
+      {/* Clients Testimonials Section - PREMIUM REDESIGN */}
+      <section className="testimonials-section">
+        <div className="container">
+          <div className="text-center mb-5">
+            <h2 className="heading title-secondary color-primary">
+              Stories of Transformation
+            </h2>
+            <p className="text-muted">
+              Hear from those who found clarity and direction.
+            </p>
+          </div>
+
           <div className="row">
             {ClientsTestimoinialData.map((client) => (
               <div className="col-lg-4 col-md-6 mb-4" key={client.id}>
-                <div className="ser-card p-4 h-100 vert-move">
-                  <i className="fa-solid fa-quote-left fa-2x mb-3 color-primary"></i>
-                  <p>{client.review}</p>
-                  <div className="mt-3 d-flex align-items-center justify-content-center flex-column">
+                <div className="testimonial-card-premium h-100">
+                  <i className="fas fa-quote-right quote-icon-large"></i>
+
+                  <div className="text-center">
+                    <div className="rating-star mb-3">
+                      {"★".repeat(Math.floor(client.rating))}
+                      {client.rating % 1 !== 0 ? "½" : ""}
+                    </div>
+                  </div>
+
+                  <p className="testimonial-text text-center">
+                    &quot;{client.review}&quot;
+                  </p>
+
+                  <div className="client-info justify-content-center">
                     <img
                       src="images/astro-img1.png"
                       alt={client.name}
-                      className="mb-2 img-circle-sm"
+                      className="client-avatar"
                     />
-                    <strong>{client.name}</strong>
-                    <div className="rating-star">
-                      {"★".repeat(Math.floor(client.rating))}
-                      {client.rating % 1 !== 0 ? "½" : ""}
+                    <div className="client-details text-start">
+                      <h5>{client.name}</h5>
+                      <small className="text-muted">Verified Client</small>
                     </div>
                   </div>
                 </div>
@@ -303,77 +310,116 @@ const Page: React.FC = () => {
         </div>
       </section>
 
-      {/* Featured Astrologers List */}
-      <section className="featured-astrologers  py-50 ">
-        <div className="container text-center">
-          <h2 className="section-heading heading mb-5">
-            Meet Our Trusted Astrologers
-          </h2>
+      {/* Featured Astrologers List - ELITE GOLD EDITION */}
+      <section className="featured-astrologers-elite py-5">
+        <div className="container">
+          <div className="text-center mb-5">
+            <h2 className="title-secondary color-primary mb-2">
+              Connect with India&apos;s Elite Astrologers
+            </h2>
+            <p className="color-dark fw-medium">
+              Experience the wisdom of top-tier verified spiritual guides.
+            </p>
+          </div>
+
           <div className="row justify-content-center">
             {ListOfAllAstrologers.filter((astro) => astro.ratings >= 4.5)
               .slice(0, 3)
               .map((item) => (
-                <div className="col-lg-4 col-md-6 mb-4 " key={item.id}>
-                  <div className="astro-card ser-card card h-100 border border-gray shadow position-relative overflow-hidden">
-                    {/* Profile Image */}
-                    <div className="position-relative p-4 pb-0">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="astro-profile-img rounded-circle border border-3 border-warning shadow"
-                      />
-                      <span className="badge position-absolute badge-top-rated">
-                        ⭐ Top Rated
-                      </span>
+                <div className="col-lg-4 col-md-6 mb-4" key={item.id}>
+                  <div className="astro-card-elite">
+                    <div className="price-chip">
+                      ₹{item.price}
+                      <span>/min</span>
                     </div>
 
-                    {/* Card Body */}
-                    <div className="card-body mt-3">
-                      <h5 className="fw-bold astro-name">{item.name}</h5>
-                      <p className="card-subtitle mb-2 text-muted">
-                        {item.expertise}
-                      </p>
-
-                      {/* Ratings */}
-                      <div className="d-flex justify-content-center align-items-center mb-3">
-                        <div className="rating-star text-warning p-md">
-                          {"★".repeat(Math.floor(item.ratings))}
+                    <div className="profile-section-elite">
+                      <div className="img-frame-elite">
+                        <img src={item.image} alt={item.name} />
+                        <div className="online-dot-elite"></div>
+                      </div>
+                      <div className="name-info-elite">
+                        <h3>{item.name}</h3>
+                        <span className="expertise-elite">
+                          {item.expertise}
+                        </span>
+                        <div className="badge-verified-elite">
+                          <i className="fas fa-check-circle"></i> Verified
+                          Expert
                         </div>
-                        <small className="ms-2 text-muted">
-                          {item.ratings.toFixed(1)} / 5 ({item.ratings} reviews)
-                        </small>
                       </div>
+                    </div>
 
-                      {/* Details */}
-                      <div className="d-flex justify-content-between text-muted small mb-2">
-                        <span>
-                          Experience:{" "}
-                          <span className="fw-bold">{item.experience}</span>
-                        </span>
-                        <span>
-                          Consultations:{" "}
-                          <span className="fw-bold">{item.ratings}</span>
-                        </span>
-                      </div>
+                    <div className="elite-tagline">
+                      Specializes in solving complex life problems through
+                      accurate Vedic analysis and traditional cosmic wisdom.
+                    </div>
 
-                      {/* Price & Status */}
-                      <div className="d-flex justify-content-between align-items-center mb-3">
-                        <h6 className="mb-0 fw-bold text-success">
-                          ₹{item.price}/min
-                        </h6>
-                        <span className="badge bg-success">● Online</span>
-                      </div>
+                    <div className="divider-gold"></div>
 
-                      {/* CTA Button */}
-                      <div className="d-grid">
-                        <button className="btn btn-chat">
-                          <i className="bi bi-chat-dots-fill me-2"></i> Chat Now
-                        </button>
+                    <div className="details-grid-elite">
+                      <div className="detail-item-elite">
+                        <div className="icon-box-elite">
+                          <i className="fas fa-history"></i>
+                        </div>
+                        <div className="detail-text-elite">
+                          <strong>{item.experience}+ Yr</strong>
+                          <span>Exp</span>
+                        </div>
                       </div>
+                      <div className="detail-item-elite">
+                        <div className="icon-box-elite">
+                          <i className="fas fa-star"></i>
+                        </div>
+                        <div className="detail-text-elite">
+                          <strong>{item.ratings}</strong>
+                          <span>Ratings</span>
+                        </div>
+                      </div>
+                      <div className="detail-item-elite">
+                        <div className="icon-box-elite">
+                          <i className="fas fa-globe"></i>
+                        </div>
+                        <div className="detail-text-elite">
+                          <strong>{item.language.split(",")[0]}</strong>
+                          <span>Language</span>
+                        </div>
+                      </div>
+                      <div className="detail-item-elite">
+                        <div className="icon-box-elite">
+                          <i className="fas fa-users"></i>
+                        </div>
+                        <div className="detail-text-elite">
+                          <strong>12K+</strong>
+                          <span>Consults</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="topics-container">
+                      <span className="topic-pill">Love</span>
+                      <span className="topic-pill">Career</span>
+                      <span className="topic-pill">Marriage</span>
+                      <span className="topic-pill">Vastu</span>
+                    </div>
+
+                    <div className="actions-elite">
+                      <button className="btn-elite btn-elite-gold">
+                        <i className="bi bi-chat-dots"></i> Chat
+                      </button>
+                      <button className="btn-elite btn-elite-dark">
+                        <i className="bi bi-telephone"></i> Call
+                      </button>
                     </div>
                   </div>
                 </div>
               ))}
+          </div>
+
+          <div className="text-center mt-5">
+            <a href="#" className="btn-link wfc m-auto w-30">
+              Explore All Experts <i className="fas fa-arrow-right ms-2"></i>
+            </a>
           </div>
         </div>
       </section>

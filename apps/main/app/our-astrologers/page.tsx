@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import Link from "next/link";
 import { ListOfAllAstrologers } from "@/data/homePagaData";
@@ -6,7 +7,14 @@ const page = () => {
   return (
     <section className="astrologer-list">
       <div className="container">
-        <h2>Find Your Astrologer</h2>
+        <div className="text-center mb-40">
+          <h2 className="title-primary color-secondary">
+            Find Your Astrologer
+          </h2>
+          <p className="p-md mt-2">
+            Connect with the best Vedic experts for instant guidance.
+          </p>
+        </div>
 
         <div className="search-box">
           <input
@@ -38,6 +46,10 @@ const page = () => {
                       className="play-vid fa-beat"
                       data-bs-toggle="modal"
                       data-bs-target={`#${modalId}`}
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent link navigation when clicking play
+                        e.stopPropagation();
+                      }}
                     >
                       <i className="fa-solid fa-circle-play"></i>
                     </span>
@@ -61,6 +73,9 @@ const page = () => {
                     <button className="call">
                       <i className="fa-solid fa-phone-volume"></i> Call
                     </button>
+                    <button className="video-call">
+                      <i className="fa-solid fa-video"></i> Video
+                    </button>
                   </div>
                 </div>
 
@@ -71,6 +86,7 @@ const page = () => {
                   tabIndex={-1}
                   aria-labelledby={modalLabelId}
                   aria-hidden="true"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <div className="modal-dialog modal-dialog-centered modal-xl">
                     <div className="modal-content">
@@ -86,9 +102,7 @@ const page = () => {
                           className="btn-close"
                           data-bs-dismiss="modal"
                           aria-label="Close"
-                        >
-                          <i className="fa-solid fa-xmark"></i>
-                        </button>
+                        ></button>
                       </div>
                       <div className="modal-body">
                         <iframe
@@ -111,9 +125,48 @@ const page = () => {
         </div>
 
         <div className="view-all">
-          <a href="#" className="btn-link wfc m-auto w-20">
-            View All Astrologers
-          </a>
+          <button className="btn-link wfc m-auto w-20">
+            Load More Astrologers
+          </button>
+        </div>
+      </div>
+
+      {/* New Section: Why Choose Us */}
+      <div className="new-section-wrapper mt-5">
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-lg-6">
+              <h2 className="title-secondary color-primary">
+                Why Choose Our Astrologers?
+              </h2>
+              <ul className="list-check text-dark">
+                <li className="text-dark">
+                  <i className="fa-solid fa-check"></i> 100% Verified &
+                  Experienced Experts
+                </li>
+                <li className="text-dark">
+                  <i className="fa-solid fa-check"></i> Private & Confidential
+                  Consultations
+                </li>
+                <li className="text-dark">
+                  <i className="fa-solid fa-check"></i> Available 24/7 for
+                  Instant Support
+                </li>
+                <li className="text-dark">
+                  <i className="fa-solid fa-check"></i> Accurate Predictions &
+                  Remedies
+                </li>
+              </ul>
+            </div>
+            <div className="col-lg-6 text-center">
+              <img
+                src="/images/horoscope-bg.png"
+                style={{ maxWidth: "80%" }}
+                alt="Why Choose Us"
+                onError={(e) => (e.currentTarget.style.display = "none")}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
