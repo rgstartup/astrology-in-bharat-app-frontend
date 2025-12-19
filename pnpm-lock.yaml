@@ -185,9 +185,6 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      axios:
-        specifier: ^1.13.2
-        version: 1.13.2
       bootstrap:
         specifier: ^5.3.7
         version: 5.3.7(@popperjs/core@2.11.8)
@@ -271,6 +268,9 @@ importers:
 
   packages/ui:
     dependencies:
+      axios:
+        specifier: ^1.13.2
+        version: 1.13.2
       react:
         specifier: ^19.1.0
         version: 19.1.0

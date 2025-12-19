@@ -14,7 +14,6 @@
     "@repo/styles": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",
-    "axios": "^1.13.2",
     "bootstrap": "^5.3.7",
     "next": "15.4.6",
     "react": "19.1.0",
