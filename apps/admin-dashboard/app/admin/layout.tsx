@@ -27,9 +27,10 @@ import {
   Menu,
   Bell,
   Search,
+   Package,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
-
+import { SearchInput } from "@/app/components/admin/SearchInput";
 interface MenuItem {
   label: string;
   href: string;
@@ -41,19 +42,19 @@ const menuItems: MenuItem[] = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { label: "User Management", href: "/admin/users", icon: Users },
   { label: "Expert Management", href: "/admin/experts", icon: UserCheck },
-  { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
-  { label: "Expert KYC Review", href: "/admin/kyc", icon: FileText },
-  { label: "Service & Pricing", href: "/admin/pricing", icon: Tag },
-  { label: "Promo Configuration", href: "/admin/promos", icon: Ticket },
-  { label: "Coupons/Offers", href: "/admin/coupons", icon: Tag },
-  { label: "Live Sessions Monitor", href: "/admin/live-sessions", icon: Tv },
-  { label: "Session Logs", href: "/admin/session-logs", icon: History },
-  { label: "Payout Requests", href: "/admin/payouts", icon: Wallet },
-  { label: "Refund Management", href: "/admin/refunds", icon: RefreshCw },
-  { label: "Dispute Resolution", href: "/admin/disputes", icon: AlertCircle },
+  // { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
+  // { label: "Expert KYC Review", href: "/admin/kyc", icon: FileText },
+ { label: "Services & Pricing", href: "/admin/services", icon: Package },
+  // { label: "Promo Configuration", href: "/admin/promos", icon: Ticket },
+  // { label: "Coupons/Offers", href: "/admin/coupons", icon: Tag },
+  // { label: "Live Sessions Monitor", href: "/admin/live-sessions", icon: Tv },
+  // { label: "Session Logs", href: "/admin/session-logs", icon: History },
+  // { label: "Payout Requests", href: "/admin/payouts", icon: Wallet },
+  // { label: "Refund Management", href: "/admin/refunds", icon: RefreshCw },
+  // { label: "Dispute Resolution", href: "/admin/disputes", icon: AlertCircle },
   { label: "Reviews Moderation", href: "/admin/reviews", icon: Star },
   { label: "Analytics Dashboard", href: "/admin/analytics", icon: BarChart3 },
-  { label: "Earnings", href: "/admin/earnings", icon: IndianRupee },
+  // { label: "Earnings", href: "/admin/earnings", icon: IndianRupee },
   {
     label: "Account",
     href: "#",
@@ -234,6 +235,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+   const [globalSearch, setGlobalSearch] = useState("");
   const pathname = usePathname();
 
   const toggleSidebar = useCallback(() => {
@@ -279,12 +281,13 @@ export default function AdminLayout({
 
               <div className="flex items-center space-x-4">
                 {/* Search */}
-                <div className="hidden md:flex items-center relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
+                 <div className="hidden md:block">
+                  <SearchInput
+                    value={globalSearch}
+                    onChange={setGlobalSearch}
                     placeholder="Search..."
-                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent w-64"
+                    className="w-64"
+                    size="md"
                   />
                 </div>
 
