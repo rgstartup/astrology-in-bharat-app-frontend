@@ -36,11 +36,6 @@ const Footer: React.FC = () => {
                   src="/images/logo2.png"
                   alt="Logo Not Found"
                   className="mb-2 footer-logo"
-                  style={{
-                    maxHeight: "70px",
-                    objectFit: "cover",
-                    marginTop: "0px",
-                  }}
                 />
                 <p className="small">
                   At Astrology in Bharat, find trusted astrologers for love,

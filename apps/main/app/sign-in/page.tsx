@@ -161,12 +161,9 @@ const Page: React.FC = () => {
           <div className="col-lg-5">
             <div className="banner-data">
               <h3>
-                <span style={{ color: "var(--secondary-color)" }}>Sign In</span>{" "}
-                to
+                <span className="color-secondary">Sign In</span> to
                 <br />
-                <span style={{ color: "var(--primary-color)" }}>
-                  Astrology Bharat
-                </span>
+                <span className="color-primary">Astrology Bharat</span>
               </h3>
               <p className="text-muted">
                 Join us and unlock personalized astrology insights just for you.
@@ -194,12 +191,7 @@ const Page: React.FC = () => {
                         width={80}
                       />
                       <h6 className="fw-bold mt-2">{item.name}</h6>
-                      <small
-                        className="text-muted"
-                        style={{ fontSize: "13px" }}
-                      >
-                        {item.desc}
-                      </small>
+                      <small className="text-muted p-xxs">{item.desc}</small>
                     </div>
                   </div>
                 ))}
@@ -214,9 +206,7 @@ const Page: React.FC = () => {
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h6 className="mb-0">
                   Welcome to <br />
-                  <span style={{ color: "var(--primary-color)" }}>
-                    Astrology Bharat
-                  </span>
+                  <span className="color-primary">Astrology Bharat</span>
                 </h6>
                 <h6 className="mb-0">
                   No Account? <br />
@@ -227,7 +217,7 @@ const Page: React.FC = () => {
               </div>
 
               <div className="sign-in-heading mb-4">
-                <h2 style={{ color: "var(--primary-color)" }}>Sign In</h2>
+                <h2 className="color-primary">Sign In</h2>
               </div>
 
               {/* Social Login */}

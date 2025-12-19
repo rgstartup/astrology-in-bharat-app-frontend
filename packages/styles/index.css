@@ -1,4 +1,288 @@
-/* CSS For Header */
+/* =========================================
+   1. GLOBAL RESET & BASE STYLES
+   ========================================= */
+body {
+  font-family: "Outfit", sans-serif;
+  background-image: url("/images/white-background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+  color: #1a1a1a;
+}
+
+img {
+  max-width: 100%;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.3s;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* =========================================
+   2. TYPOGRAPHY
+   ========================================= */
+/* Font Sizes - Headings */
+.title-primary {
+  font-size: 45px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.title-secondary {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.title-tertiary {
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.title-medium {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.title-small {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Font Sizes - Text */
+.p-xl {
+  font-size: 25px;
+}
+.p-lg {
+  font-size: 20px;
+}
+.p-md {
+  font-size: 18px;
+  line-height: 24px;
+}
+.p-sm {
+  font-size: 16px;
+}
+.p-xs {
+  font-size: 14px;
+}
+.p-xxs {
+  font-size: 12px;
+}
+
+/* Font Weights */
+.fw-light {
+  font-weight: 300;
+}
+.fw-regular {
+  font-weight: 400;
+}
+.fw-medium {
+  font-weight: 500;
+}
+.fw-semibold {
+  font-weight: 600;
+}
+.fw-bold {
+  font-weight: 700;
+}
+.fw-extra-bold {
+  font-weight: 900;
+}
+
+/* =========================================
+   3. COLORS
+   ========================================= */
+/* Text Colors */
+.color-primary {
+  color: #daa23e !important;
+}
+.color-secondary {
+  color: #732882 !important;
+}
+.color-teal {
+  color: #3dc9a1 !important;
+}
+.color-dark {
+  color: #1a1a1a !important;
+}
+.color-black {
+  color: #000000 !important;
+}
+.color-white {
+  color: #ffffff !important;
+}
+.color-gray {
+  color: #ccc !important;
+}
+.color-muted {
+  color: #6c757d !important;
+}
+
+/* Background Colors */
+.bg-primary {
+  background-color: #daa23e !important;
+}
+.bg-secondary {
+  background-color: #732882 !important;
+}
+.bg-white {
+  background-color: #ffffff !important;
+}
+.bg-black {
+  background-color: #000000 !important;
+}
+.bg-cream {
+  background-color: #ffe3b852 !important;
+}
+.bg-sand {
+  background-color: #732882 !important;
+} /* Mapped based on existing css */
+
+.bg-gradient-gold {
+  background-image: linear-gradient(to right, #d08830, #daa23e);
+}
+
+/* =========================================
+  4. SPACING & LAYOUT UTILITIES
+   ========================================= */
+/* Margins */
+.m-auto {
+  margin: 0 auto !important;
+}
+.mt-10 {
+  margin-top: 10px !important;
+}
+.mt-20 {
+  margin-top: 20px !important;
+}
+.mt-30 {
+  margin-top: 30px !important;
+}
+.mt-40 {
+  margin-top: 40px !important;
+}
+.mb-10 {
+  margin-bottom: 10px !important;
+}
+.mb-20 {
+  margin-bottom: 20px !important;
+}
+.mb-30 {
+  margin-bottom: 30px !important;
+}
+.mb-40 {
+  margin-bottom: 40px !important;
+}
+
+/* Paddings */
+.p-10 {
+  padding: 10px !important;
+}
+.p-20 {
+  padding: 20px !important;
+}
+.py-50 {
+  padding: 50px 0 !important;
+}
+.py-5 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+
+/* Layout */
+.w-100 {
+  width: 100% !important;
+}
+.h-100 {
+  height: 100% !important;
+}
+.d-flex {
+  display: flex !important;
+}
+.d-none {
+  display: none !important;
+}
+.d-block {
+  display: block !important;
+}
+.flex-column {
+  flex-direction: column !important;
+}
+.align-items-center {
+  align-items: center !important;
+}
+.justify-content-center {
+  justify-content: center !important;
+}
+.justify-content-between {
+  justify-content: space-between !important;
+}
+.text-center {
+  text-align: center !important;
+}
+.text-start {
+  text-align: left !important;
+}
+.text-end {
+  text-align: right !important;
+}
+.align {
+  align-items: center;
+} /* Legacy support */
+
+.position-relative {
+  position: relative !important;
+}
+.position-absolute {
+  position: absolute !important;
+}
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+.rounded-circle {
+  border-radius: 50% !important;
+}
+.rounded-3 {
+  border-radius: 0.3rem !important;
+}
+.border {
+  border: 1px solid #dee2e6 !important;
+}
+.border-secondary {
+  border-color: #6c757d !important;
+}
+.shadow {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.wfc {
+  width: fit-content;
+  padding: 15px 23px;
+  letter-spacing: 1px;
+}
+
+/* =========================================
+   5. COMPONENT STYLES
+   ========================================= */
+
+/* --- Header Section --- */
 .logo {
   width: 170px;
   background: #fff;
@@ -7,24 +291,54 @@
   box-shadow: 0 4px 6px 3px #0000000d;
   margin-top: -60px;
 }
+
 .top-head {
   padding: 7px 0;
   background-image: linear-gradient(to right, #d08830, #daa23e);
-  /*  background-image: linear-gradient(to right, #762782, #176593);*/
 }
+
 .top-text {
   margin: 0;
   font-size: 18px;
   color: #fff;
 }
+
 .top-menu-main li a {
   color: #000 !important;
   font-size: 16px;
   padding: 9px 15px !important;
+  transition: 0.3s;
 }
+
 .top-menu-main li a:hover {
-  color: #702b83 !important;
+  color: #732882 !important;
 }
+
+.top-menu-main li ul.dropdown-menu li a {
+  transition: 0.6s;
+  border-bottom: solid 1px #7328821c;
+}
+
+.top-menu-main li ul.dropdown-menu li a:hover {
+  background: #732882;
+  color: #fff !important;
+}
+
+.navbar-toggler {
+  background: #ffd281;
+}
+
+a.nav-link {
+  color: black;
+  padding: 9px 15px !important;
+}
+
+a.nav-link:hover,
+a.nav-link:focus {
+  color: #732882 !important;
+}
+
+/* Buttons */
 .btn-link {
   background: #732882;
   color: #fff;
@@ -34,47 +348,52 @@
   text-decoration: none;
   display: block;
   text-align: center;
+  transition: 0.3s;
 }
-.btn-link img {
-  margin-right: 5px;
-  filter: brightness(0) invert(1);
-}
+
 .btn-link:hover {
   color: #fff;
   background: #186593;
 }
-ul.dropdown-menu {
-  padding: 0;
-}
-.top-menu-main li ul.dropdown-menu li a {
-  transition: 0.6s;
-  border-bottom: solid 1px #7328821c;
-}
-.top-menu-main li ul.dropdown-menu li a:hover {
-  background: #732882;
-  color: #fff !important;
-}
-a.nav-link {
-  color: black;
-  padding: 9px 15px !important;
-}
-a.nav-link :hover {
-  color: #702b83 !important;
-  padding: 9px 15px !important;
+
+.btn-link img {
+  margin-right: 5px;
+  filter: brightness(0) invert(1);
 }
 
-.nav-link:focus,
-.nav-link:hover {
-  color: #702b83;
+.orderNowbtn {
+  border: none;
+  border-radius: 50px;
+  padding: 7px 20px;
+  background-color: #732882;
+  color: #fff;
+  transition: 0.3s;
 }
 
-/**/
-.lang-dropdown {
+.orderNowbtn:hover {
+  background-color: #642172;
+  color: #fff;
+}
+
+.btn-close {
+  opacity: 1;
+  z-index: 0;
+  border-radius: 100px;
+  color: #fff;
+  font-size: 22px;
+  padding: 10px !important;
+  line-height: 1;
+}
+
+/* Dropdowns & User Menu */
+.lang-dropdown,
+.account-dropdown {
   position: relative;
   display: inline-block;
-  width: 100%;
 }
-.lang-toggle {
+
+.lang-toggle,
+.account-btn {
   background: #030303;
   color: #ffffff;
   padding: 8px 13px;
@@ -85,7 +404,16 @@ a.nav-link :hover {
   width: 100%;
   font-size: 14px;
 }
-.lang-menu {
+.account-btn {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.lang-menu,
+.account-menu {
   display: none;
   position: absolute;
   top: 100%;
@@ -96,24 +424,32 @@ a.nav-link :hover {
   min-width: 120px;
   z-index: 10;
 }
+.account-menu {
+  top: 110%;
+  min-width: 140px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
 
-.lang-menu a {
+.lang-menu a,
+.account-menu a {
   display: block;
   padding: 10px 15px;
   color: #333;
   text-decoration: none;
 }
 
-.lang-menu a:hover {
+.lang-menu a:hover,
+.account-menu a:hover {
   background: #f1f1f1;
-  border-radius: 8px;
 }
 
-/* Hover effect */
-.lang-dropdown:hover .lang-menu {
+.lang-dropdown:hover .lang-menu,
+.account-dropdown.show .account-menu {
   display: block;
 }
-/**/
+
+/* Cart Icon */
 .cart-top {
   color: #fff;
   font-size: 14px;
@@ -134,167 +470,31 @@ a.nav-link :hover {
   text-align: center;
   font-size: 10px;
 }
-/**/
-.account-dropdown {
-  position: relative;
-  display: inline-block;
-}
 
-.account-btn {
-  background: #030303;
-  color: #ffffff;
-  padding: 8px 16px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 20px;
-}
-.account-menu {
-  display: none;
-  position: absolute;
-  top: 110%;
-  left: 0;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  min-width: 140px;
-  z-index: 10;
-}
-
-.account-menu a {
-  display: block;
-  padding: 10px 15px;
-  color: #333;
-  text-decoration: none;
-}
-
-.account-menu a:hover {
-  background: #f1f1f1;
-}
-
-.account-dropdown.show .account-menu {
-  display: block;
-}
-
-
-/* CSS For Major Sections including Utilites */
-
-body {
-  font-family: "Outfit", sans-serif;
-  background-image: url("/images/white-background.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-img {
-  max-width: 100%;
-}
-ul {
-  padding: 0;
-  margin: 0;
-}
-.align {
-  align-items: center;
-}
-a {
-  text-decoration: none;
-}
-.navbar-toggler {
-  background: #ffd281;
-}
-.color-primary {
-  color: #3dc9a1 !important;
-}
-
-.color-secondary {
-  color: #daa23e !important;
-}
-
-.color-black {
-  color: #1a1a1a !important;
-}
-
-.color-light {
-  color: #fff !important;
-}
-
-.background-primary {
-  background: #3dc9a1 !important;
-}
-
-.background-secondary {
-  background: #11564f !important;
-}
-
-.background-black {
-  background: #1a1a1a !important;
-}
-
-.background-light {
-  background: #fff !important;
-}
-/**/
-
-.p-xl {
-  font-size: 25px;
-}
-.p-lg {
-  font-size: 20px;
-}
-.p-md {
-  font-size: 18px;
-  line-height: 24px;
-}
-.p-sm {
-  font-size: 16px;
-}
-.p-xs {
-  font-size: 14px;
-}
-.p-xxs {
-  font-size: 12px;
-}
-/*End font-size*/
-
-/*Start font-weight*/
-.fw-light {
-  font-weight: 300;
-}
-.fw-regular {
-  font-weight: 400;
-}
-.fw-medium {
-  font-weight: 500;
-}
-.fw-semi-bold {
-  font-weight: 600;
-}
-.fw-bold {
-  font-weight: 700;
-}
-.fw-extra-bold {
-  font-weight: 900;
-}
-
-/*banner part css*/
+/* --- Hero / Banner Section --- */
 .banner-part {
   background-image: url("/images/back-over.jpg");
   background-size: cover;
   background-repeat: no-repeat;
 }
+
 .overlay-hero {
   background: #000000c4;
   padding: 45px 0;
 }
+
 .banner-part h1 {
   font-size: 45px;
   color: #fff;
   font-weight: 600;
   letter-spacing: 1px;
 }
+
+.banner-part p {
+  color: #fff;
+  font-size: 16px;
+}
+
 .card-title {
   background: #7328823d;
   width: fit-content;
@@ -302,10 +502,6 @@ a {
   color: #fff;
   border-left: solid #daa23e;
   font-size: 23px;
-}
-.banner-part p {
-  color: #fff;
-  font-size: 16px;
 }
 
 .list-check li {
@@ -326,11 +522,7 @@ a {
   height: 25px;
   text-align: center;
 }
-.wfc {
-  width: fit-content;
-  padding: 15px 23px;
-  letter-spacing: 1px;
-}
+
 .card-hero {
   background: #73288217;
   border-radius: 15px;
@@ -353,15 +545,7 @@ a {
   margin: 11px 0;
 }
 
-/*astrologer-list css*/
-
-.astrologer-list h2 {
-  text-align: center;
-  font-size: 32px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
+/* --- Search Section --- */
 .search-box {
   display: flex;
   justify-content: center;
@@ -389,6 +573,17 @@ a {
   letter-spacing: 1px;
 }
 
+/* --- Astrologer List & Cards --- */
+.astrologer-list {
+  padding: 50px 0;
+}
+.astrologer-list h2 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
 .astro-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -409,17 +604,27 @@ a {
 .astro-card:hover {
   transform: translateY(-5px);
 }
+
 .rating-star {
   color: #daa23e;
   font-size: 22px;
 }
-
 .astro-name {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 5px;
   color: #732882;
 }
+
+.astro-card .astro-profile-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  border: solid 1px #daa23e;
+}
+
 .vid-part {
   position: relative;
   width: 150px;
@@ -438,42 +643,7 @@ a {
   color: #fff;
   cursor: pointer;
 }
-.modal-title-astro-about {
-  font-size: 25px;
-  padding: 0;
-  margin: 0;
-  color: #732882;
-  font-weight: 700;
-}
-.astro-card .astro-profile-img {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 8px;
-  border: solid 1px #daa23e;
-}
-button.btn-close {
-  /* background: #daa23e; */
-  opacity: 1;
-  z-index: 0;
-  border-radius: 100px;
-  color: #fff;
-  font-size: 22px;
-  padding: 10px !important;
-  line-height: 1;
-}
 
-.modal-content {
-  background-image: url("/images/white-background.png") !important;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-.checkmark {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
 .astro-tags {
   display: inline-block;
   background: #daa23e;
@@ -484,6 +654,7 @@ button.btn-close {
   margin-bottom: 0px;
   margin-top: 5px;
 }
+
 .astro-info {
   font-size: 16px;
   margin: 8px 0;
@@ -513,12 +684,10 @@ button.btn-close {
   border-color: #1a1a1a;
   color: #1a1a1a;
 }
-
 .astro-actions button:hover {
   background: #732882;
   color: #fff;
 }
-
 .astro-actions button.call:hover {
   background: #1a1a1a;
   color: #fff;
@@ -529,101 +698,34 @@ button.btn-close {
   margin-top: 40px;
 }
 
-@media (max-width: 991px) {
-  .modal-title-astro-about {
-    font-size: 17px;
-  }
-  .modal-body iframe {
-    height: 290px;
-  }
-}
-
-@media (max-width: 500px) {
-  .search-box {
-    flex-direction: column;
-  }
-  .search-box input,
-  .search-box button {
-    border-radius: 30px;
-    width: 100%;
-  }
-  .search-box button {
-    margin-top: 10px;
-    border-radius: 30px;
-  }
-  .modal-body iframe {
-    height: 220px;
-  }
-}
-
-.astrologer-list {
-  padding: 50px 0;
-}
-
-/* utils class start*/
-.bg-cream {
-  background: #ffe3b852;
-}
-.py-50 {
-  padding: 50px 0;
-}
-
-.min-vh-80 {
-  min-height: 80vh;
-}
-.heading {
-  font-size: 32px;
-  font-weight: 600;
+/* Modals */
+.modal-title-astro-about {
+  font-size: 25px;
+  padding: 0;
   margin: 0;
-}
-.vert-move {
-  transition: all 0.4s ease;
-}
-.vert-move:hover {
-  transform: translateY(-5px);
-}
-.text-sand {
-  color: #daa23e;
-  font-style: inherit;
-  font-weight: inherit;
-}
-.bg-sand {
-  background-color: #732882;
-}
-.text-purple {
   color: #732882;
+  font-weight: 700;
 }
-a {
-  text-decoration: none;
-  color: white;
+.modal-content {
+  background-image: url("/images/white-background.png") !important;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
-/* utils class*/
+.checkmark {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 
-/* Custom buttons Css Start*/
-.orderNowbtn {
-  border: none;
-  border-radius: 50px;
-  padding: 7px 20px;
-  background-color: #732882;
-}
-.orderNowbtn:hover {
-  border: none;
-  border-radius: 50px;
-  padding: 7px 20px;
-  background-color: #642172;
-}
-/* Custom buttons Css End */
-
-/* Horoscopes-section css start */
+/* --- Horoscopes --- */
 .horoscopes-container {
   background: #ffe3b852;
   padding: 50px 0;
 }
-.horoscopes-container h2 {
-  font-size: 32px;
-  font-weight: 600;
+.horoscopes-heading {
   margin: 0;
 }
+
 .horoscopes-items {
   background-color: #ffffff;
   overflow: hidden;
@@ -635,68 +737,43 @@ a {
   border-radius: 10px;
   transition: all 0.4s ease;
   color: #1a1a1a;
-  /* animation: pulse 2s infinite ease-in-out; */
 }
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  50% {
-    transform: scale(1.02);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-}
+
 .horoscopes-items h3 {
   font-size: 18px;
   padding-top: 10px;
+  transition: color 0.4s ease;
+  margin-bottom: 0;
 }
-
 .horoscopes-items p {
   font-size: 15px;
   margin-bottom: 0;
+  transition: color 0.4s ease;
 }
-
 .horoscopes-items img {
   width: 80px;
   height: 80px;
   transition: transform 0.4s ease;
 }
 
-.horoscopes-items h3,
-.horoscopes-items p {
-  transition: color 0.4s ease;
-  margin-bottom: 0;
-}
-
-/* Hover Effect */
 .horoscopes-items:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
-
 .horoscopes-items:hover img {
   transform: scale(1.1);
 }
 
-/* Horoscopes-section css end */
-
-/*services css */
-
-.ser-card {
-  background-color: #ffffff;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 10px 0px 20px 0px;
-  border: solid 1px #daa23e73;
+/* --- Services & Products --- */
+.astrology-services h2 {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0;
   text-align: center;
-  padding: 12px;
-  border-radius: 10px;
+  margin-bottom: 20px;
 }
+
+.ser-card,
 .product-card {
   background-color: #ffffff;
   overflow: hidden;
@@ -706,18 +783,17 @@ a {
   text-align: center;
   padding: 12px;
   border-radius: 10px;
+  min-height: 280px;
 }
-.astrology-services h2 {
-  font-size: 32px;
-  font-weight: 600;
-  margin: 0;
-  text-align: center;
-  margin-bottom: 20px;
+.product-card {
+  min-height: auto;
 }
+
 .services-img {
   border-radius: 10px;
   border: solid 1px #daa23ea1;
 }
+
 .ser-card h4 {
   font-size: 18px;
   font-weight: 600;
@@ -730,27 +806,26 @@ a {
   font-size: 16px;
   color: #1a1a1a;
 }
-
 .ser-card:hover {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/**/
-@media (min-width: 1199px) {
-  .ser-card {
-    min-height: 280px;
-  }
+/* --- Utils (Animations & Misc) --- */
+.vert-move {
+  transition: all 0.4s ease;
 }
-@media (min-width: 1400px) {
-  .container,
-  .container-lg,
-  .container-md,
-  .container-sm,
-  .container-xl,
-  .container-xxl {
-    max-width: 1140px;
-  }
+.vert-move:hover {
+  transform: translateY(-5px);
 }
+
+.text-sand {
+  color: #daa23e;
+}
+.text-purple {
+  color: #732882;
+}
+
+/* --- Media Queries --- */
 @media (max-width: 1199px) {
   .top-text {
     font-size: 12px;
@@ -767,6 +842,9 @@ a {
   }
   .btn-link {
     font-size: 15px;
+  }
+  .ser-card {
+    min-height: auto;
   }
 }
 
@@ -791,6 +869,29 @@ a {
   .top-menu-main li a {
     border-bottom: solid 1px #efefef;
   }
+  .modal-title-astro-about {
+    font-size: 17px;
+  }
+  .modal-body iframe {
+    height: 290px;
+  }
+}
+
+@media (max-width: 500px) {
+  .search-box {
+    flex-direction: column;
+  }
+  .search-box input,
+  .search-box button {
+    border-radius: 30px;
+    width: 100%;
+  }
+  .search-box button {
+    margin-top: 10px;
+  }
+  .modal-body iframe {
+    height: 220px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -798,751 +899,311 @@ a {
     display: none;
   }
 }
-@media (max-width: 767px) {
-  .top-text {
-    font-size: 16px;
-    text-align: center;
-    line-height: 1.4;
-    padding: 0 30px;
-  }
-  .list-top-bar-mobile {
-    width: 310px;
-    margin: 5px auto;
-    margin-top: 10px;
-    background: #0000001c;
-    border-radius: 100px;
-    border: solid 1px #eeeeee24;
-  }
-  .account-menu {
-    min-width: 100%;
-  }
-  .lang-menu {
-    top: 110%;
-  }
-  .mobile-space {
-    padding: 0 6px;
-    text-align: center;
-    margin: 7px 0 4px 0;
-  }
-  .top-menu-main li a {
-    font-size: 16px;
-    padding: 9px 12px !important;
-  }
-  .logo-mobile {
-    display: unset;
-  }
-  .logo-dask {
-    display: none !important;
-  }
-  .mobile-none {
-    display: none !important;
-  }
-
-  .logo {
-    width: 225px;
-  }
-  .banner-part h1 {
-    font-size: 30px;
-  }
-  .card-title {
-    padding: 8px 12px;
-    font-size: 16px;
-  }
-  .card-hero img {
-    width: 70px;
-    margin: 10px 0;
-  }
-  .card-hero h5 {
-    font-size: 18px;
-  }
-  .card-hero p {
-    font-size: 14px;
-  }
-  .card-hero {
-    padding: 6px;
-    min-height: 255px;
+@media (min-width: 1400px) {
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container-xl,
+  .container-xxl {
+    max-width: 1140px;
   }
 }
 
-@media (max-width: 360px) {
-  .card-hero h5 {
-    font-size: 16px;
-  }
-  .card-hero p {
-    font-size: 10px;
-  }
-  .card-hero {
-    padding: 6px;
-    min-height: 210px;
-  }
-  .logo {
-    width: 198px;
-  }
+/* Added Utility Classes for Refactor */
+.badge-top-rated {
+  background: linear-gradient(45deg, #f7d774, #e0a800);
+  color: #000;
+  top: 20px;
+  right: 20px;
+  font-size: 0.8rem;
 }
 
-/* Thirds Party Libraries CSS */
-/* ************* */
-/* 1 Swiper JS */
-/* Swiper JS Custom Navigation Buttons */
-
-.swiper-button-prev-unique,
-.swiper-button-next-unique {
-  background-color: black !important;
-  color: #ffffff !important;
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 010 !important;
-  position: absolute;
-  top: 100px;
-}
-
-.swiper-button-prev-unique::after,
-.swiper-button-next-unique::after {
-  font-size: 16px !important;
-
-  font-weight: bold !important;
-}
-
-/* Position the buttons */
-
-.swiper-button-prev-unique {
-  left: 10px !important;
-}
-
-.swiper-button-next-unique {
-  right: 10px !important;
-}
-
-/* Hide the default Swiper buttons if you are using custom ones */
-
-.swiper-button-prev,
-.swiper-button-next {
-  display: none !important;
-}
-
-/* Astrolgoer Details Page */
-.profile-card {
-  background: linear-gradient(to right, rgb(255, 252, 246), rgb(255, 242, 218))
-    rgb(255, 255, 255);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
-}
-
-.profile-img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #fff;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-
-/* Rating badge */
-.rating-badge {
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  border-radius: 50px;
-  padding: 2px 12px;
-  font-weight: bold;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.rating-badge img {
-  width: 16px;
-  height: 16px;
-}
-
-/* Buttons */
-.action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
-  border-radius: 50px;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-call {
-  background: #f8f9fa;
-}
-.btn-video {
-  background: #ff4d4d;
-  color: white;
-}
 .btn-chat {
-  background: #ffcc66;
-}
-
-/* Tabs */
-.nav-tabs .nav-link {
-  border-radius: 50px;
-  padding: 5px 16px;
-  font-weight: 500;
-  color: black;
-}
-.nav-tabs .nav-link.active {
-  background: #a23d2d;
+  background: linear-gradient(45deg, #ff9800, #f57c00);
   color: white;
-}
-
-/* No scrollbar on right */
-.profile-content {
-  overflow-y: scroll;
-  max-height: none;
-}
-
-.astro-tags {
-  color: rgb(0, 0, 0);
-  font-size: 14px;
-  margin-bottom: 0px;
-  margin-top: 5px;
-  background: rgb(218, 162, 62);
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-.astro-call {
-  border: none;
-  border-radius: 12px;
-  background-color: rgb(115, 40, 130);
-  color: white;
-  padding: 10px 30px;
-}
-
-.astro-videocall {
-  border: none;
-  border-radius: 12px;
-  background-color: rgb(218, 162, 62);
-  color: white;
-  padding: 10px 30px;
-}
-
-.astro-chat {
-  background-color: #186593;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 10px 30px;
-}
-
-.astro-chat:hover {
-  background-color: #186593;
-  color: white;
-  border: none;
-  transition: all 0.6s ease;
-}
-
-.nav-links {
-  display: flex;
-  justify-content: start;
-  gap: 20px;
-}
-
-.nav-links .nav-item {
-  list-style: none;
-  color: black;
-}
-
-.nav-links .about {
-  padding: 8px 10px;
-  background-color: purple;
-  border: none;
-  border-radius: 15px;
-  color: white;
-}
-
-.nav-links .experience {
-  padding: 8px 10px;
-  background-color: rgb(218, 162, 62);
-  border: none;
-  border-radius: 15px;
-  color: white;
-}
-
-/* Fixed height scrollable section */
-.custom-scroll {
-  max-height: 290px; /* Adjust to match left section height */
-  overflow-y: auto;
-  padding-right: 10px;
-}
-
-/* Custom scrollbar */
-.custom-scroll::-webkit-scrollbar {
-  width: 8px;
-}
-.custom-scroll::-webkit-scrollbar-thumb {
-  background: rgb(115, 40, 130);
-  border-radius: 4px;
-}
-.custom-scroll::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-/* Custom buttons in this section */
-.custom-btn-primary {
-  background: rgb(115, 40, 130);
-  color: white;
-  border-radius: 12px;
-  padding: 8px 18px;
-  border: none;
-  transition: 0.3s ease;
-}
-.custom-btn-primary:hover {
-  background: rgb(218, 162, 62);
-}
-
-.custom-btn-secondary {
-  background: rgb(218, 162, 62);
-  color: white;
-  border-radius: 12px;
-  padding: 8px 18px;
-  border: none;
-  transition: 0.3s ease;
-}
-.custom-btn-secondary:hover {
-  background: rgb(115, 40, 130);
-}
-
-/* ================================
-     YOUTUBE VIDEO
-  =================================== */
-.video-wrapper {
-  position: relative;
-  right: 10%;
+  font-weight: 600;
+  border-radius: 25px;
+  padding: 10px;
   width: 100%;
-  padding-bottom: 56.25%;
-  height: 350px;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.video-wrapper iframe {
-  position: absolute;
-  margin-top: 20px;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 90%;
   border: none;
-  border-radius: 10px;
+  transition: 0.3s;
 }
 
-/* ================================
-     BUTTONS & TABS
-  =================================== */
-.btn-group .btn {
-  font-size: 14px;
-  padding: 6px 12px;
-}
-
-.tabs button {
-  font-size: 13px;
-  padding: 5px 10px;
-}
-
-.submit-button {
-  background-color: #732882;
-  border: none;
-  border-radius: 12px;
-  margin-right: 14rem;
-  margin-top: 20px;
-}
-
-.submit-button:hover {
-  background-color: #186593;
-}
-
-.meeting-buttons {
-  display: flex;
-  gap: 20px;
-}
-
-.book-button,
-.meeting-buttons a {
-  border: 2px solid #732882;
-  border-radius: 20px;
-  color: black;
-  padding: 7px 15px;
-}
-
-/* ================================
-     SCROLL BOX
-  =================================== */
-.scroll-box {
-  max-height: 300px;
-  overflow-y: auto;
-  background: linear-gradient(to right, rgb(255, 252, 246), rgb(255, 242, 218))
-    rgb(255, 255, 255);
-}
-
-.scroll-box::-webkit-scrollbar {
-  width: 8px;
-}
-
-.scroll-box::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.scroll-box::-webkit-scrollbar-thumb {
-  background-color: #732882;
-  border-radius: 10px;
-  border: 2px solid transparent;
-}
-
-/* Column custom scrollbar */
-.col-lg-5::-webkit-scrollbar {
-  width: 6px;
-}
-
-.col-lg-5::-webkit-scrollbar-thumb {
-  background-color: #ffffff70;
-  border-radius: 10px;
-}
-
-.testimonial-card {
-  background: none; /* Transparent background */
-  border-radius: 20px;
-  border: solid rgba(218, 162, 62, 0.45);
-}
-
-.testimonial-card img {
-  border: 2px solid #ffcc00; /* Profile border */
-}
-
-.testimonial-card .text-warning {
-  font-size: 1.2rem;
-}
-
-.testimonial-card p {
-  font-style: italic;
-  color: #333;
-}
-
-.story-btn {
-  display: inline-block;
-  padding: 8px 10px;
-  border-radius: 12px;
-  background-color: #762782;
-  color: white;
-  border: none;
-  margin-top: 20px;
-  margin-left: 9rem;
-}
-
-.story-btn a {
+.btn-chat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: white;
 }
 
-/* More Videos section */
-
-.testimonial-part {
-  background-image: url("/images/back-image.webp");
+.img-circle-lg {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 50% !important;
 }
 
-.card-body,
-.rightcard {
-  border-radius: 20px;
+.img-circle-sm {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50% !important;
 }
 
-.card {
-  transition: transform 0.3s ease;
-  border-radius: 10px;
-  /* background-color: white; */
-  padding: 5px;
-  border: solid rgba(218, 162, 62, 0.45);
+/* =========================================
+   6. FOOTER STYLES
+   ========================================= */
+.newsletter {
+  background-color: #732882;
+  color: white;
 }
-
-.card:hover {
-  transform: translateY(-5px);
-}
-/* Footer CSS */
-/* CSS For Footer */
 
 .footer-section {
-  /* background: linear-gradient(to bottom, #d32f2f, #7b1fa2); */
-  background-color: black;
+  background-image: url("/images/bg-footer.jpg");
+  background-size: cover;
+  background-color: #000000;
   color: white;
-  padding-top: 35px;
 }
+
+.footer-main {
+  padding: 50px 0;
+  background: rgba(0, 0, 0, 0.8);
+}
+
 .footer-logo {
-  background-color: #fff;
-  border-radius: 5px;
-  padding: 10px;
+  max-height: 70px;
   object-fit: cover;
-}
-
-/*old design */
-.newsletter {
-  background-color: #daa23e;
-  color: #fff;
-}
-
-.newsletter {
-  color: #fff;
-  background-color: #daa23e;
-  padding: 20px 40px !important;
-  width: 70vw !important;
-  border-radius: 50px;
-  position: relative !important;
-  left: auto !important;
-  bottom: -40px !important;
-  margin: 0 auto !important;
-  text-align: center;
-}
-
-.newsletter-form input {
-  border-radius: 50px;
-}
-
-.footer-main h6 {
-  color: #daa23e;
-}
-
-.footer-main a {
-  color: #fff;
-  text-decoration: none;
-}
-
-.footer-main a:hover {
-  color: #ffc96c;
 }
 
 .social-icons a {
-  display: inline-block;
   color: white;
-  font-size: 1.2rem;
-  margin-right: 10px;
+  margin-right: 15px;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.social-icons a:hover {
+  color: #daa23e;
 }
 
 .subscribe-btn {
   background: #daa23e;
-  /* background: linear-gradient(to right, #ff9800, #f44336); */
-
-  color: #fff !important;
-  padding: 5px 10px;
-  border-radius: 50px;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 14px;
   font-weight: 600;
-  font-size: 0.91rem !important;
-}
-/* Sign-in Page */
-/* CSS For Sign In Page */
-
-:root {
-  --primary-color: #732882;
-  --secondary-color: #daa23e;
-  --black-color: black;
-  --border-color: #daa23e73;
-  --color-white: white;
-  --close-button: red;
-  --star-color: #ffc850;
-  --product-background: #ffe3b852;
-  --testimonial-bg-color: #ffcc00;
-  --background-gradient: linear-gradient(to right, #fffcf6, #fff2da);
-  --google-color: #e9f1ff;
-  --facebook-color: #00a2ff8e;
-  --button-hover: #186593;
+  margin-left: 10px;
 }
 
+.footer-bottom {
+  background: #111;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #aaa;
+}
+
+/* =========================================
+   7. SIGN IN PAGE STYLES
+   ========================================= */
 .signin-part {
-  background: var(--background-gradient);
-  width: 100%;
-  height: auto;
-  padding-top: 30px;
-  padding-bottom: 120px;
-  margin-bottom: -100px;
+  padding: 50px 0;
+  background: #f9f9f9;
 }
 
-.banner-data {
-  padding-top: 2rem;
+.banner-data h3 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .form-data {
-  margin: 5rem 0px 0px 10rem;
-  border: 2px solid var(--border-color);
-  border-radius: 12px;
-  background-color: white;
-  padding: 20px;
-}
-
-.sign-form-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 5rem;
+  border-radius: 15px;
+  border: 1px solid #eee;
+  background: white;
 }
 
 .sign-up {
+  color: #daa23e;
   text-decoration: none;
-  color: var(--secondary-color);
 }
 
-.social-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  background-color: var(--google-color);
-  color: var(--black-color);
-  width: 50%;
-  padding: 5px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.links-images {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-left: 10px;
-}
-
+.social-button,
 .social-button2 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  background: var(--facebook-color);
-  border-radius: 12px;
-  padding: 7px 30px;
-  cursor: pointer;
+  transition: 0.3s;
+  background: white;
+  border: 1px solid #ddd !important;
 }
 
-.form-email input {
-  width: 90%;
-  padding: 8px 10px;
-  border-radius: 15px;
-  border: none;
-  border: 2px solid var(--border-color);
-  margin-top: 5px;
-}
-
-.form-email input:focus {
-  border-color: #732882; /* custom border color */
-  outline: none; /* removes default black/blue outline */
-  box-shadow: 0 0 5px rgba(115, 40, 130, 0.3); /* optional glow */
-}
-
-.form-password input {
-  width: 90%;
-  padding: 8px 10px;
-  border-radius: 15px;
-  border: none;
-  border: 2px solid var(--border-color);
-  margin-top: 5px;
-}
-
-.form-password input:focus {
-  border-color: var(--primary-color); /* custom border color */
-  outline: none; /* removes default black/blue outline */
-  box-shadow: 0 0 5px rgba(115, 40, 130, 0.3);
-}
-
-.form-password {
-  flex-direction: column;
-}
-
-.form-password label,
-.form-email label {
-  font-size: 14px;
-}
-
-.forget-password {
-  display: flex;
-  justify-content: flex-end;
-  text-decoration: none;
-  align-items: end;
-  padding-top: 10px;
-  color: var(--secondary-color);
-  font-weight: 500;
+.social-button:hover,
+.social-button2:hover {
+  background: #f1f1f1;
 }
 
 .sign-button {
-  margin-top: 20px;
-  padding: 10px 10px;
+  background: #732882;
   border: none;
-  border-radius: 20px;
-  background-color: var(--primary-color);
-  width: 100%;
+  transition: 0.3s;
 }
+
 .sign-button:hover {
-  margin-top: 20px;
-  padding: 10px 10px;
-  border: none;
-  border-radius: 20px;
-  background-color: var(--button-hover);
-  width: 100%;
+  background: #5a1e66;
+  color: white;
 }
 
-.sign-button a {
-  text-decoration: none;
-  color: rgb(255, 255, 255);
+.forget-password {
+  color: #732882;
+  font-size: 14px;
 }
 
-.astrology-heading {
-  color: var(--primary-color);
-  display: flex;
-  justify-content: center;
-}
-
-.horoscopes-items {
-  border: 2px solid var(--border-color);
-  border-radius: 10px;
-  text-align: center;
+/* =========================================
+   8. ASTROLOGER DETAILS STYLES
+   ========================================= */
+.profile-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Soft shadow */
+  overflow: hidden;
   padding: 20px;
 }
 
-.horoscopes-items h6 {
-  color: var(--black-color);
-  padding-top: 10px;
+.astro-call,
+.astro-videocall,
+.astro-chat {
+  border: 1px solid #732882;
+  background: white;
+  color: #732882;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: 0.3s;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.horoscopes-items img {
+.astro-call:hover,
+.astro-videocall:hover,
+.astro-chat:hover {
+  background: #732882;
+  color: white;
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #1a1a1a;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 5px;
+}
+
+.nav-links a:hover {
+  color: #daa23e;
+  border-color: #daa23e;
+}
+
+.custom-btn-primary {
+  background: #daa23e;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 20px;
+  transition: 0.3s;
+}
+
+.custom-btn-primary:hover {
+  background: #c5902e;
+}
+
+.custom-btn-secondary {
+  background: white;
+  border: 1px solid #732882;
+  color: #732882;
+  border-radius: 20px;
+  padding: 6px 20px;
+  transition: 0.3s;
+}
+
+.custom-btn-secondary:hover {
+  background: #732882;
+  color: white;
+}
+
+.leftcard,
+.rightcard {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+.form-inputs {
+  border-radius: 10px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+}
+
+.submit-button {
+  background: #732882;
+  border-radius: 25px;
+  border: none;
+  transition: 0.3s;
+}
+
+.submit-button:hover {
+  background: #5a1e66;
+}
+
+.testimonial-card {
+  background: #f9f9f9;
+  border-radius: 10px;
+  border-left: 4px solid #daa23e;
+}
+
+.story-btn {
+  background: transparent;
+  border: 1px solid #ccc;
+  padding: 8px 20px;
+  border-radius: 25px;
+  color: #1a1a1a;
+}
+
+/* Helpers for Astrologer Details & Sign In */
+.img-circle-md {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50% !important;
+  border: 3px solid rgba(218, 162, 62, 0.45);
+}
+
+.play-btn-overlay {
+  position: absolute;
+  bottom: 30px;
+  left: 70%;
+  background-color: #daa23e;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.popular-astrology span {
-  color: var(--primary-color);
-  font-size: 15px;
+.star-rating-lg {
+  margin-top: 8px;
+  font-size: 18px;
+  color: #daa23e;
+  letter-spacing: 3px;
 }
 
-@media (max-width: 768px) {
-  .m-hidden {
-    display: none;
-  }
-  .banner-data p {
-    display: none;
-  }
-  .social-button {
-    width: 80%;
-  }
-  .form-data {
-    position: relative;
-    right: 50%;
-    width: 100%;
-  }
-  .social-links {
-    flex-direction: column;
-  }
-  .social-button2 {
-    margin-top: 20px;
-    width: 100%;
-  }
+.testimonial-part {
+  padding: 70px 0;
+  background-image: linear-gradient(-90deg, #0b4f6c 0%, #4a89a3 100%);
+  color: white;
 }

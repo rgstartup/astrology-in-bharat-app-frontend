@@ -3,7 +3,6 @@ import Link from "next/link";
 import { products } from "@/data/homePagaData";
 
 const page = () => {
-
   return (
     <>
       <div className="container mt-5">
@@ -15,49 +14,21 @@ const page = () => {
                 <img
                   src="/images/astro-img1.png"
                   alt="Amita Sharma"
-                  className="rounded-circle"
-                  style={{
-                    width: "150px",
-                    height: "150px",
-                    objectFit: "cover",
-                    border: "3px solid rgba(218, 162, 62, 0.45)",
-                  }}
+                  className="rounded-circle img-circle-md"
                 />
 
                 {/* Play Button */}
                 <span
-                  className="fa-beat d-flex align-items-center justify-content-center"
+                  className="fa-beat d-flex align-items-center justify-content-center play-btn-overlay"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
-                  style={{
-                    position: "absolute",
-                    bottom: "30px", // slightly above image edge
-                    left: "70%",
-                    backgroundColor: "#DAA23E",
-                    width: "35px",
-                    height: "35px",
-                    borderRadius: "50%",
-                    color: "#fff",
-                    fontSize: "18px",
-                    cursor: "pointer",
-                  }}
                 >
                   <i className="fa-solid fa-circle-play"></i>
                 </span>
 
                 {/* Stars */}
-                <div
-                  style={{
-                    marginTop: "8px",
-                    fontSize: "18px",
-                    color: "#DAA23E",
-                    letterSpacing: "3px",
-                  }}
-                >
-                  ★★★★★
-                </div>
+                <div className="star-rating-lg">★★★★★</div>
               </div>
-
 
               <div>
                 <h5 className="fw-bold text-black">Amita Sharma</h5>
@@ -138,7 +109,7 @@ const page = () => {
             <div className="leftcard border-0 h-100">
               <div className="card-body p-4">
                 <h4 className="mb-4">
-                  <strong style={{ color: "#732882" }}>
+                  <strong className="color-secondary">
                     Please share your birth details:-
                   </strong>
                 </h4>
@@ -192,7 +163,11 @@ const page = () => {
                       <label className="form-label">
                         Birth Time <span className="text-danger">*</span>
                       </label>
-                      <input type="time" className="form-control form-inputs" required />
+                      <input
+                        type="time"
+                        className="form-control form-inputs"
+                        required
+                      />
                     </div>
 
                     <div className="col-md-6">
@@ -211,7 +186,12 @@ const page = () => {
                       <label className="form-label" htmlFor="gender">
                         Gender
                       </label>
-                      <select className="form-select" id="gender" required defaultValue="">
+                      <select
+                        className="form-select"
+                        id="gender"
+                        required
+                        defaultValue=""
+                      >
                         <option value="" disabled hidden>
                           Select
                         </option>
@@ -219,7 +199,9 @@ const page = () => {
                         <option value="female">Female</option>
                         <option value="other">Other</option>
                       </select>
-                      <div className="invalid-feedback">Please select a gender.</div>
+                      <div className="invalid-feedback">
+                        Please select a gender.
+                      </div>
                     </div>
 
                     <div className="col-md-6">
@@ -266,7 +248,7 @@ const page = () => {
             <div className="rightcard border-0 h-100">
               <div className="rightcard-body p-4">
                 <h4 className="text-center">
-                  <strong style={{ color: "#732882" }}>
+                  <strong className="color-secondary">
                     Client Success Stories
                   </strong>
                 </h4>
@@ -292,7 +274,9 @@ const page = () => {
                     <div className="ms-auto text-warning">★★★★★</div>
                   </div>
                   <p className="mb-0">
-                    {"The birth chart reading was incredibly detailed and accurate. It helped me understand my life path and make important career decisions."}
+                    {
+                      "The birth chart reading was incredibly detailed and accurate. It helped me understand my life path and make important career decisions."
+                    }
                   </p>
                 </div>
 
@@ -314,7 +298,10 @@ const page = () => {
                     <div className="ms-auto text-warning">★★★★★</div>
                   </div>
                   <p className="mb-0">
-                    {"The planetary transit analysis provided invaluable timing for my business decisions. The accuracy of predictions and professional guidance has been truly remarkable."}</p>
+                    {
+                      "The planetary transit analysis provided invaluable timing for my business decisions. The accuracy of predictions and professional guidance has been truly remarkable."
+                    }
+                  </p>
                 </div>
 
                 <button className="story-btn mt-4">
@@ -330,7 +317,7 @@ const page = () => {
       <section className="store-products py-5 ">
         <div className="container">
           <h2 className="section-heading text-center mb-5 display-6 fw-semibold text-center mb-5">
-            Best <span style={{ color: "#732882" }}>Sellers</span>
+            Best <span className="color-secondary">Sellers</span>
           </h2>
           <div className="product-slider-container">
             <div className="row ">
@@ -340,8 +327,7 @@ const page = () => {
                     <img
                       src={product.image}
                       alt="Image Not Found"
-                      className="services-img w-100 mb-3"
-                      style={{ height: "160px", objectFit: "cover" }}
+                      className="services-img w-100 mb-3 product-img"
                     />
                     <h4>{product.title}</h4>
                     <p className="p-sm text-muted">{product.description}</p>
@@ -367,12 +353,9 @@ const page = () => {
           <div className="row">
             <img src="/images/medal.svg" alt="" height="70px" width="70px" />
             <h3 className="text-center">
-              <span style={{ color: "rgb(115, 40, 130)" }}>More Videos</span>
+              <span className="color-secondary">More Videos</span>
             </h3>
-            <p
-              className="text-center"
-              style={{ fontSize: " 18px", color: "rgb(0, 0, 0)" }}
-            >
+            <p className="text-center p-md color-black">
               Lets see what our customers say about us: <br />
               Real stories of how our astrology and Vastu services have made a
               positive difference in their lives.
@@ -392,7 +375,6 @@ const page = () => {
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen
-                        style={{ borderRadius: "15px" }}
                       ></iframe>
                     </div>
                   </div>
@@ -414,7 +396,6 @@ const page = () => {
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen
-                        style={{ borderRadius: "15px" }}
                       ></iframe>
                     </div>
                   </div>
@@ -436,7 +417,6 @@ const page = () => {
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen
-                        style={{ borderRadius: "15px" }}
                       ></iframe>
                     </div>
                   </div>

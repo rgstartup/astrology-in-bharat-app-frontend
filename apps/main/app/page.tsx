@@ -1,5 +1,11 @@
 import React from "react";
-import { AstrologyServicesData, ClientsTestimoinialData, ListOfAllAstrologers, ZodiacSignsData, featuredCardsHeroSection } from "@/data/homePagaData";
+import {
+  AstrologyServicesData,
+  ClientsTestimoinialData,
+  ListOfAllAstrologers,
+  ZodiacSignsData,
+  featuredCardsHeroSection,
+} from "@/data/homePagaData";
 import AstrologerCard from "@/components/AstrologerCard";
 import SearchBar from "@/components/SearchBar";
 import ProductsCarousel from "@/components/ProductsCarousel";
@@ -15,7 +21,7 @@ const Page: React.FC = () => {
               <div className="col-lg-7 col-md-12">
                 <h1>
                   Connect with
-                  <span style={{ color: "#daa23e" }}>
+                  <span className="color-primary">
                     Verified <br /> Astrologers{" "}
                   </span>
                   Online
@@ -93,9 +99,7 @@ const Page: React.FC = () => {
           {/* <!-- Astrologer Card 1 --> */}
           <div className="astro-grid">
             {ListOfAllAstrologers.map((item) => {
-              return (
-                <AstrologerCard astrologerData={item} key={item.id} />
-              );
+              return <AstrologerCard astrologerData={item} key={item.id} />;
             })}
           </div>
 
@@ -135,9 +139,6 @@ const Page: React.FC = () => {
         </div>
       </section>
 
-
-
-
       {/* Astrology Servicees */}
       <section className="astrology-services py-5">
         <div className="container">
@@ -162,9 +163,8 @@ const Page: React.FC = () => {
         </div>
       </section>
 
-
-{/* Products Listing page */}
-      < section className="product-slider-section py-50 bg-cream" >
+      {/* Products Listing page */}
+      <section className="product-slider-section py-50 bg-cream">
         <div className="container">
           <h2 className="text-center mb-5 heading section-title">
             🔮 Our Astrological Products
@@ -173,8 +173,7 @@ const Page: React.FC = () => {
             <ProductsCarousel />
           </div>
         </div>
-      </ section>
-
+      </section>
 
       {/* Why Talk to our astrologer*/}
       <section className="py-50 why-choose-us text-white">
@@ -229,8 +228,7 @@ const Page: React.FC = () => {
               <img
                 src="/images/Astrologer.png" // Replace with your image path
                 alt="Astrologer talking"
-                className="img-fluid rounded-circle border border-gray"
-                style={{ width: "300px", height: "300px", objectFit: "cover" }}
+                className="img-fluid border border-gray img-circle-lg"
               />
             </div>
 
@@ -276,7 +274,6 @@ const Page: React.FC = () => {
         </div>
       </section>
 
-
       {/* Clients Testimonials Section */}
       <section className="testimonials-section bg-cream py-50">
         <div className="container text-center">
@@ -285,21 +282,13 @@ const Page: React.FC = () => {
             {ClientsTestimoinialData.map((client) => (
               <div className="col-lg-4 col-md-6 mb-4" key={client.id}>
                 <div className="ser-card p-4 h-100 vert-move">
-                  <i
-                    className="fa-solid fa-quote-left fa-2x mb-3"
-                    style={{ color: "#daa23e" }}
-                  ></i>
+                  <i className="fa-solid fa-quote-left fa-2x mb-3 color-primary"></i>
                   <p>{client.review}</p>
                   <div className="mt-3 d-flex align-items-center justify-content-center flex-column">
                     <img
                       src="images/astro-img1.png"
                       alt={client.name}
-                      className="rounded-circle mb-2"
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        objectFit: "cover",
-                      }}
+                      className="mb-2 img-circle-sm"
                     />
                     <strong>{client.name}</strong>
                     <div className="rating-star">
@@ -325,36 +314,15 @@ const Page: React.FC = () => {
               .slice(0, 3)
               .map((item) => (
                 <div className="col-lg-4 col-md-6 mb-4 " key={item.id}>
-                  <div
-                    className="astro-card  ser-card card h-100 border border-gray shadow position-relative overflow-hidden"
-                    style={{
-                      borderRadius: "15px",
-                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    }}
-                  >
+                  <div className="astro-card ser-card card h-100 border border-gray shadow position-relative overflow-hidden">
                     {/* Profile Image */}
                     <div className="position-relative p-4 pb-0">
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="rounded-circle border border-3 border-warning shadow"
-                        style={{
-                          width: "120px",
-                          height: "120px",
-                          objectFit: "cover",
-                        }}
+                        className="astro-profile-img rounded-circle border border-3 border-warning shadow"
                       />
-                      <span
-                        className="badge position-absolute"
-                        style={{
-                          background:
-                            "linear-gradient(45deg, #f7d774, #e0a800)",
-                          color: "#000",
-                          top: "20px",
-                          right: "20px",
-                          fontSize: "0.8rem",
-                        }}
-                      >
+                      <span className="badge position-absolute badge-top-rated">
                         ⭐ Top Rated
                       </span>
                     </div>
@@ -368,10 +336,7 @@ const Page: React.FC = () => {
 
                       {/* Ratings */}
                       <div className="d-flex justify-content-center align-items-center mb-3">
-                        <div
-                          className="rating-star text-warning"
-                          style={{ fontSize: "1.1rem" }}
-                        >
+                        <div className="rating-star text-warning p-md">
                           {"★".repeat(Math.floor(item.ratings))}
                         </div>
                         <small className="ms-2 text-muted">
@@ -401,17 +366,7 @@ const Page: React.FC = () => {
 
                       {/* CTA Button */}
                       <div className="d-grid">
-                        <button
-                          className="btn"
-                          style={{
-                            background:
-                              "linear-gradient(45deg, #ff9800, #f57c00)",
-                            color: "white",
-                            fontWeight: "600",
-                            borderRadius: "25px",
-                            padding: "10px",
-                          }}
-                        >
+                        <button className="btn btn-chat">
                           <i className="bi bi-chat-dots-fill me-2"></i> Chat Now
                         </button>
                       </div>
