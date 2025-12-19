@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@shared/*": ["../shared/*"]
     },
     "plugins": [
       {
@@ -16,7 +17,9 @@
     "**/*.tsx",
     "next-env.d.ts",
     "next.config.js",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../shared/**/*.ts",
+    "../shared/**/*.tsx"
   ],
   "exclude": ["node_modules", ".next", "dist", "build"]
 }

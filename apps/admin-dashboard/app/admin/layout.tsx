@@ -39,11 +39,9 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-   { label: "User Management", href: "/admin/users", icon: Users },
-   { label: "Expert Management", href: "/admin/experts", icon: UserCheck },
+  { label: "User Management", href: "/admin/users", icon: Users },
+  { label: "Expert Management", href: "/admin/experts", icon: UserCheck },
   { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
- 
-  
   { label: "Expert KYC Review", href: "/admin/kyc", icon: FileText },
   { label: "Service & Pricing", href: "/admin/pricing", icon: Tag },
   { label: "Promo Configuration", href: "/admin/promos", icon: Ticket },
@@ -242,89 +240,77 @@ export default function AdminLayout({
     setSidebarOpen((prev) => !prev);
   }, []);
 
-  const adminRoutes = [
-    "/admin/dashboard",
-    "/admin/appointments",
-    "/admin/users",
-    "/admin/experts",
-    "/admin/kyc",
-    "/admin/pricing",
-    "/admin/promos",
-    "/admin/coupons",
-    "/admin/live-sessions",
-    "/admin/session-logs",
-    "/admin/payouts",
-    "/admin/refunds",
-    "/admin/disputes",
-    "/admin/reviews",
-    "/admin/analytics",
-    "/admin/earnings",
-    "/admin/profile",
-  ];
+  // ✅ FIX: Check if it's an admin route (including login/register which shouldn't show sidebar)
+  const isAdminRoute = pathname?.startsWith("/admin");
+  const isLoginOrRegister = pathname === "/admin/login" || pathname === "/admin/register" || pathname === "/admin";
+  
+  // ✅ Show sidebar only for admin routes (except login/register)
+  const shouldShowSidebar = isAdminRoute && !isLoginOrRegister;
 
-  const shouldShowSidebar = adminRoutes.some((route) =>
-    pathname?.startsWith(route)
-  );
-
-  if (!shouldShowSidebar) {
-    return <>{children}</>;
-  }
+  // ✅ REMOVED: The problematic condition that was preventing 404 from rendering
+  // Now all children will render with appropriate layout
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar Component */}
-      <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      {/* Sidebar Component - Only show when needed */}
+      {shouldShowSidebar && (
+        <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      )}
 
       {/* Main Content */}
-      <div className="flex-1 lg:ml-64">
-        {/* Top Header */}
-        <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={toggleSidebar}
-                className="lg:hidden text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors"
-                aria-label="Toggle sidebar"
-              >
-                <Menu className="w-6 h-6" />
-              </button>
-              <h1 className="text-2xl font-semibold text-gray-800">
-                {menuItems.find((item) => item.href === pathname)?.label ||
-                  "Dashboard"}
-              </h1>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              {/* Search */}
-              <div className="hidden md:flex items-center relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent w-64"
-                />
+      <div className={cn("flex-1", shouldShowSidebar && "lg:ml-64")}>
+        {/* Top Header - Only show when sidebar is visible */}
+        {shouldShowSidebar && (
+          <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={toggleSidebar}
+                  className="lg:hidden text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors"
+                  aria-label="Toggle sidebar"
+                >
+                  <Menu className="w-6 h-6" />
+                </button>
+                <h1 className="text-2xl font-semibold text-gray-800">
+                  {menuItems.find((item) => item.href === pathname)?.label ||
+                    "Dashboard"}
+                </h1>
               </div>
 
-              {/* Notifications */}
-              <button className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
-                  3
-                </span>
-              </button>
+              <div className="flex items-center space-x-4">
+                {/* Search */}
+                <div className="hidden md:flex items-center relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent w-64"
+                  />
+                </div>
 
-              {/* Profile */}
-              <img
-                src="https://i.pravatar.cc/150?img=12"
-                alt="Profile"
-                className="w-10 h-10 rounded-full cursor-pointer hover:ring-2 hover:ring-yellow-500 transition-all"
-              />
+                {/* Notifications */}
+                <button className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors">
+                  <Bell className="w-5 h-5" />
+                  <span className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                    3
+                  </span>
+                </button>
+
+                {/* Profile */}
+                <img
+                  src="https://i.pravatar.cc/150?img=12"
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full cursor-pointer hover:ring-2 hover:ring-yellow-500 transition-all"
+                />
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
+        )}
 
         {/* Main Content */}
-        <main className="p-6">{children}</main>
+        <main className={cn(shouldShowSidebar && "p-6")}>
+          {children}
+        </main>
       </div>
     </div>
   );

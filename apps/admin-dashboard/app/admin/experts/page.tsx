@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import {
   Mail,
   Phone,
@@ -14,7 +14,13 @@ import {
 } from "lucide-react";
 import { DataTable } from "@/app/components/admin/DataTable";
 import { StatsCards } from "@/app/components/admin/StatsCard";
-import { ProfileModal } from "@/app/components/admin/ProfileModal";
+
+// ✅ Lazy load ProfileModal - sirf jab zarurat ho tabhi load hoga
+const ProfileModal = lazy(() => 
+  import("@/app/components/admin/ProfileModal").then(module => ({
+    default: module.ProfileModal
+  }))
+);
 
 interface Expert {
   id: number;
@@ -229,6 +235,20 @@ const ALL_EXPERTS: Expert[] = [
   },
 ];
 
+// ✅ Loading fallback component
+function ModalLoadingFallback() {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl p-8 shadow-2xl">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-yellow-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-gray-600 font-medium">Loading expert profile...</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ExpertsPage() {
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -378,96 +398,87 @@ export default function ExpertsPage() {
         statsCards={<StatsCards stats={expertStats} columns={4} />}
       />
 
-      {selectedExpert && (
-        <ProfileModal
-          isOpen={showModal}
-          onClose={closeModal}
-          avatar={selectedExpert.avatar}
-          name={selectedExpert.name}
-          subtitle={selectedExpert.specialization}
-          badges={[
-            {
-              label: selectedExpert.status,
-              color:
-                selectedExpert.status === "Active"
-                  ? "bg-green-100 text-green-700"
-                  : selectedExpert.status === "Pending"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-red-100 text-red-700",
-            },
-            {
-              label: `KYC: ${selectedExpert.kycStatus}`,
-              color:
-                selectedExpert.kycStatus === "Verified"
-                  ? "bg-green-100 text-green-700"
-                  : selectedExpert.kycStatus === "Pending"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-red-100 text-red-700",
-            },
-          ]}
-          stats={[
-            {
-              icon: Star,
-              value: selectedExpert.rating,
-              label: "Rating",
-              bgColor: "bg-yellow-50",
-              iconColor: "text-yellow-600",
-            },
-            {
-              icon: Briefcase,
-              value: selectedExpert.totalConsultations,
-              label: "Consultations",
-              bgColor: "bg-blue-50",
-              iconColor: "text-blue-600",
-            },
-            {
-              icon: Award,
-              value: `${selectedExpert.experience} yrs`,
-              label: "Experience",
-              bgColor: "bg-green-50",
-              iconColor: "text-green-600",
-            },
-          ]}
-          details={[
-            { icon: Mail, label: "Email", value: selectedExpert.email },
-            { icon: Phone, label: "Phone", value: selectedExpert.phone },
-            {
-              icon: MapPin,
-              label: "Location",
-              value:
-                selectedExpert.city && selectedExpert.state
-                  ? `${selectedExpert.city}, ${selectedExpert.state}`
-                  : "Not provided",
-            },
-            { icon: Calendar, label: "Join Date", value: selectedExpert.joinDate },
-            {
-              icon: DollarSign,
-              label: "Total Earnings",
-              value: `₹${selectedExpert.totalEarnings?.toLocaleString()}`,
-            },
-            {
-              icon: Clock,
-              label: "Last Active",
-              value: selectedExpert.lastActive || "N/A",
-            },
-          ]}
-          extraInfo={{
-            label: "Languages",
-            value: selectedExpert.languages?.join(", ") || "Not specified",
-          }}
-          actions={[
-            {
-              label: "Approve Expert",
-              onClick: () => console.log("Approve", selectedExpert.id),
-              variant: "primary",
-            },
-            {
-              label: "Suspend Expert",
-              onClick: () => console.log("Suspend", selectedExpert.id),
-              variant: "danger",
-            },
-          ]}
-        />
+      {/* ✅ Suspense wrapper with loading fallback */}
+      {showModal && selectedExpert && (
+        <Suspense fallback={<ModalLoadingFallback />}>
+          <ProfileModal
+            isOpen={showModal}
+            onClose={closeModal}
+            avatar={selectedExpert.avatar}
+            name={selectedExpert.name}
+            subtitle={selectedExpert.specialization}
+            badges={[
+              {
+                label: selectedExpert.status,
+                color:
+                  selectedExpert.status === "Active"
+                    ? "bg-green-100 text-green-700"
+                    : selectedExpert.status === "Pending"
+                    ? "bg-yellow-100 text-yellow-700"
+                    : "bg-red-100 text-red-700",
+              },
+              {
+                label: `KYC: ${selectedExpert.kycStatus}`,
+                color:
+                  selectedExpert.kycStatus === "Verified"
+                    ? "bg-green-100 text-green-700"
+                    : selectedExpert.kycStatus === "Pending"
+                    ? "bg-yellow-100 text-yellow-700"
+                    : "bg-red-100 text-red-700",
+              },
+            ]}
+            stats={[
+              {
+                icon: Star,
+                value: selectedExpert.rating,
+                label: "Rating",
+                bgColor: "bg-yellow-50",
+                iconColor: "text-yellow-600",
+              },
+              {
+                icon: Briefcase,
+                value: selectedExpert.totalConsultations,
+                label: "Consultations",
+                bgColor: "bg-blue-50",
+                iconColor: "text-blue-600",
+              },
+              {
+                icon: Award,
+                value: `${selectedExpert.experience} yrs`,
+                label: "Experience",
+                bgColor: "bg-green-50",
+                iconColor: "text-green-600",
+              },
+            ]}
+            details={[
+              { icon: Mail, label: "Email", value: selectedExpert.email },
+              { icon: Phone, label: "Phone", value: selectedExpert.phone },
+              {
+                icon: MapPin,
+                label: "Location",
+                value:
+                  selectedExpert.city && selectedExpert.state
+                    ? `${selectedExpert.city}, ${selectedExpert.state}`
+                    : "Not provided",
+              },
+              { icon: Calendar, label: "Join Date", value: selectedExpert.joinDate },
+              {
+                icon: DollarSign,
+                label: "Total Earnings",
+                value: `₹${selectedExpert.totalEarnings?.toLocaleString()}`,
+              },
+              {
+                icon: Clock,
+                label: "Last Active",
+                value: selectedExpert.lastActive || "N/A",
+              },
+            ]}
+            extraInfo={{
+              label: "Languages",
+              value: selectedExpert.languages?.join(", ") || "Not specified",
+            }}
+          />
+        </Suspense>
       )}
     </>
   );

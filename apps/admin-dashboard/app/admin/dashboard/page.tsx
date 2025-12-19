@@ -193,185 +193,195 @@ export default function DashboardPage() {
         </div>
 
         {/* Analytics Charts */}
-        <div className="lg:col-span-8">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h5 className="text-lg font-semibold text-gray-900">
-                  Analytics Overview
-                </h5>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => setActiveTab("revenue")}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      activeTab === "revenue"
-                        ? "bg-yellow-600 text-white"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
-                  >
-                    Revenue
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("consultations")}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      activeTab === "consultations"
-                        ? "bg-yellow-600 text-white"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
-                  >
-                    Consultations
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("growth")}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      activeTab === "growth"
-                        ? "bg-yellow-600 text-white"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
-                  >
-                    Growth
-                  </button>
-                </div>
-              </div>
+     <div className="lg:col-span-8">
+  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h5 className="text-lg font-semibold text-gray-900">
+          Analytics Overview
+        </h5>
+        
+        {/* Mobile: Dropdown, Desktop: Buttons */}
+        <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+          <button
+            onClick={() => setActiveTab("revenue")}
+            className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors ${
+              activeTab === "revenue"
+                ? "bg-yellow-600 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            Revenue
+          </button>
+          <button
+            onClick={() => setActiveTab("consultations")}
+            className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors ${
+              activeTab === "consultations"
+                ? "bg-yellow-600 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            Consultations
+          </button>
+          <button
+            onClick={() => setActiveTab("growth")}
+            className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors ${
+              activeTab === "growth"
+                ? "bg-yellow-600 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            Growth
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div className="p-4 sm:p-6">
+      {/* Revenue Chart */}
+      {activeTab === "revenue" && (
+        <div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+            <div>
+              <h6 className="text-sm font-medium text-gray-600">
+                Monthly Revenue & Consultations
+              </h6>
+              <p className="text-xs text-gray-500 mt-1">
+                Last 7 months performance
+              </p>
             </div>
-
-            <div className="p-6">
-              {/* Revenue Chart */}
-              {activeTab === "revenue" && (
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h6 className="text-sm font-medium text-gray-600">
-                        Monthly Revenue & Consultations
-                      </h6>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Last 7 months performance
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-2 text-green-600">
-                      <TrendingUp className="w-4 h-4" />
-                      <span className="text-sm font-semibold">+15.3%</span>
-                    </div>
-                  </div>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <AreaChart data={revenueData}>
-                      <defs>
-                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#d97706" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#d97706" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis
-                        dataKey="month"
-                        stroke="#9ca3af"
-                        style={{ fontSize: "12px" }}
-                      />
-                      <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "#fff",
-                          border: "1px solid #e5e7eb",
-                          borderRadius: "8px",
-                        }}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="revenue"
-                        stroke="#d97706"
-                        strokeWidth={2}
-                        fillOpacity={1}
-                        fill="url(#colorRevenue)"
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-
-              {/* Consultation Types Chart */}
-              {activeTab === "consultations" && (
-                <div>
-                  <div className="mb-4">
-                    <h6 className="text-sm font-medium text-gray-600">
-                      Consultation Types Distribution
-                    </h6>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Most popular services
-                    </p>
-                  </div>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={consultationData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis
-                        dataKey="type"
-                        stroke="#9ca3af"
-                        style={{ fontSize: "12px" }}
-                      />
-                      <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "#fff",
-                          border: "1px solid #e5e7eb",
-                          borderRadius: "8px",
-                        }}
-                      />
-                      <Bar dataKey="count" fill="#d97706" radius={[8, 8, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-
-              {/* User Growth Chart */}
-              {activeTab === "growth" && (
-                <div>
-                  <div className="mb-4">
-                    <h6 className="text-sm font-medium text-gray-600">
-                      User & Astrologer Growth
-                    </h6>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Platform expansion over time
-                    </p>
-                  </div>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={userGrowthData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis
-                        dataKey="month"
-                        stroke="#9ca3af"
-                        style={{ fontSize: "12px" }}
-                      />
-                      <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "#fff",
-                          border: "1px solid #e5e7eb",
-                          borderRadius: "8px",
-                        }}
-                      />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="users"
-                        stroke="#10b981"
-                        strokeWidth={2}
-                        dot={{ r: 4 }}
-                        activeDot={{ r: 6 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="astrologers"
-                        stroke="#d97706"
-                        strokeWidth={2}
-                        dot={{ r: 4 }}
-                        activeDot={{ r: 6 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
+            <div className="flex items-center space-x-2 text-green-600">
+              <TrendingUp className="w-4 h-4" />
+              <span className="text-sm font-semibold">+15.3%</span>
             </div>
           </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={revenueData}>
+              <defs>
+                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#d97706" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#d97706" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis
+                dataKey="month"
+                stroke="#9ca3af"
+                style={{ fontSize: "12px" }}
+              />
+              <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "8px",
+                }}
+              />
+              <Area
+                type="monotone"
+                dataKey="revenue"
+                stroke="#d97706"
+                strokeWidth={2}
+                fillOpacity={1}
+                fill="url(#colorRevenue)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
+      )}
+
+      {/* Consultation Types Chart */}
+      {activeTab === "consultations" && (
+        <div>
+          <div className="mb-4">
+            <h6 className="text-sm font-medium text-gray-600">
+              Consultation Types Distribution
+            </h6>
+            <p className="text-xs text-gray-500 mt-1">
+              Most popular services
+            </p>
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={consultationData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis
+                dataKey="type"
+                stroke="#9ca3af"
+                style={{ fontSize: "10px" }}
+                angle={-45}
+                textAnchor="end"
+                height={80}
+              />
+              <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "8px",
+                }}
+              />
+              <Bar dataKey="count" fill="#d97706" radius={[8, 8, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {/* User Growth Chart */}
+      {activeTab === "growth" && (
+        <div>
+          <div className="mb-4">
+            <h6 className="text-sm font-medium text-gray-600">
+              User & Astrologer Growth
+            </h6>
+            <p className="text-xs text-gray-500 mt-1">
+              Platform expansion over time
+            </p>
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={userGrowthData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis
+                dataKey="month"
+                stroke="#9ca3af"
+                style={{ fontSize: "12px" }}
+              />
+              <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#fff",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "8px",
+                }}
+              />
+              <Legend 
+                wrapperStyle={{ fontSize: "12px" }}
+                iconType="line"
+              />
+              <Line
+                type="monotone"
+                dataKey="users"
+                stroke="#10b981"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+                name="Users"
+              />
+              <Line
+                type="monotone"
+                dataKey="astrologers"
+                stroke="#d97706"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+                name="Astrologers"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
       </div>
     </div>
   );

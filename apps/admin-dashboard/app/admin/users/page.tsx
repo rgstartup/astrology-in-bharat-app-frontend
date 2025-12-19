@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import {
   Mail,
   Phone,
@@ -11,7 +11,13 @@ import {
 } from "lucide-react";
 import { DataTable } from "@/app/components/admin/DataTable";
 import { StatsCards } from "@/app/components/admin/StatsCard";
-import { ProfileModal } from "@/app/components/admin/ProfileModal";
+
+// ✅ Lazy load ProfileModal 
+const ProfileModal = lazy(() => 
+  import("@/app/components/admin/ProfileModal").then(module => ({
+    default: module.ProfileModal
+  }))
+);
 
 interface User {
   id: number;
@@ -38,6 +44,20 @@ const ALL_USERS: User[] = [
   { id: 4, name: "Sneha Patel", email: "sneha@example.com", phone: "+91 98765 43213", status: "Active", joinDate: "2024-01-12", address: "321 Ring Road", city: "Ahmedabad", state: "Gujarat", dateOfBirth: "1995-12-05", gender: "Female", totalConsultations: 15, totalSpent: 7500, lastActive: "5 hours ago", avatar: "https://i.pravatar.cc/150?img=9" },
   { id: 5, name: "Vikram Singh", email: "vikram@example.com", phone: "+91 98765 43214", status: "Active", joinDate: "2024-01-11", address: "654 Mall Road", city: "Jaipur", state: "Rajasthan", dateOfBirth: "1987-07-22", gender: "Male", totalConsultations: 20, totalSpent: 10000, lastActive: "3 hours ago", avatar: "https://i.pravatar.cc/150?img=15" },
 ];
+
+// ✅ Loading fallback component
+function ModalLoadingFallback() {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl p-8 shadow-2xl">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-yellow-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-gray-600 font-medium">Loading profile...</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function UsersPage() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -146,49 +166,52 @@ export default function UsersPage() {
         statsCards={<StatsCards stats={userStats} columns={3} />}
       />
 
-      {selectedUser && (
-        <ProfileModal
-          isOpen={showModal}
-          onClose={closeModal}
-          avatar={selectedUser.avatar}
-          name={selectedUser.name}
-          badges={[
-            {
-              label: selectedUser.status,
-              color:
-                selectedUser.status === "Active"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700",
-            },
-          ]}
-          details={[
-            { icon: Mail, label: "Email", value: selectedUser.email },
-            { icon: Phone, label: "Phone", value: selectedUser.phone },
-            {
-              icon: MapPin,
-              label: "Location",
-              value:
-                selectedUser.city && selectedUser.state
-                  ? `${selectedUser.city}, ${selectedUser.state}`
-                  : "Not provided",
-            },
-            { icon: Calendar, label: "Join Date", value: selectedUser.joinDate },
-            {
-              icon: DollarSign,
-              label: "Total Spent",
-              value: `₹${selectedUser.totalSpent?.toLocaleString() || 0}`,
-            },
-            {
-              icon: Clock,
-              label: "Last Active",
-              value: selectedUser.lastActive || "N/A",
-            },
-          ]}
-          extraInfo={{
-            label: "Total Consultations",
-            value: String(selectedUser.totalConsultations || 0),
-          }}
-        />
+      {/* ✅ Suspense wrapper with loading fallback */}
+      {showModal && selectedUser && (
+        <Suspense fallback={<ModalLoadingFallback />}>
+          <ProfileModal
+            isOpen={showModal}
+            onClose={closeModal}
+            avatar={selectedUser.avatar}
+            name={selectedUser.name}
+            badges={[
+              {
+                label: selectedUser.status,
+                color:
+                  selectedUser.status === "Active"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-red-100 text-red-700",
+              },
+            ]}
+            details={[
+              { icon: Mail, label: "Email", value: selectedUser.email },
+              { icon: Phone, label: "Phone", value: selectedUser.phone },
+              {
+                icon: MapPin,
+                label: "Location",
+                value:
+                  selectedUser.city && selectedUser.state
+                    ? `${selectedUser.city}, ${selectedUser.state}`
+                    : "Not provided",
+              },
+              { icon: Calendar, label: "Join Date", value: selectedUser.joinDate },
+              {
+                icon: DollarSign,
+                label: "Total Spent",
+                value: `₹${selectedUser.totalSpent?.toLocaleString() || 0}`,
+              },
+              {
+                icon: Clock,
+                label: "Last Active",
+                value: selectedUser.lastActive || "N/A",
+              },
+            ]}
+            extraInfo={{
+              label: "Total Consultations",
+              value: String(selectedUser.totalConsultations || 0),
+            }}
+          />
+        </Suspense>
       )}
     </>
   );
