@@ -35,6 +35,7 @@ const menuItems: MenuItem[] = [
     href: "/dashboard/service-pricing",
     icon: Coins,
   },
+  
   {
     label: "Clients History",
     href: "/dashboard/client-history",

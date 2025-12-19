@@ -17,6 +17,7 @@ import {
 import Calendar from "react-calendar";
 import { format } from "date-fns";
 import StatsCard from "../StatsCard";
+import Link from "next/link";
 
 export default function AppointmentsPage() {
   // Utility function for classnames
@@ -297,14 +298,13 @@ export default function AppointmentsPage() {
 
                 {/* Right Section: Actions */}
                 <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3 w-full lg:w-auto mt-4 lg:mt-0">
-                  <a
-                    href={appt.meetingLink}
-                    target="_blank"
+                  <Link
+                    href={"/join-live-session"}
                     rel="noopener noreferrer"
                     className="px-5 py-3 text-sm bg-yellow-600 text-white rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-yellow-700 shadow-sm transition-all w-full sm:w-auto"
                   >
                     <Video className="w-5 h-5" /> Join Meeting
-                  </a>
+                  </Link>
                   <button
                     onClick={() => openRescheduleModal(appt)}
                     className="px-5 py-3 text-sm bg-gray-200 text-gray-800 rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-gray-300 shadow-sm transition-all w-full sm:w-auto"
