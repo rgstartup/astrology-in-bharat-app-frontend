@@ -951,223 +951,418 @@ a.nav-link:focus {
 }
 
 /* =========================================
-   6. FOOTER STYLES
+   7. FOOTER STYLES (REDESIGN)
    ========================================= */
-.newsletter {
-  background-color: #732882;
-  color: white;
-}
+/* CSS For Footer */
 
 .footer-section {
-  background-image: url("/images/bg-footer.jpg");
-  background-size: cover;
-  background-color: #000000;
+  /* background: linear-gradient(to bottom, #d32f2f, #7b1fa2); */
+  background-color: black;
   color: white;
+  padding-top: 35px;
 }
-
-.footer-main {
-  padding: 50px 0;
-  background: rgba(0, 0, 0, 0.8);
-}
-
 .footer-logo {
-  max-height: 70px;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 10px;
   object-fit: cover;
 }
 
-.social-icons a {
-  color: white;
-  margin-right: 15px;
-  font-size: 18px;
-  transition: 0.3s;
+/*old design */
+.newsletter {
+  background-color: #daa23e;
+  color: #fff;
 }
 
-.social-icons a:hover {
+.newsletter {
+  color: #fff;
+  background-color: #daa23e;
+  padding: 20px 40px !important;
+  width: 70vw !important;
+  border-radius: 50px;
+  position: relative !important;
+  left: auto !important;
+  bottom: -40px !important;
+  margin: 0 auto !important;
+  text-align: center;
+}
+
+.newsletter-form input {
+  border-radius: 50px;
+}
+
+.footer-main h6 {
   color: #daa23e;
+}
+
+.footer-main a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-main a:hover {
+  color: #ffc96c;
+}
+
+.social-icons a {
+  display: inline-block;
+  color: white;
+  font-size: 1.2rem;
+  margin-right: 10px;
 }
 
 .subscribe-btn {
   background: #daa23e;
-  color: white;
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-left: 10px;
-}
+  /* background: linear-gradient(to right, #ff9800, #f44336); */
 
-.footer-bottom {
-  background: #111;
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: #aaa;
+  color: #fff !important;
+  padding: 5px 10px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.91rem !important;
 }
 
 /* =========================================
-   7. SIGN IN PAGE STYLES
+   8. SIGN IN PAGE STYLES
    ========================================= */
-.signin-part {
-  padding: 50px 0;
-  background: #f9f9f9;
+/* CSS For Sign In Page */
+
+:root {
+  --primary-color: #732882;
+  --secondary-color: #daa23e;
+  --black-color: black;
+  --border-color: #daa23e73;
+  --color-white: white;
+  --close-button: red;
+  --star-color: #ffc850;
+  --product-background: #ffe3b852;
+  --testimonial-bg-color: #ffcc00;
+  --background-gradient: linear-gradient(to right, #fffcf6, #fff2da);
+  --google-color: #e9f1ff;
+  --facebook-color: #00a2ff8e;
+  --button-hover: #186593;
 }
 
-.banner-data h3 {
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 1.3;
+.signin-part {
+  background: var(--background-gradient);
+  width: 100%;
+  height: auto;
+  padding-top: 30px;
+  padding-bottom: 120px;
+  margin-bottom: -100px;
+}
+
+.banner-data {
+  padding-top: 2rem;
 }
 
 .form-data {
-  border-radius: 15px;
-  border: 1px solid #eee;
-  background: white;
-}
-
-.sign-up {
-  color: #daa23e;
-  text-decoration: none;
-}
-
-.social-button,
-.social-button2 {
-  transition: 0.3s;
-  background: white;
-  border: 1px solid #ddd !important;
-}
-
-.social-button:hover,
-.social-button2:hover {
-  background: #f1f1f1;
-}
-
-.sign-button {
-  background: #732882;
-  border: none;
-  transition: 0.3s;
-}
-
-.sign-button:hover {
-  background: #5a1e66;
-  color: white;
-}
-
-.forget-password {
-  color: #732882;
-  font-size: 14px;
-}
-
-/* =========================================
-   8. ASTROLOGER DETAILS STYLES
-   ========================================= */
-.profile-card {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Soft shadow */
-  overflow: hidden;
+  margin: 5rem 0px 0px 10rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background-color: white;
   padding: 20px;
 }
 
-.astro-call,
-.astro-videocall,
-.astro-chat {
-  border: 1px solid #732882;
-  background: white;
-  color: #732882;
-  padding: 8px 16px;
-  border-radius: 25px;
-  font-weight: 600;
-  transition: 0.3s;
-  border: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.sign-form-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5rem;
 }
 
-.astro-call:hover,
-.astro-videocall:hover,
-.astro-chat:hover {
-  background: #732882;
-  color: white;
+.sign-up {
+  text-decoration: none;
+  color: var(--secondary-color);
 }
 
-.nav-links {
-  list-style: none;
-  padding: 0;
+.social-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--google-color);
+  color: var(--black-color);
+  width: 50%;
+  padding: 5px 20px;
+  border-radius: 12px;
+  cursor: pointer;
 }
 
-.nav-links a {
-  color: #1a1a1a;
-  font-weight: 600;
-  border-bottom: 2px solid transparent;
-  padding-bottom: 5px;
+.links-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
 }
 
-.nav-links a:hover {
-  color: #daa23e;
-  border-color: #daa23e;
+.social-button2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background: var(--facebook-color);
+  border-radius: 12px;
+  padding: 7px 30px;
+  cursor: pointer;
 }
 
-.custom-btn-primary {
-  background: #daa23e;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 6px 20px;
-  transition: 0.3s;
-}
-
-.custom-btn-primary:hover {
-  background: #c5902e;
-}
-
-.custom-btn-secondary {
-  background: white;
-  border: 1px solid #732882;
-  color: #732882;
-  border-radius: 20px;
-  padding: 6px 20px;
-  transition: 0.3s;
-}
-
-.custom-btn-secondary:hover {
-  background: #732882;
-  color: white;
-}
-
-.leftcard,
-.rightcard {
-  background: white;
+.form-email input {
+  width: 90%;
+  padding: 8px 10px;
   border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  margin-bottom: 20px;
-}
-
-.form-inputs {
-  border-radius: 10px;
-  background: #f8f9fa;
-  border: 1px solid #ddd;
-}
-
-.submit-button {
-  background: #732882;
-  border-radius: 25px;
   border: none;
+  border: 2px solid var(--border-color);
+  margin-top: 5px;
+}
+
+.form-email input:focus {
+  border-color: #732882; /* custom border color */
+  outline: none; /* removes default black/blue outline */
+  box-shadow: 0 0 5px rgba(115, 40, 130, 0.3); /* optional glow */
+}
+
+.form-password input {
+  width: 90%;
+  padding: 8px 10px;
+  border-radius: 15px;
+  border: none;
+  border: 2px solid var(--border-color);
+  margin-top: 5px;
+}
+
+.form-password input:focus {
+  border-color: var(--primary-color); /* custom border color */
+  outline: none; /* removes default black/blue outline */
+  box-shadow: 0 0 5px rgba(115, 40, 130, 0.3);
+}
+
+.form-password {
+  flex-direction: column;
+}
+
+.form-password label,
+.form-email label {
+  font-size: 14px;
+}
+
+.forget-password {
+  display: flex;
+  justify-content: flex-end;
+  text-decoration: none;
+  align-items: end;
+  padding-top: 10px;
+  color: var(--secondary-color);
+  font-weight: 500;
+}
+
+.sign-button {
+  margin-top: 20px;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 20px;
+  background-color: var(--primary-color);
+  width: 100%;
+}
+.sign-button:hover {
+  margin-top: 20px;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 20px;
+  background-color: var(--button-hover);
+  width: 100%;
+}
+
+.sign-button a {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+}
+
+.astrology-heading {
+  color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+}
+
+.horoscopes-items {
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+}
+
+.horoscopes-items h6 {
+  color: var(--black-color);
+  padding-top: 10px;
+}
+
+.horoscopes-items img {
+  border-radius: 50%;
+}
+
+.popular-astrology span {
+  color: var(--primary-color);
+  font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .m-hidden {
+    display: none;
+  }
+  .banner-data p {
+    display: none;
+  }
+  .social-button {
+    width: 80%;
+  }
+  .form-data {
+    position: relative;
+    right: 50%;
+    width: 100%;
+  }
+  .social-links {
+    flex-direction: column;
+  }
+  .social-button2 {
+    margin-top: 20px;
+    width: 100%;
+  }
+}
+
+/* =========================================
+   9. ASTROLOGER PROFILE CARD (REDESIGN)
+   ========================================= */
+.astro-profile-main-card {
+  background-color: #fff8f0; /* Cream/Beige Background */
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.astro-profile-right-border {
+  border-right: 5px solid #732882;
+  border-radius: 2px;
+}
+
+/* Image Section */
+.astro-img-container {
+  position: relative;
+  display: inline-block;
+}
+
+.astro-profile-img-lg {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 4px solid #daa23e; /* Gold Border */
+  object-fit: cover;
+}
+
+.play-icon-overlay {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+}
+
+/* Info Section */
+.astro-name-lg {
+  font-size: 24px;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.astro-meta-label {
+  font-weight: 700;
+  color: #000;
+}
+
+.astro-tags-pill {
+  background-color: #daa23e;
+  color: #000;
+  padding: 4px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  margin: 5px 0;
+}
+
+.astro-rating-stars {
+  color: #daa23e;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+/* Action Buttons Area */
+.astro-actions-grid {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-astro-action {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition: 0.3s;
 }
 
-.submit-button:hover {
-  background: #5a1e66;
+.btn-astro-action:hover {
+  transform: translateY(-2px);
+  color: #fff;
 }
 
-.testimonial-card {
-  background: #f9f9f9;
-  border-radius: 10px;
-  border-left: 4px solid #daa23e;
+.btn-purple {
+  background-color: #732882;
+}
+.btn-gold {
+  background-color: #daa23e;
+}
+.btn-blue {
+  background-color: #0b4f6c;
 }
 
-.story-btn {
-  background: transparent;
-  border: 1px solid #ccc;
-  padding: 8px 20px;
-  border-radius: 25px;
-  color: #1a1a1a;
+/* Right Section - Profile Details */
+.profile-section-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #202020;
+  margin-bottom: 15px;
+}
+
+.profile-tab-btn {
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  margin-right: 10px;
+}
+
+.tab-btn-purple {
+  background-color: #732882;
+}
+.tab-btn-gold {
+  background-color: #daa23e;
+}
+
+.profile-desc-text {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.6;
+  margin-top: 15px;
 }
 
 /* Helpers for Astrologer Details & Sign In */
@@ -1204,6 +1399,6 @@ a.nav-link:focus {
 
 .testimonial-part {
   padding: 70px 0;
-  background-image: linear-gradient(-90deg, #0b4f6c 0%, #4a89a3 100%);
+  /* background-image: linear-gradient(-90deg, #0b4f6c 0%, #4a89a3 100%); */
   color: white;
 }

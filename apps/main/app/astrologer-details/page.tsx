@@ -5,424 +5,223 @@ import { products } from "@/data/homePagaData";
 const page = () => {
   return (
     <>
-      <div className="container mt-5">
-        <div className="row profile-card align-items-start">
-          <div className="col-lg-6 col-md-12 p-2">
+      {/* ================= ASTRO PROFILE ================= */}
+      <div className="container mt-40">
+        <div className="row astro-profile-main-card align-items-start">
+          {/* LEFT */}
+          <div className="col-lg-6 col-md-12 p-2 astro-profile-right-border">
             <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start text-center text-md-start">
-              <div className="position-relative me-md-3 mb-3 mb-md-0 text-center">
-                {/* Image */}
+              <div className="position-relative me-md-4 mb-3 mb-md-0">
                 <img
                   src="/images/astro-img1.png"
                   alt="Amita Sharma"
-                  className="rounded-circle img-circle-md"
+                  className="img-circle-md"
                 />
 
-                {/* Play Button */}
                 <span
-                  className="fa-beat d-flex align-items-center justify-content-center play-btn-overlay"
+                  className="play-btn-overlay fa-beat"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                 >
                   <i className="fa-solid fa-circle-play"></i>
                 </span>
 
-                {/* Stars */}
                 <div className="star-rating-lg">★★★★★</div>
               </div>
 
               <div>
-                <h5 className="fw-bold text-black">Amita Sharma</h5>
-                <div className="mb-1 text-black">
-                  <strong>Lang.</strong> Hindi, English
+                <h4 className="astro-name-lg">Amita Sharma</h4>
+
+                <div className="mb-1">
+                  <span className="astro-meta-label">Lang.</span> Hindi, English
                 </div>
-                <div className="mb-1 astro-tags">Vedic, Numero, Vastu</div>
-                <div className="mb-1 text-black">
-                  <strong>Exp.</strong> 4 years
+
+                <div className="astro-tags-pill">Vedic, Numero, Vastu</div>
+
+                <div className="mb-1">
+                  <span className="astro-meta-label">Exp.</span> 4 years
                 </div>
-                <div className="text-black">
-                  <strong>Call.</strong> ₹50.00/min
+
+                <div>
+                  <span className="astro-meta-label">Call.</span> ₹50.00/min
                 </div>
               </div>
             </div>
 
-            <div className="d-flex flex-wrap justify-content-center justify-content-md-start mt-4 gap-2">
-              <button className="astro-call d-flex align-items-center gap-1">
+            <div className="astro-actions-grid">
+              <button className="btn-astro-action btn-purple">
                 <i className="fa-solid fa-phone-volume"></i> Call
               </button>
-              <button className="astro-videocall d-flex align-items-center gap-1">
-                <i className="fa-solid fa-video"></i> Video Call
+              <button className="btn-astro-action btn-gold">
+                <i className="fa-solid fa-video"></i> Video
               </button>
-              <button className="astro-chat d-flex align-items-center gap-1">
+              <button className="btn-astro-action btn-blue">
                 <i className="fa-solid fa-comment"></i> Chat
               </button>
             </div>
           </div>
 
+          {/* RIGHT */}
           <div className="col-lg-6 col-md-12 profile-content custom-scroll mt-4 mt-lg-0">
-            <h4 className="fw-bold">Profile</h4>
+            <h4 className="profile-section-title">Profile</h4>
 
-            <ul className="nav-links mt-4 mb-3 d-flex gap-3 flex-wrap">
-              <li className="nav-item">
-                <a href="#" className="about">
-                  About
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="#" className="experience">
-                  Experience
-                </a>
-              </li>
-            </ul>
-            <p>
-              Acharya Amita Sharma, born and brought up in the holy city of
-              Varanasi (U.P.) had her education at Banaras Hindu University
-              (BHU). She got Astrological grooming in the company of the legends
-              in Varanasi. Currently in Noida working as a professional
-              Astrologer with rich experience in Vedic Astrology / Bhrigu Nandi
-              Nadi (BNN) / Vedic Vastu / Vedic Numerology & Crystal Healing.
-            </p>
-
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              ornare elit sed feugiat malesuada.
-            </p>
-            <p>
-              Integer accumsan turpis a gravida pulvinar. Suspendisse luctus ex
-              at mauris tincidunt fermentum.
-            </p>
-
-            <div className="mt-3 d-flex flex-wrap gap-2">
-              <button className="btn custom-btn-primary">Notify Me</button>
-              <button className="btn custom-btn-secondary">Message</button>
+            <div className="mb-3">
+              <button className="profile-tab-btn tab-btn-purple">About</button>
+              <button className="profile-tab-btn tab-btn-gold">Experience</button>
             </div>
 
-            <p className="small text-muted mt-2">
+            <p className="profile-desc-text">
+              Acharya Amita Sharma, born and brought up in the holy city of
+              Varanasi (U.P.) had her education at Banaras Hindu University (BHU).
+              She received astrological grooming under legendary mentors and
+              currently practices professionally in Noida.
+            </p>
+
+            <p className="profile-desc-text">
+              She specializes in Vedic Astrology, Bhrigu Nandi Nadi (BNN), Vedic
+              Vastu, Numerology & Crystal Healing with proven results.
+            </p>
+
+            <div className="mt-3 d-flex gap-2 flex-wrap">
+              <button className="orderNowbtn">Notify Me</button>
+              <button className="orderNowbtn bg-secondary">Message</button>
+            </div>
+
+            <p className="p-xxs color-muted mt-2">
               * Email alert when astrologer comes online!
             </p>
           </div>
         </div>
       </div>
 
+      {/* ================= BIRTH DETAILS & TESTIMONIAL ================= */}
       <div className="container my-5">
         <div className="row">
+          {/* FORM */}
           <div className="col-lg-6">
-            <div className="leftcard border-0 h-100">
-              <div className="card-body p-4">
-                <h4 className="mb-4">
-                  <strong className="color-secondary">
-                    Please share your birth details:-
-                  </strong>
-                </h4>
+            <div className="ser-card h-100 p-20">
+              <h4 className="title-secondary color-secondary mb-20">
+                Please share your birth details
+              </h4>
 
-                <form>
-                  <div className="row g-3">
-                    <div className="col-md-6">
-                      <label className="form-label">
-                        Name <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control form-inputs"
-                        placeholder="Enter Your Name"
-                        required
-                      />
+              <form>
+                <div className="row g-3">
+                  {[
+                    "Name",
+                    "Email",
+                    "Mobile",
+                    "Date Of Birth",
+                    "Birth Time",
+                    "Birth Place",
+                  ].map((label, i) => (
+                    <div key={i} className="col-md-6">
+                      <label className="p-sm fw-semibold">{label}</label>
+                      <input className="form-control" required />
                     </div>
+                  ))}
+                </div>
 
-                    <div className="col-md-6">
-                      <label className="form-label">
-                        Email <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        className="form-control"
-                        placeholder="Email"
-                        required
-                      />
-                    </div>
-
-                    <div className="col-md-6">
-                      <label className="form-label">
-                        Mobile <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        className="form-control"
-                        placeholder="Mobile"
-                        required
-                      />
-                    </div>
-
-                    <div className="col-md-6">
-                      <label className="form-label">
-                        Date Of Birth <span className="text-danger">*</span>
-                      </label>
-                      <input type="date" className="form-control" required />
-                    </div>
-
-                    <div className="col-md-6">
-                      <label className="form-label">
-                        Birth Time <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="time"
-                        className="form-control form-inputs"
-                        required
-                      />
-                    </div>
-
-                    <div className="col-md-6">
-                      <label className="form-label">
-                        Birth Place <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Birth Place"
-                        required
-                      />
-                    </div>
-
-                    <div className="col-md-6">
-                      <label className="form-label" htmlFor="gender">
-                        Gender
-                      </label>
-                      <select
-                        className="form-select"
-                        id="gender"
-                        required
-                        defaultValue=""
-                      >
-                        <option value="" disabled hidden>
-                          Select
-                        </option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                      </select>
-                      <div className="invalid-feedback">
-                        Please select a gender.
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
-                      <label className="form-label">Marital Status</label>
-                      <select className="form-select">
-                        <option value="" disabled hidden>
-                          Select
-                        </option>
-                        <option>Single</option>
-                        <option>Married</option>
-                        <option>Divorced</option>
-                        <option>Widowed</option>
-                      </select>
-                    </div>
-
-                    <div className="col-md-6">
-                      <label className="form-label">Occupation</label>
-                      <select className="form-select form-inputs">
-                        <option value="" disabled hidden>
-                          Select
-                        </option>
-                        <option>Student</option>
-                        <option>Working Professional</option>
-                        <option>Business</option>
-                        <option>Other</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="text-end mt-4">
-                    <button
-                      type="submit"
-                      className="px-4 py-2 text-white submit-button"
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </form>
-              </div>
+                <div className="text-end mt-20">
+                  <button className="orderNowbtn px-4">Submit</button>
+                </div>
+              </form>
             </div>
           </div>
 
+          {/* TESTIMONIAL */}
           <div className="col-lg-6">
-            <div className="rightcard border-0 h-100">
-              <div className="rightcard-body p-4">
-                <h4 className="text-center">
-                  <strong className="color-secondary">
-                    Client Success Stories
-                  </strong>
-                </h4>
-                <p className="text-center">
-                  Transformative experiences from our valued community
-                </p>
+            <div className="ser-card h-100 p-20">
+              <h4 className="text-center title-secondary color-secondary">
+                Client Success Stories
+              </h4>
 
-                <div className="testimonial-card p-4 shadow-sm">
-                  <div className="d-flex align-items-center mb-3">
+              <p className="text-center p-sm">
+                Transformative experiences from our community
+              </p>
+
+              {[1, 2].map((_, i) => (
+                <div key={i} className="testimonial-card p-20 mt-20 shadow">
+                  <div className="d-flex align-items-center mb-10">
                     <img
                       src="/images/astro-img1.png"
-                      alt="Alexandra Thompson"
-                      className="rounded-circle me-3"
-                      width="50"
-                      height="50"
+                      className="img-circle-sm me-3"
                     />
                     <div>
-                      <h6 className="mb-0 fw-bold">Alexandra Thompson</h6>
-                      <small className="text-muted">
+                      <h6 className="fw-bold mb-0">Alexandra Thompson</h6>
+                      <small className="color-muted">
                         Life Coach | New York
                       </small>
                     </div>
-                    <div className="ms-auto text-warning">★★★★★</div>
+                    <div className="ms-auto color-primary">★★★★★</div>
                   </div>
-                  <p className="mb-0">
-                    {
-                      "The birth chart reading was incredibly detailed and accurate. It helped me understand my life path and make important career decisions."
-                    }
+
+                  <p className="p-sm">
+                    The consultation was incredibly accurate and deeply
+                    insightful. Highly recommended!
                   </p>
-                </div>
-
-                <div className="testimonial-card p-4 mt-4 shadow-sm">
-                  <div className="d-flex align-items-center mb-3">
-                    <img
-                      src="/images/astro-img1.png"
-                      alt="Max Thump"
-                      className="rounded-circle me-3"
-                      width="50"
-                      height="50"
-                    />
-                    <div>
-                      <h6 className="mb-0 fw-bold">Max Thump</h6>
-                      <small className="text-muted">
-                        Life Coach | New York
-                      </small>
-                    </div>
-                    <div className="ms-auto text-warning">★★★★★</div>
-                  </div>
-                  <p className="mb-0">
-                    {
-                      "The planetary transit analysis provided invaluable timing for my business decisions. The accuracy of predictions and professional guidance has been truly remarkable."
-                    }
-                  </p>
-                </div>
-
-                <button className="story-btn mt-4">
-                  <i className="fa-solid fa-share"></i>
-                  <a href="#">Share Your Story</a>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <section className="store-products py-5 ">
-        <div className="container">
-          <h2 className="section-heading text-center mb-5 display-6 fw-semibold text-center mb-5">
-            Best <span className="color-secondary">Sellers</span>
-          </h2>
-          <div className="product-slider-container">
-            <div className="row ">
-              {products.map((product) => (
-                <div key={product.id} className="col-lg-3 col-md-4 col-sm-6">
-                  <div className="ser-card vert-move">
-                    <img
-                      src={product.image}
-                      alt="Image Not Found"
-                      className="services-img w-100 mb-3 product-img"
-                    />
-                    <h4>{product.title}</h4>
-                    <p className="p-sm text-muted">{product.description}</p>
-                    <div className=" mt-auto pt-3">
-                      <h5 className="mb-0 fw-bold">{product.price}</h5>
-                      <button className="btn btn-primary orderNowbtn mt-3">
-                        <Link href="/product/id">
-                          <i className="fas fa-shopping-cart me-2"></i>
-                          Add To Cart
-                        </Link>
-                      </button>
-                    </div>
-                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
+      </div>
+
+      {/* ================= PRODUCTS ================= */}
+      <section className="store-products py-50">
+        <div className="container">
+          <h2 className="title-secondary text-center mb-40">
+            Best <span className="color-secondary">Sellers</span>
+          </h2>
+
+          <div className="row">
+            {products.map((product) => (
+              <div key={product.id} className="col-lg-3 col-md-4 col-sm-6">
+                <div className="ser-card vert-move">
+                  <img
+                    src={product.image}
+                    className="services-img w-100 mb-10"
+                  />
+                  <h4>{product.title}</h4>
+                  <p className="p-sm">{product.description}</p>
+                  <h5 className="fw-bold mt-10">{product.price}</h5>
+
+                  <button className="orderNowbtn mt-10">
+                    <Link href="/product/id">
+                      <i className="fas fa-shopping-cart me-2"></i>
+                      Add To Cart
+                    </Link>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
+      {/* ================= VIDEO TESTIMONIAL ================= */}
       <section className="testimonial-part">
-        <div className="container py-5">
-          <div className="row">
-            <img src="/images/medal.svg" alt="" height="70px" width="70px" />
-            <h3 className="text-center">
-              <span className="color-secondary">More Videos</span>
-            </h3>
-            <p className="text-center p-md color-black">
-              Lets see what our customers say about us: <br />
-              Real stories of how our astrology and Vastu services have made a
-              positive difference in their lives.
-            </p>
+        <div className="container py-50">
+          <h3 className="text-center fw-bold">
+            <span className="color-secondary">More Videos</span>
+          </h3>
 
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="card h-80">
-                <div className="card-header text-dark d-flex align-items-center gap-3">
-                  <div className="video-box text-center">
-                    <div className="video-container">
-                      <iframe
-                        width="100%"
-                        height="315"
-                        src="https://www.youtube.com/embed/INoPh_oRooU?si=YQTkhY3KRdwTXqbq"
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                      ></iframe>
-                    </div>
-                  </div>
+          <p className="text-center p-md">
+            Real stories of transformation from our clients
+          </p>
+
+          <div className="row mt-30">
+            {[1, 2, 3].map((_, i) => (
+              <div key={i} className="col-lg-4 col-md-6 mb-4">
+                <div className="card shadow">
+                  <iframe
+                    width="100%"
+                    height="260"
+                    src="https://www.youtube.com/embed/INoPh_oRooU"
+                    allowFullScreen
+                  ></iframe>
                 </div>
               </div>
-            </div>
-
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="card h-80">
-                <div className="card-header text-dark d-flex align-items-center gap-3">
-                  <div className="video-box text-center">
-                    <div className="video-container">
-                      <iframe
-                        width="100%"
-                        height="315"
-                        src="https://www.youtube.com/embed/INoPh_oRooU?si=YQTkhY3KRdwTXqbq"
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                      ></iframe>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-4 col-md-6 mb-4">
-              <div className="card h-80">
-                <div className="card-header text-dark d-flex align-items-center gap-3">
-                  <div className="video-box text-center">
-                    <div className="video-container">
-                      <iframe
-                        width="100%"
-                        height="315"
-                        src="https://www.youtube.com/embed/INoPh_oRooU?si=YQTkhY3KRdwTXqbq"
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                      ></iframe>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
