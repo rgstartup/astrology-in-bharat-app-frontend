@@ -38,7 +38,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${outfit.variable} ${poppins.variable} `}>
-        <QuotesLoader />
+        {/* <QuotesLoader /> */}
         <Header />
         {children}
         <Footer />
