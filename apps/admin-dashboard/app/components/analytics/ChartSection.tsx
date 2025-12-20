@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo } from "react";
-import { Button } from "./Button";
+import { Button } from "../admin/Button";
 import { TrendingUp } from "lucide-react";
 import {
   LineChart,

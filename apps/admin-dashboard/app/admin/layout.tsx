@@ -51,7 +51,7 @@ const menuItems: MenuItem[] = [
   // { label: "Session Logs", href: "/admin/session-logs", icon: History },
   // { label: "Payout Requests", href: "/admin/payouts", icon: Wallet },
   // { label: "Refund Management", href: "/admin/refunds", icon: RefreshCw },
-  // { label: "Dispute Resolution", href: "/admin/disputes", icon: AlertCircle },
+  { label: "Dispute Resolution", href: "/admin/disputes", icon: AlertCircle },
   { label: "Reviews Moderation", href: "/admin/reviews", icon: Star },
   { label: "Analytics Dashboard", href: "/admin/analytics", icon: BarChart3 },
   // { label: "Earnings", href: "/admin/earnings", icon: IndianRupee },

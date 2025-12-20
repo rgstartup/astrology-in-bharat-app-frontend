@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+
 import { Award } from "lucide-react";
 
 interface Expert {

@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { Activity } from "lucide-react";
 
 interface ActivityItem {

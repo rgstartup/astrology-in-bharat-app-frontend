@@ -1,5 +1,5 @@
-import React from "react";
-import {
+"use client";
+import { 
   Clock,
   Users,
   Star,
