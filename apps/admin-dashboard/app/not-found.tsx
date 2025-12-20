@@ -12,7 +12,7 @@ export default function AdminNotFoundPage() {
       <NotFound
         returnUrl="/admin/dashboard"
         returnLabel="Back to Admin Dashboard"
-        title="Admin Page Not Found"
+       
         imagePath="/images/Astrologer.png"
       />
     );

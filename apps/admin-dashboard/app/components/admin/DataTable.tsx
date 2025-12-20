@@ -3,6 +3,7 @@ import React, { useState, useMemo, useCallback, memo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SearchInput } from "./SearchInput";
 
+// Types
 interface Column<T> {
   key: keyof T | string;
   label: string;
@@ -19,7 +20,7 @@ interface DataTableProps<T> {
   statsCards?: React.ReactNode;
 }
 
-// ✅ Memoized Table Row Component
+// Memoized Table Row Component (with overflow fix)
 const TableRow = memo(function TableRow<T extends { id: number | string }>({
   item,
   columns,
@@ -36,10 +37,17 @@ const TableRow = memo(function TableRow<T extends { id: number | string }>({
   return (
     <tr className="hover:bg-gray-50 transition-colors">
       {columns.map((column, colIndex) => (
-        <td key={colIndex} className="px-6 py-4 whitespace-nowrap">
-          {column.render
-            ? column.render(item)
-            : String(item[column.key as keyof T] || "-")}
+        <td 
+          key={colIndex} 
+          className="px-6 py-4 text-sm text-gray-900"
+          style={{ maxWidth: '250px' }}
+        >
+          {/* Truncate long text to prevent horizontal scroll */}
+          <div className="truncate" title={String(item[column.key as keyof T] || "-")}>
+            {column.render
+              ? column.render(item)
+              : String(item[column.key as keyof T] || "-")}
+          </div>
         </td>
       ))}
       {onViewDetails && (
@@ -57,7 +65,7 @@ const TableRow = memo(function TableRow<T extends { id: number | string }>({
   );
 });
 
-// ✅ Memoized Pagination Button Component
+// Memoized Pagination Button Component
 const PaginationButton = memo(function PaginationButton({
   page,
   currentPage,
@@ -89,7 +97,7 @@ const PaginationButton = memo(function PaginationButton({
   );
 });
 
-// ✅ Main DataTable Component
+// Main DataTable Component
 export function DataTable<T extends { id: number | string }>({
   data,
   columns,
@@ -99,10 +107,11 @@ export function DataTable<T extends { id: number | string }>({
   title = "Data Management",
   statsCards,
 }: DataTableProps<T>) {
+  // State for pagination and search
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // ✅ Memoized filter function
+  // Filter function (memoized)
   const filterItem = useCallback(
     (item: T) => {
       if (!searchTerm) return true;
@@ -118,12 +127,12 @@ export function DataTable<T extends { id: number | string }>({
     [searchKeys, searchTerm]
   );
 
-  // ✅ Memoized filtered data
+  // Filtered data (memoized)
   const filteredData = useMemo(() => {
     return data.filter(filterItem);
   }, [data, filterItem]);
 
-  // ✅ Memoized pagination calculations
+  // Pagination calculations (memoized)
   const paginationData = useMemo(() => {
     const total = Math.ceil(filteredData.length / itemsPerPage);
     const start = (currentPage - 1) * itemsPerPage;
@@ -138,19 +147,19 @@ export function DataTable<T extends { id: number | string }>({
     };
   }, [filteredData, currentPage, itemsPerPage]);
 
-  // ✅ Memoized pagination range
+  // Page numbers array (memoized)
   const pageNumbers = useMemo(() => {
     return Array.from({ length: paginationData.totalPages }, (_, i) => i + 1);
   }, [paginationData.totalPages]);
 
-  // ✅ Memoized handlers
+  // Event handlers (memoized)
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
   }, []);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value);
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1);
   }, []);
 
   const handlePrevPage = useCallback(() => {
@@ -161,18 +170,18 @@ export function DataTable<T extends { id: number | string }>({
     setCurrentPage((prev) => Math.min(prev + 1, paginationData.totalPages));
   }, [paginationData.totalPages]);
 
-  // ✅ Memoized empty state check
+  // Empty state checks
   const isEmpty = paginationData.currentItems.length === 0;
   const hasData = filteredData.length > 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full">
       {/* Stats Cards */}
       {statsCards}
 
-      {/* Table Card */}
-      <article className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {/* Header */}
+      {/* Table Card (overflow controlled) */}
+      <article className="bg-white rounded-xl shadow-sm border border-gray-200 w-full max-w-full overflow-hidden">
+        {/* Header with search */}
         <header className="px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
@@ -189,9 +198,9 @@ export function DataTable<T extends { id: number | string }>({
           </div>
         </header>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full" role="table" aria-label={title}>
+        {/* Table with horizontal scroll only when needed */}
+        <div className="w-full overflow-x-auto">
+          <table className="w-full table-auto" role="table" aria-label={title}>
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr role="row">
                 {columns.map((column, index) => (
@@ -217,6 +226,7 @@ export function DataTable<T extends { id: number | string }>({
             </thead>
             <tbody className="divide-y divide-gray-100">
               {isEmpty ? (
+                // Empty state
                 <tr>
                   <td
                     colSpan={columns.length + (onViewDetails ? 1 : 0)}
@@ -226,6 +236,7 @@ export function DataTable<T extends { id: number | string }>({
                   </td>
                 </tr>
               ) : (
+                // Table rows
                 paginationData.currentItems.map((item) => (
                   <TableRow
                     key={item.id}
