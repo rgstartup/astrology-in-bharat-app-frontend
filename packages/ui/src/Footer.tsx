@@ -92,7 +92,10 @@ const Footer: React.FC = () => {
                     <a href="#">Blog</a>
                   </li>
                   <li>
-                    <a href="#">Help/Support</a>
+                    <a href="/help">Help/Support</a>
+                  </li>
+                  <li>
+                    <a href="/session-history">My Seassions</a>
                   </li>
                 </ul>
               </div>

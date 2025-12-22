@@ -54,7 +54,7 @@ const Header: React.FC = () => {
       console.log("User email:", response.data?.user?.email);
       console.log("User avatar:", response.data?.user?.avatar);
       console.log("===========================");
-      
+
       // If profile exists (has an id), user is authenticated
       if (response.data && response.data.id) {
         setUserProfile(response.data);
@@ -293,6 +293,26 @@ const Header: React.FC = () => {
                                   <i className="fa-solid fa-user-edit me-2" style={{ color: "#daa23e" }}></i>
                                   Edit Profile
                                 </Link>
+                                <Link
+                                  href="/session-history"
+                                  onClick={() => setShowProfileDropdown(false)}
+                                  style={{
+                                    display: "block",
+                                    padding: "10px 20px",
+                                    color: "#333",
+                                    textDecoration: "none",
+                                    fontSize: "14px",
+                                  }}
+                                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                                    e.currentTarget.style.backgroundColor = "#f5f5f5";
+                                  }}
+                                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                                    e.currentTarget.style.backgroundColor = "transparent";
+                                  }}
+                                >
+                                  <i className="fa-solid fa-clock-rotate-left me-2" style={{ color: "#daa23e" }}></i>
+                                  My Sessions
+                                </Link>
                                 <button
                                   onClick={handleLogout}
                                   style={{
@@ -391,6 +411,7 @@ const Header: React.FC = () => {
 
                     <Nav.Link href="#">Blog</Nav.Link>
                     <Nav.Link as={Link} href="/product">Products</Nav.Link>
+                    <Nav.Link as={Link} href="/help">Help & Support</Nav.Link>
                   </Nav>
                 </Navbar.Collapse>
               </Navbar>
