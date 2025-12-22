@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { products } from "@/data/homePagaData";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import ReviewModal from "@/components/ReviewModal";
 
 interface AstrologerData {
   name: string;
@@ -27,6 +29,7 @@ const Page = () => {
     video: "",
     ratings: 5,
   });
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   useEffect(() => {
     // Read query parameters
@@ -53,6 +56,12 @@ const Page = () => {
       });
     }
   }, [searchParams]);
+
+  const router = useRouter();
+
+  const handleChatClick = () => {
+    router.push('/user-detail-form');
+  }
 
   // Generate star rating
   const renderStars = (rating: number) => {
@@ -130,13 +139,13 @@ const Page = () => {
             </div>
 
             <div className="d-flex flex-wrap justify-content-center justify-content-md-start mt-4 gap-2">
-              <button className="astro-call d-flex align-items-center gap-1">
+              <button className="astro-call d-flex align-items-center gap-1" onClick={handleChatClick}>
                 <i className="fa-solid fa-phone-volume"></i> Call
               </button>
-              <button className="astro-videocall d-flex align-items-center gap-1">
+              <button className="astro-videocall d-flex align-items-center gap-1" onClick={handleChatClick}>
                 <i className="fa-solid fa-video"></i> Video Call
               </button>
-              <button className="astro-chat d-flex align-items-center gap-1">
+              <button className="astro-chat d-flex align-items-center gap-1" onClick={handleChatClick}>
                 <i className="fa-solid fa-comment"></i> Chat
               </button>
             </div>
@@ -372,9 +381,12 @@ const Page = () => {
                     {"The planetary transit analysis provided invaluable timing for my business decisions. The accuracy of predictions and professional guidance has been truly remarkable."}</p>
                 </div>
 
-                <button className="story-btn mt-4">
+                <button
+                  className="story-btn mt-4"
+                  onClick={() => setIsReviewModalOpen(true)}
+                >
                   <i className="fa-solid fa-share"></i>
-                  <a href="#">Share Your Story</a>
+                  <span>Share Your Story</span>
                 </button>
               </div>
             </div>
@@ -382,9 +394,19 @@ const Page = () => {
         </div>
       </div>
 
+      <ReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSubmit={(data) => {
+          console.log("Review Submitted:", data);
+          // Here you would typically send the data to your backend
+          setIsReviewModalOpen(false);
+        }}
+      />
+
       <section className="store-products py-5 ">
         <div className="container">
-          <h2 className="section-heading text-center mb-5 display-6 fw-semibold text-center mb-5">
+          <h2 className="section-heading  display-6 fw-semibold text-center mb-5">
             Best <span style={{ color: "#732882" }}>Sellers</span>
           </h2>
           <div className="product-slider-container">

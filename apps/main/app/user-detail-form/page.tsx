@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface UserDetails {
   name: string;
@@ -13,6 +13,12 @@ interface UserDetails {
 
 const UserDetailForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Get data from URL or defaults
+  const astrologerName = searchParams.get("name") || "Astrologer";
+  const rate = searchParams.get("price") || "20";
+
   const [formData, setFormData] = useState<UserDetails>({
     name: "",
     gender: "",
@@ -21,7 +27,14 @@ const UserDetailForm = () => {
     birthLocation: "",
   });
 
-  const [errors, setErrors] = useState<Partial<UserDetails>>({});
+  // Booking State
+  const [bookingDate, setBookingDate] = useState("");
+  const [bookingTime, setBookingTime] = useState("");
+  const [duration, setDuration] = useState("15");
+
+  const totalAmount = Number(rate) * Number(duration);
+
+  const [errors, setErrors] = useState<Partial<UserDetails & { bookingDate: string; bookingTime: string }>>({});
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -34,7 +47,7 @@ const UserDetailForm = () => {
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<UserDetails> = {};
+    const newErrors: Partial<UserDetails & { bookingDate: string; bookingTime: string }> = {};
 
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
@@ -51,6 +64,12 @@ const UserDetailForm = () => {
     if (!formData.birthLocation.trim()) {
       newErrors.birthLocation = "Birth location is required";
     }
+    if (!bookingDate) {
+      newErrors.bookingDate = "Booking date is required";
+    }
+    if (!bookingTime) {
+      newErrors.bookingTime = "Booking time is required";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -58,12 +77,24 @@ const UserDetailForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       sessionStorage.setItem("userDetails", JSON.stringify(formData));
-      console.log("Form submitted:", formData);
-      alert("Details saved! Connecting you with an astrologer...");
-      // router.push('/consultation');
+
+      // Pass all data to checkout
+      const params = new URLSearchParams({
+        name: astrologerName,
+        price: rate,
+        // Booking Details
+        date: bookingDate,
+        time: bookingTime,
+        duration,
+        total: String(totalAmount),
+        // User Details (optional, or rely on session storage)
+        userName: formData.name,
+      });
+
+      router.push(`/checkout?${params.toString()}`);
     }
   };
 
@@ -76,10 +107,10 @@ const UserDetailForm = () => {
             <div className="row align-items-center">
               <div className="col-lg-12 text-center">
                 <h1 className="mb-3">
-                  Share Your <span style={{ color: "#daa23e" }}>Birth Details</span>
+                  Book Your <span style={{ color: "#daa23e" }}>Consultation</span>
                 </h1>
                 <p className="text-white" style={{ fontSize: "18px" }}>
-                  Get personalized astrological guidance based on your birth chart
+                  Share your details and schedule a session with {astrologerName}
                 </p>
               </div>
             </div>
@@ -102,7 +133,7 @@ const UserDetailForm = () => {
                     </h5>
                   </div>
                   <p className="mb-0 text-muted">
-                    Your birth details help our expert astrologers create an accurate birth chart 
+                    Your birth details help our expert astrologers create an accurate birth chart
                     and provide personalized predictions based on planetary positions at your birth time.
                   </p>
                 </div>
@@ -113,7 +144,7 @@ const UserDetailForm = () => {
                 <div className="card-body p-4 p-md-5">
                   <h4 className="mb-4 text-center">
                     <strong style={{ color: "#732882" }}>
-                      Please Share Your Birth Details
+                      Personal Details
                     </strong>
                   </h4>
 
@@ -247,6 +278,110 @@ const UserDetailForm = () => {
                       </div>
                     </div>
 
+                   
+
+                    {/* Booking Details Section */}
+                  
+
+                    <div className="row g-3 g-md-4 mt-3">
+                      {/* Booking Date */}
+                      <div className="col-md-6">
+                        <label className="form-label fw-semibold">
+                          Appointment Date <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          value={bookingDate}
+                          min={new Date().toISOString().split("T")[0]}
+                          onChange={(e) => {
+                            setBookingDate(e.target.value);
+                            if (errors.bookingDate) setErrors(prev => ({ ...prev, bookingDate: "" }));
+                          }}
+                          style={{
+                            borderRadius: "8px",
+                            padding: "12px 16px",
+                            border: errors.bookingDate ? "1px solid #dc3545" : "1px solid #daa23e73",
+                          }}
+                        />
+                        {errors.bookingDate && (
+                          <div className="invalid-feedback d-block">
+                            {errors.bookingDate}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Booking Time */}
+                      <div className="col-md-6">
+                        <label className="form-label fw-semibold">
+                          Appointment Time <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="time"
+                          className="form-control"
+                          value={bookingTime}
+                          onChange={(e) => {
+                            setBookingTime(e.target.value);
+                            if (errors.bookingTime) setErrors(prev => ({ ...prev, bookingTime: "" }));
+                          }}
+                          style={{
+                            borderRadius: "8px",
+                            padding: "12px 16px",
+                            border: errors.bookingTime ? "1px solid #dc3545" : "1px solid #daa23e73",
+                          }}
+                        />
+                        {errors.bookingTime && (
+                          <div className="invalid-feedback d-block">
+                            {errors.bookingTime}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Duration Selection */}
+                      <div className="col-12">
+                        <label className="form-label fw-semibold">
+                          Duration (Minutes)
+                        </label>
+                        <div className="d-flex flex-wrap gap-2">
+                          {["5","10","15", "30", "45", "60"].map((mins) => (
+                            <button
+                              key={mins}
+                              type="button"
+                              className={`btn ${duration === mins ? "btn-primary" : "btn-outline-primary"}`}
+                              onClick={() => setDuration(mins)}
+                              style={{
+                                backgroundColor: duration === mins ? "#732882" : "transparent",
+                                borderColor: "#732882",
+                                color: duration === mins ? "#fff" : "#732882",
+                                minWidth: "80px"
+                              }}
+                            >
+                              {mins} min
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Summary Box */}
+                      <div className="col-12 mt-4">
+                        <div className="p-3" style={{ backgroundColor: "#f8f9fa", borderRadius: "10px", border: "1px dashed #732882" }}>
+                          <div className="d-flex justify-content-between mb-2">
+                            <span>Rate:</span>
+                            <strong>₹{rate}/min</strong>
+                          </div>
+                          <div className="d-flex justify-content-between mb-2">
+                            <span>Duration:</span>
+                            <strong>{duration} mins</strong>
+                          </div>
+                          <hr />
+                          <div className="d-flex justify-content-between text-success">
+                            <span className="fw-bold">Total Payable:</span>
+                            <span className="fw-bold fs-5">₹{totalAmount}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Submit Button */}
                     <div className="text-center mt-4 mt-md-5">
                       <button
@@ -258,6 +393,7 @@ const UserDetailForm = () => {
                           borderRadius: "50px",
                           fontSize: "18px",
                           boxShadow: "0 4px 15px rgba(115, 40, 130, 0.3)",
+                          minWidth: "250px",
                           transition: "all 0.3s ease",
                         }}
                         onMouseEnter={(e) => {
@@ -269,8 +405,7 @@ const UserDetailForm = () => {
                           e.currentTarget.style.boxShadow = "0 4px 15px rgba(115, 40, 130, 0.3)";
                         }}
                       >
-                        <i className="fa-solid fa-comments me-2"></i>
-                        Talk to Astrologer
+                        Proceed to Pay <i className="fa-solid fa-arrow-right ms-2"></i>
                       </button>
                     </div>
 
@@ -285,42 +420,7 @@ const UserDetailForm = () => {
             </div>
           </div>
 
-          {/* Feature Cards */}
-          <div className="row mt-5 justify-content-center">
-            <div className="col-lg-8">
-              <div className="row g-3">
-                <div className="col-md-4 col-6">
-                  <div className="ser-card text-center h-100">
-                    <div className="mb-3">
-                      <i className="fa-solid fa-shield-halved" style={{ fontSize: "40px", color: "#732882" }}></i>
-                    </div>
-                    <h5 style={{ color: "#daa23e", fontSize: "16px", fontWeight: "600" }}>100% Secure</h5>
-                    <p style={{ fontSize: "14px", margin: "0" }}>Your data is encrypted</p>
-                  </div>
-                </div>
-
-                <div className="col-md-4 col-6">
-                  <div className="ser-card text-center h-100">
-                    <div className="mb-3">
-                      <i className="fa-solid fa-user-check" style={{ fontSize: "40px", color: "#732882" }}></i>
-                    </div>
-                    <h5 style={{ color: "#daa23e", fontSize: "16px", fontWeight: "600" }}>Verified Experts</h5>
-                    <p style={{ fontSize: "14px", margin: "0" }}>Certified astrologers</p>
-                  </div>
-                </div>
-
-                <div className="col-md-4 col-12">
-                  <div className="ser-card text-center h-100">
-                    <div className="mb-3">
-                      <i className="fa-solid fa-bolt" style={{ fontSize: "40px", color: "#732882" }}></i>
-                    </div>
-                    <h5 style={{ color: "#daa23e", fontSize: "16px", fontWeight: "600" }}>Quick Response</h5>
-                    <p style={{ fontSize: "14px", margin: "0" }}>Instant connection</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+         
         </div>
       </section>
     </>
