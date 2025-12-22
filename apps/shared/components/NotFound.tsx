@@ -1,8 +1,21 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import "./NotFound.css"; // Import external CSS
+import { jsx as _jsx } from "react/jsx-runtime";
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      [elemName: string]: any;
+    }
+  }
+}
+
+interface ShootingStar {
+  top: number;
+  left: number;
+  delay: number;
+}
 
 interface NotFoundProps {
   returnUrl?: string;
@@ -17,7 +30,6 @@ export const NotFound: React.FC<NotFoundProps> = ({
   title = "Page Not Found",
   imagePath = "/images/Astrologer.png",
 }) => {
-  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
   const [stars, setStars] = useState<Array<{
@@ -141,11 +153,11 @@ export const NotFound: React.FC<NotFoundProps> = ({
             {title}
             
           </h2>
-           <Link href={returnUrl}>
+        <a href={returnUrl}>
           <button className="button-3d mt-0">
             {returnLabel}
           </button>
-        </Link>
+        </a>
         
         </div>
 

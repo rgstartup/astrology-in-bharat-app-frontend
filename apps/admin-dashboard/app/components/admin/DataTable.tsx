@@ -16,11 +16,13 @@ interface DataTableProps<T> {
   searchKeys: (keyof T)[];
   itemsPerPage?: number;
   onViewDetails?: (item: T) => void;
+  renderCell?: (item: T, key: string) => React.ReactNode;
   title?: string;
   statsCards?: React.ReactNode;
+  emptyMessage?: string;
+ 
 }
 
-// Memoized Table Row Component (with overflow fix)
 const TableRow = memo(function TableRow<T extends { id: number | string }>({
   item,
   columns,
@@ -104,6 +106,7 @@ export function DataTable<T extends { id: number | string }>({
   searchKeys,
   itemsPerPage = 10,
   onViewDetails,
+  renderCell,
   title = "Data Management",
   statsCards,
 }: DataTableProps<T>) {
@@ -225,28 +228,24 @@ export function DataTable<T extends { id: number | string }>({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {isEmpty ? (
-                // Empty state
-                <tr>
-                  <td
-                    colSpan={columns.length + (onViewDetails ? 1 : 0)}
-                    className="px-6 py-12 text-center text-gray-500"
-                  >
-                    {hasData ? "No results found" : "No data available"}
-                  </td>
-                </tr>
-              ) : (
-                // Table rows
-                paginationData.currentItems.map((item) => (
-                  <TableRow
-                    key={item.id}
-                    item={item}
-                    columns={columns}
-                    onViewDetails={onViewDetails}
-                  />
-                ))
-              )}
-            </tbody>
+  {isEmpty ? (
+    <tr>
+      <td colSpan={columns.length + (onViewDetails ? 1 : 0)} className="px-6 py-12 text-center text-gray-500">
+        {hasData ? "No results found" : "No data available"}
+      </td>
+    </tr>
+  ) : (
+    paginationData.currentItems.map((item) => (
+     <TableRow 
+     key={item.id}
+  item={item}
+  columns={columns as any}
+  onViewDetails={onViewDetails as any}
+/>
+    ))
+  )}
+</tbody>
+
           </table>
         </div>
 

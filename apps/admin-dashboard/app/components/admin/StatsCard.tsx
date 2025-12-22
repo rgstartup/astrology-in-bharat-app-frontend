@@ -5,7 +5,7 @@ import { LucideIcon, ArrowUp, ArrowDown } from "lucide-react";
 interface StatConfig {
   title: string;
   value: string | number;
-  icon: LucideIcon;
+   icon: string | LucideIcon; 
   iconColor: string;
   iconBgColor: string;
   valueColor?: string;
@@ -13,6 +13,7 @@ interface StatConfig {
     value: string;
     isPositive: boolean;
     period?: string;
+     color?: string;
   };
 }
 
