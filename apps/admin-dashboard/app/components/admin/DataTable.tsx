@@ -202,52 +202,56 @@ export function DataTable<T extends { id: number | string }>({
         </header>
 
         {/* Table with horizontal scroll only when needed */}
-        <div className="w-full overflow-x-auto">
-          <table className="w-full table-auto" role="table" aria-label={title}>
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr role="row">
-                {columns.map((column, index) => (
-                  <th
-                    key={index}
-                    role="columnheader"
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
-                  >
-                    {column.label}
-                  </th>
-                ))}
-                {onViewDetails && (
-                  <th
-                    role="columnheader"
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
-                  >
-                    Actions
-                  </th>
-                )}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-  {isEmpty ? (
-    <tr>
-      <td colSpan={columns.length + (onViewDetails ? 1 : 0)} className="px-6 py-12 text-center text-gray-500">
-        {hasData ? "No results found" : "No data available"}
-      </td>
-    </tr>
-  ) : (
-    paginationData.currentItems.map((item) => (
-     <TableRow 
-     key={item.id}
-  item={item}
-  columns={columns as any}
-  onViewDetails={onViewDetails as any}
-/>
-    ))
-  )}
-</tbody>
+{/* ===== TABLE HEADER (FIXED) ===== */}
+<div className="w-full overflow-x-hidden">
+  <table className="w-full table-fixed">
+    <thead className="bg-gray-50 border-b border-gray-200">
+      <tr>
+        {columns.map((column, index) => (
+          <th
+            key={index}
+            className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap"
+          >
+            {column.label}
+          </th>
+        ))}
+        {onViewDetails && (
+          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
+            Actions
+          </th>
+        )}
+      </tr>
+    </thead>
+  </table>
+</div>
 
-          </table>
-        </div>
+{/* ===== TABLE BODY (SCROLL ONLY DATA) ===== */}
+<div className="w-full max-h-[320px] overflow-y-auto">
+  <table className="w-full table-fixed">
+    <tbody className="divide-y divide-gray-100">
+      {isEmpty ? (
+        <tr>
+          <td
+            colSpan={columns.length + (onViewDetails ? 1 : 0)}
+            className="px-6 py-12 text-center text-gray-500"
+          >
+            {hasData ? "No results found" : "No data available"}
+          </td>
+        </tr>
+      ) : (
+        paginationData.currentItems.map((item) => (
+          <TableRow
+            key={item.id}
+            item={item}
+            columns={columns as any}
+            onViewDetails={onViewDetails as any}
+          />
+        ))
+      )}
+    </tbody>
+  </table>
+</div>
+
 
         {/* Pagination */}
         {hasData && paginationData.totalPages > 0 && (
