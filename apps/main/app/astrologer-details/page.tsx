@@ -398,7 +398,7 @@ const Page = () => {
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
         onSubmit={(data) => {
-          console.log("Review Submitted:", data);
+       
           // Here you would typically send the data to your backend
           setIsReviewModalOpen(false);
         }}

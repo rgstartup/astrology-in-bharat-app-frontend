@@ -17,15 +17,15 @@ const statusBadges = {
 
 export function ReviewCard({ review, isLast }: ReviewCardProps) {
   const handleApprove = useCallback(() => {
-    console.log("Approve review:", review.id);
+
   }, [review.id]);
 
   const handleFlag = useCallback(() => {
-    console.log("Flag review:", review.id);
+ 
   }, [review.id]);
 
   const handleDelete = useCallback(() => {
-    console.log("Delete review:", review.id);
+
   }, [review.id]);
 
   const formattedDate = useMemo(

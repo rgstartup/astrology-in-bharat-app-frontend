@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { StatsCards } from "@/app/components/admin/StatsCard";
+// import { StatsCards } from "@/app/components/admin/StatsCard";
 import { Button } from "@/app/components/admin/Button";
 import { Download, Filter, RefreshCw } from "lucide-react";
 
@@ -36,7 +36,35 @@ export default function RefundManagementPage() {
         iconBgColor: "bg-blue-100",
         trend: { value: "+8%", isPositive: false, period: "this month" }
       },
-      // ... add more stats
+       {
+        title: "Total Refunds",
+        value: total.toString(),
+        icon: RefreshCw,
+        iconColor: "text-blue-600",
+        iconBgColor: "bg-blue-100",
+        trend: { value: "+8%", isPositive: false, period: "this month" }
+      },
+       {
+        title: "Total Refunds",
+        value: total.toString(),
+        icon: RefreshCw,
+        iconColor: "text-blue-600",
+        iconBgColor: "bg-blue-100",
+        trend: { value: "+8%", isPositive: false, period: "this month" }
+      },
+      {
+        title: "Total Refunds",
+        value: total.toString(),
+        icon: RefreshCw,
+        iconColor: "text-blue-600",
+        iconBgColor: "bg-blue-100",
+        trend: { value: "+8%", isPositive: false, period: "this month" }
+      },
+      
+
+      
+
+      
     ];
   }, [refunds]);
 

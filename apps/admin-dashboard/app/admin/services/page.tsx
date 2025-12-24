@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo ,lazy, Suspense} from "react";
 
 // Icons
 import { Plus } from "lucide-react";
@@ -10,6 +10,7 @@ import { ServiceCard } from "@/app/components/Service/ServiceCard";
 import { Button } from "@/app/components/admin/Button";
 import { SearchInput } from "@/app/components/admin/SearchInput";
 
+const AddService = lazy(() => import("@/app/components/Service/AddService"));
 // Data config
 import { servicesData, getStatsConfig, categories } from "@/app/components/Service/servicesConfig";
 
@@ -22,7 +23,11 @@ export default function ServicesPage() {
 
   // Get stats config (memoized)
   const statsConfig = useMemo(() => getStatsConfig(servicesData), []);
-
+const [showAddService, setShowAddService] = useState(false);
+const handleOpenAddService = () => {
+  
+  setShowAddService(true);
+};
   // Filter services based on search and category
   const filteredServices = useMemo(() => {
     return servicesData.filter((service) => {
@@ -47,7 +52,8 @@ export default function ServicesPage() {
           <h1 className="text-3xl font-bold text-gray-800">Services & Pricing</h1>
           <p className="text-gray-600 mt-1">Manage astrology services and pricing</p>
         </div>
-        <Button variant="primary" size="md" icon={Plus}>
+        <Button variant="primary" size="md" icon={Plus}   onClick={handleOpenAddService}   
+     >
           Add New Service
         </Button>
       </header>
@@ -93,6 +99,22 @@ export default function ServicesPage() {
           />
         ))}
       </div>
+
+      <Suspense
+  fallback={
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="bg-white px-6 py-3 rounded-lg shadow">
+        Loading...
+      </div>
+    </div>
+  }
+>
+  {showAddService && (
+    <AddService onClose={() => setShowAddService(false)} />
+  )}
+
+ 
+</Suspense>
     </main>
   );
 }

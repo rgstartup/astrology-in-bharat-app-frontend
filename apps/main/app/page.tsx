@@ -58,7 +58,7 @@ const Page: React.FC = () => {
 
   const handleApplySorts = (sorts: { experience: string; price: string; rating: string }) => {
     // sorts is a SortState-like object with one field set
-    console.log("Applied sorts:", sorts);
+
     // determine which sort is applied
     const sortKey = sorts.experience && sorts.experience !== "none" ? "experience"
       : sorts.rating && sorts.rating !== "none" ? "rating"

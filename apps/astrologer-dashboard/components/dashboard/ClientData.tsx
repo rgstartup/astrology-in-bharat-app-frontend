@@ -99,7 +99,7 @@ export default function ClientsPage() {
         } else if (sortConfig.key === "payment") {
           aValue = a.payment;
           bValue = b.payment;
-          console.log("From ClientData.tsx", aValue, bValue);
+    
 
         }
 

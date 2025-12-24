@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo ,lazy, Suspense } from "react";
 
 // Icons
 import { Plus, Search, Tag } from "lucide-react";
@@ -8,6 +8,8 @@ import { Plus, Search, Tag } from "lucide-react";
 import { StatsCards } from "@/app/components/admin/StatsCard";
 import { CouponCard } from "@/app/components/coupons/CouponCard";
 import { Button } from "@/app/components/admin/Button";
+const CreateCoupon = lazy(() => import("@/app/components/coupons/CreateCoupon"));
+
 
 // Data config
 import { couponsData, getStatsConfig } from "@/app/components/coupons/couponsConfig";
@@ -20,11 +22,12 @@ export default function CouponsPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   
   // Create modal state
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showCreateCoupon, setShowCreateCoupon] = useState(false);
 
   // Get stats config (memoized)
   const statsConfig = useMemo(() => getStatsConfig(couponsData), []);
 
+  
   // Filter coupons based on search and status
   const filteredCoupons = useMemo(() => {
     return couponsData.filter((coupon) => {
@@ -63,7 +66,11 @@ export default function CouponsPage() {
           <h1 className="text-3xl font-bold text-gray-800">Coupons & Offers</h1>
           <p className="text-gray-600 mt-1">Manage discount coupons and offers</p>
         </div>
-        <Button variant="primary" size="md" icon={Plus} onClick={() => setShowCreateModal(true)}>
+        <Button variant="primary" size="md" icon={Plus}  onClick={() => {
+    
+    setShowCreateCoupon(true);
+  }}
+>
           Create Coupon
         </Button>
       </header>
@@ -123,6 +130,22 @@ export default function CouponsPage() {
           ))
         )}
       </div>
+
+
+    <Suspense
+  fallback={
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="bg-white px-6 py-3 rounded-lg shadow">
+        Loading...
+      </div>
+    </div>
+  }
+>
+  
+  {showCreateCoupon && (
+    <CreateCoupon onClose={() => setShowCreateCoupon(false)} />
+  )}
+</Suspense>
     </main>
   );
 }

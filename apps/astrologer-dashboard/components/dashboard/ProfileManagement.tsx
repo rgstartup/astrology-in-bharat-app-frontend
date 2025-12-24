@@ -74,7 +74,7 @@ const ProfileManagement = () => {
   const handleSave = (section: string) => {
     setProfile(tempProfile);
     setEditMode(null);
-    console.log(`Saving changes for ${section}...`, tempProfile);
+
   };
 
   const handleCancel = () => {
@@ -134,7 +134,7 @@ const ProfileManagement = () => {
 
   const handleKYCClick = () => {
     // Navigate to KYC page or open KYC modal
-    console.log("Navigating to KYC completion...");
+ 
     alert("KYC verification process will be initiated. Please have your documents ready.");
   };
 

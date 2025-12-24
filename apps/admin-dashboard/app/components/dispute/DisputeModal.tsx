@@ -22,7 +22,7 @@ const badges = {
 
 export function DisputeModal({ dispute, onClose }: DisputeModalProps) {
   const handleAction = (action: string) => {
-    console.log(action, dispute.id);
+ 
     onClose();
   };
 

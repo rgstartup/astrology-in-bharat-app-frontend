@@ -34,7 +34,7 @@ export default function LiveSessionsPage() {
 
   // Simple calculations
   const stats = useMemo(() => {
-    console.log("Sessions data:", sessions);
+    
     const total = sessions.length;
     const live = sessions.filter(s => s.status === "live").length;
     const withIssues = sessions.filter(s => s.status === "technical-issue").length;

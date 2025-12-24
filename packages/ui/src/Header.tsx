@@ -45,32 +45,20 @@ const Header: React.FC = () => {
           withCredentials: true,
         }
       );
-      console.log("=== Profile API Response ===");
-      console.log("Full response:", response);
-      console.log("Response data:", response.data);
-      console.log("Profile ID:", response.data?.id);
-      console.log("User data:", response.data?.user);
-      console.log("User name:", response.data?.user?.name);
-      console.log("User email:", response.data?.user?.email);
-      console.log("User avatar:", response.data?.user?.avatar);
-      console.log("===========================");
-
+  
       // If profile exists (has an id), user is authenticated
       if (response.data && response.data.id) {
         setUserProfile(response.data);
         setIsAuthenticated(true);
-        console.log("✅ Authentication successful - User profile set");
+       
         console.log("Profile data:", response.data);
       } else {
-        console.log("❌ No profile data in response");
+      
         setIsAuthenticated(false);
         setUserProfile(null);
       }
     } catch (error: any) {
-      console.log("❌ Authentication check failed:");
-      console.log("Error status:", error?.response?.status);
-      console.log("Error message:", error?.message);
-      console.log("Error response:", error?.response?.data);
+
       setIsAuthenticated(false);
       setUserProfile(null);
     } finally {
@@ -88,10 +76,8 @@ const Header: React.FC = () => {
 
   // Log profile state changes
   useEffect(() => {
-    console.log("📊 Profile state updated:");
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("userProfile:", userProfile);
-    console.log("loading:", loading);
+    
+    
   }, [isAuthenticated, userProfile, loading]);
 
   // Also check authentication when window regains focus (e.g., after login in another tab)

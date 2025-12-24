@@ -85,7 +85,7 @@ export default function KYCPage() {
   };
 
   const handleExport = () => {
-    console.log("Exporting KYC data:", kycData);
+    
     alert("Export functionality coming soon!");
   };
 

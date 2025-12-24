@@ -84,9 +84,7 @@ const Page: React.FC = () => {
       password: formData.password,
     };
 
-    console.log("Login API Request Start. Endpoint:", API_ENDPOINT);
-    console.log("Request Payload (Body):", payload);
-
+   
     try {
       // Making the POST request
       const response = await axios.post<LoginSuccessResponse>(
@@ -100,11 +98,9 @@ const Page: React.FC = () => {
         }
       );
 
+
       console.log("Login Success. Status:", response.status);
       console.log("Server Response Data:", response.data);
-
-      // Assuming the server returns a token, you would store it here (e.g., localStorage)
-      // localStorage.setItem('authToken', response.data.token);
 
       setSuccessMessage(
         response.data.message || "Sign In successful! Redirecting..."
