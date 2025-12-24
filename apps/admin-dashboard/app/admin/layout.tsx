@@ -193,7 +193,15 @@ const Sidebar: React.FC<SidebarProps> = memo(
           aria-label="Sidebar navigation"
         >
           {/* Logo Section - Fixed */}
-          <div className="flex items-center justify-between p-6 bg-gray-50 border-r border-gray-200 flex-shrink-0">
+          <div className="flex items-center justify-between p-6 bg-gray-50 border-r border-gray-200 flex-shrink-0"
+          style={{
+    backgroundImage: "url('/images/back-image.webp')",
+    backgroundSize: "cover",     
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat", 
+  }}
+>
+            
             <img
               src="/images/logo.png"
               alt="Logo"
@@ -253,7 +261,11 @@ export default function AdminLayout({
   // Now all children will render with appropriate layout
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+ <div
+  className="flex min-h-screen bg-cover bg-center bg-no-repeat"
+  style={{ backgroundImage: "url('/images/back-image.webp')" }}
+>
+
       {/* Sidebar Component - Only show when needed */}
       {shouldShowSidebar && (
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
