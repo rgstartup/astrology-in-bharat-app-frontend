@@ -1,15 +1,25 @@
-import React from 'react'
+import React from "react";
 
-const SearchBar = () => {
-    return (
-        <div className="search-box">
-            <input
-                type="text"
-                placeholder="Search Astrologer, Type, Language..."
-            />
-            <button>Search</button>
-        </div>
-    )
+interface SearchBarProps {
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
 }
 
-export default SearchBar
+const SearchBar: React.FC<SearchBarProps> = ({
+  searchQuery,
+  onSearchChange,
+}) => {
+  return (
+    <div className="search-box">
+      <input
+        type="text"
+        placeholder="Search Astrologer, Type, Language..."
+        value={searchQuery}
+        onChange={(e) => onSearchChange?.(e.target.value)}
+      />
+      <button>Search</button>
+    </div>
+  );
+};
+
+export default SearchBar;
