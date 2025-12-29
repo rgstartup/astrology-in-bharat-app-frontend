@@ -59,12 +59,13 @@ export default function CouponsPage() {
   const handleToggleStatus = (id: number) => console.log("Toggle:", id);
 
   return (
-    <main className="space-y-6">
+    <main className="space-y-6 px-4 sm:px-6 lg:px-0">
+
       {/* Header with title and create button */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800">Coupons & Offers</h1>
-          <p className="text-gray-600 mt-1">Manage discount coupons and offers</p>
+    <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="min-w-0">
+         <h1 className="text-xl sm:text-3xl font-bold text-gray-800 truncate">Coupons & Offers</h1>
+           <p className="text-sm sm:text-base text-gray-600 mt-1">Manage discount coupons and offers</p>
         </div>
         <Button variant="primary" size="md" icon={Plus}  onClick={() => {
     
@@ -78,34 +79,36 @@ export default function CouponsPage() {
       {/* Stats cards - Total, Active, Redemptions, Avg Discount */}
       <StatsCards stats={statsConfig} columns={4} />
 
-      {/* Search and filter section */}
-      <div className="flex flex-col md:flex-row gap-4">
-        {/* Search input */}
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search coupons..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-          />
-        </div>
-        
-        {/* Status filter buttons */}
-        <div className="flex gap-2">
-          {filterButtons.map(({ value, label, variant }) => (
-            <Button
-              key={value}
-              variant={statusFilter === value ? (variant as any) : "outline"}
-              size="md"
-              onClick={() => setStatusFilter(value)}
-            >
-              {label}
-            </Button>
-          ))}
-        </div>
-      </div>
+     {/* Search and filter section */}
+<div className="flex flex-col gap-4 md:flex-row md:items-center">
+  {/* Search input */}
+  <div className="relative flex-1 min-w-0">
+    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+    <input
+      type="text"
+      placeholder="Search coupons..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+    />
+  </div>
+
+  {/* Status filter buttons */}
+  <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+    {filterButtons.map(({ value, label, variant }) => (
+      <Button
+        key={value}
+        variant={statusFilter === value ? (variant as any) : "outline"}
+        size="md"
+        onClick={() => setStatusFilter(value)}
+        className="w-full sm:w-auto"
+      >
+        {label}
+      </Button>
+    ))}
+  </div>
+</div>
+
 
       {/* Coupons grid or empty state */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

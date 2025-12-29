@@ -105,7 +105,7 @@ export function ProfileModal({
 
           {/* Stats Cards */}
           {stats && stats.length > 0 && (
-            <div className={`grid grid-cols-${stats.length} gap-4 mb-6`}>
+           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               {stats.map((stat, index) => {
                 const Icon = stat.icon;
                 return (

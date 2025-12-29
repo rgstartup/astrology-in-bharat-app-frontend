@@ -91,10 +91,11 @@ export default function RefundManagementPage() {
   };
 
   return (
-    <main className="space-y-6 p-6">
+  <main className="space-y-6 px-4 py-4 sm:p-6">
+
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
+     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+  <div className="min-w-0">
           <h1 className="text-3xl font-bold text-gray-900">Refund Management</h1>
           <p className="text-gray-600 mt-1">Manage and process refund requests from users</p>
         </div>
@@ -118,7 +119,8 @@ export default function RefundManagementPage() {
       />
 
       {/* Refunds Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+
         {filteredRefunds.length === 0 ? (
           <EmptyRefunds />
         ) : (

@@ -27,10 +27,12 @@ export function RefundCard({
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
       {/* Card Header */}
       <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
           <div>
             <h3 className="font-semibold text-gray-900">Refund #{refund.id}</h3>
-            <div className="flex items-center gap-3 mt-1">
+          <div className="flex flex-wrap items-center gap-2 mt-1 text-xs sm:text-sm">
+
               <div className="flex items-center gap-1 text-sm text-gray-600">
                 <Calendar className="w-3 h-3" />
                 {refund.requestedAt.toLocaleDateString()}
@@ -52,7 +54,8 @@ export function RefundCard({
       </div>
 
       {/* Card Content */}
-      <div className="p-4">
+     <div className="p-3 sm:p-4">
+
         {/* Users Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
           <UserInfoCard user={refund.user} astrologer={refund.astrologer} type="user" />
@@ -67,7 +70,8 @@ export function RefundCard({
               {refund.consultation.type.toUpperCase()}
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
             <div>
               <span className="text-xs text-gray-600">Duration</span>
               <p className="font-medium">{refund.consultation.duration} mins</p>
@@ -95,7 +99,8 @@ export function RefundCard({
         />
 
         {/* Action Buttons */}
-        <div className="mt-4 flex items-center gap-2">
+    <div className="mt-4 flex flex-col sm:flex-row gap-2">
+
           {refund.status === "pending" && (
             <>
               <Button

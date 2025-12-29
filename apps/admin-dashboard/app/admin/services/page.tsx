@@ -47,19 +47,33 @@ const handleOpenAddService = () => {
   return (
     <main className="space-y-6">
       {/* Header with add service button */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800">Services & Pricing</h1>
-          <p className="text-gray-600 mt-1">Manage astrology services and pricing</p>
-        </div>
-        <Button variant="primary" size="md" icon={Plus}   onClick={handleOpenAddService}   
-     >
-          Add New Service
-        </Button>
-      </header>
+     <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+  {/* Text */}
+  <div className="min-w-0">
+    <h1 className="text-xl sm:text-3xl font-bold text-gray-800 truncate">
+      Services & Pricing
+    </h1>
+    <p className="text-sm sm:text-base text-gray-600 mt-1">
+      Manage astrology services and pricing
+    </p>
+  </div>
+
+  {/* Action */}
+  <Button
+    variant="primary"
+    size="md"
+    icon={Plus}
+    onClick={handleOpenAddService}
+    className="w-full md:w-auto"
+  >
+    Add New Service
+  </Button>
+</header>
+
 
       {/* Stats cards - Total, Active, Bookings, Avg Price */}
       <StatsCards stats={statsConfig} columns={4} />
+
 
       {/* Search and category filters */}
       <div className="flex flex-col lg:flex-row gap-4">
@@ -73,48 +87,51 @@ const handleOpenAddService = () => {
         />
         
         {/* Category filter buttons */}
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant={categoryFilter === category ? "primary" : "outline"}
-              size="md"
-              onClick={() => setCategoryFilter(category)}
-            >
-              {category === "all" ? "All Categories" : category}
-            </Button>
-          ))}
-        </div>
+    <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+  {categories.map((category) => (
+    <Button
+      key={category}
+      variant={categoryFilter === category ? "primary" : "outline"}
+      size="md"
+      onClick={() => setCategoryFilter(category)}
+      className="w-full sm:w-auto"
+    >
+      {category === "all" ? "All Categories" : category}
+    </Button>
+  ))}
+</div>
+
+
       </div>
 
       {/* Services grid (3 columns on xl screens) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredServices.map((service) => (
-          <ServiceCard
-            key={service.id}
-            {...service}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onToggleStatus={handleToggleStatus}
-          />
-        ))}
-      </div>
+     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+  {filteredServices.map((service) => (
+    <ServiceCard
+      key={service.id}
+      {...service}
+      onEdit={handleEdit}
+      onDelete={handleDelete}
+      onToggleStatus={handleToggleStatus}
+    />
+  ))}
+</div>
 
-      <Suspense
-  fallback={
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white px-6 py-3 rounded-lg shadow">
-        Loading...
+
+    {showAddService && (
+  <Suspense
+    fallback={
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <div className="bg-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg shadow text-sm sm:text-base">
+          Loading...
+        </div>
       </div>
-    </div>
-  }
->
-  {showAddService && (
+    }
+  >
     <AddService onClose={() => setShowAddService(false)} />
-  )}
+  </Suspense>
+)}
 
- 
-</Suspense>
     </main>
   );
 }

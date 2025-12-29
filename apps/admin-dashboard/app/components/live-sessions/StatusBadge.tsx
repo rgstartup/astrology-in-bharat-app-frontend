@@ -26,13 +26,17 @@ export function StatusBadge({ status }: StatusBadgeProps) {
       icon: AlertCircle 
     }
   };
-  
+
   const { color, icon: Icon } = config[status];
-  
+
   return (
-    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${color}`}>
-      <Icon className="w-3 h-3" />
-      <span className="capitalize">{status.replace("-", " ")}</span>
+    <div
+      className={`inline-flex items-center gap-1 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium whitespace-nowrap ${color}`}
+    >
+      <Icon className="w-3 h-3 flex-shrink-0" />
+      <span className="capitalize truncate">
+        {status.replace("-", " ")}
+      </span>
     </div>
   );
 }

@@ -15,9 +15,11 @@ export function QualityIndicator({ quality }: QualityIndicatorProps) {
   };
   
   return (
-    <div className="flex items-center gap-2">
-      <div className={`w-2 h-2 rounded-full ${colors[quality]}`} />
-      <span className="text-sm capitalize">{quality}</span>
+   <div className="flex items-center gap-2 min-w-0">
+      <div
+        className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${colors[quality]}`}
+      />
+     <span className="text-xs sm:text-sm capitalize truncate">{quality}</span>
     </div>
   );
 }

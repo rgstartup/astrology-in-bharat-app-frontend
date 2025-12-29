@@ -67,11 +67,12 @@ export function ServiceCard({
       : 0;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all hover:border-orange-300 hover:-translate-y-1">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <h3 className="text-lg font-bold text-gray-800 mb-1">{name}</h3>
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 
+                p-4 sm:p-6
+                hover:shadow-xl transition-all hover:border-orange-300 hover:-translate-y-1">
+     <div className="flex items-start justify-between mb-4 gap-2">
+          <div className="flex-1 min-w-0">
+          <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-1 truncate">{name}</h3>
           <span className="inline-block px-3 py-1 bg-orange-100 text-orange-700 text-xs font-semibold rounded-full">
             {category}
           </span>
@@ -122,7 +123,8 @@ export function ServiceCard({
 
       {/* Pricing */}
       <div className="mb-4 p-4 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg border border-orange-200">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+
           <div>
             <p className="text-xs text-gray-600 mb-1">Price</p>
             <div className="flex items-center gap-2">

@@ -312,11 +312,16 @@ export default function AdminLayout({
                 </button>
 
                 {/* Profile */}
-                <img
-                  src="https://i.pravatar.cc/150?img=12"
-                  alt="Profile"
-                  className="w-10 h-10 rounded-full cursor-pointer hover:ring-2 hover:ring-yellow-500 transition-all"
-                />
+                <div className="w-10 h-10 rounded-full overflow-hidden">
+  <img
+    src="https://i.pravatar.cc/150?img=12"
+    alt="Profile"
+    className="w-full h-full rounded-full cursor-pointer
+               hover:ring-2 hover:ring-yellow-500
+               transition-all"
+  />
+</div>
+
               </div>
             </div>
           </header>

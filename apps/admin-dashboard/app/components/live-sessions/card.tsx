@@ -57,7 +57,7 @@ export function LiveSessionCard({
       {/* Card Content */}
       <div className="p-4">
         {/* Participants */}
-        <div className="flex items-center justify-between mb-4">
+       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <ParticipantCard user={session.user} type="user" />
           <ParticipantCard 
             user={session.astrologer} 
@@ -68,7 +68,8 @@ export function LiveSessionCard({
         </div>
 
         {/* Session Stats */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
+       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Duration</span>
@@ -91,7 +92,8 @@ export function LiveSessionCard({
         </div>
 
         {/* Connection & Controls */}
-        <div className="flex items-center justify-between mb-4">
+       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+
           <div>
             <span className="text-sm text-gray-600">Connection Quality:</span>
             <div className="mt-1">
@@ -99,7 +101,8 @@ export function LiveSessionCard({
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
+
             <button
               className={`p-2 rounded-lg ${
                 session.recording 

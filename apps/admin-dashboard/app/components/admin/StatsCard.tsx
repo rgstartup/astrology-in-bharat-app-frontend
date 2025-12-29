@@ -59,13 +59,14 @@ export function StatsCards({ stats, columns = 4 }: StatsCardsProps) {
                 </p>
 
                 <h3
-                  className={`text-xl sm:text-3xl font-bold ${
-                    stat.valueColor || "text-gray-900"
-                  } mb-2 break-words md:group-hover:scale-110 transition-transform`}
-                >
-                  {stat.value}
-                </h3>
-
+    className={`text-xl sm:text-3xl font-bold ${
+      stat.valueColor || "text-gray-900"
+    } mb-2 break-words
+    md:group-hover:scale-110
+    transition-transform origin-left`}
+  >
+    {stat.value}
+  </h3>
                 {stat.trend && (
                   <div className="flex items-center flex-wrap gap-1">
                     {stat.trend.isPositive ? (
