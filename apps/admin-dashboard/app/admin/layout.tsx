@@ -2,6 +2,8 @@
 import React, { memo, useCallback, useState, Fragment } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import AdminGuard from "@/app/components/AdminGuard";
+
 import {
   X,
   ChevronDown,
@@ -110,6 +112,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   }
 
   return (
+     <AdminGuard>
     <Fragment>
       <button
         onClick={() => onToggleSubmenu(item.label)}
@@ -155,6 +158,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         </div>
       )}
     </Fragment>
+    </AdminGuard>
   );
 };
 
@@ -261,6 +265,7 @@ export default function AdminLayout({
   // Now all children will render with appropriate layout
 
   return (
+       <AdminGuard>
  <div
   className="flex min-h-screen bg-cover bg-center bg-no-repeat"
   style={{ backgroundImage: "url('/images/back-image.webp')" }}
@@ -333,5 +338,6 @@ export default function AdminLayout({
         </main>
       </div>
     </div>
+    </AdminGuard>
   );
 }

@@ -28,7 +28,7 @@ export default function ClientSettingsPage() {
     ],
   });
 
-  function convertIsoToDisplayDate(isoDateString) {
+  function convertIsoToDisplayDate(isoDateString: string) {
     // 1. Create a Date object from the ISO string
     const date = new Date(isoDateString);
 
@@ -38,7 +38,7 @@ export default function ClientSettingsPage() {
     }
 
     // 2. Define formatting options
-    const options = {
+    const options: Intl.DateTimeFormatOptions = {
       day: "numeric", // Day of the month (e.g., 15)
       month: "long", // Full month name (e.g., August)
       year: "numeric", // Full year (e.g., 1995)
@@ -75,15 +75,15 @@ export default function ClientSettingsPage() {
           addresses: data.addresses?.length
             ? data.addresses
             : [
-                {
-                  street: "",
-                  city: "",
-                  state: "",
-                  postal_code: "",
-                  country: "",
-                  tag: "",
-                },
-              ],
+              {
+                street: "",
+                city: "",
+                state: "",
+                postal_code: "",
+                country: "",
+                tag: "",
+              },
+            ],
         });
       } catch (err) {
         console.log("Error fetching profile:", err);
@@ -105,7 +105,10 @@ export default function ClientSettingsPage() {
   // ------------------------------------
   const handleAddressChange = (e: any, index: number) => {
     const updated = [...formData.addresses];
-    updated[index][e.target.name] = e.target.value;
+    if (updated[index]) {
+      // @ts-ignore
+      updated[index][e.target.name] = e.target.value;
+    }
     setFormData({ ...formData, addresses: updated });
   };
 
@@ -142,27 +145,27 @@ export default function ClientSettingsPage() {
 
   return (
     <>
-      <div className="settings-page-wrapper">
-        <div className="settings-container">
+      <div className="font-outfit bg-[#f7f7f9] p-10 flex justify-center min-h-screen">
+        <div className="w-full max-w-[850px]">
           {/* -------- PAGE TITLE -------- */}
-          <div className="settings-header">
-            <h2>Profile Settings</h2>
-            <p>Manage your personal account details.</p>
+          <div className="mb-6">
+            <h2 className="font-bold text-[#242424] mb-1 text-2xl">Profile Settings</h2>
+            <p className="text-[#777] mb-6">Manage your personal account details.</p>
           </div>
 
           {/* -------- PROFILE CARD -------- */}
-          <div className="settings-card">
-            <div className="profile-section">
-              <div className="profile-img-wrapper">
+          <div className="bg-white p-9 rounded-[22px] shadow-[0_4px_14px_rgba(0,0,0,0.06)]">
+            <div className="flex items-center gap-6 mb-9 max-sm:flex-col max-sm:text-center">
+              <div className="relative w-[110px] h-[110px]">
                 {preview ? (
-                  <img src={preview} alt="User" />
+                  <img src={preview} alt="User" className="w-full h-full rounded-full object-cover border-[3px] border-[#d09b3a]" />
                 ) : (
-                  <div className="placeholder-icon">
+                  <div className="w-[110px] h-[110px] rounded-full bg-[#f0f0f0] flex justify-center items-center text-[38px] text-[#888] border-[2px] border-[#d09b3a]">
                     <i className="fa-solid fa-user"></i>
                   </div>
                 )}
 
-                <label htmlFor="profile-upload" className="profile-upload-btn">
+                <label htmlFor="profile-upload" className="absolute bottom-0 right-0 w-[34px] h-[34px] bg-white rounded-full flex justify-center items-center border border-[#ddd] cursor-pointer">
                   <i className="fa-solid fa-camera"></i>
                 </label>
                 <input
@@ -174,87 +177,94 @@ export default function ClientSettingsPage() {
               </div>
 
               <div className="profile-text">
-                <h3>{formData.full_name || "Loading..."}</h3>
-                <span>Update your personal information</span>
+                <h3 className="text-[22px] m-0 font-bold">{formData.full_name || "Loading..."}</h3>
+                <span className="text-[#777] text-sm">Update your personal information</span>
               </div>
             </div>
 
             {/* -------- FORM -------- */}
-            <form onSubmit={handleSubmit} className="profile-form">
+            <form onSubmit={handleSubmit} className="mt-2.5">
               {/* FULL NAME */}
-              <div className="form-group">
-                <label>Full Name</label>
+              <div className="flex flex-col mb-[18px]">
+                <label className="text-[13px] font-semibold text-[#666] mb-1.5">Full Name</label>
                 <input
                   type="text"
                   name="full_name"
                   value={formData.full_name}
                   onChange={handleChange}
+                  className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                 />
               </div>
 
               {/* EMAIL */}
-              <div className="form-group">
-                <label>Email Address</label>
+              <div className="flex flex-col mb-[18px]">
+                <label className="text-[13px] font-semibold text-[#666] mb-1.5">Email Address</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
+                  className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                 />
               </div>
 
               {/* PHONE */}
-              <div className="form-group">
-                <label>Phone Number</label>
+              <div className="flex flex-col mb-[18px]">
+                <label className="text-[13px] font-semibold text-[#666] mb-1.5">Phone Number</label>
                 <input
                   type="text"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
+                  className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                 />
               </div>
 
               {/* DOB */}
-              <div className="form-group">
-                <label>Date of Birth</label>
+              <div className="flex flex-col mb-[18px]">
+                <label className="text-[13px] font-semibold text-[#666] mb-1.5">Date of Birth</label>
                 <input
                   type="date"
                   name="date_of_birth"
                   value={convertIsoToDisplayDate(formData.date_of_birth)}
                   onChange={handleChange}
+                  className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                 />
               </div>
 
               {/* GENDER */}
-              <div className="form-group">
-                <label>Gender</label>
+              <div className="flex flex-col mb-[18px]">
+                <label className="text-[13px] font-semibold text-[#666] mb-1.5">Gender</label>
                 <input
                   type="text"
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
+                  className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                 />
               </div>
 
               {/* LANGUAGE */}
-              <div className="form-group">
-                <label>Language Preference</label>
+              <div className="flex flex-col mb-[18px]">
+                <label className="text-[13px] font-semibold text-[#666] mb-1.5">Language Preference</label>
                 <input
                   type="text"
                   name="language_preference"
                   value={formData.language_preference}
                   onChange={handleChange}
+                  className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                 />
               </div>
 
               {/* PREFERENCES */}
-              <div className="form-group">
-                <label>Astrology Preferences</label>
+              <div className="flex flex-col mb-[18px]">
+                <label className="text-[13px] font-semibold text-[#666] mb-1.5">Astrology Preferences</label>
                 <textarea
                   name="preferences"
                   rows={3}
                   value={formData.preferences}
                   onChange={handleChange}
+                  className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                 ></textarea>
               </div>
 
@@ -262,68 +272,74 @@ export default function ClientSettingsPage() {
               <h4 style={{ marginTop: "20px" }}>Address</h4>
               {formData.addresses.map((addr, index) => (
                 <div key={index} className="address-section">
-                  <div className="form-group">
-                    <label>Street</label>
+                  <div className="flex flex-col mb-[18px]">
+                    <label className="text-[13px] font-semibold text-[#666] mb-1.5">Street</label>
                     <input
                       name="street"
                       value={addr.street}
                       onChange={(e) => handleAddressChange(e, index)}
+                      className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label>City</label>
+                  <div className="flex flex-col mb-[18px]">
+                    <label className="text-[13px] font-semibold text-[#666] mb-1.5">City</label>
                     <input
                       name="city"
                       value={addr.city}
                       onChange={(e) => handleAddressChange(e, index)}
+                      className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label>State</label>
+                  <div className="flex flex-col mb-[18px]">
+                    <label className="text-[13px] font-semibold text-[#666] mb-1.5">State</label>
                     <input
                       name="state"
                       value={addr.state}
                       onChange={(e) => handleAddressChange(e, index)}
+                      className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label>Postal Code</label>
+                  <div className="flex flex-col mb-[18px]">
+                    <label className="text-[13px] font-semibold text-[#666] mb-1.5">Postal Code</label>
                     <input
                       name="postal_code"
                       value={addr.postal_code}
                       onChange={(e) => handleAddressChange(e, index)}
+                      className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label>Country</label>
+                  <div className="flex flex-col mb-[18px]">
+                    <label className="text-[13px] font-semibold text-[#666] mb-1.5">Country</label>
                     <input
                       name="country"
                       value={addr.country}
                       onChange={(e) => handleAddressChange(e, index)}
+                      className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label>Tag</label>
+                  <div className="flex flex-col mb-[18px]">
+                    <label className="text-[13px] font-semibold text-[#666] mb-1.5">Tag</label>
                     <input
                       name="tag"
                       value={addr.tag}
                       onChange={(e) => handleAddressChange(e, index)}
+                      className="p-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] transition-all text-[15px] focus:bg-white focus:border-[#c7c7c7] w-full"
                     />
                   </div>
                 </div>
               ))}
 
               {/* BUTTONS */}
-              <div className="form-actions">
-                <button type="button" className="cancel-btn">
+              <div className="flex justify-end gap-3 mt-6">
+                <button type="button" className="bg-[#e9e9e9] py-2.5 px-6 rounded-full border-none font-semibold cursor-pointer">
                   Cancel
                 </button>
-                <button type="submit" className="save-btn">
+                <button type="submit" className="bg-gradient-to-br from-[#732882] to-[#a051b5] text-white py-2.5 px-7 rounded-full border-none font-semibold cursor-pointer">
                   {status === "Saving..." ? (
                     <i className="fa-solid fa-spinner fa-spin"></i>
                   ) : (
@@ -332,174 +348,10 @@ export default function ClientSettingsPage() {
                 </button>
               </div>
 
-              {status && <p className="status-text">{status}</p>}
+              {status && <p className="mt-4 text-sm font-semibold text-[#4b4b4b]">{status}</p>}
             </form>
           </div>
         </div>
-
-        {/* ---------- INTERNAL CSS SCOPED BY PARENT ---------- */}
-        <style>{`
-          .settings-page-wrapper {
-            font-family: "Outfit", sans-serif;
-            background: #f7f7f9;
-            padding: 40px;
-            display: flex;
-            justify-content: center;
-          }
-
-          .settings-container {
-            width: 100%;
-            max-width: 850px;
-          }
-
-          .settings-header h2 {
-            font-weight: 700;
-            color: #242424;
-            margin-bottom: 4px;
-          }
-          .settings-header p {
-            color: #777;
-            margin-bottom: 25px;
-          }
-
-          .settings-card {
-            background: #ffffff;
-            padding: 35px;
-            border-radius: 22px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-          }
-
-          .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            margin-bottom: 35px;
-          }
-
-          .profile-img-wrapper {
-            position: relative;
-            width: 110px;
-            height: 110px;
-          }
-          .profile-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #d09b3a;
-          }
-          .placeholder-icon {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            background: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 38px;
-            color: #888;
-            border: 2px solid #d09b3a;
-          }
-
-          .profile-upload-btn {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 34px;
-            height: 34px;
-            background: #fff;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid #ddd;
-            cursor: pointer;
-          }
-
-          .profile-text h3 {
-            font-size: 22px;
-            margin: 0;
-            font-weight: 700;
-          }
-          .profile-text span {
-            color: #777;
-            font-size: 14px;
-          }
-
-          .profile-form {
-            margin-top: 10px;
-          }
-
-          .form-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 18px;
-          }
-
-          .form-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #666;
-            margin-bottom: 6px;
-          }
-
-          .form-group input,
-          .form-group textarea {
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid #e5e5e5;
-            background: #fafafa;
-            transition: 0.25s;
-            font-size: 15px;
-          }
-          .form-group input:focus,
-          .form-group textarea:focus {
-            background: #fff;
-            border-color: #c7c7c7;
-          }
-
-          .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            margin-top: 25px;
-          }
-
-          .cancel-btn {
-            background: #e9e9e9;
-            padding: 10px 22px;
-            border-radius: 30px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-          }
-          .save-btn {
-            background: linear-gradient(135deg,#732882,#a051b5);
-            color: #fff;
-            padding: 10px 28px;
-            border-radius: 30px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-          }
-
-          .status-text {
-            margin-top: 15px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #4b4b4b;
-          }
-
-          @media (max-width: 600px) {
-            .settings-card {
-              padding: 25px;
-            }
-            .profile-section {
-              flex-direction: column;
-              text-align: center;
-            }
-          }
-        `}</style>
       </div>
     </>
   );

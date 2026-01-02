@@ -24,22 +24,23 @@ const [loading, setLoading] = useState(false);
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      }
-    );
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
 
     if (!res.ok) {
       throw new Error("Invalid credentials");
     }
-console.log("Response Status:", res.status);
+
     const data = await res.json();
 
-    // 🔐 TEMP: save token (backend abhi body-based hai)
-    localStorage.setItem("accessToken", data.accessToken);
-    localStorage.setItem("user", JSON.stringify(data.user));
+    // 🔐 Cookie me store karna (frontend-side, JS accessible)
+    document.cookie = `accessToken=${data.accessToken}; path=/; secure; samesite=strict`;
+
+    // user info agar chahiye frontend me
+    document.cookie = `user=${encodeURIComponent(JSON.stringify(data.user))}; path=/; secure; samesite=strict`;
 
     // 🔍 Admin role check
     const isAdmin = data?.user?.roles?.some(

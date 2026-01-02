@@ -273,12 +273,14 @@ export function DataTable<T extends { id: number | string }>({
               </p>
 
               {/* Pagination controls */}
+
               <nav
                 className="flex items-center space-x-2"
                 role="navigation"
                 aria-label="Pagination"
               >
                 {/* Previous button */}
+                
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage === 1}
