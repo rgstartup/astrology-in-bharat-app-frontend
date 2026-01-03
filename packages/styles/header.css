@@ -166,13 +166,14 @@ a{text-decoration: none;}
     padding: 12px 7px;
     border-radius: 100px;
     text-decoration: none;
-    display: block;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     color: #fff;
     background: #fd6410!important;
 }
 .btn-link img {
-    margin-right: 1px;
     filter: brightness(0) invert(1);
     width: 20px;
 }
