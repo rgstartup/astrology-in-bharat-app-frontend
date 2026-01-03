@@ -1,0 +1,522 @@
+// Hero Section 4 Feature Cards Data
+interface CardData {
+  id: number;
+  image: string;
+  altText: string;
+  title: string;
+  description: string;
+  link: string;
+}
+export const featuredCardsHeroSection: CardData[] = [
+  {
+    id: 1,
+    image: "/images/icon1.png",
+    altText: "Live Chat Support icon",
+    title: "Live Chat Support",
+    description:
+      "Get instant answers from expert astrologers through live chat sessions.",
+    link: "#",
+  },
+  {
+    id: 2,
+    image: "/images/icon2.png",
+    altText: "Speak with Astrologer icon",
+    title: "Speak with Astrologer",
+    description:
+      "Connect via phone call for personal guidance on your life questions.",
+    link: "#",
+  },
+  {
+    id: 3,
+    image: "/images/icon3.png",
+    altText: "Astrology Product Store icon",
+    title: "Astrology Product Store",
+    description:
+      "Shop gemstones, yantras, and spiritual items recommended by experts.",
+    link: "#",
+  },
+  {
+    id: 4,
+    image: "/images/icon4.png",
+    altText: "Book A Pooja icon",
+    title: "Book A Pooja",
+    description:
+      "Book religious ceremonies & rituals performed by experienced priests.",
+    link: "#",
+  },
+];
+
+// List Astrologers Data
+interface AstrologerData {
+  id: number;
+  image: string;
+  ratings: number;
+  name: string;
+  expertise: string;
+  experience: number;
+  language: string;
+  price: number;
+  chat: boolean;
+  call: boolean;
+  video: string;
+  modalId: string;
+}
+export const ListOfAllAstrologers: AstrologerData[] = [
+  {
+    id: 1,
+    image: "/images/astro-img1.png",
+    ratings: 5,
+    name: "Parbhat Sharma",
+    expertise: "Vedic | Numerology",
+    experience: 21,
+    language: "Hindi, English",
+    price: 25,
+    chat: true,
+    call: true,
+    video: "https://www.youtube.com/embed/INoPh_oRooU",
+    modalId: "exampleModal1",
+  },
+  {
+    id: 2,
+    image: "/images/astro-img1.png",
+    ratings: 5,
+    name: "Parbhat Sharma",
+    expertise: "Vedic | Numerology",
+    experience: 21,
+    language: "Hindi, English",
+    price: 25,
+    chat: true,
+    call: true,
+    video: "https://www.youtube.com/embed/29qnXTw0qr0?si=yvrCW0my0JN_D1Yn",
+    modalId: "exampleModal2",
+  },
+  {
+    id: 3,
+    image: "/images/astro-img1.png",
+    ratings: 5,
+    name: "Parbhat Sharma",
+    expertise: "Vedic | Numerology",
+    experience: 21,
+    language: "Hindi, English",
+    price: 25,
+    chat: true,
+    call: true,
+    video: "https://www.youtube.com/embed/INoPh_oRooU",
+    modalId: "exampleModal3",
+  },
+  {
+    id: 4,
+    image: "/images/astro-img1.png",
+    ratings: 5,
+    name: "Parbhat Sharma",
+    expertise: "Vedic | Numerology",
+    experience: 21,
+    language: "Hindi, English",
+    price: 25,
+    chat: true,
+    call: true,
+    video: "https://www.youtube.com/embed/INoPh_oRooU",
+    modalId: "exampleModal4",
+  },
+  {
+    id: 5,
+    image: "/images/astro-img1.png",
+    ratings: 5,
+    name: "Parbhat Sharma",
+    expertise: "Vedic | Numerology",
+    experience: 21,
+    language: "Hindi, English",
+    price: 25,
+    chat: true,
+    call: true,
+    video: "https://www.youtube.com/embed/INoPh_oRooU",
+    modalId: "exampleModal5",
+  },
+  {
+    id: 6,
+    image: "/images/astro-img1.png",
+    ratings: 5,
+    name: "Parbhat Sharma",
+    expertise: "Vedic | Numerology",
+    experience: 21,
+    language: "Hindi, English",
+    price: 25,
+    chat: true,
+    call: true,
+    video: "https://www.youtube.com/embed/INoPh_oRooU",
+    modalId: "exampleModal6",
+  },
+  {
+    id: 7,
+    image: "/images/astro-img1.png",
+    ratings: 5,
+    name: "Parbhat Sharma",
+    expertise: "Vedic | Numerology",
+    experience: 21,
+    language: "Hindi, English",
+    price: 25,
+    chat: true,
+    call: true,
+    video: "https://www.youtube.com/embed/INoPh_oRooU",
+    modalId: "exampleModal7",
+  },
+  {
+    id: 8,
+    image: "/images/astro-img1.png",
+    ratings: 5,
+    name: "Parbhat Sharma",
+    expertise: "Vedic | Numerology",
+    experience: 21,
+    language: "Hindi, English",
+    price: 25,
+    chat: true,
+    call: true,
+    video: "https://www.youtube.com/embed/INoPh_oRooU",
+    modalId: "exampleModal8",
+  },
+];
+
+// Zodiac Signs Data
+interface ZodiaData {
+  id: number;
+  image: string;
+  title: string;
+  date: string;
+}
+export const ZodiacSignsData: ZodiaData[] = [
+  {
+    id: 1,
+    image: "/images/icon/Aries.webp",
+    title: "Aries",
+    date: "Mar 21 - Apr 19",
+  },
+  {
+    id: 2,
+    image: "/images/icon/Taurus.webp",
+    title: "Taurus",
+    date: "Apr 20 - May 20",
+  },
+  {
+    id: 3,
+    image: "/images/icon/Gemini.webp",
+    title: "Gemini",
+    date: "May 21 - Jun 20",
+  },
+  {
+    id: 4,
+    image: "/images/icon/Cancer.webp",
+    title: "Cancer",
+    date: "Jun 21 - Jul 22",
+  },
+  {
+    id: 5,
+    image: "/images/icon/Leo.webp",
+    title: "Leo",
+    date: "Jul 23 - Aug 22",
+  },
+  {
+    id: 6,
+    image: "/images/icon/Virgo.webp",
+    title: "Virgo",
+    date: "Aug 23 - Sep 22",
+  },
+  {
+    id: 7,
+    image: "/images/icon/Libra.webp",
+    title: "Libra",
+    date: "Sep 23 - Oct 22",
+  },
+  {
+    id: 8,
+    image: "/images/icon/Scorpio.webp",
+    title: "Scorpio",
+    date: "Oct 23 - Nov 21",
+  },
+  {
+    id: 9,
+    image: "/images/icon/Sagittarius.webp",
+    title: "Sagittarius",
+    date: "Nov 22 - Dec 21",
+  },
+  {
+    id: 10,
+    image: "/images/icon/Capricorn.webp",
+    title: "Capricorn",
+    date: "Dec 22 - Jan 19",
+  },
+  {
+    id: 11,
+    image: "/images/icon/Aquarius.webp",
+    title: "Aquarius",
+    date: "Jan 20 - Feb 18",
+  },
+  {
+    id: 12,
+    image: "/images/icon/Pisces.webp",
+    title: "Pisces",
+    date: "Feb 19 - Mar 20",
+  },
+];
+
+// Astrology Services Data
+interface ServiceData {
+  id: number;
+  image: string;
+  title: string;
+  description: string;
+}
+export const AstrologyServicesData: ServiceData[] = [
+  {
+    id: 1,
+    image: "/images/ser1.jpg",
+    title: "Kundli (Birth Chart)",
+    description:
+      "Unlock the secrets of your destiny with a personalized birth chart.",
+  },
+  {
+    id: 2,
+    image: "/images/ser2.jpg",
+    title: "Panchang",
+    description:
+      "Daily planetary timings and festivals stay aligned with cosmic time.",
+  },
+  {
+    id: 3,
+    image: "/images/ser3.jpg",
+    title: "Numerology",
+    description:
+      "Discover the power of numbers and what they reveal about your life.",
+  },
+  {
+    id: 4,
+    image: "/images/ser4.jpg",
+    title: "Vedic Astrology",
+    description:
+      "Ancient Vedic wisdom to guide your present and shape your future.",
+  },
+  {
+    id: 5,
+    image: "/images/ser5.jpg",
+    title: "Matchmaking",
+    description:
+      "Check marriage compatibility based on traditional astrological methods.",
+  },
+  {
+    id: 6,
+    image: "/images/ser6.jpg",
+    title: "Relationship Guidance",
+    description:
+      "Strengthen bonds and resolve love challenges through astrology.",
+  },
+  {
+    id: 7,
+    image: "/images/ser7.jpg",
+    title: "Muhurat (Auspicious Timing)",
+    description:
+      "Choose the perfect time for important events with expert muhurat analysis.",
+  },
+  {
+    id: 8,
+    image: "/images/ser8.jpg",
+    title: "Nakshatra",
+    description:
+      "Know your nakshatra traits and their influence on your personality.",
+  },
+  {
+    id: 9,
+    image: "/images/ser9.jpg",
+    title: "Career Astrology",
+    description: "Make smarter career moves with insights based on your stars.",
+  },
+  {
+    id: 10,
+    image: "/images/ser10.jpg",
+    title: "Finance Astrology",
+    description:
+      "Predict financial highs and lows — align actions with planetary cycles.",
+  },
+  {
+    id: 11,
+    image: "/images/ser11.jpg",
+    title: "Family Astrology",
+    description:
+      "Ensure harmony at home by understanding family dynamics astrologically.",
+  },
+  {
+    id: 12,
+    image: "/images/ser12.jpg",
+    title: "Health Astrology",
+    description:
+      "Identify potential health concerns through your planetary chart.",
+  },
+  {
+    id: 13,
+    image: "/images/ser13.jpg",
+    title: "Zodiac Signs",
+    description:
+      "Explore personality traits, strengths, and challenges of each sign.",
+  },
+  {
+    id: 14,
+    image: "/images/ser14.jpg",
+    title: "Tarot Reading",
+    description:
+      "Get intuitive guidance and answers through powerful tarot insights.",
+  },
+  {
+    id: 15,
+    image: "/images/ser15.jpg",
+    title: "Online Pooja",
+    description:
+      "Book Vedic rituals online for prosperity, peace, and protection.",
+  },
+  {
+    id: 16,
+    image: "/images/ser16.jpg",
+    title: "Palmistry",
+    description: "Read your destiny through the lines and mounts of your hand.",
+  },
+];
+
+// Products Card Data
+interface ProductsData {
+  id: number;
+  title: string;
+  image: string;
+  price: number;
+  description: string;
+}
+
+export const products: ProductsData[] = [
+  {
+    id: 1,
+    title: "Original Rudraksha Mala",
+    image: "/images/product-1.webp",
+    price: 899,
+    description: "Authentic energised Rudraksha for peace and prosperity.",
+  },
+  {
+    id: 2,
+    title: "Astrology Kundli Report",
+    image: "/images/product-2.webp",
+    price: 499,
+    description: "Detailed horoscope report by our expert astrologers.",
+  },
+  {
+    id: 3,
+    title: "Energised Gemstone Ring",
+    image: "/images/product-3.jpg",
+    price: 1599,
+    description: "Certified natural gemstone ring for positive energy.",
+  },
+  {
+    id: 4,
+    title: "Vastu Yantra Bracelet",
+    image: "/images/product-4.jpg",
+    price: 699,
+    description: "Bring harmony in your home with sacred Vastu Yantra.",
+  },
+  {
+    id: 5,
+    title: "Crystal Healing Bracelet",
+    image: "/images/product-5.jpg",
+    price: 349,
+    description: "Enhance health and wealth with crystal healing energy.",
+  },
+  {
+    id: 6,
+    title: "Hanuman Chalisa  Book",
+    image: "/images/product-6.jpg",
+    price: 149,
+    description: "Carry divine blessings always with you.",
+  },
+  {
+    id: 7,
+    title: "Astrology Kundli Report",
+    image: "/images/product-2.webp",
+    price: 499,
+    description: "Detailed horoscope report by our expert astrologers.",
+  },
+  {
+    id: 8,
+    title: "Energised Gemstone Ring",
+    image: "/images/product-3.jpg",
+    price: 1599,
+    description: "Certified natural gemstone ring for positive energy.",
+  },
+];
+
+// Shop By Purpose Data
+interface PurposeData {
+  id: number;
+  title: string;
+  image: string;
+}
+
+export const purpose: PurposeData[] = [
+  {
+    id: 1,
+    image: "/images/money.webp",
+    title: "Money",
+  },
+  {
+    id: 2,
+    image: "/images/Love.webp",
+    title: "Love",
+  },
+  {
+    id: 3,
+    image: "/images/Career.webp",
+    title: "Career",
+  },
+  {
+    id: 4,
+    image: "/images/evil_eye.webp",
+    title: "Evil Eye",
+  },
+  {
+    id: 5,
+    image: "/images/Health.webp",
+    title: "Health",
+  },
+  {
+    id: 6,
+    image: "/images/Gifting.webp",
+    title: "Gifting",
+  },
+];
+
+//  Clients Testimoinial Data
+interface TestimoinialData {
+  id: number;
+  name: string;
+  review: string;
+  image: string;
+  rating: number;
+}
+export const ClientsTestimoinialData: TestimoinialData[] = [
+  {
+    id: 1,
+    name: "Rahul Verma",
+    review:
+      "Amazing experience! The astrologer was very accurate and gave me practical solutions. Highly recommended.",
+    image: "/images/client1.jpg",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Priya Sharma",
+    review:
+      "Very satisfied! The consultation was insightful and helped me make better decisions in my career.",
+    image: "/images/client2.jpg",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Ankit Singh",
+    review:
+      "Great guidance and very polite. The remedies suggested worked really well for me.",
+    image: "/images/client3.jpg",
+    rating: 4.5,
+  },
+];
