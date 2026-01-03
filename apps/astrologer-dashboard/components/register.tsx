@@ -5,18 +5,16 @@ import Link from "next/link";
 import React, { useState, useCallback, FormEvent } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { Lock, User } from "lucide-react";
+import { User, Lock, Mail } from "lucide-react";
 
-// --- 1. Define Typescript Interfaces ---
-
-/** The shape of the data sent to the server (request body). */
-interface LoginPayload {
+// --- Types ---
+interface RegistrationPayload {
+  name: string;
   email: string;
   password: string;
+  roles: string[];
 }
-
-/** The shape of the expected successful server response. */
-interface LoginSuccessResponse {
+interface RegistrationSuccessResponse {
   user: {
     id: number;
     email: string;
@@ -24,141 +22,122 @@ interface LoginSuccessResponse {
     roles: Array<{ id: number; name: string }>;
   };
 }
-
-/** The shape of the data managed in the component state. */
 interface FormData {
+  fullName: string;
   email: string;
   password: string;
 }
 
-// --- API Endpoint Constant ---
-const API_ENDPOINT = "http://localhost:4000/api/v1/auth/email/login";
+// --- API ---
+const API_ENDPOINT = "http://localhost:4000/api/v1/auth/email/register";
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const router = useRouter();
-  // --- 2. State Management ---
   const [formData, setFormData] = useState<FormData>({
+    fullName: "",
     email: "",
     password: "",
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // --- Handlers ---
-
-  // Input Change Handler
+  // Input handler
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
-      setFormData((prevData) => ({
-        ...prevData,
+      setFormData((prev) => ({
+        ...prev,
         [name]: value,
       }));
     },
     []
   );
 
-  // Form Validation Logic
-  const validateForm = (): boolean => {
+  // Validation
+  const validateForm = () => {
     setError(null);
     setSuccessMessage(null);
 
-    if (!formData.email || !formData.password) {
-      setError("Email and Password are required for Sign In.");
-      console.error("Validation Error: Missing required field.");
+    if (!formData.fullName || !formData.email || !formData.password) {
+      setError("All fields marked * are required.");
+      return false;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long.");
       return false;
     }
 
     return true;
   };
 
-  // 3. Form Submission Handler with API Integration
+  // Submit handler
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsLoading(true);
 
-    // Construct the POST payload (role is not expected in login DTO)
-    const payload: LoginPayload = {
+    const payload: RegistrationPayload = {
+      name: formData.fullName,
       email: formData.email,
       password: formData.password,
+      roles: ["expert"],
     };
 
-    console.log("Expert Login API Request Start. Endpoint:", API_ENDPOINT);
-
     try {
-      // Making the POST request
-      const response = await axios.post<LoginSuccessResponse>(
+      const response = await axios.post<RegistrationSuccessResponse>(
         API_ENDPOINT,
         payload,
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
-
-      console.log("Expert Login Success. Status:", response.status);
-      console.log("Server Response Data:", response.data);
+      console.log("Expert Registration Success:", response.data);
 
       const user = response.data.user;
-      
-      // Check if the user has the 'expert' role
-      const isExpert = user.roles.some((role) => role.name === "expert");
 
-      if (!isExpert) {
-        throw new Error("Access denied. This account does not have expert privileges.");
-      }
-
-      // Store user info in localStorage for UI purposes (not for authentication)
+      // Store user info for UI purposes
       localStorage.setItem("user", JSON.stringify(user));
 
       setSuccessMessage(
-        "Sign In successful! Redirecting to your dashboard..."
+        "Registration successful! Redirecting to dashboard..."
       );
 
-      // Navigate to expert dashboard after successful login
+      setFormData({ fullName: "", email: "", password: "" });
+
+      // Navigate to expert dashboard after successful registration
       setTimeout(() => {
         router.push("/dashboard");
-      }, 1000);
+      }, 1500);
     } catch (err) {
       const axiosError = err as AxiosError;
-      console.error("Expert Login API Request Failed. Error object:", axiosError);
-
-      let errorMessage = "An unexpected error occurred. Please try again.";
+      console.error("Expert Registration Failed:", axiosError);
 
       if (axiosError.response) {
         const status = axiosError.response.status;
-        const serverMessage =
+        const msg =
           (axiosError.response.data as any)?.message ||
           (axiosError.response.data as any)?.error ||
           `Server responded with status ${status}.`;
 
-        if (status === 401) {
-          errorMessage = "Invalid credentials. Please check your email and password.";
-        } else if (status === 403) {
-          errorMessage = "Account forbidden. You may not have the required permissions.";
+        if (status === 400 || status === 409) {
+          setError(msg);
         } else if (status >= 500) {
-          errorMessage = "A critical server error occurred. Please try again later.";
+          setError("A critical server error occurred. Please try again later.");
         } else {
-          errorMessage = serverMessage;
+          setError(msg);
         }
       } else if (axiosError.request) {
-        errorMessage = "Network Error: Could not reach the server. Please check your connection.";
-      } else if (err instanceof Error) {
-        errorMessage = err.message;
+        setError("Network Error: Could not reach the server.");
+      } else {
+        setError("An unexpected error occurred.");
       }
-
-      setError(errorMessage);
     } finally {
       setIsLoading(false);
-      console.log("Expert Login API Request Finished.");
     }
   };
 
@@ -166,7 +145,7 @@ const LoginPage: React.FC = () => {
     <div className="flex min-h-screen bg-gradient-to-br from-purple-50 via-yellow-50 to-purple-50 items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 rounded-2xl overflow-hidden shadow-2xl bg-white">
         {/* Left Side: Branding and Visual Section */}
-        <div className="relative hidden lg:block h-[600px] bg-gradient-to-br from-astro-primary to-purple-900">
+        <div className="relative hidden lg:block h-[700px] bg-gradient-to-br from-astro-primary to-purple-900">
           <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col items-center justify-center text-white p-8 z-10">
             <Image
               src="/images/logo1.webp"
@@ -177,22 +156,22 @@ const LoginPage: React.FC = () => {
             />
             <div className="text-left mt-20">
               <h1 className="text-4xl font-bold mb-4">
-                Welcome Back, <span className="text-gold">Expert!</span>
+                Join as <span className="text-gold">Expert!</span>
               </h1>
               <p className="text-xl text-left text-gray-100">
-                Access your personalized dashboard, manage your appointments,
-                and grow your practice.
+                Create your expert account and start connecting with clients.
+                Manage your appointments, services, and grow your practice.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Login Form */}
+        {/* Right Side: Register Form */}
         <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-white">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-astro-primary">Expert Sign In</h2>
+            <h2 className="text-3xl font-bold text-astro-primary">Expert Sign Up</h2>
             <p className="mt-2 text-gray-600">
-              Please enter your details to sign in.
+              Create your account to get started.
             </p>
           </div>
 
@@ -212,7 +191,32 @@ const LoginPage: React.FC = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Full Name Input */}
+            <div>
+              <label
+                htmlFor="fullName"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Full Name *
+              </label>
+              <div className="relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                </div>
+                <input
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  required
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-astro-primary focus:border-astro-primary sm:text-sm transition-all"
+                  placeholder="Enter Your Full Name"
+                />
+              </div>
+            </div>
+
             {/* Email Input */}
             <div>
               <label
@@ -223,7 +227,7 @@ const LoginPage: React.FC = () => {
               </label>
               <div className="relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                  <Mail className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </div>
                 <input
                   id="email"
@@ -255,39 +259,13 @@ const LoginPage: React.FC = () => {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   required
                   value={formData.password}
                   onChange={handleInputChange}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-astro-primary focus:border-astro-primary sm:text-sm transition-all"
-                  placeholder="********"
+                  placeholder="Enter Password (min. 6 characters)"
                 />
-              </div>
-            </div>
-
-            {/* Forget password */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-astro-primary border-gray-300 rounded focus:ring-astro-primary"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  Remember me
-                </label>
-              </div>
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-astro-primary hover:text-purple-700"
-                >
-                  Forgot password?
-                </a>
               </div>
             </div>
 
@@ -298,19 +276,19 @@ const LoginPage: React.FC = () => {
                 disabled={isLoading}
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-astro-primary hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-astro-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? "Signing In..." : "Sign In"}
+                {isLoading ? "Signing Up..." : "Sign Up"}
               </button>
             </div>
 
-            {/* Sign Up Link */}
+            {/* Sign In Link */}
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{" "}
+                Already have an account?{" "}
                 <Link
-                  href="/register"
+                  href="/"
                   className="font-medium text-astro-primary hover:text-purple-700"
                 >
-                  Sign Up
+                  Sign In
                 </Link>
               </p>
             </div>
@@ -321,4 +299,5 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
+

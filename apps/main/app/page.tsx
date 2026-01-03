@@ -120,6 +120,8 @@ const Page: React.FC = () => {
         price: p.price_per_minute ?? p.price ?? 0,
         video: p.video || "",
         ratings: p.rating ?? p.ratings ?? 0,
+        userId: p.userId,
+        isAvailable: p.isAvailable ?? false,
       }));
 
       // If offset is zero replace list, otherwise append for "Load more" behavior
@@ -637,7 +639,9 @@ const Page: React.FC = () => {
                         <h6 className="mb-0 fw-bold text-success">
                           ₹{item.price}/min
                         </h6>
-                        <span className="badge bg-success">● Online</span>
+                        <span className={`badge ${item.isAvailable ? "bg-success" : "bg-danger"}`}>
+                          ● {item.isAvailable ? "Online" : "Offline"}
+                        </span>
                       </div>
 
                       {/* CTA Button */}

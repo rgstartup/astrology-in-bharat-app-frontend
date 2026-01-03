@@ -170,6 +170,23 @@
   font-size: 15px;
 }
 
+/* Mobile Responsive Styles */
+@media (max-width: 991px) {
+  .form-data {
+    margin: 2rem 0 0 0 !important;
+    padding: 20px !important;
+  }
+
+  .banner-data {
+    padding-top: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .banner-data h3 {
+    font-size: 1.75rem;
+  }
+}
+
 @media (max-width: 768px) {
   .m-hidden {
     display: none;
@@ -180,13 +197,15 @@
   }
 
   .social-button {
-    width: 80%;
+    width: 100%;
   }
 
   .form-data {
+    margin: 1rem 0 0 0 !important;
     position: relative;
-    right: 50%;
+    right: 0;
     width: 100%;
+    padding: 15px !important;
   }
 
   .social-links {
@@ -194,7 +213,38 @@
   }
 
   .social-button2 {
-    margin-top: 20px;
+    margin-top: 10px;
     width: 100%;
+  }
+
+  .signin-part {
+    padding-top: 20px;
+    padding-bottom: 60px;
+  }
+
+  .banner-data h3 {
+    font-size: 1.5rem;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 576px) {
+  .form-data {
+    padding: 15px !important;
+    margin: 0.5rem 0 0 0 !important;
+  }
+
+  .sign-in-heading h2 {
+    font-size: 1.5rem;
+  }
+
+  .banner-data h3 {
+    font-size: 1.25rem;
+  }
+
+  .social-button,
+  .social-button2 {
+    padding: 8px 15px;
+    font-size: 0.875rem;
   }
 }

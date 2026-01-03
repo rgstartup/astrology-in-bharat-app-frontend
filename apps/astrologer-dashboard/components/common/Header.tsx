@@ -1,6 +1,10 @@
-import React, { useState, useRef } from "react";
+"use client";
+
+import React, { useState, useEffect, useRef } from "react";
 import { FiSearch, FiBell, FiMenu } from "react-icons/fi";
 import Link from "next/link";
+import axios from "axios";
+import { io, Socket } from "socket.io-client";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -8,34 +12,90 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const [isOnline, setIsOnline] = useState(false); // Toggle state
+  const [isOnline, setIsOnline] = useState(false);
+  const [userId, setUserId] = useState<number | null>(null);
+  const socketRef = useRef<Socket | null>(null);
 
-  // Track whether mouse is on icon or on popup
   const isHoveringIcon = useRef(false);
   const isHoveringPopup = useRef(false);
 
-  // Sample notifications data
   const notifications = [
     { id: 1, message: "New user registered", time: "2m ago" },
     { id: 2, message: "System update available", time: "10m ago" },
     { id: 3, message: "Task assigned to you", time: "1h ago" },
   ];
 
+  useEffect(() => {
+    // Get user from localStorage
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setUserId(user.id);
+
+      // Fetch current status
+      axios.get("http://localhost:4000/api/v1/expert/profile", { withCredentials: true })
+        .then(res => {
+          if (res.data) {
+            setIsOnline(res.data.is_available);
+          }
+        })
+        .catch(err => console.error("Error fetching profile status:", err));
+
+      // Initialize socket
+      const socket = io("http://localhost:4000");
+      socketRef.current = socket;
+
+      socket.on("connect", () => {
+        console.log("Connected to status socket");
+        // Notify server this expert is online if they were already online in DB
+        if (isOnline) {
+          socket.emit("expert_online", { userId: user.id });
+        }
+      });
+
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, []);
+
+  // Effect to sync socket when isOnline changes
+  useEffect(() => {
+    if (socketRef.current && userId) {
+      if (isOnline) {
+        socketRef.current.emit("expert_online", { userId });
+      } else {
+        socketRef.current.emit("expert_offline", { userId });
+      }
+    }
+  }, [isOnline, userId]);
+
   const checkClosePopup = () => {
-    // Close only if mouse on neither icon nor popup
     if (!isHoveringIcon.current && !isHoveringPopup.current) {
       setIsNotificationOpen(false);
     }
   };
 
-  const handleToggle = () => {
-    setIsOnline(!isOnline);
+  const handleToggle = async () => {
+    const newStatus = !isOnline;
+    try {
+      // Update DB
+      await axios.patch("http://localhost:4000/api/v1/expert/profile/status",
+        { is_available: newStatus },
+        { withCredentials: true }
+      );
+
+      setIsOnline(newStatus);
+    } catch (err: any) {
+      console.error("Failed to toggle status:", err);
+      const errorMsg = err.response?.data?.message || "Failed to update status. Please try again.";
+      alert(errorMsg);
+    }
   };
 
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-40 shadow-sm">
       <div className="flex items-center justify-between">
-        {/* Left Section */}
         <div className="flex items-center space-x-4">
           <button
             onClick={toggleSidebar}
@@ -49,11 +109,8 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           </h1>
         </div>
 
-        {/* Right Section */}
         <div className="flex items-center space-x-6">
-          {/* Search */}
           <div className="flex items-center space-x-4 sm:space-x-6">
-            {/* Search Bar */}
             <div className="relative hidden md:block">
               <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
@@ -64,31 +121,26 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
               />
             </div>
 
-            {/* Toggle Button */}
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-gray-700 hidden sm:inline">
-                {isOnline ? "Online" : "Offline"}
+              <span className={`text-sm font-bold hidden sm:inline ${isOnline ? "text-green-600" : "text-red-600"}`}>
+                {isOnline ? "ONLINE" : "OFFLINE"}
               </span>
               <button
                 onClick={handleToggle}
-                className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                  isOnline
-                    ? "bg-green-500 focus:ring-green-500"
-                    : "bg-red-500 focus:ring-red-500"
-                }`}
+                className={`relative inline-flex items-center h-6 rounded-full w-11 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-inner ${isOnline
+                  ? "bg-green-500 focus:ring-green-500"
+                  : "bg-red-500 focus:ring-red-500"
+                  }`}
                 aria-label={isOnline ? "Go Offline" : "Go Online"}
               >
                 <span
-                  className={`inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full shadow-md ${
-                    isOnline ? "translate-x-6" : "translate-x-1"
-                  }`}
+                  className={`inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full shadow-md ${isOnline ? "translate-x-6" : "translate-x-1"
+                    }`}
                 />
               </button>
             </div>
 
-            {/* Notifications & User Profile */}
             <div className="flex items-center space-x-2">
-              {/* Notifications Button */}
               <div
                 className="relative"
                 onMouseEnter={() => {
@@ -97,7 +149,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
                 }}
                 onMouseLeave={() => {
                   isHoveringIcon.current = false;
-                  // Delay slightly to allow move to popup
                   setTimeout(checkClosePopup, 100);
                 }}
               >
@@ -111,7 +162,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
                   </span>
                 </button>
 
-                {/* Notification Popup */}
                 {isNotificationOpen && (
                   <div
                     className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
@@ -121,7 +171,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
                     }}
                     onMouseLeave={() => {
                       isHoveringPopup.current = false;
-                      // Delay slightly to allow move back to icon
                       setTimeout(checkClosePopup, 100);
                     }}
                   >
@@ -129,23 +178,19 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
                       <h3 className="text-sm font-semibold text-gray-800 mb-2">
                         Notifications
                       </h3>
-                      {notifications.length === 0 ? (
-                        <p className="text-sm text-gray-500">No new notifications</p>
-                      ) : (
-                        <ul className="space-y-2">
-                          {notifications.map((notification) => (
-                            <li
-                              key={notification.id}
-                              className="text-sm text-gray-700 border-b border-gray-100 pb-2"
-                            >
-                              <p>{notification.message}</p>
-                              <span className="text-xs text-gray-400">
-                                {notification.time}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                      <ul className="space-y-2">
+                        {notifications.map((notification) => (
+                          <li
+                            key={notification.id}
+                            className="text-sm text-gray-700 border-b border-gray-100 pb-2"
+                          >
+                            <p>{notification.message}</p>
+                            <span className="text-xs text-gray-400">
+                              {notification.time}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
                       <div className="mt-3">
                         <Link
                           href="/dashboard/notifications"
@@ -162,7 +207,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
             </div>
           </div>
 
-          {/* Profile */}
           <button
             className="p-0 hover:bg-gray-100 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100"
             aria-label="User Menu"

@@ -60,6 +60,7 @@ interface AstrologerData {
   call: boolean;
   video: string;
   modalId: string;
+  isAvailable: boolean;
 }
 export const ListOfAllAstrologers: AstrologerData[] = [
   {
@@ -75,6 +76,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     call: true,
     video: "https://www.youtube.com/embed/INoPh_oRooU",
     modalId: "exampleModal1",
+    isAvailable: false,
   },
   {
     id: 2,
@@ -89,6 +91,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     call: true,
     video: "https://www.youtube.com/embed/29qnXTw0qr0?si=yvrCW0my0JN_D1Yn",
     modalId: "exampleModal2",
+    isAvailable: false,
   },
   {
     id: 3,
@@ -103,6 +106,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     call: true,
     video: "https://www.youtube.com/embed/INoPh_oRooU",
     modalId: "exampleModal3",
+    isAvailable: false,
   },
   {
     id: 4,
@@ -117,6 +121,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     call: true,
     video: "https://www.youtube.com/embed/INoPh_oRooU",
     modalId: "exampleModal4",
+    isAvailable: false,
   },
   {
     id: 5,
@@ -131,6 +136,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     call: true,
     video: "https://www.youtube.com/embed/INoPh_oRooU",
     modalId: "exampleModal5",
+    isAvailable: false,
   },
   {
     id: 6,
@@ -145,6 +151,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     call: true,
     video: "https://www.youtube.com/embed/INoPh_oRooU",
     modalId: "exampleModal6",
+    isAvailable: false,
   },
   {
     id: 7,
@@ -159,6 +166,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     call: true,
     video: "https://www.youtube.com/embed/INoPh_oRooU",
     modalId: "exampleModal7",
+    isAvailable: false,
   },
   {
     id: 8,
@@ -173,6 +181,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     call: true,
     video: "https://www.youtube.com/embed/INoPh_oRooU",
     modalId: "exampleModal8",
+    isAvailable: false,
   },
 ];
 
