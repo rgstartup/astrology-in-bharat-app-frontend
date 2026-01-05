@@ -2,9 +2,11 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { products } from "@/data/homePagaData";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import ReviewModal from "@/components/ReviewModal";
+import axios from "axios";
+
+const API_BASE_URL = "http://localhost:4000/api/v1";
 
 interface AstrologerData {
   name: string;
@@ -19,6 +21,7 @@ interface AstrologerData {
 
 const Page = () => {
   const searchParams = useSearchParams();
+  const [loading, setLoading] = useState(true);
   const [astrologer, setAstrologer] = useState<AstrologerData>({
     name: "Amita Sharma",
     image: "/images/astro-img1.png",
@@ -32,28 +35,35 @@ const Page = () => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   useEffect(() => {
-    // Read query parameters
-    const name = searchParams.get('name');
-    const image = searchParams.get('image');
-    const expertise = searchParams.get('expertise');
-    const experience = searchParams.get('experience');
-    const language = searchParams.get('language');
-    const price = searchParams.get('price');
-    const video = searchParams.get('video');
-    const ratings = searchParams.get('ratings');
+    const id = searchParams.get('id');
 
-    // Update state if parameters exist
-    if (name) {
-      setAstrologer({
-        name: name || "Amita Sharma",
-        image: image || "/images/astro-img1.png",
-        expertise: expertise || "Vedic, Numero, Vastu",
-        experience: Number(experience) || 4,
-        language: language || "Hindi, English",
-        price: Number(price) || 50,
-        video: video || "",
-        ratings: Number(ratings) || 5,
-      });
+    if (id) {
+      const fetchDetails = async () => {
+        try {
+          setLoading(true);
+          const response = await axios.get(`${API_BASE_URL}/expert/profile/${id}`);
+          const data = response.data;
+
+          setAstrologer({
+            name: data.user.name || "Astrologer",
+            image: "/images/astro-img1.png", // Default image
+            expertise: data.specialization || "Vedic Astrology",
+            experience: data.experience_in_years || 0,
+            language: data.languages.join(", ") || "Hindi",
+            price: data.price || 0,
+            video: "https://www.youtube.com/embed/INoPh_oRooU", // Default video
+            ratings: Math.round(data.rating) || 5,
+          });
+        } catch (error) {
+          console.error("Error fetching astrologer details:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchDetails();
+    } else {
+      // Fallback or handle cases where no ID matches
+      setLoading(false);
     }
   }, [searchParams]);
 
@@ -67,6 +77,16 @@ const Page = () => {
   const renderStars = (rating: number) => {
     return "★".repeat(Math.floor(rating));
   };
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -398,7 +418,7 @@ const Page = () => {
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
         onSubmit={(data) => {
-       
+
           // Here you would typically send the data to your backend
           setIsReviewModalOpen(false);
         }}
@@ -523,6 +543,45 @@ const Page = () => {
           </div>
         </div>
       </section>
+
+      {/* Intro Video Modal */}
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex={-1}
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered modal-xl">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4 className="modal-title-astro-about" id="exampleModalLabel">
+                Meet Astrologer {astrologer.name} Introduction Video
+              </h4>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div className="modal-body">
+              <iframe
+                width="100%"
+                height="500"
+                src={astrologer.video}
+                title={`${astrologer.name} Introduction Video`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

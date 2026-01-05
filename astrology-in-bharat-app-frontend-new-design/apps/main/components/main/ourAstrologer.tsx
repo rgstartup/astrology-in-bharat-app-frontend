@@ -104,14 +104,7 @@ const OurAstrologer = () => {
                                     href={{
                                         pathname: "/astrologer-details",
                                         query: {
-                                            name: item.name,
-                                            image: item.image,
-                                            expertise: item.expertise,
-                                            experience: item.experience,
-                                            language: item.language,
-                                            price: item.price,
-                                            video: item.video,
-                                            ratings: item.ratings,
+                                            id: item.id,
                                         },
                                     }}
                                     className="text-decoration-none"
