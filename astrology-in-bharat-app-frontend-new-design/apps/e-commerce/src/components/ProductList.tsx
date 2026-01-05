@@ -91,28 +91,28 @@ const ProductList = () => {
     <section className="py-20 bg-theme-ivory" id="products">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6 border-b border-orange-100 pb-8">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-theme-brown mb-2 font-pl">
+            <h2 className="text-3xl md:text-5xl font-bold text-theme-brown font-pl">
               Featured Products
             </h2>
           </div>
-          <div className="bg-[#fff1e6] text-[#c07c4c] px-4 py-2 rounded-xl border border-orange-100 flex items-center gap-2 font-outfit text-sm font-semibold shadow-sm">
-            <span className="text-xl">🚚</span> Free shipping on orders over
-            ₹999
+          <div className="bg-orange-50/50 text-theme-orange-dark px-6 py-3 rounded-2xl border border-orange-100 flex items-center gap-3 font-outfit text-sm font-bold shadow-sm backdrop-blur-sm">
+            <i className="fa-solid fa-cloud text-xl animate-pulse text-orange-400"></i>
+            <span>Free shipping on orders over ₹999</span>
           </div>
         </div>
 
         {/* Category Tabs */}
-        <div className="flex flex-wrap gap-3 mb-12">
+        <div className="flex flex-wrap items-center gap-3 mb-12 overflow-x-auto pb-4 scrollbar-hide">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveTab(cat)}
-              className={`px-6 py-2 rounded-xl font-semibold transition-all duration-300 font-pl border-2 ${
+              className={`px-8 py-2.5 rounded-xl font-bold transition-all duration-300 font-pl border-2 whitespace-nowrap ${
                 activeTab === cat
                   ? "bg-theme-orange text-white border-theme-orange shadow-lg scale-105"
-                  : "bg-white text-gray-700 border-gray-100 hover:border-theme-orange hover:text-theme-orange"
+                  : "bg-white text-gray-600 border-gray-100 hover:border-theme-orange hover:text-theme-orange"
               }`}
             >
               {cat}
@@ -126,8 +126,6 @@ const ProductList = () => {
             <ProductCard key={p.id} {...p} />
           ))}
         </div>
-
-        {/* View All Button from Image context (if needed) or just the grid */}
       </div>
     </section>
   );

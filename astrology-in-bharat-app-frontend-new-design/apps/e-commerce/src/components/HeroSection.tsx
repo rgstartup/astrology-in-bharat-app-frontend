@@ -13,17 +13,16 @@ const HeroSection = () => {
                     <span className="aib-trust-badge">
                       India’s Trusted Astrology Platform
                     </span>
-                    <h1>Connect with Verified Astrologers Online</h1>
-                    <h4 className="card-title ">
-                      Instant Chat, Call, or Video Consultations
-                    </h4>
+                    <h1>Your One-Stop Astrology Store</h1>
+                    {/* <h4 className="card-title ">
+                      Discover Vastu & expert-recommended astrology products to
+                      influence your destiny and bring positive energy!
+                    </h4> */}
                     <p>
-                      At Astrology in Bharat, find trusted astrologers for love,
-                      career, health, or life guidance. Connect anytime via
-                      chat, audio, or video and get personalized solutions with
-                      full privacy.
+                      Discover Vastu & expert-recommended astrology products to
+                      influence your destiny and bring positive energy!
                     </p>
-                    <ul className="list-check">
+                    {/* <ul className="list-check">
                       <li>
                         {" "}
                         <i className="fa-solid fa-check"></i> Verified &amp;
@@ -49,9 +48,9 @@ const HeroSection = () => {
                         <i className="fa-solid fa-check"></i> Trusted by
                         Thousands Across India
                       </li>
-                    </ul>
+                    </ul> */}
                     <a href="#" className="btn-link wfc mt-4 mb-4">
-                      Start Consultation
+                      Shop Now
                     </a>
                   </div>
                 </div>
@@ -64,7 +63,7 @@ const HeroSection = () => {
                     className="Astrologer-img-h fa-spin"
                   />
                   <img
-                    src="images/Astrologer.png"
+                    src="images/astro-products.png"
                     alt="Astrologer"
                     className="Astrologer-img"
                   />
