@@ -42,7 +42,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-black">
-        {!isAdminRoute && <QuotesLoader />}
+        {/* {!isAdminRoute && <QuotesLoader />} */}
         {!isAdminRoute && <Header />}
         <main>{children}</main>
         {!isAdminRoute && <Footer />}
