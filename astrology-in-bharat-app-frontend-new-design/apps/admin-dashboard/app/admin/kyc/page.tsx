@@ -47,11 +47,11 @@ export default function KYCPage() {
       prev.map((k) =>
         k.id === id
           ? {
-              ...k,
-              status: "approved" as const,
-              reviewedAt: new Date().toISOString().split("T")[0],
-              reviewedBy: "Current Admin",
-            }
+            ...k,
+            status: "approved" as const,
+            reviewedAt: new Date().toISOString().split("T")[0],
+            reviewedBy: "Current Admin",
+          }
           : k
       )
     );
@@ -62,12 +62,12 @@ export default function KYCPage() {
       prev.map((k) =>
         k.id === id
           ? {
-              ...k,
-              status: "rejected" as const,
-              reviewedAt: new Date().toISOString().split("T")[0],
-              reviewedBy: "Current Admin",
-              rejectionReason: reason,
-            }
+            ...k,
+            status: "rejected" as const,
+            reviewedAt: new Date().toISOString().split("T")[0],
+            reviewedBy: "Current Admin",
+            rejectionReason: reason,
+          }
           : k
       )
     );
@@ -85,7 +85,7 @@ export default function KYCPage() {
   };
 
   const handleExport = () => {
-    
+
     alert("Export functionality coming soon!");
   };
 

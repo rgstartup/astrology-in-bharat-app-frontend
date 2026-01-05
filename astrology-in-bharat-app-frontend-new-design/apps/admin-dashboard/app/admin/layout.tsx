@@ -29,10 +29,10 @@ import {
   Menu,
   Bell,
   Search,
-   Package,
+  Package,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
-import { SearchInput } from "@/app/components/admin/SearchInput";
+import { SearchInput } from "../../../shared/components/SearchInput";
 interface MenuItem {
   label: string;
   href: string;
@@ -46,7 +46,7 @@ const menuItems: MenuItem[] = [
   { label: "Expert Management", href: "/admin/experts", icon: UserCheck },
   // { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
   { label: "Expert KYC Review", href: "/admin/kyc", icon: FileText },
- { label: "Services & Pricing", href: "/admin/services", icon: Package },
+  { label: "Services & Pricing", href: "/admin/services", icon: Package },
   // { label: "Promo Configuration", href: "/admin/promos", icon: Ticket },
   { label: "Coupons/Offers", href: "/admin/coupons", icon: Tag },
   { label: "Live Sessions Monitor", href: "/admin/live-sessions", icon: Tv },
@@ -112,7 +112,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   }
 
   return (
-     <AdminGuard>
+
     <Fragment>
       <button
         onClick={() => onToggleSubmenu(item.label)}
@@ -158,7 +158,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         </div>
       )}
     </Fragment>
-    </AdminGuard>
+
   );
 };
 
@@ -198,14 +198,14 @@ const Sidebar: React.FC<SidebarProps> = memo(
         >
           {/* Logo Section - Fixed */}
           <div className="flex items-center justify-between p-6 bg-gray-50 border-r border-gray-200 flex-shrink-0"
-          style={{
-    backgroundImage: "url('/images/back-image.webp')",
-    backgroundSize: "cover",     
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat", 
-  }}
->
-            
+            style={{
+              backgroundImage: "url('/images/back-image.webp')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          >
+
             <img
               src="/images/logo.png"
               alt="Logo"
@@ -247,7 +247,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-   const [globalSearch, setGlobalSearch] = useState("");
+  const [globalSearch, setGlobalSearch] = useState("");
   const pathname = usePathname();
 
   const toggleSidebar = useCallback(() => {
@@ -257,7 +257,7 @@ export default function AdminLayout({
   // ✅ FIX: Check if it's an admin route (including login/register which shouldn't show sidebar)
   const isAdminRoute = pathname?.startsWith("/admin");
   const isLoginOrRegister = pathname === "/admin/login" || pathname === "/admin/register" || pathname === "/admin";
-  
+
   // ✅ Show sidebar only for admin routes (except login/register)
   const shouldShowSidebar = isAdminRoute && !isLoginOrRegister;
 
@@ -265,11 +265,11 @@ export default function AdminLayout({
   // Now all children will render with appropriate layout
 
   return (
-       <AdminGuard>
- <div
-  className="flex min-h-screen bg-cover bg-center bg-no-repeat"
-  style={{ backgroundImage: "url('/images/back-image.webp')" }}
->
+
+    <div
+      className="flex min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/images/back-image.webp')" }}
+    >
 
       {/* Sidebar Component - Only show when needed */}
       {shouldShowSidebar && (
@@ -298,7 +298,7 @@ export default function AdminLayout({
 
               <div className="flex items-center space-x-4">
                 {/* Search */}
-                 <div className="hidden md:block">
+                <div className="hidden md:block">
                   <SearchInput
                     value={globalSearch}
                     onChange={setGlobalSearch}
@@ -318,14 +318,14 @@ export default function AdminLayout({
 
                 {/* Profile */}
                 <div className="w-10 h-10 rounded-full overflow-hidden">
-  <img
-    src="https://i.pravatar.cc/150?img=12"
-    alt="Profile"
-    className="w-full h-full rounded-full cursor-pointer
+                  <img
+                    src="https://i.pravatar.cc/150?img=12"
+                    alt="Profile"
+                    className="w-full h-full rounded-full cursor-pointer
                hover:ring-2 hover:ring-yellow-500
                transition-all"
-  />
-</div>
+                  />
+                </div>
 
               </div>
             </div>
@@ -338,6 +338,6 @@ export default function AdminLayout({
         </main>
       </div>
     </div>
-    </AdminGuard>
+
   );
 }

@@ -1,8 +1,9 @@
+```
 // refund-management/page.tsx
 "use client";
 
 import React, { useState, useMemo } from "react";
-// import { StatsCards } from "@/app/components/admin/StatsCard";
+// import { StatsCards } from "../../../../shared/components/StatsCard";
 import { Button } from "@/app/components/admin/Button";
 import { Download, Filter, RefreshCw } from "lucide-react";
 
@@ -79,15 +80,15 @@ export default function RefundManagementPage() {
 
   // Handlers
   const handleApprove = (id: string) => {
-    alert(`Approving refund ${id}`);
+    alert(`Approving refund ${ id } `);
   };
 
   const handleReject = (id: string) => {
-    alert(`Rejecting refund ${id}`);
+    alert(`Rejecting refund ${ id } `);
   };
 
   const handleViewDetails = (refund: RefundRequest) => {
-    alert(`Viewing details for ${refund.id}`);
+    alert(`Viewing details for ${ refund.id }`);
   };
 
   return (
