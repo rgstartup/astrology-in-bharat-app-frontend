@@ -2,7 +2,7 @@
 import React, { useState, useMemo, lazy, Suspense } from "react";
 
 // Components
-import { StatsCards } from "@/app/components/admin/StatsCard";
+import { StatsCards } from "../../../../shared/components/StatsCard";
 
 // Icons
 import {
@@ -100,7 +100,7 @@ export default function DashboardPage() {
                 <MoreVertical className="w-5 h-5" />
               </button>
             </header>
-            
+
             {/* Activity list */}
             <ul className="divide-y divide-gray-100 max-h-96 overflow-y-auto" role="list">
               {activities.map((activity) => (
@@ -116,7 +116,7 @@ export default function DashboardPage() {
                     {activity.avatar}
                   </div>
 
-                {/* Activity details */}
+                  {/* Activity details */}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-900">
                       <span className="font-semibold">{activity.name}</span> {activity.action}
@@ -131,7 +131,7 @@ export default function DashboardPage() {
           </article>
         </section>
 
-       {/* Analytics Charts Section (8 columns, lazy loaded) */}
+        {/* Analytics Charts Section (8 columns, lazy loaded) */}
         <section className="lg:col-span-8" aria-labelledby="analytics-heading">
           <Suspense fallback={<div className="h-[500px] bg-gray-100 animate-pulse rounded-xl" />}>
             <ChartSection activeTab={activeTab} setActiveTab={setActiveTab} />

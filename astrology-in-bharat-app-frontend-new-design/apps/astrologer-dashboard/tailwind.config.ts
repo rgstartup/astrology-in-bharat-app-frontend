@@ -5,6 +5,7 @@ const config: Config = {
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}", // include App Router if you use it
+    "../shared/components/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {

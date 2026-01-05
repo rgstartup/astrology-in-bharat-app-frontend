@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useMemo ,lazy, Suspense } from "react";
+import React, { useState, useMemo, lazy, Suspense } from "react";
 
 // Icons
 import { Plus, Search, Tag } from "lucide-react";
 
 // Components
-import { StatsCards } from "@/app/components/admin/StatsCard";
+import { StatsCards } from "../../../../shared/components/StatsCard";
 import { CouponCard } from "@/app/components/coupons/CouponCard";
 import { Button } from "@/app/components/admin/Button";
 const CreateCoupon = lazy(() => import("@/app/components/coupons/CreateCoupon"));
@@ -17,17 +17,17 @@ import { couponsData, getStatsConfig } from "@/app/components/coupons/couponsCon
 export default function CouponsPage() {
   // Search query state
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Filter state (all, active, inactive, expired)
   const [statusFilter, setStatusFilter] = useState("all");
-  
+
   // Create modal state
   const [showCreateCoupon, setShowCreateCoupon] = useState(false);
 
   // Get stats config (memoized)
   const statsConfig = useMemo(() => getStatsConfig(couponsData), []);
 
-  
+
   // Filter coupons based on search and status
   const filteredCoupons = useMemo(() => {
     return couponsData.filter((coupon) => {
@@ -62,16 +62,16 @@ export default function CouponsPage() {
     <main className="space-y-6 px-4 sm:px-6 lg:px-0">
 
       {/* Header with title and create button */}
-    <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <div className="min-w-0">
-         <h1 className="text-xl sm:text-3xl font-bold text-gray-800 truncate">Coupons & Offers</h1>
-           <p className="text-sm sm:text-base text-gray-600 mt-1">Manage discount coupons and offers</p>
+      <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-800 truncate">Coupons & Offers</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">Manage discount coupons and offers</p>
         </div>
-        <Button variant="primary" size="md" icon={Plus}  onClick={() => {
-    
-    setShowCreateCoupon(true);
-  }}
->
+        <Button variant="primary" size="md" icon={Plus} onClick={() => {
+
+          setShowCreateCoupon(true);
+        }}
+        >
           Create Coupon
         </Button>
       </header>
@@ -79,35 +79,35 @@ export default function CouponsPage() {
       {/* Stats cards - Total, Active, Redemptions, Avg Discount */}
       <StatsCards stats={statsConfig} columns={4} />
 
-     {/* Search and filter section */}
-<div className="flex flex-col gap-4 md:flex-row md:items-center">
-  {/* Search input */}
-  <div className="relative flex-1 min-w-0">
-    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-    <input
-      type="text"
-      placeholder="Search coupons..."
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-    />
-  </div>
+      {/* Search and filter section */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center">
+        {/* Search input */}
+        <div className="relative flex-1 min-w-0">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search coupons..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+          />
+        </div>
 
-  {/* Status filter buttons */}
-  <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
-    {filterButtons.map(({ value, label, variant }) => (
-      <Button
-        key={value}
-        variant={statusFilter === value ? (variant as any) : "outline"}
-        size="md"
-        onClick={() => setStatusFilter(value)}
-        className="w-full sm:w-auto"
-      >
-        {label}
-      </Button>
-    ))}
-  </div>
-</div>
+        {/* Status filter buttons */}
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+          {filterButtons.map(({ value, label, variant }) => (
+            <Button
+              key={value}
+              variant={statusFilter === value ? (variant as any) : "outline"}
+              size="md"
+              onClick={() => setStatusFilter(value)}
+              className="w-full sm:w-auto"
+            >
+              {label}
+            </Button>
+          ))}
+        </div>
+      </div>
 
 
       {/* Coupons grid or empty state */}
@@ -135,20 +135,20 @@ export default function CouponsPage() {
       </div>
 
 
-    <Suspense
-  fallback={
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white px-6 py-3 rounded-lg shadow">
-        Loading...
-      </div>
-    </div>
-  }
->
-  
-  {showCreateCoupon && (
-    <CreateCoupon onClose={() => setShowCreateCoupon(false)} />
-  )}
-</Suspense>
+      <Suspense
+        fallback={
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="bg-white px-6 py-3 rounded-lg shadow">
+              Loading...
+            </div>
+          </div>
+        }
+      >
+
+        {showCreateCoupon && (
+          <CreateCoupon onClose={() => setShowCreateCoupon(false)} />
+        )}
+      </Suspense>
     </main>
   );
 }
