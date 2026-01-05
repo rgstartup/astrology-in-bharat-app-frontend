@@ -71,8 +71,8 @@ const Footer: React.FC = () => {
           <li><a href="#">Privacy Policy</a></li>
           <li><a href="#">Terms & Conditions</a></li>
           <li><a href="#">Copyright Notice</a></li>
-          <li><a href="#">Disclaimer</a></li>
-          <li><a href="#">Help & Support</a></li>
+          <li><a href="/help">Help & Support</a></li>
+          <li><a href="/session-history">Seassion</a></li>
         </ul>
       </div> 
     </div>

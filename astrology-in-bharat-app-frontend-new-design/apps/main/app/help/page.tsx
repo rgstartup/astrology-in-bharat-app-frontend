@@ -124,7 +124,7 @@ const HelpSupport = () => {
                                 <h1 className="mb-3">
                                     Help & <span style={{ color: "#daa23e" }}>Support</span>
                                 </h1>
-                                <p className="text-white" style={{ fontSize: "18px" }}>
+                                <p className="text-black" style={{ fontSize: "18px" }}>
                                     We're here to assist you. Find answers to common questions or reach out to us.
                                 </p>
                             </div>
@@ -199,11 +199,12 @@ const HelpSupport = () => {
                                 {categories.map((cat) => (
                                     <button
                                         key={cat.id}
-                                        className={`category-btn ${activeCategory === cat.id ? "active" : ""}`}
+                                        className={`category-btn ${activeCategory === cat.id ? "active" : ""}  `} style={{borderRadius:"20px"}}
+                                      
                                         onClick={() => setActiveCategory(cat.id)}
                                     >
                                         <i className={`fa-solid ${cat.icon}`}></i>
-                                        <span className="d-none d-sm-inline ms-2">{cat.name}</span>
+                                        <span className="d-none d-sm-inline ms-2 ">{cat.name}</span>
                                     </button>
                                 ))}
                             </div>
@@ -363,7 +364,7 @@ const HelpSupport = () => {
             </section>
 
             {/* Inline Styles for Help Page Specific Components */}
-            <style jsx>{`
+            <style>{`
         .help-card {
           background: #fff;
           border: 1px solid #daa23e73;
