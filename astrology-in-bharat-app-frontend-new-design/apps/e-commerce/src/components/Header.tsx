@@ -6,7 +6,7 @@ import { useCart } from "@/context/CartContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { cart } = useCart();
+  const { cart, openCart } = useCart();
   const pathname = usePathname();
 
   const navLinks = [
@@ -78,8 +78,8 @@ const Header = () => {
               </a>
 
               {/* Desktop Cart */}
-              <Link
-                href="#"
+              <button
+                onClick={openCart}
                 className="relative text-gray-700 hover:text-primary-orange transition group"
               >
                 <i className="fa-solid fa-cart-shopping text-xl"></i>
@@ -88,19 +88,19 @@ const Header = () => {
                     {cart.length}
                   </span>
                 )}
-              </Link>
+              </button>
             </div>
 
             {/* Mobile Menu Button */}
             <div className="lg:hidden flex items-center gap-4">
-              <Link href="#" className="relative text-gray-700">
+              <button onClick={openCart} className="relative text-gray-700">
                 <i className="fa-solid fa-cart-shopping text-xl"></i>
                 {cart.length > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                     {cart.length}
                   </span>
                 )}
-              </Link>
+              </button>
 
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}

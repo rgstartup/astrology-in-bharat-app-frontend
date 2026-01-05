@@ -10,7 +10,7 @@ const FloatingCartButton = () => {
   return (
     <button
       onClick={openCart}
-      className="fixed bottom-8 right-8 z-40 bg-primary-orange text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform animate-bounce-custom"
+      className="fixed bottom-8 right-8 z-40 bg-theme-orange text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform animate-bounce-custom"
     >
       <div className="relative">
         <i className="fa-solid fa-cart-shopping text-2xl"></i>

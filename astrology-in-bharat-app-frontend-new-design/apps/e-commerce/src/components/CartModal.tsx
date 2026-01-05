@@ -57,7 +57,7 @@ const CartModal = () => {
         contact: "9999999999",
       },
       theme: {
-        color: "#FF7043",
+        color: "#fd6410",
       },
     };
 
@@ -74,7 +74,7 @@ const CartModal = () => {
     return (
       <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-md">
         <div className="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm w-full animate-bounce-in">
-          <div className="w-16 h-16 border-4 border-orange-200 border-t-primary-orange rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-orange-200 border-t-theme-orange rounded-full animate-spin mx-auto mb-4"></div>
           <h3 className="text-xl font-bold text-gray-800 mb-2">
             Processing Payment
           </h3>
@@ -135,7 +135,7 @@ const CartModal = () => {
                   <h4 className="font-semibold text-gray-800 line-clamp-1">
                     {item.title}
                   </h4>
-                  <p className="text-primary-orange font-bold">₹{item.price}</p>
+                  <p className="text-theme-orange font-bold">₹{item.price}</p>
                   <div className="flex justify-between items-center mt-2">
                     <span className="text-xs text-gray-500">
                       Qty: {item.quantity}
@@ -162,7 +162,7 @@ const CartModal = () => {
             <button
               onClick={handleCheckout}
               disabled={loading}
-              className="w-full py-3 bg-primary-orange text-white rounded-full font-bold hover:bg-orange-600 transition shadow-lg flex items-center justify-center gap-2"
+              className="w-full py-3 bg-theme-orange text-white rounded-full font-bold hover:bg-theme-orange-dark transition shadow-lg flex items-center justify-center gap-2"
             >
               {loading ? (
                 <i className="fa-solid fa-spinner fa-spin"></i>

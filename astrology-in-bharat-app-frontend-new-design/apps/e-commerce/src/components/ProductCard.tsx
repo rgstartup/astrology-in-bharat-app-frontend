@@ -25,61 +25,50 @@ const ProductCard: React.FC<ProductCardProps> = ({
     addToCart({ id, title, price, image, quantity: 1 });
   };
 
-  const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
-
   return (
-    <div className="group bg-white rounded-3xl p-5 shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-theme-orange h-full flex flex-col justify-between hover:-translate-y-2">
-      <div>
-        {/* Discount Badge */}
-        {discount > 0 && (
-          <div className="flex justify-end mb-2">
-            <span className="bg-theme-orange text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
-              {discount}% OFF
-            </span>
-          </div>
-        )}
+    <div className="group bg-white rounded-[2rem] p-4 shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-orange-100 flex flex-col h-full">
+      {/* Product Image */}
+      <div className="mb-4 aspect-square relative bg-[#f8f8f8] rounded-[1.5rem] overflow-hidden flex items-center justify-center p-4">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+          loading="lazy"
+          onError={(e) =>
+            (e.currentTarget.src =
+              "https://cdn-icons-png.flaticon.com/512/2645/2645843.png")
+          }
+        />
+      </div>
 
-        {/* Product Image */}
-        <div className="mb-4 aspect-square relative bg-gradient-to-br from-orange-50 to-purple-50 rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover relative z-10 transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src =
-                "https://via.placeholder.com/300x300?text=Product";
-            }}
-          />
-        </div>
-
-        {/* Product Info */}
-        <h4 className="text-lg font-bold text-gray-900 mb-2 font-pl group-hover:text-theme-orange transition-colors">
+      {/* Product Info */}
+      <div className="px-1 flex-grow">
+        <h4 className="text-[1.1rem] font-bold text-[#4a2c2a] mb-1 font-pl line-clamp-1">
           {title}
         </h4>
-        <p className="text-sm text-gray-600 mb-4 font-outfit line-clamp-2">
+        <p className="text-xs text-gray-500 mb-4 font-outfit line-clamp-2 leading-relaxed">
           {description}
         </p>
       </div>
 
-      <div>
-        {/* Pricing */}
-        <div className="mb-4 flex items-center justify-center gap-2 flex-wrap">
-          <span className="text-2xl font-bold text-theme-orange font-pl">
-            ₹{price.toLocaleString("en-IN")}
+      {/* Pricing and Action */}
+      <div className="px-1 mt-auto flex items-center justify-between gap-2">
+        <div className="flex flex-col">
+          <span className="text-xl font-bold text-theme-brown font-pl">
+            ₹{price}
           </span>
-          <span className="text-sm text-gray-400 line-through font-outfit">
-            ₹{originalPrice.toLocaleString("en-IN")}
-          </span>
+          {originalPrice > price && (
+            <span className="text-[10px] text-gray-400 line-through font-outfit">
+              ₹{originalPrice}
+            </span>
+          )}
         </div>
 
-        {/* CTA Button */}
         <button
           onClick={handleAddToCart}
-          className="w-full py-3 px-6 bg-theme-orange text-white rounded-full font-semibold hover:bg-theme-orange-dark transition-all shadow-md hover:shadow-lg transform active:scale-95 flex items-center justify-center gap-2 font-pl group-hover:scale-105"
+          className="py-1.5 px-4 bg-theme-orange text-white text-xs font-bold rounded-lg hover:bg-theme-orange-dark transition-colors shadow-sm active:scale-95 font-pl shadow-[#fd6410]/20"
         >
-          <i className="fa-solid fa-cart-plus"></i> Add to Cart
+          Add to Cart
         </button>
       </div>
     </div>

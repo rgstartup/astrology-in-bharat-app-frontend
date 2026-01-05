@@ -1,8 +1,9 @@
 import { Poppins, Outfit } from "next/font/google";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./globals.css";
 import "@repo/styles";
-import { Footer, Header } from "@repo/ui";
+import { Header, Footer } from "@repo/ui";
 import { CartProvider } from "@/context/CartContext";
 import CartModal from "@/components/CartModal";
 import FloatingCartButton from "@/components/FloatingCartButton";

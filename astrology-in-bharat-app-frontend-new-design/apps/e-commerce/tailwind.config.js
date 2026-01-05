@@ -15,7 +15,9 @@ module.exports = {
                 'theme-brown': '#4a2c2a',
                 'theme-brown-dark': '#3d1f1e',
                 'theme-brown-light': '#5c3634',
-                
+                'theme-ivory': '#fff9f4',
+                'primary-orange': '#fd6410',
+
                 // Legacy support
                 primary: "#fd6410",
                 secondary: "#4a2c2a",
@@ -47,12 +49,22 @@ module.exports = {
                 "0%, 100%": { opacity: 1 },
                 "50%": { opacity: 0.8 },
             },
+            "fade-in-up": {
+                "0%": { opacity: 0, transform: "translateY(20px)" },
+                "100%": { opacity: 1, transform: "translateY(0)" },
+            },
+            "spin-slow": {
+                "0%": { transform: "rotate(0deg)" },
+                "100%": { transform: "rotate(360deg)" },
+            }
         },
         animation: {
             "slide-in-right": "slide-in-right 0.3s ease-out",
             "bounce-in": "bounce-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards",
             "float": "float 3s ease-in-out infinite",
             "pulse-soft": "pulse-soft 2s ease-in-out infinite",
+            "fade-in-up": "fade-in-up 0.8s ease-out forwards",
+            "spin-slow": "spin-slow 20s linear infinite",
         },
     },
     plugins: [],
