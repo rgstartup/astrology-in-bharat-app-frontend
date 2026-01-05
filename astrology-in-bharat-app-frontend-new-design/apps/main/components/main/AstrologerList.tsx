@@ -28,15 +28,61 @@ const AstrologerList = () => {
   const [hasMore, setHasMore] = useState(true);
   const limit = 20;
 
+  // Filter & Search State
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [selectedSpecialization, setSelectedSpecialization] = useState("");
+  const [sortOption, setSortOption] = useState("newest");
+  const [filterState, setFilterState] = useState({
+    language: "",
+    minPrice: 0,
+    maxPrice: 100,
+    addressState: ""
+  });
+
+  // Local state for Filter Modal inputs
+  const [localFilter, setLocalFilter] = useState({ ...filterState });
+
+  useEffect(() => {
+    setLocalFilter({ ...filterState });
+  }, [filterState]);
+
+  // Debounce search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+
+  // Let's implement the Ref pattern properly in the full replacement.
+  const isFetchingRef = useRef(false);
+
   const fetchAstrologers = useCallback(async (currentOffset: number, isLoadMore: boolean = false) => {
-    if (loading || (!hasMore && isLoadMore)) return;
+    if (isFetchingRef.current) return;
+
+    // For 'hasMore', if we are loading more, we should ideally check it.
+    // But since we can't easily access the fresh state without deps, 
+    // we will rely on values passed or just proceed. 
+    // The scroll handler checks hasMore before calling this! 
+    // So we don't strictly need to check it here if the caller is responsible.
 
     try {
+      isFetchingRef.current = true;
       setLoading(true);
+
       const response = await axios.get(`${API_BASE_URL}/expert/profile/list`, {
         params: {
           limit,
           offset: currentOffset,
+          q: debouncedSearch,
+          specializations: selectedSpecialization,
+          sort: sortOption,
+          languages: filterState.language,
+          minPrice: filterState.minPrice,
+          maxPrice: filterState.maxPrice,
+          state: filterState.addressState
         },
       });
 
@@ -44,14 +90,14 @@ const AstrologerList = () => {
 
       const mappedData = data.map((item: ExpertProfile) => ({
         id: item.id,
-        image: "/images/astro-img1.png", // Default image
+        image: "/images/astro-img1.png",
         ratings: Math.round(item.rating) || 5,
         name: item.user.name || "Astrologer",
         expertise: item.specialization || "Vedic Astrology",
         experience: item.experience_in_years || 0,
         language: item.languages.join(", ") || "Hindi",
         price: item.price || 0,
-        video: "https://www.youtube.com/embed/INoPh_oRooU", // Default video
+        video: "https://www.youtube.com/embed/INoPh_oRooU",
         modalId: `home-modal-${item.id}`,
       }));
 
@@ -65,24 +111,25 @@ const AstrologerList = () => {
       console.error("Error fetching astrologers:", error);
     } finally {
       setLoading(false);
+      isFetchingRef.current = false;
     }
-  }, [loading, hasMore]);
+  }, [debouncedSearch, selectedSpecialization, sortOption, filterState]);
 
   useEffect(() => {
+    setOffset(0);
     fetchAstrologers(0);
-  }, []);
+  }, [debouncedSearch, selectedSpecialization, sortOption, filterState, fetchAstrologers]);
 
   const handleScroll = useCallback(() => {
-    if (!cardScrollRef.current || loading || !hasMore) return;
+    if (!cardScrollRef.current || isFetchingRef.current || !hasMore) return;
 
     const { scrollLeft, scrollWidth, clientWidth } = cardScrollRef.current;
-    // If we're within 300px of the end, load more
     if (scrollLeft + clientWidth >= scrollWidth - 300) {
       const nextOffset = offset + limit;
       setOffset(nextOffset);
       fetchAstrologers(nextOffset, true);
     }
-  }, [offset, loading, hasMore, fetchAstrologers]);
+  }, [offset, hasMore, fetchAstrologers]);
 
   useEffect(() => {
     const scrollEl = cardScrollRef.current;
@@ -107,13 +154,32 @@ const AstrologerList = () => {
   const scrollCards = (direction: "left" | "right") => {
     if (cardScrollRef.current) {
       const { current } = cardScrollRef;
-      const scrollAmount = 300; // Scrolls approximately one card width
+      const scrollAmount = 300;
       if (direction === "left") {
         current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
       } else {
         current.scrollBy({ left: scrollAmount, behavior: "smooth" });
       }
     }
+  };
+
+  const specializations = [
+    "Numerology", "Vedic", "Zodiac Compatibility", "Astrocartography", "Lunar Node Analysis"
+  ];
+
+  const applyFilters = () => {
+    setFilterState(localFilter);
+  };
+
+  const resetFilters = () => {
+    const initialState = {
+      language: "",
+      minPrice: 0,
+      maxPrice: 100,
+      addressState: ""
+    };
+    setFilterState(initialState);
+    setLocalFilter(initialState);
   };
 
   return (
@@ -128,29 +194,36 @@ const AstrologerList = () => {
               <input
                 type="text"
                 className="bg-white"
-                placeholder="Search Astrologer, Type, Language..."
+                placeholder="Search Astrologer by Name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button>Search</button>
+              <button type="button">Search</button>
             </div>
           </div>
           <div className="col-sm-3 text-end">
-            <a href="#" className="filter-btn">
+            <button
+              type="button"
+              className="filter-btn border-0 bg-transparent cursor-pointer hover:text-[#fd6410] transition-colors"
+              data-bs-toggle="modal"
+              data-bs-target="#homeFilterModal"
+            >
               <i className="fa-solid fa-filter"></i> Filter
-            </a>
-            <a href="#" className="filter-btn sort-btn">
+            </button>
+            <button
+              type="button"
+              className="filter-btn sort-btn border-0 bg-transparent cursor-pointer hover:text-[#fd6410] transition-colors"
+              data-bs-toggle="modal"
+              data-bs-target="#homeSortModal"
+            >
               <i className="fa-solid fa-sort"></i> Sort
-            </a>
+            </button>
           </div>
           <div className="col-sm-4 d-flex align-items-center">
             <button
               onClick={() => scroll("left")}
-              className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full mr-2 hover:bg-[#fd64101a] transition flex-shrink-0"
-              style={{
-                width: "30px",
-                height: "30px",
-                border: "none",
-                background: "transparent",
-              }}
+              className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full mr-2 hover:bg-[#fd64101a] transition shrink-0"
+              style={{ width: "30px", height: "30px", border: "none", background: "transparent" }}
             >
               <i className="fa-solid fa-chevron-left"></i>
             </button>
@@ -159,34 +232,104 @@ const AstrologerList = () => {
               id="list-slider"
               ref={scrollContainerRef}
             >
-              <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
-                Numerology
+              <div
+                onClick={() => setSelectedSpecialization("")}
+                className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-[#fd6410] cursor-pointer transition duration-300 ${selectedSpecialization === "" ? "bg-[#fd6410] text-white" : "bg-white text-[#1e0b0f] hover:bg-[#fd6410] hover:text-white"}`}
+              >
+                All
               </div>
-              <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
-                Vedic
-              </div>
-              <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
-                Zodiac Compatibility
-              </div>
-              <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
-                Astrocartography
-              </div>
-              <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
-                Lunar Node Analysis
-              </div>
+              {specializations.map(spec => (
+                <div
+                  key={spec}
+                  onClick={() => setSelectedSpecialization(spec)}
+                  className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-[#fd6410] cursor-pointer transition duration-300 ${selectedSpecialization === spec ? "bg-[#fd6410] text-white" : "bg-white text-[#1e0b0f] hover:bg-[#fd6410] hover:text-white"}`}
+                >
+                  {spec}
+                </div>
+              ))}
             </div>
             <button
               onClick={() => scroll("right")}
-              className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full ml-2 hover:bg-[#fd64101a] transition flex-shrink-0"
-              style={{
-                width: "30px",
-                height: "30px",
-                border: "none",
-                background: "transparent",
-              }}
+              className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full ml-2 hover:bg-[#fd64101a] transition shrink-0"
+              style={{ width: "30px", height: "30px", border: "none", background: "transparent" }}
             >
               <i className="fa-solid fa-chevron-right"></i>
             </button>
+          </div>
+        </div>
+
+        {/* Home Sort Modal */}
+        <div className="modal fade" id="homeSortModal" tabIndex={-1} aria-hidden="true" style={{ zIndex: 1060 }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content text-dark border-0 shadow-lg">
+              <div className="modal-header bg-light border-0">
+                <h5 className="modal-title font-bold">Sort By</h5>
+                <button type="button" className="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div className="modal-body p-0">
+                <div className="list-group list-group-flush">
+                  <button onClick={() => setSortOption("rating")} className={`list-group-item list-group-item-action border-0 py-3 ${sortOption === "rating" ? "bg-orange-50 text-[#fd6410] font-semibold" : ""}`} data-bs-dismiss="modal">
+                    <i className="fa-solid fa-star mr-2"></i> Rating: High to Low
+                  </button>
+                  <button onClick={() => setSortOption("price_asc")} className={`list-group-item list-group-item-action border-0 py-3 ${sortOption === "price_asc" ? "bg-orange-50 text-[#fd6410] font-semibold" : ""}`} data-bs-dismiss="modal">
+                    <i className="fa-solid fa-arrow-up-1-9 mr-2"></i> Price: Low to High
+                  </button>
+                  <button onClick={() => setSortOption("price_desc")} className={`list-group-item list-group-item-action border-0 py-3 ${sortOption === "price_desc" ? "bg-orange-50 text-[#fd6410] font-semibold" : ""}`} data-bs-dismiss="modal">
+                    <i className="fa-solid fa-arrow-down-9-1 mr-2"></i> Price: High to Low
+                  </button>
+                  <button onClick={() => setSortOption("experience")} className={`list-group-item list-group-item-action border-0 py-3 ${sortOption === "experience" ? "bg-orange-50 text-[#fd6410] font-semibold" : ""}`} data-bs-dismiss="modal">
+                    <i className="fa-solid fa-briefcase mr-2"></i> Experience: High to Low
+                  </button>
+                  <button onClick={() => setSortOption("newest")} className={`list-group-item list-group-item-action border-0 py-3 ${sortOption === "newest" ? "bg-orange-50 text-[#fd6410] font-semibold" : ""}`} data-bs-dismiss="modal">
+                    <i className="fa-solid fa-clock mr-2"></i> Newest First
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Home Filter Modal */}
+        <div className="modal fade" id="homeFilterModal" tabIndex={-1} aria-hidden="true" style={{ zIndex: 1060 }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content text-dark border-0 shadow-lg">
+              <div className="modal-header bg-light border-0">
+                <h5 className="modal-title font-bold">Customize Filters</h5>
+                <button type="button" className="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div className="modal-body p-4">
+                <div className="mb-4">
+                  <label className="form-label font-bold text-gray-700">Language</label>
+                  <div className="input-group">
+                    <span className="input-group-text bg-white border-end-0"><i className="fa-solid fa-language text-gray-400"></i></span>
+                    <input type="text" className="form-control border-start-0 shadow-none px-0" placeholder="e.g. Hindi, English" value={localFilter.language} onChange={(e) => setLocalFilter({ ...localFilter, language: e.target.value })} />
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <div className="d-flex justify-content-between mb-2">
+                    <label className="form-label font-bold text-gray-700">Price Range</label>
+                    <span className="badge bg-orange-100 text-[#fd6410] px-2 py-1">Up to ₹{localFilter.maxPrice}/min</span>
+                  </div>
+                  <input type="range" className="form-range custom-range" min="0" max="100" step="5" value={localFilter.maxPrice} onChange={(e) => setLocalFilter({ ...localFilter, maxPrice: parseInt(e.target.value) })} />
+                  <div className="d-flex justify-content-between text-xs text-gray-400 mt-1">
+                    <span>₹0</span>
+                    <span>₹50</span>
+                    <span>₹100+</span>
+                  </div>
+                </div>
+                <div className="mb-2">
+                  <label className="form-label font-bold text-gray-700">State</label>
+                  <div className="input-group">
+                    <span className="input-group-text bg-white border-end-0"><i className="fa-solid fa-location-dot text-gray-400"></i></span>
+                    <input type="text" className="form-control border-start-0 shadow-none px-0" placeholder="e.g. Maharashtra" value={localFilter.addressState} onChange={(e) => setLocalFilter({ ...localFilter, addressState: e.target.value })} />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer border-0 p-4 pt-0 gap-2">
+                <button type="button" className="btn btn-light grow font-semibold py-2" onClick={resetFilters}>Reset All</button>
+                <button type="button" className="btn bg-[#fd6410] text-white grow font-semibold py-2 shadow-sm" data-bs-dismiss="modal" onClick={applyFilters}>Apply Changes</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -207,15 +350,7 @@ const AstrologerList = () => {
               astrologers.map((item) => (
                 <React.Fragment key={item.id}>
                   <div className="grid-item">
-                    <Link
-                      href={{
-                        pathname: "/astrologer-details",
-                        query: {
-                          id: item.id,
-                        },
-                      }}
-                      className="text-decoration-none"
-                    >
+                    <Link href={{ pathname: "/astrologer-details", query: { id: item.id } }} className="text-decoration-none">
                       <div className="astro-card min-w-[300px]">
                         <div className="vid-part">
                           <img
@@ -259,43 +394,39 @@ const AstrologerList = () => {
                     </Link>
                   </div>
 
-                  {/* Modal */}
+                  {/* Modal Video */}
                   <div
                     className="modal fade"
                     id={item.modalId}
                     tabIndex={-1}
-                    aria-labelledby={`${item.modalId}Label`}
                     aria-hidden="true"
+                    style={{ zIndex: 1070 }}
                   >
                     <div className="modal-dialog modal-dialog-centered modal-xl">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h4
-                            className="modal-title-astro-about"
-                            id={`${item.modalId}Label`}
-                          >
-                            Meet Astrologer {item.name} Introduction Video
+                      <div className="modal-content text-dark border-0 shadow-2xl">
+                        <div className="modal-header border-0 pb-0">
+                          <h4 className="modal-title-astro-about">
+                            Meet {item.name}
                           </h4>
                           <button
                             type="button"
-                            className="btn-close"
+                            className="btn-close shadow-none"
                             data-bs-dismiss="modal"
-                            aria-label="Close"
                           >
                             <i className="fa-solid fa-xmark"></i>
                           </button>
                         </div>
-                        <div className="modal-body">
-                          <iframe
-                            width="100%"
-                            height="500"
-                            src={item.video}
-                            title={`${item.name} Introduction Video`}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
-                          ></iframe>
+                        <div className="modal-body p-4">
+                          <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                            <iframe
+                              width="100%"
+                              height="500"
+                              src={item.video}
+                              title={`${item.name} Video`}
+                              frameBorder="0"
+                              allowFullScreen
+                            ></iframe>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -304,13 +435,15 @@ const AstrologerList = () => {
               ))
             ) : !loading && (
               <div className="w-full text-center py-10 text-white">
-                No astrologers found.
+                <i className="fa-solid fa-magnifying-glass fa-3x mb-3 text-[#fd641055]"></i>
+                <h4>No Astrologers Found</h4>
+                <p>Adjust your filters or search terms.</p>
               </div>
             )}
 
             {loading && (
               <div className="d-flex align-items-center justify-content-center min-w-[200px]">
-                <div className="spinner-border text-primary" role="status">
+                <div className="spinner-border text-[#fd6410]" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
               </div>
@@ -326,9 +459,9 @@ const AstrologerList = () => {
           </button>
         </div>
 
-        <div className="view-all">
-          <Link href="/our-astrologers" className="btn-link wfc m-auto">
-            <i className="fa-regular fa-user"></i> View All Astrologers
+        <div className="view-all mt-4">
+          <Link href="/our-astrologers" className="btn bg-white border border-[#fd6410] text-[#fd6410] px-5 py-2.5 rounded-full font-bold hover:bg-[#fd6410] hover:text-white transition duration-300 shadow-sm m-auto block w-max">
+            <i className="fa-regular fa-user mr-2"></i> View All Astrologers
           </Link>
         </div>
       </div>

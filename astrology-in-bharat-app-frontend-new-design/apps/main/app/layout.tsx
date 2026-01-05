@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import './globals.css';
 import { Poppins, Outfit } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -31,6 +32,13 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin");
+
+  // Load Bootstrap JS for modal functionality
+  useEffect(() => {
+    // Dynamically import Bootstrap JS only on client side
+    // @ts-ignore - Bootstrap JS doesn't have type declarations
+    import("bootstrap/dist/js/bootstrap.bundle.min.js");
+  }, []);
 
   return (
     <html lang="en" className={`${outfit.variable} ${poppins.variable}`}>
