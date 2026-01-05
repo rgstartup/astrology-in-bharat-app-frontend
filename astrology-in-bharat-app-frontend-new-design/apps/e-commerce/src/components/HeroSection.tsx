@@ -49,9 +49,36 @@ const HeroSection = () => {
                         Thousands Across India
                       </li>
                     </ul> */}
-                    <a href="#" className="btn-link wfc mt-4 mb-4">
-                      Shop Now
-                    </a>
+                    {/* Hero Actions */}
+                    <div className="flex flex-col sm:flex-row items-center gap-4 mt-6 mb-8">
+                      <a
+                        href="#products"
+                        className="btn-link wfc !mt-0 !mb-0 min-w-[160px] text-center"
+                      >
+                        Shop Now
+                      </a>
+                      <a
+                        href="/products"
+                        className="flex items-center justify-center gap-2 px-8 py-3 bg-white hover:bg-gray-50 text-gray-800 rounded-xl font-bold transition-all shadow-md hover:shadow-lg border border-gray-100 font-pl min-w-[200px]"
+                      >
+                        View All Products
+                        <i className="fa-solid fa-angle-right text-theme-orange"></i>
+                      </a>
+                    </div>
+
+                    {/* Search Bar (User called it Side Bar) */}
+                    <div className="max-w-xl">
+                      <div className="relative flex items-center bg-white rounded-2xl shadow-xl border border-orange-100 overflow-hidden group focus-within:ring-2 focus-within:ring-theme-orange/20 transition-all h-14">
+                        <input
+                          type="text"
+                          placeholder="Search for products..."
+                          className="w-full h-full py-4 px-6 outline-none text-gray-700 font-outfit placeholder:text-gray-400"
+                        />
+                        <button className="bg-theme-orange hover:bg-theme-orange-dark text-white w-16 h-full flex items-center justify-center transition-colors">
+                          <i className="fa-solid fa-magnifying-glass text-lg"></i>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
