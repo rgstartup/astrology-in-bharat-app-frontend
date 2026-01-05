@@ -8,7 +8,7 @@ const FloatingCartButton = () => {
   return (
     <button
       onClick={openCart}
-      className={`fixed bottom-8 right-8 z-40 p-5 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 group ${
+      className={`fixed bottom-8 right-8 z-40 p-3 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 group ${
         cart.length > 0
           ? "bg-theme-orange text-white scale-110"
           : "bg-white text-theme-brown border border-orange-100"

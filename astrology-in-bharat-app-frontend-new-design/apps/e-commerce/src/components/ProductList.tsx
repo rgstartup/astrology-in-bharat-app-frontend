@@ -111,7 +111,7 @@ const ProductList = () => {
               onClick={() => setActiveTab(cat)}
               className={`px-8 py-2.5 rounded-xl font-bold transition-all duration-300 font-pl border-2 whitespace-nowrap ${
                 activeTab === cat
-                  ? "bg-theme-orange text-white border-theme-orange shadow-lg scale-105"
+                  ? "bg-theme-orange text-white border-theme-orange shadow-md scale-105"
                   : "bg-white text-gray-600 border-gray-100 hover:border-theme-orange hover:text-theme-orange"
               }`}
             >

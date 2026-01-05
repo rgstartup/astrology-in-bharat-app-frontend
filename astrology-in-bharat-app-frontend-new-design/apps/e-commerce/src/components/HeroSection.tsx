@@ -7,7 +7,7 @@ const HeroSection = () => {
         <div className="container">
           <div className="contant-hero">
             <div className="row align column-reverse">
-              <div className="col-lg-7 col-md-12">
+              <div className="col-lg-6 col-md-12">
                 <div className="hero-card shine">
                   <div className="card-z">
                     <span className="aib-trust-badge">
@@ -82,7 +82,7 @@ const HeroSection = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-lg-5 col-md-12">
+              <div className="col-lg-6 col-md-12">
                 <div className="right-illus">
                   <img
                     src="images/Astrologer-h.png"
@@ -92,7 +92,7 @@ const HeroSection = () => {
                   <img
                     src="images/astro-products.png"
                     alt="Astrologer"
-                    className="Astrologer-img"
+                    className="Astrologer-img relative bottom-[-23px]"
                   />
                 </div>
               </div>
