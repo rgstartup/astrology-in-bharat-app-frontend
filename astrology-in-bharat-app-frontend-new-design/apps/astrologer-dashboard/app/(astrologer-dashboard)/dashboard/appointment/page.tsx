@@ -1,9 +1,9 @@
-import AppointmentsPage from '@/components/dashboard/Appointment'
+import AppointmentsPage from '@/components/Appointment/Appointment'
 import React from 'react'
 
 const page = () => {
   return (
-<AppointmentsPage/>  )
+    <AppointmentsPage />)
 }
 
 export default page

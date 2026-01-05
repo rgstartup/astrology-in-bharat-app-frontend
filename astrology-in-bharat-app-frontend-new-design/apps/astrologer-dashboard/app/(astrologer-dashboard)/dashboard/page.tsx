@@ -1,11 +1,11 @@
 import React from "react";
 import { Users, CalendarCheck, Clock, Wallet } from "lucide-react";
-import StatsCard from "@/components/StatsCard"
-import { RecentActivity } from "@/components/ActivityFeed";
-import { UpcomingAppointments } from "@/components/UserTable";
-import { ManageConsultaions } from "@/components/ManageConsultaions";
+import StatsCard from "@/components/dashboard/StatsCard"
+import { RecentActivity } from "@/components/dashboard/ActivityFeed";
+import { UpcomingAppointments } from "@/components/dashboard/UserTable";
+import { ManageConsultaions } from "@/components/dashboard/ManageConsultaions";
 // import { MyConsultations } from "@/components/MyConsulation";
-import { ConsultationRatings } from "@/components/ConsulationRating";
+import { ConsultationRatings } from "@/components/dashboard/ConsulationRating";
 
 const page = () => {
   const statsData = [
