@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import axios from "axios";
 
@@ -27,6 +27,7 @@ interface PaginationInfo {
 }
 
 const OurAstrologer = () => {
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [astrologers, setAstrologers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [offset, setOffset] = useState(0);
@@ -82,17 +83,91 @@ const OurAstrologer = () => {
         fetchAstrologers(nextOffset, true);
     };
 
+    const scroll = (direction: "left" | "right") => {
+        if (scrollContainerRef.current) {
+            const { current } = scrollContainerRef;
+            const scrollAmount = 200;
+            if (direction === "left") {
+                current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+            } else {
+                current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+            }
+        }
+    };
+
     return (
         <section className="astrologer-list">
             <div className="container">
-                <h2 className="mt-4" >Find Your Astrologer</h2>
+                <h2 className="title-line mt-4">
+                    <span>Find Your Astrologer</span>
+                </h2>
 
-                <div className="search-box mb-4">
-                    <input
-                        type="text"
-                        placeholder="Search Astrologer, Type, Language..."
-                    />
-                    <button>Search</button>
+                <div className="row align mb-4">
+                    <div className="col-sm-5">
+                        <div className="search-box">
+                            <input
+                                type="text"
+                                className="bg-white"
+                                placeholder="Search Astrologer, Type, Language..."
+                            />
+                            <button>Search</button>
+                        </div>
+                    </div>
+                    <div className="col-sm-3 text-end">
+                        <a href="#" className="filter-btn">
+                            <i className="fa-solid fa-filter"></i> Filter
+                        </a>
+                        <a href="#" className="filter-btn sort-btn">
+                            <i className="fa-solid fa-sort"></i> Sort
+                        </a>
+                    </div>
+                    <div className="col-sm-4 d-flex align-items-center">
+                        <button
+                            onClick={() => scroll("left")}
+                            className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full mr-2 hover:bg-[#fd64101a] transition flex-shrink-0"
+                            style={{
+                                width: "30px",
+                                height: "30px",
+                                border: "none",
+                                background: "transparent",
+                            }}
+                        >
+                            <i className="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div
+                            className="flex gap-2.5 overflow-x-auto overflow-y-hidden whitespace-nowrap pb-2.5 [&::-webkit-scrollbar]:hidden w-full px-1"
+                            id="list-slider"
+                            ref={scrollContainerRef}
+                        >
+                            <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
+                                Numerology
+                            </div>
+                            <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
+                                Vedic
+                            </div>
+                            <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
+                                Zodiac Compatibility
+                            </div>
+                            <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
+                                Astrocartography
+                            </div>
+                            <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
+                                Lunar Node Analysis
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => scroll("right")}
+                            className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full ml-2 hover:bg-[#fd64101a] transition flex-shrink-0"
+                            style={{
+                                width: "30px",
+                                height: "30px",
+                                border: "none",
+                                background: "transparent",
+                            }}
+                        >
+                            <i className="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
 
                 {/* <!-- Astrologer Card Grid --> */}

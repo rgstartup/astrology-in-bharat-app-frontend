@@ -319,7 +319,7 @@ const AstrologerList = () => {
 
           <button
             onClick={() => scrollCards("right")}
-            className="flex-shrink-0 w-10 h-10 flex items-center justify-center text-[#fd6410] hover:scale-110 transition cursor-pointer z-10"
+            className="shrink-0 w-10 h-10 flex items-center justify-center text-[#fd6410] hover:scale-110 transition cursor-pointer z-10"
             style={{ background: "transparent" }}
           >
             <i className="fa-solid fa-chevron-right fa-2x"></i>
