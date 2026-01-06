@@ -6,7 +6,7 @@ import {
   ZodiacSignsData,
   AstrologyServicesData,
   ClientsTestimoinialData,
-} from "@/data/homePagaData";
+} from "@/components/AstrologyServices/homePagaData";
 import "swiper/css";
 import "swiper/css/navigation";
 // import { Swiper, SwiperSlide } from "swiper/react";

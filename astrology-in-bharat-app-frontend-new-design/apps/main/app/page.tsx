@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import AstrologerList from "@/components/main/AstrologerList";
-import AstrologerServices from "@/components/main/AstrologyServices";
+import AstrologerServices from "@/components/AstrologyServices/AstrologyServices";
 import ChooseYourZodiac from "@/components/main/ChooseYourZodiac";
 import AstrologyProduct from "@/components/main/AstrologyProduct";
 import WhyChooseUs from "@/components/main/WhyChooseUs";
@@ -48,7 +48,7 @@ const Page: React.FC = () => {
   const [selectedSpecialization, setSelectedSpecialization] =
     useState<string>("");
 
-  
+
 
   // Debounce search input with 0.8 second delay
   useEffect(() => {
@@ -66,7 +66,7 @@ const Page: React.FC = () => {
     setIsFilterOpen(false);
   };
 
-  
+
 
   const handleApplySorts = (sorts: {
     experience: string;
@@ -158,29 +158,29 @@ const Page: React.FC = () => {
   }, [appliedFilters, appliedSort, limit, offset, selectedSpecialization]);
   return (
     <>
-    {/* Hero Section  */}
-    <HeroSection/>
-     
-{/* Astrologer list  */}
-<AstrologerList/>
-{/* Astrology Services  */}
-<AstrologerServices/>
-{/* choose your zodiac section  */}
-<ChooseYourZodiac/>
-{/* Astrology Product  */}
+      {/* Hero Section  */}
+      <HeroSection />
 
-<AstrologyProduct/>
+      {/* Astrologer list  */}
+      <AstrologerList />
+      {/* Astrology Services  */}
+      <AstrologerServices />
+      {/* choose your zodiac section  */}
+      <ChooseYourZodiac />
+      {/* Astrology Product  */}
 
-{/* Why Choose us Section  */}
-<WhyChooseUs/>
+      <AstrologyProduct />
 
-{/* Testimonials  */}
-<Testimonial/>
+      {/* Why Choose us Section  */}
+      <WhyChooseUs />
+
+      {/* Testimonials  */}
+      <Testimonial />
 
 
       {/* <!-- Astrology in Bharat : CTA Section --> */}
-      <CTA/>
-     
+      <CTA />
+
     </>
   );
 };

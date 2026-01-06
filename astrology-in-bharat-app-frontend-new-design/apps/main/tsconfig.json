@@ -20,6 +20,6 @@
     ".next/types/**/*.ts",
     "../shared/**/*.ts",
     "../shared/**/*.tsx"
-  ],
+, "app/test/page.tsx"  ],
   "exclude": ["node_modules", ".next", "dist", "build"]
 }
