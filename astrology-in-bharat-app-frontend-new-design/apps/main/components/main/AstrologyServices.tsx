@@ -1,5 +1,5 @@
 import React from "react";
-import { AstrologyServicesData } from "@/data/homePagaData";
+import { AstrologyServicesData } from "@/components/AstrologyServices/homePagaData";
 
 const AstrologyServices = () => {
   return (
@@ -127,4 +127,3 @@ const AstrologyServices = () => {
 };
 
 export default AstrologyServices;
-  

@@ -2,51 +2,87 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
+import NextImage from "next/image";
+const Image = NextImage as any;
+import NextLink from "next/link";
+const Link = NextLink as any;
 import {
-  FaHeart,
-  FaBriefcase,
-  FaLeaf,
-  FaPlane,
-  FaStar,
-  FaCalendarAlt,
-  FaClock,
-  FaBookOpen,
-  FaCalculator,
-  FaPray,
-  FaInfinity,
-  FaRegHeart,
+  FaHeart as FaH,
+  FaBriefcase as FaB,
+  FaLeaf as FaL,
+  FaPlane as FaP,
+  FaStar as FaS,
+  FaCalendarAlt as FaC,
+  FaClock as FaCl,
+  FaBookOpen as FaBo,
+  FaCalculator as FaCa,
+  FaPray as FaPr,
+  FaInfinity as FaI,
+  FaRegHeart as FaRh,
 } from "react-icons/fa";
-import { MdOutlineDateRange } from "react-icons/md";
-import {
-  HiSparkles,
-  HiOutlineSparkles,
-  HiOutlineLightningBolt,
-} from "react-icons/hi";
-import {
-  MdOutlineHealthAndSafety,
-  MdOutlineWorkOutline,
-  MdFavoriteBorder,
-} from "react-icons/md";
-import {
-  GiAries,
-  GiTaurus,
-  GiGemini,
-  GiCancer,
-  GiLeo,
-  GiVirgo,
-  GiLibra,
-  GiScorpio,
-  GiSagittarius,
-  GiCapricorn,
-  GiAquarius,
-  GiPisces,
-} from "react-icons/gi";
+const FaHeart = FaH as any;
+const FaBriefcase = FaB as any;
+const FaLeaf = FaL as any;
+const FaPlane = FaP as any;
+const FaStar = FaS as any;
+const FaCalendarAlt = FaC as any;
+const FaClock = FaCl as any;
+const FaBookOpen = FaBo as any;
+const FaCalculator = FaCa as any;
+const FaPray = FaPr as any;
+const FaInfinity = FaI as any;
+const FaRegHeart = FaRh as any;
 
-import { ZodiacSignsData } from "@/data/homePagaData";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
+import { MdOutlineDateRange as MdO } from "react-icons/md";
+const MdOutlineDateRange = MdO as any;
+import {
+  HiSparkles as HiS,
+  HiOutlineSparkles as HiOs,
+  HiOutlineLightningBolt as HiLb,
+} from "react-icons/hi";
+const HiSparkles = HiS as any;
+const HiOutlineSparkles = HiOs as any;
+const HiOutlineLightningBolt = HiLb as any;
+
+import {
+  MdOutlineHealthAndSafety as MdHs,
+  MdOutlineWorkOutline as MdWo,
+  MdFavoriteBorder as MdFb,
+} from "react-icons/md";
+const MdOutlineHealthAndSafety = MdHs as any;
+const MdOutlineWorkOutline = MdWo as any;
+const MdFavoriteBorder = MdFb as any;
+
+import {
+  GiAries as GiA,
+  GiTaurus as GiT,
+  GiGemini as GiG,
+  GiCancer as GiC,
+  GiLeo as GiLe,
+  GiVirgo as GiV,
+  GiLibra as GiLi,
+  GiScorpio as GiSc,
+  GiSagittarius as GiSa,
+  GiCapricorn as GiCp,
+  GiAquarius as GiAq,
+  GiPisces as GiPi,
+} from "react-icons/gi";
+const GiAries = GiA as any;
+const GiTaurus = GiT as any;
+const GiGemini = GiG as any;
+const GiCancer = GiC as any;
+const GiLeo = GiLe as any;
+const GiVirgo = GiV as any;
+const GiLibra = GiLi as any;
+const GiScorpio = GiSc as any;
+const GiSagittarius = GiSa as any;
+const GiCapricorn = GiCp as any;
+const GiAquarius = GiAq as any;
+const GiPisces = GiPi as any;
+
+import { ZodiacSignsData } from "@/components/AstrologyServices/zodiac";
 import CTA from "@/components/main/CTA";
+import WhyChooseUs from "@/components/main/WhyChooseUs";
 
 // 12 signs mapping for icons and colors
 const zodiacList = [

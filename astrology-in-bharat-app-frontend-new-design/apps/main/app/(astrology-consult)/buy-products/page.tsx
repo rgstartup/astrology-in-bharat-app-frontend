@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import NextImage from "next/image";
+const Image = NextImage as any;
 import { HiOutlineSparkles } from "react-icons/hi";
 import { FaGem, FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";

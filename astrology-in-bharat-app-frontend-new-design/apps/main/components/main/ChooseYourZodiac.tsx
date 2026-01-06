@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ZodiacSignsData } from "@/data/homePagaData";
+import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
 import NextLink from "next/link";
 const Link = NextLink as any;
 

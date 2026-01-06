@@ -1,24 +1,41 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import NextImage from "next/image";
+const Image = NextImage as any;
 import {
-  FaCalendarAlt,
-  FaClock,
-  FaMapMarkerAlt,
-  FaStar,
-  FaHeart,
-  FaBriefcase,
-  FaLeaf,
-  FaPlane,
-  FaBookOpen,
-  FaCalculator,
-  FaPray,
-  FaInfinity,
-  FaRegHeart,
+  FaCalendarAlt as FaC,
+  FaClock as FaCl,
+  FaMapMarkerAlt as FaM,
+  FaStar as FaS,
+  FaHeart as FaH,
+  FaBriefcase as FaB,
+  FaLeaf as FaL,
+  FaPlane as FaP,
+  FaBookOpen as FaBo,
+  FaCalculator as FaCa,
+  FaPray as FaPr,
+  FaInfinity as FaI,
+  FaRegHeart as FaRh,
 } from "react-icons/fa";
-import { MdOutlineDateRange } from "react-icons/md";
-import { HiOutlineSparkles } from "react-icons/hi";
+const FaCalendarAlt = FaC as any;
+const FaClock = FaCl as any;
+const FaMapMarkerAlt = FaM as any;
+const FaStar = FaS as any;
+const FaHeart = FaH as any;
+const FaBriefcase = FaB as any;
+const FaLeaf = FaL as any;
+const FaPlane = FaP as any;
+const FaBookOpen = FaBo as any;
+const FaCalculator = FaCa as any;
+const FaPray = FaPr as any;
+const FaInfinity = FaI as any;
+const FaRegHeart = FaRh as any;
+
+import { MdOutlineDateRange as MdO } from "react-icons/md";
+const MdOutlineDateRange = MdO as any;
+import { HiOutlineSparkles as HiOs } from "react-icons/hi";
+const HiOutlineSparkles = HiOs as any;
 import WhyChooseUs from "@/components/main/WhyChooseUs";
 import CTA from "@/components/main/CTA";
 import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
@@ -111,10 +128,11 @@ const HoroscopePage = () => {
                 <div key={sign.id} className="col">
                   <button
                     onClick={() => setSelectedSign(sign)}
-                    className={`nav-link w-full bg-white border rounded-4 p-4 text-center h-100 transition-all ${selectedSign.id === sign.id
+                    className={`nav-link w-full bg-white border rounded-4 p-4 text-center h-100 transition-all ${
+                      selectedSign.id === sign.id
                         ? "border-[#fd6410] bg-[#fd641005] shadow-lg -translate-y-2 ring-1 ring-[#fd641054]"
                         : "border-[#fd64101a] hover:-translate-y-1 hover:border-[#fd641054]"
-                      }`}
+                    }`}
                   >
                     <Image
                       src={sign.image}
