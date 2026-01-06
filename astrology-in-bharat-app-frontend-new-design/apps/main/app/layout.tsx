@@ -2,14 +2,16 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import './globals.css';
+import "./globals.css";
 import { Poppins, Outfit } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import "swiper/css";
+import "swiper/css/navigation";
 
 import "@repo/styles";
 import { Header, Footer } from "@repo/ui";
-import QuotesLoader from "@/components/QuotesLoader";
+// import QuotesLoader from "@/components/QuotesLoader";
 
 // Google Fonts setup
 const outfit = Outfit({

@@ -2,8 +2,94 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useRouter, usePathname } from "next/navigation";
-import Link from "next/link";
-import { PATHS, URLS } from "@repo/routes";
+import LinkComponent from "next/link";
+import { PATHS } from "@repo/routes";
+
+const Link = LinkComponent as any;
+import {
+  Swiper as SwiperComponent,
+  SwiperSlide as SwiperSlideComponent,
+  useSwiper,
+} from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+
+const Swiper = SwiperComponent as any;
+const SwiperSlide = SwiperSlideComponent as any;
+
+// Custom Navigation Buttons Component
+const SwiperNavButtons = () => {
+  const swiper = useSwiper();
+  return (
+    <>
+      <div className="swiper-nav-prev" onClick={() => swiper.slidePrev()}>
+        <i className="fa-solid fa-chevron-left"></i>
+      </div>
+      <div className="swiper-nav-next" onClick={() => swiper.slideNext()}>
+        <i className="fa-solid fa-chevron-right"></i>
+      </div>
+    </>
+  );
+};
+
+// Swiper styles are imported in the root layout.tsx to avoid resolution issues in the shared package.
+const SERVICES_DATA = [
+  {
+    id: 1,
+    label: "My Kundli",
+    icon: "images/top-icon1.png",
+    href: PATHS.KUNDALI_MATCHING,
+    isInternal: true,
+  },
+  {
+    id: 2,
+    label: "Numerology",
+    icon: "images/top-icon2.png",
+    href: "#",
+    isInternal: false,
+  },
+  {
+    id: 3,
+    label: "Online Puja",
+    icon: "images/top-icon3.png",
+    href: PATHS.ONLINE_PUJA,
+    isInternal: true,
+  },
+  {
+    id: 4,
+    label: "Life Horoscope",
+    icon: "images/top-icon4.png",
+    href: "#",
+    isInternal: false,
+  },
+  {
+    id: 5,
+    label: "Love Report",
+    icon: "images/top-icon5.png",
+    href: "#",
+    isInternal: false,
+  },
+  {
+    id: 6,
+    label: "Match Analysis",
+    icon: "images/top-icon6.png",
+    href: PATHS.KUNDALI_MATCHING,
+    isInternal: true,
+  },
+  {
+    id: 7,
+    label: "Match Analysis",
+    icon: "images/top-icon6.png",
+    href: PATHS.KUNDALI_MATCHING,
+    isInternal: true,
+  },
+  {
+    id: 8,
+    label: "Match Analysis",
+    icon: "images/top-icon6.png",
+    href: PATHS.KUNDALI_MATCHING,
+    isInternal: true,
+  },
+];
 
 interface UserProfile {
   id: number;
@@ -23,7 +109,6 @@ interface UserProfile {
 const Header: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const [showAstrologer, setShowAstrologer] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -456,57 +541,69 @@ const Header: React.FC = () => {
         </div>
       </header>
 
-      <header className="services-list-card">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-2 col-md-4 col-6">
-              <Link
-                href={PATHS.KUNDALI_MATCHING}
-                className="flx-icon text-decoration-none text-dark"
-              >
-                <img src="images/top-icon1.png" className="icon-top-flx" />
-                <span>My Kundli</span>
-              </Link>
-            </div>
-            <div className="col-lg-2 col-md-4 col-6">
-              <div className="flx-icon">
-                <img src="images/top-icon2.png" className="icon-top-flx" />
-                <span>Numerology </span>
-              </div>
-            </div>
-            <div className="col-lg-2 col-md-4 col-6">
-              <Link
-                href={PATHS.ONLINE_PUJA}
-                className="flx-icon text-decoration-none text-dark"
-              >
-                <img src="images/top-icon3.png" className="icon-top-flx" />
-                <span>Online Puja</span>
-              </Link>
-            </div>
-            <div className="col-lg-2 col-md-4 col-6">
-              <div className="flx-icon">
-                <img src="images/top-icon4.png" className="icon-top-flx" />
-                <span>Life Horoscope</span>
-              </div>
-            </div>
-            <div className="col-lg-2 col-md-4 col-6">
-              <div className="flx-icon">
-                <img src="images/top-icon5.png" className="icon-top-flx" />
-                <span>Love Report</span>
-              </div>
-            </div>
-            <div className="col-lg-2 col-md-4 col-6">
-              <Link
-                href={PATHS.KUNDALI_MATCHING}
-                className="flx-icon text-decoration-none text-dark"
-              >
-                <img src="images/top-icon6.png" className="icon-top-flx" />
-                <span>Match Analysis</span>
-              </Link>
-            </div>
+      {isClient && (
+        <header className="services-list-card">
+          <div className="container position-relative">
+            <Swiper
+              modules={[Navigation, Autoplay]}
+              spaceBetween={15}
+              slidesPerView={2}
+              grabCursor={true}
+              loop={true}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 3,
+                },
+                768: {
+                  slidesPerView: 4,
+                },
+                1024: {
+                  slidesPerView: 6,
+                },
+              }}
+              className="services-swiper"
+            >
+              <SwiperNavButtons />
+
+              {SERVICES_DATA.map((service) => (
+                <SwiperSlide key={service.id}>
+                  <div className="flx-icon-item">
+                    {service.isInternal ? (
+                      <Link
+                        href={service.href}
+                        className="flx-icon text-decoration-none text-dark"
+                      >
+                        <img
+                          src={service.icon}
+                          className="icon-top-flx"
+                          alt={service.label}
+                        />
+                        <span>{service.label}</span>
+                      </Link>
+                    ) : (
+                      <a
+                        href={service.href}
+                        className="flx-icon text-decoration-none text-dark"
+                      >
+                        <img
+                          src={service.icon}
+                          className="icon-top-flx"
+                          alt={service.label}
+                        />
+                        <span>{service.label}</span>
+                      </a>
+                    )}
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
     </>
   );
 };
