@@ -21,7 +21,7 @@ import { MdOutlineDateRange } from "react-icons/md";
 import { HiOutlineSparkles } from "react-icons/hi";
 import WhyChooseUs from "@/components/main/WhyChooseUs";
 import CTA from "@/components/main/CTA";
-import { ZodiacSignsData } from "@/data/homePagaData";
+import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
 
 const HoroscopePage = () => {
   const [selectedSign, setSelectedSign] = useState(ZodiacSignsData[0]);
@@ -111,11 +111,10 @@ const HoroscopePage = () => {
                 <div key={sign.id} className="col">
                   <button
                     onClick={() => setSelectedSign(sign)}
-                    className={`nav-link w-full bg-white border rounded-4 p-4 text-center h-100 transition-all ${
-                      selectedSign.id === sign.id
+                    className={`nav-link w-full bg-white border rounded-4 p-4 text-center h-100 transition-all ${selectedSign.id === sign.id
                         ? "border-[#fd6410] bg-[#fd641005] shadow-lg -translate-y-2 ring-1 ring-[#fd641054]"
                         : "border-[#fd64101a] hover:-translate-y-1 hover:border-[#fd641054]"
-                    }`}
+                      }`}
                   >
                     <Image
                       src={sign.image}

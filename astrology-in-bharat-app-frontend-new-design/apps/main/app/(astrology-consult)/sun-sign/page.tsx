@@ -19,7 +19,7 @@ import {
 import { TbCrystalBall } from "react-icons/tb";
 import WhyChooseUs from "@/components/main/WhyChooseUs";
 import CTA from "@/components/main/CTA";
-import { ZodiacSignsData } from "@/data/homePagaData";
+import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
 
 const SunSignPage = () => {
   const [selectedSign, setSelectedSign] = useState(ZodiacSignsData[0]);
@@ -94,11 +94,10 @@ const SunSignPage = () => {
               <button
                 key={sign.id}
                 onClick={() => setSelectedSign(sign)}
-                className={`snap-center shrink-0 flex flex-col items-center cursor-pointer transition-all duration-300 p-2 rounded-xl border bg-transparent ${
-                  selectedSign.id === sign.id
+                className={`snap-center shrink-0 flex flex-col items-center cursor-pointer transition-all duration-300 p-2 rounded-xl border bg-transparent ${selectedSign.id === sign.id
                     ? "border-[#fd6410] bg-[#fff5ef] scale-105 shadow-md"
                     : "border-transparent opacity-60 hover:opacity-100"
-                }`}
+                  }`}
                 style={{ minWidth: "100px" }}
               >
                 <Image

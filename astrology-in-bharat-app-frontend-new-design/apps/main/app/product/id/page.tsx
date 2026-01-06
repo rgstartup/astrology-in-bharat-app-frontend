@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/free-mode";
-import { purpose } from "@/data/homePagaData";
+import { purpose } from "@/components/AstrologyServices/homePagaData";
 
 const Page = () => {
   const [isSticky, setIsSticky] = useState(false);

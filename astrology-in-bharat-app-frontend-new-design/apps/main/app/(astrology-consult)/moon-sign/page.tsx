@@ -16,7 +16,7 @@ import {
 import { HiOutlineSparkles } from "react-icons/hi";
 import WhyChooseUs from "@/components/main/WhyChooseUs";
 import CTA from "@/components/main/CTA";
-import { ZodiacSignsData } from "@/data/homePagaData";
+import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
 
 const MoonSignPage = () => {
   return (
