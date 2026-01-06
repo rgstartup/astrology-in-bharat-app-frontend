@@ -156,7 +156,7 @@ export default function ZodiacDetailsPage() {
   return (
     <div className="main-wrapper bg-[#fffcf8]">
       {/* Top Bar Tool Actions */}
-      <div className="bg-[#301118] py-3 text-white border-b border-[#fd64102b] sticky top-0 z-50">
+      {/* <div className="bg-[#301118] py-3 text-white border-b border-[#fd64102b] sticky top-0 z-50">
         <div className="container mx-auto px-4 flex flex-wrap justify-center gap-2 md:gap-3">
           {[
             { icon: <FaBookOpen />, label: "My Kundli", href: "/kundli" },
@@ -186,60 +186,94 @@ export default function ZodiacDetailsPage() {
             </Link>
           ))}
         </div>
-      </div>
+      </div> */}
 
-      {/* Hero Section */}
-      <section className="banner-part light-back pb-0">
-        <div className="container">
-          <div className="contant-hero rounded-4 border border-[#fd64102b] shadow-xl overflow-hidden bg-white">
-            <div className="row align-items-center g-0">
-              <div className="col-lg-7 col-md-12 p-6 md:p-12">
-                <div className="hero-card">
-                  <div className="card-z">
-                    <span className="aib-trust-badge">
-                      {signData.date} • {horoscope?.sign_info?.unicode_symbol}
-                    </span>
-                    <h1 className="text-4xl md:text-6xl font-bold text-[#301118] mb-4">
-                      {signData.title}{" "}
-                      <span className="text-[#fd6410]">Horoscope</span>
-                    </h1>
-                    <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                      Discover what the stars have in store for {signData.title}{" "}
-                      today. Our expert astrologers analyze planetary movements
-                      to give you the most accurate daily predictions for your
-                      life.
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {horoscope && (
-                        <>
-                          <span className="bg-[#fff5ef] text-[#c45a13] text-[11px] font-bold px-4 py-2 rounded-full uppercase border border-[#fd64102b]">
-                            Element: {horoscope.sign_info.triplicity}
-                          </span>
-                          <span className="bg-[#fff5ef] text-[#c45a13] text-[11px] font-bold px-4 py-2 rounded-full uppercase border border-[#fd64102b]">
-                            Modality: {horoscope.sign_info.modality}
-                          </span>
-                        </>
-                      )}
+      {/* Hero Section - Following Homepage Aesthetics & UI/UX */}
+      <section className="banner-part light-back">
+        <div className="overlay-hero">
+          <div className="container">
+            <div className="contant-hero">
+              <div className="row align column-reverse">
+                <div className="col-lg-7 col-md-12">
+                  <div className="hero-card shine px-0 md:px-4">
+                    <div className="card-z">
+                      <span className="aib-trust-badge">
+                        {signData.date} •{" "}
+                        {horoscope?.sign_info?.unicode_symbol || "✨"}
+                      </span>
+                      <h1 className="text-[36px] md:text-[50px] font-bold text-[#2b1b1b] mb-1">
+                        {signData.title}{" "}
+                        <span className="text-[#fd6410]">Horoscope</span>
+                      </h1>
+                      <h4 className="card-title">
+                        Daily Predictions & Cosmic Guidance
+                      </h4>
+                      <p className="text-[16px] text-[#1a1a1a] mb-3">
+                        Discover what the stars have in store for{" "}
+                        {signData.title} today. Our expert astrologers analyze
+                        planetary movements to provide accurate daily
+                        predictions specifically for your zodiac sign.
+                      </p>
+
+                      <ul className="list-check mb-4">
+                        <li>
+                          {" "}
+                          <i className="fa-solid fa-check"></i> Personalized
+                          Daily Forecasts
+                        </li>
+                        <li>
+                          {" "}
+                          <i className="fa-solid fa-check"></i> Love, Career &
+                          Health Insights
+                        </li>
+                        <li>
+                          {" "}
+                          <i className="fa-solid fa-check"></i> Planetary
+                          Transit Analysis
+                        </li>
+                      </ul>
+
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {horoscope ? (
+                          <>
+                            <div className="flex items-center gap-2 bg-[#fd64101a] text-[#c45a13] text-[12px] font-bold px-4 py-2 rounded-full uppercase border border-[#fd64102b]">
+                              <HiSparkles /> Element:{" "}
+                              {horoscope.sign_info.triplicity}
+                            </div>
+                            <div className="flex items-center gap-2 bg-[#fd64101a] text-[#c45a13] text-[12px] font-bold px-4 py-2 rounded-full uppercase border border-[#fd64102b]">
+                              <HiOutlineLightningBolt /> Modality:{" "}
+                              {horoscope.sign_info.modality}
+                            </div>
+                          </>
+                        ) : (
+                          <div className="flex items-center gap-2 bg-[#fd64101a] text-[#c45a13] text-[12px] font-bold px-4 py-2 rounded-full uppercase border border-[#fd64102b]">
+                            Aligning with your destiny...
+                          </div>
+                        )}
+                      </div>
+
+                      <Link
+                        href="/our-astrologers"
+                        className="btn-link wfc mt-4 no-underline"
+                      >
+                        Ask an Expert Today
+                      </Link>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-lg-5 col-md-12 text-center bg-gradient-to-br from-[#fff5ef] to-white p-8">
-                <div className="right-illus relative py-10">
-                  <Image
-                    src="/images/horoscope-round2.png"
-                    alt="Zodiac Wheel"
-                    width={500}
-                    height={500}
-                    className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_30s_linear_infinite] opacity-20"
-                  />
-                  <div className="relative z-10">
+                <div className="col-lg-5 col-md-12">
+                  <div className="right-illus relative h-[350px] md:h-[450px]">
+                    <Image
+                      src="/images/horoscope-round2.png"
+                      alt="Zodiac Back"
+                      fill
+                      className="Astrologer-img-h fa-spin object-contain opacity-30"
+                    />
                     <Image
                       src={signData.image}
                       alt={signData.title}
-                      width={220}
-                      height={220}
-                      className="w-[180px] md:w-[220px] mx-auto drop-shadow-[0_20px_50px_rgba(253,100,16,0.3)] hover:scale-110 transition-transform duration-500 animate-[float_4s_ease-in-out_infinite]"
+                      fill
+                      className="Astrologer-img object-contain animate-[float_4s_ease-in-out_infinite] z-10"
                     />
                   </div>
                 </div>
