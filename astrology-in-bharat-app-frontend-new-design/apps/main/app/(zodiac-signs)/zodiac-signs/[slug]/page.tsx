@@ -2,7 +2,28 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { HiSparkles, HiOutlineLightningBolt } from "react-icons/hi";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  FaHeart,
+  FaBriefcase,
+  FaLeaf,
+  FaPlane,
+  FaStar,
+  FaCalendarAlt,
+  FaClock,
+  FaBookOpen,
+  FaCalculator,
+  FaPray,
+  FaInfinity,
+  FaRegHeart,
+} from "react-icons/fa";
+import { MdOutlineDateRange } from "react-icons/md";
+import {
+  HiSparkles,
+  HiOutlineSparkles,
+  HiOutlineLightningBolt,
+} from "react-icons/hi";
 import {
   MdOutlineHealthAndSafety,
   MdOutlineWorkOutline,
@@ -22,8 +43,10 @@ import {
   GiAquarius,
   GiPisces,
 } from "react-icons/gi";
-import Image from "next/image";
+
 import { ZodiacSignsData } from "@/data/homePagaData";
+import WhyChooseUs from "@/components/main/WhyChooseUs";
+import CTA from "@/components/main/CTA";
 
 // 12 signs mapping for icons and colors
 const zodiacList = [
@@ -58,9 +81,9 @@ export default function ZodiacDetailsPage() {
   const [error, setError] = useState(false);
 
   const signData = ZodiacSignsData.find(
-    (s) => s.title.toLowerCase() === slug.toLowerCase()
+    (s) => s.title.toLowerCase() === slug?.toLowerCase()
   );
-  const signTheme = zodiacList.find((z) => z.name === slug.toLowerCase());
+  const signTheme = zodiacList.find((z) => z.name === slug?.toLowerCase());
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,16 +111,27 @@ export default function ZodiacDetailsPage() {
 
   const getIcon = (type: string) => {
     switch (type) {
-      case "General":
-        return <HiOutlineLightningBolt />;
       case "Health":
-        return <MdOutlineHealthAndSafety />;
+        return <FaLeaf className="text-green-500" />;
       case "Career":
-        return <MdOutlineWorkOutline />;
+        return <FaBriefcase className="text-blue-500" />;
       case "Love":
-        return <MdFavoriteBorder />;
+        return <FaHeart className="text-pink-500" />;
       default:
-        return <HiSparkles />;
+        return <FaPlane className="text-orange-500" />;
+    }
+  };
+
+  const getPredictionCategory = (type: string) => {
+    switch (type) {
+      case "Health":
+        return { label: "Health & Wellbeing", bg: "bg-green-50" };
+      case "Career":
+        return { label: "Career & Finance", bg: "bg-blue-50" };
+      case "Love":
+        return { label: "Love & Relations", bg: "bg-pink-50" };
+      default:
+        return { label: type + " Forecast", bg: "bg-orange-50" };
     }
   };
 
@@ -111,199 +145,334 @@ export default function ZodiacDetailsPage() {
           <p className="text-gray-500 mt-2">
             The destiny of this sign is still being written.
           </p>
+          <Link href="/" className="mt-4 inline-block text-[#fd6410] font-bold">
+            Back to Home
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="main-wrapper bg-[#fffcf8] min-h-screen">
-      <section className="horoscopes-container py-10">
-        <div className="container">
-          <div className="light-card p-6 md:p-10 rounded-[20px] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-[#daa23e3b]">
-            {/* Header with Sign Image and Basic Info */}
-            <div className="flex flex-col md:flex-row items-center gap-8 mb-12 border-b border-[#daa23e1a] pb-10">
-              <div className="relative">
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${signTheme?.color || "from-orange-100 to-orange-200"} blur-3xl opacity-20 rounded-full`}
-                ></div>
-                <Image
-                  src={signData.image}
-                  alt={signData.title}
-                  width={150}
-                  height={150}
-                  className="relative z-10 w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-2xl animate-[float_4s_ease-in-out_infinite]"
-                />
-              </div>
+    <div className="main-wrapper bg-[#fffcf8]">
+      {/* Top Bar Tool Actions */}
+      <div className="bg-[#301118] py-3 text-white border-b border-[#fd64102b] sticky top-0 z-50">
+        <div className="container mx-auto px-4 flex flex-wrap justify-center gap-2 md:gap-3">
+          {[
+            { icon: <FaBookOpen />, label: "My Kundli", href: "/kundli" },
+            {
+              icon: <FaCalculator />,
+              label: "Numerology",
+              href: "/numerology",
+            },
+            { icon: <FaPray />, label: "Online Puja", href: "/online-puja" },
+            {
+              icon: <FaInfinity />,
+              label: "Life Horoscope",
+              href: "/horoscope",
+            },
+            {
+              icon: <FaRegHeart />,
+              label: "Love Report",
+              href: "/love-report",
+            },
+          ].map((tool, i) => (
+            <Link
+              href={tool.href}
+              key={i}
+              className="flex items-center gap-2 bg-[#fd6410] hover:bg-[#e55a0d] px-3 md:px-4 py-2 rounded-full font-bold text-[10px] md:text-[12px] uppercase tracking-wider transition-all shadow-lg border-0 no-underline text-white"
+            >
+              {tool.icon} <span className="hidden sm:inline">{tool.label}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
 
-              <div className="text-center md:text-left">
-                <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
-                  <h1 className="text-4xl md:text-6xl font-bold text-[#301118] tracking-tight">
-                    {signData.title}
-                  </h1>
-                  {horoscope && (
-                    <span className="text-3xl md:text-4xl text-[#fd6410] opacity-80">
-                      {horoscope.sign_info.unicode_symbol}
+      {/* Hero Section */}
+      <section className="banner-part light-back pb-0">
+        <div className="container">
+          <div className="contant-hero rounded-4 border border-[#fd64102b] shadow-xl overflow-hidden bg-white">
+            <div className="row align-items-center g-0">
+              <div className="col-lg-7 col-md-12 p-6 md:p-12">
+                <div className="hero-card">
+                  <div className="card-z">
+                    <span className="aib-trust-badge">
+                      {signData.date} • {horoscope?.sign_info?.unicode_symbol}
                     </span>
-                  )}
-                </div>
-                <p className="text-lg md:text-xl text-[#fd6410] font-medium italic">
-                  {signData.date}
-                </p>
-                {horoscope && (
-                  <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-4">
-                    <span className="bg-[#fff5ef] text-[#c45a13] text-[12px] font-bold px-4 py-1.5 rounded-full uppercase border border-[#fd64102b]">
-                      {horoscope.sign_info.modality}
-                    </span>
-                    <span className="bg-[#fff5ef] text-[#c45a13] text-[12px] font-bold px-4 py-1.5 rounded-full uppercase border border-[#fd64102b]">
-                      {horoscope.sign_info.triplicity}
-                    </span>
-                    <span className="bg-[#fff5ef] text-[#c45a13] text-[12px] font-bold px-4 py-1.5 rounded-full uppercase border border-[#fd64102b]">
-                      {horoscope.sign_info.quadruplicity}
-                    </span>
+                    <h1 className="text-4xl md:text-6xl font-bold text-[#301118] mb-4">
+                      {signData.title}{" "}
+                      <span className="text-[#fd6410]">Horoscope</span>
+                    </h1>
+                    <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                      Discover what the stars have in store for {signData.title}{" "}
+                      today. Our expert astrologers analyze planetary movements
+                      to give you the most accurate daily predictions for your
+                      life.
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {horoscope && (
+                        <>
+                          <span className="bg-[#fff5ef] text-[#c45a13] text-[11px] font-bold px-4 py-2 rounded-full uppercase border border-[#fd64102b]">
+                            Element: {horoscope.sign_info.triplicity}
+                          </span>
+                          <span className="bg-[#fff5ef] text-[#c45a13] text-[11px] font-bold px-4 py-2 rounded-full uppercase border border-[#fd64102b]">
+                            Modality: {horoscope.sign_info.modality}
+                          </span>
+                        </>
+                      )}
+                    </div>
                   </div>
-                )}
+                </div>
+              </div>
+              <div className="col-lg-5 col-md-12 text-center bg-gradient-to-br from-[#fff5ef] to-white p-8">
+                <div className="right-illus relative py-10">
+                  <Image
+                    src="/images/horoscope-round2.png"
+                    alt="Zodiac Wheel"
+                    width={500}
+                    height={500}
+                    className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_30s_linear_infinite] opacity-20"
+                  />
+                  <div className="relative z-10">
+                    <Image
+                      src={signData.image}
+                      alt={signData.title}
+                      width={220}
+                      height={220}
+                      className="w-[180px] md:w-[220px] mx-auto drop-shadow-[0_20px_50px_rgba(253,100,16,0.3)] hover:scale-110 transition-transform duration-500 animate-[float_4s_ease-in-out_infinite]"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-
-            {loading ? (
-              <div className="py-20 text-center">
-                <div className="w-16 h-16 border-4 border-[#fd6410] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-                <p className="text-xl font-medium text-[#301118] animate-pulse">
-                  Reading the cosmic alignments for {signData.title}...
-                </p>
-              </div>
-            ) : error ? (
-              <div className="py-20 text-center italic text-gray-400">
-                <p>
-                  The stars are currently veiled by clouds. Please try again
-                  later.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-12">
-                {/* Predictions Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                  {horoscope.predictions.map((p: any, idx: number) => (
-                    <div
-                      key={idx}
-                      className="group bg-white border border-[#daa23e33] p-6 md:p-8 rounded-[15px] hover:shadow-[0_15px_40px_rgba(253,100,16,0.08)] transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
-                    >
-                      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <span className="text-6xl text-[#fd6410]">
-                          {getIcon(p.type)}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-3 mb-6 relative z-10">
-                        <span className="p-3 bg-[#fff5ef] rounded-xl text-[#fd6410] text-2xl shadow-sm border border-[#fd64101a]">
-                          {getIcon(p.type)}
-                        </span>
-                        <h4 className="font-bold text-xl text-[#301118]">
-                          {p.type} Forecast
-                        </h4>
-                      </div>
-
-                      <p className="text-[#1a1a1a] leading-relaxed mb-6 text-lg italic">
-                        &quot;{p.prediction}&quot;
-                      </p>
-
-                      <div className="space-y-4 pt-6 border-t border-[#daa23e1a]">
-                        <div className="flex items-start gap-3">
-                          <span className="text-[10px] font-black uppercase tracking-tighter bg-blue-100 text-blue-600 px-2 py-1 rounded">
-                            The Seek
-                          </span>
-                          <p className="text-sm text-gray-700">{p.seek}</p>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <span className="text-[10px] font-black uppercase tracking-tighter bg-red-100 text-red-600 px-2 py-1 rounded">
-                            Challenge
-                          </span>
-                          <p className="text-sm text-gray-700">{p.challenge}</p>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <span className="text-[10px] font-black uppercase tracking-tighter bg-emerald-100 text-emerald-600 px-2 py-1 rounded">
-                            Insight
-                          </span>
-                          <p className="text-sm text-gray-700">{p.insight}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Cosmic Aspects & Transits */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
-                  {/* Aspects */}
-                  <div className="bg-[#301118] p-8 rounded-[20px] shadow-2xl border border-[#fd64102b] text-white overflow-hidden relative">
-                    <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-[#fd6410] blur-[120px] opacity-10"></div>
-                    <h4 className="font-bold text-2xl mb-6 flex items-center gap-3 relative z-10">
-                      <HiSparkles className="text-[#fd6410]" /> Cosmic Aspects
-                    </h4>
-                    <ul className="space-y-4 relative z-10">
-                      {horoscope.aspects.map((a: any, i: number) => (
-                        <li
-                          key={i}
-                          className="flex justify-between items-center bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10 hover:border-[#fd64103d] transition-colors"
-                        >
-                          <span className="font-medium text-slate-200">
-                            {a.planet_one.name}{" "}
-                            <span className="text-[#fd6410] mx-1">
-                              {a.aspect.name}
-                            </span>{" "}
-                            {a.planet_two.name}
-                          </span>
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-[#fd6410] bg-[#fd64101a] px-3 py-1 rounded-full border border-[#fd641033]">
-                            Active
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Transits */}
-                  <div className="bg-[#fffcf8] p-8 rounded-[20px] border border-[#daa23e59] shadow-lg">
-                    <h4 className="font-bold text-2xl text-[#301118] mb-6 flex items-center gap-3">
-                      <HiOutlineLightningBolt className="text-[#fd6410]" />{" "}
-                      Today&apos;s Transits
-                    </h4>
-                    <div className="grid grid-cols-1 gap-3">
-                      {horoscope.transits.map((t: any, i: number) => (
-                        <div
-                          key={i}
-                          className="flex justify-between items-center bg-white p-4 rounded-xl border border-[#daa23e1a] shadow-sm hover:shadow-md transition-shadow"
-                        >
-                          <div className="flex flex-col">
-                            <span className="font-bold text-[#301118]">
-                              {t.name}
-                            </span>
-                            <span className="text-sm text-gray-500">
-                              Currently in {t.zodiac.name}
-                            </span>
-                          </div>
-                          {t.is_retrograde && (
-                            <span className="text-[10px] font-black uppercase text-orange-600 bg-orange-100 px-3 py-1 rounded-full border border-orange-200">
-                              Retrograde
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </section>
 
-      {/* Footer Note */}
-      <footer className="py-10 text-center border-t border-[#daa23e1a] mt-10">
-        <p className="text-gray-400 text-sm italic">
-          © 2026 Astrology in Bharat • Data synchronized with precise planetary
-          alignments.
-        </p>
-      </footer>
+      {/* Main Content & Predictions */}
+      <section className="space-section light-back">
+        <div className="container">
+          {loading ? (
+            <div className="py-20 text-center">
+              <div className="w-16 h-16 border-4 border-[#fd6410] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+              <p className="text-xl font-medium text-[#301118] animate-pulse">
+                Consulting the heavens for {signData.title}...
+              </p>
+            </div>
+          ) : error ? (
+            <div className="py-20 text-center italic text-gray-400">
+              <p>The stars are currently veiled. Please try again later.</p>
+            </div>
+          ) : (
+            <div className="row g-5">
+              {/* Detailed Predictions */}
+              <div className="col-lg-8">
+                <div className="light-card border border-[#fd64102b] p-6 md:p-10 shadow-xl h-100 bg-white rounded-4">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10 pb-6 border-b border-[#fd64101a]">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-[#fd6410] p-3 rounded-4 shadow-lg text-white text-2xl">
+                        {signTheme?.icon && <signTheme.icon />}
+                      </div>
+                      <div>
+                        <h2 className="text-3xl font-black text-[#301118] uppercase tracking-tight m-0">
+                          {signData.title} Prediction
+                        </h2>
+                        <p className="text-orange-500 font-bold text-xs uppercase tracking-widest m-0">
+                          Today's Cosmic Forecast
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 bg-[#3011181a] px-4 py-2 rounded-full">
+                      <MdOutlineDateRange className="text-[#fd6410]" />
+                      <span className="text-xs font-bold text-[#301118]">
+                        {new Date().toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="row g-4">
+                    {horoscope.predictions.map((p: any, idx: number) => {
+                      const cat = getPredictionCategory(p.type);
+                      return (
+                        <div key={idx} className="col-md-6">
+                          <div
+                            className={`${cat.bg} p-6 rounded-4 border border-white shadow-sm h-100 hover:shadow-md transition-shadow duration-300 relative overflow-hidden group`}
+                          >
+                            <div className="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity text-6xl text-[#fd6410]">
+                              {getIcon(p.type)}
+                            </div>
+                            <div className="flex items-center gap-3 mb-4 relative z-10">
+                              <span className="text-xl">{getIcon(p.type)}</span>
+                              <h4 className="text-sm font-bold text-[#301118] uppercase tracking-wider mb-0">
+                                {cat.label}
+                              </h4>
+                            </div>
+                            <p className="text-gray-700 text-sm leading-relaxed italic m-0 relative z-10">
+                              "{p.prediction}"
+                            </p>
+
+                            <div className="mt-4 pt-4 border-t border-gray-200/50 space-y-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                              <div className="flex items-start gap-2">
+                                <span className="text-[9px] font-black uppercase text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded">
+                                  Advice
+                                </span>
+                                <p className="text-[11px] text-gray-500 m-0">
+                                  {p.seek}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Cosmic Tip Card */}
+                  <div className="mt-10 bg-[#301118] p-8 rounded-4 border border-[#fd641033] relative overflow-hidden text-white shadow-2xl">
+                    <HiOutlineSparkles className="absolute -right-10 -bottom-10 text-[#fd6410] text-9xl opacity-10" />
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-full bg-[#fd6410] flex items-center justify-center text-xl">
+                        <HiSparkles />
+                      </div>
+                      <h3 className="text-xl font-bold m-0 text-white">
+                        Cosmic Tip of the Day
+                      </h3>
+                    </div>
+                    <p className="text-orange-100/80 italic relative z-10 m-0 leading-relaxed text-lg">
+                      "Align your energy with the universe by practicing
+                      mindfulness. Your lucky star is rising, but clarity of
+                      thought is your greatest asset when dealing with personal
+                      choices today."
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Sidebar */}
+              <div className="col-lg-4">
+                <div className="sticky top-24 space-y-6">
+                  {/* Cosmic Indicators */}
+                  <div className="bg-[#301118] text-white p-8 rounded-4 border border-[#fd64102b] shadow-xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#fd6410] blur-[100px] opacity-10"></div>
+                    <h3 className="text-xl font-bold mb-8 flex items-center gap-3 relative z-10">
+                      <div className="flex gap-1">
+                        {[1, 2, 3].map((s) => (
+                          <FaStar key={s} className="text-[#fd6410] text-xs" />
+                        ))}
+                      </div>
+                      Cosmic Indicators
+                    </h3>
+                    <div className="space-y-4 relative z-10">
+                      {[
+                        {
+                          lbl: "Lucky Number",
+                          val: "9 & 14",
+                          icon: <FaStar className="text-yellow-400" />,
+                        },
+                        {
+                          lbl: "Lucky Color",
+                          val: "Zodiac Orange",
+                          icon: (
+                            <div className="w-3 h-3 bg-[#fd6410] rounded-full" />
+                          ),
+                        },
+                        {
+                          lbl: "Lucky Day",
+                          val: "Thursday",
+                          icon: <FaCalendarAlt className="text-blue-400" />,
+                        },
+                        {
+                          lbl: "Best Timing",
+                          val: "10:30 AM - 12:00 PM",
+                          icon: <FaClock className="text-orange-400" />,
+                        },
+                      ].map((stat, i) => (
+                        <div
+                          key={i}
+                          className="flex justify-between items-center p-4 bg-white/5 rounded-3 border border-white/5 hover:bg-white/10 transition-all duration-300"
+                        >
+                          <div className="flex items-center gap-3">
+                            {stat.icon}
+                            <span className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">
+                              {stat.lbl}
+                            </span>
+                          </div>
+                          <span className="text-sm font-bold text-orange-200">
+                            {stat.val}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Find Temple / Remedy Search */}
+                  <div className="light-card border border-[#fd64102b] p-8 shadow-xl bg-white rounded-4">
+                    <h4 className="text-[#301118] font-bold mb-6 flex items-center gap-2">
+                      <HiOutlineLightningBolt className="text-[#fd6410]" />{" "}
+                      Expert Guidance
+                    </h4>
+                    <p className="text-xs text-gray-500 italic mb-6">
+                      Get personalized remedies and detailed analysis for{" "}
+                      {signData.title} by connecting with our expert
+                      astrologers.
+                    </p>
+                    <Link
+                      href="/our-astrologers"
+                      className="btn-link w-full text-center text-xs bg-[#fd6410] text-white border-0 py-3 rounded-xl font-bold uppercase tracking-widest no-underline hover:bg-[#e55a0d] transition-colors"
+                    >
+                      Consult Now
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Why Choose Us & CTA */}
+      <WhyChooseUs />
+      <CTA />
+
+      {/* Internal Navigation for other Signs */}
+      <section className="py-20 bg-white">
+        <div className="container">
+          <h2 className="title-line text-center mb-10">
+            <span>Explore Other Zodiac Signs</span>
+          </h2>
+          <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-12 gap-3">
+            {ZodiacSignsData.map((sign) => (
+              <Link
+                key={sign.id}
+                href={`/zodiac-signs/${sign.title.toLowerCase()}`}
+                className={`p-2 rounded-xl text-center border transition-all duration-300 no-underline ${
+                  slug?.toLowerCase() === sign.title.toLowerCase()
+                    ? "border-[#fd6410] bg-[#fd641008] shadow-md -translate-y-1"
+                    : "border-transparent hover:border-[#fd641033] hover:bg-gray-50"
+                }`}
+              >
+                <div className="relative w-10 h-10 mx-auto mb-2">
+                  <Image
+                    src={sign.image}
+                    alt={sign.title}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <span
+                  className={`text-[10px] font-bold uppercase ${slug?.toLowerCase() === sign.title.toLowerCase() ? "text-[#fd6410]" : "text-[#301118]"}`}
+                >
+                  {sign.title}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
