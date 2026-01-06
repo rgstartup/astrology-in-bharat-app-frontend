@@ -1,23 +1,20 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   FaUser,
   FaCalendarAlt,
-  FaClock,
   FaMapMarkerAlt,
-  FaChartBar,
   FaPhoneAlt,
   FaChevronRight,
   FaExclamationTriangle,
   FaLeaf,
+  FaComments,
 } from "react-icons/fa";
-import {
-  MdOutlineGavel,
-  MdOutlinePsychology,
-  MdOutlineWorshipLite,
-} from "react-icons/md";
-import { BiSearchAlt } from "react-icons/bi";
+import { GiSnake } from "react-icons/gi";
+import WhyChooseUs from "@/components/main/WhyChooseUs";
+import CTA from "@/components/main/CTA";
 
 const KaalSarpDoshPage = () => {
   const sarpTypes = [
@@ -29,345 +26,323 @@ const KaalSarpDoshPage = () => {
     { id: 6, name: "Mahapadham" },
     { id: 7, name: "Takshak" },
     { id: 8, name: "Karkotak" },
+    { id: 9, name: "Shankachood" },
+    { id: 10, name: "Ghatak" },
+    { id: 11, name: "Vishdhar" },
+    { id: 12, name: "Sheshnag" },
   ];
 
   return (
-    <div className="bg-background-light dark:bg-background-dark min-h-screen">
-      {/* Breadcrumbs */}
-      <div className="bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
-        <div className="container mx-auto px-4 py-3 flex text-xs text-gray-500 gap-2">
-          <span>Home</span> <span>/</span> <span>Free Services</span>{" "}
-          <span>/</span>{" "}
-          <span className="text-secondary dark:text-gray-300 font-semibold">
-            Kaal Sarp Dosh Analysis
-          </span>
-        </div>
-      </div>
-
-      <main className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Content (Left) */}
-          <div className="lg:col-span-8 space-y-12">
-            {/* Header */}
-            <div>
-              <h1 className="text-4xl md:text-5xl font-display font-bold text-secondary dark:text-white mb-4">
-                Kaal Sarp Dosh{" "}
-                <span className="text-primary font-serif">Analysis</span>
-              </h1>
-              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base leading-relaxed max-w-2xl">
-                Unlock the secrets of your life by checking for Kaal Sarp Dosh.
-                Enter your birth details below to get an accurate analysis and
-                effective remedies to overcome life&apos;s hurdles.
-              </p>
-            </div>
-
-            {/* Birth Details Form */}
-            <div className="bg-white dark:bg-card-dark rounded-2xl shadow-xl p-6 md:p-8 border border-gray-50 dark:border-gray-800 relative">
-              <div className="flex items-center gap-2 mb-8">
-                <FaCalendarAlt className="text-primary" />
-                <h2 className="text-lg font-bold text-secondary dark:text-white">
-                  Enter Birth Details
-                </h2>
-              </div>
-
-              <form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                      Full Name
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        placeholder="e.g. Rahul Sharma"
-                        className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg pl-10 pr-4 py-3 text-sm outline-none focus:ring-1 focus:ring-primary"
-                      />
-                      <FaUser className="absolute left-3 top-3.5 text-gray-400" />
-                    </div>
+    <div className="main-wrapper">
+      {/* Hero Section */}
+      <section className="banner-part light-back">
+        <div className="container">
+          <div className="contant-hero rounded-4 border border-[#fd64102b] shadow-xl">
+            <div className="row align-items-center">
+              <div className="col-lg-7 col-md-12">
+                <div className="hero-card">
+                  <div className="card-z">
+                    <span className="aib-trust-badge">
+                      Vedic Astrology Analysis
+                    </span>
+                    <h1>Kaal Sarp Dosh</h1>
+                    <h4 className="card-title">
+                      Unlock Secrets & Overcome Hurdles
+                    </h4>
+                    <p>
+                      Discover if your birth chart is influenced by Rahu and
+                      Ketu. An accurate analysis and effective Vedic remedies
+                      can help you navigate life&apos;s obstacles and achieve
+                      immense success.
+                    </p>
                   </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                      Gender
-                    </label>
-                    <div className="flex items-center gap-6 py-3">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="gender"
-                          className="text-primary focus:ring-primary"
-                          defaultChecked
-                        />
-                        <span className="text-sm">Male</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="gender"
-                          className="text-primary focus:ring-primary"
-                        />
-                        <span className="text-sm">Female</span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                      Date of Birth
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                      <select className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-3 text-sm outline-none">
-                        <option>Day</option>
-                      </select>
-                      <select className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-3 text-sm outline-none">
-                        <option>Month</option>
-                      </select>
-                      <select className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-3 text-sm outline-none">
-                        <option>Year</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                      Time of Birth
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                      <select className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-3 text-sm outline-none">
-                        <option>HH</option>
-                      </select>
-                      <select className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-3 text-sm outline-none">
-                        <option>MM</option>
-                      </select>
-                      <select className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-3 text-sm outline-none">
-                        <option>AM</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
-                    Place of Birth
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Enter City, State, Country"
-                      className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg pl-10 pr-4 py-3 text-sm outline-none focus:ring-1 focus:ring-primary"
-                    />
-                    <FaMapMarkerAlt className="absolute left-3 top-3.5 text-gray-400" />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-primary hover:bg-primary-hover text-white font-bold py-4 px-6 rounded-xl shadow-lg transition flex items-center justify-center gap-3"
-                >
-                  <FaChartBar /> Analyze My Kundli
-                </button>
-              </form>
-            </div>
-
-            {/* Content Section: What is... */}
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-secondary dark:text-white font-display">
-                What is Kaal Sarp Dosh?
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                Kaal Sarp Dosh is formed when all seven planets come between
-                Rahu and Ketu in a horoscope. A person with this dosh may
-                struggle and face obstacles in life despite hard work. However,
-                this dosh is not always malefic and can also bring immense
-                success if remedied correctly.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                <div className="bg-orange-50 dark:bg-orange-900/10 p-6 rounded-2xl border border-orange-100 dark:border-gray-800">
-                  <div className="flex items-center gap-3 mb-4">
-                    <FaExclamationTriangle className="text-primary" />
-                    <h3 className="font-bold text-secondary dark:text-white">
-                      Common Symptoms
-                    </h3>
-                  </div>
-                  <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-3">
-                    <li className="flex gap-2">
-                      <span>•</span> Frequent nightmares involving snakes.
-                    </li>
-                    <li className="flex gap-2">
-                      <span>•</span> Delay in marriage or marital discord.
-                    </li>
-                    <li className="flex gap-2">
-                      <span>•</span> Instability in career or business losses.
-                    </li>
-                    <li className="flex gap-2">
-                      <span>•</span> Health issues without clear diagnosis.
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="bg-green-50 dark:bg-green-900/10 p-6 rounded-2xl border border-green-100 dark:border-gray-800">
-                  <div className="flex items-center gap-3 mb-4">
-                    <FaLeaf className="text-green-600" />
-                    <h3 className="font-bold text-secondary dark:text-white">
-                      Effective Remedies
-                    </h3>
-                  </div>
-                  <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-3">
-                    <li className="flex gap-2">
-                      <span>•</span> Chant the Maha Mrityunjaya Mantra.
-                    </li>
-                    <li className="flex gap-2">
-                      <span>•</span> Perform Kaal Sarp Dosh Nivaran Puja.
-                    </li>
-                    <li className="flex gap-2">
-                      <span>•</span> Worship Lord Shiva regularly.
-                    </li>
-                    <li className="flex gap-2">
-                      <span>•</span> Offer water to a Peepal tree on Saturdays.
-                    </li>
-                  </ul>
                 </div>
               </div>
-            </div>
-
-            {/* 12 Types */}
-            <div className="space-y-8">
-              <h2 className="text-2xl font-bold text-secondary dark:text-white font-display">
-                12 Types of Kaal Sarp Dosh
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {sarpTypes.map((type) => (
-                  <div
-                    key={type.id}
-                    className="bg-white dark:bg-card-dark p-6 rounded-2xl text-center shadow-sm border border-gray-50 dark:border-gray-800"
-                  >
-                    <div className="text-primary font-bold text-lg mb-2">
-                      {type.id}
-                    </div>
-                    <div className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-tight">
-                      {type.name}
+              <div className="col-lg-5 col-md-12 text-center">
+                <div className="right-illus">
+                  <Image
+                    src="/images/horoscope-round2.png"
+                    alt="Zodiac"
+                    width={500}
+                    height={500}
+                    className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_30s_linear_infinite] opacity-30"
+                  />
+                  <div className="relative z-10 p-5">
+                    <div className="w-[180px] h-[180px] bg-white rounded-full flex items-center justify-center border-4 border-[#fd6410] shadow-2xl mx-auto">
+                      <GiSnake className="text-[#fd6410] text-7xl animate-pulse" />
                     </div>
                   </div>
-                ))}
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Sidebar (Right) */}
-          <aside className="lg:col-span-4 space-y-8">
-            {/* Consultation Card */}
-            <div className="bg-[#3b1d1d] text-white p-8 rounded-2xl relative overflow-hidden text-center shadow-lg">
-              <div className="relative z-10">
-                <h3 className="text-xl font-bold mb-4 font-display">
-                  Confused about your Kundli?
-                </h3>
-                <p className="text-orange-100/70 text-sm mb-6 leading-relaxed">
-                  Talk to our premium astrologers and get instant remedies for
-                  Kaal Sarp Dosh.
-                </p>
-                <button className="bg-primary hover:bg-primary-hover text-white font-bold py-3 px-8 rounded-xl shadow-lg transition flex items-center justify-center gap-3 w-full">
-                  <FaPhoneAlt /> Call Now @ ₹20/min
-                </button>
-              </div>
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-2xl"></div>
-            </div>
+      {/* Form & Info Section */}
+      <section className="space-section light-back">
+        <div className="container">
+          <div className="row g-5">
+            {/* Form Area */}
+            <div className="col-lg-7">
+              <div className="light-card border border-[#fd64102b] p-8 md:p-10 shadow-2xl h-100">
+                <div className="flex items-center gap-4 mb-8 border-b border-[#fd64101a] pb-4">
+                  <div className="bg-[#fd6410] text-white p-3 rounded-3 shadow-lg">
+                    <FaCalendarAlt size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-[#301118] mb-0">
+                      Enter Birth Details
+                    </h3>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                      Free Personal Analysis
+                    </p>
+                  </div>
+                </div>
 
-            {/* Other Free Tools */}
-            <div className="bg-white dark:bg-card-dark rounded-2xl shadow-md border border-gray-100 dark:border-gray-800 overflow-hidden">
-              <div className="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-                <h3 className="font-bold text-secondary dark:text-white text-sm">
-                  Other Free Tools
-                </h3>
-              </div>
-              <ul className="divide-y divide-gray-100 dark:divide-gray-800">
-                {[
-                  {
-                    name: "Mangal Dosha Check",
-                    icon: <FaExclamationTriangle className="text-orange-400" />,
-                  },
-                  {
-                    name: "Sade Sati Calculator",
-                    icon: <FaChartBar className="text-orange-400" />,
-                  },
-                  {
-                    name: "Gemstone Suggestion",
-                    icon: <FaLeaf className="text-orange-400" />,
-                  },
-                  {
-                    name: "Gun Milan",
-                    icon: <FaChartBar className="text-orange-400" />,
-                  },
-                ].map((item, i) => (
-                  <li key={i} className="group cursor-pointer">
-                    <a className="px-6 py-4 flex items-center justify-between text-sm text-gray-700 dark:text-gray-300 group-hover:bg-orange-50 dark:group-hover:bg-orange-900/10 group-hover:text-primary transition">
-                      <div className="flex items-center gap-3">
-                        {item.icon}
-                        <span>{item.name}</span>
-                      </div>
-                      <FaChevronRight className="text-xs text-gray-300 group-hover:text-primary transition" />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Live Consultations */}
-            <div className="bg-white dark:bg-card-dark rounded-2xl shadow-md border border-gray-100 dark:border-gray-800 overflow-hidden">
-              <div className="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-                <h3 className="font-bold text-secondary dark:text-white text-sm">
-                  LIVE CONSULTATIONS
-                </h3>
-              </div>
-              <div className="p-4 space-y-6">
-                {[
-                  {
-                    name: "Priya from Mumbai",
-                    action: "Consulted for",
-                    target: "Marriage Issues",
-                    time: "Just Now",
-                    color: "text-green-500",
-                  },
-                  {
-                    name: "Amit from Delhi",
-                    action: "Checked",
-                    target: "Career Growth",
-                    time: "2m ago",
-                    color: "text-gray-400",
-                  },
-                  {
-                    name: "Sneha from Pune",
-                    action: "Asked about",
-                    target: "Kaal Sarp Dosh",
-                    time: "5m ago",
-                    color: "text-gray-400",
-                  },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-lg flex-shrink-0">
-                      👤
+                <form className="space-y-4">
+                  <div className="row g-3">
+                    <div className="col-md-6">
+                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
+                        Full Name
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
+                        placeholder="Enter name"
+                      />
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between text-[11px] mb-0.5">
-                        <span className="font-bold text-gray-800 dark:text-gray-200">
-                          {item.name}
-                        </span>
-                        <span className={item.color}>{item.time}</span>
-                      </div>
-                      <p className="text-[11px] text-gray-500">
-                        {item.action}{" "}
-                        <span className="text-primary font-semibold">
-                          {item.target}
-                        </span>
-                      </p>
+                    <div className="col-md-6">
+                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
+                        Gender
+                      </label>
+                      <select className="form-select rounded-3 py-3 border-0 shadow-sm bg-gray-50 text-sm">
+                        <option>Male</option>
+                        <option>Female</option>
+                      </select>
                     </div>
                   </div>
-                ))}
+                  <div className="row g-3">
+                    <div className="col-md-4">
+                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
+                        Birth Date
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
+                        Birth Time
+                      </label>
+                      <input
+                        type="time"
+                        className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
+                        Am/Pm
+                      </label>
+                      <select className="form-select rounded-3 py-3 border-0 shadow-sm bg-gray-50 text-sm">
+                        <option>AM</option>
+                        <option>PM</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
+                      Birth Place
+                    </label>
+                    <div className="relative">
+                      <FaMapMarkerAlt className="absolute left-3 top-4 text-gray-300" />
+                      <input
+                        type="text"
+                        className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50 ps-10"
+                        placeholder="Enter city name"
+                      />
+                    </div>
+                  </div>
+                  <button className="btn-link py-4 mt-6 uppercase tracking-widest text-[12px] font-bold">
+                    Analyze Dosh Now{" "}
+                    <FaChevronRight className="ms-2" size={10} />
+                  </button>
+                </form>
               </div>
             </div>
-          </aside>
+
+            {/* Sidebar Information */}
+            <div className="col-lg-5">
+              <div className="space-y-6">
+                <div className="bg-[#301118] text-white p-8 rounded-4 relative overflow-hidden shadow-xl border border-[#fd64102b] h-100 flex flex-col justify-center">
+                  <h3 className="text-2xl font-bold mb-4 font-display">
+                    Confused about your Kundli?
+                  </h3>
+                  <p className="text-orange-100/70 text-sm mb-6 leading-relaxed italic">
+                    Talk to our premium astrologers and get instant remedies for
+                    Kaal Sarp Dosh. Understand the placement of Rahu and Ketu in
+                    your chart.
+                  </p>
+                  <button className="btn-link bg-[#fd6410] text-white py-3 px-8 rounded-xl shadow-lg transition flex items-center justify-center gap-3 w-full border-0 font-bold uppercase tracking-widest text-xs">
+                    <FaPhoneAlt /> Call Now @ ₹20/min
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Details Section */}
+      <section className="space-section light-back">
+        <div className="container">
+          <div className="row g-5">
+            <div className="col-lg-12">
+              <h2 className="title-line mb-8">
+                <span>What is Kaal Sarp Dosh?</span>
+              </h2>
+              <div className="light-card border border-[#fd64102b] p-8 shadow-xl">
+                <p className="text-gray-600 leading-relaxed italic mb-6">
+                  Kaal Sarp Dosh is formed when all seven planets come between
+                  Rahu and Ketu in a horoscope. A person with this dosh may
+                  struggle and face obstacles in life despite hard work.
+                  However, this dosh is not always malefic and can also bring
+                  immense success if remedied correctly.
+                </p>
+
+                <div className="row g-4 mt-4">
+                  <div className="col-md-6">
+                    <div className="bg-red-50 p-6 rounded-4 border border-red-100 h-100">
+                      <h4 className="text-[#301118] font-bold mb-4 flex items-center gap-3">
+                        <FaExclamationTriangle className="text-red-500" />{" "}
+                        Common Symptoms
+                      </h4>
+                      <ul className="space-y-2">
+                        {[
+                          "Frequent nightmares involving snakes.",
+                          "Delay in marriage or marital discord.",
+                          "Instability in career or business losses.",
+                          "Health issues without clear diagnosis.",
+                        ].map((item, i) => (
+                          <li
+                            key={i}
+                            className="text-sm text-gray-500 flex items-start gap-2 italic"
+                          >
+                            <div className="w-1.5 h-1.5 bg-red-500 rounded-full mt-1.5 shrink-0"></div>{" "}
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="bg-green-50 p-6 rounded-4 border border-green-100 h-100">
+                      <h4 className="text-[#301118] font-bold mb-4 flex items-center gap-3">
+                        <FaLeaf className="text-green-500" /> Effective Remedies
+                      </h4>
+                      <ul className="space-y-2">
+                        {[
+                          "Chant the Maha Mrityunjaya Mantra.",
+                          "Perform Kaal Sarp Dosh Nivaran Puja.",
+                          "Worship Lord Shiva regularly.",
+                          "Offer water to a Peepal tree on Saturdays.",
+                        ].map((item, i) => (
+                          <li
+                            key={i}
+                            className="text-sm text-gray-500 flex items-start gap-2 italic"
+                          >
+                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-1.5 shrink-0"></div>{" "}
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Types Section */}
+      <section className="space-section bg-[#301118] text-white">
+        <div className="container">
+          <h2 className="text-3xl font-bold mb-12 text-center text-white">
+            12 Types of Kaal Sarp Dosh
+          </h2>
+          <div className="row g-4">
+            {sarpTypes.map((type) => (
+              <div key={type.id} className="col-lg-3 col-md-6">
+                <div className="bg-white p-6 rounded-4 text-center group hover:-translate-y-2 transition-transform h-100 shadow-xl">
+                  <div className="w-12 h-12 bg-[#fd6410] rounded-lg flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform text-white font-bold">
+                    {type.id}
+                  </div>
+                  <h4 className="text-[#301118] font-bold text-sm mb-1 uppercase tracking-widest">
+                    {type.name}
+                  </h4>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase">
+                    Vedic Classification
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Experts Section */}
+      <section className="space-section light-back">
+        <div className="container">
+          <h2 className="title-line mb-12 text-center">
+            <span>Talk to Dosh Nivaran Experts</span>
+          </h2>
+          <div className="row g-4">
+            {[
+              {
+                name: "Acharya Sanjay",
+                exp: "18 Years",
+                spec: "Vedic | Rahu-Ketu",
+              },
+              { name: "Dr. Anjali", exp: "12 Years", spec: "Lal Kitab | Dosh" },
+              { name: "Pandit Dixit", exp: "22 Years", spec: "Rituals | Puja" },
+              { name: "Meera Ji", exp: "14 Years", spec: "Remedial Expert" },
+            ].map((ast, i) => (
+              <div key={i} className="col-lg-3 col-md-6">
+                <div className="light-card border border-[#fd64102b] p-6 text-center group hover:shadow-2xl transition-all">
+                  <div className="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-[#fd641054] group-hover:scale-105 transition-transform">
+                    <FaUser className="text-[#fd6410] text-4xl" />
+                  </div>
+                  <h4 className="text-[#301118] font-bold mb-1">{ast.name}</h4>
+                  <p className="text-[#fd6410] text-[10px] font-bold uppercase tracking-widest">
+                    {ast.spec}
+                  </p>
+                  <p className="text-gray-400 text-[11px] mb-3">
+                    Exp: {ast.exp}
+                  </p>
+                  <div className="flex gap-2">
+                    <button className="btn-link flex-1 py-2 text-[10px] uppercase shadow-sm">
+                      <FaComments className="inline me-1" /> Chat
+                    </button>
+                    <button className="btn-link flex-1 py-2 text-[10px] uppercase bg-white text-[#301118] border-0 shadow-sm">
+                      <FaPhoneAlt className="inline me-1" /> Call
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <button className="btn-link px-12 py-3 inline-flex w-auto border-0 bg-transparent text-[#fd6410] hover:text-[#301118] font-bold uppercase tracking-widest text-[12px] no-underline">
+              View All Experts <FaChevronRight className="ms-2" size={10} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <WhyChooseUs />
+      <CTA />
     </div>
   );
 };

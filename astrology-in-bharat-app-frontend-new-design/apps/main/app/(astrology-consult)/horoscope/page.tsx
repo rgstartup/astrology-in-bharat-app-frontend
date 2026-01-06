@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import {
-  FaUser,
   FaCalendarAlt,
   FaClock,
   FaMapMarkerAlt,
@@ -26,6 +26,8 @@ import { ZodiacSignsData } from "@/data/homePagaData";
 const HoroscopePage = () => {
   const [selectedSign, setSelectedSign] = useState(ZodiacSignsData[0]);
 
+  if (!selectedSign) return null;
+
   return (
     <div className="main-wrapper">
       {/* Top Bar Tool Actions - Themed */}
@@ -40,7 +42,7 @@ const HoroscopePage = () => {
           ].map((tool, i) => (
             <button
               key={i}
-              className="flex items-center gap-2 bg-[#fd6410] hover:bg-[#e55a0d] px-4 py-2 rounded-full font-bold text-[12px] uppercase tracking-wider transition-all shadow-lg"
+              className="flex items-center gap-2 bg-[#fd6410] hover:bg-[#e55a0d] px-4 py-2 rounded-full font-bold text-[12px] uppercase tracking-wider transition-all shadow-lg border-0"
             >
               {tool.icon} {tool.label}
             </button>
@@ -74,15 +76,19 @@ const HoroscopePage = () => {
               </div>
               <div className="col-lg-5 col-md-12 text-center">
                 <div className="right-illus">
-                  <img
+                  <Image
                     src="/images/horoscope-round2.png"
                     alt="Zodiac Wheel"
+                    width={500}
+                    height={500}
                     className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_20s_linear_infinite] opacity-30"
                   />
                   <div className="relative z-10 p-5">
-                    <img
+                    <Image
                       src={selectedSign.image}
                       alt={selectedSign.title}
+                      width={180}
+                      height={180}
                       className="w-[180px] mx-auto drop-shadow-2xl hover:scale-110 transition-transform"
                     />
                   </div>
@@ -96,33 +102,35 @@ const HoroscopePage = () => {
       {/* Zodiac Grid Selection */}
       <section className="space-section light-back pt-0">
         <div className="container">
-          <div className="light-card border border-[#fd64102b]">
+          <div className="light-card border border-[#fd64102b] shadow-xl p-8">
             <h2 className="title-line c-1e0b0f mb-5 text-center">
-              <span>Choose Your Zodiac Sign</span>
+              <span>Find Predictions for Your Sign</span>
             </h2>
-            <div className="row g-3">
+            <div className="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4">
               {ZodiacSignsData.map((sign) => (
-                <div key={sign.id} className="col-6 col-md-4 col-lg-2">
-                  <div
+                <div key={sign.id} className="col">
+                  <button
                     onClick={() => setSelectedSign(sign)}
-                    className={`p-4 rounded-4 text-center cursor-pointer transition-all border ${
+                    className={`nav-link w-full bg-white border rounded-4 p-4 text-center h-100 transition-all ${
                       selectedSign.id === sign.id
-                        ? "bg-[#fff5ef] border-[#fd6410] shadow-md scale-105"
-                        : "bg-white border-gray-100 hover:border-[#fd641054] hover:shadow-sm"
+                        ? "border-[#fd6410] bg-[#fd641005] shadow-lg -translate-y-2 ring-1 ring-[#fd641054]"
+                        : "border-[#fd64101a] hover:-translate-y-1 hover:border-[#fd641054]"
                     }`}
                   >
-                    <img
+                    <Image
                       src={sign.image}
                       alt={sign.title}
-                      className="w-16 h-16 mx-auto mb-2 object-contain"
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 object-contain mx-auto mb-3"
                     />
-                    <h5 className="font-bold text-sm mb-0 text-[#301118]">
+                    <h3 className="text-sm font-bold text-[#301118] mb-1">
                       {sign.title}
-                    </h5>
-                    <p className="text-[10px] text-gray-400 font-semibold mt-1 uppercase leading-none">
-                      {sign.date}
+                    </h3>
+                    <p className="text-[9px] text-gray-400 font-bold uppercase">
+                      Vedic Rashi
                     </p>
-                  </div>
+                  </button>
                 </div>
               ))}
             </div>
@@ -130,220 +138,187 @@ const HoroscopePage = () => {
         </div>
       </section>
 
-      {/* Main Content: Horoscope Details and Stats */}
-      <section className="space-section light-back py-0 pb-10">
+      {/* Prediction Details */}
+      <section className="space-section light-back">
         <div className="container">
-          <div className="row g-4 items-start">
-            {/* Sidebar Form */}
-            <aside className="col-lg-4">
-              <div className="light-card border border-[#fd64102b] sticky top-[100px]">
-                <h3 className="text-xl font-bold text-[#301118] mb-6 flex items-center gap-2 border-b pb-3">
-                  <div className="bg-[#fd6410] p-1.5 rounded-lg text-white">
-                    <FaUser size={18} />
-                  </div>
-                  Get Personal Reading
-                </h3>
-                <form className="space-y-4">
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control rounded-3 py-2.5 border-0 shadow-sm bg-gray-50"
-                      placeholder="Enter name"
-                    />
-                  </div>
-                  <div className="row g-2">
-                    <div className="col-6">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                        Birth Date
-                      </label>
-                      <input
-                        type="date"
-                        className="form-control rounded-3 py-2.5 border-0 shadow-sm bg-gray-50"
+          <div className="row g-5">
+            {/* Detailed Content */}
+            <div className="col-lg-8">
+              <div className="light-card border border-[#fd64102b] p-6 p-md-10 shadow-xl h-100">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10 pb-6 border-b border-[#fd64101a]">
+                  <div className="flex items-center gap-4">
+                    <div className="bg-[#fd6410] p-3 rounded-4 shadow-lg">
+                      <Image
+                        src={selectedSign.image}
+                        alt={selectedSign.title}
+                        width={48}
+                        height={48}
+                        className="w-12 h-12 object-contain"
                       />
                     </div>
-                    <div className="col-6">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                        Birth Time
-                      </label>
-                      <input
-                        type="time"
-                        className="form-control rounded-3 py-2.5 border-0 shadow-sm bg-gray-50"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                      Birth City
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        className="form-control rounded-3 py-2.5 border-0 shadow-sm bg-gray-50"
-                        placeholder="Search city..."
-                      />
-                      <FaMapMarkerAlt className="absolute right-3 top-3 text-gray-400" />
-                    </div>
-                  </div>
-                  <button type="submit" className="btn-link w-100 py-3 mt-4">
-                    Generate Horoscope
-                  </button>
-                </form>
-              </div>
-            </aside>
-
-            {/* Prediction Area */}
-            <main className="col-lg-8">
-              {/* Timeperiod Tabs */}
-              <div className="flex flex-wrap gap-2 mb-6 p-1 bg-[#f7f3ec] rounded-4 w-fit">
-                {["Daily", "Weekly", "Monthly", "Yearly 2026"].map((tab, i) => (
-                  <button
-                    key={tab}
-                    className={`px-6 py-2.5 rounded-3 text-xs font-bold uppercase tracking-wider transition-all ${
-                      i === 0
-                        ? "bg-[#301118] text-white shadow-lg"
-                        : "text-gray-500 hover:bg-white"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              {/* Horoscope Result Head */}
-              <div className="light-card border border-[#fd64102b] bg-[#fffcf8] mb-4 flex flex-col md:flex-row gap-6 items-center">
-                <div className="w-28 h-28 bg-white border border-[#daa23e54] rounded-4 p-3 shadow-sm flex-shrink-0">
-                  <img
-                    src={selectedSign.image}
-                    alt={selectedSign.title}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-[#301118] mb-1">
-                    {selectedSign.title} Daily Reading
-                  </h3>
-                  <p className="text-[#fd6410] font-bold text-sm mb-3">
-                    Tuesday, 06 January 2026
-                  </p>
-                  <p className="text-gray-600 text-sm leading-relaxed italic mb-0">
-                    The celestial alignment today favors growth and new
-                    beginnings for {selectedSign.title}. Expect a surge of
-                    positive energy that will help you tackle long-standing
-                    tasks.
-                  </p>
-                </div>
-              </div>
-
-              {/* Detailed Cards */}
-              <div className="row g-4 mb-6">
-                {[
-                  {
-                    title: "Love Life",
-                    icon: <FaHeart />,
-                    color: "border-pink-400",
-                    bg: "bg-pink-50",
-                    score: 85,
-                  },
-                  {
-                    title: "Career Path",
-                    icon: <FaBriefcase />,
-                    color: "border-blue-400",
-                    bg: "bg-blue-50",
-                    score: 92,
-                  },
-                  {
-                    title: "Health Status",
-                    icon: <FaLeaf />,
-                    color: "border-green-400",
-                    bg: "bg-green-50",
-                    score: 78,
-                  },
-                  {
-                    title: "Travel Luck",
-                    icon: <FaPlane />,
-                    color: "border-purple-400",
-                    bg: "bg-purple-50",
-                    score: 64,
-                  },
-                ].map((card, i) => (
-                  <div key={i} className="col-md-6">
-                    <div
-                      className={`light-card border-0 border-l-4 ${card.color} h-100 shadow-sm p-4`}
-                    >
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xl opacity-80">{card.icon}</span>
-                        <h5 className="font-bold text-[#301118] mb-0">
-                          {card.title}
-                        </h5>
-                      </div>
-                      <p className="text-xs text-gray-500 mb-4">
-                        The planetary positions suggest a favorable phase. Focus
-                        on communication to improve connections.
+                    <div>
+                      <h2 className="text-3xl font-black text-[#301118] uppercase tracking-tight m-0">
+                        {selectedSign.title} Daily Horoscope
+                      </h2>
+                      <p className="text-orange-500 font-bold text-xs uppercase tracking-widest m-0">
+                        Today&apos;s Cosmic Forecast
                       </p>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-[10px] font-bold uppercase text-gray-400">
-                          Cosmic Score
-                        </span>
-                        <span className="text-xs font-bold text-[#301118]">
-                          {card.score}%
-                        </span>
-                      </div>
-                      <div className="progress h-1 border-0 rounded-full bg-gray-100">
-                        <div
-                          className="progress-bar rounded-pill"
-                          style={{
-                            width: `${card.score}%`,
-                            backgroundColor: "#fd6410",
-                          }}
-                        ></div>
-                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
-
-              {/* Lucky Stats Bottom */}
-              <div className="bg-[#301118] rounded-4 p-6 text-white relative overflow-hidden shadow-xl">
-                <div className="absolute top-0 right-0 p-5 opacity-5">
-                  <FaStar size={120} />
+                  <div className="flex items-center gap-2 bg-[#3011181a] px-4 py-2 rounded-full">
+                    <MdOutlineDateRange className="text-[#fd6410]" />
+                    <span className="text-xs font-bold text-[#301118]">
+                      March 25, 2024
+                    </span>
+                  </div>
                 </div>
-                <div className="relative z-10">
-                  <h4 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest mb-6">
-                    <HiOutlineSparkles className="text-[#fd6410]" />{" "}
-                    Today&apos;s Lucky Points
-                  </h4>
-                  <div className="row g-3">
-                    {[
-                      { l: "Color", v: "Royal Blue" },
-                      { l: "Number", v: "7, 21" },
-                      { l: "Alphabet", v: "R, S" },
-                      { l: "Mood", v: "Ambitious" },
-                    ].map((p, i) => (
-                      <div key={i} className="col-6 col-md-3">
-                        <div className="bg-white/10 border border-white/5 rounded-3 p-3 text-center">
-                          <div className="text-[9px] text-gray-400 uppercase font-bold mb-1">
-                            {p.l}
-                          </div>
-                          <div className="text-sm font-bold">{p.v}</div>
+
+                <div className="row g-4">
+                  {[
+                    {
+                      icon: <FaHeart className="text-pink-500" />,
+                      lbl: "Love & Relations",
+                      bg: "bg-pink-50",
+                    },
+                    {
+                      icon: <FaBriefcase className="text-blue-500" />,
+                      lbl: "Career & Finance",
+                      bg: "bg-blue-50",
+                    },
+                    {
+                      icon: <FaLeaf className="text-green-500" />,
+                      lbl: "Health & Wellbeing",
+                      bg: "bg-green-50",
+                    },
+                    {
+                      icon: <FaPlane className="text-orange-500" />,
+                      lbl: "Travel & Luck",
+                      bg: "bg-orange-50",
+                    },
+                  ].map((cat, i) => (
+                    <div key={i} className="col-md-6">
+                      <div
+                        className={`${cat.bg} p-6 rounded-4 border border-white shadow-sm h-100`}
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <span className="text-xl">{cat.icon}</span>
+                          <h4 className="text-sm font-bold text-[#301118] uppercase tracking-wider mb-0">
+                            {cat.lbl}
+                          </h4>
                         </div>
+                        <p className="text-gray-500 text-xs leading-relaxed italic m-0">
+                          A positive alignment of Venus suggests a fulfilling
+                          day. Communication with loved ones will be harmonious.
+                          Expect a small surprise by evening.
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-10 bg-gray-50 p-8 rounded-4 border border-gray-100 relative overflow-hidden">
+                  <HiOutlineSparkles className="absolute -right-4 -bottom-4 text-gray-200 text-9xl opacity-20" />
+                  <h3 className="text-xl font-bold mb-4 relative z-10">
+                    Cosmic Tip of the Day
+                  </h3>
+                  <p className="text-gray-500 italic relative z-10 m-0 leading-relaxed">
+                    Patience will be your greatest ally today. The Moon is in a
+                    complex position, so avoid making hasty decisions in
+                    property or legal matters. Wear the color white for mental
+                    peace.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Sidebar Stats */}
+            <div className="col-lg-4">
+              <div className="space-y-6">
+                <div className="bg-[#301118] text-white p-8 rounded-4 border border-[#fd64102b] shadow-xl">
+                  <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
+                    <StarStats /> Cosmic Indicators
+                  </h3>
+                  <div className="space-y-5">
+                    {[
+                      {
+                        lbl: "Lucky Number",
+                        val: "7",
+                        icon: <FaStar className="text-yellow-400" />,
+                      },
+                      {
+                        lbl: "Lucky Color",
+                        val: "Royal Blue",
+                        icon: (
+                          <div className="w-3 h-3 bg-blue-600 rounded-full" />
+                        ),
+                      },
+                      {
+                        lbl: "Lucky Day",
+                        val: "Thursday",
+                        icon: <FaCalendarAlt className="text-blue-400" />,
+                      },
+                      {
+                        lbl: "Best Timing",
+                        val: "2:00 PM - 4:00 PM",
+                        icon: <FaClock className="text-orange-400" />,
+                      },
+                    ].map((stat, i) => (
+                      <div
+                        key={i}
+                        className="flex justify-between items-center p-4 bg-white/5 rounded-3 border border-white/5 hover:bg-white/10 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          {stat.icon}
+                          <span className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">
+                            {stat.lbl}
+                          </span>
+                        </div>
+                        <span className="text-sm font-bold text-orange-200">
+                          {stat.val}
+                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
+
+                <div className="light-card border border-[#fd64102b] p-8 shadow-xl">
+                  <h4 className="c-1e0b0f font-bold mb-6 flex items-center gap-2">
+                    <FaMapMarkerAlt className="text-[#fd6410]" /> Find Nearby
+                    Temple
+                  </h4>
+                  <p className="text-xs text-gray-500 italic mb-6">
+                    Strengthen your planets by visiting your ruling deity.
+                  </p>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      className="form-control rounded-3 py-3 ps-10 border-0 shadow-sm bg-gray-50"
+                      placeholder="Enter city..."
+                    />
+                    <FaMapMarkerAlt className="absolute left-3 top-4 text-gray-300" />
+                  </div>
+                  <button className="btn-link mt-4 w-full text-xs bg-[#fd6410] text-white border-0 py-3 rounded-xl font-bold uppercase tracking-widest">
+                    Search Now
+                  </button>
+                </div>
               </div>
-            </main>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Shared Components */}
       <WhyChooseUs />
       <CTA />
     </div>
   );
 };
+
+const StarStats = () => (
+  <div className="flex gap-1">
+    {[1, 2, 3].map((s) => (
+      <FaStar key={s} className="text-[#fd6410] text-xs" />
+    ))}
+  </div>
+);
 
 export default HoroscopePage;

@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   FaHeart,
   FaUser,
   FaUserFriends,
-  FaChartBar,
   FaRing,
   FaArrowRight,
   FaStar,
@@ -50,9 +50,11 @@ const LoveCalculatorPage = () => {
               </div>
               <div className="col-lg-5 col-md-12 text-center">
                 <div className="right-illus">
-                  <img
+                  <Image
                     src="/images/horoscope-round2.png"
                     alt="Zodiac"
+                    width={500}
+                    height={500}
                     className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_25s_linear_infinite] opacity-30"
                   />
                   <div className="relative z-10 p-5">

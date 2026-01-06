@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   FaUserFriends,
   FaHeart,
@@ -31,7 +32,11 @@ const KundaliMatchingPage = () => {
           ].map((tool, i) => (
             <button
               key={i}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold text-[12px] uppercase tracking-wider transition-all shadow-lg ${i === 3 ? "bg-white text-[#fd6410]" : "bg-[#fd6410] hover:bg-[#e55a0d] text-white"}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold text-[12px] uppercase tracking-wider transition-all shadow-lg border-0 ${
+                i === 3
+                  ? "bg-white text-[#fd6410]"
+                  : "bg-[#fd6410] hover:bg-[#e55a0d] text-white"
+              }`}
             >
               {tool.icon} {tool.label}
             </button>
@@ -61,9 +66,11 @@ const KundaliMatchingPage = () => {
               </div>
               <div className="col-lg-5 col-md-12 text-center">
                 <div className="right-illus">
-                  <img
+                  <Image
                     src="/images/horoscope-round2.png"
                     alt="Zodiac"
+                    width={500}
+                    height={500}
                     className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_25s_linear_infinite] opacity-30"
                   />
                   <div className="relative z-10 p-5">
@@ -98,48 +105,35 @@ const KundaliMatchingPage = () => {
                     </p>
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                      Full Name
-                    </label>
+
+                <form className="row g-3">
+                  <div className="col-12">
                     <input
                       type="text"
-                      className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
-                      placeholder="Enter name"
+                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
+                      placeholder="Boy's Full Name"
                     />
                   </div>
-                  <div className="row g-3">
-                    <div className="col-md-6">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                        Birth Date
-                      </label>
-                      <input
-                        type="date"
-                        className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                        Birth Time
-                      </label>
-                      <input
-                        type="time"
-                        className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
-                      />
-                    </div>
+                  <div className="col-md-6">
+                    <input
+                      type="date"
+                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
+                    />
                   </div>
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                      Birth Place
-                    </label>
+                  <div className="col-md-6">
+                    <input
+                      type="time"
+                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
+                    />
+                  </div>
+                  <div className="col-12">
                     <input
                       type="text"
-                      className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
-                      placeholder="Enter city name"
+                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
+                      placeholder="Birth Place (City, State)"
                     />
                   </div>
-                </div>
+                </form>
               </div>
             </div>
 
@@ -159,170 +153,114 @@ const KundaliMatchingPage = () => {
                     </p>
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                      Full Name
-                    </label>
+
+                <form className="row g-3">
+                  <div className="col-12">
                     <input
                       type="text"
-                      className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
-                      placeholder="Enter name"
+                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
+                      placeholder="Girl's Full Name"
                     />
                   </div>
-                  <div className="row g-3">
-                    <div className="col-md-6">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                        Birth Date
-                      </label>
-                      <input
-                        type="date"
-                        className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                        Birth Time
-                      </label>
-                      <input
-                        type="time"
-                        className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
-                      />
-                    </div>
+                  <div className="col-md-6">
+                    <input
+                      type="date"
+                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
+                    />
                   </div>
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                      Birth Place
-                    </label>
+                  <div className="col-md-6">
+                    <input
+                      type="time"
+                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
+                    />
+                  </div>
+                  <div className="col-12">
                     <input
                       type="text"
-                      className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
-                      placeholder="Enter city name"
+                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
+                      placeholder="Birth Place (City, State)"
                     />
                   </div>
-                </div>
+                </form>
               </div>
             </div>
           </div>
 
-          <div className="text-center mt-10">
-            <button className="btn-link py-4 px-12 shadow-lg inline-flex w-auto hover:scale-105 transition-transform">
-              Check Compatibility Now{" "}
-              <FaChevronRight className="ms-2" size={12} />
+          <div className="text-center mt-12">
+            <button className="btn-link py-4 px-12 uppercase tracking-[3px] text-sm font-black shadow-2xl hover:scale-105 transition-transform flex items-center justify-center gap-3 mx-auto border-0">
+              Generate Detailed Report{" "}
+              <FaChevronRight className="animate-pulse" />
             </button>
-            <div className="mt-4 flex justify-center items-center gap-2 text-[11px] text-gray-400 font-bold uppercase tracking-wider">
-              <MdOutlineSecurity className="text-primary text-base" />
-              100% Private & Secure Analysis
-            </div>
+            <p className="mt-4 text-[10px] text-gray-400 font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+              <MdOutlineSecurity size={14} className="text-[#fd6410]" /> 100%
+              Private & Secure Analysis
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Importance Section */}
+      {/* Why Guna Milan Section */}
       <section className="space-section bg-[#301118] text-white">
         <div className="container">
-          <h2 className="title-line color-light mb-10 text-center">
-            <span>Why Vedic Matching Matters?</span>
-          </h2>
-          <div className="row g-4">
-            {[
-              {
-                title: "Guna Milan",
-                icon: <FaHeart />,
-                color: "bg-red-500",
-                desc: "Assesses mental and emotional wavelength between partners using the 36-point system.",
-              },
-              {
-                title: "Dosha Analysis",
-                icon: <FaShieldAlt />,
-                color: "bg-orange-500",
-                desc: "Identifies Manglik and Nadi Doshas that could impact health, longevity, and prosperity.",
-              },
-              {
-                title: "Growth & Progeny",
-                icon: <FaUserFriends />,
-                color: "bg-green-500",
-                desc: "Predicts the potential for family growth, financial stability, and mutual respect.",
-              },
-            ].map((item, i) => (
-              <div key={i} className="col-md-4">
-                <div className="p-8 bg-white/5 border border-white/10 rounded-4 text-center h-100 hover:bg-white/10 transition-all">
-                  <div
-                    className={`w-16 h-16 ${item.color} rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl shadow-lg`}
-                  >
-                    {item.icon}
-                  </div>
-                  <h4 className="font-bold mb-4">{item.title}</h4>
-                  <p className="text-sm text-gray-300 leading-relaxed px-2">
-                    {item.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+          <div className="row g-5 align-items-center">
+            <div className="col-lg-6">
+              <h2 className="text-4xl font-bold mb-6">
+                Importance of <span className="text-[#fd6410]">Guna Milan</span>
+              </h2>
+              <p className="text-orange-100/70 mb-8 leading-relaxed italic">
+                In Vedic Astrology, matching horoscopes is vital for a happy and
+                enduring marriage. The Guna Milan system checks 8 different
+                aspects (Ashtakoot) to ensure overall compatibility.
+              </p>
 
-      {/* Ashtakoota Knowledge Section */}
-      <section className="space-section light-back">
-        <div className="container">
-          <div className="light-card border border-[#fd64102b] p-8 md:p-16 shadow-2xl">
-            <div className="row g-5 align-items-center">
-              <div className="col-lg-7">
-                <h2 className="text-3xl font-bold text-[#301118] mb-6">
-                  Understanding the 36 Gunas
-                </h2>
-                <p className="text-gray-600 mb-8 leading-relaxed">
-                  Vedic astrology evaluates 8 distinct categories (Ashtakoota)
-                  for marriage compatibility. Each category has specific points
-                  (Gunas) assigned to it, totaling 36. A score above 18 is
-                  generally considered positive for a harmonious union.
-                </p>
-                <div className="row g-3">
-                  {[
-                    { name: "Varna", p: "Work / Ego", pts: "1" },
-                    { name: "Vashya", p: "Dominance", pts: "2" },
-                    { name: "Tara", p: "Destiny/Luck", pts: "3" },
-                    { name: "Yoni", p: "Intimacy", pts: "4" },
-                    { name: "Maitri", p: "Friendship", pts: "5" },
-                    { name: "Gana", p: "Temperament", pts: "6" },
-                  ].map((g, i) => (
-                    <div key={i} className="col-md-6">
-                      <div className="flex items-center gap-3 bg-white border border-[#fd64101a] p-3 rounded-3 shadow-sm">
-                        <FaRegCheckCircle className="text-green-500" />
-                        <div className="flex-1">
-                          <div className="font-bold text-sm text-[#301118]">
-                            {g.name}{" "}
-                            <span className="text-[10px] text-gray-400 font-normal">
-                              ({g.p})
-                            </span>
-                          </div>
-                        </div>
-                        <div className="text-xs font-bold text-[#fd6410]">
-                          {g.pts} pts
-                        </div>
-                      </div>
+              <div className="space-y-4">
+                {[
+                  "Mental Compatibility (Gana)",
+                  "Physical Attraction (Yoni)",
+                  "Destiny & Harmony (Bhakoot)",
+                  "Progeny & Health (Nadi)",
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-4 bg-white/5 p-4 rounded-4 border border-white/5 transition-all hover:bg-white/10"
+                  >
+                    <div className="bg-[#fd6410] p-2 rounded-full">
+                      <FaRegCheckCircle size={14} />
                     </div>
-                  ))}
-                </div>
+                    <span className="font-bold text-sm tracking-wide">
+                      {item}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <div className="col-lg-5 text-center">
-                <div className="p-5 bg-[#fff5ef] border-2 border-dashed border-[#fd641054] rounded-[50px] relative overflow-hidden">
-                  <HiOutlineSparkles
-                    size={100}
-                    className="text-[#fd6410] opacity-10 absolute -top-5 -right-5"
-                  />
-                  <div className="relative z-10 py-10">
-                    <HiOutlineSparkles
-                      size={80}
-                      className="text-[#fd6410] mx-auto mb-6 animate-pulse"
-                    />
-                    <h3 className="font-bold text-[#301118] text-4xl">
-                      Divine Match
-                    </h3>
-                    <p className="text-gray-500 font-bold uppercase tracking-widest text-[12px] mt-2">
-                      Certified Vedic Analysis
-                    </p>
+            </div>
+            <div className="col-lg-6">
+              <div className="bg-white/5 p-10 rounded-[4rem] text-center border-2 border-dashed border-[#fd64103d] relative">
+                <div className="absolute top-0 left-0 w-20 h-20 bg-[#fd6410] rounded-full -ml-8 -mt-8 flex items-center justify-center shadow-lg">
+                  <FaHeart className="text-white text-3xl animate-pulse" />
+                </div>
+                <h3 className="text-6xl font-black mb-2 text-[#fd6410]">36</h3>
+                <h4 className="text-2xl font-bold mb-6">Total Gunas</h4>
+                <div className="space-y-4 text-left border-t border-white/10 pt-6">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-sm font-bold opacity-60">
+                      Excellent
+                    </span>
+                    <span className="text-sm font-bold text-green-400">
+                      25 - 36
+                    </span>
+                  </div>
+                  <div className="w-full bg-white/10 h-1.5 rounded-full">
+                    <div className="bg-green-400 w-[80%] h-full rounded-full shadow-[0_0_10px_rgba(74,222,128,0.5)]"></div>
+                  </div>
+                  <div className="flex justify-between items-baseline mt-4">
+                    <span className="text-sm font-bold opacity-60">Normal</span>
+                    <span className="text-sm font-bold text-orange-400">
+                      18 - 24
+                    </span>
+                  </div>
+                  <div className="w-full bg-white/10 h-1.5 rounded-full">
+                    <div className="bg-orange-400 w-[50%] h-full rounded-full shadow-[0_0_10px_rgba(251,146,60,0.5)]"></div>
                   </div>
                 </div>
               </div>
@@ -331,7 +269,50 @@ const KundaliMatchingPage = () => {
         </div>
       </section>
 
-      {/* Shared Components */}
+      {/* Simple Information Section */}
+      <section className="space-section light-back">
+        <div className="container">
+          <div className="row g-4">
+            <div className="col-md-4">
+              <div className="light-card border border-[#fd64102b] p-8 text-center h-100 shadow-xl border-b-4 border-b-[#fd6410]">
+                <div className="bg-orange-50 w-16 h-16 rounded-4 flex items-center justify-center mx-auto mb-6 text-[#fd6410]">
+                  <FaShieldAlt size={30} />
+                </div>
+                <h4 className="text-lg font-bold mb-3">Vedic Standards</h4>
+                <p className="text-xs text-gray-500 leading-relaxed italic m-0">
+                  Our calculations follow the authentic Parashara system for
+                  highest accuracy.
+                </p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="light-card border border-[#fd64102b] p-8 text-center h-100 shadow-xl border-b-4 border-b-blue-500">
+                <div className="bg-blue-50 w-16 h-16 rounded-4 flex items-center justify-center mx-auto mb-6 text-blue-500">
+                  <FaMars size={30} />
+                </div>
+                <h4 className="text-lg font-bold mb-3">Manglik Check</h4>
+                <p className="text-xs text-gray-500 leading-relaxed italic m-0">
+                  Deep analysis of Mars position for Dosha detection and
+                  remedies.
+                </p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="light-card border border-[#fd64102b] p-8 text-center h-100 shadow-xl border-b-4 border-b-pink-500">
+                <div className="bg-pink-50 w-16 h-16 rounded-4 flex items-center justify-center mx-auto mb-6 text-pink-500">
+                  <FaVenus size={30} />
+                </div>
+                <h4 className="text-lg font-bold mb-3">Love Compatibility</h4>
+                <p className="text-xs text-gray-500 leading-relaxed italic m-0">
+                  Understand the emotional and psychological bond between both
+                  charts.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <WhyChooseUs />
       <CTA />
     </div>

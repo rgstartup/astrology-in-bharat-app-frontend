@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   FaCalendarAlt,
   FaMapMarkerAlt,
@@ -15,7 +16,6 @@ import {
   FaExclamationTriangle,
 } from "react-icons/fa";
 import { GiMeditation } from "react-icons/gi";
-import { MdOutlineStar } from "react-icons/md";
 import WhyChooseUs from "@/components/main/WhyChooseUs";
 import CTA from "@/components/main/CTA";
 
@@ -47,9 +47,11 @@ const MangalDoshaPage = () => {
               </div>
               <div className="col-lg-5 col-md-12 text-center">
                 <div className="right-illus">
-                  <img
+                  <Image
                     src="/images/horoscope-round2.png"
                     alt="Zodiac"
+                    width={500}
+                    height={500}
                     className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_30s_linear_infinite] opacity-30"
                   />
                   <div className="relative z-10 p-5">
@@ -70,7 +72,7 @@ const MangalDoshaPage = () => {
           <div className="row g-5">
             {/* Form Area */}
             <div className="col-lg-7">
-              <div className="light-card border border-[#fd64102b] p-8 md:p-10 shadow-2xl h-100">
+              <div className="light-card border border-[#fd64102b] p-8 md:p-10 shadow-2xl h-full">
                 <div className="flex items-center gap-4 mb-8 border-b border-[#fd64101a] pb-4">
                   <div className="bg-[#fd6410] text-white p-3 rounded-3 shadow-lg">
                     <FaCalendarAlt size={24} />
@@ -161,10 +163,11 @@ const MangalDoshaPage = () => {
             <div className="col-lg-5">
               <div className="space-y-6">
                 <div className="rounded-4 overflow-hidden relative h-64 group shadow-xl border border-[#fd64102b]">
-                  <img
+                  <Image
                     src="https://images.unsplash.com/photo-1545389336-cf090694435e?w=800&q=80"
                     alt="Meditation"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 h-100"
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#301118] to-transparent p-6 flex flex-col justify-end">
                     <h3 className="text-xl font-bold text-white mb-2">
@@ -255,7 +258,7 @@ const MangalDoshaPage = () => {
                   },
                 ].map((effect, i) => (
                   <div key={i} className="col-6">
-                    <div className="bg-white p-6 rounded-4 text-center group hover:-translate-y-2 transition-transform h-100">
+                    <div className="bg-white p-6 rounded-4 text-center group hover:-translate-y-2 transition-transform h-full">
                       <div
                         className={`w-12 h-12 ${effect.color} rounded-lg flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform`}
                       >
@@ -314,7 +317,7 @@ const MangalDoshaPage = () => {
             ))}
           </div>
           <div className="text-center mt-10">
-            <button className="btn-link px-12 py-3 inline-flex w-auto border-0 bg-transparent text-[#fd6410] !hover:text-[#301118] !p-0">
+            <button className="btn-link px-12 py-3 inline-flex w-auto border-0 bg-transparent text-[#fd6410] hover:text-[#301118] p-0">
               View All Experts <FaChevronRight className="ms-2" size={10} />
             </button>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { FaGem, FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
@@ -19,23 +20,25 @@ const BuyProductsPage = () => {
                 <div className="hero-card">
                   <div className="card-z">
                     <span className="aib-trust-badge">
-                      Authentic Cosmic Marketplace
+                      Authentic Vedic Remedies
                     </span>
-                    <h1>Buy Products</h1>
-                    <h4 className="card-title">Tools for Spiritual Growth</h4>
+                    <h1>Astro Marketplace</h1>
+                    <h4 className="card-title">Energize Your Life with Gems</h4>
                     <p>
-                      Curating a collection of authentic gemstones, yantras, and
-                      spiritual tools. Our cosmic marketplace is nearly ready to
-                      serve your needs with certified products.
+                      Discover a curated collection of lab-certified gemstones,
+                      energized yantras, and authentic spiritual products to
+                      enhance your cosmic well-being.
                     </p>
                   </div>
                 </div>
               </div>
               <div className="col-lg-5 col-md-12 text-center">
                 <div className="right-illus">
-                  <img
+                  <Image
                     src="/images/horoscope-round2.png"
                     alt="Zodiac"
+                    width={500}
+                    height={500}
                     className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_30s_linear_infinite] opacity-30"
                   />
                   <div className="relative z-10 p-5">
@@ -68,9 +71,9 @@ const BuyProductsPage = () => {
             </p>
 
             <p className="text-gray-500 italic max-w-2xl mx-auto mb-12 leading-relaxed">
-              We are sourcing high-quality, energized items from trusted
-              artisans and suppliers. Rudrakshas, Gemstones, and Puja kits are
-              coming soon to your doorstep.
+              We are sourcing the finest, ethically mined gemstones and
+              authenticating ancient remedies. Our marketplace for
+              high-vibration spiritual tools will be open for you very soon.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

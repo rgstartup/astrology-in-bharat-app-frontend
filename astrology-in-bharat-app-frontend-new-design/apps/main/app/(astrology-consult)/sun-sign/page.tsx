@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import {
   FaUser,
   FaHeart,
@@ -22,6 +23,8 @@ import { ZodiacSignsData } from "@/data/homePagaData";
 
 const SunSignPage = () => {
   const [selectedSign, setSelectedSign] = useState(ZodiacSignsData[0]);
+
+  if (!selectedSign) return null;
 
   return (
     <div className="main-wrapper">
@@ -62,14 +65,18 @@ const SunSignPage = () => {
               </div>
               <div className="col-lg-5 col-md-12 text-center">
                 <div className="right-illus py-10">
-                  <img
+                  <Image
                     src="/images/horoscope-round2.png"
                     alt="Zodiac Wheel"
+                    width={500}
+                    height={500}
                     className="w-[80%] mx-auto animate-[spin_20s_linear_infinite] absolute z-0 left-[10%] top-0 opacity-20"
                   />
-                  <img
+                  <Image
                     src={selectedSign.image}
                     alt={selectedSign.title}
+                    width={200}
+                    height={200}
                     className="relative z-10 w-[200px] h-[200px] object-contain mx-auto drop-shadow-2xl transition-all duration-500 hover:scale-110"
                   />
                 </div>
@@ -84,230 +91,204 @@ const SunSignPage = () => {
         <div className="container">
           <div className="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide snap-x items-center px-4">
             {ZodiacSignsData.map((sign) => (
-              <div
+              <button
                 key={sign.id}
                 onClick={() => setSelectedSign(sign)}
-                className={`snap-center shrink-0 flex flex-col items-center cursor-pointer transition-all duration-300 p-2 rounded-xl border ${
+                className={`snap-center shrink-0 flex flex-col items-center cursor-pointer transition-all duration-300 p-2 rounded-xl border bg-transparent ${
                   selectedSign.id === sign.id
                     ? "border-[#fd6410] bg-[#fff5ef] scale-105 shadow-md"
                     : "border-transparent opacity-60 hover:opacity-100"
                 }`}
                 style={{ minWidth: "100px" }}
               >
-                <img
+                <Image
                   src={sign.image}
                   alt={sign.title}
+                  width={48}
+                  height={48}
                   className="w-12 h-12 object-contain mb-2"
                 />
-                <span
-                  className={`text-[11px] font-bold uppercase tracking-wider ${
-                    selectedSign.id === sign.id
-                      ? "text-[#fd6410]"
-                      : "text-[#1e0b0f]"
-                  }`}
-                >
+                <span className="text-[10px] font-bold uppercase tracking-wider">
                   {sign.title}
                 </span>
-              </div>
+              </button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Main Content Body */}
+      {/* Main Details Section */}
       <section className="space-section light-back">
         <div className="container">
-          <div className="row">
-            {/* Left Column - Detailed Content */}
+          <div className="row g-4">
             <div className="col-lg-8">
-              <div className="light-card mb-4 border border-[#fd64102b]">
-                <h2 className="title-line c-1e0b0f">
-                  <span>{selectedSign.title} Overview</span>
-                </h2>
-                <div className="flex flex-col md:flex-row gap-8 items-start">
-                  <div className="w-32 h-32 rounded-3xl bg-[#fff8e7] flex items-center justify-center border border-[#daa23e73] shadow-lg flex-shrink-0">
-                    <img
+              <div className="light-card p-4 p-md-5 border border-[#fd64102b] shadow-xl">
+                <div className="flex items-center gap-6 mb-10 pb-6 border-b border-gray-100">
+                  <div className="bg-[#fd64101a] p-4 rounded-4">
+                    <Image
                       src={selectedSign.image}
                       alt={selectedSign.title}
-                      className="w-20 h-20 object-contain"
+                      width={80}
+                      height={80}
+                      className="w-20 h-20 object-contain drop-shadow-lg"
                     />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-[#301118] mb-2">
-                      {selectedSign.title} ({selectedSign.date})
-                    </h3>
-                    <p className="text-[#1a1a1a] leading-relaxed mb-4">
-                      {selectedSign.title} is known for its unique planetary
-                      influences. Those born under this sign possess distinctive
-                      personality traits that define their path in life, love,
-                      and career. Understanding these cosmic vibrations can help
-                      you navigate life with greater clarity.
+                    <h2 className="text-4xl font-black text-[#301118] uppercase tracking-tight mb-1">
+                      {selectedSign.title}
+                    </h2>
+                    <p className="text-[#fd6410] font-bold text-sm tracking-[0.2em] uppercase">
+                      The {selectedSign.nature} Sign
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {["Determined", "Intuitive", "Passionate", "Strong"].map(
-                        (t) => (
-                          <span
-                            key={t}
-                            className="bg-[#edeef1] text-[#301118] text-[10px] font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider"
-                          >
-                            {t}
-                          </span>
-                        )
-                      )}
+                  </div>
+                </div>
+
+                {/* Characteristics Grid */}
+                <div className="row g-4 mb-10">
+                  {[
+                    {
+                      icon: <FaUser className="text-blue-500" />,
+                      label: "Personality",
+                      text: "Strong, ambitious and determined individuals with a natural spark for leadership.",
+                      bg: "bg-blue-50",
+                    },
+                    {
+                      icon: <FaHeart className="text-pink-500" />,
+                      label: "Love & Relations",
+                      text: "Passionate and loyal partners who seek deep emotional connections.",
+                      bg: "bg-pink-50",
+                    },
+                    {
+                      icon: <FaBriefcase className="text-orange-500" />,
+                      label: "Career",
+                      text: "Excel in creative and structured environments where their skills are valued.",
+                      bg: "bg-orange-50",
+                    },
+                    {
+                      icon: <FaHospital className="text-green-500" />,
+                      label: "Health",
+                      text: "Generally strong constitution but need to maintain balance in routines.",
+                      bg: "bg-green-50",
+                    },
+                  ].map((feat, i) => (
+                    <div key={i} className="col-md-6">
+                      <div
+                        className={`${feat.bg} p-6 rounded-4 border border-white h-100 flex gap-4`}
+                      >
+                        <div className="text-2xl mt-1">{feat.icon}</div>
+                        <div>
+                          <h4 className="text-sm font-bold text-[#301118] uppercase mb-1">
+                            {feat.label}
+                          </h4>
+                          <p className="text-gray-500 text-xs leading-relaxed italic m-0">
+                            {feat.text}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              </div>
 
-              {/* Traits Grid */}
-              <div className="row mb-4">
-                <div className="col-md-6 mb-4 mb-md-0">
-                  <div className="light-card h-100 border-l-4 border-green-500 shadow-sm">
-                    <h4 className="text-lg font-bold text-green-700 flex items-center gap-2 mb-4">
-                      <FaCheck /> Positive Traits
-                    </h4>
-                    <ul className="list-check p-0">
-                      <li className="text-sm py-2">
-                        Adventurous and energetic
-                      </li>
-                      <li className="text-sm py-2">
-                        Pioneering and courageous
-                      </li>
-                      <li className="text-sm py-2">
-                        Enthusiastic and confident
-                      </li>
-                      <li className="text-sm py-2">Dynamic and quick-witted</li>
-                    </ul>
+                {/* Extra Details */}
+                <div className="space-y-6">
+                  <div className="bg-gray-50 border border-gray-100 p-8 rounded-4 relative overflow-hidden">
+                    <TbCrystalBall className="absolute -right-4 -bottom-4 text-gray-200 text-9xl opacity-20" />
+                    <h3 className="text-xl font-bold mb-4 relative z-10 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-[#fd6410] rounded-full"></div>
+                      Vedic Perspective
+                    </h3>
+                    <p className="text-gray-500 italic relative z-10 leading-relaxed mb-0">
+                      In Vedic astrology, the Sun represents the Soul, the King,
+                      and the Father. Your sun sign placement determines the
+                      inner light and core vitality you bring to the world.
+                      Analysis of {selectedSign.title}&apos;s ruling planet and
+                      element provides deep insight into your spiritual purpose.
+                    </p>
                   </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="light-card h-100 border-l-4 border-red-500 shadow-sm">
-                    <h4 className="text-lg font-bold text-red-700 flex items-center gap-2 mb-4">
-                      <FaTimes /> Challenge Areas
-                    </h4>
-                    <ul className="list-check p-0">
-                      <li className="text-sm py-2">Impulsive and impatient</li>
-                      <li className="text-sm py-2">Quick-tempered at times</li>
-                      <li className="text-sm py-2">
-                        Occasional over-confidence
-                      </li>
-                      <li className="text-sm py-2">Resistance to delays</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Deep Dive Content */}
-              <div className="light-card border border-[#fd64102b] mb-4">
-                <h3 className="text-xl font-bold text-[#301118] mb-4">
-                  A Deep Dive into {selectedSign.title}
-                </h3>
-                <div className="text-[#1a1a1a] space-y-4">
-                  <p>
-                    Astrology provides a profound roadmap for personal growth.
-                    For {selectedSign.title}, the planetary alignment suggests a
-                    journey of self-discovery through action and contemplation.
-                    By leveraging your natural strengths, you can overcome any
-                    obstacle that life throws your way.
-                  </p>
-                  <p>
-                    In social settings, you shine as a beacon of your
-                    sign&apos;s best qualities. Whether it&apos;s leading a team
-                    or supporting a loved one, your {selectedSign.title}
-                    energy is unmistakable and powerful.
-                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Right Column - Sidebar */}
+            {/* Sidebar Stats */}
             <div className="col-lg-4">
-              {/* Lucky Factors Card */}
-              <div className="light-card mb-4 border border-[#fd64102b]">
-                <h3 className="text-lg font-bold text-[#301118] mb-4 border-b pb-2">
-                  Lucky Factors
-                </h3>
-                <div className="space-y-4">
-                  {[
-                    {
-                      label: "Numbers",
-                      value: "9, 18, 27",
-                      icon: <FaDice className="text-[#fd6410]" />,
-                    },
-                    {
-                      label: "Colors",
-                      value: "Red, Scarlet",
-                      icon: <FaPalette className="text-[#fd6410]" />,
-                    },
-                    {
-                      label: "Day",
-                      value: "Tuesday",
-                      icon: <FaCalendarAlt className="text-[#fd6410]" />,
-                    },
-                    {
-                      label: "Stone",
-                      value: "Red Coral",
-                      icon: <FaGem className="text-[#fd6410]" />,
-                    },
-                  ].map((f, i) => (
-                    <div
-                      key={i}
-                      className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
-                    >
-                      <div className="flex items-center gap-3">
-                        {f.icon}
-                        <span className="text-xs font-semibold text-gray-500 uppercase">
-                          {f.label}
+              <div className="space-y-6">
+                <div className="bg-[#301118] text-white p-8 rounded-4 border border-[#fd64102b] shadow-xl">
+                  <h3 className="text-lg font-bold mb-6 flex items-center gap-3">
+                    <FaChartBar className="text-[#fd6410]" /> Key Attributes
+                  </h3>
+                  <div className="space-y-4">
+                    {[
+                      {
+                        icon: <FaPalette />,
+                        label: "Lucky Color",
+                        val: "Golden & Red",
+                      },
+                      {
+                        icon: <FaDice />,
+                        label: "Lucky No.",
+                        val: "1, 5, 9",
+                      },
+                      {
+                        icon: <FaGem />,
+                        label: "Stone",
+                        val: "Ruby / Amber",
+                      },
+                      {
+                        icon: <FaCalendarAlt />,
+                        label: "Lucky Day",
+                        val: "Sunday",
+                      },
+                    ].map((stat, i) => (
+                      <div
+                        key={i}
+                        className="flex justify-between items-center bg-white/5 p-4 rounded-3 border border-white/5"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-orange-400">{stat.icon}</span>
+                          <span className="text-[10px] font-bold uppercase text-gray-400">
+                            {stat.label}
+                          </span>
+                        </div>
+                        <span className="text-sm font-bold text-orange-200">
+                          {stat.val}
                         </span>
                       </div>
-                      <span className="font-bold text-[#301118]">
-                        {f.value}
+                    ))}
+                  </div>
+                </div>
+
+                <div className="light-card p-8 bg-orange-50 border border-orange-100 rounded-4">
+                  <h4 className="text-[#301118] font-black uppercase tracking-wider text-sm mb-4">
+                    compatibility
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-green-100 text-green-600 p-2 rounded-full">
+                        <FaCheck size={10} />
+                      </div>
+                      <span className="text-xs font-bold text-gray-500 italic">
+                        Best With: Leo, Sagittarius, Aries
                       </span>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Premium Reports Sidebar CTA */}
-              <div className="bg-[#301118] p-6 rounded-[20px] text-white mb-4 shadow-xl">
-                <h4 className="text-xl font-bold mb-3">
-                  Get Your Personal Report
-                </h4>
-                <p className="text-sm text-gray-300 mb-6">
-                  Our expert astrologers can provide deep insights into your
-                  destiny based on your exact birth details.
-                </p>
-                <div className="space-y-3">
-                  {[
-                    { title: "Love Life Report", icon: <FaHeart /> },
-                    { title: "Career Forecast", icon: <FaChartBar /> },
-                    { title: "Life Guidance", icon: <TbCrystalBall /> },
-                  ].map((s, i) => (
-                    <a
-                      key={i}
-                      href="#"
-                      className="flex items-center justify-between p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-all border border-white/5 group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-[#fd6410]">{s.icon}</span>
-                        <span className="font-semibold text-sm">{s.title}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="bg-red-100 text-red-600 p-2 rounded-full">
+                        <FaTimes size={10} />
                       </div>
-                      <FaArrowRight className="text-xs opacity-50 group-hover:translate-x-1 transition-all" />
-                    </a>
-                  ))}
+                      <span className="text-xs font-bold text-gray-500 italic">
+                        Challenge With: Scorpio, Aquarius
+                      </span>
+                    </div>
+                  </div>
+                  <button className="btn-link mt-8 w-full flex items-center justify-center gap-4 text-xs bg-[#fd6410] text-white rounded-xl border-0 font-bold uppercase tracking-widest">
+                    View Full Compatibility <FaArrowRight />
+                  </button>
                 </div>
               </div>
-
-              {/* Consultation Button */}
-              <a href="#" className="btn-link shadow-lg py-4">
-                Consult with Expert Now
-              </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Shared Components */}
       <WhyChooseUs />
       <CTA />
     </div>

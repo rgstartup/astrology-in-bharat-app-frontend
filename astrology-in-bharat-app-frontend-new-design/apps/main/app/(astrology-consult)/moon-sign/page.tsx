@@ -1,15 +1,14 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   FaMoon,
   FaHeart,
   FaBriefcase,
   FaUserFriends,
-  FaHome,
   FaStar,
   FaPhoneAlt,
-  FaComments,
   FaCheck,
   FaExclamation,
   FaChevronRight,
@@ -54,9 +53,11 @@ const MoonSignPage = () => {
               </div>
               <div className="col-lg-5 col-md-12 text-center">
                 <div className="right-illus">
-                  <img
+                  <Image
                     src="/images/horoscope-round2.png"
                     alt="Zodiac"
+                    width={500}
+                    height={500}
                     className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_30s_linear_infinite] opacity-30"
                   />
                   <div className="relative z-10 p-5">
@@ -86,11 +87,13 @@ const MoonSignPage = () => {
             <div className="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4">
               {ZodiacSignsData.map((sign) => (
                 <div key={sign.id} className="col">
-                  <a href="#" className="block h-100 group">
+                  <button className="block h-100 group w-full bg-transparent border-0 p-0 text-left">
                     <div className="bg-white border border-[#fd64101a] rounded-4 p-4 text-center h-100 transition-all hover:-translate-y-2 hover:shadow-xl hover:border-[#fd641054]">
-                      <img
+                      <Image
                         src={sign.image}
                         alt={sign.title}
+                        width={64}
+                        height={64}
                         className="w-16 h-16 object-contain mx-auto mb-3 group-hover:scale-110 transition-transform"
                       />
                       <h3 className="text-sm font-bold text-[#301118] mb-1">
@@ -100,7 +103,7 @@ const MoonSignPage = () => {
                         {sign.date}
                       </p>
                     </div>
-                  </a>
+                  </button>
                 </div>
               ))}
             </div>
@@ -108,170 +111,101 @@ const MoonSignPage = () => {
         </div>
       </section>
 
-      {/* Main Content Layout */}
+      {/* Info Section */}
       <section className="space-section light-back">
         <div className="container">
           <div className="row g-5">
-            {/* Sidebar */}
-            <div className="col-lg-4">
+            <div className="col-lg-7">
+              <h2 className="title-line mb-8">
+                <span>The Lunar Influence</span>
+              </h2>
               <div className="space-y-6">
-                <div className="light-card border border-[#fd64102b] p-6 shadow-lg">
-                  <h3 className="text-lg font-bold text-[#301118] mb-4 border-b border-[#fd64101a] pb-2">
-                    Lunar Aspects
+                <div className="light-card border border-[#fd64102b] p-8 shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#fd641008] rounded-full -mr-16 -mt-16"></div>
+                  <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
+                    <HiOutlineSparkles className="text-orange-400" />
+                    How Moon Sign Affects You?
                   </h3>
-                  <div className="space-y-2">
+                  <p className="text-gray-500 italic leading-relaxed mb-6">
+                    While the Sun sign defines your personality, the Moon sign
+                    reveals your essence. It governs how you feel, how you care
+                    for others, and how you find comfort in life.
+                  </p>
+
+                  <div className="row g-4">
                     {[
-                      { icon: <FaHeart />, label: "Emotional Nature" },
-                      { icon: <FaBriefcase />, label: "Career & Ambition" },
-                      { icon: <FaUserFriends />, label: "Relationships" },
-                      { icon: <FaHome />, label: "Family Life" },
-                      { icon: <FaStar />, label: "Lucky Factors" },
-                    ].map((aspect, i) => (
-                      <button
-                        key={i}
-                        className={`w-full flex items-center gap-3 p-3 rounded-lg text-sm transition ${i === 0 ? "bg-[#fd6410] text-white font-bold shadow-md" : "text-gray-600 hover:bg-[#fd64100d] hover:text-[#fd6410]"}`}
-                      >
-                        {aspect.icon} {aspect.label}
-                      </button>
+                      {
+                        icon: <FaHeart />,
+                        lbl: "Emotions",
+                        desc: "Your internal mood and emotional reactions.",
+                      },
+                      {
+                        icon: <FaBriefcase />,
+                        lbl: "Career Style",
+                        desc: "How you handle stress and workspace harmony.",
+                      },
+                      {
+                        icon: <FaUserFriends />,
+                        lbl: "Relations",
+                        desc: "Your expectations from a partner emotionally.",
+                      },
+                    ].map((item, i) => (
+                      <div key={i} className="col-md-4">
+                        <div className="bg-orange-50/50 p-4 rounded-3 border border-orange-100">
+                          <div className="text-[#fd6410] mb-2">{item.icon}</div>
+                          <h4 className="text-[10px] font-bold uppercase mb-1">
+                            {item.lbl}
+                          </h4>
+                          <p className="text-[9px] text-gray-400 m-0 leading-tight">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
-
-                <div className="bg-[#301118] rounded-4 p-6 shadow-xl text-white relative overflow-hidden">
-                  <HiOutlineSparkles className="absolute top-0 right-0 text-white/10 text-9xl -mr-10 -mt-10" />
-                  <h3 className="text-xl font-bold mb-4 relative z-10">
-                    Calculte Instantly
-                  </h3>
-                  <div className="space-y-3 relative z-10">
-                    <input
-                      type="text"
-                      className="form-control bg-white/5 border-white/10 text-white placeholder:text-gray-400 text-sm py-3"
-                      placeholder="DD/MM/YYYY"
-                    />
-                    <input
-                      type="text"
-                      className="form-control bg-white/5 border-white/10 text-white placeholder:text-gray-400 text-sm py-3"
-                      placeholder="Birth Time"
-                    />
-                    <input
-                      type="text"
-                      className="form-control bg-white/5 border-white/10 text-white placeholder:text-gray-400 text-sm py-3"
-                      placeholder="Birth City"
-                    />
-                    <button className="btn-link w-full py-3 mt-2 text-sm">
-                      Calculate Rashi
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
 
-            {/* Content Area */}
-            <div className="col-lg-8">
-              <div className="light-card border border-[#fd64102b] p-8 md:p-10 shadow-xl mb-6">
-                <h2 className="text-3xl font-bold text-[#301118] mb-6 flex items-center">
-                  <FaMoon className="text-[#fd6410] me-3" size={24} />{" "}
-                  Significance of the Moon Sign
-                </h2>
-                <div className="text-gray-600 leading-relaxed space-y-4">
-                  <p>
-                    In Vedic Astrology, the Moon (Chandra) is considered the
-                    most significant planet because it represents the mind
-                    (Manas). While the Sun represents your ego and conscious
-                    soul, the Moon governs your vulnerability, temperament, and
-                    how you react to situations instinctively.
-                  </p>
-                  <p>
-                    It determines your &quot;Rashi&quot; and plays a pivotal
-                    role in Kundli matching, daily horoscope predictions, and
-                    understanding your compatibility with others. A strong Moon
-                    brings mental peace and emotional stability.
-                  </p>
-                </div>
-              </div>
-
-              <div className="row g-4">
-                <div className="col-md-6">
-                  <div className="light-card border border-green-100 bg-green-50/30 p-8 h-100">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="bg-green-500 text-white p-2 rounded-lg shadow-md">
-                        <FaCheck size={14} />
+            <div className="col-lg-5">
+              <div className="bg-[#301118] text-white p-8 rounded-4 shadow-2xl relative overflow-hidden h-100 flex flex-col justify-center border border-[#fd64102b]">
+                <FaStar className="absolute top-8 right-8 text-[#fd641054] text-4xl animate-pulse" />
+                <h3 className="text-2xl font-bold mb-6 font-display">
+                  Precise Lunar Chart Analysis
+                </h3>
+                <div className="space-y-4 mb-8">
+                  {[
+                    "Understand your Nakshatra",
+                    "Auspicious timings based on Moon",
+                    "Emotional compatibility check",
+                  ].map((text, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-5 h-5 bg-[#fd6410] rounded-full flex items-center justify-center shrink-0">
+                        <FaCheck size={8} />
                       </div>
-                      <h3 className="text-xl font-bold text-[#301118] mb-0">
-                        Positive Traits
-                      </h3>
+                      <span className="text-sm text-orange-50 italic">
+                        {text}
+                      </span>
                     </div>
-                    <ul className="space-y-3">
-                      {[
-                        "Deep emotional empathy",
-                        "Strong intuitive navigation",
-                        "Nurturing protective nature",
-                        "Vivid creative expression",
-                      ].map((t, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center gap-2 text-sm text-gray-700"
-                        >
-                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>{" "}
-                          {t}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  ))}
                 </div>
-                <div className="col-md-6">
-                  <div className="light-card border border-red-100 bg-red-50/30 p-8 h-100">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="bg-red-500 text-white p-2 rounded-lg shadow-md">
-                        <FaExclamation size={14} />
-                      </div>
-                      <h3 className="text-xl font-bold text-[#301118] mb-0">
-                        Internal Challenges
-                      </h3>
-                    </div>
-                    <ul className="space-y-3">
-                      {[
-                        "Subconscious mood shifts",
-                        "High sensitivity to environment",
-                        "Emotional storage of past",
-                        "Deep need for security",
-                      ].map((t, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center gap-2 text-sm text-gray-700"
-                        >
-                          <div className="w-1.5 h-1.5 bg-red-400 rounded-full"></div>{" "}
-                          {t}
-                        </li>
-                      ))}
-                    </ul>
+                <div className="p-4 bg-white/5 rounded-3 border border-white/10 mb-8">
+                  <div className="flex items-center gap-3 mb-2">
+                    <FaExclamation className="text-orange-400" size={12} />
+                    <h4 className="text-[10px] font-bold uppercase text-orange-400">
+                      Did you know?
+                    </h4>
                   </div>
+                  <p className="text-[11px] text-gray-400 italic m-0">
+                    The moon changes signs every 2.5 days, making its impact on
+                    your daily mood more dynamic than your sun sign.
+                  </p>
                 </div>
+                <button className="btn-link bg-[#fd6410] text-white py-4 px-8 rounded-xl shadow-lg transition flex items-center justify-center gap-3 w-full border-0 font-bold uppercase tracking-widest text-xs">
+                  <FaPhoneAlt /> Call Expert Astrologer
+                </button>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Expert Section */}
-      <section className="space-section bg-[#301118] text-white">
-        <div className="container text-center">
-          <HiOutlineSparkles className="text-[#fd6410] text-5xl mx-auto mb-6 animate-pulse" />
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Consult the Lunar Sages
-          </h2>
-          <p className="text-gray-300 max-w-2xl mx-auto mb-10 text-lg italic">
-            Connect with our certified astrologers for a detailed analysis of
-            your Moon chart and receive personalized remedies for emotional
-            well-being.
-          </p>
-          <div className="flex justify-center flex-wrap gap-4">
-            <button className="btn-link py-4 px-12 inline-flex w-auto shadow-xl">
-              <FaPhoneAlt className="me-2" /> Call Expert
-            </button>
-            <button className="btn-link py-4 px-12 inline-flex w-auto shadow-xl bg-white text-[#301118] !hover:bg-gray-100 border-0">
-              <FaComments className="me-2" /> Instant Chat
-            </button>
           </div>
         </div>
       </section>

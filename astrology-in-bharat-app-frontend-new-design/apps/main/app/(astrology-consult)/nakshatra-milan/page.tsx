@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   FaUserFriends,
   FaHeart,
   FaBrain,
-  FaPhoneAlt,
   FaChevronDown,
   FaChevronRight,
   FaCheckCircle,
@@ -42,9 +42,11 @@ const NakshatraMilanPage = () => {
               </div>
               <div className="col-lg-5 col-md-12 text-center">
                 <div className="right-illus">
-                  <img
+                  <Image
                     src="/images/horoscope-round2.png"
                     alt="Zodiac"
+                    width={500}
+                    height={500}
                     className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_30s_linear_infinite] opacity-30"
                   />
                   <div className="relative z-10 p-5">
@@ -186,9 +188,9 @@ const NakshatraMilanPage = () => {
                 Match Nakshatras Now{" "}
                 <FaChevronRight className="ms-2" size={10} />
               </button>
-              <p className="mt-4 text-[10px] text-gray-400 font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+              <div className="mt-4 text-[10px] text-gray-400 font-bold uppercase tracking-widest flex items-center justify-center gap-2">
                 <FaCheckCircle className="text-green-500" /> Privacy Protected
-              </p>
+              </div>
             </div>
           </div>
         </div>
