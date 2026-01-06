@@ -1,6 +1,8 @@
+"use client";
 import React from "react";
 import { ZodiacSignsData } from "@/data/homePagaData";
-import Link from "next/link";
+import NextLink from "next/link";
+const Link = NextLink as any;
 
 const ChooseYourZodiac = () => {
   return (
@@ -15,10 +17,10 @@ const ChooseYourZodiac = () => {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {ZodiacSignsData.map((sign) => (
-              <Link
+              <NextLink
                 href={`/zodiac-signs/${sign.title.toLowerCase()}`}
                 key={sign.id}
-                className="block h-full group"
+                className="block h-full group no-underline"
               >
                 <div
                   className="bg-white overflow-hidden shadow-[0_4px_8px_rgba(0,0,0,0.1)] text-center p-3 rounded-[10px] transition-all duration-300 ease-in-out text-[#1a1a1a] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,0,0,0.2)] h-full flex flex-col items-center justify-center cursor-pointer"
@@ -34,7 +36,7 @@ const ChooseYourZodiac = () => {
                   </h3>
                   <p className="text-xs text-[#666] mb-0">{sign.date}</p>
                 </div>
-              </Link>
+              </NextLink>
             ))}
           </div>
         </div>

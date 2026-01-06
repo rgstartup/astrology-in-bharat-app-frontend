@@ -4,7 +4,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import { products } from '@/data/homePagaData';
+import { products } from '@/components/AstrologyServices/homePagaData';
 
 const ProductsCarousel = () => {
 
@@ -36,7 +36,7 @@ const ProductsCarousel = () => {
                             src={product.image}
                             alt={product.title}
                             className="services-img w-100 mb-3"
-                            style={{height:"160px"}}
+                            style={{ height: "160px" }}
                         />
                         <h4>{product.title}</h4>
                         <p className="p-sm text-muted">{product.description}</p>

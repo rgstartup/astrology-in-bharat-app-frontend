@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { products } from "@/data/homePagaData";
+import { products } from "@/components/AstrologyServices/homePagaData";
 import { useSearchParams, useRouter } from "next/navigation";
 import ReviewModal from "@/components/ReviewModal";
 import axios from "axios";

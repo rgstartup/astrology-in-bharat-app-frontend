@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { products, purpose } from "@/data/homePagaData";
+import { products, purpose } from "@/components/AstrologyServices/homePagaData";
 
 const page: React.FC = () => {
   return (
