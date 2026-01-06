@@ -67,9 +67,9 @@ const menuItems: MenuItem[] = [
         href: "/admin/profile",
         icon: User,
       },
-      { label: "Signout", href: "/admin", icon: LogOut },
     ],
   },
+  { label: "Signout", href: "#", icon: LogOut },
 ];
 
 interface SidebarProps {
@@ -94,6 +94,51 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   const isActiveLink = pathname === item.href;
 
   if (!item.submenu) {
+    if (item.label === "Signout") {
+      return (
+        <button
+          onClick={async () => {
+            // 1. Get token
+            const getCookie = (name: string) => {
+              const value = `; ${document.cookie}`;
+              const parts = value.split(`; ${name}=`);
+              if (parts.length === 2) return parts.pop()?.split(";").shift();
+            };
+            const token = getCookie("accessToken");
+
+            // 2. Call API
+            try {
+              await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"}/api/v1/auth/logout`, {
+                method: "POST",
+                headers: {
+                  "Authorization": `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              });
+            } catch (e) {
+              console.error("Logout API failed", e);
+            }
+
+            // 3. Clear cookies
+            document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+            document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+
+            // 4. Redirect
+            window.location.href = "/";
+          }}
+          className={cn(
+            "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-left",
+            isActiveLink
+              ? "bg-yellow-800 text-white shadow-lg"
+              : "text-white hover:bg-yellow-700"
+          )}
+        >
+          <item.icon className="w-5 h-5 flex-shrink-0" />
+          <span>{item.label}</span>
+        </button>
+      );
+    }
+
     return (
       <Link
         href={item.href}
@@ -141,6 +186,50 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         >
           {item.submenu.map((subItem) => {
             const isSubmenuActive = pathname === subItem.href;
+
+            if (subItem.label === "Signout") {
+              return (
+                <button
+                  key={subItem.label}
+                  onClick={async () => {
+                    // 1. Get token
+                    const getCookie = (name: string) => {
+                      const value = `; ${document.cookie}`;
+                      const parts = value.split(`; ${name}=`);
+                      if (parts.length === 2) return parts.pop()?.split(";").shift();
+                    };
+                    const token = getCookie("accessToken");
+
+                    // 2. Call API
+                    try {
+                      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"}/api/v1/auth/logout`, {
+                        method: "POST",
+                        headers: {
+                          "Authorization": `Bearer ${token}`,
+                          "Content-Type": "application/json",
+                        },
+                      });
+                    } catch (e) {
+                      console.error("Logout API failed", e);
+                    }
+
+                    // 3. Clear cookies
+                    document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+                    document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+
+                    // 4. Redirect
+                    window.location.href = "/";
+                  }}
+                  className={cn(
+                    "block w-full text-left px-3 py-2 rounded-lg text-sm text-yellow-100 hover:bg-yellow-600 hover:text-white transition-colors duration-200",
+                    isSubmenuActive && "bg-yellow-600 text-white font-medium"
+                  )}
+                >
+                  {subItem.label}
+                </button>
+              );
+            }
+
             return (
               <Link
                 key={subItem.label}
@@ -265,79 +354,75 @@ export default function AdminLayout({
   // Now all children will render with appropriate layout
 
   return (
-
-    <div
-      className="flex min-h-screen bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/images/back-image.webp')" }}
-    >
-
-      {/* Sidebar Component - Only show when needed */}
-      {shouldShowSidebar && (
-        <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      )}
-
-      {/* Main Content */}
-      <div className={cn("flex-1", shouldShowSidebar && "lg:ml-64")}>
-        {/* Top Header - Only show when sidebar is visible */}
+    <AdminGuard>
+      <div
+        className="flex min-h-screen bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/images/back-image.webp')" }}
+      >
+        {/* Sidebar Component - Only show when needed */}
         {shouldShowSidebar && (
-          <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={toggleSidebar}
-                  className="lg:hidden text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors"
-                  aria-label="Toggle sidebar"
-                >
-                  <Menu className="w-6 h-6" />
-                </button>
-                <h1 className="text-2xl font-semibold text-gray-800">
-                  {menuItems.find((item) => item.href === pathname)?.label ||
-                    "Dashboard"}
-                </h1>
-              </div>
-
-              <div className="flex items-center space-x-4">
-                {/* Search */}
-                <div className="hidden md:block">
-                  <SearchInput
-                    value={globalSearch}
-                    onChange={setGlobalSearch}
-                    placeholder="Search..."
-                    className="w-64"
-                    size="md"
-                  />
-                </div>
-
-                {/* Notifications */}
-                <button className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors">
-                  <Bell className="w-5 h-5" />
-                  <span className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
-                    3
-                  </span>
-                </button>
-
-                {/* Profile */}
-                <div className="w-10 h-10 rounded-full overflow-hidden">
-                  <img
-                    src="https://i.pravatar.cc/150?img=12"
-                    alt="Profile"
-                    className="w-full h-full rounded-full cursor-pointer
-               hover:ring-2 hover:ring-yellow-500
-               transition-all"
-                  />
-                </div>
-
-              </div>
-            </div>
-          </header>
+          <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
         )}
 
         {/* Main Content */}
-        <main className={cn(shouldShowSidebar && "p-6")}>
-          {children}
-        </main>
-      </div>
-    </div>
+        <div className={cn("flex-1", shouldShowSidebar && "lg:ml-64")}>
+          {/* Top Header - Only show when sidebar is visible */}
+          {shouldShowSidebar && (
+            <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={toggleSidebar}
+                    className="lg:hidden text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors"
+                    aria-label="Toggle sidebar"
+                  >
+                    <Menu className="w-6 h-6" />
+                  </button>
+                  <h1 className="text-2xl font-semibold text-gray-800">
+                    {menuItems.find((item) => item.href === pathname)?.label ||
+                      "Dashboard"}
+                  </h1>
+                </div>
 
+                <div className="flex items-center space-x-4">
+                  {/* Search */}
+                  <div className="hidden md:block">
+                    <SearchInput
+                      value={globalSearch}
+                      onChange={setGlobalSearch}
+                      placeholder="Search..."
+                      className="w-64"
+                      size="md"
+                    />
+                  </div>
+
+                  {/* Notifications */}
+                  <button className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors">
+                    <Bell className="w-5 h-5" />
+                    <span className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                      3
+                    </span>
+                  </button>
+
+                  {/* Profile */}
+                  <div className="w-10 h-10 rounded-full overflow-hidden">
+                    <img
+                      src="https://i.pravatar.cc/150?img=12"
+                      alt="Profile"
+                      className="w-full h-full rounded-full cursor-pointer
+                 hover:ring-2 hover:ring-yellow-500
+                 transition-all"
+                    />
+                  </div>
+                </div>
+              </div>
+            </header>
+          )}
+
+          {/* Main Content */}
+          <main className={cn(shouldShowSidebar && "p-6")}>{children}</main>
+        </div>
+      </div>
+    </AdminGuard>
   );
 }
