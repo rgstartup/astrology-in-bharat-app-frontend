@@ -1,6 +1,4 @@
 import React from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { AstrologyServicesData } from "@/data/homePagaData";
 
 const AstrologyServices = () => {
@@ -16,24 +14,18 @@ const AstrologyServices = () => {
               <div className="row mx-0">
                 {AstrologyServicesData.map((service) => (
                   <div className="col-lg-3 col-md-4 px-2 mb-4" key={service.id}>
-                    <Link
-                      href="/our-astrologers"
-                      className="block h-full group"
-                    >
-                      <div className="bg-white overflow-hidden shadow-[0_2px_4px_rgba(0,0,0,0.08)] border-[0.5px] border-[#fd6410] text-center p-2 rounded-[8px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] h-full flex flex-col">
-                        <div className="flex-grow relative h-[150px]">
-                          <Image
-                            src={service.image}
-                            alt={service.title}
-                            fill
-                            className="rounded-[6px] border border-[#daa23ea1] object-cover"
-                          />
-                        </div>
-                        <h4 className="font-medium text-xs text-[#1e0b0f] truncate mt-2 px-1 transition-colors group-hover:text-[#fd6410]">
-                          {service.title}
-                        </h4>
+                    <div className="bg-white overflow-hidden shadow-[0_2px_4px_rgba(0,0,0,0.08)] border-[0.5px] border-[#fd6410] text-center p-2 rounded-[8px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] h-full flex flex-col">
+                      <div className="flex-grow">
+                        <img
+                          src={service.image}
+                          alt={service.title}
+                          className="rounded-[6px] border border-[#daa23ea1] w-full h-[150px] object-cover mb-2"
+                        />
                       </div>
-                    </Link>
+                      <h4 className="font-medium text-xs text-[#1e0b0f] truncate mt-2 px-1">
+                        {service.title}
+                      </h4>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -48,66 +40,85 @@ const AstrologyServices = () => {
             <span>Consult The Right Astrologer For You</span>
           </h2>
           <div className="row">
-            {[
-              {
-                id: 1,
-                title: "Love Problem Solution",
-                img: "images/services/services1.jpg",
-              },
-              {
-                id: 2,
-                title: "Marriage Problem",
-                img: "images/services/services2.jpg",
-              },
-              {
-                id: 3,
-                title: "Divorce Problem Solution",
-                img: "images/services/services3.jpg",
-              },
-              {
-                id: 4,
-                title: "Breakup Problem Solution",
-                img: "images/services/services4.jpg",
-              },
-              {
-                id: 5,
-                title: "Get Your Ex Love Back",
-                img: "images/services/services5.jpg",
-              },
-              {
-                id: 6,
-                title: "Family Problem Solution",
-                img: "images/services/services6.jpg",
-              },
-              {
-                id: 7,
-                title: "Dispute Solution",
-                img: "images/services/services8.jpg",
-              },
-              {
-                id: 8,
-                title: "Childless Couple Solution",
-                img: "images/services/services9.jpg",
-              },
-            ].map((item) => (
-              <div className="col-sm-3 col-6 mb-4" key={item.id}>
-                <Link href="/our-astrologers" className="block group">
-                  <div className="services-card">
-                    <div className="relative h-[200px] w-full overflow-hidden rounded-lg">
-                      <Image
-                        src={`/${item.img}`}
-                        alt={item.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    </div>
-                    <h4 className="mt-3 text-sm font-semibold text-[#1e0b0f] group-hover:text-[#fd6410] transition-colors">
-                      {item.title}
-                    </h4>
-                  </div>
-                </Link>
+            <div className="col-sm-3">
+              <div className="services-card">
+                <img
+                  src="images/services/services1.jpg"
+                  alt="Love Problem Solution"
+                />
+                <h4>Love Problem Solution</h4>
               </div>
-            ))}
+            </div>
+
+            <div className="col-sm-3">
+              <div className="services-card">
+                <img
+                  src="images/services/services2.jpg"
+                  alt="Marriage Problem"
+                />
+                <h4>Marriage Problem</h4>
+              </div>
+            </div>
+
+            <div className="col-sm-3">
+              <div className="services-card">
+                <img
+                  src="images/services/services3.jpg"
+                  alt="Divorce Problem Solution"
+                />
+                <h4>Divorce Problem Solution</h4>
+              </div>
+            </div>
+
+            <div className="col-sm-3">
+              <div className="services-card">
+                <img
+                  src="images/services/services4.jpg"
+                  alt="Breakup Problem Solution"
+                />
+                <h4>Breakup Problem Solution</h4>
+              </div>
+            </div>
+
+            <div className="col-sm-3">
+              <div className="services-card">
+                <img
+                  src="images/services/services5.jpg"
+                  alt="Get Your Ex Love Back"
+                />
+                <h4>Get Your Ex Love Back</h4>
+              </div>
+            </div>
+
+            <div className="col-sm-3">
+              <div className="services-card">
+                <img
+                  src="images/services/services6.jpg"
+                  alt="Family Problem Solution"
+                />
+                <h4>Family Problem Solution</h4>
+              </div>
+            </div>
+
+            <div className="col-sm-3">
+              <div className="services-card">
+                <img
+                  src="images/services/services8.jpg"
+                  alt="Dispute Solution"
+                />
+                <h4>Dispute Solution</h4>
+              </div>
+            </div>
+
+            <div className="col-sm-3">
+              <div className="services-card">
+                <img
+                  src="images/services/services9.jpg"
+                  alt="Childless Couple Solution"
+                />
+                <h4>Childless Couple Solution</h4>
+              </div>
+            </div>
           </div>
         </div>
       </div>
