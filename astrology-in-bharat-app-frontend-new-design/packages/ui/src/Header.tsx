@@ -108,16 +108,39 @@ interface UserProfile {
   };
 }
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onLogout?: () => void;
+  isAuthenticated?: boolean;
+  userProfile?: UserProfile | null;
+}
+
+const Header: React.FC<HeaderProps> = ({
+  onLogout,
+  isAuthenticated: propIsAuthenticated,
+  userProfile: propUserProfile
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(propIsAuthenticated || false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(propUserProfile || null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!propIsAuthenticated);
+
+  // Sync internal state with props if they change
+  useEffect(() => {
+    if (propIsAuthenticated !== undefined) {
+      setIsAuthenticated(propIsAuthenticated);
+    }
+  }, [propIsAuthenticated]);
+
+  useEffect(() => {
+    if (propUserProfile !== undefined) {
+      setUserProfile(propUserProfile);
+    }
+  }, [propUserProfile]);
 
   // Use useEffect to ensure this part only runs on the client
   useEffect(() => {
@@ -126,10 +149,17 @@ const Header: React.FC = () => {
 
   // Check if user is authenticated by fetching profile
   const checkAuthentication = useCallback(async () => {
+    // If we already have authentication information from props, don't fetch again unless explicitly needed
+    if (propIsAuthenticated !== undefined && propUserProfile !== undefined) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1";
       const response = await axios.get(
-        "http://localhost:4000/api/v1/client/profile",
+        `${apiUrl}/client/profile`,
         {
           withCredentials: true,
         }
@@ -162,7 +192,7 @@ const Header: React.FC = () => {
   }, [isClient, pathname, checkAuthentication]);
 
   // Log profile state changes
-  useEffect(() => {}, [isAuthenticated, userProfile, loading]);
+  useEffect(() => { }, [isAuthenticated, userProfile, loading]);
 
   // Also check authentication when window regains focus (e.g., after login in another tab)
   useEffect(() => {
@@ -179,9 +209,15 @@ const Header: React.FC = () => {
   // Handle logout
   const handleLogout = async () => {
     try {
-      // Try to call logout endpoint (adjust endpoint if different)
+      // Call external logout if provided (e.g. from AuthContext)
+      if (onLogout) {
+        onLogout();
+      }
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1";
+      // Try to call logout endpoint
       await axios.post(
-        "http://localhost:4000/api/v1/auth/logout",
+        `${apiUrl}/auth/logout`,
         {},
         {
           withCredentials: true,
@@ -191,13 +227,23 @@ const Header: React.FC = () => {
       // Even if logout endpoint fails, clear local state
       console.log("Logout endpoint error:", error);
     } finally {
-      // Clear authentication state
+      // Manually clear all possible auth cookies
+      const cookiesToClear = ['access_token', 'accessToken', 'refreshToken'];
+      cookiesToClear.forEach(name => {
+        document.cookie = `${name}=; path=/; max-age=0; SameSite=Lax`;
+        document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+      });
+
+      // Clear authentication state in Header
       setIsAuthenticated(false);
       setUserProfile(null);
       setShowProfileDropdown(false);
+      setShowAccountDropdown(false);
+
       // Redirect to home page
       router.push("/");
-      // Reload to ensure clean state
+
+      // Reload to ensure clean state across the app
       window.location.reload();
     }
   };

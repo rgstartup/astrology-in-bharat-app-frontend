@@ -55,14 +55,16 @@ const ProfileCompletionCheck: React.FC = () => {
                             preferences: profile.preferences || "",
                         });
                         setIsModalOpen(true);
-                    }, 10000); // 10 seconds
+                    }, 10000); // 10 seconds delay as requested
                 }
-            } catch (err) {
+            } catch (err: any) {
                 console.error("Failed to fetch profile for check:", err);
-                // If 404 (profile not found), it counts as incomplete
-                timeoutId = setTimeout(() => {
-                    setIsModalOpen(true);
-                }, 10000);
+                // If 404 (profile doesn't exist at all), then it is definitely empty
+                if (err.response?.status === 404) {
+                    timeoutId = setTimeout(() => {
+                        setIsModalOpen(true);
+                    }, 10000);
+                }
             } finally {
                 setHasChecked(true);
             }

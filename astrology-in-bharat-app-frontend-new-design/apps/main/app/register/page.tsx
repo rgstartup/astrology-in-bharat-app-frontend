@@ -100,7 +100,15 @@ const Page: React.FC = () => {
       );
 
       if (response.data.accessToken) {
-        login(response.data.accessToken);
+        const userRes = response.data.user;
+        const userData = userRes ? {
+          id: userRes.id,
+          name: userRes.name,
+          email: userRes.email,
+          avatar: userRes.avatar
+        } : undefined;
+
+        login(response.data.accessToken, userData);
       }
 
       setFormData({ fullName: "", email: "", password: "" });

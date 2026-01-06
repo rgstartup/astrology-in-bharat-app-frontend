@@ -10,7 +10,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import "@repo/styles";
-import { Header, Footer } from "@repo/ui";
+import { Footer } from "@repo/ui";
+import HeaderWithAuth from "@/components/HeaderWithAuth";
 // import QuotesLoader from "@/components/QuotesLoader";
 
 // Google Fonts setup
@@ -58,9 +59,8 @@ export default function RootLayout({
       <body className="min-h-screen bg-white text-black">
         <AuthProvider>
           {/* {!isAdminRoute && <QuotesLoader />} */}
-          {!isAdminRoute && <Header />}
+          {!isAdminRoute && <HeaderWithAuth />}
           <main>{children}</main>
-          {!isAdminRoute && <ProfileCompletionCheck />}
           {!isAdminRoute && <Footer />}
         </AuthProvider>
       </body>

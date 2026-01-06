@@ -106,7 +106,16 @@ const Page: React.FC = () => {
       console.log("Server Response Data:", response.data);
 
       if (response.data.accessToken) {
-        login(response.data.accessToken);
+        // Extract user data from response if available
+        const userRes = (response.data as any).user;
+        const userData = userRes ? {
+          id: userRes.id,
+          name: userRes.name,
+          email: userRes.email,
+          avatar: userRes.avatar
+        } : undefined;
+
+        login(response.data.accessToken, userData);
       }
 
       setSuccessMessage(
