@@ -23,11 +23,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const login = (newToken: string) => {
         setToken(newToken);
         setAccessToken(newToken);
+        // Set cookie for shared components (like Header) that rely on cookies
+        document.cookie = `access_token=${newToken}; path=/; max-age=86400; SameSite=Lax`;
     };
 
     const logout = () => {
         setToken(null);
         setAccessToken('');
+        // Clear cookie
+        document.cookie = "access_token=; path=/; max-age=0";
         // Optionally call logout API
         apiClient.post('/auth/logout').catch(() => { });
     };

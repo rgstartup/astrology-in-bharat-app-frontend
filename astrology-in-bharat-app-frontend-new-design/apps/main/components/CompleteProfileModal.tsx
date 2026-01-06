@@ -1,61 +1,66 @@
 "use client";
-import React, { useState, FormEvent } from "react";
-import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
 
-interface AddressDto {
-  line1: string;
-  line2?: string;
-  city: string;
-  state: string;
-  country: string;
-  zipCode: string;
-  isPrimary?: boolean;
-}
-
-interface ProfileFormData {
-  date_of_birth?: string;
-  gender: "male" | "female" | "other" | "";
-  preferences?: string;
-  addresses?: AddressDto[];
-}
+import React, { useEffect, useState } from "react";
+import apiClient from "../services/apiClient";
 
 interface CompleteProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSkip: () => void;
+  initialData?: any;
+}
+
+interface FormData {
+  full_name: string;
+  gender: "male" | "female" | "other" | "";
+  date_of_birth: string;
+  time_of_birth: string;
+  place_of_birth: string;
+  phone: string;
+  language_preference: string;
+  preferences: string; // Additional notes/preferences
 }
 
 const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
   isOpen,
   onClose,
-  onSkip,
+  initialData,
 }) => {
-  const router = useRouter();
-  const API_ENDPOINT = "http://localhost:4000/api/v1/client/profile";
-
-  const [formData, setFormData] = useState<ProfileFormData>({
+  const [formData, setFormData] = useState<FormData>({
+    full_name: "",
     gender: "",
-    addresses: [
-      {
-        line1: "",
-        city: "",
-        state: "",
-        country: "",
-        zipCode: "",
-        isPrimary: false,
-      },
-    ],
+    date_of_birth: "",
+    time_of_birth: "",
+    place_of_birth: "",
+    phone: "",
+    language_preference: "",
+    preferences: "",
   });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  // Handle main form field changes
-  const handleInputChange = (
+  // Initialize form data when initialData provided
+  useEffect(() => {
+    if (initialData) {
+      setFormData((prev) => ({
+        ...prev,
+        full_name: initialData.full_name || prev.full_name,
+        gender: initialData.gender || prev.gender,
+        date_of_birth: initialData.date_of_birth || prev.date_of_birth,
+        time_of_birth: initialData.time_of_birth || prev.time_of_birth,
+        place_of_birth: initialData.place_of_birth || prev.place_of_birth,
+        phone: initialData.phone || prev.phone,
+        language_preference: initialData.language_preference || prev.language_preference,
+        preferences: initialData.preferences || prev.preferences,
+      }));
+    }
+  }, [initialData]);
+
+  const handleChange = (
     e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
     const { name, value } = e.target;
@@ -63,606 +68,207 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
       ...prev,
       [name]: value,
     }));
-    setError(null);
-    setSuccessMessage(null);
   };
 
-  // Handle address field changes
-  const handleAddressChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    const { name, value, type, checked } = e.target;
-
-    const updatedAddresses: AddressDto[] = [...(formData.addresses || [])];
-
-    // Ensure the index exists
-    if (!updatedAddresses[index]) {
-      updatedAddresses[index] = {
-        line1: "",
-        city: "",
-        state: "",
-        country: "",
-        zipCode: "",
-        isPrimary: false,
-      };
-    }
-
-    updatedAddresses[index] = {
-      ...updatedAddresses[index],
-      [name]: type === "checkbox" ? checked : value,
-    } as AddressDto;
-
-    setFormData((prev) => ({
-      ...prev,
-      addresses: updatedAddresses,
-    }));
-    setError(null);
-  };
-
-  // Add new address
-  const handleAddAddress = () => {
-    setFormData((prev) => ({
-      ...prev,
-      addresses: [
-        ...(prev.addresses || []),
-        {
-          line1: "",
-          city: "",
-          state: "",
-          country: "",
-          zipCode: "",
-          isPrimary: false,
-        },
-      ],
-    }));
-  };
-
-  // Remove address
-  const handleRemoveAddress = (index: number) => {
-    const updatedAddresses = [...(formData.addresses || [])];
-    updatedAddresses.splice(index, 1);
-    setFormData((prev) => ({
-      ...prev,
-      addresses:
-        updatedAddresses.length > 0
-          ? updatedAddresses
-          : [
-              {
-                line1: "",
-                city: "",
-                state: "",
-                country: "",
-                zipCode: "",
-                isPrimary: false,
-              },
-            ],
-    }));
-  };
-
-  // Form validation
-  const validateForm = (): boolean => {
-    setError(null);
-
-    if (!formData.gender) {
-      setError("Gender is required.");
+  const validateForm = () => {
+    if (
+      !formData.full_name ||
+      !formData.gender ||
+      !formData.date_of_birth ||
+      !formData.time_of_birth ||
+      !formData.place_of_birth
+    ) {
+      setError("Please fill in all required birth details.");
       return false;
     }
-
-    if (formData.addresses && formData.addresses.length > 0) {
-      for (const addr of formData.addresses) {
-        if (
-          !addr.line1 ||
-          !addr.city ||
-          !addr.state ||
-          !addr.country ||
-          !addr.zipCode
-        ) {
-          setError(
-            "Please fill all required address fields (Address Line 1, City, State, Country, Zip Code)."
-          );
-          return false;
-        }
-      }
-    }
-
     return true;
   };
 
-  // Form submission
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
 
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
-    setSuccessMessage(null);
-
-    // Prepare payload according to backend DTO
-    const payload: any = {
-      gender: formData.gender as "male" | "female" | "other",
-    };
-
-    // Add optional date_of_birth if provided
-    if (formData.date_of_birth && formData.date_of_birth.trim() !== "") {
-      payload.date_of_birth = formData.date_of_birth;
-    }
-
-    // Add optional preferences if provided
-    if (formData.preferences && formData.preferences.trim() !== "") {
-      payload.preferences = formData.preferences.trim();
-    }
-
-    // Add addresses if provided and valid
-    if (formData.addresses && formData.addresses.length > 0) {
-      const validAddresses = formData.addresses
-        .filter(
-          (addr) =>
-            addr.line1?.trim() &&
-            addr.city?.trim() &&
-            addr.state?.trim() &&
-            addr.country?.trim() &&
-            addr.zipCode?.trim()
-        )
-        .map((addr) => {
-          const addressDto: any = {
-            line1: addr.line1.trim(), // REQUIRED by backend
-            city: addr.city.trim(),
-            state: addr.state.trim(),
-            country: addr.country.trim(),
-            zipCode: addr.zipCode.trim(),
-          };
-
-          // Add optional line2 if provided
-          if (addr.line2 && addr.line2.trim() !== "") {
-            addressDto.line2 = addr.line2.trim();
-          }
-
-          // Add optional isPrimary if provided (default to false)
-          if (addr.isPrimary !== undefined) {
-            addressDto.isPrimary = addr.isPrimary;
-          }
-
-          return addressDto;
-        });
-
-      if (validAddresses.length > 0) {
-        payload.addresses = validAddresses;
-      }
-    }
+    setSuccess(null);
 
     try {
-      const response = await axios.post(API_ENDPOINT, payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
+      // Use the centralized apiClient which handles tokens automatically
+      await apiClient.post("/client/profile", formData);
 
-      setSuccessMessage(
-        response.data?.message || "Profile saved successfully!"
-      );
+      setSuccess("Profile updated successfully!");
 
+      // Close after a short delay
       setTimeout(() => {
         onClose();
       }, 1500);
-    } catch (err) {
-      const error = err as AxiosError;
-      if (error.response) {
-        const status = error.response.status;
-        const errorData = error.response.data as any;
 
-        if (status === 401) {
-          setError("You are not authenticated. Please sign in first.");
-          setTimeout(() => {
-            onClose();
-            router.push("/sign-in");
-          }, 3000);
-          setIsLoading(false);
-          return;
-        }
-
-        let msg: string = "";
-
-        if (typeof errorData === "string") {
-          msg = errorData;
-        } else if (errorData?.message) {
-          if (typeof errorData.message === "string") {
-            msg = errorData.message;
-          } else if (Array.isArray(errorData.message)) {
-            msg = errorData.message.join(", ");
-          } else if (typeof errorData.message === "object") {
-            msg = JSON.stringify(errorData.message);
-          }
-        } else if (errorData?.error) {
-          if (typeof errorData.error === "string") {
-            msg = errorData.error;
-          } else if (
-            errorData.error?.message &&
-            typeof errorData.error.message === "string"
-          ) {
-            msg = errorData.error.message;
-          } else {
-            msg = JSON.stringify(errorData.error);
-          }
-        } else {
-          msg = `Server responded with status ${status}.`;
-        }
-
-        setError(msg || `An error occurred (${status})`);
-      } else if (error.request) {
-        setError(
-          "Network Error: Could not reach the server. Please check your connection."
-        );
-      } else {
-        setError("An unexpected error occurred. Please try again.");
-      }
+    } catch (err: any) {
+      console.error("Error saving profile:", err);
+      setError(
+        err.response?.data?.message ||
+        "Failed to save profile. Please try again."
+      );
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
-  };
-
-  // Reset form
-  const handleReset = () => {
-    setFormData({
-      gender: "",
-      addresses: [
-        {
-          line1: "",
-          city: "",
-          state: "",
-          country: "",
-          zipCode: "",
-          isPrimary: false,
-        },
-      ],
-    });
-    setError(null);
-    setSuccessMessage(null);
   };
 
   if (!isOpen) return null;
 
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className="modal-backdrop fade show"
-        onClick={onClose}
-        style={{ display: "block", zIndex: 1040 }}
-      ></div>
+    <div
+      className="modal show d-block"
+      tabIndex={-1}
+      role="dialog"
+      style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1050 }}
+    >
+      <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div className="modal-content overflow-hidden border-0">
+          <div className="modal-header bg-primary text-white">
+            <h5 className="modal-title fw-bold">Complete Your Profile</h5>
+          </div>
+          <div className="modal-body p-4 bg-light">
+            <p className="text-secondary mb-4">
+              Please provide your birth details for accurate astrological
+              predictions.
+            </p>
 
-      {/* Modal */}
-      <div
-        className="modal fade show"
-        style={{ display: "block", zIndex: 1050 }}
-        tabIndex={-1}
-        aria-labelledby="completeProfileModalLabel"
-        aria-modal="true"
-        role="dialog"
-      >
-        <div
-          className="modal-dialog modal-dialog-centered modal-lg"
-          style={{ maxWidth: "800px" }}
-        >
-          <div className="modal-content">
-            {/* Modal Header */}
-            <div className="modal-header">
-              <h5 className="modal-title" id="completeProfileModalLabel">
-                <i
-                  className="fa-solid fa-user-edit me-2"
-                  style={{ color: "#daa23e" }}
-                ></i>
-                Complete Your Profile
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={onClose}
-                aria-label="Close"
-              ></button>
-            </div>
+            {error && <div className="alert alert-danger">{error}</div>}
+            {success && <div className="alert alert-success">{success}</div>}
 
-            {/* Modal Body */}
-            <div
-              className="modal-body"
-              style={{ maxHeight: "70vh", overflowY: "auto" }}
-            >
-              <form onSubmit={handleSubmit} id="profile-form">
+            <form onSubmit={handleSubmit}>
+              {/* Full Name */}
+              <div className="mb-3">
+                <label className="form-label fw-bold">Full Name *</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="full_name"
+                  value={formData.full_name}
+                  onChange={handleChange}
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+
+              {/* Gender */}
+              <div className="mb-3">
+                <label className="form-label fw-bold">Gender *</label>
+                <select
+                  className="form-select"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="row">
                 {/* Date of Birth */}
-                <div className="mb-4">
-                  <label className="form-label fw-bold">
-                    Date of Birth <span className="text-muted">(Optional)</span>
-                  </label>
+                <div className="col-md-4 mb-3">
+                  <label className="form-label fw-bold">Date of Birth *</label>
                   <input
                     type="date"
                     className="form-control"
                     name="date_of_birth"
-                    value={formData.date_of_birth || ""}
-                    onChange={handleInputChange}
-                    style={{
-                      borderColor: "#daa23e",
-                      borderWidth: "2px",
-                    }}
-                  />
-                </div>
-
-                {/* Gender */}
-                <div className="mb-4">
-                  <label className="form-label fw-bold">
-                    Gender <span className="text-danger">*</span>
-                  </label>
-                  <select
-                    className="form-select"
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleInputChange}
+                    value={formData.date_of_birth}
+                    onChange={handleChange}
                     required
-                    style={{
-                      borderColor: "#daa23e",
-                      borderWidth: "2px",
-                    }}
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                {/* Preferences */}
-                <div className="mb-4">
-                  <label className="form-label fw-bold">
-                    Preferences <span className="text-muted">(Optional)</span>
-                  </label>
-                  <textarea
-                    className="form-control"
-                    name="preferences"
-                    rows={3}
-                    value={formData.preferences || ""}
-                    onChange={handleInputChange}
-                    placeholder="Enter your astrology preferences..."
-                    style={{
-                      borderColor: "#daa23e",
-                      borderWidth: "2px",
-                    }}
                   />
                 </div>
 
-                {/* Addresses Section */}
-                <div className="mb-4">
-                  <div className="d-flex justify-content-between align-items-center mb-3">
-                    <label className="form-label fw-bold mb-0">
-                      Address <span className="text-muted">(Optional)</span>
-                    </label>
-                    <button
-                      type="button"
-                      className="btn btn-sm"
-                      onClick={handleAddAddress}
-                      style={{
-                        background:
-                          "linear-gradient(45deg, #daa23e, #e0a800)",
-                        color: "white",
-                        border: "none",
-                      }}
-                    >
-                      <i className="fa-solid fa-plus me-1"></i> Add Address
-                    </button>
-                  </div>
-
-                  {formData.addresses?.map((address, index) => (
-                    <div
-                      key={index}
-                      className="border rounded p-3 mb-3"
-                      style={{
-                        borderColor: "#daa23e",
-                        borderWidth: "2px",
-                      }}
-                    >
-                      <div className="d-flex justify-content-between align-items-center mb-2">
-                        <h6 className="mb-0">Address {index + 1}</h6>
-                        {formData.addresses &&
-                          formData.addresses.length > 1 && (
-                            <button
-                              type="button"
-                              className="btn btn-sm btn-danger"
-                              onClick={() => handleRemoveAddress(index)}
-                            >
-                              <i className="fa-solid fa-trash"></i>
-                            </button>
-                          )}
-                      </div>
-
-                      <div className="row">
-                        {/* Address Line 1 (REQUIRED) */}
-                        <div className="col-md-12 mb-3">
-                          <label className="form-label">
-                            Address Line 1{" "}
-                            <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="line1"
-                            value={address.line1}
-                            onChange={(e) => handleAddressChange(e, index)}
-                            required={index === 0}
-                            placeholder="Street address, house no., etc."
-                          />
-                        </div>
-
-                        {/* Address Line 2 */}
-                        <div className="col-md-12 mb-3">
-                          <label className="form-label">
-                            Address Line 2{" "}
-                            <span className="text-muted">(Optional)</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="line2"
-                            value={address.line2 || ""}
-                            onChange={(e) => handleAddressChange(e, index)}
-                            placeholder="Apartment, suite, etc."
-                          />
-                        </div>
-
-                        <div className="col-md-6 mb-3">
-                          <label className="form-label">
-                            City <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="city"
-                            value={address.city}
-                            onChange={(e) => handleAddressChange(e, index)}
-                            required={index === 0}
-                          />
-                        </div>
-
-                        <div className="col-md-6 mb-3">
-                          <label className="form-label">
-                            State <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="state"
-                            value={address.state}
-                            onChange={(e) => handleAddressChange(e, index)}
-                            required={index === 0}
-                          />
-                        </div>
-
-                        <div className="col-md-6 mb-3">
-                          <label className="form-label">
-                            Country <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="country"
-                            value={address.country}
-                            onChange={(e) => handleAddressChange(e, index)}
-                            required={index === 0}
-                          />
-                        </div>
-
-                        <div className="col-md-6 mb-3">
-                          <label className="form-label">
-                            Zip Code <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="zipCode"
-                            value={address.zipCode}
-                            onChange={(e) => handleAddressChange(e, index)}
-                            required={index === 0}
-                          />
-                        </div>
-
-                        <div className="col-md-12">
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              name="isPrimary"
-                              checked={address.isPrimary || false}
-                              onChange={(e) => handleAddressChange(e, index)}
-                              id={`isPrimary-${index}`}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor={`isPrimary-${index}`}
-                            >
-                              Set as Primary Address
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                {/* Time of Birth */}
+                <div className="col-md-4 mb-3">
+                  <label className="form-label fw-bold">Time of Birth *</label>
+                  <input
+                    type="time"
+                    className="form-control"
+                    name="time_of_birth"
+                    value={formData.time_of_birth}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
 
-                {/* Error Message */}
-                {error && (
-                  <div className="alert alert-danger" role="alert">
-                    <i className="fa-solid fa-circle-exclamation me-2"></i>
-                    {error}
-                  </div>
-                )}
+                {/* Place of Birth */}
+                <div className="col-md-4 mb-3">
+                  <label className="form-label fw-bold">Place of Birth *</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="place_of_birth"
+                    value={formData.place_of_birth}
+                    onChange={handleChange}
+                    placeholder="City, Country"
+                    required
+                  />
+                </div>
+              </div>
 
-                {/* Success Message */}
-                {successMessage && (
-                  <div className="alert alert-success" role="alert">
-                    <i className="fa-solid fa-check-circle me-2"></i>
-                    {successMessage}
-                  </div>
-                )}
-              </form>
-            </div>
+              {/* Phone Number */}
+              <div className="mb-3">
+                <label className="form-label fw-bold">Phone Number</label>
+                <input
+                  type="tel"
+                  className="form-control"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Enter your mobile number"
+                />
+              </div>
 
-            {/* Modal Footer */}
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={handleReset}
-                disabled={isLoading}
-              >
-                <i className="fa-solid fa-rotate-left me-2"></i>
-                Reset
-              </button>
-              <button
-                type="button"
-                className="btn"
-                onClick={onSkip}
-                disabled={isLoading}
-                style={{
-                  backgroundColor: "#f0f0f0",
-                  color: "#333",
-                  border: "none",
-                }}
-              >
-                Skip
-              </button>
-              <button
-                type="submit"
-                form="profile-form"
-                className="btn"
-                disabled={isLoading}
-                style={{
-                  background: "linear-gradient(45deg, #daa23e, #e0a800)",
-                  color: "white",
-                  border: "none",
-                }}
-              >
-                {isLoading ? (
-                  <>
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <i className="fa-solid fa-save me-2"></i>
-                    Save Profile
-                  </>
-                )}
-              </button>
-            </div>
+              {/* Language Preference */}
+              <div className="mb-3">
+                <label className="form-label fw-bold">Language Preference</label>
+                <select
+                  className="form-select"
+                  name="language_preference"
+                  value={formData.language_preference}
+                  onChange={handleChange}
+                >
+                  <option value="">Select Language</option>
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Sanskrit">Sanskrit</option>
+                </select>
+              </div>
+
+              {/* Preferences */}
+              <div className="mb-3">
+                <label className="form-label fw-bold">Astrological Preferences / Notes</label>
+                <textarea
+                  className="form-control"
+                  name="preferences"
+                  value={formData.preferences}
+                  onChange={handleChange}
+                  placeholder="Any specific areas you are interested in (e.g., Career, Health, Marriage)..."
+                  rows={3}
+                />
+              </div>
+
+              <div className="d-flex justify-content-end gap-2 mt-4">
+                <button
+                  type="submit"
+                  className="btn btn-primary px-5 py-2 fw-bold"
+                  disabled={loading}
+                >
+                  {loading ? "Saving..." : "Save Details"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

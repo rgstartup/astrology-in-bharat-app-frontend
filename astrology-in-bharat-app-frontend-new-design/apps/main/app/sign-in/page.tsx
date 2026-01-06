@@ -192,7 +192,7 @@ const Page: React.FC = () => {
                 ].map((item, idx) => (
                   <div className="col-lg-4 col-sm-6 col-md-4 col-6" key={idx}>
                     <div className="horoscopes-items text-center">
-                      <Image
+                      <img
                         src="/images/astro-img1.png"
                         alt="Popular Astrology"
                         height={80}
@@ -225,9 +225,9 @@ const Page: React.FC = () => {
                 </h6>
                 <h6 className="mb-0">
                   No Account? <br />
-                  <Link href="/register" className="sign-up fw-bold">
+                  <a href="/register" className="sign-up fw-bold">
                     Sign Up
-                  </Link>
+                  </a>
                 </h6>
               </div>
 
@@ -238,7 +238,7 @@ const Page: React.FC = () => {
               {/* Social Login */}
               <div className="social-links d-flex gap-3 mb-4">
                 <div className="social-button d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
-                  <Image
+                  <img
                     src="/images/google-color-svgrepo-com.svg"
                     alt="Google"
                     height={22}
@@ -247,7 +247,7 @@ const Page: React.FC = () => {
                   <small>Sign in with Google</small>
                 </div>
                 <div className="social-button2 d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
-                  <Image
+                  <img
                     src="/images/facebook-1-svgrepo-com.svg"
                     alt="Facebook"
                     height={22}
@@ -307,12 +307,12 @@ const Page: React.FC = () => {
 
                 {/* Forget password */}
                 <div className="d-flex justify-content-end mb-3">
-                  <Link
+                  <a
                     href="#"
                     className="forget-password text-decoration-none"
                   >
                     Forget Password?
-                  </Link>
+                  </a>
                 </div>
 
                 {/* Submit button */}
