@@ -27,6 +27,10 @@ const poppins = Poppins({
   weight: ["400", "700"],
 });
 
+import { AuthProvider } from "@/context/AuthContext";
+
+import ProfileCompletionCheck from "@/components/ProfileCompletionCheck";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -52,10 +56,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-black">
-        {/* {!isAdminRoute && <QuotesLoader />} */}
-        {!isAdminRoute && <Header />}
-        <main>{children}</main>
-        {!isAdminRoute && <Footer />}
+        <AuthProvider>
+          {/* {!isAdminRoute && <QuotesLoader />} */}
+          {!isAdminRoute && <Header />}
+          <main>{children}</main>
+          {!isAdminRoute && <ProfileCompletionCheck />}
+          {!isAdminRoute && <Footer />}
+        </AuthProvider>
       </body>
     </html>
   );

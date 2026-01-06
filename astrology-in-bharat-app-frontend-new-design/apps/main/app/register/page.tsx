@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useState, useCallback, FormEvent } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 // --- Types ---
 interface RegistrationPayload {
@@ -14,6 +15,8 @@ interface RegistrationPayload {
 }
 interface RegistrationSuccessResponse {
   message: string;
+  accessToken?: string;
+  user?: any;
 }
 interface FormData {
   fullName: string;
@@ -26,6 +29,7 @@ const API_ENDPOINT = "http://localhost:4000/api/v1/auth/email/register";
 
 const Page: React.FC = () => {
   const router = useRouter();
+  const { login } = useAuth();
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
@@ -69,7 +73,7 @@ const Page: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -94,6 +98,10 @@ const Page: React.FC = () => {
       setSuccessMessage(
         response.data.message || "Registration successful! You can now sign in."
       );
+
+      if (response.data.accessToken) {
+        login(response.data.accessToken);
+      }
 
       setFormData({ fullName: "", email: "", password: "" });
       router.push('/')
@@ -154,7 +162,7 @@ const Page: React.FC = () => {
                 ].map((item, idx) => (
                   <div className="col-lg-4 col-sm-6 col-md-4 col-6" key={idx}>
                     <div className="horoscopes-items text-center">
-                      <Image
+                      <img
                         src="/images/astro-img1.png"
                         alt="Popular Astrology"
                         height={80}
@@ -183,9 +191,9 @@ const Page: React.FC = () => {
                 </h6>
                 <h6 className="mb-0">
                   Already Account? <br />
-                  <Link href="/sign-in" className="sign-up fw-bold">
+                  <a href="/sign-in" className="sign-up fw-bold">
                     Sign In
-                  </Link>
+                  </a>
                 </h6>
               </div>
 
@@ -196,7 +204,7 @@ const Page: React.FC = () => {
               {/* Social Login */}
               <div className="social-links d-flex gap-3 mb-4">
                 <div className="social-button d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
-                  <Image
+                  <img
                     src="/images/google-color-svgrepo-com.svg"
                     alt="Google"
                     height={22}
@@ -205,7 +213,7 @@ const Page: React.FC = () => {
                   <small>Sign in with Google</small>
                 </div>
                 <div className="social-button2 d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
-                  <Image
+                  <img
                     src="/images/facebook-1-svgrepo-com.svg"
                     alt="Facebook"
                     height={22}
