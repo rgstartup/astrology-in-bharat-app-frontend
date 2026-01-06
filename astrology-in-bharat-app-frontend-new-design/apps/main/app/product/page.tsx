@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { products, purpose } from "@/data/homePagaData";
 
 const page: React.FC = () => {
@@ -10,7 +11,7 @@ const page: React.FC = () => {
         <div className="overlay-hero">
           <div className="container">
             <h4 className=" text-white text-center  display-5 fw-semibold display-3">
-              Our Prodcuts
+              Our Products
             </h4>
           </div>
         </div>
@@ -19,30 +20,38 @@ const page: React.FC = () => {
       {/* Best Sellers Product Grid */}
       <section className="store-products py-5 ">
         <div className="container">
-          <h2 className="section-heading text-center mb-5 display-6 fw-semibold text-center mb-5">
+          <h2 className="section-heading text-center mb-5 display-6 fw-semibold text-[#301118]">
             Best Sellers
           </h2>
           <div className="product-slider-container">
-            <div className="row ">
+            <div className="row g-4">
               {products.map((product) => (
                 <div key={product.id} className="col-lg-3 col-md-4 col-sm-6">
-                  <div className="ser-card vert-move">
-                    <img
-                      src={product.image}
-                      alt="Image Not Found"
-                      className="services-img w-100 mb-3"
-                      style={{ height: "160px", objectFit: "cover" }}
-                    />
-                    <h4>{product.title}</h4>
-                    <p className="p-sm text-muted">{product.description}</p>
-                    <div className=" mt-auto pt-3">
-                      <h5 className="mb-0 fw-bold">{product.price}</h5>
-                      <button className="btn btn-primary orderNowbtn mt-3">
-                        <Link href="/product/id">
-                          <i className="fas fa-shopping-cart me-2"></i>
-                          Add To Cart
-                        </Link>
-                      </button>
+                  <div className="ser-card vert-move h-100 flex flex-col p-4 shadow-sm hover:shadow-lg transition-all rounded-4 border">
+                    <div className="relative w-full h-[160px] mb-3 overflow-hidden rounded-3">
+                      <Image
+                        src={product.image}
+                        alt={product.title}
+                        fill
+                        className="services-img object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                    <h4 className="text-lg font-bold text-[#301118] h-[50px] overflow-hidden line-clamp-2">
+                      {product.title}
+                    </h4>
+                    <p className="p-sm text-muted text-sm line-clamp-2 flex-grow">
+                      {product.description}
+                    </p>
+                    <div className=" mt-auto pt-3 flex items-center justify-between">
+                      <h5 className="mb-0 fw-bold text-[#fd6410]">
+                        {product.price}
+                      </h5>
+                      <Link
+                        href="/product/id"
+                        className="btn-link text-sm font-bold flex items-center gap-1 hover:text-[#fd6410]"
+                      >
+                        <i className="fas fa-shopping-cart"></i> Add
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -53,26 +62,24 @@ const page: React.FC = () => {
       </section>
 
       {/* Shop by Purpose Section */}
-      <section
-        className="store-products py-50 bg-cream "
-        style={{ marginBottom: "-90px", paddingBottom: "100px" }}
-      >
+      <section className="store-products py-20 bg-[#fff5f0] border-t border-[#fd64102b]">
         <div className="container">
-          <h2 className="section-heading  text-center mb-5 display-6 fw-semibold  ">
+          <h2 className="section-heading text-center mb-5 display-6 fw-semibold text-[#301118]">
             Shop By Purpose
           </h2>
           <div className="product-slider-container">
-            <div className="row ">
+            <div className="row g-4">
               {purpose.map((item) => (
                 <div key={item.id} className="col-lg-2 col-md-4 col-sm-6">
-                  <div className=" vert-move">
-                    <img
-                      src={item.image}
-                      alt="Image Not Found"
-                      className="services-img w-100 mb-3"
-                      style={{ height: "160px", objectFit: "cover" }}
-                    />
-                    {/* <span>{item.title}</span> */}
+                  <div className="vert-move p-2 bg-white rounded-full shadow-sm hover:shadow-md transition-all border border-[#fd64101a]">
+                    <div className="relative w-full aspect-square overflow-hidden rounded-full">
+                      <Image
+                        src={item.image}
+                        alt="Purpose"
+                        fill
+                        className="services-img object-cover"
+                      />
+                    </div>
                   </div>
                 </div>
               ))}

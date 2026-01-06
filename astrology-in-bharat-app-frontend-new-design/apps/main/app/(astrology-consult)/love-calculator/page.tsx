@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import NextImage from "next/image";
 import {
   FaHeart,
   FaUser,
@@ -50,7 +50,7 @@ const LoveCalculatorPage = () => {
               </div>
               <div className="col-lg-5 col-md-12 text-center">
                 <div className="right-illus">
-                  <Image
+                  <NextImage
                     src="/images/horoscope-round2.png"
                     alt="Zodiac"
                     width={500}

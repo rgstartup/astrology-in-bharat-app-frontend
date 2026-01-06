@@ -3,9 +3,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useRouter, usePathname } from "next/navigation";
 import LinkComponent from "next/link";
+import Image from "next/image";
 import { PATHS } from "@repo/routes";
 
 const Link = LinkComponent as any;
+const NextImage = Image as any;
 import {
   Swiper as SwiperComponent,
   SwiperSlide as SwiperSlideComponent,
@@ -364,13 +366,15 @@ const Header: React.FC = () => {
           <div className="row align">
             <div className="col-lg-10 col-md-7">
               <nav className="navbar navbar-expand-lg navbar-light ">
-                <a className="navbar-brand" href="#">
-                  <img
-                    src="images/web-logo.png"
+                <Link className="navbar-brand" href="/">
+                  <NextImage
+                    src="/images/web-logo.png"
                     alt="logo"
-                    className="logo  "
+                    width={180}
+                    height={60}
+                    className="logo object-contain"
                   />
-                </a>
+                </Link>
                 <button
                   className="navbar-toggler"
                   type="button"
@@ -388,14 +392,14 @@ const Header: React.FC = () => {
                 >
                   <ul className="navbar-nav ms-auto  top-menu-main">
                     <li className="nav-item">
-                      <a className="nav-link" href="#">
+                      <Link className="nav-link" href="/">
                         Home
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="#">
+                      <Link className="nav-link" href={PATHS.HOROSCOPE}>
                         Daily Horoscope
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item dropdown">
                       <a
@@ -517,10 +521,9 @@ const Header: React.FC = () => {
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link" href="#">
-                        {" "}
+                      <Link className="nav-link" href={PATHS.BLOG}>
                         Blog
-                      </a>
+                      </Link>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" href="#">
@@ -532,10 +535,16 @@ const Header: React.FC = () => {
               </nav>
             </div>
             <div className="col-lg-2 col-md-5 mobile-none">
-              <a href="#" className="btn-link">
-                <img src="images/chat.svg" className="chat-icon" /> Ask
-                Astrologer
-              </a>
+              <Link href="/our-astrologers" className="btn-link">
+                <NextImage
+                  src="/images/chat.svg"
+                  className="chat-icon"
+                  alt="chat"
+                  width={24}
+                  height={24}
+                />{" "}
+                Ask Astrologer
+              </Link>
             </div>
           </div>
         </div>
@@ -577,10 +586,12 @@ const Header: React.FC = () => {
                         href={service.href}
                         className="flx-icon text-decoration-none text-dark"
                       >
-                        <img
-                          src={service.icon}
+                        <NextImage
+                          src={`/${service.icon}`}
                           className="icon-top-flx"
                           alt={service.label}
+                          width={40}
+                          height={40}
                         />
                         <span>{service.label}</span>
                       </Link>
@@ -589,10 +600,12 @@ const Header: React.FC = () => {
                         href={service.href}
                         className="flx-icon text-decoration-none text-dark"
                       >
-                        <img
-                          src={service.icon}
+                        <NextImage
+                          src={`/${service.icon}`}
                           className="icon-top-flx"
                           alt={service.label}
+                          width={40}
+                          height={40}
                         />
                         <span>{service.label}</span>
                       </a>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Love Calculator - Astrology in Bharat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#F95C19", // Extracted vibrant orange
+                        "primary-hover": "#e04e10",
+                        "background-light": "#FFF9F2", // Creamy light background
+                        "background-dark": "#1F1111", // Deep dark brown/black for dark mode
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#2D1B1B",
+                        "text-light": "#333333",
+                        "text-dark": "#F5F5F5",
+                        "border-light": "#FFE0C2",
+                        "border-dark": "#4A2F2F"
+                    },
+                    fontFamily: {
+                        display: ["'Playfair Display'", "serif"],
+                        sans: ["'Poppins'", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                    backgroundImage: {
+                        'mandala': "url('https://www.transparenttextures.com/patterns/black-scales.png')", // Abstract pattern
+                    }
+                },
+            },
+        };
+    </script>
+<style>::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #F95C19; 
+            border-radius: 4px;
+        }
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300">
+<div class="bg-[#3D0C11] text-white py-2 px-4 text-xs md:text-sm dark:bg-black">
+<div class="container mx-auto flex justify-between items-center">
+<span class="hidden md:inline">Connect with Verified Astrology Experts for Online Predictions.</span>
+<div class="flex items-center space-x-4 ml-auto">
+<button class="flex items-center hover:text-primary transition">
+<span class="material-icons text-base mr-1">language</span> Eng <span class="material-icons text-sm ml-1">expand_more</span>
+</button>
+<button class="flex items-center hover:text-primary transition relative">
+<span class="material-icons text-base mr-1">shopping_cart</span> Cart
+                    <span class="absolute -top-1 -right-2 bg-primary text-white text-[10px] rounded-full px-1">0</span>
+</button>
+<button class="flex items-center hover:text-primary transition bg-white text-black px-3 py-1 rounded-full">
+<span class="material-icons text-base mr-1">person</span> Account <span class="material-icons text-sm ml-1">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+<nav class="bg-surface-light dark:bg-surface-dark shadow-sm sticky top-0 z-50">
+<div class="container mx-auto px-4 py-3 flex justify-between items-center">
+<div class="flex items-center">
+<div class="flex flex-col">
+<h1 class="font-display text-2xl md:text-3xl font-bold text-primary leading-none">Astrology</h1>
+<span class="text-xs md:text-sm font-medium tracking-wider text-gray-600 dark:text-gray-300">in Bharat</span>
+</div>
+</div>
+<div class="hidden lg:flex items-center space-x-6 xl:space-x-8 text-sm font-medium text-gray-700 dark:text-gray-200">
+<a class="hover:text-primary transition" href="#">Home</a>
+<a class="hover:text-primary transition" href="#">Daily Horoscope</a>
+<div class="relative group">
+<button class="flex items-center hover:text-primary transition">
+                        Astrology Consult <span class="material-icons text-sm ml-1">expand_more</span>
+</button>
+<div class="absolute top-full left-0 w-48 bg-white dark:bg-surface-dark shadow-lg rounded-b-lg py-2 hidden group-hover:block border-t-2 border-primary">
+<a class="block px-4 py-2 hover:bg-orange-50 dark:hover:bg-gray-800 hover:text-primary" href="#">Chat with Astrologer</a>
+<a class="block px-4 py-2 hover:bg-orange-50 dark:hover:bg-gray-800 hover:text-primary" href="#">Talk to Astrologer</a>
+</div>
+</div>
+<a class="hover:text-primary transition" href="#">Blog</a>
+<a class="hover:text-primary transition" href="#">Kundli Prediction</a>
+</div>
+<button class="bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-full font-medium shadow-lg shadow-orange-200 dark:shadow-none flex items-center transition transform hover:-translate-y-0.5">
+<span class="material-icons text-sm mr-2">chat_bubble</span> Ask Astrologer
+            </button>
+<button class="lg:hidden text-gray-700 dark:text-gray-200">
+<span class="material-icons text-3xl">menu</span>
+</button>
+</div>
+</nav>
+<div class="bg-gradient-to-r from-[#D94F0C] to-[#F95C19] text-white py-3 shadow-md overflow-x-auto">
+<div class="container mx-auto flex justify-between md:justify-center space-x-4 md:space-x-10 min-w-max px-4">
+<a class="flex items-center space-x-2 text-sm font-medium opacity-90 hover:opacity-100 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">grid_view</span> <span>My Kundli</span>
+</a>
+<a class="flex items-center space-x-2 text-sm font-medium opacity-90 hover:opacity-100 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">filter_7</span> <span>Numerology</span>
+</a>
+<a class="flex items-center space-x-2 text-sm font-medium opacity-90 hover:opacity-100 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">temple_buddhist</span> <span>Online Puja</span>
+</a>
+<a class="flex items-center space-x-2 text-sm font-medium opacity-90 hover:opacity-100 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">auto_awesome</span> <span>Life Horoscope</span>
+</a>
+<a class="flex items-center space-x-2 text-sm font-medium opacity-90 hover:opacity-100 whitespace-nowrap border-b-2 border-white pb-0.5" href="#">
+<span class="material-icons text-lg">favorite</span> <span>Love Report</span>
+</a>
+<a class="flex items-center space-x-2 text-sm font-medium opacity-90 hover:opacity-100 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">diversity_3</span> <span>Match Analysis</span>
+</a>
+</div>
+</div>
+<div class="relative py-12 md:py-20 overflow-hidden">
+<div class="absolute inset-0 z-0 opacity-10 dark:opacity-5 pointer-events-none">
+<img alt="Zodiac Wheel" class="absolute -right-64 -top-64 w-[800px] h-[800px] animate-spin-slow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGWOzwidQcIqnwVx8iXzIeHL5mADtrutww1pH99auTtiPV861iMYNgS8AMDcJ3i6NzKr8f14QOE9aVorVMAZH7DouQdfHpJR7XycwCdXQhI1NMtnzcGH_61s3li60jzX8GOJVPHw-IEVQ27iA_dubWZZn0en-TfCg_QvyMehj8NORpLON2Rp1MkIRv0vbaIH6rPEsJC4PoBiz45uPP-S6wrl2HOsOOrskgZW4NxFulqbrCaSIxl5ImT-uf7pgv2FbOl8bp10Rd6iPx" style="animation-duration: 120s;"/>
+<img alt="Zodiac Wheel" class="absolute -left-64 bottom-0 w-[600px] h-[600px] opacity-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeRIuM7lWDx6pb191M5CdZv6p1F5FuYTd8yj6hhjLwGvqLydI0nsb0a3PpSW8ZFkRWhGXJnDAznroVLpipvrRi5QVwodWuRgEtfR4cU50MhygeDqn5XopGD0eZX3WzZ67YUvhBZWDnLTuyqR3mDgUSC0ejsvVcKLyqCsu_O1Y7OMTm1R7cGwHn6Kxjj5RhSv1AM00cOya2PcTXPXnEjvtfnZ3PnAR4ikDwvClB-jOC80e8fnziwUbVyQmRlHAD7YN6T46pC2pbe3P5"/>
+</div>
+<div class="container mx-auto px-4 relative z-10">
+<div class="text-center mb-10">
+<span class="bg-orange-100 dark:bg-orange-900/30 text-primary px-4 py-1 rounded-full text-xs font-bold tracking-widest uppercase mb-4 inline-block">Free Tool</span>
+<h2 class="font-display text-4xl md:text-5xl font-bold mb-4 text-gray-800 dark:text-white">True Love Calculator</h2>
+<p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Discover the cosmic compatibility between you and your partner. Use our Vedic algorithm to check your love percentage based on names and zodiac signs.</p>
+</div>
+<div class="max-w-4xl mx-auto bg-white dark:bg-surface-dark rounded-2xl shadow-xl overflow-hidden border border-border-light dark:border-border-dark flex flex-col md:flex-row">
+<div class="w-full md:w-5/12 bg-orange-50 dark:bg-[#3A2222] p-8 flex flex-col justify-center items-center text-center relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+<img alt="Couple in Love Illustration" class="w-48 h-auto mb-6 relative z-10 drop-shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMshWzZeiejz7y9nHOeJJPANbNB7nbKXAYuw3mvkVl0svOfQOYY-WFBOGNDdp4l_CijT5IsKTVdxPdTeGwDRlEf3-44Bx6K7PwQoKwhJo_PxtEgzgm-MQwtqiGiRnkZ_YMrWTUzOfgcOayHx2hYEPURJiiydZF30svDJRGeqOt4yhb07qlz-KxI6AR4KEo4_QwXDYRofHqKeB21IllH7_OHCosGI3aMNLwu7hLA5d3cR6VixGvzY9lSscfhgK-XADS9xXfZFQPJunz"/>
+<h3 class="font-display text-2xl font-bold text-primary mb-2 relative z-10">Are you meant to be?</h3>
+<p class="text-sm text-gray-600 dark:text-gray-300 relative z-10">The stars hold the answer. Enter your details to reveal the strength of your bond.</p>
+</div>
+<div class="w-full md:w-7/12 p-8 md:p-10">
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-4">
+<h4 class="font-semibold text-gray-800 dark:text-gray-100 flex items-center">
+<span class="bg-primary/10 text-primary p-1 rounded-md mr-2"><span class="material-icons text-sm">person</span></span> 
+                                    Your Details
+                                </h4>
+<div>
+<label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase">Name</label>
+<input class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-primary focus:border-primary transition" placeholder="Enter your name" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase">Zodiac Sign</label>
+<select class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-primary focus:border-primary transition">
+<option>Select Sign</option>
+<option>Aries</option>
+<option>Taurus</option>
+<option>Gemini</option>
+<option>Cancer</option>
+<option>Leo</option>
+<option>Virgo</option>
+<option>Libra</option>
+<option>Scorpio</option>
+<option>Sagittarius</option>
+<option>Capricorn</option>
+<option>Aquarius</option>
+<option>Pisces</option>
+</select>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="font-semibold text-gray-800 dark:text-gray-100 flex items-center">
+<span class="bg-pink-100 text-pink-500 p-1 rounded-md mr-2"><span class="material-icons text-sm">favorite</span></span> 
+                                    Partner Details
+                                </h4>
+<div>
+<label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase">Name</label>
+<input class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-primary focus:border-primary transition" placeholder="Partner's name" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase">Zodiac Sign</label>
+<select class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white focus:ring-primary focus:border-primary transition">
+<option>Select Sign</option>
+<option>Aries</option>
+<option>Taurus</option>
+<option>Gemini</option>
+<option>Cancer</option>
+<option>Leo</option>
+<option>Virgo</option>
+<option>Libra</option>
+<option>Scorpio</option>
+<option>Sagittarius</option>
+<option>Capricorn</option>
+<option>Aquarius</option>
+<option>Pisces</option>
+</select>
+</div>
+</div>
+</div>
+<div class="pt-4">
+<button class="w-full bg-gradient-to-r from-primary to-orange-600 hover:to-orange-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-500/30 transform hover:-translate-y-1 transition duration-200 text-lg flex justify-center items-center" type="submit">
+<span class="material-icons mr-2 animate-pulse">favorite</span> Calculate Compatibility
+                            </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-[#251616] py-16">
+<div class="container mx-auto px-4">
+<div class="flex flex-col md:flex-row items-center gap-12">
+<div class="w-full md:w-1/2 order-2 md:order-1">
+<h3 class="font-display text-3xl font-bold mb-6 text-gray-900 dark:text-white">How Astrology Influences Love</h3>
+<div class="space-y-6 text-gray-600 dark:text-gray-300">
+<p class="leading-relaxed">
+                            Love compatibility in Vedic astrology is not just about matching sun signs. It involves a deep analysis of lunar constellations (Nakshatras), planetary positions, and the interplay of elements (Fire, Earth, Air, Water).
+                        </p>
+<ul class="space-y-4">
+<li class="flex items-start">
+<span class="bg-green-100 text-green-600 rounded-full p-1 mr-3 mt-1"><span class="material-icons text-sm">check</span></span>
+<div>
+<strong class="block text-gray-900 dark:text-white">Guna Milan</strong>
+                                    Matching of 36 points (Gunas) for long-term marital stability.
+                                </div>
+</li>
+<li class="flex items-start">
+<span class="bg-green-100 text-green-600 rounded-full p-1 mr-3 mt-1"><span class="material-icons text-sm">check</span></span>
+<div>
+<strong class="block text-gray-900 dark:text-white">Planetary Harmony</strong>
+                                    Analyzing the positions of Venus (Love) and Mars (Passion).
+                                </div>
+</li>
+<li class="flex items-start">
+<span class="bg-green-100 text-green-600 rounded-full p-1 mr-3 mt-1"><span class="material-icons text-sm">check</span></span>
+<div>
+<strong class="block text-gray-900 dark:text-white">Element Balance</strong>
+                                    How your core natures interact—do you fuel each other or extinguish the spark?
+                                </div>
+</li>
+</ul>
+<div class="pt-4">
+<a class="text-primary font-semibold hover:underline flex items-center" href="#">
+                                Read full guide on Zodiac Compatibility <span class="material-icons text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/2 order-1 md:order-2 flex justify-center">
+<div class="grid grid-cols-2 gap-4">
+<img alt="Starry Sky" class="w-full h-48 object-cover rounded-2xl shadow-lg transform translate-y-8" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeskE7pwuTYy7WcLQ5SudyybNVeqHh6oJer5Yj-hkiuqkf5sM26Q_WzdL_9NRejwJe_XDrnVWzgo5Py9dTVE-92BtqdzGqOl4gtVUcPr9B8-acP2rYHaPWF7P4XKDZhV7-skRPG4kTTtJIKxfBfkDWRfLlosqAaJNqwfM6bO1PeIBwQyKd-GtKW34VfRswl9hp0-HelULEKWAt6FmX7Um8ZaxCcPRG6HximYtXGaP8pBxQGWkwn1KcNMm-0d4g7gpGxvTVw99om7ov"/>
+<img alt="Wedding Ring" class="w-full h-48 object-cover rounded-2xl shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDF6tPZcU2OuqYjdjyymlu2xb6iXpwyeYJ9K8SV_gtt_BQfcW0z1OaWjOfmRp-ekEjo5Slg0IHFMaf-scQTG0ezmWyiGMEMuj3sjN8rqD1vKmDmgkpFwr7MJ6PHwoQTAumFtEDowtbSRQFuH6H-NP2N8OfDBbe0ck_iXpqbDiuGLgL8YeMMxwdNoFfCi0vVGBUT2YE8QdS-TCJav3O40zmddS495j_r8BRP5E2n1t7BsCsJ1SQH30z5K35_dpkhp6H4xRat09TDP7nN"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="py-16 bg-background-light dark:bg-background-dark">
+<div class="container mx-auto px-4">
+<h3 class="font-display text-2xl md:text-3xl font-bold text-center mb-10 dark:text-white">Other Services You Might Like</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<a class="group bg-white dark:bg-surface-dark rounded-xl p-6 text-center shadow-md hover:shadow-xl transition border border-transparent hover:border-primary/30" href="#">
+<div class="w-16 h-16 mx-auto bg-orange-100 dark:bg-orange-900/40 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-white transition text-primary">
+<span class="material-icons text-3xl">diversity_1</span>
+</div>
+<h4 class="font-bold text-lg mb-2 dark:text-white">Kundli Matching</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400">Detailed horoscope matching for marriage.</p>
+</a>
+<a class="group bg-white dark:bg-surface-dark rounded-xl p-6 text-center shadow-md hover:shadow-xl transition border border-transparent hover:border-primary/30" href="#">
+<div class="w-16 h-16 mx-auto bg-orange-100 dark:bg-orange-900/40 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-white transition text-primary">
+<span class="material-icons text-3xl">psychology</span>
+</div>
+<h4 class="font-bold text-lg mb-2 dark:text-white">Love Problems</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400">Expert solutions for relationship issues.</p>
+</a>
+<a class="group bg-white dark:bg-surface-dark rounded-xl p-6 text-center shadow-md hover:shadow-xl transition border border-transparent hover:border-primary/30" href="#">
+<div class="w-16 h-16 mx-auto bg-orange-100 dark:bg-orange-900/40 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-white transition text-primary">
+<span class="material-icons text-3xl">diamond</span>
+</div>
+<h4 class="font-bold text-lg mb-2 dark:text-white">Gemstone Report</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400">Find the lucky stone for your love life.</p>
+</a>
+<a class="group bg-white dark:bg-surface-dark rounded-xl p-6 text-center shadow-md hover:shadow-xl transition border border-transparent hover:border-primary/30" href="#">
+<div class="w-16 h-16 mx-auto bg-orange-100 dark:bg-orange-900/40 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-white transition text-primary">
+<span class="material-icons text-3xl">calendar_month</span>
+</div>
+<h4 class="font-bold text-lg mb-2 dark:text-white">Shubh Muhurat</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400">Find auspicious dates for weddings.</p>
+</a>
+</div>
+</div>
+</div>
+<footer class="bg-[#1A0F0F] text-gray-300 border-t border-orange-900 relative">
+<div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')] pointer-events-none"></div>
+<div class="container mx-auto px-4 py-16 relative z-10">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div>
+<div class="flex flex-col mb-4">
+<h1 class="font-display text-2xl font-bold text-white leading-none">Astrology</h1>
+<span class="text-xs font-medium tracking-wider text-primary">in Bharat</span>
+</div>
+<p class="text-sm mb-6 leading-relaxed text-gray-400">
+                        Astrology in Bharat is India's most trusted spiritual platform offering accurate ancient Vedic guidance through verified astrologers using authentic Indian astrology systems.
+                    </p>
+<div class="flex space-x-4">
+<a class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition" href="#">
+<span class="material-icons text-sm">facebook</span>
+</a>
+<a class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition" href="#">
+<i class="material-icons text-sm">photo_camera</i> 
+</a>
+<a class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition" href="#">
+<span class="material-icons text-sm">ondemand_video</span>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-white font-bold mb-4 border-b border-orange-900 pb-2 inline-block">Horoscope</h3>
+<ul class="space-y-2 text-sm">
+<li><a class="hover:text-primary transition" href="#">Daily Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Weekly Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Monthly Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Yearly Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Love Horoscope</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-white font-bold mb-4 border-b border-orange-900 pb-2 inline-block">Important Links</h3>
+<ul class="space-y-2 text-sm">
+<li><a class="hover:text-primary transition" href="#">Astrologer Login</a></li>
+<li><a class="hover:text-primary transition" href="#">Astrologer Registration</a></li>
+<li><a class="hover:text-primary transition" href="#">Shubh Muhurat 2025</a></li>
+<li><a class="hover:text-primary transition" href="#">Shop Our Products</a></li>
+<li><a class="hover:text-primary transition" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-white font-bold mb-4 border-b border-orange-900 pb-2 inline-block">Helpful Info</h3>
+<ul class="space-y-2 text-sm">
+<li><a class="hover:text-primary transition" href="#">Refund Policy</a></li>
+<li><a class="hover:text-primary transition" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition" href="#">Terms &amp; Conditions</a></li>
+<li><a class="hover:text-primary transition" href="#">Copyright Notice</a></li>
+<li><a class="hover:text-primary transition" href="#">Sitemap</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="bg-black py-4 border-t border-gray-900 relative z-10">
+<div class="container mx-auto px-4 text-center text-xs text-gray-500">
+                © 2025 Astrology in Bharat (Powered by Astrology in Bharat Services). All Rights Reserved.
+            </div>
+</div>
+</footer>
+<div class="fixed bottom-6 right-6 z-50">
+<button class="bg-gray-800 dark:bg-white text-white dark:text-black p-3 rounded-full shadow-lg hover:scale-110 transition" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons dark:hidden">dark_mode</span>
+<span class="material-icons hidden dark:block">light_mode</span>
+</button>
+</div>
+
+</body></html>
