@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  transpilePackages: ["@repo/ui"],
+  transpilePackages: ["@repo/ui", "@repo/routes"],
 };
 
 export default nextConfig;

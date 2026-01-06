@@ -1,9 +1,9 @@
 "use client";
-import Link from "next/link";
 import React, { useState, useEffect, useCallback } from "react";
-import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
 import axios from "axios";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
+import { PATHS, URLS } from "@repo/routes";
 
 interface UserProfile {
   id: number;
@@ -55,12 +55,10 @@ const Header: React.FC = () => {
 
         console.log("Profile data:", response.data);
       } else {
-
         setIsAuthenticated(false);
         setUserProfile(null);
       }
     } catch (error: any) {
-
       setIsAuthenticated(false);
       setUserProfile(null);
     } finally {
@@ -77,10 +75,7 @@ const Header: React.FC = () => {
   }, [isClient, pathname, checkAuthentication]);
 
   // Log profile state changes
-  useEffect(() => {
-
-
-  }, [isAuthenticated, userProfile, loading]);
+  useEffect(() => {}, [isAuthenticated, userProfile, loading]);
 
   // Also check authentication when window regains focus (e.g., after login in another tab)
   useEffect(() => {
@@ -160,7 +155,8 @@ const Header: React.FC = () => {
 
     if (showProfileDropdown || showAccountDropdown || showLanguageDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [showProfileDropdown, showAccountDropdown, showLanguageDropdown]);
 
@@ -170,47 +166,103 @@ const Header: React.FC = () => {
         <div className="container">
           <div className="row align">
             <div className="col-lg-8 col-md-6">
-              <p className="top-text">Connect with Verified Astrology Experts for Online Predictions.</p>
+              <p className="top-text">
+                Connect with Verified Astrology Experts for Online Predictions.
+              </p>
             </div>
             <div className="col-lg-4 col-md-6">
               <div className="right-part-top">
                 <div className="row align list-top-bar-mobile">
                   <div className="col-4 mobile-space">
-                    <div className={`account-dropdown language-dropdown-container w-100 ${showLanguageDropdown ? "show" : ""}`}>
+                    <div
+                      className={`account-dropdown language-dropdown-container w-100 ${showLanguageDropdown ? "show" : ""}`}
+                    >
                       <button
                         className="account-btn w-100"
-                        onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
+                        onClick={() =>
+                          setShowLanguageDropdown(!showLanguageDropdown)
+                        }
                       >
-                        <i className="fa-solid fa-globe"></i> Eng <i className="fa-solid fa-angle-down"></i>
+                        <i className="fa-solid fa-globe"></i> Eng{" "}
+                        <i className="fa-solid fa-angle-down"></i>
                       </button>
                       <div className="account-menu" style={{ zIndex: 60 }}>
-                        <a href="#" onClick={(e) => { e.preventDefault(); setShowLanguageDropdown(false); }}>English</a>
-                        <a href="#" onClick={(e) => { e.preventDefault(); setShowLanguageDropdown(false); }}>हिंदी</a>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setShowLanguageDropdown(false);
+                          }}
+                        >
+                          English
+                        </a>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setShowLanguageDropdown(false);
+                          }}
+                        >
+                          हिंदी
+                        </a>
                       </div>
                     </div>
                   </div>
 
                   <div className="col-3 mobile-space text-center">
-                    <a href="/cart" className="cart-top"><i className="fa-solid fa-cart-shopping"></i> Cart <span className="value">4</span></a>
+                    <Link href={PATHS.CART} className="cart-top">
+                      <i className="fa-solid fa-cart-shopping"></i> Cart{" "}
+                      <span className="value">4</span>
+                    </Link>
                   </div>
                   <div className="col-5 mobile-space">
-                    <div className={`account-dropdown account-dropdown-container w-100 ${showAccountDropdown ? "show" : ""}`}>
+                    <div
+                      className={`account-dropdown account-dropdown-container w-100 ${showAccountDropdown ? "show" : ""}`}
+                    >
                       <button
                         className="account-btn w-100"
-                        onClick={() => setShowAccountDropdown(!showAccountDropdown)}
+                        onClick={() =>
+                          setShowAccountDropdown(!showAccountDropdown)
+                        }
                       >
-                        <i className="fa-solid fa-user"></i> Account <i className="fa-solid fa-angle-down"></i>
+                        <i className="fa-solid fa-user"></i> Account{" "}
+                        <i className="fa-solid fa-angle-down"></i>
                       </button>
                       <div className="account-menu" style={{ zIndex: 60 }}>
                         {isAuthenticated ? (
                           <>
-                            <a href="/profile" onClick={() => setShowAccountDropdown(false)}>My Profile</a>
-                            <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }}>Logout</a>
+                            <Link
+                              href={PATHS.PROFILE}
+                              onClick={() => setShowAccountDropdown(false)}
+                            >
+                              My Profile
+                            </Link>
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleLogout();
+                              }}
+                            >
+                              Logout
+                            </a>
                           </>
                         ) : (
                           <>
-                            <a href="/sign-in" className="register-sign-in-btn" onClick={() => setShowAccountDropdown(false)}>Sign In</a>
-                            <a href="/register" className="register-sign-in-btn" onClick={() => setShowAccountDropdown(false)}>Register</a>
+                            <Link
+                              href={PATHS.SIGN_IN}
+                              className="register-sign-in-btn"
+                              onClick={() => setShowAccountDropdown(false)}
+                            >
+                              Sign In
+                            </Link>
+                            <Link
+                              href={PATHS.REGISTER}
+                              className="register-sign-in-btn"
+                              onClick={() => setShowAccountDropdown(false)}
+                            >
+                              Register
+                            </Link>
                           </>
                         )}
                       </div>
@@ -228,52 +280,177 @@ const Header: React.FC = () => {
             <div className="col-lg-10 col-md-7">
               <nav className="navbar navbar-expand-lg navbar-light ">
                 <a className="navbar-brand" href="#">
-                  <img src="images/web-logo.png" alt="logo" className="logo  " />
+                  <img
+                    src="images/web-logo.png"
+                    alt="logo"
+                    className="logo  "
+                  />
                 </a>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button
+                  className="navbar-toggler"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent"
+                  aria-expanded="false"
+                  aria-label="Toggle navigation"
+                >
                   <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <div
+                  className="collapse navbar-collapse"
+                  id="navbarSupportedContent"
+                >
                   <ul className="navbar-nav ms-auto  top-menu-main">
                     <li className="nav-item">
-                      <a className="nav-link" href="#">Home</a>
+                      <a className="nav-link" href="#">
+                        Home
+                      </a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="#">Daily Horoscope</a>
+                      <a className="nav-link" href="#">
+                        Daily Horoscope
+                      </a>
                     </li>
                     <li className="nav-item dropdown">
-                      <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <a
+                        className="nav-link dropdown-toggle"
+                        href="#"
+                        id="navbarDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
                         Astrology Consult
                       </a>
-                      <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a className="dropdown-item" href="#">Horoscope</a></li>
-                        <li><a className="dropdown-item" href="#">Kundali Matching</a></li>
-                        <li><a className="dropdown-item" href="#">Nakshatra Milan</a></li>
-                        <li><a className="dropdown-item" href="#">Kundali Matching By Name</a></li>
-                        <li><a className="dropdown-item" href="#">Mangal Dosha</a></li>
-                        <li><a className="dropdown-item" href="#">Kaal Sarp Dosh</a></li>
-                        <li><a className="dropdown-item" href="#">Love Calculator</a></li>
-                        <li><a className="dropdown-item" href="#">Sun Sign</a></li>
-                        <li><a className="dropdown-item" href="#">Moon Sign</a></li>
-                        <li><a className="dropdown-item" href="#">Nakshatra</a></li>
-                        <li><a className="dropdown-item" href="#">Buy Products</a></li>
-                        <li><a className="dropdown-item" href="#">Free Services</a></li>
-                        <li><a className="dropdown-item" href="#">Online Puja</a></li>
+                      <ul
+                        className="dropdown-menu"
+                        aria-labelledby="navbarDropdown"
+                      >
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.HOROSCOPE}
+                          >
+                            Horoscope
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.KUNDALI_MATCHING}
+                          >
+                            Kundali Matching
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.NAKSHATRA_MILAN}
+                          >
+                            Nakshatra Milan
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.KUNDALI_MATCHING_BY_NAME}
+                          >
+                            Kundali Matching By Name
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.MANGAL_DOSHA}
+                          >
+                            Mangal Dosha
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.KAAL_SARP_DOSH}
+                          >
+                            Kaal Sarp Dosh
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.LOVE_CALCULATOR}
+                          >
+                            Love Calculator
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="dropdown-item" href={PATHS.SUN_SIGN}>
+                            Sun Sign
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.MOON_SIGN}
+                          >
+                            Moon Sign
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.NAKSHATRA}
+                          >
+                            Nakshatra
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.BUY_PRODUCTS}
+                          >
+                            Buy Products
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.FREE_SERVICES}
+                          >
+                            Free Services
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.ONLINE_PUJA}
+                          >
+                            Online Puja
+                          </Link>
+                        </li>
                       </ul>
                     </li>
 
                     <li className="nav-item">
-                      <a className="nav-link" href="#">  Blog</a>
+                      <a className="nav-link" href="#">
+                        {" "}
+                        Blog
+                      </a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="#">Kundli Prediction </a>
+                      <a className="nav-link" href="#">
+                        Kundli Prediction{" "}
+                      </a>
                     </li>
                   </ul>
                 </div>
               </nav>
             </div>
             <div className="col-lg-2 col-md-5 mobile-none">
-              <a href="#" className="btn-link"><img src="images/chat.svg" className="chat-icon" /> Ask Astrologer</a>
+              <a href="#" className="btn-link">
+                <img src="images/chat.svg" className="chat-icon" /> Ask
+                Astrologer
+              </a>
             </div>
           </div>
         </div>
@@ -283,10 +460,13 @@ const Header: React.FC = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-2 col-md-4 col-6">
-              <div className="flx-icon">
+              <Link
+                href={PATHS.KUNDALI_MATCHING}
+                className="flx-icon text-decoration-none text-dark"
+              >
                 <img src="images/top-icon1.png" className="icon-top-flx" />
                 <span>My Kundli</span>
-              </div>
+              </Link>
             </div>
             <div className="col-lg-2 col-md-4 col-6">
               <div className="flx-icon">
@@ -295,10 +475,13 @@ const Header: React.FC = () => {
               </div>
             </div>
             <div className="col-lg-2 col-md-4 col-6">
-              <div className="flx-icon">
+              <Link
+                href={PATHS.ONLINE_PUJA}
+                className="flx-icon text-decoration-none text-dark"
+              >
                 <img src="images/top-icon3.png" className="icon-top-flx" />
                 <span>Online Puja</span>
-              </div>
+              </Link>
             </div>
             <div className="col-lg-2 col-md-4 col-6">
               <div className="flx-icon">
@@ -313,12 +496,14 @@ const Header: React.FC = () => {
               </div>
             </div>
             <div className="col-lg-2 col-md-4 col-6">
-              <div className="flx-icon">
+              <Link
+                href={PATHS.KUNDALI_MATCHING}
+                className="flx-icon text-decoration-none text-dark"
+              >
                 <img src="images/top-icon6.png" className="icon-top-flx" />
                 <span>Match Analysis</span>
-              </div>
+              </Link>
             </div>
-
           </div>
         </div>
       </header>
