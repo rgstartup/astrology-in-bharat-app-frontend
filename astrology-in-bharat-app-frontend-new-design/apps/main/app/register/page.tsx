@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useState, useCallback, FormEvent } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 // --- Types ---
 interface RegistrationPayload {
@@ -14,6 +15,8 @@ interface RegistrationPayload {
 }
 interface RegistrationSuccessResponse {
   message: string;
+  accessToken?: string;
+  user?: any;
 }
 interface FormData {
   fullName: string;
@@ -26,6 +29,7 @@ const API_ENDPOINT = "http://localhost:4000/api/v1/auth/email/register";
 
 const Page: React.FC = () => {
   const router = useRouter();
+  const { login } = useAuth();
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
@@ -69,7 +73,7 @@ const Page: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -94,6 +98,10 @@ const Page: React.FC = () => {
       setSuccessMessage(
         response.data.message || "Registration successful! You can now sign in."
       );
+
+      if (response.data.accessToken) {
+        login(response.data.accessToken);
+      }
 
       setFormData({ fullName: "", email: "", password: "" });
       router.push('/')

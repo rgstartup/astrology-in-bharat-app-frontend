@@ -25,6 +25,8 @@ const poppins = Poppins({
   weight: ["400", "700"],
 });
 
+import { AuthProvider } from "@/context/AuthContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -50,10 +52,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-black">
-        {/* {!isAdminRoute && <QuotesLoader />} */}
-        {!isAdminRoute && <Header />}
-        <main>{children}</main>
-        {!isAdminRoute && <Footer />}
+        <AuthProvider>
+          {/* {!isAdminRoute && <QuotesLoader />} */}
+          {!isAdminRoute && <Header />}
+          <main>{children}</main>
+          {!isAdminRoute && <Footer />}
+        </AuthProvider>
       </body>
     </html>
   );

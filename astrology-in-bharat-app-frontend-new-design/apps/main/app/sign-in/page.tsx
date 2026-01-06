@@ -5,6 +5,8 @@ import Link from "next/link";
 import React, { useState, useCallback, FormEvent } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+
 // --- 1. Define Typescript Interfaces ---
 
 /** The shape of the data sent to the server (request body). */
@@ -15,7 +17,7 @@ interface LoginPayload {
 
 /** The shape of the expected successful server response. */
 interface LoginSuccessResponse {
-  token: string;
+  accessToken: string;
   message: string;
   // Add other fields you expect, e.g., user data
 }
@@ -31,6 +33,7 @@ const API_ENDPOINT = "http://localhost:4000/api/v1/auth/email/login";
 
 const Page: React.FC = () => {
   const router = useRouter();
+  const { login } = useAuth();
   // --- 2. State Management ---
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -84,7 +87,7 @@ const Page: React.FC = () => {
       password: formData.password,
     };
 
-   
+
     try {
       // Making the POST request
       const response = await axios.post<LoginSuccessResponse>(
@@ -101,6 +104,10 @@ const Page: React.FC = () => {
 
       console.log("Login Success. Status:", response.status);
       console.log("Server Response Data:", response.data);
+
+      if (response.data.accessToken) {
+        login(response.data.accessToken);
+      }
 
       setSuccessMessage(
         response.data.message || "Sign In successful! Redirecting..."
