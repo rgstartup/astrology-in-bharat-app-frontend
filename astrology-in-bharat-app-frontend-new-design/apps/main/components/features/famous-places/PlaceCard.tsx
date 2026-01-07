@@ -13,8 +13,7 @@ interface PlaceCardProps {
 const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
   const [realImage, setRealImage] = useState<string | null>(null);
 
-  const NO_IMAGE_URL =
-    "https://png.pngtree.com/png-vector/20190820/ourmid/pngtree-no-image-vector-illustration-isolated-png-image_1694547.jpg";
+  const NO_IMAGE_URL = "/images/image-not-found.png";
 
   useEffect(() => {
     const loadImage = async () => {
@@ -44,7 +43,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
           <div className="absolute bottom-3 left-4 right-4">
-            <span className="inline-block bg-primary text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-1.5 opacity-90">
+            <span className="inline-block bg-[#F25E0A] text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-1.5 opacity-90">
               {place.category || "Sacred Site"}
             </span>
             <h3 className="text-white font-bold text-base leading-tight line-clamp-2 drop-shadow-md">
@@ -53,7 +52,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
           </div>
         </div>
 
-        <div className="p-4 flex-1 flex flex-col justify-between">
+        <div className="p-4 flex-1 flex flex-col justify-between bg-white/90">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <div className="flex items-center text-accent-gold">
@@ -62,7 +61,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
                     key={i}
                     className={`w-3 h-3 ${
                       i < Math.floor(place.rating || 4)
-                        ? "fill-current"
+                        ? "fill-current text-orange-500"
                         : "text-gray-500 fill-current"
                     }`}
                     viewBox="0 0 20 20"
@@ -71,20 +70,20 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
                   </svg>
                 ))}
               </div>
-              <span className="text-[10px] font-bold text-gray-400">
+              <span className="text-[10px] font-bold text-orange-500">
                 ({place.ratingCount || "4.5"})
               </span>
             </div>
 
-            <div className="flex items-start gap-1.5 text-gray-300 mb-4">
-              <i className="fa-solid fa-location-dot mt-0.5 text-primary text-xs"></i>
+            <div className="flex items-start gap-1.5 text-black mb-4">
+              <i className="fa-solid fa-location-dot mt-0.5 text-[#301118] text-xs"></i>
               <p className="text-[11px] leading-relaxed line-clamp-2">
                 {place.address || "Address available on request"}
               </p>
             </div>
           </div>
 
-          <div className="w-full bg-gradient-to-r from-primary to-primary-hover text-white py-2 rounded-lg text-xs font-bold text-center group-hover:shadow-[0_0_15px_rgba(253,100,16,0.3)] transition-all uppercase tracking-widest">
+          <div className="w-full bg-[#301118] text-white py-2 rounded-lg text-xs font-bold text-center group-hover:shadow-[0_0_15px_rgba(253,100,16,0.3)] transition-all uppercase tracking-widest">
             Darshan Details
           </div>
         </div>

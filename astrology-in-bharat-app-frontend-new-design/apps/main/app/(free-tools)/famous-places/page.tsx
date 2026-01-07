@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { fetchPlaces, Place } from "@/libs/serp-api";
 import PlaceCard from "@/components/features/famous-places/PlaceCard";
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
 
 const FamousPlacesPage = () => {
   const [temples, setTemples] = useState<Place[]>([]);
@@ -63,13 +65,13 @@ const FamousPlacesPage = () => {
         <div className="overlay-hero">
           <div className="container relative z-10 text-center">
             <span className="aib-trust-badge mb-4 mx-auto inline-block">
-              Spiritual Guide & Local Directory
+              ॐ Spiritual Guide & Local Directory
             </span>
             <h1 className="text-4xl md:text-6xl font-display font-bold mb-6 tracking-tight text-white">
               Divine Destinations &{" "}
-              <span className="italic text-primary">Famous Places</span>
+              <span className="italic text-[#F25E0A]">Famous Places</span>
             </h1>
-            <p className="text-lg text-text-sub-dark max-w-3xl mx-auto font-body leading-relaxed drop-shadow-lg">
+            <p className="text-lg text-white max-w-3xl mx-auto font-body leading-relaxed drop-shadow-lg">
               Unlock the spiritual energy of Bharat. Explore sacred temples in
               Mohali and Chandigarh, or embark on a life-changing pilgrimage
               across the holiest sites in India.
@@ -82,7 +84,7 @@ const FamousPlacesPage = () => {
         {/* Mohali/Chandigarh Temples Section */}
         <section className="relative">
           <div className="text-center mb-12">
-            <h2 className="title-line text-white mb-4">
+            <h2 className="title-line text-black mb-4">
               <span>Sacred Temples in Mohali & Chandigarh</span>
             </h2>
             <p className="text-text-sub-dark max-w-xl mx-auto">
@@ -111,7 +113,7 @@ const FamousPlacesPage = () => {
         {/* Holy Pilgrimage Section */}
         <section className="relative">
           <div className="text-center mb-12">
-            <h2 className="title-line text-white mb-4">
+            <h2 className="title-line text-black mb-4">
               <span>Holy Pilgrimage Across India</span>
             </h2>
             <p className="text-text-sub-dark max-w-xl mx-auto">
@@ -136,35 +138,9 @@ const FamousPlacesPage = () => {
             </div>
           )}
         </section>
-
-        {/* Info Banner - Re-styled to match WhyChooseUs Card style */}
-        <section className="bg-gradient-to-r from-[#2d1215] to-[#1e0b0f] rounded-[2rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-10 border border-[#fd641054] shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl"></div>
-          <div className="text-6xl animate-bounce">🕉️</div>
-          <div className="text-center md:text-left relative z-10">
-            <h3 className="text-3xl font-bold text-white mb-4 font-display">
-              Planning a Spiritual Journey?
-            </h3>
-            <p className="text-text-sub-dark text-base max-w-xl leading-relaxed">
-              Every spiritual journey starts with an auspicious intention.
-              Consult our expert astrologers to find the best{" "}
-              <strong>Muhurtha</strong> for your visit and maximize the divine
-              benefits.
-            </p>
-          </div>
-          <div className="flex flex-col gap-4 ml-auto">
-            <button className="whitespace-nowrap bg-primary text-white px-10 py-4 rounded-xl font-bold hover:shadow-[0_0_20px_rgba(253,100,16,0.5)] transition-all transform hover:-translate-y-1">
-              Consult with Astrologer
-            </button>
-            <p className="text-center text-[10px] text-gray-500 uppercase tracking-widest font-bold">
-              Trusted by 10,000+ devotees
-            </p>
-          </div>
-        </section>
       </main>
-
-      {/* Footer Space */}
-      <div className="py-20"></div>
+      <WhyChooseUs />
+      <CTA />
     </div>
   );
 };
