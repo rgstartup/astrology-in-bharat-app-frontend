@@ -89,21 +89,43 @@ export const usersData: User[] = [
   },
 ];
 
-export const getStatsConfig = (users: User[]) => {
-  const activeUsers = users.filter((u) => u.status === "Active").length;
-  const inactiveUsers = users.filter((u) => u.status === "Inactive").length;
+// Define types
+export interface UserStats {
+  totalUsers: number;
+  activeUsers: number;
+  inactiveUsers: number;
+}
+
+export const getStatsConfig = (data: User[] | UserStats) => {
+  let stats: UserStats;
+
+  // Handle array input (legacy or client-side calculation)
+  if (Array.isArray(data)) {
+    stats = {
+      totalUsers: data.length,
+      activeUsers: data.filter((u) => u.emailVerified).length,
+      inactiveUsers: data.filter((u) => !u.emailVerified).length,
+    };
+  } else {
+    // Handle object input (pre-calculated from API)
+    stats = {
+      totalUsers: data.totalUsers || 0,
+      activeUsers: data.activeUsers || 0,
+      inactiveUsers: data.inactiveUsers || 0,
+    };
+  }
 
   return [
     {
       title: "Total Users",
-      value: users.length,
+      value: stats.totalUsers,
       icon: UserIcon,
       iconColor: "text-blue-600",
       iconBgColor: "bg-blue-100",
     },
     {
       title: "Active Users",
-      value: activeUsers,
+      value: stats.activeUsers,
       icon: UserIcon,
       iconColor: "text-green-600",
       iconBgColor: "bg-green-100",
@@ -111,7 +133,7 @@ export const getStatsConfig = (users: User[]) => {
     },
     {
       title: "Inactive Users",
-      value: inactiveUsers,
+      value: stats.inactiveUsers,
       icon: UserIcon,
       iconColor: "text-red-600",
       iconBgColor: "bg-red-100",
@@ -126,11 +148,17 @@ export const getColumns = () => [
     label: "User",
     render: (user: User) => (
       <div className="flex items-center space-x-3">
-        <img
-          src={user.avatar}
-          alt={user.name}
-          className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-100"
-        />
+        {user.avatar ? (
+          <img
+            src={user.avatar}
+            alt={user.name}
+            className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-100"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
+            {user.name.charAt(0)}
+          </div>
+        )}
         <div>
           <p className="text-sm font-semibold text-gray-900">{user.name}</p>
           <p className="text-xs text-gray-500">{user.email}</p>
@@ -139,33 +167,46 @@ export const getColumns = () => [
     ),
   },
   {
-    key: "phone",
+    key: "contact",
     label: "Contact",
-    render: (user: User) => <p className="text-sm text-gray-600">{user.phone}</p>,
+    render: (user: User) => (
+      <div>
+        <p className="text-sm text-gray-600">{user.email}</p>
+        {user.phone && <p className="text-xs text-gray-500">{user.phone}</p>}
+      </div>
+    ),
   },
   {
     key: "location",
     label: "Location",
-    render: (user: User) => (
-      <p className="text-sm text-gray-600">
-        {user.city && user.state ? `${user.city}, ${user.state}` : "-"}
-      </p>
-    ),
+    render: (user: User) => {
+      const address = user.profile_client?.addresses?.[0];
+      const city = address?.city;
+      const state = address?.state;
+      const display = city && state ? `${city}, ${state}` : city || state || "-";
+      return <p className="text-sm text-gray-600">{display}</p>;
+    },
   },
   {
     key: "joinDate",
     label: "Join Date",
+    render: (user: User) => (
+      <span className="text-sm text-gray-600">
+        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-"}
+      </span>
+    ),
   },
   {
     key: "status",
     label: "Status",
     render: (user: User) => (
       <span
-        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-          user.status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-        }`}
+        className={`px-3 py-1 rounded-full text-xs font-semibold ${user.emailVerified
+          ? "bg-green-100 text-green-700"
+          : "bg-red-100 text-red-700"
+          }`}
       >
-        {user.status}
+        {user.emailVerified ? "Verified" : "Unverified"}
       </span>
     ),
   },

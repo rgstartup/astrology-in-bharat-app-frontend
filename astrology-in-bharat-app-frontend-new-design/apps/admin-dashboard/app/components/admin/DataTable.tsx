@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useMemo, useCallback, memo } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, Eye } from "lucide-react";
 import { SearchInput } from "../../../../shared/components/SearchInput";
+import { Loading } from "../../../../shared/components/Loading";
 
 // Types
 interface Column<T> {
@@ -20,7 +21,11 @@ interface DataTableProps<T> {
   title?: string;
   statsCards?: React.ReactNode;
   emptyMessage?: string;
-
+  onSearch?: (value: string) => void;
+  isLoading?: boolean;
+  manualPagination?: boolean;
+  totalItems?: number;
+  onPageChange?: (page: number) => void;
 }
 
 const TableRow = memo(function TableRow<T extends { id: number | string }>({
@@ -89,8 +94,8 @@ const PaginationButton = memo(function PaginationButton({
       aria-label={`Go to page ${page}`}
       aria-current={isActive ? "page" : undefined}
       className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${isActive
-          ? "bg-gray-900 text-white"
-          : "border border-gray-200 hover:bg-gray-100 text-gray-700"
+        ? "bg-gray-900 text-white"
+        : "border border-gray-200 hover:bg-gray-100 text-gray-700"
         }`}
     >
       {page}
@@ -108,6 +113,11 @@ export function DataTable<T extends { id: number | string }>({
   renderCell,
   title = "Data Management",
   statsCards,
+  onSearch,
+  isLoading = false,
+  manualPagination = false,
+  totalItems = 0,
+  onPageChange,
 }: DataTableProps<T>) {
   // State for pagination and search
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -116,6 +126,10 @@ export function DataTable<T extends { id: number | string }>({
   // Filter function (memoized)
   const filterItem = useCallback(
     (item: T) => {
+      // If server-side search is enabled (onSearch provided), skip client-side filtering
+      // as the data passed is already filtered by the server
+      if (onSearch) return true;
+
       if (!searchTerm) return true;
 
       return searchKeys.some((key) => {
@@ -126,7 +140,7 @@ export function DataTable<T extends { id: number | string }>({
         );
       });
     },
-    [searchKeys, searchTerm]
+    [searchKeys, searchTerm, onSearch]
   );
 
   // Filtered data (memoized)
@@ -136,6 +150,17 @@ export function DataTable<T extends { id: number | string }>({
 
   // Pagination calculations (memoized)
   const paginationData = useMemo(() => {
+    // If manual (server-side) pagination is enabled
+    if (manualPagination) {
+      return {
+        totalPages: Math.ceil((totalItems || 0) / itemsPerPage),
+        currentItems: data, // Data is already sliced by server
+        startIndex: (currentPage - 1) * itemsPerPage,
+        endIndex: Math.min((currentPage - 1) * itemsPerPage + data.length, totalItems || 0),
+      };
+    }
+
+    // Client-side pagination logic
     const total = Math.ceil(filteredData.length / itemsPerPage);
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
@@ -147,7 +172,7 @@ export function DataTable<T extends { id: number | string }>({
       startIndex: start,
       endIndex: end,
     };
-  }, [filteredData, currentPage, itemsPerPage]);
+  }, [filteredData, currentPage, itemsPerPage, manualPagination, totalItems, data]);
 
   // Page numbers array (memoized)
   const pageNumbers = useMemo(() => {
@@ -157,20 +182,26 @@ export function DataTable<T extends { id: number | string }>({
   // Event handlers (memoized)
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
-  }, []);
+    onPageChange?.(page);
+  }, [onPageChange]);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value);
     setCurrentPage(1);
-  }, []);
+    onSearch?.(value);
+  }, [onSearch]);
 
   const handlePrevPage = useCallback(() => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  }, []);
+    const newPage = Math.max(currentPage - 1, 1);
+    setCurrentPage(newPage);
+    onPageChange?.(newPage);
+  }, [currentPage, onPageChange]);
 
   const handleNextPage = useCallback(() => {
-    setCurrentPage((prev) => Math.min(prev + 1, paginationData.totalPages));
-  }, [paginationData.totalPages]);
+    const newPage = Math.min(currentPage + 1, paginationData.totalPages);
+    setCurrentPage(newPage);
+    onPageChange?.(newPage);
+  }, [currentPage, paginationData.totalPages, onPageChange]);
 
   // Empty state checks
   const isEmpty = paginationData.currentItems.length === 0;
@@ -228,7 +259,15 @@ export function DataTable<T extends { id: number | string }>({
         <div className="w-full max-h-[320px] overflow-y-auto">
           <table className="w-full table-fixed">
             <tbody className="divide-y divide-gray-100">
-              {isEmpty ? (
+              {isLoading ? (
+                <tr>
+                  <td colSpan={columns.length + (onViewDetails ? 1 : 0)} className="px-6 py-10 text-center">
+                    <div className="flex justify-center items-center">
+                      <Loading size="lg" text="Loading data..." />
+                    </div>
+                  </td>
+                </tr>
+              ) : paginationData.currentItems.length === 0 ? (
                 <tr>
                   <td
                     colSpan={columns.length + (onViewDetails ? 1 : 0)}
@@ -253,7 +292,7 @@ export function DataTable<T extends { id: number | string }>({
 
 
         {/* Pagination */}
-        {hasData && paginationData.totalPages > 0 && (
+        {!isLoading && hasData && paginationData.totalPages > 0 && (
           <footer className="px-6 py-4 border-t border-gray-200 bg-gray-50">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               {/* Results info */}
