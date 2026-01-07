@@ -229,7 +229,7 @@ export const Sidebar: React.FC<SidebarProps> = memo(
           </nav>
 
           {/* Add a direct logout button at the bottom for better UX */}
-          <div className="p-4 border-t border-yellow-500">
+          {/* <div className="p-4 border-t border-yellow-500">
             <button
               onClick={logout}
               className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-yellow-100 hover:bg-yellow-700 hover:text-white"
@@ -237,7 +237,7 @@ export const Sidebar: React.FC<SidebarProps> = memo(
               <LogOut className="w-5 h-5 flex-shrink-0" />
               <span>Logout</span>
             </button>
-          </div>
+          </div> */}
         </aside>
       </>
     );
