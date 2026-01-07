@@ -1,25 +1,40 @@
 "use client";
-
 import React, { useState } from "react";
-import Image from "next/image";
+import NextImage from "next/image";
+const Image = NextImage as any;
 import {
-  FaUser,
-  FaHeart,
-  FaBriefcase,
-  FaHospital,
-  FaCheck,
-  FaTimes,
-  FaDice,
-  FaPalette,
-  FaCalendarAlt,
-  FaGem,
-  FaChartBar,
-  FaArrowRight,
+  FaUser as FaU,
+  FaHeart as FaH,
+  FaBriefcase as FaB,
+  FaHospital as FaHos,
+  FaCheck as FaC,
+  FaTimes as FaT,
+  FaDice as FaD,
+  FaPalette as FaP,
+  FaCalendarAlt as FaCa,
+  FaGem as FaG,
+  FaChartBar as FaCb,
+  FaArrowRight as FaAr,
 } from "react-icons/fa";
-import { TbCrystalBall } from "react-icons/tb";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
-import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
+const FaUser = FaU as any;
+const FaHeart = FaH as any;
+const FaBriefcase = FaB as any;
+const FaHospital = FaHos as any;
+const FaCheck = FaC as any;
+const FaTimes = FaT as any;
+const FaDice = FaD as any;
+const FaPalette = FaP as any;
+const FaCalendarAlt = FaCa as any;
+const FaGem = FaG as any;
+const FaChartBar = FaCb as any;
+const FaArrowRight = FaAr as any;
+
+import { TbCrystalBall as TbCb } from "react-icons/tb";
+const TbCrystalBall = TbCb as any;
+
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
+import { ZodiacSignsData } from "@/components/features/services/homePagaData";
 
 const SunSignPage = () => {
   const [selectedSign, setSelectedSign] = useState(ZodiacSignsData[0]);
@@ -94,10 +109,11 @@ const SunSignPage = () => {
               <button
                 key={sign.id}
                 onClick={() => setSelectedSign(sign)}
-                className={`snap-center shrink-0 flex flex-col items-center cursor-pointer transition-all duration-300 p-2 rounded-xl border bg-transparent ${selectedSign.id === sign.id
+                className={`snap-center shrink-0 flex flex-col items-center cursor-pointer transition-all duration-300 p-2 rounded-xl border bg-transparent ${
+                  selectedSign.id === sign.id
                     ? "border-[#fd6410] bg-[#fff5ef] scale-105 shadow-md"
                     : "border-transparent opacity-60 hover:opacity-100"
-                  }`}
+                }`}
                 style={{ minWidth: "100px" }}
               >
                 <Image

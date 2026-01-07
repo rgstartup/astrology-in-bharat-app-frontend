@@ -1,20 +1,30 @@
-"use client";
-
 import React from "react";
-import Image from "next/image";
+import NextImage from "next/image";
+const Image = NextImage as any;
 import {
-  FaUser,
-  FaCalendarAlt,
-  FaMapMarkerAlt,
-  FaPhoneAlt,
-  FaChevronRight,
-  FaExclamationTriangle,
-  FaLeaf,
-  FaComments,
+  FaUser as FaU,
+  FaCalendarAlt as FaCa,
+  FaMapMarkerAlt as FaMma,
+  FaPhoneAlt as FaPa,
+  FaChevronRight as FaCr,
+  FaExclamationTriangle as FaEt,
+  FaLeaf as FaL,
+  FaComments as FaCom,
 } from "react-icons/fa";
-import { GiSnake } from "react-icons/gi";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
+const FaUser = FaU as any;
+const FaCalendarAlt = FaCa as any;
+const FaMapMarkerAlt = FaMma as any;
+const FaPhoneAlt = FaPa as any;
+const FaChevronRight = FaCr as any;
+const FaExclamationTriangle = FaEt as any;
+const FaLeaf = FaL as any;
+const FaComments = FaCom as any;
+
+import { GiSnake as GiSn } from "react-icons/gi";
+const GiSnake = GiSn as any;
+
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
 
 const KaalSarpDoshPage = () => {
   const sarpTypes = [

@@ -20,5 +20,6 @@ export const PATHS = {
   REGISTER: "/register",
   HELP: "/help",
   SESSION_HISTORY: "/session-history",
+  FAMOUS_PLACES: "/famous-places",
   BLOG: "/blog",
 } as const;

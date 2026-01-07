@@ -1,49 +1,38 @@
-"use client";
-
 import React from "react";
-import Image from "next/image";
+import NextImage from "next/image";
+const Image = NextImage as any;
 import {
-  FaUserFriends,
-  FaHeart,
-  FaShieldAlt,
-  FaChevronRight,
-  FaMars,
-  FaVenus,
-  FaRegCheckCircle,
-  FaInfoCircle,
-  FaUsers,
+  FaUserFriends as FaUf,
+  FaHeart as FaH,
+  FaShieldAlt as FaSa,
+  FaChevronRight as FaCr,
+  FaMars as FaM,
+  FaVenus as FaV,
+  FaRegCheckCircle as FaRcc,
+  FaInfoCircle as FaIc,
+  FaUsers as FaUs,
 } from "react-icons/fa";
-import { HiOutlineSparkles } from "react-icons/hi";
-import { MdOutlineSecurity } from "react-icons/md";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
+const FaUserFriends = FaUf as any;
+const FaHeart = FaH as any;
+const FaShieldAlt = FaSa as any;
+const FaChevronRight = FaCr as any;
+const FaMars = FaM as any;
+const FaVenus = FaV as any;
+const FaRegCheckCircle = FaRcc as any;
+const FaInfoCircle = FaIc as any;
+const FaUsers = FaUs as any;
+
+import { HiOutlineSparkles as HiOs } from "react-icons/hi";
+const HiOutlineSparkles = HiOs as any;
+import { MdOutlineSecurity as MdOs } from "react-icons/md";
+const MdOutlineSecurity = MdOs as any;
+
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
 
 const KundaliMatchingPage = () => {
   return (
     <div className="main-wrapper">
-      {/* Top Bar Tool Actions - Themed */}
-      <div className="bg-[#301118] py-3 text-white border-b border-[#fd64102b]">
-        <div className="container mx-auto px-4 flex flex-wrap justify-center gap-3">
-          {[
-            { icon: <FaUsers />, label: "My Kundli" },
-            { icon: <FaInfoCircle />, label: "Numerology" },
-            { icon: <HiOutlineSparkles />, label: "Online Puja" },
-            { icon: <FaHeart />, label: "Match Analysis" },
-          ].map((tool, i) => (
-            <button
-              key={i}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold text-[12px] uppercase tracking-wider transition-all shadow-lg border-0 ${
-                i === 3
-                  ? "bg-white text-[#fd6410]"
-                  : "bg-[#fd6410] hover:bg-[#e55a0d] text-white"
-              }`}
-            >
-              {tool.icon} {tool.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Hero Section */}
       <section className="banner-part light-back">
         <div className="container">

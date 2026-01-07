@@ -1,22 +1,33 @@
-"use client";
-
 import React from "react";
 import NextImage from "next/image";
+const Image = NextImage as any;
 import {
-  FaHeart,
-  FaUser,
-  FaUserFriends,
-  FaRing,
-  FaArrowRight,
-  FaStar,
-  FaBalanceScale,
-  FaBullseye,
+  FaHeart as FaH,
+  FaUser as FaU,
+  FaUserFriends as FaUf,
+  FaRing as FaR,
+  FaArrowRight as FaAr,
+  FaStar as FaS,
+  FaBalanceScale as FaBs,
+  FaBullseye as FaBul,
 } from "react-icons/fa";
-import { TbCrystalBall } from "react-icons/tb";
-import { MdOutlineFavorite } from "react-icons/md";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
-import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
+const FaHeart = FaH as any;
+const FaUser = FaU as any;
+const FaUserFriends = FaUf as any;
+const FaRing = FaR as any;
+const FaArrowRight = FaAr as any;
+const FaStar = FaS as any;
+const FaBalanceScale = FaBs as any;
+const FaBullseye = FaBul as any;
+
+import { TbCrystalBall as TbCb } from "react-icons/tb";
+const TbCrystalBall = TbCb as any;
+import { MdOutlineFavorite as MdOf } from "react-icons/md";
+const MdOutlineFavorite = MdOf as any;
+
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
+import { ZodiacSignsData } from "@/components/features/services/homePagaData";
 
 const LoveCalculatorPage = () => {
   return (
@@ -50,7 +61,7 @@ const LoveCalculatorPage = () => {
               </div>
               <div className="col-lg-5 col-md-12 text-center">
                 <div className="right-illus">
-                  <NextImage
+                  <Image
                     src="/images/horoscope-round2.png"
                     alt="Zodiac"
                     width={500}

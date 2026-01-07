@@ -36,9 +36,11 @@ import { MdOutlineDateRange as MdO } from "react-icons/md";
 const MdOutlineDateRange = MdO as any;
 import { HiOutlineSparkles as HiOs } from "react-icons/hi";
 const HiOutlineSparkles = HiOs as any;
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
-import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
+import { ZodiacSignsData } from "@/components/features/services/homePagaData";
+import ChooseYourZodiac from "@/components/layout/main/ChooseYourZodiac";
+import Featured4Cards from "@/components/ui/common/Featured4Cards";
 
 const HoroscopePage = () => {
   const [selectedSign, setSelectedSign] = useState(ZodiacSignsData[0]);
@@ -47,67 +49,49 @@ const HoroscopePage = () => {
 
   return (
     <div className="main-wrapper">
-      {/* Top Bar Tool Actions - Themed */}
-      <div className="bg-[#301118] py-3 text-white border-b border-[#fd64102b]">
-        <div className="container mx-auto px-4 flex flex-wrap justify-center gap-3">
-          {[
-            { icon: <FaBookOpen />, label: "My Kundli" },
-            { icon: <FaCalculator />, label: "Numerology" },
-            { icon: <FaPray />, label: "Online Puja" },
-            { icon: <FaInfinity />, label: "Life Horoscope" },
-            { icon: <FaRegHeart />, label: "Love Report" },
-          ].map((tool, i) => (
-            <button
-              key={i}
-              className="flex items-center gap-2 bg-[#fd6410] hover:bg-[#e55a0d] px-4 py-2 rounded-full font-bold text-[12px] uppercase tracking-wider transition-all shadow-lg border-0"
-            >
-              {tool.icon} {tool.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Hero Section */}
       <section className="banner-part light-back">
-        <div className="container">
-          <div className="contant-hero rounded-4 border border-[#fd64102b] shadow-xl">
-            <div className="row align-items-center">
-              <div className="col-lg-7 col-md-12">
-                <div className="hero-card">
-                  <div className="card-z">
-                    <span className="aib-trust-badge">
-                      Free Daily Predictions
-                    </span>
-                    <h1>Discover Your Destiny</h1>
-                    <h4 className="card-title">
-                      Accurate Daily & Yearly Horoscopes
-                    </h4>
-                    <p>
-                      Unlock the secrets of the stars with our accurate daily,
-                      weekly, monthly, and yearly horoscopes based on ancient
-                      Vedic Astrology principles. Find out what the planets have
-                      in store for you today.
-                    </p>
+        <div className="overlay-hero">
+          <div className="container">
+            <div className="contant-hero rounded-4 border border-[#fd64102b] shadow-xl">
+              <div className="row align-items-center">
+                <div className="col-lg-7 col-md-12">
+                  <div className="hero-card">
+                    <div className="card-z">
+                      <span className="aib-trust-badge">
+                        Free Daily Predictions
+                      </span>
+                      <h1>Discover Your Destiny</h1>
+                      <h4 className="card-title">
+                        Accurate Daily & Yearly Horoscopes
+                      </h4>
+                      <p>
+                        Unlock the secrets of the stars with our accurate daily,
+                        weekly, monthly, and yearly horoscopes based on ancient
+                        Vedic Astrology principles. Find out what the planets
+                        have in store for you today.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-lg-5 col-md-12 text-center">
-                <div className="right-illus">
-                  <Image
-                    src="/images/horoscope-round2.png"
-                    alt="Zodiac Wheel"
-                    width={500}
-                    height={500}
-                    className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_20s_linear_infinite] opacity-30"
-                  />
-                  <div className="relative z-10 p-5">
+                <div className="col-lg-5 col-md-12 text-center">
+                  <div className="right-illus">
                     <Image
-                      src={selectedSign.image}
-                      alt={selectedSign.title}
-                      width={180}
-                      height={180}
-                      className="w-[180px] mx-auto drop-shadow-2xl hover:scale-110 transition-transform"
+                      src="/images/horoscope-round2.png"
+                      alt="Zodiac Wheel"
+                      width={500}
+                      height={500}
+                      className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_20s_linear_infinite] opacity-30"
                     />
+                    <div className="relative z-10 p-5">
+                      <Image
+                        src={selectedSign.image}
+                        alt={selectedSign.title}
+                        width={180}
+                        height={180}
+                        className="w-[180px] mx-auto drop-shadow-2xl hover:scale-110 transition-transform"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -116,44 +100,7 @@ const HoroscopePage = () => {
         </div>
       </section>
 
-      {/* Zodiac Grid Selection */}
-      <section className="space-section light-back pt-0">
-        <div className="container">
-          <div className="light-card border border-[#fd64102b] shadow-xl p-8">
-            <h2 className="title-line c-1e0b0f mb-5 text-center">
-              <span>Find Predictions for Your Sign</span>
-            </h2>
-            <div className="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4">
-              {ZodiacSignsData.map((sign) => (
-                <div key={sign.id} className="col">
-                  <button
-                    onClick={() => setSelectedSign(sign)}
-                    className={`nav-link w-full bg-white border rounded-4 p-4 text-center h-100 transition-all ${
-                      selectedSign.id === sign.id
-                        ? "border-[#fd6410] bg-[#fd641005] shadow-lg -translate-y-2 ring-1 ring-[#fd641054]"
-                        : "border-[#fd64101a] hover:-translate-y-1 hover:border-[#fd641054]"
-                    }`}
-                  >
-                    <Image
-                      src={sign.image}
-                      alt={sign.title}
-                      width={64}
-                      height={64}
-                      className="w-16 h-16 object-contain mx-auto mb-3"
-                    />
-                    <h3 className="text-sm font-bold text-[#301118] mb-1">
-                      {sign.title}
-                    </h3>
-                    <p className="text-[9px] text-gray-400 font-bold uppercase">
-                      Vedic Rashi
-                    </p>
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <ChooseYourZodiac />
 
       {/* Prediction Details */}
       <section className="space-section light-back">
