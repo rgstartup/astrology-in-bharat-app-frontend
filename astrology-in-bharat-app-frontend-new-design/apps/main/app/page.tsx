@@ -1,12 +1,12 @@
 import React from "react";
-import AstrologerList from "@/components/main/AstrologerList";
-import AstrologerServices from "@/components/AstrologyServices/AstrologyServices";
-import ChooseYourZodiac from "@/components/main/ChooseYourZodiac";
-import AstrologyProduct from "@/components/main/AstrologyProduct";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import Testimonial from "@/components/main/Testimonial";
-import CTA from "@/components/main/CTA";
-import HeroSection from "@/components/main/HeroSection";
+import AstrologerList from "@/components/features/astrologers/AstrologerList";
+import AstrologerServices from "@/components/features/services/AstrologyServices";
+import ChooseYourZodiac from "@/components/layout/main/ChooseYourZodiac";
+import AstrologyProduct from "@/components/features/shop/AstrologyProduct";
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import Testimonial from "@/components/layout/main/Testimonial";
+import CTA from "@/components/layout/main/CTA";
+import HeroSection from "@/components/layout/main/HeroSection";
 import { getExperts } from "@/libs/api-experts";
 // import { toast } from 'react-hot-toast'; // Cannot use toast in Server Component directly
 

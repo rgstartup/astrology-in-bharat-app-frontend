@@ -1,6 +1,6 @@
 "use client";
-import ProductsCarousel from "@/components/ProductsCarousel";
 import React, { useState } from "react";
+import ProductsCarousel from "@/components/features/shop/ProductsCarousel";
 import { Button, Form } from "react-bootstrap";
 
 const CartPage: React.FC = () => {
@@ -58,7 +58,7 @@ const CartPage: React.FC = () => {
   const grandTotal = subtotal + shipping + tax;
 
   return (
-    <div >
+    <div>
       <div className="container py-5">
         {/* Title */}
         <div className="d-flex align-items-center mb-4">
@@ -166,7 +166,9 @@ const CartPage: React.FC = () => {
                   <hr />
                   <li className="d-flex justify-content-between mb-3">
                     <span className="fw-semibold">Total</span>
-                    <span className="fw-semibold fs-5">₹{grandTotal.toFixed(0)}</span>
+                    <span className="fw-semibold fs-5">
+                      ₹{grandTotal.toFixed(0)}
+                    </span>
                   </li>
                 </ul>
                 <Button
@@ -174,7 +176,8 @@ const CartPage: React.FC = () => {
                   className="w-100 text-white fw-semibold py-2"
                   style={{ background: "#d9a03d", border: "none" }}
                 >
-                  Proceed to Checkout <i className="fas fa-arrow-right ms-2"></i>
+                  Proceed to Checkout{" "}
+                  <i className="fas fa-arrow-right ms-2"></i>
                 </Button>
               </div>
             </div>

@@ -1,13 +1,15 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import NextLink from "next/link";
+import NextImage from "next/image";
+const NextImageComp = NextImage as any;
 const Link = NextLink as any;
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-const API_BASE_URL = "http://localhost:4000/api/v1";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000/api/v1";
 
 interface ExpertProfile {
   id: number;
@@ -54,6 +56,22 @@ interface AstrologerListProps {
   initialError?: string;
 }
 
+// Map helper
+const mapExpert = (item: ExpertProfile): ClientExpertProfile => ({
+  id: item.id,
+  image: item.user?.avatar || "/images/astro-img1.png",
+  ratings: Math.round(item.rating || 0) || 5,
+  name: item.user?.name || "Astrologer",
+  expertise: item.specialization || "Vedic Astrology",
+  experience: item.experience_in_years || 0,
+  language: Array.isArray(item.languages)
+    ? item.languages.join(", ")
+    : item.user?.language || "Hindi",
+  price: item.price || 0,
+  video: item.video || "https://www.youtube.com/embed/INoPh_oRooU",
+  modalId: `home-modal-${item.id}`,
+});
+
 const AstrologerList: React.FC<AstrologerListProps> = ({
   initialExperts,
   initialPagination,
@@ -92,23 +110,6 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
   });
 
   const [localFilter, setLocalFilter] = useState({ ...filterState });
-
-  // Map helper
-  const mapExpert = (item: ExpertProfile) => ({
-    id: item.id,
-    image: item.user?.avatar || "/images/astro-img1.png",
-    ratings: Math.round(item.rating || 0) || 5,
-    name: item.user?.name || "Astrologer",
-    expertise: item.specialization || "Vedic Astrology",
-    experience: item.experience_in_years || 0,
-    language: Array.isArray(item.languages)
-      ? item.languages.join(", ")
-      : item.user?.language || "Hindi",
-    price: item.price || 0,
-    video: item.video || "https://www.youtube.com/embed/INoPh_oRooU",
-    modalId: `home-modal-${item.id}`,
-  });
-
   // Initialize from Server Data
   useEffect(() => {
     if (initialError) {
@@ -128,7 +129,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
         setHasMore(initialPagination.hasMore);
       }
     }
-  }, [initialExperts, initialPagination]);
+  }, [initialExperts, initialPagination, initialError, offset]);
   // NOTE: We do not depend on `offset` here to avoid loop reset.
   // We only set initial data when provided and we are at start.
 
@@ -607,11 +608,14 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
                       >
                         <div className="astro-card min-w-[300px]">
                           <div className="vid-part">
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="astro-profile-img"
-                            />
+                            <div className="relative w-full h-full overflow-hidden">
+                              <NextImageComp
+                                src={item.image}
+                                alt={item.name}
+                                fill
+                                className="astro-profile-img object-cover"
+                              />
+                            </div>
                             <span
                               className="play-vid fa-beat"
                               data-bs-toggle="modal"

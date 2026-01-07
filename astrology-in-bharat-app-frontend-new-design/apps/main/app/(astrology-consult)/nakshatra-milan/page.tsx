@@ -1,20 +1,30 @@
-"use client";
-
 import React from "react";
-import Image from "next/image";
+import NextImage from "next/image";
+const Image = NextImage as any;
 import {
-  FaUserFriends,
-  FaHeart,
-  FaBrain,
-  FaChevronDown,
-  FaChevronRight,
-  FaCheckCircle,
-  FaMapMarkerAlt,
+  FaUserFriends as FaUf,
+  FaHeart as FaH,
+  FaBrain as FaB,
+  FaChevronDown as FaCd,
+  FaChevronRight as FaCr,
+  FaCheckCircle as FaCc,
+  FaMapMarkerAlt as FaMma,
 } from "react-icons/fa";
-import { MdOutlineHealthAndSafety } from "react-icons/md";
-import { HiOutlineSparkles } from "react-icons/hi";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
+const FaUserFriends = FaUf as any;
+const FaHeart = FaH as any;
+const FaBrain = FaB as any;
+const FaChevronDown = FaCd as any;
+const FaChevronRight = FaCr as any;
+const FaCheckCircle = FaCc as any;
+const FaMapMarkerAlt = FaMma as any;
+
+import { MdOutlineHealthAndSafety as MdOhas } from "react-icons/md";
+const MdOutlineHealthAndSafety = MdOhas as any;
+import { HiOutlineSparkles as HiOs } from "react-icons/hi";
+const HiOutlineSparkles = HiOs as any;
+
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
 
 const NakshatraMilanPage = () => {
   return (
@@ -65,7 +75,7 @@ const NakshatraMilanPage = () => {
       <section className="space-section light-back">
         <div className="container">
           <div className="light-card border border-[#fd64102b] p-8 md:p-12 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#fd6410] via-yellow-400 to-[#fd6410]"></div>
+            <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-[#fd6410] via-yellow-400 to-[#fd6410]"></div>
 
             <div className="row g-5">
               {/* Boy's Details */}

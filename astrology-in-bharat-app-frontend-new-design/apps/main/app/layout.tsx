@@ -6,7 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import "@repo/styles";
-import ClientLayout from "@/components/ClientLayout";
+import ClientLayout from "@/components/layout/ClientLayout";
 import { Metadata } from "next";
 
 // Google Fonts setup

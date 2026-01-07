@@ -36,9 +36,9 @@ import { MdOutlineDateRange as MdO } from "react-icons/md";
 const MdOutlineDateRange = MdO as any;
 import { HiOutlineSparkles as HiOs } from "react-icons/hi";
 const HiOutlineSparkles = HiOs as any;
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
-import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
+import { ZodiacSignsData } from "@/components/features/services/homePagaData";
 
 const HoroscopePage = () => {
   const [selectedSign, setSelectedSign] = useState(ZodiacSignsData[0]);

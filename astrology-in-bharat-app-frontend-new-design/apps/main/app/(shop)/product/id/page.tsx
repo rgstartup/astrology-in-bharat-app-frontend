@@ -1,13 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper as Sw, SwiperSlide as Ss } from "swiper/react";
+const Swiper = Sw as any;
+const SwiperSlide = Ss as any;
 import { Navigation, Thumbs, FreeMode, Autoplay } from "swiper/modules";
 import { Accordion } from "react-bootstrap";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/free-mode";
-import { purpose } from "@/components/AstrologyServices/homePagaData";
+import { purpose } from "@/components/features/services/homePagaData";
 
 const Page = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -17,7 +19,8 @@ const Page = () => {
     tagline: "Unleash your inner calm and prosperity",
     price: 349,
     originalPrice: 799,
-    description: "Our Celestial Healing Bracelet is meticulously crafted with natural crystals known for their profound energy-enhancing properties. This elegant piece is more than just an accessory; it's a conduit for positive energy, promoting balance, wellness, and abundance in your life. Each crystal is hand-selected and charged through ancient Vedic rituals to ensure maximum potency. Wear it daily to align your chakras and elevate your spiritual journey.",
+    description:
+      "Our Celestial Healing Bracelet is meticulously crafted with natural crystals known for their profound energy-enhancing properties. This elegant piece is more than just an accessory; it&apos;s a conduit for positive energy, promoting balance, wellness, and abundance in your life. Each crystal is hand-selected and charged through ancient Vedic rituals to ensure maximum potency. Wear it daily to align your chakras and elevate your spiritual journey.",
     images: [
       "/images/product-5.jpg",
       "/images/product-4.jpg",
@@ -78,7 +81,6 @@ const Page = () => {
       dimensions: "Adjustable size, fits most wrist sizes.",
     },
   };
-
 
   // const relatedProducts = [
   //   { name: "Healing Stone Pendant", price: 299, image: "/images/product-6.jpg" },
@@ -225,10 +227,7 @@ const Page = () => {
                 className="p-3 rounded my-4"
                 style={{ background: "#fdf4e5", border: "1px dashed #d9a03d" }}
               >
-                <i
-                  className="fas fa-tag me-2"
-                  style={{ color: "#d9a03d" }}
-                ></i>
+                <i className="fas fa-tag me-2" style={{ color: "#d9a03d" }}></i>
                 Use code <strong>SAVE10</strong> for 10% off!
               </div>
 
@@ -278,9 +277,7 @@ const Page = () => {
           >
             <div className="container d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
-                <h5 className="mb-0 fw-bold me-3 text-dark">
-                  {product.title}
-                </h5>
+                <h5 className="mb-0 fw-bold me-3 text-dark">{product.title}</h5>
                 <h5 className="mb-0 fw-bold" style={{ color: "#d9a03d" }}>
                   ₹{product.price}
                 </h5>
@@ -327,15 +324,23 @@ const Page = () => {
 
           {/* Product Details Section */}
           <section className="mb-5">
-            <h3 className="fw-bold mb-4 text-center" style={{ color: "#732882" }}>
+            <h3
+              className="fw-bold mb-4 text-center"
+              style={{ color: "#732882" }}
+            >
               Product Specifications
             </h3>
             <div className="row g-4 justify-content-center">
               {product.details.map((detail, idx) => (
                 <div className="col-md-6 col-lg-3" key={idx}>
-                  <div className="card h-100 border-0 shadow-sm rounded-lg" style={{ background: "#f8f8f8" }}>
+                  <div
+                    className="card h-100 border-0 shadow-sm rounded-lg"
+                    style={{ background: "#f8f8f8" }}
+                  >
                     <div className="card-body">
-                      <h6 className="fw-bold mb-2" style={{ color: "#732882" }}>{detail.title}</h6>
+                      <h6 className="fw-bold mb-2" style={{ color: "#732882" }}>
+                        {detail.title}
+                      </h6>
                       <p className="text-muted small mb-0">{detail.text}</p>
                     </div>
                   </div>
@@ -368,14 +373,24 @@ const Page = () => {
           {/* Customer Reviews Section */}
           {/* Customer Reviews Section */}
           <section className="mt-5">
-            <h3 className="fw-bold mb-4 text-center" style={{ color: "#732882" }}>
+            <h3
+              className="fw-bold mb-4 text-center"
+              style={{ color: "#732882" }}
+            >
               Authentic Customer Reviews
             </h3>
             <div className="d-flex align-items-center justify-content-center mb-3">
-              <h1 className="me-3 mb-0 display-4 fw-bold" style={{ color: "#d9a03d" }}>{product.avgRating}</h1>
+              <h1
+                className="me-3 mb-0 display-4 fw-bold"
+                style={{ color: "#d9a03d" }}
+              >
+                {product.avgRating}
+              </h1>
               <div>
                 <StarRating rating={product.avgRating} />
-                <p className="ms-2 mb-0 text-muted small mt-1">{product.totalRatings.toLocaleString()} verified ratings</p>
+                <p className="ms-2 mb-0 text-muted small mt-1">
+                  {product.totalRatings.toLocaleString()} verified ratings
+                </p>
               </div>
             </div>
 
@@ -383,12 +398,16 @@ const Page = () => {
               <div className="col-md-8">
                 {product.reviewStats.map((r, idx) => (
                   <div className="d-flex align-items-center mb-2" key={idx}>
-                    <span className="me-2 fw-bold" style={{ width: "50px", color: "#732882" }}>
+                    <span
+                      className="me-2 fw-bold"
+                      style={{ width: "50px", color: "#732882" }}
+                    >
                       {r.stars} <i className="fas fa-star text-warning"></i>
                     </span>
-                    <div className="progress flex-grow-1" style={{ height: "10px", background: "#f0f0f0" }}>
-
-                    </div>
+                    <div
+                      className="progress flex-grow-1"
+                      style={{ height: "10px", background: "#f0f0f0" }}
+                    ></div>
                     <span className="ms-3 text-muted" style={{ width: "60px" }}>
                       {r.count.toLocaleString()}
                     </span>
@@ -397,16 +416,20 @@ const Page = () => {
               </div>
             </div>
             <div className="text-center mt-4">
-              <button className="btn btn-outline-secondary px-4">Write a Review</button>
+              <button className="btn btn-outline-secondary px-4">
+                Write a Review
+              </button>
             </div>
           </section>
 
           <hr className="my-5" />
 
-
           {/* Testimonials Section */}
           <section className="mb-5">
-            <h3 className="fw-bold mb-4 text-center" style={{ color: "#732882" }}>
+            <h3
+              className="fw-bold mb-4 text-center"
+              style={{ color: "#732882" }}
+            >
               Stories from Our Customers
             </h3>
             <div className="row g-4 justify-content-center">
@@ -433,13 +456,36 @@ const Page = () => {
                   className="mySwiper"
                 >
                   {[
-                    { name: "Amit Sharma", img: "/images/astro-img1.png", rating: 5, text: "The moment I put on this bracelet, I felt a shift in my energy. It's beautiful and powerful. Fast delivery and excellent quality." },
-                    { name: "Priya Verma", img: "/images/astro-img1.png", rating: 4, text: "A truly beautiful product. The packaging was exquisite, and the positive vibes were immediate. Highly recommend to anyone seeking balance." },
-                    { name: "Rohit Mehta", img: "/images/astro-img1.png", rating: 5, text: "Impeccable quality and authenticity. The design is so elegant, it feels like it was made just for me. A must-have for daily wear." },
-                    { name: "Sneha Patel", img: "/images/astro-img1.png", rating: 5, text: "I've been wearing it for a month, and I've noticed a significant improvement in my focus and overall well-being. Thank you for this magical piece!" }
+                    {
+                      name: "Amit Sharma",
+                      img: "/images/astro-img1.png",
+                      rating: 5,
+                      text: "The moment I put on this bracelet, I felt a shift in my energy. It's beautiful and powerful. Fast delivery and excellent quality.",
+                    },
+                    {
+                      name: "Priya Verma",
+                      img: "/images/astro-img1.png",
+                      rating: 4,
+                      text: "A truly beautiful product. The packaging was exquisite, and the positive vibes were immediate. Highly recommend to anyone seeking balance.",
+                    },
+                    {
+                      name: "Rohit Mehta",
+                      img: "/images/astro-img1.png",
+                      rating: 5,
+                      text: "Impeccable quality and authenticity. The design is so elegant, it feels like it was made just for me. A must-have for daily wear.",
+                    },
+                    {
+                      name: "Sneha Patel",
+                      img: "/images/astro-img1.png",
+                      rating: 5,
+                      text: "I've been wearing it for a month, and I've noticed a significant improvement in my focus and overall well-being. Thank you for this magical piece!",
+                    },
                   ].map((review, idx) => (
                     <SwiperSlide key={idx}>
-                      <div className="card my-5  border border-gray shadow-sm rounded-lg" style={{ background: "#fcfcfb" }}>
+                      <div
+                        className="card my-5  border border-gray shadow-sm rounded-lg"
+                        style={{ background: "#fcfcfb" }}
+                      >
                         <div className="card-body text-center d-flex flex-column justify-content-between">
                           <div>
                             <img
@@ -452,13 +498,19 @@ const Page = () => {
                                 objectFit: "cover",
                               }}
                             />
-                            <h5 className="fw-bold mb-1" style={{ color: "#732882" }}>
+                            <h5
+                              className="fw-bold mb-1"
+                              style={{ color: "#732882" }}
+                            >
                               {review.name}
                             </h5>
                             <div className="mb-2">
                               <StarRating rating={review.rating} />
                             </div>
-                            <p className="text-muted" style={{ fontSize: "0.95rem" }}>
+                            <p
+                              className="text-muted"
+                              style={{ fontSize: "0.95rem" }}
+                            >
                               {review.text}
                             </p>
                           </div>
@@ -539,8 +591,6 @@ const Page = () => {
           </section>
         </div>
       </div>
-
-
     </>
   );
 };

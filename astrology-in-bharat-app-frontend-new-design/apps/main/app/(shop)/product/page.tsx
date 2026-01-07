@@ -3,7 +3,7 @@ import NextLink from "next/link";
 const Link = NextLink as any;
 import NextImage from "next/image";
 const Image = NextImage as any;
-import { products, purpose } from "@/components/AstrologyServices/homePagaData";
+import { products, purpose } from "@/components/features/services/homePagaData";
 
 const page: React.FC = () => {
   return (

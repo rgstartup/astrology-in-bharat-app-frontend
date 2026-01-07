@@ -1,22 +1,34 @@
-"use client";
-
 import React from "react";
-import Image from "next/image";
+import NextImage from "next/image";
+const Image = NextImage as any;
 import {
-  FaUserFriends,
-  FaHeart,
-  FaShieldAlt,
-  FaChevronRight,
-  FaMars,
-  FaVenus,
-  FaRegCheckCircle,
-  FaInfoCircle,
-  FaUsers,
+  FaUserFriends as FaUf,
+  FaHeart as FaH,
+  FaShieldAlt as FaSa,
+  FaChevronRight as FaCr,
+  FaMars as FaM,
+  FaVenus as FaV,
+  FaRegCheckCircle as FaRcc,
+  FaInfoCircle as FaIc,
+  FaUsers as FaUs,
 } from "react-icons/fa";
-import { HiOutlineSparkles } from "react-icons/hi";
-import { MdOutlineSecurity } from "react-icons/md";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
+const FaUserFriends = FaUf as any;
+const FaHeart = FaH as any;
+const FaShieldAlt = FaSa as any;
+const FaChevronRight = FaCr as any;
+const FaMars = FaM as any;
+const FaVenus = FaV as any;
+const FaRegCheckCircle = FaRcc as any;
+const FaInfoCircle = FaIc as any;
+const FaUsers = FaUs as any;
+
+import { HiOutlineSparkles as HiOs } from "react-icons/hi";
+const HiOutlineSparkles = HiOs as any;
+import { MdOutlineSecurity as MdOs } from "react-icons/md";
+const MdOutlineSecurity = MdOs as any;
+
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
 
 const KundaliMatchingPage = () => {
   return (

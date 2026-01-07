@@ -1,10 +1,8 @@
-import React from 'react'
-import OurAstrologer from '@/components/main/ourAstrologer'
+import React from "react";
+import OurAstrologer from "@/components/layout/main/ourAstrologer";
 
 const page = () => {
-  return (
-    <OurAstrologer />
-  )
-}
+  return <OurAstrologer />;
+};
 
-export default page
+export default page;

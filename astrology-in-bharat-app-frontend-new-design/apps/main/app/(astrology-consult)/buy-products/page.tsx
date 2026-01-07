@@ -1,13 +1,15 @@
-"use client";
-
 import React from "react";
 import NextImage from "next/image";
 const Image = NextImage as any;
-import { HiOutlineSparkles } from "react-icons/hi";
-import { FaGem, FaArrowLeft } from "react-icons/fa";
-import Link from "next/link";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
+import { HiOutlineSparkles as HiOs } from "react-icons/hi";
+const HiOutlineSparkles = HiOs as any;
+import { FaGem as FaGe, FaArrowLeft as FaAl } from "react-icons/fa";
+const FaGem = FaGe as any;
+const FaArrowLeft = FaAl as any;
+import NextLink from "next/link";
+const Link = NextLink as any;
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
 
 const BuyProductsPage = () => {
   return (

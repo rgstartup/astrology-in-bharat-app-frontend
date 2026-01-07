@@ -14,11 +14,6 @@ import {
   FaStar as FaS,
   FaCalendarAlt as FaC,
   FaClock as FaCl,
-  FaBookOpen as FaBo,
-  FaCalculator as FaCa,
-  FaPray as FaPr,
-  FaInfinity as FaI,
-  FaRegHeart as FaRh,
 } from "react-icons/fa";
 const FaHeart = FaH as any;
 const FaBriefcase = FaB as any;
@@ -27,11 +22,6 @@ const FaPlane = FaP as any;
 const FaStar = FaS as any;
 const FaCalendarAlt = FaC as any;
 const FaClock = FaCl as any;
-const FaBookOpen = FaBo as any;
-const FaCalculator = FaCa as any;
-const FaPray = FaPr as any;
-const FaInfinity = FaI as any;
-const FaRegHeart = FaRh as any;
 
 import { MdOutlineDateRange as MdO } from "react-icons/md";
 const MdOutlineDateRange = MdO as any;
@@ -43,15 +33,6 @@ import {
 const HiSparkles = HiS as any;
 const HiOutlineSparkles = HiOs as any;
 const HiOutlineLightningBolt = HiLb as any;
-
-import {
-  MdOutlineHealthAndSafety as MdHs,
-  MdOutlineWorkOutline as MdWo,
-  MdFavoriteBorder as MdFb,
-} from "react-icons/md";
-const MdOutlineHealthAndSafety = MdHs as any;
-const MdOutlineWorkOutline = MdWo as any;
-const MdFavoriteBorder = MdFb as any;
 
 import {
   GiAries as GiA,
@@ -80,9 +61,9 @@ const GiCapricorn = GiCp as any;
 const GiAquarius = GiAq as any;
 const GiPisces = GiPi as any;
 
-import { ZodiacSignsData } from "@/components/AstrologyServices/zodiac";
-import CTA from "@/components/main/CTA";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
+import { ZodiacSignsData } from "@/components/features/services/zodiac";
+import CTA from "@/components/layout/main/CTA";
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
 
 // 12 signs mapping for icons and colors
 const zodiacList = [

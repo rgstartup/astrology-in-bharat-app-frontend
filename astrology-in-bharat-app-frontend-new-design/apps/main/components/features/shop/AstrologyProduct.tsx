@@ -1,4 +1,6 @@
 import React from "react";
+import NextImage from "next/image";
+const Image = NextImage as any;
 
 const AstrologyProduct = () => {
   return (
@@ -23,11 +25,12 @@ const AstrologyProduct = () => {
             {/* <!-- Product Card --> */}
             <div className="col-lg-3 col-md-6 col-sm-12">
               <div className="bg-white rounded-2xl p-2 text-center shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition duration-300 mb-[30px] border border-[#fd641047] hover:-translate-y-1.5">
-                <div className="mb-[15px]">
-                  <img
+                <div className="mb-[15px] relative h-[200px] w-full overflow-hidden rounded-xl">
+                  <Image
                     src="/images/product/product1.jpg"
                     alt="Rudraksha Mala"
-                    className="w-full object-contain mb-[15px]"
+                    fill
+                    className="object-contain"
                   />
                 </div>
                 <h4 className="text-[22px] font-semibold text-[#1e0b0f] mb-1.5">
@@ -56,11 +59,12 @@ const AstrologyProduct = () => {
             {/* <!-- Product Card --> */}
             <div className="col-lg-3 col-md-6 col-sm-12">
               <div className="bg-white rounded-2xl p-2 text-center shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition duration-300 mb-[30px] border border-[#fd641047] hover:-translate-y-1.5">
-                <div className="mb-[15px]">
-                  <img
+                <div className="mb-[15px] relative h-[200px] w-full overflow-hidden rounded-xl">
+                  <Image
                     src="/images/product/product2.jpg"
                     alt="Gemstone Ring"
-                    className="w-full object-contain mb-[15px]"
+                    fill
+                    className="object-contain"
                   />
                 </div>
                 <h4 className="text-[22px] font-semibold text-[#1e0b0f] mb-1.5">
@@ -89,11 +93,12 @@ const AstrologyProduct = () => {
             {/* <!-- Product Card --> */}
             <div className="col-lg-3 col-md-6 col-sm-12">
               <div className="bg-white rounded-2xl p-2 text-center shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition duration-300 mb-[30px] border border-[#fd641047] hover:-translate-y-1.5">
-                <div className="mb-[15px]">
-                  <img
+                <div className="mb-[15px] relative h-[200px] w-full overflow-hidden rounded-xl">
+                  <Image
                     src="/images/product/product3.jpg"
                     alt="Yantra"
-                    className="w-full object-contain mb-[15px]"
+                    fill
+                    className="object-contain"
                   />
                 </div>
                 <h4 className="text-[22px] font-semibold text-[#1e0b0f] mb-1.5">
@@ -122,11 +127,12 @@ const AstrologyProduct = () => {
             {/* <!-- Product Card --> */}
             <div className="col-lg-3 col-md-6 col-sm-12">
               <div className="bg-white rounded-2xl p-2 text-center shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition duration-300 mb-[30px] border border-[#fd641047] hover:-translate-y-1.5">
-                <div className="mb-[15px]">
-                  <img
+                <div className="mb-[15px] relative h-[200px] w-full overflow-hidden rounded-xl">
+                  <Image
                     src="/images/product/product4.jpg"
                     alt="Astrology Bracelet"
-                    className="w-full object-contain mb-[15px]"
+                    fill
+                    className="object-contain"
                   />
                 </div>
                 <h4 className="text-[22px] font-semibold text-[#1e0b0f] mb-1.5">
@@ -155,7 +161,7 @@ const AstrologyProduct = () => {
 
           {/* <!-- View All Button -->  */}
           <div className="view-all mt-1 mb-3">
-            <a href="#" className="btn-link wfc m-auto">
+            <a href="#" className="btn-link wfc m-auto text-decoration-none">
               <i className="fa-solid fa-cart-shopping"></i> View All Products
             </a>
           </div>

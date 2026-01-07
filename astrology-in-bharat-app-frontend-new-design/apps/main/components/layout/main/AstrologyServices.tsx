@@ -1,5 +1,5 @@
 import React from "react";
-import { AstrologyServicesData } from "@/components/AstrologyServices/homePagaData";
+import { AstrologyServicesData } from "@/components/features/services/homePagaData";
 
 const AstrologyServices = () => {
   return (
