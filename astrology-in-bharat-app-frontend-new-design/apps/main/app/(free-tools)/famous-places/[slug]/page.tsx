@@ -1,13 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { fetchPlaceImages, getPlaceBySlug, Place } from "@/libs/serp-api";
-import NextImage from "next/image";
-import NextLink from "next/link";
-
-const Image = NextImage as any;
-const Link = NextLink as any;
+import Image from "next/image";
+import Link from "next/link";
 
 const PlaceDetailPage = () => {
   const { slug } = useParams();
@@ -18,9 +15,6 @@ const PlaceDetailPage = () => {
   useEffect(() => {
     const data = getPlaceBySlug(slug as string);
     if (!data) {
-      // If not found in cache (e.g. direct link), we might need to search for it
-      // For now, redirect back if not found to avoid errors
-      // router.push("/famous-places");
       setLoading(false);
       return;
     }
@@ -38,34 +32,22 @@ const PlaceDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background-light">
-        <div className="flex flex-col items-center">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-text-sub-light font-bold animate-pulse">
-            Gathering Divine Details...
-          </p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-5 h-5 border-2 border-[#fd6410] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!place) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background-light">
-        <div className="text-center p-8 bg-white rounded-2xl shadow-sm border border-border-light max-w-sm">
-          <div className="text-5xl mb-4">📍</div>
-          <h2 className="text-xl font-bold text-secondary mb-2">
-            Place Not Found
-          </h2>
-          <p className="text-text-sub-light text-sm mb-6">
-            We couldn't find the details for this spiritual site. It might have
-            moved or is temporarily unavailable.
-          </p>
+      <div className="min-h-screen flex items-center justify-center bg-white p-6">
+        <div className="text-center p-6 bg-white rounded-lg border border-slate-200 max-w-sm">
+          <h2 className="text-base font-bold text-[#301118] mb-1">Not Found</h2>
           <Link
             href="/famous-places"
-            className="inline-block bg-primary text-white px-6 py-2 rounded-lg font-bold"
+            className="text-xs font-bold text-[#fd6410]"
           >
-            Back to Places
+            Return to Directory
           </Link>
         </div>
       </div>
@@ -75,203 +57,251 @@ const PlaceDetailPage = () => {
   const mainImage =
     images.length > 0
       ? images[0]
-      : place.thumbnailUrl ||
-        "https://png.pngtree.com/png-vector/20190820/ourmid/pngtree-no-image-vector-illustration-isolated-png-image_1694547.jpg";
+      : place.thumbnailUrl || "/images/image-not-found.png";
 
   return (
-    <div className="min-h-screen bg-background-dark pb-24">
-      {/* Dynamic Header with back-img style */}
-      <div className="relative h-[450px] md:h-[600px] w-full overflow-hidden">
+    <div className="min-h-screen bg-[#FDFCFB]">
+      {/* 1. Full-Width Hero Section */}
+      <section className="relative h-[45vh] md:h-[55vh] w-full overflow-hidden">
         <Image
           src={mainImage}
           alt={place.title}
           fill
-          className="object-cover opacity-60"
+          className="object-cover"
+          priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/40 to-transparent"></div>
+        {/* Black Overlay to darken image */}
+        <div className="absolute inset-0 bg-black/30"></div>
+        {/* Subtle Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#301118]/80 via-transparent to-transparent"></div>
 
-        <div className="absolute top-10 left-6 md:left-12 z-20">
-          <Link
-            href="/famous-places"
-            className="bg-white/10 backdrop-blur-md text-white px-6 py-2.5 rounded-full font-bold flex items-center gap-2 hover:bg-primary transition-all shadow-xl no-underline border border-white/20"
-          >
-            <span className="text-xl">&larr;</span> Back to Sacred Places
-          </Link>
-        </div>
-
-        <div className="absolute bottom-40 left-0 right-0 text-center px-4 z-10">
-          <span className="aib-trust-badge mb-4 mx-auto inline-block">
-            Verified Spiritual Site
-          </span>
-          <h1 className="text-4xl md:text-7xl font-display font-bold text-white mb-4 drop-shadow-2xl">
-            {place.title}
-          </h1>
-          <div className="flex items-center justify-center gap-6 text-white/80">
-            <div className="flex items-center gap-2">
-              <i className="fa-solid fa-star text-accent-gold"></i>
-              <span className="font-bold text-white text-lg">
-                {place.rating || "4.8"}
-              </span>
-            </div>
-            <div className="w-1.5 h-1.5 bg-white/30 rounded-full"></div>
-            <span className="font-medium tracking-wide uppercase text-sm">
+        {/* Navigation Over Hero */}
+        <div className="absolute top-0 left-0 right-0 z-50 p-4 md:p-6">
+          <div className="max-w-5xl mx-auto flex items-center justify-between">
+            <Link
+              href="/famous-places"
+              className="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white/20 transition-all flex items-center gap-2 no-underline"
+            >
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.5"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+              Directory
+            </Link>
+            <div className="px-2 py-0.5 rounded-md bg-white/20 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-widest">
               {place.category}
-            </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-6xl mx-auto px-4 -mt-24 relative z-20">
-        <div className="bg-[#1e0b0f6e] backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-[#fd641054] p-8 md:p-16">
-          <div className="flex flex-col lg:flex-row gap-16">
-            <div className="lg:col-span-2 flex-1 space-y-12">
-              <section>
-                <h2 className="title-line text-white mb-8">
-                  <span>About this Divine Location</span>
-                </h2>
-                <div className="bg-[#2d1215]/50 p-8 rounded-3xl border border-[#fd641020] flex items-start gap-6">
-                  <div className="bg-gradient-to-br from-primary to-primary-hover w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <i className="fa-solid fa-location-dot text-white text-2xl"></i>
+        {/* Hero Title Container */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 text-white">
+          <div className="max-w-5xl mx-auto">
+            <div className="flex items-center gap-2 mb-2 opacity-90">
+              <div className="flex items-center text-[#fd6410]">
+                <svg className="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span className="text-[11px] font-bold ml-1">
+                  {place.rating || "4.8"}
+                </span>
+              </div>
+              <div className="w-1 h-1 rounded-full bg-white/40"></div>
+              <span className="text-[10px] font-bold uppercase tracking-tight">
+                Verified Sacred Site
+              </span>
+            </div>
+            <h1 className="text-3xl md:text-5xl font-display font-bold leading-tight tracking-tight drop-shadow-sm">
+              {place.title}
+            </h1>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Content Details Section */}
+      <main className="max-w-5xl mx-auto px-4 py-10 md:py-16">
+        <div className="flex flex-col md:flex-row gap-8 lg:gap-16">
+          <div className="flex-1 space-y-12">
+            {/* Address Block - Prominent yet compact */}
+            <div className="inline-flex items-start gap-3.5 p-4 bg-white rounded-xl border border-slate-200/60 shadow-sm w-full max-w-2xl">
+              <div className="w-10 h-10 rounded-full bg-[#fd6410]/5 flex items-center justify-center flex-shrink-0">
+                <svg
+                  className="w-4 h-4 text-[#fd6410]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </div>
+              <div className="pr-4">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">
+                  Location
+                </span>
+                <p className="text-[13px] text-[#301118] leading-relaxed font-semibold">
+                  {place.address}
+                </p>
+              </div>
+            </div>
+
+            {/* Gallery Grid */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  Divine Visuals
+                </span>
+                <div className="flex-1 h-px bg-slate-100"></div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {images.slice(1, 4).map((img, i) => (
+                  <div
+                    key={i}
+                    className="relative aspect-square rounded-xl overflow-hidden border border-slate-100 shadow-sm"
+                  >
+                    <Image
+                      src={img}
+                      alt={`${place.title} visual ${i + 1}`}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                  <div>
-                    <h3 className="text-white font-bold text-xl mb-2">
-                      Location Address
-                    </h3>
-                    <p className="text-text-sub-dark italic leading-relaxed text-lg">
-                      {place.address}
-                    </p>
-                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Significance Section */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-[#fd6410] uppercase tracking-widest">
+                  Divine Heritage
+                </span>
+                <div className="flex-1 h-px bg-slate-100"></div>
+              </div>
+              <div className="grid md:grid-cols-5 gap-6">
+                <div className="md:col-span-3">
+                  <p className="text-[13px] text-slate-600 leading-relaxed">
+                    Explore the profound architectural marvel and spiritual
+                    significance of {place.title}. Known for its historical
+                    depth, this sacred site offers a sanctuary for peace and
+                    meditation.
+                  </p>
                 </div>
-              </section>
-
-              {images.length > 1 && (
-                <section>
-                  <h2 className="title-line text-white mb-8">
-                    <span>Divine Gallery</span>
-                  </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                    {images.slice(1, 7).map((img, i) => (
+                <div className="md:col-span-2 bg-slate-50/50 rounded-lg p-5 border border-slate-100/50">
+                  <div className="space-y-3">
+                    {[
+                      "Ideal Visit: Brahma Muhurta",
+                      "Media: Limited zones",
+                      "Attire: Traditional preferred",
+                      "Offerings: Local essentials",
+                    ].map((item, i) => (
                       <div
                         key={i}
-                        className="relative h-44 md:h-56 rounded-2xl overflow-hidden group border border-white/10"
+                        className="flex items-center gap-2.5 text-[11px] font-bold text-[#301118]/70"
                       >
-                        <Image
-                          src={img}
-                          alt={`${place.title} ${i + 1}`}
-                          fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                        <div className="w-1 h-1 rounded-full bg-[#fd6410]/40"></div>
+                        {item}
                       </div>
                     ))}
                   </div>
-                </section>
-              )}
-
-              <section className="bg-gradient-to-br from-[#2d1215] to-[#1e0b0f] p-10 rounded-[2rem] border border-[#fd641030] shadow-inner relative overflow-hidden">
-                <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl"></div>
-                <h2 className="text-2xl font-bold text-white mb-6 font-display flex items-center gap-3">
-                  <i className="fa-solid fa-om text-primary"></i>
-                  Spiritual Significance
-                </h2>
-                <p className="text-text-sub-dark text-lg leading-relaxed mb-8">
-                  Experience the profound serenity and divine energy of this
-                  sacred site. Known for its historical depth and spiritual
-                  vibrations, it offers a unique sanctuary for devotees and
-                  seekers alike.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    "Best time to visit: Early morning (Brahma Muhurta)",
-                    "Photography: Allowed in designated areas",
-                    "Dress Code: Modest traditional attire recommended",
-                    "Offerings: Local flowers and sweets available nearby",
-                  ].map((item, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-3 text-white/80 font-medium"
-                    >
-                      <i className="fa-solid fa-circle-check text-primary"></i>
-                      {item}
-                    </div>
-                  ))}
                 </div>
-              </section>
+              </div>
             </div>
+          </div>
 
-            <div className="w-full lg:w-[350px] shrink-0">
-              <div className="sticky top-10 space-y-8">
-                <div className="bg-surface-dark rounded-3xl border border-[#fd641040] p-8 shadow-2xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-primary/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
-                  <h3 className="font-bold text-white text-xl mb-6 border-b border-white/10 pb-4">
-                    Darshan Timings
-                  </h3>
+          {/* Sidebar - Integrated & Sticky */}
+          <div className="w-full md:w-80 shrink-0">
+            <div className="sticky top-24 space-y-6">
+              {/* Timing Card */}
+              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-[0_2px_15px_rgba(0,0,0,0.03)]">
+                <div className="bg-[#301118] px-6 py-3.5 flex justify-between items-center text-white">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest">
+                    Plan Your Visit
+                  </h4>
+                  <svg
+                    className="w-3 h-3 text-[#fd6410]"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" />
+                  </svg>
+                </div>
 
-                  <div className="space-y-5">
+                <div className="p-6 space-y-4">
+                  <div className="space-y-3.5 pb-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-text-sub-dark font-medium">
-                        Daily Opening
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">
+                        Darshan Timings
                       </span>
-                      <span className="font-bold text-primary">
-                        5:00 AM - 9:00 PM
+                      <span className="text-[12px] font-bold text-[#301118]">
+                        05:00 - 21:00
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-text-sub-dark font-medium">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">
                         Special Aarti
                       </span>
-                      <span className="font-bold text-accent-gold">
-                        6:30 AM & 7:30 PM
+                      <span className="text-[12px] font-bold text-[#301118]">
+                        06:30 & 19:30
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-text-sub-dark font-medium">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">
                         Entry Fee
                       </span>
-                      <span className="font-bold text-green-500">
+                      <span className="text-[12px] font-bold text-green-600">
                         Free Darshan
                       </span>
                     </div>
-                  </div>
-
-                  <div className="mt-10 p-5 bg-[#1e0b0f] rounded-2xl border border-primary/20 text-center">
-                    <p className="text-[10px] text-primary font-bold uppercase tracking-[0.2em] mb-2">
-                      Vedic Insight
-                    </p>
-                    <p className="text-sm text-text-sub-dark italic leading-relaxed">
-                      &quot;Visiting during your <strong>Jupiter Hora</strong>{" "}
-                      is believed to enhance the spiritual connection.&quot;
-                    </p>
                   </div>
 
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.title + " " + place.address)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full mt-8 bg-primary hover:bg-primary-hover text-white py-4 rounded-2xl font-bold transition-all shadow-lg text-center no-underline flex items-center justify-center gap-3 active:scale-95"
+                    className="block w-full bg-[#fd6410] hover:bg-[#301118] text-white py-3 rounded-xl font-bold text-[11px] text-center no-underline transition-all uppercase tracking-widest"
                   >
-                    <i className="fa-solid fa-map-location-dot"></i>
                     Get Directions
                   </a>
                 </div>
+              </div>
 
-                <div className="bg-gradient-to-r from-[#fd6410] to-[#c34500] rounded-3xl p-8 text-center text-white shadow-xl group cursor-pointer overflow-hidden relative">
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
-                  <i className="fa-solid fa-comments text-3xl mb-4 inline-block"></i>
-                  <h4 className="font-bold text-lg mb-2">Need Guidance?</h4>
-                  <p className="text-white/80 text-sm mb-6">
-                    Talk to our experts for a personalized spiritual
-                    consultation.
-                  </p>
-                  <button className="bg-white text-primary px-6 py-2.5 rounded-xl font-bold text-sm w-full">
-                    Start Consultation
-                  </button>
-                </div>
+              {/* Support Card */}
+              <div className="bg-[#FFF9F5] p-6 rounded-2xl border border-[#fd6410]/10 border-dashed">
+                <h4 className="text-[10px] font-bold text-[#301118] uppercase tracking-widest mb-2 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#fd6410]"></span>
+                  Need Guidance?
+                </h4>
+                <p className="text-[12px] text-slate-500 mb-5 leading-relaxed">
+                  Book a personalized spiritual consultation for your visit.
+                </p>
+                <button className="w-full bg-white border border-[#301118] text-[#301118] hover:bg-[#301118] hover:text-white py-2.5 rounded-lg font-bold text-[11px] transition-all uppercase tracking-widest">
+                  Consult Now
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
