@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FiBell, FiMenu } from "react-icons/fi";
 import Link from "next/link";
+import apiClient from "@/lib/apiClient";
 
 import { SearchInput } from "../../../shared/components/SearchInput";
 
@@ -12,6 +13,21 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(false); // Toggle state
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const res = await apiClient.get('/expert/profile');
+        if (res.data) {
+          setIsOnline(res.data.is_available);
+        }
+      } catch (err) {
+        console.error("Failed to fetch initial status:", err);
+      }
+    };
+    fetchStatus();
+  }, []);
 
   // Track whether mouse is on icon or on popup
   const isHoveringIcon = useRef(false);
@@ -31,8 +47,19 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
     }
   };
 
-  const handleToggle = () => {
-    setIsOnline(!isOnline);
+  const handleToggle = async () => {
+    if (loading) return;
+    try {
+      setLoading(true);
+      const newStatus = !isOnline;
+      await apiClient.patch('/expert/profile/status', { is_available: newStatus });
+      setIsOnline(newStatus);
+    } catch (err) {
+      console.error("Failed to update status:", err);
+      alert("Failed to update online status");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

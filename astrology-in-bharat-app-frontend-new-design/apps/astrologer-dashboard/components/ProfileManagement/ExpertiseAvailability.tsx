@@ -129,29 +129,6 @@ export default function ExpertiseAvailability({
                         </div>
                     </div>
 
-                    <div className="flex items-center space-x-3 py-2">
-                        <label className="flex items-center cursor-pointer">
-                            <div className="relative">
-                                <input
-                                    type="checkbox"
-                                    name="is_available"
-                                    checked={tempProfile.is_available}
-                                    onChange={(e) => {
-                                        onChange({
-                                            target: {
-                                                name: 'is_available',
-                                                value: e.target.checked
-                                            }
-                                        } as any);
-                                    }}
-                                    className="sr-only"
-                                />
-                                <div className={`block w-10 h-6 rounded-full transition-colors ${tempProfile.is_available ? 'bg-green-500' : 'bg-gray-400'}`}></div>
-                                <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${tempProfile.is_available ? 'translate-x-4' : ''}`}></div>
-                            </div>
-                            <span className="ml-3 text-sm font-medium text-gray-700">Currently Available for Consultation</span>
-                        </label>
-                    </div>
 
                     <div className="flex space-x-2 justify-end pt-2">
                         <button
