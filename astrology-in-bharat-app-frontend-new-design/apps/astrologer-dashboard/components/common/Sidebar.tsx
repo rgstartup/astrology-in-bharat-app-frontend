@@ -13,57 +13,24 @@ import {
   History,
   User,
   Settings,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
+import { useAuth } from "@/context/AuthContext";
 
-// **Architectural Change:** Decouple data from component
-// This enhances maintainability and scalability. Menu data can now be
-// managed in a separate file (e.g., `src/config/menuItems.ts`).
-// The menu items are no longer hard-coded within the component itself.
 interface MenuItem {
   label: string;
   href: string;
   icon: React.ElementType;
   submenu?: Omit<MenuItem, "submenu">[];
+  onClick?: () => void;
 }
-
-const menuItems: MenuItem[] = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Appointment", href: "/dashboard/appointment", icon: CalendarCheck },
-  {
-    label: "Service & Pricing",
-    href: "/dashboard/service-pricing",
-    icon: Coins,
-  },
-  
-  {
-    label: "Clients History",
-    href: "/dashboard/client-history",
-    icon: History,
-  },
-  { label: "Earnings", href: "/dashboard/earnings", icon: Coins },
-  {
-    label: "Account",
-    href: "#",
-    icon: Settings,
-    submenu: [
-      {
-        label: "Profile Management",
-        href: "/dashboard/profilemanagement",
-        icon: User,
-      },
-      { label: "Signout", href: "/", icon: X },
-    ],
-  },
-];
 
 interface SidebarProps {
   isOpen: boolean;
   toggleSidebar: () => void;
 }
 
-// **Refactoring:** Created a sub-component for menu items.
-// This improves reusability and readability by separating the rendering logic.
 interface SidebarMenuItemProps {
   item: MenuItem;
   pathname: string;
@@ -80,10 +47,17 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   const isSubmenuOpen = openSubmenu === item.label;
   const isActiveLink = pathname === item.href;
 
-  // Accessibility and Semantic HTML:
-  // Use `role="button"` for the submenu button.
-  // The `aria-controls` and `aria-expanded` attributes are crucial for screen readers.
-  // The `aria-current` attribute correctly indicates the active page.
+  if (item.onClick) {
+    return (
+      <button
+        onClick={item.onClick}
+        className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-white hover:bg-yellow-700 mt-auto"
+      >
+        <item.icon className="w-5 h-5 flex-shrink-0" />
+        <span>{item.label}</span>
+      </button>
+    );
+  }
 
   if (!item.submenu) {
     return (
@@ -132,6 +106,17 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         >
           {item.submenu.map((subItem) => {
             const isSubmenuActive = pathname === subItem.href;
+            if (subItem.onClick) {
+              return (
+                <button
+                  key={subItem.label}
+                  onClick={subItem.onClick}
+                  className="block w-full text-left px-3 py-2 rounded-lg text-sm text-yellow-100 hover:bg-yellow-600 hover:text-white transition-colors duration-200"
+                >
+                  {subItem.label}
+                </button>
+              );
+            }
             return (
               <Link
                 key={subItem.label}
@@ -154,9 +139,38 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
 
 export const Sidebar: React.FC<SidebarProps> = memo(
   ({ isOpen, toggleSidebar }) => {
-    // **State Management Improvement:** Initialize open submenu based on active path.
-    // This ensures that the submenu is open on page load if a sub-link is active.
     const pathname = usePathname();
+    const { logout } = useAuth();
+
+    const menuItems: MenuItem[] = [
+      { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      { label: "Appointment", href: "/dashboard/appointment", icon: CalendarCheck },
+      {
+        label: "Service & Pricing",
+        href: "/dashboard/service-pricing",
+        icon: Coins,
+      },
+      {
+        label: "Clients History",
+        href: "/dashboard/client-history",
+        icon: History,
+      },
+      { label: "Earnings", href: "/dashboard/earnings", icon: Coins },
+      {
+        label: "Account",
+        href: "#",
+        icon: Settings,
+        submenu: [
+          {
+            label: "Profile Management",
+            href: "/dashboard/profilemanagement",
+            icon: User,
+          },
+          { label: "Signout", href: "#", icon: LogOut, onClick: logout },
+        ],
+      },
+    ];
+
     const initialOpenSubmenu = menuItems.find(
       (item) => item.submenu && item.submenu.some((sub) => sub.href === pathname)
     )?.label || null;
@@ -168,13 +182,8 @@ export const Sidebar: React.FC<SidebarProps> = memo(
       setOpenSubmenu((prev) => (prev === label ? null : label));
     }, []);
 
-    // **Accessibility & Semantics:**
-    // Use an accessible name for the close button.
-    // The main `<aside>` and `<nav>` elements already have good ARIA labels.
-
     return (
       <>
-        {/* Mobile Overlay: */}
         {isOpen && (
           <div
             className="fixed inset-0 z-40 lg:hidden bg-black/70 transition-opacity duration-300 ease-in-out"
@@ -183,7 +192,6 @@ export const Sidebar: React.FC<SidebarProps> = memo(
           />
         )}
 
-        {/* Sidebar */}
         <aside
           className={cn(
             "fixed left-0 top-0 h-full w-64 flex flex-col bg-yellow-600 text-white transition-transform duration-300 ease-in-out z-50 overflow-y-auto no-scrollbar shadow-xl shadow-gray-400",
@@ -192,7 +200,6 @@ export const Sidebar: React.FC<SidebarProps> = memo(
           )}
           aria-label="Sidebar navigation"
         >
-          {/* Logo Section */}
           <div className="flex items-center justify-between p-6 bg-gray-50 border-r border-gray-200 flex-shrink-0">
             <img
               src="/images/logo.png"
@@ -208,7 +215,6 @@ export const Sidebar: React.FC<SidebarProps> = memo(
             </button>
           </div>
 
-          {/* Navigation Menu */}
           <nav className="mt-8 px-4 flex-1" aria-label="Main navigation">
             {menuItems.map((item) => (
               <div key={item.label} className="mb-2">
@@ -221,6 +227,17 @@ export const Sidebar: React.FC<SidebarProps> = memo(
               </div>
             ))}
           </nav>
+
+          {/* Add a direct logout button at the bottom for better UX */}
+          <div className="p-4 border-t border-yellow-500">
+            <button
+              onClick={logout}
+              className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-yellow-100 hover:bg-yellow-700 hover:text-white"
+            >
+              <LogOut className="w-5 h-5 flex-shrink-0" />
+              <span>Logout</span>
+            </button>
+          </div>
         </aside>
       </>
     );
