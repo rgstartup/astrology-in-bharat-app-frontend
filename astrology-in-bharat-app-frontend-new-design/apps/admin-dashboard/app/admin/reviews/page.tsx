@@ -2,8 +2,8 @@
 import React, { useState, useMemo } from "react";
 
 // Components
-import { StatsCards } from "@/app/components/admin/StatsCard";
-import { SearchInput } from "@/app/components/admin/SearchInput";
+import { StatsCards } from "../../../../shared/components/StatsCard";
+import { SearchInput } from "../../../../../shared/components/SearchInput";
 import { Button } from "@/app/components/admin/Button";
 import { ReviewCard } from "@/app/components/reviews/ReviewCard";
 
@@ -16,7 +16,7 @@ import { reviewsData, getStatsConfig } from "@/app/components/reviews/reviewsCon
 export default function ReviewsPage() {
   // Filter state (all, pending, flagged, approved)
   const [filter, setFilter] = useState("all");
-  
+
   // Search query state
   const [searchQuery, setSearchQuery] = useState("");
 

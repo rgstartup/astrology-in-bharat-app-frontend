@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kundali Matching - Astrology in Bharat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#F36A10",
+                        "primary-dark": "#D9580A",
+                        "background-light": "#FFF9F4", // Warm cream
+                        "background-dark": "#120C0C", // Deep dark brown/black
+                        "surface-light": "#FFFFFF",
+                        "surface-dark": "#1E1616", // Lighter dark brown for cards
+                        "border-light": "#EAD4C6",
+                        "border-dark": "#3D2B2B",
+                        "text-main-light": "#2D1414",
+                        "text-main-dark": "#EAE0DD",
+                        "text-muted-light": "#6B5B5B",
+                        "text-muted-dark": "#9C8E8E",
+                    },
+                    fontFamily: {
+                        display: ["Poppins", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        'xl': '1rem',
+                        '2xl': '1.5rem',
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #F36A10; 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300">
+<div class="bg-[#2D1414] text-white py-2 text-xs md:text-sm">
+<div class="container mx-auto px-4 flex justify-between items-center">
+<span class="hidden md:block opacity-90">Connect with Verified Astrology Experts for Online Predictions.</span>
+<div class="flex items-center space-x-4 ml-auto">
+<button class="flex items-center space-x-1 bg-white text-[#2D1414] px-3 py-1 rounded-full font-medium text-xs hover:bg-gray-100 transition">
+<span class="material-icons-outlined text-sm">language</span>
+<span>Eng</span>
+<span class="material-icons-outlined text-sm">expand_more</span>
+</button>
+<a class="flex items-center hover:text-primary transition" href="#">
+<span class="material-icons-outlined mr-1 text-sm">shopping_cart</span>
+                    Cart
+                </a>
+<button class="flex items-center space-x-1 hover:text-primary transition">
+<span class="material-icons-outlined text-sm">person</span>
+<span>Account</span>
+<span class="material-icons-outlined text-sm">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+<nav class="bg-surface-light dark:bg-surface-dark shadow-sm sticky top-0 z-50 border-b border-border-light dark:border-border-dark">
+<div class="container mx-auto px-4 py-3 flex justify-between items-center">
+<div class="flex items-center space-x-2">
+<div class="w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-icons-outlined text-2xl md:text-3xl">auto_awesome</span>
+</div>
+<div class="leading-tight">
+<h1 class="font-bold text-lg md:text-xl text-primary tracking-tight">Astrology<br/><span class="text-text-main-light dark:text-white">in Bharat</span></h1>
+</div>
+</div>
+<div class="hidden lg:flex items-center space-x-8 font-medium text-sm">
+<a class="hover:text-primary transition" href="#">Home</a>
+<a class="hover:text-primary transition" href="#">Daily Horoscope</a>
+<div class="relative group">
+<button class="flex items-center hover:text-primary transition">
+                        Astrology Consult
+                        <span class="material-icons-outlined text-sm ml-1">expand_more</span>
+</button>
+<div class="absolute top-full left-0 w-48 bg-white dark:bg-surface-dark shadow-lg rounded-lg py-2 hidden group-hover:block border border-border-light dark:border-border-dark mt-2">
+<a class="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-primary" href="#">Kundali Matching</a>
+<a class="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-primary" href="#">Chat with Astrologer</a>
+</div>
+</div>
+<a class="hover:text-primary transition" href="#">Blog</a>
+<a class="hover:text-primary transition" href="#">Kundli Prediction</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition text-text-muted-light dark:text-text-muted-dark" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-outlined">dark_mode</span>
+</button>
+<a class="hidden md:flex bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-full font-medium items-center transition shadow-md shadow-primary/30" href="#">
+<span class="material-icons-outlined text-lg mr-2">chat</span>
+                    Ask Astrologer
+                </a>
+<button class="lg:hidden p-2 text-text-main-light dark:text-text-main-dark">
+<span class="material-icons-outlined">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<div class="bg-gradient-to-r from-primary to-[#FF8C38] py-3 shadow-inner hidden md:block">
+<div class="container mx-auto px-4 flex justify-center space-x-8 text-white font-medium text-sm">
+<a class="flex items-center hover:opacity-80 transition bg-black/10 px-4 py-1.5 rounded-full" href="#">
+<span class="material-icons-outlined text-lg mr-2">grid_view</span> My Kundli
+            </a>
+<a class="flex items-center hover:opacity-80 transition" href="#">
+<span class="material-icons-outlined text-lg mr-2">calculate</span> Numerology
+            </a>
+<a class="flex items-center hover:opacity-80 transition" href="#">
+<span class="material-icons-outlined text-lg mr-2">temple_hindu</span> Online Puja
+            </a>
+<a class="flex items-center hover:opacity-80 transition" href="#">
+<span class="material-icons-outlined text-lg mr-2">favorite</span> Match Analysis
+            </a>
+</div>
+</div>
+<div class="container mx-auto px-4 py-4 text-xs md:text-sm text-text-muted-light dark:text-text-muted-dark">
+<a class="hover:text-primary" href="#">Home</a> <span class="mx-2">/</span>
+<a class="hover:text-primary" href="#">Astrology Services</a> <span class="mx-2">/</span>
+<span class="text-primary font-medium">Kundali Matching</span>
+</div>
+<section class="container mx-auto px-4 pb-12">
+<div class="text-center mb-10 max-w-3xl mx-auto">
+<span class="bg-orange-100 dark:bg-orange-900/30 text-primary dark:text-primary-dark text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Free Service</span>
+<h2 class="text-3xl md:text-4xl font-bold mt-4 mb-3 text-text-main-light dark:text-text-main-dark">
+                Kundali Matching for Marriage
+            </h2>
+<p class="text-text-muted-light dark:text-text-muted-dark text-sm md:text-base">
+                Enter the birth details of the Boy and Girl to generate a comprehensive compatibility report based on Vedic Astrology principles (Guna Milan).
+            </p>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark overflow-hidden relative">
+<div class="absolute top-0 left-0 w-32 h-32 bg-primary/5 rounded-full -translate-x-16 -translate-y-16 pointer-events-none"></div>
+<div class="absolute bottom-0 right-0 w-48 h-48 bg-primary/5 rounded-full translate-x-20 translate-y-20 pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-light dark:divide-border-dark">
+<div class="p-6 md:p-10 relative">
+<div class="flex items-center space-x-4 mb-8">
+<div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400">
+<span class="material-icons-outlined text-2xl">male</span>
+</div>
+<div>
+<h3 class="text-xl font-bold">Boy's Details</h3>
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">Enter details for the groom</p>
+</div>
+</div>
+<div class="space-y-5">
+<div class="relative">
+<label class="block text-xs font-medium text-text-muted-light dark:text-text-muted-dark mb-1 uppercase tracking-wide">Name</label>
+<div class="relative">
+<span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">person</span>
+<input class="w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition dark:text-white dark:placeholder-gray-500" placeholder="Enter full name" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="relative">
+<label class="block text-xs font-medium text-text-muted-light dark:text-text-muted-dark mb-1 uppercase tracking-wide">Birth Date</label>
+<div class="relative">
+<span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">calendar_today</span>
+<input class="w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition dark:text-white text-gray-500" type="date"/>
+</div>
+</div>
+<div class="relative">
+<label class="block text-xs font-medium text-text-muted-light dark:text-text-muted-dark mb-1 uppercase tracking-wide">Birth Time</label>
+<div class="relative">
+<span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">schedule</span>
+<input class="w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition dark:text-white text-gray-500" type="time"/>
+</div>
+</div>
+</div>
+<div class="relative">
+<label class="block text-xs font-medium text-text-muted-light dark:text-text-muted-dark mb-1 uppercase tracking-wide">Birth Place</label>
+<div class="relative">
+<span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">place</span>
+<input class="w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition dark:text-white dark:placeholder-gray-500" placeholder="Enter city name" type="text"/>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 md:p-10 relative">
+<div class="flex items-center space-x-4 mb-8">
+<div class="w-12 h-12 rounded-full bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center text-pink-600 dark:text-pink-400">
+<span class="material-icons-outlined text-2xl">female</span>
+</div>
+<div>
+<h3 class="text-xl font-bold">Girl's Details</h3>
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">Enter details for the bride</p>
+</div>
+</div>
+<div class="space-y-5">
+<div class="relative">
+<label class="block text-xs font-medium text-text-muted-light dark:text-text-muted-dark mb-1 uppercase tracking-wide">Name</label>
+<div class="relative">
+<span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">person</span>
+<input class="w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition dark:text-white dark:placeholder-gray-500" placeholder="Enter full name" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="relative">
+<label class="block text-xs font-medium text-text-muted-light dark:text-text-muted-dark mb-1 uppercase tracking-wide">Birth Date</label>
+<div class="relative">
+<span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">calendar_today</span>
+<input class="w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition dark:text-white text-gray-500" type="date"/>
+</div>
+</div>
+<div class="relative">
+<label class="block text-xs font-medium text-text-muted-light dark:text-text-muted-dark mb-1 uppercase tracking-wide">Birth Time</label>
+<div class="relative">
+<span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">schedule</span>
+<input class="w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition dark:text-white text-gray-500" type="time"/>
+</div>
+</div>
+</div>
+<div class="relative">
+<label class="block text-xs font-medium text-text-muted-light dark:text-text-muted-dark mb-1 uppercase tracking-wide">Birth Place</label>
+<div class="relative">
+<span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">place</span>
+<input class="w-full pl-10 pr-4 py-3 bg-background-light dark:bg-background-dark border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition dark:text-white dark:placeholder-gray-500" placeholder="Enter city name" type="text"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-[#251B1B] px-6 py-6 md:px-10 flex flex-col md:flex-row items-center justify-between border-t border-border-light dark:border-border-dark gap-4">
+<div class="flex items-center text-sm text-text-muted-light dark:text-text-muted-dark">
+<span class="material-icons-outlined text-primary mr-2">verified_user</span>
+<span>Your information is 100% private &amp; secure.</span>
+</div>
+<button class="w-full md:w-auto bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-10 rounded-xl shadow-lg shadow-primary/30 transition transform hover:-translate-y-0.5 flex items-center justify-center">
+<span class="mr-2">Match Horoscope</span>
+<span class="material-icons-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<section class="py-12 bg-white dark:bg-surface-dark border-t border-b border-border-light dark:border-border-dark">
+<div class="container mx-auto px-4">
+<h2 class="text-2xl md:text-3xl font-bold text-center mb-10 text-text-main-light dark:text-text-main-dark">Why is Kundali Matching Important?</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="bg-background-light dark:bg-background-dark p-6 rounded-2xl hover:shadow-lg transition duration-300 border border-transparent hover:border-primary/20">
+<div class="w-14 h-14 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center mb-4 mx-auto md:mx-0">
+<span class="material-icons-outlined text-2xl">favorite_border</span>
+</div>
+<h3 class="text-lg font-bold mb-2 text-center md:text-left">Compatibility Analysis</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark text-center md:text-left leading-relaxed">
+                        Evaluates mental and physical compatibility (Guna Milan) to ensure long-term harmony in the relationship.
+                    </p>
+</div>
+<div class="bg-background-light dark:bg-background-dark p-6 rounded-2xl hover:shadow-lg transition duration-300 border border-transparent hover:border-primary/20">
+<div class="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center mb-4 mx-auto md:mx-0">
+<span class="material-icons-outlined text-2xl">error_outline</span>
+</div>
+<h3 class="text-lg font-bold mb-2 text-center md:text-left">Dosha Verification</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark text-center md:text-left leading-relaxed">
+                        Identifies potential issues like Mangal Dosha or Nadi Dosha that could affect health and prosperity.
+                    </p>
+</div>
+<div class="bg-background-light dark:bg-background-dark p-6 rounded-2xl hover:shadow-lg transition duration-300 border border-transparent hover:border-primary/20">
+<div class="w-14 h-14 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mb-4 mx-auto md:mx-0">
+<span class="material-icons-outlined text-2xl">family_restroom</span>
+</div>
+<h3 class="text-lg font-bold mb-2 text-center md:text-left">Future Progeny</h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark text-center md:text-left leading-relaxed">
+                        Assesses the possibilities of healthy progeny and family growth through Nadi and Bhakoot Guna.
+                    </p>
+</div>
+</div>
+</div>
+</section>
+<section class="container mx-auto px-4 py-12">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+<div class="order-2 md:order-1">
+<h3 class="text-2xl font-bold mb-4 text-text-main-light dark:text-text-main-dark">Understanding the 36 Gunas</h3>
+<div class="space-y-4 text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed">
+<p>In Vedic Astrology, Kundali Matching or Horoscope Matching is vital for marriage. The process involves matching 8 distinct aspects (Ashtakoota) of the bride and groom's personality.</p>
+<p>Each aspect carries points (Gunas), totaling 36. A score of 18 or above is considered acceptable for marriage, while a score above 24 is considered excellent.</p>
+</div>
+<ul class="mt-6 space-y-3">
+<li class="flex items-center">
+<span class="material-icons-outlined text-green-500 mr-2 text-sm">check_circle</span>
+<span class="text-sm font-medium">Varna (Work Compatibility) - 1 Point</span>
+</li>
+<li class="flex items-center">
+<span class="material-icons-outlined text-green-500 mr-2 text-sm">check_circle</span>
+<span class="text-sm font-medium">Vashya (Dominance) - 2 Points</span>
+</li>
+<li class="flex items-center">
+<span class="material-icons-outlined text-green-500 mr-2 text-sm">check_circle</span>
+<span class="text-sm font-medium">Tara (Destiny) - 3 Points</span>
+</li>
+<li class="flex items-center">
+<span class="material-icons-outlined text-green-500 mr-2 text-sm">check_circle</span>
+<span class="text-sm font-medium">Yoni (Mental Compatibility) - 4 Points</span>
+</li>
+</ul>
+</div>
+<div class="order-1 md:order-2 bg-gradient-to-br from-orange-100 to-red-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 flex items-center justify-center min-h-[300px] relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 dark:opacity-5 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')]"></div>
+<div class="relative text-center">
+<span class="material-icons-outlined text-9xl text-primary opacity-80">auto_awesome</span>
+<p class="mt-4 font-bold text-lg text-primary-dark">Divine Union</p>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-primary/10 dark:bg-surface-dark border-t border-primary/20 dark:border-border-dark py-12">
+<div class="container mx-auto px-4 text-center">
+<h2 class="text-2xl md:text-3xl font-bold mb-4">Have specific concerns about your match?</h2>
+<p class="text-text-muted-light dark:text-text-muted-dark mb-8 max-w-2xl mx-auto">Computer generated reports are a great starting point, but an expert astrologer can provide nuanced remedies for Doshas and personalized guidance.</p>
+<div class="flex flex-wrap justify-center gap-4">
+<a class="bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-primary/30 transition" href="#">
+                    Talk to Astrologer
+                </a>
+<a class="bg-white dark:bg-gray-800 text-text-main-light dark:text-white border border-gray-200 dark:border-gray-700 hover:border-primary font-semibold py-3 px-8 rounded-full transition" href="#">
+                    View Pricing
+                </a>
+</div>
+</div>
+</section>
+<footer class="bg-[#1F1111] text-gray-300 py-12 border-t-4 border-primary">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+<div>
+<div class="flex items-center space-x-2 mb-4">
+<div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-icons-outlined text-2xl">auto_awesome</span>
+</div>
+<h2 class="font-bold text-xl text-white">Astrology<br/>in Bharat</h2>
+</div>
+<p class="text-sm text-gray-400 mb-6">
+                        Astrology in Bharat is India's trusted astrology platform offering accurate guidance through verified astrologers using authentic Indian astrology systems.
+                    </p>
+<div class="flex space-x-4">
+<a class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition" href="#"><span class="material-icons-outlined text-sm">facebook</span></a>
+<a class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition" href="#"><span class="material-icons-outlined text-sm">smart_display</span></a>
+<a class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition" href="#"><span class="material-icons-outlined text-sm">alternate_email</span></a>
+</div>
+</div>
+<div>
+<h3 class="text-primary font-bold mb-4 uppercase text-sm tracking-wider">Horoscope</h3>
+<ul class="space-y-2 text-sm text-gray-400">
+<li><a class="hover:text-white transition" href="#">Daily Horoscope</a></li>
+<li><a class="hover:text-white transition" href="#">Weekly Horoscope</a></li>
+<li><a class="hover:text-white transition" href="#">Monthly Horoscope</a></li>
+<li><a class="hover:text-white transition" href="#">Yearly Horoscope</a></li>
+<li><a class="hover:text-white transition" href="#">Love Horoscope</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-primary font-bold mb-4 uppercase text-sm tracking-wider">Astrology Services</h3>
+<ul class="space-y-2 text-sm text-gray-400">
+<li><a class="hover:text-white transition" href="#">Chat with Astrologer</a></li>
+<li><a class="hover:text-white transition" href="#">Talk to Astrologer</a></li>
+<li><a class="hover:text-white transition" href="#">Video Consultation</a></li>
+<li><a class="hover:text-white transition" href="#">Kundli Matching</a></li>
+<li><a class="hover:text-white transition" href="#">Numerology Report</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-primary font-bold mb-4 uppercase text-sm tracking-wider">Important Links</h3>
+<ul class="space-y-2 text-sm text-gray-400">
+<li><a class="hover:text-white transition" href="#">Astrologer Login</a></li>
+<li><a class="hover:text-white transition" href="#">Astrologer Registration</a></li>
+<li><a class="hover:text-white transition" href="#">Shubh Muhurat 2024</a></li>
+<li><a class="hover:text-white transition" href="#">Shop Our Products</a></li>
+<li><a class="hover:text-white transition" href="#">Contact Us</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-white/10 pt-8 text-center text-xs text-gray-500">
+<p>© 2024 Astrology in Bharat (Powered by Astrology in Bharat Services). All Rights Reserved.</p>
+</div>
+</div>
+</footer>
+
+</body></html>

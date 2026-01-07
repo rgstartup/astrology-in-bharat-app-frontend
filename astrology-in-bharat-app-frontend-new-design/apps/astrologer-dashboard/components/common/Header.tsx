@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
-import { FiSearch, FiBell, FiMenu } from "react-icons/fi";
+import { FiBell, FiMenu } from "react-icons/fi";
 import Link from "next/link";
+
+import { SearchInput } from "../../../shared/components/SearchInput";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -9,6 +11,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(false); // Toggle state
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Track whether mouse is on icon or on popup
   const isHoveringIcon = useRef(false);
@@ -54,13 +57,12 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           {/* Search */}
           <div className="flex items-center space-x-4 sm:space-x-6">
             {/* Search Bar */}
-            <div className="relative hidden md:block">
-              <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
+            <div className="hidden md:block w-40 sm:w-64">
+              <SearchInput
+                value={searchQuery}
+                onChange={setSearchQuery}
                 placeholder="Search..."
-                className="w-40 sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition-colors duration-200"
-                aria-label="Search dashboard"
+                className="w-full"
               />
             </div>
 
@@ -71,17 +73,15 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
               </span>
               <button
                 onClick={handleToggle}
-                className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                  isOnline
-                    ? "bg-green-500 focus:ring-green-500"
-                    : "bg-red-500 focus:ring-red-500"
-                }`}
+                className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 ${isOnline
+                  ? "bg-green-500 focus:ring-green-500"
+                  : "bg-red-500 focus:ring-red-500"
+                  }`}
                 aria-label={isOnline ? "Go Offline" : "Go Online"}
               >
                 <span
-                  className={`inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full shadow-md ${
-                    isOnline ? "translate-x-6" : "translate-x-1"
-                  }`}
+                  className={`inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full shadow-md ${isOnline ? "translate-x-6" : "translate-x-1"
+                    }`}
                 />
               </button>
             </div>

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useMemo, useCallback, memo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SearchInput } from "./SearchInput";
+import { SearchInput } from "../../../../shared/components/SearchInput";
 
 // Types
 interface Column<T> {
@@ -20,7 +20,7 @@ interface DataTableProps<T> {
   title?: string;
   statsCards?: React.ReactNode;
   emptyMessage?: string;
- 
+
 }
 
 const TableRow = memo(function TableRow<T extends { id: number | string }>({
@@ -39,8 +39,8 @@ const TableRow = memo(function TableRow<T extends { id: number | string }>({
   return (
     <tr className="hover:bg-gray-50 transition-colors">
       {columns.map((column, colIndex) => (
-        <td 
-          key={colIndex} 
+        <td
+          key={colIndex}
           className="px-6 py-4 text-sm text-gray-900"
           style={{ maxWidth: '250px' }}
         >
@@ -88,11 +88,10 @@ const PaginationButton = memo(function PaginationButton({
       onClick={handleClick}
       aria-label={`Go to page ${page}`}
       aria-current={isActive ? "page" : undefined}
-      className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-        isActive
+      className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${isActive
           ? "bg-gray-900 text-white"
           : "border border-gray-200 hover:bg-gray-100 text-gray-700"
-      }`}
+        }`}
     >
       {page}
     </button>
@@ -118,7 +117,7 @@ export function DataTable<T extends { id: number | string }>({
   const filterItem = useCallback(
     (item: T) => {
       if (!searchTerm) return true;
-      
+
       return searchKeys.some((key) => {
         const value = item[key];
         return (
@@ -141,7 +140,7 @@ export function DataTable<T extends { id: number | string }>({
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const items = filteredData.slice(start, end);
-    
+
     return {
       totalPages: total,
       currentItems: items,
@@ -188,7 +187,7 @@ export function DataTable<T extends { id: number | string }>({
         <header className="px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-            
+
             {/* Search Input */}
             <SearchInput
               value={searchTerm}
@@ -202,55 +201,55 @@ export function DataTable<T extends { id: number | string }>({
         </header>
 
         {/* Table with horizontal scroll only when needed */}
-{/* ===== TABLE HEADER (FIXED) ===== */}
-<div className="w-full overflow-x-hidden">
-  <table className="w-full table-fixed">
-    <thead className="bg-gray-50 border-b border-gray-200">
-      <tr>
-        {columns.map((column, index) => (
-          <th
-            key={index}
-            className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap"
-          >
-            {column.label}
-          </th>
-        ))}
-        {onViewDetails && (
-          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
-            Actions
-          </th>
-        )}
-      </tr>
-    </thead>
-  </table>
-</div>
+        {/* ===== TABLE HEADER (FIXED) ===== */}
+        <div className="w-full overflow-x-hidden">
+          <table className="w-full table-fixed">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                {columns.map((column, index) => (
+                  <th
+                    key={index}
+                    className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap"
+                  >
+                    {column.label}
+                  </th>
+                ))}
+                {onViewDetails && (
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
+                    Actions
+                  </th>
+                )}
+              </tr>
+            </thead>
+          </table>
+        </div>
 
-{/* ===== TABLE BODY (SCROLL ONLY DATA) ===== */}
-<div className="w-full max-h-[320px] overflow-y-auto">
-  <table className="w-full table-fixed">
-    <tbody className="divide-y divide-gray-100">
-      {isEmpty ? (
-        <tr>
-          <td
-            colSpan={columns.length + (onViewDetails ? 1 : 0)}
-            className="px-6 py-12 text-center text-gray-500"
-          >
-            {hasData ? "No results found" : "No data available"}
-          </td>
-        </tr>
-      ) : (
-        paginationData.currentItems.map((item) => (
-          <TableRow
-            key={item.id}
-            item={item}
-            columns={columns as any}
-            onViewDetails={onViewDetails as any}
-          />
-        ))
-      )}
-    </tbody>
-  </table>
-</div>
+        {/* ===== TABLE BODY (SCROLL ONLY DATA) ===== */}
+        <div className="w-full max-h-[320px] overflow-y-auto">
+          <table className="w-full table-fixed">
+            <tbody className="divide-y divide-gray-100">
+              {isEmpty ? (
+                <tr>
+                  <td
+                    colSpan={columns.length + (onViewDetails ? 1 : 0)}
+                    className="px-6 py-12 text-center text-gray-500"
+                  >
+                    {hasData ? "No results found" : "No data available"}
+                  </td>
+                </tr>
+              ) : (
+                paginationData.currentItems.map((item) => (
+                  <TableRow
+                    key={item.id}
+                    item={item}
+                    columns={columns as any}
+                    onViewDetails={onViewDetails as any}
+                  />
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
 
         {/* Pagination */}
@@ -280,7 +279,7 @@ export function DataTable<T extends { id: number | string }>({
                 aria-label="Pagination"
               >
                 {/* Previous button */}
-                
+
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage === 1}

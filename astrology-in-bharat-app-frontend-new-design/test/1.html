@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Horoscope Services - Astrology in Bharat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#FF6F00", // Vibrant Orange from buttons
+              secondary: "#4E211A", // Dark Brown from header/footer
+              "background-light": "#FFFBF5", // Creamy white background
+              "background-dark": "#1A100E", // Very dark brown/black for dark mode
+              "card-light": "#FFFFFF",
+              "card-dark": "#2D1B18",
+              "text-main-light": "#333333",
+              "text-main-dark": "#E5E5E5",
+              "accent-orange": "#FFF3E0", // Light orange background for tags
+            },
+            fontFamily: {
+              sans: ["Poppins", "sans-serif"],
+              display: ["Playfair Display", "serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              'xl': '1rem',
+              '2xl': '1.5rem',
+            },
+            backgroundImage: {
+               'mandala-pattern': "url('https://www.transparenttextures.com/patterns/black-scales.png')", // Abstract pattern placeholder
+            }
+          },
+        },
+      };
+    </script>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #FF6F00;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 font-sans">
+<div class="bg-secondary text-white py-2 px-4 text-sm hidden md:flex justify-between items-center">
+<span>Connect with Verified Astrology Experts for Online Predictions.</span>
+<div class="flex items-center space-x-6">
+<button class="flex items-center space-x-1 bg-white text-secondary px-3 py-1 rounded-full text-xs font-semibold hover:bg-gray-100 transition">
+<span class="material-icons text-sm">language</span>
+<span>Eng</span>
+<span class="material-icons text-sm">expand_more</span>
+</button>
+<button class="flex items-center space-x-1 hover:text-primary transition">
+<span class="material-icons text-sm">shopping_cart</span>
+<span>Cart</span>
+<span class="bg-primary text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center -ml-1 -mt-2">4</span>
+</button>
+<button class="flex items-center space-x-1 bg-white text-secondary px-3 py-1 rounded-full text-xs font-semibold hover:bg-gray-100 transition">
+<span class="material-icons text-sm">person</span>
+<span>Account</span>
+<span class="material-icons text-sm">expand_more</span>
+</button>
+</div>
+</div>
+<header class="bg-white dark:bg-card-dark shadow-sm sticky top-0 z-50">
+<div class="container mx-auto px-4 py-3 flex justify-between items-center">
+<div class="flex items-center space-x-2">
+<div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center border-2 border-primary">
+<span class="material-icons text-primary text-2xl">self_improvement</span>
+</div>
+<div>
+<h1 class="font-display text-2xl font-bold text-primary leading-none">Astrology</h1>
+<p class="text-xs text-secondary dark:text-gray-300 font-semibold tracking-wide">in Bharat</p>
+</div>
+</div>
+<nav class="hidden lg:flex items-center space-x-8 font-medium text-sm text-gray-700 dark:text-gray-200">
+<a class="hover:text-primary transition" href="#">Home</a>
+<a class="text-primary font-semibold" href="#">Daily Horoscope</a>
+<div class="relative group">
+<button class="flex items-center hover:text-primary transition">
+                        Astrology Consult <span class="material-icons text-sm ml-1">expand_more</span>
+</button>
+</div>
+<a class="hover:text-primary transition" href="#">Blog</a>
+<a class="hover:text-primary transition" href="#">Kundli Prediction</a>
+</nav>
+<button class="bg-primary hover:bg-orange-600 text-white px-5 py-2.5 rounded-full font-semibold shadow-md transition flex items-center space-x-2">
+<span class="material-icons text-sm">chat</span>
+<span>Ask Astrologer</span>
+</button>
+</div>
+</header>
+<div class="bg-primary py-3">
+<div class="container mx-auto px-4 flex justify-center space-x-4 overflow-x-auto custom-scrollbar">
+<button class="flex-shrink-0 bg-secondary text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2 hover:bg-opacity-90 transition">
+<span class="material-icons text-sm text-yellow-400">grid_view</span>
+<span>My Kundli</span>
+</button>
+<button class="flex-shrink-0 bg-secondary text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2 hover:bg-opacity-90 transition">
+<span class="material-icons text-sm text-yellow-400">looks_3</span>
+<span>Numerology</span>
+</button>
+<button class="flex-shrink-0 bg-secondary text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2 hover:bg-opacity-90 transition">
+<span class="material-icons text-sm text-yellow-400">temple_buddhist</span>
+<span>Online Puja</span>
+</button>
+<button class="flex-shrink-0 bg-secondary text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2 hover:bg-opacity-90 transition">
+<span class="material-icons text-sm text-yellow-400">auto_awesome</span>
+<span>Life Horoscope</span>
+</button>
+<button class="flex-shrink-0 bg-secondary text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2 hover:bg-opacity-90 transition">
+<span class="material-icons text-sm text-yellow-400">favorite</span>
+<span>Love Report</span>
+</button>
+</div>
+</div>
+<section class="relative py-12 lg:py-16 overflow-hidden">
+<div class="absolute inset-0 opacity-10 dark:opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/zodiac.png')]"></div>
+<div class="container mx-auto px-4 relative z-10 text-center">
+<span class="bg-orange-100 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 inline-block">Free Daily Predictions</span>
+<h2 class="font-display text-4xl lg:text-5xl font-bold text-secondary dark:text-white mb-4">Discover Your Destiny</h2>
+<p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg mb-10">
+                Unlock the secrets of the stars with our accurate daily, weekly, monthly, and yearly horoscopes based on Vedic Astrology principles.
+            </p>
+<div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 lg:gap-6 max-w-5xl mx-auto">
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Aries" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBifTJzqEwtRyGEjhG_vaU1LB6Fe3M8iAUPUtcFMBr7TS4lLqlixhlE660I76tsCn3-X-zVABG1xKtl4oY1zErUfLHXHygeLnumJtn-do_hF8oOTDW2HQ_A75zQ2BBsUKUTkDclz1k1JF-pjDeGAlOY45UDyd1nnmAHLN407XEZ9WEPy_yg-q8owsrJDWWCBIspA3724YSPsAfVZNqZgSBbokwHSqVzgEJDfWKYFNWNqo1JKZOGEEX3J-Ulf36yYV5siXsqfbvVKqF9"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Aries</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Mar 21 - Apr 19</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Taurus" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhdzOa0pOJchbVlVYWD1NceJjwacD060S1CipTSHrpm3EG_LTJIt1EJ5GUJwvXCcOMQv6eKA15CKdaMMu9SjW7RYR8iPM2-RLPUxRfv0f-2EahrzOT5yEsKpHES8gfs_QjIz_T_KJKWF1EedB-h9hKyGoXVcn21ZWcvtZqOfBVi-kiSAAPWJh71RrY2tcMvrvxrBi6ERytEttciJtYWw7D83ooJfPvWNosOjaVkX564iLAaEgzLBG2ZkasslYAKT2QPQmx8bJS9MjB"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Taurus</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Apr 20 - May 20</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Gemini" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb7Op5gfpemeF3LxmxUbvEuZIb-QnEJ5ZPReVVxtfcLocti7LTNT3QctkQl4SVJSQcL2eI_4SqLOgjFVIS9zUutCPQK_yjWp334UrNiJDHqi_GVWoPQO4MGXa7P_fcgyxda0FEfJDcTDZ2g7x1_-s4bdybhidATy5NpbuGDJR4wtIm52uCzAcLxLebitWEgInRwvQxeFUUDgB5sjyUvPuenjRoDKUi9Gz_a4VDC6_ZBwJpyzYz9hCViWHUPaVRFUjbIreg2yemWzR_"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Gemini</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">May 21 - Jun 20</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Cancer" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGmv4RLtJJpqYfBUlx4_Mvkh2c0b83D8pL-PTOjmUlggODpfsaFYnozbYA3mm4Q-R-oGT-QdTQZcuyOfmhPRI6RFZqMMMcKwBZJi_IAVXs9kHmJIx0Gju2y4pjszCsXY2qL4k0dN07TNQ5xxQdYPVBMlg33QlBXXq2PW-IYG-SlSkA02jFF-poSXXCGNPAiPznBljUcqIjpsHegm6bsOH57aPTmH-CA44cqYwpjrYoxeVck8kmYBzMAOstIpK3o7Ob6rt_6_nV71tR"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Cancer</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Jun 21 - Jul 22</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Leo" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQoj7DZRRTHFwtLEU-O_aVd5fhRs4fwp43hqzQI7ZdfVyJrzUH9kNGp5kO307kExxAh_9iNPzYU9aQ88vFd1gQLDdQELiyYmgSS8XWDmQzL71y-JMeqAho1mRMCqP-yGDfT0VKwHegjx7SoVSLr0cCGtDOCEejRNGQ9G_rkOy8vLQtPLTIwOg4pHIp0X7fHso1pAYzP15EGIWnVTlef4SeYVkWGQpj87Eewx5pH2m7zBNXSzz_bquKIdNHXt_QE6ZgjpeGox8nWbRE"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Leo</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Jul 23 - Aug 22</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Virgo" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiqx-zpxGDMQOxwuzhyAvpzYeD7kZahNVG4HaYyzn6vg4qIknes5B1CXUZ7DIadQbm1bTIjcp184oVIVTu9_9DqoVG7Eofhbov8xFWBQSvVkr8Gb-3syU4qNOs2cHm_k2gkF9ebX8D6ujeW0mqKrNDZwcLPDl4TAE4luGtvrDEo59WkIBvlSC7xvLY2KFhSFIZ3HDjby0xHUHgeD1OIzZwPiWsxrQ75HAY8OuA3Jj7RiC264h1st3c-Jm0NE31Fx65wAdpYbCMqdpq"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Virgo</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Aug 23 - Sep 22</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Libra" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2M7ZAZUfeJwRGt8arnwsgPlBtgVbkYhd9B5gCjrTaz7hW_ZVL4bhBJNeRdb7TEUfYzACPZImi3Ahn6GYcCiXiWE7uUdY0xYWMRpT1wWT0E9zKQlsFnbr2CrZSfO8bflBcetfhLxyF5k7oildxsOPSZuqkyp53QWoNf1a9o_7J9KdfoXLm3g03w4iM_XEFWLG4ANfT71shqFyVJv_KFWXeqJnalNCYm15Yc7sNfVSTEvOYiBLsqZqNFzfBxkCSbIL2J83eiwkAgck5"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Libra</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Sep 23 - Oct 22</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Scorpio" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO3XqebLeUL9u3GAALeDWA7_I_4zCoRT61kKxTSJiDkydsdgA72l7xdAMbyxXfXLvJVByugEtnmqLmCYmo8oOQDaUCTbup8CuhXYccE2HRknbDwYnXk-LDzhS3vkkVH7IGL4GeE7Cuq3gVCTEQJsPq5KTKy8ajd5vyRTJPoGgT6YbQC4vD23A7zjr_I5vwcpiAL66N84jQe0gRgb13T0dXD-fCRV8BvBMmAx0oUFJIKGDqDOGQuDFdJikJZzpDmxB3ixVY1YzwXdY2"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Scorpio</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Oct 23 - Nov 21</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Sagittarius" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTyMqdv_LZh7MTl2HWuJewappX7kvqvkgAAyOPYLHROLjSAtM2y4BbHNZluViVSOlwYBAEGiggxN1LH733yEF7KNkeJsf3N6G3LXPk1_Jgfukjeki6b7kFkz-yH6RWlv9az_lp5aiS17-Za_C83UMILZzUlRj_vNwKp6i0THirJcXYcEJZNt98YnCORf9i71lXcM4ztutVNpjIl9okD_ldXdGGRrK7q8PIBUbuY98JGHpxHvk_UF5GhfVqtJbkcyaILL9Jl9eBz8jZ"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Sagittarius</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Nov 22 - Dec 21</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Capricorn" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB519gUI-bTFb15Qrn9oSQkiTPt93V_oleygDw6hrdW-2xLngjbPUhi6Iri8h7BJu_ip3QhG-KC5yyINLT98Ias34w6_EMdIetQGlb1StzG9YMzVPwPLUl-gFaEyKBW8hOr8c_9crAxqMIVY7S0vPdgtmG21rV9VFfxamIzhPfm1mWzL95YxvPU6qiM9xT3nDE2qPVAi6Kj5D9Vk2G1AEbogiIX-sHJ8izjDyLwSCyomCnCo7WVg4uBX5Vc-6RhKoYu28d4qYT0YFZF"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Capricorn</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Dec 22 - Jan 19</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Aquarius" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCScVICCcpIiRJFxcKrJiNespb-Nr0ZOrS8HXCdMVOuyzGXaWK5jxRp24ipdAXrfA4f0O3IelNSrlvrhFVldAnGf9FDm9esr8yMnaOjZ8nXmwYHN8FV0rWlcV4Gz5wTAWNRQe8GMMP6gVWgZ8E3mNeBMh3n5ynKl8JjqCG-GIIk6FNVAPliAjyUCFokaJYCA55LAFhjdaa67K_WcThWjZXc1I_0GOBTtL0dwEdOSTqXOoI5euj0Olo0Aj5zveoGAxaw_-857lanwiOs"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Aquarius</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Jan 20 - Feb 18</p>
+</a>
+<a class="group bg-white dark:bg-card-dark rounded-xl p-4 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 dark:border-gray-700 flex flex-col items-center" href="#">
+<div class="w-16 h-16 rounded-full bg-accent-orange dark:bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-primary transition-colors">
+<img alt="Pisces" class="w-10 h-10 filter dark:invert group-hover:brightness-0 group-hover:invert transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr8gxbAAFY-yzB2S6th-fVnkFNVTo-hrywo9kIzrKtgLHsVq9bmQMksrj8UVYCBE1j7jMOwMPlFNtLdn_qCXzQnp6TxK24778Kpm_nNqB1UMRhCamG87fbpQg1CrdMILv-dPkEzfjtUSv2EO_srUndRKDWND0BKlaOnCjZl7MCAk89Jvvhwhq8m8KhrQHXM37KUJZ0QeIxMWp0cbxto05_mIMmx4bktLCqEr2YxT4voypqriRwKALElzc1L_u4hvedDv3_D01y-olg"/>
+</div>
+<h3 class="font-display font-bold text-lg text-secondary dark:text-white group-hover:text-primary dark:group-hover:text-primary transition">Pisces</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Feb 19 - Mar 20</p>
+</a>
+</div>
+</div>
+</section>
+<section class="py-12 bg-white dark:bg-card-dark border-t border-gray-100 dark:border-gray-800">
+<div class="container mx-auto px-4">
+<div class="flex flex-col lg:flex-row gap-8">
+<div class="lg:w-1/3">
+<div class="bg-background-light dark:bg-background-dark p-6 rounded-2xl border border-gray-200 dark:border-gray-700 sticky top-24">
+<div class="flex items-center space-x-3 mb-6">
+<div class="p-2 bg-primary text-white rounded-lg">
+<span class="material-icons">person_search</span>
+</div>
+<h3 class="font-display text-xl font-bold text-secondary dark:text-white">Get Personalized Horoscope</h3>
+</div>
+<form class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+<input class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-card-dark text-gray-800 dark:text-gray-200 focus:border-primary focus:ring-primary" placeholder="Enter your name" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date of Birth</label>
+<input class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-card-dark text-gray-800 dark:text-gray-200 focus:border-primary focus:ring-primary" type="date"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
+<input class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-card-dark text-gray-800 dark:text-gray-200 focus:border-primary focus:ring-primary" type="time"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Place of Birth</label>
+<div class="relative">
+<input class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-card-dark text-gray-800 dark:text-gray-200 focus:border-primary focus:ring-primary pr-10" placeholder="Start typing city..." type="text"/>
+<span class="material-icons absolute right-3 top-2.5 text-gray-400">location_on</span>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Zodiac Sign (Optional)</label>
+<select class="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-card-dark text-gray-800 dark:text-gray-200 focus:border-primary focus:ring-primary">
+<option>Select your sign</option>
+<option>Aries</option>
+<option>Taurus</option>
+<option>...</option>
+</select>
+</div>
+<button class="w-full bg-primary hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 mt-2" type="submit">
+                                Generate Horoscope
+                            </button>
+</form>
+</div>
+</div>
+<div class="lg:w-2/3">
+<div class="flex space-x-2 mb-8 overflow-x-auto custom-scrollbar pb-2 border-b border-gray-200 dark:border-gray-700">
+<button class="px-6 py-2 bg-secondary text-white rounded-t-lg font-medium text-sm whitespace-nowrap">Daily</button>
+<button class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary font-medium text-sm whitespace-nowrap">Weekly</button>
+<button class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary font-medium text-sm whitespace-nowrap">Monthly</button>
+<button class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary font-medium text-sm whitespace-nowrap">Yearly 2024</button>
+<button class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary font-medium text-sm whitespace-nowrap">Love</button>
+<button class="px-6 py-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary font-medium text-sm whitespace-nowrap">Career</button>
+</div>
+<div class="flex items-center space-x-6 mb-8 bg-accent-orange dark:bg-gray-800 p-6 rounded-2xl">
+<img alt="Aries Big" class="w-24 h-24 filter dark:invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2qLehPDAiJcxqSxjofM5azQ95Imp0TogJ4B9hCEhJdEoszwkuS4r4DKLKlw6DksxbgM4quxvEH04Yol7mZI6thD1lfpF5hWpjaD3c8CSMTudxpzFi5okFqxLUSJgsY27s1vFjtPkFXb70ubKN-etD8PUYRkwRSSB449xg_mzSOo3GXdsL8y43f-9jYGNyjsIkMsH6oDtM8QHRBiUFJlOeWO2P3IVmILLt4kHey2koIYMogvN3XdUgqF_kdeweKZvbQo2_4oUo0g6f"/>
+<div>
+<h2 class="font-display text-3xl font-bold text-secondary dark:text-white mb-1">Aries Daily Horoscope</h2>
+<p class="text-sm text-primary font-semibold mb-2">Tuesday, 24 October 2023</p>
+<p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                                Today brings a surge of energy, Aries. The moon's position suggests a favorable time for starting new projects, but be wary of impulsive decisions in financial matters.
+                            </p>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-6">
+<div class="bg-background-light dark:bg-background-dark p-6 rounded-xl border-l-4 border-red-500 shadow-sm">
+<div class="flex items-center space-x-2 mb-3">
+<span class="material-icons text-red-500">favorite</span>
+<h4 class="font-bold text-lg text-secondary dark:text-white">Love &amp; Relationships</h4>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                Single Aries might find an unexpected connection today. Committed ones should practice patience; a small misunderstanding could escalate if not handled with care.
+                            </p>
+<div class="mt-4 w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+<div class="bg-red-500 h-1.5 rounded-full" style="width: 75%"></div>
+</div>
+<span class="text-xs text-red-500 font-semibold mt-1 block">Love Score: 75%</span>
+</div>
+<div class="bg-background-light dark:bg-background-dark p-6 rounded-xl border-l-4 border-blue-500 shadow-sm">
+<div class="flex items-center space-x-2 mb-3">
+<span class="material-icons text-blue-500">work</span>
+<h4 class="font-bold text-lg text-secondary dark:text-white">Career &amp; Money</h4>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                A colleague might offer a fresh perspective that solves a lingering problem. Financially, it's a good day to review your savings plan but avoid large purchases.
+                            </p>
+<div class="mt-4 w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+<div class="bg-blue-500 h-1.5 rounded-full" style="width: 88%"></div>
+</div>
+<span class="text-xs text-blue-500 font-semibold mt-1 block">Career Score: 88%</span>
+</div>
+<div class="bg-background-light dark:bg-background-dark p-6 rounded-xl border-l-4 border-green-500 shadow-sm">
+<div class="flex items-center space-x-2 mb-3">
+<span class="material-icons text-green-500">spa</span>
+<h4 class="font-bold text-lg text-secondary dark:text-white">Health &amp; Wellness</h4>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                Your energy levels are high, but don't skip meals. Hydration is key today. A light evening walk will help clear your mind before sleep.
+                            </p>
+<div class="mt-4 w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+<div class="bg-green-500 h-1.5 rounded-full" style="width: 60%"></div>
+</div>
+<span class="text-xs text-green-500 font-semibold mt-1 block">Health Score: 60%</span>
+</div>
+<div class="bg-background-light dark:bg-background-dark p-6 rounded-xl border-l-4 border-purple-500 shadow-sm">
+<div class="flex items-center space-x-2 mb-3">
+<span class="material-icons text-purple-500">flight</span>
+<h4 class="font-bold text-lg text-secondary dark:text-white">Travel</h4>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                Not the best day for long-distance travel. Commuting might face minor delays. Plan ahead if you have important meetings.
+                            </p>
+<div class="mt-4 w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+<div class="bg-purple-500 h-1.5 rounded-full" style="width: 40%"></div>
+</div>
+<span class="text-xs text-purple-500 font-semibold mt-1 block">Travel Score: 40%</span>
+</div>
+</div>
+<div class="mt-8 bg-secondary text-white rounded-xl p-6 relative overflow-hidden">
+<div class="absolute right-0 top-0 opacity-10">
+<span class="material-icons text-[150px]">auto_awesome</span>
+</div>
+<h4 class="font-display font-bold text-xl mb-4 relative z-10">Today's Lucky Factors</h4>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">
+<div class="bg-white/10 backdrop-blur-sm p-3 rounded-lg text-center">
+<p class="text-xs opacity-75">Lucky Color</p>
+<p class="font-bold text-lg">Crimson Red</p>
+</div>
+<div class="bg-white/10 backdrop-blur-sm p-3 rounded-lg text-center">
+<p class="text-xs opacity-75">Lucky Number</p>
+<p class="font-bold text-lg">9, 18</p>
+</div>
+<div class="bg-white/10 backdrop-blur-sm p-3 rounded-lg text-center">
+<p class="text-xs opacity-75">Lucky Time</p>
+<p class="font-bold text-lg">2pm - 4pm</p>
+</div>
+<div class="bg-white/10 backdrop-blur-sm p-3 rounded-lg text-center">
+<p class="text-xs opacity-75">Mood</p>
+<p class="font-bold text-lg">Energetic</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 bg-cover bg-center relative" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC48EFMTKYkA_LpKJiATLnEifZmVfzAXkCJrI4H-zlPEJ6U43M7Uc9m42jUDxqoAgYKJT1x26i7d_Q3IJUJzcw_YdV5WLZtofKXicxYjKQJeFLS1tTz81dSO2gEcuckFbKohsTb1JYGZcPsz4fMaJfeKTca8JlIq-x1epUYx6dIxoZ7G9KKEXLglB20D-Uefl9qFKEPCYMeanD4n3cvoiM1b-VmVTvjrmVZ2KvGLiCsvaqzKP8yhWjTGhg0-UEoxyUS86wYo8na787j');">
+<div class="absolute inset-0 bg-secondary/80 dark:bg-black/80"></div>
+<div class="container mx-auto px-4 relative z-10 text-center">
+<h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">Need More Detailed Insights?</h2>
+<p class="text-gray-200 max-w-2xl mx-auto mb-8">
+                Connect with our verified astrology experts for a personalized consultation about your love life, career, and future.
+            </p>
+<div class="flex justify-center gap-4">
+<button class="bg-primary hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:-translate-y-1">
+                    Chat with Astrologer
+                </button>
+<button class="bg-white hover:bg-gray-100 text-secondary font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:-translate-y-1">
+                    Book a Session
+                </button>
+</div>
+</div>
+</section>
+<footer class="bg-secondary text-white pt-16 pb-8 border-t border-gray-800">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+<div>
+<div class="flex items-center space-x-2 mb-4">
+<div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center border border-primary">
+<span class="material-icons text-primary text-xl">self_improvement</span>
+</div>
+<div>
+<h2 class="font-display text-xl font-bold text-white leading-none">Astrology</h2>
+<p class="text-[10px] text-gray-300 tracking-wide">in Bharat</p>
+</div>
+</div>
+<p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        India's most trusted astrology platform offering accurate predictions, kundli matching, and personalized remedies from expert astrologers.
+                    </p>
+<div class="flex space-x-4">
+<a class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition" href="#">
+<span class="text-xs">FB</span>
+</a>
+<a class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition" href="#">
+<span class="text-xs">IG</span>
+</a>
+<a class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition" href="#">
+<span class="text-xs">YT</span>
+</a>
+</div>
+</div>
+<div>
+<h3 class="font-display font-bold text-lg mb-6 border-b border-primary/50 pb-2 inline-block">Horoscope</h3>
+<ul class="space-y-3 text-sm text-gray-400">
+<li><a class="hover:text-primary transition" href="#">Daily Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Weekly Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Monthly Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Yearly Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Zodiac Signs</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-display font-bold text-lg mb-6 border-b border-primary/50 pb-2 inline-block">Services</h3>
+<ul class="space-y-3 text-sm text-gray-400">
+<li><a class="hover:text-primary transition" href="#">Chat with Astrologer</a></li>
+<li><a class="hover:text-primary transition" href="#">Talk to Astrologer</a></li>
+<li><a class="hover:text-primary transition" href="#">Kundli Matching</a></li>
+<li><a class="hover:text-primary transition" href="#">Numerology Report</a></li>
+<li><a class="hover:text-primary transition" href="#">Book a Pooja</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-display font-bold text-lg mb-6 border-b border-primary/50 pb-2 inline-block">Support</h3>
+<ul class="space-y-3 text-sm text-gray-400">
+<li><a class="hover:text-primary transition" href="#">Astrologer Login</a></li>
+<li><a class="hover:text-primary transition" href="#">Contact Us</a></li>
+<li><a class="hover:text-primary transition" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition" href="#">Terms &amp; Conditions</a></li>
+<li><a class="hover:text-primary transition" href="#">Refund Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-gray-800 pt-8 text-center text-xs text-gray-500">
+<p>© 2024 Astrology in Bharat. All Rights Reserved.</p>
+</div>
+</div>
+</footer>
+
+</body></html>

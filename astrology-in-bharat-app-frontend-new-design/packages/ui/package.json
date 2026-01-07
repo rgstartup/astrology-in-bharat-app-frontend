@@ -22,6 +22,8 @@
     "typescript": "5.8.2"
   },
   "dependencies": {
+    "@repo/routes": "workspace:*",
+    "swiper": "^11.2.10",
     "axios": "^1.13.2",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",

@@ -4,13 +4,13 @@ const nextConfig: NextConfig = {
   /* config options here */
   turbopack: {
     rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
       },
     },
   },
-  transpilePackages: ['@repo/ui'],
+  transpilePackages: ["@repo/ui", "@repo/routes"],
 };
 
 export default nextConfig;

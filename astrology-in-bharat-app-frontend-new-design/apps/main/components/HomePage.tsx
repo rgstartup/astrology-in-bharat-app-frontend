@@ -6,13 +6,14 @@ import {
   ZodiacSignsData,
   AstrologyServicesData,
   ClientsTestimoinialData,
-} from "@/data/homePagaData";
+} from "@/components/features/services/homePagaData";
 import "swiper/css";
 import "swiper/css/navigation";
 // import { Swiper, SwiperSlide } from "swiper/react";
 // import { Navigation, Autoplay } from "swiper/modules";
-import Link from "next/link";
-import ProductsCarousel from "./ProductsCarousel";
+import NextLink from "next/link";
+const Link = NextLink as any;
+import ProductsCarousel from "@/components/features/shop/ProductsCarousel";
 
 const HomePage: React.FC = () => {
   return (
@@ -98,11 +99,8 @@ const HomePage: React.FC = () => {
         <div className="container">
           <h2>Find Your Astrologer</h2>
 
-          <div className="search-box"  >
-            <input
-              type="text"
-              placeholder="Search Astrologer By Name..."
-            />
+          <div className="search-box">
+            <input type="text" placeholder="Search Astrologer By Name..." />
             <button>Search</button>
           </div>
 
@@ -110,7 +108,11 @@ const HomePage: React.FC = () => {
           <div className="astro-grid">
             {ListOfAllAstrologers.map((item) => {
               return (
-                <Link href="/astrologer-details" className="grid-item" key={item.id}>
+                <Link
+                  href="/astrologer-details"
+                  className="grid-item"
+                  key={item.id}
+                >
                   <div className="astro-card">
                     <div className="vid-part">
                       <img

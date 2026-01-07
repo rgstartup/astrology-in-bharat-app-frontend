@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from "react";
 
 // Components
-import { StatsCards } from "@/app/components/admin/StatsCard";
+import { StatsCards } from "../../../../shared/components/StatsCard";
 import { DataTable } from "@/app/components/admin/DataTable";
 import { DisputeModal } from "@/app/components/dispute/DisputeModal";
 
@@ -16,7 +16,7 @@ export default function DisputesPage() {
 
   // Get stats config (Total, Pending, Under Review, Completed, Resolved)
   const statsConfig = useMemo(() => getStatsConfig(disputesData), []);
-  
+
   // Get table columns with custom renders (memoized)
   const columns = useMemo(() => getColumns(), []);
 

@@ -14,9 +14,7 @@ interface Notification {
     type: "info" | "success" | "error";
 }
 
-interface NotificationPageProps {
-    initialNotifications?: Notification[];
-}
+
 
 const dummyNotifications: Notification[] = [
     {
@@ -128,11 +126,9 @@ const NotificationItem: FC<{
     );
 };
 
-const NotificationPage: FC<NotificationPageProps> = ({
-    initialNotifications = dummyNotifications,
-}) => {
+const NotificationPage = () => {
     const [notifications, setNotifications] =
-        useState<Notification[]>(initialNotifications);
+        useState<Notification[]>(dummyNotifications);
     const [isMounted, setIsMounted] = useState(false);
 
     // Fix hydration error by rendering after mount

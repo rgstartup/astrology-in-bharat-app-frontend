@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     // Speed up CI/builds by not failing on ESLint errors
     ignoreDuringBuilds: true,
   },
+  transpilePackages: ["@repo/ui", "@repo/routes"],
 };
 
 export default nextConfig;

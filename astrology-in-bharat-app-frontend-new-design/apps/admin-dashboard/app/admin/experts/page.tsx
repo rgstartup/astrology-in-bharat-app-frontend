@@ -3,7 +3,7 @@ import React, { useState, useMemo, lazy, Suspense } from "react";
 
 // Components
 import { DataTable } from "@/app/components/admin/DataTable";
-import { StatsCards } from "@/app/components/admin/StatsCard";
+import { StatsCards } from "../../../../shared/components/StatsCard";
 
 // Data config and types
 import { expertsData, getStatsConfig, getColumns } from "@/app/components/expert/expertsConfig";
@@ -37,10 +37,10 @@ export default function ExpertsPage() {
 
   // Get stats config (memoized)
   const statsConfig = useMemo(() => getStatsConfig(expertsData), []);
-  
+
   // Get table columns (memoized)
   const columns = useMemo(() => getColumns(), []);
-  
+
   // Get modal props for selected expert
   const modalProps = selectedExpert ? getProfileModalProps(selectedExpert) : null;
 

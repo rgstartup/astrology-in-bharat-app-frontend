@@ -2,16 +2,16 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { StatsCards } from "@/app/components/admin/StatsCard";
+import { StatsCards } from "../../../../shared/components/StatsCard";
 
 
-import { 
-  RefreshCw, 
+import {
+  RefreshCw,
   Eye,
-  Video,          
-  Activity,       
-  AlertCircle,    
-  Clock           
+  Video,
+  Activity,
+  AlertCircle,
+  Clock
 } from "lucide-react";
 // Static components
 import { SessionHeader } from "@/app/components/live-sessions/SessionHeader";
@@ -34,46 +34,46 @@ export default function LiveSessionsPage() {
 
   // Simple calculations
   const stats = useMemo(() => {
-    
+
     const total = sessions.length;
     const live = sessions.filter(s => s.status === "live").length;
     const withIssues = sessions.filter(s => s.status === "technical-issue").length;
     const recording = sessions.filter(s => s.recording).length;
-    
+
     return [
-     {
-      title: "Total Active Sessions",
-      value: total.toString(),
-      icon: Activity,
-      iconColor: "text-blue-600",
-      iconBgColor: "bg-blue-100",
-      trend: { value: "+12%", isPositive: true, period: "vs yesterday" }
-    },
-    {
-      title: "Live Now",
-      value: live.toString(),
-      icon: Activity,
-      iconColor: "text-green-600",
-      iconBgColor: "bg-green-100",
-      trend: { value: "+5", isPositive: true, period: "last hour" }
-    },
-    {
-      title: "Recording",
-      value: recording.toString(),
-      icon: Video,
-      iconColor: "text-purple-600",
-      iconBgColor: "bg-purple-100",
-      trend: { value: "3", isPositive: true, period: "sessions" }
-    },
-    {
-      title: "Issues",
-      value: withIssues.toString(),
-      icon: AlertCircle,
-      iconColor: "text-red-600",
-      iconBgColor: "bg-red-100",
-      trend: { value: "1", isPositive: false, period: "needs attention" }
-    },
-    
+      {
+        title: "Total Active Sessions",
+        value: total.toString(),
+        icon: Activity,
+        iconColor: "text-blue-600",
+        iconBgColor: "bg-blue-100",
+        trend: { value: "+12%", isPositive: true, period: "vs yesterday" }
+      },
+      {
+        title: "Live Now",
+        value: live.toString(),
+        icon: Activity,
+        iconColor: "text-green-600",
+        iconBgColor: "bg-green-100",
+        trend: { value: "+5", isPositive: true, period: "last hour" }
+      },
+      {
+        title: "Recording",
+        value: recording.toString(),
+        icon: Video,
+        iconColor: "text-purple-600",
+        iconBgColor: "bg-purple-100",
+        trend: { value: "3", isPositive: true, period: "sessions" }
+      },
+      {
+        title: "Issues",
+        value: withIssues.toString(),
+        icon: AlertCircle,
+        iconColor: "text-red-600",
+        iconBgColor: "bg-red-100",
+        trend: { value: "1", isPositive: false, period: "needs attention" }
+      },
+
     ];
   }, [sessions]);
 
@@ -110,7 +110,7 @@ export default function LiveSessionsPage() {
   return (
     <main className="space-y-6 p-6">
       {/* Header */}
-      <SessionHeader 
+      <SessionHeader
         onRefresh={handleRefresh}
         isRefreshing={isRefreshing}
       />
@@ -120,15 +120,15 @@ export default function LiveSessionsPage() {
 
       {/* Filters & Controls */}
       <div className="flex items-center gap-4 p-4 bg-white rounded-xl border">
-        <SessionFilters 
+        <SessionFilters
           filters={filters}
           activeFilter={activeFilter}
           onFilterChange={setActiveFilter}
         />
-        
+
         <div className="flex-1" />
-        
-        <SessionControls 
+
+        <SessionControls
           volume={volume}
           isPlaying={isPlaying}
           onVolumeChange={setVolume}
