@@ -63,9 +63,9 @@ const OurAstrologer = () => {
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
-    const fetchAstrologers = useCallback(async (currentOffset: number, isLoadMore: boolean = false) => {
+    const fetchAstrologers = useCallback(async (currentOffset: number, isLoadMore: boolean = false, isSilent: boolean = false) => {
         try {
-            setLoading(true);
+            if (!isSilent) setLoading(true);
             const response = await axios.get(`${API_BASE_URL}/expert/profile/list`, {
                 params: {
                     limit,
@@ -92,6 +92,7 @@ const OurAstrologer = () => {
                 experience: item.experience_in_years || 0,
                 language: item.languages.join(", ") || "Hindi",
                 price: item.price || 0,
+                is_available: item.is_available,
                 video: "https://www.youtube.com/embed/INoPh_oRooU",
                 modalId: `modal-${item.id}`,
             }));
@@ -105,7 +106,7 @@ const OurAstrologer = () => {
         } catch (error) {
             console.error("Error fetching astrologers:", error);
         } finally {
-            setLoading(false);
+            if (!isSilent) setLoading(false);
         }
     }, [debouncedSearch, selectedSpecialization, sortOption, filterState]);
 
@@ -113,6 +114,16 @@ const OurAstrologer = () => {
         setOffset(0);
         fetchAstrologers(0);
     }, [debouncedSearch, selectedSpecialization, sortOption, filterState, fetchAstrologers]);
+
+    // Real-time status update polling
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // Background update to reflect status changes without a showing a loading overlay
+            fetchAstrologers(offset, false, true);
+        }, 10000); // 10 seconds polling
+
+        return () => clearInterval(interval);
+    }, [fetchAstrologers, offset]);
 
     const handleLoadMore = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -358,12 +369,18 @@ const OurAstrologer = () => {
                                 <div className="astro-card">
                                     <div className="vid-part">
                                         <img src={item.image} alt={item.name} className="astro-profile-img" />
+                                        <div className={`status-badge ${item.is_available ? 'online' : 'offline'}`}>
+                                            <i className="fa-solid fa-circle"></i> {item.is_available ? 'Online' : 'Offline'}
+                                        </div>
                                         <span className="play-vid fa-beat" data-bs-toggle="modal" data-bs-target={`#${item.modalId}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
                                             <i className="fa-solid fa-circle-play"></i>
                                         </span>
                                     </div>
                                     <div className="rating-star">{"★".repeat(item.ratings)}</div>
-                                    <div className="astro-name">{item.name}</div>
+                                    <div className="astro-name">
+                                        {item.name}
+                                        {item.is_available && <span className="online-dot ms-2"></span>}
+                                    </div>
                                     <div className="astro-tags">{item.expertise}</div>
                                     <div className="astro-info"><strong>Exp:</strong> {item.experience} Years</div>
                                     <div className="astro-info"><strong>Lang:</strong> {item.language}</div>
