@@ -6,7 +6,7 @@ const AstrologyServices = () => {
     <section className="bg-edeef1 space-section">
       <div className="container">
         <div className="light-card mt-4">
-          <h2 className="title-line mb-3 c-1e0b0f">
+          <h2 className="title-line mb-3 text-black">
             <span>Astrology Services </span>
           </h2>
           <div className="overflow-hidden">
@@ -22,7 +22,7 @@ const AstrologyServices = () => {
                           className="rounded-[6px] border border-[#daa23ea1] w-full h-[150px] object-cover mb-2"
                         />
                       </div>
-                      <h4 className="font-medium text-xs text-[#1e0b0f] truncate mt-2 px-1">
+                      <h4 className="font-medium text-xs text-black truncate mt-2 px-1">
                         {service.title}
                       </h4>
                     </div>
@@ -36,7 +36,7 @@ const AstrologyServices = () => {
         <br className="mobile-none" />
 
         <div className="light-card">
-          <h2 className="title-line mb-4 c-1e0b0f">
+          <h2 className="title-line mb-4 text-black">
             <span>Consult The Right Astrologer For You</span>
           </h2>
           <div className="row">

@@ -11,7 +11,7 @@ const ChooseYourZodiac = () => {
     <section className="horoscopes-container light-back">
       <div className="container">
         <div className="light-card">
-          <h2 className="title-line mb-3 c-1e0b0f">
+          <h2 className="title-line mb-3 text-black">
             <span>Choose Your Zodiac Sign </span>
           </h2>
           <p className="text-center text-[#1a1a1a] mb-8 text-base font-medium">
@@ -36,7 +36,7 @@ const ChooseYourZodiac = () => {
                       className="object-contain transition-transform duration-300 group-hover:scale-110"
                     />
                   </div>
-                  <h3 className="text-lg font-semibold mb-0.5 text-[#1e0b0f]">
+                  <h3 className="text-lg font-semibold mb-0.5 text-black">
                     {sign.title}
                   </h3>
                   <p className="text-xs text-[#666] mb-0">{sign.date}</p>

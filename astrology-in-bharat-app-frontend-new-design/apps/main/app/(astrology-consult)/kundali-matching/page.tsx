@@ -33,29 +33,6 @@ import CTA from "@/components/layout/main/CTA";
 const KundaliMatchingPage = () => {
   return (
     <div className="main-wrapper">
-      {/* Top Bar Tool Actions - Themed */}
-      <div className="bg-[#301118] py-3 text-white border-b border-[#fd64102b]">
-        <div className="container mx-auto px-4 flex flex-wrap justify-center gap-3">
-          {[
-            { icon: <FaUsers />, label: "My Kundli" },
-            { icon: <FaInfoCircle />, label: "Numerology" },
-            { icon: <HiOutlineSparkles />, label: "Online Puja" },
-            { icon: <FaHeart />, label: "Match Analysis" },
-          ].map((tool, i) => (
-            <button
-              key={i}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold text-[12px] uppercase tracking-wider transition-all shadow-lg border-0 ${
-                i === 3
-                  ? "bg-white text-[#fd6410]"
-                  : "bg-[#fd6410] hover:bg-[#e55a0d] text-white"
-              }`}
-            >
-              {tool.icon} {tool.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Hero Section */}
       <section className="banner-part light-back">
         <div className="container">

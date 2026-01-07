@@ -526,9 +526,9 @@ const Header: React.FC = () => {
                       </Link>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="#">
-                        Kundli Prediction{" "}
-                      </a>
+                      <Link className="nav-link" href={PATHS.FAMOUS_PLACES}>
+                        Famous Places
+                      </Link>
                     </li>
                   </ul>
                 </div>

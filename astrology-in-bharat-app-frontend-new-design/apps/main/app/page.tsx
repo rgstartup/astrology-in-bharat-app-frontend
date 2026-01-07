@@ -8,7 +8,6 @@ import Testimonial from "@/components/layout/main/Testimonial";
 import CTA from "@/components/layout/main/CTA";
 import HeroSection from "@/components/layout/main/HeroSection";
 import { getExperts } from "@/libs/api-experts";
-// import { toast } from 'react-hot-toast'; // Cannot use toast in Server Component directly
 
 export default async function Page(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -38,37 +37,19 @@ export default async function Page(props: {
   const experts = response.data;
   const pagination = response.pagination;
 
-  // We can pass an error flag to client if needed
-  // if (!response.success) { ... }
-
   return (
     <>
-      {/* Hero Section  */}
       <HeroSection />
-
-      {/* Astrologer list  */}
       <AstrologerList
         initialExperts={experts}
         initialPagination={pagination}
         initialError={response.error}
       />
-
-      {/* Astrology Services  */}
       <AstrologerServices />
-
-      {/* choose your zodiac section  */}
       <ChooseYourZodiac />
-
-      {/* Astrology Product  */}
       <AstrologyProduct />
-
-      {/* Why Choose us Section  */}
       <WhyChooseUs />
-
-      {/* Testimonials  */}
       <Testimonial />
-
-      {/* CTA Section */}
       <CTA />
     </>
   );

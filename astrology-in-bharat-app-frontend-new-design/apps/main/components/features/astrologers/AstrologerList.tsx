@@ -721,10 +721,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
         </div>
 
         <div className="view-all mt-4">
-          <Link
-            href="/our-astrologers"
-            className="btn bg-white border border-[#fd6410] text-[#fd6410] px-5 py-2.5 rounded-full font-bold hover:bg-[#fd6410] hover:text-white transition duration-300 shadow-sm m-auto block w-max"
-          >
+          <Link href="/our-astrologers" className="btn-link wfc mt-4 mb-4 mx-auto">
             <i className="fa-regular fa-user mr-2"></i> View All Astrologers
           </Link>
         </div>
