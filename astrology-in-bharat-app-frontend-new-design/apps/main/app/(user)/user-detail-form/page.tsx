@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface UserDetails {
@@ -11,7 +11,7 @@ interface UserDetails {
   birthLocation: string;
 }
 
-const UserDetailForm = () => {
+const UserDetailFormContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -34,7 +34,9 @@ const UserDetailForm = () => {
 
   const totalAmount = Number(rate) * Number(duration);
 
-  const [errors, setErrors] = useState<Partial<UserDetails & { bookingDate: string; bookingTime: string }>>({});
+  const [errors, setErrors] = useState<
+    Partial<UserDetails & { bookingDate: string; bookingTime: string }>
+  >({});
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -47,7 +49,9 @@ const UserDetailForm = () => {
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<UserDetails & { bookingDate: string; bookingTime: string }> = {};
+    const newErrors: Partial<
+      UserDetails & { bookingDate: string; bookingTime: string }
+    > = {};
 
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
@@ -107,10 +111,12 @@ const UserDetailForm = () => {
             <div className="row align-items-center">
               <div className="col-lg-12 text-center">
                 <h1 className="mb-3">
-                  Book Your <span style={{ color: "#daa23e" }}>Consultation</span>
+                  Book Your{" "}
+                  <span style={{ color: "#daa23e" }}>Consultation</span>
                 </h1>
                 <p className="text-white" style={{ fontSize: "18px" }}>
-                  Share your details and schedule a session with {astrologerName}
+                  Share your details and schedule a session with{" "}
+                  {astrologerName}
                 </p>
               </div>
             </div>
@@ -124,23 +130,40 @@ const UserDetailForm = () => {
           <div className="row justify-content-center">
             <div className="col-lg-8 col-md-10">
               {/* Info Card */}
-              <div className="card border-0 shadow-sm mb-4" style={{ borderRadius: "15px", border: "solid 1px #daa23e73" }}>
+              <div
+                className="card border-0 shadow-sm mb-4"
+                style={{ borderRadius: "15px", border: "solid 1px #daa23e73" }}
+              >
                 <div className="card-body p-4 text-center">
                   <div className="d-flex align-items-center justify-content-center mb-3">
-                    <i className="fa-solid fa-star" style={{ color: "#daa23e", fontSize: "24px", marginRight: "10px" }}></i>
-                    <h5 className="mb-0" style={{ color: "#732882", fontWeight: "600" }}>
+                    <i
+                      className="fa-solid fa-star"
+                      style={{
+                        color: "#daa23e",
+                        fontSize: "24px",
+                        marginRight: "10px",
+                      }}
+                    ></i>
+                    <h5
+                      className="mb-0"
+                      style={{ color: "#732882", fontWeight: "600" }}
+                    >
                       Why We Need Your Birth Details
                     </h5>
                   </div>
                   <p className="mb-0 text-muted">
-                    Your birth details help our expert astrologers create an accurate birth chart
-                    and provide personalized predictions based on planetary positions at your birth time.
+                    Your birth details help our expert astrologers create an
+                    accurate birth chart and provide personalized predictions
+                    based on planetary positions at your birth time.
                   </p>
                 </div>
               </div>
 
               {/* Main Form Card */}
-              <div className="leftcard border-0 shadow-lg" style={{ borderRadius: "15px" }}>
+              <div
+                className="leftcard border-0 shadow-lg"
+                style={{ borderRadius: "15px" }}
+              >
                 <div className="card-body p-4 p-md-5">
                   <h4 className="mb-4 text-center">
                     <strong style={{ color: "#732882" }}>
@@ -160,12 +183,14 @@ const UserDetailForm = () => {
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
-                          className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                          className={`form-control ${errors.name ? "is-invalid" : ""}`}
                           placeholder="Enter Your Full Name"
                           style={{
                             borderRadius: "8px",
                             padding: "12px 16px",
-                            border: errors.name ? "1px solid #dc3545" : "1px solid #daa23e73",
+                            border: errors.name
+                              ? "1px solid #dc3545"
+                              : "1px solid #daa23e73",
                           }}
                         />
                         {errors.name && (
@@ -184,11 +209,13 @@ const UserDetailForm = () => {
                           name="gender"
                           value={formData.gender}
                           onChange={handleChange}
-                          className={`form-select ${errors.gender ? 'is-invalid' : ''}`}
+                          className={`form-select ${errors.gender ? "is-invalid" : ""}`}
                           style={{
                             borderRadius: "8px",
                             padding: "12px 16px",
-                            border: errors.gender ? "1px solid #dc3545" : "1px solid #daa23e73",
+                            border: errors.gender
+                              ? "1px solid #dc3545"
+                              : "1px solid #daa23e73",
                           }}
                         >
                           <option value="">Select Gender</option>
@@ -214,11 +241,13 @@ const UserDetailForm = () => {
                           value={formData.dateOfBirth}
                           onChange={handleChange}
                           max={new Date().toISOString().split("T")[0]}
-                          className={`form-control ${errors.dateOfBirth ? 'is-invalid' : ''}`}
+                          className={`form-control ${errors.dateOfBirth ? "is-invalid" : ""}`}
                           style={{
                             borderRadius: "8px",
                             padding: "12px 16px",
-                            border: errors.dateOfBirth ? "1px solid #dc3545" : "1px solid #daa23e73",
+                            border: errors.dateOfBirth
+                              ? "1px solid #dc3545"
+                              : "1px solid #daa23e73",
                           }}
                         />
                         {errors.dateOfBirth && (
@@ -238,11 +267,13 @@ const UserDetailForm = () => {
                           name="timeOfBirth"
                           value={formData.timeOfBirth}
                           onChange={handleChange}
-                          className={`form-control ${errors.timeOfBirth ? 'is-invalid' : ''}`}
+                          className={`form-control ${errors.timeOfBirth ? "is-invalid" : ""}`}
                           style={{
                             borderRadius: "8px",
                             padding: "12px 16px",
-                            border: errors.timeOfBirth ? "1px solid #dc3545" : "1px solid #daa23e73",
+                            border: errors.timeOfBirth
+                              ? "1px solid #dc3545"
+                              : "1px solid #daa23e73",
                           }}
                         />
                         {errors.timeOfBirth && (
@@ -262,12 +293,14 @@ const UserDetailForm = () => {
                           name="birthLocation"
                           value={formData.birthLocation}
                           onChange={handleChange}
-                          className={`form-control ${errors.birthLocation ? 'is-invalid' : ''}`}
+                          className={`form-control ${errors.birthLocation ? "is-invalid" : ""}`}
                           placeholder="City, State, Country"
                           style={{
                             borderRadius: "8px",
                             padding: "12px 16px",
-                            border: errors.birthLocation ? "1px solid #dc3545" : "1px solid #daa23e73",
+                            border: errors.birthLocation
+                              ? "1px solid #dc3545"
+                              : "1px solid #daa23e73",
                           }}
                         />
                         {errors.birthLocation && (
@@ -278,16 +311,14 @@ const UserDetailForm = () => {
                       </div>
                     </div>
 
-                   
-
                     {/* Booking Details Section */}
-                  
 
                     <div className="row g-3 g-md-4 mt-3">
                       {/* Booking Date */}
                       <div className="col-md-6">
                         <label className="form-label fw-semibold">
-                          Appointment Date <span className="text-danger">*</span>
+                          Appointment Date{" "}
+                          <span className="text-danger">*</span>
                         </label>
                         <input
                           type="date"
@@ -296,12 +327,18 @@ const UserDetailForm = () => {
                           min={new Date().toISOString().split("T")[0]}
                           onChange={(e) => {
                             setBookingDate(e.target.value);
-                            if (errors.bookingDate) setErrors(prev => ({ ...prev, bookingDate: "" }));
+                            if (errors.bookingDate)
+                              setErrors((prev) => ({
+                                ...prev,
+                                bookingDate: "",
+                              }));
                           }}
                           style={{
                             borderRadius: "8px",
                             padding: "12px 16px",
-                            border: errors.bookingDate ? "1px solid #dc3545" : "1px solid #daa23e73",
+                            border: errors.bookingDate
+                              ? "1px solid #dc3545"
+                              : "1px solid #daa23e73",
                           }}
                         />
                         {errors.bookingDate && (
@@ -314,7 +351,8 @@ const UserDetailForm = () => {
                       {/* Booking Time */}
                       <div className="col-md-6">
                         <label className="form-label fw-semibold">
-                          Appointment Time <span className="text-danger">*</span>
+                          Appointment Time{" "}
+                          <span className="text-danger">*</span>
                         </label>
                         <input
                           type="time"
@@ -322,12 +360,18 @@ const UserDetailForm = () => {
                           value={bookingTime}
                           onChange={(e) => {
                             setBookingTime(e.target.value);
-                            if (errors.bookingTime) setErrors(prev => ({ ...prev, bookingTime: "" }));
+                            if (errors.bookingTime)
+                              setErrors((prev) => ({
+                                ...prev,
+                                bookingTime: "",
+                              }));
                           }}
                           style={{
                             borderRadius: "8px",
                             padding: "12px 16px",
-                            border: errors.bookingTime ? "1px solid #dc3545" : "1px solid #daa23e73",
+                            border: errors.bookingTime
+                              ? "1px solid #dc3545"
+                              : "1px solid #daa23e73",
                           }}
                         />
                         {errors.bookingTime && (
@@ -343,17 +387,18 @@ const UserDetailForm = () => {
                           Duration (Minutes)
                         </label>
                         <div className="d-flex flex-wrap gap-2">
-                          {["5","10","15", "30", "45", "60"].map((mins) => (
+                          {["5", "10", "15", "30", "45", "60"].map((mins) => (
                             <button
                               key={mins}
                               type="button"
                               className={`btn ${duration === mins ? "btn-primary" : "btn-outline-primary"}`}
                               onClick={() => setDuration(mins)}
                               style={{
-                                backgroundColor: duration === mins ? "#732882" : "transparent",
+                                backgroundColor:
+                                  duration === mins ? "#732882" : "transparent",
                                 borderColor: "#732882",
                                 color: duration === mins ? "#fff" : "#732882",
-                                minWidth: "80px"
+                                minWidth: "80px",
                               }}
                             >
                               {mins} min
@@ -364,7 +409,14 @@ const UserDetailForm = () => {
 
                       {/* Summary Box */}
                       <div className="col-12 mt-4">
-                        <div className="p-3" style={{ backgroundColor: "#f8f9fa", borderRadius: "10px", border: "1px dashed #732882" }}>
+                        <div
+                          className="p-3"
+                          style={{
+                            backgroundColor: "#f8f9fa",
+                            borderRadius: "10px",
+                            border: "1px dashed #732882",
+                          }}
+                        >
                           <div className="d-flex justify-content-between mb-2">
                             <span>Rate:</span>
                             <strong>₹{rate}/min</strong>
@@ -388,7 +440,8 @@ const UserDetailForm = () => {
                         type="submit"
                         className="submit-button px-5 py-3 text-white fw-semibold"
                         style={{
-                          background: "linear-gradient(45deg, #732882, #8a3399)",
+                          background:
+                            "linear-gradient(45deg, #732882, #8a3399)",
                           border: "none",
                           borderRadius: "50px",
                           fontSize: "18px",
@@ -398,34 +451,57 @@ const UserDetailForm = () => {
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.transform = "translateY(-2px)";
-                          e.currentTarget.style.boxShadow = "0 6px 20px rgba(115, 40, 130, 0.4)";
+                          e.currentTarget.style.boxShadow =
+                            "0 6px 20px rgba(115, 40, 130, 0.4)";
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.transform = "translateY(0)";
-                          e.currentTarget.style.boxShadow = "0 4px 15px rgba(115, 40, 130, 0.3)";
+                          e.currentTarget.style.boxShadow =
+                            "0 4px 15px rgba(115, 40, 130, 0.3)";
                         }}
                       >
-                        Proceed to Pay <i className="fa-solid fa-arrow-right ms-2"></i>
+                        Proceed to Pay{" "}
+                        <i className="fa-solid fa-arrow-right ms-2"></i>
                       </button>
                     </div>
 
                     {/* Privacy Note */}
-                    <p className="text-center text-muted mt-4 mb-0" style={{ fontSize: "14px" }}>
+                    <p
+                      className="text-center text-muted mt-4 mb-0"
+                      style={{ fontSize: "14px" }}
+                    >
                       <i className="fa-solid fa-lock me-1"></i>
-                      Your information is secure and will only be used for astrological consultation
+                      Your information is secure and will only be used for
+                      astrological consultation
                     </p>
                   </form>
                 </div>
               </div>
             </div>
           </div>
-
-         
         </div>
       </section>
     </>
   );
 };
 
-export default UserDetailForm;
+const UserDetailForm = () => {
+  return (
+    <Suspense
+      fallback={
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ minHeight: "100vh" }}
+        >
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      }
+    >
+      <UserDetailFormContent />
+    </Suspense>
+  );
+};
 
+export default UserDetailForm;

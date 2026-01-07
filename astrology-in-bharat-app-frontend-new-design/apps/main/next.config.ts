@@ -2,18 +2,20 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  turbopack: {
-    rules: {
-      "*.svg": {
-        loaders: ["@svgr/webpack"],
-        as: "*.js",
-      },
-    },
-  },
+  transpilePackages: ["@repo/ui", "@repo/routes", "swiper"],
   images: {
     unoptimized: true,
   },
-  transpilePackages: ["@repo/ui", "@repo/routes", "swiper"],
+  experimental: {
+    turbo: {
+      rules: {
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
+        },
+      },
+    },
+  },
 };
 
 export default nextConfig;

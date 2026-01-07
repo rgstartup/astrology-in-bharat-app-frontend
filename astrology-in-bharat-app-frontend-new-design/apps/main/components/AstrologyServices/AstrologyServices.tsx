@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import {
-  AstrologyServicesData,
-  ConsultationServicesData,
-} from "./data";
-import ServiceCard from './ServiceCard';
-import ConsultationCard from './ConsultationCard';
-import Link from 'next/link';
+import React from "react";
+import { AstrologyServicesData, ConsultationServicesData } from "./data";
+import ServiceCard from "./ServiceCard";
+import ConsultationCard from "./ConsultationCard";
+import NextLink from "next/link";
+const Link = NextLink as any;
 
 const AstrologyServices = () => {
   return (
@@ -19,11 +17,11 @@ const AstrologyServices = () => {
             <div className="h-[550px] overflow-y-auto pr-2 custom-scrollbar">
               <div className="row mx-0">
                 {AstrologyServicesData.map((service) => (
-                  <div
-                    className="col-lg-3 col-md-4 px-2 mb-4"
-                    key={service.id}
-                  >
-                    <Link href={`/services/${service.slug}`} className="block h-full no-underline hover:text-inherit">
+                  <div className="col-lg-3 col-md-4 px-2 mb-4" key={service.id}>
+                    <Link
+                      href={`/services/${service.slug}`}
+                      className="block h-full no-underline hover:text-inherit"
+                    >
                       <ServiceCard item={service} />
                     </Link>
                   </div>
@@ -42,7 +40,10 @@ const AstrologyServices = () => {
           <div className="row">
             {ConsultationServicesData.map((service) => (
               <div className="col-sm-3" key={service.id}>
-                <Link href={`/services/${service.slug}`} className="block no-underline hover:text-inherit">
+                <Link
+                  href={`/services/${service.slug}`}
+                  className="block no-underline hover:text-inherit"
+                >
                   <ConsultationCard item={service} />
                 </Link>
               </div>
@@ -51,7 +52,7 @@ const AstrologyServices = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default AstrologyServices;

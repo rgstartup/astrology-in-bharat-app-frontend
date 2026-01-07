@@ -1,5 +1,8 @@
 import React from "react";
-import Link from "next/link";
+import NextLink from "next/link";
+const Link = NextLink as any;
+import NextImage from "next/image";
+const Image = NextImage as any;
 import { products, purpose } from "@/components/AstrologyServices/homePagaData";
 
 const page: React.FC = () => {
@@ -38,7 +41,7 @@ const page: React.FC = () => {
                     <h4 className="text-lg font-bold text-[#301118] h-[50px] overflow-hidden line-clamp-2">
                       {product.title}
                     </h4>
-                    <p className="p-sm text-muted text-sm line-clamp-2 flex-grow">
+                    <p className="p-sm text-muted text-sm line-clamp-2 grow">
                       {product.description}
                     </p>
                     <div className=" mt-auto pt-3 flex items-center justify-between">

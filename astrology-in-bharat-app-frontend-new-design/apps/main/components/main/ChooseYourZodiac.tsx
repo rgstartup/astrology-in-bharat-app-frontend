@@ -1,7 +1,7 @@
-"use client";
 import React from "react";
 import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
 import NextLink from "next/link";
+
 const Link = NextLink as any;
 
 const ChooseYourZodiac = () => {
@@ -17,7 +17,7 @@ const ChooseYourZodiac = () => {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {ZodiacSignsData.map((sign) => (
-              <NextLink
+              <Link
                 href={`/zodiac-signs/${sign.title.toLowerCase()}`}
                 key={sign.id}
                 className="block h-full group no-underline"
@@ -36,7 +36,7 @@ const ChooseYourZodiac = () => {
                   </h3>
                   <p className="text-xs text-[#666] mb-0">{sign.date}</p>
                 </div>
-              </NextLink>
+              </Link>
             ))}
           </div>
         </div>

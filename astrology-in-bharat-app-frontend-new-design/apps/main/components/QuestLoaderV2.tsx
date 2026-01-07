@@ -45,7 +45,9 @@ export default function QuotesLoaderV2() {
     // Rotate quote if available
     if (quotes.length > 0) {
       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-      setCurrentQuote(randomQuote);
+      if (randomQuote) {
+        setCurrentQuote(randomQuote);
+      }
     }
 
     // Start fade out animation before hiding

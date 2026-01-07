@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { products } from "@/components/AstrologyServices/homePagaData";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -19,7 +19,7 @@ interface AstrologerData {
   ratings: number;
 }
 
-const Page = () => {
+const AstrologerDetailsContent = () => {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [astrologer, setAstrologer] = useState<AstrologerData>({
@@ -35,13 +35,15 @@ const Page = () => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   useEffect(() => {
-    const id = searchParams.get('id');
+    const id = searchParams.get("id");
 
     if (id) {
       const fetchDetails = async () => {
         try {
           setLoading(true);
-          const response = await axios.get(`${API_BASE_URL}/expert/profile/${id}`);
+          const response = await axios.get(
+            `${API_BASE_URL}/expert/profile/${id}`
+          );
           const data = response.data;
 
           setAstrologer({
@@ -70,8 +72,8 @@ const Page = () => {
   const router = useRouter();
 
   const handleChatClick = () => {
-    router.push('/user-detail-form');
-  }
+    router.push("/user-detail-form");
+  };
 
   // Generate star rating
   const renderStars = (rating: number) => {
@@ -80,7 +82,10 @@ const Page = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "100vh" }}
+      >
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
@@ -142,7 +147,6 @@ const Page = () => {
                 </div>
               </div>
 
-
               <div>
                 <h5 className="fw-bold text-black">{astrologer.name}</h5>
                 <div className="mb-1 text-black">
@@ -159,13 +163,22 @@ const Page = () => {
             </div>
 
             <div className="d-flex flex-wrap justify-content-center justify-content-md-start mt-4 gap-2">
-              <button className="astro-call d-flex align-items-center gap-1" onClick={handleChatClick}>
+              <button
+                className="astro-call d-flex align-items-center gap-1"
+                onClick={handleChatClick}
+              >
                 <i className="fa-solid fa-phone-volume"></i> Call
               </button>
-              <button className="astro-videocall d-flex align-items-center gap-1" onClick={handleChatClick}>
+              <button
+                className="astro-videocall d-flex align-items-center gap-1"
+                onClick={handleChatClick}
+              >
                 <i className="fa-solid fa-video"></i> Video Call
               </button>
-              <button className="astro-chat d-flex align-items-center gap-1" onClick={handleChatClick}>
+              <button
+                className="astro-chat d-flex align-items-center gap-1"
+                onClick={handleChatClick}
+              >
                 <i className="fa-solid fa-comment"></i> Chat
               </button>
             </div>
@@ -276,7 +289,11 @@ const Page = () => {
                       <label className="form-label">
                         Birth Time <span className="text-danger">*</span>
                       </label>
-                      <input type="time" className="form-control form-inputs" required />
+                      <input
+                        type="time"
+                        className="form-control form-inputs"
+                        required
+                      />
                     </div>
 
                     <div className="col-md-6">
@@ -295,7 +312,12 @@ const Page = () => {
                       <label className="form-label" htmlFor="gender">
                         Gender
                       </label>
-                      <select className="form-select" id="gender" required defaultValue="">
+                      <select
+                        className="form-select"
+                        id="gender"
+                        required
+                        defaultValue=""
+                      >
                         <option value="" disabled hidden>
                           Select
                         </option>
@@ -303,7 +325,9 @@ const Page = () => {
                         <option value="female">Female</option>
                         <option value="other">Other</option>
                       </select>
-                      <div className="invalid-feedback">Please select a gender.</div>
+                      <div className="invalid-feedback">
+                        Please select a gender.
+                      </div>
                     </div>
 
                     <div className="col-md-6">
@@ -376,7 +400,9 @@ const Page = () => {
                     <div className="ms-auto text-warning">★★★★★</div>
                   </div>
                   <p className="mb-0">
-                    {"The birth chart reading was incredibly detailed and accurate. It helped me understand my life path and make important career decisions."}
+                    {
+                      "The birth chart reading was incredibly detailed and accurate. It helped me understand my life path and make important career decisions."
+                    }
                   </p>
                 </div>
 
@@ -398,7 +424,10 @@ const Page = () => {
                     <div className="ms-auto text-warning">★★★★★</div>
                   </div>
                   <p className="mb-0">
-                    {"The planetary transit analysis provided invaluable timing for my business decisions. The accuracy of predictions and professional guidance has been truly remarkable."}</p>
+                    {
+                      "The planetary transit analysis provided invaluable timing for my business decisions. The accuracy of predictions and professional guidance has been truly remarkable."
+                    }
+                  </p>
                 </div>
 
                 <button
@@ -418,7 +447,6 @@ const Page = () => {
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
         onSubmit={(data) => {
-
           // Here you would typically send the data to your backend
           setIsReviewModalOpen(false);
         }}
@@ -586,5 +614,23 @@ const Page = () => {
   );
 };
 
-export default Page;
+const Page = () => {
+  return (
+    <Suspense
+      fallback={
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ minHeight: "100vh" }}
+        >
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      }
+    >
+      <AstrologerDetailsContent />
+    </Suspense>
+  );
+};
 
+export default Page;

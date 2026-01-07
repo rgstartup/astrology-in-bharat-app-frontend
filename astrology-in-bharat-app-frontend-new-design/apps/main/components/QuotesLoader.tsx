@@ -26,9 +26,13 @@ export default function QuotesLoader() {
       if (savedQuotes) {
         const parsedQuotes: Quote[] = JSON.parse(savedQuotes);
         setQuotes(parsedQuotes);
-        setRandomQuote(
-          parsedQuotes[Math.floor(Math.random() * parsedQuotes.length)].text
-        );
+        if (parsedQuotes.length > 0) {
+          const firstRandom =
+            parsedQuotes[Math.floor(Math.random() * parsedQuotes.length)];
+          if (firstRandom) {
+            setRandomQuote(firstRandom.text);
+          }
+        }
         return;
       }
 
@@ -37,9 +41,11 @@ export default function QuotesLoader() {
       if (Array.isArray(response.data) && response.data.length > 0) {
         setQuotes(response.data);
         sessionStorage.setItem("quotesData", JSON.stringify(response.data));
-        setRandomQuote(
-          response.data[Math.floor(Math.random() * response.data.length)].text
-        );
+        const firstFetchRandom =
+          response.data[Math.floor(Math.random() * response.data.length)];
+        if (firstFetchRandom) {
+          setRandomQuote(firstFetchRandom.text);
+        }
       } else {
         setRandomQuote("Unlock Your Destiny. The stars align you.");
       }
@@ -55,7 +61,10 @@ export default function QuotesLoader() {
   // Each time route changes → show random quote from saved list
   useEffect(() => {
     if (quotes.length > 0) {
-      setRandomQuote(quotes[Math.floor(Math.random() * quotes.length)].text);
+      const effectRandom = quotes[Math.floor(Math.random() * quotes.length)];
+      if (effectRandom) {
+        setRandomQuote(effectRandom.text);
+      }
     }
 
     setIsVisible(true);
