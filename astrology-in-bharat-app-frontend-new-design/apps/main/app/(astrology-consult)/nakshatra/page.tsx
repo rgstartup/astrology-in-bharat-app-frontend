@@ -1,20 +1,34 @@
-"use client";
-
 import React from "react";
+import NextImage from "next/image";
+const Image = NextImage as any;
 import {
-  FaSearch,
-  FaBolt,
-  FaGlobe,
-  FaTheaterMasks,
-  FaCheck,
-  FaTimes,
-  FaFileAlt,
-  FaChevronRight,
+  FaSearch as FaSe,
+  FaBolt as FaBo,
+  FaGlobe as FaGl,
+  FaTheaterMasks as FaTm,
+  FaCheck as FaCh,
+  FaTimes as FaTi,
+  FaFileAlt as FaFa,
+  FaChevronRight as FaCr,
 } from "react-icons/fa";
-import { GiCrystalBall, GiHorseHead } from "react-icons/gi";
-import { HiOutlineSparkles } from "react-icons/hi";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
+const FaSearch = FaSe as any;
+const FaBolt = FaBo as any;
+const FaGlobe = FaGl as any;
+const FaTheaterMasks = FaTm as any;
+const FaCheck = FaCh as any;
+const FaTimes = FaTi as any;
+const FaFileAlt = FaFa as any;
+const FaChevronRight = FaCr as any;
+
+import { GiCrystalBall as GiCb, GiHorseHead as GiHh } from "react-icons/gi";
+const GiCrystalBall = GiCb as any;
+const GiHorseHead = GiHh as any;
+
+import { HiOutlineSparkles as HiOs } from "react-icons/hi";
+const HiOutlineSparkles = HiOs as any;
+
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
 
 const NakshatraPage = () => {
   const nakshatras = [

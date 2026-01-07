@@ -1,22 +1,33 @@
-"use client";
-
 import React from "react";
-import Image from "next/image";
+import NextImage from "next/image";
+const Image = NextImage as any;
 import {
-  FaMoon,
-  FaHeart,
-  FaBriefcase,
-  FaUserFriends,
-  FaStar,
-  FaPhoneAlt,
-  FaCheck,
-  FaExclamation,
-  FaChevronRight,
+  FaMoon as FaMo,
+  FaHeart as FaH,
+  FaBriefcase as FaB,
+  FaUserFriends as FaUf,
+  FaStar as FaS,
+  FaPhoneAlt as FaPa,
+  FaCheck as FaC,
+  FaExclamation as FaE,
+  FaChevronRight as FaCr,
 } from "react-icons/fa";
-import { HiOutlineSparkles } from "react-icons/hi";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
-import { ZodiacSignsData } from "@/components/AstrologyServices/homePagaData";
+const FaMoon = FaMo as any;
+const FaHeart = FaH as any;
+const FaBriefcase = FaB as any;
+const FaUserFriends = FaUf as any;
+const FaStar = FaS as any;
+const FaPhoneAlt = FaPa as any;
+const FaCheck = FaC as any;
+const FaExclamation = FaE as any;
+const FaChevronRight = FaCr as any;
+
+import { HiOutlineSparkles as HiOs } from "react-icons/hi";
+const HiOutlineSparkles = HiOs as any;
+
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
+import { ZodiacSignsData } from "@/components/features/services/homePagaData";
 
 const MoonSignPage = () => {
   return (

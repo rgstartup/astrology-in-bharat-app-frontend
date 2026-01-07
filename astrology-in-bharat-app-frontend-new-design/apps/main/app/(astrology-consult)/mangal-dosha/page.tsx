@@ -1,23 +1,36 @@
-"use client";
-
 import React from "react";
-import Image from "next/image";
+import NextImage from "next/image";
+const Image = NextImage as any;
 import {
-  FaCalendarAlt,
-  FaMapMarkerAlt,
-  FaHeartBroken,
-  FaChartLine,
-  FaHospital,
-  FaUser,
-  FaComments,
-  FaPhoneAlt,
-  FaCheck,
-  FaChevronRight,
-  FaExclamationTriangle,
+  FaCalendarAlt as FaCa,
+  FaMapMarkerAlt as FaMma,
+  FaHeartBroken as FaHb,
+  FaChartLine as FaCl,
+  FaHospital as FaHos,
+  FaUser as FaU,
+  FaComments as FaCom,
+  FaPhoneAlt as FaPa,
+  FaCheck as FaC,
+  FaChevronRight as FaCr,
+  FaExclamationTriangle as FaEt,
 } from "react-icons/fa";
-import { GiMeditation } from "react-icons/gi";
-import WhyChooseUs from "@/components/main/WhyChooseUs";
-import CTA from "@/components/main/CTA";
+const FaCalendarAlt = FaCa as any;
+const FaMapMarkerAlt = FaMma as any;
+const FaHeartBroken = FaHb as any;
+const FaChartLine = FaCl as any;
+const FaHospital = FaHos as any;
+const FaUser = FaU as any;
+const FaComments = FaCom as any;
+const FaPhoneAlt = FaPa as any;
+const FaCheck = FaC as any;
+const FaChevronRight = FaCr as any;
+const FaExclamationTriangle = FaEt as any;
+
+import { GiMeditation as GiM } from "react-icons/gi";
+const GiMeditation = GiM as any;
+
+import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
+import CTA from "@/components/layout/main/CTA";
 
 const MangalDoshaPage = () => {
   return (
@@ -169,7 +182,7 @@ const MangalDoshaPage = () => {
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#301118] to-transparent p-6 flex flex-col justify-end">
+                  <div className="absolute inset-0 bg-linear-to-t from-[#301118] to-transparent p-6 flex flex-col justify-end">
                     <h3 className="text-xl font-bold text-white mb-2">
                       What is Mangal Dosha?
                     </h3>
