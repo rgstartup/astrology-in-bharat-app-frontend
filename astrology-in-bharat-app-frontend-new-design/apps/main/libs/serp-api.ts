@@ -15,6 +15,19 @@ export interface Place {
   images?: string[];
 }
 
+const BLOCKED_DOMAINS = [
+  "facebook.com",
+  "fbcdn.net",
+  "instagram.com",
+  "linkedin.com",
+  "fbsbx.com",
+];
+
+const isValidImageUrl = (url?: string) => {
+  if (!url) return false;
+  return !BLOCKED_DOMAINS.some((domain) => url.includes(domain));
+};
+
 const generateSlug = (title: string) => {
   return title
     .toLowerCase()
@@ -39,7 +52,7 @@ const getCachedData = (key: string) => {
   return null;
 };
 
-const setCachedData = (key: string, data: any) => {
+const setCachedData = (key: string, data: unknown) => {
   if (typeof window === "undefined") return;
   const cacheObj = {
     data,
@@ -70,8 +83,11 @@ export async function fetchPlaces(
       }),
     });
     const data = await response.json();
-    const places = (data.places || []).map((p: any) => ({
+    const places = (data.places || []).map((p: Place) => ({
       ...p,
+      thumbnailUrl: isValidImageUrl(p.thumbnailUrl)
+        ? p.thumbnailUrl
+        : undefined,
       slug: generateSlug(p.title),
     }));
 
@@ -101,7 +117,9 @@ export async function fetchPlaceImages(placeTitle: string): Promise<string[]> {
       }),
     });
     const data = await response.json();
-    const images = (data.images || []).map((img: any) => img.imageUrl);
+    const images = (data.images || [])
+      .map((img: { imageUrl: string }) => img.imageUrl)
+      .filter(isValidImageUrl);
 
     setCachedData(cacheKey, images);
     return images;
@@ -122,7 +140,9 @@ export function getAllCachedPlaces(): Place[] {
         if (Array.isArray(data)) {
           places.push(...data);
         }
-      } catch (e) {}
+      } catch {
+        // Silently fail for individual cache entry parsing errors
+      }
     }
   }
   return places;

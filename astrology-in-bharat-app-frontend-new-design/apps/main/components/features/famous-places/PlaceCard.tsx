@@ -13,7 +13,7 @@ interface PlaceCardProps {
 const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
   const [realImage, setRealImage] = useState<string | null>(null);
 
-  const NO_IMAGE_URL = "/images/image-not-found-1.png";
+  const NO_IMAGE_URL = "/images/image-not-found.png";
 
   useEffect(() => {
     const loadImage = async () => {
