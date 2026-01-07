@@ -6,7 +6,7 @@ const NextImageComp = NextImage as any;
 const Link = NextLink as any;
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000/api/v1";
@@ -597,110 +597,110 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
           >
             {astrologers.length > 0
               ? astrologers.map((item) => (
-                  <React.Fragment key={item.id}>
-                    <div className="grid-item">
-                      <Link
-                        href={{
-                          pathname: "/astrologer-details",
-                          query: { id: item.id },
-                        }}
-                        className="text-decoration-none"
-                      >
-                        <div className="astro-card min-w-[300px]">
-                          <div className="vid-part">
-                            <div className="relative w-full h-full overflow-hidden">
-                              <NextImageComp
-                                src={item.image}
-                                alt={item.name}
-                                fill
-                                className="astro-profile-img object-cover"
-                              />
-                            </div>
-                            <span
-                              className="play-vid fa-beat"
-                              data-bs-toggle="modal"
-                              data-bs-target={`#${item.modalId}`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                              }}
-                            >
-                              <i className="fa-solid fa-circle-play"></i>
-                            </span>
-                          </div>
-                          <div className="rating-star">
-                            {"★".repeat(item.ratings)}
-                          </div>
-                          <div className="astro-name">{item.name}</div>
-                          <div className="astro-tags">{item.expertise}</div>
-                          <div className="astro-info">
-                            <strong>Exp:</strong> {item.experience} Years
-                          </div>
-                          <div className="astro-info">
-                            <strong>Lang:</strong> {item.language}
-                          </div>
-                          <div className="astro-info">
-                            <strong>Price:</strong> ₹{item.price}/min
-                          </div>
-                          <div className="astro-actions">
-                            <button>
-                              <i className="fa-regular fa-comment-dots"></i>{" "}
-                              Chat
-                            </button>
-                            <button className="call">
-                              <i className="fa-solid fa-phone-volume"></i> Call
-                            </button>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
-
-                    {/* Modal Video */}
-                    <div
-                      className="modal fade"
-                      id={item.modalId}
-                      tabIndex={-1}
-                      aria-hidden="true"
-                      style={{ zIndex: 1070 }}
+                <React.Fragment key={item.id}>
+                  <div className="grid-item">
+                    <Link
+                      href={{
+                        pathname: "/astrologer-details",
+                        query: { id: item.id },
+                      }}
+                      className="text-decoration-none"
                     >
-                      <div className="modal-dialog modal-dialog-centered modal-xl">
-                        <div className="modal-content text-dark border-0 shadow-2xl">
-                          <div className="modal-header border-0 pb-0">
-                            <h4 className="modal-title-astro-about">
-                              Meet {item.name}
-                            </h4>
-                            <button
-                              type="button"
-                              className="btn-close shadow-none"
-                              data-bs-dismiss="modal"
-                            >
-                              <i className="fa-solid fa-xmark"></i>
-                            </button>
+                      <div className="astro-card min-w-[300px]">
+                        <div className="vid-part">
+                          <div className="relative w-full h-full overflow-hidden">
+                            <NextImageComp
+                              src={item.image}
+                              alt={item.name}
+                              fill
+                              className="astro-profile-img object-cover"
+                            />
                           </div>
-                          <div className="modal-body p-4">
-                            <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100">
-                              <iframe
-                                width="100%"
-                                height="500"
-                                src={item.video}
-                                title={`${item.name} Video`}
-                                frameBorder="0"
-                                allowFullScreen
-                              ></iframe>
-                            </div>
+                          <span
+                            className="play-vid fa-beat"
+                            data-bs-toggle="modal"
+                            data-bs-target={`#${item.modalId}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                          >
+                            <i className="fa-solid fa-circle-play"></i>
+                          </span>
+                        </div>
+                        <div className="rating-star">
+                          {"★".repeat(item.ratings)}
+                        </div>
+                        <div className="astro-name">{item.name}</div>
+                        <div className="astro-tags">{item.expertise}</div>
+                        <div className="astro-info">
+                          <strong>Exp:</strong> {item.experience} Years
+                        </div>
+                        <div className="astro-info">
+                          <strong>Lang:</strong> {item.language}
+                        </div>
+                        <div className="astro-info">
+                          <strong>Price:</strong> ₹{item.price}/min
+                        </div>
+                        <div className="astro-actions">
+                          <button>
+                            <i className="fa-regular fa-comment-dots"></i>{" "}
+                            Chat
+                          </button>
+                          <button className="call">
+                            <i className="fa-solid fa-phone-volume"></i> Call
+                          </button>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* Modal Video */}
+                  <div
+                    className="modal fade"
+                    id={item.modalId}
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    style={{ zIndex: 1070 }}
+                  >
+                    <div className="modal-dialog modal-dialog-centered modal-xl">
+                      <div className="modal-content text-dark border-0 shadow-2xl">
+                        <div className="modal-header border-0 pb-0">
+                          <h4 className="modal-title-astro-about">
+                            Meet {item.name}
+                          </h4>
+                          <button
+                            type="button"
+                            className="btn-close shadow-none"
+                            data-bs-dismiss="modal"
+                          >
+                            <i className="fa-solid fa-xmark"></i>
+                          </button>
+                        </div>
+                        <div className="modal-body p-4">
+                          <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                            <iframe
+                              width="100%"
+                              height="500"
+                              src={item.video}
+                              title={`${item.name} Video`}
+                              frameBorder="0"
+                              allowFullScreen
+                            ></iframe>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </React.Fragment>
-                ))
-              : !loading && (
-                  <div className="w-full text-center py-10 text-white">
-                    <i className="fa-solid fa-magnifying-glass fa-3x mb-3 text-[#fd641055]"></i>
-                    <h4>No Astrologers Found</h4>
-                    <p>Adjust your filters or search terms.</p>
                   </div>
-                )}
+                </React.Fragment>
+              ))
+              : !loading && (
+                <div className="w-full text-center py-10 text-white">
+                  <i className="fa-solid fa-magnifying-glass fa-3x mb-3 text-[#fd641055]"></i>
+                  <h4>No Astrologers Found</h4>
+                  <p>Adjust your filters or search terms.</p>
+                </div>
+              )}
 
             {loading && (
               <div className="d-flex align-items-center justify-content-center min-w-[200px]">

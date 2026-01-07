@@ -4,6 +4,8 @@ import { Lock, User } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { toast } from "react-toastify";
+
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -49,14 +51,19 @@ export default function AdminLoginPage() {
       );
 
       if (!isAdmin) {
-        setError("You are not an admin");
+        const msg = "You are not an admin";
+        setError(msg);
+        toast.error(msg);
         return;
       }
 
       // ✅ success
+      toast.success("Login Successful! Redirecting...");
       router.push("/admin/dashboard");
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      const msg = err.message || "Something went wrong";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

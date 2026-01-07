@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { SearchInput } from "../../../shared/components/SearchInput";
+import { toast } from "react-toastify";
 interface MenuItem {
   label: string;
   href: string;
@@ -123,8 +124,11 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
             document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
             document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
 
-            // 4. Redirect
-            window.location.href = "/";
+            // 4. Toast and Redirect
+            toast.success("Signed out successfully");
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 1000);
           }}
           className={cn(
             "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-left",
@@ -217,8 +221,11 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
                     document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
                     document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
 
-                    // 4. Redirect
-                    window.location.href = "/";
+                    // 4. Toast and Redirect
+                    toast.success("Signed out successfully");
+                    setTimeout(() => {
+                      window.location.href = "/";
+                    }, 1000);
                   }}
                   className={cn(
                     "block w-full text-left px-3 py-2 rounded-lg text-sm text-yellow-100 hover:bg-yellow-600 hover:text-white transition-colors duration-200",
