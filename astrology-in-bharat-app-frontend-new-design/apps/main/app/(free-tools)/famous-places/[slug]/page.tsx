@@ -54,10 +54,9 @@ const PlaceDetailPage = () => {
     );
   }
 
-  const mainImage =
-    images.length > 0
-      ? images[0]
-      : place.thumbnailUrl || "/images/image-not-found.png";
+  const mainImage: string =
+    (images && images.length > 0 && images[0] ? images[0] : "") ||
+    (place.thumbnailUrl ? place.thumbnailUrl : "/images/image-not-found.png");
 
   return (
     <div className="min-h-screen bg-[#FDFCFB]">

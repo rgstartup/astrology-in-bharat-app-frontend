@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import NextImage from "next/image";
-import NextLink from "next/link";
+import Image from "next/image";
+import Link from "next/link";
 import { fetchPlaceImages, Place } from "@/libs/serp-api";
-
-const Image = NextImage as any;
-const Link = NextLink as any;
 
 interface PlaceCardProps {
   place: Place;
@@ -26,7 +23,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
     loadImage();
   }, [place.title]);
 
-  const displayImage = realImage || place.thumbnailUrl || NO_IMAGE_URL;
+  const displayImage: string = realImage || place.thumbnailUrl || NO_IMAGE_URL;
 
   return (
     <Link

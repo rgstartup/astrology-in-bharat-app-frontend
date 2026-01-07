@@ -117,8 +117,8 @@ const FamousPlacesPage = () => {
               <span>Holy Pilgrimage Across India</span>
             </h2>
             <p className="text-text-sub-dark max-w-xl mx-auto">
-              Explore the widely revered pilgrimage sites that define India's
-              rich spiritual heritage and tradition.
+              Explore the widely revered pilgrimage sites that define
+              India&apos;s rich spiritual heritage and tradition.
             </p>
           </div>
 
@@ -133,7 +133,8 @@ const FamousPlacesPage = () => {
           ) : (
             <div className="text-center py-16 bg-[#1e0b0f6e] rounded-3xl border border-dashed border-[#fd641054]">
               <p className="text-gray-400 italic">
-                Exploring India's pilgrimage sites... please check back shortly.
+                Exploring India&apos;s pilgrimage sites... please check back
+                shortly.
               </p>
             </div>
           )}
