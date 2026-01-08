@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import axios from "axios";
 
 const API_BASE_URL = "http://localhost:4000/api/v1";
@@ -28,6 +29,8 @@ interface PaginationInfo {
 
 const OurAstrologer = () => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const searchParams = useSearchParams();
+    const spec = searchParams.get("specialization");
     const [astrologers, setAstrologers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [offset, setOffset] = useState(0);
@@ -37,7 +40,7 @@ const OurAstrologer = () => {
     // Filter & Search State
     const [searchQuery, setSearchQuery] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
-    const [selectedSpecialization, setSelectedSpecialization] = useState("");
+    const [selectedSpecialization, setSelectedSpecialization] = useState(spec || "");
     const [sortOption, setSortOption] = useState("newest");
     const [filterState, setFilterState] = useState({
         language: "",
@@ -125,6 +128,12 @@ const OurAstrologer = () => {
         return () => clearInterval(interval);
     }, [fetchAstrologers, offset]);
 
+    useEffect(() => {
+        if (spec) {
+            setSelectedSpecialization(spec);
+        }
+    }, [spec]);
+
     const handleLoadMore = (e: React.MouseEvent) => {
         e.preventDefault();
         const nextOffset = offset + limit;
@@ -146,14 +155,14 @@ const OurAstrologer = () => {
 
     const specializations = [
         "Numerology", "Vedic", "Zodiac Compatibility", "Astrocartography", "Lunar Node Analysis",
-"Love Problem Solution", 
-"Marriage Problem", 
- 
-"Divorce Problem Solution", "Breakup Problem Solution", 
-"Get Your Ex Love Back",
-"Family Problem Solution",
-"Dispute Solution",
-"Childless Couple Solution"
+        "Love Problem Solution",
+        "Marriage Problem",
+
+        "Divorce Problem Solution", "Breakup Problem Solution",
+        "Get Your Ex Love Back",
+        "Family Problem Solution",
+        "Dispute Solution",
+        "Childless Couple Solution"
     ];
 
     const applyFilters = () => {
