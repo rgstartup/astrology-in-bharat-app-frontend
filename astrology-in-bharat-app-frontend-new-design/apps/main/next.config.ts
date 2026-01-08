@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
       },
     },
   },
+<<<<<<< HEAD
   async rewrites() {
     return [
       {
@@ -32,6 +33,13 @@ const nextConfig: NextConfig = {
         destination: "http://localhost:3000/uploads/:path*", // Proxy to Admin Dashboard (Port 3000)
       },
     ];
+=======
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+>>>>>>> be497642a24dcd262482fae7291e414a246665ac
   },
 };
 
