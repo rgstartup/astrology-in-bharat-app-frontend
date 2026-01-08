@@ -10,7 +10,6 @@ import {
   FaPhoneAlt as FaPa,
   FaCheck as FaC,
   FaExclamation as FaE,
-  FaChevronRight as FaCr,
 } from "react-icons/fa";
 const FaMoon = FaMo as any;
 const FaHeart = FaH as any;
@@ -20,7 +19,6 @@ const FaStar = FaS as any;
 const FaPhoneAlt = FaPa as any;
 const FaCheck = FaC as any;
 const FaExclamation = FaE as any;
-const FaChevronRight = FaCr as any;
 
 import { HiOutlineSparkles as HiOs } from "react-icons/hi";
 const HiOutlineSparkles = HiOs as any;
@@ -34,46 +32,61 @@ const MoonSignPage = () => {
     <div className="main-wrapper">
       {/* Hero Section */}
       <section className="banner-part light-back">
-        <div className="container">
-          <div className="contant-hero rounded-4 border border-[#fd64102b] shadow-xl">
-            <div className="row align-items-center">
-              <div className="col-lg-7 col-md-12">
-                <div className="hero-card">
-                  <div className="card-z">
-                    <span className="aib-trust-badge">
-                      Emotional Intelligence
-                    </span>
-                    <h1>Moon Sign Details</h1>
-                    <h4 className="card-title">
-                      Discover Your True Inner Self
-                    </h4>
-                    <p>
-                      In Vedic Astrology, your Moon Sign reveals your emotional
-                      landscape, subconscious patterns, and deepest needs. It
-                      governs your intuition, vulnerability, and instinctive
-                      reactions to the world.
-                    </p>
-                    <div className="pt-3">
-                      <button className="btn-link py-3 px-10 shadow-lg inline-flex w-auto uppercase tracking-widest text-[12px]">
-                        Find My Moon Sign{" "}
-                        <FaChevronRight className="ms-2" size={12} />
+        <div className="overlay-hero">
+          <div className="container">
+            <div className="contant-hero">
+              <div className="row align-items-center">
+                <div className="col-lg-7 col-md-12">
+                  <div className="hero-card shine">
+                    <div className="card-z">
+                      <span className="aib-trust-badge">
+                        Emotional Intelligence
+                      </span>
+                      <h1>Moon Sign Details</h1>
+                      <h4 className="card-title">
+                        Discover Your True Inner Self
+                      </h4>
+                      <p>
+                        needs. It governs your intuition, vulnerability, and
+                        instinctive reactions to the world.
+                      </p>
+                      <ul className="list-check">
+                        <li>
+                          <i className="fa-solid fa-check"></i> Identify Your
+                          Rashi
+                        </li>
+                        <li>
+                          <i className="fa-solid fa-check"></i> Understand
+                          Emotions
+                        </li>
+                        <li>
+                          <i className="fa-solid fa-check"></i> Inner Self
+                          Analysis
+                        </li>
+                        <li>
+                          <i className="fa-solid fa-check"></i> Vedic Moon
+                          Guidance
+                        </li>
+                      </ul>
+                      <button className="btn-link wfc mt-4 mb-4">
+                        Find My Moon Sign
                       </button>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-lg-5 col-md-12 text-center">
-                <div className="right-illus">
-                  <Image
-                    src="/images/horoscope-round2.png"
-                    alt="Zodiac"
-                    width={500}
-                    height={500}
-                    className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_30s_linear_infinite] opacity-30"
-                  />
-                  <div className="relative z-10 p-5">
-                    <div className="w-[180px] h-[180px] bg-white rounded-full flex items-center justify-center border-4 border-[#fd6410] shadow-2xl mx-auto">
-                      <FaMoon className="text-[#fd6410] text-7xl animate-pulse" />
+                <div className="col-lg-5 col-md-12 text-center">
+                  <div className="right-illus">
+                    <Image
+                      src="/images/horoscope-round2.png"
+                      alt="Zodiac"
+                      width={500}
+                      height={500}
+                      className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_30s_linear_infinite] opacity-30"
+                    />
+                    <div className="relative z-10 p-5">
+                      <div className="w-[180px] h-[180px] bg-white rounded-full flex items-center justify-center border-4 border-[#fd6410] shadow-2xl mx-auto">
+                        <FaMoon className="text-[#fd6410] text-7xl animate-pulse" />
+                      </div>
                     </div>
                   </div>
                 </div>

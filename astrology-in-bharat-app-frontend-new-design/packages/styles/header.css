@@ -303,8 +303,11 @@ ul.dropdown-menu {
   padding: 40px 0;
 }
 
-.overlay-hero {
-  padding: 25px 0;
+.hero-card {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .contant-hero {
@@ -477,8 +480,6 @@ nav.navbar {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
-
-
 
 .swiper-nav-prev,
 .swiper-nav-next {
@@ -1629,5 +1630,7 @@ button.btn-close {
   background: #22c55e;
   border-radius: 50%;
   display: inline-block;
-  box-shadow: 0 0 0 2px #fff, 0 0 8px #22c55e;
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 8px #22c55e;
 }

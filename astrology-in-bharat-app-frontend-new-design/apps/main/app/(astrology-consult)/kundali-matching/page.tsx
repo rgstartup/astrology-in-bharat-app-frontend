@@ -9,8 +9,6 @@ import {
   FaMars as FaM,
   FaVenus as FaV,
   FaRegCheckCircle as FaRcc,
-  FaInfoCircle as FaIc,
-  FaUsers as FaUs,
 } from "react-icons/fa";
 const FaUserFriends = FaUf as any;
 const FaHeart = FaH as any;
@@ -19,11 +17,7 @@ const FaChevronRight = FaCr as any;
 const FaMars = FaM as any;
 const FaVenus = FaV as any;
 const FaRegCheckCircle = FaRcc as any;
-const FaInfoCircle = FaIc as any;
-const FaUsers = FaUs as any;
 
-import { HiOutlineSparkles as HiOs } from "react-icons/hi";
-const HiOutlineSparkles = HiOs as any;
 import { MdOutlineSecurity as MdOs } from "react-icons/md";
 const MdOutlineSecurity = MdOs as any;
 
@@ -35,36 +29,58 @@ const KundaliMatchingPage = () => {
     <div className="main-wrapper">
       {/* Hero Section */}
       <section className="banner-part light-back">
-        <div className="container">
-          <div className="contant-hero rounded-4 border border-[#fd64102b] shadow-xl">
-            <div className="row align-items-center">
-              <div className="col-lg-7 col-md-12">
-                <div className="hero-card">
-                  <div className="card-z">
-                    <span className="aib-trust-badge">Free Service</span>
-                    <h1>Kundali Matching</h1>
-                    <h4 className="card-title">Find Your Perfect Soulmate</h4>
-                    <p>
-                      Generate a comprehensive compatibility report based on
-                      ancient Vedic Astrology principles (Guna Milan). Enter
-                      birth details to understand the mental, physical, and
-                      spiritual alignment between partners.
-                    </p>
+        <div className="overlay-hero">
+          <div className="container">
+            <div className="contant-hero">
+              <div className="row align-items-center">
+                <div className="col-lg-7 col-md-12">
+                  <div className="hero-card shine">
+                    <div className="card-z">
+                      <span className="aib-trust-badge">Free Service</span>
+                      <h1>Kundali Matching</h1>
+                      <h4 className="card-title">Find Your Perfect Soulmate</h4>
+                      <p>
+                        Generate a comprehensive compatibility report based on
+                        birth details to understand the mental, physical, and
+                        spiritual alignment between partners.
+                      </p>
+                      <ul className="list-check">
+                        <li>
+                          <i className="fa-solid fa-check"></i> 8-Point
+                          Ashtakoot Milan
+                        </li>
+                        <li>
+                          <i className="fa-solid fa-check"></i> Mangal Dosha
+                          Checking
+                        </li>
+                        <li>
+                          <i className="fa-solid fa-check"></i> Bhakoot & Nadi
+                          Dosha
+                        </li>
+                        <li>
+                          <i className="fa-solid fa-check"></i> Conclusion &
+                          Report
+                        </li>
+                      </ul>
+                      <button className="btn-link wfc mt-4 mb-4">
+                        Match Kundali Now
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-lg-5 col-md-12 text-center">
-                <div className="right-illus">
-                  <Image
-                    src="/images/horoscope-round2.png"
-                    alt="Zodiac"
-                    width={500}
-                    height={500}
-                    className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_25s_linear_infinite] opacity-30"
-                  />
-                  <div className="relative z-10 p-5">
-                    <div className="w-[180px] h-[180px] bg-white rounded-full flex items-center justify-center border-4 border-[#fd6410] shadow-2xl mx-auto">
-                      <FaUserFriends className="text-[#fd6410] text-7xl animate-bounce" />
+                <div className="col-lg-5 col-md-12 text-center">
+                  <div className="right-illus">
+                    <Image
+                      src="/images/horoscope-round2.png"
+                      alt="Zodiac"
+                      width={500}
+                      height={500}
+                      className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_25s_linear_infinite] opacity-30"
+                    />
+                    <div className="relative z-10 p-5">
+                      <div className="w-[180px] h-[180px] bg-white rounded-full flex items-center justify-center border-4 border-[#fd6410] shadow-2xl mx-auto">
+                        <FaUserFriends className="text-[#fd6410] text-7xl animate-bounce" />
+                      </div>
                     </div>
                   </div>
                 </div>
