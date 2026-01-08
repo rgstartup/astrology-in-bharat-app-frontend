@@ -14,7 +14,7 @@ const FaSearch = FaSe as any;
 
 interface LocationAutocompleteProps {
   placeholder?: string;
-  onSelect: (location: string) => void;
+  onSelect: (location: { name: string; lat: string; lon: string }) => void;
   initialValue?: string;
   className?: string;
 }
@@ -51,8 +51,7 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
   const formatShortLocation = (result: NominatimResult) => {
     const addr = result.address;
 
-    const city =
-      addr?.city || addr?.town || addr?.village || "";
+    const city = addr?.city || addr?.town || addr?.village || "";
     const state = addr?.state || "";
     const country = addr?.country || "";
 
@@ -101,8 +100,7 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   /* ------------------------------
@@ -111,7 +109,11 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
   const handleSelect = (result: NominatimResult) => {
     const shortLocation = formatShortLocation(result);
     setQuery(shortLocation);
-    onSelect(shortLocation);
+    onSelect({
+      name: shortLocation,
+      lat: result.lat,
+      lon: result.lon,
+    });
     setIsOpen(false);
   };
 
