@@ -20,7 +20,7 @@ const ChooseYourZodiac = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {ZodiacSignsData.map((sign) => (
               <Link
-                href={`/zodiac-signs/${sign.title.toLowerCase()}`}
+                href={`/horoscope/${sign.title.toLowerCase()}`}
                 key={sign.id}
                 className="block h-full group no-underline"
               >

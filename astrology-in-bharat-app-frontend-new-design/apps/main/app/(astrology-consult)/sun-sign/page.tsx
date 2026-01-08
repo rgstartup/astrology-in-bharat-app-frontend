@@ -44,56 +44,70 @@ const SunSignPage = () => {
   return (
     <div className="main-wrapper">
       {/* Hero Section */}
-      <section className="banner-part light-back pb-0">
-        <div className="container">
-          <div className="contant-hero mb-0 rounded-b-none border-b-0">
-            <div className="row align-items-center">
-              <div className="col-lg-7 col-md-12">
-                <div className="hero-card">
-                  <div className="card-z">
-                    <span className="aib-trust-badge">
-                      Zodiac Knowledge Base
-                    </span>
-                    <h1>Sun Sign Details</h1>
-                    <h4 className="card-title">
-                      Discover the Secrets of Your Personality
-                    </h4>
-                    <p>
-                      Explore the cosmic lens of your sun sign to understand
-                      your true self, your relationships, and your destiny. Each
-                      sign carries unique energies that shape who you are.
-                    </p>
-                    <div className="flex flex-wrap gap-3 mt-4">
-                      {["Personality", "Love", "Career", "Health"].map(
-                        (trait) => (
-                          <span
-                            key={trait}
-                            className="bg-[#fde6d3] text-[#c45a13] text-[12px] font-bold px-4 py-2 rounded-full uppercase tracking-wider"
-                          >
-                            {trait}
-                          </span>
-                        )
-                      )}
+      <section className="banner-part light-back">
+        <div className="overlay-hero">
+          <div className="container">
+            <div className="contant-hero">
+              <div className="row align-items-center">
+                <div className="col-lg-7 col-md-12">
+                  <div className="hero-card shine">
+                    <div className="card-z">
+                      <span className="aib-trust-badge">
+                        Zodiac Knowledge Base
+                      </span>
+                      <h1>Sun Sign Details</h1>
+                      <h4 className="card-title">
+                        Discover the Secrets of Your Personality
+                      </h4>
+                      <p>
+                        Explore the cosmic lens of your sun sign to understand
+                        your true self, your relationships, and your destiny.
+                        Each sign carries unique energies that shape who you
+                        are.
+                      </p>
+                      <div className="flex flex-wrap gap-3 mt-4">
+                        <ul className="list-check">
+                          <li>
+                            <i className="fa-solid fa-check"></i> Know Your
+                            Zodiac
+                          </li>
+                          <li>
+                            <i className="fa-solid fa-check"></i> Personality
+                            Traits
+                          </li>
+                          <li>
+                            <i className="fa-solid fa-check"></i> Love
+                            Compatibility
+                          </li>
+                          <li>
+                            <i className="fa-solid fa-check"></i> Career &
+                            Health
+                          </li>
+                        </ul>
+                        <button className="btn-link wfc mt-4 mb-4">
+                          Select Zodiac Sign
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-lg-5 col-md-12 text-center">
-                <div className="right-illus py-10">
-                  <Image
-                    src="/images/horoscope-round2.png"
-                    alt="Zodiac Wheel"
-                    width={500}
-                    height={500}
-                    className="w-[80%] mx-auto animate-[spin_20s_linear_infinite] absolute z-0 left-[10%] top-0 opacity-20"
-                  />
-                  <Image
-                    src={selectedSign.image}
-                    alt={selectedSign.title}
-                    width={200}
-                    height={200}
-                    className="relative z-10 w-[200px] h-[200px] object-contain mx-auto drop-shadow-2xl transition-all duration-500 hover:scale-110"
-                  />
+                <div className="col-lg-5 col-md-12 text-center">
+                  <div className="right-illus py-10">
+                    <Image
+                      src="/images/horoscope-round2.png"
+                      alt="Zodiac Wheel"
+                      width={500}
+                      height={500}
+                      className="w-[80%] mx-auto animate-[spin_20s_linear_infinite] absolute z-0 left-[10%] top-0 opacity-20"
+                    />
+                    <Image
+                      src={selectedSign.image}
+                      alt={selectedSign.title}
+                      width={200}
+                      height={200}
+                      className="relative z-10 w-[200px] h-[200px] object-contain mx-auto drop-shadow-2xl transition-all duration-500 hover:scale-110"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
