@@ -145,7 +145,15 @@ const OurAstrologer = () => {
     };
 
     const specializations = [
-        "Numerology", "Vedic", "Zodiac Compatibility", "Astrocartography", "Lunar Node Analysis"
+        "Numerology", "Vedic", "Zodiac Compatibility", "Astrocartography", "Lunar Node Analysis",
+"Love Problem Solution", 
+"Marriage Problem", 
+ 
+"Divorce Problem Solution", "Breakup Problem Solution", 
+"Get Your Ex Love Back",
+"Family Problem Solution",
+"Dispute Solution",
+"Childless Couple Solution"
     ];
 
     const applyFilters = () => {

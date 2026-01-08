@@ -33,23 +33,7 @@ const AstrologyServices = () => {
 
         <br className="mobile-none" />
 
-        <div className="light-card">
-          <h2 className="title-line mb-4 text-black">
-            <span>Consult The Right Astrologer For You</span>
-          </h2>
-          <div className="row">
-            {ConsultationServicesData.map((service) => (
-              <div className="col-sm-3" key={service.id}>
-                <Link
-                  href={`/services/${service.slug}`}
-                  className="block no-underline hover:text-inherit"
-                >
-                  <ConsultationCard item={service} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
+ 
       </div>
     </section>
   );
