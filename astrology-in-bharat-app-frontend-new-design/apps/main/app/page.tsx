@@ -7,6 +7,7 @@ import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
 import Testimonial from "@/components/layout/main/Testimonial";
 import CTA from "@/components/layout/main/CTA";
 import HeroSection from "@/components/layout/main/HeroSection";
+import AstrologerConsultant from "@/components/layout/main/AstrologerConsultant";
 import { getExperts } from "@/libs/api-experts";
 
 export default async function Page(props: {
@@ -46,6 +47,7 @@ export default async function Page(props: {
         initialError={response.error}
       />
       <AstrologerServices />
+      <AstrologerConsultant />
       <ChooseYourZodiac />
       <AstrologyProduct />
       <WhyChooseUs />
