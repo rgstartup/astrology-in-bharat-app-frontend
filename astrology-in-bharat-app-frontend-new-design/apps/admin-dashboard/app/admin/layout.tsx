@@ -30,6 +30,7 @@ import {
   Bell,
   Search,
   Package,
+  ShoppingBag,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { SearchInput } from "../../../shared/components/SearchInput";
@@ -57,6 +58,7 @@ const menuItems: MenuItem[] = [
   { label: "Dispute Resolution", href: "/admin/disputes", icon: AlertCircle },
   { label: "Reviews Moderation", href: "/admin/reviews", icon: Star },
   { label: "Analytics Dashboard", href: "/admin/analytics", icon: BarChart3 },
+  { label: "Products", href: "/admin/products", icon: ShoppingBag },
   // { label: "Earnings", href: "/admin/earnings", icon: IndianRupee },
   {
     label: "Account",
