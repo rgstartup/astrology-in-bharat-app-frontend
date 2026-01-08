@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
+import { FaRedoAlt, FaHome } from "react-icons/fa";
 
 export default function Error({
   error,
@@ -10,49 +12,53 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
+    console.error("Error:", error);
   }, [error]);
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center bg-gray-50 px-4 text-center">
-      <div className="rounded-2xl bg-white p-8 shadow-xl">
-        <div className="mb-4 flex justify-center text-red-500">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-16 w-16"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
+    <div className="flex min-h-[calc(90vh-100px)] items-center justify-center bg-[#fafafa] px-4 font-poppins">
+      <div className="w-full max-w-3/5  rounded-2xl border border-gray-200 bg-white px-8 py-16 text-center shadow-sm">
+        {/* Icon */}
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-orange-50">
+          <span className="text-2xl font-semibold text-[#fd6410]">!</span>
         </div>
-        <h2 className="mb-2 text-2xl font-bold text-gray-800">
-          Something went wrong!
-        </h2>
-        <p className="mb-6 text-gray-600">
-          We encountered an unexpected error. Please try again.
+
+        {/* Title */}
+        <h1 className="mb-2 text-2xl font-semibold text-gray-800">
+          Something went wrong
+        </h1>
+
+        {/* Description */}
+        <p className="mb-6 text-sm leading-relaxed text-gray-500">
+          We couldn’t complete your request right now. Please try again or go
+          back to the homepage.
         </p>
-        <div className="flex justify-center gap-4">
+
+        {/* Actions */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <button
             onClick={() => reset()}
-            className="rounded-full bg-[#fd6410] px-6 py-2 font-semibold text-white transition hover:bg-[#e35d0e]"
+            className="flex items-center justify-center gap-2 rounded-pill bg-[#fd6410] px-6 py-2.5 text-sm font-medium text-white transition hover:bg-[#e65a0e]"
           >
+            <FaRedoAlt size={14} />
             Try Again
           </button>
-          <button
-            onClick={() => (window.location.href = "/")}
-            className="rounded-full border border-gray-300 bg-white px-6 py-2 font-semibold text-gray-700 transition hover:bg-gray-50"
+
+          <Link
+            href="/"
+            className="flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-black transition hover:bg-gray-50"
           >
+            <FaHome size={14} />
             Go Home
-          </button>
+          </Link>
         </div>
+
+        {/* Optional Debug ID */}
+        {error.digest && (
+          <p className="mt-6 text-[11px] text-gray-400">
+            Reference ID: {error.digest}
+          </p>
+        )}
       </div>
     </div>
   );

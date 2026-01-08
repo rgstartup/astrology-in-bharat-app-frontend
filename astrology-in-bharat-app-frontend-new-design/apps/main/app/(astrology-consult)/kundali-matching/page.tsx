@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import NextImage from "next/image";
 const Image = NextImage as any;
@@ -9,6 +11,10 @@ import {
   FaMars as FaM,
   FaVenus as FaV,
   FaRegCheckCircle as FaRcc,
+  FaUser as FaU,
+  FaCalendarAlt as FaCa,
+  FaClock as FaC,
+  FaMapMarkerAlt as FaMma,
 } from "react-icons/fa";
 const FaUserFriends = FaUf as any;
 const FaHeart = FaH as any;
@@ -17,12 +23,17 @@ const FaChevronRight = FaCr as any;
 const FaMars = FaM as any;
 const FaVenus = FaV as any;
 const FaRegCheckCircle = FaRcc as any;
+const FaUser = FaU as any;
+const FaCalendarAlt = FaCa as any;
+const FaClock = FaC as any;
+const FaMapMarkerAlt = FaMma as any;
 
 import { MdOutlineSecurity as MdOs } from "react-icons/md";
 const MdOutlineSecurity = MdOs as any;
 
 import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
 import CTA from "@/components/layout/main/CTA";
+import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
 
 const KundaliMatchingPage = () => {
   return (
@@ -96,46 +107,51 @@ const KundaliMatchingPage = () => {
           <div className="row g-4">
             {/* Boy's Details */}
             <div className="col-lg-6">
-              <div className="light-card border border-[#fd64102b] p-8 h-100 shadow-xl group">
+              <div className="light-card border rounded-4 border-[#fd64102b] p-8 h-100 shadow-xl group transition-all duration-300 hover:shadow-2xl hover:border-[#fd641055]">
                 <div className="flex items-center gap-4 mb-8 border-b border-[#fd64101a] pb-4">
-                  <div className="bg-blue-50 p-3 rounded-full text-blue-500 group-hover:scale-110 transition-transform">
+                  <div className="bg-blue-500/10 p-3 rounded-2xl text-blue-600 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-sm">
                     <FaMars size={24} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-[#301118] mb-0">
                       Boy&apos;s Details
                     </h3>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-                      Groom Information
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+                      The Groom&apos;s Profile
                     </p>
                   </div>
                 </div>
 
-                <form className="row g-3">
+                <form className="row g-4">
                   <div className="col-12">
-                    <input
-                      type="text"
-                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
-                      placeholder="Boy's Full Name"
-                    />
+                    <div className="relative group/input">
+                      <input
+                        type="text"
+                        className="form-control rounded-3 py-3 pl-10 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
+                        placeholder="Boy's Full Name"
+                      />
+                    </div>
                   </div>
                   <div className="col-md-6">
-                    <input
-                      type="date"
-                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
-                    />
+                    <div className="relative group/input">
+                      <input
+                        type="date"
+                        className="form-control rounded-3 py-3 pl-10 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
+                      />
+                    </div>
                   </div>
                   <div className="col-md-6">
-                    <input
-                      type="time"
-                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
-                    />
+                    <div className="relative group/input">
+                      <input
+                        type="time"
+                        className="form-control rounded-3 py-3 pl-10 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
+                      />
+                    </div>
                   </div>
                   <div className="col-12">
-                    <input
-                      type="text"
-                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
-                      placeholder="Birth Place (City, State)"
+                    <LocationAutocomplete
+                      placeholder="Boy's Birth Place (City, State)"
+                      onSelect={(val) => console.log("Boy location:", val)}
                     />
                   </div>
                 </form>
@@ -144,46 +160,51 @@ const KundaliMatchingPage = () => {
 
             {/* Girl's Details */}
             <div className="col-lg-6">
-              <div className="light-card border border-[#fd64102b] p-8 h-100 shadow-xl group">
+              <div className="light-card border rounded-4 border-[#fd64102b] p-8 h-100 shadow-xl group transition-all duration-300 hover:shadow-2xl hover:border-[#fd641055]">
                 <div className="flex items-center gap-4 mb-8 border-b border-[#fd64101a] pb-4">
-                  <div className="bg-pink-50 p-3 rounded-full text-pink-500 group-hover:scale-110 transition-transform">
+                  <div className="bg-pink-500/10 p-3 rounded-2xl text-pink-600 group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition-all duration-500 shadow-sm">
                     <FaVenus size={24} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-[#301118] mb-0">
                       Girl&apos;s Details
                     </h3>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-                      Bride Information
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+                      The Bride&apos;s Profile
                     </p>
                   </div>
                 </div>
 
-                <form className="row g-3">
+                <form className="row g-4">
                   <div className="col-12">
-                    <input
-                      type="text"
-                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
-                      placeholder="Girl's Full Name"
-                    />
+                    <div className="relative group/input">
+                      <input
+                        type="text"
+                        className="form-control rounded-3 py-3 pl-10 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
+                        placeholder="Girl's Full Name"
+                      />
+                    </div>
                   </div>
                   <div className="col-md-6">
-                    <input
-                      type="date"
-                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
-                    />
+                    <div className="relative group/input">
+                      <input
+                        type="date"
+                        className="form-control rounded-3 py-3 pl-10 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
+                      />
+                    </div>
                   </div>
                   <div className="col-md-6">
-                    <input
-                      type="time"
-                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
-                    />
+                    <div className="relative group/input">
+                      <input
+                        type="time"
+                        className="form-control rounded-3 py-3 pl-10 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
+                      />
+                    </div>
                   </div>
                   <div className="col-12">
-                    <input
-                      type="text"
-                      className="form-control rounded-3 py-3 border-0 bg-gray-50 text-sm shadow-sm"
-                      placeholder="Birth Place (City, State)"
+                    <LocationAutocomplete
+                      placeholder="Girl's Birth Place (City, State)"
+                      onSelect={(val) => console.log("Girl location:", val)}
                     />
                   </div>
                 </form>
@@ -192,7 +213,7 @@ const KundaliMatchingPage = () => {
           </div>
 
           <div className="text-center mt-12">
-            <button className="btn-link py-4 px-12 uppercase tracking-[3px] text-sm font-black shadow-2xl hover:scale-105 transition-transform flex items-center justify-center gap-3 mx-auto border-0">
+            <button className="btn-link py-3 px-4 wfc mx-auto uppercase tracking-[3px] text-sm font-black shadow-2xl hover:scale-105 transition-transform flex items-center justify-center gap-3  border-0">
               Generate Detailed Report{" "}
               <FaChevronRight className="animate-pulse" />
             </button>
@@ -212,7 +233,7 @@ const KundaliMatchingPage = () => {
               <h2 className="text-4xl font-bold mb-6">
                 Importance of <span className="text-[#fd6410]">Guna Milan</span>
               </h2>
-              <p className="text-orange-100/70 mb-8 leading-relaxed italic">
+              <p className="text-orange-100/90 mb-8 leading-relaxed italic">
                 In Vedic Astrology, matching horoscopes is vital for a happy and
                 enduring marriage. The Guna Milan system checks 8 different
                 aspects (Ashtakoot) to ensure overall compatibility.
@@ -277,38 +298,56 @@ const KundaliMatchingPage = () => {
       {/* Simple Information Section */}
       <section className="space-section light-back">
         <div className="container">
+          <div className="row justify-content-center mb-12">
+            <div className="col-lg-7 text-center">
+              <span className="aib-trust-badge mb-3">Service Excellence</span>
+              <h2 className="text-3xl font-bold text-[#301118]">
+                Expert Matching Insights
+              </h2>
+              <p className="text-gray-500 text-sm mt-3">
+                Discover why thousands of couples trust our Vedic compatibility
+                reports for their journey together.
+              </p>
+            </div>
+          </div>
           <div className="row g-4">
             <div className="col-md-4">
-              <div className="light-card border border-[#fd64102b] p-8 text-center h-100 shadow-xl border-b-4 border-b-[#fd6410]">
-                <div className="bg-orange-50 w-16 h-16 rounded-4 flex items-center justify-center mx-auto mb-6 text-[#fd6410]">
-                  <FaShieldAlt size={30} />
+              <div className="light-card border border-[#fd64102b] rounded-4 p-8 text-center h-100 shadow-xl border-b-4 border-b-[#fd6410] group transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:bg-orange-50/10">
+                <div className="bg-orange-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-[#fd6410] group-hover:rotate-12 transition-transform duration-500 shadow-sm">
+                  <FaShieldAlt size={34} />
                 </div>
-                <h4 className="text-lg font-bold mb-3">Vedic Standards</h4>
-                <p className="text-xs text-gray-500 leading-relaxed italic m-0">
+                <h4 className="text-xl font-bold mb-3 text-[#301118]">
+                  Vedic Standards
+                </h4>
+                <p className="text-sm text-gray-500 leading-relaxed italic m-0 px-2">
                   Our calculations follow the authentic Parashara system for
                   highest accuracy.
                 </p>
               </div>
             </div>
             <div className="col-md-4">
-              <div className="light-card border border-[#fd64102b] p-8 text-center h-100 shadow-xl border-b-4 border-b-blue-500">
-                <div className="bg-blue-50 w-16 h-16 rounded-4 flex items-center justify-center mx-auto mb-6 text-blue-500">
-                  <FaMars size={30} />
+              <div className="light-card border border-[#fd64102b] rounded-4 p-8 text-center h-100 shadow-xl border-b-4 border-b-blue-500 group transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:bg-blue-50/10">
+                <div className="bg-blue-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-500 group-hover:rotate-12 transition-transform duration-500 shadow-sm">
+                  <FaMars size={34} />
                 </div>
-                <h4 className="text-lg font-bold mb-3">Manglik Check</h4>
-                <p className="text-xs text-gray-500 leading-relaxed italic m-0">
+                <h4 className="text-xl font-bold mb-3 text-[#301118]">
+                  Manglik Check
+                </h4>
+                <p className="text-sm text-gray-500 leading-relaxed italic m-0 px-2">
                   Deep analysis of Mars position for Dosha detection and
                   remedies.
                 </p>
               </div>
             </div>
             <div className="col-md-4">
-              <div className="light-card border border-[#fd64102b] p-8 text-center h-100 shadow-xl border-b-4 border-b-pink-500">
-                <div className="bg-pink-50 w-16 h-16 rounded-4 flex items-center justify-center mx-auto mb-6 text-pink-500">
-                  <FaVenus size={30} />
+              <div className="light-card border border-[#fd64102b] rounded-4 p-8 text-center h-100 shadow-xl border-b-4 border-b-pink-500 group transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:bg-pink-50/10">
+                <div className="bg-pink-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-pink-500 group-hover:rotate-12 transition-transform duration-500 shadow-sm">
+                  <FaVenus size={34} />
                 </div>
-                <h4 className="text-lg font-bold mb-3">Love Compatibility</h4>
-                <p className="text-xs text-gray-500 leading-relaxed italic m-0">
+                <h4 className="text-xl font-bold mb-3 text-[#301118]">
+                  Love Compatibility
+                </h4>
+                <p className="text-sm text-gray-500 leading-relaxed italic m-0 px-2">
                   Understand the emotional and psychological bond between both
                   charts.
                 </p>
