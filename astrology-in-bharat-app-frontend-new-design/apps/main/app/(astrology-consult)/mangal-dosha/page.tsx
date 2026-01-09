@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useRef } from "react";
 import NextImage from "next/image";
 const Image = NextImage as any;
 import {
@@ -13,6 +15,9 @@ import {
   FaCheck as FaC,
   FaChevronRight as FaCr,
   FaExclamationTriangle as FaEt,
+  FaSpinner as FaSp,
+  FaMars as FaMa,
+  FaCheckCircle as FaCc,
 } from "react-icons/fa";
 const FaCalendarAlt = FaCa as any;
 const FaMapMarkerAlt = FaMma as any;
@@ -25,14 +30,143 @@ const FaPhoneAlt = FaPa as any;
 const FaCheck = FaC as any;
 const FaChevronRight = FaCr as any;
 const FaExclamationTriangle = FaEt as any;
+const FaSpinner = FaSp as any;
+const FaMars = FaMa as any;
+const FaCheckCircle = FaCc as any;
 
 import { GiMeditation as GiM } from "react-icons/gi";
 const GiMeditation = GiM as any;
 
 import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
 import CTA from "@/components/layout/main/CTA";
+import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
+import axios from "axios";
 
 const MangalDoshaPage = () => {
+  const [details, setDetails] = useState({
+    name: "",
+    gender: "male",
+    date: "",
+    time: "",
+    lat: "",
+    lon: "",
+    locationName: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Helper to safely render any content (string, object, array) to avoid "Objects as React Child" error
+  const renderContent = (content: any): React.ReactNode => {
+    if (content === null || content === undefined) return "";
+    if (typeof content === "string" || typeof content === "number")
+      return content;
+    if (Array.isArray(content)) {
+      return content.map((item, i) => (
+        <React.Fragment key={i}>
+          {i > 0 && ", "}
+          {renderContent(item)}
+        </React.Fragment>
+      ));
+    }
+    if (typeof content === "object") {
+      // Common Prokerala object properties
+      if (content.description) return content.description;
+      if (content.name) return content.name;
+      if (content.title) return content.title;
+      return JSON.stringify(content);
+    }
+    return String(content);
+  };
+
+  const handleInputChange = (field: string, value: any) => {
+    setDetails((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleLocationSelect = (location: {
+    name: string;
+    lat: string;
+    lon: string;
+  }) => {
+    setDetails((prev) => ({
+      ...prev,
+      locationName: location.name,
+      lat: location.lat,
+      lon: location.lon,
+    }));
+  };
+
+  const handleAnalyze = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setResult(null);
+
+    if (
+      !details.date ||
+      !details.time ||
+      !details.lat ||
+      !details.lon ||
+      !details.name
+    ) {
+      setError("Please fill in all details including birth location.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      console.log("Submitting Mangal Dosha Request...");
+      const response = await axios.get("/api/mangal-dosha", {
+        params: {
+          dob: `${details.date}T${details.time}:00+05:30`,
+          lat: details.lat,
+          lon: details.lon,
+        },
+      });
+
+      console.log("Mangal Dosha Full API Response Object:", response);
+
+      // Navigate possible nesting: response.data -> .data -> .mangal_dosha
+      let rawData = response.data;
+      if (rawData?.data) rawData = rawData.data;
+
+      const finalData = rawData?.mangal_dosha || rawData;
+
+      console.log("Deeply Extracted Result Data:", finalData);
+
+      if (
+        finalData &&
+        (finalData.description || finalData.has_dosha !== undefined)
+      ) {
+        setResult(finalData);
+        setTimeout(() => {
+          resultsRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 300);
+      } else {
+        console.error(
+          "Data validation failed. Keys found:",
+          finalData ? Object.keys(finalData) : "null"
+        );
+        setError(
+          "The API returned data in an unexpected format. Please check the console."
+        );
+      }
+    } catch (err: any) {
+      console.error("Frontend Analyze Error:", err);
+      const errMsg =
+        err.response?.data?.error ||
+        err.message ||
+        "Failed to generate report. Please try again.";
+      setError(typeof errMsg === "string" ? errMsg : JSON.stringify(errMsg));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="main-wrapper">
       {/* Hero Section */}
@@ -74,7 +208,12 @@ const MangalDoshaPage = () => {
                           Remedies
                         </li>
                       </ul>
-                      <button className="btn-link wfc mt-4 mb-4">
+                      <button
+                        className="btn-link wfc mt-4 mb-4"
+                        onClick={() =>
+                          window.scrollTo({ top: 600, behavior: "smooth" })
+                        }
+                      >
                         Check Mangal Dosha
                       </button>
                     </div>
@@ -89,10 +228,14 @@ const MangalDoshaPage = () => {
                       height={500}
                       className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_30s_linear_infinite] opacity-30"
                     />
-                    <div className="relative z-10 p-5">
-                      <div className="w-[180px] h-[180px] bg-white rounded-full flex items-center justify-center border-4 border-[#fd6410] shadow-2xl mx-auto">
-                        <FaExclamationTriangle className="text-[#fd6410] text-7xl animate-pulse" />
-                      </div>
+                    <div className="relative z-10 p-5 transform hover:scale-105 transition-transform duration-500">
+                      <Image
+                        src="/images/mangal-dosha-hero.png"
+                        alt="Mangal Dosha Analysis"
+                        width={500}
+                        height={500}
+                        className="w-full h-auto drop-shadow-2xl rounded-3xl"
+                      />
                     </div>
                   </div>
                 </div>
@@ -123,7 +266,7 @@ const MangalDoshaPage = () => {
                   </div>
                 </div>
 
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={handleAnalyze}>
                   <div className="row g-3">
                     <div className="col-md-6">
                       <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
@@ -133,15 +276,25 @@ const MangalDoshaPage = () => {
                         type="text"
                         className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
                         placeholder="Enter name"
+                        value={details.name}
+                        onChange={(e) =>
+                          handleInputChange("name", e.target.value)
+                        }
                       />
                     </div>
                     <div className="col-md-6">
                       <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
                         Gender
                       </label>
-                      <select className="form-select rounded-3 py-3 border-0 shadow-sm bg-gray-50 text-sm">
-                        <option>Male</option>
-                        <option>Female</option>
+                      <select
+                        className="form-select rounded-3 py-3 border-0 shadow-sm bg-gray-50 text-sm"
+                        value={details.gender}
+                        onChange={(e) =>
+                          handleInputChange("gender", e.target.value)
+                        }
+                      >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
                       </select>
                     </div>
                   </div>
@@ -153,6 +306,10 @@ const MangalDoshaPage = () => {
                       <input
                         type="date"
                         className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
+                        value={details.date}
+                        onChange={(e) =>
+                          handleInputChange("date", e.target.value)
+                        }
                       />
                     </div>
                     <div className="col-md-4">
@@ -162,34 +319,44 @@ const MangalDoshaPage = () => {
                       <input
                         type="time"
                         className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50"
+                        value={details.time}
+                        onChange={(e) =>
+                          handleInputChange("time", e.target.value)
+                        }
                       />
                     </div>
                     <div className="col-md-4">
                       <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                        Am/Pm
+                        Birth Place
                       </label>
-                      <select className="form-select rounded-3 py-3 border-0 shadow-sm bg-gray-50 text-sm">
-                        <option>AM</option>
-                        <option>PM</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">
-                      Birth Place
-                    </label>
-                    <div className="relative">
-                      <FaMapMarkerAlt className="absolute left-3 top-4 text-gray-300" />
-                      <input
-                        type="text"
-                        className="form-control rounded-3 py-3 border-0 shadow-sm bg-gray-50 ps-10"
-                        placeholder="Enter city name"
+                      <LocationAutocomplete
+                        placeholder="City"
+                        onSelect={handleLocationSelect}
+                        value={details.locationName}
                       />
                     </div>
                   </div>
-                  <button className="btn-link py-4 mt-6 uppercase tracking-widest text-[12px] font-bold">
-                    Analyze Mangal Dosha Now{" "}
-                    <FaChevronRight className="ms-2" size={10} />
+
+                  {error && (
+                    <div className="text-red-500 text-sm font-bold mt-2">
+                      {error}
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="btn-link py-4 mt-6 uppercase tracking-widest text-[12px] font-bold w-full flex items-center justify-center gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        Analyzing <FaSpinner className="animate-spin" />
+                      </>
+                    ) : (
+                      <>
+                        Analyze Mangal Dosha Now <FaChevronRight size={10} />
+                      </>
+                    )}
                   </button>
                 </form>
               </div>
@@ -205,7 +372,7 @@ const MangalDoshaPage = () => {
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-linear-to-t from-[#301118] to-transparent p-6 flex flex-col justify-end">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#301118] to-transparent p-6 flex flex-col justify-end">
                     <h3 className="text-xl font-bold text-white mb-2">
                       What is Mangal Dosha?
                     </h3>
@@ -240,6 +407,162 @@ const MangalDoshaPage = () => {
         </div>
       </section>
 
+      {/* Results Section */}
+      {result && (
+        <section ref={resultsRef} className="space-section bg-white pt-5">
+          <div className="container">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-[#fff9f6] rounded-[3rem] shadow-[0_20px_50px_rgba(253,100,16,0.1)] border border-orange-100 overflow-hidden">
+                <div className="p-8 md:p-12">
+                  <div className="text-center mb-10">
+                    <div className="inline-flex items-center gap-2 bg-[#fd641012] text-[#fd6410] px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-6">
+                      Analysis Report
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-black text-[#301118] mb-4">
+                      Your Mangal Dosha{" "}
+                      <span className="text-[#fd6410]">Status</span>
+                    </h2>
+                    <p className="text-gray-500 max-w-lg mx-auto">
+                      Based on the birth details provided, here is the detailed
+                      analysis of Mars position in your horoscope.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col md:flex-row gap-8 items-stretch mb-8">
+                    {/* Status Card */}
+                    <div className="flex-1">
+                      <div
+                        className={`h-full rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center relative overflow-hidden ${
+                          result.has_dosha
+                            ? "bg-red-50 border border-red-100"
+                            : "bg-green-50 border border-green-100"
+                        }`}
+                      >
+                        <div
+                          className={`w-24 h-24 rounded-full flex items-center justify-center mb-6 shadow-xl ${
+                            result.has_dosha
+                              ? "bg-red-500 text-white"
+                              : "bg-green-500 text-white"
+                          }`}
+                        >
+                          {result.has_dosha ? (
+                            <FaMars size={40} className="animate-pulse" />
+                          ) : (
+                            <FaCheckCircle size={40} />
+                          )}
+                        </div>
+                        <h3
+                          className={`text-2xl font-black uppercase tracking-wider mb-2 ${
+                            result.has_dosha ? "text-red-600" : "text-green-600"
+                          }`}
+                        >
+                          {result.has_dosha
+                            ? "Manglik Dosha Present"
+                            : "No Mangal Dosha"}
+                        </h3>
+                        <p
+                          className={`font-bold text-sm uppercase tracking-widest ${
+                            result.has_dosha ? "text-red-400" : "text-green-400"
+                          }`}
+                        >
+                          {result.has_dosha
+                            ? "Requires Attention"
+                            : "Favorable Chart"}
+                        </p>
+                        {result.type && (
+                          <div className="mt-4 px-4 py-1.5 bg-white/50 rounded-full text-xs font-bold text-gray-600 border border-gray-100">
+                            Type: {renderContent(result.type)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Description Card */}
+                    <div className="flex-[1.5]">
+                      <div className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-sm border border-orange-50 h-full flex flex-col justify-center">
+                        <h4 className="text-lg font-bold text-[#301118] mb-4 flex items-center gap-2">
+                          <FaChartLine className="text-[#fd6410]" /> Detailed
+                          Analysis
+                        </h4>
+                        <p className="text-gray-600 leading-loose italic mb-6">
+                          &quot;{renderContent(result.description)}&quot;
+                        </p>
+
+                        {!result.has_dosha && (
+                          <div className="bg-green-50 p-4 rounded-2xl border border-green-100 flex gap-3 items-start">
+                            <FaCheckCircle className="text-green-500 mt-1 shrink-0" />
+                            <p className="text-green-800 text-sm m-0 font-medium">
+                              Your chart is free from the adverse effects of
+                              Mars. This is considered auspicious for marriage
+                              and partnerships.
+                            </p>
+                          </div>
+                        )}
+
+                        {result.has_dosha && (
+                          <div className="bg-red-50 p-4 rounded-2xl border border-red-100 flex gap-3 items-start">
+                            <FaExclamationTriangle className="text-red-500 mt-1 shrink-0" />
+                            <p className="text-red-800 text-sm m-0 font-medium">
+                              Since Mangal Dosha is present, it is highly
+                              recommended to consult with an astrologer for
+                              Kumbh Vivah or other remedies before marriage.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Exceptions & Remedies Section (New) */}
+                  {(result.exceptions?.length > 0 ||
+                    result.remedies?.length > 0) && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {result.exceptions?.length > 0 && (
+                        <div className="bg-orange-50 rounded-[2rem] p-8 border border-orange-100">
+                          <h4 className="text-lg font-bold text-[#301118] mb-4 flex items-center gap-2">
+                            <FaCheckCircle className="text-[#fd6410]" />{" "}
+                            Exceptions Found
+                          </h4>
+                          <ul className="space-y-2">
+                            {result.exceptions.map((ex: any, idx: number) => (
+                              <li
+                                key={idx}
+                                className="text-sm text-gray-700 list-disc list-inside"
+                              >
+                                {renderContent(ex)}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {result.remedies?.length > 0 && (
+                        <div className="bg-[#301118] text-white rounded-[2rem] p-8 border border-white/10">
+                          <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                            <GiMeditation className="text-[#fd6410]" />{" "}
+                            Recommended Remedies
+                          </h4>
+                          <ul className="space-y-2">
+                            {result.remedies.map((rem: any, idx: number) => (
+                              <li
+                                key={idx}
+                                className="text-sm text-gray-300 list-disc list-inside"
+                              >
+                                {renderContent(rem)}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Detailed Info Section */}
       <section className="space-section bg-[#301118] text-white">
         <div className="container">
@@ -261,7 +584,7 @@ const MangalDoshaPage = () => {
                   a final verdict.
                 </p>
               </div>
-              <button className="btn-link py-3 px-8 mt-8 inline-flex w-auto uppercase tracking-widest text-[11px]">
+              <button className="btn-link py-3 px-12 mt-8 inline-flex wfc uppercase tracking-widest text-[11px]">
                 Consult remedies <FaChevronRight className="ms-2" size={10} />
               </button>
             </div>
@@ -300,10 +623,10 @@ const MangalDoshaPage = () => {
                       >
                         {effect.icon}
                       </div>
-                      <h4 className="text-[#301118] font-bold text-sm mb-1">
+                      <h4 className="text-black font-bold text-sm mb-1">
                         {effect.title}
                       </h4>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase">
+                      <p className="text-[10px] text-gray-600 font-semibold uppercase">
                         {effect.desc}
                       </p>
                     </div>
@@ -353,7 +676,7 @@ const MangalDoshaPage = () => {
             ))}
           </div>
           <div className="text-center mt-10">
-            <button className="btn-link px-12 py-3 inline-flex w-auto border-0 bg-transparent text-[#fd6410] hover:text-[#301118] p-0">
+            <button className="btn-link px-8 py-3 inline-flex wfc border-0 bg-transparent text-[#fd6410] hover:text-[#301118] mx-auto">
               View All Experts <FaChevronRight className="ms-2" size={10} />
             </button>
           </div>

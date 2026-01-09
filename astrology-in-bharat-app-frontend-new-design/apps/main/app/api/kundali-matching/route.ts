@@ -13,6 +13,16 @@ export async function GET(request: Request) {
     const girl_lat = searchParams.get("girl_lat");
     const girl_lon = searchParams.get("girl_lon");
 
+    console.log("=== Kundali Matching API Request Started ===");
+    console.log("Parameters Received:", {
+      boy_dob,
+      boy_lat,
+      boy_lon,
+      girl_dob,
+      girl_lat,
+      girl_lon,
+    });
+
     if (
       !boy_dob ||
       !boy_lat ||
@@ -21,6 +31,7 @@ export async function GET(request: Request) {
       !girl_lat ||
       !girl_lon
     ) {
+      console.error("Missing mandatory parameters");
       return NextResponse.json(
         { error: "Missing mandatory parameters for boy or girl" },
         { status: 400 }
@@ -28,6 +39,7 @@ export async function GET(request: Request) {
     }
 
     // 1. Get Access Token
+    console.log("Step 1: Fetching Access Token...");
     const tokenResponse = await fetch("https://api.prokerala.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -39,6 +51,7 @@ export async function GET(request: Request) {
     });
 
     const tokenData = await tokenResponse.json();
+    console.log("Token Response Status:", tokenResponse.status);
 
     if (!tokenData.access_token) {
       console.error("Matching Auth Failed:", tokenData);
@@ -47,6 +60,7 @@ export async function GET(request: Request) {
         { status: 500 }
       );
     }
+    console.log("Token acquired successfully.");
 
     // 2. Fetch Kundli Matching Data
     const boyCoords = `${boy_lat},${boy_lon}`;
@@ -60,18 +74,106 @@ export async function GET(request: Request) {
       girl_coordinates: girlCoords,
     });
 
-    const dataResponse = await fetch(
-      `https://api.prokerala.com/v2/astrology/kundli-matching?${params.toString()}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${tokenData.access_token}`,
-          Accept: "application/json",
-        },
-      }
-    );
+    const apiUrl = `https://api.prokerala.com/v2/astrology/kundli-matching?${params.toString()}`;
+    console.log("Step 2: Calling Prokerala API...");
+    console.log("API URL:", apiUrl);
 
-    const result = await dataResponse.json();
+    const dataResponse = await fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tokenData.access_token}`,
+        Accept: "application/json",
+      },
+    });
+
+    // const result = await dataResponse.json(); <--for live data
+    const result = {
+      status: "ok",
+      data: {
+        girl_info: {
+          koot: {
+            varna: "Brahmin",
+            vasya: "Jalachara",
+            tara: "Janma",
+            yoni: "Gau",
+            graha_maitri: "Jupiter",
+            gana: "Manushya",
+            bhakoot: "Meena",
+            nadi: "Madhya",
+          },
+          nakshatra: {
+            id: 25,
+            name: "Uttara Bhadrapada",
+            lord: {
+              id: 6,
+              name: "Saturn",
+              vedic_name: "Shani",
+            },
+            pada: 3,
+          },
+          rasi: {
+            id: 11,
+            name: "Meena",
+            lord: {
+              id: 2,
+              name: "Mercury",
+              vedic_name: "Budha",
+            },
+          },
+        },
+        boy_info: {
+          koot: {
+            varna: "Brahmin",
+            vasya: "Jalachara",
+            tara: "Janma",
+            yoni: "Gau",
+            graha_maitri: "Jupiter",
+            gana: "Manushya",
+            bhakoot: "Meena",
+            nadi: "Madhya",
+          },
+          nakshatra: {
+            id: 25,
+            name: "Uttara Bhadrapada",
+            lord: {
+              id: 6,
+              name: "Saturn",
+              vedic_name: "Shani",
+            },
+            pada: 3,
+          },
+          rasi: {
+            id: 11,
+            name: "Meena",
+            lord: {
+              id: 2,
+              name: "Mercury",
+              vedic_name: "Budha",
+            },
+          },
+        },
+        message: {
+          type: "bad",
+          description:
+            "Union is not recommended due to the presence of Nadi Maha Dosha.  Since Gun Milan Nadi Koot is given supreme priority during match making. The Boy and Girl are not affected by Mangal Dosha",
+        },
+        guna_milan: {
+          total_points: 28,
+          maximum_points: 36,
+          ashtakoot: {
+            varna: { score: 1, maximum_score: 1 },
+            vasya: { score: 2, maximum_score: 2 },
+            tara: { score: 1.5, maximum_score: 3 },
+            yoni: { score: 4, maximum_score: 4 },
+            graha_maitri: { score: 5, maximum_score: 5 },
+            gana: { score: 1, maximum_score: 6 },
+            bhakoot: { score: 7, maximum_score: 7 },
+            nadi: { score: 6.5, maximum_score: 8 },
+          },
+        },
+      },
+    };
+    console.log("Prokerala API Response Status:", dataResponse.status);
 
     if (!dataResponse.ok) {
       console.error("Prokerala Matching Error Result:", result);
@@ -81,6 +183,7 @@ export async function GET(request: Request) {
       );
     }
 
+    console.log("API Request Successful. Returning result.");
     return NextResponse.json(result);
   } catch (error: any) {
     console.error(
