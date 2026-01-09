@@ -6,6 +6,7 @@ export interface Product {
     price: number;
     originalPrice: number;
     imageUrl: string;
+    isActive?: boolean;
 }
 
 const getCookie = (name: string) => {

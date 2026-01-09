@@ -15,6 +15,12 @@ const ImageIconComponent = ImageIcon as any;
 const PencilIcon = Pencil as any;
 const Trash2Icon = Trash2 as any;
 
+// Helper to safely parse numbers
+const parsePrice = (value: any) => {
+    const num = parseFloat(value);
+    return isNaN(num) ? 0 : num;
+};
+
 export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(false);
@@ -30,6 +36,7 @@ export default function ProductsPage() {
         price: 0,
         originalPrice: 0,
         imageUrl: "",
+        isActive: true,
     });
     const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -92,6 +99,7 @@ export default function ProductsPage() {
             price: 0,
             originalPrice: 0,
             imageUrl: "",
+            isActive: true,
         });
         setEditingId(null);
         setSelectedFile(null);
@@ -106,6 +114,7 @@ export default function ProductsPage() {
             price: product.price,
             originalPrice: product.originalPrice,
             imageUrl: product.imageUrl,
+            isActive: product.isActive !== undefined ? product.isActive : true,
         });
         setEditingId(product.id || product._id || null);
 
@@ -247,6 +256,16 @@ export default function ProductsPage() {
                                 </button>
                             </div>
 
+                            {/* Discount Preview */}
+                            {parsePrice(formData.originalPrice) > parsePrice(formData.price) && parsePrice(formData.originalPrice) > 0 && (
+                                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg animate-in fade-in slide-in-from-top-2">
+                                    <p className="text-green-700 text-sm font-medium flex items-center gap-2">
+                                        <span>🎉</span>
+                                        {Math.round(((parsePrice(formData.originalPrice) - parsePrice(formData.price)) / parsePrice(formData.originalPrice)) * 100)}% OFF will be shown to users
+                                    </p>
+                                </div>
+                            )}
+
                             {imageMode === "file" ? (
                                 <div className="border border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 relative h-[42px] flex items-center justify-center">
                                     <input
@@ -292,7 +311,18 @@ export default function ProductsPage() {
 
                         {/* Prices */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Actual Price / MRP (₹)</label>
+                            <input
+                                type="number"
+                                name="originalPrice"
+                                value={formData.originalPrice}
+                                onChange={handleInputChange}
+                                min="0"
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Selling Price (₹)</label>
                             <input
                                 type="number"
                                 name="price"
@@ -303,16 +333,20 @@ export default function ProductsPage() {
                                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yellow-500 focus:outline-none"
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Original Price (₹)</label>
-                            <input
-                                type="number"
-                                name="originalPrice"
-                                value={formData.originalPrice}
-                                onChange={handleInputChange}
-                                min="0"
-                                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yellow-500 focus:outline-none"
-                            />
+
+                        {/* Active Status */}
+                        <div className="md:col-span-2">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    name="isActive"
+                                    checked={formData.isActive !== false}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
+                                    className="w-5 h-5 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
+                                />
+                                <span className="text-sm font-medium text-gray-700">Active Status</span>
+                            </label>
+                            <p className="text-xs text-gray-500 mt-1 ml-7">Inactive products will be hidden from the public shop.</p>
                         </div>
 
                         <div className="col-span-2 flex justify-end gap-3 mt-4">
