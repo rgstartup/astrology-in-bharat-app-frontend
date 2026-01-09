@@ -54,6 +54,29 @@ const KundaliMatchingPage = () => {
   const [error, setError] = useState<string | null>(null);
   const resultsRef = React.useRef<HTMLDivElement>(null);
 
+  // Helper to safely render any content (string, object, array) to avoid "Objects as React Child" error
+  const renderContent = (content: any): React.ReactNode => {
+    if (content === null || content === undefined) return "";
+    if (typeof content === "string" || typeof content === "number")
+      return content;
+    if (Array.isArray(content)) {
+      return content.map((item, i) => (
+        <React.Fragment key={i}>
+          {i > 0 && ", "}
+          {renderContent(item)}
+        </React.Fragment>
+      ));
+    }
+    if (typeof content === "object") {
+      if (content.description) return content.description;
+      if (content.name) return content.name;
+      if (content.title) return content.title;
+      if (content.report) return content.report;
+      return JSON.stringify(content);
+    }
+    return String(content);
+  };
+
   const handleInputChange = (
     gender: "boy" | "girl",
     field: string,
@@ -89,6 +112,7 @@ const KundaliMatchingPage = () => {
 
   const handleMatch = async () => {
     setError(null);
+    setMatchingResult(null);
     if (
       !boyDetails.date ||
       !boyDetails.time ||
@@ -103,6 +127,7 @@ const KundaliMatchingPage = () => {
 
     setLoading(true);
     try {
+      console.log("Submitting Kundali Matching Request...");
       const response = await axios.get("/api/kundali-matching", {
         params: {
           boy_dob: `${boyDetails.date}T${boyDetails.time}:00+05:30`,
@@ -114,9 +139,15 @@ const KundaliMatchingPage = () => {
         },
       });
 
-      const resData = response.data?.data || response.data;
-      if (resData) {
-        setMatchingResult(resData);
+      console.log("Kundali Matching Full API Response:", response);
+
+      let finalData = response.data;
+      if (finalData?.data) finalData = finalData.data;
+
+      console.log("Extracted Matching Result Data:", finalData);
+
+      if (finalData) {
+        setMatchingResult(finalData);
         // Scroll to results after a short delay to allow rendering
         setTimeout(() => {
           resultsRef.current?.scrollIntoView({
@@ -125,7 +156,6 @@ const KundaliMatchingPage = () => {
           });
         }, 300);
       } else {
-        console.error("Invalid API Response Structure:", response.data);
         setError("Received incomplete data from the server.");
       }
     } catch (err: any) {
@@ -133,10 +163,11 @@ const KundaliMatchingPage = () => {
         "Matching Error Details:",
         err.response?.data || err.message
       );
-      setError(
+      const errMsg =
         err.response?.data?.error ||
-          "Failed to generate report. Please try again."
-      );
+        err.message ||
+        "Failed to generate report.";
+      setError(typeof errMsg === "string" ? errMsg : JSON.stringify(errMsg));
     } finally {
       setLoading(false);
     }
@@ -429,6 +460,137 @@ const KundaliMatchingPage = () => {
                     </div>
                   </div>
 
+                  {/* Detailed Kundali Data */}
+                  <div className="row g-4 mb-12">
+                    {/* Boy's Kundali Card */}
+                    <div className="col-lg-6">
+                      <div className="bg-white rounded-[2rem] p-8 border border-blue-50 h-100 shadow-sm">
+                        <h4 className="text-[11px] font-black text-blue-600 uppercase tracking-[3px] mb-6 flex items-center gap-2">
+                          <FaMars /> Groom&apos;s Kundali
+                        </h4>
+                        <div className="space-y-4">
+                          <div className="flex justify-between border-b border-gray-50 pb-2 gap-4">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase whitespace-nowrap">
+                              Nakshatra
+                            </span>
+                            <span className="text-sm font-bold text-[#301118] text-right">
+                              {renderContent(
+                                matchingResult.boy_info?.nakshatra?.name
+                              )}{" "}
+                              (
+                              {renderContent(
+                                matchingResult.boy_info?.nakshatra?.lord?.name
+                              )}
+                              , Pada{" "}
+                              {renderContent(
+                                matchingResult.boy_info?.nakshatra?.pada
+                              )}
+                              )
+                            </span>
+                          </div>
+                          <div className="flex justify-between border-b border-gray-50 pb-2 gap-4">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase whitespace-nowrap">
+                              Rasi (Moon Sign)
+                            </span>
+                            <span className="text-sm font-bold text-[#301118] text-right">
+                              {renderContent(
+                                matchingResult.boy_info?.rasi?.name
+                              )}{" "}
+                              (
+                              {renderContent(
+                                matchingResult.boy_info?.rasi?.lord?.name
+                              )}
+                              )
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-x-8 gap-y-3 pt-2">
+                            {matchingResult.boy_info?.koot &&
+                              Object.entries(matchingResult.boy_info.koot).map(
+                                ([key, value]) => (
+                                  <div
+                                    key={key}
+                                    className="flex justify-between items-center border-b border-gray-50 pb-1"
+                                  >
+                                    <span className="text-[9px] font-bold text-gray-300 uppercase">
+                                      {key}
+                                    </span>
+                                    <span className="text-[11px] font-bold text-[#301118] uppercase">
+                                      {renderContent(value)}
+                                    </span>
+                                  </div>
+                                )
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Girl's Kundali Card */}
+                    <div className="col-lg-6">
+                      <div className="bg-white rounded-[2rem] p-8 border border-pink-50 h-100 shadow-sm">
+                        <h4 className="text-[11px] font-black text-pink-600 uppercase tracking-[3px] mb-6 flex items-center gap-2">
+                          <FaVenus /> Bride&apos;s Kundali
+                        </h4>
+                        <div className="space-y-4">
+                          <div className="flex justify-between border-b border-gray-50 pb-2 gap-4">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase whitespace-nowrap">
+                              Nakshatra
+                            </span>
+                            <span className="text-sm font-bold text-[#301118] text-right">
+                              {renderContent(
+                                matchingResult.girl_info?.nakshatra?.name
+                              )}{" "}
+                              (
+                              {renderContent(
+                                matchingResult.girl_info?.nakshatra?.lord?.name
+                              )}
+                              , Pada{" "}
+                              {renderContent(
+                                matchingResult.girl_info?.nakshatra?.pada
+                              )}
+                              )
+                            </span>
+                          </div>
+                          <div className="flex justify-between border-b border-gray-50 pb-2 gap-4">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase whitespace-nowrap">
+                              Rasi (Moon Sign)
+                            </span>
+                            <span className="text-sm font-bold text-[#301118] text-right">
+                              {renderContent(
+                                matchingResult.girl_info?.rasi?.name
+                              )}{" "}
+                              (
+                              {renderContent(
+                                matchingResult.girl_info?.rasi?.lord?.name
+                              )}
+                              )
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-x-8 gap-y-3 pt-2">
+                            {matchingResult.girl_info?.koot &&
+                              Object.entries(matchingResult.girl_info.koot).map(
+                                ([key, value]) => (
+                                  <div
+                                    key={key}
+                                    className="flex justify-between items-center border-b border-gray-50 pb-1"
+                                  >
+                                    <span className="text-[9px] font-bold text-gray-300 uppercase">
+                                      {key}
+                                    </span>
+                                    <span className="text-[11px] font-bold text-[#301118] uppercase">
+                                      {renderContent(value)}
+                                    </span>
+                                  </div>
+                                )
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="row g-5">
                     {/* Score Card */}
                     <div className="col-lg-5">
@@ -453,11 +615,13 @@ const KundaliMatchingPage = () => {
                               strokeWidth="12"
                               strokeDasharray={
                                 (
-                                  ((matchingResult.guna_milan?.total?.score ??
+                                  ((matchingResult.guna_milan?.total_points ??
+                                    matchingResult.guna_milan?.total?.score ??
                                     matchingResult.total?.score ??
                                     matchingResult.total_score ??
                                     0) /
-                                    36) *
+                                    (matchingResult.guna_milan
+                                      ?.maximum_points ?? 36)) *
                                   (2 * Math.PI * 80)
                                 ).toString() +
                                 " " +
@@ -476,13 +640,15 @@ const KundaliMatchingPage = () => {
                           </svg>
                           <div className="absolute flex flex-col items-center">
                             <span className="text-6xl font-black text-[#301118] leading-none mb-1">
-                              {matchingResult.guna_milan?.total?.score ??
+                              {matchingResult.guna_milan?.total_points ??
+                                matchingResult.guna_milan?.total?.score ??
                                 matchingResult.total?.score ??
                                 matchingResult.total_score ??
                                 0}
                             </span>
                             <span className="text-sm font-black text-gray-300 uppercase tracking-tighter">
-                              out of 36
+                              out of{" "}
+                              {matchingResult.guna_milan?.maximum_points ?? 36}
                             </span>
                           </div>
                         </div>
@@ -490,24 +656,35 @@ const KundaliMatchingPage = () => {
                         <div className="mt-10">
                           <div
                             className={`inline-flex items-center gap-2 px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest ${
-                              (matchingResult.guna_milan?.total?.score ??
+                              (matchingResult.guna_milan?.total_points ??
+                                matchingResult.guna_milan?.total?.score ??
                                 matchingResult.total?.score ??
                                 matchingResult.total_score ??
-                                0) >= 18
+                                0) >=
+                              (matchingResult.guna_milan?.maximum_points ??
+                                36) /
+                                2
                                 ? "bg-green-500 text-white shadow-lg shadow-green-100"
                                 : "bg-[#301118] text-white shadow-lg shadow-orange-100"
                             }`}
                           >
-                            {(matchingResult.guna_milan?.total?.score ??
+                            {(matchingResult.guna_milan?.total_points ??
+                              matchingResult.guna_milan?.total?.score ??
                               matchingResult.total?.score ??
                               matchingResult.total_score ??
-                              0) >= 18
+                              0) >=
+                            (matchingResult.guna_milan?.maximum_points ?? 36) /
+                              2
                               ? "High Compatibility"
                               : "Moderate Match"}
                           </div>
                           <p className="mt-4 text-[10px] text-gray-400 font-bold max-w-[200px] leading-relaxed">
-                            {(matchingResult.guna_milan?.total?.score ?? 0) >=
-                            18
+                            {(matchingResult.guna_milan?.total_points ??
+                              matchingResult.guna_milan?.total?.score ??
+                              matchingResult.total?.score ??
+                              0) >=
+                            (matchingResult.guna_milan?.maximum_points ?? 36) /
+                              2
                               ? "Excellent spiritual and mental alignment for marriage."
                               : "Some aspects may require mutual understanding and adjustments."}
                           </p>
@@ -515,57 +692,10 @@ const KundaliMatchingPage = () => {
                       </div>
                     </div>
 
-                    {/* Breakdown Grid */}
-                    <div className="col-lg-7">
-                      <div className="bg-white rounded-[3rem] p-10 h-100 shadow-sm border border-orange-50">
-                        <div className="flex items-center justify-between mb-8 border-b border-gray-50 pb-6">
-                          <h3 className="text-[11px] font-black text-[#301118] uppercase tracking-[3px]">
-                            Ashtakoot Breakdown
-                          </h3>
-                          <span className="text-[10px] font-bold text-[#fd6410] bg-[#fd641010] px-3 py-1 rounded-full uppercase tracking-widest">
-                            8 Koot Milan
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                          {Object.entries(
-                            (matchingResult.guna_milan?.ashtakoot ||
-                              matchingResult.ashtakoot ||
-                              matchingResult.ashtakoot_points ||
-                              {}) as Record<
-                              string,
-                              { score: number; maximum_score: number }
-                            >
-                          ).map(([key, value]) => (
-                            <div key={key} className="space-y-2 group">
-                              <div className="flex justify-between items-end">
-                                <span className="text-[10px] font-black uppercase tracking-wider text-[#301118] opacity-70 group-hover:opacity-100 transition-opacity">
-                                  {key}
-                                </span>
-                                <span className="text-[11px] font-black text-[#fd6410]">
-                                  {value.score}{" "}
-                                  <span className="text-gray-300 font-bold">
-                                    /
-                                  </span>{" "}
-                                  {value.maximum_score}
-                                </span>
-                              </div>
-                              <div className="w-full bg-gray-50 h-2 rounded-full overflow-hidden border border-gray-100">
-                                <div
-                                  className="bg-gradient-to-r from-[#fd6410] to-[#ff8c4a] h-full rounded-full transition-all duration-1000"
-                                  style={{
-                                    width: `${(value.score / (value.maximum_score || 1)) * 100}%`,
-                                  }}
-                                ></div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+                
 
                     {/* Conclusion Card */}
-                    <div className="col-12">
+                    <div className="col-7">
                       <div className="bg-gradient-to-br from-[#301118] to-[#4a1c26] rounded-[3rem] p-10 md:p-14 text-white relative overflow-hidden shadow-2xl">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-[#fd641008] rounded-full -mr-16 -mt-16"></div>
                         <div className="relative z-10 text-center md:text-left">
@@ -579,11 +709,14 @@ const KundaliMatchingPage = () => {
                               </h4>
                               <p className="text-lg italic opacity-95 leading-relaxed m-0 font-display">
                                 &quot;
-                                {matchingResult.guna_milan?.conclusion
-                                  ?.report ??
-                                  matchingResult.conclusion?.report ??
-                                  matchingResult.conclusion ??
-                                  "Our analysis suggests consulting with a professional astrologer for a truly personalized compatibility reading based on your complete charts."}
+                                {renderContent(
+                                  matchingResult.message?.description ||
+                                    matchingResult.guna_milan?.conclusion
+                                      ?.report ||
+                                    matchingResult.conclusion?.report ||
+                                    matchingResult.conclusion ||
+                                    "Our analysis suggests consulting with a professional astrologer for a truly personalized compatibility reading."
+                                )}
                                 &quot;
                               </p>
                             </div>
@@ -650,28 +783,61 @@ const KundaliMatchingPage = () => {
                 <div className="absolute top-0 left-0 w-20 h-20 bg-[#fd6410] rounded-full -ml-8 -mt-8 flex items-center justify-center shadow-lg">
                   <FaHeart className="text-white text-3xl animate-pulse" />
                 </div>
-                <h3 className="text-6xl font-black mb-2 text-[#fd6410]">36</h3>
-                <h4 className="text-2xl font-bold mb-6">Total Gunas</h4>
+                {matchingResult ? (
+                  <>
+                    <h3 className="text-6xl font-black mb-2 text-[#fd6410]">
+                      {matchingResult.guna_milan?.total_points ??
+                        matchingResult.guna_milan?.total?.score ??
+                        0}
+                    </h3>
+                    <h4 className="text-2xl font-bold mb-6">
+                      Your Match Score
+                    </h4>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="text-6xl font-black mb-2 text-[#fd6410]">
+                      36
+                    </h3>
+                    <h4 className="text-2xl font-bold mb-6">Total Gunas</h4>
+                  </>
+                )}
                 <div className="space-y-4 text-left border-t border-white/10 pt-6">
                   <div className="flex justify-between items-baseline">
                     <span className="text-sm font-bold opacity-60">
-                      Excellent
+                      Excellent Match
                     </span>
                     <span className="text-sm font-bold text-green-400">
-                      25 - 36
+                      25 - 36 Points
                     </span>
                   </div>
                   <div className="w-full bg-white/10 h-1.5 rounded-full">
-                    <div className="bg-green-400 w-[80%] h-full rounded-full shadow-[0_0_10px_rgba(74,222,128,0.5)]"></div>
+                    <div
+                      className="bg-green-400 h-full rounded-full shadow-[0_0_10px_rgba(74,222,128,0.5)] transition-all duration-1000"
+                      style={{
+                        width: matchingResult
+                          ? `${Math.min(100, ((matchingResult.guna_milan?.total_points ?? 0) / 36) * 100)}%`
+                          : "80%",
+                      }}
+                    ></div>
                   </div>
                   <div className="flex justify-between items-baseline mt-4">
-                    <span className="text-sm font-bold opacity-60">Normal</span>
+                    <span className="text-sm font-bold opacity-60">
+                      Normal Match
+                    </span>
                     <span className="text-sm font-bold text-orange-400">
-                      18 - 24
+                      18 - 24 Points
                     </span>
                   </div>
                   <div className="w-full bg-white/10 h-1.5 rounded-full">
-                    <div className="bg-orange-400 w-[50%] h-full rounded-full shadow-[0_0_10px_rgba(251,146,60,0.5)]"></div>
+                    <div
+                      className="bg-orange-400 h-full rounded-full shadow-[0_0_10px_rgba(251,146,60,0.5)] transition-all duration-1000"
+                      style={{
+                        width: matchingResult
+                          ? `${Math.min(100, ((matchingResult.guna_milan?.total_points ?? 0) / 24) * 100)}%`
+                          : "50%",
+                      }}
+                    ></div>
                   </div>
                 </div>
               </div>
