@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
           <div className="row">
             <div className="col-lg-4 col-md-6">
               <img
-                src="images/web-logo-white.png"
+                src="/images/web-logo-white.png"
                 alt="Astrology in Bharat Logo"
                 className="web-logo-white mb-2 w-75"
               />
