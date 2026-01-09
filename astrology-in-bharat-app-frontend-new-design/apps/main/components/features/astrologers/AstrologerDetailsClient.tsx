@@ -498,7 +498,7 @@ export default function AstrologerDetailsClient({
                     <h5 className="text-xl font-bold text-[#fd6410]">{product.price}</h5>
                     <NextLink href="/product/id">
                       <button className="flex items-center gap-2 bg-[#fd6410] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#e35605] transition-colors shadow-sm active:scale-95">
-                        <i className="fas fa-shopping-cart"></i> Buy Now
+                        <i className="fas fa-shopping-cart"></i> Buy Now.
                       </button>
                     </NextLink>
                   </div>
