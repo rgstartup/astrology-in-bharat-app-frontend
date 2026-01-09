@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/context/AuthContext";
 
+import { toast } from "react-toastify";
+
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -32,14 +34,37 @@ const LoginPage: React.FC = () => {
 
             if (response.data?.accessToken) {
                 login(response.data.accessToken, response.data.user);
-                router.push("/dashboard");
+                try {
+                    const profileRes = await apiClient.get('/expert/profile');
+                    const profile = profileRes.data;
+
+                    if (!profile.gender || !profile.specialization) {
+                        toast.success("Login successful. Please complete your profile.");
+                        router.push("/profile");
+                    } else {
+                        toast.success("Login successful!");
+                        router.push("/dashboard");
+                    }
+                } catch (profileErr) {
+                    console.error("Error fetching profile:", profileErr);
+                    // Fallback to dashboard if profile fetch fails, or maybe profile?
+                    // Better to let them go to dashboard and let other guards handle it, or just dashboard.
+                    toast.success("Login successful!");
+                    router.push("/dashboard");
+                }
             } else {
                 setError("Login failed. No access token received.");
             }
         } catch (err: any) {
             console.error("Login error details:", err.response?.data || err.message);
             const backendMessage = err.response?.data?.message;
-            const message = Array.isArray(backendMessage) ? backendMessage.join(", ") : backendMessage;
+            let message = Array.isArray(backendMessage) ? backendMessage.join(", ") : backendMessage;
+
+            if (err.response?.status === 401 && (message?.toLowerCase().includes("verify") || message?.toLowerCase().includes("email"))) {
+                message = "Email not verified. Please check your inbox for the verification link.";
+                toast.error(message, { autoClose: 5000 });
+            }
+
             setError(message || "Invalid email or password.");
         } finally {
             setLoading(false);

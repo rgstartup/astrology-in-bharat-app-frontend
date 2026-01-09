@@ -1,25 +1,40 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
-import { Lock, User, Mail } from "lucide-react";
+import { Lock, User, Mail, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-toastify";
 
 const RegisterPage: React.FC = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const { login } = useAuth();
 
+    useEffect(() => {
+        // Clear any existing tokens when visiting register page to avoid stale auth issues
+        localStorage.removeItem("accessToken");
+    }, []);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -33,17 +48,20 @@ const RegisterPage: React.FC = () => {
 
             console.log("Registration successful response:", response.status);
 
-            if (response.data?.accessToken) {
-                login(response.data.accessToken, response.data.user);
-                router.push("/dashboard");
-            } else {
-                setError("Registration successful! Please sign in.");
-                setTimeout(() => router.push("/"), 2000);
+            if (response.status === 201 || response.status === 200) {
+                toast.success("Signup successful. Please verify your email before logging in.", { autoClose: 5000 });
+                setTimeout(() => {
+                    router.push("/");
+                }, 3000);
             }
         } catch (err: any) {
-            console.error("Registration error details:", err.response?.data || err.message);
-            const backendMessage = err.response?.data?.message;
+            console.error("Full Registration Error Object:", err);
+            console.error("Registration error stringified:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
+
+            const backendMessage = err.response?.data?.message || err.message || "Unknown error occurred";
             const message = Array.isArray(backendMessage) ? backendMessage.join(", ") : backendMessage;
+
+            toast.error(message || "Failed to register. Please try again later.");
             setError(message || "Failed to register. Please try again later.");
         } finally {
             setLoading(false);
@@ -136,14 +154,48 @@ const RegisterPage: React.FC = () => {
                                 <input
                                     id="password"
                                     name="password"
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     required
                                     minLength={6}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent sm:text-sm text-black transition-all"
+                                    className="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent sm:text-sm text-black transition-all"
                                     placeholder="Min. 6 characters"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                                >
+                                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-1">Confirm Password</label>
+                            <div className="relative rounded-md shadow-sm">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Lock className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    required
+                                    minLength={6}
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    className="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent sm:text-sm text-black transition-all"
+                                    placeholder="Confirm your password"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                                >
+                                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                </button>
                             </div>
                         </div>
 

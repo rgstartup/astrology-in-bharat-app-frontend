@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 
 // Create axios instance
 export const apiClient = axios.create({
@@ -107,7 +107,7 @@ apiClient.interceptors.response.use(
 
                 // Redirect to sign-in
                 if (typeof window !== 'undefined') {
-                    window.location.href = '/sign-in';
+                    window.location.href = '/';
                 }
 
                 return Promise.reject(refreshError);

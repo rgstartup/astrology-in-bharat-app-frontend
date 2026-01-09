@@ -17,6 +17,9 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
   useEffect(() => {
     const fetchStatus = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) return;
+
       try {
         const res = await apiClient.get('/expert/profile');
         if (res.data) {
