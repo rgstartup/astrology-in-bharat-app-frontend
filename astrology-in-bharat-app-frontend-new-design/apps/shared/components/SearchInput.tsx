@@ -58,7 +58,7 @@ export function SearchInput({
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
                 className={cn(
-                    "w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all",
+                    "w-full border border-gray-300 rounded-lg hover:!border-[#F25E0A] focus:!ring-2 focus:!ring-[#F25E0A] focus:!border-[#F25E0A] outline-none transition-all",
                     sizes[size],
                     value && showClearButton && "pr-10"
                 )}

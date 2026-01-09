@@ -190,10 +190,10 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
     const updates = {
       q: debouncedSearch,
       specializations: selectedSpecialization,
-      sort: sortOption,
+      sort: sortOption === "newest" ? undefined : sortOption,
       languages: filterState.language,
       minPrice: filterState.minPrice,
-      maxPrice: filterState.maxPrice,
+      maxPrice: filterState.maxPrice === 100 ? undefined : filterState.maxPrice,
       state: filterState.addressState,
     };
 

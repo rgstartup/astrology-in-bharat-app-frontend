@@ -3,7 +3,8 @@ module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",         // All pages in app folder
     "./components/**/*.{js,ts,jsx,tsx}",  // All reusable components
-    "./libs/**/*.{js,ts,jsx,tsx}"         // Any custom libs with React code
+    "./libs/**/*.{js,ts,jsx,tsx}",        // Any custom libs with React code
+    "../shared/components/**/*.{js,ts,jsx,tsx}" // Shared components
   ],
   darkMode: "class",
   theme: {
