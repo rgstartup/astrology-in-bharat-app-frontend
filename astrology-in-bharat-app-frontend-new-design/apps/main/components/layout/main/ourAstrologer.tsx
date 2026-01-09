@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
+import { SkeletonCard } from "../../features/astrologers/SkeletonCard";
 
 const API_BASE_URL = "http://localhost:4000/api/v1";
 
@@ -11,6 +12,7 @@ interface ExpertProfile {
     user: {
         id: number;
         name: string;
+        avatar?: string;
     };
     specialization: string;
     experience_in_years: number;
@@ -86,9 +88,18 @@ const OurAstrologer = () => {
 
             const { data, pagination }: { data: ExpertProfile[]; pagination: PaginationInfo } = response.data;
 
+            const getImageUrl = (path?: string) => {
+                if (!path) return "/images/astro-img1.png";
+                if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
+                // If the path doesn't start with / and isn't a full URL, it might need the uploads prefix
+                // The backend serves assets from /uploads according to main.ts
+                const baseUrl = "http://localhost:4000"; // Fallback to localized server
+                return `${baseUrl}/uploads/${path}`;
+            };
+
             const mappedData = data.map((item) => ({
                 id: item.id,
-                image: "/images/astro-img1.png",
+                image: getImageUrl(item.user?.avatar),
                 ratings: Math.round(item.rating) || 5,
                 name: item.user.name || "Astrologer",
                 expertise: item.specialization || "Vedic Astrology",
@@ -380,55 +391,61 @@ const OurAstrologer = () => {
                 </div>
 
                 <div className="astro-grid">
-                    {astrologers.map((item) => (
-                        <div className="grid-item" key={item.id}>
-                            <Link href={{ pathname: "/astrologer-details", query: { id: item.id } }} className="text-decoration-none">
-                                <div className="astro-card">
-                                    <div className="vid-part">
-                                        <img src={item.image} alt={item.name} className="astro-profile-img" />
-                                        <div className={`status-badge ${item.is_available ? 'online' : 'offline'}`}>
-                                            <i className="fa-solid fa-circle"></i> {item.is_available ? 'Online' : 'Offline'}
+                    {loading && astrologers.length === 0 ? (
+                        Array.from({ length: 8 }).map((_, i) => (
+                            <SkeletonCard key={i} />
+                        ))
+                    ) : (
+                        astrologers.map((item) => (
+                            <div className="grid-item" key={item.id}>
+                                <Link href={{ pathname: "/astrologer-details", query: { id: item.id } }} className="text-decoration-none">
+                                    <div className="astro-card">
+                                        <div className="vid-part">
+                                            <img src={item.image} alt={item.name} className="astro-profile-img" />
+                                            <div className={`status-badge ${item.is_available ? 'online' : 'offline'}`}>
+                                                <i className="fa-solid fa-circle"></i> {item.is_available ? 'Online' : 'Offline'}
+                                            </div>
+                                            <span className="play-vid fa-beat" data-bs-toggle="modal" data-bs-target={`#${item.modalId}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                                                <i className="fa-solid fa-circle-play"></i>
+                                            </span>
                                         </div>
-                                        <span className="play-vid fa-beat" data-bs-toggle="modal" data-bs-target={`#${item.modalId}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-                                            <i className="fa-solid fa-circle-play"></i>
-                                        </span>
+                                        <div className="rating-star">{"★".repeat(item.ratings)}</div>
+                                        <div className="astro-name">
+                                            {item.name}
+                                            {item.is_available && <span className="online-dot ms-2"></span>}
+                                        </div>
+                                        <div className="astro-tags">{item.expertise}</div>
+                                        <div className="astro-info"><strong>Exp:</strong> {item.experience} Years</div>
+                                        <div className="astro-info"><strong>Lang:</strong> {item.language}</div>
+                                        <div className="astro-info"><strong>Price:</strong> ₹{item.price}/min</div>
+                                        <div className="astro-actions">
+                                            <button><i className="fa-regular fa-comment-dots"></i> Chat</button>
+                                            <button className="call"><i className="fa-solid fa-phone-volume"></i> Call</button>
+                                        </div>
                                     </div>
-                                    <div className="rating-star">{"★".repeat(item.ratings)}</div>
-                                    <div className="astro-name">
-                                        {item.name}
-                                        {item.is_available && <span className="online-dot ms-2"></span>}
-                                    </div>
-                                    <div className="astro-tags">{item.expertise}</div>
-                                    <div className="astro-info"><strong>Exp:</strong> {item.experience} Years</div>
-                                    <div className="astro-info"><strong>Lang:</strong> {item.language}</div>
-                                    <div className="astro-info"><strong>Price:</strong> ₹{item.price}/min</div>
-                                    <div className="astro-actions">
-                                        <button><i className="fa-regular fa-comment-dots"></i> Chat</button>
-                                        <button className="call"><i className="fa-solid fa-phone-volume"></i> Call</button>
-                                    </div>
-                                </div>
-                            </Link>
+                                </Link>
 
-                            <div className="modal fade" id={item.modalId} tabIndex={-1} aria-hidden="true" style={{ zIndex: 1070 }}>
-                                <div className="modal-dialog modal-dialog-centered modal-xl">
-                                    <div className="modal-content text-dark border-0 shadow-2xl">
-                                        <div className="modal-header border-0 pb-0">
-                                            <h4 className="modal-title-astro-about">Meet {item.name}</h4>
-                                            <button type="button" className="btn-close shadow-none" data-bs-dismiss="modal" ><i className="fa-solid fa-xmark"></i></button>
-                                        </div>
-                                        <div className="modal-body p-4">
-                                            <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100">
-                                                <iframe width="100%" height="500" src={item.video} title={`${item.name} Video`} frameBorder="0" allowFullScreen></iframe>
+                                <div className="modal fade" id={item.modalId} tabIndex={-1} aria-hidden="true" style={{ zIndex: 1070 }}>
+                                    <div className="modal-dialog modal-dialog-centered modal-xl">
+                                        <div className="modal-content text-dark border-0 shadow-2xl">
+                                            <div className="modal-header border-0 pb-0">
+                                                <h4 className="modal-title-astro-about">Meet {item.name}</h4>
+                                                <button type="button" className="btn-close shadow-none" data-bs-dismiss="modal" ><i className="fa-solid fa-xmark"></i></button>
+                                            </div>
+                                            <div className="modal-body p-4">
+                                                <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100">
+                                                    <iframe width="100%" height="500" src={item.video} title={`${item.name} Video`} frameBorder="0" allowFullScreen></iframe>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    )}
                 </div>
 
-                {loading && (
+                {loading && astrologers.length > 0 && (
                     <div className="text-center my-4">
                         <div className="spinner-border text-[#fd6410]" role="status"><span className="visually-hidden">Loading...</span></div>
                     </div>

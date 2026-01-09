@@ -1316,10 +1316,10 @@ button.btn-close {
 }
 
 /*Responsive css*/
-@media (min-width: 1199px) {
-}
+@media (min-width: 1199px) {}
 
 @media (min-width: 1400px) {
+
   .container,
   .container-lg,
   .container-md,
@@ -1581,6 +1581,7 @@ button.btn-close {
     width: 295px;
   }
 }
+
 .register-sign-in-btn {
   position: relative;
   z-index: 60;
@@ -1633,4 +1634,52 @@ button.btn-close {
   box-shadow:
     0 0 0 2px #fff,
     0 0 8px #22c55e;
+}
+
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton {
+  background: #f6f7f8;
+  background-image: linear-gradient(to right,
+      #f6f7f8 0%,
+      #edeef1 20%,
+      #f6f7f8 40%,
+      #f6f7f8 100%);
+  background-repeat: no-repeat;
+  background-size: 800px 104px;
+  display: inline-block;
+  position: relative;
+  animation-duration: 1.2s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-text {
+  height: 12px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.skeleton-card {
+  padding: 12px 10px;
+  border-radius: 12px;
+  border: solid 1px #e2e8f0;
+  background: white;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }

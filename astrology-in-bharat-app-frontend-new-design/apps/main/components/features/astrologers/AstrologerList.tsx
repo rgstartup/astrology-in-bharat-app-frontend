@@ -7,6 +7,7 @@ const Link = NextLink as any;
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { SkeletonCard } from "./SkeletonCard";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000/api/v1";
@@ -57,9 +58,15 @@ interface AstrologerListProps {
 }
 
 // Map helper
+const getImageUrl = (path?: string) => {
+  if (!path) return "/images/astro-img1.png";
+  if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
+  return `${API_BASE_URL.replace("/api/v1", "")}/uploads/${path}`;
+};
+
 const mapExpert = (item: ExpertProfile): ClientExpertProfile => ({
   id: item.id,
-  image: item.user?.avatar || "/images/astro-img1.png",
+  image: getImageUrl(item.user?.avatar),
   ratings: Math.round(item.rating || 0) || 5,
   name: item.user?.name || "Astrologer",
   expertise: item.specialization || "Vedic Astrology",
@@ -115,7 +122,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
     if (initialError) {
       toast.error(
         initialError === "server_unreachable"
-          ? "Server is unreachable. Showing limited data."
+          ? "Server is unreachable. Please check your connection."
           : "Failed to load experts"
       );
     }
@@ -289,14 +296,14 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
     "Zodiac Compatibility",
     "Astrocartography",
     "Lunar Node Analysis",
-    "Love Problem Solution", 
-"Marriage Problem", 
- 
-"Divorce Problem Solution", "Breakup Problem Solution", 
-"Get Your Ex Love Back",
-"Family Problem Solution",
-"Dispute Solution",
-"Childless Couple Solution"
+    "Love Problem Solution",
+    "Marriage Problem",
+
+    "Divorce Problem Solution", "Breakup Problem Solution",
+    "Get Your Ex Love Back",
+    "Family Problem Solution",
+    "Dispute Solution",
+    "Childless Couple Solution"
   ];
 
   const scrollCards = (direction: "left" | "right") => {
@@ -603,8 +610,14 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
             className="flex-1 min-w-0 flex overflow-x-auto gap-4 scroll-smooth [&::-webkit-scrollbar]:hidden py-4"
             ref={cardScrollRef}
           >
-            {astrologers.length > 0
-              ? astrologers.map((item) => (
+            {loading && astrologers.length === 0 ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div className="min-w-[300px]" key={i}>
+                  <SkeletonCard />
+                </div>
+              ))
+            ) : astrologers.length > 0 ? (
+              astrologers.map((item) => (
                 <React.Fragment key={item.id}>
                   <div className="grid-item">
                     <Link
@@ -616,14 +629,11 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
                     >
                       <div className="astro-card min-w-[300px]">
                         <div className="vid-part">
-                          <div className="relative w-full h-full overflow-hidden">
-                            <NextImageComp
-                              src={item.image}
-                              alt={item.name}
-                              fill
-                              className="astro-profile-img object-cover"
-                            />
-                          </div>
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="astro-profile-img"
+                          />
                           <span
                             className="play-vid fa-beat"
                             data-bs-toggle="modal"
@@ -702,15 +712,17 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
                   </div>
                 </React.Fragment>
               ))
-              : !loading && (
+            ) : (
+              !loading && (
                 <div className="w-full text-center py-10 text-white">
                   <i className="fa-solid fa-magnifying-glass fa-3x mb-3 text-[#fd641055]"></i>
                   <h4>No Astrologers Found</h4>
                   <p>Adjust your filters or search terms.</p>
                 </div>
-              )}
+              )
+            )}
 
-            {loading && (
+            {loading && astrologers.length > 0 && (
               <div className="d-flex align-items-center justify-content-center min-w-[200px]">
                 <div className="spinner-border text-[#fd6410]" role="status">
                   <span className="visually-hidden">Loading...</span>
