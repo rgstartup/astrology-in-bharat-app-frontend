@@ -295,65 +295,69 @@ const Header: React.FC = () => {
                       </div>
                     </div>
                   </div>
-
-                  <div className="col-3 mobile-space text-center">
+                  {isAuthenticated ?(
+                    <><div className="col-3 mobile-space text-center">
                     <Link href={PATHS.CART} className="cart-top">
                       <i className="fa-solid fa-cart-shopping"></i> Cart{" "}
                       <span className="value">4</span>
                     </Link>
                   </div>
+                  </>
+                  ):(
+                    <> </>
+                  )}
+
+                  
                   <div className="col-5 mobile-space">
-                    <div
-                      className={`account-dropdown account-dropdown-container w-100 ${showAccountDropdown ? "show" : ""}`}
-                    >
-                      <button
-                        className="account-btn w-100"
-                        onClick={() =>
-                          setShowAccountDropdown(!showAccountDropdown)
-                        }
-                      >
-                        <i className="fa-solid fa-user"></i> Account{" "}
-                        <i className="fa-solid fa-angle-down"></i>
-                      </button>
-                      <div className="account-menu" style={{ zIndex: 60 }}>
-                        {isAuthenticated ? (
-                          <>
-                            <Link
-                              href={PATHS.PROFILE}
-                              onClick={() => setShowAccountDropdown(false)}
-                            >
-                              My Profile
-                            </Link>
-                            <a
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleLogout();
-                              }}
-                            >
-                              Logout
-                            </a>
-                          </>
-                        ) : (
-                          <>
-                            <Link
-                              href={PATHS.SIGN_IN}
-                              className="register-sign-in-btn"
-                              onClick={() => setShowAccountDropdown(false)}
-                            >
-                              Sign In
-                            </Link>
-                            <Link
-                              href={PATHS.REGISTER}
-                              className="register-sign-in-btn"
-                              onClick={() => setShowAccountDropdown(false)}
-                            >
-                              Register
-                            </Link>
-                          </>
-                        )}
-                      </div>
-                    </div>
+                    <div className="d-flex gap-2 w-100 justify-content-end">
+  {isAuthenticated ? (
+    <>
+      <Link
+        href={PATHS.PROFILE}
+        className="account-btn w-100 text-center"
+      >
+        <i className="fa-solid fa-user"></i> My Profile
+      </Link>
+
+      <button
+        className="account-btn w-100"
+        onClick={handleLogout}
+        type="button"
+      >
+        <i className="fa-solid fa-right-from-bracket"></i> Logout
+      </button>
+    </>
+  ) : (
+    <>
+      <Link
+        href={PATHS.SIGN_IN}
+        className=" w-100 text-center" style={{
+          backgroundColor: "#fa6310",
+          color: "white",
+          borderRadius: "5px",
+          padding: "5px 8px 5px 8px",
+          
+        }}
+      >
+        SignIn
+      </Link>
+
+      <Link
+        href={PATHS.REGISTER}
+        className=" w-100 text-center"style={{
+          backgroundColor: "#fa6310",
+          color: "white",
+          borderRadius: "5px",
+          padding: "5px 8px 5px 8px",
+          
+        }}
+      >
+        Register
+      </Link>
+    </>
+  )}
+</div>
+
                   </div>
                 </div>
               </div>
