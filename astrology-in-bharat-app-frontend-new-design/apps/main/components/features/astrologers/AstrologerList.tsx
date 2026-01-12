@@ -621,10 +621,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
                 <React.Fragment key={item.id}>
                   <div className="grid-item">
                     <Link
-                      href={{
-                        pathname: "/astrologer-details",
-                        query: { id: item.id },
-                      }}
+                      href={`/astrologer/${item.id}`}
                       className="text-decoration-none"
                     >
                       <div className="astro-card min-w-[300px]">

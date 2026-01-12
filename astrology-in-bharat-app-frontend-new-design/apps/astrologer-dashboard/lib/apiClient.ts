@@ -6,9 +6,6 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 export const apiClient = axios.create({
     baseURL: API_BASE_URL,
     withCredentials: true, // Important for cookies
-    headers: {
-        'Content-Type': 'application/json',
-    },
 });
 
 let isRefreshing = false;
@@ -32,9 +29,13 @@ const processQueue = (error: any, token: string | null = null) => {
 // Request interceptor - Add access token to requests
 apiClient.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('accessToken');
+        const token = typeof window !== "undefined" ? localStorage.getItem('accessToken') : null;
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`;
+            // Debug log (remove in production)
+            console.log(`[API] ${config.method?.toUpperCase()} ${config.url} - Token Present`);
+        } else {
+            console.warn(`[API] ${config.method?.toUpperCase()} ${config.url} - No Token Found!`);
         }
         return config;
     },
@@ -53,6 +54,22 @@ apiClient.interceptors.response.use(
 
         // If error is 401 and we haven't retried yet
         if (error.response?.status === 401 && !originalRequest._retry) {
+            // Check if it's actually a throttle error (misconfigured backend returning 401 for 429)
+            const errorData = error.response?.data as any;
+            let errorMessage = "";
+
+            if (typeof errorData?.message === 'string') {
+                errorMessage = errorData.message;
+            } else if (Array.isArray(errorData?.message)) {
+                errorMessage = errorData.message.join(" ");
+            } else if (typeof errorData?.message === 'object') {
+                errorMessage = JSON.stringify(errorData.message);
+            }
+
+            if (errorMessage.toLowerCase().includes('too many requests')) {
+                return Promise.reject(error);
+            }
+
             if (isRefreshing) {
                 // If already refreshing, queue this request
                 return new Promise((resolve, reject) => {

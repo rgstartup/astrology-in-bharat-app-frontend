@@ -63,10 +63,7 @@ export const getExperts = async (
     const url = `${API_BASE_URL}/expert/profile/list?${queryParams.toString()}`;
 
     const response = await fetch(url, {
-      next: {
-        revalidate: 3600, // Cache for 1 hour by default for this list
-        tags: ["experts"],
-      },
+      cache: 'no-store',
     });
 
     if (!response.ok) {

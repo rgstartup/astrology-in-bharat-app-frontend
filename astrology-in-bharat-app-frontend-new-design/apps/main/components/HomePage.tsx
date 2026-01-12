@@ -109,7 +109,7 @@ const HomePage: React.FC = () => {
             {ListOfAllAstrologers.map((item) => {
               return (
                 <Link
-                  href="/astrologer-details"
+                  href={`/astrologer/${item.id}`}
                   className="grid-item"
                   key={item.id}
                 >

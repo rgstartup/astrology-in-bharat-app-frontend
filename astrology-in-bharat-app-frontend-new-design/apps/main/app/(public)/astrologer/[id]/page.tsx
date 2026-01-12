@@ -17,15 +17,18 @@ interface ExpertData {
   price: number;
   rating: number;
   video?: string;
+  bio?: string;
+  detailed_experience?: any[];
+  gallery?: string[];
+  videos?: string[];
 }
 
 export default async function Page({
-  searchParams,
+  params,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{ id: string }>;
 }) {
-  const params = await searchParams;
-  const id = params.id;
+  const { id } = await params;
 
   if (!id || typeof id !== "string") {
     return notFound();
@@ -34,7 +37,7 @@ export default async function Page({
   try {
     const url = `${API_BASE_URL}/expert/profile/${id}`;
     const response = await fetch(url, {
-      next: { revalidate: 3600 },
+      cache: 'no-store', // Disable caching for real-time updates
     });
 
     if (!response.ok) {
@@ -57,6 +60,10 @@ export default async function Page({
       price: data.price || 0,
       video: data.video || "https://www.youtube.com/embed/INoPh_oRooU",
       ratings: Math.round(data.rating) || 5,
+      bio: data.bio || "",
+      detailed_experience: data.detailed_experience || [],
+      gallery: data.gallery || [],
+      videos: data.videos || [],
     };
 
     return <AstrologerDetailsClient astrologer={astrologer} />;
