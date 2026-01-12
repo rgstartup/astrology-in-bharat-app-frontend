@@ -10,7 +10,7 @@ import FormInput from "@packages/ui/src/components/profile/FormInput";
 
 // Types
 interface ProfileData {
-  full_name?: string;
+  username?: string;
   date_of_birth?: string;
   time_of_birth?: string;
   place_of_birth?: string;
@@ -34,14 +34,15 @@ interface AddressDto {
 const ProfilePage: React.FC = () => {
   const router = useRouter();
   const { clientUser, isClientAuthenticated } = useClientAuth();
-  
+
   const [profileData, setProfileData] = useState<ProfileData>({});
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("/images/default-avatar.png");
+  const [imagePreview, setImagePreview] = useState<string>("/images/a.webp");
+  const [isEditing, setIsEditing] = useState(false);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -57,7 +58,7 @@ const ProfilePage: React.FC = () => {
       const response = await axios.get('http://localhost:4000/api/v1/client/profile', {
         withCredentials: true
       });
-      
+
       if (response.data) {
         setProfileData(response.data);
         if (response.data.profile_picture) {
@@ -96,39 +97,108 @@ const ProfilePage: React.FC = () => {
     setErrorMessage("");
 
     try {
-      const formData = new FormData();
-      
-      // Add profile data
-      Object.keys(profileData).forEach(key => {
-        const value = profileData[key as keyof ProfileData];
-        if (value !== undefined && value !== null) {
-          formData.append(key, value.toString());
-        }
-      });
+      // Prepare JSON payload
+      const payload: any = { ...profileData };
 
-      // Add image if selected
-      if (profileImage) {
-        formData.append('file', profileImage);
+      // Ensure gender has a value since it's required
+      if (!payload.gender || payload.gender.trim() === '') {
+        payload.gender = 'other';
       }
 
-      const response = await axios.patch(
-        'http://localhost:4000/api/v1/client/profile',
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+      // Clean payload: remove empty strings/nulls/undefined to avoid validation errors
+      Object.keys(payload).forEach(key => {
+        if (payload[key] === null || payload[key] === undefined || payload[key] === '') {
+          delete payload[key];
         }
-      );
+      });
+      // Remove non-DTO fields if any (axios will ignore extra properties usually, but good to be clean)
+
+      console.log("📤 Submitting profile data:", payload);
+
+      let response;
+
+      // Try to update first, if 404, then create
+      try {
+        response = await axios.patch(
+          'http://localhost:4000/api/v1/client/profile',
+          payload,
+          {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        console.log("✅ PATCH response:", response.status, response.data);
+      } catch (error: any) {
+        if (error.response?.status === 404) {
+          // Profile doesn't exist, create it
+          console.log("📝 Profile not found, creating new profile...");
+          response = await axios.post(
+            'http://localhost:4000/api/v1/client/profile',
+            payload,
+            {
+              withCredentials: true,
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          console.log("✅ POST response:", response.status, response.data);
+        } else {
+          console.log("❌ Other error:", error.response?.status, error.response?.data);
+          throw error;
+        }
+      }
+
+      // Handle image upload if selected
+      if (profileImage) {
+        console.log("🖼️ Uploading profile picture...");
+        const formData = new FormData();
+        formData.append('file', profileImage);
+
+        const imageResponse = await axios.patch(
+          'http://localhost:4000/api/v1/client/profile/picture',
+          formData,
+          {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+        console.log("✅ Picture upload response:", imageResponse.status);
+
+        // Update local state with new image path if returned
+        if (imageResponse.data && imageResponse.data.profile_picture) {
+          response.data.profile_picture = imageResponse.data.profile_picture;
+        }
+      }
 
       setSuccessMessage("Profile updated successfully!");
+
+      // Update local profile data with server response
+      setProfileData(prev => ({ ...prev, ...response.data }));
+
       if (response.data.profile_picture) {
         setImagePreview(response.data.profile_picture);
       }
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      setErrorMessage("Failed to update profile");
+      setIsEditing(false); // Exit edit mode after save
+    } catch (error: any) {
+      console.error("❌ Error updating profile:", error);
+      console.error("❌ Error details:", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+
+      // Better error message
+      const errorMessage = error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        'Unknown error occurred';
+
+      setErrorMessage(`Failed to update profile: ${errorMessage}`);
     } finally {
       setSaving(false);
     }
@@ -162,10 +232,33 @@ const ProfilePage: React.FC = () => {
         <div className="container">
           <div className="row align-items-center">
             <div className="col-12">
-              <h2 className="mb-0" style={{ color: "var(--primary-color)" }}>
-                My Profile
-              </h2>
-              <p className="mb-0 text-muted">Manage your personal information</p>
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <h2 className="mb-0" style={{ color: "var(--primary-color)" }}>
+                    My Profile
+                  </h2>
+                  <p className="mb-0 text-muted">Manage your profile information</p>
+                </div>
+                <div>
+                  <button
+                    className="btn px-4 text-white btn-lg"
+                    onClick={() => setIsEditing(!isEditing)}
+                    style={{ backgroundColor: "var(--primary-color)" }}
+                  >
+                    {isEditing ? (
+                      <>
+                        <i className="fa-solid fa-times me-2"></i>
+                        Cancel
+                      </>
+                    ) : (
+                      <>
+                        <i className="fa-solid fa-edit me-2"></i>
+                        Edit Profile
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -173,6 +266,25 @@ const ProfilePage: React.FC = () => {
 
       {/* Main Content */}
       <div className="container py-5">
+        {/* Floating Edit Button */}
+        {!isEditing && (
+          <div className="position-fixed" style={{ bottom: "20px", right: "20px", zIndex: 1000 }}>
+            <button
+              className="btn btn-primary btn-lg rounded-circle shadow-lg"
+              onClick={() => setIsEditing(true)}
+              style={{
+                backgroundColor: "#fd6410",
+                width: "60px",
+                height: "60px",
+                borderRadius: "50%"
+              }}
+              title="Edit Profile"
+            >
+              <i className="fa-solid fa-edit"></i>
+            </button>
+          </div>
+        )}
+
         <div className="row">
           {/* Left Column - Profile Picture */}
           <div className="col-lg-4 mb-4 mb-lg-0">
@@ -180,15 +292,16 @@ const ProfilePage: React.FC = () => {
               <div className="card-body p-4">
                 <ProfileImageUpload
                   imagePreview={imagePreview}
-                  onImageChange={handleImageChange}
-                  userName={profileData.full_name}
+                  onImageChange={isEditing ? handleImageChange : () => { }}
+                  userName={profileData.username || "User"}
                   userEmail={clientUser?.email}
+                  disabled={!isEditing}
                 />
               </div>
             </div>
           </div>
 
-          {/* Right Column - Form */}
+          {/* Right Column - Profile Info */}
           <div className="col-lg-8">
             <div className="card border-0 shadow-sm">
               <div className="card-body p-4">
@@ -197,9 +310,9 @@ const ProfilePage: React.FC = () => {
                   <div className="alert alert-success alert-dismissible fade show" role="alert">
                     <i className="fa-solid fa-check-circle me-2"></i>
                     {successMessage}
-                    <button 
-                      type="button" 
-                      className="btn-close" 
+                    <button
+                      type="button"
+                      className="btn-close"
                       onClick={() => setSuccessMessage("")}
                     ></button>
                   </div>
@@ -209,154 +322,213 @@ const ProfilePage: React.FC = () => {
                   <div className="alert alert-danger alert-dismissible fade show" role="alert">
                     <i className="fa-solid fa-exclamation-circle me-2"></i>
                     {errorMessage}
-                    <button 
-                      type="button" 
-                      className="btn-close" 
+                    <button
+                      type="button"
+                      className="btn-close"
                       onClick={() => setErrorMessage("")}
                     ></button>
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit}>
-                  {/* Personal Information Section */}
-                  <ProfileFormSection title="Personal Information" icon="fa-solid fa-user">
-                    <div className="col-md-6">
-                      <FormInput
-                        label="Full Name"
-                        type="text"
-                        value={profileData.full_name || ""}
-                        onChange={(value) => handleInputChange('full_name', value)}
-                        placeholder="Enter your full name"
-                      />
-                    </div>
+                {isEditing ? (
+                  <form onSubmit={handleSubmit}>
+                    {/* Personal Information Section */}
+                    <ProfileFormSection title="Personal Information" icon="fa-solid fa-user">
+                      <div className="col-md-6">
+                        <FormInput
+                          label="Username"
+                          type="text"
+                          value={profileData.username || ""}
+                          onChange={(value) => handleInputChange('username', value)}
+                          placeholder="Enter your username"
+                        />
+                      </div>
 
-                    <div className="col-md-6">
-                      <FormInput
-                        label="Email"
-                        type="email"
-                        value={clientUser?.email || ""}
-                        disabled={true}
-                        className="bg-light"
-                      />
-                      <small className="text-muted">Email cannot be changed</small>
-                    </div>
+                      <div className="col-md-6">
+                        <FormInput
+                          label="Email"
+                          type="email"
+                          value={clientUser?.email || ""}
+                          disabled={true}
+                          className="bg-light"
+                        />
+                        <small className="text-muted">Email cannot be changed</small>
+                      </div>
 
-                    <div className="col-md-6">
-                      <FormInput
-                        label="Phone"
-                        type="tel"
-                        value={profileData.phone || ""}
-                        onChange={(value) => handleInputChange('phone', value)}
-                        placeholder="Enter your phone number"
-                      />
-                    </div>
+                      <div className="col-md-6">
+                        <FormInput
+                          label="Phone"
+                          type="tel"
+                          value={profileData.phone || ""}
+                          onChange={(value) => handleInputChange('phone', value)}
+                          placeholder="Enter your phone number"
+                        />
+                      </div>
 
-                    <div className="col-md-6">
-                      <FormInput
-                        label="Gender"
-                        type="text"
-                        value={profileData.gender || ""}
-                        onChange={(value) => handleInputChange('gender', value as 'male' | 'female' | 'other')}
-                        options={[
-                          { value: 'male', label: 'Male' },
-                          { value: 'female', label: 'Female' },
-                          { value: 'other', label: 'Other' }
-                        ]}
-                        placeholder="Select Gender"
-                      />
-                    </div>
-                  </ProfileFormSection>
+                      <div className="col-md-6">
+                        <FormInput
+                          label="Gender"
+                          type="text"
+                          value={profileData.gender || ""}
+                          onChange={(value) => handleInputChange('gender', value as 'male' | 'female' | 'other')}
+                          options={[
+                            { value: 'male', label: 'Male' },
+                            { value: 'female', label: 'Female' },
+                            { value: 'other', label: 'Other' }
+                          ]}
+                          placeholder="Select Gender"
+                        />
+                      </div>
+                    </ProfileFormSection>
 
-                  {/* Birth Information Section */}
-                  <ProfileFormSection title="Birth Information" icon="fa-solid fa-calendar">
-                    <div className="col-md-4">
-                      <FormInput
-                        label="Date of Birth"
-                        type="date"
-                        value={profileData.date_of_birth || ""}
-                        onChange={(value) => handleInputChange('date_of_birth', value)}
-                      />
-                    </div>
+                    {/* Birth Information Section */}
+                    <ProfileFormSection title="Birth Information" icon="fa-solid fa-calendar">
+                      <div className="col-md-4">
+                        <FormInput
+                          label="Date of Birth"
+                          type="date"
+                          value={profileData.date_of_birth || ""}
+                          onChange={(value) => handleInputChange('date_of_birth', value)}
+                        />
+                      </div>
 
-                    <div className="col-md-4">
-                      <FormInput
-                        label="Time of Birth"
-                        type="time"
-                        value={profileData.time_of_birth || ""}
-                        onChange={(value) => handleInputChange('time_of_birth', value)}
-                      />
-                    </div>
+                      <div className="col-md-4">
+                        <FormInput
+                          label="Time of Birth"
+                          type="time"
+                          value={profileData.time_of_birth || ""}
+                          onChange={(value) => handleInputChange('time_of_birth', value)}
+                        />
+                      </div>
 
-                    <div className="col-md-4">
-                      <FormInput
-                        label="Place of Birth"
-                        type="text"
-                        value={profileData.place_of_birth || ""}
-                        onChange={(value) => handleInputChange('place_of_birth', value)}
-                        placeholder="Enter your birth place"
-                      />
-                    </div>
-                  </ProfileFormSection>
+                      <div className="col-md-4">
+                        <FormInput
+                          label="Place of Birth"
+                          type="text"
+                          value={profileData.place_of_birth || ""}
+                          onChange={(value) => handleInputChange('place_of_birth', value)}
+                          placeholder="Enter your birth place"
+                        />
+                      </div>
+                    </ProfileFormSection>
 
-                  {/* Preferences Section */}
-                  <ProfileFormSection title="Preferences" icon="fa-solid fa-cog">
-                    <div className="col-md-6">
-                      <FormInput
-                        label="Language Preference"
-                        type="text"
-                        value={profileData.language_preference || ""}
-                        onChange={(value) => handleInputChange('language_preference', value)}
-                        options={[
-                          { value: 'english', label: 'English' },
-                          { value: 'hindi', label: 'हिंदी' }
-                        ]}
-                        placeholder="Select Language"
-                      />
-                    </div>
+                    {/* Preferences Section */}
+                    <ProfileFormSection title="Preferences" icon="fa-solid fa-cog">
+                      <div className="col-md-6">
+                        <FormInput
+                          label="Language Preference"
+                          type="text"
+                          value={profileData.language_preference || ""}
+                          onChange={(value) => handleInputChange('language_preference', value)}
+                          options={[
+                            { value: 'english', label: 'English' },
+                            { value: 'hindi', label: 'हिंदी' }
+                          ]}
+                          placeholder="Select Language"
+                        />
+                      </div>
 
-                    <div className="col-md-6">
-                      <FormInput
-                        label="Astrology Preferences"
-                        type="textarea"
-                        value={profileData.preferences || ""}
-                        onChange={(value) => handleInputChange('preferences', value)}
-                        placeholder="Enter your astrology preferences"
-                        rows={3}
-                      />
-                    </div>
-                  </ProfileFormSection>
+                      <div className="col-md-6">
+                        <FormInput
+                          label="Astrology Preferences"
+                          type="textarea"
+                          value={profileData.preferences || ""}
+                          onChange={(value) => handleInputChange('preferences', value)}
+                          placeholder="Enter your astrology preferences"
+                          rows={3}
+                        />
+                      </div>
+                    </ProfileFormSection>
 
-                  {/* Submit Button */}
-                  <div className="col-12">
-                    <div className="d-flex gap-3 justify-content-end">
-                      <button
-                        type="button"
-                        className="btn btn-secondary px-4"
-                        onClick={() => router.push('/')}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="btn px-4 text-white"
-                        disabled={saving}
-                        style={{ backgroundColor: "var(--primary-color)" }}
-                      >
-                        {saving ? (
-                          <>
-                            <span className="spinner-border spinner-border-sm me-2"></span>
-                            Saving...
-                          </>
-                        ) : (
-                          <>
-                            <i className="fa-solid fa-save me-2"></i>
-                            Save Profile
-                          </>
-                        )}
-                      </button>
+                    {/* Submit Button */}
+                    <div className="col-12">
+                      <div className="d-flex gap-3 justify-content-end">
+                        <button
+                          type="button"
+                          className="btn btn-secondary px-4"
+                          onClick={() => {
+                            setIsEditing(false);
+                            loadProfile(); // Reload original data
+                          }}
+                        >
+                          <i className="fa-solid fa-times me-2"></i>
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="btn px-4 text-white"
+                          disabled={saving}
+                          style={{ backgroundColor: "#fd6410" }}
+                        >
+                          {saving ? (
+                            <>
+                              <span className="spinner-border spinner-border-sm me-2"></span>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <i className="fa-solid fa-save me-2"></i>
+                              Save Profile
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                ) : (
+                  /* View Mode */
+                  <div className="row">
+                    <div className="col-12">
+                      <h4 className="mb-4" style={{ color: "var(--primary-color)" }}>
+                        <i className="fa-solid fa-user me-2"></i>
+                        Personal Information
+                      </h4>
+                      <div className="row g-3 mb-4">
+                        <div className="col-md-6">
+                          <strong>Username:</strong> {profileData.username || "Not set"}
+                        </div>
+                        <div className="col-md-6">
+                          <strong>Email:</strong> {clientUser?.email || "Not set"}
+                        </div>
+                        <div className="col-md-6">
+                          <strong>Phone:</strong> {profileData.phone || "Not set"}
+                        </div>
+                        <div className="col-md-6">
+                          <strong>Gender:</strong> {profileData.gender || "Not set"}
+                        </div>
+                      </div>
+
+                      <h4 className="mb-4" style={{ color: "var(--primary-color)" }}>
+                        <i className="fa-solid fa-calendar me-2"></i>
+                        Birth Information
+                      </h4>
+                      <div className="row g-3 mb-4">
+                        <div className="col-md-4">
+                          <strong>Date of Birth:</strong> {profileData.date_of_birth || "Not set"}
+                        </div>
+                        <div className="col-md-4">
+                          <strong>Time of Birth:</strong> {profileData.time_of_birth || "Not set"}
+                        </div>
+                        <div className="col-md-4">
+                          <strong>Place of Birth:</strong> {profileData.place_of_birth || "Not set"}
+                        </div>
+                      </div>
+
+                      <h4 className="mb-4" style={{ color: "var(--primary-color)" }}>
+                        <i className="fa-solid fa-cog me-2"></i>
+                        Preferences
+                      </h4>
+                      <div className="row g-3">
+                        <div className="col-md-6">
+                          <strong>Language Preference:</strong> {profileData.language_preference || "Not set"}
+                        </div>
+                        <div className="col-md-6">
+                          <strong>Astrology Preferences:</strong> {profileData.preferences || "Not set"}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </form>
+                )}
               </div>
             </div>
           </div>

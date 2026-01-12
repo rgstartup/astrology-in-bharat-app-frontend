@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useState, useCallback, FormEvent } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 // --- 1. Define Typescript Interfaces ---
 
 /** The shape of the data sent to the server (request body). */
@@ -17,6 +18,7 @@ interface LoginPayload {
 interface LoginSuccessResponse {
   token: string;
   message: string;
+  user?: any; // Add user field
   // Add other fields you expect, e.g., user data
 }
 
@@ -31,6 +33,7 @@ const API_ENDPOINT = "http://localhost:4000/api/v1/auth/email/login";
 
 const Page: React.FC = () => {
   const router = useRouter();
+  const { clientLogin } = useClientAuth(); // Add this line
   // --- 2. State Management ---
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -101,6 +104,11 @@ const Page: React.FC = () => {
 
       console.log("Login Success. Status:", response.status);
       console.log("Server Response Data:", response.data);
+
+      // Update authentication context
+      if (response.data.token) {
+        clientLogin(response.data.token, response.data.user);
+      }
 
       setSuccessMessage(
         response.data.message || "Sign In successful! Redirecting..."
@@ -311,7 +319,7 @@ const Page: React.FC = () => {
                 {/* Submit button */}
                 <button
                   type="submit"
-                  className="btn btn-primary w-100 py-2 fw-semibold sign-button"
+                  className="btn btn-primary w-100 py-2 fw-semibold sign-button" style={{backgroundColor:"#fd6410", color:"white"}}
                   disabled={isLoading}
                 >
                   {isLoading ? "Signing In..." : "Sign In"}

@@ -289,7 +289,7 @@ const Page: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="btn btn-primary w-100 mt-4 py-2 fw-semibold sign-button"
+                  className="btn  w-100 mt-4 py-2 fw-semibold sign-button" style={{backgroundColor:"#fd6410", color:"white"}}
                   disabled={isLoading}
                 >
                   {isLoading ? "Signing Up..." : "Sign Up"}

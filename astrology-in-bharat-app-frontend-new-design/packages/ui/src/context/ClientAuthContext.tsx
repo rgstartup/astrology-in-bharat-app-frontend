@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
@@ -42,6 +42,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
     const [clientLoading, setClientLoading] = useState(true);
     const [isClientAuthenticated, setIsClientAuthenticated] = useState(false);
     const router = useRouter();
+    const authCheckRef = useRef(false); // Add ref to prevent multiple checks
 
     const clientLogin = (newToken: string, userData?: ClientUser) => {
         localStorage.setItem('clientAccessToken', newToken);
@@ -150,6 +151,11 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
     };
 
     useEffect(() => {
+        // Prevent multiple simultaneous authentication checks
+        if (authCheckRef.current) {
+            return;
+        }
+        
         const initClientAuth = async () => {
             try {
                 console.log("🔍 Checking authentication status...");
@@ -208,9 +214,11 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                 }
             } finally {
                 setClientLoading(false);
+                authCheckRef.current = false; // Reset ref after completion
             }
         };
 
+        authCheckRef.current = true; // Set ref to prevent multiple calls
         initClientAuth();
     }, []);
 
