@@ -18,7 +18,7 @@ const NotFound: React.FC = () => {
       {/* Message */}
       <p className="mb-4 text-gray-500 italic" style={{ maxWidth: "500px" }}>
         Looks like the stars couldn’t guide you here. The page you are looking
-        for might have been moved, renamed, or does not exist in our universe.
+        for might have been moved,,, renamed, or does not exist in our universe.
       </p>
 
       {/* Image */}
