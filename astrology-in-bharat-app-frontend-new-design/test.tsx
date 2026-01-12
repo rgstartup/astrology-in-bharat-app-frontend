@@ -237,86 +237,66 @@ const Header: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-6 mobile-space">
+                  <div className="col-5 mobile-space">
                     <div className="d-flex gap-2 w-100 justify-content-end">
-                     
+                      {/* Cart button - always visible */}
+                      <div className="col-4 mobile-space text-center">
+                        <Link href={PATHS.CART} className="cart-top">
+                          <i className="fa-solid fa-cart-shopping"></i> Cart{" "}
+                          <span className="value">4</span>
+                        </Link>
+                      </div>
 
                       {isAuthenticated ? (
-  <div className="col-8 mobile-space">
-    <div className="d-flex gap-2 align-items-center">
-      <Link href={PATHS.CART} className="cart-top">
-        <i className="fa-solid fa-cart-shopping" style={{marginLeft:"20px"}}></i> {" "}
-      </Link>
+                        <>
+                          <div className="col-4 mobile-space text-center">
+                            <Link
+                              href={PATHS.PROFILE}
+                              className="account-btn w-100 text-center"
+                            >
+                              <i className="fa-solid fa-user"></i> My Profile
+                            </Link>
 
-      <Link
-        href={PATHS.PROFILE}
-        style={{
-          backgroundColor: "#fa6310",
-          color: "white",
-          borderRadius: "5px",
-          padding: "5px 8px",
-          textDecoration: "none",
-          width: "100%",
-          textAlign: "center",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <i className="fa-solid fa-user"></i> Profile
-      </Link>
+                            <button
+                              className="account-btn w-100"
+                              onClick={handleLogout}
+                              type="button"
+                            >
+                              <i className="fa-solid fa-right-from-bracket"></i> Logout
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="col-8 mobile-space text-center">
+                            <Link
+                              href={PATHS.SIGN_IN}
+                              className=" w-100 text-center" style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px 5px 8px",
+                                
+                              }}
+                            >
+                              SignIn
+                            </Link>
 
-      <button
-        onClick={handleLogout}
-        type="button"
-        style={{
-          backgroundColor: "#fa6310",
-          color: "white",
-          borderRadius: "5px",
-          padding: "5px 8px",
-          border: "none",
-          width: "100%",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <i className="fa-solid fa-right-from-bracket"></i> Logout
-      </button>
-    </div>
-  </div>
-) : (
-  <div className="col-8 mobile-space">
-    <div className="d-flex gap-2">
-      <Link
-        href={PATHS.SIGN_IN}
-        style={{
-          backgroundColor: "#fa6310",
-          color: "white",
-          borderRadius: "5px",
-          padding: "5px 8px",
-          textDecoration: "none",
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        SignIn
-      </Link>
-
-      <Link
-        href={PATHS.REGISTER}
-        style={{
-          backgroundColor: "#fa6310",
-          color: "white",
-          borderRadius: "5px",
-          padding: "5px 8px",
-          textDecoration: "none",
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        Register
-      </Link>
-    </div>
-  </div>
-)}
-
+                            <Link
+                              href={PATHS.REGISTER}
+                              className=" w-100 text-center"style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px 5px 8px",
+                                
+                              }}
+                            >
+                              Register
+                            </Link>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

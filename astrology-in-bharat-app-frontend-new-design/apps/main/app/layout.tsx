@@ -5,8 +5,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "swiper/css";
 import "swiper/css/navigation";
 
-import "@repo/styles";
+import "@packages/styles/index.css";
 import ClientLayout from "@/components/layout/ClientLayout";
+import { ClientAuthProvider } from "@packages/ui/src/context/ClientAuthContext";
 import { Metadata } from "next";
 
 // Google Fonts setup
@@ -56,7 +57,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-black">
-        <ClientLayout>{children}</ClientLayout>
+        <ClientAuthProvider>
+          <ClientLayout>{children}</ClientLayout>
+        </ClientAuthProvider>
       </body>
     </html>
   );
