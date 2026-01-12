@@ -52,16 +52,39 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
     };
 
     const clientLogout = async () => {
-        localStorage.removeItem('clientAccessToken');
+        console.log("🚪 Starting logout process...");
+        
+        // Clear local state first
         setClientUser(null);
         setIsClientAuthenticated(false);
+        setClientLoading(false);
+        
+        // Clear all local storage items
+        localStorage.removeItem('clientAccessToken');
+        localStorage.removeItem('accessToken'); // Clear any other tokens
+        localStorage.removeItem('refreshToken');
+        
+        console.log("🗑️ Cleared local storage and state");
         
         try {
-            await apiClient.post('/auth/client-logout');
-        } catch (err) {
-            console.error("Client Logout error:", err);
+            // Call backend logout endpoint
+            console.log("📡 Calling backend logout...");
+            const response = await apiClient.post('/auth/client-logout');
+            console.log("✅ Backend logout successful:", response.data);
+        } catch (err: any) {
+            console.error("❌ Backend logout error:", err);
+            
+            // Even if backend fails, continue with frontend logout
+            if (err.response?.status === 401) {
+                console.log("ℹ️ User was already logged out (401)");
+            } else if (err.response?.status === 404) {
+                console.log("ℹ️ Logout endpoint not found (404)");
+            } else {
+                console.log("⚠️ Network error during logout, but continuing...");
+            }
         }
         
+        console.log("🔄 Redirecting to home...");
         router.push('/');
     };
 
