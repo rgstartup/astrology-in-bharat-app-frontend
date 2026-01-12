@@ -5,6 +5,7 @@ import { Modal } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 
 interface Astrologer {
+  id?: number | string;
   image: string;
   name: string;
   expertise: string;
@@ -23,7 +24,7 @@ interface AstrologerCardProps {
 
 
 const AstrologerCard: React.FC<AstrologerCardProps> = ({ astrologerData }) => {
-  const { image, name, expertise, experience, language, price, video, ratings = 0 } = astrologerData as any;
+  const { id, image, name, expertise, experience, language, price, video, ratings = 0 } = astrologerData as any;
 
   const [show, setShow] = useState(false);
 
@@ -38,6 +39,9 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({ astrologerData }) => {
 
   // Create URL-safe query string with astrologer data
   const createDetailsUrl = () => {
+    if (id) return `/astrologer/${id}`;
+
+    // Fallback if no ID (though ID should exist)
     const params = new URLSearchParams({
       name: name || '',
       image: image || '',

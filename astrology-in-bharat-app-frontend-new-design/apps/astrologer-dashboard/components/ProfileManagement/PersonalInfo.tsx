@@ -12,6 +12,7 @@ interface PersonalInfoProps {
     onChange: (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => void;
+    onProfilePicUpdate?: (file: File) => void;
 }
 
 export default function PersonalInfo({
@@ -22,18 +23,45 @@ export default function PersonalInfo({
     onSave,
     onCancel,
     onChange,
+    onProfilePicUpdate
 }: PersonalInfoProps) {
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
     const specs = profile.specialization ? profile.specialization.split(',').map(s => s.trim()).filter(s => s) : [];
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file && onProfilePicUpdate) {
+            onProfilePicUpdate(file);
+        }
+        if (e.target) e.target.value = "";
+    };
+    console.log("mere phto", profile.profilePic)
     return (
         <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-gray-100 h-full">
             <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4">
-                <div className="relative w-24 h-24 rounded-full bg-gray-200">
+                <div className="relative w-24 h-24 rounded-full bg-gray-200 group">
                     <img
-                        src={profile.profilePic || "/images/profile.jpg"}
+                        src={profile.profilePic}
                         alt="Profile"
                         className="w-full h-full object-cover rounded-full border-2 border-yellow-500 shadow-md"
                     />
+                    {onProfilePicUpdate && (
+                        <>
+                            <div
+                                onClick={() => fileInputRef.current?.click()}
+                                className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                            >
+                                <Edit3 className="w-6 h-6 text-white" />
+                            </div>
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                className="hidden"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                            />
+                        </>
+                    )}
                 </div>
                 <div className="flex-1">
                     <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{profile.name}</h2>

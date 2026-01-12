@@ -9,28 +9,20 @@ interface HeaderProps {
   toggleSidebar: () => void;
 }
 
+import { useAuth } from "../../context/AuthContext";
+
 export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(false); // Toggle state
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchStatus = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) return;
-
-      try {
-        const res = await apiClient.get('/expert/profile');
-        if (res.data) {
-          setIsOnline(res.data.is_available);
-        }
-      } catch (err) {
-        console.error("Failed to fetch initial status:", err);
-      }
-    };
-    fetchStatus();
-  }, []);
+    if (user?.is_available !== undefined) {
+      setIsOnline(user.is_available);
+    }
+  }, [user]);
 
   // Track whether mouse is on icon or on popup
   const isHoveringIcon = useRef(false);
@@ -199,7 +191,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           >
             <Link href="/dashboard/profilemanagement">
               <img
-                src="/images/profile.jpg"
+                src={(user as any)?.avatar || (user as any)?.profilePic || "/images/profile.jpg"}
                 alt="Profile"
                 className="w-10 h-10 text-gray-600 object-cover rounded-full border-2 border-yellow-500 shadow-md bg-top"
               />

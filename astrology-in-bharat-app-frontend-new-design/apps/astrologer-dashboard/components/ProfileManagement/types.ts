@@ -43,4 +43,26 @@ export interface Profile {
     kycCompleted: boolean;
     addresses: Address[];
     certificates?: string[];
+    gallery: string[];
+    videos: string[];
+    detailed_experience: ExperienceItem[];
+}
+
+export interface ExperienceItem {
+    id: number;
+    title: string;
+    organization: string;
+    startDate: string;
+    endDate: string; // or 'Present'
+    description: string;
+    isCurrent: boolean;
+}
+
+export interface DocumentItem {
+    id: number;
+    name: string;
+    type: string;
+    size: string;
+    url?: string;
+    uploadedAt: Date;
 }

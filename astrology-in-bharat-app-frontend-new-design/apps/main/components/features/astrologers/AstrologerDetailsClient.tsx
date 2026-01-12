@@ -22,6 +22,10 @@ interface AstrologerData {
   price: number;
   video: string;
   ratings: number;
+  bio: string;
+  detailed_experience: any[];
+  gallery: string[];
+  videos: string[];
 }
 
 export default function AstrologerDetailsClient({
@@ -30,7 +34,8 @@ export default function AstrologerDetailsClient({
   astrologer: AstrologerData;
 }) {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'experience' | 'reviews' | 'gallery' | 'videos'>('about');
   const router = useRouter();
 
@@ -65,7 +70,7 @@ export default function AstrologerDetailsClient({
                     </div>
                   </div>
                   <button
-                    onClick={() => setIsVideoModalOpen(true)}
+                    onClick={() => setSelectedVideo(astrologer.video)}
                     className="absolute bottom-1 right-1 bg-[#fd6410] text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
                   >
                     <i className="fa-solid fa-play text-[12px]"></i>
@@ -195,44 +200,36 @@ export default function AstrologerDetailsClient({
               <div className="min-h-[160px] mb-8">
                 {activeTab === 'about' && (
                   <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <p>
-                      <span className="font-bold text-gray-900">Acharya {astrologer.name}</span> is a distinguished expert with profound knowledge in
-                      <span className="font-semibold text-[#fd6410]"> Vedic Astrology</span>,
-                      <span className="font-semibold text-[#fd6410]"> Nadi Shastra</span>, and
-                      <span className="font-semibold text-[#fd6410]"> Crystal Healing</span>.
-                      With over {astrologer.experience} years of dedicated practice, they have guided countless individuals towards clarity and success.
-                    </p>
-                    <p className="mt-3 text-xs text-gray-400">
-                      Specializes in relationship counseling, career guidance, and remedial measures using ancient Vedic wisdom.
-                    </p>
+                    {astrologer.bio ? (
+                      <p className="whitespace-pre-line">{astrologer.bio}</p>
+                    ) : (
+                      <p>
+                        <span className="font-bold text-gray-900">Acharya {astrologer.name}</span> is a distinguished expert with profound knowledge in
+                        <span className="font-semibold text-[#fd6410]"> {astrologer.expertise}</span>.
+                        With over {astrologer.experience} years of dedicated practice, they have guided countless individuals towards clarity and success.
+                      </p>
+                    )}
                   </div>
                 )}
 
                 {activeTab === 'experience' && (
                   <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[200px] overflow-y-auto pr-1">
-                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm">
-                      <div className="flex gap-3">
-                        <div className="mt-1.5 w-2 h-2 rounded-full bg-[#fd6410] shrink-0"></div>
-                        <div>
-                          <h5 className="text-sm font-bold text-gray-900">Senior Vedic Astrologer</h5>
-                          <p className="text-xs text-gray-500 font-medium">Astrology In Bharat • 2020 - Present</p>
-                          <p className="text-sm text-gray-600 mt-2 leading-relaxed">Provided accurate predictions for over 5000+ clients globally specializing in career and marriage.</p>
+                    {astrologer.detailed_experience && astrologer.detailed_experience.length > 0 ? (
+                      astrologer.detailed_experience.map((exp, index) => (
+                        <div key={index} className="bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm">
+                          <div className="flex gap-3">
+                            <div className="mt-1.5 w-2 h-2 rounded-full bg-[#fd6410] shrink-0"></div>
+                            <div>
+                              <h5 className="text-sm font-bold text-gray-900">{exp.role || "Astrologer"}</h5>
+                              <p className="text-xs text-gray-500 font-medium">{exp.company || "Independent"} • {exp.duration || "N/A"}</p>
+                              {exp.description && <p className="text-sm text-gray-600 mt-2 leading-relaxed">{exp.description}</p>}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm">
-                      <div className="flex gap-3">
-                        <div className="mt-1.5 w-2 h-2 rounded-full bg-gray-400 shrink-0"></div>
-                        <div>
-                          <h5 className="text-sm font-bold text-gray-900">Certified Vastu Consultant</h5>
-                          <p className="text-xs text-gray-500 font-medium">Varanasi Vedic Institute • 2015 - 2020</p>
-                          <p className="text-sm text-gray-600 mt-2 leading-relaxed">Conducted onsite Vastu audits for residential and commercial properties.</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Dummy item to demonstrate scrolling if needed, or just keep the 2 as requested but strictly following the card layout */}
+                      ))
+                    ) : (
+                      <p className="text-sm text-gray-500 italic">No specific experience details added.</p>
+                    )}
                   </div>
                 )}
 
@@ -260,81 +257,57 @@ export default function AstrologerDetailsClient({
                 )}
 
                 {activeTab === 'gallery' && (
-                  <div className="grid grid-cols-2 gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[280px] overflow-y-auto pr-1">
-                    <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group">
-                      <Image src="/images/astro-img1.png" alt="Gallery 1" fill className="object-cover transition-transform group-hover:scale-105" />
-                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i className="fa-solid fa-magnifying-glass text-white"></i>
-                      </div>
-                    </div>
-                    <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group">
-                      <Image src="/images/astro-img2.png" alt="Gallery 2" fill className="object-cover transition-transform group-hover:scale-105" />
-                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i className="fa-solid fa-play text-white"></i>
-                      </div>
-                    </div>
-                    <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group">
-                      <Image src="/images/astro-img3.png" alt="Gallery 3" fill className="object-cover transition-transform group-hover:scale-105" />
-                    </div>
-                    <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group">
-                      <Image src="/images/astro-img1.png" alt="Gallery 4" fill className="object-cover transition-transform group-hover:scale-105" />
-                    </div>
-                    <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group">
-                      <Image src="/images/astro-img2.png" alt="Gallery 5" fill className="object-cover transition-transform group-hover:scale-105" />
-                    </div>
-                    <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group flex items-center justify-center bg-gray-50">
-                      <span className="text-xs text-gray-400 font-medium cursor-pointer hover:text-[#fd6410] transition-colors">Load More</span>
-                    </div>
+                  <div className="grid grid-cols-3 gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[360px] overflow-y-auto pr-1">
+                    {astrologer.gallery && astrologer.gallery.length > 0 ? (
+                      astrologer.gallery.map((img, index) => (
+                        <div
+                          key={index}
+                          onClick={() => setSelectedImage(img)}
+                          className="relative aspect-square rounded-lg overflow-hidden border border-gray-200 group cursor-pointer"
+                        >
+                          <Image src={img} alt={`Gallery ${index + 1}`} fill className="object-cover transition-transform group-hover:scale-105" />
+                          <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i className="fa-solid fa-magnifying-glass text-white text-xl"></i>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="col-span-3 text-sm text-gray-500 italic text-center py-4">No gallery images available.</p>
+                    )}
                   </div>
                 )}
 
                 {activeTab === 'videos' && (
-                  <div className="grid grid-cols-2 gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[280px] overflow-y-auto pr-1">
-                    <div onClick={() => setIsVideoModalOpen(true)} className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group cursor-pointer bg-black">
-                      <Image src="/images/astro-img1.png" alt="Video 1" fill className="object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-10 h-10 rounded-full bg-[#fd6410] flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                          <i className="fa-solid fa-play text-xs pl-0.5"></i>
+                  <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[320px] overflow-y-auto pr-1">
+                    {astrologer.videos && astrologer.videos.length > 0 ? (
+                      astrologer.videos.map((vid, index) => (
+                        <div
+                          key={index}
+                          onClick={() => setSelectedVideo(vid)}
+                          className="relative aspect-video rounded-xl overflow-hidden border border-gray-200 group cursor-pointer bg-black shadow-sm hover:shadow-md transition-all"
+                        >
+                          {/* Video */}
+                          <video
+                            src={vid}
+                            className="w-full h-full object-cover opacity-90 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none"
+                          />
+
+                          {/* Hover Overlay + Play Icon */}
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div className="w-14 h-14 rounded-full bg-[#fd6410] flex items-center justify-center text-white shadow-xl scale-75 group-hover:scale-100 transition-transform duration-300">
+                              <i className="fa-solid fa-play text-lg ml-1"></i>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div onClick={() => setIsVideoModalOpen(true)} className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group cursor-pointer bg-black">
-                      <Image src="/images/astro-img2.png" alt="Video 2" fill className="object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center text-white shadow-lg group-hover:bg-[#fd6410] transition-all">
-                          <i className="fa-solid fa-play text-xs pl-0.5"></i>
-                        </div>
-                      </div>
-                    </div>
-                    <div onClick={() => setIsVideoModalOpen(true)} className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group cursor-pointer bg-black">
-                      <Image src="/images/astro-img3.png" alt="Video 3" fill className="object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center text-white shadow-lg group-hover:bg-[#fd6410] transition-all">
-                          <i className="fa-solid fa-play text-xs pl-0.5"></i>
-                        </div>
-                      </div>
-                    </div>
-                    <div onClick={() => setIsVideoModalOpen(true)} className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group cursor-pointer bg-black">
-                      <Image src="/images/astro-img1.png" alt="Video 4" fill className="object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center text-white shadow-lg group-hover:bg-[#fd6410] transition-all">
-                          <i className="fa-solid fa-play text-xs pl-0.5"></i>
-                        </div>
-                      </div>
-                    </div>
-                    <div onClick={() => setIsVideoModalOpen(true)} className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group cursor-pointer bg-black">
-                      <Image src="/images/astro-img2.png" alt="Video 5" fill className="object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center text-white shadow-lg group-hover:bg-[#fd6410] transition-all">
-                          <i className="fa-solid fa-play text-xs pl-0.5"></i>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group flex items-center justify-center bg-gray-50">
-                      <span className="text-xs text-gray-400 font-medium cursor-pointer hover:text-[#fd6410] transition-colors">Load More</span>
-                    </div>
+                      ))
+                    ) : (
+                      <p className="col-span-2 text-sm text-gray-500 italic text-center py-4">
+                        No videos available.
+                      </p>
+                    )}
                   </div>
                 )}
+
               </div>
 
               <div className="flex flex-wrap gap-3 mb-5">
@@ -510,34 +483,63 @@ export default function AstrologerDetailsClient({
       </section>
 
       {/* Video Modal (Custom Implementation) */}
-      {isVideoModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h4 className="text-lg font-bold text-gray-800">
-                Meet Astrologer {astrologer.name}
-              </h4>
+      {selectedVideo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-4xl bg-black rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col">
+            <div className="absolute top-4 right-4 z-10">
               <button
-                onClick={() => setIsVideoModalOpen(false)}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                onClick={() => setSelectedVideo(null)}
+                className="p-2 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full transition-colors backdrop-blur-md"
               >
                 <XIcon className="w-6 h-6" />
               </button>
             </div>
-            <div className="p-0 bg-black aspect-video">
-              <iframe
-                width="100%"
-                height="100%"
-                src={astrologer.video}
-                title="Intro Video"
-                frameBorder="0"
-                allowFullScreen
-                className="w-full h-full"
-              ></iframe>
+
+            <div className="relative w-full aspect-video bg-black flex items-center justify-center">
+              <video
+                src={selectedVideo}
+                controls
+                autoPlay
+                className="w-full h-full max-h-[80vh]"
+                controlsList="nodownload"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            <div className="bg-white p-4 flex items-center justify-between border-t border-gray-100">
+              <h4 className="text-base font-bold text-gray-800">
+                Playing Video
+              </h4>
+              <span className="text-xs text-gray-500">Astrologer {astrologer.name}</span>
             </div>
           </div>
           {/* Backdrop click to close */}
-          <div className="absolute inset-0 -z-10" onClick={() => setIsVideoModalOpen(false)}></div>
+          <div className="absolute inset-0 -z-10" onClick={() => setSelectedVideo(null)}></div>
+        </div>
+      )}
+
+      {/* Image Lightbox Modal */}
+      {selectedImage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-4xl max-h-[90vh] flex items-center justify-center animate-in zoom-in-95 duration-200">
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute -top-12 right-0 p-2 text-white hover:text-gray-300 transition-colors bg-white/10 rounded-full backdrop-blur-md"
+            >
+              <XIcon className="w-6 h-6" />
+            </button>
+            <div className="relative w-full h-[80vh] rounded-lg overflow-hidden">
+              <Image
+                src={selectedImage}
+                alt="Full view"
+                fill
+                className="object-contain" // Use object-contain to show full image without cropping
+              />
+            </div>
+          </div>
+          {/* Backdrop click to close */}
+          <div className="absolute inset-0 -z-10" onClick={() => setSelectedImage(null)}></div>
         </div>
       )}
     </>
