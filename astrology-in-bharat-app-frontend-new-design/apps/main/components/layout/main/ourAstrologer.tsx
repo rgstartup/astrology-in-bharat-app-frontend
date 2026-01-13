@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import { SkeletonCard } from "../../features/astrologers/SkeletonCard";
 
-const API_BASE_URL = "http://localhost:4000/api/v1";
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1`;
 
 interface ExpertProfile {
     id: number;
@@ -93,7 +93,7 @@ const OurAstrologer = () => {
                 if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
                 // If the path doesn't start with / and isn't a full URL, it might need the uploads prefix
                 // The backend serves assets from /uploads according to main.ts
-                const baseUrl = "http://localhost:4000"; // Fallback to localized server
+                const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"; // Fallback to localized server
                 return `${baseUrl}/uploads/${path}`;
             };
 

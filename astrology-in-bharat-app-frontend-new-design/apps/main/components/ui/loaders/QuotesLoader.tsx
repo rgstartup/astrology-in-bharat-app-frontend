@@ -36,7 +36,7 @@ export default function QuotesLoader() {
         return;
       }
 
-      const response = await axios.get("http://localhost:4000/api/v1/quotes");
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/quotes`);
 
       if (Array.isArray(response.data) && response.data.length > 0) {
         setQuotes(response.data);

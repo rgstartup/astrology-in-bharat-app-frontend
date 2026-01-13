@@ -29,7 +29,7 @@ interface FormData {
 }
 
 // --- API Endpoint Constant ---
-const API_ENDPOINT = "http://localhost:4000/api/v1/auth/email/login";
+const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/email/login`;
 
 const Page: React.FC = () => {
   const router = useRouter();
@@ -87,7 +87,7 @@ const Page: React.FC = () => {
       password: formData.password,
     };
 
-   
+
     try {
       // Making the POST request
       const response = await axios.post<LoginSuccessResponse>(
@@ -319,7 +319,7 @@ const Page: React.FC = () => {
                 {/* Submit button */}
                 <button
                   type="submit"
-                  className="btn btn-primary w-100 py-2 fw-semibold sign-button" style={{backgroundColor:"#fd6410", color:"white"}}
+                  className="btn btn-primary w-100 py-2 fw-semibold sign-button" style={{ backgroundColor: "#fd6410", color: "white" }}
                   disabled={isLoading}
                 >
                   {isLoading ? "Signing In..." : "Sign In"}

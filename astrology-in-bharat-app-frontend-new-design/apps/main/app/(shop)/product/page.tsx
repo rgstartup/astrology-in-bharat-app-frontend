@@ -12,7 +12,7 @@ interface Product {
 }
 
 async function getProducts(): Promise<Product[]> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
   try {
     const res = await fetch(`${apiUrl}/api/v1/products`, { cache: "no-store" });
     if (!res.ok) {

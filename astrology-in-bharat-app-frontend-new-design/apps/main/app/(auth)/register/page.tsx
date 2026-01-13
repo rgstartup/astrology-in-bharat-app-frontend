@@ -22,7 +22,7 @@ interface FormData {
 }
 
 // --- API ---
-const API_ENDPOINT = "http://localhost:4000/api/v1/auth/email/register";
+const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/email/register`;
 
 const Page: React.FC = () => {
   const router = useRouter();
@@ -69,7 +69,7 @@ const Page: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -289,7 +289,7 @@ const Page: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="btn  w-100 mt-4 py-2 fw-semibold sign-button" style={{backgroundColor:"#fd6410", color:"white"}}
+                  className="btn  w-100 mt-4 py-2 fw-semibold sign-button" style={{ backgroundColor: "#fd6410", color: "white" }}
                   disabled={isLoading}
                 >
                   {isLoading ? "Signing Up..." : "Sign Up"}

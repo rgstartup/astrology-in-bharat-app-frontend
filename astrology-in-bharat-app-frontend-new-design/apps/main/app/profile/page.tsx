@@ -55,7 +55,7 @@ const ProfilePage: React.FC = () => {
   const loadProfile = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:4000/api/v1/client/profile', {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile`, {
         withCredentials: true
       });
 
@@ -120,7 +120,7 @@ const ProfilePage: React.FC = () => {
       // Try to update first, if 404, then create
       try {
         response = await axios.patch(
-          'http://localhost:4000/api/v1/client/profile',
+          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile`,
           payload,
           {
             withCredentials: true,
@@ -135,7 +135,7 @@ const ProfilePage: React.FC = () => {
           // Profile doesn't exist, create it
           console.log("📝 Profile not found, creating new profile...");
           response = await axios.post(
-            'http://localhost:4000/api/v1/client/profile',
+            `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile`,
             payload,
             {
               withCredentials: true,
@@ -158,7 +158,7 @@ const ProfilePage: React.FC = () => {
         formData.append('file', profileImage);
 
         const imageResponse = await axios.patch(
-          'http://localhost:4000/api/v1/client/profile/picture',
+          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile/picture`,
           formData,
           {
             withCredentials: true,

@@ -32,7 +32,7 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
   onSkip,
 }) => {
   const router = useRouter();
-  const API_ENDPOINT = "http://localhost:4000/api/v1/client/profile";
+  const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/client/profile`;
 
   const [formData, setFormData] = useState<ProfileFormData>({
     gender: "",
@@ -128,15 +128,15 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
         updatedAddresses.length > 0
           ? updatedAddresses
           : [
-              {
-                line1: "",
-                city: "",
-                state: "",
-                country: "",
-                zipCode: "",
-                isPrimary: false,
-              },
-            ],
+            {
+              line1: "",
+              city: "",
+              state: "",
+              country: "",
+              zipCode: "",
+              isPrimary: false,
+            },
+          ],
     }));
   };
 
