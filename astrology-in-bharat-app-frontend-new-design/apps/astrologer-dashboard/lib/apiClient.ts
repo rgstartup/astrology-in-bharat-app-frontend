@@ -1,6 +1,10 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/api/v1` : 'http://localhost:6543/api/v1';
+const apiEnvVar = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "");
+const API_BASE_URL = apiEnvVar ? `${apiEnvVar}/api/v1` : 'http://localhost:6543/api/v1';
+
+console.log("DEBUG: process.env.NEXT_PUBLIC_API_URL =", process.env.NEXT_PUBLIC_API_URL);
+console.log("DEBUG: Resolved API_BASE_URL =", API_BASE_URL);
 
 // Create axios instance
 export const apiClient = axios.create({

@@ -9,7 +9,8 @@ export interface Product {
     percentageOff?: number;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+const apiEnvVar = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "");
+const API_BASE_URL = apiEnvVar || "http://localhost:6543";
 
 export const getProducts = async (): Promise<Product[]> => {
     try {
