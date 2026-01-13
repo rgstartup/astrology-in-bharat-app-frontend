@@ -3,6 +3,7 @@
 import React from "react";
 import NextImage from "next/image";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useCart } from "@packages/ui/src/context/CartContext";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
@@ -38,6 +39,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
     const percentageOff = Number(product.percentageOff) || 0;
 
     const { isClientAuthenticated } = useClientAuth();
+    const { addToCart } = useCart();
+    const [isAdding, setIsAdding] = React.useState(false);
     const router = useRouter();
 
     const handleLike = (e: React.MouseEvent) => {
@@ -57,7 +60,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
         toast.success("Added to wishlist!");
     };
 
-    const handleBuy = (e: React.MouseEvent) => {
+    const handleBuy = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -70,8 +73,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
             return;
         }
 
-        // TODO: Implement actual buy/cart logic
-        toast.success("Proceeding to checkout...");
+        try {
+            setIsAdding(true);
+            await addToCart(Number(product.id || product._id), 1);
+        } finally {
+            setIsAdding(false);
+        }
     };
 
     return (
@@ -146,10 +153,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                     </button>
                     <button
                         onClick={handleBuy}
-                        className="col-span-4 bg-[#F95E09] hover:bg-[#D84E06] text-white font-semibold rounded-full shadow-[0_4px_20px_-2px_rgba(249,94,9,0.3)] hover:shadow-orange-500/40 transform active:scale-95 transition-all duration-200 h-10 flex items-center justify-center gap-2 text-sm"
+                        disabled={isAdding}
+                        className="col-span-4 bg-[#F95E09] hover:bg-[#D84E06] text-white font-semibold rounded-full shadow-[0_4px_20px_-2px_rgba(249,94,9,0.3)] hover:shadow-orange-500/40 transform active:scale-95 transition-all duration-200 h-10 flex items-center justify-center gap-2 text-sm disabled:opacity-70"
                     >
-                        <span>Buy Now</span>
-                        <i className="fa-solid fa-arrow-right"></i>
+                        <span>{isAdding ? "Adding..." : "Add to Cart"}</span>
+                        {!isAdding && <i className="fa-solid fa-cart-plus"></i>}
                     </button>
                 </div>
             </div>

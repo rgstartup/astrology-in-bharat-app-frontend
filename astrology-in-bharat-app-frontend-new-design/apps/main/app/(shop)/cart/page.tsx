@@ -1,61 +1,38 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import ProductsCarousel from "@/components/features/shop/ProductsCarousel";
 import { Button, Form } from "react-bootstrap";
+import { useCart } from "@packages/ui/src/context/CartContext";
 
 const CartPage: React.FC = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Crystal Healing Bracelet",
-      price: 349,
-      image: "/images/product-1.webp",
-      quantity: 2,
-    },
-    {
-      id: 2,
-      name: "Rose Quartz Pendant",
-      price: 499,
-      image: "/images/product-2.webp",
-      quantity: 1,
-    },
-    {
-      id: 3,
-      name: "Rose Quartz Pendant",
-      price: 499,
-      image: "/images/product-2.webp",
-      quantity: 1,
-    },
-    {
-      id: 4,
-      name: "Rose Quartz Pendant",
-      price: 499,
-      image: "/images/product-2.webp",
-      quantity: 1,
-    },
-  ]);
+  const {
+    cartItems,
+    updateQuantity,
+    removeFromCart,
+    cartTotal,
+    isLoading
+  } = useCart();
 
-  const handleQuantityChange = (id: number, delta: number) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
-    );
+  const handleQuantityChange = async (id: number, delta: number) => {
+    // Find the item to get current quantity
+    const item = cartItems.find(i => i.productId === id);
+    if (item) {
+      await updateQuantity(id, item.quantity + delta);
+    }
   };
 
-  const handleRemoveItem = (id: number) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+  const handleRemoveItem = async (id: number) => {
+    await removeFromCart(id);
   };
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  const subtotal = cartTotal;
   const shipping = subtotal > 1000 ? 0 : 50;
   const tax = subtotal * 0.1;
   const grandTotal = subtotal + shipping + tax;
+
+  if (isLoading && cartItems.length === 0) {
+    return <div className="container py-5">Loading cart...</div>;
+  }
 
   return (
     <div>
@@ -75,14 +52,14 @@ const CartPage: React.FC = () => {
               <div className="bg-white rounded shadow-sm p-4">
                 {cartItems.map((item) => (
                   <div
-                    key={item.id}
+                    key={item.productId}
                     className="d-flex align-items-center justify-content-between py-3 border-bottom"
                   >
                     {/* Image & Title */}
                     <div className="d-flex align-items-center">
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={item.product?.image || "/images/placeholder.png"}
+                        alt={item.product?.name || "Product"}
                         style={{
                           width: "70px",
                           height: "70px",
@@ -91,8 +68,8 @@ const CartPage: React.FC = () => {
                         className="me-3 rounded border"
                       />
                       <div>
-                        <h6 className="mb-1 fw-semibold">{item.name}</h6>
-                        <span className="text-muted small">₹{item.price}</span>
+                        <h6 className="mb-1 fw-semibold">{item.product?.name || "Product Name"}</h6>
+                        <span className="text-muted small">₹{item.product?.sale_price || item.product?.price}</span>
                       </div>
                     </div>
 
@@ -102,7 +79,8 @@ const CartPage: React.FC = () => {
                         variant="outline-secondary"
                         size="sm"
                         className="rounded-circle"
-                        onClick={() => handleQuantityChange(item.id, -1)}
+                        onClick={() => handleQuantityChange(item.productId, -1)}
+                        disabled={isLoading}
                       >
                         <i className="fas fa-minus"></i>
                       </Button>
@@ -121,7 +99,8 @@ const CartPage: React.FC = () => {
                         variant="outline-secondary"
                         size="sm"
                         className="rounded-circle"
-                        onClick={() => handleQuantityChange(item.id, 1)}
+                        onClick={() => handleQuantityChange(item.productId, 1)}
+                        disabled={isLoading}
                       >
                         <i className="fas fa-plus"></i>
                       </Button>
@@ -129,7 +108,7 @@ const CartPage: React.FC = () => {
 
                     {/* Price */}
                     <div className="fw-semibold text-dark mx-3">
-                      ₹{item.price * item.quantity}
+                      ₹{(item.product?.sale_price || item.product?.price || 0) * item.quantity}
                     </div>
 
                     {/* Remove */}
@@ -137,7 +116,8 @@ const CartPage: React.FC = () => {
                       variant="outline-danger"
                       size="sm"
                       className="rounded-circle"
-                      onClick={() => handleRemoveItem(item.id)}
+                      onClick={() => handleRemoveItem(item.productId)}
+                      disabled={isLoading}
                     >
                       <i className="fas fa-trash"></i>
                     </Button>

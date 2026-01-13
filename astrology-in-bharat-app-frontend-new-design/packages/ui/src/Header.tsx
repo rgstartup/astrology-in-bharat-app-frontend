@@ -5,6 +5,7 @@ import LinkComponent from "next/link";
 import Image from "next/image";
 import { PATHS } from "@repo/routes";
 import { useClientAuth } from "./context/ClientAuthContext";
+import { useCart } from "./context/CartContext";
 
 const Link = LinkComponent as any;
 const NextImage = Image as any;
@@ -116,6 +117,10 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
     refreshAuth
   } = useClientAuth();
 
+  const { cartCount } = useCart();
+
+
+
   // Prioritize props if available, otherwise use context
   const isAuthenticated = authState ?? contextIsAuthenticated;
   const clientUser = userData ?? contextUser;
@@ -166,7 +171,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
     if (userName) {
       return userName
         .split(" ")
-        .map((n) => n[0])
+        .map((n: string) => n[0])
         .join("")
         .toUpperCase()
         .slice(0, 2);
@@ -261,8 +266,21 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                       {isAuthenticated ? (
                         <div className="col-8 mobile-space">
                           <div className="d-flex gap-2 align-items-center">
-                            <Link href={PATHS.CART} className="cart-top">
+                            <Link href={PATHS.CART} className="cart-top position-relative">
                               <i className="fa-solid fa-cart-shopping" style={{ marginLeft: "20px" }}></i> {" "}
+                              {cartCount > 0 && (
+                                <span
+                                  className="position-absolute translate-middle badge rounded-pill bg-danger"
+                                  style={{
+                                    top: '5px',
+                                    left: '35px',
+                                    fontSize: '10px',
+                                    padding: '0.25em 0.6em'
+                                  }}
+                                >
+                                  {cartCount}
+                                </span>
+                              )}
                             </Link>
 
                             <Link

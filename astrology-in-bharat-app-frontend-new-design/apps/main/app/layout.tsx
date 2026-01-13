@@ -8,6 +8,7 @@ import "swiper/css/navigation";
 import "@packages/styles/index.css";
 import ClientLayout from "@/components/layout/ClientLayout";
 import { ClientAuthProvider } from "@packages/ui/src/context/ClientAuthContext";
+import { CartProvider } from "@packages/ui/src/context/CartContext";
 import { Metadata } from "next";
 
 // Google Fonts setup
@@ -58,7 +59,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-white text-black">
         <ClientAuthProvider>
-          <ClientLayout>{children}</ClientLayout>
+          <CartProvider>
+            <ClientLayout>{children}</ClientLayout>
+          </CartProvider>
         </ClientAuthProvider>
       </body>
     </html>
