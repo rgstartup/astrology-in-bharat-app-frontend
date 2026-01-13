@@ -111,7 +111,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
 
             // 2. Call API
             try {
-              await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"}/api/v1/auth/logout`, {
+              await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/logout`, {
                 method: "POST",
                 headers: {
                   "Authorization": `Bearer ${token}`,
@@ -208,7 +208,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
 
                     // 2. Call API
                     try {
-                      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"}/api/v1/auth/logout`, {
+                      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/logout`, {
                         method: "POST",
                         headers: {
                           "Authorization": `Bearer ${token}`,
