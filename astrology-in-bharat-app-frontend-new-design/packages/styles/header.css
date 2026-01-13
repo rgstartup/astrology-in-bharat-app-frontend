@@ -519,9 +519,12 @@ nav.navbar {
 }
 
 .services-swiper {
-  padding: 0px 0;
+  
   width: 100%;
   position: relative;
+}
+.swiperSliders {
+  width: 80%;
 }
 
 .flx-icon-item {

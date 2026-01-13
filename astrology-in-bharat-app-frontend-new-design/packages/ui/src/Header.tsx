@@ -544,7 +544,7 @@ const Header: React.FC = () => {
 
               {SERVICES_DATA.map((service) => (
                 <SwiperSlide key={service.id}>
-                  <div className="flx-icon-item">
+                  <div className="flx-icon-item swiperSliders ">
                     {service.isInternal ? (
                       <Link
                         href={service.href}
