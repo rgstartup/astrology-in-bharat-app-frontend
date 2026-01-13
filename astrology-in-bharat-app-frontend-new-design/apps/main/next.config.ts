@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/uploads/:path*",
-        destination: "http://localhost:3000/uploads/:path*", // Proxy to Admin Dashboard (Port 3000)
+        destination: `${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "") || "http://localhost:6543"}/uploads/:path*`, // Proxy to Backend
       },
     ];
   },

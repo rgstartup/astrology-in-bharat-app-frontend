@@ -211,7 +211,17 @@ const ProfileManagement = () => {
       avatar: dataToSave.profilePic,
       gallery: dataToSave.gallery,
       videos: dataToSave.videos,
-      detailed_experience: dataToSave.detailed_experience,
+      detailed_experience: dataToSave.detailed_experience
+        .filter((exp: any) => exp && !Array.isArray(exp) && typeof exp === 'object')
+        .map((exp: any) => ({
+          role: exp.role || exp.title || "Astrologer",
+          company: exp.company || exp.organization || "Freelance",
+          description: exp.description || "",
+          startDate: exp.startDate || new Date().toISOString(),
+          endDate: exp.endDate || new Date().toISOString(),
+          isCurrent: exp.isCurrent || false,
+          location: exp.location || "Remote"
+        })),
       certificates: dataToSave.certificates
     };
   };
@@ -224,7 +234,9 @@ const ProfileManagement = () => {
     try {
       setLoading(true);
       const dataToSave = updatedData ? { ...tempProfile, ...updatedData } : tempProfile;
+      console.log("DEBUG: detailed_experience being saved:", JSON.stringify(dataToSave.detailed_experience, null, 2));
       const payload: any = constructProfilePayload(dataToSave);
+      console.log("DEBUG: Final Payload being sent:", JSON.stringify(payload.detailed_experience, null, 2));
 
       if (Array.isArray(payload.languages)) {
         // If backend returns string, it might expect string.
@@ -236,9 +248,11 @@ const ProfileManagement = () => {
       }
 
       if (hasProfile) {
-        await updateProfile(payload);
+        const res = await updateProfile(payload);
+        console.log("DEBUG: API Response after Save:", JSON.stringify(res, null, 2));
       } else {
-        await createProfile(payload);
+        const res = await createProfile(payload);
+        console.log("DEBUG: API Response after Create:", JSON.stringify(res, null, 2));
         setHasProfile(true);
       }
 

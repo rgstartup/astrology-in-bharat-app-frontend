@@ -2,8 +2,10 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { Header, Footer } from "@repo/ui";
+import Header from "@packages/ui/src/Header";
+import Footer from "@packages/ui/src/Footer";
 import ToastProvider from "./ToastProvider";
+import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 
 export default function ClientLayout({
   children,
@@ -12,6 +14,7 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin");
+  const { isClientAuthenticated, clientUser, clientLogout } = useClientAuth();
 
   // Load Bootstrap JS for modal functionality
   useEffect(() => {
@@ -23,7 +26,13 @@ export default function ClientLayout({
   return (
     <>
       <ToastProvider />
-      {!isAdminRoute && <Header />}
+      {!isAdminRoute && (
+        <Header
+          authState={isClientAuthenticated}
+          userData={clientUser}
+          logoutHandler={clientLogout}
+        />
+      )}
       <main>{children}</main>
       {!isAdminRoute && <Footer />}
     </>
