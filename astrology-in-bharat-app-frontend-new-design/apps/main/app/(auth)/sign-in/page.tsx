@@ -6,6 +6,7 @@ import React, { useState, useCallback, FormEvent } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { toast } from "react-toastify";
 // --- 1. Define Typescript Interfaces ---
 
 /** The shape of the data sent to the server (request body). */
@@ -110,13 +111,13 @@ const Page: React.FC = () => {
         clientLogin(response.data.token, response.data.user);
       }
 
-      setSuccessMessage(
-        response.data.message || "Sign In successful! Redirecting..."
-      );
+      toast.success(response.data.message || "Sign In successful! Redirecting...");
 
       // Optionally redirect the user after success
       // router.push('/dashboard');
-      router.push('/')
+      // Use window.location.href for a hard redirect to ensure state is refreshed
+      window.location.href = '/profile';
+      // router.push('/profile');
     } catch (err) {
       const error = err as AxiosError;
       console.error("Login API Request Failed. Error object:", error);

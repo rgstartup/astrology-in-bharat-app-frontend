@@ -50,8 +50,10 @@ export interface Profile {
 
 export interface ExperienceItem {
     id: number;
-    title: string;
-    organization: string;
+    title?: string; // Kept for backward compatibility if needed, but not primary
+    organization?: string;
+    role: string;
+    company: string;
     startDate: string;
     endDate: string; // or 'Present'
     description: string;

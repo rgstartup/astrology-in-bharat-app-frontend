@@ -2,6 +2,9 @@
 
 import React from "react";
 import NextImage from "next/image";
+import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const Image = NextImage as any;
 
@@ -34,6 +37,43 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
     const price = Number(product.price) || 0;
     const percentageOff = Number(product.percentageOff) || 0;
 
+    const { isClientAuthenticated } = useClientAuth();
+    const router = useRouter();
+
+    const handleLike = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!isClientAuthenticated) {
+            toast.error("Please login first to add to wishlist", {
+                onClick: () => router.push("/sign-in"),
+                autoClose: 3000,
+                style: { cursor: 'pointer' }
+            });
+            return;
+        }
+
+        // TODO: Implement actual wishlist API call here
+        toast.success("Added to wishlist!");
+    };
+
+    const handleBuy = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!isClientAuthenticated) {
+            toast.error("Please login first to buy products", {
+                onClick: () => router.push("/sign-in"),
+                autoClose: 3000,
+                style: { cursor: 'pointer' }
+            });
+            return;
+        }
+
+        // TODO: Implement actual buy/cart logic
+        toast.success("Proceeding to checkout...");
+    };
+
     return (
         <div className={`group relative bg-white rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] hover:shadow-lg transition-all duration-300 overflow-hidden h-full flex flex-col border border-gray-100 ${className || ""}`}>
             {/* 🔥 Top Header: Offer Tag (Left) & Heart Icon (Right) */}
@@ -47,7 +87,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
             )}
 
             {/* ❤️ Wishlist Icon */}
-            <button className="absolute top-3 right-3 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full text-gray-400 hover:text-red-500 transition-colors shadow-sm w-9 h-9 flex items-center justify-center">
+            <button
+                onClick={handleLike}
+                className="absolute top-3 right-3 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full text-gray-400 hover:text-red-500 transition-colors shadow-sm w-9 h-9 flex items-center justify-center"
+            >
                 <i className="fa-regular fa-heart text-lg"></i>
             </button>
 
@@ -95,10 +138,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
 
                 {/* 🔘 Action Buttons */}
                 <div className="grid grid-cols-5 gap-3 mt-1">
-                    <button className="col-span-1 flex items-center justify-center border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors h-10">
+                    <button
+                        onClick={handleBuy}
+                        className="col-span-1 flex items-center justify-center border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors h-10"
+                    >
                         <i className="fa-solid fa-bag-shopping"></i>
                     </button>
-                    <button className="col-span-4 bg-[#F95E09] hover:bg-[#D84E06] text-white font-semibold rounded-full shadow-[0_4px_20px_-2px_rgba(249,94,9,0.3)] hover:shadow-orange-500/40 transform active:scale-95 transition-all duration-200 h-10 flex items-center justify-center gap-2 text-sm">
+                    <button
+                        onClick={handleBuy}
+                        className="col-span-4 bg-[#F95E09] hover:bg-[#D84E06] text-white font-semibold rounded-full shadow-[0_4px_20px_-2px_rgba(249,94,9,0.3)] hover:shadow-orange-500/40 transform active:scale-95 transition-all duration-200 h-10 flex items-center justify-center gap-2 text-sm"
+                    >
                         <span>Buy Now</span>
                         <i className="fa-solid fa-arrow-right"></i>
                     </button>

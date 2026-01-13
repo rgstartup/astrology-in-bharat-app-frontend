@@ -93,22 +93,39 @@ const SERVICES_DATA = [
   },
 ];
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  authState?: boolean;
+  userData?: any;
+  logoutHandler?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
-  
+
   // Use the authentication context
-  const { 
-    clientUser, 
-    isClientAuthenticated: isAuthenticated, 
+  const {
+    clientUser: contextUser,
+    isClientAuthenticated: contextIsAuthenticated,
     clientLoading: loading,
-    clientLogout,
+    clientLogout: contextLogout,
     refreshAuth
   } = useClientAuth();
+
+  // Prioritize props if available, otherwise use context
+  const isAuthenticated = authState ?? contextIsAuthenticated;
+  const clientUser = userData ?? contextUser;
+  const clientLogout = async () => {
+    if (logoutHandler) {
+      logoutHandler();
+    } else {
+      await contextLogout();
+    }
+  };
 
   // Use useEffect to ensure this part only runs on the client
   useEffect(() => {
@@ -239,83 +256,83 @@ const Header: React.FC = () => {
                   </div>
                   <div className="col-6 mobile-space">
                     <div className="d-flex gap-2 w-100 justify-content-end">
-                     
+
 
                       {isAuthenticated ? (
-  <div className="col-8 mobile-space">
-    <div className="d-flex gap-2 align-items-center">
-      <Link href={PATHS.CART} className="cart-top">
-        <i className="fa-solid fa-cart-shopping" style={{marginLeft:"20px"}}></i> {" "}
-      </Link>
+                        <div className="col-8 mobile-space">
+                          <div className="d-flex gap-2 align-items-center">
+                            <Link href={PATHS.CART} className="cart-top">
+                              <i className="fa-solid fa-cart-shopping" style={{ marginLeft: "20px" }}></i> {" "}
+                            </Link>
 
-      <Link
-        href={PATHS.PROFILE}
-        style={{
-          backgroundColor: "#fa6310",
-          color: "white",
-          borderRadius: "5px",
-          padding: "5px 8px",
-          textDecoration: "none",
-          width: "100%",
-          textAlign: "center",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <i className="fa-solid fa-user"></i> Profile
-      </Link>
+                            <Link
+                              href={PATHS.PROFILE}
+                              style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px",
+                                textDecoration: "none",
+                                width: "100%",
+                                textAlign: "center",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              <i className="fa-solid fa-user"></i> Profile
+                            </Link>
 
-      <button
-        onClick={handleLogout}
-        type="button"
-        style={{
-          backgroundColor: "#fa6310",
-          color: "white",
-          borderRadius: "5px",
-          padding: "5px 8px",
-          border: "none",
-          width: "100%",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <i className="fa-solid fa-right-from-bracket"></i> Logout
-      </button>
-    </div>
-  </div>
-) : (
-  <div className="col-8 mobile-space">
-    <div className="d-flex gap-2">
-      <Link
-        href={PATHS.SIGN_IN}
-        style={{
-          backgroundColor: "#fa6310",
-          color: "white",
-          borderRadius: "5px",
-          padding: "5px 8px",
-          textDecoration: "none",
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        SignIn
-      </Link>
+                            <button
+                              onClick={handleLogout}
+                              type="button"
+                              style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px",
+                                border: "none",
+                                width: "100%",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              <i className="fa-solid fa-right-from-bracket"></i> Logout
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="col-8 mobile-space">
+                          <div className="d-flex gap-2">
+                            <Link
+                              href={PATHS.SIGN_IN}
+                              style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px",
+                                textDecoration: "none",
+                                width: "100%",
+                                textAlign: "center",
+                              }}
+                            >
+                              SignIn
+                            </Link>
 
-      <Link
-        href={PATHS.REGISTER}
-        style={{
-          backgroundColor: "#fa6310",
-          color: "white",
-          borderRadius: "5px",
-          padding: "5px 8px",
-          textDecoration: "none",
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        Register
-      </Link>
-    </div>
-  </div>
-)}
+                            <Link
+                              href={PATHS.REGISTER}
+                              style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px",
+                                textDecoration: "none",
+                                width: "100%",
+                                textAlign: "center",
+                              }}
+                            >
+                              Register
+                            </Link>
+                          </div>
+                        </div>
+                      )}
 
                     </div>
                   </div>
@@ -409,7 +426,7 @@ const Header: React.FC = () => {
                             className="dropdown-item"
                             href={PATHS.KUNDALI_MATCHING_BY_NAME}
                           >
-                            Kundali Matching By Name 
+                            Kundali Matching By Name
                           </Link>
                         </li>
                         <li>

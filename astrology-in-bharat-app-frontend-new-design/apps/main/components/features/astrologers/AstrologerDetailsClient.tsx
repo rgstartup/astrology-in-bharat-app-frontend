@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import ReviewModal from "@/components/ui/modals/ReviewModal";
 import NextImage from "next/image";
 import { X } from "lucide-react";
+import ProductSection from "@/components/features/shop/ProductSection";
 
 const Image = NextImage as any;
 const NextLink = Link as any;
@@ -220,8 +221,12 @@ export default function AstrologerDetailsClient({
                           <div className="flex gap-3">
                             <div className="mt-1.5 w-2 h-2 rounded-full bg-[#fd6410] shrink-0"></div>
                             <div>
-                              <h5 className="text-sm font-bold text-gray-900">{exp.role || "Astrologer"}</h5>
-                              <p className="text-xs text-gray-500 font-medium">{exp.company || "Independent"} • {exp.duration || "N/A"}</p>
+                              <h5 className="text-sm font-bold text-gray-900">{exp.title || exp.role || "Astrologer"}</h5>
+                              <p className="text-xs text-gray-500 font-medium">
+                                <span className="text-gray-700 font-semibold">Experience:</span>{" "}
+                                {exp.organization || exp.company || "Independent"}
+                                {exp.duration ? ` • ${exp.duration}` : ""}
+                              </p>
                               {exp.description && <p className="text-sm text-gray-600 mt-2 leading-relaxed">{exp.description}</p>}
                             </div>
                           </div>
@@ -419,66 +424,42 @@ export default function AstrologerDetailsClient({
       {/* Astrology Products Section */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl lg:text-4xl font-bold text-center mb-10 text-gray-900">
-            Astrology <span className="text-[#fd6410]">Products</span>
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
+          <ProductSection
+            products={[
               {
-                id: 1,
-                title: "Original Rudraksha Mala",
-                price: "₹1,499",
-                image: "/images/astro-img1.png",
+                id: "1",
+                name: "Original Rudraksha Mala",
+                price: 1499,
+                originalPrice: 2999,
+                imageUrl: "/images/astro-img1.png",
                 description: "Authentic 5 Mukhi Rudraksha mala for peace and meditation."
               },
               {
-                id: 2,
-                title: "Vedic Astrology Guide",
-                price: "₹899",
-                image: "/images/astro-img2.png",
+                id: "2",
+                name: "Vedic Astrology Guide",
+                price: 899,
+                originalPrice: 1499,
+                imageUrl: "/images/astro-img2.png",
                 description: "Comprehensive guide to understanding planetary movements."
               },
               {
-                id: 3,
-                title: "Crystal Tortoise",
-                price: "₹599",
-                image: "/images/astro-img3.png",
+                id: "3",
+                name: "Crystal Tortoise",
+                price: 599,
+                originalPrice: 999,
+                imageUrl: "/images/astro-img3.png",
                 description: "Feng Shui crystal tortoise for longevity and stability."
               },
               {
-                id: 4,
-                title: "Shri Yantra",
-                price: "₹2,100",
-                image: "/images/astro-img1.png",
+                id: "4",
+                name: "Shri Yantra",
+                price: 2100,
+                originalPrice: 3500,
+                imageUrl: "/images/astro-img1.png",
                 description: "Sacred geometry yantra for wealth and prosperity."
               }
-            ].map((product) => (
-              <div key={product.id} className="group h-full">
-                <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden h-full flex flex-col p-4">
-                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-gray-100">
-                    <Image
-                      src={product.image}
-                      alt={product.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-
-                  <h4 className="font-bold text-gray-900 text-lg mb-2 line-clamp-1">{product.title}</h4>
-                  <p className="text-sm text-gray-500 mb-4 line-clamp-2 leading-relaxed flex-grow">{product.description}</p>
-
-                  <div className="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between">
-                    <h5 className="text-xl font-bold text-[#fd6410]">{product.price}</h5>
-                    <NextLink href="/product/id">
-                      <button className="flex items-center gap-2 bg-[#fd6410] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#e35605] transition-colors shadow-sm active:scale-95">
-                        <i className="fas fa-shopping-cart"></i> Buy Now
-                      </button>
-                    </NextLink>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+            ]}
+          />
         </div>
       </section>
 

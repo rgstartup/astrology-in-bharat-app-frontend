@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 
 // API client with proper cookie handling
 const apiClient = axios.create({
-  baseURL: 'http://localhost:4000/api/v1',
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+    baseURL: '/api/v1',
+    withCredentials: true,
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
 
 interface ClientUser {
@@ -54,19 +54,19 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
 
     const clientLogout = async () => {
         console.log("🚪 Starting logout process...");
-        
+
         // Clear local state first
         setClientUser(null);
         setIsClientAuthenticated(false);
         setClientLoading(false);
-        
+
         // Clear all local storage items
         localStorage.removeItem('clientAccessToken');
         localStorage.removeItem('accessToken'); // Clear any other tokens
         localStorage.removeItem('refreshToken');
-        
+
         console.log("🗑️ Cleared local storage and state");
-        
+
         try {
             // Call backend logout endpoint
             console.log("📡 Calling backend logout...");
@@ -74,7 +74,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
             console.log("✅ Backend logout successful:", response.data);
         } catch (err: any) {
             console.error("❌ Backend logout error:", err);
-            
+
             // Even if backend fails, continue with frontend logout
             if (err.response?.status === 401) {
                 console.log("ℹ️ User was already logged out (401)");
@@ -84,7 +84,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                 console.log("⚠️ Network error during logout, but continuing...");
             }
         }
-        
+
         console.log("🔄 Redirecting to home...");
         router.push('/');
     };
@@ -95,7 +95,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
         try {
             const res = await apiClient.get('/client/profile');
             console.log("📊 Profile response:", res.data);
-            
+
             // If we get a 200 response (even with empty data), user is authenticated
             // because the endpoint is protected by JwtAuthGuard
             if (res.status === 200) {
@@ -118,7 +118,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                     // User is authenticated but has no profile yet
                     // We need to get user info from somewhere else or use minimal data
                     console.log("✅ User authenticated but no profile exists");
-                    
+
                     // Try to get user info from login response or create minimal user object
                     // For now, we'll consider them authenticated with minimal data
                     setClientUser({
@@ -155,15 +155,24 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
         if (authCheckRef.current) {
             return;
         }
-        
+
         const initClientAuth = async () => {
             try {
                 console.log("🔍 Checking authentication status...");
-                // Check authentication by calling profile endpoint
-                const res = await apiClient.get('/client/profile');
-                
+                // Check authentication by calling profile endpoint with anti-cache headers
+                const res = await apiClient.get('/client/profile', {
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    },
+                    params: {
+                        _t: new Date().getTime() // Anti-cache timestamp
+                    }
+                });
+
                 console.log("📊 Profile response:", res.data);
-                
+
                 // If we get a 200 response (even with empty data), user is authenticated
                 // because the endpoint is protected by JwtAuthGuard
                 if (res.status === 200) {
@@ -185,7 +194,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                     } else {
                         // User is authenticated but has no profile yet
                         console.log("✅ User authenticated but no profile exists");
-                        
+
                         // Try to get user info from login response or create minimal user object
                         // For now, we'll consider them authenticated with minimal data
                         setClientUser({

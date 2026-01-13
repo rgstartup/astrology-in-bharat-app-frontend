@@ -46,6 +46,7 @@ export default async function Page({
     }
 
     const data: ExpertData = await response.json();
+    console.log("DEBUG: Fetched detailed_experience:", JSON.stringify(data.detailed_experience, null, 2));
 
     const astrologer = {
       id: data.id,
