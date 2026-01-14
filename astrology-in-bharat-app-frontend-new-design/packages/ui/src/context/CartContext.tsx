@@ -7,8 +7,7 @@ import { useClientAuth } from "./ClientAuthContext";
 
 // Define Types
 export interface CartItem {
-    id: number; // Cart Item ID (optional, depending on backend) or Product ID reference? 
-    // Based on API docs, operations use productId. Let's assume response includes product details.
+    id: number;
     productId: number;
     quantity: number;
     product?: {
@@ -45,8 +44,11 @@ const CartContext = createContext<CartContextType>({
 });
 
 // API Client
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+
 const apiClient = axios.create({
-    baseURL: "/api/v1",
+    baseURL: `${cleanApiUrl}/api/v1`,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
@@ -75,16 +77,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             setIsLoading(true);
             const res = await apiClient.get("/cart", {
-                headers: {
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache',
-                    'Expires': '0'
-                },
                 params: { _t: new Date().getTime() } // Anti-cache
             });
-            // Assuming response.data is the array of items or { data: items }
-            // Adjust based on actual response structure. API doc says "List of cart items"
-            const items = Array.isArray(res.data) ? res.data : (res.data.data || []);
+            console.log("🛒 Cart API Response (Stringified):", JSON.stringify(res.data, null, 2)); // DEBUG LOG
+            // Response structure is { id, items: [...], ... }
+            const rawItems = res.data?.items || (Array.isArray(res.data) ? res.data : []);
+
+            // Map items to ensure productId is present
+            const items = rawItems.map((item: any) => ({
+                ...item,
+                productId: item.productId || item.product?.id
+            }));
+
+            console.log("🛒 Parsed Cart Items:", items); // DEBUG LOG
             setCartItems(items);
         } catch (error) {
             console.error("Failed to fetch cart:", error);
@@ -110,7 +115,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             setIsLoading(true);
             await apiClient.post("/cart/add", { productId, quantity });
-            toast.success("Added to cart!");
+            // @ts-ignore
+            toast.success("Added to cart! Click to view", {
+                onClick: () => window.location.href = '/cart',
+                autoClose: 3000,
+                style: { cursor: 'pointer' }
+            });
             await fetchCart(); // Refresh cart
         } catch (error: any) {
             console.error("Add to cart error:", error);
@@ -120,20 +130,46 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    // Update Quantity
+    // Debounce Ref
+    const debouncedUpdate = React.useRef<{ [key: number]: NodeJS.Timeout }>({});
+
+    // Update Quantity with Debounce & Optimistic UI
     const updateQuantity = async (productId: number, quantity: number) => {
-        try {
-            if (quantity <= 0) {
-                await removeFromCart(productId);
-                return;
-            }
-            // Optimistic update could go here
-            await apiClient.put("/cart/update", { productId, quantity });
-            await fetchCart();
-        } catch (error: any) {
-            console.error("Update quantity error:", error);
-            toast.error(error.response?.data?.message || "Failed to update quantity");
+        if (quantity <= 0) {
+            await removeFromCart(productId);
+            return;
         }
+
+        // 1. Optimistic Update
+        setCartItems(prev => prev.map(item =>
+            (item.productId === productId || item.product?.id === productId)
+                ? { ...item, quantity }
+                : item
+        ));
+
+        // 2. Debounce API Call
+        if (debouncedUpdate.current[productId]) {
+            clearTimeout(debouncedUpdate.current[productId]);
+        }
+
+        debouncedUpdate.current[productId] = setTimeout(async () => {
+            try {
+                // Perform actual API call
+                await apiClient.put("/cart/update", { productId, quantity });
+                // We don't fetchCart here to avoid overwriting optimistic state if user is still clicking
+                // But to be safe, we can fetch if successful. 
+                // However, fetching might cause a jump if there's a slight mismatch. 
+                // Let's rely on optimistic state and maybe background refresh.
+                // For now, let's just do the call.
+            } catch (error: any) {
+                console.error("Update quantity error:", error);
+                toast.error(error.response?.data?.message || "Failed to update quantity");
+                // Revert on error (optional, but good practice. For now, just fetching cart restores truth)
+                await fetchCart();
+            } finally {
+                delete debouncedUpdate.current[productId];
+            }
+        }, 500); // 500ms delay
     };
 
     // Remove Item

@@ -6,6 +6,7 @@ import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 import { useCart } from "@packages/ui/src/context/CartContext";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useWishlist } from "@/context/WishlistContext";
 
 const Image = NextImage as any;
 
@@ -26,12 +27,17 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+    const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+
     const imageUrl = product.imageUrl
         ? product.imageUrl.startsWith("http")
             ? product.imageUrl
-            : product.imageUrl.startsWith("/")
-                ? product.imageUrl
-                : `/uploads/${product.imageUrl}`
+            : product.imageUrl.startsWith("/uploads/")
+                ? `${cleanApiUrl}${product.imageUrl}`
+                : product.imageUrl.startsWith("/")
+                    ? product.imageUrl
+                    : `/uploads/${product.imageUrl}`
         : "";
 
     const originalPrice = Number(product.originalPrice) || 0;
@@ -43,12 +49,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
     const [isAdding, setIsAdding] = React.useState(false);
     const router = useRouter();
 
-    const handleLike = (e: React.MouseEvent) => {
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+    const isLiked = product.id ? isInWishlist(Number(product.id || product._id)) : false;
+
+    const handleLike = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
 
         if (!isClientAuthenticated) {
-            toast.error("Please login first to add to wishlist", {
+            toast.error("Please login first to use wishlist", {
                 onClick: () => router.push("/sign-in"),
                 autoClose: 3000,
                 style: { cursor: 'pointer' }
@@ -56,8 +65,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
             return;
         }
 
-        // TODO: Implement actual wishlist API call here
-        toast.success("Added to wishlist!");
+        if (isLiked) {
+            await removeFromWishlist(Number(product.id || product._id));
+        } else {
+            await addToWishlist(Number(product.id || product._id));
+        }
     };
 
     const handleBuy = async (e: React.MouseEvent) => {
@@ -93,12 +105,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                 </div>
             )}
 
-            {/* ❤️ Wishlist Icon */}
             <button
                 onClick={handleLike}
-                className="absolute top-3 right-3 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full text-gray-400 hover:text-red-500 transition-colors shadow-sm w-9 h-9 flex items-center justify-center"
+                className={`absolute top-3 right-3 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full transition-colors shadow-sm w-9 h-9 flex items-center justify-center ${isLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'}`}
             >
-                <i className="fa-regular fa-heart text-lg"></i>
+                <i className={`${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-lg`}></i>
             </button>
 
             {/* 🖼️ Image Area with Glow */}

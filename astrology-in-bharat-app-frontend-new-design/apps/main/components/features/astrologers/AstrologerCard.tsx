@@ -14,6 +14,7 @@ interface Astrologer {
   price: number;
   video: string;
   ratings?: number;
+  is_available?: boolean;
 }
 
 interface AstrologerCardProps {
@@ -24,7 +25,7 @@ interface AstrologerCardProps {
 
 
 const AstrologerCard: React.FC<AstrologerCardProps> = ({ astrologerData }) => {
-  const { id, image, name, expertise, experience, language, price, video, ratings = 0 } = astrologerData as any;
+  const { id, image, name, expertise, experience, language, price, video, ratings = 0, is_available } = astrologerData as any;
 
   const [show, setShow] = useState(false);
 
@@ -61,7 +62,17 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({ astrologerData }) => {
         <Link href={createDetailsUrl()}>
           <div className="vid-part">
             <img src={image} alt={name} className="astro-profile-img" />
-            <span className="play-vid fa-beat" >
+
+            {/* Status Badge */}
+            <div className={`status-badge ${is_available ? 'online' : 'offline'}`}>
+              <i className="fa-solid fa-circle"></i> {is_available ? 'Online' : 'Offline'}
+            </div>
+
+            <span className="play-vid fa-beat" onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleShow();
+            }}>
               <i className="fa-solid fa-circle-play"></i>
             </span>
           </div>
@@ -79,7 +90,10 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({ astrologerData }) => {
             })}
             <span className="text-muted small ms-2">{ratings.toFixed(1)} / 5</span>
           </div>
-          <div className="astro-name">{name}</div>
+          <div className="astro-name">
+            {name}
+            {is_available && <span className="online-dot ms-2"></span>}
+          </div>
           <div className="astro-tags">{expertise}</div>
           <div className="astro-info">
             <strong>Exp:</strong> {experience} Years

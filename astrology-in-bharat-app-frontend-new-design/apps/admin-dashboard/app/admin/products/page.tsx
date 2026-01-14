@@ -147,30 +147,62 @@ export default function ProductsPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        let finalImageUrl = formData.imageUrl;
-
-        // Handle Image Upload if needed
-        if (imageMode === "file" && selectedFile) {
-            const uploadedUrl = await uploadFile(selectedFile);
-            if (!uploadedUrl) {
-                toast.error("Image upload failed.");
-                return;
-            }
-            finalImageUrl = uploadedUrl;
-        } else if (imageMode === "url" && !finalImageUrl) {
-            toast.error("Please provide an image URL.");
-            return;
-        }
-
         try {
             setSubmitting(true);
-            const payload = { ...formData, imageUrl: finalImageUrl };
+
+            // Construct FormData for multipart/form-data request
+            const submissionData = new FormData();
+            submissionData.append("name", formData.name);
+            submissionData.append("description", formData.description);
+            submissionData.append("price", String(formData.price));
+            submissionData.append("originalPrice", String(formData.originalPrice));
+
+            // Only append active status if explicitly set (backend might default)
+            if (formData.isActive !== undefined) {
+                submissionData.append("isActive", String(formData.isActive));
+            }
+
+            // Handle Image
+            if (imageMode === "file" && selectedFile) {
+                // Backend requires the file key to be 'file'
+                submissionData.append("file", selectedFile);
+            } else if (imageMode === "url" && formData.imageUrl) {
+                submissionData.append("imageUrl", formData.imageUrl);
+            } else if (editingId && formData.imageUrl) {
+                // Retain existing image if editing and no new file
+                submissionData.append("imageUrl", formData.imageUrl);
+            } else if (!editingId && !selectedFile && !formData.imageUrl) {
+                toast.error("Please provide an image URL or upload a file.");
+                setSubmitting(false);
+                return;
+            }
 
             if (editingId) {
-                await ProductService.updateProduct(editingId, payload);
+                // For update, we might need a similar FormData logic or keeping JSON if backend allows.
+                // Assuming update also supports moving to FormData or separate logic.
+                // For now, retaining original logic for update (JSON) unless user specified update issues too.
+                // But typically update also needs file support.
+                // Let's assume update stays JSON or we'd need to update ProductService.updateProduct too.
+                // Given the instructions focused on "Creates Product", I'll switch back to JSON for update 
+                // OR ideally upgrade updateProduct too. 
+                // Let's stick to JSON for update for now to minimize risk, unless we want to support file update.
+                // If the user wants to update the image via file, we'd need to handle that. 
+                // Let's keep the uploadFile logic ONLY for update for now as a fallback if not changing updateProduct.
+
+                let updatePayload: any = { ...formData };
+
+                // If editing and chose a new file, we might still need the old upload flow OR upgrade updateProduct.
+                // Let's use the old flow for EDIT to be safe, as backend instructions were specific to CREATE.
+                if (imageMode === "file" && selectedFile) {
+                    const uploadedUrl = await uploadFile(selectedFile);
+                    if (uploadedUrl) updatePayload.imageUrl = uploadedUrl;
+                }
+
+                await ProductService.updateProduct(editingId, updatePayload);
                 toast.success("Product updated successfully");
             } else {
-                await ProductService.createProduct(payload);
+                // Create Product using FormData
+                await ProductService.createProduct(submissionData);
                 toast.success("Product added successfully");
             }
 

@@ -4,7 +4,12 @@ import ProductsCarousel from "@/components/features/shop/ProductsCarousel";
 import { Button, Form } from "react-bootstrap";
 import { useCart } from "@packages/ui/src/context/CartContext";
 
+import { useRouter } from "next/navigation";
+import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+
 const CartPage: React.FC = () => {
+  const router = useRouter();
+  const { isClientAuthenticated } = useClientAuth();
   const {
     cartItems,
     updateQuantity,
@@ -12,6 +17,18 @@ const CartPage: React.FC = () => {
     cartTotal,
     isLoading
   } = useCart();
+
+  React.useEffect(() => {
+    // If not authenticated, redirect to login
+    if (!isClientAuthenticated) {
+      router.push("/sign-in");
+    }
+  }, [isClientAuthenticated, router]);
+
+  // If redirecting, show nothing or spinner
+  if (!isClientAuthenticated) {
+    return null;
+  }
 
   const handleQuantityChange = async (id: number, delta: number) => {
     // Find the item to get current quantity
@@ -50,79 +67,98 @@ const CartPage: React.FC = () => {
             {/* Cart Items */}
             <div className="col-lg-8">
               <div className="bg-white rounded shadow-sm p-4">
-                {cartItems.map((item) => (
-                  <div
-                    key={item.productId}
-                    className="d-flex align-items-center justify-content-between py-3 border-bottom"
-                  >
-                    {/* Image & Title */}
-                    <div className="d-flex align-items-center">
-                      <img
-                        src={item.product?.image || "/images/placeholder.png"}
-                        alt={item.product?.name || "Product"}
-                        style={{
-                          width: "70px",
-                          height: "70px",
-                          objectFit: "cover",
-                        }}
-                        className="me-3 rounded border"
-                      />
-                      <div>
-                        <h6 className="mb-1 fw-semibold">{item.product?.name || "Product Name"}</h6>
-                        <span className="text-muted small">₹{item.product?.sale_price || item.product?.price}</span>
-                      </div>
-                    </div>
+                {cartItems.map((item) => {
+                  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+                  const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
 
-                    {/* Quantity Controls */}
-                    <div className="d-flex align-items-center">
-                      <Button
-                        variant="outline-secondary"
-                        size="sm"
-                        className="rounded-circle"
-                        onClick={() => handleQuantityChange(item.productId, -1)}
-                        disabled={isLoading}
-                      >
-                        <i className="fas fa-minus"></i>
-                      </Button>
-                      <Form.Control
-                        type="text"
-                        value={item.quantity}
-                        readOnly
-                        className="mx-2 text-center border-0 fw-semibold"
-                        style={{
-                          width: "45px",
-                          background: "#f1f3f5",
-                          borderRadius: "8px",
-                        }}
-                      />
-                      <Button
-                        variant="outline-secondary"
-                        size="sm"
-                        className="rounded-circle"
-                        onClick={() => handleQuantityChange(item.productId, 1)}
-                        disabled={isLoading}
-                      >
-                        <i className="fas fa-plus"></i>
-                      </Button>
-                    </div>
+                  // Handle property mismatch (backend might send 'image' or 'imageUrl')
+                  const productImg = item.product?.image || (item.product as any)?.imageUrl;
 
-                    {/* Price */}
-                    <div className="fw-semibold text-dark mx-3">
-                      ₹{(item.product?.sale_price || item.product?.price || 0) * item.quantity}
-                    </div>
+                  const imageUrl = productImg
+                    ? productImg.startsWith("http")
+                      ? productImg
+                      : productImg.startsWith("/uploads/")
+                        ? `${cleanApiUrl}${productImg}`
+                        : productImg.startsWith("/")
+                          ? productImg
+                          : `/uploads/${productImg}`
+                    : "/images/image-not-found.png";
 
-                    {/* Remove */}
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      className="rounded-circle"
-                      onClick={() => handleRemoveItem(item.productId)}
-                      disabled={isLoading}
+                  return (
+                    <div
+                      key={item.productId || item.product?.id}
+                      className="d-flex align-items-center justify-content-between py-3 border-bottom"
                     >
-                      <i className="fas fa-trash"></i>
-                    </Button>
-                  </div>
-                ))}
+                      {/* Image & Title */}
+                      <div className="d-flex align-items-center">
+                        <img
+                          src={imageUrl}
+                          alt={item.product?.name || "Product"}
+                          onError={(e) => (e.currentTarget.src = "/images/image-not-found.png")}
+                          style={{
+                            width: "70px",
+                            height: "70px",
+                            objectFit: "cover",
+                          }}
+                          className="me-3 rounded border"
+                        />
+                        <div>
+                          <h6 className="mb-1 fw-semibold">{item.product?.name || "Product Name"}</h6>
+                          <span className="text-muted small">₹{item.product?.sale_price || item.product?.price}</span>
+                        </div>
+                      </div>
+
+                      {/* Quantity Controls */}
+                      <div className="d-flex align-items-center">
+                        <Button
+                          variant="outline-secondary"
+                          size="sm"
+                          className="rounded-circle"
+                          onClick={() => handleQuantityChange(item.productId || item.product?.id || 0, -1)}
+                          disabled={isLoading}
+                        >
+                          <i className="fas fa-minus"></i>
+                        </Button>
+                        <Form.Control
+                          type="text"
+                          value={item.quantity}
+                          readOnly
+                          className="mx-2 text-center border-0 fw-semibold"
+                          style={{
+                            width: "45px",
+                            background: "#f1f3f5",
+                            borderRadius: "8px",
+                          }}
+                        />
+                        <Button
+                          variant="outline-secondary"
+                          size="sm"
+                          className="rounded-circle"
+                          onClick={() => handleQuantityChange(item.productId || item.product?.id || 0, 1)}
+                          disabled={isLoading}
+                        >
+                          <i className="fas fa-plus"></i>
+                        </Button>
+                      </div>
+
+                      {/* Price */}
+                      <div className="fw-semibold text-dark mx-3">
+                        ₹{(item.product?.sale_price || item.product?.price || 0) * item.quantity}
+                      </div>
+
+                      {/* Remove */}
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        className="rounded-circle"
+                        onClick={() => handleRemoveItem(item.productId || item.product?.id || 0)}
+                        disabled={isLoading}
+                      >
+                        <i className="fas fa-trash"></i>
+                      </Button>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 

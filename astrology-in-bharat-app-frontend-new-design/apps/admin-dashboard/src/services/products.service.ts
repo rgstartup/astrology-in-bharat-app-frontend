@@ -30,14 +30,18 @@ export const ProductService = {
         return res.json();
     },
 
-    createProduct: async (product: Product) => {
+    createProduct: async (product: Product | FormData) => {
+        const isFormData = product instanceof FormData;
+        const headers: Record<string, string> = { ...getAuthHeaders() };
+
+        if (!isFormData) {
+            headers["Content-Type"] = "application/json";
+        }
+
         const res = await fetch(`${API_BASE}/api/v1/products`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                ...getAuthHeaders(),
-            },
-            body: JSON.stringify(product),
+            headers,
+            body: isFormData ? product : JSON.stringify(product),
         });
         if (!res.ok) {
             const error = await res.json();

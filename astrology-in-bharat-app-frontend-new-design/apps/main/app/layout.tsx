@@ -9,6 +9,7 @@ import "@packages/styles/index.css";
 import ClientLayout from "@/components/layout/ClientLayout";
 import { ClientAuthProvider } from "@packages/ui/src/context/ClientAuthContext";
 import { CartProvider } from "@packages/ui/src/context/CartContext";
+import { WishlistProvider } from "@/context/WishlistContext";
 import { Metadata } from "next";
 
 // Google Fonts setup
@@ -60,7 +61,9 @@ export default function RootLayout({
       <body className="min-h-screen bg-white text-black">
         <ClientAuthProvider>
           <CartProvider>
-            <ClientLayout>{children}</ClientLayout>
+            <WishlistProvider>
+              <ClientLayout>{children}</ClientLayout>
+            </WishlistProvider>
           </CartProvider>
         </ClientAuthProvider>
       </body>
