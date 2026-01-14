@@ -57,7 +57,7 @@ const ProfilePage: React.FC = () => {
       if (response.data) {
         setProfileData(response.data);
         if (response.data.profile_picture) {
-          setImagePreview(getImageUrl(response.data.profile_picture));
+          setImagePreview(response.data.profile_picture);
         }
       }
     } catch (error) {
@@ -74,14 +74,6 @@ const ProfilePage: React.FC = () => {
     }
   }, [isClientAuthenticated, loadProfile]);
 
-  // Helper to format image URL
-  const getImageUrl = (path: string | undefined) => {
-    if (!path) return "/images/a.webp";
-    if (path.startsWith('http') || path.startsWith('data:')) return path;
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543';
-    return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`;
-  };
-
   // Handle image upload dynamically (immediate)
   const handleImageChange = async (file: File) => {
     // 1. Show preview immediately
@@ -90,7 +82,6 @@ const ProfilePage: React.FC = () => {
       setImagePreview(reader.result as string);
     };
     reader.readAsDataURL(file);
-    setProfileImage(file);
 
     // 2. Upload immediately for "dynamic" experience
     try {
@@ -112,7 +103,8 @@ const ProfilePage: React.FC = () => {
       if (response.data) {
         setProfileData(response.data);
         if (response.data.profile_picture) {
-          setImagePreview(getImageUrl(response.data.profile_picture));
+          // Cloudinary provides full URL, no need for helper
+          setImagePreview(response.data.profile_picture);
         }
         setSuccessMessage("Profile picture updated successfully!");
         setTimeout(() => setSuccessMessage(""), 3000);
@@ -224,7 +216,7 @@ const ProfilePage: React.FC = () => {
       setProfileData(prev => ({ ...prev, ...response.data }));
 
       if (response.data.profile_picture) {
-        setImagePreview(getImageUrl(response.data.profile_picture));
+        setImagePreview(response.data.profile_picture);
       }
       setIsEditing(false); // Exit edit mode after save
     } catch (error: any) {
