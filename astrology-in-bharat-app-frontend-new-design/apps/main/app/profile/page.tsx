@@ -10,6 +10,7 @@ import FormInput from "@packages/ui/src/components/profile/FormInput";
 
 // Types
 interface ProfileData {
+  full_name?: string;
   username?: string;
   date_of_birth?: string;
   time_of_birth?: string;
@@ -23,12 +24,13 @@ interface ProfileData {
 }
 
 interface AddressDto {
-  line1?: string;
+  line1: string;
   line2?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  zipCode?: string;
+  city: string;
+  state: string;
+  country: string;
+  zipCode: string;
+  tag?: string;
 }
 
 const ProfilePage: React.FC = () => {
@@ -44,14 +46,7 @@ const ProfilePage: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string>("/images/a.webp");
   const [isEditing, setIsEditing] = useState(false);
 
-  // Redirect if not authenticated
-  // useEffect(() => {
-  //   if (!isClientAuthenticated) {
-  //     router.push('/sign-in');
-  //   }
-  // }, [isClientAuthenticated, router]);
 
-  // Load profile data
   const loadProfile = useCallback(async () => {
     try {
       setLoading(true);
@@ -62,7 +57,7 @@ const ProfilePage: React.FC = () => {
       if (response.data) {
         setProfileData(response.data);
         if (response.data.profile_picture) {
-          setImagePreview(response.data.profile_picture);
+          setImagePreview(getImageUrl(response.data.profile_picture));
         }
       }
     } catch (error) {
@@ -79,14 +74,75 @@ const ProfilePage: React.FC = () => {
     }
   }, [isClientAuthenticated, loadProfile]);
 
-  // Handle image upload
-  const handleImageChange = (file: File) => {
-    setProfileImage(file);
+  // Helper to format image URL
+  const getImageUrl = (path: string | undefined) => {
+    if (!path) return "/images/a.webp";
+    if (path.startsWith('http') || path.startsWith('data:')) return path;
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543';
+    return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`;
+  };
+
+  // Handle image upload dynamically (immediate)
+  const handleImageChange = async (file: File) => {
+    // 1. Show preview immediately
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview(reader.result as string);
     };
     reader.readAsDataURL(file);
+    setProfileImage(file);
+
+    // 2. Upload immediately for "dynamic" experience
+    try {
+      setSaving(true);
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile/picture`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (response.data) {
+        setProfileData(response.data);
+        if (response.data.profile_picture) {
+          setImagePreview(getImageUrl(response.data.profile_picture));
+        }
+        setSuccessMessage("Profile picture updated successfully!");
+        setTimeout(() => setSuccessMessage(""), 3000);
+      }
+    } catch (error: any) {
+      console.error("❌ Error uploading profile picture:", error);
+      setErrorMessage("Failed to upload profile picture");
+      setTimeout(() => setErrorMessage(""), 5000);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Handle input changes
+  const handleInputChange = (key: keyof ProfileData, value: any) => {
+    setProfileData(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+
+  const handleAddressChange = (index: number, key: keyof AddressDto, value: string) => {
+    setProfileData(prev => {
+      const addresses = [...(prev.addresses || [])];
+      if (!addresses[index]) {
+        addresses[index] = { line1: '', city: '', state: '', country: '', zipCode: '' };
+      }
+      addresses[index] = { ...addresses[index], [key]: value };
+      return { ...prev, addresses };
+    });
   };
 
   // Handle form submission
@@ -97,21 +153,34 @@ const ProfilePage: React.FC = () => {
     setErrorMessage("");
 
     try {
-      // Prepare JSON payload
-      const payload: any = { ...profileData };
+      // 1. Prepare and scrub payload
+      const allowedFields = [
+        'full_name', 'username', 'date_of_birth', 'time_of_birth',
+        'place_of_birth', 'gender', 'phone', 'preferences',
+        'language_preference', 'addresses', 'profile_picture'
+      ];
+
+      const payload: any = {};
+
+      // Only include allowed fields from profileData
+      allowedFields.forEach(field => {
+        if (profileData[field as keyof ProfileData] !== undefined && profileData[field as keyof ProfileData] !== null && profileData[field as keyof ProfileData] !== '') {
+          payload[field] = profileData[field as keyof ProfileData];
+        }
+      });
 
       // Ensure gender has a value since it's required
       if (!payload.gender || payload.gender.trim() === '') {
         payload.gender = 'other';
       }
 
-      // Clean payload: remove empty strings/nulls/undefined to avoid validation errors
-      Object.keys(payload).forEach(key => {
-        if (payload[key] === null || payload[key] === undefined || payload[key] === '') {
-          delete payload[key];
-        }
-      });
-      // Remove non-DTO fields if any (axios will ignore extra properties usually, but good to be clean)
+      // Scrub addresses only for forbidden DB fields, but keep 'id' for updates
+      if (payload.addresses && Array.isArray(payload.addresses)) {
+        payload.addresses = payload.addresses.map((addr: any) => {
+          const { createdAt, updatedAt, user, profile_client, ...cleanAddr } = addr;
+          return cleanAddr;
+        });
+      }
 
       console.log("📤 Submitting profile data:", payload);
 
@@ -129,11 +198,8 @@ const ProfilePage: React.FC = () => {
             },
           }
         );
-        console.log("✅ PATCH response:", response.status, response.data);
       } catch (error: any) {
         if (error.response?.status === 404) {
-          // Profile doesn't exist, create it
-          console.log("📝 Profile not found, creating new profile...");
           response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile`,
             payload,
@@ -144,44 +210,21 @@ const ProfilePage: React.FC = () => {
               },
             }
           );
-          console.log("✅ POST response:", response.status, response.data);
         } else {
-          console.log("❌ Other error:", error.response?.status, error.response?.data);
           throw error;
-        }
-      }
-
-      // Handle image upload if selected
-      if (profileImage) {
-        console.log("🖼️ Uploading profile picture...");
-        const formData = new FormData();
-        formData.append('file', profileImage);
-
-        const imageResponse = await axios.patch(
-          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile/picture`,
-          formData,
-          {
-            withCredentials: true,
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-        );
-        console.log("✅ Picture upload response:", imageResponse.status);
-
-        // Update local state with new image path if returned
-        if (imageResponse.data && imageResponse.data.profile_picture) {
-          response.data.profile_picture = imageResponse.data.profile_picture;
         }
       }
 
       setSuccessMessage("Profile updated successfully!");
 
+      // Clear message after 3 seconds
+      setTimeout(() => setSuccessMessage(""), 3000);
+
       // Update local profile data with server response
       setProfileData(prev => ({ ...prev, ...response.data }));
 
       if (response.data.profile_picture) {
-        setImagePreview(response.data.profile_picture);
+        setImagePreview(getImageUrl(response.data.profile_picture));
       }
       setIsEditing(false); // Exit edit mode after save
     } catch (error: any) {
@@ -199,6 +242,9 @@ const ProfilePage: React.FC = () => {
         'Unknown error occurred';
 
       setErrorMessage(`Failed to update profile: ${errorMessage}`);
+
+      // Clear message after 5 seconds
+      setTimeout(() => setErrorMessage(""), 5000);
     } finally {
       setSaving(false);
     }
@@ -270,17 +316,26 @@ const ProfilePage: React.FC = () => {
                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
                       />
                     </div>
-                    {isEditing && (
-                      <label
-                        className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
-                        style={{ width: "32px", height: "32px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#fd6410" }}
-                      >
-                        <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
-                        <input type="file" className="d-none" accept="image/*" onChange={(e) => {
-                          if (e.target.files && e.target.files[0]) handleImageChange(e.target.files[0]);
-                        }} />
-                      </label>
-                    )}
+                    <label
+                      className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
+                      style={{
+                        width: "35px",
+                        height: "35px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        color: "#fd6410",
+                        border: "2px solid #fff",
+                        transition: "all 0.3s ease"
+                      }}
+                      title="Update Profile Picture"
+                    >
+                      <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
+                      <input type="file" className="d-none" accept="image/*" onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) handleImageChange(e.target.files[0]);
+                      }} />
+                    </label>
                   </div>
 
                   <h5 className="fw-bold mb-1">{profileData.username || "User Name"} <i className="fa-solid fa-check-circle text-primary small"></i></h5>
@@ -301,8 +356,8 @@ const ProfilePage: React.FC = () => {
 
               {/* Navigation Menu */}
               <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
-                <div className="card-header bg-white border-0 pt-3 px-3">
-                  <small className="text-uppercase text-warning fw-bold" style={{ fontSize: "11px", letterSpacing: "1px" }}>ACCOUNT MENU</small>
+                <div className=" bg-white border-0 pt-3 px-3">
+                  <small className="text-uppercase text-warning fw-bold" style={{ fontSize: "11px", letterSpacing: "1px", color: "#fd6410" }}>ACCOUNT MENU</small>
                 </div>
                 <div className="list-group list-group-flush p-2">
                   {menuItems.map((item, index) => (
@@ -323,6 +378,18 @@ const ProfilePage: React.FC = () => {
 
             {/* Main Content Column */}
             <div className="col-lg-9">
+              {/* Feedback Messages */}
+              {successMessage && (
+                <div className="alert alert-success border-0 shadow-sm rounded-3 mb-4" role="alert">
+                  <i className="fa-solid fa-check-circle me-2"></i> {successMessage}
+                </div>
+              )}
+              {errorMessage && (
+                <div className="alert alert-danger border-0 shadow-sm rounded-3 mb-4" role="alert">
+                  <i className="fa-solid fa-exclamation-circle me-2"></i> {errorMessage}
+                </div>
+              )}
+
               {/* Personal Details Card */}
               <div className="card border-0 shadow-sm rounded-4 mb-4">
                 <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
@@ -334,8 +401,8 @@ const ProfilePage: React.FC = () => {
                   </h5>
                   <button
                     type="button"
-                    className="btn btn-link text-decoration-none p-0 fw-bold"
-                    style={{ color: "#fd6410", fontSize: "14px" }}
+                    className="  text-decoration-none p-0 fw-bold text-white px-3 py-2  "
+                    style={{ backgroundColor: "#fd6410", fontSize: "14px", borderRadius: "10px" }}
                     onClick={() => setIsEditing(!isEditing)}
                   >
                     <i className="fa-solid fa-pen me-1"></i> {isEditing ? "Cancel" : "Edit"}
@@ -344,7 +411,20 @@ const ProfilePage: React.FC = () => {
                 <div className="card-body p-4">
                   <div className="row g-4">
                     <div className="col-md-6">
-                      <label className="text-muted small fw-bold text-uppercase mb-1">FULL NAME</label>
+                      <label className="text-muted small fw-bold text-uppercase mb-1">Full Name</label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          className="form-control fw-bold"
+                          value={profileData.full_name || ""}
+                          onChange={(e) => handleInputChange('full_name', e.target.value)}
+                        />
+                      ) : (
+                        <p className="fw-bold mb-0">{profileData.full_name || "Not set"}</p>
+                      )}
+                    </div>
+                    <div className="col-md-6">
+                      <label className="text-muted small fw-bold text-uppercase mb-1">User Name</label>
                       {isEditing ? (
                         <input
                           type="text"
@@ -396,6 +476,95 @@ const ProfilePage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Address Details Card */}
+              <div className="card border-0 shadow-sm rounded-4 mb-4">
+                <div className="card-header bg-white border-0 pt-4 px-4">
+                  <h5 className="fw-bold mb-0">
+                    <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#e2f8ff", color: "#00b4d8" }}>
+                      <i className="fa-solid fa-location-dot"></i>
+                    </span>
+                    Address Details
+                  </h5>
+                </div>
+                <div className="card-body p-4">
+                  {isEditing ? (
+                    <div className="row g-3">
+                      <div className="col-md-12">
+                        <label className="text-muted small fw-bold text-uppercase mb-1">Address Line 1</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={profileData.addresses?.[0]?.line1 || ""}
+                          onChange={(e) => handleAddressChange(0, 'line1', e.target.value)}
+                        />
+                      </div>
+                      <div className="col-md-12">
+                        <label className="text-muted small fw-bold text-uppercase mb-1">Address Line 2 (Optional)</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={profileData.addresses?.[0]?.line2 || ""}
+                          onChange={(e) => handleAddressChange(0, 'line2', e.target.value)}
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="text-muted small fw-bold text-uppercase mb-1">City</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={profileData.addresses?.[0]?.city || ""}
+                          onChange={(e) => handleAddressChange(0, 'city', e.target.value)}
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="text-muted small fw-bold text-uppercase mb-1">State</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={profileData.addresses?.[0]?.state || ""}
+                          onChange={(e) => handleAddressChange(0, 'state', e.target.value)}
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <label className="text-muted small fw-bold text-uppercase mb-1">Country</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={profileData.addresses?.[0]?.country || ""}
+                          onChange={(e) => handleAddressChange(0, 'country', e.target.value)}
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <label className="text-muted small fw-bold text-uppercase mb-1">Zip Code</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={profileData.addresses?.[0]?.zipCode || ""}
+                          onChange={(e) => handleAddressChange(0, 'zipCode', e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      {profileData.addresses && profileData.addresses.length > 0 ? (
+                        <div className="d-flex align-items-start gap-3">
+                          <i className="fa-solid fa-map-location-dot text-muted mt-1"></i>
+                          <div>
+                            <p className="fw-bold mb-0">{profileData.addresses[0]?.line1}</p>
+                            {profileData.addresses[0]?.line2 && <p className="text-muted mb-0">{profileData.addresses[0]?.line2}</p>}
+                            <p className="text-muted mb-0">
+                              {profileData.addresses[0]?.city}, {profileData.addresses[0]?.state}, {profileData.addresses[0]?.country} - {profileData.addresses[0]?.zipCode}
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-muted italic mb-0">No address set. Click Edit to add one.</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Astro Birth Details Card */}
               <div className="card border-0 shadow-sm rounded-4 mb-4">
                 <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
@@ -405,14 +574,7 @@ const ProfilePage: React.FC = () => {
                     </span>
                     Astro Birth Details
                   </h5>
-                  <button
-                    type="button"
-                    className="btn btn-link text-decoration-none p-0 fw-bold"
-                    style={{ color: "#fd6410", fontSize: "14px" }}
-                    onClick={() => setIsEditing(!isEditing)}
-                  >
-                    <i className="fa-solid fa-pen me-1"></i> {isEditing ? "Cancel" : "Edit"}
-                  </button>
+
                 </div>
                 <div className="card-body p-4">
                   <div className="row g-4">
