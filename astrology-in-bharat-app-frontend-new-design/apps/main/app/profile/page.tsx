@@ -35,7 +35,7 @@ interface AddressDto {
 
 const ProfilePage: React.FC = () => {
   const router = useRouter();
-  const { clientUser, isClientAuthenticated } = useClientAuth();
+  const { clientUser, isClientAuthenticated, clientLoading } = useClientAuth();
 
   const [profileData, setProfileData] = useState<ProfileData>({});
   const [loading, setLoading] = useState(false);
@@ -45,6 +45,12 @@ const ProfilePage: React.FC = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("/images/a.webp");
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (!clientLoading && !isClientAuthenticated) {
+      router.push("/sign-in?callbackUrl=/profile");
+    }
+  }, [clientLoading, isClientAuthenticated, router]);
 
 
   const loadProfile = useCallback(async () => {
@@ -253,7 +259,7 @@ const ProfilePage: React.FC = () => {
     { icon: "fa-solid fa-shield-halved", label: "Security Settings" },
   ];
 
-  if (loading) {
+  if (loading || clientLoading) {
     return (
       <div className="min-vh-100 d-flex justify-content-center align-items-center">
         <div className="text-center">
