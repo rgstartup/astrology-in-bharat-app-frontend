@@ -14,6 +14,7 @@ import "swiper/css/navigation";
 import NextLink from "next/link";
 const Link = NextLink as any;
 import ProductsCarousel from "@/components/features/shop/ProductsCarousel";
+import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
 
 const HomePage: React.FC = () => {
   return (
@@ -106,94 +107,13 @@ const HomePage: React.FC = () => {
 
           {/* <!-- Astrologer Card 1 --> */}
           <div className="astro-grid">
-            {ListOfAllAstrologers.map((item) => {
-              return (
-                <Link
-                  href={`/astrologer/${item.id}`}
-                  className="grid-item"
-                  key={item.id}
-                >
-                  <div className="astro-card">
-                    <div className="vid-part">
-                      <img
-                        src={item.image}
-                        alt=""
-                        className="astro-profile-img"
-                      />
-                      <span
-                        className="play-vid fa-beat"
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal"
-                      >
-                        <i className="fa-solid fa-circle-play"></i>
-                      </span>
-                    </div>
-                    <div className="rating-star">★★★</div>
-                    <div className="astro-name">{item.name}</div>
-                    <div className="astro-tags">{item.expertise}</div>
-                    <div className="astro-info">
-                      <strong>Exp:</strong> {item.experience} Years
-                    </div>
-                    <div className="astro-info">
-                      <strong>Lang:</strong> {item.language}
-                    </div>
-                    <div className="astro-info">
-                      <strong>Price:</strong> ₹{item.price}/min
-                    </div>
-                    <div className="astro-actions">
-                      <button>
-                        <i className="fa-regular fa-comment-dots"></i> Chat
-                      </button>
-                      <button className="call">
-                        <i className="fa-solid fa-phone-volume"></i> Call
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* <!-- Modal --> */}
-                  <div
-                    className="modal fade"
-                    id="exampleModal"
-                    tabIndex={-1}
-                    aria-labelledby="exampleModalLabel"
-                    aria-hidden="true"
-                  >
-                    <div className="modal-dialog modal-dialog-centered modal-xl">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h4
-                            className="modal-title-astro-about"
-                            id="exampleModalLabel"
-                          >
-                            Meet Astrologer Parbhata Giri Introduction Video
-                          </h4>
-                          <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          >
-                            <i className="fa-solid fa-xmark"></i>
-                          </button>
-                        </div>
-                        <div className="modal-body">
-                          <iframe
-                            width="100%"
-                            height="500"
-                            src={item.video}
-                            title="शिव जी ने माता पार्वती को क्यों दिया ये भयंकर श्राप 😱😱 ?  #shivshankar #mataparvati"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
-                          ></iframe>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+            {ListOfAllAstrologers.map((item) => (
+              <AstrologerCard key={item.id} astrologerData={{
+                ...item,
+                is_available: true,
+                video: item.video || ""
+              }} />
+            ))}
           </div>
 
           <div className="view-all">

@@ -1,8 +1,14 @@
 "use client";
-import Link from "next/link";
+
+import NextLink from "next/link";
+const Link = NextLink as any;
+
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useRouter } from "next/navigation";
+import { useWishlist } from "@/context/WishlistContext";
+import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { toast } from "react-toastify";
 
 interface Astrologer {
   id?: number | string;
@@ -19,112 +25,195 @@ interface Astrologer {
 
 interface AstrologerCardProps {
   astrologerData: Astrologer;
+  cardClassName?: string;
 }
 
-
-
-
-const AstrologerCard: React.FC<AstrologerCardProps> = ({ astrologerData }) => {
-  const { id, image, name, expertise, experience, language, price, video, ratings = 0, is_available } = astrologerData as any;
+const AstrologerCard: React.FC<AstrologerCardProps> = ({
+  astrologerData,
+  cardClassName = "",
+}) => {
+  const {
+    id,
+    image,
+    name,
+    expertise,
+    experience,
+    language,
+    price,
+    video,
+    ratings = 0,
+    is_available,
+  } = astrologerData;
 
   const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
+  const { isExpertInWishlist, toggleExpertWishlist } = useWishlist();
+  const { isClientAuthenticated } = useClientAuth();
   const router = useRouter();
 
-  const handleChatClick = () => {
-    router.push('/user-detail-form');
-  }
+  const isLiked = id ? isExpertInWishlist(Number(id)) : false;
 
-  // Create URL-safe query string with astrologer data
-  const createDetailsUrl = () => {
-    if (id) return `/astrologer/${id}`;
+  const handleLike = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-    // Fallback if no ID (though ID should exist)
-    const params = new URLSearchParams({
-      name: name || '',
-      image: image || '',
-      expertise: expertise || '',
-      experience: String(experience || 0),
-      language: language || '',
-      price: String(price || 0),
-      video: video || '',
-      ratings: String(ratings || 0),
-    });
-    return `/astrologer-details?${params.toString()}`;
+    if (!isClientAuthenticated) {
+      toast.error("Please login first to use wishlist", {
+        onClick: () => router.push("/sign-in"),
+        autoClose: 3000,
+        style: { cursor: "pointer" },
+      });
+      return;
+    }
+
+    await toggleExpertWishlist(Number(id));
   };
 
-  return (
-    <div className="grid-item" >
-      <div className="astro-card">
-        <Link href={createDetailsUrl()}>
-          <div className="vid-part">
-            <img src={image} alt={name} className="astro-profile-img" />
+  const handleChatClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push("/user-detail-form");
+  };
 
-            {/* Status Badge */}
-            <div className={`status-badge ${is_available ? 'online' : 'offline'}`}>
-              <i className="fa-solid fa-circle"></i> {is_available ? 'Online' : 'Offline'}
+  const createDetailsUrl = () => (id ? `/astrologer/${id}` : "#");
+
+  return (
+    <div className="grid-item">
+      <div className={`astro-card ${cardClassName}`}>
+        <Link href={createDetailsUrl()}>
+          {/* IMAGE SECTION */}
+          <div className="relative flex justify-center pt-8">
+            {/* ❤️ LIKE — TOP LEFT (OUTSIDE IMAGE) */}
+            <button
+              onClick={handleLike}
+              className="absolute top-2 left-3 z-20 w-[36px] h-[36px] flex items-center justify-center rounded-full bg-white shadow-md hover:scale-110 transition"
+            >
+              <i
+                className={`${isLiked ? "fa-solid" : "fa-regular"} fa-heart`}
+                style={{ color: isLiked ? "#ff4d4d" : "#555" }}
+              />
+            </button>
+
+            {/* 🟢 ONLINE / OFFLINE — TOP RIGHT (OUTSIDE IMAGE) */}
+            <div
+              className={`absolute top-2 right-3 z-20 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2 shadow-md
+              ${is_available
+                  ? "bg-green-100 text-green-700"
+                  : "bg-gray-100 text-gray-600"
+                }`}
+            >
+              <i
+                className={`fa-solid fa-circle ${is_available ? "text-green-500" : "text-gray-400"
+                  }`}
+              />
+              {is_available ? "Online" : "Offline"}
             </div>
 
-            <span className="play-vid fa-beat" onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleShow();
-            }}>
-              <i className="fa-solid fa-circle-play"></i>
+            {/* PROFILE IMAGE */}
+            <div className="relative">
+              <img
+                src={image}
+                alt={name}
+                className="astro-profile-img"
+              />
+
+              {/* ▶ PLAY VIDEO */}
+              <span
+                className="
+    absolute 
+    top-[85%] 
+    left-[60%] 
+    -translate-x-1/2 
+    -translate-y-1/2 
+    text-white 
+    text-5xl 
+    cursor-pointer 
+    z-10 
+    drop-shadow-lg
+    transition-all
+    duration-300
+    hover:text-orange-500
+    hover:scale-110
+  "
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShow(true);
+                }}
+              >
+                <i className="fa-solid fa-circle-play" />
+              </span>
+
+
+            </div>
+          </div>
+
+          {/* RATING */}
+          <div
+            className="rating-star d-flex justify-content-center align-items-center text-center"
+            style={{ gap: 6, fontSize: "1.05rem", padding: "12px 16px 0" }}
+          >
+            {Array.from({ length: 5 }).map((_, i) => {
+              const starIndex = i + 1;
+              if (ratings >= starIndex)
+                return <i key={i} className="fa-solid fa-star color-secondary" />;
+              if (ratings >= starIndex - 0.5)
+                return (
+                  <i
+                    key={i}
+                    className="fa-solid fa-star-half-stroke color-secondary"
+                  />
+                );
+              return (
+                <i
+                  key={i}
+                  className="fa-regular fa-star"
+                  style={{ color: "#ccc" }}
+                />
+              );
+            })}
+            <span className="text-muted small ms-2">
+              {ratings.toFixed(1)} / 5
             </span>
           </div>
 
-          <div className="rating-star text-warning d-flex align-items-center" style={{ gap: 6, fontSize: "1.05rem" }}>
-            {Array.from({ length: 5 }).map((_, i) => {
-              const starIndex = i + 1;
-              if (ratings >= starIndex) {
-                return <i key={i} className="fa-solid fa-star color-secondary"></i>;
-              }
-              if (ratings >= starIndex - 0.5) {
-                return <i key={i} className="fa-solid fa-star-half-stroke color-secondary"></i>;
-              }
-              return <i key={i} className="fa-regular fa-star" style={{ color: "#ccc" }}></i>;
-            })}
-            <span className="text-muted small ms-2">{ratings.toFixed(1)} / 5</span>
-          </div>
-          <div className="astro-name">
-            {name}
-            {is_available && <span className="online-dot ms-2"></span>}
-          </div>
-          <div className="astro-tags">{expertise}</div>
-          <div className="astro-info">
+
+          {/* DETAILS */}
+          <div className="astro-name px-4 pt-2 pb-1">{name}</div>
+          <div className="astro-tags px-4">{expertise}</div>
+          <div className="astro-info px-4">
             <strong>Exp:</strong> {experience} Years
           </div>
-          <div className="astro-info">
+          <div className="astro-info px-4">
             <strong>Lang:</strong> {language}
           </div>
-          <div className="astro-info">
-            <strong>Price:</strong> ₹{price}/min
+          <div className="astro-info px-4 pb-3">
+            <strong>Price:</strong>   <span className="font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">
+              ₹{price}/min
+            </span>
           </div>
         </Link>
-        <div className="astro-actions">
-          <button onClick={handleChatClick} className="btn-global btn-outline-primary">
-            <i className="fa-regular fa-comment-dots"></i> Chat
+
+        {/* ACTION BUTTONS */}
+        <div className="astro-actions px-4 pb-4 flex gap-3">
+          <button
+            onClick={handleChatClick}
+            className="btn-global btn-outline-primary flex-1"
+          >
+            <i className="fa-regular fa-comment-dots" /> Chat
           </button>
-          <button className="call btn-global btn-outline-secondary" onClick={handleChatClick} >
-            <i className="fa-solid fa-phone-volume"></i> Call
+          <button
+            onClick={handleChatClick}
+            className="btn-global btn-outline-secondary flex-1"
+          >
+            <i className="fa-solid fa-phone-volume" /> Call
           </button>
         </div>
       </div>
 
-      {/* ✅ React-Bootstrap Modal */}
-      <Modal
-        show={show}
-        onHide={handleClose}
-        centered
-        size="xl"
-        contentClassName="astro-modal-content"
-      >
+      {/* VIDEO MODAL */}
+      <Modal show={show} onHide={() => setShow(false)} centered size="xl">
         <Modal.Header closeButton>
-          <Modal.Title className="modal-title-astro-about">
+          <Modal.Title>
             Meet Astrologer {name} Introduction Video
           </Modal.Title>
         </Modal.Header>
@@ -135,10 +224,9 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({ astrologerData }) => {
             src={video}
             title={`Astrologer ${name} Video`}
             frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-          ></iframe>
+          />
         </Modal.Body>
       </Modal>
     </div>

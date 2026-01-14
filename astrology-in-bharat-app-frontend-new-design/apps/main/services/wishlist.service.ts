@@ -43,5 +43,21 @@ export const WishlistService = {
     removeFromWishlist: async (productId: number) => {
         const response = await apiClient.delete(`/remove/${productId}`, { headers: getHeaders() });
         return response.data;
+    },
+
+    // Expert Wishlist APIs
+    getExpertWishlist: async () => {
+        const response = await apiClient.get("/astrologers", { headers: getHeaders() });
+        return response.data;
+    },
+
+    addExpertToWishlist: async (expertId: number) => {
+        const response = await apiClient.post("/astrologers/add", { expertId }, { headers: getHeaders() });
+        return response.data;
+    },
+
+    removeExpertFromWishlist: async (expertId: number) => {
+        const response = await apiClient.delete(`/astrologers/remove/${expertId}`, { headers: getHeaders() });
+        return response.data;
     }
 };

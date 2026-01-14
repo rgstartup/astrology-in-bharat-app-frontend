@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { SkeletonCard } from "./SkeletonCard";
+import AstrologerCard from "./AstrologerCard";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:6543/api/v1";
@@ -46,6 +47,7 @@ interface ClientExpertProfile {
   price: number;
   video: string;
   modalId: string;
+  is_available: boolean;
 }
 
 interface AstrologerListProps {
@@ -77,6 +79,7 @@ const mapExpert = (item: ExpertProfile): ClientExpertProfile => ({
   price: item.price || 0,
   video: item.video || "https://www.youtube.com/embed/INoPh_oRooU",
   modalId: `home-modal-${item.id}`,
+  is_available: item.is_available,
 });
 
 const AstrologerList: React.FC<AstrologerListProps> = ({
@@ -618,96 +621,11 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
               ))
             ) : astrologers.length > 0 ? (
               astrologers.map((item) => (
-                <React.Fragment key={item.id}>
-                  <div className="grid-item">
-                    <Link
-                      href={`/astrologer/${item.id}`}
-                      className="text-decoration-none"
-                    >
-                      <div className="astro-card min-w-[300px]">
-                        <div className="vid-part">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="astro-profile-img"
-                          />
-                          <span
-                            className="play-vid fa-beat"
-                            data-bs-toggle="modal"
-                            data-bs-target={`#${item.modalId}`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                            }}
-                          >
-                            <i className="fa-solid fa-circle-play"></i>
-                          </span>
-                        </div>
-                        <div className="rating-star">
-                          {"★".repeat(item.ratings)}
-                        </div>
-                        <div className="astro-name">{item.name}</div>
-                        <div className="astro-tags">{item.expertise}</div>
-                        <div className="astro-info">
-                          <strong>Exp:</strong> {item.experience} Years
-                        </div>
-                        <div className="astro-info">
-                          <strong>Lang:</strong> {item.language}
-                        </div>
-                        <div className="astro-info">
-                          <strong>Price:</strong> ₹{item.price}/min
-                        </div>
-                        <div className="astro-actions">
-                          <button>
-                            <i className="fa-regular fa-comment-dots"></i>{" "}
-                            Chat
-                          </button>
-                          <button className="call">
-                            <i className="fa-solid fa-phone-volume"></i> Call
-                          </button>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-
-                  {/* Modal Video */}
-                  <div
-                    className="modal fade"
-                    id={item.modalId}
-                    tabIndex={-1}
-                    aria-hidden="true"
-                    style={{ zIndex: 1070 }}
-                  >
-                    <div className="modal-dialog modal-dialog-centered modal-xl">
-                      <div className="modal-content text-dark border-0 shadow-2xl">
-                        <div className="modal-header border-0 pb-0">
-                          <h4 className="modal-title-astro-about">
-                            Meet {item.name}
-                          </h4>
-                          <button
-                            type="button"
-                            className="btn-close shadow-none"
-                            data-bs-dismiss="modal"
-                          >
-                            <i className="fa-solid fa-xmark"></i>
-                          </button>
-                        </div>
-                        <div className="modal-body p-4">
-                          <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100">
-                            <iframe
-                              width="100%"
-                              height="500"
-                              src={item.video}
-                              title={`${item.name} Video`}
-                              frameBorder="0"
-                              allowFullScreen
-                            ></iframe>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </React.Fragment>
+                <AstrologerCard
+                  key={item.id}
+                  astrologerData={item}
+                  cardClassName="min-w-[300px]"
+                />
               ))
             ) : (
               !loading && (
