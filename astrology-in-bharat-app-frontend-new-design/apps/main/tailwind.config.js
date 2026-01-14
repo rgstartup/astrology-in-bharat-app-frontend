@@ -30,6 +30,7 @@ module.exports = {
         "border-dark": "#4A3B3B",
         "accent-orange": "#FFF3E0",
         "accent-gold": "#FFB84C",
+        "orange-light": "#fff8ec",
       },
       fontFamily: {
         sans: ["Poppins", "sans-serif"],

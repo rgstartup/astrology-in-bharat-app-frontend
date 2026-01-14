@@ -4,9 +4,7 @@ import React, { useState, useEffect, useCallback, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
-import ProfileImageUpload from "@packages/ui/src/components/profile/ProfileImageUpload";
-import ProfileFormSection from "@packages/ui/src/components/profile/ProfileFormSection";
-import FormInput from "@packages/ui/src/components/profile/FormInput";
+
 import WishlistGrid from "@/components/features/profile/WishlistGrid";
 
 // Types
@@ -359,21 +357,22 @@ const ProfilePage: React.FC = () => {
               {/* Navigation Menu */}
               <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div className=" bg-white border-0 pt-3 px-3">
-                  <small className="text-uppercase text-warning fw-bold" style={{ fontSize: "11px", letterSpacing: "1px", color: "#fd6410" }}>ACCOUNT MENU</small>
+                  <small className="text-uppercase  fw-bold" style={{ fontSize: "11px", letterSpacing: "1px", color: "black" }}>ACCOUNT MENU</small>
                 </div>
-                <div className="list-group list-group-flush p-2">
+                <div className=" p-2">
                   {menuItems.map((item, index) => (
                     <a
                       key={index}
                       href="#"
-                      className={`list-group-item list-group-item-action border-0 rounded-3 d-flex align-items-center px-3 py-2 mb-1 ${activeTab === item.id ? 'bg-orange-light text-dark fw-bold' : 'text-muted'}`}
-                      style={activeTab === item.id ? { backgroundColor: "#fff8ec", color: "#fd6410" } : {}}
+                      className={` border-0 rounded-3 d-flex align-items-center px-3 py-2 mb-1 transition-all  text-black
+                        hover:bg-orange-light hover:text-black hover:font-bold ${activeTab === item.id ? 'font-bold' : 'text-gray-500'}`}
+                      style={activeTab === item.id ? { backgroundColor: "#fd6410", color: "white" } : {}}
                       onClick={(e) => {
                         e.preventDefault();
                         setActiveTab(item.id);
                       }}
                     >
-                      <i className={`${item.icon} me-3`} style={{ width: "20px", color: activeTab === item.id ? "#fd6410" : "inherit" }}></i>
+                      <i className={`${item.icon} me-3`} style={{ width: "20px", color: activeTab === item.id ? "#fff" : "inherit" }}></i>
                       {item.label}
                     </a>
                   ))}

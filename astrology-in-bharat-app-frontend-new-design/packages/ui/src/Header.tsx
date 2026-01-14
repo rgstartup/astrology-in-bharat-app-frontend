@@ -24,10 +24,10 @@ const SwiperNavButtons = () => {
   const swiper = useSwiper();
   return (
     <>
-      <div className="swiper-nav-prev" onClick={() => swiper.slidePrev()}>
+      <div className="swiper-nav-prev  " style={{ marginLeft:"-10px"}}  onClick={() => swiper.slidePrev()}>
         <i className="fa-solid fa-chevron-left"></i>
       </div>
-      <div className="swiper-nav-next" onClick={() => swiper.slideNext()}>
+      <div className="swiper-nav-next " style={{ marginRight:"-10px"}} onClick={() => swiper.slideNext()}>
         <i className="fa-solid fa-chevron-right"></i>
       </div>
     </>
@@ -554,7 +554,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
           <div className="container position-relative">
             <Swiper
               modules={[Navigation, Autoplay]}
-              spaceBetween={15}
+              spaceBetween={25}
               slidesPerView={2}
               grabCursor={true}
               loop={true}
@@ -570,7 +570,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                   slidesPerView: 4,
                 },
                 1024: {
-                  slidesPerView: 6,
+                  slidesPerView: 5,
                 },
               }}
               className="services-swiper"

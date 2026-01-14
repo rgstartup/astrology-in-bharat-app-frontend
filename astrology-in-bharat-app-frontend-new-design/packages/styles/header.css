@@ -522,6 +522,8 @@ nav.navbar {
   
   width: 100%;
   position: relative;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 .swiperSliders {
   width: 80%;
