@@ -249,11 +249,6 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const handleInputChange = (field: keyof ProfileData, value: string) => {
-    setProfileData(prev => ({ ...prev, [field]: value }));
-  };
-
-  // ... (previous logic remains, just updating the return)
 
   // Sidebar Menu Items
   const menuItems = [
@@ -265,13 +260,10 @@ const ProfilePage: React.FC = () => {
     { icon: "fa-solid fa-shield-halved", label: "Security Settings", id: "security" },
   ];
 
-<<<<<<< HEAD
+
   const [activeTab, setActiveTab] = useState("profile"); // State for active tab
 
-  if (loading) {
-=======
   if (loading || clientLoading) {
->>>>>>> 0a500448c040762c7f90e0636a21d9d14f469487
     return (
       <div className="min-vh-100 d-flex justify-content-center align-items-center">
         <div className="text-center">
@@ -391,17 +383,6 @@ const ProfilePage: React.FC = () => {
 
             {/* Main Content Column */}
             <div className="col-lg-9">
-<<<<<<< HEAD
-              {/* Render Content Based on Active Tab */}
-              {activeTab === "profile" && (
-                <>
-                  {/* Personal Details Card */}
-                  <div className="card border-0 shadow-sm rounded-4 mb-4">
-                    <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-                      <h5 className="fw-bold mb-0">
-                        <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#ffefe5", color: "#fd6410" }}>
-                          <i className="fa-regular fa-id-card"></i>
-=======
               {/* Feedback Messages */}
               {successMessage && (
                 <div className="alert alert-success border-0 shadow-sm rounded-3 mb-4" role="alert">
@@ -414,276 +395,22 @@ const ProfilePage: React.FC = () => {
                 </div>
               )}
 
-              {/* Personal Details Card */}
-              <div className="card border-0 shadow-sm rounded-4 mb-4">
-                <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-                  <h5 className="fw-bold mb-0">
-                    <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#ffefe5", color: "#fd6410" }}>
-                      <i className="fa-regular fa-id-card"></i>
-                    </span>
-                    Personal Details
-                  </h5>
-                  <button
-                    type="button"
-                    className="  text-decoration-none p-0 fw-bold text-white px-3 py-2  "
-                    style={{ backgroundColor: "#fd6410", fontSize: "14px", borderRadius: "10px" }}
-                    onClick={() => setIsEditing(!isEditing)}
-                  >
-                    <i className="fa-solid fa-pen me-1"></i> {isEditing ? "Cancel" : "Edit"}
-                  </button>
-                </div>
-                <div className="card-body p-4">
-                  <div className="row g-4">
-                    <div className="col-md-6">
-                      <label className="text-muted small fw-bold text-uppercase mb-1">Full Name</label>
-                      {isEditing ? (
-                        <input
-                          type="text"
-                          className="form-control fw-bold"
-                          value={profileData.full_name || ""}
-                          onChange={(e) => handleInputChange('full_name', e.target.value)}
-                        />
-                      ) : (
-                        <p className="fw-bold mb-0">{profileData.full_name || "Not set"}</p>
-                      )}
-                    </div>
-                    <div className="col-md-6">
-                      <label className="text-muted small fw-bold text-uppercase mb-1">User Name</label>
-                      {isEditing ? (
-                        <input
-                          type="text"
-                          className="form-control fw-bold"
-                          value={profileData.username || ""}
-                          onChange={(e) => handleInputChange('username', e.target.value)}
-                        />
-                      ) : (
-                        <p className="fw-bold mb-0">{profileData.username || "Not set"}</p>
-                      )}
-                    </div>
-                    <div className="col-md-6">
-                      <label className="text-muted small fw-bold text-uppercase mb-1">EMAIL ADDRESS</label>
-                      <p className="fw-bold mb-0">{clientUser?.email || "Not set"}</p>
-                    </div>
-                    <div className="col-md-6">
-                      <label className="text-muted small fw-bold text-uppercase mb-1">PHONE NUMBER</label>
-                      {isEditing ? (
-                        <input
-                          type="text"
-                          className="form-control fw-bold"
-                          value={profileData.phone || ""}
-                          onChange={(e) => handleInputChange('phone', e.target.value)}
-                        />
-                      ) : (
-                        <div className="d-flex align-items-center">
-                          <p className="fw-bold mb-0 me-2">{profileData.phone || "Not set"}</p>
-                          {profileData.phone && <span className="badge bg-success bg-opacity-10 text-success px-2 py-1" style={{ fontSize: "10px" }}>VERIFIED</span>}
-                        </div>
-                      )}
-                    </div>
-                    <div className="col-md-6">
-                      <label className="text-muted small fw-bold text-uppercase mb-1">GENDER</label>
-                      {isEditing ? (
-                        <select
-                          className="form-select fw-bold"
-                          value={profileData.gender || ""}
-                          onChange={(e) => handleInputChange('gender', e.target.value as any)}
-                        >
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                          <option value="other">Other</option>
-                        </select>
-                      ) : (
-                        <p className="fw-bold mb-0 text-capitalize">{profileData.gender || "Not set"}</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Address Details Card */}
-              <div className="card border-0 shadow-sm rounded-4 mb-4">
-                <div className="card-header bg-white border-0 pt-4 px-4">
-                  <h5 className="fw-bold mb-0">
-                    <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#e2f8ff", color: "#00b4d8" }}>
-                      <i className="fa-solid fa-location-dot"></i>
-                    </span>
-                    Address Details
-                  </h5>
-                </div>
-                <div className="card-body p-4">
-                  {isEditing ? (
-                    <div className="row g-3">
-                      <div className="col-md-12">
-                        <label className="text-muted small fw-bold text-uppercase mb-1">Address Line 1</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={profileData.addresses?.[0]?.line1 || ""}
-                          onChange={(e) => handleAddressChange(0, 'line1', e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-12">
-                        <label className="text-muted small fw-bold text-uppercase mb-1">Address Line 2 (Optional)</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={profileData.addresses?.[0]?.line2 || ""}
-                          onChange={(e) => handleAddressChange(0, 'line2', e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-6">
-                        <label className="text-muted small fw-bold text-uppercase mb-1">City</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={profileData.addresses?.[0]?.city || ""}
-                          onChange={(e) => handleAddressChange(0, 'city', e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-6">
-                        <label className="text-muted small fw-bold text-uppercase mb-1">State</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={profileData.addresses?.[0]?.state || ""}
-                          onChange={(e) => handleAddressChange(0, 'state', e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <label className="text-muted small fw-bold text-uppercase mb-1">Country</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={profileData.addresses?.[0]?.country || ""}
-                          onChange={(e) => handleAddressChange(0, 'country', e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-4">
-                        <label className="text-muted small fw-bold text-uppercase mb-1">Zip Code</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={profileData.addresses?.[0]?.zipCode || ""}
-                          onChange={(e) => handleAddressChange(0, 'zipCode', e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      {profileData.addresses && profileData.addresses.length > 0 ? (
-                        <div className="d-flex align-items-start gap-3">
-                          <i className="fa-solid fa-map-location-dot text-muted mt-1"></i>
-                          <div>
-                            <p className="fw-bold mb-0">{profileData.addresses[0]?.line1}</p>
-                            {profileData.addresses[0]?.line2 && <p className="text-muted mb-0">{profileData.addresses[0]?.line2}</p>}
-                            <p className="text-muted mb-0">
-                              {profileData.addresses[0]?.city}, {profileData.addresses[0]?.state}, {profileData.addresses[0]?.country} - {profileData.addresses[0]?.zipCode}
-                            </p>
-                          </div>
-                        </div>
-                      ) : (
-                        <p className="text-muted italic mb-0">No address set. Click Edit to add one.</p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Astro Birth Details Card */}
-              <div className="card border-0 shadow-sm rounded-4 mb-4">
-                <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-                  <h5 className="fw-bold mb-0">
-                    <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#f0f2f5", color: "#333" }}>
-                      <i className="fa-regular fa-calendar"></i>
-                    </span>
-                    Astro Birth Details
-                  </h5>
-
-                </div>
-                <div className="card-body p-4">
-                  <div className="row g-4">
-                    <div className="col-md-4">
-                      <label className="text-muted small fw-bold text-uppercase mb-1">DATE OF BIRTH</label>
-                      {isEditing ? (
-                        <input
-                          type="date"
-                          className="form-control fw-bold"
-                          value={profileData.date_of_birth || ""}
-                          onChange={(e) => handleInputChange('date_of_birth', e.target.value)}
-                        />
-                      ) : (
-                        <p className="fw-bold mb-0 text-dark"><i className="fa-regular fa-calendar me-2 text-warning"></i>{profileData.date_of_birth || "Not set"}</p>
-                      )}
-                    </div>
-                    <div className="col-md-4">
-                      <label className="text-muted small fw-bold text-uppercase mb-1">TIME OF BIRTH</label>
-                      {isEditing ? (
-                        <input
-                          type="time"
-                          className="form-control fw-bold"
-                          value={profileData.time_of_birth || ""}
-                          onChange={(e) => handleInputChange('time_of_birth', e.target.value)}
-                        />
-                      ) : (
-                        <p className="fw-bold mb-0 text-dark"><i className="fa-regular fa-clock me-2 text-warning"></i>{profileData.time_of_birth || "Not set"}</p>
-                      )}
-                    </div>
-                    <div className="col-md-4">
-                      <label className="text-muted small fw-bold text-uppercase mb-1">BIRTH PLACE</label>
-                      {isEditing ? (
-                        <input
-                          type="text"
-                          className="form-control fw-bold"
-                          value={profileData.place_of_birth || ""}
-                          onChange={(e) => handleInputChange('place_of_birth', e.target.value)}
-                          placeholder="City, Country"
-                        />
-                      ) : (
-                        <p className="fw-bold mb-0 text-dark"><i className="fa-solid fa-location-dot me-2 text-warning"></i>{profileData.place_of_birth || "Not set"}</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Settings & Preferences Card */}
-              <div className="card border-0 shadow-sm rounded-4 mb-4">
-                <div className="card-header bg-white border-0 pt-4 px-4">
-                  <h5 className="fw-bold mb-0">
-                    <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#e8f0fe", color: "#4285f4" }}>
-                      <i className="fa-solid fa-sliders"></i>
-                    </span>
-                    Settings & Preferences
-                  </h5>
-                </div>
-                <div className="card-body p-4">
-                  <div className="row align-items-center mb-4">
-                    <div className="col-md-8">
-                      <h6 className="fw-bold mb-1">Preferred Language</h6>
-                      <p className="text-muted small mb-0">Language for horoscopes and consultation</p>
-                    </div>
-                    <div className="col-md-4 text-end">
-                      {isEditing ? (
-                        <select
-                          className="form-select form-select-sm d-inline-block w-auto"
-                          value={profileData.language_preference || "english"}
-                          onChange={(e) => handleInputChange('language_preference', e.target.value)}
-                        >
-                          <option value="english">English</option>
-                          <option value="hindi">Hindi</option>
-                        </select>
-                      ) : (
-                        <span className="badge bg-light text-dark px-3 py-2 border rounded-pill">
-                          <i className="fa-solid fa-globe me-2"></i>
-                          {profileData.language_preference === 'hindi' ? 'Hindi' : 'English / Hindi'}
->>>>>>> 0a500448c040762c7f90e0636a21d9d14f469487
+              {/* Tab Content */}
+              {activeTab === "profile" && (
+                <>
+                  {/* Personal Details Card */}
+                  <div className="card border-0 shadow-sm rounded-4 mb-4">
+                    <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                      <h5 className="fw-bold mb-0">
+                        <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#ffefe5", color: "#fd6410" }}>
+                          <i className="fa-regular fa-id-card"></i>
                         </span>
                         Personal Details
                       </h5>
                       <button
                         type="button"
-                        className="btn btn-link text-decoration-none p-0 fw-bold"
-                        style={{ color: "#fd6410", fontSize: "14px" }}
+                        className="text-decoration-none p-0 fw-bold text-white px-3 py-2"
+                        style={{ backgroundColor: "#fd6410", fontSize: "14px", borderRadius: "10px" }}
                         onClick={() => setIsEditing(!isEditing)}
                       >
                         <i className="fa-solid fa-pen me-1"></i> {isEditing ? "Cancel" : "Edit"}
@@ -692,7 +419,20 @@ const ProfilePage: React.FC = () => {
                     <div className="card-body p-4">
                       <div className="row g-4">
                         <div className="col-md-6">
-                          <label className="text-muted small fw-bold text-uppercase mb-1">FULL NAME</label>
+                          <label className="text-muted small fw-bold text-uppercase mb-1">Full Name</label>
+                          {isEditing ? (
+                            <input
+                              type="text"
+                              className="form-control fw-bold"
+                              value={profileData.full_name || ""}
+                              onChange={(e) => handleInputChange('full_name', e.target.value)}
+                            />
+                          ) : (
+                            <p className="fw-bold mb-0">{profileData.full_name || "Not set"}</p>
+                          )}
+                        </div>
+                        <div className="col-md-6">
+                          <label className="text-muted small fw-bold text-uppercase mb-1">User Name</label>
                           {isEditing ? (
                             <input
                               type="text"
@@ -744,6 +484,95 @@ const ProfilePage: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Address Details Card */}
+                  <div className="card border-0 shadow-sm rounded-4 mb-4">
+                    <div className="card-header bg-white border-0 pt-4 px-4">
+                      <h5 className="fw-bold mb-0">
+                        <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#e2f8ff", color: "#00b4d8" }}>
+                          <i className="fa-solid fa-location-dot"></i>
+                        </span>
+                        Address Details
+                      </h5>
+                    </div>
+                    <div className="card-body p-4">
+                      {isEditing ? (
+                        <div className="row g-3">
+                          <div className="col-md-12">
+                            <label className="text-muted small fw-bold text-uppercase mb-1">Address Line 1</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={profileData.addresses?.[0]?.line1 || ""}
+                              onChange={(e) => handleAddressChange(0, 'line1', e.target.value)}
+                            />
+                          </div>
+                          <div className="col-md-12">
+                            <label className="text-muted small fw-bold text-uppercase mb-1">Address Line 2 (Optional)</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={profileData.addresses?.[0]?.line2 || ""}
+                              onChange={(e) => handleAddressChange(0, 'line2', e.target.value)}
+                            />
+                          </div>
+                          <div className="col-md-6">
+                            <label className="text-muted small fw-bold text-uppercase mb-1">City</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={profileData.addresses?.[0]?.city || ""}
+                              onChange={(e) => handleAddressChange(0, 'city', e.target.value)}
+                            />
+                          </div>
+                          <div className="col-md-6">
+                            <label className="text-muted small fw-bold text-uppercase mb-1">State</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={profileData.addresses?.[0]?.state || ""}
+                              onChange={(e) => handleAddressChange(0, 'state', e.target.value)}
+                            />
+                          </div>
+                          <div className="col-md-4">
+                            <label className="text-muted small fw-bold text-uppercase mb-1">Country</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={profileData.addresses?.[0]?.country || ""}
+                              onChange={(e) => handleAddressChange(0, 'country', e.target.value)}
+                            />
+                          </div>
+                          <div className="col-md-4">
+                            <label className="text-muted small fw-bold text-uppercase mb-1">Zip Code</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={profileData.addresses?.[0]?.zipCode || ""}
+                              onChange={(e) => handleAddressChange(0, 'zipCode', e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          {profileData.addresses && profileData.addresses.length > 0 ? (
+                            <div className="d-flex align-items-start gap-3">
+                              <i className="fa-solid fa-map-location-dot text-muted mt-1"></i>
+                              <div>
+                                <p className="fw-bold mb-0">{profileData.addresses[0]?.line1}</p>
+                                {profileData.addresses[0]?.line2 && <p className="text-muted mb-0">{profileData.addresses[0]?.line2}</p>}
+                                <p className="text-muted mb-0">
+                                  {profileData.addresses[0]?.city}, {profileData.addresses[0]?.state}, {profileData.addresses[0]?.country} - {profileData.addresses[0]?.zipCode}
+                                </p>
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="text-muted italic mb-0">No address set. Click Edit to add one.</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   {/* Astro Birth Details Card */}
                   <div className="card border-0 shadow-sm rounded-4 mb-4">
                     <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
@@ -753,14 +582,6 @@ const ProfilePage: React.FC = () => {
                         </span>
                         Astro Birth Details
                       </h5>
-                      <button
-                        type="button"
-                        className="btn btn-link text-decoration-none p-0 fw-bold"
-                        style={{ color: "#fd6410", fontSize: "14px" }}
-                        onClick={() => setIsEditing(!isEditing)}
-                      >
-                        <i className="fa-solid fa-pen me-1"></i> {isEditing ? "Cancel" : "Edit"}
-                      </button>
                     </div>
                     <div className="card-body p-4">
                       <div className="row g-4">
