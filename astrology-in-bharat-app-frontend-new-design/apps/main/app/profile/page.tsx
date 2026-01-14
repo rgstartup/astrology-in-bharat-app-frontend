@@ -43,7 +43,7 @@ const ProfilePage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("/images/a.webp");
+  const [imagePreview, setImagePreview] = useState<string>("/images/aa.webp");
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
