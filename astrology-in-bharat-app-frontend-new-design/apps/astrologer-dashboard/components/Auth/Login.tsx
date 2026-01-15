@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/context/AuthContext";
+import {   Eye, EyeOff } from "lucide-react";
+
 
 import { toast } from "react-toastify";
 
@@ -15,6 +17,7 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword , setShowPassword] = useState(false);
     const router = useRouter();
     const { login } = useAuth();
 
@@ -141,14 +144,21 @@ const LoginPage: React.FC = () => {
                                     <input
                                         id="password"
                                         name="password"
-                                        type="password"
+                                        type={showPassword ? "test" : "password"}
                                         autoComplete="current-password"
                                         required
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent sm:text-sm text-black transition-all"
-                                        placeholder="********"
+                                        placeholder="Enter Your Password"
                                     />
+                                      <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                                >
+                                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                </button>
                                 </div>
                             </div>
 
