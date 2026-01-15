@@ -30,6 +30,7 @@ interface ClientUser {
     name?: string;
     email?: string;
     roles?: string[];
+    avatar?: string;
 }
 
 interface ClientAuthContextType {
@@ -132,7 +133,8 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                         id: res.data.user?.id || res.data.id,
                         name: res.data.user?.name || res.data.full_name,
                         email: res.data.user?.email,
-                        roles: res.data.user?.roles || []
+                        roles: res.data.user?.roles || [],
+                        avatar: res.data.user?.avatar || res.data.profile_picture
                     });
                     setIsClientAuthenticated(true);
                     console.log("✅ User authenticated via profile data:", res.data);
@@ -217,7 +219,8 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                             id: res.data.user?.id || res.data.id,
                             name: res.data.user?.name || res.data.full_name,
                             email: res.data.user?.email,
-                            roles: res.data.user?.roles || []
+                            roles: res.data.user?.roles || [],
+                            avatar: res.data.user?.avatar || res.data.profile_picture
                         });
                         setIsClientAuthenticated(true);
                         console.log("✅ User authenticated via profile data:", res.data);

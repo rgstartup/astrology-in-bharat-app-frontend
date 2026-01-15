@@ -24,10 +24,10 @@ const SwiperNavButtons = () => {
   const swiper = useSwiper();
   return (
     <>
-      <div className="swiper-nav-prev  " style={{ marginLeft:"-10px"}}  onClick={() => swiper.slidePrev()}>
+      <div className="swiper-nav-prev  " style={{ marginLeft: "-10px" }} onClick={() => swiper.slidePrev()}>
         <i className="fa-solid fa-chevron-left"></i>
       </div>
-      <div className="swiper-nav-next " style={{ marginRight:"-10px"}} onClick={() => swiper.slideNext()}>
+      <div className="swiper-nav-next " style={{ marginRight: "-10px" }} onClick={() => swiper.slideNext()}>
         <i className="fa-solid fa-chevron-right"></i>
       </div>
     </>
@@ -260,12 +260,12 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                     </div>
                   </div>
                   <div className="col-6 mobile-space">
-                    <div className="d-flex gap-2 w-100 justify-content-end">
+                    <div className="d-flex gap-4 w-100 justify-content-end">
 
 
                       {isAuthenticated ? (
                         <div className="col-8 mobile-space">
-                          <div className="d-flex gap-2 align-items-center">
+                          <div className="d-flex gap-4 align-items-center">
                             <Link href={PATHS.CART} className="cart-top position-relative">
                               <i className="fa-solid fa-cart-shopping" style={{ marginLeft: "20px" }}></i> {" "}
                               {cartCount > 0 && (
@@ -285,18 +285,32 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
 
                             <Link
                               href={PATHS.PROFILE}
+                              className="d-flex align-items-center gap-4"
                               style={{
-                                backgroundColor: "#fa6310",
+                                // backgroundColor: "#fa6310",
                                 color: "white",
                                 borderRadius: "5px",
-                                padding: "5px 8px",
+                                // padding: "4px 10px",
                                 textDecoration: "none",
-                                width: "100%",
-                                textAlign: "center",
                                 whiteSpace: "nowrap",
                               }}
                             >
-                              <i className="fa-solid fa-user"></i> Profile
+                              <div style={{
+                                width: "42px",
+                                height: "42px",
+                                borderRadius: "50%",
+                                overflow: "hidden",
+                                border: "1px solid white"
+                              }}>
+                                <NextImage
+                                  src={clientUser?.avatar || "/images/aa.webp"}
+                                  alt="Profile"
+                                  width={24}
+                                  height={24}
+                                  className="object-cover w-100 h-100"
+                                />
+                              </div>
+                              
                             </Link>
 
                             <button
@@ -318,7 +332,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                         </div>
                       ) : (
                         <div className="col-8 mobile-space">
-                          <div className="d-flex gap-2">
+                          <div className="d-flex gap-4">
                             <Link
                               href={PATHS.SIGN_IN}
                               style={{
