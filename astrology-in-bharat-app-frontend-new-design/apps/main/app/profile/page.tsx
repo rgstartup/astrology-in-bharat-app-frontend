@@ -2,35 +2,13 @@
 
 import React, { useState, useEffect, useCallback, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument, ClientProfileData, AddressDto } from "@/libs/api-profile";
 
 import WishlistGrid from "@/components/features/profile/WishlistGrid";
 
-// Types
-interface ProfileData {
-  full_name?: string;
-  username?: string;
-  date_of_birth?: string;
-  time_of_birth?: string;
-  place_of_birth?: string;
-  gender?: 'male' | 'female' | 'other';
-  phone?: string;
-  preferences?: string;
-  language_preference?: string;
-  profile_picture?: string;
-  addresses?: AddressDto[];
-}
-
-interface AddressDto {
-  line1: string;
-  line2?: string;
-  city: string;
-  state: string;
-  country: string;
-  zipCode: string;
-  tag?: string;
-}
+// Types - now imported from api-profile
+type ProfileData = ClientProfileData;
 
 const ProfilePage: React.FC = () => {
   const router = useRouter();
@@ -55,19 +33,22 @@ const ProfilePage: React.FC = () => {
   const loadProfile = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile`, {
-        withCredentials: true
-      });
+      console.log("🔍 Loading profile via API client");
+      const data = await getClientProfile();
 
-      if (response.data) {
-        setProfileData(response.data);
-        if (response.data.profile_picture) {
-          setImagePreview(response.data.profile_picture);
+      if (data) {
+        console.log("📊 Profile loaded successfully:", data);
+        setProfileData(data);
+        if (data.profile_picture) {
+          setImagePreview(data.profile_picture);
         }
       }
-    } catch (error) {
-      console.error("Error loading profile:", error);
-      setErrorMessage("Failed to load profile data");
+    } catch (error: any) {
+      console.error("❌ Error loading profile:", error);
+      // 404 is OK - means new user with no profile yet
+      if (error.response?.status !== 404) {
+        setErrorMessage("Failed to load profile data");
+      }
     } finally {
       setLoading(false);
     }
@@ -79,7 +60,7 @@ const ProfilePage: React.FC = () => {
     }
   }, [isClientAuthenticated, loadProfile]);
 
-  // Handle image upload dynamically (immediate)
+  // Handle image upload dynamically (immediate) - following astrologer dashboard pattern
   const handleImageChange = async (file: File) => {
     // 1. Show preview immediately
     const reader = new FileReader();
@@ -91,33 +72,51 @@ const ProfilePage: React.FC = () => {
     // 2. Upload immediately for "dynamic" experience
     try {
       setSaving(true);
-      const formData = new FormData();
-      formData.append('file', file);
+      console.log("📸 Starting image upload. File details:", { name: file.name, size: file.size, type: file.type });
+      console.log("🔍 Auth state:", { isClientAuthenticated, userId: clientUser?.id });
 
-      const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile/picture`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
+      // Use the centralized upload function
+      const uploadResult = await uploadClientDocument(file);
+      console.log("☁️ Upload response from server:", uploadResult);
 
-      if (response.data) {
-        setProfileData(response.data);
-        if (response.data.profile_picture) {
-          // Cloudinary provides full URL, no need for helper
-          setImagePreview(response.data.profile_picture);
+      if (uploadResult && uploadResult.url) {
+        const imageUrl = uploadResult.url;
+        console.log("✅ Received Cloudinary URL:", imageUrl);
+
+        // Update local state
+        setProfileData(prev => ({ ...prev, profile_picture: imageUrl }));
+        setImagePreview(imageUrl);
+
+        // PERSIST to profile immediately
+        try {
+          console.log("💾 Persisting image URL to profile...");
+          const savedProfile = await updateClientProfile({ profile_picture: imageUrl });
+          console.log("✅ Persist success:", savedProfile);
+          setSuccessMessage("Profile picture updated successfully!");
+          setTimeout(() => setSuccessMessage(""), 3000);
+        } catch (saveError: any) {
+          console.error("❌ Error persisting profile picture:", saveError);
+          // If profile doesn't exist (404), create it with the image
+          if (saveError.response?.status === 404) {
+            console.log("ℹ️ No profile exists, creating new one with image...");
+            try {
+              await createClientProfile({ profile_picture: imageUrl, gender: 'other' });
+              setSuccessMessage("Profile created with picture!");
+              setTimeout(() => setSuccessMessage(""), 3000);
+            } catch (createError) {
+              console.error("❌ Error creating profile:", createError);
+            }
+          }
         }
-        setSuccessMessage("Profile picture updated successfully!");
-        setTimeout(() => setSuccessMessage(""), 3000);
+      } else {
+        console.warn("⚠️ Upload response missing URL:", uploadResult);
+        setErrorMessage("Upload succeeded but no URL returned");
       }
     } catch (error: any) {
       console.error("❌ Error uploading profile picture:", error);
-      setErrorMessage("Failed to upload profile picture");
-      setTimeout(() => setErrorMessage(""), 5000);
+      const errorDetail = error.response?.data?.message || error.message || "Unknown error";
+      setErrorMessage(`Failed to upload profile picture: ${errorDetail}`);
+      setTimeout(() => setErrorMessage(""), 8000);
     } finally {
       setSaving(false);
     }
@@ -181,32 +180,16 @@ const ProfilePage: React.FC = () => {
 
       console.log("📤 Submitting profile data:", payload);
 
-      let response;
+      let savedData;
 
       // Try to update first, if 404, then create
       try {
-        response = await axios.patch(
-          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile`,
-          payload,
-          {
-            withCredentials: true,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        console.log("💾 Submitting PATCH via API client");
+        savedData = await updateClientProfile(payload);
       } catch (error: any) {
         if (error.response?.status === 404) {
-          response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543'}/api/v1/client/profile`,
-            payload,
-            {
-              withCredentials: true,
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }
-          );
+          console.log("ℹ️ Profile not found, submitting POST instead");
+          savedData = await createClientProfile(payload);
         } else {
           throw error;
         }
@@ -218,10 +201,11 @@ const ProfilePage: React.FC = () => {
       setTimeout(() => setSuccessMessage(""), 3000);
 
       // Update local profile data with server response
-      setProfileData(prev => ({ ...prev, ...response.data }));
-
-      if (response.data.profile_picture) {
-        setImagePreview(response.data.profile_picture);
+      if (savedData) {
+        setProfileData(prev => ({ ...prev, ...savedData }));
+        if (savedData.profile_picture) {
+          setImagePreview(savedData.profile_picture);
+        }
       }
       setIsEditing(false); // Exit edit mode after save
     } catch (error: any) {
@@ -261,7 +245,8 @@ const ProfilePage: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState("profile"); // State for active tab
 
-  if (loading || clientLoading) {
+  // Only show full-page loader if we are doing initial load and have no data yet
+  if ((loading || clientLoading) && !profileData?.id && !saving) {
     return (
       <div className="min-vh-100 d-flex justify-content-center align-items-center">
         <div className="text-center">
@@ -298,7 +283,7 @@ const ProfilePage: React.FC = () => {
             {/* Sidebar Column */}
             <div className="col-lg-3">
               {/* Profile Summary Card */}
-              <div className="card border-0 shadow-sm rounded-4 mb-4 text-center p-3">
+              {/* <div className="card border-0 shadow-sm rounded-4 mb-4 text-center p-3">
                 <div className="card-body">
                   <div className="position-relative d-inline-block mb-3">
                     <div style={{
@@ -310,13 +295,20 @@ const ProfilePage: React.FC = () => {
                       boxShadow: "0 0 10px rgba(0,0,0,0.1)",
                       margin: "0 auto"
                     }}>
-                      <img
-                        src={imagePreview}
-                        alt="Profile"
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                      />
+                      {saving ? (
+                        <div className="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                          <div className="spinner-border spinner-border-sm text-primary" role="status"></div>
+                        </div>
+                      ) : (
+                        <img
+                          src={imagePreview}
+                          alt="Profile"
+                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        />
+                      )}
                     </div>
                     <label
+                      htmlFor="profile-upload"
                       className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
                       style={{
                         width: "35px",
@@ -332,30 +324,95 @@ const ProfilePage: React.FC = () => {
                       title="Update Profile Picture"
                     >
                       <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
-                      <input type="file" className="d-none" accept="image/*" onChange={(e) => {
-                        if (e.target.files && e.target.files[0]) handleImageChange(e.target.files[0]);
-                      }} />
+                      <input
+                        id="profile-upload"
+                        type="file"
+                        className="d-none"
+                        accept="image/*"
+                        onChange={(e) => {
+                          console.log("📁 File input onChange triggered!");
+                          if (e.target.files && e.target.files[0]) {
+                            handleImageChange(e.target.files[0]);
+                          }
+                        }}
+                      />
                     </label>
                   </div>
 
                   <h5 className="fw-bold mb-1">{profileData.username || "User Name"} <i className="fa-solid fa-check-circle text-primary small"></i></h5>
-                  <p className="text-muted small mb-3">Capricorn | Nakshatra: Shravana</p>
+                  
 
-                  <div className="d-flex justify-content-center gap-4 mt-3 pt-3 border-top">
-                    <div>
-                      <h4 className="fw-bold mb-0" style={{ color: "#fd6410" }}>12</h4>
-                      <small className="text-muted" style={{ fontSize: "10px", fontWeight: 600 }}>CONSULTS</small>
-                    </div>
-                    <div>
-                      <h4 className="fw-bold mb-0" style={{ color: "#fd6410" }}>4.8</h4>
-                      <small className="text-muted" style={{ fontSize: "10px", fontWeight: 600 }}>KARMA SCORE</small>
-                    </div>
-                  </div>
+                 
                 </div>
-              </div>
+              </div> */}
 
               {/* Navigation Menu */}
-              <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
+              <div className="card border-0  rounded-4 overflow-hidden">
+                 <div className="card border-0  rounded-4 mb-4 text-center p-3">
+                <div className="card-body">
+                  <div className="position-relative d-inline-block mb-3">
+                    <div style={{
+                      width: "100px",
+                      height: "100px",
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      border: "4px solid #fff",
+                      boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+                      margin: "0 auto"
+                    }}>
+                      {saving ? (
+                        <div className="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                          <div className="spinner-border spinner-border-sm text-primary" role="status"></div>
+                        </div>
+                      ) : (
+                        <img
+                          src={imagePreview}
+                          alt="Profile"
+                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        />
+                      )}
+                    </div>
+                    <label
+                      htmlFor="profile-upload"
+                      className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
+                      style={{
+                        width: "35px",
+                        height: "35px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        color: "#fd6410",
+                        border: "2px solid #fff",
+                        transition: "all 0.3s ease"
+                      }}
+                      title="Update Profile Picture"
+                    >
+                      <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
+                      <input
+                        id="profile-upload"
+                        type="file"
+                        className="d-none"
+                        accept="image/*"
+                        onChange={(e) => {
+                          console.log("📁 File input onChange triggered!");
+                          if (e.target.files && e.target.files[0]) {
+                            handleImageChange(e.target.files[0]);
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+
+                  <h5 className="fw-bold mb-1">{profileData.username || "User Name"} <i className="fa-solid fa-check-circle text-primary small"></i></h5>
+                  
+
+                 
+                </div>
+              </div>
+               
+
+
                 <div className=" bg-white border-0 pt-3 px-3">
                   <small className="text-uppercase  fw-bold" style={{ fontSize: "11px", letterSpacing: "1px", color: "black" }}>ACCOUNT MENU</small>
                 </div>
@@ -417,19 +474,8 @@ const ProfilePage: React.FC = () => {
                     </div>
                     <div className="card-body p-4">
                       <div className="row g-4">
-                        <div className="col-md-6">
-                          <label className="text-muted small fw-bold text-uppercase mb-1">Full Name</label>
-                          {isEditing ? (
-                            <input
-                              type="text"
-                              className="form-control fw-bold"
-                              value={profileData.full_name || ""}
-                              onChange={(e) => handleInputChange('full_name', e.target.value)}
-                            />
-                          ) : (
-                            <p className="fw-bold mb-0">{profileData.full_name || "Not set"}</p>
-                          )}
-                        </div>
+                       
+                         
                         <div className="col-md-6">
                           <label className="text-muted small fw-bold text-uppercase mb-1">User Name</label>
                           {isEditing ? (

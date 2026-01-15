@@ -32,6 +32,8 @@ const Page: React.FC = () => {
     password: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -266,7 +268,6 @@ const Page: React.FC = () => {
                     />
                   </div>
 
-                  {/* Password */}
                   <div className="col-12">
                     <label
                       htmlFor="password"
@@ -274,16 +275,27 @@ const Page: React.FC = () => {
                     >
                       Password *
                     </label>
-                    <input
-                      type="password"
-                      id="password"
-                      name="password"
-                      className="form-control"
-                      placeholder="Enter Password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                    />
+                    <div className="position-relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        name="password"
+                        className="form-control"
+                        placeholder="Enter Password"
+                        style={{ paddingRight: "40px" }}
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="position-absolute end-0 top-50 translate-middle-y border-0 bg-transparent pe-3 text-muted"
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{ zIndex: 10 }}
+                      >
+                        <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
