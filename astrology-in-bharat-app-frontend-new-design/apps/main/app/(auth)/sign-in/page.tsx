@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useCallback, FormEvent } from "react";
 import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 import { toast } from "react-toastify";
 // --- 1. Define Typescript Interfaces ---
@@ -17,10 +17,10 @@ interface LoginPayload {
 
 /** The shape of the expected successful server response. */
 interface LoginSuccessResponse {
-  token: string;
+  token?: string;       // Some endpoints might return 'token'
+  accessToken?: string; // Backend returns 'accessToken'
   message: string;
-  user?: any; // Add user field
-  // Add other fields you expect, e.g., user data
+  user?: any;
 }
 
 /** The shape of the data managed in the component state. */
@@ -34,7 +34,12 @@ const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:654
 
 const Page: React.FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { clientLogin } = useClientAuth(); // Add this line
+
+  // Get the callback URL from query params, default to /profile
+  const callbackUrl = searchParams.get('callbackUrl') || '/profile';
+
   // --- 2. State Management ---
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -107,16 +112,19 @@ const Page: React.FC = () => {
       console.log("Server Response Data:", response.data);
 
       // Update authentication context
-      if (response.data.token) {
-        clientLogin(response.data.token, response.data.user);
+      const token = response.data.accessToken || response.data.token;
+      if (token) {
+        console.log("🔑 Received token, calling clientLogin...");
+        clientLogin(token, response.data.user);
+      } else {
+        console.warn("⚠️ No token received in login response!", response.data);
       }
 
       toast.success(response.data.message || "Sign In successful! Redirecting...");
 
-      // Optionally redirect the user after success
-      // router.push('/dashboard');
-      // Use window.location.href for a hard redirect to ensure state is refreshed
-      window.location.href = '/profile';
+      // Redirect to the callback URL or default to /profile
+      console.log("🔄 Redirecting to:", callbackUrl);
+      window.location.href = callbackUrl;
       // router.push('/profile');
     } catch (err) {
       const error = err as AxiosError;

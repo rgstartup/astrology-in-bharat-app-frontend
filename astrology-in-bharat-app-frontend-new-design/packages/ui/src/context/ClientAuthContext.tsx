@@ -4,13 +4,26 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 // API client with proper cookie handling
-const apiClient = axios.create({
+export const apiClient = axios.create({
     baseURL: '/api/v1',
     withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json',
-    },
 });
+
+// Add a request interceptor to include the clientAccessToken
+apiClient.interceptors.request.use(
+    (config) => {
+        if (typeof window !== 'undefined') {
+            const token = localStorage.getItem('clientAccessToken');
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 interface ClientUser {
     id: number;
@@ -90,8 +103,17 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
     };
 
     const refreshAuth = async () => {
-        console.log("🔄 Manually refreshing authentication...");
-        setClientLoading(true);
+        const token = localStorage.getItem('clientAccessToken');
+        console.log("🔄 Manually refreshing authentication... Token present:", !!token);
+        if (!token) {
+            setIsClientAuthenticated(false);
+            setClientLoading(false);
+            return;
+        }
+        // Only set loading if we don't have an auth status yet
+        if (!isClientAuthenticated) {
+            setClientLoading(true);
+        }
         try {
             const res = await apiClient.get('/client/profile');
             console.log("📊 Profile response:", res.data);
@@ -157,6 +179,14 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
         }
 
         const initClientAuth = async () => {
+            const token = localStorage.getItem('clientAccessToken');
+            if (!token) {
+                console.log("ℹ️ No clientAccessToken found, skipping auth check");
+                setIsClientAuthenticated(false);
+                setClientLoading(false);
+                return;
+            }
+
             try {
                 console.log("🔍 Checking authentication status...");
                 // Check authentication by calling profile endpoint with anti-cache headers
