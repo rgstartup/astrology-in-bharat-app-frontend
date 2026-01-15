@@ -100,6 +100,7 @@ const OurAstrologer = () => {
 
             const mappedData = data.map((item) => ({
                 id: item.id,
+                userId: item.user?.id, // Map User ID
                 image: getImageUrl(item.user?.avatar),
                 ratings: Math.round(item.rating) || 5,
                 name: item.user.name || "Astrologer",

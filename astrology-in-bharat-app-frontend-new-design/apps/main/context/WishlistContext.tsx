@@ -169,7 +169,11 @@ export const WishlistProvider = ({ children }: { children: React.ReactNode }) =>
     };
 
     const isExpertInWishlist = (expertId: number) => {
-        return expertWishlistItems.some(item => (Number(item.expertId) === Number(expertId) || Number(item.expert?.id) === Number(expertId)));
+        return expertWishlistItems.some(item => (
+            Number(item.expertId) === Number(expertId) ||
+            Number(item.expert?.id) === Number(expertId) ||
+            (item.expert?.user && Number((item.expert.user as any).id) === Number(expertId)) // Check nested User ID
+        ));
     };
 
     const toggleExpertWishlist = async (expertId: number) => {

@@ -1,13 +1,10 @@
 import axios from "axios";
-import { getAuthHeaders } from "@packages/ui/src/utils/auth-utils"; // Making assumption this exists or similar
+// import { getAuthHeaders } from "@packages/ui/src/utils/auth-utils"; // Removed unused import to fix lint error
+
 
 const API_Base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-const API_URL = `${API_Base.replace(/\/api\/v1\/?$/, "")}/api/v1/wishlist`;
+// Base URL handled dynamically in methods
 
-const apiClient = axios.create({
-    baseURL: API_URL,
-    withCredentials: true,
-});
 
 // Helper to get headers (if auth-utils doesn't exist, we can implement logic here)
 // For now, relying on axios interceptors or explicit token if stored. 
@@ -30,34 +27,53 @@ const getHeaders = () => {
 };
 
 export const WishlistService = {
+    // Product Likes APIs - /api/v1/product-like
     getWishlist: async () => {
-        const response = await apiClient.get("/", { headers: getHeaders() });
+        const response = await axios.get(`${API_Base}/api/v1/product-like`, {
+            headers: getHeaders(),
+            withCredentials: true
+        });
         return response.data;
     },
 
     addToWishlist: async (productId: number) => {
-        const response = await apiClient.post("/add", { productId }, { headers: getHeaders() });
+        const response = await axios.post(`${API_Base}/api/v1/product-like/add`, { productId }, {
+            headers: getHeaders(),
+            withCredentials: true
+        });
         return response.data;
     },
 
     removeFromWishlist: async (productId: number) => {
-        const response = await apiClient.delete(`/remove/${productId}`, { headers: getHeaders() });
+        const response = await axios.delete(`${API_Base}/api/v1/product-like/remove/${productId}`, {
+            headers: getHeaders(),
+            withCredentials: true
+        });
         return response.data;
     },
 
-    // Expert Wishlist APIs
+    // Expert Likes APIs - /api/v1/expert-like
     getExpertWishlist: async () => {
-        const response = await apiClient.get("/astrologers", { headers: getHeaders() });
+        const response = await axios.get(`${API_Base}/api/v1/expert-like`, {
+            headers: getHeaders(),
+            withCredentials: true
+        });
         return response.data;
     },
 
     addExpertToWishlist: async (expertId: number) => {
-        const response = await apiClient.post("/astrologers/add", { expertId }, { headers: getHeaders() });
+        const response = await axios.post(`${API_Base}/api/v1/expert-like/add`, { expertId }, {
+            headers: getHeaders(),
+            withCredentials: true
+        });
         return response.data;
     },
 
     removeExpertFromWishlist: async (expertId: number) => {
-        const response = await apiClient.delete(`/astrologers/remove/${expertId}`, { headers: getHeaders() });
+        const response = await axios.delete(`${API_Base}/api/v1/expert-like/remove/${expertId}`, {
+            headers: getHeaders(),
+            withCredentials: true
+        });
         return response.data;
     }
 };

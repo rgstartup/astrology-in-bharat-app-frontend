@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 
 interface Astrologer {
   id?: number | string;
+  userId?: number | string;
   image: string;
   name: string;
   expertise: string;
@@ -21,6 +22,7 @@ interface Astrologer {
   video: string;
   ratings?: number;
   is_available?: boolean;
+  total_likes?: number; // ADDED
 }
 
 interface AstrologerCardProps {
@@ -34,6 +36,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
 }) => {
   const {
     id,
+    userId,
     image,
     name,
     expertise,
@@ -43,6 +46,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
     video,
     ratings = 0,
     is_available,
+    total_likes = 0, // Destructure total_likes
   } = astrologerData;
 
   const [show, setShow] = useState(false);
@@ -50,7 +54,16 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
   const { isClientAuthenticated } = useClientAuth();
   const router = useRouter();
 
-  const isLiked = id ? isExpertInWishlist(Number(id)) : false;
+  // Local state for optimistic updates
+  const [currentLikes, setCurrentLikes] = useState(total_likes);
+
+  // Sync with prop if it changes
+  React.useEffect(() => {
+    setCurrentLikes(total_likes);
+  }, [total_likes]);
+
+  const targetId = userId ? Number(userId) : Number(id);
+  const isLiked = targetId ? isExpertInWishlist(targetId) : false;
 
   const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -65,7 +78,17 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
       return;
     }
 
-    await toggleExpertWishlist(Number(id));
+    // Optimistic Update
+    const newIsLiked = !isLiked;
+    setCurrentLikes((prev) => (newIsLiked ? prev + 1 : Math.max(0, prev - 1)));
+
+    try {
+      await toggleExpertWishlist(targetId);
+    } catch (error) {
+      // Revert on failure
+      setCurrentLikes((prev) => (newIsLiked ? prev - 1 : prev + 1));
+      console.error("Failed to toggle wishlist", error);
+    }
   };
 
   const handleChatClick = (e: React.MouseEvent) => {
@@ -82,16 +105,24 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
         <Link href={createDetailsUrl()}>
           {/* IMAGE SECTION */}
           <div className="relative flex justify-center pt-8">
-            {/* ❤️ LIKE — TOP LEFT (OUTSIDE IMAGE) */}
-            <button
-              onClick={handleLike}
-              className="absolute top-2 left-3 z-20 w-[36px] h-[36px] flex items-center justify-center rounded-full bg-white shadow-md hover:scale-110 transition"
-            >
-              <i
-                className={`${isLiked ? "fa-solid" : "fa-regular"} fa-heart`}
-                style={{ color: isLiked ? "#ff4d4d" : "#555" }}
-              />
-            </button>
+            {/* ❤️ LIKE & COUNT — TOP LEFT (OUTSIDE IMAGE) */}
+            <div className="absolute top-2 left-3 z-20 flex flex-col items-center gap-1">
+              <button
+                onClick={handleLike}
+                className="w-[36px] h-[36px] flex items-center justify-center rounded-full bg-white shadow-md hover:scale-110 transition"
+              >
+                <i
+                  className={`${isLiked ? "fa-solid" : "fa-regular"} fa-heart`}
+                  style={{ color: isLiked ? "#ff4d4d" : "#555" }}
+                />
+              </button>
+              {/* Total Likes Count */}
+              {currentLikes > 0 && (
+                <span className="text-xs font-semibold text-white bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">
+                  {currentLikes}
+                </span>
+              )}
+            </div>
 
             {/* 🟢 ONLINE / OFFLINE — TOP RIGHT (OUTSIDE IMAGE) */}
             <div

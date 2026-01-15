@@ -21,6 +21,7 @@ interface ExpertData {
   detailed_experience?: any[];
   gallery?: string[];
   videos?: string[];
+  total_likes?: number; // ADDED
 }
 
 export default async function Page({
@@ -65,6 +66,7 @@ export default async function Page({
       detailed_experience: data.detailed_experience || [],
       gallery: data.gallery || [],
       videos: data.videos || [],
+      total_likes: data.total_likes || 0, // ADDED
     };
 
     return <AstrologerDetailsClient astrologer={astrologer} />;

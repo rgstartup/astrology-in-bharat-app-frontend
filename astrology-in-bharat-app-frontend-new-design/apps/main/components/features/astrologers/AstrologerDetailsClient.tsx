@@ -27,6 +27,7 @@ interface AstrologerData {
   detailed_experience: any[];
   gallery: string[];
   videos: string[];
+  total_likes?: number; // ADDED
 }
 
 export default function AstrologerDetailsClient({
@@ -97,6 +98,14 @@ export default function AstrologerDetailsClient({
                   <div className="flex items-center justify-center gap-1">
                     <span className="text-sm font-semibold text-[#1A2B47]">{astrologer.ratings}</span>
                     <i className="fa-solid fa-star text-[#fd6410] text-[12px]"></i>
+                  </div>
+                </div>
+                <div className="h-8 w-px bg-slate-200"></div>
+                <div className="text-center">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Likes</p>
+                  <div className="flex items-center justify-center gap-1">
+                    <span className="text-sm font-semibold text-[#1A2B47]">{astrologer.total_likes || 0}</span>
+                    <i className="fa-solid fa-heart text-[#ff4d4d] text-[12px]"></i>
                   </div>
                 </div>
                 <div className="h-8 w-px bg-slate-200"></div>

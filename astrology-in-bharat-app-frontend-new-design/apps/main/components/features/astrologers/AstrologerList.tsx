@@ -33,11 +33,12 @@ interface ExpertProfile {
   ratings?: number; // Fallback
   is_available: boolean;
   video?: string;
-  // [key: string]: any; // Removed to avoid lint error
+  total_likes?: number; // ADDED
 }
 
 interface ClientExpertProfile {
   id: number;
+  userId: number; // ADDED
   image: string;
   ratings: number;
   name: string;
@@ -48,6 +49,7 @@ interface ClientExpertProfile {
   video: string;
   modalId: string;
   is_available: boolean;
+  total_likes?: number; // ADDED
 }
 
 interface AstrologerListProps {
@@ -68,6 +70,7 @@ const getImageUrl = (path?: string) => {
 
 const mapExpert = (item: ExpertProfile): ClientExpertProfile => ({
   id: item.id,
+  userId: item.user?.id, // Map User ID
   image: getImageUrl(item.user?.avatar),
   ratings: Math.round(item.rating || 0) || 5,
   name: item.user?.name || "Astrologer",
@@ -80,6 +83,7 @@ const mapExpert = (item: ExpertProfile): ClientExpertProfile => ({
   video: item.video || "https://www.youtube.com/embed/INoPh_oRooU",
   modalId: `home-modal-${item.id}`,
   is_available: item.is_available,
+  total_likes: item.total_likes || 0, // ADDED
 });
 
 const AstrologerList: React.FC<AstrologerListProps> = ({
@@ -239,6 +243,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
           { params }
         );
         const { data, pagination } = response.data;
+        console.log("Client Side - Astrologer Data Fetch (Infinite Scroll):", data);
 
         const mappedData = data.map(mapExpert);
 

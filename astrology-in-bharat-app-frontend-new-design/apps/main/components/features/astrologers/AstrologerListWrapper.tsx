@@ -26,6 +26,7 @@ async function AstrologerListServer({ searchParams }: AstrologerListWrapperProps
         state:
             typeof searchParams.state === "string" ? searchParams.state : undefined,
     });
+    console.log("Server Side - Astrologer Data Init:", response.data);
 
     return (
         <AstrologerList
