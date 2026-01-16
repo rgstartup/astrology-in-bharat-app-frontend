@@ -618,13 +618,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
             className="flex-1 min-w-0 flex overflow-x-auto gap-4 scroll-smooth [&::-webkit-scrollbar]:hidden py-4"
             ref={cardScrollRef}
           >
-            {loading && astrologers.length === 0 ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <div className="min-w-[300px]" key={i}>
-                  <SkeletonCard />
-                </div>
-              ))
-            ) : astrologers.length > 0 ? (
+            {astrologers.length > 0 ? (
               astrologers.map((item) => (
                 <AstrologerCard
                   key={item.id}
@@ -633,13 +627,11 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
                 />
               ))
             ) : (
-              !loading && (
-                <div className="w-full text-center py-10 text-white">
-                  <i className="fa-solid fa-magnifying-glass fa-3x mb-3 text-[#fd641055]"></i>
-                  <h4>No Astrologers Found</h4>
-                  <p>Adjust your filters or search terms.</p>
+              Array.from({ length: 4 }).map((_, i) => (
+                <div className="min-w-[300px]" key={i}>
+                  <SkeletonCard />
                 </div>
-              )
+              ))
             )}
 
             {loading && astrologers.length > 0 && (
