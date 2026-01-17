@@ -69,7 +69,7 @@ const Page: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(FormData)
+    
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -89,7 +89,7 @@ const Page: React.FC = () => {
           withCredentials: true,
         }
       );
-      console.log(response.data)
+
 
       setSuccessMessage(
         response.data.message || "Registration successful! You can now sign in."

@@ -45,32 +45,20 @@ const Header: React.FC = () => {
           withCredentials: true,
         }
       );
-      console.log("=== Profile API Response ===");
-      console.log("Full response:", response);
-      console.log("Response data:", response.data);
-      console.log("Profile ID:", response.data?.id);
-      console.log("User data:", response.data?.user);
-      console.log("User name:", response.data?.user?.name);
-      console.log("User email:", response.data?.user?.email);
-      console.log("User avatar:", response.data?.user?.avatar);
-      console.log("===========================");
-
+  
       // If profile exists (has an id), user is authenticated
       if (response.data && response.data.id) {
         setUserProfile(response.data);
         setIsAuthenticated(true);
-        console.log("✅ Authentication successful - User profile set");
+       
         console.log("Profile data:", response.data);
       } else {
-        console.log("❌ No profile data in response");
+      
         setIsAuthenticated(false);
         setUserProfile(null);
       }
     } catch (error: any) {
-      console.log("❌ Authentication check failed:");
-      console.log("Error status:", error?.response?.status);
-      console.log("Error message:", error?.message);
-      console.log("Error response:", error?.response?.data);
+
       setIsAuthenticated(false);
       setUserProfile(null);
     } finally {
@@ -88,10 +76,8 @@ const Header: React.FC = () => {
 
   // Log profile state changes
   useEffect(() => {
-    console.log("📊 Profile state updated:");
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("userProfile:", userProfile);
-    console.log("loading:", loading);
+    
+    
   }, [isAuthenticated, userProfile, loading]);
 
   // Also check authentication when window regains focus (e.g., after login in another tab)
@@ -167,264 +153,149 @@ const Header: React.FC = () => {
   return (
     <>
       <header className="top-head">
-        <div className="container">
-          <div className="row align">
-            <div className="col-lg-2 col-md-12"></div>
-            <div className="col-lg-6 col-md-6">
-              <p className="top-text">
-                Connect with Verified Astrology Experts for Online Predictions.
-              </p>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="right-part-top">
-                <div className="row align list-top-bar-mobile">
-                  <div className="col-4 mobile-space">
-                    <div className="lang-dropdown">
-                      <button className="lang-toggle">
-                        <i className="fa-solid fa-globe"></i> Eng
-                        <i className="fa-solid fa-angle-down"></i>
-                      </button>
-                      <div className="lang-menu">
-                        <a href="#">English</a>
-                        <a href="#">हिंदी</a>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-3 mobile-space text-center">
-                    <Link href="/cart" className="cart-top">
-                      <i className="fa-solid fa-cart-shopping"></i> Cart
-                      <span className="value">4</span>
-                    </Link>
-                  </div>
-
-
-                  <div className="col-5 mobile-space">
-                    {isClient && (
-                      <>
-                        {loading ? (
-                          <div style={{ padding: "6px 12px", fontSize: "14px" }}>
-                            <i className="fa-solid fa-spinner fa-spin"></i>
-                          </div>
-                        ) : isAuthenticated ? (
-                          <div className="profile-dropdown-container" style={{ position: "relative" }}>
-                            <button
-                              className="account-btn"
-                              id="profileToggle"
-                              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "8px",
-                                padding: "6px 12px",
-                                border: "none",
-                                background: "transparent",
-                                cursor: "pointer",
-                              }}
-                            >
-                              {userProfile?.user?.avatar ? (
-                                <img
-                                  src={userProfile.user.avatar}
-                                  alt={userProfile.user.name || "User"}
-                                  style={{
-                                    width: "32px",
-                                    height: "32px",
-                                    borderRadius: "50%",
-                                    objectFit: "cover",
-                                  }}
-                                />
-                              ) : (
-                                <div
-                                  style={{
-                                    width: "32px",
-                                    height: "32px",
-                                    borderRadius: "50%",
-                                    background: "linear-gradient(45deg, #daa23e, #e0a800)",
-                                    color: "white",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    fontWeight: "bold",
-                                    fontSize: "16px",
-                                  }}
-                                >
-                                  <i className="fa-solid fa-user"></i>
-                                </div>
-                              )}
-                              <span style={{ fontSize: "14px" }}>
-                                {userProfile?.user?.name?.split(" ")[0] || "Profile"}
-                              </span>
-                              <i className="fa-solid fa-angle-down"></i>
-                            </button>
-                            {showProfileDropdown && (
-                              <div
-                                className="lang-menu"
-                                id="profileMenu"
-                                style={{
-                                  position: "absolute",
-                                  right: 0,
-                                  top: "100%",
-                                  marginTop: "8px",
-                                  minWidth: "180px",
-                                  zIndex: 1000,
-                                  background: "white",
-                                  boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                                  borderRadius: "8px",
-                                  padding: "8px 0",
-                                }}
-                              >
-                                <Link
-                                  href="/settings"
-                                  onClick={() => setShowProfileDropdown(false)}
-                                  style={{
-                                    display: "block",
-                                    padding: "10px 20px",
-                                    color: "#333",
-                                    textDecoration: "none",
-                                    fontSize: "14px",
-                                  }}
-                                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                                    e.currentTarget.style.backgroundColor = "#f5f5f5";
-                                  }}
-                                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                                    e.currentTarget.style.backgroundColor = "transparent";
-                                  }}
-                                >
-                                  <i className="fa-solid fa-user-edit me-2" style={{ color: "#daa23e" }}></i>
-                                  Edit Profile
-                                </Link>
-                                <Link
-                                  href="/session-history"
-                                  onClick={() => setShowProfileDropdown(false)}
-                                  style={{
-                                    display: "block",
-                                    padding: "10px 20px",
-                                    color: "#333",
-                                    textDecoration: "none",
-                                    fontSize: "14px",
-                                  }}
-                                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                                    e.currentTarget.style.backgroundColor = "#f5f5f5";
-                                  }}
-                                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                                    e.currentTarget.style.backgroundColor = "transparent";
-                                  }}
-                                >
-                                  <i className="fa-solid fa-clock-rotate-left me-2" style={{ color: "#daa23e" }}></i>
-                                  My Sessions
-                                </Link>
-                                <button
-                                  onClick={handleLogout}
-                                  style={{
-                                    width: "100%",
-                                    textAlign: "left",
-                                    padding: "10px 20px",
-                                    border: "none",
-                                    background: "transparent",
-                                    color: "#dc3545",
-                                    cursor: "pointer",
-                                    fontSize: "14px",
-                                  }}
-                                  onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-                                    e.currentTarget.style.backgroundColor = "#f5f5f5";
-                                  }}
-                                  onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-                                    e.currentTarget.style.backgroundColor = "transparent";
-                                  }}
-                                >
-                                  <i className="fa-solid fa-sign-out-alt me-2"></i>
-                                  Logout
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <div className="lang-dropdown">
-                            <button className="account-btn" id="accountToggle">
-                              <i className="fa-solid fa-user"></i> Account
-                              <i className="fa-solid fa-angle-down"></i>
-                            </button>
-                            <div className="lang-menu" id="accountMenu">
-                              <Link href="/sign-in">Sign In</Link>
-                              <Link href="/register">Register</Link>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-
+ <div className="container">
+     <div className="row align"> 
+       <div className="col-lg-8 col-md-6">
+         <p className="top-text">Connect with Verified Astrology Experts for Online Predictions.</p>      
+       </div>
+       <div className="col-lg-4 col-md-6">
+         <div className="right-part-top">
+           <div className="row align list-top-bar-mobile">
+             <div className="col-4 mobile-space"> 
+                <div className="account-dropdown w-100">
+                <button className="account-btn w-100" id="accountToggle">
+                  <i className="fa-solid fa-globe"></i> Eng <i className="fa-solid fa-angle-down"></i>
+                </button>
+                <div className="account-menu" id="accountMenu">
+                  <a href="#">English</a>
+                    <a href="#">हिंदी</a>
                 </div>
               </div>
-            </div>
-          </div>
+             </div>
+
+             <div className="col-3 mobile-space text-center">
+               <a href="#" className="cart-top"><i className="fa-solid fa-cart-shopping"></i> Cart <span className="value">10</span></a>
+             </div>
+             <div className="col-5 mobile-space">
+               <div className="account-dropdown w-100">
+                <div className="account-dropdown w-100">
+                  <button className="account-btn w-100" id="accountToggle">
+                    <i className="fa-solid fa-user"></i> Account <i className="fa-solid fa-angle-down"></i>
+                  </button>
+                  <div className="account-menu" id="accountMenu">
+                    <a href="#">Sign In</a>
+                    <a href="#">Register</a>
+                  </div>
+                </div>
+
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+  </div>
+  </div>
+</header>
+     <header className="main-head">
+ <div className="container">
+     <div className="row align">
+       <div className="col-lg-10 col-md-7">
+         <nav className="navbar navbar-expand-lg navbar-light "> 
+            <a className="navbar-brand" href="#"> 
+              <img src="images/web-logo.png" alt="logo" className="logo  "/>
+            </a>
+            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul className="navbar-nav ms-auto  top-menu-main">
+                 <li className="nav-item">
+                  <a className="nav-link" href="#">Home</a>
+                </li> 
+                <li className="nav-item">
+                  <a className="nav-link" href="#">Daily Horoscope</a>
+                </li>
+                <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Astrology Consult
+                  </a>
+                  <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a className="dropdown-item" href="#">Horoscope</a></li>
+                    <li><a className="dropdown-item" href="#">Kundali Matching</a></li> 
+                    <li><a className="dropdown-item" href="#">Nakshatra Milan</a></li>
+                    <li><a className="dropdown-item" href="#">Kundali Matching By Name</a></li>
+                    <li><a className="dropdown-item" href="#">Mangal Dosha</a></li>
+                    <li><a className="dropdown-item" href="#">Kaal Sarp Dosh</a></li>
+                    <li><a className="dropdown-item" href="#">Love Calculator</a></li>
+                    <li><a className="dropdown-item" href="#">Sun Sign</a></li>
+                    <li><a className="dropdown-item" href="#">Moon Sign</a></li>
+                    <li><a className="dropdown-item" href="#">Nakshatra</a></li> 
+                    <li><a className="dropdown-item" href="#">Buy Products</a></li> 
+                    <li><a className="dropdown-item" href="#">Free Services</a></li> 
+                    <li><a className="dropdown-item" href="#">Online Puja</a></li> 
+                  </ul>
+                </li>
+                 
+                 <li className="nav-item">
+                  <a className="nav-link" href="#">  Blog</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#">Kundli Prediction </a>
+                </li>
+              </ul> 
+            </div> 
+        </nav>
+       </div> 
+       <div className="col-lg-2 col-md-5 mobile-none">
+         <a href="#" className="btn-link"><img src="images/chat.svg" className="chat-icon" /> Ask Astrologer</a>
+       </div>
+     </div>
+  </div>
+</header>
+
+<header className="services-list-card">
+  <div className="container">
+    <div className="row">
+      <div className="col-lg-2 col-md-4 col-6">
+        <div className="flx-icon">
+          <img src="images/top-icon1.png" className="icon-top-flx"/>
+          <span>My Kundli</span>
         </div>
-      </header>
+      </div>
+      <div className="col-lg-2 col-md-4 col-6">
+        <div className="flx-icon">
+          <img src="images/top-icon2.png" className="icon-top-flx"/>
+          <span>Numerology </span>
+        </div>
+      </div>
+      <div className="col-lg-2 col-md-4 col-6">
+        <div className="flx-icon">
+          <img src="images/top-icon3.png" className="icon-top-flx"/>
+          <span>Online Puja</span>
+        </div>
+      </div>
+      <div className="col-lg-2 col-md-4 col-6">
+        <div className="flx-icon">
+          <img src="images/top-icon4.png" className="icon-top-flx"/>
+          <span>Life Horoscope</span>
+        </div>
+      </div>
+      <div className="col-lg-2 col-md-4 col-6">
+        <div className="flx-icon">
+          <img src="images/top-icon5.png" className="icon-top-flx"/>
+          <span>Love Report</span>
+        </div>
+      </div>
+      <div className="col-lg-2 col-md-4 col-6">
+        <div className="flx-icon">
+          <img src="images/top-icon6.png" className="icon-top-flx"/>
+          <span>Match Analysis</span>
+        </div>
+      </div>
 
-      {/* Main Navbar */}
-      <header className="main-head border-bottom border-secondary-subtle">
-        <Container>
-          <div className="row align">
-            <div className="col-lg-9 col-md-7">
-              <Navbar expand="lg" className="navbar-light">
-                <Navbar.Brand href="#">
-                  <img
-                    src="/images/logo.png"
-                    alt="logo"
-                    className="logo logo-dask"
-                  />
-                  <img
-                    src="/images/logo2.png"
-                    alt="logo"
-                    className="logo logo-mobile"
-                  />
-                </Navbar.Brand>
-                {/* Conditionally render the Navbar.Toggle to fix the hydration error */}
-                {isClient && <Navbar.Toggle aria-controls="navbarSupportedContent" />}
-                <Navbar.Collapse id="navbarSupportedContent">
-                  <Nav className="ms-auto top-menu-main">
-                    <Nav.Link as={Link} href="/">Home</Nav.Link>
-                    <Nav.Link as={Link} href="/our-astrologers">Our Astrologers</Nav.Link>
-
-                    {/* DROPDOWN ON HOVER */}
-                    <NavDropdown
-                      title="Our Services"
-                      id="navbarDropdown"
-                      show={showAstrologer}
-                      onMouseEnter={() => setShowAstrologer(true)}
-                      onMouseLeave={() => setShowAstrologer(false)}
-                    >
-                      <NavDropdown.Item href="#">Horoscope</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Kundali Matching</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Nakshatra Milan</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Kundali Matching By Name</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Mangal Dosha</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Kaal Sarp Dosh</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Love Calculator</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Sun Sign</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Moon Sign</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Nakshatra</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Buy Products</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Free Services</NavDropdown.Item>
-                      <NavDropdown.Item href="#">Online Puja</NavDropdown.Item>
-                    </NavDropdown>
-
-                    <Nav.Link href="#">Blog</Nav.Link>
-                    <Nav.Link as={Link} href="/product">Products</Nav.Link>
-                    <Nav.Link as={Link} href="/help">Help & Support</Nav.Link>
-                  </Nav>
-                </Navbar.Collapse>
-              </Navbar>
-            </div>
-            <div className="col-lg-3 col-md-5 mobile-none">
-              <a href="#" className="btn-link">
-                <img src="/images/chat.svg" className="chat-icon" /> Chat With
-                Astrologer
-              </a>
-            </div>
-          </div>
-        </Container>
-      </header>
+    </div>
+  </div>
+</header>
     </>
   );
 };

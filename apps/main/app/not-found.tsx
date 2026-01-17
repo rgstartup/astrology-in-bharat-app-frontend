@@ -26,7 +26,7 @@ const NotFound: React.FC = () => {
 
       {/* Image */}
       <img
-        src="/images/Astrologer.png"
+        src="/public/images/Astrologer.png"
         alt="Astrologer Illustration"
         className="img-fluid mb-4"
         style={{ maxWidth: "250px" }}

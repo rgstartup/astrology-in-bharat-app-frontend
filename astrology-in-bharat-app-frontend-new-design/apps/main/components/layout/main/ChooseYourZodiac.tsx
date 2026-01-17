@@ -1,0 +1,53 @@
+import React from "react";
+import { ZodiacSignsData } from "@/components/features/services/homePagaData";
+import NextLink from "next/link";
+import NextImage from "next/image";
+
+const Link = NextLink as any;
+const Image = NextImage as any;
+
+const ChooseYourZodiac = () => {
+  return (
+    <section className="horoscopes-container light-back">
+      <div className="container">
+        <div className="light-card">
+          <h2 className="title-line mb-3 text-black">
+            <span>Choose Your Zodiac Sign </span>
+          </h2>
+          <p className="text-center text-[#1a1a1a] mb-8 text-base font-medium">
+            Discover Your Daily, Monthly and Yearly Horoscope
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {ZodiacSignsData.map((sign) => (
+              <Link
+                href={`/horoscope/${sign.title.toLowerCase()}`}
+                key={sign.id}
+                className="block h-full group no-underline"
+              >
+                <div
+                  className="bg-white overflow-hidden shadow-[0_4px_8px_rgba(0,0,0,0.1)] text-center p-3 rounded-[10px] transition-all duration-300 ease-in-out text-[#1a1a1a] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,0,0,0.2)] h-full flex flex-col items-center justify-center cursor-pointer"
+                  style={{ border: "1px solid #daa23e73" }}
+                >
+                  <div className="relative w-20 h-20 mb-2">
+                    <Image
+                      src={sign.image}
+                      alt={sign.title}
+                      fill
+                      className="object-contain transition-transform duration-300 group-hover:scale-110"
+                    />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-0.5 text-black">
+                    {sign.title}
+                  </h3>
+                  <p className="text-xs text-[#666] mb-0">{sign.date}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ChooseYourZodiac;

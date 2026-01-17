@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Moon Sign Details - Astrology in Bharat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#f95c02", // Orange color seen in buttons and accents
+              secondary: "#4a1212", // Dark reddish/brown seen in headers/footers
+              "primary-light": "#ffefdb", // Light orange background
+              "background-light": "#fffaf5", // Off-white/cream background
+              "background-dark": "#1a1212", // Dark mode background (assumed based on brand)
+              "card-light": "#ffffff",
+              "card-dark": "#2d2020",
+              "text-main": "#333333",
+              "text-light": "#666666",
+              "text-dark-main": "#e5e5e5",
+              "text-dark-light": "#a3a3a3"
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+              serif: ["Playfair Display", "serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              xl: "1rem",
+              "2xl": "1.5rem",
+            },
+            backgroundImage: {
+                'mandala': "url('https://www.transparenttextures.com/patterns/black-scales.png')", // Abstract pattern
+            }
+          },
+        },
+      };
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-text-dark-main font-display transition-colors duration-200">
+<div class="bg-[#3e1212] dark:bg-black text-white py-2 px-4 md:px-8 text-sm flex flex-col md:flex-row justify-between items-center relative z-20">
+<p class="mb-2 md:mb-0 hidden md:block">Connect with Verified Astrology Experts for Online Predictions.</p>
+<div class="flex items-center space-x-4">
+<div class="bg-white text-black px-3 py-1 rounded-full flex items-center cursor-pointer hover:bg-gray-100 transition">
+<i class="fas fa-globe mr-2"></i> Eng <i class="fas fa-chevron-down ml-2 text-xs"></i>
+</div>
+<div class="flex items-center cursor-pointer hover:text-primary transition relative">
+<i class="fas fa-shopping-cart mr-1"></i> Cart
+                <span class="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">0</span>
+</div>
+<div class="bg-white text-black px-4 py-1 rounded-full flex items-center cursor-pointer hover:bg-gray-100 transition">
+<i class="fas fa-user mr-2"></i> Account <i class="fas fa-chevron-down ml-2 text-xs"></i>
+</div>
+</div>
+</div>
+<header class="bg-white dark:bg-[#1f1616] shadow-sm sticky top-0 z-50">
+<div class="container mx-auto px-4 md:px-8 py-4 flex justify-between items-center">
+<div class="flex items-center">
+<div class="relative w-16 h-16 mr-3">
+<div class="absolute inset-0 bg-orange-100 rounded-full flex items-center justify-center border border-orange-200 overflow-hidden">
+<img alt="Astrology Logo" class="object-cover w-full h-full opacity-80 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDla9K4PeGw-i8ZJ4LG8zvAS7MtO0hY7r1mwKsDznx6fk1622OcZ8eX6SJeo3fF165KiNOYPNgL_l_eiqtlaPydAPVP0gDUdWsyjAO5W2WTr_XUyjxFvzUhwHTtrzmw3nSnPg6kL7Rid_WsmKm_dNq4x5cWbIglsXAyEXehJSAAV5abBrzucX6TWqZIy3d8M8F9u2iqwh2aeIJmQuL1_ho3qH6JG08RtBoFA6qsKf_iwXzOzBzsWt1ehB5Jq2Q5BysU2uXLhBYTCTaM"/>
+</div>
+</div>
+<div>
+<h1 class="font-serif text-2xl font-bold text-primary leading-tight">Astrology<br/><span class="text-[#3e1212] dark:text-white">in Bharat</span></h1>
+<p class="text-[10px] text-gray-500 uppercase tracking-wider">India's Trusted Astrology Platform</p>
+</div>
+</div>
+<nav class="hidden lg:flex items-center space-x-6 text-sm font-medium text-gray-700 dark:text-gray-300">
+<a class="hover:text-primary transition" href="#">Home</a>
+<a class="hover:text-primary transition" href="#">Daily Horoscope</a>
+<div class="relative group">
+<button class="flex items-center hover:text-primary transition">Astrology Consult <i class="fas fa-chevron-down ml-1 text-xs"></i></button>
+</div>
+<a class="text-primary font-semibold" href="#">Moon Sign</a>
+<a class="hover:text-primary transition" href="#">Blog</a>
+<a class="hover:text-primary transition" href="#">Kundli Prediction</a>
+</nav>
+<button class="bg-primary hover:bg-orange-600 text-white px-6 py-2.5 rounded-full font-medium transition shadow-lg hover:shadow-orange-200 dark:hover:shadow-none flex items-center">
+<i class="fas fa-comments mr-2"></i> Ask Astrologer
+            </button>
+<button class="lg:hidden text-2xl text-gray-700 dark:text-white">
+<i class="fas fa-bars"></i>
+</button>
+</div>
+</header>
+<div class="bg-primary py-3 hidden md:block">
+<div class="container mx-auto px-4 flex justify-center space-x-8 text-white text-sm font-medium">
+<a class="flex items-center space-x-2 bg-black/10 px-4 py-1 rounded-lg hover:bg-black/20 transition" href="#"><i class="fas fa-star-of-david"></i> <span>My Kundli</span></a>
+<a class="flex items-center space-x-2 bg-black/10 px-4 py-1 rounded-lg hover:bg-black/20 transition" href="#"><i class="fas fa-sort-numeric-up-alt"></i> <span>Numerology</span></a>
+<a class="flex items-center space-x-2 bg-black/10 px-4 py-1 rounded-lg hover:bg-black/20 transition" href="#"><i class="fas fa-om"></i> <span>Online Puja</span></a>
+<a class="flex items-center space-x-2 bg-black/10 px-4 py-1 rounded-lg hover:bg-black/20 transition" href="#"><i class="fas fa-infinity"></i> <span>Life Horoscope</span></a>
+<a class="flex items-center space-x-2 bg-black/10 px-4 py-1 rounded-lg hover:bg-black/20 transition" href="#"><i class="fas fa-heart"></i> <span>Love Report</span></a>
+<a class="flex items-center space-x-2 bg-black/10 px-4 py-1 rounded-lg hover:bg-black/20 transition" href="#"><i class="fas fa-ring"></i> <span>Match Analysis</span></a>
+</div>
+</div>
+<section class="relative bg-orange-50 dark:bg-background-dark py-12 md:py-16 overflow-hidden">
+<div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBMWnV0_VHoDMj3T3hLKdsVY0Xq0OHz7zc5x2TcJEIwND0jl6PPqJjXyjtdrs2E-djfqGDVNSLwAhX4-S1hlwJPgCCyfbAxWUPkqc5F1yRhioDsS0vFTU6FDkNaJu8ej6ZWpNKzTGfL7fCIPaYavk2_aPHtFApdgubNcBqiLNRZOaz2JjCwVdAJQc2z1KDzvLPiuIpNKcydIm-EKapflJhK1ATpwqFjv7iUC8UqwI6WuppN8seQUYNLzX9puqBVQJvrXsBuh3zfWLso');"></div>
+<div class="container mx-auto px-4 md:px-8 relative z-10">
+<div class="flex flex-col md:flex-row items-center justify-between">
+<div class="md:w-1/2 mb-8 md:mb-0">
+<span class="bg-orange-100 text-primary px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">Explore the Moon's Influence</span>
+<h1 class="text-4xl md:text-5xl font-serif font-bold text-[#3e1212] dark:text-white mt-4 mb-4 leading-tight">
+                        Discover Your <span class="text-primary">Moon Sign</span> &amp; Emotional Nature
+                    </h1>
+<p class="text-gray-600 dark:text-gray-300 text-lg mb-8 leading-relaxed">
+                        Your Moon Sign reveals your inner self, emotions, and deepest needs. Unlike your Sun Sign which represents your core personality, the Moon governs your feelings and intuition.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-primary text-white px-8 py-3 rounded-full font-medium shadow-lg shadow-orange-200 dark:shadow-none hover:bg-orange-600 transition transform hover:-translate-y-1">
+                            Find My Moon Sign
+                        </button>
+<button class="bg-white dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-200 dark:border-gray-700 px-8 py-3 rounded-full font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center justify-center">
+<i class="far fa-play-circle mr-2 text-primary"></i> Watch Video
+                        </button>
+</div>
+</div>
+<div class="md:w-5/12 relative">
+<div class="relative w-full aspect-square max-w-md mx-auto">
+<div class="absolute inset-0 bg-gradient-to-tr from-orange-200 to-purple-100 dark:from-orange-900 dark:to-purple-900 rounded-full opacity-60 blur-2xl animate-pulse"></div>
+<img alt="Mystical Moon Astrology" class="relative z-10 w-full h-full object-cover rounded-full border-8 border-white dark:border-gray-800 shadow-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWEpWXV8UxjmkWnUkDciHX3KmYGTfqrp_iq3cDVT_JxJwpDLZ23Gic7oROyPZ5HtFSfwYz0JEx-o0xP97xGf_1vIB4s90dILuX160Ui7TihapMsYhS3eLp0r8BAQX42JD74v1su1qavX4nvNLaO1RfaL_Q81PcJjOcvLLImMoCZLixpIRlYMGuax6gUauH1kC7wFy9HSjN5s-nXeNcFD28UQd5mZwkHt6PddM1eKY3lUeNVNy_3oxkuPQAXKnPO5NvBuqcWJeABIUw"/>
+<div class="absolute top-0 right-10 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg animate-bounce" style="animation-duration: 3s;">
+<img alt="Moon" class="w-8 h-8" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtIXHsK0T0N9c3b4nGsbBr2KNLMDMFZ9M9gezjXFAaJRb0ZBLlCE6je1T4M-FN_FoMXUYD_TQrs0afrDSu1BiYkWmyxMkY96A5u0bNtgrGsU02TXmrFR_Tb8A1EoVPNVOCULS3y9oWkUnzqzy9x_DvE51xJTia-g1uttS-wGhlliW-lZKlaYcKIAOfiFPpBSGhvJIPQObnL_57lmHjzBye2ED33J0gD3qOId7wkiIItyERwfja3ZCfWneQRZR0aO5PhLrrFWBat8_h"/>
+</div>
+<div class="absolute bottom-10 left-0 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg animate-bounce" style="animation-duration: 4s;">
+<img alt="Star" class="w-6 h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyqh2oWZn9aTOOLv9NkcFEEcv8u82usaLr6UfaDHGQ_Kt7wC3Oo6Z7d9-rpb70Yj-O_3dlLLhnJ1BrmALOAcw1iTLi7bEB6W8V-UwUz5eUxz4vvs5zpCcNEy11OF62ySgu1ii_JuiV5KekeNPpIKFAEDPUoUMPQ8VEO8ChvNf7mP_GMYOrRPIeCjrDNtLY90O2Rc3-E9b3VGyQAcScU-Ec_8CbNQ90mRvsYEHAoDabfBM6DSZlv4RDuwkietRA8ssexUhxXMrhBk5I"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 bg-white dark:bg-[#1f1616]">
+<div class="container mx-auto px-4 md:px-8">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-serif font-bold text-gray-900 dark:text-white mb-3">Select Your Moon Sign</h2>
+<p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">Choose your moon sign below to read detailed predictions about your emotional landscape, compatibility, and daily forecast.</p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Aries" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPk1oU04_CinOw4Oo28mwCXDElJCLp7HdN42ggHlrJKvLa00jmrvSdiPkDGbrSOR5a64xcj3mmQWj6MvTFoq4yaR-Lj_OZnDmI6DoTMumwnm2gqHMMJlhS0Z9LSFTwoDg8zQljTxPdJDRphmkjiptybItOCGr24NuRO1wRcI4ewWYtLElQc8cIdFPJMcFCdumA_xCjh0yhhw7XPtCldvRsax6WkdmmKVt-rT1mJ2TBZReH1AD_ohvCENaj-ux5O3BAbpRlMFYFlc9M"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Aries</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Mar 21 - Apr 19</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Taurus" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5FLlrsg_NyxFjOK4x7nws0TwDgPmDf4fwhQN0tOEEyH5rJkRZFtD9IacqHuh_vOsdRla8DnGutltvKNctOhREl1-NxR7-Iu03vWTJ8n24rldFWMJcoilox5J_MJ9s1xmugKqd2zOh6el0kYrlqWLap368SCvtE2aAB3P6V3KWv1QG4f3kueyBCY6XdOQootBi-UR0Dy_FIVryRH4w4-ErAtk4yfw0bTCRuMdf6PtWLIPhm_eSBYnSpMOaBO-JsEu2qfcbJwKhzbyb"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Taurus</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Apr 20 - May 20</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Gemini" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA39MZhAMDViEuHaz8Q4unw5SAB8BZINmb85zAqV2KRazxpLZLeDlkaMmj0HTx1pKKyvXim4-xwDvrt16yRM2njTaYu_qlXrOyIR2fh1M3THdyta8gv5IR_PCAEy-FxLuvsHYSlk6AHRlcjz7s0vSVUNLgJw-dRUMn9Wk1xvK1kO53yCVjvCKKpqva2CrnUTn6fqFmEXwPYLb00ykcvmtX1cQdcAon0XCVdl_SU-IQ-3QMiOGS8LXoCBy0zTUENBswrEhSRC8CD5d54"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Gemini</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">May 21 - Jun 20</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Cancer" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-65x7Vj9N0JgilADhWOt2jKH0A0r3hFa0rSzAjT_hrlDJGxJ4Y3copLwHcktHfKhayaoir2kyfDPzNceJeWWaQKGRo5iBvA7_76Pq2S7Q2jR0JHVZiBbggmpFY5otYT-wqem5J8siueguqZDl7wLY959Lr-YsRnmzGspBtWobb8OMG499jWo1nCUS4JXxeWvM92aKEauif-GOFWEQ7fVpVXUAO68dTC1efo16tn970oew3mCVUyBDRPAam5Z3YrCIFlaKDEfl0Pjd"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Cancer</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Jun 21 - Jul 22</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Leo" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIh7tIYKLtkqDYR-Jxqfl_I8Vn7T-mlhZ9u4e3IxcQv9to5D7qVFQ0IYwRfybVswjRvOzH2qdnqrZE1hoj-B6MXZ0bEZQ_jWe4c3SjWmf0zzx9pM7CEYC84bSf7RZhg_oznEffv-dgHw9Od2erVJ3Bq3chkeFCxFDy396yX-0bW6-uNUNxcvI_Sa7i6gsN1K1_xIU-y6t0y6lTUQTvh4uhQNcbokDnSwE4Uct-vsyLgzFOcWVsmwCEm4KdCLzgQW0TOFRGA8J8l60x"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Leo</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Jul 23 - Aug 22</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Virgo" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMyIZq1nSYGF16rSEZeaNaKoBrLrI4Y5Z92KHAiyjvvKNH21x2EYkHLLe4MkKD2eu-6jZrWj9VEiaZcb4UND1aSePRvsGwuU5um99qrF6fzLiyq7Ok8O5POjFok7AoUf2dWeXhD32f8OhNgoq7Pd2aa3Ep0U1-NIRIINRfm8xdMuQ-u_0Im3ul7146CbjVDOLu9KN7DUF198TGUgknPap2HgP8RKgemaQY292eUSiSbMXZZZ1FeXsymRdSyid3yam-MHGYvgqHZQGm"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Virgo</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Aug 23 - Sep 22</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Libra" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc3ZuMccJILqscSytAtQ8kmYeG-PitRtmlyUcy8KkFt3YEgkOzw_fGTp_7voyvN0CsTxx_4KlDa2Lz5iVvwnpHX4JBJo4lvueCYWZRiYVKN2zf7IDvqsx3E-NmKZSw-RFi_Ct-P1uO5vE7vy-hA8ZtOCntLYPGgsRAh8LPV-x-l0mNI6d5kivrm4wlVFg8pwBSkOFUrjlqvVhPplO8zvV5DGgOVXeN8Eyf49-LEe_9IgU9k7yagkf_mVCEcJWXJN77ApnZPqgW7VL1"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Libra</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Sep 23 - Oct 22</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Scorpio" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSwE3Md8fTq47ga4Ba39iXrtHAd0yL_V2rIynSuFG3eu5-cmwpXeKpaKBSNSRZRSARVsJmJXEuMpggGMXH6xiinKZwJvjI_kuqy-pZ4NBjidqpT7CsZoia55uUF-sFuDg-h9JLmneax97sA7en2FKRKSNDElWR0-LEkHAc8_O2GM6ZDK88pJoZK7rDMIMWC6YSKjjEwlNkXrZcfvrGUydNp4nR8jyi33-ZjK8Uu_N3aIMXsgVPSWCMRD8_qyEf4TP9gIS772cuUF3T"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Scorpio</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Oct 23 - Nov 21</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Sagittarius" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyFtVI5x5SFb3yrfYHt3TDCJCOuSZyd9wVnw5DRjH_L5DJM5jDYX21wadmJbOo3AY2d1TJhUSlWG4u0VCsVpE6Lrvx4JPw9si7sM2C1OBNtaF25e6ydV3XbrVJZTuR5rFeJb7LzJd6pMTHgdePsxq-kSseoTdzUoWedNZ5zI02jlkqKbmiaH3c3z-bfwvcSulG0j_OzRNrHxfWuwY2mSmFufeddSxca3tvSJ0IxhxZnZtXt_ygQ-Bjxirb9SwRHQLYdV9OFNRzQdeV"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Sagittarius</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Nov 22 - Dec 21</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Capricorn" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsN1cSEaWyHKu1r90--J_hO5mwxVQrCh3H62zfJY3nEPCz2pTCHU5riX2uD4wlVbgbubd8iTZUGX1ryiCpMkim4JPiQZdslR-m2IX34jqT56cS0ZQvAeEq3FqzyB4omW_g9hUnpA6MCmRfQZ0KAvQLDjfC3NLEulAute2tDcAZtBk49lak0mnndKpQedYvdM2dGtxcfUsgl0LUCF8eWodIYDByPcltrLhM9XaVtHwVlkhyJP1bAFr04P74kMEgBGcv2AvAC8Lk9utT"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Capricorn</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Dec 22 - Jan 19</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Aquarius" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDew2pTlDFOgzHwkHIPw7V6lixpWdNUU_R8C6f5iAPqbqs3xNxP_UvTdLvLenv1Rde8N1rraNRc8g3A3OjCTp7utuyKZC7huatBpdY9osRfa5I5_h_wgoTZtRhC9TTHqKYj0C2L5oREAdqlfH4xXGd16HtdZtO93NPEK-KeDZVoD9SfLEgjiIlNgd2x4daA5u6VKLGXLEy-bv0Ay7CEhM7dRd_q5Tqrudg-UPIYZxsE01kqpm6eQVOLZen8UHguSDoQACSREBDPbuNL"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Aquarius</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Jan 20 - Feb 18</p>
+</a>
+<a class="group bg-orange-50 dark:bg-gray-800 rounded-xl p-6 text-center hover:shadow-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-orange-200 dark:hover:border-orange-900" href="#">
+<div class="w-16 h-16 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition duration-300">
+<img alt="Pisces" class="w-10 h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb8u4MRf1IWjRF88UTCaUSvUAW5Rf6Xs59nfY3Zu1RgQKCqcJb2a-mB2guOJqiAr2SDDkP4RpHj6uHdn3SmQR7lFF4YrWOSepZ_4RhH9AHpD6-fjSLEYbYrkGsKQK0MSbZms4rPGyGY7ZVfxJq8UUx0ZDVWBduWABMHkXUpCaZa4DExQP0R1J2dezpZ3E3gGuj8qYfdCCcd9d7Ea7sufbKX7hzynHWfD37P0tAYnExXz1Iuz41KdrCpymG9XtSpjUM6LIdzUq1F2eM"/>
+</div>
+<h3 class="font-bold text-gray-800 dark:text-white group-hover:text-primary transition">Pisces</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Feb 19 - Mar 20</p>
+</a>
+</div>
+</div>
+</section>
+<section class="py-16 bg-[#fffaf5] dark:bg-[#251b1b]">
+<div class="container mx-auto px-4 md:px-8">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-1 space-y-6">
+<div class="bg-white dark:bg-[#1f1616] rounded-xl shadow-md p-6 border-t-4 border-primary">
+<h3 class="text-xl font-serif font-bold mb-4 dark:text-white">Moon Sign Aspects</h3>
+<ul class="space-y-3 text-sm">
+<li class="flex items-center text-primary font-medium bg-orange-50 dark:bg-orange-900/20 p-2 rounded cursor-pointer">
+<i class="fas fa-heart w-6 text-center mr-2"></i> Emotional Nature
+                            </li>
+<li class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+<i class="fas fa-briefcase w-6 text-center mr-2"></i> Career &amp; Ambition
+                            </li>
+<li class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+<i class="fas fa-users w-6 text-center mr-2"></i> Relationships
+                            </li>
+<li class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+<i class="fas fa-home w-6 text-center mr-2"></i> Family Life
+                            </li>
+<li class="flex items-center text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary p-2 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+<i class="fas fa-star w-6 text-center mr-2"></i> Lucky Charms
+                            </li>
+</ul>
+</div>
+<div class="bg-primary rounded-xl shadow-md p-6 text-white relative overflow-hidden">
+<div class="absolute top-0 right-0 opacity-10">
+<i class="fas fa-moon text-9xl transform translate-x-10 -translate-y-10"></i>
+</div>
+<h3 class="text-xl font-serif font-bold mb-2 relative z-10">Don't Know Your Moon Sign?</h3>
+<p class="text-sm mb-4 opacity-90 relative z-10">Use our free calculator to find out instantly based on your birth details.</p>
+<form class="space-y-3 relative z-10">
+<input class="w-full rounded-md px-3 py-2 text-gray-800 text-sm focus:ring-2 focus:ring-orange-300 border-none" placeholder="Date of Birth (DD/MM/YYYY)" type="text"/>
+<input class="w-full rounded-md px-3 py-2 text-gray-800 text-sm focus:ring-2 focus:ring-orange-300 border-none" placeholder="Time of Birth" type="text"/>
+<input class="w-full rounded-md px-3 py-2 text-gray-800 text-sm focus:ring-2 focus:ring-orange-300 border-none" placeholder="Place of Birth" type="text"/>
+<button class="w-full bg-[#3e1212] text-white py-2 rounded-md font-medium hover:bg-black transition shadow-lg">Calculate Now</button>
+</form>
+</div>
+</div>
+<div class="lg:col-span-2 space-y-8">
+<div class="bg-white dark:bg-[#1f1616] rounded-xl shadow-md p-8 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-orange-400"></div>
+<h2 class="text-2xl font-serif font-bold text-gray-900 dark:text-white mb-4">The Significance of the Moon Sign</h2>
+<p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                             In Vedic Astrology, the Moon (Chandra) is considered the most significant planet because it represents the mind (Manas). While the Sun represents the soul, the Moon governs our emotions, temperament, and how we react to situations instinctively. Your Moon sign is the zodiac sign where the Moon was positioned at the exact time of your birth.
+                         </p>
+<p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                             It determines your "Rashi" and plays a pivotal role in Kundli matching, daily horoscope predictions, and understanding your compatibility with others. A strong Moon brings mental peace and emotional stability, while a weak Moon can cause anxiety and mood fluctuations.
+                         </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900 rounded-xl p-6">
+<div class="flex items-center mb-4">
+<div class="bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-200 p-2 rounded-full mr-3">
+<i class="fas fa-plus"></i>
+</div>
+<h3 class="text-lg font-bold text-gray-800 dark:text-white">Positive Traits</h3>
+</div>
+<ul class="space-y-2 text-gray-600 dark:text-gray-300 text-sm">
+<li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i> Intuitive and empathetic nature</li>
+<li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i> Strong emotional intelligence</li>
+<li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i> Nurturing and protective of loved ones</li>
+<li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i> Creative and imaginative mind</li>
+</ul>
+</div>
+<div class="bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900 rounded-xl p-6">
+<div class="flex items-center mb-4">
+<div class="bg-red-100 dark:bg-red-800 text-red-600 dark:text-red-200 p-2 rounded-full mr-3">
+<i class="fas fa-minus"></i>
+</div>
+<h3 class="text-lg font-bold text-gray-800 dark:text-white">Challenges</h3>
+</div>
+<ul class="space-y-2 text-gray-600 dark:text-gray-300 text-sm">
+<li class="flex items-start"><i class="fas fa-exclamation-circle text-red-500 mt-1 mr-2"></i> Mood swings and unpredictability</li>
+<li class="flex items-start"><i class="fas fa-exclamation-circle text-red-500 mt-1 mr-2"></i> Over-sensitivity to criticism</li>
+<li class="flex items-start"><i class="fas fa-exclamation-circle text-red-500 mt-1 mr-2"></i> Tendency to hold onto past grudges</li>
+<li class="flex items-start"><i class="fas fa-exclamation-circle text-red-500 mt-1 mr-2"></i> Can become overly dependent emotionally</li>
+</ul>
+</div>
+</div>
+<div class="bg-black rounded-xl overflow-hidden relative shadow-lg group cursor-pointer">
+<img alt="Space background" class="w-full h-64 object-cover opacity-60 group-hover:opacity-40 transition duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpEnFgGiwexYsOZSzQTZT-gRC90gCd30JqRmLOCJREnQlHgk68vydeLOkvb2dqFauSzNPJVsWoFHw_qJpc8_cpD6QVykAXCWg5Bmmo8fJcKX6GKJZG-YrFztg_V-T1QR_3wbcAkz4jjR2qIFnUhjpH0geegBUWvH2tXxZS8N9rNR3LzJ62YS-PDaUKq4HT-D8A8aW7sGaFcsESJOppJuJn-3byO5E7Mu4kewjX1bsWBoLP2BXgMhs0JQvU9108PpiNI8_0uA52lWxD"/>
+<div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+<div class="bg-white/20 backdrop-blur-sm p-4 rounded-full mb-4 group-hover:scale-110 transition duration-300">
+<i class="fas fa-play text-white text-3xl ml-1"></i>
+</div>
+<h3 class="text-2xl font-serif font-bold text-white mb-2">Watch: How Moon Signs Affect Relationships</h3>
+<p class="text-gray-200 text-sm">Expert Astrologer Pandit Ji explains the nuances of lunar compatibility.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 bg-gradient-to-r from-[#3e1212] to-[#250b0b] relative overflow-hidden">
+<div class="absolute inset-0 opacity-10" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD7onpAqBSkuuq2DlzqAhpdfuvsfZKxwA-zKFiaaK2oO0E4itiVBK42FfdNOwVh8H6WKfZ73CzeT-RIknmOXZZ6ElwvewQ6Zrxj47zds9SF25DibL3oII6kM2F9MxDlSrytIqVWdRY8Czf_TGgAR-3QHTrYsO_0ELqo5squXLfkOID3zxwDk4QPNhlJcNKJKPxIWXByumtDS0gA_Radww4rEc0upY3XHrVBNeIaDLXGV0layy5F4x3N3gPRKm8Fyy5-MUEYTTxGb-hH');"></div>
+<div class="container mx-auto px-4 md:px-8 text-center relative z-10">
+<h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Still Confused About Your Moon Sign?</h2>
+<p class="text-gray-300 max-w-2xl mx-auto mb-8 text-lg">Connect with our verified astrologers for a detailed analysis of your birth chart and get personalized remedies for emotional well-being.</p>
+<div class="flex flex-col sm:flex-row justify-center gap-4">
+<button class="bg-primary hover:bg-orange-600 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg shadow-orange-900/50 transition transform hover:-translate-y-1">
+<i class="fas fa-phone-alt mr-2"></i> Talk to Astrologer
+                </button>
+<button class="bg-white hover:bg-gray-100 text-[#3e1212] px-8 py-3 rounded-full font-bold text-lg shadow-lg transition transform hover:-translate-y-1">
+<i class="fas fa-comments mr-2"></i> Chat with Astrologer
+                </button>
+</div>
+</div>
+</section>
+<footer class="bg-black text-gray-400 py-12 border-t border-gray-800">
+<div class="container mx-auto px-4 md:px-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+<div>
+<div class="flex items-center mb-4">
+<div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center mr-3 overflow-hidden">
+<img alt="Logo" class="opacity-80 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqieGJBPnIfFdMYqbCs-VJskq9cNMBVLQXUjbS98uow2mfEayecfdDn_2iOaHM9Q-dIIUPogjDOR8rfulefFX72BzAbbyJmGlrmrPoFxmfKtv9KScZW48RxwU2XY4h9E5z2gzUjBsW7iqlP6YStZcvnSFmbuCtRFL-kgo34A-GWcVyNUFnIu2PM2s7ZlBcuGQSIyldmnh1IBy-eKF_OiuGSDZrvXBqp-dOvehTwDhrCCxU2gO88mkv2whOlz1vIzFK0u9JY_-T3y5O"/>
+</div>
+<h4 class="text-white font-serif font-bold text-lg">Astrology<br/><span class="text-primary text-sm">in Bharat</span></h4>
+</div>
+<p class="text-sm leading-relaxed mb-4">
+                        Astrology in Bharat is India's trusted astrology platform offering accurate guidance through verified astrologers using authentic Indian astrology systems.
+                    </p>
+<div class="flex space-x-3">
+<a class="bg-gray-800 hover:bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center transition" href="#"><i class="fab fa-facebook-f"></i></a>
+<a class="bg-gray-800 hover:bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center transition" href="#"><i class="fab fa-instagram"></i></a>
+<a class="bg-gray-800 hover:bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center transition" href="#"><i class="fab fa-youtube"></i></a>
+<a class="bg-gray-800 hover:bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center transition" href="#"><i class="fab fa-linkedin-in"></i></a>
+</div>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4 border-b border-gray-700 pb-2 inline-block">Horoscope</h4>
+<ul class="space-y-2 text-sm">
+<li><a class="hover:text-primary transition" href="#">Daily Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Weekly Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Monthly Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Yearly Horoscope</a></li>
+<li><a class="hover:text-primary transition" href="#">Zodiac Signs</a></li>
+<li><a class="hover:text-primary transition" href="#">Love Horoscope</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4 border-b border-gray-700 pb-2 inline-block">Astrology Services</h4>
+<ul class="space-y-2 text-sm">
+<li><a class="hover:text-primary transition" href="#">Chat with Astrologer</a></li>
+<li><a class="hover:text-primary transition" href="#">Talk to Astrologer</a></li>
+<li><a class="hover:text-primary transition" href="#">Video Consultation</a></li>
+<li><a class="hover:text-primary transition" href="#">Kundli Matching</a></li>
+<li><a class="hover:text-primary transition" href="#">Kundli Prediction</a></li>
+<li><a class="hover:text-primary transition" href="#">Numerology Report</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4 border-b border-gray-700 pb-2 inline-block">Important Links</h4>
+<ul class="space-y-2 text-sm">
+<li><a class="hover:text-primary transition" href="#">Astrologer Login</a></li>
+<li><a class="hover:text-primary transition" href="#">Astrologer Registration</a></li>
+<li><a class="hover:text-primary transition" href="#">Shubh Muhurat 2024</a></li>
+<li><a class="hover:text-primary transition" href="#">Shop Our Products</a></li>
+<li><a class="hover:text-primary transition" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition" href="#">Contact Us</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-gray-800 pt-8 text-center text-xs text-gray-500">
+<p>© 2024 Astrology in Bharat (Powered by Astrology in Bharat Services). All Rights Reserved.</p>
+</div>
+</div>
+</footer>
+
+</body></html>

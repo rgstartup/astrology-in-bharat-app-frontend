@@ -34,11 +34,28 @@ const Page: React.FC = () => {
   const [limit, setLimit] = useState(20);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState<number | null>(null);
-  const [appliedFilters, setAppliedFilters] = useState<Partial<FilterState>>({});
+  const [appliedFilters, setAppliedFilters] = useState<Partial<FilterState>>(
+    {}
+  );
   const [appliedSort, setAppliedSort] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState<string>(""); // Immediate input value
   const [searchQuery, setSearchQuery] = useState<string>(""); // Debounced search query
-  const [selectedSpecialization, setSelectedSpecialization] = useState<string>("");
+  const [selectedSpecialization, setSelectedSpecialization] =
+    useState<string>("");
+
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const { current } = scrollContainerRef;
+      const scrollAmount = 200;
+      if (direction === "left") {
+        current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      } else {
+        current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      }
+    }
+  };
 
   // Debounce search input with 0.8 second delay
   useEffect(() => {
@@ -56,13 +73,34 @@ const Page: React.FC = () => {
     setIsFilterOpen(false);
   };
 
-  const handleApplySorts = (sorts: { experience: string; price: string; rating: string }) => {
+  const cardScrollRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollCards = (direction: "left" | "right") => {
+    if (cardScrollRef.current) {
+      const { current } = cardScrollRef;
+      const scrollAmount = 300; // Scrolls approximately one card width
+      if (direction === "left") {
+        current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      } else {
+        current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      }
+    }
+  };
+
+  const handleApplySorts = (sorts: {
+    experience: string;
+    price: string;
+    rating: string;
+  }) => {
     // sorts is a SortState-like object with one field set
-    console.log("Applied sorts:", sorts);
+
     // determine which sort is applied
-    const sortKey = sorts.experience && sorts.experience !== "none" ? "experience"
-      : sorts.rating && sorts.rating !== "none" ? "rating"
-        : null;
+    const sortKey =
+      sorts.experience && sorts.experience !== "none"
+        ? "experience"
+        : sorts.rating && sorts.rating !== "none"
+          ? "rating"
+          : null;
     setAppliedSort(sortKey);
     setOffset(0);
     setIsSortOpen(false);
@@ -103,7 +141,7 @@ const Page: React.FC = () => {
     setError(null);
     try {
       const qs = buildQueryString();
-      const url = `http://localhost:4000/api/v1/expert/profile/list?${qs}`;
+      const url = `http://localhost:4000/api/v1/expert/list?${qs}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`Request failed: ${res.status}`);
       const json = await res.json();
@@ -116,7 +154,9 @@ const Page: React.FC = () => {
         name: p.user?.name || p.name || "Unknown",
         expertise: p.specialization || p.expertise || "",
         experience: p.experience_in_years ?? p.experience ?? 0,
-        language: Array.isArray(p.languages) ? p.languages.join(", ") : p.languages || p.user?.language || "",
+        language: Array.isArray(p.languages)
+          ? p.languages.join(", ")
+          : p.languages || p.user?.language || "",
         price: p.price_per_minute ?? p.price ?? 0,
         video: p.video || "",
         ratings: p.rating ?? p.ratings ?? 0,
@@ -132,536 +172,1071 @@ const Page: React.FC = () => {
     }
   };
 
-  // Client-side filtering for search query
-  const getFilteredExperts = () => {
-    if (!searchQuery.trim()) {
-      return experts;
-    }
-
-    const query = searchQuery.toLowerCase();
-    return experts.filter((expert) => {
-      const name = expert.name?.toLowerCase() || "";
-      const language = expert.language?.toLowerCase() || "";
-      const expertise = expert.expertise?.toLowerCase() || "";
-
-      return (
-        name.includes(query) ||
-        language.includes(query) ||
-        expertise.includes(query)
-      );
-    });
-  };
-
-  // Check if user should see the complete profile modal
-  useEffect(() => {
-    // Only show on the root route "/"
-    if (pathname === "/") {
-      // Check if modal was already shown (stored in localStorage)
-      const hasSeenModal = localStorage.getItem("completeProfileModalShown");
-
-      if (!hasSeenModal) {
-        // Set a timeout to show the modal after 10 seconds
-        const timer = setTimeout(() => {
-          setShowCompleteProfile(true);
-        }, 10000); // 10 seconds
-
-        // Cleanup timer on unmount or pathname change
-        return () => clearTimeout(timer);
-      }
-    } else {
-      // Reset state when navigating away
-      setShowCompleteProfile(false);
-    }
-  }, [pathname]);
-
-  // Handle modal close
-  const handleCloseCompleteProfile = () => {
-    setShowCompleteProfile(false);
-    // Mark as shown so it doesn't appear again
-    localStorage.setItem("completeProfileModalShown", "true");
-  };
-
-  // Handle skip button
-  const handleSkipCompleteProfile = () => {
-    setShowCompleteProfile(false);
-    // Mark as shown so it doesn't appear again
-    localStorage.setItem("completeProfileModalShown", "true");
-  };
-
   React.useEffect(() => {
     fetchExperts();
   }, [appliedFilters, appliedSort, limit, offset, selectedSpecialization]);
   return (
     <>
-      {/* Hero Section */}
-      <section className="banner-part ">
+      <section className="banner-part light-back">
         <div className="overlay-hero">
           <div className="container">
-            <div className="row align">
-              <div className="col-lg-7 col-md-12">
-                <h1 className="title-xl">
-                  Connect with
-                  <span className="color-secondary">
-                    Verified <br /> Astrologers{" "}
-                  </span>
-                  Online
-                </h1>
-                <h4 className="card-title title-md mt-4 mb-4">
-                  Instant Chat, Call, or Video Consultations
-                </h4>
-                <p>
-                  At Astrology in Bharat, find trusted astrologers for love,
-                  career, health, or life guidance. Connect anytime via chat,
-                  audio, or video and get personalized solutions with full
-                  privacy.
-                </p>
-                <ul className="list-check">
-                  <li>
-                    <i className="fa-solid fa-check"></i> Verified & Experienced
-                    Astrologers
-                  </li>
-                  <li>
-                    <i className="fa-solid fa-check"></i> Instant Chat, Call &
-                    Video Support
-                  </li>
-                  <li>
-                    <i className="fa-solid fa-check"></i> 100% Privacy &
-                    Confidentiality
-                  </li>
-                  <li>
-                    <i className="fa-solid fa-check"></i> Accurate Predictions &
-                    Remedies
-                  </li>
-                  <li>
-                    <i className="fa-solid fa-check"></i> Trusted by Thousands
-                    Across India
-                  </li>
-                </ul>
-                <a href="#" className="btn-global btn-primary wfc mt-4 mb-4">
-                  Start Consultation
-                </a>
-              </div>
-              <div className="col-lg-5 col-md-12">
-                <div className="right-hero">
-                  <img
-                    src="images/Astrologer.png"
-                    alt="Astrologer"
-                    className="Astrologer-img"
-                  />
+            <div className="contant-hero">
+              <div className="row align column-reverse">
+                <div className="col-lg-7 col-md-12">
+                  <div className="hero-card shine">
+                    <div className="card-z">
+                      <span className="aib-trust-badge">
+                        India’s Trusted Astrology Platform
+                      </span>
+                      <h1>Connect with Verified Astrologers Online</h1>
+                      <h4 className="card-title ">
+                        Instant Chat, Call, or Video Consultations
+                      </h4>
+                      <p>
+                        At Astrology in Bharat, find trusted astrologers for
+                        love, career, health, or life guidance. Connect anytime
+                        via chat, audio, or video and get personalized solutions
+                        with full privacy.
+                      </p>
+                      <ul className="list-check">
+                        <li>
+                          {" "}
+                          <i className="fa-solid fa-check"></i> Verified &amp;
+                          Experienced Astrologers
+                        </li>
+                        <li>
+                          {" "}
+                          <i className="fa-solid fa-check"></i> Instant Chat,
+                          Call &amp; Video Support
+                        </li>
+                        <li>
+                          {" "}
+                          <i className="fa-solid fa-check"></i> 100% Privacy
+                          &amp; Confidentiality{" "}
+                        </li>
+                        <li>
+                          {" "}
+                          <i className="fa-solid fa-check"></i> Accurate
+                          Predictions &amp; Remedies
+                        </li>
+                        <li>
+                          {" "}
+                          <i className="fa-solid fa-check"></i> Trusted by
+                          Thousands Across India
+                        </li>
+                      </ul>
+                      <a href="#" className="btn-link wfc mt-4 mb-4">
+                        Start Consultation
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-lg-5 col-md-12">
+                  <div className="right-illus">
+                    <img
+                      src="images/Astrologer-h.png"
+                      alt="Astrologer"
+                      className="Astrologer-img-h fa-spin"
+                    />
+                    <img
+                      src="images/Astrologer.png"
+                      alt="Astrologer"
+                      className="Astrologer-img"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="row mt-4">
-              {featuredCardsHeroSection.map((card) => (
-                <div key={card.id} className="col-sm-3 col-6">
-                  <a href={card.link}>
-                    <div className="card-hero vert-move">
-                      <img src={card.image} alt={card.altText} />
-                      <h5>{card.title}</h5>
-                      <p>{card.description}</p>
-                    </div>
-                  </a>
-                </div>
-              ))}
+            <div className="row mt-2">
+              <div className="col-sm-3 col-6">
+                <a href="#">
+                  <div className="card-hero text-center">
+                    <img
+                      src="images/icon1.png"
+                      alt="icon1.png"
+                      className="mx-auto"
+                    />
+                    <h5>Live Chat Support</h5>
+                    <p className="color-light">
+                      Get instant answers from expert astrologers through live
+                      chat sessions.
+                    </p>
+                  </div>
+                </a>
+              </div>
+
+              <div className="col-sm-3 col-6">
+                <a href="#">
+                  <div className="card-hero flex flex-col items-center text-center">
+                    <img src="images/icon2.png" alt="icon2.png" />
+                    <h5 className="mt-2">Speak with Astrologer</h5>
+                    <p className="color-light">
+                      Connect via phone call for personal guidance on your life
+                      questions.
+                    </p>
+                  </div>
+                </a>
+              </div>
+
+              <div className="col-sm-3 col-6">
+                <a href="#">
+                  <div className="card-hero flex flex-col items-center text-center">
+                    <img src="images/icon3.png" alt="icon3.png" />
+                    <h5 className="mt-2">Astrology Product Store</h5>
+                    <p className="color-light">
+                      Shop gemstones, yantras, and spiritual items recommended
+                      by experts.
+                    </p>
+                  </div>
+                </a>
+              </div>
+
+              <div className="col-sm-3 col-6">
+                <a href="#">
+                  <div className="card-hero flex flex-col items-center text-center">
+                    <img src="images/icon4.png" alt="icon4.png" />
+                    <h5 className="mt-2">Book A Pooja</h5>
+                    <p className="color-light">
+                      Book religious ceremonies & rituals performed by
+                      experienced priests.
+                    </p>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Find Your Astrologer */}
-      <section className="astrologer-list">
+      <section className="astrologer-list back-img">
         <div className="container">
-          {/* Image placeholder with text */}
-          <div className="talk-to-astrologer-banner">
-            <div className="banner-image-placeholder">
-              {/* User will paste their image here */}
-              <h2 className="banner-text">Talk to Astrologer</h2>
+          <h2 className="title-line color-light">
+            <span>Find Your Astrologer</span>
+          </h2>
+          <div className="row align  ">
+            <div className="col-sm-5">
+              <div className="search-box">
+                <input
+                  type="text"
+                  className="bg-white"
+                  placeholder="Search Astrologer, Type, Language..."
+                />
+                <button>Search</button>
+              </div>
+            </div>
+            <div className="col-sm-3 text-end">
+              <a href="#" className="filter-btn">
+                <i className="fa-solid fa-filter"></i> Filter
+              </a>
+              <a href="#" className="filter-btn sort-btn">
+                <i className="fa-solid fa-sort"></i> Sort
+              </a>
+            </div>
+            <div className="col-sm-4 d-flex align-items-center">
+              <button
+                onClick={() => scroll("left")}
+                className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full mr-2 hover:bg-[#fd64101a] transition flex-shrink-0"
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  border: "none",
+                  background: "transparent",
+                }}
+              >
+                <i className="fa-solid fa-chevron-left"></i>
+              </button>
+              <div
+                className="flex gap-2.5 overflow-x-auto overflow-y-hidden whitespace-nowrap pb-2.5 [&::-webkit-scrollbar]:hidden w-full px-1"
+                id="list-slider"
+                ref={scrollContainerRef}
+              >
+                <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
+                  Numerology
+                </div>
+                <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
+                  Vedic
+                </div>
+                <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
+                  Zodiac Compatibility
+                </div>
+                <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
+                  Astrocartography
+                </div>
+                <div className="bg-white px-[15px] py-2 rounded-[20px] text-sm font-medium text-[#1e0b0f] border border-[#fd6410] cursor-pointer transition duration-300 hover:bg-[#fd6410] hover:text-white">
+                  Lunar Node Analysis
+                </div>
+              </div>
+              <button
+                onClick={() => scroll("right")}
+                className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full ml-2 hover:bg-[#fd64101a] transition flex-shrink-0"
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  border: "none",
+                  background: "transparent",
+                }}
+              >
+                <i className="fa-solid fa-chevron-right"></i>
+              </button>
             </div>
           </div>
 
-          <div style={{ position: "relative" }}>
-            {/* Search, Filter, and Sort Row */}
-            <div className="search-filter-row">
-              <div className="search-wrapper">
-                <SearchBar
-                  searchQuery={searchInput}
-                  onSearchChange={handleSearchChange}
-                />
+          <div className="flex items-center relative mt-4">
+            <button
+              onClick={() => scrollCards("left")}
+              className="flex-shrink-0 w-10 h-10 flex items-center justify-center text-[#fd6410] hover:scale-110 transition cursor-pointer z-10"
+              style={{ background: "transparent" }}
+            >
+              <i className="fa-solid fa-chevron-left fa-2x"></i>
+            </button>
+
+            <div
+              className="flex-1 min-w-0 flex overflow-x-auto gap-4 scroll-smooth [&::-webkit-scrollbar]:hidden py-4"
+              ref={cardScrollRef}
+            >
+              <div className="astro-card min-w-[300px]">
+                <div className="vid-part">
+                  <img
+                    src="images/astro-img1.png"
+                    alt="Pandit Sharma"
+                    className="astro-profile-img"
+                  />
+                  <span
+                    className="play-vid fa-beat"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                  >
+                    {" "}
+                    <i className="fa-solid fa-circle-play "></i>{" "}
+                  </span>
+                </div>
+                <div className="rating-star">★★★★★</div>
+                <div className="astro-name">Parbhat Sharma</div>
+                <div className="astro-tags">Vedic | Numerology</div>
+                <div className="astro-info">
+                  <strong>Exp:</strong> 21 Years
+                </div>
+                <div className="astro-info">
+                  <strong>Lang:</strong> Hindi, English
+                </div>
+                <div className="astro-info">
+                  <strong>Price:</strong> ₹25/min
+                </div>
+                <div className="astro-actions">
+                  <button>
+                    <i className="fa-regular fa-comment-dots"></i> Chat
+                  </button>
+                  <button className="call">
+                    <i className="fa-solid fa-phone-volume"></i> Call
+                  </button>
+                </div>
               </div>
 
-              <button
-                className="btn btn-filter"
-                onClick={() => setIsFilterOpen(true)}
+              <div
+                className="modal fade "
+                id="exampleModal"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
               >
-                <i className="fa-solid fa-filter"></i>
-                Filter
-              </button>
+                <div className="modal-dialog modal-dialog-centered modal-xl">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h4
+                        className="modal-title-astro-about "
+                        id="exampleModalLabel"
+                      >
+                        Meet Astrologer Parbhata Giri Introduction Video
+                      </h4>
+                      <button
+                        type="button"
+                        className="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <i className="fa-solid fa-xmark"></i>
+                      </button>
+                    </div>
+                    <div className="modal-body">
+                      <iframe
+                        width="100%"
+                        height="500"
+                        src="https://www.youtube.com/embed/INoPh_oRooU"
+                        title="शिव जी ने माता पार्वती को क्यों दिया ये भयंकर श्राप 😱😱 ?  #shivshankar #mataparvati"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                      ></iframe>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-              <button
-                className="btn btn-sort"
-                onClick={() => setIsSortOpen(true)}
-              >
-                <i className="fa-solid fa-sort"></i>
-                Sort
-              </button>
+              <div className="rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.1)] text-center transition-transform duration-300 border border-[#fd6410] bg-white p-3 hover:-translate-y-1 relative items-center min-w-[300px]">
+                <div className="relative w-[150px] mx-auto">
+                  <img
+                    src="images/astro-img1.png"
+                    alt="Pandit Sharma"
+                    className="w-[120px] h-[120px] object-cover rounded-full mb-2 border border-[#daa23e]"
+                  />
+                </div>
+                <div className="text-[#fd6410] text-[22px]">★★★★★</div>
+                <div className="text-[18px] font-semibold mb-0.5 text-[#301118]">
+                  Pandit Sharma
+                </div>
+                <div className="inline-block bg-[#fd6410] text-white text-sm px-2.5 py-1 rounded-[20px] mt-1.5 mb-0">
+                  Vedic | Numerology
+                </div>
+                <div className="text-base my-2 text-[#1a1a1a]">
+                  <strong>Exp:</strong> 21 Years
+                </div>
+                <div className="text-base my-2 text-[#1a1a1a]">
+                  <strong>Lang:</strong> Hindi, English
+                </div>
+                <div className="text-base my-2 text-[#1a1a1a]">
+                  <strong>Price:</strong> ₹25/min
+                </div>
+                <div className="flex justify-center gap-2.5 mt-4">
+                  <button className="flex-1 py-2 px-3 rounded-[25px] border border-[#fd6410] text-sm bg-[#fd6410] text-white hover:bg-[#301118] transition-all cursor-pointer">
+                    <i className="fa-regular fa-comment-dots"></i> Chat
+                  </button>
+                  <button className="flex-1 py-2 px-3 rounded-[25px] border border-[#fd6410] text-sm bg-white text-black hover:bg-[#301118] hover:text-white transition-all cursor-pointer">
+                    <i className="fa-solid fa-phone-volume"></i> Call
+                  </button>
+                </div>
+              </div>
+
+              <div className="astro-card min-w-[300px]">
+                <div className="vid-part">
+                  <img
+                    src="images/astro-img1.png"
+                    alt="Pandit Sharma"
+                    className="astro-profile-img"
+                  />
+                </div>
+                <div className="rating-star">★★★★★</div>
+                <div className="astro-name">Pandit Sharma</div>
+                <div className="astro-tags">Vedic | Numerology</div>
+                <div className="astro-info">
+                  <strong>Exp:</strong> 21 Years
+                </div>
+                <div className="astro-info">
+                  <strong>Lang:</strong> Hindi, English
+                </div>
+                <div className="astro-info">
+                  <strong>Price:</strong> ₹25/min
+                </div>
+                <div className="astro-actions">
+                  <button>
+                    <i className="fa-regular fa-comment-dots"></i> Chat
+                  </button>
+                  <button className="call">
+                    <i className="fa-solid fa-phone-volume"></i> Call
+                  </button>
+                </div>
+              </div>
+
+              <div className="astro-card min-w-[300px]">
+                <div className="vid-part">
+                  <img
+                    src="images/astro-img1.png"
+                    alt="Pandit Sharma"
+                    className="astro-profile-img"
+                  />
+                </div>
+                <div className="rating-star">★★★★★</div>
+                <div className="astro-name">Pandit Sharma</div>
+                <div className="astro-tags">Vedic | Numerology</div>
+                <div className="astro-info">
+                  <strong>Exp:</strong> 21 Years
+                </div>
+                <div className="astro-info">
+                  <strong>Lang:</strong> Hindi, English
+                </div>
+                <div className="astro-info">
+                  <strong>Price:</strong> ₹25/min
+                </div>
+                <div className="astro-actions">
+                  <button>
+                    <i className="fa-regular fa-comment-dots"></i> Chat
+                  </button>
+                  <button className="call">
+                    <i className="fa-solid fa-phone-volume"></i> Call
+                  </button>
+                </div>
+              </div>
+
+              <div className="astro-card min-w-[300px]">
+                <div className="vid-part">
+                  <img
+                    src="images/astro-img1.png"
+                    alt="Pandit Sharma"
+                    className="astro-profile-img"
+                  />
+                </div>
+                <div className="rating-star">★★★★★</div>
+                <div className="astro-name">Pandit Sharma</div>
+                <div className="astro-tags">Vedic | Numerology</div>
+                <div className="astro-info">
+                  <strong>Exp:</strong> 21 Years
+                </div>
+                <div className="astro-info">
+                  <strong>Lang:</strong> Hindi, English
+                </div>
+                <div className="astro-info">
+                  <strong>Price:</strong> ₹25/min
+                </div>
+                <div className="astro-actions">
+                  <button>
+                    <i className="fa-regular fa-comment-dots"></i> Chat
+                  </button>
+                  <button className="call">
+                    <i className="fa-solid fa-phone-volume"></i> Call
+                  </button>
+                </div>
+              </div>
+
+              <div className="astro-card min-w-[300px]">
+                <div className="vid-part">
+                  <img
+                    src="images/astro-img1.png"
+                    alt="Pandit Sharma"
+                    className="astro-profile-img"
+                  />
+                </div>
+                <div className="rating-star">★★★★★</div>
+                <div className="astro-name">Pandit Sharma</div>
+                <div className="astro-tags">Vedic | Numerology</div>
+                <div className="astro-info">
+                  <strong>Exp:</strong> 21 Years
+                </div>
+                <div className="astro-info">
+                  <strong>Lang:</strong> Hindi, English
+                </div>
+                <div className="astro-info">
+                  <strong>Price:</strong> ₹25/min
+                </div>
+                <div className="astro-actions">
+                  <button>
+                    <i className="fa-regular fa-comment-dots"></i> Chat
+                  </button>
+                  <button className="call">
+                    <i className="fa-solid fa-phone-volume"></i> Call
+                  </button>
+                </div>
+              </div>
+
+              <div className="astro-card min-w-[300px]">
+                <div className="vid-part">
+                  <img
+                    src="images/astro-img1.png"
+                    alt="Pandit Sharma"
+                    className="astro-profile-img"
+                  />
+                </div>
+                <div className="rating-star">★★★★★</div>
+                <div className="astro-name">Pandit Sharma</div>
+                <div className="astro-tags">Vedic | Numerology</div>
+                <div className="astro-info">
+                  <strong>Exp:</strong> 21 Years
+                </div>
+                <div className="astro-info">
+                  <strong>Lang:</strong> Hindi, English
+                </div>
+                <div className="astro-info">
+                  <strong>Price:</strong> ₹25/min
+                </div>
+                <div className="astro-actions">
+                  <button>
+                    <i className="fa-regular fa-comment-dots"></i> Chat
+                  </button>
+                  <button className="call">
+                    <i className="fa-solid fa-phone-volume"></i> Call
+                  </button>
+                </div>
+              </div>
+
+              <div className="astro-card min-w-[300px]">
+                <div className="vid-part">
+                  <img
+                    src="images/astro-img1.png"
+                    alt="Pandit Sharma"
+                    className="astro-profile-img"
+                  />
+                </div>
+                <div className="rating-star">★★★★★</div>
+                <div className="astro-name">Pandit Sharma</div>
+                <div className="astro-tags">Vedic | Numerology</div>
+                <div className="astro-info">
+                  <strong>Exp:</strong> 21 Years
+                </div>
+                <div className="astro-info">
+                  <strong>Lang:</strong> Hindi, English
+                </div>
+                <div className="astro-info">
+                  <strong>Price:</strong> ₹25/min
+                </div>
+                <div className="astro-actions">
+                  <button>
+                    <i className="fa-regular fa-comment-dots"></i> Chat
+                  </button>
+                  <button className="call">
+                    <i className="fa-solid fa-phone-volume"></i> Call
+                  </button>
+                </div>
+              </div>
             </div>
 
-            {/* Specialization Carousel */}
-            <SpecializationCarousel
-              selectedSpecialization={selectedSpecialization}
-              onSpecializationChange={handleSpecializationChange}
-            />
-
-            <FilterModal
-              isOpen={isFilterOpen}
-              onClose={() => setIsFilterOpen(false)}
-              onApply={handleApplyFilters}
-            />
-            <SortModal
-              isOpen={isSortOpen}
-              onClose={() => setIsSortOpen(false)}
-              onApply={handleApplySorts}
-            />
-          </div>
-
-          {/* <!-- Astrologer Card 1 --> */}
-          <div className="astro-grid">
-            {loading && <div>Loading...</div>}
-            {error && <div className="text-danger">{error}</div>}
-            {!loading && !error && getFilteredExperts().length === 0 && (
-              <div>No astrologers found.</div>
-            )}
-            {!loading && getFilteredExperts().map((item, idx) => {
-              return <AstrologerCard astrologerData={item} key={idx} />;
-            })}
+            <button
+              onClick={() => scrollCards("right")}
+              className="flex-shrink-0 w-10 h-10 flex items-center justify-center text-[#fd6410] hover:scale-110 transition cursor-pointer z-10"
+              style={{ background: "transparent" }}
+            >
+              <i className="fa-solid fa-chevron-right fa-2x"></i>
+            </button>
           </div>
 
           <div className="view-all">
-            {(total === null || experts.length < total) && (
-              <button
-                className="btn-global btn-secondary wfc m-auto"
-                onClick={() => setOffset((prev) => prev + limit)}
-                disabled={loading}
-                aria-label="Load more astrologers"
-                style={{
-                  boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
-                }}
-              >
-                {loading ? "Loading..." : "Load More Astrologers"}
-              </button>
-            )}
+            <a href="#" className="btn-link wfc m-auto">
+              <i className="fa-regular fa-user"></i> View All Astrologers
+            </a>
           </div>
         </div>
       </section>
 
-      {/* <!--Zodiac Signs & Horoscopes-section --> */}
-      <section className="horoscopes-container">
+      <section className="bg-edeef1 space-section">
         <div className="container">
-          <div className="row">
-            <h2 className="text-center mt-3 mb-2 horoscopes-heading title-lg">
-              Choose Your Zodiac Sign
+          <div className="light-card mt-4">
+            <h2 className="title-line mb-3 c-1e0b0f">
+              <span>Astrology Services </span>
             </h2>
-            <p className="text-center horoscopes-heading">
+            <div className="overflow-hidden">
+              <div className="h-[550px] overflow-y-auto pr-2 custom-scrollbar">
+                <div className="row mx-0">
+                  {AstrologyServicesData.map((service) => (
+                    <div
+                      className="col-lg-3 col-md-4 px-2 mb-4"
+                      key={service.id}
+                    >
+                      <div className="bg-white overflow-hidden shadow-[0_2px_4px_rgba(0,0,0,0.08)] border-[0.5px] border-[#fd6410] text-center p-2 rounded-[8px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_8px_rgba(0,0,0,0.1)] h-full flex flex-col">
+                        <div className="flex-grow">
+                          <img
+                            src={service.image}
+                            alt={service.title}
+                            className="rounded-[6px] border border-[#daa23ea1] w-full h-[150px] object-cover mb-2"
+                          />
+                        </div>
+                        <h4 className="font-medium text-xs text-[#1e0b0f] truncate mt-2 px-1">
+                          {service.title}
+                        </h4>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <br className="mobile-none" />
+
+          <div className="light-card">
+            <h2 className="title-line mb-4 c-1e0b0f">
+              <span>Consult The Right Astrologer For You</span>
+            </h2>
+            <div className="row">
+              <div className="col-sm-3">
+                <div className="services-card">
+                  <img
+                    src="images/services/services1.jpg"
+                    alt="Love Problem Solution"
+                  />
+                  <h4>Love Problem Solution</h4>
+                </div>
+              </div>
+
+              <div className="col-sm-3">
+                <div className="services-card">
+                  <img
+                    src="images/services/services2.jpg"
+                    alt="Marriage Problem"
+                  />
+                  <h4>Marriage Problem</h4>
+                </div>
+              </div>
+
+              <div className="col-sm-3">
+                <div className="services-card">
+                  <img
+                    src="images/services/services3.jpg"
+                    alt="Divorce Problem Solution"
+                  />
+                  <h4>Divorce Problem Solution</h4>
+                </div>
+              </div>
+
+              <div className="col-sm-3">
+                <div className="services-card">
+                  <img
+                    src="images/services/services4.jpg"
+                    alt="Breakup Problem Solution"
+                  />
+                  <h4>Breakup Problem Solution</h4>
+                </div>
+              </div>
+
+              <div className="col-sm-3">
+                <div className="services-card">
+                  <img
+                    src="images/services/services5.jpg"
+                    alt="Get Your Ex Love Back"
+                  />
+                  <h4>Get Your Ex Love Back</h4>
+                </div>
+              </div>
+
+              <div className="col-sm-3">
+                <div className="services-card">
+                  <img
+                    src="images/services/services6.jpg"
+                    alt="Family Problem Solution"
+                  />
+                  <h4>Family Problem Solution</h4>
+                </div>
+              </div>
+
+              <div className="col-sm-3">
+                <div className="services-card">
+                  <img
+                    src="images/services/services8.jpg"
+                    alt="Dispute Solution"
+                  />
+                  <h4>Dispute Solution</h4>
+                </div>
+              </div>
+
+              <div className="col-sm-3">
+                <div className="services-card">
+                  <img
+                    src="images/services/services9.jpg"
+                    alt="Childless Couple Solution"
+                  />
+                  <h4>Childless Couple Solution</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="horoscopes-container light-back">
+        <div className="container">
+          <div className="light-card">
+            <h2 className="title-line mb-3 c-1e0b0f">
+              <span>Choose Your Zodiac Sign </span>
+            </h2>
+            <p className="text-center text-[#1a1a1a] mb-8 text-base font-medium">
               Discover Your Daily, Monthly and Yearly Horoscope
             </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {ZodiacSignsData.map((sign) => (
+                <a href="#" key={sign.id} className="block h-full group">
+                  <div
+                    className="bg-white overflow-hidden shadow-[0_4px_8px_rgba(0,0,0,0.1)] text-center p-3 rounded-[10px] transition-all duration-300 ease-in-out text-[#1a1a1a] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,0,0,0.2)] h-full flex flex-col items-center justify-center cursor-pointer"
+                    style={{ border: "1px solid #daa23e73" }}
+                  >
+                    <img
+                      src={sign.image}
+                      alt={sign.title}
+                      className="w-20 h-20 object-contain transition-transform duration-300 group-hover:scale-110 mb-2"
+                    />
+                    <h3 className="text-lg font-semibold mb-0.5 text-[#1e0b0f]">
+                      {sign.title}
+                    </h3>
+                    <p className="text-xs text-[#666] mb-0">{sign.date}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="aib-products-section bg-edeef1  space-section">
+        <div className="container">
+          <div className="light-card">
+            {/* <!-- Section Heading --> */}
+            <div className="row mb-4">
+              <div className="col-12">
+                <h2 className="title-line mb-4 c-1e0b0f">
+                  <span>Astrology Products</span>
+                </h2>
+                <p className="aib-products-subtitle c-1e0b0f m-0">
+                  Energized & Expert-Recommended Astrology Products for Positive
+                  Life Changes
+                </p>
+              </div>
+            </div>
 
-            {ZodiacSignsData.map((item) => {
-              return (
-                <div className="col-lg-2 col-sm-6 col-md-4 col-6" key={item.id}>
-                  <a href="#">
-                    <div className="horoscopes-items">
-                      <img src={item.image} alt="Image Not Found" />
-                      <h3>{item.title}</h3>
-                      <p className="fw-normal">{item.date}</p>
-                    </div>
+            {/* <!-- Products Grid --> */}
+            <div className="row">
+              {/* <!-- Product Card --> */}
+              <div className="col-lg-3 col-md-6 col-sm-12">
+                <div className="bg-white rounded-2xl p-2 text-center shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition duration-300 mb-[30px] border border-[#fd641047] hover:-translate-y-1.5">
+                  <div className="mb-[15px]">
+                    <img
+                      src="images/product/product1.jpg"
+                      alt="Rudraksha Mala"
+                      className="w-full object-contain mb-[15px]"
+                    />
+                  </div>
+                  <h4 className="text-[22px] font-semibold text-[#1e0b0f] mb-1.5">
+                    Rudraksha Mala
+                  </h4>
+                  <p className="text-base text-[#1a1a1a] mb-3">
+                    Energized for peace & spiritual growth
+                  </p>
+                  <div className="mb-[15px]">
+                    <span className="text-lg font-bold text-[#fd6410] mr-2">
+                      ₹1,499
+                    </span>
+                    <span className="text-sm text-[#1e0b0f9e] line-through">
+                      ₹1,999
+                    </span>
+                  </div>
+                  <a
+                    href="#"
+                    className="inline-block py-2.5 px-6 bg-[#fd6410] text-white rounded-[25px] no-underline font-semibold hover:bg-[#e5670d] hover:text-white"
+                  >
+                    Buy Now
                   </a>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+              </div>
 
-      {/* Astrology Servicees */}
-      <section className="astrology-services py-5">
-        <div className="container">
-          <h2 className="title-lg">Astrology Services</h2>
-          <div className="row">
-            {AstrologyServicesData.map((item) => {
-              return (
-                <div className="col-lg-3 col-md-6" key={item.id}>
-                  <div className="ser-card vert-move">
+              {/* <!-- Product Card --> */}
+              <div className="col-lg-3 col-md-6 col-sm-12">
+                <div className="bg-white rounded-2xl p-2 text-center shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition duration-300 mb-[30px] border border-[#fd641047] hover:-translate-y-1.5">
+                  <div className="mb-[15px]">
                     <img
-                      src={item.image}
-                      alt="Kundli"
-                      className="services-img"
+                      src="images/product/product2.jpg"
+                      alt="Gemstone Ring"
+                      className="w-full object-contain mb-[15px]"
                     />
-                    <h4>{item.title}</h4>
-                    <p>{item.description}</p>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Products Listing page */}
-      <section className="product-slider-section py-50 bg-cream">
-        <div className="container">
-          <h2 className="text-center mb-5 heading section-title">
-            🔮 Our Astrological Products
-          </h2>
-          <div className="product-slider-container">
-            <ProductsCarousel />
-          </div>
-        </div>
-      </section>
-
-      {/* Why Talk to our astrologer*/}
-      <section className="py-50 why-choose-us text-white">
-        <div className="container">
-          <h2 className="text-center mb-5 heading text-black title-lg">
-            Why Talk to Our Astrologer?
-          </h2>
-          <div className="row d-flex align-items-center">
-            {/* Left Column of Promises */}
-            <div className="col-lg-4 col-md-12 mb-4 mb-lg-0">
-              <div className="d-flex flex-column gap-3">
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-chart-line fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Accurate Predictions
-                    </h6>
-                    <small className="text-muted">
-                      Gain clarity with precise and insightful astrological
-                      readings.
-                    </small>
+                  <h4 className="text-[22px] font-semibold text-[#1e0b0f] mb-1.5">
+                    Gemstone Ring
+                  </h4>
+                  <p className="text-base text-[#1a1a1a] mb-3">
+                    Recommended as per kundli analysis
+                  </p>
+                  <div className="mb-[15px]">
+                    <span className="text-lg font-bold text-[#fd6410] mr-2">
+                      ₹2,999
+                    </span>
+                    <span className="text-sm text-[#1e0b0f9e] line-through">
+                      ₹3,499
+                    </span>
                   </div>
-                </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-lock fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      100% Confidentiality
-                    </h6>
-                    <small className="text-muted">
-                      Your conversations and data are completely private.
-                    </small>
-                  </div>
-                </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-history fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Vedic & Modern Approach
-                    </h6>
-                    <small className="text-muted">
-                      Our experts blend traditional wisdom with contemporary
-                      insights.
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Center Image */}
-            <div className="col-lg-4 col-md-12 text-center my-4 my-lg-0">
-              <img
-                src="/images/Astrologer.png" // Replace with your image path
-                alt="Astrologer talking"
-                className="img-fluid rounded-circle border border-gray"
-                style={{ width: "300px", height: "300px", objectFit: "cover" }}
-              />
-            </div>
-
-            {/* Right Column of Promises */}
-            <div className="col-lg-4 col-md-12">
-              <div className="d-flex flex-column gap-3">
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-gem fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Remedial Solutions
-                    </h6>
-                    <small className="text-muted">
-                      Receive practical solutions to mitigate planetary effects.
-                    </small>
-                  </div>
-                </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-star fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Personalized Consultations
-                    </h6>
-                    <small className="text-muted">
-                      Get tailored advice for your unique birth chart.
-                    </small>
-                  </div>
-                </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-comments fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Accessible Anytime
-                    </h6>
-                    <small className="text-muted">
-                      Connect with our astrologers on your schedule.
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Clients Testimonials Section */}
-      <section className="testimonials-section bg-cream py-50">
-        <div className="container text-center">
-          <h2 className="section-heading heading mb-5 title-lg">What Our Clients Say</h2>
-          <div className="row">
-            {ClientsTestimoinialData.map((client) => (
-              <div className="col-lg-4 col-md-6 mb-4" key={client.id}>
-                <div className="ser-card p-4 h-100 vert-move">
-                  <i
-                    className="fa-solid fa-quote-left fa-2x mb-3 color-secondary"
-                  ></i>
-                  <p>{client.review}</p>
-                  <div className="mt-3 d-flex align-items-center justify-content-center flex-column">
-                    <img
-                      src="images/astro-img1.png"
-                      alt={client.name}
-                      className="rounded-circle mb-2"
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <strong>{client.name}</strong>
-                    <div className="rating-star">
-                      {"★".repeat(Math.floor(client.rating))}
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Astrologers List */}
-      <section className="featured-astrologers  py-50 ">
-        <div className="container text-center">
-          <h2 className="section-heading heading mb-5 title-lg">
-            Meet Our Trusted Astrologers
-          </h2>
-          <div className="row justify-content-center">
-            {ListOfAllAstrologers.filter((astro) => astro.ratings >= 4.5)
-              .slice(0, 3)
-              .map((item) => (
-                <div className="col-lg-4 col-md-6 mb-4 " key={item.id}>
-                  <div
-                    className="astro-card  ser-card card h-100 border border-gray shadow position-relative overflow-hidden"
-                    style={{
-                      borderRadius: "15px",
-                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    }}
+                  <a
+                    href="#"
+                    className="inline-block py-2.5 px-6 bg-[#fd6410] text-white rounded-[25px] no-underline font-semibold hover:bg-[#e5670d] hover:text-white"
                   >
-                    {/* Profile Image */}
-                    <div className="position-relative p-4 pb-0">
+                    Buy Now
+                  </a>
+                </div>
+              </div>
+
+              {/* <!-- Product Card --> */}
+              <div className="col-lg-3 col-md-6 col-sm-12">
+                <div className="bg-white rounded-2xl p-2 text-center shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition duration-300 mb-[30px] border border-[#fd641047] hover:-translate-y-1.5">
+                  <div className="mb-[15px]">
+                    <img
+                      src="images/product/product3.jpg"
+                      alt="Yantra"
+                      className="w-full object-contain mb-[15px]"
+                    />
+                  </div>
+                  <h4 className="text-[22px] font-semibold text-[#1e0b0f] mb-1.5">
+                    Shree Yantra
+                  </h4>
+                  <p className="text-base text-[#1a1a1a] mb-3">
+                    For wealth, success & prosperity
+                  </p>
+                  <div className="mb-[15px]">
+                    <span className="text-lg font-bold text-[#fd6410] mr-2">
+                      ₹1,199
+                    </span>
+                    <span className="text-sm text-[#1e0b0f9e] line-through">
+                      ₹1,699
+                    </span>
+                  </div>
+                  <a
+                    href="#"
+                    className="inline-block py-2.5 px-6 bg-[#fd6410] text-white rounded-[25px] no-underline font-semibold hover:bg-[#e5670d] hover:text-white"
+                  >
+                    Buy Now
+                  </a>
+                </div>
+              </div>
+
+              {/* <!-- Product Card --> */}
+              <div className="col-lg-3 col-md-6 col-sm-12">
+                <div className="bg-white rounded-2xl p-2 text-center shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition duration-300 mb-[30px] border border-[#fd641047] hover:-translate-y-1.5">
+                  <div className="mb-[15px]">
+                    <img
+                      src="images/product/product4.jpg"
+                      alt="Astrology Bracelet"
+                      className="w-full object-contain mb-[15px]"
+                    />
+                  </div>
+                  <h4 className="text-[22px] font-semibold text-[#1e0b0f] mb-1.5">
+                    Astrology Bracelet
+                  </h4>
+                  <p className="text-base text-[#1a1a1a] mb-3">
+                    Balances planetary energies
+                  </p>
+                  <div className="mb-[15px]">
+                    <span className="text-lg font-bold text-[#fd6410] mr-2">
+                      ₹899
+                    </span>
+                    <span className="text-sm text-[#1e0b0f9e] line-through">
+                      ₹1,299
+                    </span>
+                  </div>
+                  <a
+                    href="#"
+                    className="inline-block py-2.5 px-6 bg-[#fd6410] text-white rounded-[25px] no-underline font-semibold hover:bg-[#e5670d] hover:text-white"
+                  >
+                    Buy Now
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* <!-- View All Button -->  */}
+            <div className="view-all mt-1 mb-3">
+              <a href="#" className="btn-link wfc m-auto">
+                <i className="fa-solid fa-cart-shopping"></i> View All Products
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="why-section back-img">
+        <div className="container">
+          <h2 className="title-line mb-3 color-light">
+            <span>Why Choose Astrology in Bharat</span>
+          </h2>
+          <p className="aib-products-subtitle  color-light m-0">
+            Trusted Astrology. Accurate Guidance. Complete Privacy.
+          </p>
+          <div className="row align-items-center text-center">
+            {/* <!-- Left column --> */}
+            <div className="col-md-4">
+              <div className="border border-[#fd641054] rounded-xl my-5 p-6 bg-[#1e0b0f6e]">
+                <i className="fa-solid fa-user-check bg-gradient-to-r from-[#fd6410] to-[#c34500] text-white w-[70px] h-[70px] rounded-full text-[40px] py-3.5 mb-3.5 inline-block"></i>
+                <div className="choose-text">
+                  <h4 className="text-[22px] font-semibold text-white">
+                    Verified & Experienced Astrologers
+                  </h4>
+                </div>
+              </div>
+
+              <div className="border border-[#fd641054] rounded-xl my-5 p-6 bg-[#1e0b0f6e]">
+                <i className="fa-solid fa-comments bg-gradient-to-r from-[#fd6410] to-[#c34500] text-white w-[70px] h-[70px] rounded-full text-[40px] py-3.5 mb-3.5 inline-block"></i>
+                <div className="choose-text">
+                  <h4 className="text-[22px] font-semibold text-white">
+                    Instant Chat, Call & Video Support
+                  </h4>
+                </div>
+              </div>
+
+              <div className="border border-[#fd641054] rounded-xl my-5 p-6 bg-[#1e0b0f6e]">
+                <i className="fa-solid fa-shield-halved bg-gradient-to-r from-[#fd6410] to-[#c34500] text-white w-[70px] h-[70px] rounded-full text-[40px] py-3.5 mb-3.5 inline-block"></i>
+                <div className="choose-text">
+                  <h4 className="text-[22px] font-semibold text-white">
+                    100% Privacy & Confidentiality
+                  </h4>
+                </div>
+              </div>
+            </div>
+            {/* <!-- Center Image --> */}
+            <div className="col-md-4 text-center">
+              <div className="overflow-hidden relative">
+                <img
+                  src="images/horoscope-round2.png"
+                  className="w-[90%] mx-auto absolute z-10 left-[10%] top-0 animate-[spin_10s_linear_infinite]"
+                  alt="horoscope"
+                />
+                <img
+                  src="images/astro.png"
+                  alt="astro"
+                  className="relative z-20 bottom-[22px]"
+                />
+              </div>
+            </div>
+            {/* <!-- Right column --> */}
+            <div className="col-md-4">
+              <div className="border border-[#fd641054] rounded-xl my-5 p-6 bg-[#1e0b0f6e]">
+                <i className="fa-solid fa-bullseye bg-gradient-to-r from-[#fd6410] to-[#c34500] text-white w-[70px] h-[70px] rounded-full text-[40px] py-3.5 mb-3.5 inline-block"></i>
+                <div className="choose-text">
+                  <h4 className="text-[22px] font-semibold text-white">
+                    Accurate Predictions & Effective Remedies
+                  </h4>
+                </div>
+              </div>
+              <div className="border border-[#fd641054] rounded-xl my-5 p-6 bg-[#1e0b0f6e]">
+                <i className="fa-solid fa-user-gear bg-gradient-to-r from-[#fd6410] to-[#c34500] text-white w-[70px] h-[70px] rounded-full text-[40px] py-3.5 mb-3.5 inline-block"></i>
+                <div className="choose-text">
+                  <h4 className="text-[22px] font-semibold text-white">
+                    Personalized Astrology Consultations
+                  </h4>
+                </div>
+              </div>
+              <div className="border border-[#fd641054] rounded-xl my-5 p-6 bg-[#1e0b0f6e]">
+                <i className="fa-solid fa-hand-holding-heart bg-gradient-to-r from-[#fd6410] to-[#c34500] text-white w-[70px] h-[70px] rounded-full text-[40px] py-3.5 mb-3.5 inline-block"></i>
+                <div className="choose-text">
+                  <h4 className="text-[22px] font-semibold text-white">
+                    Expert Guidance for Life Problems
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="testimonial-section-cards bg-edeef1  space-section">
+        <div className="container">
+          <div className="light-card">
+            <h2 className="title-line mb-3 c-1e0b0f">
+              <span>What Our Users Say </span>
+            </h2>
+            <div className="row">
+              <div className="col-lg-4 col-md-6 col-12">
+                {/* <!-- Testimonial Card --> */}
+                <div className="bg-white rounded-[18px] p-6 max-w-[360px] transition duration-300 border border-[#fd641047] shadow-[0_10px_25px_rgba(0,0,0,0.08)] my-2.5 hover:-translate-y-1.5 mx-auto">
+                  <div className="flex items-center mb-3">
+                    <div className="mr-3">
                       <img
-                        src={item.image}
-                        alt={item.name}
-                        className="rounded-circle  border-3 border-warning shadow"
-                        style={{
-                          width: "120px",
-                          height: "120px",
-                          objectFit: "cover",
-                        }}
+                        src="images/t1.png"
+                        alt="User Review"
+                        className="w-[55px] h-[55px] rounded-full object-cover border-[3px] border-[#ff7a18]"
                       />
-                      <span
-                        className="badge position-absolute"
-                        style={{
-                          background:
-                            "linear-gradient(45deg, #f7d774, #e0a800)",
-                          color: "#000",
-                          top: "20px",
-                          right: "20px",
-                          fontSize: "0.8rem",
-                        }}
-                      >
-                        ⭐ Top Rated
+                    </div>
+                    <div>
+                      <h5 className="text-lg font-semibold text-[#32131a] m-0">
+                        Rahul Sharma
+                      </h5>
+                      <span className="text-[15px] text-[#1a1a1a]">
+                        Delhi, India
                       </span>
                     </div>
+                  </div>
+                  <div className="text-[#fd6410] text-[25px] mb-1 tracking-[3px]">
+                    ★★★★★
+                  </div>
+                  <p className="text-base text-[#311219] leading-[1.6]">
+                    I had a great experience with Astrology in Bharat. The
+                    astrologer was very accurate and guided me properly about my
+                    career and future decisions.
+                  </p>
+                </div>
+              </div>
 
-                    {/* Card Body */}
-                    <div className="card-body mt-3">
-                      <h5 className="fw-bold astro-name">{item.name}</h5>
-                      <p className="card-subtitle mb-2 text-muted">
-                        {item.expertise}
-                      </p>
-
-                      {/* Ratings */}
-                      <div className="d-flex justify-content-center align-items-center mb-3">
-                        <div
-                          className="rating-star text-warning"
-                          style={{ fontSize: "1.1rem" }}
-                        >
-                          {"★".repeat(Math.floor(item.ratings))}
-                        </div>
-                        <small className="ms-2 text-muted">
-                          {item.ratings.toFixed(1)} / 5 ({item.ratings} reviews)
-                        </small>
-                      </div>
-
-                      {/* Details */}
-                      <div className="d-flex justify-content-between text-muted small mb-2">
-                        <span>
-                          Experience:{" "}
-                          <span className="fw-bold">{item.experience}</span>
-                        </span>
-                        <span>
-                          Consultations:{" "}
-                          <span className="fw-bold">{item.ratings}</span>
-                        </span>
-                      </div>
-
-                      {/* Price & Status */}
-                      <div className="d-flex justify-content-between align-items-center mb-3">
-                        <h6 className="mb-0 fw-bold text-success">
-                          ₹{item.price}/min
-                        </h6>
-                        <span className="badge bg-success">● Online</span>
-                      </div>
-
-                      {/* CTA Button */}
-                      <div className="d-grid">
-                        <button
-                          className="btn-global btn-primary w-100"
-                        >
-                          <i className="bi bi-chat-dots-fill me-2"></i> Chat Now
-                        </button>
-                      </div>
+              <div className="col-lg-4 col-md-6 col-12">
+                {/* <!-- Testimonial Card --> */}
+                <div className="bg-white rounded-[18px] p-6 max-w-[360px] transition duration-300 border border-[#fd641047] shadow-[0_10px_25px_rgba(0,0,0,0.08)] my-2.5 hover:-translate-y-1.5 mx-auto">
+                  <div className="flex items-center mb-3">
+                    <div className="mr-3">
+                      <img
+                        src="images/t1.png"
+                        alt="User Review"
+                        className="w-[55px] h-[55px] rounded-full object-cover border-[3px] border-[#ff7a18]"
+                      />
+                    </div>
+                    <div>
+                      <h5 className="text-lg font-semibold text-[#32131a] m-0">
+                        Rahul Sharma
+                      </h5>
+                      <span className="text-[15px] text-[#1a1a1a]">
+                        Delhi, India
+                      </span>
                     </div>
                   </div>
+                  <div className="text-[#fd6410] text-[25px] mb-1 tracking-[3px]">
+                    ★★★★★
+                  </div>
+                  <p className="text-base text-[#311219] leading-[1.6]">
+                    I had a great experience with Astrology in Bharat. The
+                    astrologer was very accurate and guided me properly about my
+                    career and future decisions.
+                  </p>
                 </div>
-              ))}
+              </div>
+
+              <div className="col-lg-4 col-md-6 col-12">
+                {/* <!-- Testimonial Card --> */}
+                <div className="bg-white rounded-[18px] p-6 max-w-[360px] transition duration-300 border border-[#fd641047] shadow-[0_10px_25px_rgba(0,0,0,0.08)] my-2.5 hover:-translate-y-1.5 mx-auto">
+                  <div className="flex items-center mb-3">
+                    <div className="mr-3">
+                      <img
+                        src="images/t1.png"
+                        alt="User Review"
+                        className="w-[55px] h-[55px] rounded-full object-cover border-[3px] border-[#ff7a18]"
+                      />
+                    </div>
+                    <div>
+                      <h5 className="text-lg font-semibold text-[#32131a] m-0">
+                        Rahul Sharma
+                      </h5>
+                      <span className="text-[15px] text-[#1a1a1a]">
+                        Delhi, India
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-[#fd6410] text-[25px] mb-1 tracking-[3px]">
+                    ★★★★★
+                  </div>
+                  <p className="text-base text-[#311219] leading-[1.6]">
+                    I had a great experience with Astrology in Bharat. The
+                    astrologer was very accurate and guided me properly about my
+                    career and future decisions.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Complete Profile Modal */}
-      <CompleteProfileModal
-        isOpen={showCompleteProfile}
-        onClose={handleCloseCompleteProfile}
-        onSkip={handleSkipCompleteProfile}
-      />
+      {/* <!-- Astrology in Bharat : CTA Section --> */}
+      <section className="py-[50px] bg-cover bg-center bg-no-repeat relative bg-[#301118] bg-[url('/images/back-over.jpg')] bg-fixed">
+        {/* Overlay if needed, or assuming the background image is dark. Using a dark fallback just in case */}
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container relative z-10">
+          <div className="row align-items-center">
+            <div className="col-lg-8 col-md-12 text-center text-lg-start">
+              <h2 className="text-[32px] font-bold mb-[15px] text-white">
+                Ready to Get Accurate Astrology Guidance?
+              </h2>
+              <p className="text-lg text-[#ffdcb2] mb-[30px] lg:mb-0 max-w-[700px] mx-auto lg:mx-0">
+                Connect with verified astrologers today and get personalized
+                solutions for love, career, health, and life problems.
+              </p>
+            </div>
+
+            <div className="col-lg-4 col-md-12 text-center text-lg-end">
+              <a
+                href="#"
+                className="inline-block py-3 px-[40px] bg-[#fd6410] text-white rounded-[30px] text-lg font-semibold hover:bg-[#e5670d] hover:text-white hover:-translate-y-1 transition-all shadow-[0_4px_15px_rgba(253,100,16,0.4)]"
+              >
+                Consult Now
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 };
