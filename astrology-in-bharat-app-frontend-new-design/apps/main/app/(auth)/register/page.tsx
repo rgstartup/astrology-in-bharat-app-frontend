@@ -5,12 +5,14 @@ import Link from "next/link";
 import React, { useState, useCallback, FormEvent } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 // --- Types ---
 interface RegistrationPayload {
   name: string;
   email: string;
   password: string;
+  phone: string;
 }
 interface RegistrationSuccessResponse {
   message: string;
@@ -19,6 +21,8 @@ interface FormData {
   fullName: string;
   email: string;
   password: string;
+  confirmPassword: string;
+  phoneNumber: string;
 }
 
 // --- API ---
@@ -30,9 +34,12 @@ const Page: React.FC = () => {
     fullName: "",
     email: "",
     password: "",
+    confirmPassword: "",
+    phoneNumber: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -55,13 +62,25 @@ const Page: React.FC = () => {
     setError(null);
     setSuccessMessage(null);
 
-    if (!formData.fullName || !formData.email || !formData.password) {
-      setError("All fields marked * are required.");
+    if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword || !formData.phoneNumber) {
+      toast.error("All fields marked * are required.");
       return false;
     }
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long.");
+      toast.error("Password must be at least 6 characters long.");
+      return false;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match.");
+      return false;
+    }
+
+    // Basic phone number validation (10 digits)
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(formData.phoneNumber)) {
+      toast.error("Please enter a valid 10-digit phone number.");
       return false;
     }
 
@@ -80,6 +99,7 @@ const Page: React.FC = () => {
       name: formData.fullName,
       email: formData.email,
       password: formData.password,
+      phone: formData.phoneNumber,
     };
 
     try {
@@ -93,12 +113,11 @@ const Page: React.FC = () => {
       );
 
 
-      setSuccessMessage(
-        response.data.message || "Registration successful! You can now sign in."
+      toast.success(
+        response.data.message || "Registration successful! Please check your email to verify your account."
       );
 
-      setFormData({ fullName: "", email: "", password: "" });
-      router.push('/')
+      setFormData({ fullName: "", email: "", password: "", confirmPassword: "", phoneNumber: "" });
     } catch (err) {
       const error = err as AxiosError;
 
@@ -110,16 +129,16 @@ const Page: React.FC = () => {
           `Server responded with status ${status}.`;
 
         if (status === 400 || status === 409) {
-          setError(msg);
+          toast.error(msg);
         } else if (status >= 500) {
-          setError("A critical server error occurred. Please try again later.");
+          toast.error("A critical server error occurred. Please try again later.");
         } else {
-          setError(msg);
+          toast.error(msg);
         }
       } else if (error.request) {
-        setError("Network Error: Could not reach the server.");
+        toast.error("Network Error: Could not reach the server.");
       } else {
-        setError("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.");
       }
     } finally {
       setIsLoading(false);
@@ -217,16 +236,16 @@ const Page: React.FC = () => {
                 </div>
               </div>
 
-              {error && (
+              {/* {error && (
                 <div className="alert alert-danger mb-3" role="alert">
                   <b>Error:</b> {error}
                 </div>
-              )}
-              {successMessage && (
+              )} */}
+              {/* {successMessage && (
                 <div className="alert alert-success mb-3" role="alert">
                   <b>Success:</b> {successMessage}
                 </div>
-              )}
+              )} */}
 
               {/* Form */}
               <form onSubmit={handleSubmit}>
@@ -268,6 +287,25 @@ const Page: React.FC = () => {
                     />
                   </div>
 
+                  {/* Phone Number */}
+                  <div className="col-12">
+                    <label htmlFor="phoneNumber" className="form-label fw-semibold">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      className="form-control"
+                      placeholder="Enter 10-digit Phone Number"
+                      value={formData.phoneNumber}
+                      onChange={handleInputChange}
+                      required
+                      maxLength={10}
+                    />
+                  </div>
+
+                  {/* Password */}
                   <div className="col-12">
                     <label
                       htmlFor="password"
@@ -294,6 +332,37 @@ const Page: React.FC = () => {
                         style={{ zIndex: 10 }}
                       >
                         <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="col-12">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="form-label fw-semibold"
+                    >
+                      Confirm Password *
+                    </label>
+                    <div className="position-relative">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        className="form-control"
+                        placeholder="Re-enter Password"
+                        style={{ paddingRight: "40px" }}
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <button
+                        type="button"
+                        className="position-absolute end-0 top-50 translate-middle-y border-0 bg-transparent pe-3 text-muted"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        style={{ zIndex: 10 }}
+                      >
+                        <i className={`fa-solid ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
                       </button>
                     </div>
                   </div>

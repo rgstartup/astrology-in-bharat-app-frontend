@@ -9,6 +9,7 @@ import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 import { toast } from "react-toastify";
+
 // --- 1. Define Typescript Interfaces ---
 
 /** The shape of the data sent to the server (request body). */
@@ -40,7 +41,7 @@ export const dynamic = 'force-dynamic';
 const SignInContent: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { clientLogin } = useClientAuth(); // Add this line
+  const { clientLogin } = useClientAuth();
 
   // Get the callback URL from query params, default to /profile
   const callbackUrl = searchParams.get('callbackUrl') || '/profile';
@@ -52,8 +53,6 @@ const SignInContent: React.FC = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // --- Handlers ---
 
@@ -71,15 +70,11 @@ const SignInContent: React.FC = () => {
 
   // Form Validation Logic
   const validateForm = (): boolean => {
-    setError(null);
-    setSuccessMessage(null);
-
     if (!formData.email || !formData.password) {
-      setError("Email and Password are required for Sign In.");
+      toast.error("Email and Password are required for Sign In.");
       console.error("Validation Error: Missing required field.");
       return false;
     }
-
     return true;
   };
 
@@ -93,15 +88,12 @@ const SignInContent: React.FC = () => {
 
     setIsLoading(true);
 
-    // Construct the POST payload as required: email & password in JSON body
     const payload: LoginPayload = {
       email: formData.email,
       password: formData.password,
     };
 
-
     try {
-      // Making the POST request
       const response = await axios.post<LoginSuccessResponse>(
         API_ENDPOINT,
         payload,
@@ -112,11 +104,9 @@ const SignInContent: React.FC = () => {
         }
       );
 
-
       console.log("Login Success. Status:", response.status);
       console.log("Server Response Data:", response.data);
 
-      // Update authentication context
       const token = response.data.accessToken || response.data.token;
       if (token) {
         console.log("🔑 Received token, calling clientLogin...");
@@ -127,10 +117,8 @@ const SignInContent: React.FC = () => {
 
       toast.success(response.data.message || "Sign In successful! Redirecting...");
 
-      // Redirect to the callback URL or default to /profile
       console.log("🔄 Redirecting to:", callbackUrl);
       window.location.href = callbackUrl;
-      // router.push('/profile');
     } catch (err) {
       const error = err as AxiosError;
       console.error("Login API Request Failed. Error object:", error);
@@ -147,22 +135,18 @@ const SignInContent: React.FC = () => {
         );
 
         if (status === 401) {
-          // 401 Unauthorized (Invalid credentials)
-          setError(
-            "Invalid credentials. Please check your email and password."
-          );
+          // 401 Unauthorized (Invalid credentials or Email not verified)
+          toast.error(serverMessage || "Invalid credentials. Please check your email and password.");
         } else if (status >= 500) {
-          setError("A critical server error occurred. Please try again later.");
+          toast.error("A critical server error occurred. Please try again later.");
         } else {
-          setError(`Login failed: ${serverMessage}`);
+          toast.error(`Login failed: ${serverMessage}`);
         }
       } else if (error.request) {
-        setError(
-          "Network Error: Could not reach the server. Please check your connection."
-        );
+        toast.error("Network Error: Could not reach the server. Please check your connection.");
         console.error("Network Error: No response received from server.");
       } else {
-        setError("An unexpected error occurred. Please try again.");
+        toast.error("An unexpected error occurred. Please try again.");
         console.error("Request Setup Error:", error.message);
       }
     } finally {
@@ -230,7 +214,6 @@ const SignInContent: React.FC = () => {
           {/* Right Side - Sign In Form */}
           <div className="col-lg-7 col-sm-12 ms-auto">
             <div className="form-data shadow-sm p-4 rounded-xl bg-white">
-              {/* Heading */}
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h6 className="mb-0">
                   Welcome to <br />
@@ -250,7 +233,6 @@ const SignInContent: React.FC = () => {
                 <h2 style={{ color: "var(--primary-color)" }}>Sign In</h2>
               </div>
 
-              {/* Social Login */}
               <div className="social-links d-flex gap-3 mb-4">
                 <div className="social-button d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
                   <Image
@@ -272,21 +254,7 @@ const SignInContent: React.FC = () => {
                 </div>
               </div>
 
-              {/* Status Messages for Error/Success */}
-              {error && (
-                <div className="alert alert-danger mb-3" role="alert">
-                  <b>Error:</b> {error}
-                </div>
-              )}
-              {successMessage && (
-                <div className="alert alert-success mb-3" role="alert">
-                  <b>Success:</b> {successMessage}
-                </div>
-              )}
-
-              {/* Sign In Form */}
               <form onSubmit={handleSubmit}>
-                {/* Email Input */}
                 <div className="form-group mb-3">
                   <label htmlFor="email" className="form-label fw-semibold">
                     Enter your username or email address *
@@ -303,7 +271,6 @@ const SignInContent: React.FC = () => {
                   />
                 </div>
 
-                {/* Password Input */}
                 <div className="form-group mb-3">
                   <label htmlFor="password" className="form-label fw-semibold">
                     Enter Your Password Here *
@@ -331,7 +298,6 @@ const SignInContent: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Forget password */}
                 <div className="d-flex justify-content-end mb-3">
                   <Link
                     href="#"
@@ -341,7 +307,6 @@ const SignInContent: React.FC = () => {
                   </Link>
                 </div>
 
-                {/* Submit button */}
                 <button
                   type="submit"
                   className="btn btn-primary w-100 py-2 fw-semibold sign-button" style={{ backgroundColor: "#fd6410", color: "white" }}
