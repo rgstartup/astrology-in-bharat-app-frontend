@@ -12,6 +12,8 @@ import {
   FaVenus as FaV,
   FaRegCheckCircle as FaRcc,
   FaSpinner as FaSp,
+  FaUser as FaU,
+  FaHandshake as FaHs
 } from "react-icons/fa";
 const FaUserFriends = FaUf as React.ComponentType<any>;
 const FaHeart = FaH as React.ComponentType<any>;
@@ -21,14 +23,34 @@ const FaMars = FaM as React.ComponentType<any>;
 const FaVenus = FaV as React.ComponentType<any>;
 const FaRegCheckCircle = FaRcc as React.ComponentType<any>;
 const FaSpinner = FaSp as React.ComponentType<any>;
+const FaUser = FaU as React.ComponentType<any>;
+const FaHandshake = FaHs as React.ComponentType<any>;
 
 import { MdOutlineSecurity as MdOs } from "react-icons/md";
 const MdOutlineSecurity = MdOs as any;
+
+import {
+  GiLotus as GiL,
+  GiFlowerEmblem as GiFe,
+  GiStarShuriken as GiSs,
+  GiSparkles as GiSpark,
+  GiLion as GiLionI,
+  GiYinYang as GiYy,
+  GiLovers as GiLov
+} from "react-icons/gi";
+const GiLotus = GiL as any;
+const GiFlowerEmblem = GiFe as any;
+const GiStarShuriken = GiSs as any;
+const GiSparkles = GiSpark as any;
+const GiLion = GiLionI as any;
+const GiYinYang = GiYy as any;
+const GiLovers = GiLov as any;
 
 import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
 import CTA from "@/components/layout/main/CTA";
 import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const KundaliMatchingPage = () => {
   const [boyDetails, setBoyDetails] = useState({
@@ -68,10 +90,11 @@ const KundaliMatchingPage = () => {
       ));
     }
     if (typeof content === "object") {
-      if (content.description) return content.description;
-      if (content.name) return content.name;
-      if (content.title) return content.title;
-      if (content.report) return content.report;
+      if (Object.keys(content).length === 0) return "";
+      if (content.description) return renderContent(content.description);
+      if (content.name) return renderContent(content.name);
+      if (content.title) return renderContent(content.title);
+      if (content.report) return renderContent(content.report);
       return JSON.stringify(content);
     }
     return String(content);
@@ -110,45 +133,79 @@ const KundaliMatchingPage = () => {
     }
   };
 
+  // Premium Section Animations & Styles
+  const premiumStyles = `
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .animate-spin-slow { animation: spin-slow 20s linear infinite; }
+    .animate-pulse-soft { animation: pulse-soft 4s ease-in-out infinite; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(48, 17, 24, 0.1);
+    }
+    .text-burgundy { color: #301118; }
+    .bg-burgundy { background-color: #301118; }
+    .border-burgundy { border-color: #301118; }
+    .text-gold { color: #d4af37; }
+  `;
+
   const handleMatch = async () => {
-    setError(null);
     setMatchingResult(null);
-    if (
-      !boyDetails.date ||
-      !boyDetails.time ||
-      !boyDetails.lat ||
-      !girlDetails.date ||
-      !girlDetails.time ||
-      !girlDetails.lat
-    ) {
-      setError("Please fill in all birth details for both individuals.");
+    if (!boyDetails.date || !boyDetails.time || !boyDetails.lat) {
+      toast.error("Please fill in Boy's birth details (Date, Time, and Place).");
+      return;
+    }
+    if (!girlDetails.date || !girlDetails.time || !girlDetails.lat) {
+      toast.error("Please fill in Girl's birth details (Date, Time, and Place).");
       return;
     }
 
     setLoading(true);
     try {
-      console.log("Submitting Kundali Matching Request...");
-      const response = await axios.get("/api/kundali-matching", {
-        params: {
-          boy_dob: `${boyDetails.date}T${boyDetails.time}:00+05:30`,
-          boy_lat: boyDetails.lat,
-          boy_lon: boyDetails.lon,
-          girl_dob: `${girlDetails.date}T${girlDetails.time}:00+05:30`,
-          girl_lat: girlDetails.lat,
-          girl_lon: girlDetails.lon,
+      console.log("Submitting Guna Milan Request...");
+
+      // Formatting according to Prokerala API requirement from walkthrough
+      const response = await axios.post("/api/v1/matchmaking/guna-milan", {
+        girl: {
+          name: girlDetails.name || "Girl",
+          datetime: `${girlDetails.date}T${girlDetails.time}:00Z`,
+          location: {
+            lat: parseFloat(girlDetails.lat),
+            lon: parseFloat(girlDetails.lon),
+            tz: 5.5
+          }
         },
+        boy: {
+          name: boyDetails.name || "Boy",
+          datetime: `${boyDetails.date}T${boyDetails.time}:00Z`,
+          location: {
+            lat: parseFloat(boyDetails.lat),
+            lon: parseFloat(boyDetails.lon),
+            tz: 5.5
+          }
+        }
       });
 
-      console.log("Kundali Matching Full API Response:", response);
+      console.log("Matchmaking API Response:", response.data);
 
-      let finalData = response.data;
-      if (finalData?.data) finalData = finalData.data;
-
-      console.log("Extracted Matching Result Data:", finalData);
-
-      if (finalData) {
-        setMatchingResult(finalData);
-        // Scroll to results after a short delay to allow rendering
+      if (response.data.success) {
+        setMatchingResult(response.data.data);
+        toast.success("Compatibility report generated successfully!");
+        // Scroll to results
         setTimeout(() => {
           resultsRef.current?.scrollIntoView({
             behavior: "smooth",
@@ -156,586 +213,364 @@ const KundaliMatchingPage = () => {
           });
         }, 300);
       } else {
-        setError("Received incomplete data from the server.");
+        toast.error(response.data.message || "Failed to generate report.");
       }
     } catch (err: any) {
-      console.error(
-        "Matching Error Details:",
-        err.response?.data || err.message
-      );
-      const errMsg =
-        err.response?.data?.error ||
-        err.message ||
-        "Failed to generate report.";
-      setError(typeof errMsg === "string" ? errMsg : JSON.stringify(errMsg));
+      console.error("Matchmaking Error:", err);
+      toast.error(err.response?.data?.message || err.message || "Failed to generate report.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="main-wrapper">
-      {/* Hero Section */}
-      <section className="banner-part light-back">
-        <div className="overlay-hero">
-          <div className="container">
-            <div className="contant-hero">
-              <div className="row align-items-center">
-                <div className="col-lg-7 col-md-12">
-                  <div className="hero-card shine">
-                    <div className="card-z">
-                      <span className="aib-trust-badge">Free Service</span>
-                      <h1>Kundali Matching</h1>
-                      <h4 className="card-title">Find Your Perfect Soulmate</h4>
-                      <p>
-                        Generate a comprehensive compatibility report based on
-                        birth details to understand the mental, physical, and
-                        spiritual alignment between partners.
-                      </p>
-                      <ul className="list-check">
-                        <li>
-                          <i className="fa-solid fa-check"></i> 8-Point
-                          Ashtakoot Milan
-                        </li>
-                        <li>
-                          <i className="fa-solid fa-check"></i> Mangal Dosha
-                          Checking
-                        </li>
-                        <li>
-                          <i className="fa-solid fa-check"></i> Bhakoot & Nadi
-                          Dosha
-                        </li>
-                        <li>
-                          <i className="fa-solid fa-check"></i> Conclusion &
-                          Report
-                        </li>
-                      </ul>
-                      <button
-                        className="btn-link wfc mt-4 mb-4"
-                        onClick={() =>
-                          window.scrollTo({ top: 600, behavior: "smooth" })
-                        }
-                      >
-                        Match Kundali Now
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-5 col-md-12 text-center">
-                  <div className="right-illus">
-                    <Image
-                      src="/images/horoscope-round2.png"
-                      alt="Zodiac"
-                      width={500}
-                      height={500}
-                      className="w-[90%] mx-auto absolute z-0 left-[10%] top-0 animate-[spin_25s_linear_infinite] opacity-30"
-                    />
-                    <div className="relative z-10 p-5">
-                      <div className="w-[180px] h-[180px] bg-white rounded-full flex items-center justify-center border-4 border-[#fd6410] shadow-2xl mx-auto">
-                        <FaUserFriends className="text-[#fd6410] text-7xl animate-bounce" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <div className="min-h-screen bg-[#fffaf7] overflow-x-hidden relative">
+      <style>{premiumStyles}</style>
+
+      {/* Decorative Ornaments */}
+      <div className="absolute top-20 left-[-10%] opacity-[0.03] text-burgundy animate-spin-slow pointer-events-none">
+        <GiLotus size={600} />
+      </div>
+      <div className="absolute top-[40%] right-[-5%] opacity-[0.02] text-burgundy animate-float pointer-events-none">
+        <GiFlowerEmblem size={400} />
+      </div>
+      <div className="absolute bottom-20 left-[-5%] opacity-[0.03] text-burgundy animate-float pointer-events-none">
+        <GiStarShuriken size={300} />
+      </div>
+
+      {/* Page Header Enhancement */}
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-[#301118] via-[#4a1c26] to-[#301118] text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full border-[40px] border-white/5 rounded-full blur-3xl"></div>
+
+        <div className="container relative z-10 text-center">
+          <div className="flex justify-center mb-6">
+            <div className="bg-[#fd641022] p-4 rounded-full border border-[#fd6410] animate-pulse-soft">
+              <GiSparkles className="text-[#fd6410] text-3xl" />
             </div>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight">
+            Premium <span className="text-[#fd6410]">Guna Milan</span> Report
+          </h1>
+          <p className="text-xl md:text-2xl text-orange-100/80 max-w-3xl mx-auto font-light italic leading-relaxed">
+            &quot;A divine harmony analysis based on ancient Vedic scriptures for a prosperous and blissful union.&quot;
+          </p>
+          <div className="mt-10 flex justify-center gap-4 text-xs font-black uppercase tracking-[4px]">
+            <span className="bg-white/10 px-6 py-2 rounded-full border border-white/5">Authentic Parashara System</span>
+            <span className="bg-white/10 px-6 py-2 rounded-full border border-white/5">Ashta Koot Analysis</span>
           </div>
         </div>
       </section>
 
-      {/* Dual Detail Cards Section */}
-      <section className="space-section light-back">
+      {/* Main Form Section */}
+      <section className="relative z-20 -mt-20 px-4 pb-20">
         <div className="container">
-          <div className="row g-4">
-            {/* Boy's Details */}
-            <div className="col-lg-6">
-              <div className="light-card border rounded-4 border-[#fd64102b] p-8 h-100 shadow-xl group transition-all duration-300 hover:shadow-2xl hover:border-[#fd641055]">
-                <div className="flex items-center gap-4 mb-8 border-b border-[#fd64101a] pb-4">
-                  <div className="bg-blue-500/10 p-3 rounded-2xl text-blue-600 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-sm">
-                    <FaMars size={24} />
+          <div className="max-w-6xl mx-auto">
+            <div className="row g-4 md:g-6">
+              {/* Boy's Details */}
+              <div className="col-lg-6">
+                <div className="glass-card rounded-[3rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(48,17,24,0.1)] border-t-4 border-t-blue-500/50 group transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden h-100">
+                  <div className="absolute top-0 right-0 p-8 opacity-[0.05] group-hover:opacity-[0.1] transition-opacity">
+                    <GiStarShuriken size={100} />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-[#301118] mb-0">
-                      Boy&apos;s Details
-                    </h3>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
-                      The Groom&apos;s Profile
-                    </p>
+                  <div className="flex items-center gap-6 mb-10 pb-6 border-b border-burgundy/5 leading-none">
+                    <div className="bg-blue-500/10 p-4 rounded-3xl text-blue-600 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-lg">
+                      <FaMars size={32} />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-black text-burgundy mb-2">Boy&apos;s Information</h3>
+                      <p className="text-[10px] text-[#fd6410] font-black uppercase tracking-widest m-0">The Prospective Groom</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="row g-4">
-                  <div className="col-12">
-                    <div className="relative group/input">
+                  <div className="space-y-6">
+                    <div className="relative">
                       <input
                         type="text"
-                        className="form-control rounded-3 py-3 pl-4 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
-                        placeholder="Boy's Full Name"
+                        className="form-control rounded-2xl py-4 pl-6 border border-burgundy/10 bg-white/50 text-sm shadow-sm focus:bg-white focus:ring-4 focus:ring-[#fd641011] transition-all"
+                        placeholder="Full Name"
                         value={boyDetails.name}
-                        onChange={(e) =>
-                          handleInputChange("boy", "name", e.target.value)
-                        }
+                        onChange={(e) => handleInputChange("boy", "name", e.target.value)}
                       />
                     </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="relative group/input">
-                      <input
-                        type="date"
-                        className="form-control rounded-3 py-3 pl-4 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
-                        value={boyDetails.date}
-                        onChange={(e) =>
-                          handleInputChange("boy", "date", e.target.value)
-                        }
+                    <div className="row g-4">
+                      <div className="col-md-6">
+                        <input
+                          type="date"
+                          className="form-control rounded-2xl py-4 pl-6 border border-burgundy/10 bg-white/50 text-sm shadow-sm focus:bg-white focus:ring-4 focus:ring-[#fd641011] transition-all"
+                          value={boyDetails.date}
+                          onChange={(e) => handleInputChange("boy", "date", e.target.value)}
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <input
+                          type="time"
+                          className="form-control rounded-2xl py-4 pl-6 border border-burgundy/10 bg-white/50 text-sm shadow-sm focus:bg-white focus:ring-4 focus:ring-[#fd641011] transition-all"
+                          value={boyDetails.time}
+                          onChange={(e) => handleInputChange("boy", "time", e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <LocationAutocomplete
+                        placeholder="Birth Place (City, State)"
+                        onSelect={(val) => handleLocationSelect("boy", val)}
                       />
                     </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="relative group/input">
-                      <input
-                        type="time"
-                        className="form-control rounded-3 py-3 pl-4 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
-                        value={boyDetails.time}
-                        onChange={(e) =>
-                          handleInputChange("boy", "time", e.target.value)
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <LocationAutocomplete
-                      placeholder="Boy's Birth Place (City, State)"
-                      onSelect={(val) => handleLocationSelect("boy", val)}
-                    />
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Girl's Details */}
-            <div className="col-lg-6">
-              <div className="light-card border rounded-4 border-[#fd64102b] p-8 h-100 shadow-xl group transition-all duration-300 hover:shadow-2xl hover:border-[#fd641055]">
-                <div className="flex items-center gap-4 mb-8 border-b border-[#fd64101a] pb-4">
-                  <div className="bg-pink-500/10 p-3 rounded-2xl text-pink-600 group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition-all duration-500 shadow-sm">
-                    <FaVenus size={24} />
+              {/* Girl's Details */}
+              <div className="col-lg-6">
+                <div className="glass-card rounded-[3rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(48,17,24,0.1)] border-t-4 border-t-pink-500/50 group transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden h-100">
+                  <div className="absolute top-0 right-0 p-8 opacity-[0.05] group-hover:opacity-[0.1] transition-opacity">
+                    <GiFlowerEmblem size={100} />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-[#301118] mb-0">
-                      Girl&apos;s Details
-                    </h3>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
-                      The Bride&apos;s Profile
-                    </p>
+                  <div className="flex items-center gap-6 mb-10 pb-6 border-b border-burgundy/5 leading-none">
+                    <div className="bg-pink-500/10 p-4 rounded-3xl text-pink-600 group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition-all duration-500 shadow-lg">
+                      <FaVenus size={32} />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-black text-burgundy mb-2">Girl&apos;s Information</h3>
+                      <p className="text-[10px] text-[#fd6410] font-black uppercase tracking-widest m-0">The Prospective Bride</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="row g-4">
-                  <div className="col-12">
-                    <div className="relative group/input">
+                  <div className="space-y-6">
+                    <div className="relative">
                       <input
                         type="text"
-                        className="form-control rounded-3 py-3 pl-4 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
-                        placeholder="Girl's Full Name"
+                        className="form-control rounded-2xl py-4 pl-6 border border-burgundy/10 bg-white/50 text-sm shadow-sm focus:bg-white focus:ring-4 focus:ring-[#fd641011] transition-all"
+                        placeholder="Full Name"
                         value={girlDetails.name}
-                        onChange={(e) =>
-                          handleInputChange("girl", "name", e.target.value)
-                        }
+                        onChange={(e) => handleInputChange("girl", "name", e.target.value)}
                       />
                     </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="relative group/input">
-                      <input
-                        type="date"
-                        className="form-control rounded-3 py-3 pl-4 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
-                        value={girlDetails.date}
-                        onChange={(e) =>
-                          handleInputChange("girl", "date", e.target.value)
-                        }
+                    <div className="row g-4">
+                      <div className="col-md-6">
+                        <input
+                          type="date"
+                          className="form-control rounded-2xl py-4 pl-6 border border-burgundy/10 bg-white/50 text-sm shadow-sm focus:bg-white focus:ring-4 focus:ring-[#fd641011] transition-all"
+                          value={girlDetails.date}
+                          onChange={(e) => handleInputChange("girl", "date", e.target.value)}
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <input
+                          type="time"
+                          className="form-control rounded-2xl py-4 pl-6 border border-burgundy/10 bg-white/50 text-sm shadow-sm focus:bg-white focus:ring-4 focus:ring-[#fd641011] transition-all"
+                          value={girlDetails.time}
+                          onChange={(e) => handleInputChange("girl", "time", e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <LocationAutocomplete
+                        placeholder="Birth Place (City, State)"
+                        onSelect={(val) => handleLocationSelect("girl", val)}
                       />
                     </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="relative group/input">
-                      <input
-                        type="time"
-                        className="form-control rounded-3 py-3 pl-4 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all"
-                        value={girlDetails.time}
-                        onChange={(e) =>
-                          handleInputChange("girl", "time", e.target.value)
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <LocationAutocomplete
-                      placeholder="Girl's Birth Place (City, State)"
-                      onSelect={(val) => handleLocationSelect("girl", val)}
-                    />
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="text-center mt-12">
-            {error && (
-              <p className="text-red-500 font-bold mb-4 animate-bounce">
-                {error}
-              </p>
-            )}
-            <button
-              disabled={loading}
-              onClick={handleMatch}
-              className="btn-link py-3 px-4 wfc mx-auto uppercase tracking-[3px] text-sm font-black shadow-2xl hover:scale-105 transition-transform flex items-center justify-center gap-3 border-0 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <>
-                  Analyzing Details <FaSpinner className="animate-spin" />
-                </>
-              ) : (
-                <>
-                  Generate Detailed Report{" "}
-                  <FaChevronRight className="animate-pulse" />
-                </>
+            <div className="text-center mt-16">
+              {error && (
+                <p className="text-red-500 font-bold mb-6 animate-bounce">
+                  {error}
+                </p>
               )}
-            </button>
-            <p className="mt-4 text-[10px] text-gray-400 font-bold uppercase tracking-widest flex items-center justify-center gap-2">
-              <MdOutlineSecurity size={14} className="text-[#fd6410]" /> 100%
-              Private & Secure Analysis
-            </p>
+              <button
+                disabled={loading}
+                onClick={handleMatch}
+                className="bg-burgundy text-white py-4 px-12 rounded-full uppercase tracking-[4px] text-xs font-black shadow-[0_15px_30px_rgba(48,17,24,0.3)] hover:scale-105 hover:bg-[#fd6410] transition-all flex items-center justify-center gap-4 mx-auto disabled:opacity-50 disabled:cursor-not-allowed group"
+              >
+                {loading ? (
+                  <>
+                    Analyzing Destiny <FaSpinner className="animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    Match Kundali Now <FaChevronRight className="group-hover:translate-x-2 transition-transform" />
+                  </>
+                )}
+              </button>
+              <div className="mt-8 flex items-center justify-center gap-6 opacity-40">
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"><MdOutlineSecurity size={16} /> 100% Private</div>
+                <div className="w-1 h-1 bg-burgundy rounded-full"></div>
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"><FaRegCheckCircle size={14} /> Vedic Verified</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Results Section */}
       {matchingResult && (
-        <section ref={resultsRef} className="space-section bg-white pt-5">
+        <section ref={resultsRef} className="pb-32 relative">
           <div className="container">
             <div className="max-w-5xl mx-auto">
-              <div className="bg-[#fff9f6] rounded-[3rem] shadow-[0_20px_50px_rgba(253,100,16,0.1)] border border-orange-100 overflow-hidden">
-                <div className="p-8 md:p-16">
-                  {/* Result Header */}
-                  <div className="text-center mb-12">
-                    <div className="inline-flex items-center gap-2 bg-[#fd641012] text-[#fd6410] px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
-                      Analysis Complete
+              {/* Premium Result Container */}
+              <div className="bg-white rounded-[4rem] shadow-[0_40px_100px_rgba(48,17,24,0.15)] overflow-hidden border border-burgundy/5">
+                <div className="p-8 md:p-20 relative">
+                  <div className="absolute top-0 right-0 p-10 opacity-[0.03] animate-spin-slow">
+                    <GiLotus size={300} />
+                  </div>
+
+                  {/* Enhanced Result Header */}
+                  <div className="text-center mb-16 relative z-10">
+                    <div className="inline-flex items-center gap-2 bg-[#fd641012] text-[#fd6410] px-8 py-2 rounded-full text-[12px] font-black uppercase tracking-[4px] mb-10 border border-[#fd641022]">
+                      <GiSparkles /> Analysis Complete <GiSparkles />
                     </div>
-                    <h2 className="text-4xl md:text-5xl font-black text-[#301118] mb-8 leading-tight">
-                      Relationship{" "}
-                      <span className="text-[#fd6410]">Compatibility</span>{" "}
-                      Result
+                    <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-12 leading-tight tracking-tight">
+                      Divine <span className="text-[#fd6410]">Compatibility</span> Verdict
                     </h2>
 
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-20">
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-32">
                       <div className="text-center group">
-                        <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-4 border-2 border-blue-100 group-hover:scale-110 transition-transform duration-500">
-                          <FaMars className="text-blue-500 text-3xl" />
+                        <div className="w-28 h-28 bg-blue-500/5 rounded-[2.5rem] flex items-center justify-center mb-6 border border-blue-100 group-hover:rotate-6 transition-transform duration-500 shadow-inner">
+                          <FaMars className="text-blue-500 text-4xl" />
                         </div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
-                          Groom
-                        </p>
-                        <h4 className="text-xl font-bold text-[#301118]">
-                          {boyDetails.name || "Boy"}
-                        </h4>
+                        <p className="text-[10px] font-black text-[#fd6410] uppercase tracking-widest mb-1">Groom</p>
+                        <h4 className="text-2xl font-black text-burgundy tracking-tight">{boyDetails.name || "Boy"}</h4>
                       </div>
 
                       <div className="relative">
-                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-[#fd6410] shadow-xl border border-orange-50 z-10 relative animate-pulse">
-                          <FaHeart size={24} />
+                        <div className="w-20 h-20 bg-[#fd6410] rounded-full flex items-center justify-center text-white shadow-[0_10px_30px_rgba(253,100,16,0.5)] z-10 relative animate-pulse-soft">
+                          <FaHeart size={32} />
                         </div>
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-[2px] bg-gradient-to-r from-transparent via-orange-200 to-transparent hidden md:block"></div>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-[2px] bg-gradient-to-r from-transparent via-burgundy/10 to-transparent hidden md:block"></div>
                       </div>
 
                       <div className="text-center group">
-                        <div className="w-24 h-24 bg-pink-50 rounded-full flex items-center justify-center mb-4 border-2 border-pink-100 group-hover:scale-110 transition-transform duration-500">
-                          <FaVenus className="text-pink-500 text-3xl" />
+                        <div className="w-28 h-28 bg-pink-500/5 rounded-[2.5rem] flex items-center justify-center mb-6 border border-pink-100 group-hover:-rotate-6 transition-transform duration-500 shadow-inner">
+                          <FaVenus className="text-pink-500 text-4xl" />
                         </div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
-                          Bride
-                        </p>
-                        <h4 className="text-xl font-bold text-[#301118]">
-                          {girlDetails.name || "Girl"}
-                        </h4>
+                        <p className="text-[10px] font-black text-[#fd6410] uppercase tracking-widest mb-1">Bride</p>
+                        <h4 className="text-2xl font-black text-burgundy tracking-tight">{girlDetails.name || "Girl"}</h4>
                       </div>
                     </div>
                   </div>
 
-                  {/* Detailed Kundali Data */}
-                  <div className="row g-4 mb-12">
-                    {/* Boy's Kundali Card */}
-                    <div className="col-lg-6">
-                      <div className="bg-white rounded-[2rem] p-8 border border-blue-50 h-100 shadow-sm">
-                        <h4 className="text-[11px] font-black text-blue-600 uppercase tracking-[3px] mb-6 flex items-center gap-2">
-                          <FaMars /> Groom&apos;s Kundali
-                        </h4>
-                        <div className="space-y-4">
-                          <div className="flex justify-between border-b border-gray-50 pb-2 gap-4">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase whitespace-nowrap">
-                              Nakshatra
-                            </span>
-                            <span className="text-sm font-bold text-[#301118] text-right">
-                              {renderContent(
-                                matchingResult.boy_info?.nakshatra?.name
-                              )}{" "}
-                              (
-                              {renderContent(
-                                matchingResult.boy_info?.nakshatra?.lord?.name
-                              )}
-                              , Pada{" "}
-                              {renderContent(
-                                matchingResult.boy_info?.nakshatra?.pada
-                              )}
-                              )
-                            </span>
-                          </div>
-                          <div className="flex justify-between border-b border-gray-50 pb-2 gap-4">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase whitespace-nowrap">
-                              Rasi (Moon Sign)
-                            </span>
-                            <span className="text-sm font-bold text-[#301118] text-right">
-                              {renderContent(
-                                matchingResult.boy_info?.rasi?.name
-                              )}{" "}
-                              (
-                              {renderContent(
-                                matchingResult.boy_info?.rasi?.lord?.name
-                              )}
-                              )
-                            </span>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-x-8 gap-y-3 pt-2">
-                            {matchingResult.boy_info?.koot &&
-                              Object.entries(matchingResult.boy_info.koot).map(
-                                ([key, value]) => (
-                                  <div
-                                    key={key}
-                                    className="flex justify-between items-center border-b border-gray-50 pb-1"
-                                  >
-                                    <span className="text-[9px] font-bold text-gray-300 uppercase">
-                                      {key}
-                                    </span>
-                                    <span className="text-[11px] font-bold text-[#301118] uppercase">
-                                      {renderContent(value)}
-                                    </span>
-                                  </div>
-                                )
-                              )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Girl's Kundali Card */}
-                    <div className="col-lg-6">
-                      <div className="bg-white rounded-[2rem] p-8 border border-pink-50 h-100 shadow-sm">
-                        <h4 className="text-[11px] font-black text-pink-600 uppercase tracking-[3px] mb-6 flex items-center gap-2">
-                          <FaVenus /> Bride&apos;s Kundali
-                        </h4>
-                        <div className="space-y-4">
-                          <div className="flex justify-between border-b border-gray-50 pb-2 gap-4">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase whitespace-nowrap">
-                              Nakshatra
-                            </span>
-                            <span className="text-sm font-bold text-[#301118] text-right">
-                              {renderContent(
-                                matchingResult.girl_info?.nakshatra?.name
-                              )}{" "}
-                              (
-                              {renderContent(
-                                matchingResult.girl_info?.nakshatra?.lord?.name
-                              )}
-                              , Pada{" "}
-                              {renderContent(
-                                matchingResult.girl_info?.nakshatra?.pada
-                              )}
-                              )
-                            </span>
-                          </div>
-                          <div className="flex justify-between border-b border-gray-50 pb-2 gap-4">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase whitespace-nowrap">
-                              Rasi (Moon Sign)
-                            </span>
-                            <span className="text-sm font-bold text-[#301118] text-right">
-                              {renderContent(
-                                matchingResult.girl_info?.rasi?.name
-                              )}{" "}
-                              (
-                              {renderContent(
-                                matchingResult.girl_info?.rasi?.lord?.name
-                              )}
-                              )
-                            </span>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-x-8 gap-y-3 pt-2">
-                            {matchingResult.girl_info?.koot &&
-                              Object.entries(matchingResult.girl_info.koot).map(
-                                ([key, value]) => (
-                                  <div
-                                    key={key}
-                                    className="flex justify-between items-center border-b border-gray-50 pb-1"
-                                  >
-                                    <span className="text-[9px] font-bold text-gray-300 uppercase">
-                                      {key}
-                                    </span>
-                                    <span className="text-[11px] font-bold text-[#301118] uppercase">
-                                      {renderContent(value)}
-                                    </span>
-                                  </div>
-                                )
-                              )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
+                  {/* Main Outcome Grid */}
                   <div className="row g-5">
-                    {/* Score Card */}
+                    {/* Visual Score Gauge */}
                     <div className="col-lg-5">
-                      <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-orange-50 text-center h-100 flex flex-col items-center justify-center">
-                        <h3 className="text-[11px] font-black text-[#301118] uppercase tracking-[3px] mb-8">
-                          Final Guna Score
-                        </h3>
+                      <div className="bg-[#fffcf9] rounded-[3.5rem] p-12 border border-burgundy/5 text-center h-100 flex flex-col items-center justify-center shadow-lg relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-6 opacity-[0.02] group-hover:rotate-12 transition-transform">
+                          <GiFlowerEmblem size={150} />
+                        </div>
+                        <h3 className="text-[12px] font-black text-burgundy uppercase tracking-[4px] mb-10 relative z-10">Milan Score</h3>
 
-                        <div className="relative inline-flex items-center justify-center">
-                          <svg className="w-48 h-48 transform -rotate-90">
+                        <div className="relative inline-flex items-center justify-center z-10">
+                          <svg className="w-56 h-56 transform -rotate-90">
+                            <circle className="text-[#30111808]" strokeWidth="16" stroke="currentColor" fill="transparent" r="95" cx="112" cy="112" />
                             <circle
-                              className="text-gray-100"
-                              strokeWidth="12"
-                              stroke="currentColor"
-                              fill="transparent"
-                              r="80"
-                              cx="96"
-                              cy="96"
-                            />
-                            <circle
-                              className="text-[#fd6410]"
-                              strokeWidth="12"
-                              strokeDasharray={
-                                (
-                                  ((matchingResult.guna_milan?.total_points ??
-                                    matchingResult.guna_milan?.total?.score ??
-                                    matchingResult.total?.score ??
-                                    matchingResult.total_score ??
-                                    0) /
-                                    (matchingResult.guna_milan
-                                      ?.maximum_points ?? 36)) *
-                                  (2 * Math.PI * 80)
-                                ).toString() +
-                                " " +
-                                2 * Math.PI * 80
-                              }
+                              className="text-[#fd6410] transition-all duration-1000 ease-out"
+                              strokeWidth="16"
+                              strokeDasharray={`${((matchingResult.guna_milan?.total_points ?? 0) / (matchingResult.guna_milan?.maximum_points ?? 36)) * (2 * Math.PI * 95)} ${2 * Math.PI * 95}`}
                               strokeLinecap="round"
                               stroke="currentColor"
                               fill="transparent"
-                              r="80"
-                              cx="96"
-                              cy="96"
-                              style={{
-                                transition: "stroke-dasharray 1s ease-in-out",
-                              }}
+                              r="95"
+                              cx="112"
+                              cy="112"
                             />
                           </svg>
                           <div className="absolute flex flex-col items-center">
-                            <span className="text-6xl font-black text-[#301118] leading-none mb-1">
-                              {matchingResult.guna_milan?.total_points ??
-                                matchingResult.guna_milan?.total?.score ??
-                                matchingResult.total?.score ??
-                                matchingResult.total_score ??
-                                0}
+                            <span className="text-7xl font-black text-burgundy leading-none mb-2 tracking-tighter">
+                              {matchingResult.guna_milan?.total_points ?? 0}
                             </span>
-                            <span className="text-sm font-black text-gray-300 uppercase tracking-tighter">
-                              out of{" "}
-                              {matchingResult.guna_milan?.maximum_points ?? 36}
-                            </span>
+                            <span className="text-[10px] font-black text-gray-300 uppercase tracking-[2px]">Points of 36</span>
                           </div>
                         </div>
 
-                        <div className="mt-10">
+                        <div className="mt-12 relative z-10">
                           <div
-                            className={`inline-flex items-center gap-2 px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest ${
-                              (matchingResult.guna_milan?.total_points ??
-                                matchingResult.guna_milan?.total?.score ??
-                                matchingResult.total?.score ??
-                                matchingResult.total_score ??
-                                0) >=
-                              (matchingResult.guna_milan?.maximum_points ??
-                                36) /
-                                2
-                                ? "bg-green-500 text-white shadow-lg shadow-green-100"
-                                : "bg-[#301118] text-white shadow-lg shadow-orange-100"
-                            }`}
+                            className={`px-12 py-4 rounded-full text-xs font-black uppercase tracking-[3px] shadow-2xl transition-all ${(matchingResult.guna_milan?.total_points ?? 0) >= 18
+                              ? "bg-green-500 text-white shadow-green-200"
+                              : "bg-burgundy text-white shadow-burgundy/20"
+                              }`}
                           >
-                            {(matchingResult.guna_milan?.total_points ??
-                              matchingResult.guna_milan?.total?.score ??
-                              matchingResult.total?.score ??
-                              matchingResult.total_score ??
-                              0) >=
-                            (matchingResult.guna_milan?.maximum_points ?? 36) /
-                              2
-                              ? "High Compatibility"
+                            {(matchingResult.guna_milan?.total_points ?? 0) >= 18
+                              ? "Excellent Harmony"
                               : "Moderate Match"}
                           </div>
-                          <p className="mt-4 text-[10px] text-gray-400 font-bold max-w-[200px] leading-relaxed">
-                            {(matchingResult.guna_milan?.total_points ??
-                              matchingResult.guna_milan?.total?.score ??
-                              matchingResult.total?.score ??
-                              0) >=
-                            (matchingResult.guna_milan?.maximum_points ?? 36) /
-                              2
-                              ? "Excellent spiritual and mental alignment for marriage."
-                              : "Some aspects may require mutual understanding and adjustments."}
-                          </p>
                         </div>
                       </div>
                     </div>
 
-                
+                    {/* Pro Expert Verdict */}
+                    <div className="col-lg-7">
+                      <div className="bg-gradient-to-br from-[#301118] to-[#1a090d] rounded-[3.5rem] p-12 md:p-16 text-white relative overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.3)] h-100 group">
+                        <div className="absolute -top-10 -right-10 w-64 h-64 bg-white opacity-[0.02] rounded-full blur-3xl"></div>
+                        <div className="absolute bottom-0 left-0 p-10 opacity-[0.05] animate-float">
+                          <GiLotus size={250} />
+                        </div>
 
-                    {/* Conclusion Card */}
-                    <div className="col-7">
-                      <div className="bg-gradient-to-br from-[#301118] to-[#4a1c26] rounded-[3rem] p-10 md:p-14 text-white relative overflow-hidden shadow-2xl">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#fd641008] rounded-full -mr-16 -mt-16"></div>
-                        <div className="relative z-10 text-center md:text-left">
-                          <div className="flex flex-col md:flex-row items-center gap-8">
-                            <div className="bg-[#fd6410] w-20 h-20 rounded-3xl flex items-center justify-center shrink-0 shadow-2xl rotate-3">
-                              <MdOutlineSecurity size={40} />
+                        <div className="relative z-10">
+                          <div className="flex flex-col md:flex-row items-center gap-10 mb-12">
+                            <div className="bg-[#fd6410] p-6 rounded-[2rem] flex items-center justify-center shrink-0 shadow-[0_15px_30px_rgba(253,100,16,0.3)] rotate-3">
+                              <MdOutlineSecurity size={48} />
                             </div>
-                            <div className="flex-1">
-                              <h4 className="text-[12px] font-black uppercase tracking-[4px] mb-4 text-[#fd6410]">
-                                Astro-Expert Conclusion
-                              </h4>
-                              <p className="text-lg italic opacity-95 leading-relaxed m-0 font-display">
-                                &quot;
-                                {renderContent(
-                                  matchingResult.message?.description ||
-                                    matchingResult.guna_milan?.conclusion
-                                      ?.report ||
-                                    matchingResult.conclusion?.report ||
-                                    matchingResult.conclusion ||
-                                    "Our analysis suggests consulting with a professional astrologer for a truly personalized compatibility reading."
-                                )}
-                                &quot;
-                              </p>
+                            <div className="text-center md:text-left">
+                              <h4 className="text-[12px] font-black uppercase tracking-[5px] mb-2 text-[#fd6410] opacity-80">Astro-Expert Conclusion</h4>
+                              <p className="text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">Master Summary</p>
                             </div>
                           </div>
-                          <div className="mt-10 pt-10 border-t border-white/5 flex flex-wrap justify-center md:justify-start gap-4">
-                            <button
-                              className="bg-white text-[#301118] px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
-                              onClick={() => window.print()}
-                            >
-                              Print Report
-                            </button>
-                            <button className="bg-white/10 text-white border border-white/10 px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-white/20 transition-all">
-                              Download PDF
-                            </button>
+
+                          <div className="bg-white/5 p-8 rounded-3xl border border-white/5 backdrop-blur-sm">
+                            <p className="text-xl md:text-2xl italic opacity-90 leading-relaxed m-0 font-light border-l-4 border-[#fd6410] pl-8">
+                              &quot;{renderContent(matchingResult.message?.description || "Our automated analysis indicates a significant celestial alignment.")}&quot;
+                            </p>
+                          </div>
+
+                          <div className="mt-12 pt-10 border-t border-white/5 flex flex-wrap justify-center md:justify-start gap-6">
+                            <button className="bg-[#fd6410] text-white px-10 py-4 rounded-full text-[11px] font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-[#fd641022]" onClick={() => window.print()}>Print Detailed Report</button>
+                            <button className="bg-white/5 text-white border border-white/20 px-10 py-4 rounded-full text-[11px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">Download PDF</button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
+
+                  {/* Ashta Koot Details */}
+                  {matchingResult.guna_milan?.ashta_koot && (
+                    <div className="mt-20 relative z-10">
+                      <div className="flex items-center gap-8 mb-12">
+                        <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent to-[#fd64101a]"></div>
+                        <h4 className="text-[16px] font-black uppercase tracking-[6px] text-burgundy whitespace-nowrap">
+                          <span className="text-[#fd6410]">Ashta Koot</span> breakdown
+                        </h4>
+                        <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent to-[#fd64101a]"></div>
+                      </div>
+
+                      <div className="row g-4">
+                        {Object.entries(matchingResult.guna_milan.ashta_koot).map(([key, value]: [string, any], idx) => (
+                          <div key={key} className="col-md-6 col-lg-3">
+                            <div className="bg-white border border-burgundy/5 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+                              <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                                <GiSparkles size={40} className="text-[#fd6410]" />
+                              </div>
+                              <p className="text-[9px] font-black uppercase tracking-widest text-[#fd6410] mb-2">Factor {idx + 1}</p>
+                              <h5 className="text-lg font-black text-burgundy capitalize mb-4">{key}</h5>
+                              <div className="flex justify-between items-end">
+                                <div>
+                                  <span className="text-3xl font-black text-burgundy">{value.points}</span>
+                                  <span className="text-[10px] font-bold text-gray-300 uppercase ml-2">/ {value.maximum_points}</span>
+                                </div>
+                                <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${value.points > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                                  {value.description}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -743,167 +578,46 @@ const KundaliMatchingPage = () => {
         </section>
       )}
 
-      {/* Why Guna Milan Section */}
-      <section className="space-section bg-[#301118] text-white">
-        <div className="container">
-          <div className="row g-5 align-items-center">
-            <div className="col-lg-6">
-              <h2 className="text-4xl font-bold mb-6">
-                Importance of <span className="text-[#fd6410]">Guna Milan</span>
+      {/* Trust & Methodology Section */}
+      <section className="py-32 bg-[#301118] text-white overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#fd6410] opacity-[0.03] rounded-full blur-[120px] -mr-[400px] -mt-[400px]"></div>
+        <div className="container relative z-10">
+          <div className="row justify-content-center mb-20">
+            <div className="col-lg-8 text-center">
+              <span className="inline-block bg-[#fd6410] text-white px-6 py-1 rounded-full text-[10px] font-black uppercase tracking-[4px] mb-8">Vedic Methodology</span>
+              <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-tight">
+                Authentic <span className="text-[#fd6410]">Ashtakoot</span> System
               </h2>
-              <p className="text-orange-100/90 mb-8 leading-relaxed italic">
-                In Vedic Astrology, matching horoscopes is vital for a happy and
-                enduring marriage. The Guna Milan system checks 8 different
-                aspects (Ashtakoot) to ensure overall compatibility.
-              </p>
-
-              <div className="space-y-4">
-                {[
-                  "Mental Compatibility (Gana)",
-                  "Physical Attraction (Yoni)",
-                  "Destiny & Harmony (Bhakoot)",
-                  "Progeny & Health (Nadi)",
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-4 bg-white/5 p-4 rounded-4 border border-white/5 transition-all hover:bg-white/10"
-                  >
-                    <div className="bg-[#fd6410] p-2 rounded-full">
-                      <FaRegCheckCircle size={14} />
-                    </div>
-                    <span className="font-bold text-sm tracking-wide">
-                      {item}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <div className="bg-white/5 p-10 rounded-[4rem] text-center border-2 border-dashed border-[#fd64103d] relative">
-                <div className="absolute top-0 left-0 w-20 h-20 bg-[#fd6410] rounded-full -ml-8 -mt-8 flex items-center justify-center shadow-lg">
-                  <FaHeart className="text-white text-3xl animate-pulse" />
-                </div>
-                {matchingResult ? (
-                  <>
-                    <h3 className="text-6xl font-black mb-2 text-[#fd6410]">
-                      {matchingResult.guna_milan?.total_points ??
-                        matchingResult.guna_milan?.total?.score ??
-                        0}
-                    </h3>
-                    <h4 className="text-2xl font-bold mb-6">
-                      Your Match Score
-                    </h4>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="text-6xl font-black mb-2 text-[#fd6410]">
-                      36
-                    </h3>
-                    <h4 className="text-2xl font-bold mb-6">Total Gunas</h4>
-                  </>
-                )}
-                <div className="space-y-4 text-left border-t border-white/10 pt-6">
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-sm font-bold opacity-60">
-                      Excellent Match
-                    </span>
-                    <span className="text-sm font-bold text-green-400">
-                      25 - 36 Points
-                    </span>
-                  </div>
-                  <div className="w-full bg-white/10 h-1.5 rounded-full">
-                    <div
-                      className="bg-green-400 h-full rounded-full shadow-[0_0_10px_rgba(74,222,128,0.5)] transition-all duration-1000"
-                      style={{
-                        width: matchingResult
-                          ? `${Math.min(100, ((matchingResult.guna_milan?.total_points ?? 0) / 36) * 100)}%`
-                          : "80%",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between items-baseline mt-4">
-                    <span className="text-sm font-bold opacity-60">
-                      Normal Match
-                    </span>
-                    <span className="text-sm font-bold text-orange-400">
-                      18 - 24 Points
-                    </span>
-                  </div>
-                  <div className="w-full bg-white/10 h-1.5 rounded-full">
-                    <div
-                      className="bg-orange-400 h-full rounded-full shadow-[0_0_10px_rgba(251,146,60,0.5)] transition-all duration-1000"
-                      style={{
-                        width: matchingResult
-                          ? `${Math.min(100, ((matchingResult.guna_milan?.total_points ?? 0) / 24) * 100)}%`
-                          : "50%",
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Simple Information Section */}
-      <section className="space-section light-back">
-        <div className="container">
-          <div className="row justify-content-center mb-12">
-            <div className="col-lg-7 text-center">
-              <span className="aib-trust-badge mb-3">Service Excellence</span>
-              <h2 className="text-3xl font-bold text-[#301118]">
-                Expert Matching Insights
-              </h2>
-              <p className="text-gray-500 text-sm mt-3">
-                Discover why thousands of couples trust our Vedic compatibility
-                reports for their journey together.
+              <p className="text-xl text-orange-100/60 leading-relaxed font-light italic">
+                Our analysis is built on the foundation of Bhrigu Samhita and Parashara Horasastra, ensuring that every guna has the spiritual weight it deserves.
               </p>
             </div>
           </div>
+
           <div className="row g-4">
-            <div className="col-md-4">
-              <div className="light-card border border-[#fd64102b] rounded-4 p-8 text-center h-100 shadow-xl border-b-4 border-b-[#fd6410] group transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:bg-orange-50/10">
-                <div className="bg-orange-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-[#fd6410] group-hover:rotate-12 transition-transform duration-500 shadow-sm">
-                  <FaShieldAlt size={34} />
+            {[
+              { title: "Varan", desc: "Checks for personality matching", icon: FaUser },
+              { title: "Vashya", desc: "Checks for mutual attraction", icon: FaHeart },
+              { title: "Tara", desc: "Checks for health and longevity", icon: GiStarShuriken },
+              { title: "Yoni", desc: "Checks for physical compatibility", icon: GiLion },
+              { title: "Maitri", desc: "Checks for psychological bond", icon: FaHandshake },
+              { title: "Gana", desc: "Checks for temperament matching", icon: GiYinYang },
+              { title: "Bhakoot", desc: "Checks for overall family harmony", icon: FaUserFriends },
+              { title: "Nadi", desc: "Checks for spiritual connection", icon: GiLotus }
+            ].map((koot, i) => (
+              <div key={koot.title} className="col-6 col-md-3">
+                <div className="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-[3rem] hover:bg-white/10 transition-all duration-500 group cursor-default h-100 relative overflow-hidden flex flex-col items-center text-center border-l-4 border-l-transparent hover:border-l-[#fd6410]">
+                  <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.1] group-hover:scale-125 group-hover:rotate-12 transition-all duration-700">
+                    <koot.icon size={120} />
+                  </div>
+                  <div className="bg-gradient-to-br from-[#fd6410] to-[#301118] text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-8 shadow-lg group-hover:scale-110 transition-all duration-500">
+                    <span className="text-sm font-black italic">{i + 1}</span>
+                  </div>
+                  <h4 className="text-xl font-bold mb-3 tracking-tight group-hover:text-[#fd6410] transition-colors">{koot.title}</h4>
+                  <p className="text-[11px] text-white/50 m-0 leading-relaxed font-light italic">{koot.desc}</p>
                 </div>
-                <h4 className="text-xl font-bold mb-3 text-[#301118]">
-                  Vedic Standards
-                </h4>
-                <p className="text-sm text-gray-500 leading-relaxed italic m-0 px-2">
-                  Our calculations follow the authentic Parashara system for
-                  highest accuracy.
-                </p>
               </div>
-            </div>
-            <div className="col-md-4">
-              <div className="light-card border border-[#fd64102b] rounded-4 p-8 text-center h-100 shadow-xl border-b-4 border-b-blue-500 group transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:bg-blue-50/10">
-                <div className="bg-blue-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-500 group-hover:rotate-12 transition-transform duration-500 shadow-sm">
-                  <FaMars size={34} />
-                </div>
-                <h4 className="text-xl font-bold mb-3 text-[#301118]">
-                  Manglik Check
-                </h4>
-                <p className="text-sm text-gray-500 leading-relaxed italic m-0 px-2">
-                  Deep analysis of Mars position for Dosha detection and
-                  remedies.
-                </p>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div className="light-card border border-[#fd64102b] rounded-4 p-8 text-center h-100 shadow-xl border-b-4 border-b-pink-500 group transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:bg-pink-50/10">
-                <div className="bg-pink-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-pink-500 group-hover:rotate-12 transition-transform duration-500 shadow-sm">
-                  <FaVenus size={34} />
-                </div>
-                <h4 className="text-xl font-bold mb-3 text-[#301118]">
-                  Love Compatibility
-                </h4>
-                <p className="text-sm text-gray-500 leading-relaxed italic m-0 px-2">
-                  Understand the emotional and psychological bond between both
-                  charts.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>

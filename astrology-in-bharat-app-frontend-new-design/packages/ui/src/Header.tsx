@@ -38,17 +38,17 @@ const SwiperNavButtons = () => {
 const SERVICES_DATA = [
   {
     id: 1,
-    label: "My Kundli",
+    label: "Matchmaking",
     icon: "images/top-icon1.png",
     href: PATHS.KUNDALI_MATCHING,
     isInternal: true,
   },
   {
     id: 2,
-    label: "Numerology",
+    label: "Guna Milan",
     icon: "images/top-icon2.png",
-    href: "#",
-    isInternal: false,
+    href: PATHS.KUNDALI_MATCHING,
+    isInternal: true,
   },
   {
     id: 3,
@@ -59,25 +59,25 @@ const SERVICES_DATA = [
   },
   {
     id: 4,
-    label: "Life Horoscope",
+    label: "Love Match",
     icon: "images/top-icon4.png",
-    href: "#",
-    isInternal: false,
-  },
-  {
-    id: 5,
-    label: "Love Report",
-    icon: "images/top-icon5.png",
-    href: "#",
-    isInternal: false,
-  },
-  {
-    id: 6,
-    label: "Match Analysis",
-    icon: "images/top-icon6.png",
     href: PATHS.KUNDALI_MATCHING,
     isInternal: true,
   },
+  /* {
+    id: 5,
+    label: "Match Check",
+    icon: "images/top-icon5.png",
+    href: PATHS.KUNDALI_MATCHING,
+    isInternal: true,
+  },
+  {
+    id: 6,
+    label: "Vedic Match",
+    icon: "images/top-icon6.png",
+    href: PATHS.KUNDALI_MATCHING,
+    isInternal: true,
+  }, */
   {
     id: 7,
     label: "Match Analysis",
@@ -85,13 +85,13 @@ const SERVICES_DATA = [
     href: PATHS.KUNDALI_MATCHING,
     isInternal: true,
   },
-  {
+  /* {
     id: 8,
     label: "Match Analysis",
     icon: "images/top-icon6.png",
     href: PATHS.KUNDALI_MATCHING,
     isInternal: true,
-  },
+  }, */
 ];
 
 interface HeaderProps {
@@ -445,7 +445,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                             Kundali Matching
                           </Link>
                         </li>
-                        <li>
+                        {/* <li>
                           <Link
                             className="dropdown-item"
                             href={PATHS.NAKSHATRA_MILAN}
@@ -476,7 +476,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                           >
                             Kaal Sarp Dosh
                           </Link>
-                        </li>
+                        </li> */}
                         <li>
                           <Link
                             className="dropdown-item"
@@ -485,7 +485,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                             Love Calculator
                           </Link>
                         </li>
-                        <li>
+                        {/* <li>
                           <Link className="dropdown-item" href={PATHS.SUN_SIGN}>
                             Sun Sign
                           </Link>
@@ -521,7 +521,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                           >
                             Free Services
                           </Link>
-                        </li>
+                        </li> */}
                         <li>
                           <Link
                             className="dropdown-item"
@@ -593,36 +593,27 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
 
               {SERVICES_DATA.map((service) => (
                 <SwiperSlide key={service.id}>
-                  <div className="flx-icon-item swiperSliders ">
-                    {service.isInternal ? (
-                      <Link
-                        href={service.href}
-                        className="flx-icon text-decoration-none text-dark"
-                      >
-                        <NextImage
-                          src={`/${service.icon}`}
-                          className="icon-top-flx"
-                          alt={service.label}
-                          width={40}
-                          height={40}
-                        />
-                        <span>{service.label}</span>
-                      </Link>
-                    ) : (
-                      <a
-                        href={service.href}
-                        className="flx-icon text-decoration-none text-dark"
-                      >
-                        <NextImage
-                          src={`/${service.icon}`}
-                          className="icon-top-flx"
-                          alt={service.label}
-                          width={40}
-                          height={40}
-                        />
-                        <span>{service.label}</span>
-                      </a>
-                    )}
+                  <div className="flx-icon-item swiperSliders">
+                    <a
+                      href={service.href}
+                      onClick={(e) => {
+                        if (service.isInternal && (service.href as any) !== "#") {
+                          e.preventDefault();
+                          router.push(service.href);
+                        }
+                      }}
+                      className="flx-icon text-decoration-none text-dark"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <NextImage
+                        src={`/${service.icon}`}
+                        className="icon-top-flx"
+                        alt={service.label}
+                        width={40}
+                        height={40}
+                      />
+                      <span>{service.label}</span>
+                    </a>
                   </div>
                 </SwiperSlide>
               ))}
