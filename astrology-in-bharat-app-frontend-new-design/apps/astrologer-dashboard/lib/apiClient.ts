@@ -41,6 +41,21 @@ apiClient.interceptors.request.use(
         } else {
             console.warn(`[API] ${config.method?.toUpperCase()} ${config.url} - No Token Found!`);
         }
+
+        // Add expert: true to payloads for POST, PUT, PATCH
+        const method = config.method?.toLowerCase();
+        if (['post', 'put', 'patch'].includes(method || '')) {
+            if (config.data instanceof FormData) {
+                if (!config.data.has('expert')) {
+                    config.data.append('expert', 'true');
+                }
+            } else if (typeof config.data === 'object' && config.data !== null) {
+                config.data.expert = true;
+            } else if (!config.data) {
+                config.data = { expert: true };
+            }
+        }
+
         return config;
     },
     (error) => {

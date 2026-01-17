@@ -28,17 +28,17 @@ export interface AddressDto {
 }
 
 export const getClientProfile = async () => {
-    const response = await apiClient.get('/client/profile');
+    const response = await apiClient.get('/client');
     return response.data;
 };
 
 export const updateClientProfile = async (data: Partial<ClientProfileData>) => {
-    const response = await apiClient.patch('/client/profile', data);
+    const response = await apiClient.patch('/client', data);
     return response.data;
 };
 
 export const createClientProfile = async (data: Partial<ClientProfileData>) => {
-    const response = await apiClient.post('/client/profile', data);
+    const response = await apiClient.post('/client', data);
     return response.data;
 };
 
@@ -46,7 +46,7 @@ export const uploadClientDocument = async (file: File): Promise<{ url: string; m
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await apiClient.post('/client/profile/upload-document', formData);
+    const response = await apiClient.post('/client/upload-document', formData);
     return response.data;
 };
 

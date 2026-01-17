@@ -47,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
     try {
       setLoading(true);
       const newStatus = !isOnline;
-      await apiClient.patch('/expert/profile/status', { is_available: newStatus });
+      await apiClient.patch('/expert/status', { is_available: newStatus });
       setIsOnline(newStatus);
     } catch (err) {
       console.error("Failed to update status:", err);

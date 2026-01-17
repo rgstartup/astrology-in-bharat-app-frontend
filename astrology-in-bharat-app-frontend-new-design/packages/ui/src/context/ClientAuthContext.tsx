@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 // API client with proper cookie handling
 export const apiClient = axios.create({
     baseURL: '/api/v1',
-    withCredentials: true,
+    withCredentials: false, // Set to false to avoid cookie collision with Dashboard on localhost
 });
 
 // Add a request interceptor to include the clientAccessToken
@@ -76,8 +76,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
 
         // Clear all local storage items
         localStorage.removeItem('clientAccessToken');
-        localStorage.removeItem('accessToken'); // Clear any other tokens
-        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('refreshToken'); // If any client refresh token exists
 
         console.log("🗑️ Cleared local storage and state");
 
@@ -116,7 +115,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
             setClientLoading(true);
         }
         try {
-            const res = await apiClient.get('/client/profile');
+            const res = await apiClient.get('/client');
             console.log("📊 Profile response:", res.data);
 
             // If we get a 200 response (even with empty data), user is authenticated
@@ -181,18 +180,24 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
         }
 
         const initClientAuth = async () => {
+            if (typeof window === 'undefined') return;
+
             const token = localStorage.getItem('clientAccessToken');
+            console.log("🔍 [ClientAuth] Initializing... Token found:", !!token);
+
             if (!token) {
-                console.log("ℹ️ No clientAccessToken found, skipping auth check");
+                console.log("ℹ️ [ClientAuth] No clientAccessToken found, skipping auth check");
                 setIsClientAuthenticated(false);
                 setClientLoading(false);
                 return;
             }
 
+            // OPTIMISTIC: Assume authenticated if we have a token
+            setIsClientAuthenticated(true);
+
             try {
-                console.log("🔍 Checking authentication status...");
-                // Check authentication by calling profile endpoint with anti-cache headers
-                const res = await apiClient.get('/client/profile', {
+                console.log("🔍 [ClientAuth] Verifying session via /client/profile...");
+                const res = await apiClient.get('/client', {
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
                         'Pragma': 'no-cache',
@@ -203,7 +208,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                     }
                 });
 
-                console.log("📊 Profile response:", res.data);
+                console.log("📊 [ClientAuth] Profile response mapping...");
 
                 // If we get a 200 response (even with empty data), user is authenticated
                 // because the endpoint is protected by JwtAuthGuard
@@ -244,19 +249,32 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                     console.log("❌ No authentication data found");
                 }
             } catch (err: any) {
-                console.error("❌ Client Auth init error:", err);
-                // If we get 401, user is not authenticated
+                console.error("❌ [ClientAuth] Auth init error:", err);
+                // If we get 401, user is definitely not authenticated or token expired
                 if (err.response?.status === 401) {
+                    console.log("❌ [ClientAuth] User not authenticated (401), clearing session");
                     setIsClientAuthenticated(false);
                     setClientUser(null);
-                    console.log("❌ User not authenticated (401)");
+                    localStorage.removeItem('clientAccessToken');
+                } else if (err.response?.status === 404) {
+                    // NEW: Treat 404 as authenticated but no profile yet
+                    console.log("✅ [ClientAuth] Profile not found (404), but user is authenticated");
+                    setIsClientAuthenticated(true);
+                    setClientUser({
+                        id: 0,
+                        name: "New Cosmic Explorer",
+                        email: "",
+                        roles: []
+                    });
                 } else {
-                    // Other errors might be network issues, don't clear auth state
-                    console.log("⚠️ Network error, keeping current auth state");
+                    // Other errors (500, network) - better to stay "authenticated" 
+                    // and let the page handle the error or show cached data
+                    console.log("⚠️ [ClientAuth] Network or server error, assuming session is still valid");
+                    setIsClientAuthenticated(true);
                 }
             } finally {
                 setClientLoading(false);
-                authCheckRef.current = false; // Reset ref after completion
+                authCheckRef.current = false;
             }
         };
 

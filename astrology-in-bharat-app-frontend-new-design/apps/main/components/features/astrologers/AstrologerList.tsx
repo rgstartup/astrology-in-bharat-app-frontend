@@ -239,7 +239,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
         };
 
         const response = await axios.get(
-          `${API_BASE_URL}/expert/profile/list`,
+          `${API_BASE_URL}/expert/list`,
           { params }
         );
         const { data, pagination } = response.data;

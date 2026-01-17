@@ -141,7 +141,7 @@ const Page: React.FC = () => {
     setError(null);
     try {
       const qs = buildQueryString();
-      const url = `http://localhost:4000/api/v1/expert/profile/list?${qs}`;
+      const url = `http://localhost:4000/api/v1/expert/list?${qs}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`Request failed: ${res.status}`);
       const json = await res.json();

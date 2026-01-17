@@ -60,7 +60,7 @@ export const getExperts = async (
       }
     });
 
-    const url = `${API_BASE_URL}/expert/profile/list?${queryParams.toString()}`;
+    const url = `${API_BASE_URL}/expert/list?${queryParams.toString()}`;
 
     const response = await fetch(url, {
       cache: 'no-store',

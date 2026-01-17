@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Users, CalendarCheck, Clock, Wallet } from "lucide-react";
 import { StatsCards } from "../../../../shared/components/StatsCard";
@@ -7,7 +8,10 @@ import { ManageConsultaions } from "@/components/dashboard/ManageConsultaions";
 // import { MyConsultations } from "@/components/MyConsulation";
 import { ConsultationRatings } from "@/components/dashboard/ConsulationRating";
 
-const page = () => {
+import { useAuth } from "@/context/AuthContext";
+
+const Page = () => {
+  const { user } = useAuth();
   const statsData = [
     {
       title: "Total Consultations",
@@ -45,6 +49,17 @@ const page = () => {
 
   return (
     <main className="space-y-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Welcome back, {user?.name || "Expert"}!
+          </h2>
+          <p className="text-gray-500">
+            Here's what's happening with your consultations today.
+          </p>
+        </div>
+      </div>
+
       <section>
         <StatsCards stats={statsData} columns={4} />
       </section>
@@ -77,4 +92,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

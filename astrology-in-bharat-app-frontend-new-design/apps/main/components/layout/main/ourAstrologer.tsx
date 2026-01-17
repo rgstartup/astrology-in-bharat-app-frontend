@@ -72,7 +72,7 @@ const OurAstrologer = () => {
     const fetchAstrologers = useCallback(async (currentOffset: number, isLoadMore: boolean = false, isSilent: boolean = false) => {
         try {
             if (!isSilent) setLoading(true);
-            const response = await axios.get(`${API_BASE_URL}/expert/profile/list`, {
+            const response = await axios.get(`${API_BASE_URL}/expert/list`, {
                 params: {
                     limit,
                     offset: currentOffset,

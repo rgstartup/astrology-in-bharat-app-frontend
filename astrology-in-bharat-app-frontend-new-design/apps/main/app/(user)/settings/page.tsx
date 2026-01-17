@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function ClientSettingsPage() {
-  const API = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/client/profile`;
+  const API = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/client`;
 
   const [preview, setPreview] = useState("");
   const [status, setStatus] = useState("");

@@ -34,12 +34,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const router = useRouter();
 
-    const login = (newToken: string, userData?: User) => {
+    const login = async (newToken: string, userData?: User) => {
         localStorage.setItem('accessToken', newToken);
-        if (userData) {
-            setUser(userData);
-        }
         setIsAuthenticated(true);
+
+        // Fetch full profile immediately to get expert-specific fields
+        try {
+            const res = await apiClient.get('/expert');
+            if (res.data) {
+                const fullUserData = { ...res.data, ...(res.data.user || {}) };
+                setUser(fullUserData);
+            } else if (userData) {
+                setUser(userData);
+            }
+        } catch (err) {
+            console.error("Error fetching expert profile after login:", err);
+            if (userData) setUser(userData);
+        }
     };
 
     const logout = () => {
@@ -62,7 +73,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             try {
                 // Try to get profile to verify token and get user data
-                const res = await apiClient.get('/expert/profile');
+                const res = await apiClient.get('/expert');
                 if (res.data) {
                     // Merge user data and profile data to ensure we have everything
                     const fullUserData = { ...res.data, ...(res.data.user || {}) };

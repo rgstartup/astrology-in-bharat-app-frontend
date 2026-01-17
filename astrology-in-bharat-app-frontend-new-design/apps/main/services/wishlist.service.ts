@@ -16,7 +16,7 @@ const getHeaders = () => {
     // Usually implies Cookie or Bearer. User message said "Auth: Requires Bearer Token".
     // So we need to retrieve the token.
     if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
+        const token = localStorage.getItem('clientAccessToken') || localStorage.getItem('accessToken') || localStorage.getItem('token');
         if (token) {
             return {
                 Authorization: `Bearer ${token}`

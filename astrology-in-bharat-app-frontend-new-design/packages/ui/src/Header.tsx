@@ -287,10 +287,10 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                               href={PATHS.PROFILE}
                               className="d-flex align-items-center gap-4"
                               style={{
-                              
+
                                 color: "white",
                                 borderRadius: "5px",
-                                
+
                                 textDecoration: "none",
                                 whiteSpace: "nowrap",
                               }}
@@ -310,7 +310,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                                   className="object-cover w-100 h-100"
                                 />
                               </div>
-                              
+
                             </Link>
 
                             <button

@@ -96,17 +96,7 @@ const ProfilePage: React.FC = () => {
           setTimeout(() => setSuccessMessage(""), 3000);
         } catch (saveError: any) {
           console.error("❌ Error persisting profile picture:", saveError);
-          // If profile doesn't exist (404), create it with the image
-          if (saveError.response?.status === 404) {
-            console.log("ℹ️ No profile exists, creating new one with image...");
-            try {
-              await createClientProfile({ profile_picture: imageUrl, gender: 'other' });
-              setSuccessMessage("Profile created with picture!");
-              setTimeout(() => setSuccessMessage(""), 3000);
-            } catch (createError) {
-              console.error("❌ Error creating profile:", createError);
-            }
-          }
+          setErrorMessage("Failed to save profile picture to profile");
         }
       } else {
         console.warn("⚠️ Upload response missing URL:", uploadResult);
@@ -180,20 +170,8 @@ const ProfilePage: React.FC = () => {
 
       console.log("📤 Submitting profile data:", payload);
 
-      let savedData;
-
-      // Try to update first, if 404, then create
-      try {
-        console.log("💾 Submitting PATCH via API client");
-        savedData = await updateClientProfile(payload);
-      } catch (error: any) {
-        if (error.response?.status === 404) {
-          console.log("ℹ️ Profile not found, submitting POST instead");
-          savedData = await createClientProfile(payload);
-        } else {
-          throw error;
-        }
-      }
+      console.log("💾 Submitting PATCH via API client");
+      const savedData = await updateClientProfile(payload);
 
       setSuccessMessage("Profile updated successfully!");
 
@@ -348,69 +326,69 @@ const ProfilePage: React.FC = () => {
 
               {/* Navigation Menu */}
               <div className="card border-0  rounded-4 overflow-hidden">
-                 <div className="card border-0  rounded-4 mb-4 text-center p-3">
-                <div className="card-body">
-                  <div className="position-relative d-inline-block mb-3">
-                    <div style={{
-                      width: "100px",
-                      height: "100px",
-                      borderRadius: "50%",
-                      overflow: "hidden",
-                      border: "4px solid #fff",
-                      boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-                      margin: "0 auto"
-                    }}>
-                      {saving ? (
-                        <div className="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
-                          <div className="spinner-border spinner-border-sm text-primary" role="status"></div>
-                        </div>
-                      ) : (
-                        <img
-                          src={imagePreview}
-                          alt="Profile"
-                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        />
-                      )}
-                    </div>
-                    <label
-                      htmlFor="profile-upload"
-                      className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
-                      style={{
-                        width: "35px",
-                        height: "35px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        cursor: "pointer",
-                        color: "#fd6410",
-                        border: "2px solid #fff",
-                        transition: "all 0.3s ease"
-                      }}
-                      title="Update Profile Picture"
-                    >
-                      <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
-                      <input
-                        id="profile-upload"
-                        type="file"
-                        className="d-none"
-                        accept="image/*"
-                        onChange={(e) => {
-                          console.log("📁 File input onChange triggered!");
-                          if (e.target.files && e.target.files[0]) {
-                            handleImageChange(e.target.files[0]);
-                          }
+                <div className="card border-0  rounded-4 mb-4 text-center p-3">
+                  <div className="card-body">
+                    <div className="position-relative d-inline-block mb-3">
+                      <div style={{
+                        width: "100px",
+                        height: "100px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                        border: "4px solid #fff",
+                        boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+                        margin: "0 auto"
+                      }}>
+                        {saving ? (
+                          <div className="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                            <div className="spinner-border spinner-border-sm text-primary" role="status"></div>
+                          </div>
+                        ) : (
+                          <img
+                            src={imagePreview}
+                            alt="Profile"
+                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          />
+                        )}
+                      </div>
+                      <label
+                        htmlFor="profile-upload"
+                        className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
+                        style={{
+                          width: "35px",
+                          height: "35px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          color: "#fd6410",
+                          border: "2px solid #fff",
+                          transition: "all 0.3s ease"
                         }}
-                      />
-                    </label>
+                        title="Update Profile Picture"
+                      >
+                        <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
+                        <input
+                          id="profile-upload"
+                          type="file"
+                          className="d-none"
+                          accept="image/*"
+                          onChange={(e) => {
+                            console.log("📁 File input onChange triggered!");
+                            if (e.target.files && e.target.files[0]) {
+                              handleImageChange(e.target.files[0]);
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+
+                    <h5 className="fw-bold mb-1">{profileData.username || "User Name"} <i className="fa-solid fa-check-circle text-primary small"></i></h5>
+
+
+
                   </div>
-
-                  <h5 className="fw-bold mb-1">{profileData.username || "User Name"} <i className="fa-solid fa-check-circle text-primary small"></i></h5>
-                  
-
-                 
                 </div>
-              </div>
-               
+
 
 
                 <div className=" bg-white border-0 pt-3 px-3">
@@ -474,8 +452,8 @@ const ProfilePage: React.FC = () => {
                     </div>
                     <div className="card-body p-4">
                       <div className="row g-4">
-                       
-                         
+
+
                         <div className="col-md-6">
                           <label className="text-muted small fw-bold text-uppercase mb-1">User Name</label>
                           {isEditing ? (
