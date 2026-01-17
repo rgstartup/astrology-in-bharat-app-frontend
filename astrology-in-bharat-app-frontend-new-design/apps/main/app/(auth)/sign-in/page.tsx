@@ -1,8 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import React, { useState, useCallback, FormEvent } from "react";
+import NextImage from "next/image";
+import NextLink from "next/link";
+const Image = NextImage as any;
+const Link = NextLink as any;
+import React, { useState, useCallback, FormEvent, Suspense } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
@@ -32,7 +34,10 @@ interface FormData {
 // --- API Endpoint Constant ---
 const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/email/login`;
 
-const Page: React.FC = () => {
+// Disable static generation for this page
+export const dynamic = 'force-dynamic';
+
+const SignInContent: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { clientLogin } = useClientAuth(); // Add this line
@@ -350,6 +355,14 @@ const Page: React.FC = () => {
         </div>
       </div>
     </section>
+  );
+};
+
+const Page: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInContent />
+    </Suspense>
   );
 };
 
