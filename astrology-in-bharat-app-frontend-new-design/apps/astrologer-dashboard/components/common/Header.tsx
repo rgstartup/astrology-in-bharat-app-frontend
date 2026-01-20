@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { FiBell, FiMenu } from "react-icons/fi";
 import Link from "next/link";
 import apiClient from "@/lib/apiClient";
+import { socket } from "@/lib/socket";
 
 import { SearchInput } from "../../../shared/components/SearchInput";
 
@@ -22,6 +23,34 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
     if (user?.is_available !== undefined) {
       setIsOnline(user.is_available);
     }
+  }, [user]);
+
+  // WebSocket Listener for status sync (across sessions/devices) - RESTORED
+  useEffect(() => {
+    console.log("[Socket] Dashboard Header initialized. Socket status:", socket.connected ? "Connected" : "Disconnected");
+
+    const handleStatusSync = (data: any) => {
+      console.log("[Socket] 🔔 Dashboard received event:", data);
+
+      const expertId = data.expert_id || data.userId || data.id;
+      const isAvailable = data.is_available !== undefined
+        ? data.is_available
+        : (data.status === 'online');
+
+      const currentExpertId = user?.id;
+      const altId = user?.userId;
+
+      if (String(currentExpertId) === String(expertId) || String(altId) === String(expertId)) {
+        console.log(`[Socket] 🔄 Dashboard Syncing Status for ID ${expertId} to ${isAvailable}`);
+        setIsOnline(isAvailable);
+      }
+    };
+
+    socket.on("expert_status_changed", handleStatusSync);
+
+    return () => {
+      socket.off("expert_status_changed", handleStatusSync);
+    };
   }, [user]);
 
   // Track whether mouse is on icon or on popup
@@ -47,11 +76,23 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
     try {
       setLoading(true);
       const newStatus = !isOnline;
+
+      // DEBUG LOGS
+      const token = typeof window !== "undefined" ? localStorage.getItem('accessToken') : "window_undefined";
+      console.log("[AuthDebug] Attempting status update. Token length:", token?.length || 0);
+      console.log("[AuthDebug] Token preview:", token ? token.substring(0, 10) + "..." : "null");
+      console.log("[AuthDebug] Sending payload:", { is_available: newStatus });
+
       await apiClient.patch('/expert/status', { is_available: newStatus });
       setIsOnline(newStatus);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to update status:", err);
-      alert("Failed to update online status");
+      // Detailed error log
+      if (err.response) {
+        console.error("[AuthDebug] 401 Response Data:", err.response.data);
+        console.error("[AuthDebug] 401 Response Status:", err.response.status);
+      }
+      alert("Failed to update online status. Please check if you are still logged in.");
     } finally {
       setLoading(false);
     }

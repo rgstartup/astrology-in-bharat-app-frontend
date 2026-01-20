@@ -9,6 +9,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { SkeletonCard } from "./SkeletonCard";
 import AstrologerCard from "./AstrologerCard";
+import { socket } from "@/libs/socket";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:6543/api/v1";
@@ -124,6 +125,39 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
   });
 
   const [localFilter, setLocalFilter] = useState({ ...filterState });
+
+  // WebSocket Listener for real-time status updates - RESTORED
+  useEffect(() => {
+    const handleStatusUpdate = (data: any) => {
+      console.log("[Socket] 🔔 Status Event Detected:", data);
+
+      // Map flexible payload formats from backend
+      const expertId = data.expert_id || data.userId || data.id;
+      const isAvailable = data.is_available !== undefined
+        ? data.is_available
+        : (data.status === 'online');
+
+      if (!expertId) return;
+
+      setAstrologers((prev) =>
+        prev.map((astro) => {
+          const isMatch = String(astro.id) === String(expertId) || String(astro.userId) === String(expertId);
+          if (isMatch) {
+            console.log(`[Socket] 🔄 Updating Expert: ${astro.name} to ${isAvailable ? 'Online' : 'Offline'}`);
+            return { ...astro, is_available: isAvailable };
+          }
+          return astro;
+        })
+      );
+    };
+
+    socket.on("expert_status_changed", handleStatusUpdate);
+
+    return () => {
+      socket.off("expert_status_changed", handleStatusUpdate);
+    };
+  }, []);
+
   // Initialize from Server Data
   useEffect(() => {
     if (initialError) {

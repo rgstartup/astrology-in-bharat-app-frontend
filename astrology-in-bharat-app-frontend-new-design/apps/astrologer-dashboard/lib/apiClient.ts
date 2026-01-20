@@ -36,10 +36,10 @@ apiClient.interceptors.request.use(
         const token = typeof window !== "undefined" ? localStorage.getItem('accessToken') : null;
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`;
-            // Debug log (remove in production)
-            console.log(`[API] ${config.method?.toUpperCase()} ${config.url} - Token Present`);
+            // Debug log
+            console.log(`[API] ${config.method?.toUpperCase()} ${config.url} - Auth Header Set. Token starts with: ${token.substring(0, 10)}...`);
         } else {
-            console.warn(`[API] ${config.method?.toUpperCase()} ${config.url} - No Token Found!`);
+            console.warn(`[API] ${config.method?.toUpperCase()} ${config.url} - No Token Found in localStorage!`);
         }
 
         // Add expert: true to payloads for POST, PUT, PATCH
@@ -70,6 +70,10 @@ apiClient.interceptors.response.use(
     },
     async (error: AxiosError) => {
         const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+
+        if (error.response) {
+            console.error(`[API Error] ${error.config?.method?.toUpperCase()} ${error.config?.url} | Status: ${error.response.status} | Data:`, error.response.data);
+        }
 
         // If error is 401 and we haven't retried yet
         if (error.response?.status === 401 && !originalRequest._retry) {
