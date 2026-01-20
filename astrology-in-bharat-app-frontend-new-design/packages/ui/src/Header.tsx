@@ -213,7 +213,8 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
 
   return (
     <>
-      <header className="top-head">
+      <header className="bg-[#301118] text-[#2b1b00] py-1 px-4">
+
         <div className="container">
           <div className="row align">
             <div className="col-lg-8 col-md-6">
@@ -260,12 +261,12 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                     </div>
                   </div>
                   <div className="col-6 mobile-space">
-                    <div className="d-flex gap-4 w-100 justify-content-end">
+                    <div className="d-flex gap-2 w-100 justify-content-end me-lg-5">
 
 
                       {isAuthenticated ? (
                         <div className="col-8 mobile-space">
-                          <div className="d-flex gap-4 align-items-center">
+                          <div className="d-flex gap-2 align-items-center">
                             <Link href={PATHS.CART} className="cart-top position-relative">
                               <i className="fa-solid fa-cart-shopping" style={{ marginLeft: "20px" }}></i> {" "}
                               {cartCount > 0 && (
@@ -285,12 +286,10 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
 
                             <Link
                               href={PATHS.PROFILE}
-                              className="d-flex align-items-center gap-4"
+                              className="d-flex align-items-center gap-2"
                               style={{
-
                                 color: "white",
-                                borderRadius: "5px",
-
+                                borderRadius: "50%",
                                 textDecoration: "none",
                                 whiteSpace: "nowrap",
                               }}
@@ -310,7 +309,22 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                                   className="object-cover w-100 h-100"
                                 />
                               </div>
+                            </Link>
 
+                            <Link
+                              href={PATHS.PROFILE}
+                              style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px",
+                                textDecoration: "none",
+                                whiteSpace: "nowrap",
+                                fontSize: "14px",
+                                fontWeight: "bold"
+                              }}
+                            >
+                              <i className="fa-solid fa-user"></i> <span className="d-none d-md-inline">Profile</span>
                             </Link>
 
                             <button
@@ -322,11 +336,10 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                                 borderRadius: "5px",
                                 padding: "5px 8px",
                                 border: "none",
-                                width: "100%",
                                 whiteSpace: "nowrap",
                               }}
                             >
-                              <i className="fa-solid fa-right-from-bracket"></i> Logout
+                              <i className="fa-solid fa-right-from-bracket"></i> <span className="d-none d-md-inline">Logout</span>
                             </button>
                           </div>
                         </div>

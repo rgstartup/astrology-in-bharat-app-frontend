@@ -2,12 +2,20 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { Lock, User, Mail, Eye, EyeOff } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import NextImage from "next/image";
+import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-toastify";
+
+const Image = NextImage as any;
+const Link = NextLink as any;
+const UserIcon = User as any;
+const MailIcon = Mail as any;
+const LockIcon = Lock as any;
+const EyeIcon = Eye as any;
+const EyeOffIcon = EyeOff as any;
 
 const RegisterPage: React.FC = () => {
     const [name, setName] = useState("");
@@ -22,8 +30,10 @@ const RegisterPage: React.FC = () => {
     const { login } = useAuth();
 
     useEffect(() => {
-        // Clear any existing tokens when visiting register page to avoid stale auth issues
-        localStorage.removeItem("accessToken");
+        // Migration cleanup
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("accessToken");
+        }
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -66,6 +76,12 @@ const RegisterPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleGoogleLogin = () => {
+        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+        const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=expert&redirect_uri=http://localhost:3003`;
+        window.location.href = googleLoginUrl;
     };
 
     return (
@@ -111,7 +127,7 @@ const RegisterPage: React.FC = () => {
                             <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
                             <div className="relative rounded-md shadow-sm">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <User className="h-5 w-5 text-gray-400" />
+                                    <UserIcon className="h-5 w-5 text-gray-400" />
                                 </div>
                                 <input
                                     id="name"
@@ -130,7 +146,7 @@ const RegisterPage: React.FC = () => {
                             <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
                             <div className="relative rounded-md shadow-sm">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Mail className="h-5 w-5 text-gray-400" />
+                                    <MailIcon className="h-5 w-5 text-gray-400" />
                                 </div>
                                 <input
                                     id="email"
@@ -149,7 +165,7 @@ const RegisterPage: React.FC = () => {
                             <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
                             <div className="relative rounded-md shadow-sm">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-gray-400" />
+                                    <LockIcon className="h-5 w-5 text-gray-400" />
                                 </div>
                                 <input
                                     id="password"
@@ -167,7 +183,7 @@ const RegisterPage: React.FC = () => {
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
                                 >
-                                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                    {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
                                 </button>
                             </div>
                         </div>
@@ -176,7 +192,7 @@ const RegisterPage: React.FC = () => {
                             <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-1">Confirm Password</label>
                             <div className="relative rounded-md shadow-sm">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-gray-400" />
+                                    <LockIcon className="h-5 w-5 text-gray-400" />
                                 </div>
                                 <input
                                     id="confirmPassword"
@@ -194,12 +210,12 @@ const RegisterPage: React.FC = () => {
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
                                 >
-                                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                    {showConfirmPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
                                 </button>
                             </div>
                         </div>
 
-                        <div className="pt-2">
+                        <div className="pt-2 space-y-3">
                             <button
                                 type="submit"
                                 disabled={loading}
@@ -214,6 +230,21 @@ const RegisterPage: React.FC = () => {
                                         Processing...
                                     </>
                                 ) : "Create Expert Account"}
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={handleGoogleLogin}
+                                className="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-all duration-200 transform hover:-translate-y-0.5"
+                            >
+                                <Image
+                                    src="/images/google-color-svgrepo-com.svg"
+                                    alt="Google"
+                                    height={20}
+                                    width={20}
+                                    className="mr-2"
+                                />
+                                Sign up with Google
                             </button>
                         </div>
 

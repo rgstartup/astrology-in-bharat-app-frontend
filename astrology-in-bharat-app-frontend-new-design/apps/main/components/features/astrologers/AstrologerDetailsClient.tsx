@@ -42,7 +42,7 @@ export default function AstrologerDetailsClient({
   const router = useRouter();
 
   const handleChatClick = () => {
-    router.push("/user-detail-form");
+    router.push(`/chat/prep/${astrologer.id}`);
   };
 
   return (

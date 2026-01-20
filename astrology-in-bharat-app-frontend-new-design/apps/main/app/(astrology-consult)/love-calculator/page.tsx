@@ -273,7 +273,8 @@ const LoveCalculatorPage = () => {
             <div className="inline-flex p-2 bg-white/5 backdrop-blur-xl rounded-[2rem] border border-white/10 gap-2 mb-8">
               <button
                 onClick={() => setActiveMode("simple")}
-                className={`flex items-center gap-3 px-8 py-4 rounded-[1.5rem] text-sm font-black uppercase tracking-widest transition-all duration-500 ${activeMode === "simple"
+                style={{ borderRadius: '9999px' }}
+                className={`flex items-center gap-3 px-8 py-4 text-sm font-black uppercase tracking-widest transition-all duration-500 ${activeMode === "simple"
                   ? "bg-gradient-to-r from-[#fd6410] to-[#ff8c42] text-white shadow-xl scale-105"
                   : "hover:bg-white/5 text-white/60"
                   }`}
@@ -283,7 +284,8 @@ const LoveCalculatorPage = () => {
               </button>
               <button
                 onClick={() => setActiveMode("advanced")}
-                className={`flex items-center gap-3 px-8 py-4 rounded-[1.5rem] text-sm font-black uppercase tracking-widest transition-all duration-500 ${activeMode === "advanced"
+                style={{ borderRadius: '9999px' }}
+                className={`flex items-center gap-3 px-8 py-4 text-sm font-black uppercase tracking-widest transition-all duration-500 ${activeMode === "advanced"
                   ? "bg-gradient-to-r from-[#fd6410] to-[#ff8c42] text-white shadow-xl scale-105"
                   : "hover:bg-white/5 text-white/60"
                   }`}

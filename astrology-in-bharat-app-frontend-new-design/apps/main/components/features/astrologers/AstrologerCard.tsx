@@ -94,7 +94,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
   const handleChatClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    router.push("/user-detail-form");
+    router.push(`/chat/prep/${targetId}`);
   };
 
   const createDetailsUrl = () => (id ? `/astrologer/${id}` : "#");
@@ -209,36 +209,60 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
 
 
           {/* DETAILS */}
-          <div className="astro-name px-4 pt-2 pb-1">{name}</div>
-          <div className="astro-tags px-4">{expertise}</div>
-          <div className="astro-info px-4">
-            <strong>Exp:</strong> {experience} Years
+          {/* Name */}
+          <div className="px-4 pt-2 pb-1 text-[18px] font-semibold text-[#301118]">
+            {name}
           </div>
-          <div className="astro-info px-4">
-            <strong>Lang:</strong> {language}
+
+          {/* Expertise Tag */}
+          <div className="px-4 mt-1">
+            <span className="inline-block bg-[#fd6410] text-white text-[14px] px-3 py-1 rounded-full">
+              {expertise}
+            </span>
           </div>
-          <div className="astro-info px-4 pb-3">
-            <strong>Price:</strong>   <span className="font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">
+
+          {/* Experience */}
+          <div className="px-4 my-2 text-[16px] text-[#1a1a1a]">
+            <strong>Exp:</strong>
+            <span className="ml-2 font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
+              {experience} Years
+            </span>
+          </div>
+
+          {/* Language */}
+          <div className="px-4 my-2 text-[16px] text-[#1a1a1a]">
+            <strong>Lang:</strong>
+            <span className="ml-2 font-semibold bg-gray-100 px-2 py-0.5 rounded">
+              {language}
+            </span>
+          </div>
+
+          {/* Price */}
+          <div className="px-4 pb-3 my-2 text-[16px] text-[#1a1a1a]">
+            <strong>Price:</strong>
+            <span className="ml-2 font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">
               ₹{price}/min
             </span>
           </div>
+
+
         </Link>
 
         {/* ACTION BUTTONS */}
         <div className="astro-actions px-4 pb-4 flex gap-3">
           <button
             onClick={handleChatClick}
-            className="btn-global btn-outline-primary flex-1"
-          >
+            className="px-6 py-2 bg-orange-500 text-white text-sm font-semibold rounded-full">
             <i className="fa-regular fa-comment-dots" /> Chat
           </button>
+
           <button
             onClick={handleChatClick}
-            className="btn-global btn-outline-secondary flex-1"
-          >
+            className="px-6 py-2 bg-orange-500 text-white text-sm font-semibold rounded-full">
             <i className="fa-solid fa-phone-volume" /> Call
           </button>
         </div>
+
       </div>
 
       {/* VIDEO MODAL */}

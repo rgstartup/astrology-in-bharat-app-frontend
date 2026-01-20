@@ -2,6 +2,27 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+
+// Cookie helpers
+const getCookie = (name: string) => {
+    if (typeof document === 'undefined') return null;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+    return null;
+};
+
+const setCookie = (name: string, value: string, days: number = 30) => {
+    if (typeof document === 'undefined') return;
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+};
+
+const deleteCookie = (name: string) => {
+    if (typeof document === 'undefined') return;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+};
 
 // API client with proper cookie handling
 export const apiClient = axios.create({
@@ -13,7 +34,7 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(
     (config) => {
         if (typeof window !== 'undefined') {
-            const token = localStorage.getItem('clientAccessToken');
+            const token = getCookie('clientAccessToken');
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -59,7 +80,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
     const authCheckRef = useRef(false); // Add ref to prevent multiple checks
 
     const clientLogin = (newToken: string, userData?: ClientUser) => {
-        localStorage.setItem('clientAccessToken', newToken);
+        setCookie('clientAccessToken', newToken);
         if (userData) {
             setClientUser(userData);
         }
@@ -69,16 +90,16 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
     const clientLogout = async () => {
         console.log("🚪 Starting logout process...");
 
-        // Clear local state first
+        // Clear all local state first
         setClientUser(null);
         setIsClientAuthenticated(false);
         setClientLoading(false);
 
-        // Clear all local storage items
-        localStorage.removeItem('clientAccessToken');
-        localStorage.removeItem('refreshToken'); // If any client refresh token exists
+        // Clear cookies
+        deleteCookie('clientAccessToken');
+        deleteCookie('refreshToken');
 
-        console.log("🗑️ Cleared local storage and state");
+        console.log("🗑️ Cleared cookies and state");
 
         try {
             // Call backend logout endpoint
@@ -103,7 +124,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
     };
 
     const refreshAuth = async () => {
-        const token = localStorage.getItem('clientAccessToken');
+        const token = getCookie('clientAccessToken');
         console.log("🔄 Manually refreshing authentication... Token present:", !!token);
         if (!token) {
             setIsClientAuthenticated(false);
@@ -182,7 +203,26 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
         const initClientAuth = async () => {
             if (typeof window === 'undefined') return;
 
-            const token = localStorage.getItem('clientAccessToken');
+            // Capture tokens from URL (Google OAuth Redirect)
+            const searchParams = new URLSearchParams(window.location.search);
+            const urlAccessToken = searchParams.get('accessToken');
+            const urlRefreshToken = searchParams.get('refreshToken');
+
+            if (urlAccessToken) {
+                console.log("🎁 [ClientAuth] Found tokens in URL, processing...");
+                setCookie('clientAccessToken', urlAccessToken);
+                if (urlRefreshToken) {
+                    setCookie('refreshToken', urlRefreshToken);
+                }
+
+                toast.success("Login Successful!");
+
+                // Clean URL parameters
+                const newUrl = window.location.pathname + window.location.hash;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+
+            const token = getCookie('clientAccessToken');
             console.log("🔍 [ClientAuth] Initializing... Token found:", !!token);
 
             if (!token) {
@@ -253,9 +293,8 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                 // If we get 401, user is definitely not authenticated or token expired
                 if (err.response?.status === 401) {
                     console.log("❌ [ClientAuth] User not authenticated (401), clearing session");
-                    setIsClientAuthenticated(false);
-                    setClientUser(null);
-                    localStorage.removeItem('clientAccessToken');
+                    localStorage.removeItem('clientAccessToken'); // Migration cleanup
+                    deleteCookie('clientAccessToken');
                 } else if (err.response?.status === 404) {
                     // NEW: Treat 404 as authenticated but no profile yet
                     console.log("✅ [ClientAuth] Profile not found (404), but user is authenticated");

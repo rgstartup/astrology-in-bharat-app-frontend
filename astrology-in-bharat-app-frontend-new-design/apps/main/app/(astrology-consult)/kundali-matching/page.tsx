@@ -385,7 +385,8 @@ const KundaliMatchingPage = () => {
               <button
                 disabled={loading}
                 onClick={handleMatch}
-                className="bg-burgundy text-white py-4 px-12 rounded-full uppercase tracking-[4px] text-xs font-black shadow-[0_15px_30px_rgba(48,17,24,0.3)] hover:scale-105 hover:bg-[#fd6410] transition-all flex items-center justify-center gap-4 mx-auto disabled:opacity-50 disabled:cursor-not-allowed group"
+                style={{ borderRadius: '9999px' }}
+                className="bg-burgundy text-white py-4 px-12 uppercase tracking-[4px] text-xs font-black shadow-[0_15px_30px_rgba(48,17,24,0.3)] hover:scale-105 hover:bg-[#fd6410] transition-all flex items-center justify-center gap-4 mx-auto disabled:opacity-50 disabled:cursor-not-allowed group"
               >
                 {loading ? (
                   <>

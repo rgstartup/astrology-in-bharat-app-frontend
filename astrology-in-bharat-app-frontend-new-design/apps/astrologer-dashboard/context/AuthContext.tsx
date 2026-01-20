@@ -2,6 +2,27 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import apiClient from '@/lib/apiClient';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+
+// Cookie helpers
+const getCookie = (name: string) => {
+    if (typeof document === 'undefined') return null;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+    return null;
+};
+
+const setCookie = (name: string, value: string, days: number = 30) => {
+    if (typeof document === 'undefined') return;
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+};
+
+const deleteCookie = (name: string) => {
+    if (typeof document === 'undefined') return;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+};
 
 interface User {
     id: number;
@@ -35,7 +56,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
 
     const login = async (newToken: string, userData?: User) => {
-        localStorage.setItem('accessToken', newToken);
+        setCookie('accessToken', newToken);
         setIsAuthenticated(true);
 
         // Fetch full profile immediately to get expert-specific fields
@@ -54,7 +75,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const logout = () => {
-        localStorage.removeItem('accessToken');
+        deleteCookie('accessToken');
         setUser(null);
         setIsAuthenticated(false);
         apiClient.post('/auth/logout').catch((err) => {
@@ -65,7 +86,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const initAuth = async () => {
-            const token = localStorage.getItem('accessToken');
+            if (typeof window === 'undefined') return;
+
+            // Capture tokens from URL (Google OAuth Redirect)
+            const searchParams = new URLSearchParams(window.location.search);
+            const urlAccessToken = searchParams.get('accessToken');
+            const urlRefreshToken = searchParams.get('refreshToken');
+
+            if (urlAccessToken) {
+                console.log("🎁 [Auth] Found expert tokens in URL, processing...");
+                setCookie('accessToken', urlAccessToken);
+                if (urlRefreshToken) {
+                    setCookie('refreshToken', urlRefreshToken);
+                }
+
+                toast.success("Login Successful!");
+
+                // Clean URL parameters and redirect to dashboard
+                const newUrl = window.location.pathname + window.location.hash;
+                window.history.replaceState({}, document.title, newUrl);
+                router.push('/dashboard');
+            }
+
+            const token = getCookie('accessToken');
             if (!token) {
                 setLoading(false);
                 return;
@@ -100,7 +143,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     // Only logout if it's NOT a throttling error
                     if (!errorMessageString.toLowerCase().includes('too many requests')) {
                         console.warn("[AuthContext] Invalid token (401), logging out...");
-                        localStorage.removeItem('accessToken');
+                        deleteCookie('accessToken');
                         setIsAuthenticated(false);
                     } else {
                         // If it IS a throttling error masked as 401, keep authenticated

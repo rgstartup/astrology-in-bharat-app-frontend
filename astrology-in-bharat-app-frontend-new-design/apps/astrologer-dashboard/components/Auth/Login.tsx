@@ -1,23 +1,28 @@
 "use client";
 import React, { useState } from "react";
 import Head from "next/head";
-import { Lock, User } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Lock, User, Eye, EyeOff } from "lucide-react";
+import NextImage from "next/image";
+import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/context/AuthContext";
-import {   Eye, EyeOff } from "lucide-react";
-
 
 import { toast } from "react-toastify";
+
+const Image = NextImage as any;
+const Link = NextLink as any;
+const UserIcon = User as any;
+const LockIcon = Lock as any;
+const EyeIcon = Eye as any;
+const EyeOffIcon = EyeOff as any;
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const [showPassword , setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
     const { login } = useAuth();
 
@@ -57,6 +62,12 @@ const LoginPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleGoogleLogin = () => {
+        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+        const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=expert&redirect_uri=http://localhost:3003`;
+        window.location.href = googleLoginUrl;
     };
 
     return (
@@ -114,7 +125,7 @@ const LoginPage: React.FC = () => {
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <User className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                        <UserIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                                     </div>
                                     <input
                                         id="email"
@@ -139,7 +150,7 @@ const LoginPage: React.FC = () => {
                                 </label>
                                 <div className="relative rounded-md shadow-sm">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                        <LockIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                                     </div>
                                     <input
                                         id="password"
@@ -152,13 +163,13 @@ const LoginPage: React.FC = () => {
                                         className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent sm:text-sm text-black transition-all"
                                         placeholder="Enter Your Password"
                                     />
-                                      <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
-                                >
-                                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                                </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                                    >
+                                        {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                                    </button>
                                 </div>
                             </div>
 
@@ -184,7 +195,7 @@ const LoginPage: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="pt-2">
+                            <div className="pt-2 space-y-3">
                                 <button
                                     type="submit"
                                     disabled={loading}
@@ -199,6 +210,21 @@ const LoginPage: React.FC = () => {
                                             Signing in...
                                         </>
                                     ) : "Sign In"}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={handleGoogleLogin}
+                                    className="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-all duration-200 transform hover:-translate-y-0.5"
+                                >
+                                    <Image
+                                        src="/images/google-color-svgrepo-com.svg"
+                                        alt="Google"
+                                        height={20}
+                                        width={20}
+                                        className="mr-2"
+                                    />
+                                    Sign in with Google
                                 </button>
                             </div>
 

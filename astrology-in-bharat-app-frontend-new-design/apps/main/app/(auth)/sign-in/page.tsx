@@ -4,7 +4,7 @@ import NextImage from "next/image";
 import NextLink from "next/link";
 const Image = NextImage as any;
 const Link = NextLink as any;
-import React, { useState, useCallback, FormEvent, Suspense } from "react";
+import React, { useState, useCallback, FormEvent, Suspense, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
@@ -155,6 +155,12 @@ const SignInContent: React.FC = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+    const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=client&redirect_uri=http://localhost:3000`;
+    window.location.href = googleLoginUrl;
+  };
+
   // --- Render ---
 
   return (
@@ -234,7 +240,11 @@ const SignInContent: React.FC = () => {
               </div>
 
               <div className="social-links d-flex gap-3 mb-4">
-                <div className="social-button d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
+                <div
+                  className="social-button d-flex align-items-center gap-2 border px-3 py-2 rounded pointer"
+                  onClick={handleGoogleLogin}
+                  style={{ cursor: "pointer" }}
+                >
                   <Image
                     src="/images/google-color-svgrepo-com.svg"
                     alt="Google"
@@ -242,15 +252,6 @@ const SignInContent: React.FC = () => {
                     width={22}
                   />
                   <small>Sign in with Google</small>
-                </div>
-                <div className="social-button2 d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
-                  <Image
-                    src="/images/facebook-1-svgrepo-com.svg"
-                    alt="Facebook"
-                    height={22}
-                    width={22}
-                  />
-                  <small>Facebook</small>
                 </div>
               </div>
 

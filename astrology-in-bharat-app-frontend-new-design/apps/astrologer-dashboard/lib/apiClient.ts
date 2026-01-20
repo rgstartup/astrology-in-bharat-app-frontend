@@ -6,6 +6,26 @@ const API_BASE_URL = apiEnvVar ? `${apiEnvVar}/api/v1` : 'http://localhost:6543/
 console.log("DEBUG: process.env.NEXT_PUBLIC_API_URL =", process.env.NEXT_PUBLIC_API_URL);
 console.log("DEBUG: Resolved API_BASE_URL =", API_BASE_URL);
 
+// Cookie helper
+const getCookie = (name: string) => {
+    if (typeof document === 'undefined') return null;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+    return null;
+};
+
+const setCookie = (name: string, value: string, days: number = 30) => {
+    if (typeof document === 'undefined') return;
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+};
+
+const deleteCookie = (name: string) => {
+    if (typeof document === 'undefined') return;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+};
+
 // Create axios instance
 export const apiClient = axios.create({
     baseURL: API_BASE_URL,
@@ -33,13 +53,13 @@ const processQueue = (error: any, token: string | null = null) => {
 // Request interceptor - Add access token to requests
 apiClient.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        const token = typeof window !== "undefined" ? localStorage.getItem('accessToken') : null;
+        const token = typeof window !== "undefined" ? getCookie('accessToken') : null;
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`;
             // Debug log
             console.log(`[API] ${config.method?.toUpperCase()} ${config.url} - Auth Header Set. Token starts with: ${token.substring(0, 10)}...`);
         } else {
-            console.warn(`[API] ${config.method?.toUpperCase()} ${config.url} - No Token Found in localStorage!`);
+            console.warn(`[API] ${config.method?.toUpperCase()} ${config.url} - No Token Found in Cookies!`);
         }
 
         // Add expert: true to payloads for POST, PUT, PATCH
@@ -124,8 +144,8 @@ apiClient.interceptors.response.use(
 
                 const { accessToken } = response.data;
 
-                // Store new access token
-                localStorage.setItem('accessToken', accessToken);
+                // Store new access token in Cookies
+                setCookie('accessToken', accessToken);
 
                 // Update default header
                 apiClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
@@ -143,7 +163,7 @@ apiClient.interceptors.response.use(
                 processQueue(refreshError, null);
 
                 // Clear tokens
-                localStorage.removeItem('accessToken');
+                deleteCookie('accessToken');
 
                 // Redirect to sign-in
                 if (typeof window !== 'undefined') {

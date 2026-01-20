@@ -14,6 +14,7 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin");
+  const isChatRoom = pathname?.includes("/chat/room");
   const { isClientAuthenticated, clientUser, clientLogout } = useClientAuth();
 
   // Load Bootstrap JS for modal functionality
@@ -26,7 +27,7 @@ export default function ClientLayout({
   return (
     <>
       <ToastProvider />
-      {!isAdminRoute && (
+      {!isAdminRoute && !isChatRoom && (
         <Header
           authState={isClientAuthenticated}
           userData={clientUser}
@@ -34,7 +35,7 @@ export default function ClientLayout({
         />
       )}
       <main>{children}</main>
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isChatRoom && <Footer />}
     </>
   );
 }

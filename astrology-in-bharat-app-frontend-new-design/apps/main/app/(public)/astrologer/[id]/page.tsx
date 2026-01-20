@@ -36,7 +36,7 @@ export default async function Page({
   }
 
   try {
-    const url = `${API_BASE_URL}/expert/profile/${id}`;
+    const url = `${API_BASE_URL}/expert/${id}`;
     const response = await fetch(url, {
       cache: 'no-store', // Disable caching for real-time updates
     });

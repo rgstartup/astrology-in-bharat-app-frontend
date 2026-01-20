@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState, useCallback, FormEvent } from "react";
+import React, { useState, useCallback, FormEvent, useEffect } from "react";
 import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 
 // --- Types ---
 interface RegistrationPayload {
@@ -30,6 +31,9 @@ const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:654
 
 const Page: React.FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { clientLogin } = useClientAuth();
+
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
@@ -85,6 +89,12 @@ const Page: React.FC = () => {
     }
 
     return true;
+  };
+
+  const handleGoogleLogin = () => {
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+    const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=client&redirect_uri=http://localhost:3000`;
+    window.location.href = googleLoginUrl;
   };
 
   // Submit handler
@@ -214,9 +224,12 @@ const Page: React.FC = () => {
                 <h2 style={{ color: "var(--primary-color)" }}>Sign Up</h2>
               </div>
 
-              {/* Social Login */}
               <div className="social-links d-flex gap-3 mb-4">
-                <div className="social-button d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
+                <div
+                  className="social-button d-flex align-items-center gap-2 border px-3 py-2 rounded pointer"
+                  onClick={handleGoogleLogin}
+                  style={{ cursor: "pointer" }}
+                >
                   <Image
                     src="/images/google-color-svgrepo-com.svg"
                     alt="Google"
@@ -225,27 +238,9 @@ const Page: React.FC = () => {
                   />
                   <small>Sign in with Google</small>
                 </div>
-                <div className="social-button2 d-flex align-items-center gap-2 border px-3 py-2 rounded pointer">
-                  <Image
-                    src="/images/facebook-1-svgrepo-com.svg"
-                    alt="Facebook"
-                    height={22}
-                    width={22}
-                  />
-                  <small>Facebook</small>
-                </div>
+
               </div>
 
-              {/* {error && (
-                <div className="alert alert-danger mb-3" role="alert">
-                  <b>Error:</b> {error}
-                </div>
-              )} */}
-              {/* {successMessage && (
-                <div className="alert alert-success mb-3" role="alert">
-                  <b>Success:</b> {successMessage}
-                </div>
-              )} */}
 
               {/* Form */}
               <form onSubmit={handleSubmit}>
