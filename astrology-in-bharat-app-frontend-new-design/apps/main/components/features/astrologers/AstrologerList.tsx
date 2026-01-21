@@ -34,6 +34,11 @@ interface ExpertProfile {
   ratings?: number; // Fallback
   is_available: boolean;
   video?: string;
+  chat_price?: number;
+  call_price?: number;
+  video_call_price?: number;
+  report_price?: number;
+  horoscope_price?: number;
   total_likes?: number; // ADDED
 }
 
@@ -47,7 +52,12 @@ interface ClientExpertProfile {
   experience: number;
   language: string;
   price: number;
-  video: string;
+  chat_price?: number;
+  call_price?: number;
+  video_call_price?: number;
+  report_price?: number;
+  horoscope_price?: number;
+  video?: string;
   modalId: string;
   is_available: boolean;
   total_likes?: number; // ADDED
@@ -81,7 +91,12 @@ const mapExpert = (item: ExpertProfile): ClientExpertProfile => ({
     ? item.languages.join(", ")
     : item.user?.language || "Hindi",
   price: item.price || 0,
-  video: item.video || "https://www.youtube.com/embed/INoPh_oRooU",
+  chat_price: item.chat_price,
+  call_price: item.call_price,
+  video_call_price: item.video_call_price,
+  report_price: item.report_price,
+  horoscope_price: item.horoscope_price,
+  video: item.video || "",
   modalId: `home-modal-${item.id}`,
   is_available: item.is_available,
   total_likes: item.total_likes || 0, // ADDED
@@ -660,6 +675,15 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
                   cardClassName="min-w-[300px]"
                 />
               ))
+            ) : !loading && initialError ? (
+              <div className="w-full text-center py-10 flex flex-col items-center justify-center">
+                <p className="text-red-500 font-semibold mb-2">Failed to load astrologers</p>
+                <button onClick={() => window.location.reload()} className="px-4 py-2 bg-[#fd6410] text-white rounded-full text-sm">Retry</button>
+              </div>
+            ) : !loading && astrologers.length === 0 ? (
+              <div className="w-full text-center py-10">
+                <p className="text-gray-500 font-medium">No astrologers found matching your criteria.</p>
+              </div>
             ) : (
               Array.from({ length: 4 }).map((_, i) => (
                 <div className="min-w-[300px]" key={i}>

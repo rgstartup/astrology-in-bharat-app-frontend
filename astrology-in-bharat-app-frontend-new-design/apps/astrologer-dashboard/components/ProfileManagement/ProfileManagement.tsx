@@ -27,6 +27,11 @@ const ProfileManagement = () => {
     experience_in_years: 0,
     languages: [],
     price: 0,
+    chat_price: 0,
+    call_price: 0,
+    video_call_price: 0,
+    report_price: 0,
+    horoscope_price: 0,
     bank_details: "",
     is_available: false,
     kycCompleted: false,
@@ -35,6 +40,7 @@ const ProfileManagement = () => {
     certificates: [],
     gallery: [],
     videos: [],
+    video: "",
     detailed_experience: [],
   });
 
@@ -97,6 +103,11 @@ const ProfileManagement = () => {
         experience_in_years: fullUser.experience_in_years || 0,
         languages: typeof fullUser.languages === 'string' ? fullUser.languages.split(',').map((l: string) => l.trim()) : (fullUser.languages || []),
         price: fullUser.price || 0,
+        chat_price: fullUser.chat_price || 0,
+        call_price: fullUser.call_price || 0,
+        video_call_price: fullUser.video_call_price || 0,
+        report_price: fullUser.report_price || 0,
+        horoscope_price: fullUser.horoscope_price || 0,
         bank_details: fullUser.bank_details || "",
         is_available: fullUser.is_available || false,
         kycCompleted: false, // Placeholder
@@ -113,6 +124,7 @@ const ProfileManagement = () => {
         certificates: fullUser.certificates || [],
         gallery: fullUser.gallery || [],
         videos: fullUser.videos || [],
+        video: fullUser.video || "",
         detailed_experience: fullUser.detailed_experience || [],
         date_of_birth: fullUser.date_of_birth,
       };
@@ -139,6 +151,11 @@ const ProfileManagement = () => {
             experience_in_years: data.experience_in_years || 0,
             languages: typeof data.languages === 'string' ? data.languages.split(',').map((l: string) => l.trim()) : (data.languages || []),
             price: data.price || 0,
+            chat_price: data.chat_price || 0,
+            call_price: data.call_price || 0,
+            video_call_price: data.video_call_price || 0,
+            report_price: data.report_price || 0,
+            horoscope_price: data.horoscope_price || 0,
             bank_details: data.bank_details || "",
             is_available: data.is_available || false,
             kycCompleted: false, // Placeholder
@@ -155,6 +172,7 @@ const ProfileManagement = () => {
             certificates: data.certificates || [],
             gallery: data.gallery || [],
             videos: data.videos || [],
+            video: data.video || "",
             detailed_experience: data.detailed_experience || [],
             date_of_birth: data.date_of_birth,
           };
@@ -196,6 +214,11 @@ const ProfileManagement = () => {
       experience_in_years: Number(dataToSave.experience_in_years),
       languages: dataToSave.languages,
       price: Number(dataToSave.price),
+      chat_price: Number(dataToSave.chat_price),
+      call_price: Number(dataToSave.call_price),
+      video_call_price: Number(dataToSave.video_call_price),
+      report_price: Number(dataToSave.report_price),
+      horoscope_price: Number(dataToSave.horoscope_price),
       bank_details: dataToSave.bank_details,
       is_available: dataToSave.is_available,
       date_of_birth: dataToSave.date_of_birth,
@@ -211,6 +234,7 @@ const ProfileManagement = () => {
       avatar: dataToSave.profilePic,
       gallery: dataToSave.gallery,
       videos: dataToSave.videos,
+      video: dataToSave.video,
       detailed_experience: dataToSave.detailed_experience
         .filter((exp: any) => exp && !Array.isArray(exp) && typeof exp === 'object')
         .map((exp: any) => ({
@@ -405,6 +429,23 @@ const ProfileManagement = () => {
     }
   };
 
+  const handleUploadIntroVideo = async (file: File) => {
+    setLoading(true);
+    const url = await uploadFile(file);
+    setLoading(false);
+
+    if (url) {
+      setTempProfile(prev => ({ ...prev, video: url }));
+      handleSave("video", { video: url });
+    }
+  };
+
+  const handleRemoveIntro = () => {
+    if (confirm("Are you sure you want to remove the introduction video?")) {
+      handleSave("video", { video: "" });
+    }
+  };
+
   // Detailed Experience Handlers
   const handleAddExperience = (exp: ExperienceItem) => {
     const newExp = [...profile.detailed_experience, exp];
@@ -587,6 +628,15 @@ const ProfileManagement = () => {
         <PortfolioGallery
           images={profile.gallery}
           videos={profile.videos}
+          introVideo={profile.video || ""}
+          tempIntroVideo={tempProfile.video || ""}
+          isEditingIntro={editMode === "video"}
+          onEditIntro={() => handleEditClick("video")}
+          onSaveIntro={() => handleSave("video")}
+          onCancelIntro={handleCancel}
+          onIntroVideoChange={handleChange}
+          onUploadIntroVideo={handleUploadIntroVideo}
+          onRemoveIntro={handleRemoveIntro}
           onAddImage={handleAddImage}
           onRemoveImage={handleRemoveImage}
           onAddVideo={handleAddVideo}

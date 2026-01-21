@@ -37,6 +37,11 @@ export interface Profile {
     date_of_birth?: string;
     languages: string[];
     price: number;
+    chat_price?: number;
+    call_price?: number;
+    video_call_price?: number;
+    report_price?: number;
+    horoscope_price?: number;
     bank_details: string;
     is_available: boolean;
     profilePic?: string;
@@ -45,7 +50,9 @@ export interface Profile {
     certificates?: string[];
     gallery: string[];
     videos: string[];
+    video?: string; // Main introduction video
     detailed_experience: ExperienceItem[];
+    custom_services?: CustomService[];
 }
 
 export interface ExperienceItem {
@@ -58,6 +65,14 @@ export interface ExperienceItem {
     endDate: string; // or 'Present'
     description: string;
     isCurrent: boolean;
+}
+
+export interface CustomService {
+    id: string;
+    name: string;
+    price: number;
+    unit: string;
+    description?: string;
 }
 
 export interface DocumentItem {

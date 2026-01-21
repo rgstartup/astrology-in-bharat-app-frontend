@@ -18,6 +18,11 @@ export interface ExpertProfile {
   rating: number;
   is_available: boolean;
   video?: string;
+  chat_price?: number;
+  call_price?: number;
+  video_call_price?: number;
+  report_price?: number;
+  horoscope_price?: number;
   [key: string]: unknown;
 }
 
@@ -61,16 +66,19 @@ export const getExperts = async (
     });
 
     const url = `${API_BASE_URL}/expert/list?${queryParams.toString()}`;
+    console.log(`[API Debug] Fetching experts from: ${url}`);
 
     const response = await fetch(url, {
       cache: 'no-store',
     });
 
     if (!response.ok) {
+      console.error(`[API Debug] Fetch failed with status: ${response.status}`);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const result = await response.json();
+    console.log(`[API Debug] Successfully fetched ${result.data?.length} experts`);
 
     return {
       success: true,
@@ -78,7 +86,7 @@ export const getExperts = async (
       pagination: result.pagination,
     };
   } catch (error: any) {
-    console.error("API Fetch Error:", error.message);
+    console.error("[API Debug] getExperts Error:", error.message);
     const isNetworkError =
       error.message.includes("fetch failed") ||
       error.message.includes("Network Error");

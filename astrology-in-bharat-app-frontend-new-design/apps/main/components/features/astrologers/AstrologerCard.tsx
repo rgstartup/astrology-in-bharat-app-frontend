@@ -19,7 +19,12 @@ interface Astrologer {
   experience: number;
   language: string;
   price: number;
-  video: string;
+  chat_price?: number;
+  call_price?: number;
+  video_call_price?: number;
+  report_price?: number;
+  horoscope_price?: number;
+  video?: string;
   ratings?: number;
   is_available?: boolean;
   total_likes?: number; // ADDED
@@ -43,6 +48,11 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
     experience,
     language,
     price,
+    chat_price,
+    call_price,
+    video_call_price,
+    report_price,
+    horoscope_price,
     video,
     ratings = 0,
     is_available,
@@ -61,6 +71,15 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
   React.useEffect(() => {
     setCurrentLikes(total_likes);
   }, [total_likes]);
+
+  const getYoutubeId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2] && match[2].length === 11) ? match[2] : null;
+  };
+
+  const videoId = video ? getYoutubeId(video) : null;
+  const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : video;
 
   const targetId = userId ? Number(userId) : Number(id);
   const isLiked = targetId ? isExpertInWishlist(targetId) : false;
@@ -236,33 +255,48 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
               {language}
             </span>
           </div>
-
-          {/* Price */}
-          <div className="px-4 pb-3 my-2 text-[16px] text-[#1a1a1a]">
-            <strong>Price:</strong>
-            <span className="ml-2 font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded">
-              ₹{price}/min
-            </span>
-          </div>
-
-
         </Link>
 
-        {/* ACTION BUTTONS */}
-        <div className="astro-actions px-4 pb-4 flex gap-3">
-          <button
-            onClick={handleChatClick}
-            className="px-6 py-2 bg-orange-500 text-white text-sm font-semibold rounded-full">
-            <i className="fa-regular fa-comment-dots" /> Chat
-          </button>
+        {/* ACTION BUTTONS WITH PRICES */}
+        <div className="px-4 pb-4 space-y-2">
+          <div className="flex gap-2">
+            <button
+              onClick={handleChatClick}
+              className="flex-1 py-1.5 bg-orange-500 text-white text-[13px] font-bold rounded-full flex flex-col items-center justify-center leading-tight hover:bg-orange-600 transition-colors"
+            >
+              <div className="flex items-center gap-1.5">
+                <i className="fa-regular fa-comment-dots" /> Chat
+              </div>
+              <span className="text-[11px] opacity-90 font-medium">
+                {chat_price && chat_price > 0 ? `₹${chat_price}/min` : (price > 0 ? `₹${price}/min` : "Free")}
+              </span>
+            </button>
+
+            <button
+              onClick={handleChatClick}
+              className="flex-1 py-1.5 bg-orange-500 text-white text-[13px] font-bold rounded-full flex flex-col items-center justify-center leading-tight hover:bg-orange-600 transition-colors"
+            >
+              <div className="flex items-center gap-1.5">
+                <i className="fa-solid fa-phone-volume" /> Call
+              </div>
+              <span className="text-[11px] opacity-90 font-medium">
+                {call_price && call_price > 0 ? `₹${call_price}/min` : (price > 0 ? `₹${price}/min` : "Free")}
+              </span>
+            </button>
+          </div>
 
           <button
             onClick={handleChatClick}
-            className="px-6 py-2 bg-orange-500 text-white text-sm font-semibold rounded-full">
-            <i className="fa-solid fa-phone-volume" /> Call
+            className="w-full py-1.5 bg-orange-500 text-white text-[13px] font-bold rounded-full flex flex-col items-center justify-center leading-tight hover:bg-orange-600 transition-colors"
+          >
+            <div className="flex items-center gap-1.5">
+              <i className="fa-solid fa-video" /> Video Call
+            </div>
+            <span className="text-[11px] opacity-90 font-medium">
+              {video_call_price && video_call_price > 0 ? `₹${video_call_price}/min` : (price > 0 ? `₹${price * 2}/min` : "Free")}
+            </span>
           </button>
         </div>
-
       </div>
 
       {/* VIDEO MODAL */}
@@ -273,15 +307,34 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <iframe
-            width="100%"
-            height="500"
-            src={video}
-            title={`Astrologer ${name} Video`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          {video ? (
+            videoId ? (
+              <iframe
+                width="100%"
+                height="500"
+                src={embedUrl}
+                title={`Astrologer ${name} Video`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <video
+                src={video}
+                width="100%"
+                height="500"
+                controls
+                className="bg-black"
+              />
+            )
+          ) : (
+            <div className="h-[500px] flex items-center justify-center bg-gray-100 rounded">
+              <div className="text-center">
+                <i className="fa-solid fa-video-slash text-5xl text-gray-400 mb-3" />
+                <p className="text-gray-500">No introduction video available yet.</p>
+              </div>
+            </div>
+          )}
         </Modal.Body>
       </Modal>
     </div>
