@@ -23,6 +23,7 @@ export interface ExpertProfile {
   video_call_price?: number;
   report_price?: number;
   horoscope_price?: number;
+  custom_services?: { id: string; name: string; price: number; unit: string }[];
   [key: string]: unknown;
 }
 
@@ -36,6 +37,9 @@ export interface FetchExpertsParams {
   minPrice?: number;
   maxPrice?: number;
   state?: string;
+  service?: string;
+  online?: boolean;  // Changed to boolean as it's cleaner, but string is also fine if query param needs it. Stick to what backend expects (often string in query params). Kept generic.
+  rating?: number;
 }
 
 export interface FetchExpertsResponse {

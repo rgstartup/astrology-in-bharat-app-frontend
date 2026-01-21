@@ -3,7 +3,7 @@
 import NextLink from "next/link";
 const Link = NextLink as any;
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
@@ -27,7 +27,8 @@ interface Astrologer {
   video?: string;
   ratings?: number;
   is_available?: boolean;
-  total_likes?: number; // ADDED
+  total_likes?: number;
+  custom_services?: { id: string; name: string; price: number; unit: string }[];
 }
 
 interface AstrologerCardProps {
@@ -56,10 +57,12 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
     video,
     ratings = 0,
     is_available,
-    total_likes = 0, // Destructure total_likes
+    total_likes = 0,
+    custom_services = [],
   } = astrologerData;
 
   const [show, setShow] = useState(false);
+  const [serviceIndex, setServiceIndex] = useState(0);
   const { isExpertInWishlist, toggleExpertWishlist } = useWishlist();
   const { isClientAuthenticated } = useClientAuth();
   const router = useRouter();
@@ -117,6 +120,15 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
   };
 
   const createDetailsUrl = () => (id ? `/astrologer/${id}` : "#");
+
+  // Combine expertise and custom services for display
+  const allServices = [
+    expertise,
+    ...custom_services.map(s => s.name)
+  ].filter(Boolean);
+
+  const displayServices = allServices.slice(0, 3);
+  const remainingCount = allServices.length - 3;
 
   return (
     <div className="grid-item">
@@ -234,10 +246,54 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
           </div>
 
           {/* Expertise Tag */}
-          <div className="px-4 mt-1">
-            <span className="inline-block bg-[#fd6410] text-white text-[14px] px-3 py-1 rounded-full">
-              {expertise}
-            </span>
+          <div className="px-4 mt-1 relative group h-7">
+            {/* Show arrows only if more than 2 services */}
+            {allServices.length > 2 && (
+              <>
+                {/* Left Scroll Arrow */}
+                {serviceIndex > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setServiceIndex((prev) => Math.max(0, prev - 1));
+                    }}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full w-5 h-5 flex items-center justify-center shadow-sm cursor-pointer hover:bg-white text-gray-700 border border-gray-100"
+                  >
+                    <i className="fa-solid fa-chevron-left text-[10px]" />
+                  </button>
+                )}
+
+                {/* Right Scroll Arrow */}
+                {serviceIndex + 2 < allServices.length && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setServiceIndex((prev) => Math.min(allServices.length - 2, prev + 1));
+                    }}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full w-5 h-5 flex items-center justify-center shadow-sm cursor-pointer hover:bg-white text-gray-700 border border-gray-100"
+                  >
+                    <i className="fa-solid fa-chevron-right text-[10px]" />
+                  </button>
+                )}
+              </>
+            )}
+
+            {/* Services Container */}
+            <div className={`flex gap-1 justify-center ${allServices.length > 2 ? 'px-6' : ''}`}>
+              {(allServices.length > 2
+                ? allServices.slice(serviceIndex, serviceIndex + 2)
+                : allServices
+              ).map((service, index) => (
+                <span
+                  key={index}
+                  className="whitespace-nowrap inline-block bg-[#fd6410] text-white text-[12px] px-2 py-0.5 rounded-full flex-shrink-0 animate-fadeIn"
+                >
+                  {service}
+                </span>
+              ))}
+            </div>
           </div>
 
           {/* Experience */}
@@ -257,7 +313,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
           </div>
         </Link>
 
-        {/* ACTION BUTTONS WITH PRICES */}
+        {/* ACTION BUTTONS WITH PRICES POINTER */}
         <div className="px-4 pb-4 space-y-2">
           <div className="flex gap-2">
             <button

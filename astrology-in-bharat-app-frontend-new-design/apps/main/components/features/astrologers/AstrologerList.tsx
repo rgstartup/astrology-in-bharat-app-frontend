@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import NextLink from "next/link";
 import NextImage from "next/image";
 const NextImageComp = NextImage as any;
@@ -40,6 +40,7 @@ interface ExpertProfile {
   report_price?: number;
   horoscope_price?: number;
   total_likes?: number; // ADDED
+  custom_services?: { id: string; name: string; price: number; unit: string }[] | string;
 }
 
 interface ClientExpertProfile {
@@ -61,6 +62,7 @@ interface ClientExpertProfile {
   modalId: string;
   is_available: boolean;
   total_likes?: number; // ADDED
+  custom_services?: { id: string; name: string; price: number; unit: string }[];
 }
 
 interface AstrologerListProps {
@@ -100,6 +102,11 @@ const mapExpert = (item: ExpertProfile): ClientExpertProfile => ({
   modalId: `home-modal-${item.id}`,
   is_available: item.is_available,
   total_likes: item.total_likes || 0, // ADDED
+  custom_services: Array.isArray(item.custom_services)
+    ? item.custom_services
+    : typeof item.custom_services === 'string'
+      ? (() => { try { return JSON.parse(item.custom_services); } catch { return []; } })()
+      : [],
 });
 
 const AstrologerList: React.FC<AstrologerListProps> = ({
@@ -128,16 +135,30 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
   const [selectedSpecialization, setSelectedSpecialization] = useState(
     searchParams.get("specializations") || ""
   );
-  const [sortOption, setSortOption] = useState(
-    searchParams.get("sort") || "newest"
-  );
 
   const [filterState, setFilterState] = useState({
     language: searchParams.get("languages") || "",
     minPrice: Number(searchParams.get("minPrice")) || 0,
     maxPrice: Number(searchParams.get("maxPrice")) || 100,
     addressState: searchParams.get("state") || "",
+    serviceType: searchParams.get("service") || "all",
+    minRating: Number(searchParams.get("rating")) || 0,
+    onlyOnline: searchParams.get("online") === "true",
+    sortBy: searchParams.get("sort") || "newest",
   });
+
+  const hasActiveFilters = useMemo(() => {
+    return (
+      filterState.language !== "" ||
+      filterState.minPrice !== 0 ||
+      filterState.maxPrice !== 100 ||
+      filterState.addressState !== "" ||
+      filterState.serviceType !== "all" ||
+      filterState.minRating !== 0 ||
+      filterState.onlyOnline !== false ||
+      filterState.sortBy !== "newest"
+    );
+  }, [filterState]);
 
   const [localFilter, setLocalFilter] = useState({ ...filterState });
 
@@ -246,11 +267,14 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
     const updates = {
       q: debouncedSearch,
       specializations: selectedSpecialization,
-      sort: sortOption === "newest" ? undefined : sortOption,
+      sort: filterState.sortBy === "newest" ? undefined : filterState.sortBy,
       languages: filterState.language,
       minPrice: filterState.minPrice,
       maxPrice: filterState.maxPrice === 100 ? undefined : filterState.maxPrice,
       state: filterState.addressState,
+      service: filterState.serviceType === "all" ? undefined : filterState.serviceType,
+      rating: filterState.minRating === 0 ? undefined : filterState.minRating,
+      online: filterState.onlyOnline ? "true" : undefined,
     };
 
     updateUrl(updates);
@@ -261,7 +285,6 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
   }, [
     debouncedSearch,
     selectedSpecialization,
-    sortOption,
     filterState,
     updateUrl,
   ]);
@@ -280,11 +303,14 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
           offset: currentOffset,
           q: debouncedSearch,
           specializations: selectedSpecialization,
-          sort: sortOption,
+          sort: filterState.sortBy,
           languages: filterState.language,
           minPrice: filterState.minPrice,
           maxPrice: filterState.maxPrice,
           state: filterState.addressState,
+          service: filterState.serviceType,
+          rating: filterState.minRating,
+          online: filterState.onlyOnline,
         };
 
         const response = await axios.get(
@@ -306,7 +332,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
         isFetchingRef.current = false;
       }
     },
-    [debouncedSearch, selectedSpecialization, sortOption, filterState]
+    [debouncedSearch, selectedSpecialization, filterState]
   );
 
   const handleScroll = useCallback(() => {
@@ -339,11 +365,14 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
       minPrice: 0,
       maxPrice: 100,
       addressState: "",
+      serviceType: "all",
+      minRating: 0,
+      onlyOnline: false,
+      sortBy: "newest",
     };
     setFilterState(initialState);
     setLocalFilter(initialState);
     setSelectedSpecialization("");
-    setSortOption("newest");
     setSearchQuery("");
   };
 
@@ -393,6 +422,8 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
         <h2 className="title-line color-light">
           <span>Find Your Astrologer</span>
         </h2>
+
+        {/* Header / Top Controls */}
         <div className="row align  ">
           <div className="col-sm-5">
             <div className="search-box">
@@ -414,15 +445,20 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
               data-bs-target="#homeFilterModal"
             >
               <i className="fa-solid fa-filter"></i> Filter
+              {hasActiveFilters && (
+                <span className="absolute top-0 right-0 w-2 h-2 bg-[#fd6410] rounded-full translate-x-1/2 -translate-y-1/2"></span>
+              )}
             </button>
-            <button
-              type="button"
-              className="filter-btn sort-btn border-0 bg-transparent cursor-pointer hover:text-[#fd6410] transition-colors"
-              data-bs-toggle="modal"
-              data-bs-target="#homeSortModal"
-            >
-              <i className="fa-solid fa-sort"></i> Sort
-            </button>
+
+            {hasActiveFilters && (
+              <button
+                type="button"
+                className="filter-btn text-red-500 border-0 bg-transparent cursor-pointer hover:text-red-700 transition-colors ml-3 text-sm font-medium"
+                onClick={resetFilters}
+              >
+                <i className="fa-solid fa-xmark mr-1"></i> Reset
+              </button>
+            )}
           </div>
           <div className="col-sm-4 d-flex align-items-center">
             <button
@@ -473,71 +509,6 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
           </div>
         </div>
 
-        {/* Home Sort Modal */}
-        <div
-          className="modal fade"
-          id="homeSortModal"
-          tabIndex={-1}
-          aria-hidden="true"
-          style={{ zIndex: 1060 }}
-        >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content text-dark border-0 shadow-lg">
-              <div className="modal-header bg-light border-0">
-                <h5 className="modal-title font-bold">Sort By</h5>
-                <button
-                  type="button"
-                  className="btn-close shadow-none"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="modal-body p-0">
-                <div className="list-group list-group-flush">
-                  <button
-                    onClick={() => setSortOption("rating")}
-                    className={`list-group-item list-group-item-action border-0 py-3 ${sortOption === "rating" ? "bg-orange-50 text-[#fd6410] font-semibold" : ""}`}
-                    data-bs-dismiss="modal"
-                  >
-                    <i className="fa-solid fa-star mr-2"></i> Rating: High to
-                    Low
-                  </button>
-                  <button
-                    onClick={() => setSortOption("price_asc")}
-                    className={`list-group-item list-group-item-action border-0 py-3 ${sortOption === "price_asc" ? "bg-orange-50 text-[#fd6410] font-semibold" : ""}`}
-                    data-bs-dismiss="modal"
-                  >
-                    <i className="fa-solid fa-arrow-up-1-9 mr-2"></i> Price: Low
-                    to High
-                  </button>
-                  <button
-                    onClick={() => setSortOption("price_desc")}
-                    className={`list-group-item list-group-item-action border-0 py-3 ${sortOption === "price_desc" ? "bg-orange-50 text-[#fd6410] font-semibold" : ""}`}
-                    data-bs-dismiss="modal"
-                  >
-                    <i className="fa-solid fa-arrow-down-9-1 mr-2"></i> Price:
-                    High to Low
-                  </button>
-                  <button
-                    onClick={() => setSortOption("experience")}
-                    className={`list-group-item list-group-item-action border-0 py-3 ${sortOption === "experience" ? "bg-orange-50 text-[#fd6410] font-semibold" : ""}`}
-                    data-bs-dismiss="modal"
-                  >
-                    <i className="fa-solid fa-briefcase mr-2"></i> Experience:
-                    High to Low
-                  </button>
-                  <button
-                    onClick={() => setSortOption("newest")}
-                    className={`list-group-item list-group-item-action border-0 py-3 ${sortOption === "newest" ? "bg-orange-50 text-[#fd6410] font-semibold" : ""}`}
-                    data-bs-dismiss="modal"
-                  >
-                    <i className="fa-solid fa-clock mr-2"></i> Newest First
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Home Filter Modal */}
         <div
@@ -549,89 +520,171 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
         >
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content text-dark border-0 shadow-lg">
-              <div className="modal-header bg-light border-0">
+              <div className="modal-header bg-light border-0 d-flex justify-content-between align-items-center w-100">
                 <h5 className="modal-title font-bold">Customize Filters</h5>
                 <button
                   type="button"
-                  className="btn-close shadow-none"
+                  className="btn shadow-none p-0 border-0"
+                  style={{
+                    backgroundColor: "#e2e8f0",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer"
+                  }}
                   data-bs-dismiss="modal"
                   aria-label="Close"
-                ></button>
+                >
+                  <i className="fa-solid fa-xmark" style={{ fontSize: "16px", color: "#1e293b" }}></i>
+                </button>
               </div>
-              <div className="modal-body p-4">
-                <div className="mb-4">
-                  <label className="form-label font-bold text-gray-700">
-                    Language
-                  </label>
-                  <div className="input-group">
-                    <span className="input-group-text bg-white border-end-0">
-                      <i className="fa-solid fa-language text-gray-400"></i>
-                    </span>
+              <div className="modal-body p-4 custom-scrollbar" style={{ maxHeight: "70vh", overflowY: "auto" }}>
+
+                {/* 1. Availability */}
+                <div className="mb-4 flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${localFilter.onlyOnline ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                    <span className="font-bold text-gray-700">Online Astrologers Only</span>
+                  </div>
+                  <div className="form-check form-switch">
                     <input
-                      type="text"
-                      className="form-control border-start-0 shadow-none px-0"
-                      placeholder="e.g. Hindi, English"
-                      value={localFilter.language}
-                      onChange={(e) =>
-                        setLocalFilter({
-                          ...localFilter,
-                          language: e.target.value,
-                        })
-                      }
+                      className="form-check-input cursor-pointer"
+                      type="checkbox"
+                      checked={localFilter.onlyOnline}
+                      onChange={(e) => setLocalFilter({ ...localFilter, onlyOnline: e.target.checked })}
                     />
                   </div>
                 </div>
+
+                {/* 2. Service Type */}
+                <div className="mb-4">
+                  <label className="form-label font-bold text-gray-700 mb-2 block">Service Type</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {["all", "chat", "call", "video_call"].map((type) => (
+                      <label key={type} className={`cursor-pointer border rounded-lg p-2 text-center transition ${localFilter.serviceType === type ? 'bg-orange-50 border-[#fd6410] text-[#fd6410] font-semibold' : 'border-gray-200 hover:bg-gray-50'}`}>
+                        <input
+                          type="radio"
+                          name="serviceType"
+                          className="hidden"
+                          checked={localFilter.serviceType === type}
+                          onChange={() => setLocalFilter({ ...localFilter, serviceType: type })}
+                        />
+                        {type === "all" ? "All Services" : type === "video_call" ? "Video Call" : type.charAt(0).toUpperCase() + type.slice(1)}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 3. Sort Order */}
+                <div className="mb-4">
+                  <label className="form-label font-bold text-gray-700 mb-2 block">Sort By</label>
+                  <select
+                    className="form-select border-gray-200 shadow-sm"
+                    value={localFilter.sortBy}
+                    onChange={(e) => setLocalFilter({ ...localFilter, sortBy: e.target.value })}
+                  >
+                    <option value="newest">Newest First</option>
+                    <option value="rating">Rating: High to Low</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="experience">Experience: High to Low</option>
+                  </select>
+                </div>
+
+                {/* 4. Rating Filter */}
+                <div className="mb-4">
+                  <label className="form-label font-bold text-gray-700 mb-2 block">Minimum Rating</label>
+                  <div className="flex gap-2">
+                    {[0, 3, 4, 5].map((rating) => (
+                      <button
+                        key={rating}
+                        onClick={() => setLocalFilter({ ...localFilter, minRating: rating })}
+                        className={`flex-1 py-1.5 rounded-md border text-sm transition ${localFilter.minRating === rating
+                          ? 'bg-[#fd6410] text-white border-[#fd6410]'
+                          : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                          }`}
+                      >
+                        {rating === 0 ? 'Any' : <><i className="fa-solid fa-star text-xs mr-1" />{rating}+</>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 5. Price Range */}
                 <div className="mb-4">
                   <div className="d-flex justify-content-between mb-2">
-                    <label className="form-label font-bold text-gray-700">
-                      Price Range
-                    </label>
-                    <span className="badge bg-orange-100 text-[#fd6410] px-2 py-1">
+                    <label className="form-label font-bold text-gray-700">Price Range</label>
+                    <span className="px-3 py-1 rounded-full font-bold text-sm shadow-sm" style={{ backgroundColor: "#fd6410", color: "#fff" }}>
                       Up to ₹{localFilter.maxPrice}/min
                     </span>
                   </div>
                   <input
                     type="range"
-                    className="form-range custom-range"
+                    className="form-range w-full h-2 rounded-lg appearance-none cursor-pointer"
+                    style={{
+                      background: `linear-gradient(to right, #fd6410 ${(localFilter.maxPrice / 500) * 100}%, #e5e7eb ${(localFilter.maxPrice / 500) * 100}%)`
+                    }}
                     min="0"
-                    max="100"
-                    step="5"
+                    max="500"
+                    step="10"
                     value={localFilter.maxPrice}
-                    onChange={(e) =>
-                      setLocalFilter({
-                        ...localFilter,
-                        maxPrice: parseInt(e.target.value),
-                      })
-                    }
+                    onChange={(e) => setLocalFilter({ ...localFilter, maxPrice: parseInt(e.target.value) })}
                   />
-                  <div className="d-flex justify-content-between text-xs text-gray-400 mt-1">
-                    <span>₹0</span>
-                    <span>₹50</span>
-                    <span>₹100+</span>
+                  <div className="d-flex justify-content-between text-xs mt-2 font-medium">
+                    <span
+                      className={`cursor-pointer transition-colors ${localFilter.maxPrice < 50 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                      onClick={() => setLocalFilter({ ...localFilter, maxPrice: 0 })}
+                    >
+                      Free
+                    </span>
+                    <span
+                      className={`cursor-pointer transition-colors ${localFilter.maxPrice >= 50 && localFilter.maxPrice < 100 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                      onClick={() => setLocalFilter({ ...localFilter, maxPrice: 50 })}
+                    >
+                      ₹50
+                    </span>
+                    <span
+                      className={`cursor-pointer transition-colors ${localFilter.maxPrice >= 100 && localFilter.maxPrice < 500 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                      onClick={() => setLocalFilter({ ...localFilter, maxPrice: 100 })}
+                    >
+                      ₹100
+                    </span>
+                    <span
+                      className={`cursor-pointer transition-colors ${localFilter.maxPrice >= 500 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                      onClick={() => setLocalFilter({ ...localFilter, maxPrice: 500 })}
+                    >
+                      ₹500+
+                    </span>
                   </div>
                 </div>
-                <div className="mb-2">
-                  <label className="form-label font-bold text-gray-700">
-                    State
-                  </label>
-                  <div className="input-group">
-                    <span className="input-group-text bg-white border-end-0">
-                      <i className="fa-solid fa-location-dot text-gray-400"></i>
-                    </span>
+
+                {/* 6. Language & State */}
+                <div className="grid grid-cols-2 gap-3 mb-2">
+                  <div>
+                    <label className="form-label font-bold text-gray-700 text-sm">Language</label>
                     <input
                       type="text"
-                      className="form-control border-start-0 shadow-none px-0"
-                      placeholder="e.g. Maharashtra"
+                      className="form-control form-control-sm border-gray-200"
+                      placeholder="e.g. Hindi"
+                      value={localFilter.language}
+                      onChange={(e) => setLocalFilter({ ...localFilter, language: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="form-label font-bold text-gray-700 text-sm">State</label>
+                    <input
+                      type="text"
+                      className="form-control form-control-sm border-gray-200"
+                      placeholder="e.g. Delhi"
                       value={localFilter.addressState}
-                      onChange={(e) =>
-                        setLocalFilter({
-                          ...localFilter,
-                          addressState: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setLocalFilter({ ...localFilter, addressState: e.target.value })}
                     />
                   </div>
                 </div>
+
               </div>
               <div className="modal-footer border-0 p-4 pt-0 gap-2">
                 <button
@@ -643,17 +696,19 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
                 </button>
                 <button
                   type="button"
-                  className="btn bg-[#fd6410] text-white grow font-semibold py-2 shadow-sm"
+                  className="btn text-white grow font-semibold py-2 shadow-sm"
+                  style={{ backgroundColor: "#fd6410", borderColor: "#fd6410" }}
                   data-bs-dismiss="modal"
                   onClick={applyFilters}
                 >
-                  Apply Changes
+                  Apply Filters
                 </button>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Astrologer List Scroll */}
         <div className="flex items-center relative mt-4">
           <button
             onClick={() => scrollCards("left")}
@@ -703,7 +758,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
 
           <button
             onClick={() => scrollCards("right")}
-            className="shrink-0 w-10 h-10 flex items-center justify-center text-[#fd6410] hover:scale-110 transition cursor-pointer z-10"
+            className="shrink-0 w-10 h-10 flex items-center justify-content-center text-[#fd6410] hover:scale-110 transition cursor-pointer z-10"
             style={{ background: "transparent" }}
           >
             <i className="fa-solid fa-chevron-right fa-2x"></i>

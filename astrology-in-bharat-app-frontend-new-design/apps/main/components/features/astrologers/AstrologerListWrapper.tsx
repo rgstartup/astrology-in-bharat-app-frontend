@@ -25,6 +25,10 @@ async function AstrologerListServer({ searchParams }: AstrologerListWrapperProps
         maxPrice: Number(searchParams.maxPrice) || undefined,
         state:
             typeof searchParams.state === "string" ? searchParams.state : undefined,
+        service:
+            typeof searchParams.service === "string" ? searchParams.service : undefined,
+        online: searchParams.online === "true" ? true : undefined,
+        rating: Number(searchParams.rating) || undefined,
     });
     console.log("Server Side - Astrologer Data Init:", response.data);
 

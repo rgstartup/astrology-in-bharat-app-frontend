@@ -47,6 +47,13 @@ export interface Profile {
     profilePic?: string;
     kycCompleted: boolean;
     addresses: Address[];
+    phoneNumber?: string; // Mobile number field
+    // Detailed address fields
+    houseNo?: string;
+    state?: string;
+    district?: string;
+    country?: string;
+    pincode?: string;
     certificates?: string[];
     gallery: string[];
     videos: string[];
@@ -82,4 +89,5 @@ export interface DocumentItem {
     size: string;
     url?: string;
     uploadedAt: Date;
+    category?: 'aadhar' | 'pan' | 'other';
 }
