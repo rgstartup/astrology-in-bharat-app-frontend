@@ -22,5 +22,20 @@ export const PATHS = {
   SESSION_HISTORY: "/session-history",
   FAMOUS_PLACES: "/famous-places",
   BLOG: "/blog",
-  PLANET: "/calculator/planet"
+  // FREE CALCULATORS
+  PLANET: "/calculator/planet",
+  FLAMES_CALCULATOR: "/calculator/flames",
+  LOVE_COMPATIBILITY_CALCULATOR: "/calculator/love-compatibility",
+  MARRIAGE_AGE_CALCULATOR: "/calculator/marriage-age",
+  SOULMATE_NAME_INITALS_CALCULATOR: "/calculator/soulmate-name-initials",
+  LUCKY_NUMBER_CALCULATOR: "/calculator/lucky-number",
+  LUCKY_COLOR_CALCULATOR: "/calculator/lucky-color",
+  LIFE_PATH_CALCULATOR: "/calculator/life-path",
+  NAME_NUMEROLOGY_CALCULATOR: "/calculator/name-numerology",
+  ZODIAC_SIGN_CALCULATOR: "/calculator/zodiac-sign-compatibility",
+  NAKSHATRA_FINDER : "/calculator/nakshatra-finder",
+  LOYAL_PARTNER_CALCULATOR : "/calculator/loyal-partner",
+  BREAKUP_PATCHUP_CALCULATOR : "/calculator/breakup-patchup",
+  WHO_LOVES_MORE_CALCULATOR : "/calculator/who-loves-more",
+  COMPATIBILITY_BY_ZODIAC_CALCULATOR : "/calculator/compatibility-by-zodiac",
 } as const;

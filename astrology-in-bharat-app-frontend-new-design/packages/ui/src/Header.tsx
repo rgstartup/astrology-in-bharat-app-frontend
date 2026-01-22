@@ -260,64 +260,125 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                       </div>
                     </div>
                   </div>
+                  <div className="col-6 mobile-space">
+                    <div className="d-flex gap-2 w-100 justify-content-end me-lg-5">
 
-                  <div className="col-3 mobile-space text-center">
-                    <Link href={PATHS.CART} className="cart-top">
-                      <i className="fa-solid fa-cart-shopping"></i> Cart{" "}
-                      <span className="value">4</span>
-                    </Link>
-                  </div>
-                  <div className="col-5 mobile-space">
-                    <div
-                      className={`account-dropdown account-dropdown-container w-100 ${showAccountDropdown ? "show" : ""}`}
-                    >
-                      <button
-                        className="account-btn w-100"
-                        onClick={() =>
-                          setShowAccountDropdown(!showAccountDropdown)
-                        }
-                      >
-                        <i className="fa-solid fa-user"></i> Account{" "}
-                        <i className="fa-solid fa-angle-down"></i>
-                      </button>
-                      <div className="account-menu" style={{ zIndex: 60 }}>
-                        {isAuthenticated ? (
-                          <>
+
+                      {isAuthenticated ? (
+                        <div className="col-8 mobile-space">
+                          <div className="d-flex gap-2 align-items-center">
+                            <Link href={PATHS.CART} className="cart-top position-relative">
+                              <i className="fa-solid fa-cart-shopping" style={{ marginLeft: "20px" }}></i> {" "}
+                              {cartCount > 0 && (
+                                <span
+                                  className="position-absolute translate-middle badge rounded-pill bg-danger"
+                                  style={{
+                                    top: '5px',
+                                    left: '35px',
+                                    fontSize: '10px',
+                                    padding: '0.25em 0.6em'
+                                  }}
+                                >
+                                  {cartCount}
+                                </span>
+                              )}
+                            </Link>
+
                             <Link
                               href={PATHS.PROFILE}
-                              onClick={() => setShowAccountDropdown(false)}
-                            >
-                              My Profile
-                            </Link>
-                            <a
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleLogout();
+                              className="d-flex align-items-center gap-2"
+                              style={{
+                                color: "white",
+                                borderRadius: "50%",
+                                textDecoration: "none",
+                                whiteSpace: "nowrap",
                               }}
                             >
-                              Logout
-                            </a>
-                          </>
-                        ) : (
-                          <>
+                              <div style={{
+                                width: "42px",
+                                height: "42px",
+                                borderRadius: "50%",
+                                overflow: "hidden",
+                                border: "1px solid white"
+                              }}>
+                                <NextImage
+                                  src={clientUser?.avatar || "/images/aa.webp"}
+                                  alt="Profile"
+                                  width={24}
+                                  height={24}
+                                  className="object-cover w-100 h-100"
+                                />
+                              </div>
+                            </Link>
+
+                            <Link
+                              href={PATHS.PROFILE}
+                              style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px",
+                                textDecoration: "none",
+                                whiteSpace: "nowrap",
+                                fontSize: "14px",
+                                fontWeight: "bold"
+                              }}
+                            >
+                              <i className="fa-solid fa-user"></i> <span className="d-none d-md-inline">Profile</span>
+                            </Link>
+
+                            <button
+                              onClick={handleLogout}
+                              type="button"
+                              style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px",
+                                border: "none",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              <i className="fa-solid fa-right-from-bracket"></i> <span className="d-none d-md-inline">Logout</span>
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="col-8 mobile-space">
+                          <div className="d-flex gap-4">
                             <Link
                               href={PATHS.SIGN_IN}
-                              className="register-sign-in-btn"
-                              onClick={() => setShowAccountDropdown(false)}
+                              style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px",
+                                textDecoration: "none",
+                                width: "100%",
+                                textAlign: "center",
+                              }}
                             >
-                              Sign In
+                              SignIn
                             </Link>
+
                             <Link
                               href={PATHS.REGISTER}
-                              className="register-sign-in-btn"
-                              onClick={() => setShowAccountDropdown(false)}
+                              style={{
+                                backgroundColor: "#fa6310",
+                                color: "white",
+                                borderRadius: "5px",
+                                padding: "5px 8px",
+                                textDecoration: "none",
+                                width: "100%",
+                                textAlign: "center",
+                              }}
                             >
                               Register
                             </Link>
-                          </>
-                        )}
-                      </div>
+                          </div>
+                        </div>
+                      )}
+
                     </div>
                   </div>
                 </div>
@@ -437,6 +498,92 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                             Love Calculator
                           </Link>
                         </li>
+                         <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.FLAMES_CALCULATOR}
+                          >
+                            Flames Calculator
+                          </Link>
+                        </li>
+                        <li>
+  <Link className="dropdown-item" href={PATHS.LOVE_COMPATIBILITY_CALCULATOR}>
+    Love Compatibility Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.MARRIAGE_AGE_CALCULATOR}>
+    Marriage Age Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.SOULMATE_NAME_INITALS_CALCULATOR}>
+    Soulmate Name Initials Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.LUCKY_NUMBER_CALCULATOR}>
+    Lucky Number Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.LUCKY_COLOR_CALCULATOR}>
+    Lucky Color Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.LIFE_PATH_CALCULATOR}>
+    Life Path Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.NAME_NUMEROLOGY_CALCULATOR}>
+    Name Numerology Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.ZODIAC_SIGN_CALCULATOR}>
+    Zodiac Sign Compatibility Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.NAKSHATRA_FINDER}>
+    Nakshatra Finder
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.LOYAL_PARTNER_CALCULATOR}>
+    Loyal Partner Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.BREAKUP_PATCHUP_CALCULATOR}>
+    Breakup Patchup Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.WHO_LOVES_MORE_CALCULATOR}>
+    Who Loves More Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.COMPATIBILITY_BY_ZODIAC_CALCULATOR}>
+    Compatibility By Zodiac Calculator
+  </Link>
+</li>
+
                         {/* <li>
                           <Link className="dropdown-item" href={PATHS.SUN_SIGN}>
                             Sun Sign
