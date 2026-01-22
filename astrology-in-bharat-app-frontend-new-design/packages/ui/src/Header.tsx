@@ -484,6 +484,92 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                             Love Calculator
                           </Link>
                         </li>
+                         <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.FLAMES_CALCULATOR}
+                          >
+                            Flames Calculator
+                          </Link>
+                        </li>
+                        <li>
+  <Link className="dropdown-item" href={PATHS.LOVE_COMPATIBILITY_CALCULATOR}>
+    Love Compatibility Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.MARRIAGE_AGE_CALCULATOR}>
+    Marriage Age Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.SOULMATE_NAME_INITALS_CALCULATOR}>
+    Soulmate Name Initials Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.LUCKY_NUMBER_CALCULATOR}>
+    Lucky Number Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.LUCKY_COLOR_CALCULATOR}>
+    Lucky Color Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.LIFE_PATH_CALCULATOR}>
+    Life Path Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.NAME_NUMEROLOGY_CALCULATOR}>
+    Name Numerology Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.ZODIAC_SIGN_CALCULATOR}>
+    Zodiac Sign Compatibility Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.NAKSHATRA_FINDER}>
+    Nakshatra Finder
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.LOYAL_PARTNER_CALCULATOR}>
+    Loyal Partner Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.BREAKUP_PATCHUP_CALCULATOR}>
+    Breakup Patchup Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.WHO_LOVES_MORE_CALCULATOR}>
+    Who Loves More Calculator
+  </Link>
+</li>
+
+<li>
+  <Link className="dropdown-item" href={PATHS.COMPATIBILITY_BY_ZODIAC_CALCULATOR}>
+    Compatibility By Zodiac Calculator
+  </Link>
+</li>
+
                         {/* <li>
                           <Link className="dropdown-item" href={PATHS.SUN_SIGN}>
                             Sun Sign
