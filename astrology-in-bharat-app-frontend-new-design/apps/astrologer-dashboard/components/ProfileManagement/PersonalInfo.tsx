@@ -51,6 +51,7 @@ export default function PersonalInfo({
                                 onClick={() => fileInputRef.current?.click()}
                                 className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                             >
+                                {/* @ts-ignore */}
                                 <Edit3 className="w-6 h-6 text-white" />
                             </div>
                             <input
@@ -91,6 +92,7 @@ export default function PersonalInfo({
                         onClick={onEdit}
                         className="flex items-center space-x-1 text-sm text-yellow-600 hover:text-yellow-700 font-medium"
                     >
+                        {/* @ts-ignore */}
                         <Edit3 className="w-4 h-4" />
                         <span>Edit Profile</span>
                     </button>
@@ -104,7 +106,7 @@ export default function PersonalInfo({
                             <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Gender</label>
                             <select
                                 name="gender"
-                                value={tempProfile.gender}
+                                value={tempProfile.gender!}
                                 onChange={onChange}
                                 className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
                             >
@@ -122,6 +124,80 @@ export default function PersonalInfo({
                                 onChange={onChange}
                                 className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
                             />
+                        </div>
+                        {/* Mobile Number Field */}
+                        <div className="sm:col-span-2">
+                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Mobile Number</label>
+                            <input
+                                type="tel"
+                                name="phoneNumber"
+                                value={tempProfile.phoneNumber || ""}
+                                onChange={onChange}
+                                placeholder="e.g. +91 9876543210"
+                                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Address Section */}
+                    <div className="border-t border-gray-200 pt-4">
+                        <h4 className="text-sm font-semibold text-gray-700 mb-3">Address</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">House/Office No</label>
+                                <input
+                                    type="text"
+                                    name="houseNo"
+                                    value={tempProfile.houseNo || ""}
+                                    onChange={onChange}
+                                    placeholder="Enter house/office number"
+                                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">District</label>
+                                <input
+                                    type="text"
+                                    name="district"
+                                    value={tempProfile.district || ""}
+                                    onChange={onChange}
+                                    placeholder="Enter district"
+                                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">State</label>
+                                <input
+                                    type="text"
+                                    name="state"
+                                    value={tempProfile.state || ""}
+                                    onChange={onChange}
+                                    placeholder="Enter state"
+                                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Country</label>
+                                <input
+                                    type="text"
+                                    name="country"
+                                    value={tempProfile.country || ""}
+                                    onChange={onChange}
+                                    placeholder="Enter country"
+                                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Pincode</label>
+                                <input
+                                    type="text"
+                                    name="pincode"
+                                    value={tempProfile.pincode || ""}
+                                    onChange={onChange}
+                                    placeholder="Enter pincode"
+                                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -147,6 +223,7 @@ export default function PersonalInfo({
                             onClick={onSave}
                             className="flex items-center space-x-2 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-all shadow-md text-sm font-medium"
                         >
+                            {/* @ts-ignore */}
                             <Save className="w-4 h-4" />
                             <span>Save Changes</span>
                         </button>
@@ -154,7 +231,7 @@ export default function PersonalInfo({
                 </div>
             ) : (
                 <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                         <div>
                             <p className="text-gray-500">Gender</p>
                             <p className="font-medium capitalize text-black">{profile.gender}</p>
@@ -162,6 +239,37 @@ export default function PersonalInfo({
                         <div>
                             <p className="text-gray-500">Date of Birth</p>
                             <p className="font-medium text-black">{profile.date_of_birth ? new Date(profile.date_of_birth).toLocaleDateString() : "Not specified"}</p>
+                        </div>
+                        <div className="sm:col-span-2">
+                            <p className="text-gray-500">Mobile Number</p>
+                            <p className="font-medium text-black">{profile.phoneNumber || "Not added"}</p>
+                        </div>
+                    </div>
+
+                    {/* Address Section in View Mode */}
+                    <div className="border-t border-gray-200 pt-4 mt-4">
+                        <h4 className="text-sm font-semibold text-gray-700 mb-3">Address</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p className="text-gray-500">House/Office No</p>
+                                <p className="font-medium text-black">{profile.houseNo || "Not added"}</p>
+                            </div>
+                            <div>
+                                <p className="text-gray-500">District</p>
+                                <p className="font-medium text-black">{profile.district || "Not added"}</p>
+                            </div>
+                            <div>
+                                <p className="text-gray-500">State</p>
+                                <p className="font-medium text-black">{profile.state || "Not added"}</p>
+                            </div>
+                            <div>
+                                <p className="text-gray-500">Country</p>
+                                <p className="font-medium text-black">{profile.country || "Not added"}</p>
+                            </div>
+                            <div>
+                                <p className="text-gray-500">Pincode</p>
+                                <p className="font-medium text-black">{profile.pincode || "Not added"}</p>
+                            </div>
                         </div>
                     </div>
                     <div>

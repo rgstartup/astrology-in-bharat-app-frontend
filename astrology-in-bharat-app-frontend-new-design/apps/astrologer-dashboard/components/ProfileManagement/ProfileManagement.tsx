@@ -5,11 +5,8 @@ import { AlertTriangle } from "lucide-react";
 import { toast } from "react-toastify";
 import PersonalInfo from "./PersonalInfo";
 import TodoList from "./TodoList";
-import LeaveCalendar from "./LeaveCalendar";
-import ExpertiseAvailability from "./ExpertiseAvailability";
+
 import PayoutInfo from "./PayoutInfo";
-import AddressManagement from "./AddressManagement";
-import DetailedExperience from "./DetailedExperience";
 import PortfolioGallery from "./PortfolioGallery";
 import VerificationAndDocuments from "./VerificationAndDocuments";
 import { Todo, LeaveDate, Profile, Gender, DocumentItem, ExperienceItem } from "./types";
@@ -42,7 +39,14 @@ const ProfileManagement = () => {
     videos: [],
     video: "",
     detailed_experience: [],
+    phoneNumber: "",
+    houseNo: "",
+    state: "",
+    district: "",
+    country: "",
+    pincode: ""
   });
+
 
   const [editMode, setEditMode] = useState<string | null>(null);
   const [tempProfile, setTempProfile] = useState<Profile>(profile);
@@ -77,10 +81,7 @@ const ProfileManagement = () => {
     },
   ]);
 
-  // Leave Management State (Local for now as per previous design)
-  const [leaveDates, setLeaveDates] = useState<LeaveDate[]>([
-    { id: 1, date: "2025-11-05", reason: "Personal Work" },
-  ]);
+
 
   useEffect(() => {
     if (!authUser?.email) return;
@@ -94,6 +95,10 @@ const ProfileManagement = () => {
     // is_available is a boolean, so check for undefined. price is number.
     if (fullUser && (fullUser.is_available !== undefined || fullUser.price !== undefined || fullUser.bio !== undefined || fullUser.specialization !== undefined)) {
       console.log("Using cached profile data from AuthContext. key fields found.");
+
+      // Extract address from addresses array
+      const firstAddress = fullUser.addresses?.[0];
+
       const mappedProfile: Profile = {
         name: fullUser.name || "",
         email: fullUser.email || "",
@@ -108,6 +113,13 @@ const ProfileManagement = () => {
         video_call_price: fullUser.video_call_price || 0,
         report_price: fullUser.report_price || 0,
         horoscope_price: fullUser.horoscope_price || 0,
+        phoneNumber: fullUser.phoneNumber || "",
+        // Extract address fields from addresses array
+        houseNo: firstAddress?.houseNo || firstAddress?.line1 || "",
+        state: firstAddress?.state || "",
+        district: firstAddress?.district || firstAddress?.city || "",
+        country: firstAddress?.country || "",
+        pincode: firstAddress?.pincode || firstAddress?.zipCode || "",
         bank_details: fullUser.bank_details || "",
         is_available: fullUser.is_available || false,
         kycCompleted: false, // Placeholder
@@ -207,6 +219,22 @@ const ProfileManagement = () => {
   };
 
   const constructProfilePayload = (dataToSave: Profile) => {
+    // Build address object from individual fields
+    const addressObject = {
+      line1: dataToSave.houseNo || "",
+      houseNo: dataToSave.houseNo || "",
+      city: dataToSave.district || "",
+      district: dataToSave.district || "",
+      state: dataToSave.state || "",
+      country: dataToSave.country || "",
+      zipCode: dataToSave.pincode || "",
+      pincode: dataToSave.pincode || ""
+    };
+
+    // Only add address to array if at least one field is filled
+    const hasAddressData = dataToSave.houseNo || dataToSave.district || dataToSave.state || dataToSave.country || dataToSave.pincode;
+    const addressesArray = hasAddressData ? [addressObject] : [];
+
     return {
       gender: dataToSave.gender,
       specialization: dataToSave.specialization,
@@ -222,15 +250,8 @@ const ProfileManagement = () => {
       bank_details: dataToSave.bank_details,
       is_available: dataToSave.is_available,
       date_of_birth: dataToSave.date_of_birth,
-      addresses: dataToSave.addresses.map(a => ({
-        line1: a.line1,
-        line2: a.line2,
-        city: a.city,
-        state: a.state,
-        country: a.country,
-        zipCode: a.zipCode,
-        tag: a.tag
-      })),
+      phoneNumber: dataToSave.phoneNumber,
+      addresses: addressesArray,
       avatar: dataToSave.profilePic,
       gallery: dataToSave.gallery,
       videos: dataToSave.videos,
@@ -482,21 +503,7 @@ const ProfileManagement = () => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  // Leave Management Functions
-  const addLeaveDate = (date: string, reason: string) => {
-    setLeaveDates([
-      ...leaveDates,
-      {
-        id: Date.now(),
-        date: date,
-        reason: reason,
-      },
-    ]);
-  };
 
-  const deleteLeaveDate = (id: number) => {
-    setLeaveDates(leaveDates.filter((leave) => leave.id !== id));
-  };
 
   // Document Functions - Now handles certificates too via separate handler or same? 
   // Wait, I need a handler for certificates. VerificationAndDocuments calls onUploadCertificate? 
@@ -506,32 +513,22 @@ const ProfileManagement = () => {
   // It has a button "Upload Certificate" but does it use onUploadDocument? No, onUploadDocument is for the "KYC Documents" section.
   // I need to add onUploadCertificate to VerificationAndDocuments props and ProfileManagement handlers.
 
-  const handleUploadDocument = async (file: File) => {
+  const handleUploadDocument = async (file: File, category?: 'aadhar' | 'pan' | 'other') => {
     setLoading(true);
     const url = await uploadFile(file);
     setLoading(false);
 
     if (url) {
-      // For now, documents are local state or server state? 
-      // The profile interface has specific fields. 
-      // The current "documents" state is local in ProfileManagement (lines 62-70).
-      // If the backend has a way to store "documents" (KYC docs) separately, I should use that.
-      // The user request mentioned "certificates" specifically.
-      // Let's assume onUploadDocument is for "KYC Documents" which might just be stored in 'documents' list for now (mocked or real).
-      // Since I don't have a specific field in Profile for "kycDocuments" other than "certificates", I will assume 'documents' need to be stored somewhere.
-      // But the previous code had `documents` as local state.
-
       const newDoc: DocumentItem = {
         id: Date.now(),
         name: file.name,
         type: file.type,
         size: (file.size / (1024 * 1024)).toFixed(2) + " MB",
         uploadedAt: new Date(),
-        url: url
+        url: url,
+        category: category
       };
       setDocuments([...documents, newDoc]);
-      // In a real app we'd save this association to backend. 
-      // For now, I will just leave it as local state but with real URL.
     }
   };
 
@@ -578,6 +575,7 @@ const ProfileManagement = () => {
 
       {!profile.kycCompleted && (
         <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-start sm:items-center space-x-3">
+          {/* @ts-ignore */}
           <AlertTriangle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5 sm:mt-0" />
           <p className="text-orange-800 font-medium text-sm sm:text-base">
             Your account is currently inactive and not visible to users. Please complete your KYC verification to activate your profile.
@@ -597,32 +595,8 @@ const ProfileManagement = () => {
           onProfilePicUpdate={handleProfilePicUpdate}
         />
 
-        <ExpertiseAvailability
-          profile={profile}
-          tempProfile={tempProfile}
-          isEditing={editMode === "expertise"}
-          onEdit={() => handleEditClick("expertise")}
-          onSave={() => handleSave("expertise")}
-          onCancel={handleCancel}
-          onChange={handleChange}
-          onLanguageChange={(langs) => setTempProfile(prev => ({ ...prev, languages: langs }))}
-        />
 
-        <DetailedExperience
-          experiences={profile.detailed_experience}
-          onAdd={handleAddExperience}
-          onRemove={handleRemoveExperience}
-        />
 
-        <AddressManagement
-          profile={profile}
-          tempProfile={tempProfile}
-          isEditing={editMode === "address"}
-          onEdit={() => handleEditClick("address")}
-          onSave={() => handleSave("address")}
-          onCancel={handleCancel}
-          onAddressChange={(addresses) => setTempProfile(prev => ({ ...prev, addresses }))}
-        />
 
         {/* New Portfolio Gallery Component */}
         <PortfolioGallery
@@ -672,11 +646,6 @@ const ProfileManagement = () => {
           onDelete={deleteTodo}
         />
 
-        <LeaveCalendar
-          leaveDates={leaveDates}
-          onAdd={addLeaveDate}
-          onDelete={deleteLeaveDate}
-        />
       </div>
     </div>
   );
