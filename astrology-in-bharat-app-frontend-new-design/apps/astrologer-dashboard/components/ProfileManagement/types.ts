@@ -60,6 +60,7 @@ export interface Profile {
     video?: string; // Main introduction video
     detailed_experience: ExperienceItem[];
     custom_services?: CustomService[];
+    documents?: DocumentItem[]; // KYC Documents
 }
 
 export interface ExperienceItem {
@@ -86,8 +87,9 @@ export interface DocumentItem {
     id: number;
     name: string;
     type: string;
-    size: string;
-    url?: string;
-    uploadedAt: Date;
+    size?: string;
+    url: string;
+    uploadedAt?: Date;
     category?: 'aadhar' | 'pan' | 'other';
+    side?: 'front' | 'back';
 }

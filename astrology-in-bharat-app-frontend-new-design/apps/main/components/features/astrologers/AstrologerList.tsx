@@ -139,7 +139,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
   const [filterState, setFilterState] = useState({
     language: searchParams.get("languages") || "",
     minPrice: Number(searchParams.get("minPrice")) || 0,
-    maxPrice: Number(searchParams.get("maxPrice")) || 100,
+    maxPrice: Number(searchParams.get("maxPrice")) || 1000,
     addressState: searchParams.get("state") || "",
     serviceType: searchParams.get("service") || "all",
     minRating: Number(searchParams.get("rating")) || 0,
@@ -270,7 +270,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
       sort: filterState.sortBy === "newest" ? undefined : filterState.sortBy,
       languages: filterState.language,
       minPrice: filterState.minPrice,
-      maxPrice: filterState.maxPrice === 100 ? undefined : filterState.maxPrice,
+      maxPrice: filterState.maxPrice === 1000 ? undefined : filterState.maxPrice,
       state: filterState.addressState,
       service: filterState.serviceType === "all" ? undefined : filterState.serviceType,
       rating: filterState.minRating === 0 ? undefined : filterState.minRating,
@@ -306,7 +306,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
           sort: filterState.sortBy,
           languages: filterState.language,
           minPrice: filterState.minPrice,
-          maxPrice: filterState.maxPrice,
+          maxPrice: filterState.maxPrice === 1000 ? undefined : filterState.maxPrice,
           state: filterState.addressState,
           service: filterState.serviceType,
           rating: filterState.minRating,
@@ -363,7 +363,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
     const initialState = {
       language: "",
       minPrice: 0,
-      maxPrice: 100,
+      maxPrice: 1000,
       addressState: "",
       serviceType: "all",
       minRating: 0,
@@ -625,38 +625,38 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
                     type="range"
                     className="form-range w-full h-2 rounded-lg appearance-none cursor-pointer"
                     style={{
-                      background: `linear-gradient(to right, #fd6410 ${(localFilter.maxPrice / 500) * 100}%, #e5e7eb ${(localFilter.maxPrice / 500) * 100}%)`
+                      background: `linear-gradient(to right, #fd6410 ${(localFilter.maxPrice / 1000) * 100}%, #e5e7eb ${(localFilter.maxPrice / 1000) * 100}%)`
                     }}
                     min="0"
-                    max="500"
+                    max="1000"
                     step="10"
                     value={localFilter.maxPrice}
                     onChange={(e) => setLocalFilter({ ...localFilter, maxPrice: parseInt(e.target.value) })}
                   />
                   <div className="d-flex justify-content-between text-xs mt-2 font-medium">
                     <span
-                      className={`cursor-pointer transition-colors ${localFilter.maxPrice < 50 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
-                      onClick={() => setLocalFilter({ ...localFilter, maxPrice: 0 })}
-                    >
-                      Free
-                    </span>
-                    <span
-                      className={`cursor-pointer transition-colors ${localFilter.maxPrice >= 50 && localFilter.maxPrice < 100 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                      className={`cursor-pointer transition-colors ${localFilter.maxPrice <= 50 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
                       onClick={() => setLocalFilter({ ...localFilter, maxPrice: 50 })}
                     >
                       ₹50
                     </span>
                     <span
-                      className={`cursor-pointer transition-colors ${localFilter.maxPrice >= 100 && localFilter.maxPrice < 500 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
-                      onClick={() => setLocalFilter({ ...localFilter, maxPrice: 100 })}
+                      className={`cursor-pointer transition-colors ${localFilter.maxPrice > 50 && localFilter.maxPrice <= 200 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                      onClick={() => setLocalFilter({ ...localFilter, maxPrice: 200 })}
                     >
-                      ₹100
+                      ₹200
                     </span>
                     <span
-                      className={`cursor-pointer transition-colors ${localFilter.maxPrice >= 500 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                      className={`cursor-pointer transition-colors ${localFilter.maxPrice > 200 && localFilter.maxPrice <= 500 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
                       onClick={() => setLocalFilter({ ...localFilter, maxPrice: 500 })}
                     >
-                      ₹500+
+                      ₹500
+                    </span>
+                    <span
+                      className={`cursor-pointer transition-colors ${localFilter.maxPrice > 500 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                      onClick={() => setLocalFilter({ ...localFilter, maxPrice: 1000 })}
+                    >
+                      Any Price
                     </span>
                   </div>
                 </div>

@@ -6,6 +6,7 @@ import "react-calendar/dist/Calendar.css";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { ChatNotificationListener } from "@/components/ChatNotificationListener";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -38,6 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <>
+      <ChatNotificationListener />
       <div className="min-h-screen bg-gray-50 flex">
         {/* Sidebar */}
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />

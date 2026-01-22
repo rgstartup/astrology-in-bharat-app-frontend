@@ -84,8 +84,12 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
   const videoId = video ? getYoutubeId(video) : null;
   const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : video;
 
-  const targetId = userId ? Number(userId) : Number(id);
-  const isLiked = targetId ? isExpertInWishlist(targetId) : false;
+  // For wishlist, we use userId (user table ID)
+  const wishlistTargetId = userId ? Number(userId) : Number(id);
+  const isLiked = wishlistTargetId ? isExpertInWishlist(wishlistTargetId) : false;
+
+  // For chat/consultation, we use id (expert profile ID)
+  const expertProfileId = Number(id);
 
   const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -105,7 +109,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
     setCurrentLikes((prev) => (newIsLiked ? prev + 1 : Math.max(0, prev - 1)));
 
     try {
-      await toggleExpertWishlist(targetId);
+      await toggleExpertWishlist(wishlistTargetId);
     } catch (error) {
       // Revert on failure
       setCurrentLikes((prev) => (newIsLiked ? prev - 1 : prev + 1));
@@ -116,7 +120,8 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
   const handleChatClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    router.push(`/chat/prep/${targetId}`);
+    // Use expert profile ID for chat
+    router.push(`/chat/prep/${expertProfileId}`);
   };
 
   const createDetailsUrl = () => (id ? `/astrologer/${id}` : "#");

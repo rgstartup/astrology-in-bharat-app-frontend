@@ -48,7 +48,7 @@ const OurAstrologer = () => {
     const [filterState, setFilterState] = useState({
         language: "",
         minPrice: 0,
-        maxPrice: 100,
+        maxPrice: 1000,
         addressState: "",
         onlineOnly: false
     });
@@ -81,7 +81,7 @@ const OurAstrologer = () => {
                     sort: sortOption,
                     languages: filterState.language,
                     minPrice: filterState.minPrice,
-                    maxPrice: filterState.maxPrice,
+                    maxPrice: filterState.maxPrice === 1000 ? undefined : filterState.maxPrice,
                     state: filterState.addressState,
                     onlineOnly: filterState.onlineOnly ? 'true' : undefined
                 },
@@ -186,7 +186,7 @@ const OurAstrologer = () => {
         const initialState = {
             language: "",
             minPrice: 0,
-            maxPrice: 100,
+            maxPrice: 1000,
             addressState: "",
             onlineOnly: false
         };
@@ -348,13 +348,13 @@ const OurAstrologer = () => {
                                         <label className="form-label font-bold text-gray-700 mb-0">Price Range</label>
                                         <span className="badge bg-[#fd6410] text-white px-3 py-1.5 rounded-full">Up to ₹{localFilter.maxPrice}/min</span>
                                     </div>
-                                    <input type="range" className="form-range w-100" min="0" max="100" step="5" value={localFilter.maxPrice} onChange={(e) => setLocalFilter({ ...localFilter, maxPrice: parseInt(e.target.value) })} style={{ accentColor: "#fd6410" }} />
+                                    <input type="range" className="form-range w-100" min="0" max="1000" step="10" value={localFilter.maxPrice} onChange={(e) => setLocalFilter({ ...localFilter, maxPrice: parseInt(e.target.value) })} style={{ accentColor: "#fd6410" }} />
                                     <div className="d-flex justify-content-between text-xs text-gray-500 mt-1 px-1">
                                         <span>₹0</span>
-                                        <span>₹25</span>
-                                        <span>₹50</span>
-                                        <span>₹75</span>
-                                        <span>₹100+</span>
+                                        <span>₹250</span>
+                                        <span>₹500</span>
+                                        <span>₹750</span>
+                                        <span>₹1000+</span>
                                     </div>
                                 </div>
 

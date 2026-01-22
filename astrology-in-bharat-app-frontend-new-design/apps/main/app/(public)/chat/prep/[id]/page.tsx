@@ -1,10 +1,15 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
-import { ChevronLeft, MessageSquare, User, Calendar, MapPin } from "lucide-react";
+import NextImage from "next/image";
+import * as LucideIcons from "lucide-react";
+import apiClient from "@/libs/api-profile";
+import { toast } from "react-toastify";
+import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+
+const Image = NextImage as any;
+const { ChevronLeft, MessageSquare, User, Calendar, MapPin } = LucideIcons as any;
 
 interface AstrologerData {
     id: string | number;
@@ -12,6 +17,13 @@ interface AstrologerData {
     image: string;
     expertise: string;
     experience: number;
+    price: number;
+    chat_price?: number;
+    call_price?: number;
+    video_call_price?: number;
+    languages: string[];
+    rating: number;
+    is_available: boolean;
 }
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
@@ -23,7 +35,9 @@ export default function ConsultationPrep() {
 
     const [astrologer, setAstrologer] = useState<AstrologerData | null>(null);
     const [loading, setLoading] = useState(true);
+    const [actionLoading, setActionLoading] = useState(false);
     const [askSomeoneElse, setAskSomeoneElse] = useState(true);
+    const { isClientAuthenticated } = useClientAuth();
 
     useEffect(() => {
         const fetchAstro = async () => {
@@ -37,6 +51,13 @@ export default function ConsultationPrep() {
                         image: data.user?.avatar || "/images/astro-img1.png",
                         expertise: data.specialization || "Vedic Astrology",
                         experience: data.experience_in_years || 0,
+                        price: data.price || 0,
+                        chat_price: data.chat_price,
+                        call_price: data.call_price,
+                        video_call_price: data.video_call_price,
+                        languages: data.languages || [],
+                        rating: data.rating || 5,
+                        is_available: data.is_available || false,
                     });
                 }
             } catch (error) {
@@ -47,6 +68,28 @@ export default function ConsultationPrep() {
         };
         if (id) fetchAstro();
     }, [id]);
+
+    const handleStartConsultation = async () => {
+        if (!isClientAuthenticated) {
+            toast.error("Please login to start consultation");
+            return;
+        }
+
+        setActionLoading(true);
+        try {
+            const response = await apiClient.post("/chat/initiate", { expertId: parseInt(id) });
+            if (response.data && response.data.id) {
+                toast.success("Connecting to expert...");
+                router.push(`/chat/room/${id}?sessionId=${response.data.id}`);
+            }
+        } catch (error: any) {
+            console.error("Initiation error:", error);
+            const msg = error.response?.data?.message || "Failed to start consultation";
+            toast.error(msg);
+        } finally {
+            setActionLoading(false);
+        }
+    };
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -59,235 +102,212 @@ export default function ConsultationPrep() {
             className="min-h-screen bg-cover bg-center bg-fixed pb-20 relative"
             style={{ backgroundImage: "url('/images/white-background.png')" }}
         >
-            {/* Background Overlay for better readability */}
-            <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]"></div>
+            {/* Premium Glassmorphic Styles */}
+            <style>
+                {`
+                @keyframes float {
+                    0%, 100% { transform: translateY(0) scale(1.05); }
+                    50% { transform: translateY(-10px) scale(1.08); }
+                }
+                .astro-card-glow {
+                    background: radial-gradient(circle at 50% 50%, rgba(253,100,16,0.15), transparent 70%);
+                }
+                `}
+            </style>
 
-            {/* Header */}
-            <header className="bg-white/80 backdrop-blur-md px-4 py-4 sticky top-0 z-30 border-b border-gray-100 flex items-center justify-center shadow-sm">
+            {/* Top Navigation */}
+            <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-gray-100 px-4 py-4 md:px-10 flex items-center justify-between">
                 <button
                     onClick={() => router.back()}
-                    className="absolute left-4 p-2 hover:bg-[#fd6410]/10 rounded-full transition-all active:scale-90 group"
+                    className="flex items-center gap-2 group text-gray-400 hover:text-[#fd6410] transition-colors"
                 >
-                    <ChevronLeft className="w-6 h-6 text-gray-700 group-hover:text-[#fd6410]" />
+                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-[#fd6410]/10 transition-colors">
+                        <ChevronLeft className="w-5 h-5" />
+                    </div>
+                    <span className="font-bold text-xs uppercase tracking-widest">Back</span>
                 </button>
-                <h1 className="text-xl font-bold text-[#800000] tracking-tight">Consultation Prep</h1>
-            </header>
 
-            <div className="max-w-6xl mx-auto p-4 md:py-10 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Astro-Secure Link</span>
+                </div>
+            </nav>
 
-                    {/* Left Column: Workflow */}
-                    <div className="group space-y-8 bg-white/70 backdrop-blur-xl p-6 md:p-10 rounded-[40px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-[3px] border-[#fd6410] transition-all duration-500">
-                        <h2 className="text-2xl font-bold text-[#800000] mb-2 flex items-center gap-4">
-                            <div className="w-1.5 h-6 bg-[#800000] rounded-full"></div>
-                            Workflow
-                        </h2>
+            <main className="max-w-6xl mx-auto px-4 pt-10 md:pt-16">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
 
-                        <style jsx>{`
-                            @keyframes flowDown {
-                                0% {
-                                    top: -100%;
-                                }
-                                100% {
-                                    top: 100%;
-                                }
-                            }
-                            .flow-line {
-                                position: relative;
-                                overflow: hidden;
-                            }
-                            .flow-line::after {
-                                content: '';
-                                position: absolute;
-                                left: 0;
-                                width: 100%;
-                                height: 50%;
-                                background: linear-gradient(to bottom, transparent, #800000, transparent);
-                                animation: flowDown 3s linear infinite;
-                            }
-                        `}</style>
+                    {/* Left: Interactive Onboarding Card */}
+                    <div className="lg:col-span-7 space-y-8 animate-in fade-in slide-in-from-left duration-1000">
+                        <div className="space-y-4">
+                            <span className="px-4 py-1.5 bg-[#fd6410]/10 text-[#fd6410] text-[10px] font-black uppercase tracking-[0.3em] rounded-full border border-[#fd6410]/20 inline-block">
+                                Preparing Connection
+                            </span>
+                            <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-[1.1] tracking-tight">
+                                Talk to <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fd6410] to-orange-400">
+                                    {astrologer?.name}
+                                </span>
+                            </h1>
+                            <p className="text-gray-500 text-lg md:text-xl font-medium max-w-lg leading-relaxed">
+                                Get deep cosmic insights about your career, marriage, and future. Your session is 100% private.
+                            </p>
+                        </div>
 
-                        <div className="space-y-0 relative">
-                            {/* Step 1: Active */}
-                            <div className="flex gap-6 relative">
-                                <div className="flex flex-col items-center shrink-0">
-                                    <div className="w-11 h-11 rounded-full bg-white border-[6px] border-[#fd6410]/10 flex items-center justify-center z-10 shadow-sm relative">
-                                        <div className="w-3.5 h-3.5 rounded-full bg-[#fd6410] shadow-[0_0_10px_rgba(253,100,16,0.3)]"></div>
-                                        <div className="absolute inset-0 rounded-full border-2 border-[#fd6410] opacity-30 scale-110"></div>
-                                    </div>
-                                    {/* Line segment - Grows to fill space */}
-                                    <div className="flex-1 w-[4px] bg-[#800000]/20 -mt-1 flow-line"></div>
+                        {/* Feature Grid */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="p-6 rounded-[2.5rem] bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:translate-y-[-5px] transition-all duration-500 group">
+                                <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center mb-4 group-hover:bg-[#fd6410] transition-colors">
+                                    <MessageSquare className="w-6 h-6 text-[#fd6410] group-hover:text-white" />
                                 </div>
-                                <div className="flex-1 pb-12">
-                                    <div className="bg-white p-6 rounded-[2.5rem] border-2 border-[#fd6410]/20 shadow-sm transition-all duration-300 hover:shadow-md">
-                                        <h3 className="text-xl font-bold text-[#800000]">Connecting to Expert</h3>
-                                        <p className="text-[13px] text-[#800000] mt-2 font-medium leading-relaxed opacity-80">Our top astrologers are being notified to join your session.</p>
-                                        <div className="flex items-center gap-3 mt-4">
-                                            <span className="px-6 py-2 bg-[#fd6410] text-[#800000] text-[9px] font-black rounded-full shadow-[0_5px_15px_rgba(253,100,16,0.15)] uppercase tracking-widest leading-none">
-                                                Active
-                                            </span>
-                                            <div className="flex gap-1.5">
-                                                <div className="w-1.5 h-1.5 bg-[#fd6410] rounded-full animate-pulse shadow-[0_0_5px_#fd6410]"></div>
-                                                <div className="w-1.5 h-1.5 bg-[#fd6410] rounded-full opacity-60"></div>
-                                                <div className="w-1.5 h-1.5 bg-[#fd6410] rounded-full opacity-30"></div>
-                                            </div>
+                                <h3 className="font-bold text-gray-900 mb-1">Live Chat</h3>
+                                <p className="text-xs text-gray-400 leading-relaxed font-medium">Real-time answers from verified experts.</p>
+                            </div>
+                            <div className="p-6 rounded-[2.5rem] bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:translate-y-[-5px] transition-all duration-500 group">
+                                <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
+                                    <Calendar className="w-6 h-6 text-blue-500 group-hover:text-white" />
+                                </div>
+                                <h3 className="font-bold text-gray-900 mb-1">Instant Access</h3>
+                                <p className="text-xs text-gray-400 leading-relaxed font-medium">No appointments needed. Connect now.</p>
+                            </div>
+                        </div>
+
+                        {/* Consultation Checklist */}
+                        <div className="p-8 rounded-[3rem] bg-[#1a1a1a] text-white overflow-hidden relative group">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-[#fd6410] opacity-10 blur-[80px] -mr-32 -mt-32"></div>
+                            <h3 className="text-lg font-bold mb-6 flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-[#fd6410] flex items-center justify-center">
+                                    <User className="w-5 h-5 text-white" />
+                                </div>
+                                Session Checklist
+                            </h3>
+                            <ul className="space-y-4">
+                                {[
+                                    "Keep your Birth Date & Time ready",
+                                    "Ask specific questions for clearer answers",
+                                    "Your session is 256-bit encrypted",
+                                    "Expert is live and awaiting your message"
+                                ].map((item, i) => (
+                                    <li key={i} className="flex items-center gap-4 text-sm font-bold opacity-70 hover:opacity-100 transition-opacity">
+                                        <div className="w-5 h-5 rounded-full border border-white/20 flex items-center justify-center text-[10px]">
+                                            {i + 1}
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Step 2: Inactive */}
-                            <div className="flex gap-6 relative">
-                                <div className="flex flex-col items-center shrink-0">
-                                    <div className="w-11 h-11 rounded-full bg-white border-2 border-[#fd6410]/20 flex items-center justify-center z-10 text-[#fd6410]">
-                                        <Calendar className="w-5 h-5 opacity-60" />
-                                    </div>
-                                    {/* Line segment - Grows to fill space */}
-                                    <div className="flex-1 w-[4px] bg-[#800000]/20 -mt-1 flow-line"></div>
-                                </div>
-                                <div className="flex-1 pb-12">
-                                    <div className="bg-white/50 backdrop-blur-sm p-6 rounded-[2.5rem] border border-[#fd6410]/10 shadow-sm transition-all duration-300">
-                                        <h3 className="text-lg font-bold text-[#800000]">5 Mins Free Session</h3>
-                                        <p className="text-[12px] text-[#800000] mt-1 font-medium italic opacity-60">Session will start automatically.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Step 3: Inactive */}
-                            <div className="flex gap-6 relative">
-                                <div className="flex flex-col items-center shrink-0">
-                                    <div className="w-11 h-11 rounded-full bg-white border-2 border-[#fd6410]/20 flex items-center justify-center z-10 text-[#fd6410]">
-                                        <User className="w-5 h-5 opacity-60" />
-                                    </div>
-                                </div>
-                                <div className="flex-1 pb-2">
-                                    <div className="bg-white/50 backdrop-blur-sm p-6 rounded-[2.5rem] border border-[#fd6410]/10 shadow-sm transition-all duration-300">
-                                        <h3 className="text-lg font-bold text-[#800000]">Deep Consultation</h3>
-                                        <p className="text-[12px] text-[#800000] mt-1 font-medium opacity-60">Option to extend via wallet recharge.</p>
-                                    </div>
-                                </div>
-                            </div>
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     </div>
 
-                    {/* Right Column: User Content */}
-                    <div className="space-y-8">
-                        {/* Profile Section */}
-                        <div className="bg-white/80 backdrop-blur-xl p-8 rounded-[40px] shadow-[0_20px_50px_rgba(0,0,0,0.03)] border-[3px] border-[#fd6410] group hover:shadow-[0_30px_60px_rgba(253,100,16,0.08)] transition-all duration-500">
-                            <h2 className="text-2xl font-black text-[#800000] mb-8 flex items-center gap-3">
-                                <User className="w-6 h-6 text-[#fd6410]" /> Profile to be shared
-                            </h2>
-                            <div className="flex items-center gap-8 bg-gradient-to-br from-gray-50 to-white p-8 rounded-3xl border border-gray-100 relative overflow-hidden group-hover:border-[#fd6410]/20 transition-colors">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-[#fd6410]/5 rounded-full blur-3xl -mr-10 -mt-10"></div>
-                                <div className="flex-1 space-y-4">
-                                    <h4 className="text-2xl font-black text-gray-800 tracking-tight">{astrologer?.name || "Aryan Sharma"}</h4>
-                                    <div className="space-y-2">
-                                        <div className="flex items-center gap-3 text-sm font-bold text-gray-500">
-                                            <div className="p-2 bg-white rounded-xl border border-gray-50 shadow-sm group-hover:text-[#fd6410] transition-colors"><Calendar className="w-4 h-4" /></div>
-                                            <span>15 Oct 1992</span>
-                                        </div>
-                                        <div className="flex items-center gap-3 text-sm font-bold text-gray-500">
-                                            <div className="p-2 bg-white rounded-xl border border-gray-50 shadow-sm group-hover:text-[#fd6410] transition-colors"><MapPin className="w-4 h-4" /></div>
-                                            <span>New Delhi, India</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="w-28 h-28 rounded-[2rem] overflow-hidden shadow-[0_15px_35px_rgba(0,0,0,0.2)] border-8 border-white group-hover:scale-105 transition-transform duration-500">
+                    {/* Right: Expert Preview & CTA */}
+                    <div className="lg:col-span-5 relative">
+                        <div className="sticky top-28">
+                            <div className="p-2 bg-white rounded-[3.5rem] shadow-[0_40px_100px_rgba(0,0,0,0.08)] relative overflow-hidden">
+                                {/* Expert Image Section */}
+                                <div className="relative h-[480px] rounded-[3rem] overflow-hidden group">
                                     <Image
                                         src={astrologer?.image || "/images/astro-img1.png"}
-                                        alt="User"
-                                        width={112}
-                                        height={112}
-                                        className="object-cover w-full h-full"
+                                        alt={astrologer?.name || "Astrologer"}
+                                        fill
+                                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
                                     />
-                                </div>
-                            </div>
-                        </div>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
 
-                        {/* Relative Section with 3D Toggle */}
-                        <div className="bg-white/80 backdrop-blur-xl rounded-[40px] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.03)] border-[3px] border-[#fd6410] group">
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="space-y-1">
-                                    <h3 className="font-black text-[#800000] text-xl tracking-tight">Family Questions?</h3>
-                                    <p className="text-sm font-medium text-gray-400">Ask for your loved ones</p>
-                                </div>
+                                    {/* Availability Badge */}
+                                    <div className={`absolute top-6 left-6 px-4 py-2 backdrop-blur-md rounded-full border flex items-center gap-2 ${astrologer?.is_available
+                                        ? 'bg-white/10 border-white/20'
+                                        : 'bg-gray-900/30 border-gray-500/30'
+                                        }`}>
+                                        <div className={`w-2 h-2 rounded-full ${astrologer?.is_available
+                                            ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]'
+                                            : 'bg-gray-400'
+                                            }`}></div>
+                                        <span className="text-white text-[10px] font-black uppercase tracking-widest">
+                                            {astrologer?.is_available ? 'Available Now' : 'Offline'}
+                                        </span>
+                                    </div>
 
-                                {/* User Requested Toggle Design */}
-                                <label className="inline-flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        className="sr-only peer"
-                                        checked={askSomeoneElse}
-                                        onChange={() => setAskSomeoneElse(!askSomeoneElse)}
-                                    />
-                                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#fd6410] shadow-inner"></div>
-                                </label>
-                            </div>
+                                    {/* Price Badge */}
+                                    <div className="absolute top-6 right-6 px-4 py-2 bg-[#fd6410] rounded-full shadow-lg flex items-center gap-2">
+                                        <span className="text-white text-xs font-black uppercase tracking-widest">
+                                            ₹{astrologer?.chat_price || astrologer?.price || 0} / min
+                                        </span>
+                                    </div>
 
-                            {askSomeoneElse && (
-                                <div className="mt-10 space-y-8 animate-in fade-in slide-in-from-top-6 duration-700 zoom-in-95">
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                        <div className="group/input">
-                                            <label className="block text-[11px] font-black text-[#800000] uppercase tracking-[0.2em] mb-3 ml-1 opacity-70">Relative's Name</label>
-                                            <div className="relative">
-                                                <input
-                                                    type="text"
-                                                    defaultValue="Priya Sharma"
-                                                    className="w-full px-6 py-4 bg-gray-50/50 border-2 border-transparent rounded-2xl focus:border-[#fd6410]/30 focus:bg-white outline-none text-gray-700 font-bold shadow-inner transition-all"
-                                                />
-                                                <div className="absolute inset-0 rounded-2xl border-b-2 border-black/5 pointer-events-none"></div>
+                                    {/* Bottom Info Overlay */}
+                                    <div className="absolute bottom-10 left-10 right-10">
+                                        <div className="flex items-center gap-6 mb-4">
+                                            <div className="flex flex-col">
+                                                <span className="text-white/60 text-[10px] font-black uppercase tracking-widest mb-1">Experience</span>
+                                                <span className="text-white font-bold">{astrologer?.experience}+ Years</span>
+                                            </div>
+                                            <div className="w-[1px] h-8 bg-white/20"></div>
+                                            <div className="flex flex-col">
+                                                <span className="text-white/60 text-[10px] font-black uppercase tracking-widest mb-1">Expertise</span>
+                                                <span className="text-white font-bold">{astrologer?.expertise}</span>
                                             </div>
                                         </div>
-                                        <div className="group/input">
-                                            <label className="block text-[11px] font-black text-[#800000] uppercase tracking-[0.2em] mb-3 ml-1 opacity-70">Relation</label>
-                                            <div className="relative">
-                                                <select className="w-full px-6 py-4 bg-gray-50/50 border-2 border-transparent rounded-2xl focus:border-[#fd6410]/30 focus:bg-white outline-none text-gray-700 font-bold appearance-none transition-all shadow-inner">
-                                                    <option>Sibling</option>
-                                                    <option>Parent</option>
-                                                    <option>Friend</option>
-                                                    <option>Spouse</option>
-                                                </select>
-                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
-                                                    <ChevronLeft className="w-5 h-5 rotate-[270deg]" />
-                                                </div>
-                                                <div className="absolute inset-0 rounded-2xl border-b-2 border-black/5 pointer-events-none"></div>
+                                        <div className="flex items-center gap-2">
+                                            <MapPin className="w-4 h-4 text-orange-400" />
+                                            <span className="text-white/80 text-xs font-medium">Verified Astro Expert • Bharat</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-8 space-y-6">
+                                    {/* Option to toggle who is asking */}
+                                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Consulting for</span>
+                                            <span className="text-sm font-bold text-gray-900">{askSomeoneElse ? "Myself" : "Someone Else"}</span>
+                                        </div>
+                                        <button
+                                            onClick={() => setAskSomeoneElse(!askSomeoneElse)}
+                                            className="px-4 py-2 text-[10px] font-black text-[#fd6410] uppercase tracking-widest hover:bg-[#fd6410]/5 rounded-xl transition-colors"
+                                        >
+                                            Change
+                                        </button>
+                                    </div>
+
+                                    {/* Big CTA with Hover Effects */}
+                                    <div className="pt-6 relative group">
+                                        {/* Glow Effect */}
+                                        <div className="absolute -inset-2 bg-gradient-to-r from-[#fd6410] to-orange-400 rounded-[45px] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
+
+                                        <button
+                                            onClick={handleStartConsultation}
+                                            disabled={actionLoading}
+                                            className={`relative w-full py-6 bg-gradient-to-br from-orange-400 via-[#fd6410] to-[#fd6410] text-white rounded-[2.5rem] font-black text-xl flex items-center justify-center gap-4 shadow-[0_20px_40px_rgba(253,100,16,0.25)] hover:shadow-[0_25px_60px_rgba(253,100,16,0.35)] hover:-translate-y-1 active:translate-y-0.5 active:scale-[0.99] transition-all duration-300 border-b-8 border-[#fd6410]/80 overflow-hidden ${actionLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                        >
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
+                                            <MessageSquare className="w-7 h-7 fill-white/20" />
+                                            <span>{actionLoading ? "CONNECTING..." : "START CONSULTATION"}</span>
+                                        </button>
+
+                                        <div className="flex flex-col items-center gap-4 mt-8">
+                                            <div className="text-[10px] text-gray-400 font-black uppercase tracking-[0.4em] flex items-center gap-3">
+                                                <div className="w-10 h-[1px] bg-gray-200"></div>
+                                                Privacy Protected
+                                                <div className="w-10 h-[1px] bg-gray-200"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            )}
-                        </div>
+                            </div>
 
-                        {/* Big CTA with Hover Effects */}
-                        <div className="pt-6 relative group">
-                            {/* Glow Effect */}
-                            <div className="absolute -inset-2 bg-gradient-to-r from-[#fd6410] to-orange-400 rounded-[45px] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
-
-                            <button
-                                onClick={() => router.push(`/chat/room/${id}`)}
-                                className="relative w-full py-6 bg-gradient-to-br from-orange-400 via-[#fd6410] to-[#fd6410] text-white rounded-[2.5rem] font-black text-xl flex items-center justify-center gap-4 shadow-[0_20px_40px_rgba(253,100,16,0.25)] hover:shadow-[0_25px_60px_rgba(253,100,16,0.35)] hover:-translate-y-1 active:translate-y-0.5 active:scale-[0.99] transition-all duration-300 border-b-8 border-[#fd6410]/80 overflow-hidden"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
-                                <MessageSquare className="w-7 h-7 fill-white/20" />
-                                <span>START CONSULTATION</span>
-                            </button>
-
-                            <div className="flex flex-col items-center gap-4 mt-8">
-                                <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.4em] flex items-center gap-3">
-                                    <div className="w-10 h-[1px] bg-gray-200"></div>
-                                    Privacy Protected
-                                    <div className="w-10 h-[1px] bg-gray-200"></div>
-                                </p>
-                                <div className="flex gap-4 opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
-                                    <img src="https://img.icons8.com/color/48/000000/visa.png" className="h-6" alt="Visa" />
-                                    <img src="https://img.icons8.com/color/48/000000/mastercard.png" className="h-6" alt="Mastercard" />
-                                    <img src="https://img.icons8.com/color/48/000000/google-pay.png" className="h-6" alt="GPay" />
-                                </div>
+                            {/* Trust Pill */}
+                            <div className="mt-8 flex items-center justify-center gap-4">
+                                {[1, 2, 3].map(i => (
+                                    <div key={i} className="w-2 h-2 bg-orange-400/20 rounded-full"></div>
+                                ))}
+                                <span className="text-[9px] font-black text-gray-300 uppercase tracking-[0.5em]">Trust & Integrity</span>
+                                {[1, 2, 3].map(i => (
+                                    <div key={i} className="w-2 h-2 bg-orange-400/20 rounded-full"></div>
+                                ))}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     );
 }

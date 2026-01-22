@@ -1,12 +1,19 @@
 import React from "react";
 import {
-    Clock,
-    Video,
-    RefreshCw,
-    XCircle,
+    Clock as LucideClock,
+    Video as LucideVideo,
+    RefreshCw as LucideRefreshCw,
+    XCircle as LucideXCircle,
+    MessageSquare as LucideMessageSquare,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Appointment } from "./types";
+
+const Clock = LucideClock as any;
+const Video = LucideVideo as any;
+const RefreshCw = LucideRefreshCw as any;
+const XCircle = LucideXCircle as any;
+const MessageSquare = LucideMessageSquare as any;
 
 interface AppointmentListProps {
     appointments: Appointment[];
@@ -23,8 +30,11 @@ export default function AppointmentList({
 
     const statusColors: Record<Appointment["status"], string> = {
         confirmed: "bg-green-100 text-green-600",
-        pending: "bg-yellow-100 text-yellow-600",
-        cancelled: "bg-red-100 text-red-600",
+        pending: "bg-yellow-100 text-yellow-600 border-yellow-200",
+        active: "bg-blue-100 text-blue-600 border-blue-200",
+        completed: "bg-gray-100 text-gray-600 border-gray-200",
+        cancelled: "bg-red-100 text-red-600 border-red-200",
+        expired: "bg-orange-100 text-orange-600 border-orange-200",
     };
 
     return (
@@ -68,7 +78,7 @@ export default function AppointmentList({
                                             statusColors[appt.status]
                                         )}
                                     >
-                                        {appt.status}
+                                        {appt.status === 'pending' ? '⏳ Waiting for you' : appt.status === 'active' ? '🟢 Live Now' : appt.status}
                                     </span>
                                     <span className="text-xs bg-purple-100 text-purple-600 px-3 py-1 rounded-full font-medium">
                                         {appt.type === "new" ? "🆕 New Client" : "Follow-up"}
@@ -84,23 +94,38 @@ export default function AppointmentList({
 
                         {/* Right Section: Actions */}
                         <div className="flex-shrink-0 flex flex-col sm:flex-row gap-3 w-full lg:w-auto mt-4 lg:mt-0">
-                            <a
-                                href={"http://localhost:3003/join-live-session"}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-5 py-3 text-sm bg-yellow-600 text-white rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-yellow-700 shadow-sm transition-all w-full sm:w-auto"
-                            >
-                                <Video className="w-5 h-5" /> Join Meeting
-                            </a>
-                            <button
-                                onClick={() => onReschedule(appt)}
-                                className="px-5 py-3 text-sm bg-gray-200 text-gray-800 rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-gray-300 shadow-sm transition-all w-full sm:w-auto"
-                            >
-                                <RefreshCw className="w-5 h-5" /> Reschedule
-                            </button>
-                            <button className="px-5 py-3 text-sm bg-red-600 text-white rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-red-700 shadow-sm transition-all w-full sm:w-auto">
-                                <XCircle className="w-5 h-5" /> Cancel
-                            </button>
+                            {appt.status !== 'completed' && appt.status !== 'expired' && appt.status !== 'cancelled' && (
+                                <>
+                                    <a
+                                        href={appt.meetingLink}
+                                        className="px-5 py-3 text-sm bg-yellow-600 text-white rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-yellow-700 shadow-sm transition-all w-full sm:w-auto"
+                                    >
+                                        {appt.service === "Chat Consultation" ? (
+                                            <>
+                                                <MessageSquare className="w-5 h-5" /> {appt.status === 'active' ? 'Re-join Chat' : 'Join Chat'}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Video className="w-5 h-5" /> Join Meeting
+                                            </>
+                                        )}
+                                    </a>
+                                    <button
+                                        onClick={() => onReschedule(appt)}
+                                        className="px-5 py-3 text-sm bg-gray-200 text-gray-800 rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-gray-300 shadow-sm transition-all w-full sm:w-auto"
+                                    >
+                                        <RefreshCw className="w-5 h-5" /> Reschedule
+                                    </button>
+                                    <button className="px-5 py-3 text-sm bg-red-600 text-white rounded-xl flex items-center justify-center gap-2 font-semibold hover:bg-red-700 shadow-sm transition-all w-full sm:w-auto">
+                                        <XCircle className="w-5 h-5" /> Cancel
+                                    </button>
+                                </>
+                            )}
+                            {(appt.status === 'completed' || appt.status === 'expired') && (
+                                <div className="text-sm font-bold opacity-60 uppercase tracking-tighter bg-gray-50 px-6 py-3 rounded-xl border border-dashed border-gray-300">
+                                    {appt.status === 'completed' ? '✅ Finished Successfully' : '⌛ Missed - Expired'}
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -145,23 +170,38 @@ export default function AppointmentList({
 
                         {/* Actions stacked */}
                         <div className="flex flex-col gap-2">
-                            <a
-                                href={appt.meetingLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full px-3 py-2.5 bg-yellow-600 text-white rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-700 shadow-sm transition-all"
-                            >
-                                <Video className="w-4 h-4" /> Join
-                            </a>
-                            <button
-                                onClick={() => onReschedule(appt)}
-                                className="w-full px-3 py-2.5 bg-yellow-500 text-white rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-600 shadow-sm transition-all"
-                            >
-                                <RefreshCw className="w-4 h-4" /> Reschedule
-                            </button>
-                            <button className="w-full px-3 py-2.5 bg-red-500 text-white rounded-xl flex items-center justify-center gap-2 hover:bg-red-600 shadow-sm transition-all">
-                                <XCircle className="w-4 h-4" /> Cancel
-                            </button>
+                            {appt.status !== 'completed' && appt.status !== 'expired' && appt.status !== 'cancelled' && (
+                                <>
+                                    <a
+                                        href={appt.meetingLink}
+                                        className="w-full px-3 py-2.5 bg-yellow-600 text-white rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-700 shadow-sm transition-all"
+                                    >
+                                        {appt.service === "Chat Consultation" ? (
+                                            <>
+                                                <MessageSquare className="w-4 h-4" /> {appt.status === 'active' ? 'Re-join Chat' : 'Join Chat'}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Video className="w-4 h-4" /> Join
+                                            </>
+                                        )}
+                                    </a>
+                                    <button
+                                        onClick={() => onReschedule(appt)}
+                                        className="w-full px-3 py-2.5 bg-yellow-500 text-white rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-600 shadow-sm transition-all"
+                                    >
+                                        <RefreshCw className="w-4 h-4" /> Reschedule
+                                    </button>
+                                    <button className="w-full px-3 py-2.5 bg-red-500 text-white rounded-xl flex items-center justify-center gap-2 hover:bg-red-600 shadow-sm transition-all">
+                                        <XCircle className="w-4 h-4" /> Cancel
+                                    </button>
+                                </>
+                            )}
+                            {(appt.status === 'completed' || appt.status === 'expired') && (
+                                <div className="text-xs font-bold opacity-60 text-center bg-gray-50 py-3 rounded-xl border border-dashed border-gray-200">
+                                    {appt.status === 'completed' ? '✅ Completed' : '⌛ Expired'}
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}

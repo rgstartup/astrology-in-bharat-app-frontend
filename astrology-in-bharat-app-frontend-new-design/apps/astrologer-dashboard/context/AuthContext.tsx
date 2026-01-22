@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const res = await apiClient.get('/expert');
             if (res.data) {
-                const fullUserData = { ...res.data, ...(res.data.user || {}) };
+                const fullUserData = { ...res.data.user, ...res.data, profileId: res.data.id };
                 setUser(fullUserData);
             } else if (userData) {
                 setUser(userData);
@@ -118,8 +118,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 // Try to get profile to verify token and get user data
                 const res = await apiClient.get('/expert');
                 if (res.data) {
-                    // Merge user data and profile data to ensure we have everything
-                    const fullUserData = { ...res.data, ...(res.data.user || {}) };
+                    // Merge User data INTO Profile data, but keep Profile ID as 'id'
+                    const fullUserData = { ...res.data.user, ...res.data, profileId: res.data.id };
                     setUser(fullUserData);
                     setIsAuthenticated(true);
                 }

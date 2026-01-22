@@ -139,9 +139,11 @@ const ProfileManagement = () => {
         video: fullUser.video || "",
         detailed_experience: fullUser.detailed_experience || [],
         date_of_birth: fullUser.date_of_birth,
+        documents: fullUser.documents || [],
       };
       setProfile(mappedProfile);
       setTempProfile(mappedProfile);
+      setDocuments(mappedProfile.documents || []);
       setHasProfile(true);
       setLoading(false);
       return;
@@ -187,9 +189,11 @@ const ProfileManagement = () => {
             video: data.video || "",
             detailed_experience: data.detailed_experience || [],
             date_of_birth: data.date_of_birth,
+            documents: data.documents || [],
           };
           setProfile(mappedProfile);
           setTempProfile(mappedProfile);
+          setDocuments(mappedProfile.documents || []);
           setHasProfile(true);
         }
       } catch (err: any) {
@@ -240,7 +244,9 @@ const ProfileManagement = () => {
       specialization: dataToSave.specialization,
       bio: dataToSave.bio,
       experience_in_years: Number(dataToSave.experience_in_years),
-      languages: dataToSave.languages,
+      languages: Array.isArray(dataToSave.languages)
+        ? dataToSave.languages.map(l => l.trim()).filter(l => l.length > 0)
+        : [],
       price: Number(dataToSave.price),
       chat_price: Number(dataToSave.chat_price),
       call_price: Number(dataToSave.call_price),
@@ -259,6 +265,7 @@ const ProfileManagement = () => {
       detailed_experience: dataToSave.detailed_experience
         .filter((exp: any) => exp && !Array.isArray(exp) && typeof exp === 'object')
         .map((exp: any) => ({
+          id: exp.id || 0,
           role: exp.role || exp.title || "Astrologer",
           company: exp.company || exp.organization || "Freelance",
           description: exp.description || "",
@@ -267,7 +274,15 @@ const ProfileManagement = () => {
           isCurrent: exp.isCurrent || false,
           location: exp.location || "Remote"
         })),
-      certificates: dataToSave.certificates
+      certificates: dataToSave.certificates,
+      documents: (dataToSave.documents || []).map(doc => ({
+        id: doc.id,
+        name: doc.name,
+        url: doc.url,
+        type: doc.type,
+        category: doc.category,
+        side: doc.side
+      }))
     };
   };
 
@@ -355,6 +370,14 @@ const ProfileManagement = () => {
     }));
   };
 
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setTempProfile((prev) => ({
+      ...prev,
+      languages: value.split(',')
+    }));
+  };
+
   // File Upload Helper
   const uploadFile = async (file: File): Promise<string | null> => {
     const toastId = toast.loading("Uploading file...");
@@ -401,7 +424,7 @@ const ProfileManagement = () => {
       // Save to backend with FULL payload
       try {
         const payload = constructProfilePayload(updatedProfile);
-        await updateProfile(payload);
+        await updateProfile(payload as any);
         toast.success("Profile picture updated successfully!");
       } catch (error) {
         console.error("Failed to save profile picture:", error);
@@ -513,7 +536,7 @@ const ProfileManagement = () => {
   // It has a button "Upload Certificate" but does it use onUploadDocument? No, onUploadDocument is for the "KYC Documents" section.
   // I need to add onUploadCertificate to VerificationAndDocuments props and ProfileManagement handlers.
 
-  const handleUploadDocument = async (file: File, category?: 'aadhar' | 'pan' | 'other') => {
+  const handleUploadDocument = async (file: File, category?: 'aadhar' | 'pan' | 'other', side?: 'front' | 'back') => {
     setLoading(true);
     const url = await uploadFile(file);
     setLoading(false);
@@ -526,9 +549,15 @@ const ProfileManagement = () => {
         size: (file.size / (1024 * 1024)).toFixed(2) + " MB",
         uploadedAt: new Date(),
         url: url,
-        category: category
+        category: category,
+        side: side
       };
-      setDocuments([...documents, newDoc]);
+
+      const updatedDocuments = [...documents, newDoc];
+      setDocuments(updatedDocuments);
+
+      // Save to backend
+      handleSave("documents", { documents: updatedDocuments });
     }
   };
 
@@ -544,7 +573,11 @@ const ProfileManagement = () => {
   };
 
   const handleDeleteDocument = (id: number) => {
-    setDocuments(documents.filter((doc) => doc.id !== id));
+    const updatedDocuments = documents.filter((doc) => doc.id !== id);
+    setDocuments(updatedDocuments);
+
+    // Save to backend
+    handleSave("documents", { documents: updatedDocuments });
   };
 
   const handleKYCClick = () => {
@@ -593,6 +626,7 @@ const ProfileManagement = () => {
           onCancel={handleCancel}
           onChange={handleChange}
           onProfilePicUpdate={handleProfilePicUpdate}
+          onLanguageChange={handleLanguageChange}
         />
 
 

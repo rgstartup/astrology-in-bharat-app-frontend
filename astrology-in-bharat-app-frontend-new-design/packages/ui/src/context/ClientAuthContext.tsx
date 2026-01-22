@@ -56,24 +56,29 @@ interface ClientUser {
 
 interface ClientAuthContextType {
     clientUser: ClientUser | null;
+    clientBalance: number;
     clientLogin: (token: string, userData?: ClientUser) => void;
     clientLogout: () => void;
     refreshAuth: () => Promise<void>;
+    refreshBalance: () => Promise<void>;
     isClientAuthenticated: boolean;
     clientLoading: boolean;
 }
 
 const ClientAuthContext = createContext<ClientAuthContextType>({
     clientUser: null,
+    clientBalance: 0,
     clientLogin: () => { },
     clientLogout: () => { },
     refreshAuth: async () => { },
+    refreshBalance: async () => { },
     isClientAuthenticated: false,
     clientLoading: true,
 });
 
 export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [clientUser, setClientUser] = useState<ClientUser | null>(null);
+    const [clientBalance, setClientBalance] = useState<number>(0);
     const [clientLoading, setClientLoading] = useState(true);
     const [isClientAuthenticated, setIsClientAuthenticated] = useState(false);
     const router = useRouter();
@@ -85,6 +90,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
             setClientUser(userData);
         }
         setIsClientAuthenticated(true);
+        refreshBalance();
     };
 
     const clientLogout = async () => {
@@ -123,6 +129,15 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
         router.push('/');
     };
 
+    const refreshBalance = async () => {
+        try {
+            const res = await apiClient.get('/wallet/balance');
+            setClientBalance(res.data);
+        } catch (err) {
+            console.error("❌ Error fetching balance:", err);
+        }
+    };
+
     const refreshAuth = async () => {
         const token = getCookie('clientAccessToken');
         console.log("🔄 Manually refreshing authentication... Token present:", !!token);
@@ -146,6 +161,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                 if (res.data && res.data.user) {
                     setClientUser(res.data.user);
                     setIsClientAuthenticated(true);
+                    refreshBalance();
                     console.log("✅ User authenticated via user data:", res.data.user);
                 } else if (res.data && res.data.id) {
                     // Profile exists but no nested user object
@@ -257,6 +273,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                     if (res.data && res.data.user) {
                         setClientUser(res.data.user);
                         setIsClientAuthenticated(true);
+                        refreshBalance();
                         console.log("✅ User authenticated via user data:", res.data.user);
                     } else if (res.data && res.data.id) {
                         // Profile exists but no nested user object
@@ -324,9 +341,11 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
     return (
         <ClientAuthContext.Provider value={{
             clientUser,
+            clientBalance,
             clientLogin,
             clientLogout,
             refreshAuth,
+            refreshBalance,
             isClientAuthenticated,
             clientLoading
         }}>

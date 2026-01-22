@@ -2,17 +2,22 @@
 
 import React, { useState, useEffect, useCallback, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { PATHS } from "@repo/routes";
+import { toast } from "react-toastify";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
-import { getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument, ClientProfileData, AddressDto } from "@/libs/api-profile";
+import apiClient, { getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument, ClientProfileData, AddressDto } from "@/libs/api-profile";
+import * as LucideIcons from "lucide-react";
 
 import WishlistGrid from "@/components/features/profile/WishlistGrid";
+
+const { Plus, CheckCircle2 } = LucideIcons as any;
 
 // Types - now imported from api-profile
 type ProfileData = ClientProfileData;
 
 const ProfilePage: React.FC = () => {
   const router = useRouter();
-  const { clientUser, isClientAuthenticated, clientLoading } = useClientAuth();
+  const { clientUser, isClientAuthenticated, clientLoading, clientBalance } = useClientAuth();
 
   const [profileData, setProfileData] = useState<ProfileData>({});
   const [loading, setLoading] = useState(false);
@@ -23,6 +28,30 @@ const ProfilePage: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string>("/images/aa.webp");
   const [isEditing, setIsEditing] = useState(false);
 
+  // Wallet Recharge State
+  const [rechargeAmount, setRechargeAmount] = useState<number>(500);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const rechargeOptions = [100, 200, 500, 1000, 2000, 5000];
+
+  const { refreshBalance } = useClientAuth();
+
+  const handleRecharge = async () => {
+    if (rechargeAmount < 10) {
+      toast.error("Minimum recharge amount is ₹10");
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      await apiClient.post("/wallet/topup", { amount: rechargeAmount });
+      toast.success(`Successfully recharged ₹${rechargeAmount}!`);
+      refreshBalance();
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Recharge failed. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
   useEffect(() => {
     if (!clientLoading && !isClientAuthenticated) {
       router.push("/sign-in?callbackUrl=/profile");
@@ -213,11 +242,11 @@ const ProfilePage: React.FC = () => {
   // Sidebar Menu Items
   const menuItems = [
     { icon: "fa-regular fa-user", label: "Personal Profile", id: "profile" },
-    { icon: "fa-regular fa-heart", label: "My Wishlist", id: "wishlist" }, // ADDED
+    { icon: "fa-solid fa-wallet", label: "My Wallet", id: "wallet" },
+    { icon: "fa-regular fa-heart", label: "My Wishlist", id: "wishlist" },
     { icon: "fa-solid fa-clock-rotate-left", label: "Consultation History", id: "history" },
     { icon: "fa-solid fa-bag-shopping", label: "My Orders", id: "orders" },
     { icon: "fa-solid fa-scroll", label: "My Kundli Reports", id: "reports" },
-    { icon: "fa-solid fa-shield-halved", label: "Security Settings", id: "security" },
   ];
 
 
@@ -725,6 +754,312 @@ const ProfilePage: React.FC = () => {
                   </div>
                   <div className="card-body p-4 pt-0">
                     <WishlistGrid />
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "wallet" && (
+                <div className="card border-0 shadow-xl rounded-3xl mb-6 overflow-hidden">
+                  {/* Header with gradient */}
+                  <div className="card-header bg-gradient-to-r from-orange-500 to-amber-500 border-0 pt-6 px-6 pb-6">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center">
+                        <div className="flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl mr-4">
+                          <i className="fa-solid fa-wallet text-xl text-white"></i>
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-white text-xl mb-1">My Wallet</h5>
+                          <p className="text-white/80 text-sm">Recharge & manage your balance</p>
+                        </div>
+                      </div>
+                      <div className="bg-white/20 backdrop-blur-sm text-white rounded-full px-4 py-2 font-bold text-sm">
+                        <i className="fa-solid fa-indian-rupee-sign mr-1"></i>
+                        Wallet
+                      </div>
+                    </div>
+
+                    {/* Balance Display */}
+                    <div className="relative">
+                      <div className="p-6 rounded-3xl bg-white/10 backdrop-blur-sm text-center border border-white/20">
+                        <p className="text-white/80 text-xs font-bold uppercase mb-2 tracking-wider">
+                          <i className="fa-solid fa-circle-info mr-2"></i>
+                          Available Balance
+                        </p>
+                        <div className="flex items-center justify-center mb-1">
+                          <span className="text-white text-3xl mr-2">₹</span>
+                          <h1 className="font-black text-white text-5xl">
+                            {clientBalance?.toLocaleString() || '0'}
+                          </h1>
+                        </div>
+                        <p className="text-white/70 text-sm">
+                          Last updated: Just now
+                        </p>
+                      </div>
+
+                      {/* Decorative circles */}
+                      <div className="absolute -top-3 right-6 w-14 h-14 rounded-full bg-white/10 z-0"></div>
+                      <div className="absolute -bottom-3 left-6 w-10 h-10 rounded-full bg-white/10 z-0"></div>
+                    </div>
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="card-body p-6 pt-8">
+                    {/* Recharge Section */}
+                    <div className="mb-8">
+                      {/* Section Header */}
+                      <div className="mb-6">
+                        <div className="flex items-center mb-2">
+                          <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-lg mr-3">
+                            <i className="fa-solid fa-money-bill-transfer text-orange-500"></i>
+                          </div>
+                          <h6 className="font-bold text-gray-800 text-lg">Add Money to Wallet</h6>
+                        </div>
+                        <p className="text-gray-600 text-sm">
+                          Select a package or enter custom amount. Minimum recharge: ₹100
+                        </p>
+                      </div>
+
+                      {/* Custom Amount Input */}
+                      <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200 mb-6">
+                        <div className="grid md:grid-cols-2 gap-4 items-center">
+                          <div>
+                            <div className="flex items-center mb-2">
+                              <i className="fa-solid fa-pencil text-gray-400 mr-2"></i>
+                              <label className="font-bold text-gray-700">Enter Custom Amount</label>
+                            </div>
+                            <p className="text-gray-500 text-sm">Enter any amount between ₹100 - ₹50,000</p>
+                          </div>
+                          <div>
+                            <div className="relative">
+                              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span className="text-gray-500 font-bold">₹</span>
+                              </div>
+                              <input
+                                type="number"
+                                value={rechargeAmount}
+                                onChange={(e) => setRechargeAmount(parseInt(e.target.value) || 0)}
+                                className="w-full pl-10 pr-4 py-4 border border-gray-300 rounded-xl font-bold text-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                                placeholder="0"
+                                min="100"
+                                max="50000"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Quick Recharge Options */}
+                      <div className="mb-8">
+                        <div className="flex items-center mb-4">
+                          <div className="flex items-center justify-center w-8 h-8 bg-amber-100 rounded-lg mr-3">
+                            <i className="fa-solid fa-bolt text-amber-500"></i>
+                          </div>
+                          <h6 className="font-bold text-gray-800 text-lg">Quick Recharge Options</h6>
+                        </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {rechargeOptions.map((amt) => (
+                            <button
+                              key={amt}
+                              type="button"
+                              onClick={() => setRechargeAmount(amt)}
+                              className={`relative p-5 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group ${rechargeAmount === amt
+                                  ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg'
+                                  : 'border-gray-200 bg-white hover:border-orange-300 hover:shadow-md'
+                                }`}
+                            >
+                              {/* Active indicator */}
+                              {rechargeAmount === amt && (
+                                <div className="absolute top-3 right-3 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                  <i className="fa-solid fa-check text-white text-xs"></i>
+                                </div>
+                              )}
+
+                              {/* Amount */}
+                              <div className="flex items-center mb-2">
+                                <span className="text-lg font-bold mr-1">₹</span>
+                                <span className={`text-3xl font-black ${rechargeAmount === amt ? 'text-orange-600' : 'text-gray-800'
+                                  }`}>
+                                  {amt}
+                                </span>
+                              </div>
+
+                              {/* Bonus for larger amounts */}
+                              {amt >= 1000 && (
+                                <span className={`text-xs font-bold px-3 py-1 rounded-full ${rechargeAmount === amt
+                                    ? 'bg-green-500 text-white'
+                                    : 'bg-green-100 text-green-700'
+                                  }`}>
+                                  +{(amt * 0.05).toFixed(0)} bonus
+                                </span>
+                              )}
+
+                              {/* Hover effect */}
+                              <div className="absolute inset-0 rounded-2xl bg-orange-500 opacity-0 group-hover:opacity-5 transition-opacity"></div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Action Button */}
+                      <div className="mb-6">
+                        <button
+                          type="button"
+                          onClick={handleRecharge}
+                          disabled={isProcessing || rechargeAmount < 100}
+                          className={`w-full py-5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-between shadow-lg ${isProcessing || rechargeAmount < 100
+                              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                              : 'bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-orange-500 hover:to-amber-500 hover:shadow-xl hover:-translate-y-0.5'
+                            }`}
+                        >
+                          {isProcessing ? (
+                            <>
+                              <div className="flex items-center">
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                                <span>Processing Recharge...</span>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="flex items-center">
+                                <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mr-4">
+                                  <i className="fa-solid fa-bolt text-white text-xl"></i>
+                                </div>
+                                <div className="text-left">
+                                  <div className="text-white">Recharge ₹{rechargeAmount.toLocaleString()}</div>
+                                  <div className="text-white/80 text-sm font-normal">Click to proceed to payment</div>
+                                </div>
+                              </div>
+                              <i className="fa-solid fa-arrow-right text-xl"></i>
+                            </>
+                          )}
+                        </button>
+
+                        {/* Validation message */}
+                        {rechargeAmount > 0 && rechargeAmount < 100 && (
+                          <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center">
+                            <i className="fa-solid fa-exclamation-triangle text-amber-500 mr-3 text-xl"></i>
+                            <div>
+                              <p className="font-bold text-amber-700">Minimum recharge amount is ₹100</p>
+                              <p className="text-amber-600 text-sm mt-1">Please enter ₹100 or more to proceed</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Features */}
+                      <div className="mt-8 pt-8 border-t border-gray-200">
+                        <div className="grid md:grid-cols-3 gap-6">
+                          <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
+                            <div className="flex items-center justify-center w-12 h-12 bg-green-50 rounded-xl mr-4">
+                              <i className="fa-solid fa-shield-check text-green-500 text-xl"></i>
+                            </div>
+                            <div>
+                              <h6 className="font-bold text-gray-800 mb-1">Secure Payments</h6>
+                              <p className="text-gray-600 text-sm">Bank-level security with encryption</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
+                            <div className="flex items-center justify-center w-12 h-12 bg-amber-50 rounded-xl mr-4">
+                              <i className="fa-solid fa-zap text-amber-500 text-xl"></i>
+                            </div>
+                            <div>
+                              <h6 className="font-bold text-gray-800 mb-1">Instant Credit</h6>
+                              <p className="text-gray-600 text-sm">Balance updates in real-time</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
+                            <div className="flex items-center justify-center w-12 h-12 bg-blue-50 rounded-xl mr-4">
+                              <i className="fa-solid fa-headset text-blue-500 text-xl"></i>
+                            </div>
+                            <div>
+                              <h6 className="font-bold text-gray-800 mb-1">24/7 Support</h6>
+                              <p className="text-gray-600 text-sm">Always here to help you</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Additional info */}
+                        <div className="mt-6 pt-6 border-t border-gray-100">
+                          <div className="flex flex-wrap items-center justify-center gap-6 text-gray-500 text-sm">
+                            <div className="flex items-center">
+                              <i className="fa-solid fa-lock text-green-500 mr-2"></i>
+                              <span>256-bit SSL Encryption</span>
+                            </div>
+                            <div className="flex items-center">
+                              <i className="fa-solid fa-credit-card text-blue-500 mr-2"></i>
+                              <span>Multiple Payment Options</span>
+                            </div>
+                            <div className="flex items-center">
+                              <i className="fa-solid fa-clock text-purple-500 mr-2"></i>
+                              <span>Instant Processing</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "history" && (
+                <div className="card border-0 shadow-sm rounded-4 mb-4">
+                  <div className="card-header bg-white border-0 pt-4 px-4 mb-3">
+                    <h5 className="fw-bold mb-0">
+                      <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#e3f2fd", color: "#1e88e5" }}>
+                        <i className="fa-solid fa-clock-rotate-left"></i>
+                      </span>
+                      Consultation History
+                    </h5>
+                  </div>
+                  <div className="card-body p-4 pt-5 text-center">
+                    <div className="mb-4">
+                      <i className="fa-solid fa-calendar-check fa-3x text-light"></i>
+                    </div>
+                    <h6 className="fw-bold">No Consultations Yet</h6>
+                    <p className="text-muted small">Your future consultations will appear here.</p>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "orders" && (
+                <div className="card border-0 shadow-sm rounded-4 mb-4">
+                  <div className="card-header bg-white border-0 pt-4 px-4 mb-3">
+                    <h5 className="fw-bold mb-0">
+                      <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#f3e5f5", color: "#8e24aa" }}>
+                        <i className="fa-solid fa-bag-shopping"></i>
+                      </span>
+                      My Orders
+                    </h5>
+                  </div>
+                  <div className="card-body p-4 pt-5 text-center">
+                    <div className="mb-4">
+                      <i className="fa-solid fa-box-open fa-3x text-light"></i>
+                    </div>
+                    <h6 className="fw-bold">No Orders Found</h6>
+                    <p className="text-muted small">You haven't placed any orders yet.</p>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "reports" && (
+                <div className="card border-0 shadow-sm rounded-4 mb-4">
+                  <div className="card-header bg-white border-0 pt-4 px-4 mb-3">
+                    <h5 className="fw-bold mb-0">
+                      <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#e8f5e9", color: "#43a047" }}>
+                        <i className="fa-solid fa-scroll"></i>
+                      </span>
+                      My Kundli Reports
+                    </h5>
+                  </div>
+                  <div className="card-body p-4 pt-5 text-center">
+                    <div className="mb-4">
+                      <i className="fa-solid fa-file-invoice fa-3x text-light"></i>
+                    </div>
+                    <h6 className="fw-bold">No Reports Available</h6>
+                    <p className="text-muted small">Generate your first Kundali report to see it here.</p>
                   </div>
                 </div>
               )}

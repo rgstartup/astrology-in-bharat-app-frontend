@@ -104,8 +104,6 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
   const router = useRouter();
   const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
 
   // Use the authentication context
@@ -114,7 +112,9 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
     isClientAuthenticated: contextIsAuthenticated,
     clientLoading: loading,
     clientLogout: contextLogout,
-    refreshAuth
+    clientBalance,
+    refreshAuth,
+    refreshBalance
   } = useClientAuth();
 
   const { cartCount } = useCart();
@@ -184,32 +184,18 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-
-      // Profile dropdown
-      if (
-        !target.closest(".profile-dropdown-container") &&
-        !target.closest("#profileToggle")
-      ) {
-        setShowProfileDropdown(false);
-      }
-
-      // Account dropdown
-      if (!target.closest(".account-dropdown-container")) {
-        setShowAccountDropdown(false);
-      }
-
       // Language dropdown
       if (!target.closest(".language-dropdown-container")) {
         setShowLanguageDropdown(false);
       }
     };
 
-    if (showProfileDropdown || showAccountDropdown || showLanguageDropdown) {
+    if (showLanguageDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
       return () =>
         document.removeEventListener("mousedown", handleClickOutside);
     }
-  }, [showProfileDropdown, showAccountDropdown, showLanguageDropdown]);
+  }, [showLanguageDropdown]);
 
   return (
     <>
