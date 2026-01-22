@@ -260,125 +260,64 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                       </div>
                     </div>
                   </div>
-                  <div className="col-6 mobile-space">
-                    <div className="d-flex gap-2 w-100 justify-content-end me-lg-5">
 
-
-                      {isAuthenticated ? (
-                        <div className="col-8 mobile-space">
-                          <div className="d-flex gap-2 align-items-center">
-                            <Link href={PATHS.CART} className="cart-top position-relative">
-                              <i className="fa-solid fa-cart-shopping" style={{ marginLeft: "20px" }}></i> {" "}
-                              {cartCount > 0 && (
-                                <span
-                                  className="position-absolute translate-middle badge rounded-pill bg-danger"
-                                  style={{
-                                    top: '5px',
-                                    left: '35px',
-                                    fontSize: '10px',
-                                    padding: '0.25em 0.6em'
-                                  }}
-                                >
-                                  {cartCount}
-                                </span>
-                              )}
-                            </Link>
-
+                  <div className="col-3 mobile-space text-center">
+                    <Link href={PATHS.CART} className="cart-top">
+                      <i className="fa-solid fa-cart-shopping"></i> Cart{" "}
+                      <span className="value">4</span>
+                    </Link>
+                  </div>
+                  <div className="col-5 mobile-space">
+                    <div
+                      className={`account-dropdown account-dropdown-container w-100 ${showAccountDropdown ? "show" : ""}`}
+                    >
+                      <button
+                        className="account-btn w-100"
+                        onClick={() =>
+                          setShowAccountDropdown(!showAccountDropdown)
+                        }
+                      >
+                        <i className="fa-solid fa-user"></i> Account{" "}
+                        <i className="fa-solid fa-angle-down"></i>
+                      </button>
+                      <div className="account-menu" style={{ zIndex: 60 }}>
+                        {isAuthenticated ? (
+                          <>
                             <Link
                               href={PATHS.PROFILE}
-                              className="d-flex align-items-center gap-2"
-                              style={{
-                                color: "white",
-                                borderRadius: "50%",
-                                textDecoration: "none",
-                                whiteSpace: "nowrap",
-                              }}
+                              onClick={() => setShowAccountDropdown(false)}
                             >
-                              <div style={{
-                                width: "42px",
-                                height: "42px",
-                                borderRadius: "50%",
-                                overflow: "hidden",
-                                border: "1px solid white"
-                              }}>
-                                <NextImage
-                                  src={clientUser?.avatar || "/images/aa.webp"}
-                                  alt="Profile"
-                                  width={24}
-                                  height={24}
-                                  className="object-cover w-100 h-100"
-                                />
-                              </div>
+                              My Profile
                             </Link>
-
-                            <Link
-                              href={PATHS.PROFILE}
-                              style={{
-                                backgroundColor: "#fa6310",
-                                color: "white",
-                                borderRadius: "5px",
-                                padding: "5px 8px",
-                                textDecoration: "none",
-                                whiteSpace: "nowrap",
-                                fontSize: "14px",
-                                fontWeight: "bold"
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleLogout();
                               }}
                             >
-                              <i className="fa-solid fa-user"></i> <span className="d-none d-md-inline">Profile</span>
-                            </Link>
-
-                            <button
-                              onClick={handleLogout}
-                              type="button"
-                              style={{
-                                backgroundColor: "#fa6310",
-                                color: "white",
-                                borderRadius: "5px",
-                                padding: "5px 8px",
-                                border: "none",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              <i className="fa-solid fa-right-from-bracket"></i> <span className="d-none d-md-inline">Logout</span>
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="col-8 mobile-space">
-                          <div className="d-flex gap-4">
+                              Logout
+                            </a>
+                          </>
+                        ) : (
+                          <>
                             <Link
                               href={PATHS.SIGN_IN}
-                              style={{
-                                backgroundColor: "#fa6310",
-                                color: "white",
-                                borderRadius: "5px",
-                                padding: "5px 8px",
-                                textDecoration: "none",
-                                width: "100%",
-                                textAlign: "center",
-                              }}
+                              className="register-sign-in-btn"
+                              onClick={() => setShowAccountDropdown(false)}
                             >
-                              SignIn
+                              Sign In
                             </Link>
-
                             <Link
                               href={PATHS.REGISTER}
-                              style={{
-                                backgroundColor: "#fa6310",
-                                color: "white",
-                                borderRadius: "5px",
-                                padding: "5px 8px",
-                                textDecoration: "none",
-                                width: "100%",
-                                textAlign: "center",
-                              }}
+                              className="register-sign-in-btn"
+                              onClick={() => setShowAccountDropdown(false)}
                             >
                               Register
                             </Link>
-                          </div>
-                        </div>
-                      )}
-
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
