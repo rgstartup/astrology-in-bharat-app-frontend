@@ -88,10 +88,17 @@ function ChatRoomContent() {
     const [freeLimitData, setFreeLimitData] = useState<any>(null);
     const [continuationTimer, setContinuationTimer] = useState<number>(30);
 
+    // Review States
+    const [reviewRating, setReviewRating] = useState<number>(0);
+    const [reviewComment, setReviewComment] = useState<string>("");
+    const [reviewSubmitted, setReviewSubmitted] = useState<boolean>(false);
+    const [reviewLoading, setReviewLoading] = useState<boolean>(false);
+
     const [sessionSummary, setSessionSummary] = useState<any>(null);
     const [inputValue, setInputValue] = useState("");
     const [typingStatus, setTypingStatus] = useState<{ senderName: string; isTyping: boolean } | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
 
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
 
@@ -298,6 +305,38 @@ function ChatRoomContent() {
             // No need to redirect, socket will trigger modal
         } catch (err) {
             toast.error("Failed to end session");
+        }
+    };
+
+    const handleSubmitReview = async () => {
+        if (reviewRating === 0) {
+            toast.warning("Please select a rating before submitting");
+            return;
+        }
+
+        setReviewLoading(true);
+        try {
+            await apiClient.post('/reviews', {
+                sessionId: parseInt(sessionId || '0'),
+                expertId: parseInt(id || '0'),
+                rating: reviewRating,
+                comment: reviewComment.trim()
+            });
+
+            setReviewSubmitted(true);
+            toast.success("Thank you for your feedback!");
+
+            // Close modal and redirect after 2 seconds
+            setTimeout(() => {
+                setShowModal(false);
+                router.push('/');
+            }, 2000);
+        } catch (error: any) {
+            console.error("Failed to submit review:", error);
+            const errorMsg = error.response?.data?.message || "Failed to submit review";
+            toast.error(errorMsg);
+        } finally {
+            setReviewLoading(false);
         }
     };
 
@@ -564,14 +603,93 @@ function ChatRoomContent() {
                                     </div>
                                 </div>
 
-                                <div className="w-full space-y-4">
-                                    <button onClick={() => router.push('/wallet')} className="w-full py-5 bg-[#fd6410] text-white rounded-[24px] font-black text-lg shadow-[0_10px_30px_rgba(253,100,16,0.3)] hover:brightness-110 active:scale-[0.98] transition-all">
-                                        Recharge Wallet
-                                    </button>
-                                    <button onClick={() => router.push('/')} className={`w-full py-4 rounded-[24px] border ${isDarkMode ? 'border-white/5 text-gray-400' : 'border-black/5 text-gray-500'} font-bold transition-all text-sm uppercase tracking-widest`}>
-                                        Go to Home
-                                    </button>
-                                </div>
+                                {/* Review Section - Show only if NOT expired */}
+                                {sessionSummary?.status !== 'expired' && (
+                                    <div className="w-full mb-6">
+                                        <h3 className={`text-sm font-bold uppercase tracking-widest mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Rate your Experience</h3>
+                                        <div className="flex justify-center gap-2 mb-4">
+                                            {[1, 2, 3, 4, 5].map((star) => (
+                                                <button
+                                                    key={star}
+                                                    type="button"
+                                                    onClick={() => setReviewRating(star)}
+                                                    className="transition-all hover:scale-110 active:scale-90"
+                                                >
+                                                    <Star
+                                                        className={`w-8 h-8 ${star <= reviewRating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+                                                    />
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <textarea
+                                            value={reviewComment}
+                                            onChange={(e) => setReviewComment(e.target.value)}
+                                            placeholder="Sharing your experience helps others..."
+                                            className={`w-full p-4 rounded-xl text-sm mb-4 resize-none outline-none border transition-all focs:ring-2 focus:ring-[#fd6410] ${isDarkMode
+                                                ? 'bg-white/5 border-white/10 text-white placeholder:text-gray-500'
+                                                : 'bg-gray-50 border-gray-200 text-gray-800'
+                                                }`}
+                                            rows={2}
+                                        />
+                                        <button
+                                            onClick={async () => {
+                                                if (reviewSubmitted) return;
+
+                                                // Validation
+                                                if (reviewRating === 0) {
+                                                    toast.warning("Please select a rating before submitting");
+                                                    return;
+                                                }
+
+                                                try {
+                                                    setReviewSubmitted(true);
+
+                                                    // Real API call to backend
+                                                    await apiClient.post('/reviews', {
+                                                        sessionId: parseInt(sessionId || '0'),
+                                                        expertId: expertData?.id || expertData?.userId,
+                                                        rating: reviewRating,
+                                                        comment: reviewComment.trim()
+                                                    });
+
+                                                    toast.success("Thank you for your feedback!");
+
+                                                    // Wait a bit then redirect
+                                                    setTimeout(() => router.push('/'), 1500);
+                                                } catch (err: any) {
+                                                    setReviewSubmitted(false);
+                                                    const errorMsg = err.response?.data?.message || "Failed to submit review. Please try again.";
+                                                    toast.error(errorMsg);
+                                                }
+                                            }}
+                                            disabled={reviewSubmitted}
+                                            className={`w-full py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg active:scale-95 transition-all ${reviewSubmitted
+                                                ? 'bg-green-500 text-white cursor-not-allowed'
+                                                : 'bg-[#fd6410] text-white hover:bg-[#e05600]'
+                                                }`}
+                                        >
+                                            {reviewSubmitted ? (
+                                                <span className="flex items-center justify-center gap-2">
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                    Submitted
+                                                </span>
+                                            ) : "Submit Review"}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {sessionSummary?.status === 'expired' && (
+                                    <div className="w-full space-y-4">
+                                        <button onClick={() => router.push('/wallet')} className="w-full py-5 bg-[#fd6410] text-white rounded-[24px] font-black text-lg shadow-[0_10px_30px_rgba(253,100,16,0.3)] hover:brightness-110 active:scale-[0.98] transition-all">
+                                            Recharge Wallet
+                                        </button>
+                                        <button onClick={() => router.push('/')} className={`w-full py-4 rounded-[24px] border ${isDarkMode ? 'border-white/5 text-gray-400' : 'border-black/5 text-gray-500'} font-bold transition-all text-sm uppercase tracking-widest`}>
+                                            Go to Home
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

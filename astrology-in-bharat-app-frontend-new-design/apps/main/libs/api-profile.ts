@@ -65,4 +65,14 @@ export const endChatSession = async (sessionId: number) => {
     return response.data;
 };
 
+export const getAllChatSessions = async () => {
+    const response = await apiClient.get('/chat/sessions/my-sessions');
+    return response.data;
+};
+
+export const getChatHistory = async (sessionId: number) => {
+    const response = await apiClient.get(`/chat/history/${sessionId}`);
+    return response.data;
+};
+
 export default apiClient;

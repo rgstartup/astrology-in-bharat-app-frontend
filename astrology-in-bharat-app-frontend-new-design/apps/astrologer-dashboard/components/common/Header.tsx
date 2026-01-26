@@ -3,6 +3,7 @@ import { FiBell, FiMenu } from "react-icons/fi";
 import Link from "next/link";
 import apiClient from "@/lib/apiClient";
 import { socket } from "@/lib/socket";
+import { toast } from "react-toastify";
 
 import { SearchInput } from "../../../shared/components/SearchInput";
 
@@ -85,14 +86,27 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
       await apiClient.patch('/expert/status', { is_available: newStatus });
       setIsOnline(newStatus);
+      toast.success(`You are now ${newStatus ? 'Online' : 'Offline'}`);
     } catch (err: any) {
       console.error("Failed to update status:", err);
-      // Detailed error log
-      if (err.response) {
-        console.error("[AuthDebug] 401 Response Data:", err.response.data);
-        console.error("[AuthDebug] 401 Response Status:", err.response.status);
+
+      // Extract backend error message robustly
+      let errorMessage = "Failed to update status";
+      if (err.response?.data?.message) {
+        errorMessage = Array.isArray(err.response.data.message)
+          ? err.response.data.message.join(", ")
+          : err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
       }
-      alert("Failed to update online status. Please check if you are still logged in.");
+
+      // Detailed error log for development
+      if (err.response) {
+        console.error("[AuthDebug] Response Data:", err.response.data);
+        console.error("[AuthDebug] Response Status:", err.response.status);
+      }
+
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -1,12 +1,15 @@
 import React from "react";
-import { Phone, Mail, MessageSquare, Video, Star } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { Client } from "./types";
+
+const { Phone, Mail, MessageSquare, Video, Star } = LucideIcons as any;
 
 interface ClientMobileListProps {
     clients: Client[];
+    onViewChat: (client: Client) => void;
 }
 
-export default function ClientMobileList({ clients }: ClientMobileListProps) {
+export default function ClientMobileList({ clients, onViewChat }: ClientMobileListProps) {
     return (
         <div className="space-y-4 md:hidden">
             {clients.map((client) => (
@@ -65,8 +68,17 @@ export default function ClientMobileList({ clients }: ClientMobileListProps) {
                     </div>
 
                     {/* Payment */}
-                    <div className="text-sm font-semibold text-yellow-700">
-                        Payment to Expert: ₹{client.payment.toLocaleString()}
+                    <div className="flex justify-between items-center">
+                        <div className="text-sm font-semibold text-yellow-700">
+                            Payment: ₹{client.payment.toLocaleString()}
+                        </div>
+                        <button
+                            onClick={() => onViewChat(client)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-colors text-xs font-bold"
+                        >
+                            <MessageSquare size={12} />
+                            Chat History
+                        </button>
                     </div>
 
                     {/* Notes */}

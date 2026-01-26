@@ -215,7 +215,7 @@ const ProfileManagement = () => {
 
   const handleEditClick = (section: string) => {
     if (fetchError) {
-      alert(fetchError);
+      toast.error(fetchError);
       return;
     }
     setEditMode(section);
@@ -288,7 +288,7 @@ const ProfileManagement = () => {
 
   const handleSave = async (section: string, updatedData?: Partial<Profile>) => {
     if (fetchError) {
-      alert(fetchError);
+      toast.error(fetchError);
       return;
     }
     try {
@@ -319,10 +319,11 @@ const ProfileManagement = () => {
       setProfile(dataToSave);
       setTempProfile(dataToSave);
       setEditMode(null);
+      toast.success("Profile updated successfully!");
     } catch (err: any) {
       console.error("Failed to save profile:", err);
       if (err.response?.status === 429) {
-        alert("Too many requests. Please wait a moment before saving again.");
+        toast.warning("Too many requests. Please wait a moment before saving again.");
       } else {
         const errorData = err.response?.data;
         let errorMessage = "Failed to save profile changes.";
@@ -344,9 +345,9 @@ const ProfileManagement = () => {
         const isThrottled = fullErrorMessageString.toLowerCase().includes('too many requests');
 
         if (isThrottled) {
-          alert("Too many requests. Please wait a moment.");
+          toast.warning("Too many requests. Please wait a moment.");
         } else {
-          alert(`Error: ${errorMessage}`);
+          toast.error(errorMessage);
         }
       }
     } finally {
@@ -581,7 +582,7 @@ const ProfileManagement = () => {
   };
 
   const handleKYCClick = () => {
-    alert(
+    toast.info(
       "KYC verification process will be initiated. Please have your documents ready."
     );
   };

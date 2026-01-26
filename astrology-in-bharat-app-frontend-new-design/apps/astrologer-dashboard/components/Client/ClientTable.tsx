@@ -1,17 +1,21 @@
 import React from "react";
-import { Phone, Mail, Star, ArrowDown, ArrowUp } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { Client, SortConfig, SortKey } from "./types";
+
+const { Phone, Mail, Star, ArrowDown, ArrowUp, MessageSquare } = LucideIcons as any;
 
 interface ClientTableProps {
     clients: Client[];
     sortConfig: SortConfig;
     requestSort: (key: SortKey) => void;
+    onViewChat: (client: Client) => void;
 }
 
 export default function ClientTable({
     clients,
     sortConfig,
     requestSort,
+    onViewChat
 }: ClientTableProps) {
     const getSortIcon = (key: SortKey) => {
         if (sortConfig.key !== key) return null;
@@ -47,7 +51,7 @@ export default function ClientTable({
                             onClick={() => requestSort("payment")}
                         >
                             <div className="flex items-center">
-                                Payment To Expert (₹)
+                                Payment (₹)
                                 {getSortIcon("payment")}
                             </div>
                         </th>
@@ -55,7 +59,7 @@ export default function ClientTable({
                             Rating & Review
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Expert Notes
+                            Actions
                         </th>
                     </tr>
                 </thead>
@@ -112,16 +116,18 @@ export default function ClientTable({
                                         />
                                     ))}
                                 </div>
-                                <p className="text-xs text-gray-600 italic leading-snug">
+                                <p className="text-xs text-gray-600 italic leading-snug truncate max-w-[150px]" title={client.review}>
                                     “{client.review}”
                                 </p>
                             </td>
                             <td className="px-6 py-4">
-                                <textarea
-                                    className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500"
-                                    rows={2}
-                                    placeholder="How can we assist you..."
-                                />
+                                <button
+                                    onClick={() => onViewChat(client)}
+                                    className="flex items-center gap-2 px-3 py-1.5 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-colors text-xs font-semibold"
+                                >
+                                    <MessageSquare size={14} />
+                                    View Chat
+                                </button>
                             </td>
                         </tr>
                     ))}

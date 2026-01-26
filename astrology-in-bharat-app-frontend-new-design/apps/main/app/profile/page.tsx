@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { PATHS } from "@repo/routes";
 import { toast } from "react-toastify";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
-import apiClient, { getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument, ClientProfileData, AddressDto } from "@/libs/api-profile";
+import apiClient, { getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument, ClientProfileData, AddressDto, getAllChatSessions, getChatHistory } from "@/libs/api-profile";
 import * as LucideIcons from "lucide-react";
 
 import WishlistGrid from "@/components/features/profile/WishlistGrid";
@@ -34,6 +34,15 @@ const ProfilePage: React.FC = () => {
   const rechargeOptions = [100, 200, 500, 1000, 2000, 5000];
 
   const { refreshBalance } = useClientAuth();
+
+  // Consultation History State
+  const [consultationHistory, setConsultationHistory] = useState<any[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [selectedSession, setSelectedSession] = useState<any>(null);
+  const [chatMessages, setChatMessages] = useState<any[]>([]);
+  const [showChatModal, setShowChatModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile"); // State for active tab
+
 
   const handleRecharge = async () => {
     if (rechargeAmount < 10) {
@@ -88,6 +97,40 @@ const ProfilePage: React.FC = () => {
       loadProfile();
     }
   }, [isClientAuthenticated, loadProfile]);
+
+  // Load consultation history when history tab is active
+  useEffect(() => {
+    const loadConsultationHistory = async () => {
+      if (activeTab === "history" && isClientAuthenticated) {
+        setLoadingHistory(true);
+        try {
+          const sessions = await getAllChatSessions();
+          console.log("📜 Consultation History loaded:", sessions);
+          setConsultationHistory(sessions);
+        } catch (error) {
+          console.error("Failed to load consultation history:", error);
+          toast.error("Failed to load consultation history");
+        } finally {
+          setLoadingHistory(false);
+        }
+      }
+    };
+    loadConsultationHistory();
+  }, [activeTab, isClientAuthenticated]);
+
+  // Function to open chat history modal
+  const handleViewChat = async (session: any) => {
+    try {
+      setSelectedSession(session);
+      setShowChatModal(true);
+      const messages = await getChatHistory(session.id);
+      setChatMessages(messages);
+    } catch (error) {
+      console.error("Failed to load chat messages:", error);
+      toast.error("Failed to load chat messages");
+    }
+  };
+
 
   // Handle image upload dynamically (immediate) - following astrologer dashboard pattern
   const handleImageChange = async (file: File) => {
@@ -249,8 +292,6 @@ const ProfilePage: React.FC = () => {
     { icon: "fa-solid fa-scroll", label: "My Kundli Reports", id: "reports" },
   ];
 
-
-  const [activeTab, setActiveTab] = useState("profile"); // State for active tab
 
   // Only show full-page loader if we are doing initial load and have no data yet
   if ((loading || clientLoading) && !profileData?.id && !saving) {
@@ -864,8 +905,8 @@ const ProfilePage: React.FC = () => {
                               type="button"
                               onClick={() => setRechargeAmount(amt)}
                               className={`relative p-5 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group ${rechargeAmount === amt
-                                  ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg'
-                                  : 'border-gray-200 bg-white hover:border-orange-300 hover:shadow-md'
+                                ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg'
+                                : 'border-gray-200 bg-white hover:border-orange-300 hover:shadow-md'
                                 }`}
                             >
                               {/* Active indicator */}
@@ -887,8 +928,8 @@ const ProfilePage: React.FC = () => {
                               {/* Bonus for larger amounts */}
                               {amt >= 1000 && (
                                 <span className={`text-xs font-bold px-3 py-1 rounded-full ${rechargeAmount === amt
-                                    ? 'bg-green-500 text-white'
-                                    : 'bg-green-100 text-green-700'
+                                  ? 'bg-green-500 text-white'
+                                  : 'bg-green-100 text-green-700'
                                   }`}>
                                   +{(amt * 0.05).toFixed(0)} bonus
                                 </span>
@@ -908,8 +949,8 @@ const ProfilePage: React.FC = () => {
                           onClick={handleRecharge}
                           disabled={isProcessing || rechargeAmount < 100}
                           className={`w-full py-5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-between shadow-lg ${isProcessing || rechargeAmount < 100
-                              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                              : 'bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-orange-500 hover:to-amber-500 hover:shadow-xl hover:-translate-y-0.5'
+                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-orange-500 hover:to-amber-500 hover:shadow-xl hover:-translate-y-0.5'
                             }`}
                         >
                           {isProcessing ? (
@@ -1014,15 +1055,117 @@ const ProfilePage: React.FC = () => {
                       Consultation History
                     </h5>
                   </div>
-                  <div className="card-body p-4 pt-5 text-center">
-                    <div className="mb-4">
-                      <i className="fa-solid fa-calendar-check fa-3x text-light"></i>
-                    </div>
-                    <h6 className="fw-bold">No Consultations Yet</h6>
-                    <p className="text-muted small">Your future consultations will appear here.</p>
+                  <div className="card-body p-4 pt-0">
+                    {loadingHistory ? (
+                      <div className="text-center py-5">
+                        <div className="spinner-border text-primary" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <p className="text-muted small mt-3">Loading your consultation history...</p>
+                      </div>
+                    ) : consultationHistory.length === 0 ? (
+                      <div className="text-center py-5">
+                        <div className="mb-4">
+                          <i className="fa-solid fa-calendar-check fa-3x text-light"></i>
+                        </div>
+                        <h6 className="fw-bold">No Consultations Yet</h6>
+                        <p className="text-muted small">Your future consultations will appear here.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {consultationHistory.map((session: any) => (
+                          <div
+                            key={session.id}
+                            className="border rounded-3 p-4 hover:bg-gray-50 transition-all"
+                            style={{ borderColor: "#e0e0e0" }}
+                          >
+                            <div className="d-flex justify-content-between align-items-start">
+                              <div className="flex-grow-1">
+                                <div className="d-flex align-items-center gap-3 mb-2">
+                                  <div
+                                    className="rounded-circle overflow-hidden"
+                                    style={{ width: "48px", height: "48px", border: "2px solid #fd6410" }}
+                                  >
+                                    <img
+                                      src={session.expert?.user?.avatar || "/images/astro-img1.png"}
+                                      alt={session.expert?.user?.name || "Expert"}
+                                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                    />
+                                  </div>
+                                  <div>
+                                    <h6 className="fw-bold mb-1">
+                                      {session.expert?.user?.name || "Expert Consultation"}
+                                    </h6>
+                                    <p className="text-muted small mb-0">
+                                      <i className="fa-regular fa-calendar me-1"></i>
+                                      {new Date(session.createdAt).toLocaleDateString('en-IN', {
+                                        day: 'numeric',
+                                        month: 'short',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                      })}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="d-flex gap-2 flex-wrap mt-2">
+                                  <span
+                                    className={`badge px-3 py-1 ${session.status === 'completed'
+                                      ? 'bg-success bg-opacity-10 text-success'
+                                      : session.status === 'expired'
+                                        ? 'bg-warning bg-opacity-10 text-warning'
+                                        : 'bg-info bg-opacity-10 text-info'
+                                      }`}
+                                    style={{ fontSize: "11px" }}
+                                  >
+                                    <i className={`fa-solid ${session.status === 'completed'
+                                      ? 'fa-check-circle'
+                                      : session.status === 'expired'
+                                        ? 'fa-clock'
+                                        : 'fa-spinner'
+                                      } me-1`}></i>
+                                    {session.status === 'completed' ? 'Completed' : session.status === 'expired' ? 'Expired' : session.status}
+                                  </span>
+
+                                  {session.isFree && (
+                                    <span className="badge bg-primary bg-opacity-10 text-primary px-3 py-1" style={{ fontSize: "11px" }}>
+                                      <i className="fa-solid fa-gift me-1"></i>
+                                      Free Session
+                                    </span>
+                                  )}
+
+                                  <span className="badge bg-secondary bg-opacity-10 text-secondary px-3 py-1" style={{ fontSize: "11px" }}>
+                                    <i className="fa-solid fa-clock me-1"></i>
+                                    {session.durationMins || 0} mins
+                                  </span>
+
+                                  {session.totalCost > 0 && (
+                                    <span className="badge bg-dark bg-opacity-10 text-dark px-3 py-1" style={{ fontSize: "11px" }}>
+                                      <i className="fa-solid fa-indian-rupee-sign me-1"></i>
+                                      ₹{session.totalCost}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={() => handleViewChat(session)}
+                                className="btn btn-sm text-white px-4 py-2 rounded-3 fw-bold shadow-sm"
+                                style={{ backgroundColor: "#fd6410" }}
+                              >
+                                <i className="fa-solid fa-message me-2"></i>
+                                View Chat
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
+
 
               {activeTab === "orders" && (
                 <div className="card border-0 shadow-sm rounded-4 mb-4">
@@ -1076,6 +1219,149 @@ const ProfilePage: React.FC = () => {
 
             </div>
           </div>
+
+          {/* Chat History Modal */}
+          {showChatModal && selectedSession && (
+            <div
+              className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+              style={{
+                backgroundColor: "rgba(0,0,0,0.7)",
+                zIndex: 9999,
+                backdropFilter: "blur(8px)"
+              }}
+              onClick={() => setShowChatModal(false)}
+            >
+              <div
+                className="bg-white rounded-4 shadow-lg overflow-hidden"
+                style={{ maxWidth: "800px", width: "90%", maxHeight: "90vh" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Modal Header */}
+                <div className="d-flex justify-content-between align-items-center p-4 border-bottom" style={{ backgroundColor: "#fd6410" }}>
+                  <div className="d-flex align-items-center gap-3">
+                    <div
+                      className="rounded-circle overflow-hidden"
+                      style={{ width: "48px", height: "48px", border: "3px solid white" }}
+                    >
+                      <img
+                        src={selectedSession.expert?.user?.avatar || "/images/astro-img1.png"}
+                        alt={selectedSession.expert?.user?.name || "Expert"}
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                      />
+                    </div>
+                    <div>
+                      <h5 className="fw-bold mb-0 text-white">
+                        {selectedSession.expert?.user?.name || "Expert Consultation"}
+                      </h5>
+                      <p className="small mb-0 text-white opacity-75">
+                        <i className="fa-regular fa-calendar me-1"></i>
+                        {new Date(selectedSession.createdAt).toLocaleDateString('en-IN', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowChatModal(false)}
+                    className="btn btn-light rounded-circle p-2"
+                    style={{ width: "40px", height: "40px" }}
+                  >
+                    <i className="fa-solid fa-times"></i>
+                  </button>
+                </div>
+
+                {/* Chat Messages */}
+                <div className="p-4 overflow-auto" style={{ maxHeight: "60vh" }}>
+                  {chatMessages.length === 0 ? (
+                    <div className="text-center py-5">
+                      <i className="fa-solid fa-message fa-3x text-muted mb-3"></i>
+                      <p className="text-muted">No messages in this consultation</p>
+                    </div>
+                  ) : (
+                    <div className="d-flex flex-column gap-3">
+                      {chatMessages.map((msg: any, index: number) => (
+                        <div
+                          key={msg.id || index}
+                          className={`d-flex gap-3 ${msg.senderType === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+                        >
+                          <div
+                            className="rounded-circle overflow-hidden flex-shrink-0"
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              border: `2px solid ${msg.senderType === 'user' ? '#fd6410' : '#e0e0e0'}`
+                            }}
+                          >
+                            <img
+                              src={msg.senderType === 'user'
+                                ? (profileData.profile_picture || "https://avatar.iran.liara.run/public/boy?username=User")
+                                : (selectedSession.expert?.user?.avatar || "/images/astro-img1.png")
+                              }
+                              alt={msg.senderType}
+                              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                            />
+                          </div>
+                          <div className={`flex-grow-1 ${msg.senderType === 'user' ? 'text-end' : 'text-start'}`} style={{ maxWidth: "70%" }}>
+                            <div
+                              className={`p-3 rounded-3 ${msg.senderType === 'user'
+                                ? 'bg-primary bg-opacity-10 text-dark'
+                                : 'bg-light text-dark'
+                                }`}
+                              style={{
+                                borderRadius: msg.senderType === 'user' ? "20px 20px 5px 20px" : "20px 20px 20px 5px"
+                              }}
+                            >
+                              <p className="mb-1" style={{ fontSize: "14px", lineHeight: "1.5" }}>
+                                {msg.content}
+                              </p>
+                              <small className="text-muted" style={{ fontSize: "11px" }}>
+                                {msg.createdAt
+                                  ? new Date(msg.createdAt).toLocaleTimeString('en-IN', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })
+                                  : ''
+                                }
+                              </small>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Modal Footer */}
+                <div className="p-4 border-top bg-light">
+                  <div className="d-flex gap-2 justify-content-between align-items-center">
+                    <div className="d-flex gap-2 flex-wrap">
+                      <span className="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">
+                        <i className="fa-solid fa-clock me-1"></i>
+                        Duration: {selectedSession.durationMins || 0} mins
+                      </span>
+                      {selectedSession.totalCost > 0 && (
+                        <span className="badge bg-dark bg-opacity-10 text-dark px-3 py-2">
+                          <i className="fa-solid fa-indian-rupee-sign me-1"></i>
+                          Cost: ₹{selectedSession.totalCost}
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => setShowChatModal(false)}
+                      className="btn btn-secondary px-4 py-2 rounded-3"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
         </form>
       </div>
     </div>
