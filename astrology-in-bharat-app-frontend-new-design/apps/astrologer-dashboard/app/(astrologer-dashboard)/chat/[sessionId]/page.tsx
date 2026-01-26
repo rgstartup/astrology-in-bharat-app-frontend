@@ -93,7 +93,8 @@ function ExpertChatRoomContent() {
             chatSocket.off('new_message');
             chatSocket.off('session_activated');
             chatSocket.off('session_ended');
-            chatSocket.disconnect();
+            // Do NOT disconnect, as the shared socket is needed for global notifications (ChatNotificationListener)
+            // chatSocket.disconnect(); 
         };
     }, [sessionId, isAuthenticated, user]);
 

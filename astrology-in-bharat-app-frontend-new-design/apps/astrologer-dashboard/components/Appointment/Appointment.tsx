@@ -35,21 +35,63 @@ export default function AppointmentsPage() {
     }
 
     try {
-      console.log("[AppointmentDebug] Fetching pending chat sessions for expert user ID:", expertUser.id);
-      const response = await apiClient.get("/chat/sessions/pending");
-      console.log("[AppointmentDebug] Fetch response data:", response.data);
+      console.log("[AppointmentDebug] Fetching chat sessions (pending + completed) for expert user ID:", expertUser.id);
 
-      const chatAppointments: Appointment[] = response.data.map((session: any) => ({
-        id: session.id,
-        name: session.user?.name || "Client",
-        service: "Chat Consultation",
-        date: session.createdAt || new Date().toISOString(),
-        status: session.status, // Use backend status directly (pending, active, completed, expired)
-        type: "new",
-        reminder: false,
-        meetingLink: `/chat/${session.id}`,
-        sessionId: session.id,
-        clientId: session.clientId,
+      // Fetch both pending sessions (which include 'active') and completed ones
+      const [pendingRes, completedRes] = await Promise.allSettled([
+        apiClient.get("/chat/sessions/pending"),
+        apiClient.get("/chat/sessions/completed") // Assuming this endpoint exists or should be created
+      ]);
+
+      let allSessions: any[] = [];
+
+      if (pendingRes.status === 'fulfilled') {
+        console.log("[AppointmentDebug] Pending response data:", pendingRes.value.data);
+        allSessions = [...allSessions, ...pendingRes.value.data];
+      } else {
+        console.error("[AppointmentDebug] Failed to fetch pending sessions", pendingRes.reason);
+      }
+
+      if (completedRes.status === 'fulfilled') {
+        console.log("[AppointmentDebug] Completed response data:", completedRes.value.data);
+        allSessions = [...allSessions, ...completedRes.value.data];
+      } else {
+        // It's possible the completed endpoint might fail if not implemented, just log warning
+        console.warn("[AppointmentDebug] Failed to fetch completed sessions (endpoint might not exist yet)", completedRes.reason);
+      }
+
+      // Sort by date (newest first)
+      allSessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      const chatAppointments: Appointment[] = await Promise.all(allSessions.map(async (session: any) => {
+        let currentStatus = session.status;
+
+        // Fix: Backend pending endpoint might return stale "active" status even if session ended.
+        // We double-check the status for any "active" session using the individual session endpoint.
+        if (currentStatus === 'active') {
+          try {
+            const verificationRes = await apiClient.get(`/chat/session/${session.id}?_t=${Date.now()}`);
+            if (verificationRes.data && verificationRes.data.status) {
+              console.log(`[AppointmentDebug] Verified status for session ${session.id}: ${verificationRes.data.status}`);
+              currentStatus = verificationRes.data.status;
+            }
+          } catch (err) {
+            console.warn(`[AppointmentDebug] Failed to verify session ${session.id}`, err);
+          }
+        }
+
+        return {
+          id: session.id,
+          name: session.user?.name || "Client",
+          service: "Chat Consultation",
+          date: session.createdAt || new Date().toISOString(),
+          status: currentStatus, // Use the verified status
+          type: "new",
+          reminder: false,
+          meetingLink: `/chat/${session.id}`,
+          sessionId: session.id,
+          clientId: session.clientId,
+        };
       }));
 
       console.log("[AppointmentDebug] Mapped appointments:", chatAppointments);
@@ -231,6 +273,72 @@ export default function AppointmentsPage() {
         appointment={selectedAppointment}
         onConfirm={handleReschedule}
       />
+
+      {/* DEBUG CONSOLE UI */}
+      <DebugConsole />
     </div>
   );
+}
+
+// Simple Debug Console Component
+function DebugConsole() {
+  const [logs, setLogs] = useState<string[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Override console.log to capture logs
+    const originalLog = console.log;
+    const originalError = console.error;
+
+    console.log = (...args) => {
+      // Filter only our relevant logs
+      const msg = args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ');
+      if (msg.includes("[AppointmentDebug]") || msg.includes("Socket")) {
+        setLogs(prev => [`[LOG] ${new Date().toLocaleTimeString()} - ${msg}`, ...prev].slice(0, 50));
+      }
+      originalLog.apply(console, args);
+    };
+
+    console.error = (...args) => {
+      const msg = args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ');
+      setLogs(prev => [`[ERR] ${new Date().toLocaleTimeString()} - ${msg}`, ...prev].slice(0, 50));
+      originalError.apply(console, args);
+    }
+
+    return () => {
+      console.log = originalLog;
+      console.error = originalError;
+    };
+  }, []);
+
+  if (!isVisible) {
+    return (
+      <button
+        onClick={() => setIsVisible(true)}
+        className="fixed bottom-4 right-4 bg-gray-800 text-white p-2 rounded-full shadow-lg text-xs z-50 opacity-50 hover:opacity-100"
+      >
+        🐞 Debug Logs
+      </button>
+    );
+  }
+
+  return (
+    <div className="fixed bottom-0 right-0 w-full md:w-1/3 h-1/3 bg-gray-900 text-green-400 font-mono text-xs p-4 overflow-y-auto shadow-2xl border-t-2 border-green-500 z-50">
+      <div className="flex justify-between items-center mb-2 border-b border-gray-700 pb-2">
+        <span className="font-bold text-white">Live Socket & App Logs</span>
+        <div className="flex gap-2">
+          <button onClick={() => setLogs([])} className="text-gray-400 hover:text-white">Clear</button>
+          <button onClick={() => setIsVisible(false)} className="text-gray-400 hover:text-white">Close</button>
+        </div>
+      </div>
+      <div className="space-y-1">
+        {logs.length === 0 && <span className="opacity-50">Waiting for logs...</span>}
+        {logs.map((log, i) => (
+          <div key={i} className="break-words border-b border-gray-800 pb-1">
+            {log}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }

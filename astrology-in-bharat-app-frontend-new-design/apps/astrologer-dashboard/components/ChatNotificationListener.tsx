@@ -21,20 +21,33 @@ export const ChatNotificationListener: React.FC = () => {
 
         const registrationId = user.profileId || user.id;
 
-        const setupSocket = () => {
-            console.log("[ChatNotificationDebug] Setting up socket... Status:", chatSocket.connected ? "Connected" : "Disconnected");
-
-            if (!chatSocket.connected) {
-                chatSocket.connect();
-            }
-
+        const registerExpert = () => {
             console.log("[ChatNotificationDebug] Registering expert PROFILE ID:", registrationId);
             chatSocket.emit('register_expert', { expertId: registrationId }, (res: any) => {
                 console.log("[ChatNotificationDebug] Registration acknowledgment:", res);
             });
         };
 
+        const setupSocket = () => {
+            console.log("[ChatNotificationDebug] Setting up socket... Status:", chatSocket.connected ? "Connected" : "Disconnected");
+
+            if (!chatSocket.connected) {
+                chatSocket.connect();
+            } else {
+                // If already connected, register immediately
+                registerExpert();
+            }
+        };
+
         setupSocket();
+
+        // Ensure we re-register on reconnection (crucial for notifications)
+        const onConnect = () => {
+            console.log("[ChatNotificationDebug] Socket reconnected automatically. Re-registering expert...");
+            registerExpert();
+        };
+
+        chatSocket.on('connect', onConnect);
 
         // Listen for new requests
         const handleNewRequest = (session: any) => {
@@ -71,6 +84,7 @@ export const ChatNotificationListener: React.FC = () => {
         return () => {
             console.log("[ChatNotificationDebug] Cleaning up listeners");
             chatSocket.off('new_chat_request', handleNewRequest);
+            chatSocket.off('connect', onConnect);
         };
     }, [isAuthenticated, user, router]);
 
