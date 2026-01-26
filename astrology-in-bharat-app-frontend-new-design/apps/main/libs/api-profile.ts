@@ -50,4 +50,19 @@ export const uploadClientDocument = async (file: File): Promise<{ url: string; m
     return response.data;
 };
 
+export const getActiveChatSessions = async () => {
+    const response = await apiClient.get('/chat/sessions/pending');
+    return response.data;
+};
+
+export const getPendingChatSessions = async () => {
+    const response = await apiClient.get('/chat/sessions/pending');
+    return response.data;
+};
+
+export const endChatSession = async (sessionId: number) => {
+    const response = await apiClient.post(`/chat/end/${sessionId}`);
+    return response.data;
+};
+
 export default apiClient;

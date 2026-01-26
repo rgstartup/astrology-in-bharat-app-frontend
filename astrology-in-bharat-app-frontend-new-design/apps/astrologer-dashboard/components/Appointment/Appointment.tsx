@@ -14,6 +14,8 @@ import { chatSocket } from "@/lib/socket";
 export default function AppointmentsPage() {
   const { user: expertUser, isAuthenticated: isExpertAuthenticated } = useAuth();
 
+  console.log("[AppointmentDebug] AppointmentsPage Rendered");
+
   useEffect(() => {
     if (expertUser) {
       console.log("[AppointmentDebug] Full expertUser structure:", JSON.stringify(expertUser, null, 2));
@@ -62,6 +64,7 @@ export default function AppointmentsPage() {
 
       // Sort by date (newest first)
       allSessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      console.log(`[AppointmentDebug] Final session count to map: ${allSessions.length}`);
 
       const chatAppointments: Appointment[] = await Promise.all(allSessions.map(async (session: any) => {
         let currentStatus = session.status;
@@ -80,6 +83,12 @@ export default function AppointmentsPage() {
           }
         }
 
+        if (!session.expiresAt) {
+          console.warn(`[AppointmentDebug] ⚠️ Missing expiresAt for session ${session.id}. Raw session:`, session);
+        } else {
+          console.log(`[AppointmentDebug] ✅ Received expiresAt for session ${session.id}: ${session.expiresAt}`);
+        }
+
         return {
           id: session.id,
           name: session.user?.name || "Client",
@@ -91,6 +100,9 @@ export default function AppointmentsPage() {
           meetingLink: `/chat/${session.id}`,
           sessionId: session.id,
           clientId: session.clientId,
+          expiresAt: session.expiresAt,
+          isFree: !!session.isFree,
+          freeMinutes: session.freeMinutes || 0,
         };
       }));
 
@@ -147,6 +159,8 @@ export default function AppointmentsPage() {
           return;
         }
 
+        console.log(`[AppointmentDebug] Socket data contains expiresAt: ${session.expiresAt || 'MISSING'}`);
+
         const newAppt: Appointment = {
           id: session.id,
           name: session.user?.name || "Client",
@@ -158,6 +172,9 @@ export default function AppointmentsPage() {
           meetingLink: `/chat/${session.id}`,
           sessionId: session.id,
           clientId: session.clientId || session.userId,
+          expiresAt: session.expiresAt,
+          isFree: !!session.isFree,
+          freeMinutes: session.freeMinutes || 0,
         };
 
         setAppointments(prev => {
@@ -273,72 +290,6 @@ export default function AppointmentsPage() {
         appointment={selectedAppointment}
         onConfirm={handleReschedule}
       />
-
-      {/* DEBUG CONSOLE UI */}
-      <DebugConsole />
     </div>
   );
-}
-
-// Simple Debug Console Component
-function DebugConsole() {
-  const [logs, setLogs] = useState<string[]>([]);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    // Override console.log to capture logs
-    const originalLog = console.log;
-    const originalError = console.error;
-
-    console.log = (...args) => {
-      // Filter only our relevant logs
-      const msg = args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ');
-      if (msg.includes("[AppointmentDebug]") || msg.includes("Socket")) {
-        setLogs(prev => [`[LOG] ${new Date().toLocaleTimeString()} - ${msg}`, ...prev].slice(0, 50));
-      }
-      originalLog.apply(console, args);
-    };
-
-    console.error = (...args) => {
-      const msg = args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ');
-      setLogs(prev => [`[ERR] ${new Date().toLocaleTimeString()} - ${msg}`, ...prev].slice(0, 50));
-      originalError.apply(console, args);
-    }
-
-    return () => {
-      console.log = originalLog;
-      console.error = originalError;
-    };
-  }, []);
-
-  if (!isVisible) {
-    return (
-      <button
-        onClick={() => setIsVisible(true)}
-        className="fixed bottom-4 right-4 bg-gray-800 text-white p-2 rounded-full shadow-lg text-xs z-50 opacity-50 hover:opacity-100"
-      >
-        🐞 Debug Logs
-      </button>
-    );
-  }
-
-  return (
-    <div className="fixed bottom-0 right-0 w-full md:w-1/3 h-1/3 bg-gray-900 text-green-400 font-mono text-xs p-4 overflow-y-auto shadow-2xl border-t-2 border-green-500 z-50">
-      <div className="flex justify-between items-center mb-2 border-b border-gray-700 pb-2">
-        <span className="font-bold text-white">Live Socket & App Logs</span>
-        <div className="flex gap-2">
-          <button onClick={() => setLogs([])} className="text-gray-400 hover:text-white">Clear</button>
-          <button onClick={() => setIsVisible(false)} className="text-gray-400 hover:text-white">Close</button>
-        </div>
-      </div>
-      <div className="space-y-1">
-        {logs.length === 0 && <span className="opacity-50">Waiting for logs...</span>}
-        {logs.map((log, i) => (
-          <div key={i} className="break-words border-b border-gray-800 pb-1">
-            {log}
-          </div>
-        ))}
-      </div>
-    </div>
-  )
 }

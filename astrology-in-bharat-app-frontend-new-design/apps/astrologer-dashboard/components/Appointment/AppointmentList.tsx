@@ -20,6 +20,37 @@ interface AppointmentListProps {
     onReschedule: (appt: Appointment) => void;
 }
 
+// Countdown Timer Component
+function CountdownTimer({ expiresAt }: { expiresAt: string }) {
+    const [timeLeft, setTimeLeft] = React.useState<string>("");
+
+    React.useEffect(() => {
+        const calculateTime = () => {
+            const difference = +new Date(expiresAt) - +new Date();
+            if (difference > 0) {
+                const minutes = Math.floor((difference / 1000 / 60) % 60);
+                const seconds = Math.floor((difference / 1000) % 60);
+                setTimeLeft(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+            } else {
+                setTimeLeft("Expired");
+            }
+        };
+
+        calculateTime();
+        const timer = setInterval(calculateTime, 1000);
+        return () => clearInterval(timer);
+    }, [expiresAt]);
+
+    if (timeLeft === "Expired") return <span className="text-red-500 font-bold ml-2">Timed Out!</span>;
+    if (!timeLeft) return null;
+
+    return (
+        <span className="text-red-600 font-bold ml-2 animate-pulse bg-red-50 px-2 py-0.5 rounded border border-red-100 flex items-center gap-1 shadow-sm">
+            <Clock className="w-3 h-3" /> Expires in {timeLeft}
+        </span>
+    );
+}
+
 export default function AppointmentList({
     appointments,
     onReschedule,
@@ -80,6 +111,14 @@ export default function AppointmentList({
                                     >
                                         {appt.status === 'pending' ? '⏳ Waiting for you' : appt.status === 'active' ? '🟢 Live Now' : appt.status}
                                     </span>
+                                    {appt.status === 'pending' && appt.expiresAt && (
+                                        <CountdownTimer expiresAt={appt.expiresAt} />
+                                    )}
+                                    {appt.isFree && (
+                                        <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border border-green-200 animate-pulse">
+                                            🎁 Free Consultation ({appt.freeMinutes}m)
+                                        </span>
+                                    )}
                                     <span className="text-xs bg-purple-100 text-purple-600 px-3 py-1 rounded-full font-medium">
                                         {appt.type === "new" ? "🆕 New Client" : "Follow-up"}
                                     </span>
@@ -139,7 +178,19 @@ export default function AppointmentList({
                         className="bg-white p-5 rounded-2xl shadow-lg border border-gray-100 space-y-3 hover:shadow-xl transition-all"
                     >
                         <div>
-                            <h3 className="font-semibold text-gray-900">{appt.name}</h3>
+                            <div className="flex justify-between items-start">
+                                <h3 className="font-semibold text-gray-900">{appt.name}</h3>
+                                <div className="flex flex-col items-end gap-1">
+                                    {appt.status === 'pending' && appt.expiresAt && (
+                                        <CountdownTimer expiresAt={appt.expiresAt} />
+                                    )}
+                                    {appt.isFree && (
+                                        <span className="bg-green-50 text-green-600 px-2 py-0.5 rounded-[4px] text-[8px] font-black uppercase tracking-widest border border-green-100">
+                                            Free ({appt.freeMinutes}m)
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
                             <p className="text-sm text-gray-600">{appt.service}</p>
                             <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
                                 <Clock className="w-4 h-4" />
@@ -209,3 +260,4 @@ export default function AppointmentList({
         </section>
     );
 }
+

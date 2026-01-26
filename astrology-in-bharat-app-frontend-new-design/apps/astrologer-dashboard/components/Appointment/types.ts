@@ -9,4 +9,7 @@ export interface Appointment {
     meetingLink: string;
     sessionId?: number;
     clientId?: number;
+    expiresAt?: string;
+    isFree?: boolean;
+    freeMinutes?: number;
 }

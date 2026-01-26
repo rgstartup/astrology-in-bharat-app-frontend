@@ -12,7 +12,7 @@ import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
 
 const Image = NextImage as any;
 const {
-    ChevronLeft, Paperclip, Send, Clock, Star, Phone, MoreVertical, Wallet, X, Home, User: UserIcon, Sun, Moon
+    ChevronLeft, Paperclip, Send, Clock, Star, Phone, MoreVertical, Wallet, X, Home, User: UserIcon, Sun, Moon, AlertTriangle, AlertCircle
 } = LucideIcons as any;
 
 interface Message {
@@ -24,6 +24,49 @@ interface Message {
     createdAt?: string;
 }
 
+// Waiting Countdown Component for User Side
+function WaitingCountdown({ expiresAt, onExpire }: { expiresAt: string; onExpire: () => void }) {
+    const [secondsLeft, setSecondsLeft] = useState<number>(0);
+
+    useEffect(() => {
+        const calculateSeconds = () => {
+            const diff = Math.floor((new Date(expiresAt).getTime() - Date.now()) / 1000);
+            if (diff <= 0) {
+                setSecondsLeft(0);
+                setTimeout(onExpire, 1000); // Small buffer before showing ended state
+                return true; // Finished
+            } else {
+                setSecondsLeft(diff);
+                return false;
+            }
+        };
+
+        const finished = calculateSeconds();
+        if (finished) return;
+
+        const interval = setInterval(() => {
+            if (calculateSeconds()) {
+                clearInterval(interval);
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [expiresAt, onExpire]);
+
+    const mins = Math.floor(secondsLeft / 60);
+    const secs = secondsLeft % 60;
+
+    return (
+        <div className="flex flex-col items-center gap-1">
+            <div className="flex items-center gap-2 bg-black/10 px-4 py-1.5 rounded-full border border-orange-500/20">
+                <Clock className="w-3 h-3 text-orange-500" />
+                <span className="text-orange-500 font-black tabular-nums text-xs">
+                    Auto-Expires in: {mins}:{secs.toString().padStart(2, '0')}
+                </span>
+            </div>
+        </div>
+    );
+}
+
 function ChatRoomContent() {
     const params = useParams();
     const searchParams = useSearchParams();
@@ -33,11 +76,17 @@ function ChatRoomContent() {
 
     const { clientUser, isClientAuthenticated } = useClientAuth();
     const [isDarkMode, setIsDarkMode] = useState(true);
-    const [timeLeft, setTimeLeft] = useState(300); // 5 mins
+    const [timeLeft, setTimeLeft] = useState(0); // Initialize at 0
     const [showModal, setShowModal] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [sessionStatus, setSessionStatus] = useState<'pending' | 'active' | 'completed'>('pending');
     const [expertData, setExpertData] = useState<any>(null);
+    const [expiresAt, setExpiresAt] = useState<string | null>(null);
+    const [isFree, setIsFree] = useState<boolean>(false);
+    const [freeMinutes, setFreeMinutes] = useState<number>(0);
+    const [showFreeEndPrompt, setShowFreeEndPrompt] = useState(false);
+    const [freeLimitData, setFreeLimitData] = useState<any>(null);
+    const [continuationTimer, setContinuationTimer] = useState<number>(30);
 
     const [sessionSummary, setSessionSummary] = useState<any>(null);
     const [inputValue, setInputValue] = useState("");
@@ -83,16 +132,37 @@ function ChatRoomContent() {
     useEffect(() => {
         if (!sessionId || !isClientAuthenticated) return;
 
-        // 1. Fetch History
-        const fetchHistory = async () => {
+        // 1. Fetch History & Session Info
+        const fetchInitialData = async () => {
             try {
-                const res = await apiClient.get(`/chat/history/${sessionId}`);
-                setMessages(res.data);
+                // Fetch history
+                const historyRes = await apiClient.get(`/chat/history/${sessionId}`);
+                setMessages(historyRes.data);
+
+                // Fetch session details for expiresAt
+                const sessionRes = await apiClient.get(`/chat/session/${sessionId}?_t=${Date.now()}`);
+                if (sessionRes.data) {
+                    console.log(`[UserChatDebug] Session Data Loaded: Status=${sessionRes.data.status}, maxMinutes=${sessionRes.data.maxMinutes}, isFree=${sessionRes.data.isFree}`);
+                    setExpiresAt(sessionRes.data.expiresAt);
+                    setSessionStatus(sessionRes.data.status);
+
+                    const freeChat = !!sessionRes.data.isFree;
+                    const mins = sessionRes.data.freeMinutes || 0;
+                    setIsFree(freeChat);
+                    setFreeMinutes(mins);
+
+                    // Set timer based on maxMinutes, or fallback to freeMinutes for new sessions
+                    if (sessionRes.data.maxMinutes && sessionRes.data.maxMinutes > 0) {
+                        setTimeLeft(sessionRes.data.maxMinutes * 60);
+                    } else if (freeChat && mins > 0) {
+                        setTimeLeft(mins * 60);
+                    }
+                }
             } catch (err) {
-                console.error("Failed to fetch chat history:", err);
+                console.error("Failed to fetch initial chat data:", err);
             }
         };
-        fetchHistory();
+        fetchInitialData();
 
         // 2. Socket Connection
         console.log("[UserChatDebug] Connecting to chat socket for session:", sessionId);
@@ -113,9 +183,29 @@ function ChatRoomContent() {
             setMessages((prev) => [...prev, msg]);
         });
 
+        chatSocket.on('free_limit_reached', (data: any) => {
+            console.log("[UserChatDebug] Free limit reached:", data);
+            setFreeLimitData(data);
+            setShowFreeEndPrompt(true);
+            setContinuationTimer(30);
+        });
+
+        chatSocket.on('continuation_confirmed', (data: any) => {
+            console.log("[UserChatDebug] Continuation confirmed:", data);
+            setShowFreeEndPrompt(false);
+            toast.success("Chat continued in paid mode!");
+        });
+
         chatSocket.on('session_activated', (session: any) => {
             console.log("[UserChatDebug] 🚨 SESSION ACTIVATED EVENT RECEIVED!", session);
             setSessionStatus('active');
+
+            // Critical fix: Ensure timer starts with backend's maxMinutes when session goes LIVE
+            if (session.maxMinutes) {
+                console.log("[UserChatDebug] Clock starting at:", session.maxMinutes, "mins");
+                setTimeLeft(session.maxMinutes * 60);
+            }
+
             toast.success("Consultation Started!");
         });
 
@@ -123,9 +213,18 @@ function ChatRoomContent() {
             toast.warning(data.message);
         });
 
+        chatSocket.on('balance_updated', (data: { maxMinutes: number }) => {
+            console.log("[UserChatDebug] Balance updated, adjusting timer:", data);
+            if (data.maxMinutes) {
+                setTimeLeft(data.maxMinutes * 60);
+            }
+        });
+
         chatSocket.on('session_ended', (data: any) => {
             console.log("[UserChatDebug] Session ended event received", data);
-            setSessionStatus('completed');
+            setSessionStatus(data.status === 'expired' ? 'completed' : 'completed');
+
+            // We use 'completed' for UI state, but use data.status for Modal content
             setSessionSummary(data);
             setShowModal(true);
         });
@@ -145,6 +244,21 @@ function ChatRoomContent() {
             chatSocket.disconnect();
         };
     }, [sessionId, isClientAuthenticated]);
+
+    useEffect(() => {
+        if (!showFreeEndPrompt || continuationTimer <= 0) return;
+        const interval = setInterval(() => {
+            setContinuationTimer(prev => {
+                if (prev <= 1) {
+                    clearInterval(interval);
+                    setShowFreeEndPrompt(false);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [showFreeEndPrompt, continuationTimer]);
 
     useEffect(() => {
         if (sessionStatus !== 'active') return;
@@ -211,7 +325,10 @@ function ChatRoomContent() {
                             <Image src={expertData.image} alt={expertData.name} width={40} height={40} className="object-cover" />
                         </div>
                         <div className="hidden sm:block">
-                            <h1 className="font-bold text-sm leading-none text-white">{expertData.name}</h1>
+                            <h1 className="font-bold text-sm leading-none text-white flex items-center gap-2">
+                                {expertData.name}
+                                {isFree && <span className="bg-white text-[#fd6410] px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter shadow-sm animate-bounce">Free Chat</span>}
+                            </h1>
                             <p className="text-[9px] text-white/80 flex items-center gap-1 mt-0.5">
                                 <span className={`w-1 h-1 bg-green-400 rounded-full ${sessionStatus === 'active' ? 'animate-pulse' : ''}`}></span> {sessionStatus === 'active' ? 'Secure Session' : sessionStatus === 'completed' ? 'Session Ended' : 'Waiting for Expert'}
                             </p>
@@ -220,14 +337,18 @@ function ChatRoomContent() {
                 </div>
 
                 <div className="flex items-center gap-4 md:gap-6">
-                    {/* Timer */}
-                    <div className="bg-black/20 px-3 py-1 rounded-xl flex items-center gap-3 border border-white/5">
-                        <Clock className="w-3.5 h-3.5 text-white opacity-60" />
-                        <div className="flex flex-col items-start leading-none">
-                            <span className="text-[8px] font-black uppercase tracking-widest opacity-40 text-white">{sessionStatus === 'active' ? 'Time Left' : 'Consultation'}</span>
-                            <span className="text-xs md:text-sm font-black tabular-nums text-white">{formatTime(timeLeft)}</span>
+                    {/* Timer - Only show when Active */}
+                    {sessionStatus === 'active' && (
+                        <div className="bg-black/20 px-3 py-1 rounded-xl flex items-center gap-3 border border-white/5">
+                            <Clock className="w-3.5 h-3.5 text-white opacity-60" />
+                            <div className="flex flex-col items-start leading-none">
+                                <span className="text-[8px] font-black uppercase tracking-widest opacity-40 text-white">
+                                    {isFree ? 'Free Time' : 'Time Left'}
+                                </span>
+                                <span className="text-xs md:text-sm font-black tabular-nums text-white">{formatTime(timeLeft)}</span>
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <div className="w-px h-6 bg-black/10 mx-1 hidden md:block"></div>
 
@@ -353,10 +474,32 @@ function ChatRoomContent() {
                                     </button>
                                 </div>
                             ) : (
-                                <div className="flex justify-center py-4">
-                                    <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">
-                                        {sessionStatus === 'pending' ? 'Chat will be enabled once expert starts' : 'This session has ended'}
-                                    </p>
+                                <div className="flex flex-col items-center justify-center py-4 text-center">
+                                    {sessionStatus === 'pending' ? (
+                                        <div className={`space-y-3 ${isDarkMode ? 'text-white/80' : 'text-gray-600'}`}>
+                                            {isFree && (
+                                                <div className="bg-green-500/10 border border-green-500/20 rounded-2xl px-4 py-2 mb-2 inline-block animate-pulse">
+                                                    <p className="text-green-500 font-black text-[10px] uppercase tracking-widest">🎉 Congratulations! You have {freeMinutes} mins FREE</p>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center justify-center gap-3">
+                                                <div className="w-2 h-2 bg-[#fd6410] rounded-full animate-ping"></div>
+                                                <p className="font-black text-sm uppercase tracking-widest text-[#fd6410]">Expert is joining...</p>
+                                            </div>
+                                            {expiresAt && <WaitingCountdown expiresAt={expiresAt} onExpire={() => setSessionStatus('completed')} />}
+                                            <p className="text-[11px] font-bold text-orange-500/80 max-w-sm mx-auto leading-relaxed px-4">
+                                                Important: If the expert does not accept your request within the timer above, this session will expire automatically for your security.
+                                            </p>
+                                            <p className="text-[9px] opacity-40 max-w-xs mx-auto leading-relaxed">Please do not refresh or close this window while connecting.</p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col items-center gap-2">
+                                            <AlertTriangle className="w-6 h-6 text-red-500 opacity-50" />
+                                            <p className="text-red-500/50 font-black uppercase tracking-widest text-xs">
+                                                This consultation session has ended
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                             <div className="flex items-center justify-center gap-2 opacity-20 pt-4 text-center">
@@ -376,49 +519,118 @@ function ChatRoomContent() {
             </div>
 
             {/* Session Summary Modal */}
-            {showModal && (
-                <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 ${isDarkMode ? 'bg-[#0a0505]/95' : 'bg-black/60'} backdrop-blur-xl animate-in fade-in duration-500`}>
-                    <div className={`${isDarkMode ? 'bg-[#1a0c0c]' : 'bg-white'} w-full max-w-md rounded-[40px] overflow-hidden border ${isDarkMode ? 'border-white/10' : 'border-[#fd6410]/20'} shadow-[0_0_50px_rgba(253,100,16,0.15)] animate-in zoom-in-95 duration-300 relative`}>
-                        <div className="p-8 md:p-10 flex flex-col items-center text-center relative z-10">
-                            <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-6">
-                                <Star className="w-8 h-8 text-green-500" fill="currentColor" />
-                            </div>
-                            <h2 className={`text-3xl font-black mb-1 ${isDarkMode ? 'text-white' : 'text-[#2A0A0A]'} tracking-tight uppercase`}>Session Summary</h2>
-                            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} text-[12px] font-bold tracking-widest uppercase mb-8`}>Consulation Finished</p>
+            {
+                showModal && (
+                    <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 ${isDarkMode ? 'bg-[#0a0505]/95' : 'bg-black/60'} backdrop-blur-xl animate-in fade-in duration-500`}>
+                        <div className={`${isDarkMode ? 'bg-[#1a0c0c]' : 'bg-white'} w-full max-w-md rounded-[40px] overflow-hidden border ${isDarkMode ? 'border-white/10' : 'border-[#fd6410]/20'} shadow-[0_0_50px_rgba(253,100,16,0.15)] animate-in zoom-in-95 duration-300 relative`}>
+                            <div className="p-8 md:p-10 flex flex-col items-center text-center relative z-10">
+                                <div className={`w-16 h-16 ${sessionSummary?.status === 'expired' ? 'bg-red-500/10' : 'bg-green-500/10'} rounded-full flex items-center justify-center mb-6`}>
+                                    {sessionSummary?.status === 'expired' ? (
+                                        <AlertCircle className="w-8 h-8 text-red-500" />
+                                    ) : (
+                                        <Star className="w-8 h-8 text-green-500" fill="currentColor" />
+                                    )}
+                                </div>
+                                <h2 className={`text-3xl font-black mb-1 ${isDarkMode ? 'text-white' : 'text-[#2A0A0A]'} tracking-tight uppercase`}>
+                                    {sessionSummary?.status === 'expired' ? 'Session Expired' : 'Session Summary'}
+                                </h2>
+                                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} text-[12px] font-bold tracking-widest uppercase mb-8`}>
+                                    {sessionSummary?.status === 'expired' ? 'Expert missed the request' : 'Consulation Finished'}
+                                </p>
 
-                            <div className={`w-full ${isDarkMode ? 'bg-white/5' : 'bg-gray-50'} rounded-3xl p-6 mb-8 space-y-4`}>
-                                <div className="flex justify-between items-center text-sm">
-                                    <span className="opacity-50 font-bold uppercase tracking-tighter">Total Duration</span>
-                                    <span className="font-black">{sessionSummary?.durationMins || 0} Minutes</span>
+                                <div className={`w-full ${isDarkMode ? 'bg-white/5' : 'bg-gray-50'} rounded-3xl p-6 mb-8 space-y-4`}>
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="opacity-50 font-bold uppercase tracking-tighter">Total Duration</span>
+                                        <span className="font-black">{sessionSummary?.durationMins || 0} Minutes</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="opacity-50 font-bold uppercase tracking-tighter">Charge per minute</span>
+                                        <span className="font-black">₹{sessionSummary?.pricePerMinute || 0}</span>
+                                    </div>
+                                    <div className="h-px bg-current opacity-10"></div>
+                                    {sessionSummary?.isFree && (
+                                        <div className="flex justify-between items-center text-xs text-green-500 font-bold mb-2">
+                                            <span className="uppercase tracking-tighter">Free Minutes Discount</span>
+                                            <span className="bg-green-500/10 px-2 py-0.5 rounded">-{sessionSummary?.freeMinutes || freeMinutes} Mins</span>
+                                        </div>
+                                    )}
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-[#fd6410] font-black uppercase tracking-tighter text-sm">Amount Deducted</span>
+                                        <span className="text-xl font-black">₹{sessionSummary?.totalCost || 0}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-xs opacity-60">
+                                        <span>Remaining Balance</span>
+                                        <span className="font-black">₹{Math.floor(sessionSummary?.remainingBalance || 0)}</span>
+                                    </div>
                                 </div>
-                                <div className="flex justify-between items-center text-sm">
-                                    <span className="opacity-50 font-bold uppercase tracking-tighter">Charge per minute</span>
-                                    <span className="font-black">₹{sessionSummary?.pricePerMinute || 0}</span>
-                                </div>
-                                <div className="h-px bg-current opacity-10"></div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-[#fd6410] font-black uppercase tracking-tighter text-sm">Amount Deducted</span>
-                                    <span className="text-xl font-black">₹{sessionSummary?.totalCost || 0}</span>
-                                </div>
-                                <div className="flex justify-between items-center text-xs opacity-60">
-                                    <span>Remaining Balance</span>
-                                    <span className="font-black">₹{Math.floor(sessionSummary?.remainingBalance || 0)}</span>
+
+                                <div className="w-full space-y-4">
+                                    <button onClick={() => router.push('/wallet')} className="w-full py-5 bg-[#fd6410] text-white rounded-[24px] font-black text-lg shadow-[0_10px_30px_rgba(253,100,16,0.3)] hover:brightness-110 active:scale-[0.98] transition-all">
+                                        Recharge Wallet
+                                    </button>
+                                    <button onClick={() => router.push('/')} className={`w-full py-4 rounded-[24px] border ${isDarkMode ? 'border-white/5 text-gray-400' : 'border-black/5 text-gray-500'} font-bold transition-all text-sm uppercase tracking-widest`}>
+                                        Go to Home
+                                    </button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                )
+            }
 
-                            <div className="w-full space-y-4">
-                                <button onClick={() => router.push('/wallet')} className="w-full py-5 bg-[#fd6410] text-white rounded-[24px] font-black text-lg shadow-[0_10px_30px_rgba(253,100,16,0.3)] hover:brightness-110 active:scale-[0.98] transition-all">
+            {/* Free Chat Ending Prompt Modal */}
+            {showFreeEndPrompt && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+                    <div className={`${isDarkMode ? 'bg-[#1a0c0c] border-white/10' : 'bg-white border-[#fd6410]/20'} w-full max-w-sm rounded-[32px] overflow-hidden border p-8 text-center shadow-2xl relative`}>
+                        {/* 30s Countdown Ring */}
+                        <div className="absolute top-4 right-4 w-10 h-10 rounded-full border-2 border-[#fd6410]/20 flex items-center justify-center">
+                            <span className="text-[10px] font-black text-[#fd6410]">{continuationTimer}s</span>
+                        </div>
+
+                        <div className="w-14 h-14 bg-yellow-500/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                            <Clock className="w-7 h-7 text-yellow-500 animate-pulse" />
+                        </div>
+                        <h3 className="text-xl font-black mb-2 uppercase tracking-tight">Free Time Ended</h3>
+                        <p className="text-xs opacity-60 leading-relaxed mb-6">
+                            {freeLimitData?.message || `Your free consultation is over. Continue at ₹${freeLimitData?.expertPrice || expertData.price}/min?`}
+                        </p>
+
+                        {freeLimitData?.requireRecharge && (
+                            <div className="mb-6 p-3 bg-red-500/10 rounded-2xl border border-red-500/20 text-red-500 text-[10px] font-bold uppercase">
+                                ⚠️ Low Balance: ₹{freeLimitData?.balance || 0}
+                            </div>
+                        )}
+
+                        <div className="flex flex-col gap-3">
+                            {freeLimitData?.requireRecharge ? (
+                                <button
+                                    onClick={() => router.push('/wallet')}
+                                    className="w-full py-4 bg-red-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg active:scale-95 transition-all"
+                                >
                                     Recharge Wallet
                                 </button>
-                                <button onClick={() => router.push('/')} className={`w-full py-4 rounded-[24px] border ${isDarkMode ? 'border-white/5 text-gray-400' : 'border-black/5 text-gray-500'} font-bold transition-all text-sm uppercase tracking-widest`}>
-                                    Go to Home
+                            ) : (
+                                <button
+                                    onClick={() => {
+                                        chatSocket.emit('confirm_paid_continuation', { sessionId: parseInt(sessionId || '0') });
+                                        // Loading state could be added here
+                                    }}
+                                    className="w-full py-4 bg-[#fd6410] text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg active:scale-95 transition-all"
+                                >
+                                    Continue Chat
                                 </button>
-                            </div>
+                            )}
+                            <button
+                                onClick={handleEndChat}
+                                className={`w-full py-4 rounded-2xl border ${isDarkMode ? 'border-white/5 text-gray-500' : 'border-gray-200 text-gray-400'} font-bold text-xs uppercase tracking-widest hover:bg-red-500/5 hover:text-red-500 transition-all`}
+                            >
+                                End Session
+                            </button>
                         </div>
                     </div>
                 </div>
             )}
-        </div>
+        </div >
     );
 }
 

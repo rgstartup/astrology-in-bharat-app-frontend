@@ -6,6 +6,7 @@ import Header from "@packages/ui/src/Header";
 import Footer from "@packages/ui/src/Footer";
 import ToastProvider from "./ToastProvider";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import FloatingChatButton from "../features/chat/FloatingChatButton";
 
 export default function ClientLayout({
   children,
@@ -35,6 +36,10 @@ export default function ClientLayout({
         />
       )}
       <main>{children}</main>
+      <script>
+        {`console.log("[ClientLayoutDebug] Render conditions - isAdmin:", ${isAdminRoute}, "isChatRoom:", ${isChatRoom});`}
+      </script>
+      {!isAdminRoute && !isChatRoom && <FloatingChatButton />}
       {!isAdminRoute && !isChatRoom && <Footer />}
     </>
   );

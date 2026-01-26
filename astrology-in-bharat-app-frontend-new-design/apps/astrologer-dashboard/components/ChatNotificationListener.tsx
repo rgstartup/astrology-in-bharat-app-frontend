@@ -53,25 +53,43 @@ export const ChatNotificationListener: React.FC = () => {
         const handleNewRequest = (session: any) => {
             console.log("[ChatNotificationDebug] 🚨 New chat request RECEIVED:", session);
 
+            const isFree = !!session.isFree;
+
             // Show a custom toast with an action
             toast.info(
                 (<div>
-                    <p className="font-bold flex items-center gap-2">
-                        <MessageSquare className="w-4 h-4" /> New Chat Request!
+                    <div className="flex items-center justify-between">
+                        <p className="font-bold flex items-center gap-2">
+                            <MessageSquare className="w-4 h-4" /> New Chat Request!
+                        </p>
+                        {isFree && (
+                            <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter border border-green-200">
+                                FREE
+                            </span>
+                        )}
+                    </div>
+                    <p className="text-xs mt-1">
+                        {isFree
+                            ? "A client has initiated their FIRST FREE consultation!"
+                            : "A client is waiting for you to join the session."}
                     </p>
-                    <p className="text-xs mt-1">A client is waiting for you.</p>
+                    {session.expiresAt && (
+                        <p className="text-[10px] text-red-500 font-bold mt-1 animate-pulse">
+                            ⏳ Be quick! This request expires soon.
+                        </p>
+                    )}
                     <button
                         onClick={() => {
                             toast.dismiss();
                             router.push(`/chat/${session.id}`);
                         }}
-                        className="mt-2 bg-yellow-600 text-white px-3 py-1 rounded text-[10px] font-bold uppercase transition hover:bg-yellow-700"
+                        className="mt-2 w-full bg-yellow-600 text-white px-3 py-2 rounded text-[10px] font-bold uppercase transition hover:bg-yellow-700 shadow-sm"
                     >
-                        Accept & Chat
+                        Accept & Start Chat
                     </button>
                 </div>),
                 {
-                    position: "top-right",
+                    position: "bottom-right", // Changed from top-right to bottom-right as per common dashboard UX
                     autoClose: false,
                     closeOnClick: false,
                     draggable: false,
