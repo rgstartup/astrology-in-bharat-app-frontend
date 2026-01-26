@@ -512,15 +512,11 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
 
 <li>
   <Link className="dropdown-item" href={PATHS.LUCKY_NUMBER_CALCULATOR}>
-    Lucky Number Calculator
+    Lucky Number & Colour Calculator
   </Link>
 </li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.LUCKY_COLOR_CALCULATOR}>
-    Lucky Color Calculator
-  </Link>
-</li>
+
 
 <li>
   <Link className="dropdown-item" href={PATHS.LIFE_PATH_CALCULATOR}>
@@ -558,55 +554,10 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
   </Link>
 </li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.WHO_LOVES_MORE_CALCULATOR}>
-    Who Loves More Calculator
-  </Link>
-</li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.COMPATIBILITY_BY_ZODIAC_CALCULATOR}>
-    Compatibility By Zodiac Calculator
-  </Link>
-</li>
 
-                        {/* <li>
-                          <Link className="dropdown-item" href={PATHS.SUN_SIGN}>
-                            Sun Sign
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.MOON_SIGN}
-                          >
-                            Moon Sign
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.NAKSHATRA}
-                          >
-                            Nakshatra
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.BUY_PRODUCTS}
-                          >
-                            Buy Products
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.FREE_SERVICES}
-                          >
-                            Free Services
-                          </Link>
-                        </li> */}
+
+
                         <li>
                           <Link
                             className="dropdown-item"
