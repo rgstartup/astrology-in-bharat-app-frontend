@@ -31,8 +31,8 @@ export const PATHS = {
   LOVE_COMPATIBILITY_CALCULATOR: "/calculator/love-compatibility",
   MARRIAGE_AGE_CALCULATOR: "/calculator/marriage-age",
   SOULMATE_NAME_INITALS_CALCULATOR: "/calculator/soulmate-name-initials",
-  LUCKY_NUMBER_CALCULATOR: "/calculator/lucky-number",
-  LUCKY_COLOR_CALCULATOR: "/calculator/lucky-color",
+  LUCKY_NUMBER_CALCULATOR: "/calculator/lucky-number-color",
+  
   LIFE_PATH_CALCULATOR: "/calculator/life-path",
   NAME_NUMEROLOGY_CALCULATOR: "/calculator/name-numerology",
   ZODIAC_SIGN_CALCULATOR: "/calculator/zodiac-sign-compatibility",
