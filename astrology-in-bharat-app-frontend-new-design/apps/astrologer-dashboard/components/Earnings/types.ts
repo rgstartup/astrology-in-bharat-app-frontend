@@ -1,23 +1,37 @@
-export interface EarningsItem {
-    date: string;
-    earnings: number;
+export interface EarningsStatsData {
+    totalRevenue: number;
+    walletBalance: number;
+    totalWithdrawn: number;
+    revenueGrowth?: number;
+    balanceGrowth?: number;
+    withdrawalGrowth?: number;
 }
 
-export interface CommissionItem {
-    name: string;
+export interface ChartDataPoint {
+    label: string;
     value: number;
+    projected?: number;
 }
 
-export interface PayoutItem {
+export interface RevenueBreakdown {
+    category: string;
+    amount: number;
+    percentage: number;
+    color: string;
+}
+
+export interface Transaction {
+    id: string;
     date: string;
-    amount: string;
-    status: "Processed" | "Pending" | "Cancelled"; // Assuming Cancelled is a possibility based on typical status, inferred "Processed" | "Pending" from file
+    description: string;
+    type: 'credit' | 'debit';
+    amount: number;
+    status: 'completed' | 'pending' | 'failed' | 'received';
 }
 
-export type TimeRange =
-    | "lastWeek"
-    | "thisWeek"
-    | "lastMonth"
-    | "thisMonth"
-    | "lastYear"
-    | "thisYear";
+export interface EarningsDashboardData {
+    stats: EarningsStatsData;
+    incomeTrends: ChartDataPoint[];
+    revenueBreakdown: RevenueBreakdown[];
+    recentTransactions: Transaction[];
+}

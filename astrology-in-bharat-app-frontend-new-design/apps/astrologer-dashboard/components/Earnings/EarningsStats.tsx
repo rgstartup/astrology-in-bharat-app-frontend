@@ -1,50 +1,54 @@
 import React from "react";
-import { Wallet, Landmark, ArrowUpRight } from "lucide-react";
+import { Landmark, Wallet, ArrowUpRight, TrendingUp } from "lucide-react";
 import { StatsCards } from "../../../shared/components/StatsCard";
+import { EarningsStatsData } from "./types";
 
 interface EarningsStatsProps {
-    totalEarnings: number;
-    currentBalance: number;
-    totalWithdrawn: number;
+    stats: EarningsStatsData;
 }
 
-export default function EarningsStats({
-    totalEarnings,
-    currentBalance,
-    totalWithdrawn,
-}: EarningsStatsProps) {
+export default function EarningsStats({ stats }: EarningsStatsProps) {
     const statsData = [
         {
-            title: "Total Earnings",
-            value: `₹${totalEarnings.toLocaleString()}`,
+            title: "Total Revenue",
+            value: `₹${stats.totalRevenue.toLocaleString('en-IN')}`,
             icon: Landmark,
-            iconBgColor: "bg-yellow-100",
-            iconColor: "text-yellow-600",
-            trend: { value: "Lifetime", isPositive: true }
+            iconBgColor: "bg-amber-100",
+            iconColor: "text-amber-600",
+            trend: {
+                value: `${stats.revenueGrowth || 0}%`,
+                isPositive: (stats.revenueGrowth || 0) >= 0,
+                period: "Last 30 days"
+            }
         },
         {
-            title: "Current Balance",
-            value: `₹${currentBalance.toLocaleString()}`,
+            title: "Wallet Balance",
+            value: `₹${stats.walletBalance.toLocaleString('en-IN')}`,
             icon: Wallet,
-            iconBgColor: "bg-green-100",
-            iconColor: "text-green-600",
-            trend: { value: "Available", isPositive: true }
+            iconBgColor: "bg-purple-100",
+            iconColor: "text-purple-600",
+            trend: {
+                value: `${stats.balanceGrowth || 0}%`,
+                isPositive: (stats.balanceGrowth || 0) >= 0,
+                period: "Available"
+            }
         },
         {
-            title: "Total Withdrawn",
-            value: `₹${totalWithdrawn.toLocaleString()}`,
+            title: "Successful Withdrawals",
+            value: `₹${stats.totalWithdrawn.toLocaleString('en-IN')}`,
             icon: ArrowUpRight,
-            iconBgColor: "bg-blue-100",
-            iconColor: "text-blue-600",
-            trend: { value: "Paid Out", isPositive: true }
+            iconBgColor: "bg-emerald-100",
+            iconColor: "text-emerald-600",
+            trend: {
+                value: `${stats.withdrawalGrowth || 0}%`,
+                isPositive: (stats.withdrawalGrowth || 0) >= 0,
+                period: "Paid Out"
+            }
         },
     ];
 
     return (
         <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">
-                Earnings & Finance
-            </h1>
             <StatsCards stats={statsData} columns={3} />
         </div>
     );

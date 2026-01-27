@@ -2,118 +2,101 @@
 
 import React, { useState, useMemo } from "react";
 import EarningsStats from "./EarningsStats";
-import EarningsFilter from "./EarningsFilter";
 import EarningsCharts from "./EarningsCharts";
-import WithdrawalHistory from "./WithdrawalHistory";
-import { EarningsItem, CommissionItem, PayoutItem } from "./types";
+import EarningsTable from "./EarningsTable";
+import { EarningsDashboardData } from "./types";
+import { ChevronDown, Calendar, Download } from "lucide-react";
 
-// Mock Earnings Data
-const earningsData: EarningsItem[] = [
-  { date: "2025-08-01", earnings: 120 },
-  { date: "2025-08-02", earnings: 300 },
-  { date: "2025-08-03", earnings: 250 },
-  { date: "2025-08-04", earnings: 500 },
-  { date: "2025-08-05", earnings: 450 },
-  { date: "2025-08-06", earnings: 700 },
-  { date: "2025-08-07", earnings: 400 },
-  { date: "2025-07-15", earnings: 200 },
-  { date: "2025-07-20", earnings: 350 },
-  { date: "2025-06-10", earnings: 800 },
-  { date: "2025-01-10", earnings: 1200 },
-];
-
-const commissionData: CommissionItem[] = [
-  { name: "Platform Fee", value: 20 },
-  { name: "Your Share", value: 80 },
-];
-
-const payoutHistory: PayoutItem[] = [
-  { date: "Aug 10", amount: "₹1500", status: "Processed" },
-  { date: "Aug 15", amount: "₹2000", status: "Pending" },
-  { date: "Aug 20", amount: "₹1800", status: "Processed" },
-];
+// Initial Mock Data to see the Premium UI
+const MOCK_DATA: EarningsDashboardData = {
+  stats: {
+    totalRevenue: 125480,
+    walletBalance: 8240,
+    totalWithdrawn: 117240,
+    revenueGrowth: 15.2,
+    balanceGrowth: 4.5,
+    withdrawalGrowth: 18.8
+  },
+  incomeTrends: [
+    { label: "Jan", value: 45000 },
+    { label: "Feb", value: 52000 },
+    { label: "Mar", value: 48000 },
+    { label: "Apr", value: 61000 },
+    { label: "May", value: 98560 },
+    { label: "Jun", value: 85000 }
+  ],
+  revenueBreakdown: [
+    { category: "Chat", amount: 56466, percentage: 45, color: "#f59e0b" },
+    { category: "Call", amount: 43918, percentage: 35, color: "#300c56" },
+    { category: "Reports", amount: 25096, percentage: 20, color: "#d97706" }
+  ],
+  recentTransactions: [
+    { id: "1", date: "2024-06-15", description: "Withdrawal to HDFC Bank", type: "debit", amount: 12000, status: "completed" },
+    { id: "2", date: "2024-06-14", description: "Chat Revenue - User #8421", type: "credit", amount: 450, status: "received" },
+    { id: "3", date: "2024-06-14", description: "Call Revenue - User #9103", type: "credit", amount: 1200, status: "received" },
+    { id: "4", date: "2024-06-13", description: "Detailed Report Purchase", type: "credit", amount: 850, status: "received" },
+    { id: "5", date: "2024-06-12", description: "Withdrawal to HDFC Bank", type: "debit", amount: 5000, status: "pending" }
+  ]
+};
 
 export default function EarningsPage() {
-  const [timeRange, setTimeRange] = useState("thisMonth");
+  const [timeRange, setTimeRange] = useState("Last 6 Months");
+  const [isExporting, setIsExporting] = useState(false);
 
-  // Filter Function
-  const getFilteredData = (range: string) => {
-    const now = new Date("2025-08-20"); // Using a fixed date for consistent mock data filtering
-    return earningsData.filter((item) => {
-      const date = new Date(item.date);
-      let startDate, endDate;
+  // In a real implementation, this data would come from an API call
+  // and would NOT be calculated on the frontend.
+  const data = MOCK_DATA;
 
-      switch (range) {
-        case "lastWeek":
-          startDate = new Date(now);
-          startDate.setDate(now.getDate() - 14);
-          endDate = new Date(now);
-          endDate.setDate(now.getDate() - 7);
-          return date >= startDate && date <= endDate;
-        case "thisWeek":
-          startDate = new Date(now);
-          startDate.setDate(now.getDate() - now.getDay());
-          return date >= startDate && date <= now;
-        case "lastMonth":
-          startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-          endDate = new Date(now.getFullYear(), now.getMonth(), 0);
-          return date >= startDate && date <= endDate;
-        case "thisMonth":
-          startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-          return date >= startDate && date <= now;
-        case "lastYear":
-          startDate = new Date(now.getFullYear() - 1, 0, 1);
-          endDate = new Date(now.getFullYear() - 1, 11, 31);
-          return date >= startDate && date <= endDate;
-        case "thisYear":
-          startDate = new Date(now.getFullYear(), 0, 1);
-          return date >= startDate && date <= now;
-        default:
-          return true;
-      }
-    });
+  const handleExport = () => {
+    setIsExporting(true);
+    setTimeout(() => setIsExporting(false), 2000);
   };
 
-  const filteredData = useMemo(() => getFilteredData(timeRange), [timeRange]);
-
-  const totalEarnings = useMemo(() => {
-    return filteredData.reduce((sum, item) => sum + item.earnings, 0);
-  }, [filteredData]);
-
-  const currentBalance = useMemo(() => {
-    // This is a simple mock; in a real app, this would come from a database
-    const totalProcessed = payoutHistory
-      .filter((p) => p.status === "Processed")
-      .reduce((sum, p) => sum + parseInt(p.amount.replace("₹", "")), 0);
-    const totalReceived = earningsData.reduce(
-      (sum, item) => sum + item.earnings,
-      0
-    );
-    return totalReceived - totalProcessed;
-  }, []);
-
-  const totalWithdrawn = useMemo(() => {
-    return payoutHistory
-      .filter((p) => p.status === "Processed")
-      .reduce((sum, p) => sum + parseInt(p.amount.replace("₹", "")), 0);
-  }, []);
-
   return (
-    <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
-      <EarningsStats
-        totalEarnings={totalEarnings}
-        currentBalance={currentBalance}
-        totalWithdrawn={totalWithdrawn}
-      />
+    <div className="min-h-screen bg-gray-50/50 p-4 sm:p-6 lg:p-8">
+      {/* Header Section */}
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Earnings Dashboard</h1>
+          <p className="text-gray-500 mt-1">Monitor your performance and financial growth</p>
+        </div>
 
-      <EarningsFilter timeRange={timeRange} setTimeRange={setTimeRange} />
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <button className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 shadow-sm hover:border-amber-400 transition-all active:scale-95">
+              <Calendar className="w-4 h-4 text-amber-500" />
+              {timeRange}
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </button>
+          </div>
 
-      <EarningsCharts
-        earningsData={filteredData}
-        commissionData={commissionData}
-      />
+          <button
+            onClick={handleExport}
+            disabled={isExporting}
+            className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-300 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-amber-200 transition-all active:scale-95 translate-y-0 hover:-translate-y-0.5"
+          >
+            <Download className={`w-4 h-4 ${isExporting ? 'animate-bounce' : ''}`} />
+            {isExporting ? 'Exporting...' : 'Export PDF'}
+          </button>
+        </div>
+      </header>
 
-      <WithdrawalHistory payoutHistory={payoutHistory} />
+      {/* Dashboard Content */}
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Stats Section */}
+        <EarningsStats stats={data.stats} />
+
+        {/* Charts Section */}
+        <EarningsCharts
+          incomeTrends={data.incomeTrends}
+          revenueBreakdown={data.revenueBreakdown}
+        />
+
+        {/* Transactions Table Section */}
+        <div className="pb-12">
+          <EarningsTable transactions={data.recentTransactions} />
+        </div>
+      </div>
     </div>
   );
 }
