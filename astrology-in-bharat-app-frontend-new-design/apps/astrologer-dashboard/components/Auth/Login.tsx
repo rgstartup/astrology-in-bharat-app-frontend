@@ -189,9 +189,9 @@ const LoginPage: React.FC = () => {
                                     </label>
                                 </div>
                                 <div className="text-sm">
-                                    <a href="#" className="font-bold text-yellow-600 hover:text-yellow-700 transition-colors">
+                                    <Link href="/forgot-password" title="Forgot Password" className="font-bold text-yellow-600 hover:text-yellow-700 transition-colors">
                                         Forgot password?
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
 
