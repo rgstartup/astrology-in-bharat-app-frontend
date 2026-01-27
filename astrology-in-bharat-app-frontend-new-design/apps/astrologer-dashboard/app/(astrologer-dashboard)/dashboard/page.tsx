@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Users, CalendarCheck, Clock, Wallet } from "lucide-react";
+import { Users, CalendarCheck, Clock, Wallet, CheckCircle, XCircle } from "lucide-react";
 import { StatsCards } from "../../../../shared/components/StatsCard";
 import { RecentActivity } from "@/components/dashboard/ActivityFeed";
 import { UpcomingAppointments } from "@/components/dashboard/UserTable";
@@ -11,11 +11,14 @@ import { ReviewsList } from "@/components/dashboard/ReviewsList";
 import { ReviewsModal } from "@/components/dashboard/ReviewsModal";
 import { useAuth } from "@/context/AuthContext";
 import { getExpertReviewStats, getExpertReviews, Review, ReviewStats } from "@/lib/reviews";
+import { getDashboardStats, DashboardStats } from "@/lib/dashboard";
+import apiClient from "@/lib/apiClient";
 
 const Page = () => {
   const { user } = useAuth();
   const [ratingStats, setRatingStats] = useState<ReviewStats | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -23,12 +26,17 @@ const Page = () => {
     const fetchData = async () => {
       if (user?.profileId) {
         try {
-          const [stats, reviewsData] = await Promise.all([
+          const [stats, reviewsData, dStats] = await Promise.all([
             getExpertReviewStats(user.profileId),
-            getExpertReviews(user.profileId, 1, 4) // Fetch 4 recent reviews
+            getExpertReviews(user.profileId, 1, 4), // Fetch 4 recent reviews
+            getDashboardStats('total').catch(err => {
+              console.error("[Dashboard] Total stats fetch failed:", err);
+              return null;
+            })
           ]);
           setRatingStats(stats);
           setReviews(reviewsData.data || []);
+          setDashboardStats(dStats);
         } catch (error) {
           console.error("Error fetching ratings/reviews:", error);
         } finally {
@@ -42,36 +50,36 @@ const Page = () => {
 
   const statsData = [
     {
-      title: "Total Consultations",
-      value: "12.5k",
-      trend: { value: "2.3%", isPositive: true, period: "last week" },
+      title: "Total Appointment",
+      value: (dashboardStats?.total_appointments ?? dashboardStats?.today_appointments ?? 0).toString(),
+      trend: { value: "All Time", isPositive: true, period: "total" },
       icon: CalendarCheck,
-      iconBgColor: "bg-purple-100",
-      iconColor: "text-purple-600",
+      iconBgColor: "bg-blue-100",
+      iconColor: "text-blue-600",
     },
     {
-      title: "Upcoming Sessions",
-      value: "9.1k",
-      trend: { value: "9.1%", isPositive: true, period: "last week" },
-      icon: Clock,
-      iconBgColor: "bg-orange-100",
-      iconColor: "text-orange-600",
-    },
-    {
-      title: "Total Clients",
-      value: "3.2k",
-      trend: { value: "19%", isPositive: false, period: "last week" },
-      icon: Users,
+      title: "Total Complete",
+      value: (dashboardStats?.total_completed ?? dashboardStats?.completed_today ?? 0).toString(),
+      trend: { value: "Success", isPositive: true, period: "total" },
+      icon: CheckCircle,
       iconBgColor: "bg-green-100",
       iconColor: "text-green-600",
     },
     {
-      title: "Earnings This Month",
-      value: "945",
-      trend: { value: "12%", isPositive: true, period: "last week" },
+      title: "Total Expired",
+      value: (dashboardStats?.total_expired ?? dashboardStats?.expired_today ?? 0).toString(),
+      trend: { value: "Missed", isPositive: false, period: "total" },
+      icon: XCircle,
+      iconBgColor: "bg-red-100",
+      iconColor: "text-red-600",
+    },
+    {
+      title: "Total Earnings",
+      value: `₹${(dashboardStats?.total_earnings || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      trend: { value: "Lifetime", isPositive: true, period: "all time" },
       icon: Wallet,
-      iconBgColor: "bg-blue-100",
-      iconColor: "text-blue-600",
+      iconBgColor: "bg-purple-100",
+      iconColor: "text-purple-600",
     },
   ];
 

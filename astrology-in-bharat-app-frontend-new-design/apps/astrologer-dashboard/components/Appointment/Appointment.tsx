@@ -11,6 +11,7 @@ import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/context/AuthContext";
 import { chatSocket } from "@/lib/socket";
 import { getExpertReviews } from "@/lib/reviews";
+import { getDashboardStats, DashboardStats } from "@/lib/dashboard";
 
 export default function AppointmentsPage() {
   const { user: expertUser, isAuthenticated: isExpertAuthenticated } = useAuth();
@@ -24,11 +25,14 @@ export default function AppointmentsPage() {
   }, [expertUser]);
 
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<"list" | "calendar">("list");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeStatus, setActiveStatus] = useState("all");
 
   const fetchChatSessions = async () => {
     if (!isExpertAuthenticated || !expertUser) {
@@ -40,11 +44,15 @@ export default function AppointmentsPage() {
     try {
       console.log("[AppointmentDebug] Fetching chat sessions (pending + completed) for expert user ID:", expertUser.id);
 
-      // Fetch both pending sessions, completed ones, and relevant reviews
-      const [pendingRes, completedRes, reviewsRes] = await Promise.allSettled([
+      // Fetch both pending sessions, completed ones, relevant reviews and stats
+      const [pendingRes, completedRes, reviewsRes, statsRes] = await Promise.allSettled([
         apiClient.get("/chat/sessions/appointments/pending"),
         apiClient.get("/chat/sessions/appointments/completed"),
-        expertUser?.profileId ? getExpertReviews(expertUser.profileId, 1, 50) : Promise.reject("No expert ID")
+        expertUser?.profileId ? getExpertReviews(expertUser.profileId, 1, 50) : Promise.reject("No expert ID"),
+        getDashboardStats('today').catch(err => {
+          console.error("[Appointment] Today stats fetch failed:", err);
+          return null;
+        })
       ]);
 
       let allSessions: any[] = [];
@@ -80,7 +88,7 @@ export default function AppointmentsPage() {
         if (!sessionReview || !sessionReview.comment) {
           const matchingReview = reviews.find((r: any) =>
             r.sessionId === session.id ||
-            (r.user?.name === session.user?.name &&
+            (session.user?.name && r.user?.name === session.user?.name &&
               Math.abs(new Date(r.createdAt).getTime() - new Date(session.createdAt).getTime()) < 24 * 60 * 60 * 1000)
           );
           if (matchingReview) {
@@ -143,6 +151,11 @@ export default function AppointmentsPage() {
           } : undefined,
         };
       }));
+
+      // Stats Logic
+      if (statsRes.status === 'fulfilled' && statsRes.value) {
+        setStats(statsRes.value);
+      }
 
       console.log("[AppointmentDebug] Mapped appointments:", chatAppointments);
       setAppointments(chatAppointments);
@@ -298,6 +311,25 @@ export default function AppointmentsPage() {
     setIsModalOpen(false);
   };
 
+  // Filtering Logic
+  const filteredAppointments = appointments.filter(appt => {
+    // 1. Search Filter
+    const matchesSearch = appt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      appt.service.toLowerCase().includes(searchTerm.toLowerCase());
+
+    // 2. Status/Date Filter
+    let matchesStatus = true;
+    if (activeStatus === 'today') {
+      const today = new Date().toISOString().split('T')[0];
+      const apptDate = appt.date.split('T')[0];
+      matchesStatus = apptDate === today;
+    } else if (activeStatus !== 'all') {
+      matchesStatus = appt.status === activeStatus;
+    }
+
+    return matchesSearch && matchesStatus;
+  });
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -309,19 +341,26 @@ export default function AppointmentsPage() {
   return (
     <div className="space-y-6 bg-gray-50 min-h-screen">
       {/* Stats Section */}
-      <AppointmentStats />
+      <AppointmentStats stats={stats} />
 
       {/* Filters & View Toggles */}
-      <AppointmentFilters view={view} setView={setView} />
+      <AppointmentFilters
+        view={view}
+        setView={setView}
+        searchTerm={searchTerm}
+        onSearch={setSearchTerm}
+        activeStatus={activeStatus}
+        onStatusChange={setActiveStatus}
+      />
 
       {/* Appointment List or Calendar */}
       {view === "list" ? (
         <AppointmentList
-          appointments={appointments}
+          appointments={filteredAppointments}
           onReschedule={openRescheduleModal}
         />
       ) : (
-        <AppointmentCalendar appointments={appointments} />
+        <AppointmentCalendar appointments={filteredAppointments} />
       )}
 
       {/* Reschedule Modal */}

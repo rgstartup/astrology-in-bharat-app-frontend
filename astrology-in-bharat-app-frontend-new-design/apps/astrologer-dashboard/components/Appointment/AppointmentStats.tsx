@@ -1,38 +1,43 @@
 import React from "react";
-import { CalendarDays, CheckCircle, CircleX, ArrowUpRight } from "lucide-react";
+import { Calendar, CheckCircle, XCircle, Wallet } from "lucide-react";
 import { StatsCards } from "../../../shared/components/StatsCard";
+import { DashboardStats } from "@/lib/dashboard";
 
-export default function AppointmentStats() {
+interface AppointmentStatsProps {
+    stats: DashboardStats | null;
+}
+
+export default function AppointmentStats({ stats }: AppointmentStatsProps) {
     const statsData = [
         {
-            title: "Total Appointments",
-            value: "32",
-            trend: { value: "+12%", isPositive: true },
-            icon: CalendarDays,
+            title: "Today's Appointment",
+            value: stats?.today_appointments?.toString() || "0",
+            trend: { value: "Today", isPositive: true },
+            icon: Calendar,
             iconBgColor: "bg-blue-100",
             iconColor: "text-blue-600",
         },
         {
-            title: "Completed",
-            value: "20",
-            trend: { value: "+5%", isPositive: true },
+            title: "Today Complete",
+            value: stats?.completed_today?.toString() || "0",
+            trend: { value: "Today", isPositive: true },
             icon: CheckCircle,
             iconBgColor: "bg-green-100",
             iconColor: "text-green-600",
         },
         {
-            title: "Cancelled",
-            value: "5",
-            trend: { value: "-2%", isPositive: false },
-            icon: CircleX,
+            title: "Today Expired",
+            value: stats?.expired_today?.toString() || "0",
+            trend: { value: "Today", isPositive: false },
+            icon: XCircle,
             iconBgColor: "bg-red-100",
             iconColor: "text-red-600",
         },
         {
-            title: "Upcoming",
-            value: "7",
-            trend: { value: "+3%", isPositive: true },
-            icon: ArrowUpRight,
+            title: "Today Earning",
+            value: `₹${(stats?.today_earnings ?? stats?.total_earnings ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+            trend: { value: "Today", isPositive: true },
+            icon: Wallet,
             iconBgColor: "bg-purple-100",
             iconColor: "text-purple-600",
         },

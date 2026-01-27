@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
 const apiEnvVar = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "");
-const API_BASE_URL = apiEnvVar ? `${apiEnvVar}/api/v1` : 'http://localhost:6543/api/v1';
+const API_BASE_URL = apiEnvVar ? `${apiEnvVar}/api/v1/` : 'http://localhost:6543/api/v1/';
 
 console.log("DEBUG: process.env.NEXT_PUBLIC_API_URL =", process.env.NEXT_PUBLIC_API_URL);
 console.log("DEBUG: Resolved API_BASE_URL =", API_BASE_URL);
@@ -92,7 +92,20 @@ apiClient.interceptors.response.use(
         const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
         if (error.response) {
-            console.error(`[API Error] ${error.config?.method?.toUpperCase()} ${error.config?.url} | Status: ${error.response.status} | Data:`, error.response.data);
+            const baseURL = error.config?.baseURL || '';
+            const relativeURL = error.config?.url || '';
+            const fullUrl = baseURL.endsWith('/') && relativeURL.startsWith('/')
+                ? baseURL + relativeURL.substring(1)
+                : (baseURL.endsWith('/') || relativeURL.startsWith('/') ? baseURL + relativeURL : baseURL + '/' + relativeURL);
+
+            const method = error.config?.method?.toUpperCase();
+            const status = error.response.status;
+
+            if (status === 404) {
+                console.warn(`[API 404] ${method} ${fullUrl} | Resource not found`);
+            } else {
+                console.error(`[API Error] ${method} ${fullUrl} | Status: ${status} | Data:`, error.response.data);
+            }
         }
 
         // If error is 401 and we haven't retried yet

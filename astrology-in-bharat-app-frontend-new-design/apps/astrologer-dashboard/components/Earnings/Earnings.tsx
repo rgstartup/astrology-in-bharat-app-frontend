@@ -92,15 +92,18 @@ export default function EarningsPage() {
     return totalReceived - totalProcessed;
   }, []);
 
-  const averageEarnings =
-    filteredData.length > 0 ? totalEarnings / filteredData.length : 0;
+  const totalWithdrawn = useMemo(() => {
+    return payoutHistory
+      .filter((p) => p.status === "Processed")
+      .reduce((sum, p) => sum + parseInt(p.amount.replace("₹", "")), 0);
+  }, []);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
       <EarningsStats
         totalEarnings={totalEarnings}
         currentBalance={currentBalance}
-        averageEarnings={averageEarnings}
+        totalWithdrawn={totalWithdrawn}
       />
 
       <EarningsFilter timeRange={timeRange} setTimeRange={setTimeRange} />
