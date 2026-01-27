@@ -36,6 +36,7 @@ const LoginPage: React.FC = () => {
             const response = await apiClient.post("/auth/email/login", {
                 email,
                 password,
+                expert: true,
             });
 
             console.log("Login successful response:", response.status);
@@ -52,6 +53,14 @@ const LoginPage: React.FC = () => {
             console.error("Login error details:", err.response?.data || err.message);
             const backendMessage = err.response?.data?.message;
             let message = Array.isArray(backendMessage) ? backendMessage.join(", ") : backendMessage;
+
+            if (message === "IP_MISMATCH") {
+                toast.warning("Verify from your registered mail. Your astrology in bharat astrologer profile get signin by a different ip address verify its you", {
+                    autoClose: 10000,
+                    position: "top-center"
+                });
+                return;
+            }
 
             if (err.response?.status === 401 && (message?.toLowerCase().includes("verify") || message?.toLowerCase().includes("email"))) {
                 message = "Email not verified. Please check your inbox for the verification link.";
