@@ -10,6 +10,7 @@ import { Appointment } from "./types";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/context/AuthContext";
 import { chatSocket } from "@/lib/socket";
+import { getExpertReviews } from "@/lib/reviews";
 
 export default function AppointmentsPage() {
   const { user: expertUser, isAuthenticated: isExpertAuthenticated } = useAuth();
@@ -39,35 +40,56 @@ export default function AppointmentsPage() {
     try {
       console.log("[AppointmentDebug] Fetching chat sessions (pending + completed) for expert user ID:", expertUser.id);
 
-      // Fetch both pending sessions (which include 'active') and completed ones
-      const [pendingRes, completedRes] = await Promise.allSettled([
-        apiClient.get("/chat/sessions/pending"),
-        apiClient.get("/chat/sessions/completed") // Assuming this endpoint exists or should be created
+      // Fetch both pending sessions, completed ones, and relevant reviews
+      const [pendingRes, completedRes, reviewsRes] = await Promise.allSettled([
+        apiClient.get("/chat/sessions/appointments/pending"),
+        apiClient.get("/chat/sessions/appointments/completed"),
+        expertUser?.profileId ? getExpertReviews(expertUser.profileId, 1, 50) : Promise.reject("No expert ID")
       ]);
 
       let allSessions: any[] = [];
 
       if (pendingRes.status === 'fulfilled') {
-        console.log("[AppointmentDebug] Pending response data:", pendingRes.value.data);
         allSessions = [...allSessions, ...pendingRes.value.data];
-      } else {
-        console.error("[AppointmentDebug] Failed to fetch pending sessions", pendingRes.reason);
       }
 
       if (completedRes.status === 'fulfilled') {
-        console.log("[AppointmentDebug] Completed response data:", completedRes.value.data);
         allSessions = [...allSessions, ...completedRes.value.data];
-      } else {
-        // It's possible the completed endpoint might fail if not implemented, just log warning
-        console.warn("[AppointmentDebug] Failed to fetch completed sessions (endpoint might not exist yet)", completedRes.reason);
       }
 
-      // Sort by date (newest first)
-      allSessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      console.log(`[AppointmentDebug] Final session count to map: ${allSessions.length}`);
+      const reviews = (reviewsRes.status === 'fulfilled' && (reviewsRes.value as any).data) ? (reviewsRes.value as any).data : [];
 
-      const chatAppointments: Appointment[] = await Promise.all(allSessions.map(async (session: any) => {
+      // Deduplicate sessions by ID (prevents double display if session is in both pending and completed)
+      const uniqueSessionsMap = new Map();
+      allSessions.forEach(session => {
+        if (!uniqueSessionsMap.has(session.id)) {
+          uniqueSessionsMap.set(session.id, session);
+        }
+      });
+
+      const uniqueSessions = Array.from(uniqueSessionsMap.values());
+
+      // Sort by date (newest first)
+      uniqueSessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      const chatAppointments: Appointment[] = await Promise.all(uniqueSessions.map(async (session: any) => {
         let currentStatus = session.status;
+
+        // Match review if missing from session data
+        let sessionReview = session.review;
+        if (!sessionReview || !sessionReview.comment) {
+          const matchingReview = reviews.find((r: any) =>
+            r.sessionId === session.id ||
+            (r.user?.name === session.user?.name &&
+              Math.abs(new Date(r.createdAt).getTime() - new Date(session.createdAt).getTime()) < 24 * 60 * 60 * 1000)
+          );
+          if (matchingReview) {
+            sessionReview = {
+              rating: matchingReview.rating,
+              comment: matchingReview.comment
+            };
+          }
+        }
 
         // Fix: Backend pending endpoint might return stale "active" status even if session ended.
         // We double-check the status for any "active" session using the individual session endpoint.
@@ -92,6 +114,7 @@ export default function AppointmentsPage() {
         return {
           id: session.id,
           name: session.user?.name || "Client",
+          avatar: session.user?.avatar,
           service: "Chat Consultation",
           date: session.createdAt || new Date().toISOString(),
           status: currentStatus, // Use the verified status
@@ -103,6 +126,21 @@ export default function AppointmentsPage() {
           expiresAt: session.expiresAt,
           isFree: !!session.isFree,
           freeMinutes: session.freeMinutes || 0,
+          durationMins: (() => {
+            let d = session.durationMins || session.duration || 0;
+            if (d === 0 && (currentStatus === 'completed' || currentStatus === 'expired')) {
+              const start = session.activatedAt ? new Date(session.activatedAt).getTime() :
+                (session.startTime ? new Date(session.startTime).getTime() : 0);
+              const end = session.endedAt ? new Date(session.endedAt).getTime() :
+                (session.endTime ? new Date(session.endTime).getTime() : 0);
+              if (start > 0 && end > 0) return Math.ceil((end - start) / (1000 * 60));
+            }
+            return d;
+          })(),
+          review: sessionReview ? {
+            rating: sessionReview.rating || 0,
+            comment: sessionReview.comment || ""
+          } : undefined,
         };
       }));
 
@@ -164,6 +202,7 @@ export default function AppointmentsPage() {
         const newAppt: Appointment = {
           id: session.id,
           name: session.user?.name || "Client",
+          avatar: session.user?.avatar,
           service: "Chat Consultation",
           date: session.createdAt || new Date().toISOString(),
           status: "pending",
@@ -175,6 +214,8 @@ export default function AppointmentsPage() {
           expiresAt: session.expiresAt,
           isFree: !!session.isFree,
           freeMinutes: session.freeMinutes || 0,
+          durationMins: session.durationMins || 0,
+          review: session.review,
         };
 
         setAppointments(prev => {

@@ -74,9 +74,10 @@ function ChatRoomContent() {
     const id = params.id as string;
     const sessionId = searchParams.get('sessionId');
 
-    const { clientUser, isClientAuthenticated } = useClientAuth();
+    const { clientUser, isClientAuthenticated, refreshBalance } = useClientAuth();
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0); // Initialize at 0
+    const [elapsedTime, setElapsedTime] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [sessionStatus, setSessionStatus] = useState<'pending' | 'active' | 'completed'>('pending');
@@ -158,11 +159,19 @@ function ChatRoomContent() {
                     setIsFree(freeChat);
                     setFreeMinutes(mins);
 
-                    // Set timer based on maxMinutes, or fallback to freeMinutes for new sessions
-                    if (sessionRes.data.maxMinutes && sessionRes.data.maxMinutes > 0) {
-                        setTimeLeft(sessionRes.data.maxMinutes * 60);
-                    } else if (freeChat && mins > 0) {
-                        setTimeLeft(mins * 60);
+                    // Pure sync from backend's improved fields
+                    console.log("[UserChatDebug] Server Sync Data:", {
+                        status: sessionRes.data.status,
+                        remainingSeconds: sessionRes.data.remainingSeconds,
+                        elapsedSeconds: sessionRes.data.elapsedSeconds,
+                        expiresAt: sessionRes.data.expiresAt
+                    });
+
+                    if (sessionRes.data.remainingSeconds !== undefined) {
+                        setTimeLeft(sessionRes.data.remainingSeconds);
+                    }
+                    if (sessionRes.data.elapsedSeconds !== undefined) {
+                        setElapsedTime(sessionRes.data.elapsedSeconds);
                     }
                 }
             } catch (err) {
@@ -204,13 +213,14 @@ function ChatRoomContent() {
         });
 
         chatSocket.on('session_activated', (session: any) => {
-            console.log("[UserChatDebug] 🚨 SESSION ACTIVATED EVENT RECEIVED!", session);
+            console.log("[UserChatDebug] Session activated socket event:", session);
             setSessionStatus('active');
 
-            // Critical fix: Ensure timer starts with backend's maxMinutes when session goes LIVE
-            if (session.maxMinutes) {
-                console.log("[UserChatDebug] Clock starting at:", session.maxMinutes, "mins");
-                setTimeLeft(session.maxMinutes * 60);
+            if (session.remainingSeconds !== undefined) {
+                setTimeLeft(session.remainingSeconds);
+            }
+            if (session.elapsedSeconds !== undefined) {
+                setElapsedTime(session.elapsedSeconds);
             }
 
             toast.success("Consultation Started!");
@@ -220,8 +230,8 @@ function ChatRoomContent() {
             toast.warning(data.message);
         });
 
-        chatSocket.on('balance_updated', (data: { maxMinutes: number }) => {
-            console.log("[UserChatDebug] Balance updated, adjusting timer:", data);
+        chatSocket.on('balance_updated', (data: { maxMinutes?: number }) => {
+            console.log("[UserChatDebug] Balance updated:", data);
             if (data.maxMinutes) {
                 setTimeLeft(data.maxMinutes * 60);
             }
@@ -271,10 +281,8 @@ function ChatRoomContent() {
         if (sessionStatus !== 'active') return;
 
         const timer = setInterval(() => {
-            setTimeLeft((prev) => {
-                if (prev <= 0) return 0;
-                return prev - 1;
-            });
+            setTimeLeft((prev) => (prev <= 0 ? 0 : prev - 1));
+            setElapsedTime((prev) => prev + 1);
         }, 1000);
         return () => clearInterval(timer);
     }, [sessionStatus]);
@@ -369,22 +377,37 @@ function ChatRoomContent() {
                                 {isFree && <span className="bg-white text-[#fd6410] px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter shadow-sm animate-bounce">Free Chat</span>}
                             </h1>
                             <p className="text-[9px] text-white/80 flex items-center gap-1 mt-0.5">
-                                <span className={`w-1 h-1 bg-green-400 rounded-full ${sessionStatus === 'active' ? 'animate-pulse' : ''}`}></span> {sessionStatus === 'active' ? 'Secure Session' : sessionStatus === 'completed' ? 'Session Ended' : 'Waiting for Expert'}
+                                {sessionStatus === 'active' ? 'Live Session' : sessionStatus === 'completed' ? 'Session Ended' : 'Waiting for Expert'}
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4 md:gap-6">
-                    {/* Timer - Only show when Active */}
+                <div className="flex items-center gap-4 md:gap-8">
+                    {/* Timers Section */}
                     {sessionStatus === 'active' && (
-                        <div className="bg-black/20 px-3 py-1 rounded-xl flex items-center gap-3 border border-white/5">
-                            <Clock className="w-3.5 h-3.5 text-white opacity-60" />
-                            <div className="flex flex-col items-start leading-none">
-                                <span className="text-[8px] font-black uppercase tracking-widest opacity-40 text-white">
-                                    {isFree ? 'Free Time' : 'Time Left'}
-                                </span>
-                                <span className="text-xs md:text-sm font-black tabular-nums text-white">{formatTime(timeLeft)}</span>
+                        <div className="flex items-center gap-4 md:gap-5">
+                            {/* Active Duration - High Contrast */}
+                            <div className="hidden sm:flex flex-col items-end gap-0.5">
+                                <span className="text-[9px] font-black uppercase tracking-[0.1em] text-white/80 whitespace-nowrap leading-none">Elapsed</span>
+                                <span className="text-sm md:text-base font-black tabular-nums text-white drop-shadow-sm leading-none">{formatTime(elapsedTime)}</span>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="w-px h-8 bg-white/20 hidden sm:block"></div>
+
+                            {/* Time Left Capsule Design */}
+                            <div className="bg-black/20 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-4 border border-white/30 shadow-2xl relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div className="p-1.5 bg-white/10 rounded-full">
+                                    <Clock className="w-3.5 h-3.5 text-white" />
+                                </div>
+                                <div className="flex flex-col items-start gap-0.5">
+                                    <span className="text-[9px] font-black uppercase tracking-[0.1em] text-white/80 whitespace-nowrap leading-none">
+                                        {isFree ? 'Free Time' : 'Time Left'}
+                                    </span>
+                                    <span className="text-sm md:text-base font-black tabular-nums text-white drop-shadow-sm leading-none">{formatTime(timeLeft)}</span>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -440,14 +463,28 @@ function ChatRoomContent() {
                             {messages.map((msg: Message) => (
                                 <div key={msg.id} className={`flex gap-3 md:gap-4 ${msg.senderType === "user" ? "flex-row-reverse" : "flex-row"} items-start`}>
                                     <div className="flex-shrink-0 mt-1">
-                                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full border-2 ${msg.senderType === "user" ? "border-white/10" : "border-[#fd6410]/30"} overflow-hidden shadow-lg`}>
-                                            <Image
-                                                src={msg.senderType === "user" ? "https://avatar.iran.liara.run/public/boy?username=Ravi" : expertData.image}
-                                                alt={msg.senderType}
-                                                width={48}
-                                                height={48}
-                                                className="object-cover"
-                                            />
+                                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full border-2 ${msg.senderType === "user" ? "border-white/10" : "border-[#fd6410]/30"} overflow-hidden shadow-lg flex items-center justify-center bg-[#fd6410]`}>
+                                            {msg.senderType === "user" && clientUser?.avatar ? (
+                                                <Image
+                                                    src={clientUser.avatar}
+                                                    alt="You"
+                                                    width={48}
+                                                    height={48}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : msg.senderType === "expert" && expertData.image ? (
+                                                <Image
+                                                    src={expertData.image}
+                                                    alt={expertData.name}
+                                                    width={48}
+                                                    height={48}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <span className="text-white font-bold text-xs">
+                                                    {msg.senderType === "user" ? (clientUser?.name?.charAt(0) || 'U') : (expertData.name?.charAt(0) || 'E')}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
 

@@ -19,9 +19,18 @@ export default function ClientMobileList({ clients, onViewChat }: ClientMobileLi
                 >
                     {/* Header */}
                     <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-semibold text-gray-900">
-                            {client.name}
-                        </h2>
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-yellow-600 text-white flex items-center justify-center font-bold text-lg overflow-hidden flex-shrink-0">
+                                {client.avatar ? (
+                                    <img src={client.avatar} alt={client.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    client.name.charAt(0)
+                                )}
+                            </div>
+                            <h2 className="text-lg font-semibold text-gray-900">
+                                {client.name}
+                            </h2>
+                        </div>
                         <div className="flex items-center">
                             {Array.from({ length: 5 }).map((_, i) => (
                                 <Star

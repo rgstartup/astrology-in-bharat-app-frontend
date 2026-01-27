@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Users, CalendarCheck, Clock, Wallet } from "lucide-react";
 import { StatsCards } from "../../../../shared/components/StatsCard";
 import { RecentActivity } from "@/components/dashboard/ActivityFeed";
@@ -7,11 +7,39 @@ import { UpcomingAppointments } from "@/components/dashboard/UserTable";
 import { ManageConsultaions } from "@/components/dashboard/ManageConsultaions";
 // import { MyConsultations } from "@/components/MyConsulation";
 import { ConsultationRatings } from "@/components/dashboard/ConsulationRating";
-
+import { ReviewsList } from "@/components/dashboard/ReviewsList";
+import { ReviewsModal } from "@/components/dashboard/ReviewsModal";
 import { useAuth } from "@/context/AuthContext";
+import { getExpertReviewStats, getExpertReviews, Review, ReviewStats } from "@/lib/reviews";
 
 const Page = () => {
   const { user } = useAuth();
+  const [ratingStats, setRatingStats] = useState<ReviewStats | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (user?.profileId) {
+        try {
+          const [stats, reviewsData] = await Promise.all([
+            getExpertReviewStats(user.profileId),
+            getExpertReviews(user.profileId, 1, 4) // Fetch 4 recent reviews
+          ]);
+          setRatingStats(stats);
+          setReviews(reviewsData.data || []);
+        } catch (error) {
+          console.error("Error fetching ratings/reviews:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+  }, [user?.profileId]);
+
   const statsData = [
     {
       title: "Total Consultations",
@@ -47,6 +75,15 @@ const Page = () => {
     },
   ];
 
+  // Logic for distribution fallback
+  const distribution = [
+    { stars: 5, count: Math.round((ratingStats?.totalReviews || 0) * 0.7) },
+    { stars: 4, count: Math.round((ratingStats?.totalReviews || 0) * 0.2) },
+    { stars: 3, count: Math.round((ratingStats?.totalReviews || 0) * 0.05) },
+    { stars: 2, count: Math.round((ratingStats?.totalReviews || 0) * 0.03) },
+    { stars: 1, count: Math.round((ratingStats?.totalReviews || 0) * 0.02) },
+  ];
+
   return (
     <main className="space-y-8">
       <div className="flex items-center justify-between">
@@ -73,21 +110,31 @@ const Page = () => {
         </div>
       </section>
 
-      <section>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* <MyConsultations /> */}
-          <ConsultationRatings averageRating={4.8}
-            totalRatings={1237}
-            distribution={[
-              { stars: 5, count: 900 },
-              { stars: 4, count: 200 },
-              { stars: 3, count: 80 },
-              { stars: 2, count: 40 },
-              { stars: 1, count: 17 },
-            ]} />
-          <ManageConsultaions />
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="space-y-6">
+          <ConsultationRatings
+            averageRating={ratingStats?.rating || 0}
+            totalRatings={ratingStats?.totalReviews || 0}
+            distribution={distribution}
+            loading={loading}
+            onViewAllClick={() => setIsModalOpen(true)}
+          />
+          {!loading && reviews.length > 0 && (
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <ReviewsList reviews={reviews} />
+            </div>
+          )}
         </div>
+        <ManageConsultaions />
       </section>
+
+      {user?.profileId && (
+        <ReviewsModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          expertId={user.profileId}
+        />
+      )}
     </main>
   );
 };

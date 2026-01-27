@@ -1,6 +1,7 @@
 export interface Client {
     id: number;
     name: string;
+    avatar?: string;
     phone: string;
     email: string;
     lastConsultation: {

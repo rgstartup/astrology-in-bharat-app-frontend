@@ -5,6 +5,7 @@ import {
     RefreshCw as LucideRefreshCw,
     XCircle as LucideXCircle,
     MessageSquare as LucideMessageSquare,
+    Star as LucideStar,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Appointment } from "./types";
@@ -14,6 +15,7 @@ const Video = LucideVideo as any;
 const RefreshCw = LucideRefreshCw as any;
 const XCircle = LucideXCircle as any;
 const MessageSquare = LucideMessageSquare as any;
+const Star = LucideStar as any;
 
 interface AppointmentListProps {
     appointments: Appointment[];
@@ -84,8 +86,21 @@ export default function AppointmentList({
                         {/* Left Section: Client Info & Details */}
                         <div className="flex items-start lg:items-center gap-5 flex-1 min-w-0">
                             {/* Avatar */}
-                            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-600 text-white flex items-center justify-center font-bold text-2xl ring-2 ring-yellow-500">
-                                {appt.name.charAt(0)}
+                            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-yellow-600 text-white flex items-center justify-center font-bold text-2xl ring-2 ring-yellow-500 overflow-hidden shadow-sm">
+                                {appt.avatar ? (
+                                    <img
+                                        src={appt.avatar}
+                                        alt={appt.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            // Fallback if image fails to load
+                                            (e.currentTarget as any).style.display = 'none';
+                                            (e.currentTarget as any).parentElement.innerText = appt.name.charAt(0);
+                                        }}
+                                    />
+                                ) : (
+                                    appt.name.charAt(0)
+                                )}
                             </div>
 
                             {/* Text Content */}
@@ -161,8 +176,40 @@ export default function AppointmentList({
                                 </>
                             )}
                             {(appt.status === 'completed' || appt.status === 'expired') && (
-                                <div className="text-sm font-bold opacity-60 uppercase tracking-tighter bg-gray-50 px-6 py-3 rounded-xl border border-dashed border-gray-300">
-                                    {appt.status === 'completed' ? '✅ Finished Successfully' : '⌛ Missed - Expired'}
+                                <div className="flex flex-col items-end gap-2">
+                                    <div className="flex items-center gap-4 bg-gray-50 px-5 py-3 rounded-xl border border-dashed border-gray-300">
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">Status</span>
+                                            <span className="text-sm font-bold text-gray-700">
+                                                {appt.status === 'completed' ? '✅ COMPLETED' : '⌛ EXPIRED'}
+                                            </span>
+                                        </div>
+                                        {appt.status === 'completed' && appt.durationMins !== undefined && (
+                                            <>
+                                                <div className="w-px h-8 bg-gray-200"></div>
+                                                <div className="flex flex-col items-end">
+                                                    <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">Duration</span>
+                                                    <span className="text-sm font-bold text-gray-700 flex items-center gap-1">
+                                                        <Clock className="w-3 h-3 text-[#fd6410]" /> {appt.durationMins} min
+                                                    </span>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {appt.review && appt.review.rating > 0 && (
+                                        <div className="flex items-center gap-1.5 bg-orange-50 px-3 py-1.5 rounded-lg border border-orange-100">
+                                            <div className="flex items-center gap-0.5">
+                                                {[1, 2, 3, 4, 5].map((s) => (
+                                                    <Star
+                                                        key={s}
+                                                        className={`w-3 h-3 ${s <= (appt.review?.rating || 0) ? "text-yellow-500 fill-yellow-500" : "text-gray-200"}`}
+                                                    />
+                                                ))}
+                                            </div>
+                                            <span className="text-[10px] font-bold text-orange-700">{appt.review.rating}/5</span>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -249,8 +296,24 @@ export default function AppointmentList({
                                 </>
                             )}
                             {(appt.status === 'completed' || appt.status === 'expired') && (
-                                <div className="text-xs font-bold opacity-60 text-center bg-gray-50 py-3 rounded-xl border border-dashed border-gray-200">
-                                    {appt.status === 'completed' ? '✅ Completed' : '⌛ Expired'}
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center text-xs font-bold bg-gray-50 px-4 py-3 rounded-xl border border-dashed border-gray-200">
+                                        <span className="opacity-60">{appt.status === 'completed' ? '✅ COMPLETED' : '⌛ EXPIRED'}</span>
+                                        {appt.status === 'completed' && appt.durationMins !== undefined && (
+                                            <span className="text-[#fd6410]">{appt.durationMins} MINS</span>
+                                        )}
+                                    </div>
+                                    {appt.review && appt.review.rating > 0 && (
+                                        <div className="flex items-center justify-center gap-1 bg-orange-50/50 py-1.5 rounded-lg">
+                                            {[1, 2, 3, 4, 5].map((s) => (
+                                                <Star
+                                                    key={s}
+                                                    className={`w-2.5 h-2.5 ${s <= (appt.review?.rating || 0) ? "text-yellow-500 fill-yellow-500" : "text-gray-200"}`}
+                                                />
+                                            ))}
+                                            <span className="text-[10px] font-bold text-orange-700 ml-1">{appt.review.rating}/5</span>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>

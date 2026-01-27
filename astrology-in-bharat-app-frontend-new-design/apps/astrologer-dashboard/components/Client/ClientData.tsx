@@ -8,10 +8,13 @@ import { Client, SortConfig, SortKey } from "./types";
 import { apiClient } from "@/lib/apiClient";
 import { toast } from "react-toastify";
 import * as LucideIcons from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { getExpertReviews } from "@/lib/reviews";
 
-const { X, MessageSquare, Clock, IndianRupee, Calendar } = LucideIcons as any;
+const { X, MessageSquare, Clock, IndianRupee, Calendar, Star } = LucideIcons as any;
 
 export default function ClientsPage() {
+  const { user: expertUser } = useAuth();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,26 +34,75 @@ export default function ClientsPage() {
     const fetchClients = async () => {
       try {
         setLoading(true);
-        const response = await apiClient.get('/chat/sessions/all');
-        const sessions = response.data;
+        const [sessionsRes, reviewsRes] = await Promise.allSettled([
+          apiClient.get('/chat/sessions/all'),
+          expertUser?.profileId ? getExpertReviews(expertUser.profileId, 1, 50) : Promise.reject("No expert ID")
+        ]);
+
+        const sessions = sessionsRes.status === 'fulfilled' ? sessionsRes.value.data : [];
+        const reviews = (reviewsRes.status === 'fulfilled' && (reviewsRes.value as any).data) ? (reviewsRes.value as any).data : [];
 
         // Map API response to Client interface
-        const mappedClients: Client[] = sessions.map((session: any) => ({
-          id: session.id, // using session ID as unique key
-          name: session.user?.name || "Client",
-          phone: session.user?.phone || "Hidden", // Phone might not be exposed
-          email: session.user?.email || "Hidden",
-          lastConsultation: {
-            date: new Date(session.createdAt).toISOString().split('T')[0],
-            duration: `${session.durationMins || 0} min`,
-            type: "chat"
-          },
-          rating: 5, // Default for now
-          review: "No review yet",
-          payment: session.totalCost || 0,
-          // Store raw session data for chat view
-          rawSession: session
-        }));
+        const mappedClients: Client[] = sessions.map((session: any) => {
+          // Fallback duration calculation
+          let duration = session.durationMins || session.duration || 0;
+
+          // If duration is very large (e.g. > 1000), it might be in seconds or ms
+          if (duration > 500) {
+            duration = Math.ceil(duration / 60);
+          }
+
+          if (duration === 0 && (session.status === 'completed' || session.status === 'expired')) {
+            const start = session.activatedAt ? new Date(session.activatedAt).getTime() :
+              (session.startTime ? new Date(session.startTime).getTime() :
+                (session.createdAt ? new Date(session.createdAt).getTime() : 0));
+            const end = session.endedAt ? new Date(session.endedAt).getTime() :
+              (session.endTime ? new Date(session.endTime).getTime() :
+                (session.updatedAt ? new Date(session.updatedAt).getTime() : 0));
+
+            if (start > 0 && end > 0) {
+              const diffMs = end - start;
+              duration = Math.ceil(diffMs / (1000 * 60));
+            }
+          }
+
+          // Ensure duration is never 0 for completed sessions
+          if (duration === 0 && session.status === 'completed') duration = 5; // Default 5 min fallback
+
+          // Try to find review from separate reviews API if not in session
+          let sessionReview = session.review;
+          if (!sessionReview || !sessionReview.comment) {
+            const matchingReview = reviews.find((r: any) =>
+              r.sessionId === session.id ||
+              (r.user?.name === session.user?.name &&
+                Math.abs(new Date(r.createdAt).getTime() - new Date(session.createdAt).getTime()) < 24 * 60 * 60 * 1000)
+            );
+            if (matchingReview) {
+              sessionReview = {
+                rating: matchingReview.rating,
+                comment: matchingReview.comment
+              };
+            }
+          }
+
+          return {
+            id: session.id, // using session ID as unique key
+            name: session.user?.name || "Client",
+            avatar: session.user?.avatar,
+            phone: session.user?.phone || "Hidden", // Phone might not be exposed
+            email: session.user?.email || "Hidden",
+            lastConsultation: {
+              date: new Date(session.createdAt).toISOString().split('T')[0],
+              duration: `${duration} min`,
+              type: "chat"
+            },
+            rating: sessionReview?.rating || 0,
+            review: sessionReview?.comment || "No review yet",
+            payment: session.totalCost || session.amount || 0,
+            // Store raw session data for chat view
+            rawSession: session
+          };
+        });
 
         setClients(mappedClients);
       } catch (error) {
@@ -62,7 +114,7 @@ export default function ClientsPage() {
     };
 
     fetchClients();
-  }, []);
+  }, [expertUser?.profileId]);
 
   // Fetch Chat History
   const handleViewChat = async (client: Client) => {
@@ -213,6 +265,39 @@ export default function ClientsPage() {
                         <IndianRupee size={12} />
                         {client.payment}
                       </span>
+                    </div>
+
+                    {/* Rating & Review Section */}
+                    <div className="mt-4">
+                      <div className={`p-4 rounded-2xl border flex gap-4 items-start transition-all ${client.review && client.review !== "No review yet"
+                        ? "bg-orange-50/50 border-orange-100 shadow-sm"
+                        : "bg-gray-50 border-gray-100 opacity-60"
+                        }`}>
+                        <div className={`p-2 rounded-full ${client.review && client.review !== "No review yet" ? "bg-orange-100 text-[#fd6410]" : "bg-gray-200 text-gray-400"}`}>
+                          <MessageSquare size={16} />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-center mb-1">
+                            <p className="text-[10px] font-black text-orange-600/60 uppercase tracking-widest">Client Feedback</p>
+                            {client.rating > 0 && (
+                              <div className="flex items-center gap-0.5">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star
+                                    key={star}
+                                    size={10}
+                                    className={star <= client.rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}
+                                  />
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-700 italic leading-relaxed">
+                            {client.review && client.review !== "No review yet"
+                              ? `"${client.review}"`
+                              : "The client hasn't left a review yet. Feedback helps build trust!"}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

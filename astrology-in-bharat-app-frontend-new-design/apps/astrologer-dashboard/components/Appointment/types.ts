@@ -1,6 +1,7 @@
 export interface Appointment {
     id: number;
     name: string;
+    avatar?: string;
     service: string;
     date: string;
     status: "confirmed" | "pending" | "cancelled" | "active" | "completed" | "expired";
@@ -12,4 +13,9 @@ export interface Appointment {
     expiresAt?: string;
     isFree?: boolean;
     freeMinutes?: number;
+    durationMins?: number;
+    review?: {
+        rating: number;
+        comment: string;
+    };
 }

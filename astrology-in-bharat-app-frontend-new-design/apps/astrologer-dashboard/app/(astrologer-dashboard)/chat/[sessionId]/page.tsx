@@ -31,12 +31,14 @@ function ExpertChatRoomContent() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [sessionStatus, setSessionStatus] = useState<'pending' | 'active' | 'completed'>('pending');
     const [timeLeft, setTimeLeft] = useState(0);
+    const [elapsedTime, setElapsedTime] = useState(0); // Count-up timer
     const [inputValue, setInputValue] = useState("");
     const [isActivating, setIsActivating] = useState(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const [clientName, setClientName] = useState("Client");
+    const [clientAvatar, setClientAvatar] = useState<string | null>(null);
 
     useEffect(() => {
         if (!sessionId || !isAuthenticated || !user) return;
@@ -47,11 +49,28 @@ function ExpertChatRoomContent() {
                 console.log("[ExpertChatDebug] Fetching status for session:", sessionId);
 
                 // Fetch basic session info
-                const sessionRes = await apiClient.get(`/chat/session/${sessionId}`);
+                const sessionRes = await apiClient.get(`/chat/session/${sessionId}?_t=${Date.now()}`);
                 if (sessionRes.data) {
-                    setSessionStatus(sessionRes.data.status);
+                    const status = sessionRes.data.status;
+                    setSessionStatus(status);
                     if (sessionRes.data.user?.name) {
                         setClientName(sessionRes.data.user.name);
+                    }
+                    if (sessionRes.data.user?.avatar) {
+                        setClientAvatar(sessionRes.data.user.avatar);
+                    }
+
+                    // Pure sync from backend's improved fields
+                    console.log("[ExpertChatDebug] Server Sync Data:", {
+                        remainingSeconds: sessionRes.data.remainingSeconds,
+                        elapsedSeconds: sessionRes.data.elapsedSeconds
+                    });
+
+                    if (sessionRes.data.remainingSeconds !== undefined) {
+                        setTimeLeft(sessionRes.data.remainingSeconds);
+                    }
+                    if (sessionRes.data.elapsedSeconds !== undefined) {
+                        setElapsedTime(sessionRes.data.elapsedSeconds);
                     }
                 }
 
@@ -78,9 +97,16 @@ function ExpertChatRoomContent() {
         });
 
         chatSocket.on('session_activated', (session: any) => {
-            console.log("[ExpertChatDebug] Session activated event received!", session);
+            console.log("[ExpertChatDebug] Session activated socket event:", session);
             setSessionStatus('active');
-            toast.success("Consultation started! Billing is now active.");
+
+            if (session.remainingSeconds !== undefined) {
+                setTimeLeft(session.remainingSeconds);
+            }
+            if (session.elapsedSeconds !== undefined) {
+                setElapsedTime(session.elapsedSeconds);
+            }
+            toast.success("Consultation started!");
         });
 
         chatSocket.on('session_ended', () => {
@@ -101,7 +127,8 @@ function ExpertChatRoomContent() {
     useEffect(() => {
         if (sessionStatus !== 'active') return;
         const timer = setInterval(() => {
-            setTimeLeft((prev) => prev + 1);
+            setTimeLeft((prev) => (prev <= 0 ? 0 : prev - 1));
+            setElapsedTime((prev) => prev + 1);
         }, 1000);
         return () => clearInterval(timer);
     }, [sessionStatus]);
@@ -175,30 +202,57 @@ function ExpertChatRoomContent() {
     return (
         <div className="flex flex-col h-[calc(100vh-120px)] bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             {/* Header */}
-            <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+            <header className="bg-gradient-to-r from-[#fd6410] to-[#ff8c4a] px-6 py-4 flex items-center justify-between shadow-md">
                 <div className="flex items-center gap-4">
-                    <button onClick={() => router.back()} className="p-2 hover:bg-gray-50 rounded-full transition-colors text-gray-500">
+                    <button onClick={() => router.back()} className="p-2 hover:bg-white/10 rounded-full transition-colors text-white">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 font-bold">
-                            {clientName.charAt(0)}
+                        <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white font-black overflow-hidden border border-white/30 shadow-sm">
+                            {clientAvatar ? (
+                                <img
+                                    src={clientAvatar}
+                                    alt={clientName}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                clientName.charAt(0).toUpperCase()
+                            )}
                         </div>
                         <div>
-                            <h2 className="font-bold text-gray-900 leading-tight">Consultation with {clientName}</h2>
-                            <p className="text-xs text-gray-500 flex items-center gap-1">
-                                <span className={`w-2 h-2 rounded-full ${sessionStatus === 'active' ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'}`}></span>
-                                {sessionStatus === 'active' ? 'Live Session' : sessionStatus === 'completed' ? 'Session Completed' : 'Waiting to start'}
+                            <h2 className="font-bold text-white leading-tight">Consultation with {clientName}</h2>
+                            <p className="text-[10px] text-white/80 font-bold flex items-center gap-1.5 mt-0.5">
+                                <span className={`w-1.5 h-1.5 rounded-full ${sessionStatus === 'active' ? 'bg-green-400 animate-pulse' : 'bg-white/30'}`}></span>
+                                {sessionStatus === 'active' ? 'Live Session' : 'Pending'}
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-6">
+                    {/* Timers Section */}
                     {sessionStatus === 'active' && (
-                        <div className="bg-yellow-50 px-4 py-2 rounded-xl border border-yellow-100 flex items-center gap-3">
-                            <Clock className="w-4 h-4 text-yellow-600" />
-                            <span className="text-sm font-bold text-yellow-700 tabular-nums uppercase tracking-tight">Active: {formatTime(timeLeft)}</span>
+                        <div className="flex items-center gap-4 md:gap-5">
+                            {/* Active Duration - High Contrast */}
+                            <div className="hidden sm:flex flex-col items-end gap-0.5">
+                                <span className="text-[9px] font-black uppercase tracking-[0.1em] text-white/80 whitespace-nowrap leading-none">Elapsed</span>
+                                <span className="text-sm md:text-base font-black tabular-nums text-white drop-shadow-sm leading-none">{formatTime(elapsedTime)}</span>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="w-px h-8 bg-white/20 hidden sm:block"></div>
+
+                            {/* Time Left Capsule Design */}
+                            <div className="bg-black/20 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-4 border border-white/30 shadow-2xl relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div className="p-1.5 bg-white/10 rounded-full">
+                                    <Clock className="w-3.5 h-3.5 text-white" />
+                                </div>
+                                <div className="flex flex-col items-start gap-0.5">
+                                    <span className="text-[9px] font-black uppercase tracking-[0.1em] text-white/80 whitespace-nowrap leading-none">Time Left</span>
+                                    <span className="text-sm md:text-base font-black tabular-nums text-white drop-shadow-sm leading-none">{formatTime(timeLeft)}</span>
+                                </div>
+                            </div>
                         </div>
                     )}
 
@@ -206,7 +260,7 @@ function ExpertChatRoomContent() {
                         <button
                             onClick={handleActivate}
                             disabled={isActivating}
-                            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-sm transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                            className="bg-green-500 hover:bg-green-600 text-white px-6 py-2.5 rounded-xl font-black text-sm shadow-lg transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2 border border-white/20"
                         >
                             <Power className="w-4 h-4" />
                             {isActivating ? 'Activating...' : 'Start Session'}
@@ -216,7 +270,7 @@ function ExpertChatRoomContent() {
                     {sessionStatus === 'active' && (
                         <button
                             onClick={handleEndChat}
-                            className="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2.5 rounded-xl font-bold text-sm transition-all border border-red-100 flex items-center gap-2"
+                            className="bg-white text-red-600 hover:bg-red-50 px-5 py-2.5 rounded-xl font-black text-sm transition-all shadow-lg flex items-center gap-2 border border-white/20"
                         >
                             <AlertCircle className="w-4 h-4" />
                             End session
@@ -244,10 +298,28 @@ function ExpertChatRoomContent() {
                 )}
 
                 {messages.map((msg) => (
-                    <div key={msg.id} className={`flex ${msg.senderType === "expert" ? "justify-end" : "justify-start"}`}>
+                    <div key={msg.id} className={`flex items-start gap-3 ${msg.senderType === "expert" ? "flex-row-reverse" : "flex-row"}`}>
+                        {/* Avatar */}
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden border border-gray-100 shadow-sm bg-yellow-100 flex items-center justify-center text-[10px] font-bold text-yellow-700">
+                            {msg.senderType === "expert" ? (
+                                user?.avatar ? (
+                                    <img src={user.avatar} className="w-full h-full object-cover" />
+                                ) : (
+                                    user?.name?.charAt(0) || 'E'
+                                )
+                            ) : (
+                                clientAvatar ? (
+                                    <img src={clientAvatar} className="w-full h-full object-cover" />
+                                ) : (
+                                    clientName.charAt(0)
+                                )
+                            )}
+                        </div>
+
+                        {/* Message Content */}
                         <div className={`max-w-[70%] flex flex-col ${msg.senderType === "expert" ? "items-end" : "items-start"}`}>
                             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 px-1">
-                                {msg.senderType === "expert" ? "You (Expert)" : "Client"}
+                                {msg.senderType === "expert" ? "You (Expert)" : (clientName || "Client")}
                             </span>
                             <div className={`px-4 py-3 rounded-2xl shadow-sm ${msg.senderType === "expert"
                                 ? "bg-yellow-600 text-white rounded-tr-none"
