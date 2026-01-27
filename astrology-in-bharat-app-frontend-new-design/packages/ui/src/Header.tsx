@@ -444,38 +444,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                             Kundali Matching
                           </Link>
                         </li>
-                        {/* <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.NAKSHATRA_MILAN}
-                          >
-                            Nakshatra Milan
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.KUNDALI_MATCHING_BY_NAME}
-                          >
-                            Kundali Matching By Name
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.MANGAL_DOSHA}
-                          >
-                            Mangal Dosha
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.KAAL_SARP_DOSH}
-                          >
-                            Kaal Sarp Dosh
-                          </Link>
-                        </li> */}
+                        
                         <li>
                           <Link
                             className="dropdown-item"
@@ -484,7 +453,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                             Love Calculator
                           </Link>
                         </li>
-                         <li>
+                        <li>
                           <Link
                             className="dropdown-item"
                             href={PATHS.FLAMES_CALCULATOR}
@@ -493,66 +462,66 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                           </Link>
                         </li>
                         <li>
-  <Link className="dropdown-item" href={PATHS.LOVE_COMPATIBILITY_CALCULATOR}>
-    Love Compatibility Calculator
-  </Link>
-</li>
+                          <Link className="dropdown-item" href={PATHS.LOVE_COMPATIBILITY_CALCULATOR}>
+                            Love Compatibility Calculator
+                          </Link>
+                        </li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.MARRIAGE_AGE_CALCULATOR}>
-    Marriage Age Calculator
-  </Link>
-</li>
+                        <li>
+                          <Link className="dropdown-item" href={PATHS.MARRIAGE_AGE_CALCULATOR}>
+                            Marriage Age Calculator
+                          </Link>
+                        </li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.SOULMATE_NAME_INITALS_CALCULATOR}>
-    Soulmate Name Initials Calculator
-  </Link>
-</li>
+                        <li>
+                          <Link className="dropdown-item" href={PATHS.SOULMATE_NAME_INITALS_CALCULATOR}>
+                            Soulmate Name Initials Calculator
+                          </Link>
+                        </li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.LUCKY_NUMBER_CALCULATOR}>
-    Lucky Number & Colour Calculator
-  </Link>
-</li>
+                        <li>
+                          <Link className="dropdown-item" href={PATHS.LUCKY_NUMBER_CALCULATOR}>
+                            Lucky Number & Colour Calculator
+                          </Link>
+                        </li>
 
 
 
-<li>
-  <Link className="dropdown-item" href={PATHS.LIFE_PATH_CALCULATOR}>
-    Life Path Calculator
-  </Link>
-</li>
+                        <li>
+                          <Link className="dropdown-item" href={PATHS.LIFE_PATH_CALCULATOR}>
+                            Life Path Calculator
+                          </Link>
+                        </li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.NAME_NUMEROLOGY_CALCULATOR}>
-    Name Numerology Calculator
-  </Link>
-</li>
+                        <li>
+                          <Link className="dropdown-item" href={PATHS.NAME_NUMEROLOGY_CALCULATOR}>
+                            Name Numerology Calculator
+                          </Link>
+                        </li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.ZODIAC_SIGN_CALCULATOR}>
-    Zodiac Sign Compatibility Calculator
-  </Link>
-</li>
+                        <li>
+                          <Link className="dropdown-item" href={PATHS.ZODIAC_SIGN_CALCULATOR}>
+                            Zodiac Sign Compatibility Calculator
+                          </Link>
+                        </li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.NAKSHATRA_FINDER}>
-    Nakshatra Finder
-  </Link>
-</li>
+                        <li>
+                          <Link className="dropdown-item" href={PATHS.NAKSHATRA_FINDER}>
+                            Nakshatra Finder
+                          </Link>
+                        </li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.LOYAL_PARTNER_CALCULATOR}>
-    Loyal Partner Calculator
-  </Link>
-</li>
+                        <li>
+                          <Link className="dropdown-item" href={PATHS.LOYAL_PARTNER_CALCULATOR}>
+                            Loyal Partner Calculator
+                          </Link>
+                        </li>
 
-<li>
-  <Link className="dropdown-item" href={PATHS.BREAKUP_PATCHUP_CALCULATOR}>
-    Breakup Patchup Calculator
-  </Link>
-</li>
+                        <li>
+                          <Link className="dropdown-item" href={PATHS.BREAKUP_PATCHUP_CALCULATOR}>
+                            Breakup Patchup Calculator
+                          </Link>
+                        </li>
 
 
 

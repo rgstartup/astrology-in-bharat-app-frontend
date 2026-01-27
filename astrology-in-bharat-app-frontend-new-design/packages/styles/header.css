@@ -262,6 +262,25 @@ a {
 
 ul.dropdown-menu {
   padding: 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+ul.dropdown-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+ul.dropdown-menu::-webkit-scrollbar-track {
+  background: #301118;
+}
+
+ul.dropdown-menu::-webkit-scrollbar-thumb {
+  background: #fd6410;
+  border-radius: 10px;
+}
+
+ul.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #ff7e39;
 }
 
 .top-menu-main li ul.dropdown-menu li a {

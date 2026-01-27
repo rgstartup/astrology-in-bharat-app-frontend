@@ -301,7 +301,7 @@ const SignInContent: React.FC = () => {
 
                 <div className="d-flex justify-content-end mb-3">
                   <Link
-                    href="#"
+                    href="/forgot-password"
                     className="forget-password text-decoration-none"
                   >
                     Forget Password?
