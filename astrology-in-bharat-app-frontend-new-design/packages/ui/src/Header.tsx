@@ -270,7 +270,6 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                               )}
                             </Link>
 
-<<<<<<< Updated upstream
                             <Link
                               href={PATHS.PROFILE}
                               className="d-flex align-items-center gap-2"
@@ -367,76 +366,6 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                       )}
 
                     </div>
-=======
-                  
-                  <div className="col-6 mobile-space">
-                  
-                    <div className="d-flex gap-2 w-100 justify-content-end">
-  {isAuthenticated ? (
-    <>
-      <Link href={PATHS.CART} className="cart-top">
-                      <i className="fa-solid fa-cart-shopping"></i> Cart{" "}
-                      <span className="value">4</span>
-                    </Link>
-      <Link
-        href={PATHS.PROFILE}
-        className="account-btn w-100 text-center"
-      >
-        <i className="fa-solid fa-user"></i> My Profile
-      </Link>
-
-      <button
-        className=" w-70"
-        onClick={handleLogout}
-        type="button"
-      >
-        <i className="fa-solid fa-right-from-bracket"></i> Logout
-      </button>
-    </>
-  ) : (
-    <>
-    <div style={{marginLeft:"14px"}}>
-      <Link
-        href={PATHS.SIGN_IN}
-        className=" w-100 text-center"style={{
-          color:"white",
-          backgroundColor:"#fd6410",
-          padding:"6px 8px",
-          margin:"5px",
-          borderRadius:"5px",
-          textAlign:"center",
-          justifyContent:"center",
-          marginLeft:"5px"
-        }}
-      >
-        SignIn
-      </Link>
-
-      <Link
-        href={PATHS.REGISTER}
-        className=" w-100 text-center" style={{
-          color:"white",
-          backgroundColor:"#fd6410",
-          padding:"6px 8px",
-          margin:"5px",
-          borderRadius:"5px",
-          textAlign:"center",
-          justifyContent:"center"
-        }}
-      >
-        Register
-      </Link>
-
-    </div>
-                  
-                
-      
-    </>
-  )}
-</div>
-
-
->>>>>>> Stashed changes
                   </div>
                 </div>
               </div>
