@@ -29,9 +29,27 @@ export interface Transaction {
     status: 'completed' | 'pending' | 'failed' | 'received';
 }
 
+export interface TopUser {
+    id: string;
+    name: string;
+    avatar?: string;
+    totalSpent: number;
+    sessions: number;
+}
+
+export interface TopService {
+    id: string;
+    name: string;
+    revenue: number;
+    usageCount: number;
+    color: string;
+}
+
 export interface EarningsDashboardData {
     stats: EarningsStatsData;
     incomeTrends: ChartDataPoint[];
     revenueBreakdown: RevenueBreakdown[];
     recentTransactions: Transaction[];
+    topUsers: TopUser[];
+    topServices: TopService[];
 }

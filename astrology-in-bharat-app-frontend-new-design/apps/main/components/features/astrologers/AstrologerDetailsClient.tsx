@@ -6,8 +6,9 @@ import { products } from "@/components/features/services/homePagaData";
 import { useRouter } from "next/navigation";
 import ReviewModal from "@/components/ui/modals/ReviewModal";
 import NextImage from "next/image";
-import { X } from "lucide-react";
+import { X, Star, StarHalf } from "lucide-react";
 import ProductSection from "@/components/features/shop/ProductSection";
+import { getExpertReviews, Review } from "@/libs/api-experts";
 
 const Image = NextImage as any;
 const NextLink = Link as any;
@@ -39,7 +40,45 @@ export default function AstrologerDetailsClient({
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'experience' | 'reviews' | 'gallery' | 'videos'>('about');
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const [totalReviews, setTotalReviews] = useState(0);
   const router = useRouter();
+
+  React.useEffect(() => {
+    if (activeTab === 'reviews') {
+      const fetchReviews = async () => {
+        setLoadingReviews(true);
+        try {
+          const res = await getExpertReviews(astrologer.id);
+          setReviews(res.data);
+          setTotalReviews(res.total);
+        } catch (error) {
+          console.error("Failed to load reviews", error);
+        } finally {
+          setLoadingReviews(false);
+        }
+      };
+      fetchReviews();
+    }
+  }, [activeTab, astrologer.id]);
+
+  const renderStars = (rating: number) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+
+    for (let i = 1; i <= 5; i++) {
+      if (i <= fullStars) {
+        stars.push(<i key={i} className="fa-solid fa-star"></i>);
+      } else if (i === fullStars + 1 && hasHalfStar) {
+        stars.push(<i key={i} className="fa-solid fa-star-half-stroke"></i>);
+      } else {
+        stars.push(<i key={i} className="fa-regular fa-star"></i>);
+      }
+    }
+    return stars;
+  };
 
   const handleChatClick = () => {
     router.push(`/chat/prep/${astrologer.id}`);
@@ -248,25 +287,55 @@ export default function AstrologerDetailsClient({
                 )}
 
                 {activeTab === 'reviews' && (
-                  <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-bold text-xs text-gray-900">Priya Sharma</span>
-                        <div className="flex text-[#fd6410] text-[10px]">
-                          <i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i>
-                        </div>
+                  <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[400px] overflow-y-auto pr-1">
+                    {loadingReviews ? (
+                      <div className="flex flex-col items-center justify-center py-10 space-y-3">
+                        <div className="w-8 h-8 border-4 border-[#fd6410] border-t-transparent rounded-full animate-spin"></div>
+                        <p className="text-sm text-gray-500 font-medium">Loading authentic reviews...</p>
                       </div>
-                      <p className="text-sm text-gray-600 italic">"The prediction was 100% accurate. I am very satisfied with the remedies provided."</p>
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-bold text-xs text-gray-900">Rahul Verma</span>
-                        <div className="flex text-[#fd6410] text-[10px]">
-                          <i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-solid fa-star"></i><i className="fa-regular fa-star"></i>
+                    ) : reviews.length > 0 ? (
+                      reviews.map((review) => (
+                        <div key={review.id} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-100 bg-gray-50">
+                                <Image
+                                  src={review.user.avatar || "/images/astro-img1.png"}
+                                  alt={review.user.name}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h5 className="font-bold text-sm text-gray-900">{review.user.name}</h5>
+                                <p className="text-[10px] text-gray-400 font-medium">
+                                  {new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex text-[#fd6410] text-[10px] bg-[#fd6410]/5 px-2 py-1 rounded-full gap-0.5">
+                              {renderStars(review.rating)}
+                            </div>
+                          </div>
+                          <p className="text-sm text-gray-600 leading-relaxed italic border-l-2 border-[#fd6410]/20 pl-3 py-1">
+                            "{review.comment}"
+                          </p>
                         </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                        <i className="fa-regular fa-comments text-4xl text-gray-300 mb-3"></i>
+                        <p className="text-sm text-gray-500 font-medium">No reviews yet for this astrologer.</p>
                       </div>
-                      <p className="text-sm text-gray-600 italic">"Great experience, Acharya ji listened to my problems very patiently."</p>
-                    </div>
+                    )}
+
+                    {totalReviews > reviews.length && (
+                      <div className="text-center pt-2">
+                        <button className="text-xs font-bold text-[#fd6410] hover:underline">
+                          View All {totalReviews} Reviews
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
 

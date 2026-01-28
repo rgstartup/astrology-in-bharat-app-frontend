@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
 const apiEnvVar = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "");
-const API_BASE_URL = apiEnvVar ? `${apiEnvVar}/api/v1/` : 'http://localhost:6543/api/v1/';
+const API_BASE_URL = apiEnvVar ? `${apiEnvVar}/api/v1` : 'http://localhost:6543/api/v1';
 
 console.log("DEBUG: process.env.NEXT_PUBLIC_API_URL =", process.env.NEXT_PUBLIC_API_URL);
 console.log("DEBUG: Resolved API_BASE_URL =", API_BASE_URL);
@@ -60,20 +60,6 @@ apiClient.interceptors.request.use(
             console.log(`[API] ${config.method?.toUpperCase()} ${config.url} - Auth Header Set. Token starts with: ${token.substring(0, 10)}...`);
         } else {
             console.warn(`[API] ${config.method?.toUpperCase()} ${config.url} - No Token Found in Cookies!`);
-        }
-
-        // Add expert: true to payloads for POST, PUT, PATCH
-        const method = config.method?.toLowerCase();
-        if (['post', 'put', 'patch'].includes(method || '')) {
-            if (config.data instanceof FormData) {
-                if (!config.data.has('expert')) {
-                    config.data.append('expert', 'true');
-                }
-            } else if (typeof config.data === 'object' && config.data !== null) {
-                config.data.expert = true;
-            } else if (!config.data) {
-                config.data = { expert: true };
-            }
         }
 
         return config;

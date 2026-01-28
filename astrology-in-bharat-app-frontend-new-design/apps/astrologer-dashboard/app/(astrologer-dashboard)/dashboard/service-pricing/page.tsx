@@ -147,22 +147,8 @@ const ServicePricingPage = () => {
       description: "Face-to-face video consultation for detailed guidance.",
       offer: "25% off weekends",
     },
-    {
-      name: "Report Writing",
-      key: "report_price",
-      price: profile?.report_price || 0,
-      unit: "/ report",
-      description: "Get a detailed astrology report delivered to you.",
-      offer: "16% off first session",
-    },
-    {
-      name: "Horoscope",
-      key: "horoscope_price",
-      price: profile?.horoscope_price || 0,
-      unit: "/ month",
-      description: "Daily and monthly personalized horoscope readings.",
-      offer: "First month free",
-    },
+
+
     ...(profile?.custom_services || []).map(s => ({
       name: s.name,
       key: `custom-${s.id}`,

@@ -14,6 +14,7 @@ import {
   User,
   Settings,
   LogOut,
+  Wallet,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { useAuth } from "@/context/AuthContext";
@@ -156,6 +157,7 @@ export const Sidebar: React.FC<SidebarProps> = memo(
         icon: History,
       },
       { label: "Earnings", href: "/dashboard/earnings", icon: Coins },
+      { label: "My Wallet", href: "/dashboard/wallet", icon: Wallet },
       {
         label: "Account",
         href: "#",

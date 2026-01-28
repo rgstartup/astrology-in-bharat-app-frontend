@@ -11,7 +11,23 @@ import PortfolioGallery from "./PortfolioGallery";
 import VerificationAndDocuments from "./VerificationAndDocuments";
 import { Todo, LeaveDate, Profile, Gender, DocumentItem, ExperienceItem } from "./types";
 import { useAuth } from "@/context/AuthContext";
-import { getProfile, updateProfile, createProfile, uploadDocument } from "@/lib/profile";
+import {
+  getProfile,
+  updateProfile,
+  createProfile,
+  uploadDocument,
+  updatePersonalInfo,
+  updatePricing,
+  updateBankDetails,
+  updatePortfolio,
+  updateCertificates,
+  updateDocuments,
+  updateExperience,
+  getTodos,
+  createTodo,
+  updateTodo,
+  deleteTodoApi
+} from "@/lib/profile";
 
 const ProfileManagement = () => {
   const { user: authUser } = useAuth();
@@ -53,22 +69,10 @@ const ProfileManagement = () => {
   const [loading, setLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const [pendingProfilePicFile, setPendingProfilePicFile] = useState<File | null>(null);
 
-  // Todo List State (Local for now as per previous design)
-  const [todos, setTodos] = useState<Todo[]>([
-    {
-      id: 1,
-      text: "Update profile bio",
-      completed: false,
-      createdAt: new Date(),
-    },
-    {
-      id: 2,
-      text: "Upload certificates",
-      completed: true,
-      createdAt: new Date(),
-    },
-  ]);
+  // Todo List State - Now synced with backend
+  const [todos, setTodos] = useState<Todo[]>([]);
 
   // Documents State (Local for now)
   const [documents, setDocuments] = useState<DocumentItem[]>([
@@ -77,6 +81,7 @@ const ProfileManagement = () => {
       name: "Aadhar Card.pdf",
       type: "application/pdf",
       size: "2.5 MB",
+      url: "#",
       uploadedAt: new Date("2025-01-01"),
     },
   ]);
@@ -146,71 +151,79 @@ const ProfileManagement = () => {
       setDocuments(mappedProfile.documents || []);
       setHasProfile(true);
       setLoading(false);
-      return;
     } else {
       console.warn("AuthContext user missing profile fields. Fallback to fetch.");
+      const fetchProfile = async () => {
+        try {
+          const data = await getProfile();
+          console.log("Fetched profile data:", data);
+          if (data) {
+            const mappedProfile: Profile = {
+              name: authUser?.name || data.user?.name || "",
+              email: authUser?.email || data.user?.email || "",
+              gender: data.gender || Gender.OTHER,
+              bio: data.bio || "",
+              specialization: data.specialization || "",
+              experience_in_years: data.experience_in_years || 0,
+              languages: typeof data.languages === 'string' ? data.languages.split(',').map((l: string) => l.trim()) : (data.languages || []),
+              price: data.price || 0,
+              chat_price: data.chat_price || 0,
+              call_price: data.call_price || 0,
+              video_call_price: data.video_call_price || 0,
+              report_price: data.report_price || 0,
+              horoscope_price: data.horoscope_price || 0,
+              bank_details: data.bank_details || "",
+              is_available: data.is_available || false,
+              kycCompleted: false, // Placeholder
+              addresses: data.addresses?.map((a: any) => ({
+                line1: a.line1,
+                line2: a.line2,
+                city: a.city,
+                state: a.state,
+                country: a.country,
+                zipCode: a.zipCode,
+                tag: a.tag
+              })) || [],
+              profilePic: data.user?.avatar || data.avatar || data.user?.profilePic || "",
+              certificates: data.certificates || [],
+              gallery: data.gallery || [],
+              videos: data.videos || [],
+              video: data.video || "",
+              detailed_experience: data.detailed_experience || [],
+              date_of_birth: data.date_of_birth,
+              documents: data.documents || [],
+            };
+            setProfile(mappedProfile);
+            setTempProfile(mappedProfile);
+            setDocuments(mappedProfile.documents || []);
+            setHasProfile(true);
+          }
+        } catch (err: any) {
+          // Ignore 404 (Profile not found) as it means new user
+          if (err.response?.status !== 404) {
+            console.error("Failed to fetch profile:", err);
+            setFetchError("Unable to load profile. Please refresh or try again later.");
+          } else {
+            console.log("Profile not found (404), ensuring hasProfile is false.");
+            setHasProfile(false);
+          }
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProfile();
     }
 
-    const fetchProfile = async () => {
+    // Always fetch Todos separately to ensure they are loaded regardless of profile cache
+    const fetchTodosList = async () => {
       try {
-        const data = await getProfile();
-        console.log("Fetched profile data:", data);
-        if (data) {
-          const mappedProfile: Profile = {
-            name: authUser?.name || data.user?.name || "",
-            email: authUser?.email || data.user?.email || "",
-            gender: data.gender || Gender.OTHER,
-            bio: data.bio || "",
-            specialization: data.specialization || "",
-            experience_in_years: data.experience_in_years || 0,
-            languages: typeof data.languages === 'string' ? data.languages.split(',').map((l: string) => l.trim()) : (data.languages || []),
-            price: data.price || 0,
-            chat_price: data.chat_price || 0,
-            call_price: data.call_price || 0,
-            video_call_price: data.video_call_price || 0,
-            report_price: data.report_price || 0,
-            horoscope_price: data.horoscope_price || 0,
-            bank_details: data.bank_details || "",
-            is_available: data.is_available || false,
-            kycCompleted: false, // Placeholder
-            addresses: data.addresses?.map((a: any) => ({
-              line1: a.line1,
-              line2: a.line2,
-              city: a.city,
-              state: a.state,
-              country: a.country,
-              zipCode: a.zipCode,
-              tag: a.tag
-            })) || [],
-            profilePic: data.user?.avatar || data.avatar || data.user?.profilePic || "",
-            certificates: data.certificates || [],
-            gallery: data.gallery || [],
-            videos: data.videos || [],
-            video: data.video || "",
-            detailed_experience: data.detailed_experience || [],
-            date_of_birth: data.date_of_birth,
-            documents: data.documents || [],
-          };
-          setProfile(mappedProfile);
-          setTempProfile(mappedProfile);
-          setDocuments(mappedProfile.documents || []);
-          setHasProfile(true);
-        }
-      } catch (err: any) {
-        // Ignore 404 (Profile not found) as it means new user
-        if (err.response?.status !== 404) {
-          console.error("Failed to fetch profile:", err);
-          setFetchError("Unable to load profile. Please refresh or try again later.");
-        } else {
-          console.log("Profile not found (404), ensuring hasProfile is false.");
-          setHasProfile(false);
-        }
-      } finally {
-        setLoading(false);
+        const todoData = await getTodos();
+        setTodos(todoData);
+      } catch (todoErr) {
+        console.error("Failed to fetch todos:", todoErr);
       }
     };
-
-    fetchProfile();
+    fetchTodosList();
   }, [authUser]);
 
   const handleEditClick = (section: string) => {
@@ -299,27 +312,81 @@ const ProfileManagement = () => {
       console.log("DEBUG: Final Payload being sent:", JSON.stringify(payload.detailed_experience, null, 2));
 
       if (Array.isArray(payload.languages)) {
-        // If backend returns string, it might expect string.
-        // Let's try sending string if it was an array.
-        // payload.languages = payload.languages.join(',');
-        // Actually, let's keep it as array if TypeScript expects it, 
-        // BUT check if backend complains. 
-        // User didn't say input must be string.
       }
 
-      if (hasProfile) {
-        const res = await updateProfile(payload);
-        console.log("DEBUG: API Response after Save:", JSON.stringify(res, null, 2));
-      } else {
+      // If there's a pending profile pic, upload it first
+      if (section === 'personal' && pendingProfilePicFile) {
+        toast.info("Uploading profile picture...");
+        const uploadedUrl = await uploadFile(pendingProfilePicFile);
+        if (uploadedUrl) {
+          payload.avatar = uploadedUrl;
+          dataToSave.profilePic = uploadedUrl;
+          setPendingProfilePicFile(null);
+        } else {
+          setLoading(false);
+          return;
+        }
+      }
+
+      if (!hasProfile) {
         const res = await createProfile(payload);
         console.log("DEBUG: API Response after Create:", JSON.stringify(res, null, 2));
         setHasProfile(true);
+      } else {
+        // Segmented Updates based on section
+        switch (section) {
+          case 'personal':
+            await updatePersonalInfo({
+              name: payload.name,
+              gender: payload.gender,
+              bio: payload.bio,
+              specialization: payload.specialization,
+              experience_in_years: payload.experience_in_years,
+              languages: payload.languages,
+              date_of_birth: payload.date_of_birth,
+              phoneNumber: payload.phoneNumber,
+              addresses: payload.addresses,
+              avatar: payload.avatar
+            });
+            break;
+          case 'pricing':
+            await updatePricing({
+              price: payload.price,
+              chat_price: payload.chat_price,
+              call_price: payload.call_price,
+              video_call_price: payload.video_call_price,
+              report_price: payload.report_price,
+              horoscope_price: payload.horoscope_price
+            });
+            break;
+          case 'gallery':
+          case 'videos':
+          case 'video':
+            await updatePortfolio({
+              gallery: payload.gallery,
+              videos: payload.videos,
+              video: payload.video
+            });
+            break;
+          case 'certificates':
+            await updateCertificates(payload.certificates);
+            break;
+          case 'documents':
+            await updateDocuments(payload.documents);
+            break;
+          case 'detailed_experience':
+            await updateExperience(payload.detailed_experience);
+            break;
+          default:
+            // Fallback for any other sections
+            await updateProfile(payload);
+        }
       }
 
       setProfile(dataToSave);
       setTempProfile(dataToSave);
       setEditMode(null);
-      toast.success("Profile updated successfully!");
+      toast.success(`${section.charAt(0).toUpperCase() + section.slice(1).replace('_', ' ')} updated successfully!`);
     } catch (err: any) {
       console.error("Failed to save profile:", err);
       if (err.response?.status === 429) {
@@ -357,6 +424,11 @@ const ProfileManagement = () => {
 
   const handleCancel = () => {
     setEditMode(null);
+    // Revoke any pending object URL to avoid memory leaks
+    if (tempProfile.profilePic && tempProfile.profilePic.startsWith('blob:')) {
+      URL.revokeObjectURL(tempProfile.profilePic);
+    }
+    setPendingProfilePicFile(null);
     setTempProfile(profile);
   };
 
@@ -412,27 +484,18 @@ const ProfileManagement = () => {
     }
   };
 
-  const handleProfilePicUpdate = async (file: File) => {
-    setLoading(true);
-    const url = await uploadFile(file);
+  const handleProfilePicUpdate = (file: File) => {
+    // Create a local preview URL
+    const previewUrl = URL.createObjectURL(file);
 
-    if (url) {
-      // Update profile immediately
-      const updatedProfile = { ...profile, profilePic: url };
-      setProfile(updatedProfile);
-      setTempProfile(updatedProfile); // Also update temp to prevent reversion
-
-      // Save to backend with FULL payload
-      try {
-        const payload = constructProfilePayload(updatedProfile);
-        await updateProfile(payload as any);
-        toast.success("Profile picture updated successfully!");
-      } catch (error) {
-        console.error("Failed to save profile picture:", error);
-        toast.error("Failed to save profile picture.");
-      }
+    // If there was a previous pending preview, revoke it
+    if (tempProfile.profilePic && tempProfile.profilePic.startsWith('blob:')) {
+      URL.revokeObjectURL(tempProfile.profilePic);
     }
-    setLoading(false);
+
+    setTempProfile((prev) => ({ ...prev, profilePic: previewUrl }));
+    setPendingProfilePicFile(file);
+    toast.info("Image preview updated. Click 'Save Changes' to confirm.");
   };
 
   // Gallery Handlers
@@ -502,29 +565,34 @@ const ProfileManagement = () => {
     handleSave("detailed_experience", { detailed_experience: newExp });
   };
 
-  // Todo Functions
-  const addTodo = (text: string) => {
-    setTodos([
-      ...todos,
-      {
-        id: Date.now(),
-        text: text,
-        completed: false,
-        createdAt: new Date(),
-      },
-    ]);
+  // Todo Functions - Now calling backend APIs
+  const addTodo = async (text: string) => {
+    try {
+      const newTodo = await createTodo(text);
+      setTodos([...todos, newTodo]);
+    } catch (error) {
+      toast.error("Failed to add task");
+    }
   };
 
-  const toggleTodo = (id: number) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+  const toggleTodo = async (id: number) => {
+    const todo = todos.find(t => t.id === id);
+    if (!todo) return;
+    try {
+      const updatedTodo = await updateTodo(id, { completed: !todo.completed });
+      setTodos(todos.map(t => t.id === id ? updatedTodo : t));
+    } catch (error) {
+      toast.error("Failed to update task");
+    }
   };
 
-  const deleteTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const deleteTodo = async (id: number) => {
+    try {
+      await deleteTodoApi(id);
+      setTodos(todos.filter((todo) => todo.id !== id));
+    } catch (error) {
+      toast.error("Failed to delete task");
+    }
   };
 
 
@@ -653,15 +721,7 @@ const ProfileManagement = () => {
           onUploadVideoFile={handleAddVideoFile}
         />
 
-        <PayoutInfo
-          bankDetails={profile.bank_details}
-          tempBankDetails={tempProfile.bank_details}
-          isEditing={editMode === "payout"}
-          onEdit={() => handleEditClick("payout")}
-          onSave={() => handleSave("payout")}
-          onCancel={handleCancel}
-          onChange={handleChange}
-        />
+        <PayoutInfo />
 
         {/* New Verification And Documents Component */}
         <VerificationAndDocuments

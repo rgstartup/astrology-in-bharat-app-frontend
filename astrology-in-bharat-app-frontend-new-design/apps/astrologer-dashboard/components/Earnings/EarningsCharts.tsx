@@ -38,6 +38,20 @@ export default function EarningsCharts({
     incomeTrends,
     revenueBreakdown,
 }: EarningsChartsProps) {
+    // Default empty data if not provided
+    const chartData = incomeTrends?.length > 0 ? incomeTrends : [
+        { label: "Jan", value: 0 },
+        { label: "Feb", value: 0 },
+        { label: "Mar", value: 0 },
+        { label: "Apr", value: 0 },
+        { label: "May", value: 0 },
+        { label: "Jun", value: 0 },
+    ];
+
+    const pieData = revenueBreakdown?.length > 0
+        ? revenueBreakdown
+        : [{ category: "No Data", amount: 0, percentage: 0, color: "#e5e7eb" }];
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             {/* Main Income Trend Chart */}
@@ -59,7 +73,7 @@ export default function EarningsCharts({
 
                 <div className="h-[300px] w-100%">
                     <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={incomeTrends}>
+                        <AreaChart data={chartData}>
                             <defs>
                                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.1} />
@@ -103,7 +117,7 @@ export default function EarningsCharts({
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
-                                data={revenueBreakdown}
+                                data={pieData}
                                 cx="50%"
                                 cy="50%"
                                 innerRadius={60}
@@ -111,7 +125,7 @@ export default function EarningsCharts({
                                 paddingAngle={5}
                                 dataKey="amount"
                             >
-                                {revenueBreakdown.map((entry, index) => (
+                                {pieData.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={entry.color} />
                                 ))}
                             </Pie>
@@ -123,14 +137,14 @@ export default function EarningsCharts({
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                         <span className="text-xs text-gray-400 uppercase font-bold tracking-wider">Total</span>
                         <span className="text-xl font-bold text-gray-900">
-                            ₹{revenueBreakdown.reduce((acc, curr) => acc + curr.amount, 0).toLocaleString('en-IN')}
+                            ₹{pieData.reduce((acc, curr) => acc + (curr.amount || 0), 0).toLocaleString('en-IN')}
                         </span>
                     </div>
                 </div>
 
                 {/* Legend */}
                 <div className="mt-4 space-y-2">
-                    {revenueBreakdown.map((item, idx) => (
+                    {pieData.map((item, idx) => (
                         <div key={idx} className="flex items-center justify-between text-sm">
                             <div className="flex items-center gap-2">
                                 <span className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />

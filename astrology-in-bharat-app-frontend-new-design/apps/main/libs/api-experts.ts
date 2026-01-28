@@ -101,3 +101,40 @@ export const getExperts = async (
     };
   }
 };
+
+export interface Review {
+  id: number;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  user: {
+    id: number;
+    name: string;
+    avatar?: string;
+  };
+}
+
+export interface FetchReviewsResponse {
+  data: Review[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export const getExpertReviews = async (
+  expertId: string | number,
+  page: number = 1,
+  limit: number = 10
+): Promise<FetchReviewsResponse> => {
+  try {
+    const url = `${API_BASE_URL}/reviews/expert/${expertId}?page=${page}&limit=${limit}`;
+    const response = await fetch(url, { cache: 'no-store' });
+
+    if (!response.ok) throw new Error("Failed to fetch reviews");
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching expert reviews:", error);
+    return { data: [], total: 0, page, limit };
+  }
+};

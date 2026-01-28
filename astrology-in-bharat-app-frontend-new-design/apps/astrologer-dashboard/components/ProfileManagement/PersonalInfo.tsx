@@ -42,17 +42,17 @@ export default function PersonalInfo({
     console.log("mere phto", profile.profilePic)
     return (
         <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-gray-100 h-full">
-            <div
-                className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4 cursor-pointer hover:bg-gray-50/50 p-2 -m-2 rounded-xl transition-colors"
-                onClick={() => setIsExpanded(!isExpanded)}
-            >
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-200 group flex-shrink-0">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4 p-2 -m-2 rounded-xl transition-colors">
+                <div
+                    className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-200 group flex-shrink-0 cursor-default"
+                    onClick={(e) => e.stopPropagation()}
+                >
                     <img
-                        src={profile.profilePic || "/placeholder-avatar.png"}
+                        src={(isEditing ? tempProfile.profilePic : profile.profilePic) || "/placeholder-avatar.png"}
                         alt="Profile"
                         className="w-full h-full object-cover rounded-full border-2 border-yellow-500 shadow-md"
                     />
-                    {onProfilePicUpdate && isExpanded && (
+                    {onProfilePicUpdate && isExpanded && isEditing && (
                         <>
                             <div
                                 onClick={(e) => {
@@ -74,7 +74,10 @@ export default function PersonalInfo({
                         </>
                     )}
                 </div>
-                <div className="flex-1 min-w-0">
+                <div
+                    className="flex-1 min-w-0 cursor-pointer hover:bg-gray-50/50 p-2 rounded-lg transition-colors"
+                    onClick={() => setIsExpanded(!isExpanded)}
+                >
                     <div className="flex items-center justify-between">
                         <h2 className="text-xl sm:text-2xl font-bold text-gray-800 truncate">{profile.name}</h2>
                         {/* @ts-ignore */}
