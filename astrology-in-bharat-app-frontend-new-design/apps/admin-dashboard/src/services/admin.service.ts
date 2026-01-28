@@ -19,3 +19,9 @@ export const getExpertStats = async () => {
   const res = await api.get("/admin/experts/stats");
   return res.data;
 };
+
+export const getExpertById = async (id: number) => {
+  const res = await api.get(`/admin/experts/${id}`);
+  return res.data;
+};
+

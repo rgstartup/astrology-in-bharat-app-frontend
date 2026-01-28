@@ -5,8 +5,42 @@ export interface Expert {
   emailVerified: boolean;
   createdAt: string;
   avatar?: string;
+  phone?: string;
+  status?: string;
 
-  // Profile data
+  // Detailed Profile data from the new API
+  bio?: string;
+  intro_video_url?: string;
+  gallery?: string[];
+  documents?: {
+    type: string;
+    url: string;
+    title?: string;
+    status?: string;
+    category?: string;
+    side?: string;
+  }[];
+  experience?: number;
+  specialization?: string;
+  rating?: number;
+  consultationCount?: number;
+  totalConsultations?: number;
+  totalEarnings?: number;
+  kycStatus?: string;
+  languages?: string[];
+  city?: string;
+  state?: string;
+  gender?: string;
+  dob?: string;
+  house_no?: string;
+  district?: string;
+  country?: string;
+  pincode?: string;
+  kyc_details?: {
+    status: string;
+  };
+
+  // Nested Structure support (Backward compatibility)
   profile_expert?: {
     id: number;
     specialization?: string;
@@ -14,19 +48,27 @@ export interface Expert {
     rating?: number;
     totalConsultations?: number;
     totalEarnings?: number;
+    bio?: string;
+    intro_video_url?: string;
+    gallery?: string[];
+    documents?: {
+      type: string;
+      url: string;
+      title?: string;
+      status?: string;
+      category?: string;
+      side?: string;
+    }[];
     addresses?: {
       city?: string;
       state?: string;
       country?: string;
     }[];
     languages?: string[];
-    kycStatus?: "Verified" | "Pending" | "Rejected"; // Check actual API enum
+    kycStatus?: "Verified" | "Pending" | "Rejected";
   };
 
-  // Flattened/Legacy fields for UI if API doesn't nest everything (adjust based on actual response)
-  // For now assuming nesting based on user description
-
-  phone?: string;
-  // status might be derived from emailVerified or roles
-  status?: string;
+  // UI specific fields
+  joinDate?: string;
+  lastActive?: string;
 }
