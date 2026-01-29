@@ -7,29 +7,12 @@ interface AstrologerListWrapperProps {
 }
 
 async function AstrologerListServer({ searchParams }: AstrologerListWrapperProps) {
-    // Fetch experts on the server
+    // Fetch experts on the server using raw searchParams
     const response = await getExperts({
         limit: 20,
         offset: 0,
-        q: typeof searchParams.q === "string" ? searchParams.q : undefined,
-        specializations:
-            typeof searchParams.specializations === "string"
-                ? searchParams.specializations
-                : undefined,
-        sort: typeof searchParams.sort === "string" ? searchParams.sort : undefined,
-        languages:
-            typeof searchParams.languages === "string"
-                ? searchParams.languages
-                : undefined,
-        minPrice: Number(searchParams.minPrice) || undefined,
-        maxPrice: Number(searchParams.maxPrice) || undefined,
-        state:
-            typeof searchParams.state === "string" ? searchParams.state : undefined,
-        service:
-            typeof searchParams.service === "string" ? searchParams.service : undefined,
-        online: searchParams.online === "true" ? true : undefined,
-        rating: Number(searchParams.rating) || undefined,
-    });
+        ...searchParams,
+    } as any);
     console.log("Server Side - Astrologer Data Init:", response.data);
 
     return (

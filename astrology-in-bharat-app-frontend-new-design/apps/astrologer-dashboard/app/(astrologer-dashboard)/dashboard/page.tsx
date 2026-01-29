@@ -13,6 +13,9 @@ import { useAuth } from "@/context/AuthContext";
 import { getExpertReviewStats, getExpertReviews, Review, ReviewStats } from "@/lib/reviews";
 import { getDashboardStats, DashboardStats } from "@/lib/dashboard";
 import apiClient from "@/lib/apiClient";
+import { socket } from "@/lib/socket";
+import { toast } from "react-toastify";
+import { AlertTriangle, Info } from "lucide-react";
 
 const Page = () => {
   const { user } = useAuth();
@@ -21,6 +24,15 @@ const Page = () => {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    console.log("[DashboardDebug] Current User Status Info:", {
+      status: user?.status,
+      kycStatus: user?.kycStatus,
+      kycDetailsStatus: user?.kyc_details?.status,
+      rejectionReason: user?.rejectionReason
+    });
+  }, [user]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -104,6 +116,51 @@ const Page = () => {
           </p>
         </div>
       </div>
+
+      {/* KYC Rejection Alert */}
+      {(() => {
+        const status = (
+          user?.status ||
+          user?.kycStatus ||
+          user?.kyc_status ||
+          user?.kyc_details?.status ||
+          user?.profile_expert?.kycStatus ||
+          ""
+        ).toLowerCase();
+
+        const isRejected = status === 'rejected';
+
+        if (!isRejected) return null;
+
+        const reason = user?.rejectionReason ||
+          user?.profile_expert?.rejectionReason ||
+          user?.kyc_details?.rejectionReason ||
+          "Please verify your documents and profile information and try again.";
+
+        return (
+          <div className="bg-rose-50 border-2 border-rose-100 rounded-3xl p-6 flex items-start gap-5 animate-in slide-in-from-top-4 duration-500 shadow-sm mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500 flex items-center justify-center text-white shrink-0 shadow-lg shadow-rose-500/20">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <div className="flex-1">
+              <h4 className="text-lg font-black text-rose-900 mb-1">Expert Profile Rejected</h4>
+              <p className="text-sm font-bold text-rose-700/80 leading-relaxed mb-3 italic">
+                " {reason} "
+              </p>
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-rose-500 bg-white/50 w-fit px-3 py-1 rounded-full border border-rose-100">
+                <Info className="w-3 h-3" />
+                <span>Fix these issues to re-apply for verification</span>
+              </div>
+            </div>
+            <button
+              onClick={() => window.location.href = '/profile'}
+              className="px-6 py-3 rounded-2xl bg-white border border-rose-200 text-rose-600 font-bold text-xs uppercase tracking-widest hover:bg-rose-100 transition-all shadow-sm"
+            >
+              Edit Profile
+            </button>
+          </div>
+        );
+      })()}
 
       <section>
         <StatsCards stats={statsData} columns={4} />

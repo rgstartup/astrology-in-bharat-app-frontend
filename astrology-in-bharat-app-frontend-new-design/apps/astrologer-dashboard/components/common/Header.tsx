@@ -49,8 +49,41 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
     socket.on("expert_status_changed", handleStatusSync);
 
+    // Global KYC Status Update Listener
+    const handleKycUpdate = (data: any) => {
+      console.log("[Socket] 🛡️ KYC Status Update RECEIVED:", data);
+
+      const expertId = data.expert_id || data.id || data.userId;
+      const currentExpertId = user?.id || user?.profileId;
+
+      if (String(currentExpertId) === String(expertId)) {
+        toast.info(`Profile Update: Your status is now ${data.status}`, {
+          position: "top-center",
+          autoClose: 5 * 1000,
+        });
+
+        // Add to notifications list
+        setNotifications(prev => [{
+          id: Date.now(),
+          message: `Profile status updated to ${data.status}`,
+          time: "Just now",
+          type: data.status === 'rejected' ? 'error' : 'success'
+        }, ...prev]);
+
+        // Refresh to apply new status and show rejection reason if any
+        if (data.status === 'rejected' || data.status === 'active') {
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        }
+      }
+    };
+
+    socket.on("kyc_status_updated", handleKycUpdate);
+
     return () => {
       socket.off("expert_status_changed", handleStatusSync);
+      socket.off("kyc_status_updated", handleKycUpdate);
     };
   }, [user]);
 
@@ -58,12 +91,28 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const isHoveringIcon = useRef(false);
   const isHoveringPopup = useRef(false);
 
-  // Sample notifications data
-  const notifications = [
-    { id: 1, message: "New user registered", time: "2m ago" },
-    { id: 2, message: "System update available", time: "10m ago" },
-    { id: 3, message: "Task assigned to you", time: "1h ago" },
-  ];
+  // Dynamic notifications state
+  const [notifications, setNotifications] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Initial notifications with a priority rejection notice
+    const initial = [
+      { id: 1, message: "New user registered", time: "2m ago", type: 'info' },
+      { id: 2, message: "System update available", time: "10m ago", type: 'info' },
+    ];
+
+    const status = (user?.status || user?.kycStatus || user?.kyc_status || user?.kyc_details?.status || "").toLowerCase();
+    if (status === 'rejected') {
+      initial.unshift({
+        id: Date.now(),
+        message: "❌ Profile Rejected: " + (user?.rejectionReason || "Check profile for details"),
+        time: "Just now",
+        type: 'error'
+      });
+    }
+
+    setNotifications(initial);
+  }, [user]);
 
   const checkClosePopup = () => {
     // Close only if mouse on neither icon nor popup

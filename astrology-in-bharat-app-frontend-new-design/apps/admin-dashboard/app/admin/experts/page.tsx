@@ -40,50 +40,62 @@ export default function ExpertsPage() {
   // Selected expert state (for modal)
   const [selectedExpert, setSelectedExpert] = useState<Expert | null>(null);
 
-  // Fetch stats (Only once)
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const statsData = await getExpertStats();
-        // statsData might come as object directly from axios response data if API returns object
-        if (statsData) {
-          setStats(statsData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch expert stats:", error);
+  // Fetch stats (Function)
+  const fetchStats = async () => {
+    try {
+      const statsData = await getExpertStats();
+      if (statsData) {
+        setStats(statsData);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch expert stats:", error);
+    }
+  };
+
+  // Fetch experts (Function)
+  const fetchExperts = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getExperts({ search: searchQuery, page: page, limit: 10 });
+      if (response && response.data) {
+        setExperts(response.data);
+        setTotalExperts(response.total || response.count || 0);
+      } else if (Array.isArray(response)) {
+        setExperts(response);
+        setTotalExperts(response.length);
+      } else {
+        setExperts(response.result || []);
+        setTotalExperts(response.total || 0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch experts:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Initial fetch stats
+  useEffect(() => {
     fetchStats();
   }, []);
 
   // Fetch experts (Paginated)
   useEffect(() => {
-    const fetchExperts = async () => {
-      try {
-        setIsLoading(true);
-        const response = await getExperts({ search: searchQuery, page: page, limit: 10 });
-        if (response && response.data) {
-          setExperts(response.data);
-          setTotalExperts(response.total || response.count || 0);
-        } else if (Array.isArray(response)) {
-          setExperts(response);
-          setTotalExperts(response.length);
-        } else {
-          setExperts(response.result || []);
-          setTotalExperts(response.total || 0);
-        }
-      } catch (error) {
-        console.error("Failed to fetch experts:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     const timeoutId = setTimeout(() => {
       fetchExperts();
     }, 500);
 
-    return () => clearTimeout(timeoutId);
+    const handleRefresh = () => {
+      fetchStats();
+      fetchExperts();
+    };
+
+    window.addEventListener('refreshExperts', handleRefresh);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('refreshExperts', handleRefresh);
+    };
   }, [searchQuery, page]);
 
   // Handle View Details - Fetch full profile for modal
@@ -139,8 +151,13 @@ export default function ExpertsPage() {
         <Suspense fallback={<ModalLoadingFallback />}>
           <ProfileModal
             {...modalProps}
+            expertId={selectedExpert.id}
             isOpen={true}
             onClose={() => setSelectedExpert(null)}
+            onStatusUpdate={() => {
+              // Refresh both table and stats
+              window.dispatchEvent(new CustomEvent('refreshExperts'));
+            }}
           />
         </Suspense>
       )}

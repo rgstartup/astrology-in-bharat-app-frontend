@@ -28,8 +28,10 @@ interface DocumentItem {
 }
 
 interface ProfileModalProps {
+  expertId?: number;
   isOpen: boolean;
   onClose: () => void;
+  onStatusUpdate?: () => void;
   avatar?: string;
   name: string;
   subtitle?: string;
@@ -50,6 +52,7 @@ interface ProfileModalProps {
 }
 
 export function ProfileModal({
+  expertId,
   isOpen,
   onClose,
   avatar,
@@ -61,15 +64,42 @@ export function ProfileModal({
   bio,
   documents,
   checklist,
+  onStatusUpdate,
   actions,
 }: ProfileModalProps) {
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+  const [isRejecting, setIsRejecting] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toggleItem = (label: string) => {
     setExpandedItems(prev => ({
       ...prev,
       [label]: !prev[label]
     }));
+  };
+
+  const handleStatusUpdate = async (status: string, reason?: string) => {
+    if (!expertId) return;
+
+    try {
+      setIsSubmitting(true);
+      const { updateExpertStatus } = await import("@/src/services/admin.service");
+      const { toast } = await import("react-toastify");
+
+      await updateExpertStatus(expertId, { status, reason });
+
+      toast.success(status === 'active' ? 'Expert approved successfully!' : 'Expert rejected');
+      setIsRejecting(false);
+      onStatusUpdate?.();
+      onClose();
+    } catch (error) {
+      console.error("Status update failed:", error);
+      const { toast } = await import("react-toastify");
+      toast.error("Failed to update status");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -113,16 +143,19 @@ export function ProfileModal({
           <div className="px-10 pb-10 space-y-12">
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {stats?.map((stat, idx) => (
-                <div key={idx} className={`${stat.bgColor} p-6 rounded-[2rem] border border-white shadow-sm hover:shadow-md transition-all group relative overflow-hidden`}>
-                  <div className="absolute -right-4 -top-4 opacity-5 group-hover:scale-125 transition-transform duration-700">
-                    <stat.icon className="w-24 h-24" />
+              {stats?.map((stat, idx) => {
+                const Icon = stat.icon as any;
+                return (
+                  <div key={idx} className={`${stat.bgColor} p-6 rounded-[2rem] border border-white shadow-sm hover:shadow-md transition-all group relative overflow-hidden`}>
+                    <div className="absolute -right-4 -top-4 opacity-5 group-hover:scale-125 transition-transform duration-700">
+                      <Icon className="w-24 h-24" />
+                    </div>
+                    <Icon className={`w-6 h-6 ${stat.iconColor} mb-4 relative z-10`} />
+                    <p className="text-2xl font-black text-gray-900 leading-none mb-1 relative z-10">{stat.value}</p>
+                    <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest relative z-10">{stat.label}</p>
                   </div>
-                  <stat.icon className={`w-6 h-6 ${stat.iconColor} mb-4 relative z-10`} />
-                  <p className="text-2xl font-black text-gray-900 leading-none mb-1 relative z-10">{stat.value}</p>
-                  <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest relative z-10">{stat.label}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Profile Completion Checklist - Full Width */}
@@ -145,15 +178,15 @@ export function ProfileModal({
                           {item.label}
                         </span>
                         {expandedItems[item.label] ? (
-                          <ChevronUp className="w-4 h-4 text-orange-500" />
+                          <ChevronUp as any className="w-4 h-4 text-orange-500" />
                         ) : (
-                          <ChevronDown className="w-4 h-4 text-orange-500" />
+                          <ChevronDown as any className="w-4 h-4 text-orange-500" />
                         )}
                       </div>
 
                       {item.isComplete ? (
                         <div className="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100">
-                          <CheckCircle className="w-4 h-4" />
+                          <CheckCircle as any className="w-4 h-4" />
                         </div>
                       ) : (
                         <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-300">
@@ -168,10 +201,10 @@ export function ProfileModal({
                         <div className="bg-white/60 p-4 rounded-xl border border-orange-50/50">
                           {item.label === "Profile Picture" ? (
                             <img src={item.value} className="max-w-xs rounded-lg shadow-md border-2 border-white" alt={item.label} />
-                          ) : item.label === "Gallery Photos" ? (
+                          ) : item.label === "Gallery Photos" || item.label === "Certificates" ? (
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                               {Array.isArray(item.value) && item.value.map((img: any, i: number) => (
-                                <img key={i} src={img.url} className="w-full h-32 object-cover rounded-xl shadow-sm border-2 border-white" alt={`Gallery ${i}`} />
+                                <img key={i} src={img.url} className="w-full h-32 object-cover rounded-xl shadow-sm border-2 border-white" alt={`${item.label} ${i}`} />
                               ))}
                             </div>
                           ) : item.label === "Introduction Video" ? (
@@ -218,16 +251,65 @@ export function ProfileModal({
 
             {/* Footer Actions - Now explicitly at the bottom of content grid area */}
             <div className="flex gap-4 pt-10 border-t border-gray-100">
-              <button className="flex-1 py-5 rounded-[2rem] bg-gray-900 text-white font-black uppercase text-xs tracking-widest shadow-2xl shadow-gray-900/40 hover:bg-orange-500 transition-all hover:translate-y-[-4px]">
-                Approve Expert Profile
+              <button
+                onClick={() => handleStatusUpdate('active')}
+                disabled={isSubmitting}
+                className="flex-1 py-5 rounded-[2rem] bg-gray-900 text-white font-black uppercase text-xs tracking-widest shadow-2xl shadow-gray-900/40 hover:bg-orange-500 transition-all hover:translate-y-[-4px] disabled:opacity-50"
+              >
+                {isSubmitting ? "Processing..." : "Approve Expert Profile"}
               </button>
-              <button className="px-10 py-5 rounded-[2rem] bg-rose-50 text-rose-500 font-black uppercase text-xs tracking-widest border border-rose-100 hover:bg-rose-100 transition-all">
+              <button
+                onClick={() => setIsRejecting(true)}
+                disabled={isSubmitting}
+                className="px-10 py-5 rounded-[2rem] bg-rose-50 text-rose-500 font-black uppercase text-xs tracking-widest border border-rose-100 hover:bg-rose-100 transition-all disabled:opacity-50"
+              >
                 Reject
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Rejection Reason Modal */}
+      {isRejecting && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center px-4 animate-in fade-in duration-200">
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-md" onClick={() => setIsRejecting(false)} />
+          <div className="relative bg-white rounded-[2.5rem] shadow-2xl max-w-lg w-full p-8 animate-in zoom-in-95 duration-300 border border-white">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500">
+                <AlertCircle className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="text-xl font-black text-gray-900">Rejection Reason</h4>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Explain why this profile is being rejected</p>
+              </div>
+            </div>
+
+            <textarea
+              className="w-full h-40 bg-gray-50 rounded-3xl p-6 text-sm font-bold text-gray-900 placeholder:text-gray-300 border-none focus:ring-2 focus:ring-rose-500/20 transition-all resize-none mb-6"
+              placeholder="E.g. Address proof is missing, or Aadhar card photo is blurred..."
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+            />
+
+            <div className="flex gap-4">
+              <button
+                onClick={() => setIsRejecting(false)}
+                className="flex-1 py-4 rounded-2xl bg-gray-50 text-gray-500 font-black uppercase text-[10px] tracking-widest hover:bg-gray-100 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleStatusUpdate('rejected', rejectReason)}
+                disabled={isSubmitting || !rejectReason.trim()}
+                className="flex-[2] py-4 rounded-2xl bg-rose-500 text-white font-black uppercase text-[10px] tracking-widest shadow-lg shadow-rose-500/30 hover:bg-rose-600 transition-all hover:translate-y-[-2px] disabled:opacity-50"
+              >
+                {isSubmitting ? "Rejecting..." : "Confirm Rejection"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

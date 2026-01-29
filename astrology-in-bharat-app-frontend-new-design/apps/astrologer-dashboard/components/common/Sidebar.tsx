@@ -230,16 +230,38 @@ export const Sidebar: React.FC<SidebarProps> = memo(
             ))}
           </nav>
 
-          {/* Add a direct logout button at the bottom for better UX */}
-          {/* <div className="p-4 border-t border-yellow-500">
-            <button
-              onClick={logout}
-              className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-yellow-100 hover:bg-yellow-700 hover:text-white"
-            >
-              <LogOut className="w-5 h-5 flex-shrink-0" />
-              <span>Logout</span>
-            </button>
-          </div> */}
+          {/* Verification Status Banner (Sidebar Bottom) */}
+          {(() => {
+            const { user } = useAuth();
+            const status = (
+              user?.status ||
+              user?.kycStatus ||
+              user?.kyc_status ||
+              user?.kyc_details?.status ||
+              user?.profile_expert?.kycStatus ||
+              ""
+            ).toLowerCase();
+
+            if (status !== 'rejected') return null;
+
+            return (
+              <div className="mx-4 mb-8 bg-black/20 rounded-2xl p-4 border border-white/10">
+                <div className="flex items-center gap-2 text-rose-300 mb-2">
+                  <X className="w-4 h-4 shrink-0" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Profile Rejected</span>
+                </div>
+                <p className="text-[10px] text-white/70 line-clamp-2 mb-3 italic">
+                  "{user?.rejectionReason || user?.profile_expert?.rejectionReason || "Check profile"}"
+                </p>
+                <Link
+                  href="/dashboard/profilemanagement"
+                  className="block w-full py-2 bg-rose-500 text-white text-center rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all shadow-lg shadow-rose-900/40"
+                >
+                  Edit profile
+                </Link>
+              </div>
+            );
+          })()}
         </aside>
       </>
     );
