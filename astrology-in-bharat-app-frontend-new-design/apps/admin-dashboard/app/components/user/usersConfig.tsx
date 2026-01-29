@@ -92,8 +92,8 @@ export const usersData: User[] = [
 // Define types
 export interface UserStats {
   totalUsers: number;
-  activeUsers: number;
-  inactiveUsers: number;
+  recentUsers: number;
+  blockedUsers: number;
 }
 
 export const getStatsConfig = (data: User[] | UserStats) => {
@@ -101,17 +101,20 @@ export const getStatsConfig = (data: User[] | UserStats) => {
 
   // Handle array input (legacy or client-side calculation)
   if (Array.isArray(data)) {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
     stats = {
       totalUsers: data.length,
-      activeUsers: data.filter((u) => u.emailVerified).length,
-      inactiveUsers: data.filter((u) => !u.emailVerified).length,
+      recentUsers: data.filter((u) => u.createdAt && new Date(u.createdAt) >= sevenDaysAgo).length,
+      blockedUsers: data.filter((u) => u.isBlocked).length,
     };
   } else {
     // Handle object input (pre-calculated from API)
     stats = {
       totalUsers: data.totalUsers || 0,
-      activeUsers: data.activeUsers || 0,
-      inactiveUsers: data.inactiveUsers || 0,
+      recentUsers: data.recentUsers || 0,
+      blockedUsers: data.blockedUsers || 0,
     };
   }
 
@@ -124,16 +127,16 @@ export const getStatsConfig = (data: User[] | UserStats) => {
       iconBgColor: "bg-blue-100",
     },
     {
-      title: "Active Users",
-      value: stats.activeUsers,
+      title: "Recent Users",
+      value: stats.recentUsers,
       icon: UserIcon,
       iconColor: "text-green-600",
       iconBgColor: "bg-green-100",
       valueColor: "text-green-600",
     },
     {
-      title: "Inactive Users",
-      value: stats.inactiveUsers,
+      title: "Blocked Users",
+      value: stats.blockedUsers,
       icon: UserIcon,
       iconColor: "text-red-600",
       iconBgColor: "bg-red-100",
@@ -142,7 +145,7 @@ export const getStatsConfig = (data: User[] | UserStats) => {
   ];
 };
 
-export const getColumns = () => [
+export const getColumns = (onToggleBlock?: (user: User) => void) => [
   {
     key: "name",
     label: "User",
@@ -199,14 +202,33 @@ export const getColumns = () => [
   {
     key: "status",
     label: "Status",
+    render: (user: User) => {
+      const statusLabel = user.status || (user.emailVerified ? "Verified" : "Unverified");
+      const statusColor = user.status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700";
+      return (
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold ${statusColor}`}
+        >
+          {statusLabel}
+        </span>
+      );
+    },
+  },
+  {
+    key: "isBlocked",
+    label: "Block Status",
     render: (user: User) => (
       <span
-        className={`px-3 py-1 rounded-full text-xs font-semibold ${user.emailVerified
-          ? "bg-green-100 text-green-700"
-          : "bg-red-100 text-red-700"
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleBlock?.(user);
+        }}
+        className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors hover:opacity-80 ${user.isBlocked
+          ? "bg-red-100 text-red-700"
+          : "bg-green-100 text-green-700"
           }`}
       >
-        {user.emailVerified ? "Verified" : "Unverified"}
+        {user.isBlocked ? "Blocked" : "Not Blocked"}
       </span>
     ),
   },

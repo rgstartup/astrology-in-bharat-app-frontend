@@ -24,7 +24,14 @@ export const getExpertById = async (id: number) => {
   const res = await api.get(`/admin/experts/${id}`);
   return res.data;
 };
+
 export const updateExpertStatus = async (id: number, data: { status: string; reason?: string }) => {
   const res = await api.patch(`/admin/experts/${id}/status`, data);
   return res.data;
 };
+export const toggleUserBlock = async (id: number, isBlocked: boolean) => {
+  const res = await api.patch(`/admin/users/${id}/block`, { isBlocked });
+  return res.data;
+};
+
+

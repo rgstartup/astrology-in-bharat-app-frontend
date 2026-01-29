@@ -61,7 +61,7 @@ const TableRow = memo(function TableRow<T extends { id: number | string }>({
         <td className="px-6 py-4 whitespace-nowrap">
           <button
             onClick={handleViewDetails}
-            className="px-4 py-2 text-sm font-medium text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 rounded-lg transition-colors"
+            className="px-3 py-1.5 text-xs font-medium text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 rounded-lg transition-colors border border-yellow-200"
             aria-label={`View details for item ${item.id}`}
           >
             View Details
