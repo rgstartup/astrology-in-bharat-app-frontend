@@ -7,8 +7,6 @@ import { toast } from "react-toastify";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 import apiClient, { getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument, ClientProfileData, AddressDto, getAllChatSessions, getChatHistory, getMyOrders, getWalletTransactions } from "@/libs/api-profile";
 import * as LucideIcons from "lucide-react";
-import { loadRazorpay } from "@/libs/razorpay";
-import { getNotificationSocket, connectNotificationSocket } from "@packages/ui/src/utils/socket";
 
 import WishlistGrid from "@/components/features/profile/WishlistGrid";
 
@@ -1068,30 +1066,9 @@ const ProfilePage: React.FC = () => {
                         <p className="text-white/80 text-sm">Recharge & manage your balance</p>
                       </div>
                     </div>
-
-                    {/* Toggle Button */}
-                    {/* Toggle Button */}
-                    <div className="flex bg-white/20 backdrop-blur-md rounded-full p-1.5 border border-white/10">
-                      <button
-                        onClick={() => setWalletView('recharge')}
-                        className={`px-5 py-2 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-2 ${walletView === 'recharge'
-                            ? 'bg-white text-orange-600 shadow-md transform scale-105'
-                            : 'text-white/90 hover:bg-white/10'
-                          }`}
-                      >
-                        <i className="fa-solid fa-plus-circle text-[10px]"></i>
-                        Add Money
-                      </button>
-                      <button
-                        onClick={() => setWalletView('history')}
-                        className={`px-5 py-2 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-2 ${walletView === 'history'
-                            ? 'bg-white text-orange-600 shadow-md transform scale-105'
-                            : 'text-white/90 hover:bg-white/10'
-                          }`}
-                      >
-                        <i className="fa-solid fa-list text-[10px]"></i>
-                        Transactions
-                      </button>
+                    <div className="bg-white/20 backdrop-blur-sm text-white rounded-full px-4 py-2 font-bold text-sm">
+                      <i className="fa-solid fa-indian-rupee-sign mr-1"></i>
+                      Wallet
                     </div>
                   </div>
 
@@ -1121,256 +1098,204 @@ const ProfilePage: React.FC = () => {
 
                 {/* Card Body */}
                 <div className="card-body p-6 pt-8">
+                  {/* Recharge Section */}
+                  <div className="mb-8">
+                    {/* Section Header */}
+                    <div className="mb-6">
+                      <div className="flex items-center mb-2">
+                        <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-lg mr-3">
+                          <i className="fa-solid fa-money-bill-transfer text-orange-500"></i>
+                        </div>
+                        <h6 className="font-bold text-gray-800 text-lg">Add Money to Wallet</h6>
+                      </div>
+                      <p className="text-gray-600 text-sm">
+                        Select a package or enter custom amount. Minimum recharge: ₹100
+                      </p>
+                    </div>
 
-                  {walletView === 'recharge' ? (
-                    <>
-                      {/* Recharge Section */}
-                      <div className="mb-0">
-                        {/* Section Header */}
-                        <div className="mb-6">
+                    {/* Custom Amount Input */}
+                    <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200 mb-6">
+                      <div className="grid md:grid-cols-2 gap-4 items-center">
+                        <div>
                           <div className="flex items-center mb-2">
-                            <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-lg mr-3">
-                              <i className="fa-solid fa-money-bill-transfer text-orange-500"></i>
-                            </div>
-                            <h6 className="font-bold text-gray-800 text-lg">Add Money to Wallet</h6>
+                            <i className="fa-solid fa-pencil text-gray-400 mr-2"></i>
+                            <label className="font-bold text-gray-700">Enter Custom Amount</label>
                           </div>
-                          <p className="text-gray-600 text-sm">
-                            Select a package or enter custom amount. Minimum recharge: ₹100
-                          </p>
+                          <p className="text-gray-500 text-sm">Enter any amount between ₹100 - ₹50,000</p>
                         </div>
-
-                        {/* Custom Amount Input */}
-                        <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200 mb-6">
-                          <div className="grid md:grid-cols-2 gap-4 items-center">
-                            <div>
-                              <div className="flex items-center mb-2">
-                                <i className="fa-solid fa-pencil text-gray-400 mr-2"></i>
-                                <label className="font-bold text-gray-700">Enter Custom Amount</label>
-                              </div>
-                              <p className="text-gray-500 text-sm">Enter any amount between ₹100 - ₹50,000</p>
+                        <div>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <span className="text-gray-500 font-bold">₹</span>
                             </div>
-                            <div>
-                              <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                  <span className="text-gray-500 font-bold">₹</span>
-                                </div>
-                                <input
-                                  type="number"
-                                  value={rechargeAmount}
-                                  onChange={(e) => setRechargeAmount(parseInt(e.target.value) || 0)}
-                                  className="w-full pl-10 pr-4 py-4 border border-gray-300 rounded-xl font-bold text-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
-                                  placeholder="0"
-                                  min="100"
-                                  max="50000"
-                                />
-                              </div>
-                            </div>
+                            <input
+                              type="number"
+                              value={rechargeAmount}
+                              onChange={(e) => setRechargeAmount(parseInt(e.target.value) || 0)}
+                              className="w-full pl-10 pr-4 py-4 border border-gray-300 rounded-xl font-bold text-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                              placeholder="0"
+                              min="100"
+                              max="50000"
+                            />
                           </div>
                         </div>
+                      </div>
+                    </div>
 
-                        {/* Quick Recharge Options */}
-                        <div className="mb-8">
-                          <div className="flex items-center mb-4">
-                            <div className="flex items-center justify-center w-8 h-8 bg-amber-100 rounded-lg mr-3">
-                              <i className="fa-solid fa-bolt text-amber-500"></i>
-                            </div>
-                            <h6 className="font-bold text-gray-800 text-lg">Quick Recharge Options</h6>
-                          </div>
-
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {rechargeOptions.map((amt) => (
-                              <button
-                                key={amt}
-                                type="button"
-                                onClick={() => setRechargeAmount(amt)}
-                                className={`relative p-5 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group ${rechargeAmount === amt
-                                  ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg'
-                                  : 'border-gray-200 bg-white hover:border-orange-300 hover:shadow-md'
-                                  }`}
-                              >
-                                {/* Active indicator */}
-                                {rechargeAmount === amt && (
-                                  <div className="absolute top-3 right-3 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                                    <i className="fa-solid fa-check text-white text-xs"></i>
-                                  </div>
-                                )}
-
-                                {/* Amount */}
-                                <div className="flex items-center mb-2">
-                                  <span className="text-lg font-bold mr-1">₹</span>
-                                  <span className={`text-3xl font-black ${rechargeAmount === amt ? 'text-orange-600' : 'text-gray-800'
-                                    }`}>
-                                    {amt}
-                                  </span>
-                                </div>
-
-                                {/* Bonus for larger amounts */}
-                                {amt >= 1000 && (
-                                  <span className={`text-xs font-bold px-3 py-1 rounded-full ${rechargeAmount === amt
-                                    ? 'bg-green-500 text-white'
-                                    : 'bg-green-100 text-green-700'
-                                    }`}>
-                                    +{(amt * 0.05).toFixed(0)} bonus
-                                  </span>
-                                )}
-
-                                {/* Hover effect */}
-                                <div className="absolute inset-0 rounded-2xl bg-orange-500 opacity-0 group-hover:opacity-5 transition-opacity"></div>
-                              </button>
-                            ))}
-                          </div>
+                    {/* Quick Recharge Options */}
+                    <div className="mb-8">
+                      <div className="flex items-center mb-4">
+                        <div className="flex items-center justify-center w-8 h-8 bg-amber-100 rounded-lg mr-3">
+                          <i className="fa-solid fa-bolt text-amber-500"></i>
                         </div>
+                        <h6 className="font-bold text-gray-800 text-lg">Quick Recharge Options</h6>
+                      </div>
 
-                        {/* Action Button */}
-                        <div className="mb-6">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {rechargeOptions.map((amt) => (
                           <button
+                            key={amt}
                             type="button"
-                            onClick={handleRecharge}
-                            disabled={isProcessing || rechargeAmount < 100}
-                            className={`w-full py-5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-between shadow-lg ${isProcessing || rechargeAmount < 100
-                              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                              : 'bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-orange-500 hover:to-amber-500 hover:shadow-xl hover:-translate-y-0.5'
+                            onClick={() => setRechargeAmount(amt)}
+                            className={`relative p-5 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group ${rechargeAmount === amt
+                              ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg'
+                              : 'border-gray-200 bg-white hover:border-orange-300 hover:shadow-md'
                               }`}
                           >
-                            {isProcessing ? (
-                              <>
-                                <div className="flex items-center">
-                                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                                  <span>Processing Recharge...</span>
-                                </div>
-                              </>
-                            ) : (
-                              <>
-                                <div className="flex items-center">
-                                  <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mr-4">
-                                    <i className="fa-solid fa-bolt text-white text-xl"></i>
-                                  </div>
-                                  <div className="text-left">
-                                    <div className="text-white">Recharge ₹{rechargeAmount.toLocaleString()}</div>
-                                    <div className="text-white/80 text-sm font-normal">Click to proceed to payment</div>
-                                  </div>
-                                </div>
-                                <i className="fa-solid fa-arrow-right text-xl"></i>
-                              </>
+                            {/* Active indicator */}
+                            {rechargeAmount === amt && (
+                              <div className="absolute top-3 right-3 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                <i className="fa-solid fa-check text-white text-xs"></i>
+                              </div>
                             )}
-                          </button>
 
-                          {/* Validation message */}
-                          {rechargeAmount > 0 && rechargeAmount < 100 && (
-                            <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center">
-                              <i className="fa-solid fa-exclamation-triangle text-amber-500 mr-3 text-xl"></i>
-                              <div>
-                                <p className="font-bold text-amber-700">Minimum recharge amount is ₹100</p>
-                                <p className="text-amber-600 text-sm mt-1">Please enter ₹100 or more to proceed</p>
+                            {/* Amount */}
+                            <div className="flex items-center mb-2">
+                              <span className="text-lg font-bold mr-1">₹</span>
+                              <span className={`text-3xl font-black ${rechargeAmount === amt ? 'text-orange-600' : 'text-gray-800'
+                                }`}>
+                                {amt}
+                              </span>
+                            </div>
+
+                            {/* Bonus for larger amounts */}
+                            {amt >= 1000 && (
+                              <span className={`text-xs font-bold px-3 py-1 rounded-full ${rechargeAmount === amt
+                                ? 'bg-green-500 text-white'
+                                : 'bg-green-100 text-green-700'
+                                }`}>
+                                +{(amt * 0.05).toFixed(0)} bonus
+                              </span>
+                            )}
+
+                            {/* Hover effect */}
+                            <div className="absolute inset-0 rounded-2xl bg-orange-500 opacity-0 group-hover:opacity-5 transition-opacity"></div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="mb-6">
+                      <button
+                        type="button"
+                        onClick={handleRecharge}
+                        disabled={isProcessing || rechargeAmount < 100}
+                        className={`w-full py-5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-between shadow-lg ${isProcessing || rechargeAmount < 100
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-orange-500 hover:to-amber-500 hover:shadow-xl hover:-translate-y-0.5'
+                          }`}
+                      >
+                        {isProcessing ? (
+                          <>
+                            <div className="flex items-center">
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                              <span>Processing Recharge...</span>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex items-center">
+                              <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mr-4">
+                                <i className="fa-solid fa-bolt text-white text-xl"></i>
+                              </div>
+                              <div className="text-left">
+                                <div className="text-white">Recharge ₹{rechargeAmount.toLocaleString()}</div>
+                                <div className="text-white/80 text-sm font-normal">Click to proceed to payment</div>
                               </div>
                             </div>
-                          )}
+                            <i className="fa-solid fa-arrow-right text-xl"></i>
+                          </>
+                        )}
+                      </button>
+
+                      {/* Validation message */}
+                      {rechargeAmount > 0 && rechargeAmount < 100 && (
+                        <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center">
+                          <i className="fa-solid fa-exclamation-triangle text-amber-500 mr-3 text-xl"></i>
+                          <div>
+                            <p className="font-bold text-amber-700">Minimum recharge amount is ₹100</p>
+                            <p className="text-amber-600 text-sm mt-1">Please enter ₹100 or more to proceed</p>
+                          </div>
                         </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      {/* Transaction History Table */}
-                      <div className="mt-0 pt-0">
-                        <div className="flex items-center justify-between mb-6">
-                          <h6 className="font-bold text-gray-800 text-lg flex items-center">
-                            <i className="fa-solid fa-clock-rotate-left mr-3 text-orange-500 bg-orange-100 p-2 rounded-lg"></i>
-                            Transaction History
-                          </h6>
-                          <button
-                            onClick={() => setWalletView('recharge')}
-                            className="text-sm font-medium text-orange-600 hover:text-orange-700"
-                          >
-                            <i className="fa-solid fa-arrow-left mr-1"></i> Back to Recharge
-                          </button>
+                      )}
+                    </div>
+
+                    {/* Features */}
+                    <div className="mt-8 pt-8 border-t border-gray-200">
+                      <div className="grid md:grid-cols-3 gap-6">
+                        <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
+                          <div className="flex items-center justify-center w-12 h-12 bg-green-50 rounded-xl mr-4">
+                            <i className="fa-solid fa-shield-check text-green-500 text-xl"></i>
+                          </div>
+                          <div>
+                            <h6 className="font-bold text-gray-800 mb-1">Secure Payments</h6>
+                            <p className="text-gray-600 text-sm">Bank-level security with encryption</p>
+                          </div>
                         </div>
 
-                        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-                          <div className="overflow-x-auto">
-                            <table className="w-full text-left border-collapse">
-                              <thead className="bg-gray-50/80 text-gray-700 text-xs uppercase tracking-wider font-bold border-b border-gray-100">
-                                <tr>
-                                  <th className="px-6 py-4">Date</th>
-                                  <th className="px-6 py-4">Description</th>
-                                  <th className="px-6 py-4 text-center">Type</th>
-                                  <th className="px-6 py-4 text-right">Amount</th>
-                                  <th className="px-6 py-4 text-right">Status</th>
-                                </tr>
-                              </thead>
-                              <tbody className="text-sm">
-                                {loadingTransactions ? (
-                                  <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                                      <div className="flex flex-col items-center justify-center">
-                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mb-3"></div>
-                                        <p>Loading transactions...</p>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                ) : !walletTransactions || walletTransactions.length === 0 ? (
-                                  <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-gray-400">
-                                      <div className="flex flex-col items-center justify-center">
-                                        <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-3">
-                                          <i className="fa-solid fa-receipt text-2xl text-gray-300"></i>
-                                        </div>
-                                        <p>No transactions found.</p>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                ) : (
-                                  walletTransactions.map((tx: any, idx: number) => (
-                                    <tr key={tx.id || idx} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                                      <td className="px-6 py-4 text-gray-600">
-                                        <div className="font-medium text-gray-900">
-                                          {new Date(tx.createdAt || Date.now()).toLocaleDateString('en-IN', {
-                                            day: 'numeric', month: 'short', year: 'numeric'
-                                          })}
-                                        </div>
-                                        <div className="text-xs text-gray-400 mt-0.5">
-                                          {new Date(tx.createdAt || Date.now()).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
-                                        </div>
-                                      </td>
-                                      <td className="px-6 py-4">
-                                        <div className="font-medium text-gray-800">{tx.description || tx.reason || 'Wallet Transaction'}</div>
-                                        <div className="text-xs text-gray-400 mt-0.5 font-mono">#{tx.transactionId || tx.id}</div>
-                                      </td>
-                                      <td className="px-6 py-4 text-center">
-                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold capitalize ${tx.type === 'debit'
-                                          ? 'bg-red-50 text-red-600 border border-red-100'
-                                          : 'bg-green-50 text-green-600 border border-green-100'
-                                          }`}>
-                                          {tx.type === 'debit' ? (
-                                            <><i className="fa-solid fa-arrow-up mr-1 transform rotate-45"></i> Debit</>
-                                          ) : (
-                                            <><i className="fa-solid fa-arrow-down mr-1 transform rotate-45"></i> Credit</>
-                                          )}
-                                        </span>
-                                      </td>
-                                      <td className={`px-6 py-4 text-right font-black text-base ${tx.type === 'debit' ? 'text-red-500' : 'text-green-500'
-                                        }`}>
-                                        {tx.type === 'debit' ? '-' : '+'}₹{tx.amount}
-                                      </td>
-                                      <td className="px-6 py-4 text-right">
-                                        <span className={`inline-flex px-2 py-1 rounded text-xs font-bold uppercase tracking-wide ${tx.status === 'success' ? 'text-green-600 bg-green-50' :
-                                          tx.status === 'failed' ? 'text-red-600 bg-red-50' : 'text-amber-600 bg-amber-50'
-                                          }`}>
-                                          {tx.status || 'Success'}
-                                        </span>
-                                      </td>
-                                    </tr>
-                                  ))
-                                )}
-                              </tbody>
-                            </table>
+                        <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
+                          <div className="flex items-center justify-center w-12 h-12 bg-amber-50 rounded-xl mr-4">
+                            <i className="fa-solid fa-zap text-amber-500 text-xl"></i>
+                          </div>
+                          <div>
+                            <h6 className="font-bold text-gray-800 mb-1">Instant Credit</h6>
+                            <p className="text-gray-600 text-sm">Balance updates in real-time</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
+                          <div className="flex items-center justify-center w-12 h-12 bg-blue-50 rounded-xl mr-4">
+                            <i className="fa-solid fa-headset text-blue-500 text-xl"></i>
+                          </div>
+                          <div>
+                            <h6 className="font-bold text-gray-800 mb-1">24/7 Support</h6>
+                            <p className="text-gray-600 text-sm">Always here to help you</p>
                           </div>
                         </div>
                       </div>
-                    </>
-                  )}
+
+                      {/* Additional info */}
+                      <div className="mt-6 pt-6 border-t border-gray-100">
+                        <div className="flex flex-wrap items-center justify-center gap-6 text-gray-500 text-sm">
+                          <div className="flex items-center">
+                            <i className="fa-solid fa-lock text-green-500 mr-2"></i>
+                            <span>256-bit SSL Encryption</span>
+                          </div>
+                          <div className="flex items-center">
+                            <i className="fa-solid fa-credit-card text-blue-500 mr-2"></i>
+                            <span>Multiple Payment Options</span>
+                          </div>
+                          <div className="flex items-center">
+                            <i className="fa-solid fa-clock text-purple-500 mr-2"></i>
+                            <span>Instant Processing</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-
             )}
 
             {activeTab === "history" && (
@@ -1505,211 +1430,12 @@ const ProfilePage: React.FC = () => {
                     My Orders
                   </h5>
                 </div>
-                <div className="card-body p-4 pt-0">
-                  {loadingOrders ? (
-                    <div className="text-center py-5">
-                      <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                      <p className="text-muted small mt-3">Loading your orders...</p>
-                    </div>
-                  ) : !orders || orders.length === 0 ? (
-                    <div className="text-center py-5">
-                      <div className="mb-4">
-                        <i className="fa-solid fa-box-open fa-3x text-light"></i>
-                      </div>
-                      <h6 className="fw-bold">No Orders Found</h6>
-                      <p className="text-muted small">You haven't placed any orders yet.</p>
-                      <a href="/shop" className="btn btn-outline-primary btn-sm mt-3 rounded-pill px-4">Browse Shop</a>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {orders.map((order: any) => {
-                        const isExpanded = expandedOrders[order.id]; // Default collapsed
-                        return (
-                          <div
-                            key={order.id}
-                            className="border rounded-3 p-4 hover:bg-gray-50 transition-all mb-3"
-                            style={{ borderColor: "#e0e0e0" }}
-                          >
-                            <div className="d-flex justify-content-between align-items-start">
-                              <div className="flex-grow-1">
-                                {/* Header Section */}
-                                <div
-                                  className="d-flex align-items-center justify-content-between mb-3 cursor-pointer"
-                                  onClick={() => toggleOrder(order.id)}
-                                >
-                                  <div>
-                                    <h6 className="fw-bold mb-1">
-                                      Order #{order.id}
-                                    </h6>
-                                    <p className="text-muted small mb-0">
-                                      <i className="fa-regular fa-calendar me-1"></i>
-                                      {new Date(order.createdAt).toLocaleDateString('en-IN', {
-                                        day: 'numeric',
-                                        month: 'short',
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                      })}
-                                    </p>
-                                  </div>
-                                  <div className="d-flex align-items-center gap-3">
-                                    <span
-                                      className={`badge px-3 py-2 rounded-pill ${order.status === 'completed' || order.status === 'paid'
-                                        ? 'bg-success bg-opacity-10 text-success'
-                                        : order.status === 'pending'
-                                          ? 'bg-warning bg-opacity-10 text-warning'
-                                          : 'bg-secondary bg-opacity-10 text-secondary'
-                                        }`}
-                                    >
-                                      {order.status?.toUpperCase() || 'UNKNOWN'}
-                                    </span>
-
-                                    {/* Toggle Button */}
-                                    <button
-                                      className="btn btn-sm btn-light rounded-circle d-flex align-items-center justify-content-center border"
-                                      style={{ width: '32px', height: '32px' }}
-                                      onClick={(e) => { e.stopPropagation(); toggleOrder(order.id); }}
-                                    >
-                                      <i className={`fa-solid fa-chevron-${isExpanded ? 'up' : 'down'} text-muted`}></i>
-                                    </button>
-                                  </div>
-                                </div>
-
-                                {/* Collapsible Content */}
-                                {isExpanded && (
-                                  <div className="animate-in slide-in-from-top-2 duration-300">
-                                    {/* Order Items */}
-                                    {order.items && order.items.length > 0 && (
-                                      <div className="mb-3 bg-light p-3 rounded-3">
-                                        {order.items.map((item: any, idx: number) => (
-                                          <div key={idx} className="d-flex align-items-center mb-2 last:mb-0">
-                                            <div className="me-3 text-muted" style={{ width: "20px" }}>
-                                              {item.quantity}x
-                                            </div>
-                                            <div className="flex-grow-1">
-                                              <span className="fw-medium text-dark">{item.product?.name || "Product"}</span>
-                                            </div>
-                                            <div className="fw-bold">
-                                              ₹{item.price}
-                                            </div>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-
-                                    {/* Order Tracker UI */}
-                                    <div className="mt-4 pt-3 border-top">
-                                      {/* ... Tracker CSS ... */}
-                                      <style dangerouslySetInnerHTML={{
-                                        __html: `
-                                        @keyframes shimmer {
-                                          0% { background-position: -100% 0; }
-                                          100% { background-position: 200% 0; }
-                                        }
-                                        .tracker-bar-animated {
-                                          background: linear-gradient(90deg, #198754 0%, #6ee7b7 50%, #198754 100%);
-                                          background-size: 200% 100%;
-                                          animation: shimmer 2s infinite linear;
-                                          box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-                                        }
-                                        @keyframes pulse-green {
-                                          0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7); }
-                                          70% { box-shadow: 0 0 0 8px rgba(25, 135, 84, 0); }
-                                          100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
-                                        }
-                                        .step-pulse {
-                                          animation: pulse-green 2s infinite;
-                                        }
-                                      `}} />
-                                      <div className="position-relative d-flex justify-content-between text-center mx-4 my-2">
-                                        {/* Progress Bar Background */}
-                                        <div className="position-absolute top-50 start-0 translate-middle-y w-100 bg-light rounded-pill" style={{ height: "4px", zIndex: 0 }}></div>
-
-                                        {/* Active Progress Bar */}
-                                        <div
-                                          className="position-absolute top-50 start-0 translate-middle-y rounded-pill transition-all tracker-bar-animated"
-                                          style={{
-                                            height: "6px",
-                                            zIndex: 0,
-                                            width: (() => {
-                                              const s = order.status?.toLowerCase();
-                                              if (s === 'delivered' || s === 'completed') return '100%';
-                                              if (s === 'shipped' || s === 'dispatched') return '75%';
-                                              if (s === 'packed') return '50%';
-                                              if (s === 'processing' || s === 'accepted') return '25%';
-                                              return '5%';
-                                            })()
-                                          }}
-                                        ></div>
-
-                                        {/* Steps */}
-                                        {[
-                                          { label: 'Placed', icon: 'fa-clipboard-check', activeStates: ['pending', 'placed', 'processing', 'packed', 'shipped', 'delivered', 'completed'] },
-                                          { label: 'Packed', icon: 'fa-box-open', activeStates: ['packed', 'shipped', 'delivered', 'completed'] },
-                                          { label: 'Shipped', icon: 'fa-truck-fast', activeStates: ['shipped', 'delivered', 'completed'] },
-                                          { label: 'Delivered', icon: 'fa-house-circle-check', activeStates: ['delivered', 'completed'] }
-                                        ].map((step, i) => {
-                                          const s = order.status?.toLowerCase() || 'pending';
-                                          const isCompleted = step.activeStates.includes(s);
-
-                                          // Determine if this is the CURRENT active step (for pulsing)
-                                          let isCurrent = false;
-                                          if (step.label === 'Placed' && (s === 'pending' || s === 'placed' || s === 'processing')) isCurrent = true;
-                                          if (step.label === 'Packed' && s === 'packed') isCurrent = true;
-                                          if (step.label === 'Shipped' && (s === 'shipped' || s === 'dispatched')) isCurrent = true;
-                                          if (step.label === 'Delivered' && (s === 'delivered' || s === 'completed')) isCurrent = true;
-
-                                          return (
-                                            <div key={i} className="position-relative z-10 bg-white px-2">
-                                              <div
-                                                className={`rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2 border-2 ${isCompleted ? 'bg-success border-success text-white' : 'bg-white border-secondary text-secondary'} ${isCurrent ? 'step-pulse' : ''}`}
-                                                style={{ width: "32px", height: "32px", fontSize: "14px", transition: "all 0.3s" }}
-                                              >
-                                                <i className={`fa-solid ${step.icon}`}></i>
-                                              </div>
-                                              <p className={`small mb-0 fw-bold ${isCompleted ? 'text-success' : 'text-muted'}`} style={{ fontSize: "11px" }}>
-                                                {step.label}
-                                              </p>
-                                            </div>
-                                          );
-                                        })}
-                                      </div>
-                                      {order.status === 'cancelled' && (
-                                        <div className="text-center mt-3 text-danger fw-bold bg-danger bg-opacity-10 p-3 rounded">
-                                          <div className="mb-2">
-                                            <i className="fa-solid fa-ban me-2"></i> Order Cancelled
-                                          </div>
-                                          {order.cancellationReason && (
-                                            <div className="text-sm fw-normal text-danger mt-2 border-top border-danger border-opacity-25 pt-2">
-                                              <strong>Reason:</strong> {order.cancellationReason}
-                                            </div>
-                                          )}
-                                        </div>
-                                      )}
-                                    </div>
-
-                                    <div className="d-flex justify-content-between align-items-center border-top pt-3 mt-4">
-                                      <div>
-                                        <span className="text-muted small">Total Amount</span>
-                                        <h5 className="fw-bold text-dark mb-0">₹{order.totalAmount || order.amount}</h5>
-                                      </div>
-                                      {order.status === 'pending' && (
-                                        <button className="btn btn-sm btn-primary rounded-pill px-4">
-                                          Pay Now
-                                        </button>
-                                      )}
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+                <div className="card-body p-4 pt-5 text-center">
+                  <div className="mb-4">
+                    <i className="fa-solid fa-box-open fa-3x text-light"></i>
+                  </div>
+                  <h6 className="fw-bold">No Orders Found</h6>
+                  <p className="text-muted small">You haven't placed any orders yet.</p>
                 </div>
               </div>
             )}
