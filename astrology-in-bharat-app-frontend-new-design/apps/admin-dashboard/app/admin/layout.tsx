@@ -47,7 +47,7 @@ const menuItems: MenuItem[] = [
   { label: "User Management", href: "/admin/users", icon: Users },
   { label: "Expert Management", href: "/admin/experts", icon: UserCheck },
   // { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
-  { label: "Expert KYC Review", href: "/admin/kyc", icon: FileText },
+  // { label: "Expert KYC Review", href: "/admin/kyc", icon: FileText },
   { label: "Services & Pricing", href: "/admin/services", icon: Package },
   // { label: "Promo Configuration", href: "/admin/promos", icon: Ticket },
   { label: "Coupons/Offers", href: "/admin/coupons", icon: Tag },
