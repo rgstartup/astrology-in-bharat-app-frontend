@@ -2,15 +2,18 @@
 
 import React, { useState, useEffect, useCallback, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { PATHS } from "@repo/routes";
 import { toast } from "react-toastify";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 import apiClient, { getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument, ClientProfileData, AddressDto, getAllChatSessions, getChatHistory, getMyOrders, getWalletTransactions } from "@/libs/api-profile";
 import * as LucideIcons from "lucide-react";
+import { loadRazorpay } from "@/libs/razorpay";
+import { getNotificationSocket, connectNotificationSocket } from "@packages/ui/src/utils/socket";
 
 import WishlistGrid from "@/components/features/profile/WishlistGrid";
 
-const { Plus, CheckCircle2 } = LucideIcons as any;
+const { Plus, CheckCircle } = LucideIcons as any;
 
 // Types - imported from api-profile
 type ProfileData = ClientProfileData;
@@ -60,6 +63,7 @@ const ProfilePage: React.FC = () => {
   const [loadingTransactions, setLoadingTransactions] = useState(false);
   const [activeTab, setActiveTab] = useState("profile"); // State for active tab
   const [walletView, setWalletView] = useState<'recharge' | 'history'>('recharge');
+  const [walletPurpose, setWalletPurpose] = useState<string | undefined>(undefined);
 
   // Order collapse state
   const [expandedOrders, setExpandedOrders] = useState<Record<number, boolean>>({});
@@ -114,6 +118,8 @@ const ProfilePage: React.FC = () => {
             if (verifyRes.data.success) {
               toast.success(`Successfully recharged ₹${rechargeAmount}!`);
               refreshBalance();
+              loadTransactions(); // Refresh transaction history
+              setWalletView('history'); // Switch to history view to show the new transaction
             } else {
               toast.error("Payment verification failed!");
             }
@@ -212,7 +218,13 @@ const ProfilePage: React.FC = () => {
         try {
           const myOrders = await getMyOrders();
           console.log("🛍️ Orders loaded:", myOrders);
-          setOrders(myOrders);
+
+          // Defensive check for different API response formats
+          const orderArray = Array.isArray(myOrders)
+            ? myOrders
+            : (myOrders?.items || myOrders?.data || myOrders?.orders || []);
+
+          setOrders(orderArray);
         } catch (error: any) {
           console.error("Failed to load orders:", error);
           if (error.response?.status === 404) {
@@ -228,24 +240,34 @@ const ProfilePage: React.FC = () => {
     loadOrders();
   }, [activeTab, isClientAuthenticated]);
 
-  // Load wallet transactions when wallet tab is active
-  useEffect(() => {
-    const loadTransactions = async () => {
-      if (activeTab === "wallet" && isClientAuthenticated) {
-        setLoadingTransactions(true);
-        try {
-          const transactions = await getWalletTransactions();
-          console.log("💰 Wallet Transactions loaded:", transactions);
-          setWalletTransactions(transactions || []);
-        } catch (error) {
-          console.error("Failed to load wallet transactions:", error);
-        } finally {
-          setLoadingTransactions(false);
-        }
+  // Move loadTransactions before handleRecharge and update it
+  const loadTransactions = useCallback(async () => {
+    if (isClientAuthenticated) {
+      setLoadingTransactions(true);
+      try {
+        const params = walletPurpose ? { purpose: walletPurpose } : {};
+        const transactions = await getWalletTransactions(params);
+        console.log("💰 Wallet Transactions loaded raw:", transactions);
+
+        // Defensive check for different API response formats
+        const txArray = Array.isArray(transactions)
+          ? transactions
+          : (transactions?.items || transactions?.transactions || transactions?.data || []);
+
+        setWalletTransactions(txArray);
+      } catch (error) {
+        console.error("Failed to load wallet transactions:", error);
+      } finally {
+        setLoadingTransactions(false);
       }
-    };
-    loadTransactions();
-  }, [activeTab, isClientAuthenticated]);
+    }
+  }, [isClientAuthenticated, walletPurpose]);
+
+  useEffect(() => {
+    if (activeTab === "wallet") {
+      loadTransactions();
+    }
+  }, [activeTab, loadTransactions]);
 
   // Socket.IO - Real-Time Order Updates
   useEffect(() => {
@@ -1066,9 +1088,27 @@ const ProfilePage: React.FC = () => {
                         <p className="text-white/80 text-sm">Recharge & manage your balance</p>
                       </div>
                     </div>
-                    <div className="bg-white/20 backdrop-blur-sm text-white rounded-full px-4 py-2 font-bold text-sm">
-                      <i className="fa-solid fa-indian-rupee-sign mr-1"></i>
-                      Wallet
+                    <div className="flex bg-white/20 backdrop-blur-md rounded-full p-1.5 border border-white/10">
+                      <button
+                        onClick={() => setWalletView('recharge')}
+                        className={`px-5 py-2 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-2 ${walletView === 'recharge'
+                          ? 'bg-white text-orange-600 shadow-md transform scale-105'
+                          : 'text-white/90 hover:bg-white/10'
+                          }`}
+                      >
+                        <i className="fa-solid fa-plus-circle text-[10px]"></i>
+                        Add Money
+                      </button>
+                      <button
+                        onClick={() => setWalletView('history')}
+                        className={`px-5 py-2 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-2 ${walletView === 'history'
+                          ? 'bg-white text-orange-600 shadow-md transform scale-105'
+                          : 'text-white/90 hover:bg-white/10'
+                          }`}
+                      >
+                        <i className="fa-solid fa-list text-[10px]"></i>
+                        Transactions
+                      </button>
                     </div>
                   </div>
 
@@ -1098,136 +1138,137 @@ const ProfilePage: React.FC = () => {
 
                 {/* Card Body */}
                 <div className="card-body p-6 pt-8">
-                  {/* Recharge Section */}
-                  <div className="mb-8">
-                    {/* Section Header */}
-                    <div className="mb-6">
-                      <div className="flex items-center mb-2">
-                        <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-lg mr-3">
-                          <i className="fa-solid fa-money-bill-transfer text-orange-500"></i>
-                        </div>
-                        <h6 className="font-bold text-gray-800 text-lg">Add Money to Wallet</h6>
-                      </div>
-                      <p className="text-gray-600 text-sm">
-                        Select a package or enter custom amount. Minimum recharge: ₹100
-                      </p>
-                    </div>
-
-                    {/* Custom Amount Input */}
-                    <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200 mb-6">
-                      <div className="grid md:grid-cols-2 gap-4 items-center">
-                        <div>
-                          <div className="flex items-center mb-2">
-                            <i className="fa-solid fa-pencil text-gray-400 mr-2"></i>
-                            <label className="font-bold text-gray-700">Enter Custom Amount</label>
-                          </div>
-                          <p className="text-gray-500 text-sm">Enter any amount between ₹100 - ₹50,000</p>
-                        </div>
-                        <div>
-                          <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                              <span className="text-gray-500 font-bold">₹</span>
-                            </div>
-                            <input
-                              type="number"
-                              value={rechargeAmount}
-                              onChange={(e) => setRechargeAmount(parseInt(e.target.value) || 0)}
-                              className="w-full pl-10 pr-4 py-4 border border-gray-300 rounded-xl font-bold text-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
-                              placeholder="0"
-                              min="100"
-                              max="50000"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Quick Recharge Options */}
+                  {walletView === 'recharge' ? (
                     <div className="mb-8">
-                      <div className="flex items-center mb-4">
-                        <div className="flex items-center justify-center w-8 h-8 bg-amber-100 rounded-lg mr-3">
-                          <i className="fa-solid fa-bolt text-amber-500"></i>
+                      {/* Section Header */}
+                      <div className="mb-6">
+                        <div className="flex items-center mb-2">
+                          <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-lg mr-3">
+                            <i className="fa-solid fa-money-bill-transfer text-orange-500"></i>
+                          </div>
+                          <h6 className="font-bold text-gray-800 text-lg">Add Money to Wallet</h6>
                         </div>
-                        <h6 className="font-bold text-gray-800 text-lg">Quick Recharge Options</h6>
+                        <p className="text-gray-600 text-sm">
+                          Select a package or enter custom amount. Minimum recharge: ₹100
+                        </p>
                       </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {rechargeOptions.map((amt) => (
-                          <button
-                            key={amt}
-                            type="button"
-                            onClick={() => setRechargeAmount(amt)}
-                            className={`relative p-5 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group ${rechargeAmount === amt
-                              ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg'
-                              : 'border-gray-200 bg-white hover:border-orange-300 hover:shadow-md'
-                              }`}
-                          >
-                            {/* Active indicator */}
-                            {rechargeAmount === amt && (
-                              <div className="absolute top-3 right-3 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                                <i className="fa-solid fa-check text-white text-xs"></i>
-                              </div>
-                            )}
-
-                            {/* Amount */}
+                      {/* Custom Amount Input */}
+                      <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200 mb-6">
+                        <div className="grid md:grid-cols-2 gap-4 items-center">
+                          <div>
                             <div className="flex items-center mb-2">
-                              <span className="text-lg font-bold mr-1">₹</span>
-                              <span className={`text-3xl font-black ${rechargeAmount === amt ? 'text-orange-600' : 'text-gray-800'
-                                }`}>
-                                {amt}
-                              </span>
+                              <i className="fa-solid fa-pencil text-gray-400 mr-2"></i>
+                              <label className="font-bold text-gray-700">Enter Custom Amount</label>
                             </div>
-
-                            {/* Bonus for larger amounts */}
-                            {amt >= 1000 && (
-                              <span className={`text-xs font-bold px-3 py-1 rounded-full ${rechargeAmount === amt
-                                ? 'bg-green-500 text-white'
-                                : 'bg-green-100 text-green-700'
-                                }`}>
-                                +{(amt * 0.05).toFixed(0)} bonus
-                              </span>
-                            )}
-
-                            {/* Hover effect */}
-                            <div className="absolute inset-0 rounded-2xl bg-orange-500 opacity-0 group-hover:opacity-5 transition-opacity"></div>
-                          </button>
-                        ))}
+                            <p className="text-gray-500 text-sm">Enter any amount between ₹100 - ₹50,000</p>
+                          </div>
+                          <div>
+                            <div className="relative">
+                              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span className="text-gray-500 font-bold">₹</span>
+                              </div>
+                              <input
+                                type="number"
+                                value={rechargeAmount}
+                                onChange={(e) => setRechargeAmount(parseInt(e.target.value) || 0)}
+                                className="w-full pl-10 pr-4 py-4 border border-gray-300 rounded-xl font-bold text-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                                placeholder="0"
+                                min="100"
+                                max="50000"
+                              />
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Action Button */}
-                    <div className="mb-6">
-                      <button
-                        type="button"
-                        onClick={handleRecharge}
-                        disabled={isProcessing || rechargeAmount < 100}
-                        className={`w-full py-5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-between shadow-lg ${isProcessing || rechargeAmount < 100
-                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          : 'bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-orange-500 hover:to-amber-500 hover:shadow-xl hover:-translate-y-0.5'
-                          }`}
-                      >
-                        {isProcessing ? (
-                          <>
-                            <div className="flex items-center">
-                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                              <span>Processing Recharge...</span>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="flex items-center">
-                              <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mr-4">
-                                <i className="fa-solid fa-bolt text-white text-xl"></i>
+                      {/* Quick Recharge Options */}
+                      <div className="mb-8">
+                        <div className="flex items-center mb-4">
+                          <div className="flex items-center justify-center w-8 h-8 bg-amber-100 rounded-lg mr-3">
+                            <i className="fa-solid fa-bolt text-amber-500"></i>
+                          </div>
+                          <h6 className="font-bold text-gray-800 text-lg">Quick Recharge Options</h6>
+                        </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {rechargeOptions.map((amt) => (
+                            <button
+                              key={amt}
+                              type="button"
+                              onClick={() => setRechargeAmount(amt)}
+                              className={`relative p-5 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group ${rechargeAmount === amt
+                                ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg'
+                                : 'border-gray-200 bg-white hover:border-orange-300 hover:shadow-md'
+                                }`}
+                            >
+                              {/* Active indicator */}
+                              {rechargeAmount === amt && (
+                                <div className="absolute top-3 right-3 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                  <i className="fa-solid fa-check text-white text-xs"></i>
+                                </div>
+                              )}
+
+                              {/* Amount */}
+                              <div className="flex items-center mb-2">
+                                <span className="text-lg font-bold mr-1">₹</span>
+                                <span className={`text-3xl font-black ${rechargeAmount === amt ? 'text-orange-600' : 'text-gray-800'
+                                  }`}>
+                                  {amt}
+                                </span>
                               </div>
-                              <div className="text-left">
-                                <div className="text-white">Recharge ₹{rechargeAmount.toLocaleString()}</div>
-                                <div className="text-white/80 text-sm font-normal">Click to proceed to payment</div>
+
+                              {/* Bonus for larger amounts */}
+                              {amt >= 1000 && (
+                                <span className={`text-xs font-bold px-3 py-1 rounded-full ${rechargeAmount === amt
+                                  ? 'bg-green-500 text-white'
+                                  : 'bg-green-100 text-green-700'
+                                  }`}>
+                                  +{(amt * 0.05).toFixed(0)} bonus
+                                </span>
+                              )}
+
+                              {/* Hover effect */}
+                              <div className="absolute inset-0 rounded-2xl bg-orange-500 opacity-0 group-hover:opacity-5 transition-opacity"></div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Action Button */}
+                      <div className="mb-6">
+                        <button
+                          type="button"
+                          onClick={handleRecharge}
+                          disabled={isProcessing || rechargeAmount < 100}
+                          className={`w-full py-5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-between shadow-lg ${isProcessing || rechargeAmount < 100
+                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-orange-500 hover:to-amber-500 hover:shadow-xl hover:-translate-y-0.5'
+                            }`}
+                        >
+                          {isProcessing ? (
+                            <>
+                              <div className="flex items-center">
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                                <span>Processing Recharge...</span>
                               </div>
-                            </div>
-                            <i className="fa-solid fa-arrow-right text-xl"></i>
-                          </>
-                        )}
-                      </button>
+                            </>
+                          ) : (
+                            <>
+                              <div className="flex items-center">
+                                <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mr-4">
+                                  <i className="fa-solid fa-bolt text-white text-xl"></i>
+                                </div>
+                                <div className="text-left">
+                                  <div className="text-white">Recharge ₹{rechargeAmount.toLocaleString()}</div>
+                                  <div className="text-white/80 text-sm font-normal">Click to proceed to payment</div>
+                                </div>
+                              </div>
+                              <i className="fa-solid fa-arrow-right text-xl"></i>
+                            </>
+                          )}
+                        </button>
+                      </div>
 
                       {/* Validation message */}
                       {rechargeAmount > 0 && rechargeAmount < 100 && (
@@ -1239,61 +1280,155 @@ const ProfilePage: React.FC = () => {
                           </div>
                         </div>
                       )}
-                    </div>
 
-                    {/* Features */}
-                    <div className="mt-8 pt-8 border-t border-gray-200">
-                      <div className="grid md:grid-cols-3 gap-6">
-                        <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
-                          <div className="flex items-center justify-center w-12 h-12 bg-green-50 rounded-xl mr-4">
-                            <i className="fa-solid fa-shield-check text-green-500 text-xl"></i>
+                      {/* Features */}
+                      <div className="mt-8 pt-8 border-t border-gray-200">
+                        <div className="grid md:grid-cols-3 gap-6">
+                          <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
+                            <div className="flex items-center justify-center w-12 h-12 bg-green-50 rounded-xl mr-4">
+                              <i className="fa-solid fa-shield-check text-green-500 text-xl"></i>
+                            </div>
+                            <div>
+                              <h6 className="font-bold text-gray-800 mb-1">Secure Payments</h6>
+                              <p className="text-gray-600 text-sm">Bank-level security with encryption</p>
+                            </div>
                           </div>
-                          <div>
-                            <h6 className="font-bold text-gray-800 mb-1">Secure Payments</h6>
-                            <p className="text-gray-600 text-sm">Bank-level security with encryption</p>
+
+                          <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
+                            <div className="flex items-center justify-center w-12 h-12 bg-amber-50 rounded-xl mr-4">
+                              <i className="fa-solid fa-zap text-amber-500 text-xl"></i>
+                            </div>
+                            <div>
+                              <h6 className="font-bold text-gray-800 mb-1">Instant Credit</h6>
+                              <p className="text-gray-600 text-sm">Balance updates in real-time</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
+                            <div className="flex items-center justify-center w-12 h-12 bg-blue-50 rounded-xl mr-4">
+                              <i className="fa-solid fa-headset text-blue-500 text-xl"></i>
+                            </div>
+                            <div>
+                              <h6 className="font-bold text-gray-800 mb-1">24/7 Support</h6>
+                              <p className="text-gray-600 text-sm">Always here to help you</p>
+                            </div>
                           </div>
                         </div>
 
-                        <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
-                          <div className="flex items-center justify-center w-12 h-12 bg-amber-50 rounded-xl mr-4">
-                            <i className="fa-solid fa-zap text-amber-500 text-xl"></i>
-                          </div>
-                          <div>
-                            <h6 className="font-bold text-gray-800 mb-1">Instant Credit</h6>
-                            <p className="text-gray-600 text-sm">Balance updates in real-time</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
-                          <div className="flex items-center justify-center w-12 h-12 bg-blue-50 rounded-xl mr-4">
-                            <i className="fa-solid fa-headset text-blue-500 text-xl"></i>
-                          </div>
-                          <div>
-                            <h6 className="font-bold text-gray-800 mb-1">24/7 Support</h6>
-                            <p className="text-gray-600 text-sm">Always here to help you</p>
+                        {/* Additional info */}
+                        <div className="mt-6 pt-6 border-t border-gray-100">
+                          <div className="flex flex-wrap items-center justify-center gap-6 text-gray-500 text-sm">
+                            <div className="flex items-center">
+                              <i className="fa-solid fa-lock text-green-500 mr-2"></i>
+                              <span>256-bit SSL Encryption</span>
+                            </div>
+                            <div className="flex items-center">
+                              <i className="fa-solid fa-credit-card text-blue-500 mr-2"></i>
+                              <span>Multiple Payment Options</span>
+                            </div>
+                            <div className="flex items-center">
+                              <i className="fa-solid fa-clock text-purple-500 mr-2"></i>
+                              <span>Instant Processing</span>
+                            </div>
                           </div>
                         </div>
                       </div>
+                    </div>
+                  ) : (
+                    <div className="mt-0 pt-0">
+                      <div className="flex items-center justify-between mb-6">
+                        <h6 className="font-bold text-gray-800 text-lg flex items-center">
+                          <i className="fa-solid fa-clock-rotate-left mr-3 text-orange-500 bg-orange-100 p-2 rounded-lg"></i>
+                          Transaction History
+                        </h6>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setWalletPurpose(undefined)}
+                            className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${!walletPurpose ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                          >
+                            All
+                          </button>
+                          <button
+                            onClick={() => setWalletPurpose('recharge')}
+                            className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${walletPurpose === 'recharge' ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                          >
+                            Recharges
+                          </button>
+                        </div>
+                      </div>
 
-                      {/* Additional info */}
-                      <div className="mt-6 pt-6 border-t border-gray-100">
-                        <div className="flex flex-wrap items-center justify-center gap-6 text-gray-500 text-sm">
-                          <div className="flex items-center">
-                            <i className="fa-solid fa-lock text-green-500 mr-2"></i>
-                            <span>256-bit SSL Encryption</span>
-                          </div>
-                          <div className="flex items-center">
-                            <i className="fa-solid fa-credit-card text-blue-500 mr-2"></i>
-                            <span>Multiple Payment Options</span>
-                          </div>
-                          <div className="flex items-center">
-                            <i className="fa-solid fa-clock text-purple-500 mr-2"></i>
-                            <span>Instant Processing</span>
-                          </div>
+                      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left border-collapse">
+                            <thead className="bg-gray-50/80 text-gray-700 text-xs uppercase tracking-wider font-bold border-b border-gray-100">
+                              <tr>
+                                <th className="px-6 py-4">Date</th>
+                                <th className="px-6 py-4">Description</th>
+                                <th className="px-6 py-4 text-center">Type</th>
+                                <th className="px-6 py-4 text-right">Amount</th>
+                                <th className="px-6 py-4 text-right">Status</th>
+                              </tr>
+                            </thead>
+                            <tbody className="text-sm">
+                              {loadingTransactions ? (
+                                <tr>
+                                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                                    <div className="flex flex-col items-center justify-center">
+                                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mb-3"></div>
+                                      <p>Loading transactions...</p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ) : !Array.isArray(walletTransactions) || walletTransactions.length === 0 ? (
+                                <tr>
+                                  <td colSpan={5} className="px-6 py-12 text-center text-gray-400">
+                                    <p>No transactions found.</p>
+                                  </td>
+                                </tr>
+                              ) : (
+                                walletTransactions.map((tx: any, idx: number) => {
+                                  // Robust amount handling - handles both objects and numbers
+                                  const renderAmount = (amount: any) => {
+                                    if (typeof amount === 'object' && amount !== null) {
+                                      return amount.amount || amount.value || amount.total || 0;
+                                    }
+                                    return amount || 0;
+                                  };
+
+                                  return (
+                                    <tr key={tx.id || idx} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+                                      <td className="px-6 py-4 text-gray-600">
+                                        {tx.createdAt ? new Date(tx.createdAt).toLocaleDateString('en-IN') : 'N/A'}
+                                      </td>
+                                      <td className="px-6 py-4 font-medium text-gray-800">
+                                        {tx.description || tx.reason || 'Wallet Transaction'}
+                                      </td>
+                                      <td className="px-6 py-4 text-center">
+                                        <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${tx.type?.toLowerCase() === 'debit' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
+                                          {tx.type || 'credit'}
+                                        </span>
+                                      </td>
+                                      <td className={`px-6 py-4 text-right font-bold ${tx.type?.toLowerCase() === 'debit' ? 'text-red-500' : 'text-green-500'}`}>
+                                        ₹{renderAmount(tx.amount)}
+                                      </td>
+                                      <td className="px-6 py-4 text-right">
+                                        <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${(tx.status?.toLowerCase() === 'failed' || tx.status?.toLowerCase() === 'cancelled' || tx.status?.toLowerCase() === 'error')
+                                          ? 'bg-red-50 text-red-600'
+                                          : 'bg-green-50 text-green-600'
+                                          }`}>
+                                          {tx.status || 'Success'}
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  );
+                                })
+                              )}
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
@@ -1421,8 +1556,8 @@ const ProfilePage: React.FC = () => {
 
 
             {activeTab === "orders" && (
-              <div className="card border-0 shadow-sm rounded-4 mb-4">
-                <div className="card-header bg-white border-0 pt-4 px-4 mb-3">
+              <div className="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+                <div className="card-header bg-white border-0 pt-4 px-4 pb-0">
                   <h5 className="fw-bold mb-0">
                     <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#f3e5f5", color: "#8e24aa" }}>
                       <i className="fa-solid fa-bag-shopping"></i>
@@ -1430,12 +1565,164 @@ const ProfilePage: React.FC = () => {
                     My Orders
                   </h5>
                 </div>
-                <div className="card-body p-4 pt-5 text-center">
-                  <div className="mb-4">
-                    <i className="fa-solid fa-box-open fa-3x text-light"></i>
-                  </div>
-                  <h6 className="fw-bold">No Orders Found</h6>
-                  <p className="text-muted small">You haven't placed any orders yet.</p>
+                <div className="card-body p-4 pt-4">
+                  {loadingOrders ? (
+                    <div className="text-center py-5">
+                      <div className="spinner-border text-primary mb-3" role="status"></div>
+                      <p className="text-muted">Loading your orders...</p>
+                    </div>
+                  ) : orders.length === 0 ? (
+                    <div className="text-center py-5">
+                      <div className="mb-4">
+                        <i className="fa-solid fa-box-open fa-3x text-light"></i>
+                      </div>
+                      <h6 className="fw-bold">No Orders Found</h6>
+                      <p className="text-muted small">You haven't placed any orders yet.</p>
+                      <Link href={PATHS.BUY_PRODUCTS} className="btn-orange-gradient px-4 py-2 mt-2 rounded-pill text-white text-decoration-none d-inline-block">
+                        Shop Now
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="order-list">
+                      {orders.map((order: any, idx: number) => (
+                        <div key={order.id || idx} className="order-card border rounded-4 p-0 mb-4 overflow-hidden shadow-sm transition-all hover-shadow-md">
+                          <div className="bg-light p-3 d-flex justify-content-between align-items-center border-bottom flex-wrap gap-3">
+                            <div className="d-flex flex-column">
+                              <span className="text-muted small fw-bold text-uppercase">Order ID</span>
+                              <span className="fw-bold">#{order.orderId || order.id}</span>
+                            </div>
+                            <div className="d-flex flex-column">
+                              <span className="text-muted small fw-bold text-uppercase">Date</span>
+                              <span className="fw-bold">
+                                {order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric'
+                                }) : 'N/A'}
+                              </span>
+                            </div>
+                            <div className="d-flex flex-column">
+                              <span className="text-muted small fw-bold text-uppercase">Total Amount</span>
+                              <span className="fw-bold text-orange-500">₹{order.totalAmount || order.amount || 0}</span>
+                            </div>
+                            <div className="d-flex flex-column align-items-end">
+                              <span className={`badge rounded-pill px-3 py-2 text-uppercase ${order.status?.toLowerCase() === 'delivered' || order.status?.toLowerCase() === 'paid'
+                                ? 'bg-success-subtle text-success'
+                                : order.status?.toLowerCase() === 'cancelled' || order.status?.toLowerCase() === 'failed'
+                                  ? 'bg-danger-subtle text-danger'
+                                  : 'bg-primary-subtle text-primary'
+                                }`} style={{ fontSize: '10px' }}>
+                                {order.status || 'Pending'}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="p-3">
+                            {(order.items || order.OrderItems || []).map((item: any, itemIdx: number) => {
+                              const product = item.product || item.Product;
+
+                              const formatImageUrl = (url: string) => {
+                                if (!url) return "/images/no-image.png";
+                                if (url.startsWith("http")) return url;
+                                const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+                                const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+                                if (url.startsWith("/uploads/")) return `${cleanApiUrl}${url}`;
+                                if (url.startsWith("/")) return url;
+                                return `${cleanApiUrl}/uploads/${url}`;
+                              };
+
+                              const productImg = formatImageUrl(product?.imageUrl || product?.image || (product?.images && product.images[0]));
+
+                              return (
+                                <div key={itemIdx} className="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom last-border-none">
+                                  <div className="rounded-3 border overflow-hidden" style={{ width: "60px", height: "60px", flexShrink: 0 }}>
+                                    <img
+                                      src={productImg}
+                                      className="w-100 h-100 object-cover"
+                                      alt={product?.name || "Product"}
+                                    />
+                                  </div>
+                                  <div className="flex-grow-1">
+                                    <div className="d-flex justify-content-between">
+                                      <h6 className="mb-0 fw-bold">{product?.name || "Product Name"}</h6>
+                                      <span className="fw-bold">₹{item.price || 0}</span>
+                                    </div>
+                                    <div className="text-muted small d-flex justify-content-between mt-1">
+                                      <span>Qty: {item.quantity || 1}</span>
+                                      {order.status?.toLowerCase() === 'delivered' && (
+                                        <Link href="#" className="text-orange-500 text-decoration-none fw-bold">Write Review</Link>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+
+                            <div className="d-flex justify-content-between align-items-center mt-3 pt-2">
+                              {order.shippingAddress && (
+                                <div className="small text-muted">
+                                  <i className="fa-solid fa-location-dot me-1"></i>
+                                  {order.shippingAddress.city}, {order.shippingAddress.state}
+                                </div>
+                              )}
+                              <div className="d-flex gap-2">
+                                <button
+                                  className="btn btn-outline-dark btn-sm rounded-pill px-3"
+                                  onClick={() => toggleOrder(order.id)}
+                                >
+                                  {expandedOrders[order.id] ? 'Hide Details' : 'View Details'}
+                                </button>
+                                {order.status?.toLowerCase() === 'pending' && (
+                                  <button className="btn btn-danger btn-sm rounded-pill px-3 bg-red-600 border-red-600 text-white">Cancel Order</button>
+                                )}
+                              </div>
+                            </div>
+
+                            {expandedOrders[order.id] && (
+                              <div className="mt-4 pt-4 border-t border-gray-100 animate-in fade-in duration-300">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                  <div>
+                                    <h6 className="font-bold text-gray-800 mb-3 text-sm uppercase tracking-wider">Shipping Address</h6>
+                                    {order.shippingAddress ? (
+                                      <div className="text-sm text-gray-600 leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                        <p className="font-bold text-gray-800 mb-1">{order.shippingAddress.full_name || clientUser?.name}</p>
+                                        <p className="mb-0">{order.shippingAddress.line1}</p>
+                                        {order.shippingAddress.line2 && <p className="mb-0">{order.shippingAddress.line2}</p>}
+                                        <p className="mb-0">{order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.zipCode}</p>
+                                        <p className="mt-2 text-gray-500"><i className="fa-solid fa-phone me-2"></i>{order.shippingAddress.phone || clientUser?.phone}</p>
+                                      </div>
+                                    ) : (
+                                      <p className="text-sm text-gray-500 bg-gray-50 p-3 rounded-xl">Shipping address details not available.</p>
+                                    )}
+                                  </div>
+                                  <div>
+                                    <h6 className="font-bold text-gray-800 mb-3 text-sm uppercase tracking-wider">Order Summary</h6>
+                                    <div className="bg-gray-50 p-3 rounded-xl border border-gray-100 space-y-2">
+                                      <div className="flex justify-between text-sm">
+                                        <span className="text-gray-500">Subtotal</span>
+                                        <span className="font-medium">₹{order.totalAmount || 0}</span>
+                                      </div>
+                                      <div className="flex justify-between text-sm">
+                                        <span className="text-gray-500">Shipping</span>
+                                        <span className="text-green-600 font-medium">FREE</span>
+                                      </div>
+                                      <div className="pt-2 mt-2 border-t border-gray-200 flex justify-between">
+                                        <span className="font-bold text-gray-800">Total</span>
+                                        <span className="font-bold text-orange-600 text-lg">₹{order.totalAmount || 0}</span>
+                                      </div>
+                                      <div className="mt-3 text-[10px] text-gray-400 text-center italic">
+                                        Paid via Razorpay Online
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

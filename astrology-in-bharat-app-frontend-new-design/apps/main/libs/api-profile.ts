@@ -80,12 +80,12 @@ export const getChatHistory = async (sessionId: number) => {
 
 
 export const getMyOrders = async () => {
-    const response = await apiClient.get('/order/my-orders');
+    const response = await apiClient.get('/orders/my-orders');
     return response.data;
 };
 
-export const getWalletTransactions = async () => {
-    const response = await apiClient.get('/wallet/transactions');
+export const getWalletTransactions = async (params?: { purpose?: string, page?: number, limit?: number }) => {
+    const response = await apiClient.get('/wallet/transactions', { params });
     return response.data;
 };
 

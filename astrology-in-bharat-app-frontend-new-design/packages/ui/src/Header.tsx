@@ -18,6 +18,7 @@ import { Navigation, Autoplay } from "swiper/modules";
 
 const Swiper = SwiperComponent as any;
 const SwiperSlide = SwiperSlideComponent as any;
+import { getNotificationSocket, connectNotificationSocket } from "./utils/socket";
 
 // Custom Navigation Buttons Component
 const SwiperNavButtons = () => {
@@ -105,6 +106,11 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
   const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Use the authentication context
   const {
@@ -132,20 +138,9 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
     }
   };
 
-  // Use useEffect to ensure this part only runs on the client
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  // Debug authentication state
-  useEffect(() => {
-    console.log("🔍 Header Auth Debug:", {
-      isAuthenticated,
-      loading,
-      clientUser,
-      isClient
-    });
-  }, [isAuthenticated, loading, clientUser, isClient]);
 
   // Refresh auth when window gains focus (e.g., after login in another tab)
   useEffect(() => {
@@ -159,6 +154,83 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
     window.addEventListener("focus", handleFocus);
     return () => window.removeEventListener("focus", handleFocus);
   }, [isClient, refreshAuth]);
+
+  // API functions for notifications
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const { apiClient } = require("./context/ClientAuthContext");
+      const res = await apiClient.get('/notifications');
+      setNotifications(res.data);
+    } catch (err) {
+      console.error('Failed to fetch notifications', err);
+    }
+  }, []);
+
+  const fetchUnreadCount = useCallback(async () => {
+    try {
+      const { apiClient } = require("./context/ClientAuthContext");
+      const res = await apiClient.get('/notifications/unread-count');
+      setUnreadCount(res.data.count);
+    } catch (err) {
+      console.error('Failed to fetch unread count', err);
+    }
+  }, []);
+
+  const markAsRead = async (id: number) => {
+    try {
+      const { apiClient } = require("./context/ClientAuthContext");
+      await apiClient.patch(`/notifications/${id}/read`);
+      fetchUnreadCount();
+      fetchNotifications();
+    } catch (err) {
+      console.error('Failed to mark as read', err);
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    if (isClient && isAuthenticated) {
+      fetchUnreadCount();
+    }
+  }, [isClient, isAuthenticated, fetchUnreadCount]);
+
+  // Load notifications when dropdown opens
+  useEffect(() => {
+    if (showNotificationDropdown) {
+      fetchNotifications();
+    }
+  }, [showNotificationDropdown, fetchNotifications]);
+
+  // Notification Socket Connection
+  useEffect(() => {
+    if (isClient && isAuthenticated && clientUser?.id) {
+      console.log("🔌 Connecting to notification socket for user:", clientUser.id);
+      connectNotificationSocket(clientUser.id);
+      const socket = getNotificationSocket();
+
+      const handleUpdate = (data: any) => {
+        console.log("🔔 Real-time Notification received:", data);
+        // Show success toast
+        const { toast } = require("react-toastify");
+        toast.success(data.message || "Order Status Updated!");
+
+        // Refresh counts and lists
+        fetchUnreadCount();
+        if (showNotificationDropdown) fetchNotifications();
+      };
+
+      // Listen for backend events
+      socket.on("order_status_updated", handleUpdate);
+      socket.on("notification", handleUpdate);
+      socket.on("new_notification", handleUpdate);
+
+      return () => {
+        socket.off("order_status_updated", handleUpdate);
+        socket.off("notification", handleUpdate);
+        socket.off("new_notification", handleUpdate);
+      };
+    }
+  }, [isClient, isAuthenticated, clientUser, fetchUnreadCount, fetchNotifications, showNotificationDropdown]);
 
   // Handle logout
   const handleLogout = async () => {
@@ -188,29 +260,36 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
       if (!target.closest(".language-dropdown-container")) {
         setShowLanguageDropdown(false);
       }
+      // Profile dropdown
+      if (!target.closest(".profile-dropdown-container")) {
+        setShowProfileDropdown(false);
+      }
+      // Notification dropdown
+      if (!target.closest(".notification-dropdown-container")) {
+        setShowNotificationDropdown(false);
+      }
     };
 
-    if (showLanguageDropdown) {
+    if (showLanguageDropdown || showProfileDropdown || showNotificationDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
       return () =>
         document.removeEventListener("mousedown", handleClickOutside);
     }
-  }, [showLanguageDropdown]);
+  }, [showLanguageDropdown, showProfileDropdown, showNotificationDropdown]);
 
   return (
     <>
       <header className="bg-[#301118] text-[#2b1b00] py-1 px-4">
-
         <div className="container">
-          <div className="row align">
+          <div className="row align-items-center">
             <div className="col-lg-8 col-md-6">
-              <p className="top-text">
+              <p className="top-text mb-0 text-white">
                 Connect with Verified Astrology Experts for Online Predictions.
               </p>
             </div>
             <div className="col-lg-4 col-md-6">
               <div className="right-part-top">
-                <div className="row align list-top-bar-mobile">
+                <div className="row align-items-center list-top-bar-mobile">
                   <div className="col-4 mobile-space">
                     <div
                       className={`account-dropdown language-dropdown-container w-100 ${showLanguageDropdown ? "show" : ""}`}
@@ -246,125 +325,202 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                       </div>
                     </div>
                   </div>
-                  <div className="col-6 mobile-space">
-                    <div className="d-flex gap-2 w-100 justify-content-end me-lg-5">
-
-
+                  <div className="col-8 mobile-space">
+                    <div className="d-flex gap-4 w-100 justify-content-end align-items-center">
                       {isAuthenticated ? (
-                        <div className="col-8 mobile-space">
-                          <div className="d-flex gap-2 align-items-center">
-                            <Link href={PATHS.CART} className="cart-top position-relative">
-                              <i className="fa-solid fa-cart-shopping" style={{ marginLeft: "20px" }}></i> {" "}
-                              {cartCount > 0 && (
-                                <span
-                                  className="position-absolute translate-middle badge rounded-pill bg-danger"
-                                  style={{
-                                    top: '5px',
-                                    left: '35px',
-                                    fontSize: '10px',
-                                    padding: '0.25em 0.6em'
-                                  }}
-                                >
-                                  {cartCount}
+                        <div className="d-flex gap-4 align-items-center justify-content-end">
+
+                          {/* Cart Icon */}
+                          <Link href={PATHS.CART} className="cart-top position-relative">
+                            <i className="fa-solid fa-cart-shopping text-white text-xl"></i>
+                            {cartCount > 0 && (
+                              <span
+                                className="position-absolute translate-middle badge rounded-pill bg-danger"
+                                style={{
+                                  top: '0px',
+                                  left: '25px',
+                                  fontSize: '10px',
+                                  padding: '0.25em 0.6em'
+                                }}
+                              >
+                                {cartCount}
+                              </span>
+                            )}
+                          </Link>
+
+                          {/* Notification Bell */}
+                          <div className="notification-dropdown-container position-relative">
+                            <div
+                              className="cursor-pointer"
+                              onClick={() => setShowNotificationDropdown(!showNotificationDropdown)}
+                            >
+                              <i className="fa-solid fa-bell text-white text-xl"></i>
+                              {unreadCount > 0 && (
+                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: '10px', padding: '0.25em 0.5em', marginTop: '-5px' }}>
+                                  {unreadCount}
                                 </span>
                               )}
-                            </Link>
+                            </div>
 
-                            <Link
-                              href={PATHS.PROFILE}
-                              className="d-flex align-items-center gap-2"
-                              style={{
-                                color: "white",
-                                borderRadius: "50%",
-                                textDecoration: "none",
-                                whiteSpace: "nowrap",
-                              }}
+                            {showNotificationDropdown && (
+                              <div
+                                className="position-absolute bg-white shadow-lg rounded-3 overflow-hidden"
+                                style={{
+                                  top: "140%",
+                                  right: "0",
+                                  width: "380px",
+                                  zIndex: 1001,
+                                  border: "1px solid #eee"
+                                }}
+                              >
+                                <div className="px-3 py-3 border-bottom bg-light d-flex justify-content-between align-items-center">
+                                  <p className="mb-0 fw-bold text-dark fs-5">Notifications</p>
+                                  {notifications.length > 0 && (
+                                    <button
+                                      onClick={() => setNotifications([])}
+                                      className="btn btn-link p-0 text-decoration-none text-muted"
+                                      style={{ fontSize: '13px' }}
+                                    >
+                                      Clear All
+                                    </button>
+                                  )}
+                                </div>
+                                <div className="overflow-auto" style={{ maxHeight: '400px' }}>
+                                  {notifications.length === 0 ? (
+                                    <div className="px-3 py-5 text-center">
+                                      <i className="fa-solid fa-bell-slash text-muted mb-3 d-block fa-3x"></i>
+                                      <p className="mb-0 text-muted fs-6">No new notifications</p>
+                                    </div>
+                                  ) : (
+                                    notifications.map((notif: any, idx: number) => (
+                                      <div
+                                        key={notif.id || idx}
+                                        className={`px-3 py-3 border-bottom hover-bg-light transition-all cursor-pointer ${notif.isRead ? 'opacity-75' : 'bg-blue-50/30'}`}
+                                        onClick={() => !notif.isRead && markAsRead(notif.id)}
+                                      >
+                                        <div className="d-flex justify-content-between align-items-start mb-1">
+                                          <p className="mb-0 text-dark fw-bold fs-6">{notif.title || 'Notification'}</p>
+                                          {!notif.isRead && <span className="p-1 bg-blue-500 rounded-circle"></span>}
+                                        </div>
+                                        <p className="mb-0 text-muted" style={{ fontSize: '13px', lineHeight: '1.5' }}>{notif.message}</p>
+                                        <p className="mb-0 mt-2 text-orange-500 fw-medium" style={{ fontSize: '11px' }}>
+                                          {notif.createdAt ? new Date(notif.createdAt).toLocaleString() : 'Just now'}
+                                        </p>
+                                      </div>
+                                    ))
+                                  )}
+                                </div>
+                                <div className="px-3 py-3 border-top text-center bg-light">
+                                  <Link href="#" className="text-decoration-none text-orange-500 fw-bold fs-6" onClick={() => setShowNotificationDropdown(false)}>
+                                    View All
+                                  </Link>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* User Profile & Dropdown */}
+                          <div className="profile-dropdown-container position-relative">
+                            <div
+                              className="d-flex align-items-center gap-2 cursor-pointer"
+                              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
                             >
                               <div style={{
-                                width: "42px",
-                                height: "42px",
+                                width: "40px",
+                                height: "40px",
                                 borderRadius: "50%",
                                 overflow: "hidden",
-                                border: "1px solid white"
+                                border: "2px solid #fa6310",
+                                padding: "2px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center"
                               }}>
                                 <NextImage
                                   src={clientUser?.avatar || "/images/aa.webp"}
                                   alt="Profile"
-                                  width={24}
-                                  height={24}
-                                  className="object-cover w-100 h-100"
+                                  width={40}
+                                  height={40}
+                                  className="object-cover w-100 h-100 rounded-circle"
                                 />
                               </div>
-                            </Link>
+                              <i className="fa-solid fa-ellipsis-vertical text-white" style={{ fontSize: '18px' }}></i>
+                            </div>
 
-                            <Link
-                              href={PATHS.PROFILE}
-                              style={{
-                                backgroundColor: "#fa6310",
-                                color: "white",
-                                borderRadius: "5px",
-                                padding: "5px 8px",
-                                textDecoration: "none",
-                                whiteSpace: "nowrap",
-                                fontSize: "14px",
-                                fontWeight: "bold"
-                              }}
-                            >
-                              <i className="fa-solid fa-user"></i> <span className="d-none d-md-inline">Profile</span>
-                            </Link>
+                            {showProfileDropdown && (
+                              <div
+                                className="position-absolute bg-white shadow-lg rounded-3 overflow-hidden"
+                                style={{
+                                  top: "120%",
+                                  right: "0",
+                                  minWidth: "180px",
+                                  zIndex: 1000,
+                                  border: "1px solid #eee"
+                                }}
+                              >
+                                <div className="px-3 py-2 border-bottom bg-light">
+                                  <p className="mb-0 fw-bold text-dark small">{clientUser?.name || 'User'}</p>
+                                  <p className="mb-0 text-muted" style={{ fontSize: '10px' }}>{clientUser?.phone || ''}</p>
+                                </div>
 
-                            <button
-                              onClick={handleLogout}
-                              type="button"
-                              style={{
-                                backgroundColor: "#fa6310",
-                                color: "white",
-                                borderRadius: "5px",
-                                padding: "5px 8px",
-                                border: "none",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              <i className="fa-solid fa-right-from-bracket"></i> <span className="d-none d-md-inline">Logout</span>
-                            </button>
+                                <Link
+                                  href={PATHS.PROFILE}
+                                  className="d-block px-3 py-2 text-decoration-none text-dark hover-bg-light transition-all d-flex align-items-center gap-2"
+                                  onClick={() => setShowProfileDropdown(false)}
+                                  style={{ fontSize: '14px' }}
+                                >
+                                  <i className="fa-solid fa-user text-orange-500 w-5"></i>
+                                  My Profile
+                                </Link>
+
+                                <button
+                                  onClick={() => {
+                                    setShowProfileDropdown(false);
+                                    handleLogout();
+                                  }}
+                                  className="w-100 text-start border-0 bg-transparent px-3 py-2 text-danger hover-bg-light transition-all d-flex align-items-center gap-2"
+                                  style={{ fontSize: '14px' }}
+                                >
+                                  <i className="fa-solid fa-right-from-bracket w-5"></i>
+                                  Logout
+                                </button>
+                              </div>
+                            )}
                           </div>
                         </div>
                       ) : (
-                        <div className="col-8 mobile-space">
-                          <div className="d-flex gap-4">
-                            <Link
-                              href={PATHS.SIGN_IN}
-                              style={{
-                                backgroundColor: "#fa6310",
-                                color: "white",
-                                borderRadius: "5px",
-                                padding: "5px 8px",
-                                textDecoration: "none",
-                                width: "100%",
-                                textAlign: "center",
-                              }}
-                            >
-                              SignIn
-                            </Link>
+                        <div className="d-flex gap-3">
+                          <Link
+                            href={PATHS.SIGN_IN}
+                            style={{
+                              backgroundColor: "#fa6310",
+                              color: "white",
+                              borderRadius: "5px",
+                              padding: "6px 15px",
+                              textDecoration: "none",
+                              fontSize: "14px",
+                              fontWeight: "600"
+                            }}
+                          >
+                            SignIn
+                          </Link>
 
-                            <Link
-                              href={PATHS.REGISTER}
-                              style={{
-                                backgroundColor: "#fa6310",
-                                color: "white",
-                                borderRadius: "5px",
-                                padding: "5px 8px",
-                                textDecoration: "none",
-                                width: "100%",
-                                textAlign: "center",
-                              }}
-                            >
-                              Register
-                            </Link>
-                          </div>
+                          <Link
+                            href={PATHS.REGISTER}
+                            style={{
+                              backgroundColor: "#fa6310",
+                              color: "white",
+                              borderRadius: "5px",
+                              padding: "6px 15px",
+                              textDecoration: "none",
+                              fontSize: "14px",
+                              fontWeight: "600"
+                            }}
+                          >
+                            Register
+                          </Link>
                         </div>
                       )}
-
                     </div>
                   </div>
                 </div>
@@ -373,11 +529,12 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
           </div>
         </div>
       </header>
+
       <header className="main-head">
         <div className="container">
-          <div className="row align">
+          <div className="row align-items-center">
             <div className="col-lg-10 col-md-7">
-              <nav className="navbar navbar-expand-lg navbar-light ">
+              <nav className="navbar navbar-expand-lg navbar-light">
                 <Link className="navbar-brand" href="/">
                   <NextImage
                     src="/images/web-logo.png"
@@ -390,19 +547,18 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                 <button
                   className="navbar-toggler"
                   type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#navbarSupportedContent"
-                  aria-controls="navbarSupportedContent"
-                  aria-expanded="false"
-                  aria-label="Toggle navigation"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
                 >
                   <span className="navbar-toggler-icon"></span>
                 </button>
                 <div
-                  className="collapse navbar-collapse"
+                  className={`d-none d-lg-flex align-items-center justify-content-center flex-grow-1 ${isMenuOpen ? "d-block position-absolute bg-white w-100 start-0 top-100 shadow-sm p-3" : ""}`}
                   id="navbarSupportedContent"
+                  style={{ zIndex: 1000 }}
                 >
-                  <ul className="navbar-nav ms-auto  top-menu-main">
+                  <ul
+                    className="navbar-nav mx-auto top-menu-main d-flex flex-row align-items-center gap-2 gap-xl-4"
+                  >
                     <li className="nav-item">
                       <Link className="nav-link" href="/">
                         Home
@@ -444,7 +600,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                             Kundali Matching
                           </Link>
                         </li>
-                        
+
                         <li>
                           <Link
                             className="dropdown-item"
