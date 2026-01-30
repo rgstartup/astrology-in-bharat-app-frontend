@@ -78,4 +78,15 @@ export const getChatHistory = async (sessionId: number) => {
     return response.data;
 };
 
+
+export const getMyOrders = async () => {
+    const response = await apiClient.get('/order/my-orders');
+    return response.data;
+};
+
+export const getWalletTransactions = async () => {
+    const response = await apiClient.get('/wallet/transactions');
+    return response.data;
+};
+
 export default apiClient;

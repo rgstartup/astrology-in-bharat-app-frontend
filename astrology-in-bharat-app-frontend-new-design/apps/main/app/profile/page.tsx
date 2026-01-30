@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import { PATHS } from "@repo/routes";
 import { toast } from "react-toastify";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
-import apiClient, { getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument, ClientProfileData, AddressDto, getAllChatSessions, getChatHistory } from "@/libs/api-profile";
+import apiClient, { getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument, ClientProfileData, AddressDto, getAllChatSessions, getChatHistory, getMyOrders, getWalletTransactions } from "@/libs/api-profile";
 import * as LucideIcons from "lucide-react";
-import { loadRazorpay } from "@/libs/razorpay";
 
 import WishlistGrid from "@/components/features/profile/WishlistGrid";
 
@@ -55,12 +54,26 @@ const ProfilePage: React.FC = () => {
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [chatMessages, setChatMessages] = useState<any[]>([]);
   const [showChatModal, setShowChatModal] = useState(false);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [walletTransactions, setWalletTransactions] = useState<any[]>([]);
+  const [loadingTransactions, setLoadingTransactions] = useState(false);
   const [activeTab, setActiveTab] = useState("profile"); // State for active tab
+  const [walletView, setWalletView] = useState<'recharge' | 'history'>('recharge');
 
+  // Order collapse state
+  const [expandedOrders, setExpandedOrders] = useState<Record<number, boolean>>({});
+
+  const toggleOrder = (orderId: number) => {
+    setExpandedOrders(prev => ({
+      ...prev,
+      [orderId]: !prev[orderId]
+    }));
+  };
 
   const handleRecharge = async () => {
-    if (rechargeAmount < 10) {
-      toast.error("Minimum recharge amount is ₹10");
+    if (rechargeAmount < 100) {
+      toast.error("Minimum recharge amount is ₹100");
       return;
     }
 
@@ -190,6 +203,79 @@ const ProfilePage: React.FC = () => {
     };
     loadConsultationHistory();
   }, [activeTab, isClientAuthenticated]);
+
+  // Load orders when orders tab is active
+  useEffect(() => {
+    const loadOrders = async () => {
+      if (activeTab === "orders" && isClientAuthenticated) {
+        setLoadingOrders(true);
+        try {
+          const myOrders = await getMyOrders();
+          console.log("🛍️ Orders loaded:", myOrders);
+          setOrders(myOrders);
+        } catch (error: any) {
+          console.error("Failed to load orders:", error);
+          if (error.response?.status === 404) {
+            toast.error("Orders API not found. Please contact backend team.");
+          } else {
+            toast.error("Failed to load orders");
+          }
+        } finally {
+          setLoadingOrders(false);
+        }
+      }
+    };
+    loadOrders();
+  }, [activeTab, isClientAuthenticated]);
+
+  // Load wallet transactions when wallet tab is active
+  useEffect(() => {
+    const loadTransactions = async () => {
+      if (activeTab === "wallet" && isClientAuthenticated) {
+        setLoadingTransactions(true);
+        try {
+          const transactions = await getWalletTransactions();
+          console.log("💰 Wallet Transactions loaded:", transactions);
+          setWalletTransactions(transactions || []);
+        } catch (error) {
+          console.error("Failed to load wallet transactions:", error);
+        } finally {
+          setLoadingTransactions(false);
+        }
+      }
+    };
+    loadTransactions();
+  }, [activeTab, isClientAuthenticated]);
+
+  // Socket.IO - Real-Time Order Updates
+  useEffect(() => {
+    if (!isClientAuthenticated || !clientUser?.id) return;
+
+    // Connect socket
+    connectNotificationSocket(clientUser.id);
+    const socket = getNotificationSocket();
+
+    // Listen for order status updates
+    const handleOrderUpdate = (data: any) => {
+      console.log('📦 Real-time order update:', data);
+      toast.success(data.message || 'Order status updated');
+
+      // Update order status in real-time
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === data.orderId
+            ? { ...order, status: data.status, cancellationReason: data.cancellationReason }
+            : order
+        )
+      );
+    };
+
+    socket.on('order_status_updated', handleOrderUpdate);
+
+    return () => {
+      socket.off('order_status_updated', handleOrderUpdate);
+    };
+  }, [isClientAuthenticated, clientUser?.id]);
 
   // Function to open chat history modal
   const handleViewChat = async (session: any) => {
@@ -1520,7 +1606,7 @@ const ProfilePage: React.FC = () => {
         )}
 
       </div>
-    </div>
+    </div >
   );
 };
 
