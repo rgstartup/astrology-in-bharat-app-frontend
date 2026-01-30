@@ -81,6 +81,9 @@ importers:
       recharts:
         specifier: ^3.1.2
         version: 3.1.2(@types/react@19.1.0)(react-dom@19.2.1(react@19.2.1))(react-is@16.13.1)(react@19.2.1)(redux@5.0.1)
+      socket.io-client:
+        specifier: ^4.8.3
+        version: 4.8.3
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
@@ -459,6 +462,9 @@ importers:
       react-toastify:
         specifier: ^11.0.5
         version: 11.0.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      socket.io-client:
+        specifier: ^4.8.3
+        version: 4.8.3
       swiper:
         specifier: ^11.2.10
         version: 11.2.10
