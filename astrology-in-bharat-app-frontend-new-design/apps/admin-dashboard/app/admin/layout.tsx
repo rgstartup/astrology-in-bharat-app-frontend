@@ -59,6 +59,7 @@ const menuItems: MenuItem[] = [
   { label: "Reviews Moderation", href: "/admin/reviews", icon: Star },
   { label: "Analytics Dashboard", href: "/admin/analytics", icon: BarChart3 },
   { label: "Products", href: "/admin/products", icon: ShoppingBag },
+  { label: "Order Management", href: "/admin/orders", icon: Package },
   // { label: "Earnings", href: "/admin/earnings", icon: IndianRupee },
   {
     label: "Account",

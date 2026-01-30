@@ -87,13 +87,31 @@ const CheckoutContent = () => {
         return;
       }
 
-      // 2. Create Order on Backend
+      // 2. Pre-create Order on Backend (if Product Order)
+      let dbOrderId = null;
+      if (isOrder) {
+        try {
+          const createOrderRes = await apiClient.post("/order", {
+            shippingAddress: address
+          });
+          dbOrderId = createOrderRes.data.id;
+          console.log("✅ Order created in DB:", dbOrderId);
+        } catch (error: any) {
+          console.error("Failed to create order:", error);
+          toast.error(error.response?.data?.message || "Failed to create order. Please try again.");
+          setIsProcessing(false);
+          return;
+        }
+      }
+
+      // 3. Initiate Payment
       const orderRes = await apiClient.post("/payment/orders/create", {
         amount: total,
         type: isOrder ? 'product' : 'consultation',
         notes: {
           astrologerName,
-          isOrder
+          isOrder,
+          orderId: dbOrderId // Link razorpay order to internal DB order
         }
       });
 
