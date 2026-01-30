@@ -34,4 +34,14 @@ export const toggleUserBlock = async (id: number, isBlocked: boolean) => {
   return res.data;
 };
 
+export const getDashboardStats = async () => {
+  const res = await api.get("/admin/dashboard/stats");
+  return res.data;
+};
+
+export const getUserGrowthStats = async (days: number) => {
+  const res = await api.get("/admin/analytics/user-growth", { params: { days } });
+  return res.data;
+};
+
 

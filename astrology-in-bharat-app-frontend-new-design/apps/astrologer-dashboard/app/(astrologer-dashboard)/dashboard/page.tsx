@@ -16,7 +16,7 @@ import apiClient from "@/lib/apiClient";
 import { socket } from "@/lib/socket";
 import { toast } from "react-toastify";
 import { AlertTriangle, Info } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 const Page = () => {
   const { user } = useAuth();
   const [ratingStats, setRatingStats] = useState<ReviewStats | null>(null);
@@ -24,6 +24,8 @@ const Page = () => {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+
 
   useEffect(() => {
     console.log("[DashboardDebug] Current User Status Info:", {
@@ -177,7 +179,7 @@ const Page = () => {
               </div>
             </div>
             <button
-              onClick={() => window.location.href = '/profile'}
+              onClick={() => router.push('/profile')}
               className="px-6 py-3 rounded-2xl bg-white border border-emerald-200 text-emerald-600 font-bold text-xs uppercase tracking-widest hover:bg-emerald-100 transition-all shadow-sm"
             >
               View Profile
