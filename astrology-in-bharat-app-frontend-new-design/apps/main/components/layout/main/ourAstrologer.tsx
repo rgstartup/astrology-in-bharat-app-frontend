@@ -92,22 +92,20 @@ const OurAstrologer = () => {
             const getImageUrl = (path?: string) => {
                 if (!path) return "/images/astro-img1.png";
                 if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
-                // If the path doesn't start with / and isn't a full URL, it might need the uploads prefix
-                // The backend serves assets from /uploads according to main.ts
-                const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"; // Fallback to localized server
+                const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
                 return `${baseUrl}/uploads/${path}`;
             };
 
-            const mappedData = data.map((item) => ({
+            const mappedData = data.map((item: any) => ({
                 id: item.id,
-                userId: item.user?.id, // Map User ID
+                userId: item.user?.id,
                 image: getImageUrl(item.user?.avatar),
                 ratings: Math.round(item.rating) || 5,
-                name: item.user.name || "Astrologer",
+                name: item.user?.name || "Astrologer",
                 expertise: item.specialization || "Vedic Astrology",
                 experience: item.experience_in_years || 0,
-                language: item.languages.join(", ") || "Hindi",
-                price: item.price || 0,
+                language: Array.isArray(item.languages) ? item.languages.join(", ") : (item.languages || "Hindi"),
+                price: item.price ?? item.chat_price ?? 0,
                 is_available: item.is_available,
                 video: "https://www.youtube.com/embed/INoPh_oRooU",
                 modalId: `modal-${item.id}`,

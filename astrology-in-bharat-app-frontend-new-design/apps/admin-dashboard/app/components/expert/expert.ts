@@ -36,6 +36,18 @@ export interface Expert {
   district?: string;
   country?: string;
   pincode?: string;
+  addresses?: {
+    id: number;
+    line1?: string;
+    houseNo?: string;
+    city?: string;
+    district?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
+    pincode?: string;
+    tag?: string;
+  }[];
   kyc_details?: {
     status: string;
   };

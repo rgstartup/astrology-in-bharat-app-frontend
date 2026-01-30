@@ -65,6 +65,7 @@ export const getExperts = async (
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
+        console.log(`[API Debug] Setting param: ${key}=${value} (${typeof value})`);
         queryParams.set(key, String(value));
       }
     });
@@ -77,8 +78,9 @@ export const getExperts = async (
     });
 
     if (!response.ok) {
-      console.error(`[API Debug] Fetch failed with status: ${response.status}`);
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`[API Debug] Fetch failed with status: ${response.status}. Body: ${errorText}`);
+      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
     }
 
     const result = await response.json();

@@ -13,58 +13,76 @@ import {
   MoreVertical,
 } from "lucide-react";
 
-// Dynamic import for Recharts components (reduces initial bundle size)
+import { getDashboardStats } from "@/src/services/admin.service";
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
 
-// Lazy load chart section with loading fallback
+const MoreVerticalIcon = MoreVertical as any;
+
 const ChartSection = dynamic(() => import("@/app/components/analytics/ChartSection"), {
   loading: () => (
     <div className="h-[400px] bg-gray-100 animate-pulse rounded-xl" />
   ),
   ssr: false,
-});
+}) as any;
 
 export default function DashboardPage() {
   // Active chart tab state (revenue, users, etc.)
   const [activeTab, setActiveTab] = useState("revenue");
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await getDashboardStats();
+        setDashboardData(data);
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
 
   // Stats data (memoized for performance)
   const stats = useMemo(
     () => [
       {
-        title: "Total Consultations",
-        value: "12.5k",
+        title: "Total Chat Sessions",
+        value: loading ? "..." : (dashboardData?.totalChatSessions?.toString() || "0"),
         icon: Calendar,
         iconColor: "text-purple-600",
         iconBgColor: "bg-purple-100",
-        trend: { value: "+2.3%", isPositive: true, period: "last week" },
+        trend: { value: dashboardData?.trends?.new?.value || "+0%", isPositive: true, period: "last week" },
       },
       {
         title: "Total Astrologers",
-        value: "9.1k",
+        value: loading ? "..." : (dashboardData?.totalExperts?.toString() || "0"),
         icon: Clock,
         iconColor: "text-orange-600",
         iconBgColor: "bg-orange-100",
-        trend: { value: "+9.1%", isPositive: true, period: "last week" },
+        trend: { value: dashboardData?.trends?.total?.value || "+0%", isPositive: true, period: "last week" },
       },
       {
         title: "Total Users",
-        value: "3.2k",
+        value: loading ? "..." : (dashboardData?.totalUsers?.toString() || "0"),
         icon: Users,
         iconColor: "text-green-600",
         iconBgColor: "bg-green-100",
-        trend: { value: "-19%", isPositive: false, period: "last week" },
+        trend: { value: dashboardData?.trends?.active?.value || "+0%", isPositive: true, period: "last week" },
       },
       {
         title: "Earnings This Month",
-        value: "₹945k",
+        value: loading ? "..." : `₹${dashboardData?.totalEarnings || "0"}`,
         icon: Wallet,
         iconColor: "text-blue-600",
         iconBgColor: "bg-blue-100",
-        trend: { value: "+12%", isPositive: true, period: "last week" },
+        trend: { value: "+0%", isPositive: true, period: "last week" },
       },
     ],
-    []
+    [dashboardData, loading]
   );
 
   // Recent activities data (memoized)
@@ -97,7 +115,7 @@ export default function DashboardPage() {
                 className="text-gray-400 hover:text-gray-600 transition-colors"
                 aria-label="More options for recent activity"
               >
-                <MoreVertical className="w-5 h-5" />
+                <MoreVerticalIcon className="w-5 h-5" />
               </button>
             </header>
 

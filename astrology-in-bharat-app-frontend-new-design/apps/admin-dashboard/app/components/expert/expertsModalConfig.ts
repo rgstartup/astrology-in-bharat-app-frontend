@@ -26,7 +26,7 @@ export const getProfileModalProps = (expert: Expert) => {
   const specialization = expert.specialization || profile?.specialization || "Expert Astrologer";
   const experience = expert.experience ?? profile?.experience ?? 0;
   const rating = expert.rating ?? profile?.rating ?? "0.0";
-  const totalConsultations = expert.consultationCount ?? expert.totalConsultations ?? profile?.totalConsultations ?? "0";
+  const totalConsultations = expert.consultationCount ?? expert.totalConsultations ?? profile?.totalConsultations ?? 0;
   const totalEarnings = expert.totalEarnings ?? profile?.totalEarnings ?? 0;
   const kycStatus = expert.kyc_details?.status || expert.kycStatus || profile?.kycStatus || "Pending";
   const phone = expert.phone;
@@ -72,6 +72,11 @@ export const getProfileModalProps = (expert: Expert) => {
       value: documents.filter((d: any) => d.category === 'aadhar').map((d: any) => ({ url: d.url, side: d.side }))
     },
     {
+      label: "Certificates",
+      isComplete: expert.certificates && expert.certificates.length > 0,
+      value: expert.certificates?.map((url: string) => ({ url }))
+    },
+    {
       label: "PAN Card (KYC)",
       isComplete: documents.some((d: any) => d.category === 'pan' && d.side === 'front') &&
         documents.some((d: any) => d.category === 'pan' && d.side === 'back'),
@@ -101,9 +106,9 @@ export const getProfileModalProps = (expert: Expert) => {
     ],
     stats: [
       { icon: StarIcon, value: rating, label: "Rating", bgColor: "bg-yellow-50", iconColor: "text-yellow-600" },
-      { icon: BriefcaseIcon, value: totalConsultations, label: "Consultations", bgColor: "bg-blue-50", iconColor: "text-blue-600" },
+      { icon: BriefcaseIcon, value: String(totalConsultations), label: "Consultations", bgColor: "bg-blue-50", iconColor: "text-blue-600" },
       { icon: AwardIcon, value: `${experience}y Exp`, label: "Experience", bgColor: "bg-purple-50", iconColor: "text-purple-600" },
-      { icon: DollarSignIcon, value: `₹${((totalEarnings || 0) / 1000).toFixed(1)}k`, label: "Total Earnings", bgColor: "bg-green-50", iconColor: "text-green-600" },
+      { icon: DollarSignIcon, value: totalEarnings >= 1000 ? `₹${(totalEarnings / 1000).toFixed(1)}k` : `₹${totalEarnings}`, label: "Total Earnings", bgColor: "bg-green-50", iconColor: "text-green-600" },
     ],
     details: [
       { icon: MailIcon, label: "Email", value: email },

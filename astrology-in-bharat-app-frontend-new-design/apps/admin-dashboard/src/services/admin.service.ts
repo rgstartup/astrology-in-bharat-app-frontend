@@ -10,7 +10,7 @@ export const getUserStats = async () => {
   return res.data;
 };
 
-export const getExperts = async (params?: { page?: number; limit?: number; search?: string }) => {
+export const getExperts = async (params?: { page?: number; limit?: number; search?: string; status?: string }) => {
   const res = await api.get("/admin/experts", { params });
   return res.data;
 };
@@ -24,8 +24,24 @@ export const getExpertById = async (id: number) => {
   const res = await api.get(`/admin/experts/${id}`);
   return res.data;
 };
+
+export const updateExpertStatus = async (id: number, data: { status: string; reason?: string }) => {
+  const res = await api.patch(`/admin/experts/${id}/status`, data);
+  return res.data;
+};
 export const toggleUserBlock = async (id: number, isBlocked: boolean) => {
   const res = await api.patch(`/admin/users/${id}/block`, { isBlocked });
   return res.data;
 };
+
+export const getDashboardStats = async () => {
+  const res = await api.get("/admin/dashboard/stats");
+  return res.data;
+};
+
+export const getUserGrowthStats = async (days: number) => {
+  const res = await api.get("/admin/analytics/user-growth", { params: { days } });
+  return res.data;
+};
+
 

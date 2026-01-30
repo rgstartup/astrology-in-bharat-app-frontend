@@ -1,29 +1,181 @@
 "use client";
-
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useCart } from "@packages/ui/src/context/CartContext";
+import { getClientProfile } from "@/libs/api-profile";
+import { toast } from "react-toastify";
+import { loadRazorpay } from "@/libs/razorpay";
+import apiClient from "@/libs/api-profile";
+import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 
 const CheckoutContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { cartItems, cartTotal } = useCart();
+  const { clientUser } = useClientAuth();
+  const [isProcessing, setIsProcessing] = useState(false);
 
+  const isOrder = searchParams.get("type") === "order";
   const astrologerName = searchParams.get("name") || "Astrologer";
   const date = searchParams.get("date") || "";
   const time = searchParams.get("time") || "";
   const duration = searchParams.get("duration") || "15";
-  const total = searchParams.get("total") || "300";
+  const total = isOrder ? cartTotal : (parseInt(searchParams.get("total") || "300"));
 
   const [paymentMethod, setPaymentMethod] = useState("upi");
 
-  const handlePayment = () => {
-    // Mock payment processing
-    setTimeout(() => {
-      // Redirect to chat with astrologer info
-      const params = new URLSearchParams({
-        name: astrologerName,
+  // Shipping Address State
+  const [address, setAddress] = useState({
+    line1: "",
+    line2: "",
+    city: "",
+    state: "",
+    country: "India",
+    zipCode: ""
+  });
+
+  const [loadingProfile, setLoadingProfile] = useState(false);
+
+  // Fetch address from profile on mount
+  useEffect(() => {
+    const fetchProfileAddress = async () => {
+      try {
+        setLoadingProfile(true);
+        const profile = await getClientProfile();
+        if (profile && profile.addresses && profile.addresses.length > 0) {
+          const defaultAddr = profile.addresses[0];
+          setAddress({
+            line1: defaultAddr.line1 || "",
+            line2: defaultAddr.line2 || "",
+            city: defaultAddr.city || "",
+            state: defaultAddr.state || "",
+            country: defaultAddr.country || "India",
+            zipCode: defaultAddr.zipCode || ""
+          });
+          console.log("📍 Auto-filled address from profile:", defaultAddr);
+        }
+      } catch (err) {
+        console.error("Failed to load profile for address:", err);
+      } finally {
+        setLoadingProfile(false);
+      }
+    };
+
+    fetchProfileAddress();
+  }, []);
+
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setAddress(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handlePayment = async () => {
+    // Basic validation for shipping address if it's a product order
+    if (isOrder) {
+      if (!address.line1 || !address.city || !address.state || !address.zipCode) {
+        toast.error("Please fill in all required shipping address fields");
+        return;
+      }
+    }
+
+    setIsProcessing(true);
+    try {
+      // 1. Load Razorpay Script
+      const isLoaded = await loadRazorpay();
+      if (!isLoaded) {
+        toast.error("Razorpay SDK failed to load. Are you online?");
+        return;
+      }
+
+      // 2. Pre-create Order on Backend (if Product Order)
+      let dbOrderId = null;
+      if (isOrder) {
+        try {
+          const createOrderRes = await apiClient.post("/order", {
+            shippingAddress: address
+          });
+          dbOrderId = createOrderRes.data.id;
+          console.log("✅ Order created in DB:", dbOrderId);
+        } catch (error: any) {
+          console.error("Failed to create order:", error);
+          toast.error(error.response?.data?.message || "Failed to create order. Please try again.");
+          setIsProcessing(false);
+          return;
+        }
+      }
+
+      // 3. Initiate Payment
+      const orderRes = await apiClient.post("/payment/orders/create", {
+        amount: total,
+        type: isOrder ? 'product' : 'consultation',
+        notes: {
+          astrologerName,
+          isOrder,
+          orderId: dbOrderId // Link razorpay order to internal DB order
+        }
       });
-      router.push(`/chat?${params.toString()}`);
-    }, 1500);
+
+      const { id: order_id, amount, currency, key_id } = orderRes.data;
+
+      // 3. Open Razorpay Modal
+      const options = {
+        key: key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: amount,
+        currency: currency,
+        name: "Astrology in Bharat",
+        description: isOrder ? "Product Purchase" : `Consultation with ${astrologerName}`,
+        order_id: order_id,
+        handler: async (response: any) => {
+          try {
+            // 4. Verify Payment on Backend
+            const verifyRes = await apiClient.post("/payment/orders/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              shippingAddress: isOrder ? address : undefined
+            });
+
+            if (verifyRes.data.success) {
+              toast.success(isOrder ? "Order placed successfully!" : "Payment successful!");
+
+              if (isOrder) {
+                router.push("/profile?tab=orders");
+              } else {
+                const params = new URLSearchParams({ name: astrologerName });
+                router.push(`/chat?${params.toString()}`);
+              }
+            } else {
+              toast.error("Payment verification failed!");
+            }
+          } catch (err: any) {
+            console.error("Verification error:", err);
+            toast.error("Error verifying payment.");
+          }
+        },
+        prefill: {
+          name: clientUser?.name || "",
+          email: clientUser?.email || "",
+          contact: "" // Could get from profile if needed
+        },
+        theme: {
+          color: "#fd6410",
+        },
+        modal: {
+          ondismiss: () => {
+            setIsProcessing(false);
+          }
+        }
+      };
+
+      const rzp1 = new (window as any).Razorpay(options);
+      rzp1.open();
+
+    } catch (err: any) {
+      console.error("Payment error:", err);
+      toast.error(err.response?.data?.message || "Something went wrong with the payment.");
+    } finally {
+      // Don't set isProcessing false here if modal is open, handled in ondismiss or handler
+    }
   };
 
   return (
@@ -49,9 +201,90 @@ const CheckoutContent = () => {
         <div className="container">
           <div className="row justify-content-center">
             {/* Order Summary */}
-            <div className="col-lg-5 mb-4">
+            <div className="col-lg-5 mb-4 d-flex flex-column gap-4">
+              {/* Shipping Address - Only for Products */}
+              {isOrder && (
+                <div className="leftcard border-0 shadow-lg" style={{ borderRadius: "15px" }}>
+                  <div className="card-body p-4">
+                    <h5 className="mb-4 fw-bold" style={{ color: "#732882" }}>
+                      Shipping Address
+                      {loadingProfile && <span className="spinner-border spinner-border-sm ms-2" role="status"></span>}
+                    </h5>
+
+                    <div className="row g-3">
+                      <div className="col-12">
+                        <label className="form-label small fw-bold">Address Line 1*</label>
+                        <input
+                          type="text"
+                          name="line1"
+                          className="form-control"
+                          placeholder="House No., Street Name"
+                          value={address.line1}
+                          onChange={handleAddressChange}
+                        />
+                      </div>
+                      <div className="col-12">
+                        <label className="form-label small fw-bold">Address Line 2</label>
+                        <input
+                          type="text"
+                          name="line2"
+                          className="form-control"
+                          placeholder="Apartment, Landmark"
+                          value={address.line2}
+                          onChange={handleAddressChange}
+                        />
+                      </div>
+                      <div className="col-6">
+                        <label className="form-label small fw-bold">City*</label>
+                        <input
+                          type="text"
+                          name="city"
+                          className="form-control"
+                          value={address.city}
+                          onChange={handleAddressChange}
+                        />
+                      </div>
+                      <div className="col-6">
+                        <label className="form-label small fw-bold">State*</label>
+                        <input
+                          type="text"
+                          name="state"
+                          className="form-control"
+                          value={address.state}
+                          onChange={handleAddressChange}
+                        />
+                      </div>
+                      <div className="col-6">
+                        <label className="form-label small fw-bold">Pincode*</label>
+                        <input
+                          type="text"
+                          name="zipCode"
+                          className="form-control"
+                          value={address.zipCode}
+                          onChange={handleAddressChange}
+                        />
+                      </div>
+                      <div className="col-6">
+                        <label className="form-label small fw-bold">Country</label>
+                        <input
+                          type="text"
+                          name="country"
+                          className="form-control"
+                          value={address.country}
+                          disabled
+                        />
+                      </div>
+                    </div>
+                    <small className="text-muted mt-3 d-block">
+                      <i className="fa-solid fa-truck-fast me-1"></i>
+                      Your order will be delivered to this address.
+                    </small>
+                  </div>
+                </div>
+              )}
+
               <div
-                className="leftcard border-0 shadow-lg h-100"
+                className="leftcard border-0 shadow-lg"
                 style={{ borderRadius: "15px" }}
               >
                 <div className="card-body p-4">
@@ -59,41 +292,59 @@ const CheckoutContent = () => {
                     Order Summary
                   </h5>
 
-                  <div className="d-flex align-items-center mb-4">
-                    <div
-                      className="bg-light rounded-circle d-flex align-items-center justify-content-center"
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        border: "2px solid #daa23e",
-                      }}
-                    >
-                      <i
-                        className="fa-solid fa-user-astronaut"
-                        style={{ fontSize: "24px", color: "#732882" }}
-                      ></i>
+                  {isOrder ? (
+                    /* Product Summary */
+                    <div className="mb-3">
+                      {cartItems.map((item, idx) => (
+                        <div key={idx} className="d-flex justify-content-between mb-2 small">
+                          <span>{item.product?.name} x {item.quantity}</span>
+                          <span className="fw-semibold">₹{(item.product?.sale_price || item.product?.price || 0) * item.quantity}</span>
+                        </div>
+                      ))}
+                      <hr />
                     </div>
-                    <div className="ms-3">
-                      <h6 className="mb-1 fw-bold">{astrologerName}</h6>
-                      <small className="text-muted">
-                        Personal Consultation
-                      </small>
+                  ) : (
+                    /* Consultation Summary */
+                    <div className="d-flex align-items-center mb-4">
+                      <div
+                        className="bg-light rounded-circle d-flex align-items-center justify-content-center"
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          border: "2px solid #daa23e",
+                        }}
+                      >
+                        <i
+                          className="fa-solid fa-user-astronaut"
+                          style={{ fontSize: "24px", color: "#732882" }}
+                        ></i>
+                      </div>
+                      <div className="ms-3">
+                        <h6 className="mb-1 fw-bold">{astrologerName}</h6>
+                        <small className="text-muted">
+                          Personal Consultation
+                        </small>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <ul className="list-group list-group-flush mb-3">
-                    <li className="list-group-item d-flex justify-content-between bg-transparent px-0">
-                      <span>Date</span>
-                      <span className="fw-semibold">{date}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between bg-transparent px-0">
-                      <span>Time</span>
-                      <span className="fw-semibold">{time}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between bg-transparent px-0">
-                      <span>Duration</span>
-                      <span className="fw-semibold">{duration} Mins</span>
-                    </li>
+                    {!isOrder && (
+                      <>
+                        <li className="list-group-item d-flex justify-content-between bg-transparent px-0">
+                          <span>Date</span>
+                          <span className="fw-semibold">{date}</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between bg-transparent px-0">
+                          <span>Time</span>
+                          <span className="fw-semibold">{time}</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between bg-transparent px-0">
+                          <span>Duration</span>
+                          <span className="fw-semibold">{duration} Mins</span>
+                        </li>
+                      </>
+                    )}
                     <li
                       className="list-group-item d-flex justify-content-between bg-transparent px-0 fw-bold fs-5"
                       style={{ color: "#732882" }}
@@ -109,7 +360,7 @@ const CheckoutContent = () => {
                     style={{ fontSize: "0.85rem" }}
                   >
                     <i className="fa-solid fa-circle-info me-2"></i>
-                    Session will start automatically after payment.
+                    {isOrder ? "Order confirmation will be sent to your email." : "Session will start automatically after payment."}
                   </div>
                 </div>
               </div>
@@ -216,14 +467,19 @@ const CheckoutContent = () => {
 
                   <button
                     onClick={handlePayment}
+                    disabled={isProcessing}
                     className="btn w-100 mt-5 text-white fw-bold py-3"
                     style={{
                       background: "linear-gradient(45deg, #732882, #8a3399)",
                       borderRadius: "50px",
                       boxShadow: "0 4px 15px rgba(115, 40, 130, 0.3)",
+                      opacity: isProcessing ? 0.7 : 1
                     }}
                   >
-                    Pay ₹{total} & Start Session
+                    {isProcessing ? (
+                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                    ) : null}
+                    {isOrder ? `Pay ₹${total} & Place Order` : `Pay ₹${total} & Start Session`}
                   </button>
 
                   <div className="text-center mt-3">

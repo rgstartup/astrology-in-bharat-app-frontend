@@ -675,15 +675,46 @@ const ProfileManagement = () => {
         </p>
       </div>
 
-      {!profile.kycCompleted && (
-        <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-start sm:items-center space-x-3">
-          {/* @ts-ignore */}
-          <AlertTriangle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5 sm:mt-0" />
-          <p className="text-orange-800 font-medium text-sm sm:text-base">
-            Your account is currently inactive and not visible to users. Please complete your KYC verification to activate your profile.
-          </p>
-        </div>
-      )}
+      {(() => {
+        const kycStatus = (authUser?.kycStatus || authUser?.status || "").toString().toLowerCase();
+        const reason = authUser?.rejectionReason || authUser?.profile_expert?.rejectionReason || authUser?.kyc_details?.rejectionReason;
+
+        const isApproved = kycStatus === 'active' || kycStatus === 'approved';
+        const isRejected = kycStatus === 'rejected' || (kycStatus === 'pending' && !!reason);
+
+        if (isApproved) return null;
+
+        if (isRejected) {
+          const displayReason = reason || "Please verify your documents and profile information and try again.";
+
+          return (
+            <div className="mb-6 bg-rose-50 border-2 border-rose-100 rounded-2xl p-6 flex items-start gap-4 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-rose-500 flex items-center justify-center text-white shrink-0">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-lg font-bold text-rose-900 mb-1">Update Required: Profile Rejected</h4>
+                <p className="text-sm text-rose-700 leading-relaxed italic">
+                  " {displayReason} "
+                </p>
+                <p className="mt-3 text-xs font-semibold text-rose-500 uppercase tracking-wider bg-white/50 w-fit px-3 py-1 rounded-full border border-rose-100">
+                  Please correct these issues and we'll re-review your profile
+                </p>
+              </div>
+            </div>
+          );
+        }
+
+        // Default "Pending" or other non-approved state
+        return (
+          <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-start sm:items-center space-x-3">
+            <AlertTriangle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5 sm:mt-0" />
+            <p className="text-orange-800 font-medium text-sm sm:text-base">
+              Your account is currently inactive and not visible to users. Please complete your profile and KYC verification for review.
+            </p>
+          </div>
+        );
+      })()}
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
         <PersonalInfo

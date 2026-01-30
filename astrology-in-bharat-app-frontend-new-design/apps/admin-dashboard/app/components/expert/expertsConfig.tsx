@@ -1,4 +1,4 @@
-import { UserCheck, Clock, Award, Star } from "lucide-react";
+import { UserCheck, Clock } from "lucide-react";
 import type { Expert } from "@/app/components/expert/expert";
 
 export const expertsData: Expert[] = [
@@ -29,7 +29,6 @@ export interface ExpertStats {
   totalExperts: number;
   activeExperts: number;
   pendingExperts: number;
-  verifiedExperts?: number;
 }
 
 export const getStatsConfig = (data: Expert[] | ExpertStats) => {
@@ -49,7 +48,6 @@ export const getStatsConfig = (data: Expert[] | ExpertStats) => {
       totalExperts: data.totalExperts || 0,
       activeExperts: data.activeExperts || 0,
       pendingExperts: data.pendingExperts || 0,
-      verifiedExperts: (data as any).verifiedExperts || 0,
     };
   }
 
@@ -76,14 +74,6 @@ export const getStatsConfig = (data: Expert[] | ExpertStats) => {
       iconColor: "text-yellow-600",
       iconBgColor: "bg-yellow-100",
       valueColor: "text-yellow-600",
-    },
-    {
-      title: "KYC Verified",
-      value: stats.verifiedExperts || 0,
-      icon: Award,
-      iconColor: "text-purple-600",
-      iconBgColor: "bg-purple-100",
-      valueColor: "text-purple-600",
     },
   ];
 };

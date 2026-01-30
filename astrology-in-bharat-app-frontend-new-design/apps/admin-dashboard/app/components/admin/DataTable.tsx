@@ -26,6 +26,7 @@ interface DataTableProps<T> {
   manualPagination?: boolean;
   totalItems?: number;
   onPageChange?: (page: number) => void;
+  filterElement?: React.ReactNode;
 }
 
 const TableRow = memo(function TableRow<T extends { id: number | string }>({
@@ -118,6 +119,7 @@ export function DataTable<T extends { id: number | string }>({
   manualPagination = false,
   totalItems = 0,
   onPageChange,
+  filterElement,
 }: DataTableProps<T>) {
   // State for pagination and search
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -219,15 +221,24 @@ export function DataTable<T extends { id: number | string }>({
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
 
-            {/* Search Input */}
-            <SearchInput
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="Search..."
-              className="w-full md:w-64"
-              size="md"
-              aria-label={`Search ${title.toLowerCase()}`}
-            />
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+              {/* Custom Filter Element */}
+              {filterElement && (
+                <div className="min-w-[150px]">
+                  {filterElement}
+                </div>
+              )}
+
+              {/* Search Input */}
+              <SearchInput
+                value={searchTerm}
+                onChange={handleSearchChange}
+                placeholder="Search..."
+                className="w-full md:w-64"
+                size="md"
+                aria-label={`Search ${title.toLowerCase()}`}
+              />
+            </div>
           </div>
         </header>
 
