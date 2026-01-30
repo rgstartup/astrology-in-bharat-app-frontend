@@ -109,6 +109,13 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
         time: "Just now",
         type: 'error'
       });
+    } else if (status === 'active' || status === 'approved') {
+      initial.unshift({
+        id: Date.now(),
+        message: "✅ Account Approved: Your profile is now live!",
+        time: "Active",
+        type: 'success'
+      });
     }
 
     setNotifications(initial);

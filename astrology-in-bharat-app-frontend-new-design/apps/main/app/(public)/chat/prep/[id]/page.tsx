@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 
 const Image = NextImage as any;
-const { ChevronLeft, MessageSquare, User, Calendar, MapPin } = LucideIcons as any;
+const { ChevronLeft, MessageSquare, User, Calendar, MapPin, UserX } = LucideIcons as any;
 
 interface AstrologerData {
     id: string | number;
@@ -60,9 +60,12 @@ export default function ConsultationPrep() {
                         rating: data.rating || 5,
                         is_available: data.is_available || false,
                     });
+                } else {
+                    setAstrologer(null);
                 }
             } catch (error) {
                 console.error("Failed to fetch astrologer for prep:", error);
+                setAstrologer(null);
             } finally {
                 setLoading(false);
             }
@@ -109,6 +112,24 @@ export default function ConsultationPrep() {
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fd6410]"></div>
+        </div>
+    );
+
+    if (!astrologer) return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center px-4">
+            <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6">
+                <UserX className="w-12 h-12 text-red-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Expert Not Found</h2>
+            <p className="text-gray-500 max-w-sm mb-8">
+                The astrologer you are looking for might be unavailable or does not exist.
+            </p>
+            <button
+                onClick={() => router.push("/")}
+                className="px-8 py-3 bg-[#fd6410] text-white rounded-full font-bold shadow-lg hover:bg-orange-600 transition-all"
+            >
+                Go to Home
+            </button>
         </div>
     );
 

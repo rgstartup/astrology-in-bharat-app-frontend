@@ -43,7 +43,7 @@ const CartPage: React.FC = () => {
   };
 
   const subtotal = cartTotal;
-  const shipping = subtotal > 1000 ? 0 : 50;
+  const shipping = 0;
   const tax = subtotal * 0.1;
   const grandTotal = subtotal + shipping + tax;
 
@@ -191,6 +191,7 @@ const CartPage: React.FC = () => {
                   variant="warning"
                   className="w-100 text-white fw-semibold py-2"
                   style={{ background: "#d9a03d", border: "none" }}
+                  onClick={() => router.push("/checkout?type=order")}
                 >
                   Proceed to Checkout{" "}
                   <i className="fas fa-arrow-right ms-2"></i>

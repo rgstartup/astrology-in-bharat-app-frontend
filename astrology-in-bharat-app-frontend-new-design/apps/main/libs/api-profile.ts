@@ -13,6 +13,9 @@ export interface ClientProfileData {
     preferences?: string;
     language_preference?: string;
     profile_picture?: string;
+    marital_status?: 'single' | 'married' | 'divorced' | 'widowed' | 'other';
+    occupation?: string;
+    about_me?: string;
     addresses?: AddressDto[];
 }
 

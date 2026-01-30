@@ -10,7 +10,7 @@ export const getUserStats = async () => {
   return res.data;
 };
 
-export const getExperts = async (params?: { page?: number; limit?: number; search?: string }) => {
+export const getExperts = async (params?: { page?: number; limit?: number; search?: string; status?: string }) => {
   const res = await api.get("/admin/experts", { params });
   return res.data;
 };

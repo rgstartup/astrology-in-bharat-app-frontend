@@ -119,23 +119,15 @@ const Page = () => {
 
       {/* KYC Rejection Alert */}
       {(() => {
-        const status = (
-          user?.status ||
-          user?.kycStatus ||
-          user?.kyc_status ||
-          user?.kyc_details?.status ||
-          user?.profile_expert?.kycStatus ||
-          ""
-        ).toLowerCase();
+        const kycStatus = (user?.kycStatus || user?.status || "").toString().toLowerCase();
+        const reason = user?.rejectionReason || user?.profile_expert?.rejectionReason || user?.kyc_details?.rejectionReason;
 
-        const isRejected = status === 'rejected';
+        // Backend logic: Status remains 'pending' but rejectionReason is filled when rejected
+        const isRejected = kycStatus === 'rejected' || (kycStatus === 'pending' && !!reason);
 
         if (!isRejected) return null;
 
-        const reason = user?.rejectionReason ||
-          user?.profile_expert?.rejectionReason ||
-          user?.kyc_details?.rejectionReason ||
-          "Please verify your documents and profile information and try again.";
+        const displayReason = reason || "Please verify your documents and profile information and try again.";
 
         return (
           <div className="bg-rose-50 border-2 border-rose-100 rounded-3xl p-6 flex items-start gap-5 animate-in slide-in-from-top-4 duration-500 shadow-sm mb-8">
@@ -145,7 +137,7 @@ const Page = () => {
             <div className="flex-1">
               <h4 className="text-lg font-black text-rose-900 mb-1">Expert Profile Rejected</h4>
               <p className="text-sm font-bold text-rose-700/80 leading-relaxed mb-3 italic">
-                " {reason} "
+                " {displayReason} "
               </p>
               <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-rose-500 bg-white/50 w-fit px-3 py-1 rounded-full border border-rose-100">
                 <Info className="w-3 h-3" />
@@ -157,6 +149,38 @@ const Page = () => {
               className="px-6 py-3 rounded-2xl bg-white border border-rose-200 text-rose-600 font-bold text-xs uppercase tracking-widest hover:bg-rose-100 transition-all shadow-sm"
             >
               Edit Profile
+            </button>
+          </div>
+        );
+      })()}
+
+      {/* Account Approved Success Banner */}
+      {(() => {
+        const kycStatus = (user?.kycStatus || user?.status || "").toString().toLowerCase();
+        const isApproved = kycStatus === 'active' || kycStatus === 'approved';
+
+        if (!isApproved) return null;
+
+        return (
+          <div className="bg-emerald-50 border-2 border-emerald-100 rounded-3xl p-6 flex items-start gap-5 animate-in slide-in-from-top-4 duration-500 shadow-sm mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shrink-0 shadow-lg shadow-emerald-500/20">
+              <CheckCircle className="w-6 h-6" />
+            </div>
+            <div className="flex-1">
+              <h4 className="text-lg font-black text-emerald-900 mb-1">Account Fully Verified!</h4>
+              <p className="text-sm font-bold text-emerald-700/80 leading-relaxed mb-3">
+                Congratulations {user?.name}! Your expert profile is now active and visible to all users. You can now start receiving consultation requests.
+              </p>
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-white/50 w-fit px-3 py-1 rounded-full border border-emerald-100">
+                <CheckCircle className="w-3 h-3" />
+                <span>Live & Visible to Users</span>
+              </div>
+            </div>
+            <button
+              onClick={() => window.location.href = '/profile'}
+              className="px-6 py-3 rounded-2xl bg-white border border-emerald-200 text-emerald-600 font-bold text-xs uppercase tracking-widest hover:bg-emerald-100 transition-all shadow-sm"
+            >
+              View Profile
             </button>
           </div>
         );
