@@ -8,6 +8,15 @@ import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
 const WishlistGrid: React.FC = () => {
     const { wishlistItems, expertWishlistItems, isLoading } = useWishlist();
 
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+    const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+
+    const getImageUrl = (path?: string) => {
+        if (!path) return "/images/astro-img1.png";
+        if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
+        return `${cleanApiUrl}/uploads/${path}`;
+    };
+
     if (isLoading) {
         return (
             <div className="text-center py-5">
@@ -65,20 +74,32 @@ const WishlistGrid: React.FC = () => {
                     <div className="row g-4">
                         {expertWishlistItems.map((item) => {
                             const expert = item.expert;
+
+                            // Handling response where user data might be flat on expert or nested
+                            const name = expert?.name || (expert as any)?.user?.name || "Astrologer";
+                            const avatar = expert?.avatar || (expert as any)?.user?.avatar;
+
                             return (
                                 <div key={item.id} className="col-md-6 col-lg-4">
                                     <AstrologerCard
                                         astrologerData={{
                                             id: expert?.id || item.expertId,
-                                            image: expert?.user?.avatar || "/images/astro-img1.png",
-                                            name: expert?.user?.name || "Astrologer",
-                                            expertise: expert?.specialization || "Vedic Astrology",
-                                            experience: expert?.experience_in_years || 0,
-                                            language: "Hindi, English", // Fallback
-                                            price: 0, // Fallback
-                                            video: "",
-                                            ratings: expert?.rating || 5,
-                                            is_available: true
+                                            userId: (expert as any)?.userId || expert?.id,
+                                            image: getImageUrl(avatar),
+                                            name: name,
+                                            expertise: (expert as any)?.specialization || (expert as any)?.expertise || "Vedic Astrology",
+                                            experience: (expert as any)?.experience_in_years || (expert as any)?.experience || 5,
+                                            language: Array.isArray((expert as any)?.languages)
+                                                ? (expert as any).languages.join(", ")
+                                                : ((expert as any)?.language || "Hindi, English"),
+                                            price: (expert as any)?.price || 0,
+                                            chat_price: (expert as any)?.chat_price,
+                                            call_price: (expert as any)?.call_price,
+                                            video_call_price: (expert as any)?.video_call_price,
+                                            video: (expert as any)?.video || "",
+                                            ratings: (expert as any)?.rating || (expert as any)?.ratings || 5,
+                                            is_available: (expert as any)?.is_available ?? true,
+                                            total_likes: (expert as any)?.total_likes || 0
                                         }}
                                     />
                                 </div>

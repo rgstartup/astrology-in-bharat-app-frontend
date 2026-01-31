@@ -155,20 +155,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                 </div>
 
                 {/* 🔘 Action Buttons */}
-                <div className="grid grid-cols-5 gap-3 mt-1">
-                    <button
-                        onClick={handleBuy}
-                        className="col-span-1 flex items-center justify-center border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors h-10"
-                    >
-                        <i className="fa-solid fa-bag-shopping"></i>
-                    </button>
+                <div className="flex gap-2 mt-2">
                     <button
                         onClick={handleBuy}
                         disabled={isAdding}
-                        className="col-span-4 bg-[#F95E09] hover:bg-[#D84E06] text-white font-semibold rounded-full shadow-[0_4px_20px_-2px_rgba(249,94,9,0.3)] hover:shadow-orange-500/40 transform active:scale-95 transition-all duration-200 h-10 flex items-center justify-center gap-2 text-sm disabled:opacity-70"
+                        className="flex-1 bg-white border border-[#F95E09] text-[#F95E09] hover:bg-orange-50 font-bold rounded-lg transition-all duration-200 h-10 flex items-center justify-center text-[13px] disabled:opacity-70"
                     >
-                        <span>{isAdding ? "Adding..." : "Add to Cart"}</span>
-                        {!isAdding && <i className="fa-solid fa-cart-plus"></i>}
+                        {isAdding ? "Adding..." : "Add to Cart"}
+                    </button>
+                    <button
+                        onClick={async (e) => {
+                            await handleBuy(e);
+                            router.push("/checkout");
+                        }}
+                        disabled={isAdding}
+                        className="flex-1 bg-[#F95E09] hover:bg-[#D84E06] text-white font-bold rounded-lg shadow-sm hover:shadow-md transform active:scale-95 transition-all duration-200 h-10 flex items-center justify-center text-[13px] disabled:opacity-70"
+                    >
+                        Buy Now
                     </button>
                 </div>
             </div>

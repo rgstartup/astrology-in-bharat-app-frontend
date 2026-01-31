@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PATHS } from "@repo/routes";
 import { toast } from "react-toastify";
@@ -61,8 +61,28 @@ const ProfilePage: React.FC = () => {
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [walletTransactions, setWalletTransactions] = useState<any[]>([]);
   const [loadingTransactions, setLoadingTransactions] = useState(false);
-  const [activeTab, setActiveTab] = useState("profile"); // State for active tab
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState("profile");
   const [walletView, setWalletView] = useState<'recharge' | 'history'>('recharge');
+
+  // Initialize tabs from localStorage on mount
+  useEffect(() => {
+    const savedTab = localStorage.getItem("profileActiveTab");
+    if (savedTab) {
+      setActiveTab(savedTab);
+    }
+    const savedView = localStorage.getItem("profileWalletView");
+    if (savedView === 'history' || savedView === 'recharge') {
+      setWalletView(savedView as any);
+    }
+  }, []);
+
+  // Sync activeTab and walletView to localStorage
+  useEffect(() => {
+    localStorage.setItem("profileActiveTab", activeTab);
+    localStorage.setItem("profileWalletView", walletView);
+  }, [activeTab, walletView]);
+
   const [walletPurpose, setWalletPurpose] = useState<string | undefined>(undefined);
 
   // Order collapse state
@@ -498,94 +518,95 @@ const ProfilePage: React.FC = () => {
         <div className="row g-4">
           {/* Sidebar Column */}
           <div className="col-lg-3">
-
-            {/* Navigation Menu */}
-            <div className="card border-0  rounded-4 overflow-hidden">
-              <div className="card border-0  rounded-4 mb-4 text-center p-3">
-                <div className="card-body">
-                  <div className="position-relative d-inline-block mb-3">
-                    <div style={{
-                      width: "100px",
-                      height: "100px",
-                      borderRadius: "50%",
-                      overflow: "hidden",
-                      border: "4px solid #fff",
-                      boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-                      margin: "0 auto"
-                    }}>
-                      {savingSections.personal ? (
-                        <div className="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
-                          <div className="spinner-border spinner-border-sm text-primary" role="status"></div>
-                        </div>
-                      ) : (
-                        <img
-                          src={imagePreview}
-                          alt="Profile"
-                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                        />
-                      )}
-                    </div>
-                    <label
-                      htmlFor="profile-upload"
-                      className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
-                      style={{
-                        width: "35px",
-                        height: "35px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        cursor: "pointer",
-                        color: "#fd6410",
-                        border: "2px solid #fff",
-                        transition: "all 0.3s ease"
-                      }}
-                      title="Update Profile Picture"
-                    >
-                      <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
-                      <input
-                        id="profile-upload"
-                        type="file"
-                        className="d-none"
-                        accept="image/*"
-                        onChange={(e) => {
-                          console.log("📁 File input onChange triggered!");
-                          if (e.target.files && e.target.files[0]) {
-                            handleImageChange(e.target.files[0]);
-                          }
+            <div className="sticky top-24">
+              {/* Navigation Menu */}
+              <div className="card border-0 rounded-4 overflow-hidden">
+                <div className="card border-0  rounded-4 mb-4 text-center p-3">
+                  <div className="card-body">
+                    <div className="position-relative d-inline-block mb-3">
+                      <div style={{
+                        width: "100px",
+                        height: "100px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                        border: "4px solid #fff",
+                        boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+                        margin: "0 auto"
+                      }}>
+                        {savingSections.personal ? (
+                          <div className="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                            <div className="spinner-border spinner-border-sm text-primary" role="status"></div>
+                          </div>
+                        ) : (
+                          <img
+                            src={imagePreview}
+                            alt="Profile"
+                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          />
+                        )}
+                      </div>
+                      <label
+                        htmlFor="profile-upload"
+                        className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
+                        style={{
+                          width: "35px",
+                          height: "35px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          color: "#fd6410",
+                          border: "2px solid #fff",
+                          transition: "all 0.3s ease"
                         }}
-                      />
-                    </label>
+                        title="Update Profile Picture"
+                      >
+                        <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
+                        <input
+                          id="profile-upload"
+                          type="file"
+                          className="d-none"
+                          accept="image/*"
+                          onChange={(e) => {
+                            console.log("📁 File input onChange triggered!");
+                            if (e.target.files && e.target.files[0]) {
+                              handleImageChange(e.target.files[0]);
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+
+                    <h5 className="fw-bold mb-1">{profileData.username || "User Name"} <i className="fa-solid fa-check-circle text-primary small"></i></h5>
+
+
+
                   </div>
-
-                  <h5 className="fw-bold mb-1">{profileData.username || "User Name"} <i className="fa-solid fa-check-circle text-primary small"></i></h5>
-
-
-
                 </div>
-              </div>
 
 
 
-              <div className=" bg-white border-0 pt-3 px-3">
-                <small className="text-uppercase  fw-bold" style={{ fontSize: "11px", letterSpacing: "1px", color: "black" }}>ACCOUNT MENU</small>
-              </div>
-              <div className=" p-2">
-                {menuItems.map((item, index) => (
-                  <a
-                    key={index}
-                    href="#"
-                    className={` border-0 rounded-3 d-flex align-items-center px-3 py-2 mb-1 transition-all  text-black
+                <div className=" bg-white border-0 pt-3 px-3">
+                  <small className="text-uppercase  fw-bold" style={{ fontSize: "11px", letterSpacing: "1px", color: "black" }}>ACCOUNT MENU</small>
+                </div>
+                <div className=" p-2">
+                  {menuItems.map((item, index) => (
+                    <a
+                      key={index}
+                      href="#"
+                      className={` border-0 rounded-3 d-flex align-items-center px-3 py-2 mb-1 transition-all  text-black
                         hover:bg-orange-light hover:text-black hover:font-bold ${activeTab === item.id ? 'font-bold' : 'text-gray-500'}`}
-                    style={activeTab === item.id ? { backgroundColor: "#fd6410", color: "white" } : {}}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setActiveTab(item.id);
-                    }}
-                  >
-                    <i className={`${item.icon} me-3`} style={{ width: "20px", color: activeTab === item.id ? "#fff" : "inherit" }}></i>
-                    {item.label}
-                  </a>
-                ))}
+                      style={activeTab === item.id ? { backgroundColor: "#fd6410", color: "white" } : {}}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setActiveTab(item.id);
+                      }}
+                    >
+                      <i className={`${item.icon} me-3`} style={{ width: "20px", color: activeTab === item.id ? "#fff" : "inherit" }}></i>
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -1281,58 +1302,7 @@ const ProfilePage: React.FC = () => {
                         </div>
                       )}
 
-                      {/* Features */}
-                      <div className="mt-8 pt-8 border-t border-gray-200">
-                        <div className="grid md:grid-cols-3 gap-6">
-                          <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
-                            <div className="flex items-center justify-center w-12 h-12 bg-green-50 rounded-xl mr-4">
-                              <i className="fa-solid fa-shield-check text-green-500 text-xl"></i>
-                            </div>
-                            <div>
-                              <h6 className="font-bold text-gray-800 mb-1">Secure Payments</h6>
-                              <p className="text-gray-600 text-sm">Bank-level security with encryption</p>
-                            </div>
-                          </div>
 
-                          <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
-                            <div className="flex items-center justify-center w-12 h-12 bg-amber-50 rounded-xl mr-4">
-                              <i className="fa-solid fa-zap text-amber-500 text-xl"></i>
-                            </div>
-                            <div>
-                              <h6 className="font-bold text-gray-800 mb-1">Instant Credit</h6>
-                              <p className="text-gray-600 text-sm">Balance updates in real-time</p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center p-4 rounded-xl hover:bg-gray-50 transition-colors">
-                            <div className="flex items-center justify-center w-12 h-12 bg-blue-50 rounded-xl mr-4">
-                              <i className="fa-solid fa-headset text-blue-500 text-xl"></i>
-                            </div>
-                            <div>
-                              <h6 className="font-bold text-gray-800 mb-1">24/7 Support</h6>
-                              <p className="text-gray-600 text-sm">Always here to help you</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Additional info */}
-                        <div className="mt-6 pt-6 border-t border-gray-100">
-                          <div className="flex flex-wrap items-center justify-center gap-6 text-gray-500 text-sm">
-                            <div className="flex items-center">
-                              <i className="fa-solid fa-lock text-green-500 mr-2"></i>
-                              <span>256-bit SSL Encryption</span>
-                            </div>
-                            <div className="flex items-center">
-                              <i className="fa-solid fa-credit-card text-blue-500 mr-2"></i>
-                              <span>Multiple Payment Options</span>
-                            </div>
-                            <div className="flex items-center">
-                              <i className="fa-solid fa-clock text-purple-500 mr-2"></i>
-                              <span>Instant Processing</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   ) : (
                     <div className="mt-0 pt-0">

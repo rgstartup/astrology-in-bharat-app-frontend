@@ -111,6 +111,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showFullBalance, setShowFullBalance] = useState(false);
 
   // Use the authentication context
   const {
@@ -291,6 +292,40 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
               <div className="right-part-top">
                 <div className="row align-items-center list-top-bar-mobile">
                   <div className="col-4 mobile-space">
+                    {isAuthenticated && (
+                      <div
+                        onMouseEnter={() => setShowFullBalance(true)}
+                        onMouseLeave={() => setShowFullBalance(false)}
+                        className="d-flex align-items-center gap-2 px-3 py-2 rounded-xl transition-all hover:scale-105 active:scale-95 cursor-help whitespace-nowrap"
+                        style={{
+                          background: 'linear-gradient(145deg, #fd6410, #ff8c42)',
+                          boxShadow: `
+                            0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+                            0 2px 4px -1px rgba(0, 0, 0, 0.2),
+                            inset 0 1px 1px rgba(255, 255, 255, 0.4),
+                            inset 0 -2px 1px rgba(0, 0, 0, 0.2)
+                          `,
+                          border: '1px solid #bf4d00',
+                          minWidth: '85px',
+                          justifyContent: 'center',
+                          position: 'relative',
+                          overflow: 'hidden'
+                        }}
+                      >
+                        {/* Subtle gloss effect */}
+                        <div className="position-absolute top-0 start-0 w-100 h-50 bg-white/10" style={{ pointerEvents: 'none' }}></div>
+
+                        <i className="fa-solid fa-coins text-white text-xs" style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))' }}></i>
+                        <span className="text-white font-black text-sm tracking-tight" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+                          ₹{showFullBalance
+                            ? clientBalance?.toLocaleString()
+                            : (clientBalance >= 1000
+                              ? `${(clientBalance / 1000).toFixed(clientBalance % 1000 === 0 ? 0 : 1)} k`
+                              : clientBalance)}
+                        </span>
+                      </div>
+                    )}
+                    {/* Language Dropdown Commented Out
                     <div
                       className={`account-dropdown language-dropdown-container w-100 ${showLanguageDropdown ? "show" : ""}`}
                     >
@@ -324,6 +359,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                         </a>
                       </div>
                     </div>
+                    */}
                   </div>
                   <div className="col-8 mobile-space">
                     <div className="d-flex gap-4 w-100 justify-content-end align-items-center">

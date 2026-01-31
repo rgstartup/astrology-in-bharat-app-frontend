@@ -21,12 +21,21 @@ export interface WishlistItem {
     expert?: {
         id: number;
         user: {
+            id: number;
             name: string;
             avatar?: string;
         };
         specialization: string;
         experience_in_years: number;
         rating: number;
+        languages?: string[];
+        price?: number;
+        chat_price?: number;
+        call_price?: number;
+        video_call_price?: number;
+        video?: string;
+        is_available?: boolean;
+        total_likes?: number;
     };
 }
 
