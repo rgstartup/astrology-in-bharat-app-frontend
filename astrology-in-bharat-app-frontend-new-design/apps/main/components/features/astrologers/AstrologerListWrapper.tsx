@@ -7,11 +7,25 @@ interface AstrologerListWrapperProps {
 }
 
 async function AstrologerListServer({ searchParams }: AstrologerListWrapperProps) {
-    // Fetch experts on the server using raw searchParams
+    // Filter searchParams to only include allowed expert query parameters
+    const allowedParams = [
+        'limit', 'offset', 'q', 'specializations', 'location',
+        'state', 'minRating', 'minExperience', 'languages',
+        'minPrice', 'maxPrice', 'sort', 'onlineOnly',
+        'service', 'online', 'rating'
+    ];
+
+    const filteredParams = Object.keys(searchParams)
+        .filter(key => allowedParams.includes(key))
+        .reduce((obj, key) => {
+            obj[key] = searchParams[key];
+            return obj;
+        }, {} as Record<string, any>);
+
     const response = await getExperts({
         limit: 20,
         offset: 0,
-        ...searchParams,
+        ...filteredParams,
     } as any);
     console.log("Server Side - Astrologer Data Init:", response.data);
 
