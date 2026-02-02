@@ -652,6 +652,14 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                         <li>
                           <Link
                             className="dropdown-item"
+                            href={PATHS.DAHEJ_CALCULATOR}
+                          >
+                            Dahej Calculator
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
                             href={PATHS.FLAMES_CALCULATOR}
                           >
                             Flames Calculator

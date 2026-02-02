@@ -41,5 +41,6 @@ export const PATHS = {
   BREAKUP_PATCHUP_CALCULATOR: "/calculator/breakup-patchup",
   WHO_LOVES_MORE_CALCULATOR: "/calculator/who-loves-more",
   COMPATIBILITY_BY_ZODIAC_CALCULATOR: "/calculator/compatibility-by-zodiac",
+  DAHEJ_CALCULATOR: "/calculator/dahej",
 
 } as const;
