@@ -32,7 +32,7 @@ const AstrologerSortModal: React.FC<AstrologerSortModalProps> = ({
         >
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content text-dark border-0 shadow-lg rounded-3">
-                    <div className="modal-header bg-gradient-to-r from-orange-50 to-white border-0 py-3 px-4">
+                    <div className="modal-header bg-linear-to-r from-orange-50 to-white border-0 py-3 px-4">
                         <h5 className="modal-title font-bold text-lg">
                             <i className="fa-solid fa-sort mr-2 text-[#fd6410]"></i>Sort By
                         </h5>

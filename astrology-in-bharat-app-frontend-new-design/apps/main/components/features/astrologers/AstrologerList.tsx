@@ -91,7 +91,7 @@ const mapExpert = (item: ExpertProfile): ClientExpertProfile => ({
   id: item.id,
   userId: item.user?.id, // Map User ID
   image: getImageUrl(item.user?.avatar),
-  ratings: Math.round(item.rating || 0) || 5,
+  ratings: item.rating || 0,
   name: item.user?.name || "Astrologer",
   expertise: item.specialization || "Vedic Astrology",
   experience: item.experience_in_years || 0,
