@@ -4,9 +4,11 @@ import { getExperts } from "@/libs/api-experts";
 
 interface AstrologerListWrapperProps {
     searchParams: Record<string, string | string[] | undefined>;
+    layout?: 'slider' | 'grid';
+    title?: string;
 }
 
-async function AstrologerListServer({ searchParams }: AstrologerListWrapperProps) {
+async function AstrologerListServer({ searchParams, layout, title }: AstrologerListWrapperProps) {
     // Filter searchParams to only include allowed expert query parameters
     const allowedParams = [
         'limit', 'offset', 'q', 'specializations', 'location',
@@ -34,6 +36,8 @@ async function AstrologerListServer({ searchParams }: AstrologerListWrapperProps
             initialExperts={response.data}
             initialPagination={response.pagination}
             initialError={response.error}
+            layout={layout}
+            title={title}
         />
     );
 }
@@ -64,10 +68,10 @@ function LoadingSkeleton() {
     );
 }
 
-export default function AstrologerListWrapper({ searchParams }: AstrologerListWrapperProps) {
+export default function AstrologerListWrapper({ searchParams, layout, title }: AstrologerListWrapperProps) {
     return (
         <Suspense fallback={<LoadingSkeleton />}>
-            <AstrologerListServer searchParams={searchParams} />
+            <AstrologerListServer searchParams={searchParams} layout={layout} title={title} />
         </Suspense>
     );
 }

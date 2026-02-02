@@ -1,12 +1,13 @@
 import React, { Suspense } from "react";
 import OurAstrologer from "@/components/layout/main/ourAstrologer";
 import { AstrologerGridSkeleton } from "@/components/features/astrologers/SkeletonCard";
+import AstrologerListWrapper from "@/components/features/astrologers/AstrologerListWrapper";
 
 function OurAstrologersLoading() {
   return (
-    <section className="astrologer-list back-img" style={{ minHeight: '100vh' }}>
+    <section className="astrologer-list " style={{ minHeight: '100vh' }}>
       <div className="container">
-        <h2 className="title-line color-light">
+        <h2 className="title-line mt-4">
           <span>Our Astrologers</span>
         </h2>
         <AstrologerGridSkeleton count={12} />
@@ -15,10 +16,14 @@ function OurAstrologersLoading() {
   );
 }
 
-const page = () => {
+const page = ({ searchParams }: { searchParams: any }) => {
   return (
     <Suspense fallback={<OurAstrologersLoading />}>
-      <OurAstrologer />
+      <AstrologerListWrapper
+        searchParams={searchParams}
+        layout="grid"
+        title="Our Astrologers"
+      />
     </Suspense>
   );
 };
