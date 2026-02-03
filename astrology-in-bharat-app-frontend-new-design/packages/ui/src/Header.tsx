@@ -447,7 +447,11 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                                   )}
                                 </div>
                                 <div className="px-3 py-3 border-top text-center bg-light">
-                                  <Link href="#" className="text-decoration-none text-orange-500 fw-bold fs-6" onClick={() => setShowNotificationDropdown(false)}>
+                                  <Link
+                                    href={`${PATHS.PROFILE}?tab=notifications`}
+                                    className="text-decoration-none text-orange-500 fw-bold fs-6"
+                                    onClick={() => setShowNotificationDropdown(false)}
+                                  >
                                     View All
                                   </Link>
                                 </div>
@@ -643,6 +647,14 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                             href={PATHS.LOVE_CALCULATOR}
                           >
                             Love Calculator
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            href={PATHS.DAHEJ_CALCULATOR}
+                          >
+                            Dahej Calculator
                           </Link>
                         </li>
                         <li>

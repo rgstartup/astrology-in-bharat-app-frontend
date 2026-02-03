@@ -47,8 +47,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
       }
     };
 
-    socket.on("expert_status_changed", handleStatusSync);
-
     // Global KYC Status Update Listener
     const handleKycUpdate = (data: any) => {
       console.log("[Socket] 🛡️ KYC Status Update RECEIVED:", data);
@@ -79,13 +77,34 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
       }
     };
 
+    socket.on("expert_status_changed", handleStatusSync);
     socket.on("kyc_status_updated", handleKycUpdate);
+
+    // Register expert in tracking map for tab-close detection
+    const registerExpertOnline = () => {
+      const actualUserId = user?.userId || user?.id; // userId is preferred as it maps to the User table ID
+      if (isAuthenticated && actualUserId) {
+        console.log(`[Socket] 🌐 Registering expert ${actualUserId} as online...`);
+        socket.emit("expert_online", { userId: actualUserId });
+      }
+    };
+
+    // Initial registration
+    registerExpertOnline();
+
+    // Re-register on socket reconnection
+    const handleReconnection = () => {
+      console.log("[Socket] 🔄 Socket reconnected, re-registering expert...");
+      registerExpertOnline();
+    };
+    socket.on("connect", handleReconnection);
 
     return () => {
       socket.off("expert_status_changed", handleStatusSync);
       socket.off("kyc_status_updated", handleKycUpdate);
+      socket.off("connect", handleReconnection);
     };
-  }, [user]);
+  }, [user, isAuthenticated]);
 
   // Track whether mouse is on icon or on popup
   const isHoveringIcon = useRef(false);

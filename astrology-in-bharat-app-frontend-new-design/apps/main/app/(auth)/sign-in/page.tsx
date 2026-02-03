@@ -33,7 +33,7 @@ interface FormData {
 }
 
 // --- API Endpoint Constant ---
-const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/email/login`;
+const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/client/login`;
 
 // Disable static generation for this page
 export const dynamic = 'force-dynamic';

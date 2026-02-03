@@ -84,6 +84,8 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
   const videoId = video ? getYoutubeId(video) : null;
   const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : video;
 
+  const [isProcessing, setIsProcessing] = useState(false);
+
   // For wishlist, we use userId (user table ID)
   const wishlistTargetId = userId ? Number(userId) : Number(id);
   const isLiked = wishlistTargetId ? isExpertInWishlist(wishlistTargetId) : false;
@@ -95,6 +97,8 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
     e.preventDefault();
     e.stopPropagation();
 
+    if (isProcessing) return;
+
     if (!isClientAuthenticated) {
       toast.error("Please login first to use wishlist", {
         onClick: () => router.push("/sign-in"),
@@ -104,16 +108,22 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
       return;
     }
 
-    // Optimistic Update
-    const newIsLiked = !isLiked;
-    setCurrentLikes((prev) => (newIsLiked ? prev + 1 : Math.max(0, prev - 1)));
-
     try {
+      setIsProcessing(true);
+      // Optimistic Update
+      const prevIsLiked = isLiked;
+      const newIsLiked = !prevIsLiked;
+
+      setCurrentLikes((prev) => (newIsLiked ? prev + 1 : Math.max(0, prev - 1)));
+
       await toggleExpertWishlist(wishlistTargetId);
     } catch (error) {
       // Revert on failure
-      setCurrentLikes((prev) => (newIsLiked ? prev - 1 : prev + 1));
+      const revertedIsLiked = !isLiked;
+      setCurrentLikes((prev) => (revertedIsLiked ? prev + 1 : Math.max(0, prev - 1)));
       console.error("Failed to toggle wishlist", error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 

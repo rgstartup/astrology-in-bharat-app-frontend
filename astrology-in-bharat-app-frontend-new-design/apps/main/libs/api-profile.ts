@@ -89,4 +89,29 @@ export const getWalletTransactions = async (params?: { purpose?: string, page?: 
     return response.data;
 };
 
+export const getNotifications = async () => {
+    const response = await apiClient.get('/notifications');
+    return response.data;
+};
+
+export const getUnreadCount = async () => {
+    const response = await apiClient.get('/notifications/unread-count');
+    return response.data;
+};
+
+export const markNotificationAsRead = async (id: number) => {
+    const response = await apiClient.patch(`/notifications/${id}/read`);
+    return response.data;
+};
+
+export const deleteNotification = async (id: number) => {
+    const response = await apiClient.delete(`/notifications/${id}`);
+    return response.data;
+};
+
+export const clearAllNotifications = async () => {
+    const response = await apiClient.delete('/notifications/all');
+    return response.data;
+};
+
 export default apiClient;

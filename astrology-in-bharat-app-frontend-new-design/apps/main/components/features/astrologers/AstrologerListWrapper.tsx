@@ -4,14 +4,30 @@ import { getExperts } from "@/libs/api-experts";
 
 interface AstrologerListWrapperProps {
     searchParams: Record<string, string | string[] | undefined>;
+    layout?: 'slider' | 'grid';
+    title?: string;
 }
 
-async function AstrologerListServer({ searchParams }: AstrologerListWrapperProps) {
-    // Fetch experts on the server using raw searchParams
+async function AstrologerListServer({ searchParams, layout, title }: AstrologerListWrapperProps) {
+    // Filter searchParams to only include allowed expert query parameters
+    const allowedParams = [
+        'limit', 'offset', 'q', 'specializations', 'location',
+        'state', 'minRating', 'minExperience', 'languages',
+        'minPrice', 'maxPrice', 'sort', 'onlineOnly',
+        'service', 'online', 'rating'
+    ];
+
+    const filteredParams = Object.keys(searchParams)
+        .filter(key => allowedParams.includes(key))
+        .reduce((obj, key) => {
+            obj[key] = searchParams[key];
+            return obj;
+        }, {} as Record<string, any>);
+
     const response = await getExperts({
         limit: 20,
         offset: 0,
-        ...searchParams,
+        ...filteredParams,
     } as any);
     console.log("Server Side - Astrologer Data Init:", response.data);
 
@@ -20,6 +36,8 @@ async function AstrologerListServer({ searchParams }: AstrologerListWrapperProps
             initialExperts={response.data}
             initialPagination={response.pagination}
             initialError={response.error}
+            layout={layout}
+            title={title}
         />
     );
 }
@@ -50,10 +68,10 @@ function LoadingSkeleton() {
     );
 }
 
-export default function AstrologerListWrapper({ searchParams }: AstrologerListWrapperProps) {
+export default function AstrologerListWrapper({ searchParams, layout, title }: AstrologerListWrapperProps) {
     return (
         <Suspense fallback={<LoadingSkeleton />}>
-            <AstrologerListServer searchParams={searchParams} />
+            <AstrologerListServer searchParams={searchParams} layout={layout} title={title} />
         </Suspense>
     );
 }

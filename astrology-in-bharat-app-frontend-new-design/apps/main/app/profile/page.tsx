@@ -6,7 +6,12 @@ import Link from "next/link";
 import { PATHS } from "@repo/routes";
 import { toast } from "react-toastify";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
-import apiClient, { getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument, ClientProfileData, AddressDto, getAllChatSessions, getChatHistory, getMyOrders, getWalletTransactions } from "@/libs/api-profile";
+import apiClient, {
+  getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument,
+  ClientProfileData, AddressDto, getAllChatSessions, getChatHistory, getMyOrders,
+  getWalletTransactions, getNotifications, markNotificationAsRead, deleteNotification,
+  clearAllNotifications
+} from "@/libs/api-profile";
 import * as LucideIcons from "lucide-react";
 import { loadRazorpay } from "@/libs/razorpay";
 import { getNotificationSocket, connectNotificationSocket } from "@packages/ui/src/utils/socket";
@@ -65,17 +70,27 @@ const ProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [walletView, setWalletView] = useState<'recharge' | 'history'>('recharge');
 
-  // Initialize tabs from localStorage on mount
+  // Notifications State
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
+
+  // Initialize tabs from URL or localStorage on mount
   useEffect(() => {
-    const savedTab = localStorage.getItem("profileActiveTab");
-    if (savedTab) {
-      setActiveTab(savedTab);
+    const tabParam = searchParams.get("tab");
+    if (tabParam) {
+      setActiveTab(tabParam);
+    } else {
+      const savedTab = localStorage.getItem("profileActiveTab");
+      if (savedTab) {
+        setActiveTab(savedTab);
+      }
     }
+
     const savedView = localStorage.getItem("profileWalletView");
     if (savedView === 'history' || savedView === 'recharge') {
       setWalletView(savedView as any);
     }
-  }, []);
+  }, [searchParams]);
 
   // Sync activeTab and walletView to localStorage
   useEffect(() => {
@@ -324,11 +339,68 @@ const ProfilePage: React.FC = () => {
     };
 
     socket.on('order_status_updated', handleOrderUpdate);
+    socket.on('notification', (data) => {
+      console.log('🔔 New notification:', data);
+      if (activeTab === 'notifications') {
+        loadNotifications();
+      }
+    });
 
     return () => {
       socket.off('order_status_updated', handleOrderUpdate);
+      socket.off('notification');
     };
-  }, [isClientAuthenticated, clientUser?.id]);
+  }, [isClientAuthenticated, clientUser?.id, activeTab]);
+
+  // Load notifications
+  const loadNotifications = useCallback(async () => {
+    if (activeTab === "notifications" && isClientAuthenticated) {
+      setLoadingNotifications(true);
+      try {
+        const data = await getNotifications();
+        console.log("🔔 Notifications loaded:", data);
+        setNotifications(Array.isArray(data) ? data : (data.data || []));
+      } catch (error) {
+        console.error("Failed to load notifications:", error);
+      } finally {
+        setLoadingNotifications(false);
+      }
+    }
+  }, [activeTab, isClientAuthenticated]);
+
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
+  const handleMarkAsRead = async (id: number) => {
+    try {
+      await markNotificationAsRead(id);
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+    } catch (error) {
+      console.error("Failed to mark as read:", error);
+    }
+  };
+
+  const handleDeleteNotif = async (id: number) => {
+    try {
+      await deleteNotification(id);
+      setNotifications(prev => prev.filter(n => n.id !== id));
+      toast.success("Notification deleted");
+    } catch (error) {
+      console.error("Failed to delete notification:", error);
+    }
+  };
+
+  const handleClearAllNotifs = async () => {
+    if (!window.confirm("Are you sure you want to clear all notifications?")) return;
+    try {
+      await clearAllNotifications();
+      setNotifications([]);
+      toast.success("All notifications cleared");
+    } catch (error) {
+      console.error("Failed to clear notifications:", error);
+    }
+  };
 
   // Function to open chat history modal
   const handleViewChat = async (session: any) => {
@@ -488,6 +560,7 @@ const ProfilePage: React.FC = () => {
     { icon: "fa-solid fa-clock-rotate-left", label: "Consultation History", id: "history" },
     { icon: "fa-solid fa-bag-shopping", label: "My Orders", id: "orders" },
     { icon: "fa-solid fa-scroll", label: "My Kundli Reports", id: "reports" },
+    { icon: "fa-solid fa-bell", label: "All Notifications", id: "notifications" },
   ];
 
 
@@ -1667,6 +1740,80 @@ const ProfilePage: React.FC = () => {
                   </div>
                   <h6 className="fw-bold">No Reports Available</h6>
                   <p className="text-muted small">Generate your first Kundali report to see it here.</p>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "notifications" && (
+              <div className="card border-0 shadow-sm rounded-4 mb-4">
+                <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                  <h5 className="fw-bold mb-0">
+                    <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#fff7ed", color: "#fd6410" }}>
+                      <i className="fa-solid fa-bell"></i>
+                    </span>
+                    Notifications
+                  </h5>
+                  {notifications.length > 0 && (
+                    <button
+                      onClick={handleClearAllNotifs}
+                      className="btn btn-sm text-danger fw-bold hover:bg-red-50"
+                    >
+                      <i className="fa-solid fa-trash-can me-2"></i>
+                      Clear All
+                    </button>
+                  )}
+                </div>
+                <div className="card-body p-4">
+                  {loadingNotifications ? (
+                    <div className="text-center py-5">
+                      <div className="spinner-border text-orange-500 mb-3" role="status"></div>
+                      <p className="text-muted">Loading notifications...</p>
+                    </div>
+                  ) : notifications.length === 0 ? (
+                    <div className="text-center py-5">
+                      <div className="mb-4">
+                        <i className="fa-solid fa-bell-slash fa-3x text-light"></i>
+                      </div>
+                      <h6 className="fw-bold">No Notifications Yet</h6>
+                      <p className="text-muted small">You'll see alerts about your orders and consultations here.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {notifications.map((notif: any) => (
+                        <div
+                          key={notif.id}
+                          className={`p-3 rounded-xl border transition-all hover:shadow-md cursor-pointer ${notif.isRead ? 'bg-white opacity-80' : 'bg-orange-50 border-orange-100 shadow-sm'}`}
+                          onClick={() => !notif.isRead && handleMarkAsRead(notif.id)}
+                        >
+                          <div className="d-flex justify-content-between align-items-start">
+                            <div className="d-flex gap-3">
+                              <div className={`mt-1 p-2 rounded-lg ${notif.isRead ? 'bg-gray-100 text-gray-400' : 'bg-orange-500 text-white'}`}>
+                                <i className={`fa-solid ${notif.isRead ? 'fa-envelope-open' : 'fa-envelope'}`}></i>
+                              </div>
+                              <div>
+                                <h6 className={`mb-1 ${notif.isRead ? 'text-gray-600' : 'text-gray-900 fw-bold'}`}>{notif.title}</h6>
+                                <p className="text-muted small mb-1" style={{ lineHeight: '1.4' }}>{notif.message}</p>
+                                <span className="text-[10px] text-orange-500 font-medium uppercase tracking-wider">
+                                  {new Date(notif.createdAt).toLocaleString('en-IN', {
+                                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+                                  })}
+                                </span>
+                              </div>
+                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteNotif(notif.id);
+                              }}
+                              className="btn btn-sm text-gray-400 hover:text-red-500 transition-colors"
+                            >
+                              <i className="fa-solid fa-xmark"></i>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
