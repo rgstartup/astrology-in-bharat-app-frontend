@@ -93,13 +93,13 @@ interface JewelrySet {
 // Cars Database
 const cars = [
     "Maruti Alto",
-    "Hyundai i10",
+    "Ford Endeavour",
     "Tata Tiago",
     "Maruti Swift Dzire",
     "Hyundai Verna",
     "Honda City",
     "Toyota Fortuner",
-    "Ford Endeavour",
+    " Hyundai i20",
     "Mahindra Scorpio",
     "Range Rover",
     "Hummer H2",
