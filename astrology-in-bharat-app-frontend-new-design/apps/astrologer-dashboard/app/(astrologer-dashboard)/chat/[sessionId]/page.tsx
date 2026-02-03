@@ -280,7 +280,12 @@ function ExpertChatRoomContent() {
             </header>
 
             {/* Chat Area */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50/50">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6" style={{
+                backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), url('/images/back-image.webp')", // Dark overlay + Image
+                backgroundRepeat: "repeat",
+                backgroundSize: "300px",
+                backgroundColor: "#f9fafb" // Fallback color
+            }}>
                 {sessionStatus === 'pending' && (
                     <div className="flex justify-center my-4">
                         <div className="bg-yellow-100 text-yellow-800 px-6 py-3 rounded-2xl text-xs font-bold border border-yellow-200 flex items-center gap-2 shadow-sm">
@@ -339,10 +344,10 @@ function ExpertChatRoomContent() {
             {/* Input Area */}
             <div className="p-4 border-t border-gray-100 bg-white">
                 <div className="flex items-center gap-4">
-                    <button className="p-3 text-gray-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-xl transition-all">
+                    <button className="p-3 text-gray-400 hover:text-[#fd6410] hover:bg-orange-50 rounded-xl transition-all">
                         <Paperclip className="w-5 h-5" />
                     </button>
-                    <div className="flex-1 bg-gray-50 rounded-2xl border border-gray-200 px-4 py-2 focus-within:border-yellow-600 focus-within:ring-1 focus-within:ring-yellow-600 transition-all">
+                    <div className="flex-1 bg-gray-50 rounded-2xl border border-gray-200 px-4 py-2 focus-within:border-[#fd6410] focus-within:ring-1 focus-within:ring-[#fd6410] transition-all">
                         <textarea
                             rows={1}
                             placeholder="Type your message..."
@@ -360,7 +365,10 @@ function ExpertChatRoomContent() {
                     <button
                         onClick={handleSendMessage}
                         disabled={!inputValue.trim()}
-                        className="bg-yellow-600 text-white p-4 rounded-full shadow-lg hover:bg-yellow-700 active:scale-90 transition-all disabled:opacity-50"
+                        className={`p-4 rounded-full shadow-lg transition-all active:scale-90 flex items-center justify-center ${!inputValue.trim()
+                                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                : 'bg-[#fd6410] text-white hover:bg-[#e35d0f] shadow-orange-200'
+                            }`}
                     >
                         <Send className="w-5 h-5" />
                     </button>

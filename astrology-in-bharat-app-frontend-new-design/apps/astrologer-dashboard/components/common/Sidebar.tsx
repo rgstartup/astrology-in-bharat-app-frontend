@@ -52,7 +52,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
     return (
       <button
         onClick={item.onClick}
-        className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-white hover:bg-yellow-700 mt-auto"
+        className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-white hover:bg-[#2d1111] mt-auto"
       >
         <item.icon className="w-5 h-5 flex-shrink-0" />
         <span>{item.label}</span>
@@ -67,8 +67,8 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         className={cn(
           "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200",
           isActiveLink
-            ? "bg-yellow-800 text-white shadow-lg"
-            : "text-white hover:bg-yellow-700"
+            ? "bg-[#2d1111] text-white shadow-lg"
+            : "text-white hover:bg-[#2d1111]/80"
         )}
         aria-current={isActiveLink ? "page" : undefined}
       >
@@ -83,8 +83,8 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
       <button
         onClick={() => onToggleSubmenu(item.label)}
         className={cn(
-          "w-full px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-between text-white hover:bg-yellow-700 transition-colors duration-200",
-          isSubmenuOpen && "bg-yellow-700"
+          "w-full px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-between text-white hover:bg-[#2d1111] transition-colors duration-200",
+          isSubmenuOpen && "bg-[#2d1111]"
         )}
         aria-expanded={isSubmenuOpen}
         aria-controls={`submenu-${item.label.replace(/\s/g, "-").toLowerCase()}`}
@@ -196,13 +196,13 @@ export const Sidebar: React.FC<SidebarProps> = memo(
 
         <aside
           className={cn(
-            "fixed left-0 top-0 h-full w-64 flex flex-col bg-yellow-600 text-white transition-transform duration-300 ease-in-out z-50 overflow-y-auto no-scrollbar shadow-xl shadow-gray-400",
+            "fixed left-0 top-0 h-full w-64 flex flex-col bg-[#fd6410] text-white transition-transform duration-300 ease-in-out z-50 overflow-y-auto no-scrollbar shadow-xl",
             isOpen ? "translate-x-0" : "-translate-x-full",
             "lg:translate-x-0"
           )}
           aria-label="Sidebar navigation"
         >
-          <div className="flex items-center justify-between p-6 bg-gray-50 border-r border-gray-200 flex-shrink-0">
+          <div className="flex items-center justify-between p-6 bg-white border-b border-orange-100 flex-shrink-0">
             <img
               src="/images/logo.png"
               alt="Logo"
