@@ -395,16 +395,8 @@ export default function AdminLayout({
                 </div>
 
                 <div className="flex items-center space-x-4">
-                  {/* Search */}
-                  <div className="hidden md:block">
-                    <SearchInput
-                      value={globalSearch}
-                      onChange={setGlobalSearch}
-                      placeholder="Search..."
-                      className="w-64"
-                      size="md"
-                    />
-                  </div>
+               
+                 
 
                   {/* Notifications */}
                   <button className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors">
