@@ -141,7 +141,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
     searchParams.get("q") || ""
   );
   const [selectedSpecialization, setSelectedSpecialization] = useState(
-    searchParams.get("specializations") || ""
+    searchParams.get("specializations") || searchParams.get("specialization") || ""
   );
 
   const [filterState, setFilterState] = useState({

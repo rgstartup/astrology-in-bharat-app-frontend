@@ -15,7 +15,7 @@ const AstrologerConsultant = () => {
             {ConsultationServicesData.map((service) => (
               <div className="col-sm-3" key={service.id}>
                 <Link
-                  href={`/our-astrologers?specialization=${service.title}`}
+                  href={`/our-astrologers?specializations=${encodeURIComponent(service.title)}`}
                   className="block no-underline hover:text-inherit"
                 >
                   <ConsultationCard item={service} />
