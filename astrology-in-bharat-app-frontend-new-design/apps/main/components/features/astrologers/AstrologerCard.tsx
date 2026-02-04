@@ -165,7 +165,12 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
               {/* Total Likes Count */}
               {currentLikes > 0 && (
                 <span className="text-xs font-semibold text-white bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">
-                  {currentLikes}
+                  {((count: number) => {
+                    if (count >= 1000) {
+                      return (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+                    }
+                    return count;
+                  })(currentLikes)}
                 </span>
               )}
             </div>
