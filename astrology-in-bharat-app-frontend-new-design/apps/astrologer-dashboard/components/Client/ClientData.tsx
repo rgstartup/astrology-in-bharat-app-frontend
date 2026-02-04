@@ -99,8 +99,11 @@ export default function ClientsPage() {
             rating: sessionReview?.rating || 0,
             review: sessionReview?.comment || "No review yet",
             payment: session.totalCost || session.amount || 0,
-            // Store raw session data for chat view
-            rawSession: session
+            rawSession: {
+              ...session,
+              durationMins: duration,
+              totalCost: session.totalCost || session.amount || 0
+            }
           };
         });
 
@@ -304,13 +307,20 @@ export default function ClientsPage() {
 
                 {/* Right Side: Action Button */}
                 <div className="w-full md:w-auto flex-shrink-0">
-                  <button
-                    onClick={() => handleViewChat(client)}
-                    className="w-full md:w-auto bg-[#fd6410] hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-orange-500/20 active:scale-95"
-                  >
-                    <MessageSquare size={18} className="fill-white/20" />
-                    View Chat
-                  </button>
+                  {session?.status === 'completed' ? (
+                    <button
+                      onClick={() => handleViewChat(client)}
+                      className="w-full md:w-auto bg-[#fd6410] hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-orange-500/20 active:scale-95"
+                    >
+                      <MessageSquare size={18} className="fill-white/20" />
+                      View Chat
+                    </button>
+                  ) : (
+                    <div className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-400 flex items-center gap-2 italic">
+                      <MessageSquare size={14} className="opacity-40" />
+                      No Chat History
+                    </div>
+                  )}
                 </div>
               </div>
             );

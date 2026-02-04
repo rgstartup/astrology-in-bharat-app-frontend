@@ -212,7 +212,7 @@ const ProfilePage: React.FC = () => {
       console.error("❌ Error loading profile:", error);
       // 404 is OK - means new user with no profile yet
       if (error.response?.status !== 404) {
-        setErrorMessage("Failed to load profile data");
+        toast.error("Failed to load profile data");
       }
     } finally {
       setLoading(false);
@@ -232,7 +232,18 @@ const ProfilePage: React.FC = () => {
         setLoadingHistory(true);
         try {
           const sessions = await getAllChatSessions();
-          console.log("📜 Consultation History loaded:", sessions);
+          console.log("📜 Raw Consultation History from Backend:", sessions);
+
+          if (sessions && sessions.length > 0) {
+            console.log("🔍 Checking first session fields:", {
+              id: sessions[0].id,
+              durationMins: sessions[0].durationMins,
+              duration: sessions[0].duration,
+              activatedAt: sessions[0].activatedAt,
+              endedAt: sessions[0].endedAt
+            });
+          }
+
           setConsultationHistory(sessions);
         } catch (error) {
           console.error("Failed to load consultation history:", error);
@@ -524,8 +535,7 @@ const ProfilePage: React.FC = () => {
       console.log(`📤 Submitting ${section} data:`, payload);
 
       const savedData = await updateClientProfile(payload);
-      setSuccessMessage(`${section.charAt(0).toUpperCase() + section.slice(1)} updated successfully!`);
-      setTimeout(() => setSuccessMessage(""), 3000);
+      toast.success(`${section.charAt(0).toUpperCase() + section.slice(1)} updated successfully!`);
 
       if (savedData) {
         setProfileData(prev => ({ ...prev, ...savedData }));
@@ -535,8 +545,7 @@ const ProfilePage: React.FC = () => {
     } catch (error: any) {
       console.error(`❌ Error updating ${section}:`, error);
       const errMsg = error.response?.data?.message || error.message || 'Unknown error';
-      setErrorMessage(`Failed to update ${section}: ${errMsg}`);
-      setTimeout(() => setErrorMessage(""), 5000);
+      toast.error(`Failed to update ${section}: ${errMsg}`);
     } finally {
       setSavingSections(prev => ({ ...prev, [section]: false }));
     }
@@ -592,90 +601,112 @@ const ProfilePage: React.FC = () => {
           {/* Sidebar Column */}
           <div className="col-lg-3">
             <div className="sticky top-24">
-              {/* Navigation Menu */}
-              <div className="card border-0 rounded-4 overflow-hidden">
-                <div className="card border-0  rounded-4 mb-4 text-center p-3">
-                  <div className="card-body">
-                    <div className="position-relative d-inline-block mb-3">
-                      <div style={{
-                        width: "100px",
-                        height: "100px",
-                        borderRadius: "50%",
-                        overflow: "hidden",
-                        border: "4px solid #fff",
-                        boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-                        margin: "0 auto"
-                      }}>
-                        {savingSections.personal ? (
-                          <div className="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
-                            <div className="spinner-border spinner-border-sm text-primary" role="status"></div>
-                          </div>
-                        ) : (
-                          <img
-                            src={imagePreview}
-                            alt="Profile"
-                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                          />
-                        )}
-                      </div>
-                      <label
-                        htmlFor="profile-upload"
-                        className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
-                        style={{
-                          width: "35px",
-                          height: "35px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          cursor: "pointer",
-                          color: "#fd6410",
-                          border: "2px solid #fff",
-                          transition: "all 0.3s ease"
-                        }}
-                        title="Update Profile Picture"
-                      >
-                        <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
-                        <input
-                          id="profile-upload"
-                          type="file"
-                          className="d-none"
-                          accept="image/*"
-                          onChange={(e) => {
-                            console.log("📁 File input onChange triggered!");
-                            if (e.target.files && e.target.files[0]) {
-                              handleImageChange(e.target.files[0]);
-                            }
-                          }}
+              {/* Profile Card - Fixed at top */}
+              <div className="card border-0 rounded-top-4 mb-0 text-center p-3 shadow-lg" style={{ backgroundColor: "white" }}>
+                <div className="card-body">
+                  <div className="position-relative d-inline-block mb-3">
+                    <div style={{
+                      width: "100px",
+                      height: "100px",
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      border: "4px solid #fff",
+                      boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+                      margin: "0 auto"
+                    }}>
+                      {savingSections.personal ? (
+                        <div className="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                          <div className="spinner-border spinner-border-sm text-primary" role="status"></div>
+                        </div>
+                      ) : (
+                        <img
+                          src={imagePreview}
+                          alt="Profile"
+                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
                         />
-                      </label>
+                      )}
                     </div>
-
-                    <h5 className="fw-bold mb-1">{profileData.username || "User Name"} <i className="fa-solid fa-check-circle text-primary small"></i></h5>
-
-
-
+                    <label
+                      htmlFor="profile-upload"
+                      className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
+                      style={{
+                        width: "35px",
+                        height: "35px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        color: "#fd6410",
+                        border: "2px solid #fff",
+                        transition: "all 0.3s ease"
+                      }}
+                      title="Update Profile Picture"
+                    >
+                      <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
+                      <input
+                        id="profile-upload"
+                        type="file"
+                        className="d-none"
+                        accept="image/*"
+                        onChange={(e) => {
+                          console.log("📁 File input onChange triggered!");
+                          if (e.target.files && e.target.files[0]) {
+                            handleImageChange(e.target.files[0]);
+                          }
+                        }}
+                      />
+                    </label>
                   </div>
+
+                  <h5 className="fw-bold mb-1">{profileData.username || "User Name"} <i className="fa-solid fa-check-circle text-primary small"></i></h5>
                 </div>
+              </div>
 
-
-
-                <div className=" bg-white border-0 pt-3 px-3">
-                  <small className="text-uppercase  fw-bold" style={{ fontSize: "11px", letterSpacing: "1px", color: "black" }}>ACCOUNT MENU</small>
+              {/* Navigation Menu - Scrollable */}
+              <div
+                className="card border-0 rounded-bottom-4 overflow-y-auto shadow-lg"
+                style={{
+                  backgroundColor: "#fd6410",
+                  maxHeight: "calc(100vh - 350px)",
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "rgba(255, 255, 255, 0.5) transparent"
+                }}
+              >
+                <div className="border-0 pt-3 px-3">
+                  <small className="text-uppercase fw-bold" style={{ fontSize: "11px", letterSpacing: "1px", color: "white" }}>ACCOUNT MENU</small>
                 </div>
                 <div className=" p-2">
                   {menuItems.map((item, index) => (
                     <a
                       key={index}
                       href="#"
-                      className={` border-0 rounded-3 d-flex align-items-center px-3 py-2 mb-1 transition-all  text-black
-                        hover:bg-orange-light hover:text-black hover:font-bold ${activeTab === item.id ? 'font-bold' : 'text-gray-500'}`}
-                      style={activeTab === item.id ? { backgroundColor: "#fd6410", color: "white" } : {}}
+                      className={`border-0 rounded-3 d-flex align-items-center px-3 py-3 mb-1 transition-all text-decoration-none ${activeTab === item.id
+                        ? 'fw-bold shadow-sm'
+                        : ''
+                        }`}
+                      style={
+                        activeTab === item.id
+                          ? { backgroundColor: "#2d1111", color: "white" }
+                          : { color: "white" }
+                      }
+                      onMouseEnter={(e) => {
+                        if (activeTab !== item.id) {
+                          e.currentTarget.style.backgroundColor = "#2d1111";
+                          e.currentTarget.style.color = "white";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (activeTab !== item.id) {
+                          e.currentTarget.style.backgroundColor = "transparent";
+                          e.currentTarget.style.color = "white";
+                        }
+                      }}
                       onClick={(e) => {
                         e.preventDefault();
                         setActiveTab(item.id);
                       }}
                     >
-                      <i className={`${item.icon} me-3`} style={{ width: "20px", color: activeTab === item.id ? "#fff" : "inherit" }}></i>
+                      <i className={`${item.icon} me-3`} style={{ width: "20px" }}></i>
                       {item.label}
                     </a>
                   ))}
@@ -1064,91 +1095,7 @@ const ProfilePage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Settings & Preferences Card */}
-                <div className="card border-0 shadow-sm rounded-4 mb-4">
-                  <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-                    <h5 className="fw-bold mb-0">
-                      <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#e8f0fe", color: "#4285f4" }}>
-                        <i className="fa-solid fa-sliders"></i>
-                      </span>
-                      Settings & Preferences
-                    </h5>
-                    {editingSections.settings ? (
-                      <div className="flex gap-2">
-                        <button
-                          type="button"
-                          className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 rounded-lg font-bold transition-all text-sm"
-                          onClick={() => setEditingSections(prev => ({ ...prev, settings: false }))}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="button"
-                          disabled={savingSections.settings}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg font-bold transition-all text-sm shadow-md"
-                          onClick={() => handleSaveSection('settings')}
-                        >
-                          {savingSections.settings ? "Saving..." : "Save"}
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        className="text-blue-500 hover:text-blue-700 font-bold text-sm"
-                        onClick={() => setEditingSections(prev => ({ ...prev, settings: true }))}
-                      >
-                        Modify Preferences
-                      </button>
-                    )}
-                  </div>
-                  <div className="card-body p-4">
-                    <div className="row align-items-center mb-4">
-                      <div className="col-md-8">
-                        <h6 className="fw-bold mb-1">Preferred Language</h6>
-                        <p className="text-muted small mb-0">Language for horoscopes and consultation</p>
-                      </div>
-                      <div className="col-md-4 text-end">
-                        {editingSections.settings ? (
-                          <select
-                            className="form-select form-select-sm d-inline-block w-auto"
-                            value={profileData.language_preference || "english"}
-                            onChange={(e) => handleInputChange('language_preference', e.target.value)}
-                          >
-                            <option value="english">English</option>
-                            <option value="hindi">Hindi</option>
-                          </select>
-                        ) : (
-                          <span className="badge bg-light text-dark px-3 py-2 border rounded-pill">
-                            <i className="fa-solid fa-globe me-2"></i>
-                            {profileData.language_preference === 'hindi' ? 'Hindi' : 'English / Hindi'}
-                          </span>
-                        )}
-                      </div>
-                    </div>
 
-                    <div className="row align-items-center mb-4">
-                      <div className="col-md-8">
-                        <h6 className="fw-bold mb-1">Email Notifications</h6>
-                        <p className="text-muted small mb-0">Receive daily horoscope and offers</p>
-                      </div>
-                      <div className="col-md-4 text-end">
-                        <div className="form-check form-switch d-inline-block">
-                          <input className="form-check-input" type="checkbox" role="switch" id="emailNotif" defaultChecked style={{ backgroundColor: "#fd6410", borderColor: "#fd6410" }} />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="row align-items-center">
-                      <div className="col-md-8">
-                        <h6 className="fw-bold mb-1">App Theme</h6>
-                        <p className="text-muted small mb-0">Switch between light and dark mode</p>
-                      </div>
-                      <div className="col-md-4 text-end">
-                        <button type="button" className="btn btn-light rounded-circle"><i className="fa-solid fa-moon"></i></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </>
             )}
 
@@ -1580,14 +1527,21 @@ const ProfilePage: React.FC = () => {
                               </div>
                             </div>
 
-                            <button
-                              onClick={() => handleViewChat(session)}
-                              className="btn btn-sm text-white px-4 py-2 rounded-3 fw-bold shadow-sm"
-                              style={{ backgroundColor: "#fd6410" }}
-                            >
-                              <i className="fa-solid fa-message me-2"></i>
-                              View Chat
-                            </button>
+                            {session.status === 'completed' ? (
+                              <button
+                                onClick={() => handleViewChat(session)}
+                                className="btn btn-sm text-white px-4 py-2 rounded-3 fw-bold shadow-sm"
+                                style={{ backgroundColor: "#fd6410" }}
+                              >
+                                <i className="fa-solid fa-message me-2"></i>
+                                View Chat
+                              </button>
+                            ) : (
+                              <span className="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2" style={{ fontSize: "11px" }}>
+                                <i className="fa-solid fa-ban me-1"></i>
+                                No Chat History
+                              </span>
+                            )}
                           </div>
                         </div>
                       ))}
