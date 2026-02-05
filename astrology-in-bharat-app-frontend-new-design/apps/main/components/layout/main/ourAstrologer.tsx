@@ -140,9 +140,7 @@ const OurAstrologer = () => {
     }, [fetchAstrologers, offset]);
 
     useEffect(() => {
-        if (spec) {
-            setSelectedSpecialization(spec);
-        }
+        setSelectedSpecialization(spec || "");
     }, [spec]);
 
     const handleLoadMore = (e: React.MouseEvent) => {

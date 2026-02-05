@@ -143,7 +143,14 @@ export default function AstrologerDetailsClient({
                 <div className="text-center">
                   <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Likes</p>
                   <div className="flex items-center justify-center gap-1">
-                    <span className="text-sm font-semibold text-[#1A2B47]">{astrologer.total_likes || 0}</span>
+                    <span className="text-sm font-semibold text-[#1A2B47]">
+                      {((count: number) => {
+                        if (count >= 1000) {
+                          return (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+                        }
+                        return count;
+                      })(astrologer.total_likes || 0)}
+                    </span>
                     <i className="fa-solid fa-heart text-[#ff4d4d] text-[12px]"></i>
                   </div>
                 </div>
