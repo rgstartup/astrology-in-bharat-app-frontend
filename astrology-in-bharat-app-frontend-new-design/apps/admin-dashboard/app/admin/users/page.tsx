@@ -22,9 +22,13 @@ const ProfileModal = lazy(() =>
   }))
 );
 
+const AssignCouponModal = lazy(() => import("@/app/components/user/AssignCouponModal"));
+const BulkAssignCouponModal = lazy(() => import("@/app/components/user/BulkAssignCouponModal"));
+
 // Loading fallback for modal
 function ModalLoadingFallback() {
-  return <Loading fullScreen size="lg" text="Loading profile..." />;
+  const LoadingComp = Loading as any;
+  return <LoadingComp fullScreen size="lg" text="Loading profile..." />;
 }
 
 export default function UsersPage() {
@@ -38,6 +42,12 @@ export default function UsersPage() {
 
   // Selected user state (for view modal)
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  // Assign Coupon state
+  const [couponUser, setCouponUser] = useState<User | null>(null);
+
+  // Bulk Assign Coupon state
+  const [showBulkAssign, setShowBulkAssign] = useState(false);
 
   // Confirmation Modal State
   const [confirmModal, setConfirmModal] = useState<{
@@ -137,7 +147,7 @@ export default function UsersPage() {
   const statsConfig = useMemo(() => getStatsConfig(stats), [stats]);
 
   // Get table columns (memoized)
-  const columns = useMemo(() => getColumns(initiateToggleBlock), []);
+  const columns = useMemo(() => getColumns(initiateToggleBlock, setCouponUser), []);
 
   // Get modal props for selected user
   const modalProps = selectedUser ? getUserProfileModalProps(selectedUser) : null;
@@ -156,6 +166,17 @@ export default function UsersPage() {
         manualPagination={true}
         totalItems={totalUsers}
         onPageChange={handlePageChange}
+        headerAction={
+          <button
+            onClick={() => setShowBulkAssign(true)}
+            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-semibold text-sm shadow-lg shadow-purple-300 transition-all flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Assign Coupon (Bulk)
+          </button>
+        }
       />
 
       {/* Details Modal */}
@@ -176,6 +197,26 @@ export default function UsersPage() {
         onConfirm={handleConfirmAction}
         onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
       />
+
+      {/* Assign Coupon Modal (Single User) */}
+      {couponUser && (
+        <Suspense fallback={null}>
+          <AssignCouponModal user={couponUser} onClose={() => setCouponUser(null)} />
+        </Suspense>
+      )}
+
+      {/* Bulk Assign Coupon Modal */}
+      {showBulkAssign && (
+        <Suspense fallback={null}>
+          <BulkAssignCouponModal
+            onClose={() => setShowBulkAssign(false)}
+            onSuccess={() => {
+              fetchUsers();
+              fetchStats();
+            }}
+          />
+        </Suspense>
+      )}
     </>
   );
 }

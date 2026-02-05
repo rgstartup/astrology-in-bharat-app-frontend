@@ -114,4 +114,21 @@ export const clearAllNotifications = async () => {
     return response.data;
 };
 
+// Rewards & Coupons
+export const getMyRewards = async () => {
+    const response = await apiClient.get('/coupons/my-rewards');
+    return response.data;
+};
+
+export const applyCoupon = async (code: string, amount: number, serviceType: string) => {
+    const response = await apiClient.post('/coupons/apply', {
+        code,
+        couponCode: code,
+        amount,
+        orderValue: amount,
+        serviceType
+    });
+    return response.data;
+};
+
 export default apiClient;
