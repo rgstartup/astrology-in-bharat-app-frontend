@@ -2,10 +2,9 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@packages/ui/src/context/CartContext";
-import { getClientProfile } from "@/libs/api-profile";
+import apiClient, { getClientProfile, applyCoupon } from "@/libs/api-profile";
 import { toast } from "react-toastify";
 import { loadRazorpay } from "@/libs/razorpay";
-import apiClient from "@/libs/api-profile";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 
 const CheckoutContent = () => {
@@ -20,9 +19,62 @@ const CheckoutContent = () => {
   const date = searchParams.get("date") || "";
   const time = searchParams.get("time") || "";
   const duration = searchParams.get("duration") || "15";
-  const total = isOrder ? cartTotal : (parseInt(searchParams.get("total") || "300"));
+  const baseTotal = isOrder ? cartTotal : (parseInt(searchParams.get("total") || "300"));
 
   const [paymentMethod, setPaymentMethod] = useState("upi");
+
+  // Coupon States
+  const [couponCode, setCouponCode] = useState("");
+  const [isApplying, setIsApplying] = useState(false);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+
+  const total = Math.max(0, baseTotal - discountAmount);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode) {
+      toast.warning("Please enter a coupon code");
+      return;
+    }
+
+    setIsApplying(true);
+    try {
+      // Use the 'type' from URL or default to 'product'/'chat'
+      const sType = searchParams.get("type") || (isOrder ? 'product' : 'chat');
+
+      const res = await applyCoupon(
+        couponCode.trim(),
+        baseTotal,
+        sType
+      );
+
+      const data = res.data || res;
+      console.log("🎟️ Coupon Response:", data);
+
+      const disc = data.discountAmount ?? data.discount_amount ?? data.discount ?? data.value;
+      const isSuccess = data.success ?? data.is_valid ?? data.isValid ?? (disc !== undefined);
+
+      if (isSuccess && disc !== undefined) {
+        setDiscountAmount(Number(disc));
+        setAppliedCoupon(data.coupon || { code: couponCode });
+        toast.success(data.message || `Coupon applied! You saved ₹${disc}`);
+      } else {
+        toast.error(data.message || "This coupon cannot be applied to this order. Check minimum order value or expiry.");
+      }
+    } catch (error: any) {
+      console.error("Coupon Error:", error);
+      toast.error(error.response?.data?.message || "Failed to apply coupon");
+    } finally {
+      setIsApplying(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponCode("");
+    setDiscountAmount(0);
+    setAppliedCoupon(null);
+    toast.info("Coupon removed");
+  };
 
   // Shipping Address State
   const [address, setAddress] = useState({
@@ -108,10 +160,12 @@ const CheckoutContent = () => {
       const orderRes = await apiClient.post("/payment/orders/create", {
         amount: total,
         type: isOrder ? 'product' : 'consultation',
+        couponCode: appliedCoupon?.code, // Pass coupon code to backend for tracking
         notes: {
           astrologerName,
           isOrder,
-          orderId: dbOrderId // Link razorpay order to internal DB order
+          orderId: dbOrderId, // Link razorpay order to internal DB order
+          discountApplied: discountAmount
         }
       });
 
@@ -345,8 +399,55 @@ const CheckoutContent = () => {
                         </li>
                       </>
                     )}
+                    <li className="list-group-item bg-transparent px-0 py-3">
+                      <div className="flex flex-col gap-2">
+                        <label className="small fw-bold text-muted uppercase tracking-wider">Have a coupon?</label>
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            className="form-control form-control-sm"
+                            placeholder="Enter Code"
+                            value={couponCode}
+                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                            disabled={!!appliedCoupon || isApplying}
+                          />
+                          {appliedCoupon ? (
+                            <button
+                              className="btn btn-outline-danger btn-sm"
+                              onClick={handleRemoveCoupon}
+                              type="button"
+                            >
+                              <i className="fa-solid fa-xmark"></i>
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-dark btn-sm px-3"
+                              onClick={handleApplyCoupon}
+                              disabled={isApplying || !couponCode}
+                              type="button"
+                            >
+                              {isApplying ? <span className="spinner-border spinner-border-sm"></span> : "Apply"}
+                            </button>
+                          )}
+                        </div>
+                        {appliedCoupon && (
+                          <small className="text-success fw-bold animate-pulse">
+                            <i className="fa-solid fa-check-circle me-1"></i>
+                            Coupon Applied Successfully!
+                          </small>
+                        )}
+                      </div>
+                    </li>
+
+                    {discountAmount > 0 && (
+                      <li className="list-group-item d-flex justify-content-between bg-transparent px-0 text-success">
+                        <span>Coupon Discount</span>
+                        <span className="fw-semibold">-₹{discountAmount}</span>
+                      </li>
+                    )}
+
                     <li
-                      className="list-group-item d-flex justify-content-between bg-transparent px-0 fw-bold fs-5"
+                      className="list-group-item d-flex justify-content-between bg-transparent px-0 fw-bold fs-5 pt-3 border-top"
                       style={{ color: "#732882" }}
                     >
                       <span>Total Amount</span>

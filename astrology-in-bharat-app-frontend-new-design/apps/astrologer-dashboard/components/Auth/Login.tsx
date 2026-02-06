@@ -33,7 +33,7 @@ const LoginPage: React.FC = () => {
 
         try {
             console.log("Attempting login for:", email);
-            const response = await apiClient.post("/auth/email/login", {
+            const response = await apiClient.post("/auth/login", {
                 email,
                 password,
                 expert: true,
@@ -91,13 +91,11 @@ const LoginPage: React.FC = () => {
                     {/* Left Side: Image / Visual Section */}
                     <div className="relative hidden lg:block h-[500px]">
                         <div className="absolute inset-0 bg-yellow-600 bg-opacity-70 flex flex-col items-center justify-center text-white p-8 z-10">
-                            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 mb-4">
-                                <img
-                                    src="/images/logo1.webp"
-                                    alt="Logo"
-                                    className="w-20 h-20 object-contain bg-white rounded-xl p-2"
-                                />
-                            </div>
+                            <img
+                                src="/images/Astrologer.png"
+                                alt="Logo"
+                                className="w-56 h-56 object-contain mb-6 drop-shadow-2xl"
+                            />
 
                             <div className="text-left w-full">
                                 <h1 className="text-4xl font-bold font-sans mb-4 tracking-tight">Welcome Back, Expert!</h1>

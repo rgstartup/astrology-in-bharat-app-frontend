@@ -94,13 +94,11 @@ const RegisterPage: React.FC = () => {
                 {/* Left Side: Visual Section */}
                 <div className="relative hidden lg:block h-[600px]">
                     <div className="absolute inset-0 bg-yellow-600 bg-opacity-80 flex flex-col items-center justify-center text-white p-8 z-10 text-center">
-                        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8">
-                            <img
-                                src="/images/logo1.webp"
-                                alt="Logo"
-                                className="w-24 h-24 object-contain bg-white rounded-xl p-2"
-                            />
-                        </div>
+                        <img
+                            src="/images/Astrologer.png"
+                            alt="Logo"
+                            className="w-64 h-64 object-contain mb-8 drop-shadow-2xl"
+                        />
                         <h1 className="text-4xl font-bold mb-4 tracking-tight">Join Our Expert Community</h1>
                         <p className="text-xl opacity-90">
                             Register today to start providing your astrology expertise to thousands of seeking clients.

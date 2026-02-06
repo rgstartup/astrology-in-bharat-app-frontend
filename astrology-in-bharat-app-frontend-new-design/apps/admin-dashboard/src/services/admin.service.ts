@@ -44,4 +44,52 @@ export const getUserGrowthStats = async (days: number) => {
   return res.data;
 };
 
+// Coupons Management
+export const createCoupon = async (data: any) => {
+  const res = await api.post("/admin/coupons", data);
+  return res.data;
+};
+
+export const assignCouponToUser = async (userId: number, couponCode: string) => {
+  const res = await api.post(`/admin/coupons/assign/${userId}`, { code: couponCode });
+  return res.data;
+};
+
+export const getCoupons = async (params?: any) => {
+  const res = await api.get("/admin/coupons", { params });
+  return res.data;
+};
+
+export const getCouponStats = async () => {
+  const res = await api.get("/admin/coupons/stats");
+  return res.data;
+};
+
+export const updateCoupon = async (id: string, data: any) => {
+  const res = await api.patch(`/admin/coupons/${id}`, data);
+  return res.data;
+};
+
+export const deleteCoupon = async (id: number) => {
+  const res = await api.delete(`/admin/coupons/${id}`);
+  return res.data;
+};
+
+// Bulk Coupon Assignment
+export const assignCouponBulk = async (data: { couponCode: string; filters: any }) => {
+  const res = await api.post("/admin/coupons/assign-bulk", data);
+  return res.data;
+};
+
+// Get count of users matching filters (for preview)
+export const getFilteredUsersCount = async (filters: any) => {
+  const res = await api.post("/admin/users/filter-count", filters);
+  return res.data.count || 0;
+};
+
+// Get list of users matching filters (for preview)
+export const getFilteredUsers = async (params: any) => {
+  const res = await api.post("/admin/users/filtered-list", params);
+  return res.data.users || res.data || [];
+};
 

@@ -61,10 +61,11 @@ const menuItems: MenuItem[] = [
   { label: "Products", href: "/admin/products", icon: ShoppingBag },
   { label: "Order Management", href: "/admin/orders", icon: Package },
   // { label: "Earnings", href: "/admin/earnings", icon: IndianRupee },
+  { label: "Settings", href: "/admin/settings", icon: Settings },
   {
     label: "Account",
     href: "#",
-    icon: Settings,
+    icon: User,
     submenu: [
       {
         label: "Profile Management",
@@ -395,8 +396,8 @@ export default function AdminLayout({
                 </div>
 
                 <div className="flex items-center space-x-4">
-               
-                 
+
+
 
                   {/* Notifications */}
                   <button className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors">

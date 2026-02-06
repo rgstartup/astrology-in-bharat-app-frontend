@@ -27,6 +27,7 @@ interface DataTableProps<T> {
   totalItems?: number;
   onPageChange?: (page: number) => void;
   filterElement?: React.ReactNode;
+  headerAction?: React.ReactNode;
 }
 
 const TableRow = memo(function TableRow<T extends { id: number | string }>({
@@ -120,6 +121,7 @@ export function DataTable<T extends { id: number | string }>({
   totalItems = 0,
   onPageChange,
   filterElement,
+  headerAction,
 }: DataTableProps<T>) {
   // State for pagination and search
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -222,6 +224,13 @@ export function DataTable<T extends { id: number | string }>({
             <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+              {/* Header Action Button */}
+              {headerAction && (
+                <div className="flex-shrink-0">
+                  {headerAction}
+                </div>
+              )}
+
               {/* Custom Filter Element */}
               {filterElement && (
                 <div className="min-w-[150px]">

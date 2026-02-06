@@ -90,8 +90,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             // Capture tokens from URL (Google OAuth Redirect)
             const searchParams = new URLSearchParams(window.location.search);
-            const urlAccessToken = searchParams.get('accessToken');
-            const urlRefreshToken = searchParams.get('refreshToken');
+            const urlAccessToken = searchParams.get('accessToken') || searchParams.get('token');
+            const urlRefreshToken = searchParams.get('refreshToken') || searchParams.get('refresh_token');
 
             if (urlAccessToken) {
                 console.log("🎁 [Auth] Found expert tokens in URL, processing...");
@@ -100,6 +100,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     setCookie('refreshToken', urlRefreshToken);
                 }
 
+                setIsAuthenticated(true);
                 toast.success("Login Successful!");
 
                 // Clean URL parameters and redirect to dashboard

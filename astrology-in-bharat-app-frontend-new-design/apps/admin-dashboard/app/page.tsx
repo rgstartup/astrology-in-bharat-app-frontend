@@ -23,7 +23,7 @@ export default function AdminLoginPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/email/login`,
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/login`,
         {
           method: "POST",
           headers: {
@@ -80,11 +80,9 @@ export default function AdminLoginPage() {
         <div className="relative hidden lg:block h-[500px]">
           <div className="absolute inset-0 bg-yellow-600 bg-opacity-70 flex flex-col items-center justify-center text-white p-8 z-10">
             <img
-              src="/images/logo1.webp"
+              src="/images/Astrologer.png"
               alt="Logo"
-              width={100}
-              height={100}
-              className="absolute top-4 left-4 bg-gray-50 rounded-xl p-2"
+              className="w-56 h-56 object-contain mb-6 drop-shadow-2xl"
             />
 
             <div className="text-left">
