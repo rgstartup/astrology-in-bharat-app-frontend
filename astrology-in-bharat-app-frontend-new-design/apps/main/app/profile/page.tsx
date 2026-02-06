@@ -10,7 +10,7 @@ import apiClient, {
   getClientProfile, updateClientProfile, createClientProfile, uploadClientDocument,
   ClientProfileData, AddressDto, getAllChatSessions, getChatHistory, getMyOrders,
   getWalletTransactions, getNotifications, markNotificationAsRead, deleteNotification,
-  clearAllNotifications, getMyRewards
+  clearAllNotifications, getMyRewards, getSupportSettings, SupportSettings
 } from "@/libs/api-profile";
 import * as LucideIcons from "lucide-react";
 import { loadRazorpay } from "@/libs/razorpay";
@@ -77,6 +77,14 @@ const ProfilePage: React.FC = () => {
   // Rewards State
   const [rewards, setRewards] = useState<any[]>([]);
   const [loadingRewards, setLoadingRewards] = useState(false);
+
+  // Support Settings State
+  const [supportSettings, setSupportSettings] = useState<SupportSettings>({
+    email: 'support@astrologyinbharat.com',
+    phone: '+919876543210',
+    whatsapp: '+919876543210'
+  });
+  const [loadingSupportSettings, setLoadingSupportSettings] = useState(false);
 
   // Initialize tabs from URL or localStorage on mount
   useEffect(() => {
@@ -427,6 +435,30 @@ const ProfilePage: React.FC = () => {
     loadRewards();
   }, [loadRewards]);
 
+  // Load support settings
+  const loadSupportSettings = useCallback(async () => {
+    if (activeTab === "support") {
+      setLoadingSupportSettings(true);
+      try {
+        const data = await getSupportSettings();
+        console.log("📞 Support settings loaded:", data);
+        if (data) {
+          setSupportSettings(data);
+        }
+      } catch (error) {
+        console.error("Failed to load support settings:", error);
+        // Keep default values if API fails
+      } finally {
+        setLoadingSupportSettings(false);
+      }
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    loadSupportSettings();
+  }, [loadSupportSettings]);
+
+
   // Function to open chat history modal
   const handleViewChat = async (session: any) => {
     try {
@@ -587,6 +619,7 @@ const ProfilePage: React.FC = () => {
     { icon: "fa-solid fa-bag-shopping", label: "My Orders", id: "orders" },
     { icon: "fa-solid fa-scroll", label: "My Kundli Reports", id: "reports" },
     { icon: "fa-solid fa-bell", label: "All Notifications", id: "notifications" },
+    { icon: "fa-solid fa-headset", label: "Help & Support", id: "support" },
   ];
 
 
@@ -1941,6 +1974,166 @@ const ProfilePage: React.FC = () => {
                       ))}
                     </div>
                   )}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "support" && (
+              <div className="card border-0 shadow-sm rounded-4 mb-4">
+                <div className="card-header bg-white border-0 pt-4 px-4 mb-3">
+                  <h5 className="fw-bold mb-0">
+                    <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#e3f2fd", color: "#1976d2" }}>
+                      <i className="fa-solid fa-headset"></i>
+                    </span>
+                    Help & Support
+                  </h5>
+                  <p className="text-muted small mb-0 mt-2">We're here to help you with any questions or concerns</p>
+                </div>
+                <div className="card-body p-4">
+                  {/* Quick Contact Cards */}
+                  <div className="row g-3 mb-4">
+                    <div className="col-md-4">
+                      <div className="card border-0 bg-light h-100 hover:shadow-md transition-all">
+                        <div className="card-body text-center p-4">
+                          <div className="mb-3">
+                            <i className="fa-solid fa-envelope fa-2x" style={{ color: "#fd6410" }}></i>
+                          </div>
+                          <h6 className="fw-bold mb-2">Email Support</h6>
+                          <p className="text-muted small mb-3">Get help via email</p>
+                          <a href={`mailto:${supportSettings.email || 'support@astrologyinbharat.com'}`} className="btn btn-sm btn-outline-primary rounded-pill">
+                            <i className="fa-solid fa-paper-plane me-2"></i>
+                            Send Email
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-4">
+                      <div className="card border-0 bg-light h-100 hover:shadow-md transition-all">
+                        <div className="card-body text-center p-4">
+                          <div className="mb-3">
+                            <i className="fa-brands fa-whatsapp fa-2x" style={{ color: "#25D366" }}></i>
+                          </div>
+                          <h6 className="fw-bold mb-2">WhatsApp</h6>
+                          <p className="text-muted small mb-3">Chat with us instantly</p>
+                          <a href={`https://wa.me/${(supportSettings.whatsapp || '+919876543210').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-success rounded-pill">
+                            <i className="fa-brands fa-whatsapp me-2"></i>
+                            Chat Now
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-4">
+                      <div className="card border-0 bg-light h-100 hover:shadow-md transition-all">
+                        <div className="card-body text-center p-4">
+                          <div className="mb-3">
+                            <i className="fa-solid fa-phone fa-2x" style={{ color: "#fd6410" }}></i>
+                          </div>
+                          <h6 className="fw-bold mb-2">Phone Support</h6>
+                          <p className="text-muted small mb-3">Call us directly</p>
+                          <a href={`tel:${supportSettings.phone || '+919876543210'}`} className="btn btn-sm btn-outline-primary rounded-pill">
+                            <i className="fa-solid fa-phone me-2"></i>
+                            Call Now
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* FAQ Section */}
+                  <div className="mt-5">
+                    <h6 className="fw-bold mb-4">
+                      <i className="fa-solid fa-circle-question me-2" style={{ color: "#fd6410" }}></i>
+                      Frequently Asked Questions
+                    </h6>
+                    <div className="accordion" id="faqAccordion">
+                      <div className="accordion-item border-0 mb-3 rounded-3 overflow-hidden shadow-sm">
+                        <h2 className="accordion-header">
+                          <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            How do I recharge my wallet?
+                          </button>
+                        </h2>
+                        <div id="faq1" className="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                          <div className="accordion-body text-muted">
+                            Go to the "My Wallet" section, select the amount you want to add, and complete the payment using Razorpay. Your wallet will be credited instantly.
+                          </div>
+                        </div>
+                      </div>
+                      <div className="accordion-item border-0 mb-3 rounded-3 overflow-hidden shadow-sm">
+                        <h2 className="accordion-header">
+                          <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            How can I book a consultation?
+                          </button>
+                        </h2>
+                        <div id="faq2" className="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                          <div className="accordion-body text-muted">
+                            Browse our expert astrologers, select the one you prefer, choose a consultation type (chat, call, or video), and confirm your booking. Make sure you have sufficient wallet balance.
+                          </div>
+                        </div>
+                      </div>
+                      <div className="accordion-item border-0 mb-3 rounded-3 overflow-hidden shadow-sm">
+                        <h2 className="accordion-header">
+                          <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            What if I'm not satisfied with my consultation?
+                          </button>
+                        </h2>
+                        <div id="faq3" className="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                          <div className="accordion-body text-muted">
+                            We strive for 100% customer satisfaction. If you're not happy with your consultation, please contact our support team within 24 hours, and we'll review your case for a possible refund or credit.
+                          </div>
+                        </div>
+                      </div>
+                      <div className="accordion-item border-0 mb-3 rounded-3 overflow-hidden shadow-sm">
+                        <h2 className="accordion-header">
+                          <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            How do I track my order?
+                          </button>
+                        </h2>
+                        <div id="faq4" className="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                          <div className="accordion-body text-muted">
+                            Visit the "My Orders" section to view all your orders. Click on any order to see detailed tracking information, shipping status, and estimated delivery date.
+                          </div>
+                        </div>
+                      </div>
+                      <div className="accordion-item border-0 mb-3 rounded-3 overflow-hidden shadow-sm">
+                        <h2 className="accordion-header">
+                          <button className="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                            Is my personal information secure?
+                          </button>
+                        </h2>
+                        <div id="faq5" className="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                          <div className="accordion-body text-muted">
+                            Yes! We use industry-standard encryption and security measures to protect your personal information. Your data is never shared with third parties without your consent.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Additional Resources */}
+                  <div className="mt-5 p-4 rounded-3" style={{ backgroundColor: "#fff7ed" }}>
+                    <h6 className="fw-bold mb-3">
+                      <i className="fa-solid fa-lightbulb me-2" style={{ color: "#fd6410" }}></i>
+                      Additional Resources
+                    </h6>
+                    <ul className="list-unstyled mb-0">
+                      <li className="mb-2">
+                        <i className="fa-solid fa-circle-check me-2 text-success"></i>
+                        <a href="/terms" className="text-decoration-none">Terms & Conditions</a>
+                      </li>
+                      <li className="mb-2">
+                        <i className="fa-solid fa-circle-check me-2 text-success"></i>
+                        <a href="/privacy" className="text-decoration-none">Privacy Policy</a>
+                      </li>
+                      <li className="mb-2">
+                        <i className="fa-solid fa-circle-check me-2 text-success"></i>
+                        <a href="/refund-policy" className="text-decoration-none">Refund & Cancellation Policy</a>
+                      </li>
+                      <li className="mb-0">
+                        <i className="fa-solid fa-circle-check me-2 text-success"></i>
+                        <a href="/about" className="text-decoration-none">About Us</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             )}

@@ -131,4 +131,16 @@ export const applyCoupon = async (code: string, amount: number, serviceType: str
     return response.data;
 };
 
+// Support Settings
+export interface SupportSettings {
+    email?: string;
+    phone?: string;
+    whatsapp?: string;
+}
+
+export const getSupportSettings = async (): Promise<SupportSettings> => {
+    const response = await apiClient.get('/settings/support');
+    return response.data;
+};
+
 export default apiClient;
