@@ -1,5 +1,5 @@
 import React from "react";
-import { Edit3, Save, ChevronDown, ChevronUp } from "lucide-react";
+import { Edit3, Save, ChevronDown, ChevronUp, X, Plus } from "lucide-react";
 import { Profile, Gender } from "./types";
 
 interface PersonalInfoProps {
@@ -31,6 +31,25 @@ export default function PersonalInfo({
     const [showAddress, setShowAddress] = React.useState(false);
     const [isExpanded, setIsExpanded] = React.useState(true);
     const specs = profile.specialization ? profile.specialization.split(',').map(s => s.trim()).filter(s => s) : [];
+    const [newSpec, setNewSpec] = React.useState("");
+
+    const handleAddSpec = () => {
+        if (!newSpec.trim()) return;
+        const currentSpecs = tempProfile.specialization ? tempProfile.specialization.split(',').map(s => s.trim()).filter(s => s) : [];
+        if (!currentSpecs.includes(newSpec.trim())) {
+            const updatedSpecs = [...currentSpecs, newSpec.trim()].join(',');
+            onChange({ target: { name: 'specialization', value: updatedSpecs, type: 'text' } } as any);
+        }
+        setNewSpec("");
+    };
+
+    const handleRemoveSpec = (specToRemove: string) => {
+        const currentSpecs = tempProfile.specialization ? tempProfile.specialization.split(',').map(s => s.trim()).filter(s => s) : [];
+        const updatedSpecs = currentSpecs.filter(s => s !== specToRemove).join(',');
+        onChange({ target: { name: 'specialization', value: updatedSpecs, type: 'text' } } as any);
+    };
+
+    const tempSpecs = tempProfile.specialization ? tempProfile.specialization.split(',').map(s => s.trim()).filter(s => s) : [];
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -170,6 +189,74 @@ export default function PersonalInfo({
                                         className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
                                     />
                                 </div>
+
+                                {/* Experience Field */}
+                                <div className="sm:col-span-1">
+                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                                        Experience (Years)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="experience_in_years"
+                                        min="0"
+                                        value={tempProfile.experience_in_years || 0}
+                                        onChange={onChange}
+                                        placeholder="e.g. 5"
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                                    />
+                                </div>
+
+                                {/* Specialization Field */}
+                                <div className="sm:col-span-2">
+                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                                        Specializations
+                                    </label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            value={newSpec}
+                                            onChange={(e) => setNewSpec(e.target.value)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    handleAddSpec();
+                                                }
+                                            }}
+                                            placeholder="Add specialization (e.g. Vedic, Tarot)"
+                                            className="flex-1 p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={handleAddSpec}
+                                            className="bg-yellow-100 text-yellow-700 p-2.5 rounded-lg hover:bg-yellow-200 transition-colors"
+                                        >
+                                            {/* @ts-ignore */}
+                                            <Plus className="w-5 h-5" />
+                                        </button>
+                                    </div>
+                                    {/* Chips Display */}
+                                    <div className="flex flex-wrap gap-2 mt-3">
+                                        {tempSpecs.map((spec, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex items-center gap-1 bg-yellow-50 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium border border-yellow-100"
+                                            >
+                                                <span>{spec}</span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveSpec(spec)}
+                                                    className="hover:text-red-500 focus:outline-none"
+                                                >
+                                                    {/* @ts-ignore */}
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                        {tempSpecs.length === 0 && (
+                                            <span className="text-xs text-gray-400 italic">No specializations added.</span>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Address Section */}
@@ -297,6 +384,20 @@ export default function PersonalInfo({
                                     <p className="font-medium text-black">
                                         {profile.languages && profile.languages.length > 0 ? profile.languages.join(', ') : "Not added"}
                                     </p>
+                                </div>
+                                <div className="sm:col-span-1">
+                                    <p className="text-gray-500">Experience</p>
+                                    <p className="font-medium text-black">{profile.experience_in_years ? `${profile.experience_in_years} Years` : "Not added"}</p>
+                                </div>
+                                <div className="sm:col-span-2">
+                                    <p className="text-gray-500">Specializations</p>
+                                    <div className="flex flex-wrap gap-2 mt-1">
+                                        {specs.length > 0 ? specs.map((spec, i) => (
+                                            <span key={i} className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full">
+                                                {spec}
+                                            </span>
+                                        )) : <p className="font-medium text-black">Not added</p>}
+                                    </div>
                                 </div>
                             </div>
 

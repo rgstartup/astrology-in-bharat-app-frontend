@@ -50,25 +50,25 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="col-lg-2 col-md-6">
-              <h4 className="aib-footer-title">Horoscope</h4>
+              <h4 className="aib-footer-title">Free Calculator</h4>
               <ul className="aib-footer-links">
                 <li>
-                  <Link href={PATHS.HOROSCOPE}>Daily Horoscope</Link>
+                  <Link href={PATHS.MARRIAGE_AGE_CALCULATOR}>Marriage Age </Link>
                 </li>
                 <li>
-                  <a href="#">Weekly Horoscope</a>
+                   <Link href={PATHS.DAHEJ_CALCULATOR}>Dahej Calculator</Link>
                 </li>
                 <li>
-                  <a href="#">Monthly Horoscope</a>
+                 <Link href={PATHS.LOVE_COMPATIBILITY_CALCULATOR}>Love Compatibility </Link>
                 </li>
                 <li>
-                  <a href="#">Yearly Horoscope</a>
+                  <Link href={PATHS.LUCKY_NUMBER_CALCULATOR}>Lucky Number  </Link>
                 </li>
                 <li>
-                  <a href="#">Zodiac Signs</a>
+                  <Link href={PATHS.LIFE_PATH_CALCULATOR}>Life Path  </Link>
                 </li>
                 <li>
-                  <a href="#">Love Horoscope</a>
+                   <Link href={PATHS.NAKSHATRA_FINDER}>Nakshatra Finder  </Link>
                 </li>
               </ul>
             </div>
@@ -77,10 +77,10 @@ const Footer: React.FC = () => {
               <h4 className="aib-footer-title">Astrology Services</h4>
               <ul className="aib-footer-links">
                 <li>
-                  <a href="#">Chat with Astrologer</a>
+                  <Link href={PATHS.ONLINE_PUJA}>Online Puja</Link>
                 </li>
                 <li>
-                  <a href="#">Talk to Astrologer</a>
+                  <a href="/our-astrologers">Talk to Astrologer</a>
                 </li>
                 <li>
                   <a href="#">Video Consultation</a>
@@ -89,10 +89,10 @@ const Footer: React.FC = () => {
                   <Link href={PATHS.KUNDALI_MATCHING}>Kundli Matching</Link>
                 </li>
                 <li>
-                  <a href="#">Kundli Prediction</a>
+                  <a href="/kundali-matching">Kundli Prediction</a>
                 </li>
                 <li>
-                  <a href="#">Numerology Report</a>
+                  <a href="/calculator/name-numerology">Numerology  Report</a>
                 </li>
               </ul>
             </div>

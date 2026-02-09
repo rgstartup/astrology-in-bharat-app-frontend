@@ -3,7 +3,7 @@ import { ConsultationServicesData } from "@/components/features/services/data";
 import ConsultationCard from "@/components/features/services/ConsultationCard";
 import NextLink from "next/link";
 const Link = NextLink as any;
-const AstrologerConsultant = () => {
+const  AstrologerConsultant = () => {
   return (
     <section className="bg-edeef1 space-section">
       <div className='container'>

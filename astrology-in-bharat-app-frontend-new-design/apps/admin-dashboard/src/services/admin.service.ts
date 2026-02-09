@@ -130,3 +130,14 @@ export const markDisputeMessagesRead = async (disputeId: number) => {
   return res.data;
 };
 
+// Live Sessions
+export const getLiveSessions = async (type?: string) => {
+  const res = await api.get(`/admin/live-sessions${type ? `?type=${type}` : ""}`);
+  return res.data;
+};
+
+export const getChatHistory = async (id: number) => {
+  const res = await api.get(`/admin/live-sessions/${id}/history`);
+  return res.data;
+};
+

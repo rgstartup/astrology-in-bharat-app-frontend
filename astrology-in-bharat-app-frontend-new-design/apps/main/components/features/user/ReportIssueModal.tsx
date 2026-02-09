@@ -36,13 +36,15 @@ export default function ReportIssueModal({
         "Other",
     ];
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (isChat: boolean = false) => {
         if (!category || !issue.trim()) {
             toast.error("Please select a category and describe your issue");
             return;
         }
 
         setLoading(true);
+        if (isChat) setSubmittingWithChat(true);
+
         try {
             const payload = {
                 type,
@@ -73,7 +75,7 @@ export default function ReportIssueModal({
             const newDispute = response.data?.data || response.data;
 
             toast.success("Issue reported successfully!");
-            if (onSuccess) onSuccess(submittingWithChat ? newDispute : undefined);
+            if (onSuccess) onSuccess(isChat ? newDispute : undefined);
             onClose();
             setIssue("");
             setCategory("");
@@ -98,6 +100,7 @@ export default function ReportIssueModal({
             toast.error(errorMessage);
         } finally {
             setLoading(false);
+            setSubmittingWithChat(false);
         }
     };
 
@@ -229,13 +232,13 @@ export default function ReportIssueModal({
                     <div className="flex gap-3 mt-6">
                         <button
                             onClick={onClose}
-                            className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition-all font-sans"
+                            className="px-6 py-3 border-2 border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition-all font-sans"
                         >
                             Cancel
                         </button>
 
                         <button
-                            onClick={handleSubmit}
+                            onClick={() => handleSubmit(false)}
                             disabled={loading || !category || !issue.trim()}
                             className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all font-sans"
                         >
@@ -253,11 +256,7 @@ export default function ReportIssueModal({
                         </button>
 
                         <button
-                            onClick={async () => {
-                                setSubmittingWithChat(true);
-                                await handleSubmit();
-                                setSubmittingWithChat(false);
-                            }}
+                            onClick={() => handleSubmit(true)}
                             disabled={loading || !category || !issue.trim()}
                             className="flex-1 px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-sans flex items-center justify-center gap-2"
                         >
