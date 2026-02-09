@@ -8,8 +8,18 @@ export const notificationSocket: Socket = io(`${API_URL}/notifications`, {
     transports: ['websocket', 'polling'],
 });
 
+// Support Socket (for disputes)
+export const supportSocket: Socket = io(`${API_URL}/support`, {
+    autoConnect: false,
+    transports: ['websocket', 'polling'],
+});
+
 export const getNotificationSocket = (): Socket => {
     return notificationSocket;
+};
+
+export const getSupportSocket = (): Socket => {
+    return supportSocket;
 };
 
 export const connectNotificationSocket = (userId: number) => {

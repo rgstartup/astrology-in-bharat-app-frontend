@@ -143,4 +143,40 @@ export const getSupportSettings = async (): Promise<SupportSettings> => {
     return response.data;
 };
 
+// Disputes / Support Tickets
+export interface CreateDisputeDto {
+    type: 'order' | 'consultation';
+    itemId: number;
+    orderId?: string | number;
+    consultationId?: number;
+    category: string;
+    description: string;
+    itemDetails: any;
+}
+
+export const createDispute = async (data: CreateDisputeDto) => {
+    const response = await apiClient.post('/support/disputes', data);
+    return response.data;
+};
+
+export const getMyDisputes = async () => {
+    const response = await apiClient.get('/support/disputes');
+    return response.data;
+};
+
+export const getDisputeMessages = async (disputeId: number) => {
+    const response = await apiClient.get(`/support/disputes/${disputeId}/messages`);
+    return response.data;
+};
+
+export const sendDisputeMessage = async (disputeId: number, data: { message?: string, attachmentUrl?: string, attachmentType?: string }) => {
+    const response = await apiClient.post(`/support/disputes/${disputeId}/messages`, data);
+    return response.data;
+};
+
+export const markDisputeMessagesRead = async (disputeId: number) => {
+    const response = await apiClient.patch(`/support/disputes/${disputeId}/messages/read`);
+    return response.data;
+};
+
 export default apiClient;

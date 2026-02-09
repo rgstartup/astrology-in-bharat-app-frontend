@@ -93,3 +93,40 @@ export const getFilteredUsers = async (params: any) => {
   return res.data.users || res.data || [];
 };
 
+// Disputes / Support Tickets Management
+export const getDisputes = async (params?: { page?: number; limit?: number; status?: string }) => {
+  const res = await api.get("/admin/support/disputes", { params });
+  return res.data;
+};
+
+export const getDisputeById = async (id: number) => {
+  const res = await api.get(`/admin/support/disputes/${id}`);
+  return res.data;
+};
+
+export const updateDisputeStatus = async (id: number, data: { status: string; notes?: string }) => {
+  const res = await api.patch(`/admin/support/disputes/${id}/status`, data);
+  return res.data;
+};
+
+export const getDisputeStats = async () => {
+  const res = await api.get("/admin/support/disputes/stats");
+  return res.data;
+};
+
+// Chat APIs
+export const getDisputeMessages = async (disputeId: number) => {
+  const res = await api.get(`/admin/support/disputes/${disputeId}/messages`);
+  return res.data;
+};
+
+export const sendDisputeMessage = async (disputeId: number, data: { message?: string, attachmentUrl?: string, attachmentType?: string }) => {
+  const res = await api.post(`/admin/support/disputes/${disputeId}/messages`, data);
+  return res.data;
+};
+
+export const markDisputeMessagesRead = async (disputeId: number) => {
+  const res = await api.patch(`/admin/support/disputes/${disputeId}/messages/read`);
+  return res.data;
+};
+

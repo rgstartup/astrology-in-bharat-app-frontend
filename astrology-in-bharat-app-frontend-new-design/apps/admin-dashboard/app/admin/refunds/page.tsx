@@ -1,4 +1,3 @@
-```
 // refund-management/page.tsx
 "use client";
 
@@ -27,7 +26,7 @@ export default function RefundManagementPage() {
     const pending = refunds.filter(r => r.status === "pending").length;
     const approved = refunds.filter(r => r.status === "approved").length;
     const totalAmount = refunds.reduce((sum, r) => sum + r.requestedAmount, 0);
-    
+
     return [
       {
         title: "Total Refunds",
@@ -35,37 +34,32 @@ export default function RefundManagementPage() {
         icon: RefreshCw,
         iconColor: "text-blue-600",
         iconBgColor: "bg-blue-100",
-        trend: { value: "+8%", isPositive: false, period: "this month" }
-      },
-       {
-        title: "Total Refunds",
-        value: total.toString(),
-        icon: RefreshCw,
-        iconColor: "text-blue-600",
-        iconBgColor: "bg-blue-100",
-        trend: { value: "+8%", isPositive: false, period: "this month" }
-      },
-       {
-        title: "Total Refunds",
-        value: total.toString(),
-        icon: RefreshCw,
-        iconColor: "text-blue-600",
-        iconBgColor: "bg-blue-100",
-        trend: { value: "+8%", isPositive: false, period: "this month" }
+        trend: { value: "+8%", isPositive: true, period: "this month" }
       },
       {
-        title: "Total Refunds",
-        value: total.toString(),
+        title: "Pending Requests",
+        value: pending.toString(),
         icon: RefreshCw,
-        iconColor: "text-blue-600",
-        iconBgColor: "bg-blue-100",
-        trend: { value: "+8%", isPositive: false, period: "this month" }
+        iconColor: "text-amber-600",
+        iconBgColor: "bg-amber-100",
+        trend: { value: "Priority", isPositive: true, period: "needs action" }
       },
-      
-
-      
-
-      
+      {
+        title: "Approved",
+        value: approved.toString(),
+        icon: RefreshCw,
+        iconColor: "text-green-600",
+        iconBgColor: "bg-green-100",
+        trend: { value: "+12%", isPositive: true, period: "this month" }
+      },
+      {
+        title: "Total Amount",
+        value: `₹${totalAmount.toLocaleString()}`,
+        icon: RefreshCw,
+        iconColor: "text-purple-600",
+        iconBgColor: "bg-purple-100",
+        trend: { value: "All time", isPositive: true, period: "total" }
+      }
     ];
   }, [refunds]);
 
@@ -80,27 +74,27 @@ export default function RefundManagementPage() {
 
   // Handlers
   const handleApprove = (id: string) => {
-    alert(`Approving refund ${ id } `);
+    alert(`Approving refund ${id} `);
   };
 
   const handleReject = (id: string) => {
-    alert(`Rejecting refund ${ id } `);
+    alert(`Rejecting refund ${id} `);
   };
 
   const handleViewDetails = (refund: RefundRequest) => {
-    alert(`Viewing details for ${ refund.id }`);
+    alert(`Viewing details for ${refund.id}`);
   };
 
   return (
-  <main className="space-y-6 px-4 py-4 sm:p-6">
+    <main className="space-y-6 px-4 py-4 sm:p-6">
 
       {/* Header */}
-     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-  <div className="min-w-0">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0">
           <h1 className="text-3xl font-bold text-gray-900">Refund Management</h1>
           <p className="text-gray-600 mt-1">Manage and process refund requests from users</p>
         </div>
-        
+
         <div className="flex items-center gap-3">
           <Button variant="secondary" icon={Download}>
             Export Report
@@ -113,7 +107,7 @@ export default function RefundManagementPage() {
       <RefundStats stats={stats} />
 
       {/* Filters */}
-      <RefundFilters 
+      <RefundFilters
         filters={filters}
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}

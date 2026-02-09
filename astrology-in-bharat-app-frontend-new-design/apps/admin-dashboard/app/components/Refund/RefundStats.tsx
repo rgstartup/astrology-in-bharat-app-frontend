@@ -1,6 +1,6 @@
 // refund-management/components/RefundStats.tsx
 import React from "react";
-import { StatsCards } from "../../../../../shared/components/StatsCard";
+import { StatsCards } from "../../../../shared/components/StatsCard";
 import {
   IndianRupee,
   Clock,

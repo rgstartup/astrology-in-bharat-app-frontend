@@ -46,6 +46,28 @@ apiClient.interceptors.request.use(
     }
 );
 
+// Add a response interceptor to handle errors globally
+apiClient.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            const backendMessage = error.response.data?.message;
+            if (backendMessage && typeof backendMessage === 'string') {
+                // Show the specific message from backend (e.g., "Aapka session expire ho gaya hai")
+                toast.error(backendMessage, { toastId: 'auth-error' });
+            }
+
+            // If it's a 401, the token is likely expired or invalid
+            if (typeof window !== 'undefined') {
+                deleteCookie('clientAccessToken');
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
 interface ClientUser {
     id: number;
     name?: string;

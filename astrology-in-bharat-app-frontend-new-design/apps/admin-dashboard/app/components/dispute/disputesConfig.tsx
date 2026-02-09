@@ -73,39 +73,39 @@ export const disputesData: Dispute[] = [
   },
 ];
 
-export const getStatsConfig = (disputes: Dispute[]) => [
+export const getStatsConfig = (disputes: Dispute[], stats?: any) => [
   {
     title: "Total Disputes",
-    value: disputes.length,
+    value: stats?.total || disputes.length,
     icon: AlertCircle,
     iconColor: "text-orange-600",
     iconBgColor: "bg-orange-100",
-    trend: { value: "+3", isPositive: false, period: "this week" },
+    trend: { value: `${disputes.length}`, isPositive: false, period: "total" },
   },
   {
     title: "Pending",
-    value: disputes.filter((d) => d.status === "pending").length,
+    value: stats?.pending || disputes.filter((d) => d.status === "pending").length,
     icon: Clock,
     iconColor: "text-yellow-600",
     iconBgColor: "bg-yellow-100",
-    trend: { value: "2 urgent", isPositive: false, period: "need attention" },
+    trend: { value: "Need attention", isPositive: false, period: "urgent" },
   },
   {
     title: "Under Review",
-    value: disputes.filter((d) => d.status === "under_review").length,
+    value: stats?.underReview || disputes.filter((d) => d.status === "under_review").length,
     icon: MessageSquare,
     iconColor: "text-blue-600",
     iconBgColor: "bg-blue-100",
-    trend: { value: "+1", isPositive: false, period: "today" },
+    trend: { value: "In progress", isPositive: false, period: "active" },
   },
- 
+
   {
     title: "Resolved",
-    value: disputes.filter((d) => d.status === "resolved").length,
+    value: stats?.resolved || disputes.filter((d) => d.status === "resolved").length,
     icon: TrendingUp,
     iconColor: "text-green-600",
     iconBgColor: "bg-green-100",
-    trend: { value: "+5", isPositive: true, period: "this month" },
+    trend: { value: "Completed", isPositive: true, period: "success" },
   },
 ];
 
@@ -127,35 +127,41 @@ export const getColumns = () => [
   {
     key: "disputeId",
     label: "ID",
-    render: (d: Dispute) => <span className="font-semibold">{d.disputeId}</span>,
+    render: (d: Dispute) => <span className="font-semibold">{d.disputeId || d.id || 'N/A'}</span>,
   },
   {
     key: "user",
     label: "User",
-    render: (d: Dispute) => (
-      <div className="flex items-center gap-2">
-        <User className="w-4 h-4 text-gray-400" />
-        <span className="text-sm">{d.user}</span>
-      </div>
-    ),
+    render: (d: Dispute) => {
+      const userName = typeof d.user === 'string' ? d.user : (d.user as any)?.name || (d.user as any)?.email || 'Unknown';
+      return (
+        <div className="flex items-center gap-2">
+          <User className="w-4 h-4 text-gray-400" />
+          <span className="text-sm">{userName}</span>
+        </div>
+      );
+    },
   },
   {
     key: "expert",
     label: "Expert",
-    render: (d: Dispute) => (
-      <div className="flex items-center gap-2">
-        <UserCheck className="w-4 h-4 text-gray-400" />
-        <span className="text-sm">{d.expert}</span>
-      </div>
-    ),
+    render: (d: Dispute) => {
+      const expertName = typeof d.expert === 'string' ? d.expert : (d.expert as any)?.name || (d.expert as any)?.email || 'N/A';
+      return (
+        <div className="flex items-center gap-2">
+          <UserCheck className="w-4 h-4 text-gray-400" />
+          <span className="text-sm">{expertName}</span>
+        </div>
+      );
+    },
   },
   {
     key: "subject",
     label: "Subject",
     render: (d: Dispute) => (
       <div className="max-w-xs">
-        <p className="text-sm font-medium truncate">{d.subject}</p>
-        <p className="text-xs text-gray-600">{d.category}</p>
+        <p className="text-sm font-medium truncate">{d.subject || d.category || 'No subject'}</p>
+        <p className="text-xs text-gray-600">{d.category || 'General'}</p>
       </div>
     ),
   },
@@ -165,7 +171,7 @@ export const getColumns = () => [
     render: (d: Dispute) => (
       <div className="flex items-center gap-1 font-semibold">
         <IndianRupee className="w-3 h-3" />
-        {d.amount.toLocaleString()}
+        {d.amount ? d.amount.toLocaleString() : 'N/A'}
       </div>
     ),
   },
@@ -173,8 +179,8 @@ export const getColumns = () => [
     key: "priority",
     label: "Priority",
     render: (d: Dispute) => (
-      <span className={`px-2 py-1 rounded-full text-xs font-bold ${getBadge(d.priority)}`}>
-        {d.priority.toUpperCase()}
+      <span className={`px-2 py-1 rounded-full text-xs font-bold ${getBadge(d.priority || 'medium')}`}>
+        {(d.priority || 'MEDIUM').toUpperCase()}
       </span>
     ),
   },
@@ -182,8 +188,8 @@ export const getColumns = () => [
     key: "status",
     label: "Status",
     render: (d: Dispute) => (
-      <span className={`px-2 py-1 rounded-full text-xs font-bold border ${getBadge(d.status)}`}>
-        {d.status.replace("_", " ").toUpperCase()}
+      <span className={`px-2 py-1 rounded-full text-xs font-bold border ${getBadge(d.status || 'pending')}`}>
+        {(d.status || 'pending').replace("_", " ").toUpperCase()}
       </span>
     ),
   },
@@ -193,7 +199,7 @@ export const getColumns = () => [
     render: (d: Dispute) => (
       <div className="flex items-center gap-1 text-xs text-gray-600">
         <Calendar className="w-3 h-3" />
-        {new Date(d.createdAt).toLocaleDateString("en-IN")}
+        {d.createdAt ? new Date(d.createdAt).toLocaleDateString("en-IN") : 'N/A'}
       </div>
     ),
   },

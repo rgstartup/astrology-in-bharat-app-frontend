@@ -29,6 +29,19 @@ export const disconnectNotificationSocket = () => {
     socket.disconnect();
 };
 
+// Support Socket (for disputes chat)
+let supportSocket: Socket | null = null;
+
+export const getSupportSocket = (): Socket => {
+    if (!supportSocket) {
+        supportSocket = io(`${API_URL}/support`, {
+            autoConnect: false,
+            transports: ['websocket', 'polling'],
+        });
+    }
+    return supportSocket;
+};
+
 // Admin Socket (for admin dashboard)
 export const connectAdminSocket = () => {
     const socket = getNotificationSocket();
