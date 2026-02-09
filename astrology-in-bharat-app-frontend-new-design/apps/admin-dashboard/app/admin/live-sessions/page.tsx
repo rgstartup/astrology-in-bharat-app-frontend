@@ -1,9 +1,9 @@
 // live-sessions/page.tsx
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { StatsCards } from "../../../../shared/components/StatsCard";
-
+import { toast } from "react-toastify";
 
 import {
   RefreshCw,
@@ -13,28 +13,86 @@ import {
   AlertCircle,
   Clock
 } from "lucide-react";
+
+const { Activity: ActivityIcon } = { Activity } as any;
 // Static components
 import { SessionHeader } from "@/app/components/live-sessions/SessionHeader";
 import { SessionFilters } from "@/app/components/live-sessions/SessionFilters";
 import { SessionControls } from "@/app/components/live-sessions/SessionControls";
 import { LiveSessionCard } from "@/app/components/live-sessions/card";
+import { ChatHistoryModal } from "@/app/components/live-sessions/ChatHistoryModal";
 
 // Config
-import { mockLiveSessions } from "@/app/components/live-sessions/sessionsConfig";
 import { filters } from "@/app/components/live-sessions/sessionsConfig";
 import type { LiveSession } from "@/app/components/live-sessions/session";
+import { getLiveSessions, getChatHistory } from "@/src/services/admin.service";
 
 export default function LiveSessionsPage() {
   // Simple state
-  const [sessions] = useState<LiveSession[]>(mockLiveSessions);
+  const [sessions, setSessions] = useState<LiveSession[]>([]);
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [volume, setVolume] = useState<number>(80);
   const [isPlaying, setIsPlaying] = useState(true);
 
+  // Modal State
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+  const [selectedSessionMessages, setSelectedSessionMessages] = useState<any[]>([]);
+  const [viewingSession, setViewingSession] = useState<LiveSession | null>(null);
+
+  const fetchSessions = async () => {
+    try {
+      setIsRefreshing(true);
+      const data = await getLiveSessions(activeFilter);
+
+      // Map backend data to frontend interface
+      const mappedSessions: LiveSession[] = data.map((s: any) => ({
+        id: s.id.toString(),
+        user: {
+          id: s.user?.id.toString() || "0",
+          name: s.user?.name || "Unknown User",
+          avatar: s.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${s.user?.id}`,
+          rating: 4.5
+        },
+        astrologer: {
+          id: s.expert?.id.toString() || "0",
+          name: s.expert?.user?.name || "Unknown Expert",
+          avatar: s.expert?.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${s.expert?.id}`,
+          specialty: s.expert?.specialization || "Astrology",
+          experience: s.expert?.experience_in_years || 0
+        },
+        sessionType: s.sessionType || "chat",
+        status: s.status === 'active' ? 'live' :
+          s.status === 'pending' ? 'pending' :
+            s.status === 'expired' ? 'expired' :
+              (s.status === 'completed' && s.terminatedBy === 'admin') ? 'admin-terminated' :
+                s.status === 'completed' ? 'ended' : 'live',
+        startTime: new Date(s.startTime || s.createdAt),
+        duration: s.freeMinutes + (s.pricePerMinute > 0 ? 30 : 0), // Estimate duration or use actual if ended
+        connectionQuality: "excellent",
+        chatMessages: 0, // We don't have this in session object yet
+        recording: false,
+        lastActive: new Date(s.updatedAt || s.createdAt),
+        issues: []
+      }));
+
+      setSessions(mappedSessions);
+    } catch (error) {
+      console.error("Failed to fetch sessions:", error);
+      toast.error("Failed to fetch live sessions");
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSessions();
+    const interval = setInterval(fetchSessions, 30000); // Auto refresh every 30s
+    return () => clearInterval(interval);
+  }, [activeFilter]);
+
   // Simple calculations
   const stats = useMemo(() => {
-
     const total = sessions.length;
     const live = sessions.filter(s => s.status === "live").length;
     const withIssues = sessions.filter(s => s.status === "technical-issue").length;
@@ -47,7 +105,7 @@ export default function LiveSessionsPage() {
         icon: Activity,
         iconColor: "text-blue-600",
         iconBgColor: "bg-blue-100",
-        trend: { value: "+12%", isPositive: true, period: "vs yesterday" }
+        trend: { value: "Now", isPositive: true, period: "" }
       },
       {
         title: "Live Now",
@@ -55,7 +113,7 @@ export default function LiveSessionsPage() {
         icon: Activity,
         iconColor: "text-green-600",
         iconBgColor: "bg-green-100",
-        trend: { value: "+5", isPositive: true, period: "last hour" }
+        trend: { value: "Live", isPositive: true, period: "" }
       },
       {
         title: "Recording",
@@ -63,7 +121,7 @@ export default function LiveSessionsPage() {
         icon: Video,
         iconColor: "text-purple-600",
         iconBgColor: "bg-purple-100",
-        trend: { value: "3", isPositive: true, period: "sessions" }
+        trend: { value: "Auto", isPositive: true, period: "" }
       },
       {
         title: "Issues",
@@ -71,9 +129,8 @@ export default function LiveSessionsPage() {
         icon: AlertCircle,
         iconColor: "text-red-600",
         iconBgColor: "bg-red-100",
-        trend: { value: "1", isPositive: false, period: "needs attention" }
+        trend: { value: "All Good", isPositive: true, period: "" }
       },
-
     ];
   }, [sessions]);
 
@@ -89,17 +146,30 @@ export default function LiveSessionsPage() {
 
   // Simple handlers
   const handleRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => setIsRefreshing(false), 1000);
+    fetchSessions();
   };
 
-  const handleJoinSession = (session: LiveSession) => {
-    alert(`Joining session ${session.id} as admin observer`);
+  const handleJoinSession = async (session: LiveSession) => {
+    if (session.sessionType !== 'chat') {
+      toast.info("Observation is only available for Chat sessions.");
+      return;
+    }
+
+    try {
+      setViewingSession(session);
+      const history = await getChatHistory(parseInt(session.id));
+      setSelectedSessionMessages(history);
+      setIsHistoryModalOpen(true);
+    } catch (error) {
+      console.error("Failed to fetch chat history:", error);
+      toast.error("Could not load conversation history.");
+    }
   };
 
   const handleEndSession = (sessionId: string) => {
-    if (confirm("Are you sure you want to end this session?")) {
-      alert(`Session ${sessionId} ended`);
+    if (confirm("Are you sure you want to end this session artificially? (Not recommended)")) {
+      // Endpoint doesn't exist yet for admin-forced end, but logic placeholder
+      alert(`Session ${sessionId} end request sent (UI Only)`);
     }
   };
 
@@ -138,16 +208,32 @@ export default function LiveSessionsPage() {
 
       {/* Sessions Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredSessions.map((session) => (
-          <LiveSessionCard
-            key={session.id}
-            session={session}
-            onJoinSession={handleJoinSession}
-            onEndSession={handleEndSession}
-            onToggleRecording={handleToggleRecording}
-          />
-        ))}
+        {filteredSessions.length > 0 ? (
+          filteredSessions.map((session) => (
+            <LiveSessionCard
+              key={session.id}
+              session={session}
+              onJoinSession={handleJoinSession}
+              onEndSession={handleEndSession}
+              onToggleRecording={handleToggleRecording}
+            />
+          ))
+        ) : (
+          <div className="col-span-full py-20 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+            <ActivityIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-500">No Active Sessions Found</h3>
+            <p className="text-gray-400">There are currently no sessions matching your filters.</p>
+          </div>
+        )}
       </div>
+
+      {/* Chat History Modal */}
+      <ChatHistoryModal
+        isOpen={isHistoryModalOpen}
+        onClose={() => setIsHistoryModalOpen(false)}
+        messages={selectedSessionMessages}
+        session={viewingSession}
+      />
     </main>
   );
 }

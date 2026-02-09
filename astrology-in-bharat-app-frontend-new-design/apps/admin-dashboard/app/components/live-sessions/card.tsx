@@ -1,6 +1,6 @@
 // live-sessions/components/LiveSessionCard.tsx
 import React from "react";
-import { Video, Mic, MessageSquare, Clock, MoreVertical, VideoOff, Download, AlertCircle, Eye, PhoneOff  } from "lucide-react";
+import { Video, Mic, MessageSquare, Clock, MoreVertical, VideoOff, Download, AlertCircle, Eye, PhoneOff } from "lucide-react";
 import { Button } from "@/app/components/admin/Button";
 import { ParticipantCard } from "./ParticipantCard";
 import { QualityIndicator } from "./QualityIndicator";
@@ -20,10 +20,10 @@ export function LiveSessionCard({
   onEndSession,
   onToggleRecording,
 }: LiveSessionCardProps) {
-  
+
   // SessionTypeIcon component
   const SessionTypeIcon = ({ type }: { type: string }) => {
-    switch(type) {
+    switch (type) {
       case "video": return <Video className="w-5 h-5 text-blue-600" />;
       case "audio": return <Mic className="w-5 h-5 text-green-600" />;
       case "chat": return <MessageSquare className="w-5 h-5 text-purple-600" />;
@@ -57,18 +57,18 @@ export function LiveSessionCard({
       {/* Card Content */}
       <div className="p-4">
         {/* Participants */}
-       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <ParticipantCard user={session.user} type="user" />
-          <ParticipantCard 
-            user={session.astrologer} 
-            type="astrologer" 
+          <ParticipantCard
+            user={session.astrologer}
+            type="astrologer"
             experience={session.astrologer.experience}
             specialty={session.astrologer.specialty}
           />
         </div>
 
         {/* Session Stats */}
-       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
 
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-between">
@@ -79,7 +79,7 @@ export function LiveSessionCard({
               {Math.floor((Date.now() - session.startTime.getTime()) / 60000)} min
             </p>
           </div>
-          
+
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Chat Messages</span>
@@ -92,28 +92,27 @@ export function LiveSessionCard({
         </div>
 
         {/* Connection & Controls */}
-       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
 
           <div>
-            <span className="text-sm text-gray-600">Connection Quality:</span>
-            <div className="mt-1">
+            {/* <span className="text-sm text-gray-600">Connection Quality:</span> */}
+            {/* <div className="mt-1">
               <QualityIndicator quality={session.connectionQuality} />
-            </div>
+            </div> */}
           </div>
-          
-        <div className="flex flex-col sm:flex-row gap-2">
+
+          <div className="flex flex-col sm:flex-row gap-2">
 
             <button
-              className={`p-2 rounded-lg ${
-                session.recording 
-                  ? "bg-red-100 text-red-600 hover:bg-red-200" 
+              className={`p-2 rounded-lg ${session.recording
+                  ? "bg-red-100 text-red-600 hover:bg-red-200"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
+                }`}
               onClick={() => onToggleRecording(session.id)}
             >
               <Video className="w-4 h-4" />
             </button>
-            
+
             <button className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200">
               <Download className="w-4 h-4" />
             </button>
@@ -140,23 +139,35 @@ export function LiveSessionCard({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          <Button
-            variant="primary"
-            size="sm"
-            icon={Eye}
-            fullWidth
-            onClick={() => onJoinSession(session)}
-          >
-            Join Session
-          </Button>
-          
+          {session.sessionType === 'chat' ? (
+            <Button
+              variant="primary"
+              size="sm"
+              icon={Eye}
+              fullWidth
+              onClick={() => onJoinSession(session)}
+            >
+              View Conversation
+            </Button>
+          ) : (
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={VideoOff}
+              fullWidth
+              disabled
+            >
+              Join Restricted
+            </Button>
+          )}
+
           <Button
             variant="danger"
             size="sm"
             icon={PhoneOff}
             onClick={() => onEndSession(session.id)}
           >
-            End Session
+            End
           </Button>
         </div>
       </div>

@@ -498,16 +498,18 @@ function ChatRoomContent() {
                                         </div>
                                     </div>
 
-                                    <div className={`flex flex-col ${msg.senderType === "user" ? "items-end" : "items-start"} max-w-[85%] md:max-w-[70%]`}>
+                                    <div className={`flex flex-col ${msg.senderType === "user" ? "items-end" : msg.senderType === "admin" ? "items-center w-full" : "items-start"} max-w-[85%] md:max-w-[70%] ${msg.senderType === "admin" ? "mx-auto" : ""}`}>
                                         <span className="text-[10px] uppercase font-bold tracking-widest opacity-30 mb-1 px-2">
-                                            {msg.senderType === "user" ? "You" : expertData.name}
+                                            {msg.senderType === "user" ? "You" : msg.senderType === "admin" ? "System Message" : expertData.name}
                                         </span>
                                         <div className={`w-full ${msg.senderType === "user"
                                             ? "bg-gradient-to-br from-[#fff9f2] to-[#fff3e6] text-[#2A0A0A] rounded-2xl rounded-br-none px-5 py-3 md:px-6 md:py-4"
-                                            : "bg-white text-[#2A0A0A] rounded-2xl rounded-bl-none px-5 py-3 md:px-6 md:py-4"
+                                            : msg.senderType === "admin"
+                                                ? "bg-red-50 text-red-600 border-2 border-red-100 rounded-2xl px-5 py-3 md:px-6 md:py-4 text-center font-bold"
+                                                : "bg-white text-[#2A0A0A] rounded-2xl rounded-bl-none px-5 py-3 md:px-6 md:py-4"
                                             } shadow-xl relative transition-all hover:scale-[1.01]`}>
                                             <p className="text-[14px] md:text-base leading-relaxed">{msg.content}</p>
-                                            <div className={`mt-1 flex ${msg.senderType === "user" ? "justify-end" : "justify-start"} text-black font-medium text-[10px] opacity-40`}>
+                                            <div className={`mt-1 flex ${msg.senderType === "user" ? "justify-end" : msg.senderType === "admin" ? "justify-center" : "justify-start"} text-black font-medium text-[10px] opacity-40`}>
                                                 {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </div>
                                         </div>

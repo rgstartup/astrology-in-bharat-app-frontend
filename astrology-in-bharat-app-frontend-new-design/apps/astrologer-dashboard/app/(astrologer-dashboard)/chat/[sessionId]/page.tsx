@@ -16,7 +16,7 @@ const {
 interface Message {
     id: number;
     senderId: number;
-    senderType: "user" | "expert";
+    senderType: "user" | "expert" | "admin";
     content: string;
     type?: string;
     createdAt?: string;
@@ -109,10 +109,14 @@ function ExpertChatRoomContent() {
             toast.success("Consultation started!");
         });
 
-        chatSocket.on('session_ended', () => {
-            console.log("[ExpertChatDebug] Session ended event received!");
+        chatSocket.on('session_ended', (data: any) => {
+            console.log("[ExpertChatDebug] Session ended event received!", data);
             setSessionStatus('completed');
-            toast.info("Session has ended.");
+            if (data?.terminatedBy === 'admin') {
+                toast.error(`SESSION TERMINATED BY ADMIN: ${data.interventionMessage || 'Administrative action'}`);
+            } else {
+                toast.info("Session has ended.");
+            }
         });
 
         return () => {
@@ -302,42 +306,58 @@ function ExpertChatRoomContent() {
                     </div>
                 )}
 
-                {messages.map((msg) => (
-                    <div key={msg.id} className={`flex items-start gap-3 ${msg.senderType === "expert" ? "flex-row-reverse" : "flex-row"}`}>
-                        {/* Avatar */}
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden border border-gray-100 shadow-sm bg-yellow-100 flex items-center justify-center text-[10px] font-bold text-yellow-700">
-                            {msg.senderType === "expert" ? (
-                                user?.avatar ? (
-                                    <img src={user.avatar} className="w-full h-full object-cover" />
-                                ) : (
-                                    user?.name?.charAt(0) || 'E'
-                                )
-                            ) : (
-                                clientAvatar ? (
-                                    <img src={clientAvatar} className="w-full h-full object-cover" />
-                                ) : (
-                                    clientName.charAt(0)
-                                )
-                            )}
-                        </div>
+                {messages.map((msg) => {
+                    const isAdmin = msg.senderType === "admin";
+                    const isExpert = msg.senderType === "expert";
 
-                        {/* Message Content */}
-                        <div className={`max-w-[70%] flex flex-col ${msg.senderType === "expert" ? "items-end" : "items-start"}`}>
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 px-1">
-                                {msg.senderType === "expert" ? "You (Expert)" : (clientName || "Client")}
-                            </span>
-                            <div className={`px-4 py-3 rounded-2xl shadow-sm ${msg.senderType === "expert"
-                                ? "bg-yellow-600 text-white rounded-tr-none"
-                                : "bg-white text-gray-900 border border-gray-100 rounded-tl-none"
-                                }`}>
-                                <p className="text-sm leading-relaxed">{msg.content}</p>
-                                <p className={`text-[9px] mt-1 opacity-60 font-bold ${msg.senderType === "expert" ? "text-white" : "text-gray-400"}`}>
-                                    {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
-                                </p>
+                    return (
+                        <div key={msg.id} className={`flex items-start gap-3 ${isExpert ? "flex-row-reverse" : "flex-row"} ${isAdmin ? "justify-center w-full" : ""}`}>
+                            {/* Avatar */}
+                            {!isAdmin && (
+                                <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden border border-gray-100 shadow-sm bg-yellow-100 flex items-center justify-center text-[10px] font-bold text-yellow-700">
+                                    {isExpert ? (
+                                        user?.avatar ? (
+                                            <img src={user.avatar} className="w-full h-full object-cover" />
+                                        ) : (
+                                            user?.name?.charAt(0) || 'E'
+                                        )
+                                    ) : (
+                                        clientAvatar ? (
+                                            <img src={clientAvatar} className="w-full h-full object-cover" />
+                                        ) : (
+                                            clientName.charAt(0)
+                                        )
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Message Content */}
+                            <div className={`max-w-[70%] flex flex-col ${isExpert ? "items-end" : isAdmin ? "items-center" : "items-start"} ${isAdmin ? "w-full" : ""}`}>
+                                {!isAdmin && (
+                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 px-1">
+                                        {isExpert ? "You (Expert)" : (clientName || "Client")}
+                                    </span>
+                                )}
+                                <div className={`px-4 py-3 rounded-2xl shadow-sm ${isExpert
+                                    ? "bg-yellow-600 text-white rounded-tr-none"
+                                    : isAdmin
+                                        ? "bg-red-50 text-red-600 border-2 border-red-200 rounded-xl text-center w-full shadow-red-100"
+                                        : "bg-white text-gray-900 border border-gray-100 rounded-tl-none"
+                                    }`}>
+                                    {isAdmin && (
+                                        <div className="flex items-center justify-center gap-2 mb-1 text-[10px] font-black uppercase tracking-tighter">
+                                            <AlertCircle className="w-3 h-3" /> System Intervention
+                                        </div>
+                                    )}
+                                    <p className={`text-sm leading-relaxed ${isAdmin ? "font-black" : ""}`}>{msg.content}</p>
+                                    <p className={`text-[9px] mt-1 opacity-60 font-bold ${isExpert ? "text-white" : isAdmin ? "text-red-400" : "text-gray-400"}`}>
+                                        {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
                 <div ref={messagesEndRef} />
             </div>
 
@@ -366,8 +386,8 @@ function ExpertChatRoomContent() {
                         onClick={handleSendMessage}
                         disabled={!inputValue.trim()}
                         className={`p-4 rounded-full shadow-lg transition-all active:scale-90 flex items-center justify-center ${!inputValue.trim()
-                                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                : 'bg-[#fd6410] text-white hover:bg-[#e35d0f] shadow-orange-200'
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            : 'bg-[#fd6410] text-white hover:bg-[#e35d0f] shadow-orange-200'
                             }`}
                     >
                         <Send className="w-5 h-5" />
