@@ -53,7 +53,7 @@ const menuItems: MenuItem[] = [
   { label: "Coupons/Offers", href: "/admin/coupons", icon: Tag },
   { label: "Live Sessions Monitor", href: "/admin/live-sessions", icon: Tv },
   // { label: "Session Logs", href: "/admin/session-logs", icon: History },
-  // { label: "Payout Requests", href: "/admin/payouts", icon: Wallet },
+  { label: "Payout Requests", href: "/admin/payouts", icon: Wallet },
   { label: "Refund Management", href: "/admin/refunds", icon: RefreshCw },
   { label: "Dispute Resolution", href: "/admin/disputes", icon: AlertCircle },
   { label: "Reviews Moderation", href: "/admin/reviews", icon: Star },
