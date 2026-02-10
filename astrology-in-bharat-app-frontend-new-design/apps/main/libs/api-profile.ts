@@ -164,6 +164,11 @@ export const getMyDisputes = async () => {
     return response.data;
 };
 
+export const getDisputeById = async (disputeId: number) => {
+    const response = await apiClient.get(`/support/disputes/${disputeId}`);
+    return response.data;
+};
+
 export const getDisputeMessages = async (disputeId: number) => {
     const response = await apiClient.get(`/support/disputes/${disputeId}/messages`);
     return response.data;

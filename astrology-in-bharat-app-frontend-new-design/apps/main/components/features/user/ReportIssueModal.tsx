@@ -26,15 +26,29 @@ export default function ReportIssueModal({
     const [loading, setLoading] = useState(false);
     const [submittingWithChat, setSubmittingWithChat] = useState(false);
 
-    const categories = [
+    const orderCategories = [
         "Product Damaged/Defective",
         "Wrong Item Received",
-        "Poor Service Quality",
+        "Poor Quality",
         "Payment Issue",
         "Technical Problem",
         "Refund Request",
         "Other",
     ];
+
+    const consultationCategories = [
+        "Astrologer did not join",
+        "Poor Audio/Video Quality",
+        "Incomplete Session",
+        "Incorrect Predictions",
+        "Rude behavior by Astrologer",
+        "Payment Issue",
+        "Technical Problem",
+        "Refund Request",
+        "Other",
+    ];
+
+    const categories = type === "order" ? orderCategories : consultationCategories;
 
     const handleSubmit = async (isChat: boolean = false) => {
         if (!category || !issue.trim()) {
@@ -49,7 +63,7 @@ export default function ReportIssueModal({
             const payload = {
                 type,
                 itemId: type === "order" ? itemDetails.id : itemDetails.id,
-                orderId: type === "order" ? itemDetails.orderId || itemDetails.id : null,
+                orderId: type === "order" ? itemDetails.id : null,
                 consultationId: type === "consultation" ? itemDetails.id : null,
                 category,
                 description: issue,
@@ -72,7 +86,16 @@ export default function ReportIssueModal({
 
             console.log("Sending dispute payload:", payload);
             const response = await apiClient.post("/support/disputes", payload);
-            const newDispute = response.data?.data || response.data;
+            console.log("Dispute creation response:", response.data);
+            const resBody = response.data;
+            let newDispute = resBody?.data || resBody?.dispute || resBody;
+
+            // Ensure newDispute is an object with an id property
+            if (typeof newDispute !== "object" || newDispute === null) {
+                newDispute = { id: newDispute };
+            } else if (!newDispute.id && (newDispute.disputeId || resBody.id)) {
+                newDispute.id = newDispute.disputeId || resBody.id;
+            }
 
             toast.success("Issue reported successfully!");
             if (onSuccess) onSuccess(isChat ? newDispute : undefined);

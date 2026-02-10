@@ -22,7 +22,12 @@ export default function ClientMobileList({ clients, onViewChat }: ClientMobileLi
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-yellow-600 text-white flex items-center justify-center font-bold text-lg overflow-hidden flex-shrink-0">
                                 {client.avatar ? (
-                                    <img src={client.avatar} alt={client.name} className="w-full h-full object-cover" />
+                                    <img
+                                        src={client.avatar || "/images/profile.jpg"}
+                                        alt={client.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => { (e.target as HTMLImageElement).src = "/images/profile.jpg"; }}
+                                    />
                                 ) : (
                                     client.name.charAt(0)
                                 )}

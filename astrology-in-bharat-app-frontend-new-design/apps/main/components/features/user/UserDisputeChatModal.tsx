@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { X, Send, Paperclip, Image as ImageIcon, FileText, Download } from "lucide-react";
+import { X, Send, Paperclip, Image as ImageIcon, FileText, Download, AlertCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import { getNotificationSocket, getSupportSocket } from "@packages/ui/src/utils/socket";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
-import { getDisputeMessages, sendDisputeMessage, markDisputeMessagesRead, uploadClientDocument } from "@/libs/api-profile";
+import { getDisputeMessages, sendDisputeMessage, markDisputeMessagesRead, uploadClientDocument, getDisputeById } from "@/libs/api-profile";
 
 // Define message types locally since we can't import from admin
 interface Message {
@@ -19,6 +19,8 @@ interface Message {
     attachmentType?: "image" | "document" | "pdf";
     isRead: boolean;
     createdAt: string;
+    isSystemNote?: boolean;
+    is_system_note?: boolean;
 }
 
 interface UserDisputeChatModalProps {
@@ -27,12 +29,19 @@ interface UserDisputeChatModalProps {
     onClose: () => void;
 }
 
+const XIcon = X as any;
+const SendIcon = Send as any;
+const PaperclipIcon = Paperclip as any;
+const FileTextIcon = FileText as any;
+const AlertCircleIcon = AlertCircle as any;
+
 export default function UserDisputeChatModal({ disputeId, category, onClose }: UserDisputeChatModalProps) {
     const { clientUser } = useClientAuth();
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [userEndRequestedAt, setUserEndRequestedAt] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -48,13 +57,17 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
     useEffect(() => {
         const socket = getSupportSocket();
 
-        if (!socket.connected) {
-            socket.on('connect', () => {
-                socket.emit('join_dispute_room', { disputeId });
-            });
-            socket.connect();
-        } else {
+        const joinRoom = () => {
+            console.log("🏠 [UserSocket] Joining dispute room:", disputeId);
             socket.emit('join_dispute_room', { disputeId });
+        };
+
+        if (socket.connected) {
+            joinRoom();
+        } else {
+            console.log("🔌 [UserSocket] Connecting...");
+            socket.on('connect', joinRoom);
+            socket.connect();
         }
 
         const handleNewMessage = (message: any) => {
@@ -67,24 +80,45 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
             }
         };
 
+        const handleEndChatBroadcast = (data: any) => {
+            console.log("🚨 [UserSocket] End chat broadcast received:", data);
+            if (Number(data.disputeId) === Number(disputeId)) {
+                setUserEndRequestedAt(new Date().toISOString());
+                // No longer injecting manually - backend will send a 'new_message' 
+                // for the system note or it will appear on next refresh
+                fetchMessages();
+            }
+        };
+
         socket.on('new_message', handleNewMessage);
+        socket.on('dispute_close_requested', handleEndChatBroadcast);
 
         return () => {
+            console.log("👋 [UserSocket] Cleanup");
+            socket.off('connect', joinRoom);
             socket.off('new_message', handleNewMessage);
+            socket.off('dispute_close_requested', handleEndChatBroadcast);
         };
-    }, [disputeId]);
-
-    // Initial fetch
-    useEffect(() => {
-        fetchMessages();
     }, [disputeId]);
 
     const fetchMessages = async () => {
         try {
             setLoading(true);
+
+            // 1. Fetch Dispute Status for persistent banner after refresh
+            const response = await getDisputeById(disputeId);
+            const disputeData = response.data || response.dispute || response;
+
+            console.log("📄 [UserAPI] Dispute status:", disputeData?.status);
+
+            // 2. Fetch Messages
             const data = await getDisputeMessages(disputeId);
-            const msgs = Array.isArray(data) ? data : (data.messages || data.data || []);
-            console.log("User App Chat Messages:", msgs); // Debug: Check values
+            let msgs: Message[] = Array.isArray(data) ? data : (data.messages || data.data || []);
+
+            if (disputeData?.status === "close_requested" || disputeData?.status === "resolved") {
+                setUserEndRequestedAt(disputeData.updatedAt || new Date().toISOString());
+            }
+
             setMessages(msgs);
 
             if (msgs.length > 0) {
@@ -92,11 +126,15 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
             }
         } catch (error) {
             console.error("Error fetching messages:", error);
-            // toast.error("Failed to load messages");
         } finally {
             setLoading(false);
         }
     };
+
+    // Initial fetch
+    useEffect(() => {
+        fetchMessages();
+    }, [disputeId]);
 
     const handleSendMessage = async () => {
         if (!newMessage.trim()) return;
@@ -154,6 +192,15 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
         }
     };
 
+    const handleRequestEndChat = () => {
+        if (window.confirm("Are you sure you want to request to end this chat?")) {
+            const socket = getSupportSocket();
+            console.log("📣 [UserChat] Emitting request_end_chat", { disputeId, userId: clientUser?.id });
+            socket.emit('request_end_chat', { disputeId, userId: clientUser?.id });
+            toast.info("End chat request sent to admin");
+        }
+    };
+
     return (
         <div
             className="fixed inset-0 bg-black/60 flex items-center justify-center z-[10000]"
@@ -165,8 +212,8 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
             >
 
                 {/* Header */}
-                <div className="px-5 py-4 border-b bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-t-2xl flex justify-between items-center">
-                    <div>
+                <div className="px-5 py-4 border-b bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-t-2xl flex justify-between items-center flex-shrink-0">
+                    <div className="flex-1">
                         <h2 className="text-lg font-bold flex items-center gap-2">
                             Support Chat
                             <span className="bg-white/20 text-xs px-2 py-0.5 rounded-full">
@@ -175,21 +222,66 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
                         </h2>
                         <p className="text-xs text-white/90">{category || "General Issue"}</p>
                     </div>
-                    <button type="button" onClick={onClose} className="p-2 hover:bg-white/20 rounded-full transition-all">
-                        <X className="w-5 h-5" />
-                    </button>
+
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={handleRequestEndChat}
+                            className="text-[10px] sm:text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full font-bold transition-all flex items-center gap-1 text-white"
+                        >
+                            <AlertCircleIcon className="w-3 h-3" />
+                            End Chat
+                        </button>
+                        <button type="button" onClick={onClose} className="p-2 hover:bg-white/20 rounded-full transition-all">
+                            <XIcon className="w-5 h-5" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 bg-gray-50 flex flex-col gap-3">
-                    {messages.map((msg) => {
+                <div className="flex-1 overflow-y-auto p-4 bg-gray-50 flex flex-col gap-3 relative">
+                    {/* Persistent sticky status banner if request already exists (e.g. after refresh) */}
+                    {userEndRequestedAt && (
+                        <div className="sticky top-0 z-20 flex justify-center mb-4 transition-all animate-in fade-in slide-in-from-top-4 duration-500">
+                            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-orange-200 rounded-2xl px-5 py-3 flex items-start gap-3 shadow-lg backdrop-blur-sm max-w-[95%]">
+                                <div className="bg-orange-500 p-2 rounded-xl shadow-md flex-shrink-0">
+                                    <AlertCircleIcon className="w-4 h-4 text-white" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs text-orange-900 font-bold uppercase tracking-wider mb-0.5">End Chat Requested</span>
+                                    <p className="text-[11px] text-orange-800/80 font-medium leading-relaxed">
+                                        Your request to end this chat is being reviewed by our support team. Sent at {new Date(userEndRequestedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {messages.map((msg, idx) => {
+                        // CASE 1: System Note (End Chat Request)
+                        if (msg.isSystemNote || msg.is_system_note) {
+                            return (
+                                <div key={`sys-${idx}`} className="flex justify-center my-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                    <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-3 flex flex-col items-center gap-1 shadow-sm max-w-[90%]">
+                                        <div className="flex items-center gap-2 text-yellow-700 font-bold text-xs uppercase tracking-wider">
+                                            <AlertCircleIcon className="w-4 h-4" />
+                                            End Chat Requested
+                                        </div>
+                                        <div className="text-[10px] text-yellow-600 font-medium italic text-center">
+                                            {msg.message || `End chat requested at ${new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        }
+
+                        // CASE 2: Normal Message
                         const isMe = msg.senderType === "user";
+                        const msgKey = msg.id ? `msg-${msg.id}-${idx}` : `idx-${idx}`;
 
                         return (
-                            <div key={msg.id} className={`flex flex-col !w-full mb-3 ${isMe ? "items-end" : "items-start"}`}>
-                                {/* Profile Picture + Message */}
+                            <div key={msgKey} className={`flex flex-col !w-full mb-3 ${isMe ? "items-end" : "items-start"}`}>
                                 <div className={`flex gap-2 ${isMe ? "flex-row-reverse" : "flex-row"} items-end max-w-[85%]`}>
-                                    {/* Avatar */}
                                     <div className="flex-shrink-0">
                                         <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-300 border-2 border-white shadow-sm">
                                             <img
@@ -203,7 +295,6 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
                                         </div>
                                     </div>
 
-                                    {/* Message Bubble */}
                                     <div className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
                                         <div className={`px-4 py-2 rounded-2xl text-sm shadow-sm ${isMe
                                             ? "bg-orange-500 text-white rounded-br-none"
@@ -212,10 +303,10 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
                                             {msg.attachmentUrl && (
                                                 <div className="mb-2">
                                                     {msg.attachmentType === "image" ? (
-                                                        <img src={msg.attachmentUrl} className="rounded-lg max-h-48 object-cover" />
+                                                        <img src={msg.attachmentUrl} className="rounded-lg max-h-48 object-cover" alt="Attachment" />
                                                     ) : (
                                                         <div className="flex items-center gap-2 bg-black/10 p-2 rounded">
-                                                            <FileText className="w-4 h-4" /> Document
+                                                            <FileTextIcon className="w-4 h-4" /> Document
                                                         </div>
                                                     )}
                                                 </div>
@@ -223,25 +314,26 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
                                             {msg.message}
                                         </div>
                                         <span className="text-[10px] text-gray-400 mt-1 px-1">
-                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         );
                     })}
+
                     <div ref={messagesEndRef} />
                 </div>
 
                 {/* Input */}
-                <div className="p-3 border-t bg-white rounded-b-2xl">
+                <div className="p-3 border-t bg-white rounded-b-2xl flex-shrink-0">
                     <div className="flex gap-2 items-center">
                         <button
                             type="button"
                             onClick={(e) => { e.preventDefault(); fileInputRef.current?.click(); }}
                             className="p-3 text-gray-500 hover:bg-gray-100 rounded-full transition-all"
                         >
-                            <Paperclip className="w-5 h-5" />
+                            <PaperclipIcon className="w-5 h-5" />
                         </button>
                         <input
                             ref={fileInputRef}
@@ -276,7 +368,7 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
                             {loading ? (
                                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                             ) : (
-                                <Send className="w-5 h-5" />
+                                <SendIcon className="w-5 h-5" />
                             )}
                         </button>
                     </div>

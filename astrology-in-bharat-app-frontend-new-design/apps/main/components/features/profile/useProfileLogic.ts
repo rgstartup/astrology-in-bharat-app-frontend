@@ -55,6 +55,7 @@ export const useProfileLogic = () => {
     const [selectedSession, setSelectedSession] = useState<any>(null);
     const [chatMessages, setChatMessages] = useState<any[]>([]);
     const [showChatModal, setShowChatModal] = useState(false);
+    const [expandedSessions, setExpandedSessions] = useState<Record<number, boolean>>({});
 
     // Orders
     const [orders, setOrders] = useState<any[]>([]);
@@ -527,6 +528,13 @@ export const useProfileLogic = () => {
         }));
     };
 
+    const toggleSession = (sessionId: number) => {
+        setExpandedSessions(prev => ({
+            ...prev,
+            [sessionId]: !prev[sessionId]
+        }));
+    };
+
     const handleMarkAsRead = async (id: number) => {
         try {
             await markNotificationAsRead(id);
@@ -565,7 +573,7 @@ export const useProfileLogic = () => {
         handleRecharge,
 
         // History
-        consultationHistory, loadingHistory,
+        consultationHistory, loadingHistory, expandedSessions, toggleSession,
         selectedSession, chatMessages, showChatModal, setShowChatModal,
         handleViewChat,
 

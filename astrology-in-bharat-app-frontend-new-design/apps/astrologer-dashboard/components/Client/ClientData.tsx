@@ -88,7 +88,7 @@ export default function ClientsPage() {
           return {
             id: session.id, // using session ID as unique key
             name: session.user?.name || "Client",
-            avatar: session.user?.avatar,
+            avatar: session.user?.profile_picture || session.user?.avatar,
             phone: session.user?.phone || "Hidden", // Phone might not be exposed
             email: session.user?.email || "Hidden",
             lastConsultation: {
@@ -216,10 +216,10 @@ export default function ClientsPage() {
                     <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-orange-100 overflow-hidden shadow-sm relative">
                       {/* You might want to use session.user.avatar here if available */}
                       <img
-                        src={session?.user?.avatar || "https://avatar.iran.liara.run/public"}
+                        src={session?.user?.profile_picture || session?.user?.avatar || "/images/profile.jpg"}
                         alt={client.name}
                         className="w-full h-full object-cover"
-                        onError={(e) => { (e.target as HTMLImageElement).src = "https://avatar.iran.liara.run/public"; }}
+                        onError={(e) => { (e.target as HTMLImageElement).src = "/images/profile.jpg"; }}
                       />
                       {/* Online/Status Indicator Dot (Optional) */}
                       <span className={`absolute bottom-1 right-1 w-3 h-3 rounded-full border-2 border-white ${session?.status === 'active' ? 'bg-green-500' : 'bg-gray-300'}`}></span>
@@ -337,9 +337,10 @@ export default function ClientsPage() {
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full border-2 border-white/20 overflow-hidden bg-white/10 flex items-center justify-center">
                   <img
-                    src={selectedSession.user?.avatar || "https://avatar.iran.liara.run/public"}
+                    src={selectedSession.user?.profile_picture || selectedSession.user?.avatar || "/images/profile.jpg"}
                     alt="User"
                     className="w-full h-full object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).src = "/images/profile.jpg"; }}
                   />
                 </div>
                 <div>

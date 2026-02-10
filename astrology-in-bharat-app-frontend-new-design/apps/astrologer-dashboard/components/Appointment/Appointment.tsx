@@ -122,7 +122,7 @@ export default function AppointmentsPage() {
         return {
           id: session.id,
           name: session.user?.name || "Client",
-          avatar: session.user?.avatar,
+          avatar: session.user?.profile_picture || session.user?.avatar,
           service: "Chat Consultation",
           date: session.createdAt || new Date().toISOString(),
           status: currentStatus, // Use the verified status
@@ -215,7 +215,7 @@ export default function AppointmentsPage() {
         const newAppt: Appointment = {
           id: session.id,
           name: session.user?.name || "Client",
-          avatar: session.user?.avatar,
+          avatar: session.user?.profile_picture || session.user?.avatar,
           service: "Chat Consultation",
           date: session.createdAt || new Date().toISOString(),
           status: "pending",

@@ -36,7 +36,7 @@ const ProfilePage: React.FC = () => {
     handleRecharge,
 
     // History
-    consultationHistory, loadingHistory,
+    consultationHistory, loadingHistory, expandedSessions, toggleSession,
     selectedSession, chatMessages, showChatModal, setShowChatModal,
     handleViewChat,
 
@@ -190,6 +190,8 @@ const ProfilePage: React.FC = () => {
               <HistoryTab
                 loadingHistory={loadingHistory}
                 consultationHistory={consultationHistory}
+                expandedSessions={expandedSessions}
+                toggleSession={toggleSession}
                 onViewDetails={handleViewChat}
                 onReportIssue={(session) => {
                   setReportItemType('consultation');

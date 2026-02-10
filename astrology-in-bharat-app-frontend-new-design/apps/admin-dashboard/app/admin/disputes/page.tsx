@@ -49,10 +49,12 @@ export default function DisputesPage() {
   const fetchStats = async () => {
     try {
       const response = await getDisputeStats();
-      setStats(response);
+      if (response) {
+        setStats(response);
+      }
     } catch (error: any) {
-      console.error("Error fetching dispute stats:", error);
-      // Use calculated stats from disputes as fallback
+      console.warn("⚠️ Dispute stats API failed (500), using local state defaults.");
+      // Gracefully handle 500 error from backend
     }
   };
 
