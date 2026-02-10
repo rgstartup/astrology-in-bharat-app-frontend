@@ -20,6 +20,7 @@ const Footer: React.FC = () => {
                 offering accurate guidance through verified astrologers using
                 authentic Indian astrology systems.
               </p>
+              {/* sdklfja */}
               <ul className="social-icons">
                 <li>
                   <a href="#">
