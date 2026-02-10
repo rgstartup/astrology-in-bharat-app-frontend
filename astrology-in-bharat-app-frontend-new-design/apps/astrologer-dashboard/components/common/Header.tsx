@@ -161,6 +161,17 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
       await apiClient.patch('/expert/status', { is_available: newStatus });
       setIsOnline(newStatus);
+
+      // Sync presence with backend socket mapping
+      const actualUserId = user?.userId || user?.id;
+      if (actualUserId) {
+        if (newStatus) {
+          socket.emit("expert_online", { userId: actualUserId });
+        } else {
+          socket.emit("expert_offline", { userId: actualUserId });
+        }
+      }
+
       toast.success(`You are now ${newStatus ? 'Online' : 'Offline'}`);
     } catch (err: any) {
       console.error("Failed to update status:", err);
