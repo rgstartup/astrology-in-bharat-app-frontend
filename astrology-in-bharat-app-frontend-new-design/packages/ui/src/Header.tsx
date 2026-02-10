@@ -156,6 +156,14 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
     return () => window.removeEventListener("focus", handleFocus);
   }, [isClient, refreshAuth]);
 
+  // Refresh auth when pathname changes (e.g., after profile update)
+  useEffect(() => {
+    if (isClient && isAuthenticated) {
+      console.log("🔄 Pathname changed, refreshing auth...");
+      refreshAuth();
+    }
+  }, [pathname, isClient]);
+
   // API functions for notifications
   const fetchNotifications = useCallback(async () => {
     try {

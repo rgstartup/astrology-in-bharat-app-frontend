@@ -132,11 +132,32 @@ export default function ClientSettingsPage() {
     setStatus("Saving...");
 
     try {
+      // First, update the profile data
       await axios.patch(API, formData, {
         withCredentials: true,
       });
 
+      // If there's a profile picture to upload
+      const fileInput = document.getElementById('profile-upload') as HTMLInputElement;
+      if (fileInput?.files?.[0]) {
+        const formDataWithFile = new FormData();
+        formDataWithFile.append('file', fileInput.files[0]);
+
+        // Upload the profile picture
+        await axios.patch(`${API}/picture`, formDataWithFile, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+      }
+
       setStatus("Saved Successfully!");
+
+      // Refresh auth context to update the header avatar
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (err) {
       console.log("Update failed:", err);
       setStatus("Update Failed!");

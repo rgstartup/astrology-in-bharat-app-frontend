@@ -17,7 +17,7 @@ type ProfileData = ClientProfileData;
 export const useProfileLogic = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { clientUser, isClientAuthenticated, clientLoading, clientBalance, refreshBalance } = useClientAuth();
+    const { clientUser, isClientAuthenticated, clientLoading, clientBalance, refreshBalance, refreshAuth } = useClientAuth();
 
     const [profileData, setProfileData] = useState<ProfileData>({});
     const [loading, setLoading] = useState(false);
@@ -424,6 +424,7 @@ export const useProfileLogic = () => {
                 setImagePreview(imageUrl);
 
                 await updateClientProfile({ profile_picture: imageUrl });
+                await refreshAuth(); // Refresh global auth state to update header
                 setSuccessMessage("Profile picture updated successfully!");
                 setTimeout(() => setSuccessMessage(""), 3000);
             } else {
@@ -499,6 +500,7 @@ export const useProfileLogic = () => {
             if (savedData) {
                 setProfileData(prev => ({ ...prev, ...savedData }));
             }
+            await refreshAuth(); // Refresh global auth state to update header
             setEditingSections(prev => ({ ...prev, [section]: false }));
         } catch (error: any) {
             console.error(`❌ Error updating ${section}:`, error);
