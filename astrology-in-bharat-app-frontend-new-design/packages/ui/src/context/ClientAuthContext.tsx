@@ -173,7 +173,16 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
             setClientLoading(true);
         }
         try {
-            const res = await apiClient.get('/client');
+            const res = await apiClient.get('/client', {
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                },
+                params: {
+                    _t: new Date().getTime() // Anti-cache timestamp
+                }
+            });
             console.log("📊 Profile response:", res.data);
 
             // If we get a 200 response (even with empty data), user is authenticated
