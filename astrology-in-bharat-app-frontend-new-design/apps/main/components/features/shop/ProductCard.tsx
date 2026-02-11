@@ -164,9 +164,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                         {isAdding ? "Adding..." : "Add to Cart"}
                     </button>
                     <button
-                        onClick={async (e) => {
-                            await handleBuy(e);
-                            router.push("/checkout");
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const id = product.id || product._id;
+                            // Store in sessionStorage for a clean URL
+                            sessionStorage.setItem('buyNowItem', JSON.stringify({ productId: id, quantity: 1 }));
+                            router.push(`/checkout?type=order`);
                         }}
                         disabled={isAdding}
                         className="flex-1 bg-[#F95E09] hover:bg-[#D84E06] text-white font-bold rounded-lg shadow-sm hover:shadow-md transform active:scale-95 transition-all duration-200 h-10 flex items-center justify-center text-[13px] disabled:opacity-70"
