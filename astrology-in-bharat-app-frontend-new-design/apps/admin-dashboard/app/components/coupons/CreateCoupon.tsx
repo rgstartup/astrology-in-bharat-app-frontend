@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { X, Loader2 } from "lucide-react";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 import { createCoupon } from "@/src/services/admin.service";
 import { toast } from "react-toastify";
 

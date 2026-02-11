@@ -1,7 +1,7 @@
 // refund-management/components/RefundFilters.tsx
 import React from "react";
 import { Filter, Calendar, Download } from "lucide-react";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 
 interface FilterItem {
   key: string;
@@ -14,10 +14,10 @@ interface RefundFiltersProps {
   onFilterChange: (filter: string) => void;
 }
 
-export function RefundFilters({ 
-  filters, 
-  activeFilter, 
-  onFilterChange 
+export function RefundFilters({
+  filters,
+  activeFilter,
+  onFilterChange
 }: RefundFiltersProps) {
   return (
     <div className="bg-white rounded-xl border p-4">
@@ -28,16 +28,15 @@ export function RefundFilters({
             <Filter className="w-4 h-4 text-gray-500" />
             <span className="text-sm font-medium text-gray-700">Filter by:</span>
           </div>
-          
+
           {filters.map((filter) => (
             <button
               key={filter.key}
               onClick={() => onFilterChange(filter.key)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                activeFilter === filter.key
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeFilter === filter.key
                   ? "bg-gray-900 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
+                }`}
             >
               {filter.label}
             </button>
@@ -55,7 +54,7 @@ export function RefundFilters({
               <option>Custom range</option>
             </select>
           </div>
-          
+
           <Button variant="outline" size="sm" icon={Download}>
             Export
           </Button>

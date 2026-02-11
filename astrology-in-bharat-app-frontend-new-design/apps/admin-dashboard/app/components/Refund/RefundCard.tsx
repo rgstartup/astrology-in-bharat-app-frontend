@@ -3,7 +3,7 @@
 
 import React from "react";
 import { Calendar, Clock, MoreVertical, MessageSquare } from "lucide-react";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 import { RefundStatusBadge } from "./RefundStatusBadge";
 import { RefundAmount } from "./RefundAmount";
 import { UserInfoCard } from "./UserInfoCard";
@@ -31,7 +31,7 @@ export function RefundCard({
 
           <div>
             <h3 className="font-semibold text-gray-900">Refund #{refund.id}</h3>
-          <div className="flex flex-wrap items-center gap-2 mt-1 text-xs sm:text-sm">
+            <div className="flex flex-wrap items-center gap-2 mt-1 text-xs sm:text-sm">
 
               <div className="flex items-center gap-1 text-sm text-gray-600">
                 <Calendar className="w-3 h-3" />
@@ -43,7 +43,7 @@ export function RefundCard({
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <RefundStatusBadge status={refund.status} />
             <button className="p-1 hover:bg-gray-100 rounded-lg">
@@ -54,7 +54,7 @@ export function RefundCard({
       </div>
 
       {/* Card Content */}
-     <div className="p-3 sm:p-4">
+      <div className="p-3 sm:p-4">
 
         {/* Users Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
@@ -70,7 +70,7 @@ export function RefundCard({
               {refund.consultation.type.toUpperCase()}
             </span>
           </div>
-         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
             <div>
               <span className="text-xs text-gray-600">Duration</span>
@@ -85,7 +85,7 @@ export function RefundCard({
 
         {/* Refund Amount */}
         <div className="mb-4">
-          <RefundAmount 
+          <RefundAmount
             original={refund.amount}
             requested={refund.requestedAmount}
             status={refund.status}
@@ -93,13 +93,13 @@ export function RefundCard({
         </div>
 
         {/* Refund Reason */}
-        <RefundReason 
+        <RefundReason
           reason={refund.reason}
           attachments={refund.attachments}
         />
 
         {/* Action Buttons */}
-    <div className="mt-4 flex flex-col sm:flex-row gap-2">
+        <div className="mt-4 flex flex-col sm:flex-row gap-2">
 
           {refund.status === "pending" && (
             <>
@@ -111,7 +111,7 @@ export function RefundCard({
               >
                 Approve
               </Button>
-              
+
               <Button
                 variant="danger"
                 size="sm"
@@ -122,7 +122,7 @@ export function RefundCard({
               </Button>
             </>
           )}
-          
+
           <Button
             variant="outline"
             size="sm"

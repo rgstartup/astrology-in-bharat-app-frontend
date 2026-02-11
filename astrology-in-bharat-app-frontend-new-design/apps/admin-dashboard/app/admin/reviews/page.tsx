@@ -4,7 +4,7 @@ import React, { useState, useMemo } from "react";
 // Components
 import { StatsCards } from "../../../../shared/components/StatsCard";
 import { SearchInput } from "../../../../shared/components/SearchInput";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 import { ReviewCard } from "@/app/components/reviews/ReviewCard";
 
 // Icons

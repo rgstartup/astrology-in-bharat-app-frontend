@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useMemo } from "react";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 import { Star, Calendar, CheckCircle, Flag, Trash2 } from "lucide-react";
 import type { Review } from "@/app/components/reviews/review";
 
@@ -21,7 +21,7 @@ export function ReviewCard({ review, isLast }: ReviewCardProps) {
   }, [review.id]);
 
   const handleFlag = useCallback(() => {
- 
+
   }, [review.id]);
 
   const handleDelete = useCallback(() => {
@@ -63,9 +63,8 @@ export function ReviewCard({ review, isLast }: ReviewCardProps) {
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`w-4 h-4 ${
-                    i < review.rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"
-                  }`}
+                  className={`w-4 h-4 ${i < review.rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"
+                    }`}
                 />
               ))}
             </div>
@@ -85,9 +84,8 @@ export function ReviewCard({ review, isLast }: ReviewCardProps) {
         <div className="flex flex-col items-start lg:items-end gap-3">
           {/* Status Badge */}
           <span
-            className={`px-3 py-1 rounded-full text-xs font-semibold border ${
-              statusBadges[review.status]
-            }`}
+            className={`px-3 py-1 rounded-full text-xs font-semibold border ${statusBadges[review.status]
+              }`}
           >
             {review.status.toUpperCase()}
           </span>

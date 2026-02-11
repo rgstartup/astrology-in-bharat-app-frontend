@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 import { XCircle, CheckCircle, Eye, Calendar, IndianRupee, MessageSquare } from "lucide-react";
 import type { Dispute } from "@/app/components/dispute/dispute";
 import { updateDisputeStatus } from "@/src/services/admin.service";

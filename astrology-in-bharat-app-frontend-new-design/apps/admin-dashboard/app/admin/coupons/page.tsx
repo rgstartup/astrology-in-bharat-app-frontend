@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { Plus, Search, Tag, Loader2 } from "lucide-react";
 import { StatsCards } from "../../../../shared/components/StatsCard";
 import { CouponCard } from "@/app/components/coupons/CouponCard";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 import { getCoupons, getCouponStats } from "@/src/services/admin.service";
 import { toast } from "react-toastify";
 
