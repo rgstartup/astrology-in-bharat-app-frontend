@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@shared/components/Button";
 
 interface WalletTabProps {
     walletBalance: number;
@@ -48,27 +49,25 @@ const WalletTab: React.FC<WalletTabProps> = ({
                         <p className="text-gray-400 text-sm">Manage your balance & transactions</p>
                     </div>
 
-                    <div className="flex gap-3 bg-white/10 p-1 rounded-xl backdrop-blur-sm">
-                        <button
+                    <div className="flex gap-2 bg-white/10 p-1.5 !rounded-full backdrop-blur-sm">
+                        <Button
+                            variant={walletView === 'recharge' ? 'primary' : 'ghost'}
+                            size="sm"
                             onClick={() => setWalletView('recharge')}
-                            className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 ${walletView === 'recharge'
-                                ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
-                                : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                                }`}
+                            className={walletView === 'recharge' ? "shadow-orange-500/30" : "text-gray-300 hover:text-white"}
                         >
                             <i className="fa-solid fa-plus-circle"></i>
                             Add Money
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                            variant={walletView === 'history' ? 'outline' : 'ghost'}
+                            size="sm"
                             onClick={() => setWalletView('history')}
-                            className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 ${walletView === 'history'
-                                ? 'bg-white text-gray-900 shadow-lg'
-                                : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                                }`}
+                            className={walletView === 'history' ? "bg-white text-gray-900 border-none" : "text-gray-300 hover:text-white"}
                         >
                             <i className="fa-solid fa-list-ul"></i>
                             History
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
@@ -197,37 +196,27 @@ const WalletTab: React.FC<WalletTabProps> = ({
 
                         {/* Action Button */}
                         <div className="mb-6">
-                            <button
-                                type="button"
+                            <Button
+                                variant="primary"
+                                fullWidth
+                                loading={isProcessing}
                                 onClick={handleRecharge}
-                                disabled={isProcessing || rechargeAmount < 100}
-                                className={`w-full py-5 px-6 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-between shadow-lg ${isProcessing || rechargeAmount < 100
-                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    : 'bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-orange-500 hover:to-amber-500 hover:shadow-xl hover:-translate-y-0.5'
-                                    }`}
+                                className="h-20 !rounded-full"
+                                disabled={rechargeAmount < 100}
                             >
-                                {isProcessing ? (
-                                    <>
-                                        <div className="flex items-center">
-                                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                                            <span>Processing Recharge...</span>
+                                <div className="flex items-center justify-between w-full px-2">
+                                    <div className="flex items-center">
+                                        <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mr-4">
+                                            <i className="fa-solid fa-bolt text-white text-xl"></i>
                                         </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="flex items-center">
-                                            <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mr-4">
-                                                <i className="fa-solid fa-bolt text-white text-xl"></i>
-                                            </div>
-                                            <div className="text-left">
-                                                <div className="text-white">Recharge ₹{rechargeAmount.toLocaleString()}</div>
-                                                <div className="text-white/80 text-sm font-normal">Click to proceed to payment</div>
-                                            </div>
+                                        <div className="text-left">
+                                            <div className="text-white text-lg font-bold">Recharge ₹{rechargeAmount.toLocaleString()}</div>
+                                            <div className="text-white/80 text-sm font-normal">Click to proceed to payment</div>
                                         </div>
-                                        <i className="fa-solid fa-arrow-right text-xl"></i>
-                                    </>
-                                )}
-                            </button>
+                                    </div>
+                                    <i className="fa-solid fa-arrow-right text-xl text-white/50"></i>
+                                </div>
+                            </Button>
                         </div>
 
                         {/* Validation message */}
@@ -240,8 +229,6 @@ const WalletTab: React.FC<WalletTabProps> = ({
                                 </div>
                             </div>
                         )}
-
-
                     </div>
                 ) : (
                     <div className="mt-0 pt-0">
@@ -251,18 +238,22 @@ const WalletTab: React.FC<WalletTabProps> = ({
                                 Transaction History
                             </h6>
                             <div className="flex gap-2">
-                                <button
+                                <Button
+                                    variant={!walletPurpose ? 'primary' : 'secondary'}
+                                    size="sm"
                                     onClick={() => setWalletPurpose(undefined)}
-                                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${!walletPurpose ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                    className="px-4"
                                 >
                                     All
-                                </button>
-                                <button
+                                </Button>
+                                <Button
+                                    variant={walletPurpose === 'recharge' ? 'primary' : 'secondary'}
+                                    size="sm"
                                     onClick={() => setWalletPurpose('recharge')}
-                                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${walletPurpose === 'recharge' ? 'bg-orange-500 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                    className="px-4"
                                 >
                                     Recharges
-                                </button>
+                                </Button>
                             </div>
                         </div>
 
@@ -337,9 +328,10 @@ const WalletTab: React.FC<WalletTabProps> = ({
                             </div>
                         </div>
                     </div>
-                )}
-            </div>
-        </div>
+                )
+                }
+            </div >
+        </div >
     );
 };
 

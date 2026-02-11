@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Button } from "@shared/components/Button";
 import NextImage from "next/image";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 import { useCart } from "@packages/ui/src/context/CartContext";
@@ -156,14 +157,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
 
                 {/* 🔘 Action Buttons */}
                 <div className="flex gap-2 mt-2">
-                    <button
+                    <Button
+                        variant="outline"
+                        size="md"
                         onClick={handleBuy}
-                        disabled={isAdding}
-                        className="flex-1 bg-white border border-[#F95E09] text-[#F95E09] hover:bg-orange-50 font-bold rounded-lg transition-all duration-200 h-10 flex items-center justify-center text-[13px] disabled:opacity-70"
+                        loading={isAdding}
+                        className="flex-1 !rounded-full border-[#F95E09] text-[#F95E09] hover:bg-orange-50 h-10 text-[13px]"
                     >
-                        {isAdding ? "Adding..." : "Add to Cart"}
-                    </button>
-                    <button
+                        Add to Cart
+                    </Button>
+                    <Button
+                        variant="primary"
+                        size="md"
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -172,11 +177,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                             sessionStorage.setItem('buyNowItem', JSON.stringify({ productId: id, quantity: 1 }));
                             router.push(`/checkout?type=order`);
                         }}
-                        disabled={isAdding}
-                        className="flex-1 bg-[#F95E09] hover:bg-[#D84E06] text-white font-bold rounded-lg shadow-sm hover:shadow-md transform active:scale-95 transition-all duration-200 h-10 flex items-center justify-center text-[13px] disabled:opacity-70"
+                        loading={isAdding}
+                        className="flex-1 !rounded-full h-10 text-[13px]"
                     >
                         Buy Now
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>

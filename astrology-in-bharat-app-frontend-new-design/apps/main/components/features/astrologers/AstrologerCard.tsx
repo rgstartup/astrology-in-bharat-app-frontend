@@ -4,6 +4,7 @@ import NextLink from "next/link";
 const Link = NextLink as any;
 
 import React, { useState, useRef } from "react";
+import { Button } from "@shared/components/Button";
 import { Modal } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
@@ -336,34 +337,37 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
         {/* ACTION BUTTONS WITH PRICES POINTER */}
         <div className="px-4 pb-4 space-y-2">
           <div className="flex gap-2">
-            <button
+            <Button
+              variant="primary"
               onClick={handleChatClick}
-              className="flex-1 py-1.5 bg-orange-500 text-white text-[13px] font-bold rounded-full flex flex-col items-center justify-center leading-tight hover:bg-orange-600 transition-colors"
+              className="flex-1 flex-col py-1.5 leading-tight !rounded-full text-[13px]"
             >
               <div className="flex items-center gap-1.5">
                 <i className="fa-regular fa-comment-dots" /> Chat
               </div>
-              <span className="text-[11px] opacity-90 font-medium">
+              <span className="text-[11px] opacity-90 font-medium whitespace-nowrap">
                 {chat_price && chat_price > 0 ? `₹${chat_price}/min` : (price > 0 ? `₹${price}/min` : "Free")}
               </span>
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant="primary"
               onClick={handleChatClick}
-              className="flex-1 py-1.5 bg-orange-500 text-white text-[13px] font-bold rounded-full flex flex-col items-center justify-center leading-tight hover:bg-orange-600 transition-colors"
+              className="flex-1 flex-col py-1.5 leading-tight !rounded-full text-[13px]"
             >
               <div className="flex items-center gap-1.5">
                 <i className="fa-solid fa-phone-volume" /> Call
               </div>
-              <span className="text-[11px] opacity-90 font-medium">
+              <span className="text-[11px] opacity-90 font-medium whitespace-nowrap">
                 {call_price && call_price > 0 ? `₹${call_price}/min` : (price > 0 ? `₹${price}/min` : "Free")}
               </span>
-            </button>
+            </Button>
           </div>
 
-          <button
+          <Button
+            variant="primary"
             onClick={handleChatClick}
-            className="w-full py-1.5 bg-orange-500 text-white text-[13px] font-bold rounded-full flex flex-col items-center justify-center leading-tight hover:bg-orange-600 transition-colors"
+            className="w-full flex-col py-1.5 leading-tight !rounded-full text-[13px]"
           >
             <div className="flex items-center gap-1.5">
               <i className="fa-solid fa-video" /> Video Call
@@ -371,7 +375,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
             <span className="text-[11px] opacity-90 font-medium">
               {video_call_price && video_call_price > 0 ? `₹${video_call_price}/min` : (price > 0 ? `₹${price * 2}/min` : "Free")}
             </span>
-          </button>
+          </Button>
         </div>
       </div>
 

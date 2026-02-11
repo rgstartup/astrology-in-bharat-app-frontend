@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from "@shared/components/Button";
 
 interface ProfileFormProps {
     profileData: any;
@@ -48,31 +49,33 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                         Personal Details
                     </h5>
                     {!editingSections.personal ? (
-                        <button
-                            type="button"
-                            className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-md shadow-orange-200"
+                        <Button
+                            variant="primary"
+                            size="md"
                             onClick={() => setEditingSections(prev => ({ ...prev, personal: true }))}
+                            className="shadow-orange-200"
                         >
                             <i className="fa-solid fa-pen-to-square"></i>
                             Edit Profile
-                        </button>
+                        </Button>
                     ) : (
                         <div className="flex gap-2">
-                            <button
-                                type="button"
-                                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-xl font-bold transition-all"
+                            <Button
+                                variant="secondary"
+                                size="md"
                                 onClick={() => setEditingSections(prev => ({ ...prev, personal: false }))}
                             >
                                 Cancel
-                            </button>
-                            <button
-                                type="button"
-                                disabled={savingSections.personal}
-                                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-md shadow-green-200"
+                            </Button>
+                            <Button
+                                variant="success"
+                                size="md"
+                                loading={savingSections.personal}
                                 onClick={() => handleSaveSection('personal')}
+                                className="shadow-green-200"
                             >
-                                {savingSections.personal ? "Saving..." : "Save Changes"}
-                            </button>
+                                Save Changes
+                            </Button>
                         </div>
                     )}
                 </div>
@@ -210,31 +213,33 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                         Address Details
                     </h5>
                     {!editingSections.address ? (
-                        <button
-                            type="button"
-                            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-md shadow-blue-100"
+                        <Button
+                            variant="primary"
+                            size="md"
                             onClick={() => setEditingSections(prev => ({ ...prev, address: true }))}
+                            className="shadow-orange-200"
                         >
-                            <i className="fa-solid fa-map-pin"></i>
+                            <i className="fa-solid fa-location-dot"></i>
                             Edit Address
-                        </button>
+                        </Button>
                     ) : (
                         <div className="flex gap-2">
-                            <button
-                                type="button"
-                                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-xl font-bold transition-all"
+                            <Button
+                                variant="secondary"
+                                size="md"
                                 onClick={() => setEditingSections(prev => ({ ...prev, address: false }))}
                             >
                                 Cancel
-                            </button>
-                            <button
-                                type="button"
-                                disabled={savingSections.address}
-                                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-md shadow-green-200"
+                            </Button>
+                            <Button
+                                variant="success"
+                                size="md"
+                                loading={savingSections.address}
                                 onClick={() => handleSaveSection('address')}
+                                className="shadow-green-200"
                             >
-                                {savingSections.address ? "Saving..." : "Save Address"}
-                            </button>
+                                Save Address
+                            </Button>
                         </div>
                     )}
                 </div>
@@ -327,31 +332,33 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                         Astro Birth Details
                     </h5>
                     {!editingSections.astro ? (
-                        <button
-                            type="button"
-                            className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-md shadow-purple-100"
+                        <Button
+                            variant="primary"
+                            size="md"
                             onClick={() => setEditingSections(prev => ({ ...prev, astro: true }))}
+                            className="bg-purple-500 hover:bg-purple-600 shadow-purple-100"
                         >
                             <i className="fa-solid fa-moon"></i>
                             Edit Birth Data
-                        </button>
+                        </Button>
                     ) : (
                         <div className="flex gap-2">
-                            <button
-                                type="button"
-                                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-xl font-bold transition-all"
+                            <Button
+                                variant="secondary"
+                                size="md"
                                 onClick={() => setEditingSections(prev => ({ ...prev, astro: false }))}
                             >
                                 Cancel
-                            </button>
-                            <button
-                                type="button"
-                                disabled={savingSections.astro}
-                                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-md shadow-green-200"
+                            </Button>
+                            <Button
+                                variant="success"
+                                size="md"
+                                loading={savingSections.astro}
                                 onClick={() => handleSaveSection('astro')}
+                                className="shadow-green-200"
                             >
-                                {savingSections.astro ? "Saving..." : "Save Birth Data"}
-                            </button>
+                                Save Birth Data
+                            </Button>
                         </div>
                     )}
                 </div>
@@ -363,11 +370,20 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
                                 <input
                                     type="date"
                                     className="form-control fw-bold"
-                                    value={profileData.date_of_birth || ""}
+                                    value={profileData.date_of_birth ? profileData.date_of_birth.split('T')[0] : ""}
                                     onChange={(e) => handleInputChange('date_of_birth', e.target.value)}
                                 />
                             ) : (
-                                <p className="fw-bold mb-0 text-dark"><i className="fa-regular fa-calendar me-2 text-warning"></i>{profileData.date_of_birth || "Not set"}</p>
+                                <p className="fw-bold mb-0 text-dark">
+                                    <i className="fa-regular fa-calendar me-2 text-warning"></i>
+                                    {profileData.date_of_birth ? (
+                                        new Date(profileData.date_of_birth).toLocaleDateString('en-IN', {
+                                            day: 'numeric',
+                                            month: 'short',
+                                            year: 'numeric'
+                                        })
+                                    ) : "Not set"}
+                                </p>
                             )}
                         </div>
                         <div className="col-md-4">
