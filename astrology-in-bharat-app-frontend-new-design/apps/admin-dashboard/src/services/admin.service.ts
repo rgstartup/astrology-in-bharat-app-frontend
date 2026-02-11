@@ -10,6 +10,11 @@ export const getUserStats = async () => {
   return res.data;
 };
 
+export const getUserById = async (id: number) => {
+  const res = await api.get(`/admin/users/${id}`);
+  return res.data;
+};
+
 export const getExperts = async (params?: { page?: number; limit?: number; search?: string; status?: string }) => {
   const res = await api.get("/admin/experts", { params });
   return res.data;

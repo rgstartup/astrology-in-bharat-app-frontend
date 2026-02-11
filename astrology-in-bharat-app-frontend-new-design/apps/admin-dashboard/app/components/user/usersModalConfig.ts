@@ -21,8 +21,13 @@ export const getUserProfileModalProps = (user: User) => ({
     { icon: Calendar, label: "Join Date", value: user.joinDate || "N/A" },
     {
       icon: DollarSign,
-      label: "Total Spent",
+      label: "Consultation Spending",
       value: `₹${user.totalSpent?.toLocaleString() || 0}`,
+    },
+    {
+      icon: DollarSign,
+      label: "Wallet Balance",
+      value: `₹${(user as any).walletBalance?.toLocaleString() || 0}`,
     },
     {
       icon: Clock,
