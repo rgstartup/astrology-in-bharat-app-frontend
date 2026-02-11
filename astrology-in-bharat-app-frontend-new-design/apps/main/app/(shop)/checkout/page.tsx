@@ -14,22 +14,73 @@ const CheckoutContent = () => {
   const { clientUser } = useClientAuth();
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+  const [directProduct, setDirectProduct] = useState<any>(null);
+  const [loadingProduct, setLoadingProduct] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("upi");
+  const [couponCode, setCouponCode] = useState("");
+  const [isApplying, setIsApplying] = useState(false);
+  const [discountAmount, setDiscountAmount] = useState(0);
+
+  const [buyNowInfo, setBuyNowInfo] = useState<{ productId: string | number, quantity: number } | null>(null);
+
   const isOrder = searchParams.get("type") === "order";
   const astrologerName = searchParams.get("name") || "Astrologer";
   const date = searchParams.get("date") || "";
   const time = searchParams.get("time") || "";
   const duration = searchParams.get("duration") || "15";
-  const baseTotal = isOrder ? cartTotal : (parseInt(searchParams.get("total") || "300"));
 
-  const [paymentMethod, setPaymentMethod] = useState("upi");
+  // 1. Initial Logic: Capture Buy Now info from URL or SessionStorage
+  useEffect(() => {
+    if (isOrder) {
+      const urlProductId = searchParams.get("productId");
+      const urlQuantity = searchParams.get("quantity");
 
-  // Coupon States
-  const [couponCode, setCouponCode] = useState("");
-  const [isApplying, setIsApplying] = useState(false);
-  const [discountAmount, setDiscountAmount] = useState(0);
-  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+      if (urlProductId) {
+        setBuyNowInfo({ productId: urlProductId, quantity: parseInt(urlQuantity || "1") });
+      } else {
+        const stored = sessionStorage.getItem('buyNowItem');
+        if (stored) {
+          try {
+            setBuyNowInfo(JSON.parse(stored));
+          } catch (e) {
+            console.error("Error parsing buyNowItem:", e);
+          }
+        }
+      }
+    }
+  }, [isOrder, searchParams]);
+
+  // Calculate base total based on whether it's a direct product buy or full cart
+  const baseTotal = isOrder
+    ? buyNowInfo
+      ? (Number(directProduct?.sale_price || directProduct?.price || 0) * buyNowInfo.quantity)
+      : cartTotal
+    : (parseInt(searchParams.get("total") || "300"));
 
   const total = Math.max(0, baseTotal - discountAmount);
+
+  // Fetch product if it's a direct buy
+  useEffect(() => {
+    if (isOrder && buyNowInfo?.productId) {
+      const fetchDirectProduct = async () => {
+        try {
+          setLoadingProduct(true);
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+          const res = await fetch(`${apiUrl}/api/v1/products/${buyNowInfo.productId}`);
+          if (res.ok) {
+            const data = await res.json();
+            setDirectProduct(data.data || data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch product for direct buy:", error);
+        } finally {
+          setLoadingProduct(false);
+        }
+      };
+      fetchDirectProduct();
+    }
+  }, [isOrder, buyNowInfo?.productId]);
 
   const handleApplyCoupon = async () => {
     if (!couponCode) {
@@ -143,10 +194,19 @@ const CheckoutContent = () => {
       let dbOrderId = null;
       if (isOrder) {
         try {
-          const createOrderRes = await apiClient.post("/order", {
-            shippingAddress: address
-          });
+          const orderPayload = {
+            shippingAddress: address,
+            productId: buyNowInfo ? Number(buyNowInfo.productId) : undefined,
+            quantity: buyNowInfo ? Number(buyNowInfo.quantity) : undefined,
+            couponCode: appliedCoupon?.code || undefined
+          };
+          console.log("📦 Sending Order Payload:", orderPayload);
+
+          const createOrderRes = await apiClient.post("/order", orderPayload);
           dbOrderId = createOrderRes.data.id;
+
+          // Clear buyNowItem if order is successfully created
+          sessionStorage.removeItem('buyNowItem');
           console.log("✅ Order created in DB:", dbOrderId);
         } catch (error: any) {
           console.error("Failed to create order:", error);
@@ -349,12 +409,27 @@ const CheckoutContent = () => {
                   {isOrder ? (
                     /* Product Summary */
                     <div className="mb-3">
-                      {cartItems.map((item, idx) => (
-                        <div key={idx} className="d-flex justify-content-between mb-2 small">
-                          <span>{item.product?.name} x {item.quantity}</span>
-                          <span className="fw-semibold">₹{(item.product?.sale_price || item.product?.price || 0) * item.quantity}</span>
-                        </div>
-                      ))}
+                      {buyNowInfo ? (
+                        /* Direct Product Buy Summary */
+                        directProduct ? (
+                          <div className="d-flex justify-content-between mb-2 small">
+                            <span>{directProduct.name} x {buyNowInfo.quantity}</span>
+                            <span className="fw-semibold">₹{(Number(directProduct.sale_price || directProduct.price || 0)) * buyNowInfo.quantity}</span>
+                          </div>
+                        ) : (
+                          <div className="text-center py-2">
+                            <span className="spinner-border spinner-border-sm text-secondary"></span>
+                          </div>
+                        )
+                      ) : (
+                        /* Full Cart Summary */
+                        cartItems.map((item, idx) => (
+                          <div key={idx} className="d-flex justify-content-between mb-2 small">
+                            <span>{item.product?.name} x {item.quantity}</span>
+                            <span className="fw-semibold">₹{(item.product?.sale_price || item.product?.price || 0) * item.quantity}</span>
+                          </div>
+                        ))
+                      )}
                       <hr />
                     </div>
                   ) : (
