@@ -254,8 +254,17 @@ function ChatRoomContent() {
             setSessionStatus(data.status === 'expired' ? 'completed' : 'completed');
             setSessionSummary(data);
 
-            if (isEndingSession.current) {
-                // User ended it, show modal immediately or short delay
+            if (data.status === 'terminated') {
+                setMessages(prev => [...prev, {
+                    id: Date.now(),
+                    senderId: 0,
+                    senderType: 'admin',
+                    content: "This session has been terminated by an administrator.",
+                    createdAt: new Date().toISOString()
+                }]);
+                setShowModal(true);
+            } else if (isEndingSession.current) {
+                // User ended it, show modal immediately
                 setShowModal(true);
             } else {
                 // Expert ended it (or system timeout), show notification and delay modal
@@ -506,8 +515,8 @@ function ChatRoomContent() {
                     <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scrollbar-hide">
                         <div className="max-w-4xl mx-auto space-y-8">
                             <div className="flex justify-center mb-10">
-                                <div className={`px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] transition-all border ${isDarkMode ? 'bg-white/5 opacity-30 border-white/5' : 'bg-[#fd6410]/10 text-[#fd6410] border-[#fd6410]/20'}`}>
-                                    {sessionStatus === 'active' ? 'Consultation in Progress' : sessionStatus === 'completed' ? 'Session Ended' : 'Start your celestial journey'}
+                                <div className={`px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] transition-all border ${sessionSummary?.status === 'terminated' ? 'bg-red-500/10 text-red-500 border-red-500/20' : isDarkMode ? 'bg-white/5 opacity-30 border-white/5' : 'bg-[#fd6410]/10 text-[#fd6410] border-[#fd6410]/20'}`}>
+                                    {sessionStatus === 'active' ? 'Consultation in Progress' : (sessionStatus === 'completed' && sessionSummary?.status === 'terminated') ? 'Session Terminated by Admin' : sessionStatus === 'completed' ? 'Session Ended' : 'Start your celestial journey'}
                                 </div>
                             </div>
 
@@ -704,7 +713,7 @@ function ChatRoomContent() {
                                         <div className="flex flex-col items-center gap-2">
                                             <AlertTriangle className="w-6 h-6 text-red-500 opacity-50" />
                                             <p className="text-red-500/50 font-black uppercase tracking-widest text-xs">
-                                                This consultation session has ended
+                                                {sessionSummary?.status === 'terminated' ? 'Session Terminated by Admin' : 'This consultation session has ended'}
                                             </p>
                                         </div>
                                     )}
@@ -734,40 +743,51 @@ function ChatRoomContent() {
                             <div className="p-6 md:p-8 flex flex-col items-center text-center relative z-10 overflow-y-auto custom-scrollbar">
 
                                 <h2 className={`text-2xl font-black mb-1 ${isDarkMode ? 'text-white' : 'text-[#2A0A0A]'} tracking-tight uppercase`}>
-                                    {sessionSummary?.status === 'expired' ? 'Session Expired' : 'Session Summary'}
+                                    {sessionSummary?.status === 'expired' ? 'Session Expired' : sessionSummary?.status === 'terminated' ? 'Admin Terminated Session' : 'Session Summary'}
                                 </h2>
                                 <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} text-[11px] font-bold tracking-widest uppercase mb-6`}>
-                                    {sessionSummary?.status === 'expired' ? 'Expert missed the request' : 'Consulation Finished'}
+                                    {sessionSummary?.status === 'expired' ? 'Expert missed the request' : sessionSummary?.status === 'terminated' ? null : 'Consulation Finished'}
                                 </p>
 
-                                <div className={`w-full ${isDarkMode ? 'bg-white/5' : 'bg-gray-50'} rounded-2xl p-5 mb-6 space-y-3 flex-shrink-0`}>
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span className="opacity-50 font-bold uppercase tracking-tighter">Total Duration</span>
-                                        <span className="font-black">{sessionSummary?.durationMins || 0} Minutes</span>
+                                {sessionSummary?.status === 'terminated' && (
+                                    <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl mb-6 w-full">
+                                        <p className="text-red-500 text-xs font-bold uppercase tracking-widest mb-1">Authorization Action</p>
+                                        <p className="text-red-400 text-sm leading-relaxed">
+                                            {sessionSummary?.reason || sessionSummary?.message || "Your session was terminated by an administrator for policy violation or security reasons."}
+                                        </p>
                                     </div>
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span className="opacity-50 font-bold uppercase tracking-tighter">Charge per minute</span>
-                                        <span className="font-black">₹{sessionSummary?.pricePerMinute || 0}</span>
-                                    </div>
-                                    <div className="h-px bg-current opacity-10"></div>
-                                    {sessionSummary?.isFree && (
-                                        <div className="flex justify-between items-center text-xs text-green-500 font-bold mb-2">
-                                            <span className="uppercase tracking-tighter">Free Minutes Discount</span>
-                                            <span className="bg-green-500/10 px-2 py-0.5 rounded">-{sessionSummary?.freeMinutes || freeMinutes} Mins</span>
-                                        </div>
-                                    )}
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-[#fd6410] font-black uppercase tracking-tighter text-sm">Amount Deducted</span>
-                                        <span className="text-xl font-black">₹{sessionSummary?.totalCost || 0}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center text-xs opacity-60">
-                                        <span>Remaining Balance</span>
-                                        <span className="font-black">₹{Math.floor(sessionSummary?.remainingBalance || 0)}</span>
-                                    </div>
-                                </div>
+                                )}
 
-                                {/* Review Section - Show only if NOT expired */}
-                                {sessionSummary?.status !== 'expired' && (
+                                {sessionSummary?.status !== 'terminated' && (
+                                    <div className={`w-full ${isDarkMode ? 'bg-white/5' : 'bg-gray-50'} rounded-2xl p-5 mb-6 space-y-3 flex-shrink-0`}>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="opacity-50 font-bold uppercase tracking-tighter">Total Duration</span>
+                                            <span className="font-black">{sessionSummary?.durationMins || 0} Minutes</span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="opacity-50 font-bold uppercase tracking-tighter">Charge per minute</span>
+                                            <span className="font-black">₹{sessionSummary?.pricePerMinute || 0}</span>
+                                        </div>
+                                        <div className="h-px bg-current opacity-10"></div>
+                                        {sessionSummary?.isFree && (
+                                            <div className="flex justify-between items-center text-xs text-green-500 font-bold mb-2">
+                                                <span className="uppercase tracking-tighter">Free Minutes Discount</span>
+                                                <span className="bg-green-500/10 px-2 py-0.5 rounded">-{sessionSummary?.freeMinutes || freeMinutes} Mins</span>
+                                            </div>
+                                        )}
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-[#fd6410] font-black uppercase tracking-tighter text-sm">Amount Deducted</span>
+                                            <span className="text-xl font-black">₹{sessionSummary?.totalCost || 0}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-xs opacity-60">
+                                            <span>Remaining Balance</span>
+                                            <span className="font-black">₹{Math.floor(sessionSummary?.remainingBalance || 0)}</span>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Review Section - Show only if NOT expired and NOT terminated */}
+                                {sessionSummary?.status !== 'expired' && sessionSummary?.status !== 'terminated' && (
                                     <div className="w-full mb-6">
                                         <h3 className={`text-sm font-bold uppercase tracking-widest mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Rate your Experience</h3>
                                         <div className="flex justify-center gap-2 mb-4">
@@ -860,6 +880,13 @@ function ChatRoomContent() {
                                         </button>
                                         <button onClick={() => router.push('/')} className={`w-full py-4 rounded-[24px] border ${isDarkMode ? 'border-white/5 text-gray-400' : 'border-black/5 text-gray-500'} font-bold transition-all text-sm uppercase tracking-widest`}>
                                             Go to Home
+                                        </button>
+                                    </div>
+                                )}
+                                {sessionSummary?.status === 'terminated' && (
+                                    <div className="w-full space-y-4">
+                                        <button onClick={() => router.push('/')} className="w-full py-5 bg-[#fd6410] text-white rounded-[24px] font-black text-lg shadow-[0_10px_30px_rgba(253,100,16,0.3)] hover:brightness-110 active:scale-[0.98] transition-all uppercase tracking-widest">
+                                            Back to Home
                                         </button>
                                     </div>
                                 )}
