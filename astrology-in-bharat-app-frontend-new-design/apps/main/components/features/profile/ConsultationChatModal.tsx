@@ -40,7 +40,7 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
                             style={{ width: "48px", height: "48px", border: "3px solid white" }}
                         >
                             <img
-                                src={selectedSession.expert?.user?.avatar || "/images/astro-img1.png"}
+                                src={selectedSession.expert?.user?.avatar || "/images/dummy-astrologer.jpg"}
                                 alt={selectedSession.expert?.user?.name || "Expert"}
                                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
                             />
@@ -95,7 +95,7 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
                                         <img
                                             src={msg.senderType === 'user'
                                                 ? (userAvatar || "https://avatar.iran.liara.run/public/boy?username=User")
-                                                : (selectedSession.expert?.user?.avatar || "/images/astro-img1.png")
+                                                : (selectedSession.expert?.user?.avatar || "/images/dummy-astrologer.jpg")
                                             }
                                             alt={msg.senderType}
                                             style={{ width: "100%", height: "100%", objectFit: "cover" }}

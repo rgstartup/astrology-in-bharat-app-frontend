@@ -223,7 +223,7 @@ const SignInContent: React.FC = () => {
                       <div className="horoscopes-items text-center">
                         <div className="position-relative d-inline-block">
                           <Image
-                            src={expert.user?.avatar || "/images/astro-img1.png"}
+                            src={expert.user?.avatar || "/images/dummy-astrologer.jpg"}
                             alt={expert.user?.name || "Expert"}
                             height={80}
                             width={80}
@@ -256,7 +256,7 @@ const SignInContent: React.FC = () => {
                     <div className="col-lg-4 col-sm-6 col-md-4 col-6" key={idx}>
                       <div className="horoscopes-items text-center opacity-50">
                         <Image
-                          src="/images/astro-img1.png"
+                          src="/images/dummy-astrologer.jpg"
                           alt="placeholder"
                           height={80}
                           width={80}

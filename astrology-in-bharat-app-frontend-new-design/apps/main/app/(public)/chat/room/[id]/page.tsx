@@ -18,7 +18,7 @@ const {
 interface Message {
     id: number;
     senderId: number;
-    senderType: "user" | "expert";
+    senderType: "user" | "expert" | "admin";
     content: string;
     type?: string;
     createdAt?: string;
@@ -119,7 +119,7 @@ function ChatRoomContent() {
                     setExpertData({
                         id: data.id,
                         userId: data.user?.id,
-                        image: data.user?.avatar || "/images/astro-img1.png",
+                        image: data.user?.avatar || "/images/dummy-astrologer.jpg",
                         name: data.user?.name || "Astrologer",
                         expertise: data.specialization || "Vedic Astrology",
                         experience: data.experience_in_years || 0,

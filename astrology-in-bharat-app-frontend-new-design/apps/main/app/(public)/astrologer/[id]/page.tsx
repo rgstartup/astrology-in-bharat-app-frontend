@@ -52,7 +52,7 @@ export default async function Page({
     const astrologer = {
       id: data.id,
       name: data.user.name || "Astrologer",
-      image: data.user.avatar || "/images/astro-img1.png",
+      image: data.user.avatar || "/images/dummy-astrologer.jpg",
       expertise: data.specialization || "Vedic Astrology",
       experience: data.experience_in_years || 0,
       language:

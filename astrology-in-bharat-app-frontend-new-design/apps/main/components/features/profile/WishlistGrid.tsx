@@ -12,7 +12,7 @@ const WishlistGrid: React.FC = () => {
     const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
 
     const getImageUrl = (path?: string) => {
-        if (!path) return "/images/astro-img1.png";
+        if (!path) return "/images/dummy-astrologer.jpg";
         if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
         return `${cleanApiUrl}/uploads/${path}`;
     };

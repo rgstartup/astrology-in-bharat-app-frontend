@@ -82,7 +82,7 @@ interface AstrologerListProps {
 
 // Map helper
 const getImageUrl = (path?: string) => {
-  if (!path) return "/images/astro-img1.png";
+  if (!path) return "/images/dummy-astrologer.jpg";
   if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
   return `${API_BASE_URL.replace("/api/v1", "")}/uploads/${path}`;
 };

@@ -49,7 +49,7 @@ export default function ConsultationPrep() {
                     setAstrologer({
                         id: data.id,
                         name: data.user?.name || "Astrologer",
-                        image: data.user?.avatar || "/images/astro-img1.png",
+                        image: data.user?.avatar || "/images/dummy-astrologer.jpg",
                         expertise: data.specialization || "Vedic Astrology",
                         experience: data.experience_in_years || 0,
                         price: data.price || 0,
@@ -241,7 +241,7 @@ export default function ConsultationPrep() {
                                 {/* Expert Image Section */}
                                 <div className="relative h-[480px] rounded-[3rem] overflow-hidden group">
                                     <Image
-                                        src={astrologer?.image || "/images/astro-img1.png"}
+                                        src={astrologer?.image || "/images/dummy-astrologer.jpg"}
                                         alt={astrologer?.name || "Astrologer"}
                                         fill
                                         className="object-cover transition-transform duration-1000 group-hover:scale-110"

@@ -458,25 +458,25 @@ const Page = () => {
                   {[
                     {
                       name: "Amit Sharma",
-                      img: "/images/astro-img1.png",
+                      img: "/images/dummy-astrologer.jpg",
                       rating: 5,
                       text: "The moment I put on this bracelet, I felt a shift in my energy. It's beautiful and powerful. Fast delivery and excellent quality.",
                     },
                     {
                       name: "Priya Verma",
-                      img: "/images/astro-img1.png",
+                      img: "/images/dummy-astrologer.jpg",
                       rating: 4,
                       text: "A truly beautiful product. The packaging was exquisite, and the positive vibes were immediate. Highly recommend to anyone seeking balance.",
                     },
                     {
                       name: "Rohit Mehta",
-                      img: "/images/astro-img1.png",
+                      img: "/images/dummy-astrologer.jpg",
                       rating: 5,
                       text: "Impeccable quality and authenticity. The design is so elegant, it feels like it was made just for me. A must-have for daily wear.",
                     },
                     {
                       name: "Sneha Patel",
-                      img: "/images/astro-img1.png",
+                      img: "/images/dummy-astrologer.jpg",
                       rating: 5,
                       text: "I've been wearing it for a month, and I've noticed a significant improvement in my focus and overall well-being. Thank you for this magical piece!",
                     },

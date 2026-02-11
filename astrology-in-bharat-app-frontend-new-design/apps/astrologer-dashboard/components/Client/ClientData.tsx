@@ -216,10 +216,10 @@ export default function ClientsPage() {
                     <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-orange-100 overflow-hidden shadow-sm relative">
                       {/* You might want to use session.user.avatar here if available */}
                       <img
-                        src={session?.user?.profile_picture || session?.user?.avatar || "/images/profile.jpg"}
+                        src={session?.user?.profile_picture || session?.user?.avatar || "/images/dummy-astrologer.jpg"}
                         alt={client.name}
                         className="w-full h-full object-cover"
-                        onError={(e) => { (e.target as HTMLImageElement).src = "/images/profile.jpg"; }}
+                        onError={(e) => { (e.target as HTMLImageElement).src = "/images/dummy-astrologer.jpg"; }}
                       />
                       {/* Online/Status Indicator Dot (Optional) */}
                       <span className={`absolute bottom-1 right-1 w-3 h-3 rounded-full border-2 border-white ${session?.status === 'active' ? 'bg-green-500' : 'bg-gray-300'}`}></span>
@@ -337,10 +337,10 @@ export default function ClientsPage() {
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full border-2 border-white/20 overflow-hidden bg-white/10 flex items-center justify-center">
                   <img
-                    src={selectedSession.user?.profile_picture || selectedSession.user?.avatar || "/images/profile.jpg"}
+                    src={selectedSession.user?.profile_picture || selectedSession.user?.avatar || "/images/dummy-astrologer.jpg"}
                     alt="User"
                     className="w-full h-full object-cover"
-                    onError={(e) => { (e.target as HTMLImageElement).src = "/images/profile.jpg"; }}
+                    onError={(e) => { (e.target as HTMLImageElement).src = "/images/dummy-astrologer.jpg"; }}
                   />
                 </div>
                 <div>

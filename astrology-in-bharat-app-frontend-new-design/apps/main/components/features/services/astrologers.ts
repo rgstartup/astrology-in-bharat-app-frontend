@@ -16,7 +16,7 @@ interface AstrologerData {
 export const ListOfAllAstrologers: AstrologerData[] = [
     {
         id: 1,
-        image: "/images/astro-img1.png",
+        image: "/images/dummy-astrologer.jpg",
         ratings: 5,
         name: "Parbhat Sharma",
         expertise: "Vedic | Numerology",
@@ -30,7 +30,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     },
     {
         id: 2,
-        image: "/images/astro-img1.png",
+        image: "/images/dummy-astrologer.jpg",
         ratings: 5,
         name: "Parbhat Sharma",
         expertise: "Vedic | Numerology",
@@ -44,7 +44,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     },
     {
         id: 3,
-        image: "/images/astro-img1.png",
+        image: "/images/dummy-astrologer.jpg",
         ratings: 5,
         name: "Parbhat Sharma",
         expertise: "Vedic | Numerology",
@@ -58,7 +58,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     },
     {
         id: 4,
-        image: "/images/astro-img1.png",
+        image: "/images/dummy-astrologer.jpg",
         ratings: 5,
         name: "Parbhat Sharma",
         expertise: "Vedic | Numerology",
@@ -72,7 +72,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     },
     {
         id: 5,
-        image: "/images/astro-img1.png",
+        image: "/images/dummy-astrologer.jpg",
         ratings: 5,
         name: "Parbhat Sharma",
         expertise: "Vedic | Numerology",
@@ -86,7 +86,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     },
     {
         id: 6,
-        image: "/images/astro-img1.png",
+        image: "/images/dummy-astrologer.jpg",
         ratings: 5,
         name: "Parbhat Sharma",
         expertise: "Vedic | Numerology",
@@ -100,7 +100,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     },
     {
         id: 7,
-        image: "/images/astro-img1.png",
+        image: "/images/dummy-astrologer.jpg",
         ratings: 5,
         name: "Parbhat Sharma",
         expertise: "Vedic | Numerology",
@@ -114,7 +114,7 @@ export const ListOfAllAstrologers: AstrologerData[] = [
     },
     {
         id: 8,
-        image: "/images/astro-img1.png",
+        image: "/images/dummy-astrologer.jpg",
         ratings: 5,
         name: "Parbhat Sharma",
         expertise: "Vedic | Numerology",

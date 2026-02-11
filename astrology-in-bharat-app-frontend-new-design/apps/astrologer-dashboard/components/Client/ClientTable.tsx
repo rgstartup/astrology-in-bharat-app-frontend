@@ -74,10 +74,10 @@ export default function ClientTable({
                                     <div className="w-8 h-8 rounded-full bg-yellow-600 text-white flex items-center justify-center font-bold text-sm overflow-hidden flex-shrink-0">
                                         {client.avatar ? (
                                             <img
-                                                src={client.avatar || "/images/profile.jpg"}
+                                                src={client.avatar || "/images/dummy-astrologer.jpg"}
                                                 alt={client.name}
                                                 className="w-full h-full object-cover"
-                                                onError={(e) => { (e.target as HTMLImageElement).src = "/images/profile.jpg"; }}
+                                                onError={(e) => { (e.target as HTMLImageElement).src = "/images/dummy-astrologer.jpg"; }}
                                             />
                                         ) : (
                                             client.name.charAt(0)

@@ -112,7 +112,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
                 <button
                   key={subItem.label}
                   onClick={subItem.onClick}
-                  className="block w-full text-left px-3 py-2 rounded-lg text-sm text-yellow-100 hover:bg-yellow-600 hover:text-white transition-colors duration-200"
+                  className="block w-full text-left px-3 py-2 rounded-lg text-sm text-white hover:bg-[#2d1111]/80 transition-colors duration-200"
                 >
                   {subItem.label}
                 </button>
@@ -123,8 +123,8 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
                 key={subItem.label}
                 href={subItem.href}
                 className={cn(
-                  "block px-3 py-2 rounded-lg text-sm text-yellow-100 hover:bg-yellow-600 hover:text-white transition-colors duration-200",
-                  isSubmenuActive && "bg-yellow-600 text-white font-medium"
+                  "block px-3 py-2 rounded-lg text-sm text-white hover:bg-[#2d1111]/80 transition-colors duration-200",
+                  isSubmenuActive && "bg-[#2d1111] text-white font-medium"
                 )}
                 aria-current={isSubmenuActive ? "page" : undefined}
               >

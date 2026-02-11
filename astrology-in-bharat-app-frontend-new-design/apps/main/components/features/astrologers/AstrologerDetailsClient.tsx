@@ -307,7 +307,7 @@ export default function AstrologerDetailsClient({
                             <div className="flex items-center gap-3">
                               <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-100 bg-gray-50">
                                 <Image
-                                  src={review.user.avatar || "/images/astro-img1.png"}
+                                  src={review.user.avatar || "/images/dummy-astrologer.jpg"}
                                   alt={review.user.name}
                                   fill
                                   className="object-cover"
@@ -516,7 +516,7 @@ export default function AstrologerDetailsClient({
                 name: "Original Rudraksha Mala",
                 price: 1499,
                 originalPrice: 2999,
-                imageUrl: "/images/astro-img1.png",
+                imageUrl: "/images/dummy-astrologer.jpg",
                 description: "Authentic 5 Mukhi Rudraksha mala for peace and meditation."
               },
               {
@@ -540,7 +540,7 @@ export default function AstrologerDetailsClient({
                 name: "Shri Yantra",
                 price: 2100,
                 originalPrice: 3500,
-                imageUrl: "/images/astro-img1.png",
+                imageUrl: "/images/dummy-astrologer.jpg",
                 description: "Sacred geometry yantra for wealth and prosperity."
               }
             ]}

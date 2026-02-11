@@ -90,7 +90,7 @@ const OurAstrologer = () => {
             const { data, pagination }: { data: ExpertProfile[]; pagination: PaginationInfo } = response.data;
 
             const getImageUrl = (path?: string) => {
-                if (!path) return "/images/astro-img1.png";
+                if (!path) return "/images/dummy-astrologer.jpg";
                 if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
                 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
                 return `${baseUrl}/uploads/${path}`;
@@ -271,7 +271,7 @@ const OurAstrologer = () => {
                 <div className="modal fade" id="sortModal" tabIndex={-1} aria-hidden="true" style={{ zIndex: 1060 }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content text-dark border-0 shadow-lg rounded-3">
-                            <div className="modal-header bg-gradient-to-r from-orange-50 to-white border-0 py-3 px-4">
+                            <div className="modal-header bg-linear-to-r from-orange-50 to-white border-0 py-3 px-4">
                                 <h5 className="modal-title font-bold text-lg"><i className="fa-solid fa-sort mr-2 text-[#fd6410]"></i>Sort By</h5>
                                 <button type="button" className="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">X</button>
                             </div>
@@ -315,7 +315,7 @@ const OurAstrologer = () => {
                 <div className="modal fade" id="filterModal" tabIndex={-1} aria-hidden="true" style={{ zIndex: 1060 }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content text-dark border-0 shadow-lg rounded-3">
-                            <div className="modal-header bg-gradient-to-r from-orange-50 to-white border-0 py-3 px-4">
+                            <div className="modal-header bg-linear-to-r from-orange-50 to-white border-0 py-3 px-4">
                                 <h5 className="modal-title font-bold text-lg"><i className="fa-solid fa-filter mr-2 text-[#fd6410]"></i>Filter Astrologers</h5>
                                 <button type="button" className="btn-close shadow-none text-red-500" data-bs-dismiss="modal" aria-label="Close ">X</button>
                             </div>
@@ -355,7 +355,7 @@ const OurAstrologer = () => {
                                 </div>
 
                                 {/* Online Only Toggle */}
-                                <div className="p-3 rounded-lg border bg-gradient-to-r from-green-50 to-white">
+                                <div className="p-3 rounded-lg border bg-linear-to-r from-green-50 to-white">
                                     <div className="d-flex align-items-center justify-content-between">
                                         <div className="d-flex align-items-center">
                                             <div className="w-10 h-10 rounded-full bg-green-100 d-flex align-items-center justify-content-center mr-3">

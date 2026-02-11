@@ -67,7 +67,7 @@ export default function PersonalInfo({
                     onClick={(e) => e.stopPropagation()}
                 >
                     <img
-                        src={(isEditing ? tempProfile.profilePic : profile.profilePic) || "/placeholder-avatar.png"}
+                        src={(isEditing ? tempProfile.profilePic : profile.profilePic) || "/images/dummy-astrologer.jpg"}
                         alt="Profile"
                         className="w-full h-full object-cover rounded-full border-2 border-yellow-500 shadow-md"
                     />

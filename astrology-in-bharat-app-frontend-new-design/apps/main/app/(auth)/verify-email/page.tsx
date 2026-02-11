@@ -100,7 +100,7 @@ const VerifyEmailContent: React.FC = () => {
                         <div className="form-data shadow-sm p-5 rounded-xl bg-white text-center">
                             <div className="mb-4">
                                 <Image
-                                    src="/images/astro-img1.png"
+                                    src="/images/dummy-astrologer.jpg"
                                     alt="Astrology Bharat"
                                     height={100}
                                     width={100}

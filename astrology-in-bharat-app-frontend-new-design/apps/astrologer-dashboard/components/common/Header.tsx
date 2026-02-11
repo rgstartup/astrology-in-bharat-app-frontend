@@ -332,7 +332,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           >
             <Link href="/dashboard/profilemanagement">
               <img
-                src={(user as any)?.avatar || (user as any)?.profilePic || "/images/profile.jpg"}
+                src={(user as any)?.avatar || (user as any)?.profilePic || "/images/dummy-astrologer.jpg"}
                 alt="Profile"
                 className="w-10 h-10 text-gray-600 object-cover rounded-full border-2 border-yellow-500 shadow-md bg-top"
               />

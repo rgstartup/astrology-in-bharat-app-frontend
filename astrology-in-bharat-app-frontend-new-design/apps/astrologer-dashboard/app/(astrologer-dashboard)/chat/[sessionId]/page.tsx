@@ -215,10 +215,10 @@ function ExpertChatRoomContent() {
                         <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white font-black overflow-hidden border border-white/30 shadow-sm">
                             {clientAvatar ? (
                                 <img
-                                    src={clientAvatar || "/images/profile.jpg"}
+                                    src={clientAvatar || "/images/dummy-astrologer.jpg"}
                                     alt={clientName}
                                     className="w-full h-full object-cover"
-                                    onError={(e) => { (e.target as HTMLImageElement).src = "/images/profile.jpg"; }}
+                                    onError={(e) => { (e.target as HTMLImageElement).src = "/images/dummy-astrologer.jpg"; }}
                                 />
                             ) : (
                                 clientName.charAt(0).toUpperCase()
@@ -325,9 +325,9 @@ function ExpertChatRoomContent() {
                                     ) : (
                                         clientAvatar ? (
                                             <img
-                                                src={clientAvatar || "/images/profile.jpg"}
+                                                src={clientAvatar || "/images/dummy-astrologer.jpg"}
                                                 className="w-full h-full object-cover"
-                                                onError={(e) => { (e.target as HTMLImageElement).src = "/images/profile.jpg"; }}
+                                                onError={(e) => { (e.target as HTMLImageElement).src = "/images/dummy-astrologer.jpg"; }}
                                             />
                                         ) : (
                                             clientName.charAt(0)

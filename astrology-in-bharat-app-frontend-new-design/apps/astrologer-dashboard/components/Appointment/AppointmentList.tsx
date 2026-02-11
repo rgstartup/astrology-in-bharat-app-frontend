@@ -89,12 +89,12 @@ export default function AppointmentList({
                             <div className="flex-shrink-0 w-12 h-12 rounded-full bg-yellow-600 text-white flex items-center justify-center font-bold text-2xl ring-2 ring-yellow-500 overflow-hidden shadow-sm">
                                 {appt.avatar ? (
                                     <img
-                                        src={appt.avatar || "/images/profile.jpg"}
+                                        src={appt.avatar || "/images/dummy-astrologer.jpg"}
                                         alt={appt.name}
                                         className="w-full h-full object-cover"
                                         onError={(e) => {
                                             // Fallback if image fails to load
-                                            (e.currentTarget as any).src = "/images/profile.jpg";
+                                            (e.currentTarget as any).src = "/images/dummy-astrologer.jpg";
                                         }}
                                     />
                                 ) : (

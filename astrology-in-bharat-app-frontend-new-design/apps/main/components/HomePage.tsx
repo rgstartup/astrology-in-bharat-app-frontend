@@ -303,7 +303,7 @@ const HomePage: React.FC = () => {
                   <p>{client.review}</p>
                   <div className="mt-3 d-flex align-items-center justify-content-center flex-column">
                     <img
-                      src="images/astro-img1.png"
+                      src="/images/dummy-astrologer.jpg"
                       alt={client.name}
                       className="rounded-circle mb-2"
                       style={{
