@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 // Components
 import { StatsCards } from "../../../../shared/components/StatsCard";
 import { ServiceCard } from "@/app/components/Service/ServiceCard";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 import { SearchInput } from "../../../../shared/components/SearchInput";
 
 const AddService = lazy(() => import("@/app/components/Service/AddService"));

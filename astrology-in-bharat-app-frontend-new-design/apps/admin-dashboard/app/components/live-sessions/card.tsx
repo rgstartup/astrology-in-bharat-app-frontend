@@ -2,6 +2,15 @@
 import React, { useState, useEffect } from "react";
 import { Video, Mic, MessageSquare, Clock, VideoOff, AlertCircle, Eye, PhoneOff } from "lucide-react";
 import { Button } from "../../../../shared/components/Button";
+
+const VideoComp = Video as any;
+const MicComp = Mic as any;
+const MessageSquareComp = MessageSquare as any;
+const ClockComp = Clock as any;
+const VideoOffComp = VideoOff as any;
+const AlertCircleComp = AlertCircle as any;
+const EyeComp = Eye as any;
+const PhoneOffComp = PhoneOff as any;
 import { ParticipantCard } from "./ParticipantCard";
 
 import { StatusBadge } from "./StatusBadge";
@@ -24,9 +33,9 @@ export function LiveSessionCard({
   // SessionTypeIcon component
   const SessionTypeIcon = ({ type }: { type: string }) => {
     switch (type) {
-      case "video": return <Video className="w-5 h-5 text-blue-600" />;
-      case "audio": return <Mic className="w-5 h-5 text-green-600" />;
-      case "chat": return <MessageSquare className="w-5 h-5 text-purple-600" />;
+      case "video": return <VideoComp className="w-5 h-5 text-blue-600" />;
+      case "audio": return <MicComp className="w-5 h-5 text-green-600" />;
+      case "chat": return <MessageSquareComp className="w-5 h-5 text-purple-600" />;
       default: return null;
     }
   };
@@ -91,7 +100,7 @@ export function LiveSessionCard({
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Duration</span>
-              <Clock className="w-4 h-4 text-gray-500" />
+              <ClockComp className="w-4 h-4 text-gray-500" />
             </div>
             <p className="text-lg font-semibold text-gray-900 mt-1">
               {elapsed} min
@@ -101,7 +110,7 @@ export function LiveSessionCard({
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Chat Messages</span>
-              <MessageSquare className="w-4 h-4 text-gray-500" />
+              <MessageSquareComp className="w-4 h-4 text-gray-500" />
             </div>
             <p className="text-lg font-semibold text-gray-900 mt-1">
               {session.chatMessages}
@@ -126,7 +135,7 @@ export function LiveSessionCard({
         {session.issues && session.issues.length > 0 && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-lg mb-4">
             <div className="flex items-center gap-2 mb-2">
-              <AlertCircle className="w-5 h-5 text-red-600" />
+              <AlertCircleComp className="w-5 h-5 text-red-600" />
               <h4 className="font-medium text-red-700">Technical Issues</h4>
             </div>
             <ul className="text-sm text-red-600 space-y-1">
@@ -146,7 +155,7 @@ export function LiveSessionCard({
             <Button
               variant="primary"
               size="sm"
-              icon={Eye}
+              icon={EyeComp}
               fullWidth
               onClick={() => onJoinSession(session)}
             >
@@ -156,7 +165,7 @@ export function LiveSessionCard({
             <Button
               variant="secondary"
               size="sm"
-              icon={VideoOff}
+              icon={VideoOffComp}
               fullWidth
               disabled
             >
@@ -167,7 +176,7 @@ export function LiveSessionCard({
           <Button
             variant="danger"
             size="sm"
-            icon={PhoneOff}
+            icon={PhoneOffComp}
             onClick={() => onEndSession(session.id)}
           >
             End

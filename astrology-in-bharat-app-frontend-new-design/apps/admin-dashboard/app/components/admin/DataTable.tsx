@@ -3,6 +3,12 @@ import React, { useState, useMemo, useCallback, memo } from "react";
 import { ChevronLeft, ChevronRight, Search, Eye } from "lucide-react";
 import { SearchInput } from "../../../../shared/components/SearchInput";
 import { Loading } from "../../../../shared/components/Loading";
+const LoadingComp = Loading as any;
+import { Button } from "../../../../shared/components/Button";
+
+const ChevronLeftComp = ChevronLeft as any;
+const ChevronRightComp = ChevronRight as any;
+const EyeComp = Eye as any;
 
 // Types
 interface Column<T> {
@@ -61,13 +67,14 @@ const TableRow = memo(function TableRow<T extends { id: number | string }>({
       ))}
       {onViewDetails && (
         <td className="px-6 py-4 whitespace-nowrap">
-          <button
+          <Button
+            size="sm"
+            variant="outline"
             onClick={handleViewDetails}
-            className="px-3 py-1.5 text-xs font-medium text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 rounded-lg transition-colors border border-yellow-200"
             aria-label={`View details for item ${item.id}`}
           >
             View Details
-          </button>
+          </Button>
         </td>
       )}
     </tr>
@@ -283,7 +290,7 @@ export function DataTable<T extends { id: number | string }>({
                 <tr>
                   <td colSpan={columns.length + (onViewDetails ? 1 : 0)} className="px-6 py-10 text-center">
                     <div className="flex justify-center items-center">
-                      <Loading size="lg" text="Loading data..." />
+                      <LoadingComp size="lg" text="Loading data..." />
                     </div>
                   </td>
                 </tr>
@@ -345,7 +352,7 @@ export function DataTable<T extends { id: number | string }>({
                   aria-label="Go to previous page"
                   className="p-2 rounded-lg border border-gray-200 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+                  <ChevronLeftComp className="w-4 h-4" aria-hidden="true" />
                 </button>
 
                 {/* Page numbers */}
@@ -365,7 +372,7 @@ export function DataTable<T extends { id: number | string }>({
                   aria-label="Go to next page"
                   className="p-2 rounded-lg border border-gray-200 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ChevronRight className="w-4 h-4" aria-hidden="true" />
+                  <ChevronRightComp className="w-4 h-4" aria-hidden="true" />
                 </button>
               </nav>
             </div>

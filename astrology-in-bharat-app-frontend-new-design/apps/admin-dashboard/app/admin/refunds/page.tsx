@@ -3,7 +3,7 @@
 
 import React, { useState, useMemo } from "react";
 // import { StatsCards } from "../../../../shared/components/StatsCard";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 import { Download, Filter, RefreshCw } from "lucide-react";
 
 // Components
