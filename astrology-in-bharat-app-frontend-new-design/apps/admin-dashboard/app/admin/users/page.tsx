@@ -13,7 +13,7 @@ import { getUserProfileModalProps } from "@/app/components/user/usersModalConfig
 import type { User } from "@/app/components/user/user";
 
 // Services
-import { getUsers, getUserStats, toggleUserBlock } from "@/src/services/admin.service";
+import { getUsers, getUserStats, toggleUserBlock, getUserById } from "@/src/services/admin.service";
 
 // Lazy load ProfileModal (loads only when needed)
 const ProfileModal = lazy(() =>
@@ -42,6 +42,8 @@ export default function UsersPage() {
 
   // Selected user state (for view modal)
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [detailedUser, setDetailedUser] = useState<any>(null);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
 
   // Assign Coupon state
   const [couponUser, setCouponUser] = useState<User | null>(null);
@@ -159,7 +161,18 @@ export default function UsersPage() {
         columns={columns}
         searchKeys={["name", "email"]}
         title="User Management"
-        onViewDetails={setSelectedUser}
+        onViewDetails={async (user) => {
+          setSelectedUser(user);
+          try {
+            setIsDetailLoading(true);
+            const data = await getUserById(user.id);
+            setDetailedUser(data);
+          } catch (error) {
+            console.error("Failed to fetch user details:", error);
+          } finally {
+            setIsDetailLoading(false);
+          }
+        }}
         statsCards={<StatsCards stats={statsConfig} columns={3} />}
         onSearch={handleSearch}
         isLoading={isLoading}
@@ -180,9 +193,24 @@ export default function UsersPage() {
       />
 
       {/* Details Modal */}
-      {selectedUser && modalProps && (
+      {selectedUser && (
         <Suspense fallback={<ModalLoadingFallback />}>
-          <ProfileModal {...modalProps} isOpen={true} onClose={() => setSelectedUser(null)} />
+          <ProfileModal
+            {...(detailedUser ? getUserProfileModalProps(detailedUser) : getUserProfileModalProps(selectedUser))}
+            isOpen={true}
+            onClose={() => {
+              setSelectedUser(null);
+              setDetailedUser(null);
+            }}
+            action2Label="Close"
+            checklist={detailedUser?.addresses?.map((addr: any) => ({
+              label: `${addr.tag || 'Address'}`,
+              isComplete: !!addr.line1,
+              value: `${addr.line1}, ${addr.city}, ${addr.state}, ${addr.country} - ${addr.zipCode}`
+            }))}
+            purchases={detailedUser?.purchases}
+            subtitle="User Profile"
+          />
         </Suspense>
       )}
 

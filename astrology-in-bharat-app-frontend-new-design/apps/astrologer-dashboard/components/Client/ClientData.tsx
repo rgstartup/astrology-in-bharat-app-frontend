@@ -241,16 +241,18 @@ export default function ClientsPage() {
                     {/* Badges Row */}
                     <div className="flex flex-wrap items-center gap-2 mt-1">
                       {/* Status Badge */}
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold capitalize ${session?.status === 'completed' ? 'bg-green-100 text-green-700' :
-                        session?.status === 'active' ? 'bg-blue-100 text-blue-700' :
-                          'bg-gray-100 text-gray-600'
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold capitalize ${session?.terminatedBy === 'admin' ? 'bg-red-100 text-red-700' :
+                        session?.status === 'completed' ? 'bg-green-100 text-green-700' :
+                          session?.status === 'active' ? 'bg-blue-100 text-blue-700' :
+                            'bg-gray-100 text-gray-600'
                         }`}>
                         {/* Circle Icon */}
-                        <div className={`w-1.5 h-1.5 rounded-full ${session?.status === 'completed' ? 'bg-green-500' :
-                          session?.status === 'active' ? 'bg-blue-500' :
-                            'bg-gray-500'
+                        <div className={`w-1.5 h-1.5 rounded-full ${session?.terminatedBy === 'admin' ? 'bg-red-500' :
+                          session?.status === 'completed' ? 'bg-green-500' :
+                            session?.status === 'active' ? 'bg-blue-500' :
+                              'bg-gray-500'
                           }`}></div>
-                        {session?.status || 'Completed'}
+                        {session?.terminatedBy === 'admin' ? 'Terminated by Admin' : (session?.status || 'Completed')}
                       </span>
 
                       {/* Duration Badge */}
@@ -348,7 +350,7 @@ export default function ClientsPage() {
                     </span>
                     <span className="w-1 h-1 bg-white/50 rounded-full"></span>
                     <span className="capitalize">
-                      {selectedSession.status}
+                      {selectedSession.terminatedBy === 'admin' ? 'Terminated by Admin' : selectedSession.status}
                     </span>
                   </div>
                 </div>

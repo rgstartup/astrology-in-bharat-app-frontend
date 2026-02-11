@@ -120,10 +120,10 @@ export default function AppointmentList({
                                     <span
                                         className={cn(
                                             "inline-block px-3 py-1 text-xs rounded-full font-medium shadow-sm capitalize border border-current",
-                                            statusColors[appt.status]
+                                            appt.terminatedBy === 'admin' ? "bg-red-100 text-red-600 border-red-200" : statusColors[appt.status]
                                         )}
                                     >
-                                        {appt.status === 'pending' ? '⏳ Waiting for you' : appt.status === 'active' ? '🟢 Live Now' : appt.status}
+                                        {appt.terminatedBy === 'admin' ? '🛑 Terminated by Admin' : (appt.status === 'pending' ? '⏳ Waiting for you' : appt.status === 'active' ? '🟢 Live Now' : appt.status)}
                                     </span>
                                     {appt.status === 'pending' && appt.expiresAt && (
                                         <CountdownTimer expiresAt={appt.expiresAt} />
@@ -180,7 +180,7 @@ export default function AppointmentList({
                                         <div className="flex flex-col items-end">
                                             <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">Status</span>
                                             <span className="text-sm font-bold text-gray-700">
-                                                {appt.status === 'completed' ? '✅ COMPLETED' : '⌛ EXPIRED'}
+                                                {appt.terminatedBy === 'admin' ? '🛑 TERMINATED BY ADMIN' : (appt.status === 'completed' ? '✅ COMPLETED' : '⌛ EXPIRED')}
                                             </span>
                                         </div>
                                         {appt.status === 'completed' && appt.durationMins !== undefined && (
@@ -250,10 +250,10 @@ export default function AppointmentList({
                             <span
                                 className={cn(
                                     "px-3 py-1 text-xs rounded-full font-medium shadow-sm",
-                                    statusColors[appt.status]
+                                    appt.terminatedBy === 'admin' ? "bg-red-100 text-red-600 border-red-200" : statusColors[appt.status]
                                 )}
                             >
-                                {appt.status}
+                                {appt.terminatedBy === 'admin' ? 'Terminated by Admin' : appt.status}
                             </span>
                             <span className="text-xs text-gray-500">
                                 {appt.type === "new" ? "🆕 New" : "🔄 Follow-up"}
@@ -297,7 +297,7 @@ export default function AppointmentList({
                             {(appt.status === 'completed' || appt.status === 'expired') && (
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center text-xs font-bold bg-gray-50 px-4 py-3 rounded-xl border border-dashed border-gray-200">
-                                        <span className="opacity-60">{appt.status === 'completed' ? '✅ COMPLETED' : '⌛ EXPIRED'}</span>
+                                        <span className="opacity-60">{appt.terminatedBy === 'admin' ? '🛑 TERMINATED BY ADMIN' : (appt.status === 'completed' ? '✅ COMPLETED' : '⌛ EXPIRED')}</span>
                                         {appt.status === 'completed' && appt.durationMins !== undefined && (
                                             <span className="text-[#fd6410]">{appt.durationMins} MINS</span>
                                         )}

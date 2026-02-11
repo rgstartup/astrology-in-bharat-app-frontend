@@ -5,6 +5,7 @@ export interface Appointment {
     service: string;
     date: string;
     status: "confirmed" | "pending" | "cancelled" | "active" | "completed" | "expired";
+    terminatedBy?: string;
     type: "new" | "follow-up";
     reminder: boolean;
     meetingLink: string;

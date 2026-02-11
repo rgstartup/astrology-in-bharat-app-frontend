@@ -18,7 +18,6 @@ const { Activity: ActivityIcon } = { Activity } as any;
 // Static components
 import { SessionHeader } from "@/app/components/live-sessions/SessionHeader";
 import { SessionFilters } from "@/app/components/live-sessions/SessionFilters";
-import { SessionControls } from "@/app/components/live-sessions/SessionControls";
 import { LiveSessionCard } from "@/app/components/live-sessions/card";
 import { ChatHistoryModal } from "@/app/components/live-sessions/ChatHistoryModal";
 
@@ -68,9 +67,9 @@ export default function LiveSessionsPage() {
               (s.status === 'completed' && s.terminatedBy === 'admin') ? 'admin-terminated' :
                 s.status === 'completed' ? 'ended' : 'live',
         startTime: new Date(s.startTime || s.createdAt),
-        duration: s.freeMinutes + (s.pricePerMinute > 0 ? 30 : 0), // Estimate duration or use actual if ended
+        duration: s.duration || 0,
         connectionQuality: "excellent",
-        chatMessages: 0, // We don't have this in session object yet
+        chatMessages: s.messageCount || 0,
         recording: false,
         lastActive: new Date(s.updatedAt || s.createdAt),
         issues: []
@@ -198,12 +197,7 @@ export default function LiveSessionsPage() {
 
         <div className="flex-1" />
 
-        <SessionControls
-          volume={volume}
-          isPlaying={isPlaying}
-          onVolumeChange={setVolume}
-          onPlayPause={setIsPlaying}
-        />
+
       </div>
 
       {/* Sessions Grid */}

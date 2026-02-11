@@ -3,6 +3,15 @@
 import React, { useState } from "react";
 import { X, LucideIcon, Play, Image as ImageIcon, FileText, CheckCircle2, AlertCircle, ExternalLink, Download, CheckCircle, Circle, ChevronDown, ChevronUp } from "lucide-react";
 
+const XComp = X as any;
+const PlayComp = Play as any;
+const CheckCircleComp = CheckCircle as any;
+const CheckCircle2Comp = CheckCircle2 as any;
+const AlertCircleComp = AlertCircle as any;
+const CircleComp = Circle as any;
+const ChevronDownComp = ChevronDown as any;
+const ChevronUpComp = ChevronUp as any;
+
 interface DetailItem {
   icon: LucideIcon;
   label: string;
@@ -49,6 +58,14 @@ interface ProfileModalProps {
     onClick: () => void;
     variant: "primary" | "danger";
   }[];
+  action2Label?: string;
+  purchases?: {
+    id: number;
+    amount: number;
+    status: string;
+    createdAt: string;
+    items: { productName: string; quantity: number; price: number }[];
+  }[];
 }
 
 export function ProfileModal({
@@ -65,7 +82,9 @@ export function ProfileModal({
   documents,
   checklist,
   onStatusUpdate,
+  action2Label,
   actions,
+  purchases,
 }: ProfileModalProps) {
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [isRejecting, setIsRejecting] = useState(false);
@@ -114,7 +133,7 @@ export function ProfileModal({
         <div className="relative bg-[#FCFBFA] rounded-[3rem] shadow-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto animate-in zoom-in-95 duration-300 border border-white">
 
           <button onClick={onClose} className="absolute top-8 right-8 z-10 text-gray-400 hover:text-gray-900 bg-white shadow-sm p-3 rounded-full transition-all">
-            <X className="w-6 h-6" />
+            <XComp className="w-6 h-6" />
           </button>
 
           {/* Header Section */}
@@ -123,7 +142,7 @@ export function ProfileModal({
               <div className="absolute -inset-2 bg-gradient-to-tr from-amber-500 to-orange-300 rounded-full blur opacity-20 group-hover:opacity-40 transition animate-pulse" />
               <img src={avatar || "https://avatar.iran.liara.run/public/boy"} className="relative w-40 h-40 rounded-full object-cover border-[8px] border-white shadow-2xl" alt={name} />
               <div className="absolute bottom-2 right-2 w-10 h-10 bg-emerald-500 rounded-full border-4 border-white flex items-center justify-center text-white">
-                <CheckCircle2 className="w-5 h-5" />
+                <CheckCircle2Comp className="w-5 h-5" />
               </div>
             </div>
 
@@ -178,19 +197,19 @@ export function ProfileModal({
                           {item.label}
                         </span>
                         {expandedItems[item.label] ? (
-                          <ChevronUp as any className="w-4 h-4 text-orange-500" />
+                          <ChevronUpComp className="w-4 h-4 text-orange-500" />
                         ) : (
-                          <ChevronDown as any className="w-4 h-4 text-orange-500" />
+                          <ChevronDownComp className="w-4 h-4 text-orange-500" />
                         )}
                       </div>
 
                       {item.isComplete ? (
                         <div className="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100">
-                          <CheckCircle as any className="w-4 h-4" />
+                          <CheckCircleComp className="w-4 h-4" />
                         </div>
                       ) : (
                         <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-300">
-                          <Circle className="w-4 h-4" />
+                          <CircleComp className="w-4 h-4" />
                         </div>
                       )}
                     </div>
@@ -200,7 +219,9 @@ export function ProfileModal({
                       <div className="px-5 pb-5 pt-2 animate-in slide-in-from-top-2 duration-300">
                         <div className="bg-white/60 p-4 rounded-xl border border-orange-50/50">
                           {item.label === "Profile Picture" ? (
-                            <img src={item.value} className="max-w-xs rounded-lg shadow-md border-2 border-white" alt={item.label} />
+                            <a href={item.value} target="_blank" rel="noopener noreferrer">
+                              <img src={item.value} className="max-w-xs rounded-lg shadow-md border-2 border-white hover:opacity-90 transition-opacity" alt={item.label} />
+                            </a>
                           ) : item.label === "Gallery Photos" || item.label === "Certificates" ? (
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                               {Array.isArray(item.value) && item.value.map((img: any, i: number) => (
@@ -213,7 +234,7 @@ export function ProfileModal({
                                 <video src={item.value} controls className="w-full h-full object-contain" />
                               ) : (
                                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
-                                  <Play className="w-12 h-12 mb-2 opacity-20" />
+                                  <PlayComp className="w-12 h-12 mb-2 opacity-20" />
                                   <p className="text-xs font-bold uppercase tracking-widest">No video uploaded</p>
                                 </div>
                               )}
@@ -233,7 +254,7 @@ export function ProfileModal({
                                 ))
                               ) : (
                                 <div className="flex flex-col items-center justify-center py-8 text-gray-400">
-                                  <AlertCircle className="w-8 h-8 mb-2" />
+                                  <AlertCircleComp className="w-8 h-8 mb-2" />
                                   <p className="text-xs font-bold uppercase tracking-widest">No document images found</p>
                                 </div>
                               )}
@@ -249,6 +270,47 @@ export function ProfileModal({
               </div>
             </div>
 
+            {/* Purchase History Section */}
+            {purchases && purchases.length > 0 && (
+              <div className="bg-white rounded-[2.5rem] p-10 shadow-xl shadow-gray-200/50 border border-gray-100">
+                <div className="flex items-center justify-between mb-8">
+                  <h4 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] leading-none">Purchase History (Things Bought)</h4>
+                  <span className="text-xs font-black text-purple-600 bg-purple-50 px-4 py-2 rounded-full uppercase tracking-tighter">
+                    {purchases.length} Orders
+                  </span>
+                </div>
+                <div className="space-y-6">
+                  {purchases.map((order, idx) => (
+                    <div key={idx} className="bg-gray-50/50 rounded-2xl p-6 border border-gray-100">
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Order #{order.id}</p>
+                          <p className="text-xs font-bold text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-lg font-black text-gray-900">₹{order.amount}</p>
+                          <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${order.status === 'completed' || order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' : 'bg-orange-50 text-orange-600'}`}>
+                            {order.status}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {order.items.map((item, i) => (
+                          <div key={i} className="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-50">
+                            <div className="flex items-center gap-3">
+                              <div className="w-2 h-2 rounded-full bg-purple-500" />
+                              <p className="text-sm font-bold text-gray-700">{item.productName}</p>
+                            </div>
+                            <p className="text-sm font-black text-gray-400">x{item.quantity} - ₹{item.price}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Footer Actions - Now explicitly at the bottom of content grid area */}
             <div className="flex gap-4 pt-10 border-t border-gray-100">
               <button
@@ -263,7 +325,7 @@ export function ProfileModal({
                 disabled={isSubmitting}
                 className="px-10 py-5 rounded-[2rem] bg-rose-50 text-rose-500 font-black uppercase text-xs tracking-widest border border-rose-100 hover:bg-rose-100 transition-all disabled:opacity-50"
               >
-                Reject
+                {action2Label || "Reject"}
               </button>
             </div>
           </div>
@@ -277,7 +339,7 @@ export function ProfileModal({
           <div className="relative bg-white rounded-[2.5rem] shadow-2xl max-w-lg w-full p-8 animate-in zoom-in-95 duration-300 border border-white">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500">
-                <AlertCircle className="w-6 h-6" />
+                <AlertCircleComp className="w-6 h-6" />
               </div>
               <div>
                 <h4 className="text-xl font-black text-gray-900">Rejection Reason</h4>
