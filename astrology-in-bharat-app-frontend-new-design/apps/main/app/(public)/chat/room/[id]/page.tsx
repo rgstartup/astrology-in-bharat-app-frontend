@@ -5,14 +5,14 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import NextImage from "next/image";
 import * as LucideIcons from "lucide-react";
 import { chatSocket } from "@/libs/socket";
-import apiClient from "@/libs/api-profile";
+import apiClient, { uploadClientDocument } from "@/libs/api-profile";
 import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 import { toast } from "react-toastify";
 import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
 
 const Image = NextImage as any;
 const {
-    ChevronLeft, Paperclip, Send, Clock, Star, Phone, MoreVertical, Wallet, X, Home, User: UserIcon, Sun, Moon, AlertTriangle, AlertCircle
+    ChevronLeft, Paperclip, Send, Clock, Star, Phone, MoreVertical, Wallet, X, Home, User: UserIcon, Sun, Moon, AlertTriangle, AlertCircle, FileText
 } = LucideIcons as any;
 
 interface Message {
@@ -21,6 +21,12 @@ interface Message {
     senderType: "user" | "expert" | "admin";
     content: string;
     type?: string;
+    attachmentUrl?: string;
+    attachmentType?: "image" | "document";
+    attachment_url?: string;
+    attachment_type?: string;
+    imageUrl?: string;
+    mediaUrl?: string;
     createdAt?: string;
 }
 
@@ -99,6 +105,10 @@ function ChatRoomContent() {
     const [inputValue, setInputValue] = useState("");
     const [typingStatus, setTypingStatus] = useState<{ senderName: string; isTyping: boolean } | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [uploading, setUploading] = useState(false);
+    const [pendingAttachment, setPendingAttachment] = useState<{ url: string; type: "image" | "document"; name: string } | null>(null);
+    const isEndingSession = useRef(false);
 
 
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
@@ -119,7 +129,9 @@ function ChatRoomContent() {
                     setExpertData({
                         id: data.id,
                         userId: data.user?.id,
-                        image: data.user?.avatar || "/images/dummy-astrologer.jpg",
+                        image: data.user?.avatar
+                            ? (data.user.avatar.startsWith("http") || data.user.avatar.startsWith("/") ? data.user.avatar : `/${data.user.avatar}`)
+                            : "/images/dummy-astrologer.jpg",
                         name: data.user?.name || "Astrologer",
                         expertise: data.specialization || "Vedic Astrology",
                         experience: data.experience_in_years || 0,
@@ -240,10 +252,18 @@ function ChatRoomContent() {
         chatSocket.on('session_ended', (data: any) => {
             console.log("[UserChatDebug] Session ended event received", data);
             setSessionStatus(data.status === 'expired' ? 'completed' : 'completed');
-
-            // We use 'completed' for UI state, but use data.status for Modal content
             setSessionSummary(data);
-            setShowModal(true);
+
+            if (isEndingSession.current) {
+                // User ended it, show modal immediately or short delay
+                setShowModal(true);
+            } else {
+                // Expert ended it (or system timeout), show notification and delay modal
+                toast.info("Consultation completed by the expert.");
+                setTimeout(() => {
+                    setShowModal(true);
+                }, 3000); // 3 seconds delay to read the chat message
+            }
         });
 
         chatSocket.on('typing_status', (data: { senderName: string; isTyping: boolean }) => {
@@ -292,21 +312,40 @@ function ChatRoomContent() {
     }, [messages]);
 
     const handleSendMessage = () => {
-        if (!inputValue.trim() || !sessionId || !clientUser) return;
+        if ((!inputValue.trim() && !pendingAttachment) || !sessionId || !clientUser) return;
 
-        const payload = {
+        const payload: any = {
             sessionId: parseInt(sessionId),
             senderId: clientUser.id,
             senderType: 'user',
-            content: inputValue,
+            content: inputValue.trim() || (pendingAttachment?.type === "image" ? "Sent an image" : "Sent an attachment"),
         };
+
+        if (pendingAttachment) {
+            payload.attachmentUrl = pendingAttachment.url;
+            payload.attachmentType = pendingAttachment.type;
+        }
+
         chatSocket.emit('send_message', payload);
         setInputValue("");
+        setPendingAttachment(null);
     };
 
     const handleEndChat = () => {
         if (!sessionId) return;
         if (!confirm("Are you sure you want to end this session?")) return;
+
+        isEndingSession.current = true;
+
+        // Send a system message before ending the chat for history
+        if (clientUser && sessionId) {
+            chatSocket.emit('send_message', {
+                sessionId: parseInt(sessionId),
+                senderId: clientUser.id,
+                senderType: 'admin',
+                content: "User has ended the consultation.",
+            });
+        }
 
         // New Backend Logic: Emit 'end_chat' event directly
         console.log("[UserChatDebug] Emitting end_chat socket event:", sessionId);
@@ -317,34 +356,37 @@ function ChatRoomContent() {
     };
 
     const handleSubmitReview = async () => {
-        if (reviewRating === 0) {
-            toast.warning("Please select a rating before submitting");
+        // ... (existing review logic)
+    };
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !sessionId || !clientUser) return;
+
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error("File size must be less than 5MB");
             return;
         }
 
-        setReviewLoading(true);
         try {
-            await apiClient.post('/reviews', {
-                sessionId: parseInt(sessionId || '0'),
-                expertId: parseInt(id || '0'),
-                rating: reviewRating,
-                comment: reviewComment.trim()
-            });
+            setUploading(true);
+            const uploadRes = await uploadClientDocument(file);
 
-            setReviewSubmitted(true);
-            toast.success("Thank you for your feedback!");
-
-            // Close modal and redirect after 2 seconds
-            setTimeout(() => {
-                setShowModal(false);
-                router.push('/');
-            }, 2000);
-        } catch (error: any) {
-            console.error("Failed to submit review:", error);
-            const errorMsg = error.response?.data?.message || "Failed to submit review";
-            toast.error(errorMsg);
+            if (uploadRes && uploadRes.url) {
+                const attachmentType = file.type.startsWith("image") ? "image" : "document";
+                setPendingAttachment({
+                    url: uploadRes.url,
+                    type: attachmentType as any,
+                    name: file.name
+                });
+                toast.info("File uploaded! Click send to share.");
+            }
+        } catch (error) {
+            console.error("Upload error:", error);
+            toast.error("Upload failed");
         } finally {
-            setReviewLoading(false);
+            setUploading(false);
+            if (e.target) e.target.value = ""; // Reset input
         }
     };
 
@@ -470,52 +512,93 @@ function ChatRoomContent() {
                             </div>
 
                             {/* ... (rest of messages mapping identical) ... */}
-                            {messages.map((msg: Message) => (
-                                <div key={msg.id} className={`flex gap-3 md:gap-4 ${msg.senderType === "user" ? "flex-row-reverse" : "flex-row"} items-start`}>
-                                    <div className="flex-shrink-0 mt-1">
-                                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full border-2 ${msg.senderType === "user" ? "border-white/10" : "border-[#fd6410]/30"} overflow-hidden shadow-lg flex items-center justify-center bg-[#fd6410]`}>
-                                            {msg.senderType === "user" && clientUser?.avatar ? (
-                                                <Image
-                                                    src={clientUser.avatar}
-                                                    alt="You"
-                                                    width={48}
-                                                    height={48}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            ) : msg.senderType === "expert" && expertData.image ? (
-                                                <Image
-                                                    src={expertData.image}
-                                                    alt={expertData.name}
-                                                    width={48}
-                                                    height={48}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            ) : (
-                                                <span className="text-white font-bold text-xs">
-                                                    {msg.senderType === "user" ? (clientUser?.name?.charAt(0) || 'U') : (expertData.name?.charAt(0) || 'E')}
-                                                </span>
-                                            )}
+                            {messages.map((msg: Message) => {
+                                // Debugging attachment issues
+                                console.log("Rendering Msg:", msg);
+                                return (
+                                    <div key={msg.id} className={`flex gap-3 md:gap-4 ${msg.senderType === "user" ? "flex-row-reverse" : "flex-row"} items-start`}>
+                                        <div className="flex-shrink-0 mt-1">
+                                            <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full border-2 ${msg.senderType === "user" ? "border-white/10" : "border-[#fd6410]/30"} overflow-hidden shadow-lg flex items-center justify-center bg-[#fd6410]`}>
+                                                {msg.senderType === "user" && clientUser?.avatar ? (
+                                                    <Image
+                                                        src={clientUser.avatar}
+                                                        alt="You"
+                                                        width={48}
+                                                        height={48}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : msg.senderType === "expert" && expertData.image ? (
+                                                    <Image
+                                                        src={expertData.image}
+                                                        alt={expertData.name}
+                                                        width={48}
+                                                        height={48}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <span className="text-white font-bold text-xs">
+                                                        {msg.senderType === "user" ? (clientUser?.name?.charAt(0) || 'U') : (expertData.name?.charAt(0) || 'E')}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className={`flex flex-col ${msg.senderType === "user" ? "items-end" : msg.senderType === "admin" ? "items-center w-full" : "items-start"} max-w-[85%] md:max-w-[70%] ${msg.senderType === "admin" ? "mx-auto" : ""}`}>
-                                        <span className="text-[10px] uppercase font-bold tracking-widest opacity-30 mb-1 px-2">
-                                            {msg.senderType === "user" ? "You" : msg.senderType === "admin" ? "System Message" : expertData.name}
-                                        </span>
-                                        <div className={`w-full ${msg.senderType === "user"
-                                            ? "bg-gradient-to-br from-[#fff9f2] to-[#fff3e6] text-[#2A0A0A] rounded-2xl rounded-br-none px-5 py-3 md:px-6 md:py-4"
-                                            : msg.senderType === "admin"
-                                                ? "bg-red-50 text-red-600 border-2 border-red-100 rounded-2xl px-5 py-3 md:px-6 md:py-4 text-center font-bold"
-                                                : "bg-white text-[#2A0A0A] rounded-2xl rounded-bl-none px-5 py-3 md:px-6 md:py-4"
-                                            } shadow-xl relative transition-all hover:scale-[1.01]`}>
-                                            <p className="text-[14px] md:text-base leading-relaxed">{msg.content}</p>
-                                            <div className={`mt-1 flex ${msg.senderType === "user" ? "justify-end" : msg.senderType === "admin" ? "justify-center" : "justify-start"} text-black font-medium text-[10px] opacity-40`}>
-                                                {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        <div className={`flex flex-col ${msg.senderType === "user" ? "items-end" : msg.senderType === "admin" ? "items-center w-full" : "items-start"} max-w-[85%] md:max-w-[70%] ${msg.senderType === "admin" ? "mx-auto" : ""}`}>
+                                            <span className="text-[10px] uppercase font-bold tracking-widest opacity-30 mb-1 px-2">
+                                                {msg.senderType === "user" ? "You" : msg.senderType === "admin" ? "System Message" : expertData.name}
+                                            </span>
+                                            <div className={`w-full ${msg.senderType === "user"
+                                                ? "bg-gradient-to-br from-[#fff9f2] to-[#fff3e6] text-[#2A0A0A] rounded-2xl rounded-br-none px-5 py-3 md:px-6 md:py-4"
+                                                : msg.senderType === "admin"
+                                                    ? "bg-red-50 text-red-600 border-2 border-red-100 rounded-2xl px-5 py-3 md:px-6 md:py-4 text-center font-bold"
+                                                    : "bg-white text-[#2A0A0A] rounded-2xl rounded-bl-none px-5 py-3 md:px-6 md:py-4"
+                                                } shadow-xl relative transition-all hover:scale-[1.01]`}>
+                                                {/* Attachment Display */}
+                                                {(msg.attachmentUrl || msg.attachment_url || msg.imageUrl || msg.mediaUrl) && (
+                                                    <div className="mb-3">
+                                                        {(
+                                                            msg.attachmentType?.toLowerCase() === "image" ||
+                                                            msg.attachment_type?.toLowerCase() === "image" ||
+                                                            (msg.attachmentUrl || msg.attachment_url || msg.imageUrl || msg.mediaUrl)?.match(/\.(jpg|jpeg|png|gif|webp)$|images/i)
+                                                        ) ? (
+                                                            <a href={msg.attachmentUrl || msg.attachment_url || msg.imageUrl || msg.mediaUrl} target="_blank" rel="noreferrer" className="block outline-none">
+                                                                <img
+                                                                    src={msg.attachmentUrl || msg.attachment_url || msg.imageUrl || msg.mediaUrl}
+                                                                    className="rounded-xl max-h-72 w-auto object-contain shadow-md hover:brightness-95 transition-all border border-black/5"
+                                                                    alt="Chat Attachment"
+                                                                    onError={(e) => {
+                                                                        console.error("Image load error:", msg.attachmentUrl || msg.attachment_url);
+                                                                        (e.target as any).style.display = 'none';
+                                                                    }}
+                                                                />
+                                                            </a>
+                                                        ) : (
+                                                            <a
+                                                                href={msg.attachmentUrl || msg.attachment_url || msg.imageUrl || msg.mediaUrl}
+                                                                target="_blank"
+                                                                rel="noreferrer"
+                                                                className="flex items-center gap-3 bg-black/5 p-3 rounded-xl border border-black/5 hover:bg-black/10 transition group"
+                                                            >
+                                                                <div className="p-2.5 bg-[#fd6410]/10 rounded-xl group-hover:bg-[#fd6410]/20 transition">
+                                                                    <FileText className="w-5 h-5 text-[#fd6410]" />
+                                                                </div>
+                                                                <div className="flex flex-col overflow-hidden">
+                                                                    <span className="text-xs font-bold truncate">File Attachment</span>
+                                                                    <span className="text-[10px] opacity-40">Tap to view document</span>
+                                                                </div>
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                )}
+                                                <p className="text-[14px] md:text-base leading-relaxed">{msg.content}</p>
+                                                <div className={`mt-1 flex ${msg.senderType === "user" ? "justify-end" : msg.senderType === "admin" ? "justify-center" : "justify-start"} text-black font-medium text-[10px] opacity-40`}>
+                                                    {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
 
                             {typingStatus && (
                                 <div className="flex items-center gap-3 animate-pulse pl-4 py-2">
@@ -535,31 +618,68 @@ function ChatRoomContent() {
                     <div className={`p-4 md:p-6 ${isDarkMode ? 'bg-[#1a0c0c]' : 'bg-white'} border-t ${isDarkMode ? 'border-white/5' : 'border-black/5'} transition-colors duration-500`}>
                         <div className="max-w-4xl mx-auto">
                             {sessionStatus === 'active' ? (
-                                <div className="flex items-end gap-3 md:gap-4">
-                                    <button className={`w-12 h-12 md:w-14 md:h-14 ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'} rounded-2xl flex items-center justify-center transition-all active:scale-95 border ${isDarkMode ? 'border-white/5' : 'border-black/5'} group`}>
-                                        <Paperclip className="w-5 h-5 md:w-6 md:h-6 text-[#fd6410] group-hover:scale-110 transition" />
-                                    </button>
-                                    <div className={`flex-1 ${isDarkMode ? 'bg-white/5 focus-within:bg-black/20 border-white/5 focus-within:border-[#fd6410]/50' : 'bg-gray-100 focus-within:bg-white border-transparent focus-within:border-[#fd6410]/30'} rounded-[24px] px-6 py-3 md:py-4 flex items-center border transition-all shadow-2xl`}>
-                                        <textarea
-                                            rows={1}
-                                            placeholder="Ask about your future, career, or love life..."
-                                            value={inputValue}
-                                            onChange={(e) => setInputValue(e.target.value)}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter' && !e.shiftKey) {
-                                                    e.preventDefault();
-                                                    handleSendMessage();
-                                                }
-                                            }}
-                                            className={`bg-transparent border-none outline-none ${isDarkMode ? 'text-white' : 'text-[#2A0A0A]'} text-[15px] md:text-base w-full placeholder:text-gray-500 resize-none max-h-32`}
+                                <div className="flex flex-col gap-3">
+                                    {/* Attachment Preview Chip */}
+                                    {pendingAttachment && (
+                                        <div className="flex items-center self-start gap-2 bg-[#fd6410]/10 border border-[#fd6410]/20 rounded-xl pl-2 pr-1 py-1 animate-in slide-in-from-bottom-2 duration-300">
+                                            {pendingAttachment.type === 'image' ? (
+                                                <div className="w-8 h-8 rounded-lg overflow-hidden border border-[#fd6410]/30 mr-1">
+                                                    <img src={pendingAttachment.url} className="w-full h-full object-cover" alt="Preview" />
+                                                </div>
+                                            ) : (
+                                                <FileText className="w-4 h-4 text-[#fd6410]" />
+                                            )}
+                                            <span className="text-[11px] font-bold text-[#fd6410] max-w-[150px] truncate">{pendingAttachment.name}</span>
+                                            <button
+                                                onClick={() => setPendingAttachment(null)}
+                                                className="p-1 hover:bg-[#fd6410]/20 rounded-full transition"
+                                            >
+                                                <X className="w-3.5 h-3.5 text-[#fd6410]" />
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    <div className="flex items-end gap-3 md:gap-4">
+                                        <button
+                                            onClick={() => fileInputRef.current?.click()}
+                                            disabled={uploading}
+                                            className={`w-12 h-12 md:w-14 md:h-14 ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'} rounded-2xl flex items-center justify-center transition-all active:scale-95 border ${isDarkMode ? 'border-white/5' : 'border-black/5'} group disabled:opacity-50`}
+                                        >
+                                            {uploading ? (
+                                                <div className="w-5 h-5 border-2 border-[#fd6410]/30 border-t-[#fd6410] rounded-full animate-spin" />
+                                            ) : (
+                                                <Paperclip className="w-5 h-5 md:w-6 md:h-6 text-[#fd6410] group-hover:scale-110 transition" />
+                                            )}
+                                        </button>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            className="hidden"
+                                            onChange={handleFileUpload}
+                                            accept="image/*,.pdf,.doc,.docx"
                                         />
+                                        <div className={`flex-1 ${isDarkMode ? 'bg-white/5 focus-within:bg-black/20 border-white/5 focus-within:border-[#fd6410]/50' : 'bg-gray-100 focus-within:bg-white border-transparent focus-within:border-[#fd6410]/30'} rounded-[24px] px-6 py-3 md:py-4 flex items-center border transition-all shadow-2xl`}>
+                                            <textarea
+                                                rows={1}
+                                                placeholder="Ask about your future, career, or love life..."
+                                                value={inputValue}
+                                                onChange={(e) => setInputValue(e.target.value)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                                        e.preventDefault();
+                                                        handleSendMessage();
+                                                    }
+                                                }}
+                                                className={`bg-transparent border-none outline-none ${isDarkMode ? 'text-white' : 'text-[#2A0A0A]'} text-[15px] md:text-base w-full placeholder:text-gray-500 resize-none max-h-32`}
+                                            />
+                                        </div>
+                                        <button
+                                            onClick={handleSendMessage}
+                                            className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-tr from-[#fd6410] to-[#ff914d] rounded-full flex items-center justify-center shadow-xl shadow-orange-500/20 active:scale-90 hover:brightness-110 transition-all"
+                                        >
+                                            <Send className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                                        </button>
                                     </div>
-                                    <button
-                                        onClick={handleSendMessage}
-                                        className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-tr from-[#fd6410] to-[#ff914d] rounded-full flex items-center justify-center shadow-xl shadow-orange-500/20 active:scale-90 hover:brightness-110 transition-all"
-                                    >
-                                        <Send className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                                    </button>
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-4 text-center">
@@ -679,21 +799,31 @@ function ChatRoomContent() {
                                                 if (reviewSubmitted) return;
 
                                                 // Validation
+                                                const sid = parseInt(sessionId || '0');
+                                                if (!sid) {
+                                                    toast.error("Invalid Session ID. Cannot submit review.");
+                                                    return;
+                                                }
+
                                                 if (reviewRating === 0) {
                                                     toast.warning("Please select a rating before submitting");
                                                     return;
                                                 }
 
+                                                const payload = {
+                                                    sessionId: sid,
+                                                    expertId: expertData?.id || expertData?.userId,
+                                                    rating: reviewRating,
+                                                    comment: reviewComment.trim()
+                                                };
+
+                                                console.log("[UserChatDebug] Submitting Review Payload:", payload);
+
                                                 try {
                                                     setReviewSubmitted(true);
 
                                                     // Real API call to backend
-                                                    await apiClient.post('/reviews', {
-                                                        sessionId: parseInt(sessionId || '0'),
-                                                        expertId: expertData?.id || expertData?.userId,
-                                                        rating: reviewRating,
-                                                        comment: reviewComment.trim()
-                                                    });
+                                                    await apiClient.post('/reviews', payload);
 
                                                     toast.success("Thank you for your feedback!");
 
