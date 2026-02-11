@@ -436,13 +436,13 @@ export default function ConsultationPrep() {
 
                             {/* Checkbox Agreement */}
                             <div className="p-4 bg-orange-50 rounded-2xl border-2 border-orange-200">
-                                <label className="flex items-start gap-3 cursor-pointer group">
+                                <label className="flex items-start gap-5 cursor-pointer group">
                                     <input
                                         type="checkbox"
                                         id="agreeTerms"
-                                        className="mt-0.5 w-5 h-5 rounded border-2 border-orange-400 text-orange-500 focus:ring-2 focus:ring-orange-500 cursor-pointer flex-shrink-0"
+                                        className="m-2 w-5 h-5 rounded border-2 border-orange-400 text-orange-500 focus:ring-2 focus:ring-orange-500 cursor-pointer flex-shrink-0"
                                     />
-                                    <span className="text-xs md:text-sm font-bold text-gray-800 group-hover:text-orange-600 transition-colors leading-relaxed">
+                                    <span className="text-xs md:text-sm font-bold text-gray-800transition-colors leading-relaxed">
                                         I have read and understood all the safety guidelines and disclaimer. I agree to follow these precautions during my consultation and will not share any contact details.
                                     </span>
                                 </label>
