@@ -1,6 +1,6 @@
 // live-sessions/components/LiveSessionCard.tsx
 import React, { useState, useEffect } from "react";
-import { Video, Mic, MessageSquare, Clock, MoreVertical, VideoOff, Download, AlertCircle, Eye, PhoneOff } from "lucide-react";
+import { Video, Mic, MessageSquare, Clock, VideoOff, AlertCircle, Eye, PhoneOff } from "lucide-react";
 import { Button } from "@/app/components/admin/Button";
 import { ParticipantCard } from "./ParticipantCard";
 
