@@ -72,11 +72,7 @@ export default function ClientsPage() {
           // Try to find review from separate reviews API if not in session
           let sessionReview = session.review;
           if (!sessionReview || !sessionReview.comment) {
-            const matchingReview = reviews.find((r: any) =>
-              r.sessionId === session.id ||
-              (r.user?.name === session.user?.name &&
-                Math.abs(new Date(r.createdAt).getTime() - new Date(session.createdAt).getTime()) < 24 * 60 * 60 * 1000)
-            );
+            const matchingReview = reviews.find((r: any) => r.sessionId === session.id);
             if (matchingReview) {
               sessionReview = {
                 rating: matchingReview.rating,
