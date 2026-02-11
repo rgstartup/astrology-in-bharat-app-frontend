@@ -66,11 +66,13 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                                         <span className="fw-bold text-orange-500">₹{session.totalCost || 0}</span>
                                     </div>
                                     <div className="d-flex flex-column align-items-end gap-2">
-                                        <span className={`px-3 py-1 rounded-pill text-[10px] uppercase font-bold tracking-wide ${session.status === 'completed'
-                                            ? 'bg-success bg-opacity-10 text-success'
-                                            : 'bg-warning bg-opacity-10 text-warning'
+                                        <span className={`px-3 py-1 rounded-pill text-[10px] uppercase font-bold tracking-wide ${session.terminatedBy === 'admin'
+                                            ? 'bg-danger bg-opacity-10 text-danger'
+                                            : session.status === 'completed'
+                                                ? 'bg-success bg-opacity-10 text-success'
+                                                : 'bg-warning bg-opacity-10 text-warning'
                                             }`}>
-                                            {session.status || 'Scheduled'}
+                                            {session.terminatedBy === 'admin' ? 'Terminated by Admin' : (session.status || 'Scheduled')}
                                         </span>
                                         <button
                                             onClick={(e) => {
@@ -97,7 +99,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                                                     }}
                                                 />
                                             </div>
-                                            <div className="flex-grow-1">
+                                            <div className="grow">
                                                 <div className="d-flex justify-content-between align-items-start mb-2">
                                                     <div>
                                                         <h5 className="mb-0 fw-bold">{session.expert?.user?.name || "Astro Expert"}</h5>

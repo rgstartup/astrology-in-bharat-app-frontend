@@ -149,6 +149,7 @@ export default function AppointmentsPage() {
             rating: sessionReview.rating || 0,
             comment: sessionReview.comment || ""
           } : undefined,
+          terminatedBy: session.terminatedBy,
         };
       }));
 
@@ -229,6 +230,7 @@ export default function AppointmentsPage() {
           freeMinutes: session.freeMinutes || 0,
           durationMins: session.durationMins || 0,
           review: session.review,
+          terminatedBy: session.terminatedBy,
         };
 
         setAppointments(prev => {
@@ -269,7 +271,11 @@ export default function AppointmentsPage() {
           }
           console.log(`[AppointmentDebug] Updating session ${targetId} to status: ${data.status || 'completed'}`);
           return prev.map(a =>
-            a.id === targetId ? { ...a, status: (data.status === 'expired' ? 'expired' : 'completed') as any } : a
+            a.id === targetId ? {
+              ...a,
+              status: (data.status === 'expired' ? 'expired' : 'completed') as any,
+              terminatedBy: data.terminatedBy
+            } : a
           );
         });
       });

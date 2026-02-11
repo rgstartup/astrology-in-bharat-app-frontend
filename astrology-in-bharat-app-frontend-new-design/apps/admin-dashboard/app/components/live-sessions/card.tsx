@@ -1,5 +1,5 @@
 // live-sessions/components/LiveSessionCard.tsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Video, Mic, MessageSquare, Clock, MoreVertical, VideoOff, Download, AlertCircle, Eye, PhoneOff } from "lucide-react";
 import { Button } from "@/app/components/admin/Button";
 import { ParticipantCard } from "./ParticipantCard";
@@ -31,6 +31,26 @@ export function LiveSessionCard({
     }
   };
 
+  const [elapsed, setElapsed] = useState(
+    session.status === 'live'
+      ? Math.floor((Date.now() - session.startTime.getTime()) / 60000)
+      : session.duration
+  );
+
+  useEffect(() => {
+    if (session.status === 'live') {
+      const updateTimer = () => {
+        setElapsed(Math.floor((Date.now() - session.startTime.getTime()) / 60000));
+      };
+
+      updateTimer();
+      const timer = setInterval(updateTimer, 30000); // Update every 30s
+      return () => clearInterval(timer);
+    } else {
+      setElapsed(session.duration);
+    }
+  }, [session.status, session.startTime, session.duration]);
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
       {/* Session Header */}
@@ -41,15 +61,13 @@ export function LiveSessionCard({
             <div>
               <h3 className="font-semibold text-gray-900">Session #{session.id}</h3>
               <p className="text-sm text-gray-600 capitalize">
-                {session.sessionType} Session • {session.duration} mins
+                {session.sessionType} Session • {elapsed} mins
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <StatusBadge status={session.status} />
-            <button className="p-1 hover:bg-gray-100 rounded-lg">
-              <MoreVertical className="w-5 h-5 text-gray-500" />
-            </button>
+
           </div>
         </div>
       </div>
@@ -76,7 +94,7 @@ export function LiveSessionCard({
               <Clock className="w-4 h-4 text-gray-500" />
             </div>
             <p className="text-lg font-semibold text-gray-900 mt-1">
-              {Math.floor((Date.now() - session.startTime.getTime()) / 60000)} min
+              {elapsed} min
             </p>
           </div>
 
@@ -101,22 +119,7 @@ export function LiveSessionCard({
             </div> */}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2">
 
-            <button
-              className={`p-2 rounded-lg ${session.recording
-                  ? "bg-red-100 text-red-600 hover:bg-red-200"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-              onClick={() => onToggleRecording(session.id)}
-            >
-              <Video className="w-4 h-4" />
-            </button>
-
-            <button className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200">
-              <Download className="w-4 h-4" />
-            </button>
-          </div>
         </div>
 
         {/* Issues Alert */}
