@@ -7,6 +7,7 @@ import TopInsights from "./TopInsights";
 import { EarningsDashboardData } from "./types";
 import { ChevronDown, Calendar, Download } from "lucide-react";
 import { getEarningsStats } from "@/lib/earnings";
+import { Button } from "../../../shared/components/Button";
 
 export default function EarningsPage() {
   const [timeRange, setTimeRange] = useState("last_6_months");
@@ -62,36 +63,39 @@ export default function EarningsPage() {
 
         <div className="flex items-center gap-3">
           <div className="relative group">
-            <button className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 shadow-sm hover:border-amber-400 transition-all active:scale-95">
-              {/* @ts-ignore */}
+            <Button
+              variant="outline"
+              className="bg-white border-gray-200 hover:border-amber-400 text-gray-700 shadow-sm rounded-xl gap-2 font-semibold"
+            >
               <Calendar className="w-4 h-4 text-amber-500" />
               {timeRangeLabels[timeRange]}
-              {/* @ts-ignore */}
               <ChevronDown className="w-4 h-4 text-gray-400" />
-            </button>
+            </Button>
 
             <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 invisible group-hover:visible z-50 transition-all opacity-0 group-hover:opacity-100">
               {Object.entries(timeRangeLabels).map(([key, label]) => (
-                <button
+                <Button
                   key={key}
                   onClick={() => setTimeRange(key)}
-                  className={`w-full text-left px-4 py-2 text-sm font-medium hover:bg-amber-50 transition-colors ${timeRange === key ? 'text-amber-600 bg-amber-50' : 'text-gray-600'}`}
+                  variant="ghost"
+                  className={`w-full justify-start px-4 py-2 text-sm font-medium hover:bg-amber-50 transition-colors rounded-lg ${timeRange === key ? 'text-amber-600 bg-amber-50' : 'text-gray-600'}`}
                 >
                   {label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
 
-          <button
+          <Button
             onClick={handleExport}
             disabled={isExporting}
-            className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 disabled:bg-amber-300 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-amber-200 transition-all active:scale-95 translate-y-0 hover:-translate-y-0.5"
+            loading={isExporting}
+            variant="primary"
+            className="shadow-md rounded-xl"
           >
-            {/* @ts-ignore */}
             <Download className={`w-4 h-4 ${isExporting ? 'animate-bounce' : ''}`} />
             {isExporting ? 'Exporting...' : 'Export PDF'}
-          </button>
+          </Button>
         </div>
       </header>
 

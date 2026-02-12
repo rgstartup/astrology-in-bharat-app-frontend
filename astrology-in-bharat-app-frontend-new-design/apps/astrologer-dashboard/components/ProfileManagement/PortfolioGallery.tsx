@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Image as ImageIcon, Video, Trash2, Plus, Upload, Link as LinkIcon, X, Play, Save, ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { Button } from "../../../shared/components/Button";
 
 interface PortfolioGalleryProps {
     images: string[];
@@ -118,7 +119,7 @@ export default function PortfolioGallery({
     const introEmbedUrl = introVideoId ? `https://www.youtube.com/embed/${introVideoId}` : introVideo;
 
     return (
-        <div className={`bg-white rounded-2xl shadow-lg border border-gray-100 ${isExpanded ? 'p-4 sm:p-6' : 'p-4'}`}>
+        <div className={`bg-white rounded-2xl shadow-lg border-2 border-orange-400 ${isExpanded ? 'p-4 sm:p-6' : 'p-4'}`}>
             <div
                 className="flex items-center justify-between mb-4 cursor-pointer"
                 onClick={() => setIsExpanded(!isExpanded)}
@@ -137,7 +138,7 @@ export default function PortfolioGallery({
                         <button
                             onClick={() => setActiveTab('images')}
                             className={`flex items-center px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'images'
-                                ? 'border-purple-600 text-purple-600'
+                                ? 'border-orange-600 text-orange-600'
                                 : 'border-transparent text-gray-500 hover:text-gray-700'
                                 }`}
                         >
@@ -146,7 +147,7 @@ export default function PortfolioGallery({
                         <button
                             onClick={() => setActiveTab('videos')}
                             className={`flex items-center px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'videos'
-                                ? 'border-purple-600 text-purple-600'
+                                ? 'border-orange-600 text-orange-600'
                                 : 'border-transparent text-gray-500 hover:text-gray-700'
                                 }`}
                         >
@@ -155,7 +156,7 @@ export default function PortfolioGallery({
                         <button
                             onClick={() => setActiveTab('intro-video')}
                             className={`flex items-center px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'intro-video'
-                                ? 'border-purple-600 text-purple-600'
+                                ? 'border-orange-600 text-orange-600'
                                 : 'border-transparent text-gray-500 hover:text-gray-700'
                                 }`}
                         >
@@ -167,12 +168,14 @@ export default function PortfolioGallery({
                     {activeTab === 'images' && (
                         <div className="animate-in fade-in slide-in-from-left-2 duration-300">
                             <div className="flex justify-end mb-4">
-                                <button
+                                <Button
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="text-sm bg-purple-50 text-purple-600 px-3 py-1 rounded-full hover:bg-purple-100 flex items-center transition-colors"
+                                    variant="primary"
+                                    size="sm"
+                                    className="flex items-center gap-1"
                                 >
-                                    <Plus className="w-4 h-4 mr-1" /> Add Image
-                                </button>
+                                    <Plus className="w-4 h-4" /> Add Image
+                                </Button>
                                 <input
                                     type="file"
                                     ref={fileInputRef}
@@ -210,12 +213,14 @@ export default function PortfolioGallery({
                             <div className="flex justify-end mb-4 gap-2">
                                 {onUploadVideoFile && (
                                     <>
-                                        <button
+                                        <Button
                                             onClick={() => videoInputRef.current?.click()}
-                                            className="text-sm bg-purple-50 text-purple-600 px-3 py-1 rounded-full hover:bg-purple-100 flex items-center transition-colors"
+                                            variant="primary"
+                                            size="sm"
+                                            className="flex items-center gap-1"
                                         >
-                                            <Upload className="w-4 h-4 mr-1" /> Upload Video
-                                        </button>
+                                            <Upload className="w-4 h-4" /> Upload Video
+                                        </Button>
                                         <input
                                             type="file"
                                             ref={videoInputRef}
@@ -226,12 +231,14 @@ export default function PortfolioGallery({
                                     </>
                                 )}
                                 {!isAddingVideo && (
-                                    <button
+                                    <Button
                                         onClick={() => setIsAddingVideo(true)}
-                                        className="text-sm bg-red-50 text-red-600 px-3 py-1 rounded-full hover:bg-red-100 flex items-center transition-colors"
+                                        variant="primary"
+                                        size="sm"
+                                        className="flex items-center gap-1"
                                     >
-                                        <LinkIcon className="w-4 h-4 mr-1" /> Add Video Link
-                                    </button>
+                                        <LinkIcon className="w-4 h-4" /> Add Video Link
+                                    </Button>
                                 )}
                             </div>
 
@@ -246,18 +253,18 @@ export default function PortfolioGallery({
                                         onKeyDown={(e) => e.key === 'Enter' && handleAddVideo()}
                                     />
                                     <div className="flex gap-2">
-                                        <button
+                                        <Button
                                             onClick={handleAddVideo}
-                                            className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
+                                            variant="primary"
                                         >
                                             Add
-                                        </button>
-                                        <button
+                                        </Button>
+                                        <Button
                                             onClick={() => setIsAddingVideo(false)}
-                                            className="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
+                                            variant="secondary"
                                         >
                                             Cancel
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
                             )}
@@ -318,13 +325,15 @@ export default function PortfolioGallery({
                                         </div>
                                     </div>
 
-                                    <button
+                                    <Button
                                         onClick={() => videoInputRef.current?.click()}
-                                        className="w-full flex items-center justify-center gap-2 py-4 border-2 border-dashed border-gray-200 rounded-xl hover:border-yellow-500 hover:bg-yellow-50 transition-all text-sm text-gray-500 hover:text-yellow-700 font-medium"
+                                        variant="outline"
+                                        fullWidth
+                                        className="py-4 border-2 border-dashed flex items-center justify-center gap-2"
                                     >
                                         <Upload className="w-5 h-5" />
                                         <span>Upload Video File</span>
-                                    </button>
+                                    </Button>
                                     <input
                                         type="file"
                                         ref={videoInputRef}
@@ -334,19 +343,20 @@ export default function PortfolioGallery({
                                     />
 
                                     <div className="flex gap-2 justify-end pt-2">
-                                        <button
+                                        <Button
                                             onClick={onCancelIntro}
-                                            className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
+                                            variant="secondary"
                                         >
                                             Cancel
-                                        </button>
-                                        <button
+                                        </Button>
+                                        <Button
                                             onClick={onSaveIntro}
-                                            className="flex items-center gap-2 bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700 shadow-md"
+                                            variant="primary"
+                                            className="flex items-center gap-2"
                                         >
                                             <Save className="w-4 h-4" />
                                             <span>Save Video</span>
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
                             ) : (
@@ -377,12 +387,14 @@ export default function PortfolioGallery({
                                                     <span className="text-xs text-gray-500 truncate" title={introVideo}>{introVideo}</span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
-                                                    <button
+                                                    <Button
                                                         onClick={onEditIntro}
-                                                        className="text-sm text-yellow-600 font-medium hover:text-yellow-700 px-2"
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-orange-600 hover:text-orange-700"
                                                     >
                                                         Change
-                                                    </button>
+                                                    </Button>
                                                     {onRemoveIntro && (
                                                         <button
                                                             onClick={onRemoveIntro}
@@ -400,13 +412,15 @@ export default function PortfolioGallery({
                                             <Video className="w-10 h-10 mx-auto text-gray-300 mb-3" />
                                             <h3 className="text-sm font-semibold text-gray-900 mb-1">Add Intro Video</h3>
                                             <p className="text-xs text-gray-500 mb-4">Introduce yourself to users through a short video message.</p>
-                                            <button
+                                            <Button
                                                 onClick={onEditIntro}
-                                                className="inline-flex items-center gap-2 px-4 py-2 bg-white text-yellow-600 border border-yellow-200 rounded-full text-xs font-bold hover:bg-yellow-50 shadow-sm"
+                                                variant="outline"
+                                                size="sm"
+                                                className="inline-flex items-center gap-2 rounded-full"
                                             >
                                                 <Plus className="w-4 h-4" />
                                                 Add Now
-                                            </button>
+                                            </Button>
                                         </div>
                                     )}
                                 </div>

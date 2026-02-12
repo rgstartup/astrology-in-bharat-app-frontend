@@ -1,6 +1,8 @@
 import React from "react";
 import { Edit3, Save, ChevronDown, ChevronUp, X, Plus } from "lucide-react";
 import { Profile, Gender } from "./types";
+import { Button } from "../../../shared/components/Button";
+import { Avatar } from "../../../shared/components/Avatar";
 
 interface PersonalInfoProps {
     profile: Profile;
@@ -58,18 +60,18 @@ export default function PersonalInfo({
         }
         if (e.target) e.target.value = "";
     };
-    console.log("mere phto", profile.profilePic)
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-gray-100 h-full">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg border-2 border-orange-400 h-full">
             <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4 p-2 -m-2 rounded-xl transition-colors">
                 <div
-                    className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-200 group flex-shrink-0 cursor-default"
+                    className="relative group flex-shrink-0 cursor-default"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <img
-                        src={(isEditing ? tempProfile.profilePic : profile.profilePic) || "/images/dummy-astrologer.jpg"}
+                    <Avatar
+                        src={isEditing ? tempProfile.profilePic : profile.profilePic}
                         alt="Profile"
-                        className="w-full h-full object-cover rounded-full border-2 border-yellow-500 shadow-md"
+                        size="xl"
+                        className="w-20 h-20 sm:w-24 sm:h-24 border-2 border-orange-500 shadow-md"
                     />
                     {onProfilePicUpdate && isExpanded && isEditing && (
                         <>
@@ -110,7 +112,7 @@ export default function PersonalInfo({
                         {specs.map((spec, i) => (
                             <span
                                 key={i}
-                                className="bg-yellow-100 text-yellow-800 text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-full"
+                                className="bg-orange-100 text-orange-800 text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-full"
                             >
                                 {spec}
                             </span>
@@ -127,14 +129,15 @@ export default function PersonalInfo({
                             About Expert
                         </h3>
                         {!isEditing && (
-                            <button
+                            <Button
                                 onClick={onEdit}
-                                className="flex items-center space-x-1 text-sm text-yellow-600 hover:text-yellow-700 font-medium"
+                                variant="primary"
+                                size="sm"
+                                className="flex items-center gap-1"
                             >
-                                {/* @ts-ignore */}
                                 <Edit3 className="w-4 h-4" />
                                 <span>Edit Profile</span>
-                            </button>
+                            </Button>
                         )}
                     </div>
 
@@ -225,21 +228,21 @@ export default function PersonalInfo({
                                             placeholder="Add specialization (e.g. Vedic, Tarot)"
                                             className="flex-1 p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
                                         />
-                                        <button
+                                        <Button
                                             type="button"
                                             onClick={handleAddSpec}
-                                            className="bg-yellow-100 text-yellow-700 p-2.5 rounded-lg hover:bg-yellow-200 transition-colors"
+                                            variant="primary"
+                                            className="p-2.5 rounded-lg h-auto"
                                         >
-                                            {/* @ts-ignore */}
                                             <Plus className="w-5 h-5" />
-                                        </button>
+                                        </Button>
                                     </div>
                                     {/* Chips Display */}
                                     <div className="flex flex-wrap gap-2 mt-3">
                                         {tempSpecs.map((spec, index) => (
                                             <div
                                                 key={index}
-                                                className="flex items-center gap-1 bg-yellow-50 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium border border-yellow-100"
+                                                className="flex items-center gap-1 bg-orange-50 text-orange-800 px-3 py-1 rounded-full text-xs font-medium border border-orange-100"
                                             >
                                                 <span>{spec}</span>
                                                 <button
@@ -348,20 +351,20 @@ export default function PersonalInfo({
                             </div>
 
                             <div className="flex space-x-2 justify-end pt-2">
-                                <button
+                                <Button
                                     onClick={onCancel}
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                    variant="secondary"
                                 >
                                     Cancel
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                     onClick={onSave}
-                                    className="flex items-center space-x-2 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-all shadow-md text-sm font-medium"
+                                    variant="primary"
+                                    className="flex items-center gap-2"
                                 >
-                                    {/* @ts-ignore */}
                                     <Save className="w-4 h-4" />
                                     <span>Save Changes</span>
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     ) : (

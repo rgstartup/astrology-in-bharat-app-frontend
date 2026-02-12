@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Shield, CheckCircle2, FileText, Upload, Trash2, File as FileIcon, Award, ChevronRight, ChevronDown, ChevronUp, CreditCard, UserSquare2, X } from "lucide-react";
 import { DocumentItem } from "./types";
+import { Button } from "../../../shared/components/Button";
 
 interface VerificationAndDocumentsProps {
     kycCompleted: boolean;
@@ -78,14 +79,14 @@ export default function VerificationAndDocuments({
     return (
         <div className="space-y-6">
             {/* Merged KYC & Documents Section */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-orange-400 overflow-hidden">
                 <div
                     className="p-4 sm:p-6 flex items-start space-x-3 cursor-pointer hover:bg-gray-50 transition-colors"
                     onClick={() => setIsExpanded(!isExpanded)}
                 >
-                    <div className="p-2 bg-yellow-100 rounded-lg">
+                    <div className="p-2 bg-orange-100 rounded-lg">
                         {/* @ts-ignore */}
-                        <Shield className="w-6 h-6 sm:w-7 sm:h-7 text-yellow-600" />
+                        <Shield className="w-6 h-6 sm:w-7 sm:h-7 text-orange-600" />
                     </div>
                     <div className="flex-1">
                         <div className="flex items-center justify-between">
@@ -118,11 +119,11 @@ export default function VerificationAndDocuments({
                                 </p>
                             </div>
                         ) : (
-                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6">
-                                <p className="text-xs sm:text-sm text-yellow-800 font-medium flex items-center">
+                            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-6">
+                                <p className="text-xs sm:text-sm text-orange-800 font-medium flex items-center">
                                     <span>⚠️ KYC Pending</span>
                                 </p>
-                                <p className="text-xs text-yellow-700 mt-1">
+                                <p className="text-xs text-orange-700 mt-1">
                                     Upload both documents below to complete the process.
                                 </p>
                             </div>
@@ -173,10 +174,9 @@ export default function VerificationAndDocuments({
                                                             <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                             <span className="text-xs font-medium truncate">{doc.name}</span>
                                                         </div>
-                                                        <button onClick={() => onDeleteDocument(doc.id)} className="text-gray-400 hover:text-red-500">
-                                                            {/* @ts-ignore */}
+                                                        <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                             <Trash2 className="w-3 h-3" />
-                                                        </button>
+                                                        </Button>
                                                     </div>
                                                 ))}
                                             </div>
@@ -218,10 +218,9 @@ export default function VerificationAndDocuments({
                                                             <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                             <span className="text-xs font-medium truncate">{doc.name}</span>
                                                         </div>
-                                                        <button onClick={() => onDeleteDocument(doc.id)} className="text-gray-400 hover:text-red-500">
-                                                            {/* @ts-ignore */}
+                                                        <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                             <Trash2 className="w-3 h-3" />
-                                                        </button>
+                                                        </Button>
                                                     </div>
                                                 ))}
                                             </div>
@@ -244,10 +243,9 @@ export default function VerificationAndDocuments({
                                                         <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                         <span className="text-xs font-medium truncate">{doc.name}</span>
                                                     </div>
-                                                    <button onClick={() => onDeleteDocument(doc.id)} className="text-gray-400 hover:text-red-500">
-                                                        {/* @ts-ignore */}
+                                                    <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                         <Trash2 className="w-3 h-3" />
-                                                    </button>
+                                                    </Button>
                                                 </div>
                                             ))}
                                         </div>
@@ -300,10 +298,9 @@ export default function VerificationAndDocuments({
                                                             <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                             <span className="text-xs font-medium truncate">{doc.name}</span>
                                                         </div>
-                                                        <button onClick={() => onDeleteDocument(doc.id)} className="text-gray-400 hover:text-red-500">
-                                                            {/* @ts-ignore */}
+                                                        <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                             <Trash2 className="w-3 h-3" />
-                                                        </button>
+                                                        </Button>
                                                     </div>
                                                 ))}
                                             </div>
@@ -345,10 +342,9 @@ export default function VerificationAndDocuments({
                                                             <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                             <span className="text-xs font-medium truncate">{doc.name}</span>
                                                         </div>
-                                                        <button onClick={() => onDeleteDocument(doc.id)} className="text-gray-400 hover:text-red-500">
-                                                            {/* @ts-ignore */}
+                                                        <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                             <Trash2 className="w-3 h-3" />
-                                                        </button>
+                                                        </Button>
                                                     </div>
                                                 ))}
                                             </div>
@@ -371,10 +367,9 @@ export default function VerificationAndDocuments({
                                                         <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                         <span className="text-xs font-medium truncate">{doc.name}</span>
                                                     </div>
-                                                    <button onClick={() => onDeleteDocument(doc.id)} className="text-gray-400 hover:text-red-500">
-                                                        {/* @ts-ignore */}
+                                                    <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                         <Trash2 className="w-3 h-3" />
-                                                    </button>
+                                                    </Button>
                                                 </div>
                                             ))}
                                         </div>
@@ -397,10 +392,9 @@ export default function VerificationAndDocuments({
                                                     <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                     <span className="text-xs font-medium truncate">{doc.name}</span>
                                                 </div>
-                                                <button onClick={() => onDeleteDocument(doc.id)} className="text-gray-400 hover:text-red-500">
-                                                    {/* @ts-ignore */}
+                                                <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                     <Trash2 className="w-3 h-3" />
-                                                </button>
+                                                </Button>
                                             </div>
                                         ))}
                                     </div>
@@ -413,14 +407,14 @@ export default function VerificationAndDocuments({
             </div>
 
             {/* Certificates Section */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-orange-400 overflow-hidden">
                 <div
                     className="p-4 sm:p-6 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
                     onClick={() => setIsCertExpanded(!isCertExpanded)}
                 >
                     <h3 className="text-lg font-bold text-gray-900 flex items-center">
                         {/* @ts-ignore */}
-                        <Award className="w-5 h-5 mr-2 text-yellow-600" /> Certificates
+                        <Award className="w-5 h-5 mr-2 text-orange-600" /> Certificates
                     </h3>
                     <div className="flex items-center space-x-2">
                         {/* @ts-ignore */}
@@ -446,31 +440,32 @@ export default function VerificationAndDocuments({
                                                 type: name.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? "image/jpeg" : "application/pdf"
                                             });
                                         }}
-                                        className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100 hover:border-yellow-300 hover:bg-yellow-50/30 transition-all cursor-pointer group"
+                                        className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-orange-200 hover:border-orange-300 hover:bg-orange-50/30 transition-all cursor-pointer group"
                                     >
                                         <div className="flex items-center space-x-3 overflow-hidden">
                                             <div className="p-2 bg-white rounded-lg shadow-sm">
                                                 {/* @ts-ignore */}
-                                                <FileText className="w-4 h-4 text-yellow-600" />
+                                                <FileText className="w-4 h-4 text-orange-600" />
                                             </div>
-                                            <span className="text-xs sm:text-sm font-medium text-gray-700 truncate group-hover:text-yellow-700">
+                                            <span className="text-xs sm:text-sm font-medium text-gray-700 truncate group-hover:text-orange-700">
                                                 {cert.split('/').pop()?.split('?')[0] || "Certificate"}
                                             </span>
                                         </div>
                                         {/* @ts-ignore */}
-                                        <ChevronRight size={16} className="text-gray-400 group-hover:text-yellow-600 group-hover:translate-x-0.5 transition-all" />
+                                        <ChevronRight size={16} className="text-gray-400 group-hover:text-orange-600 group-hover:translate-x-0.5 transition-all" />
                                     </li>
                                 ))}
                             </ul>
                         )}
-                        <button
+                        <Button
                             onClick={() => certificateInputRef.current?.click()}
-                            className="w-full flex items-center justify-center space-x-2 bg-yellow-50 text-yellow-700 border border-yellow-100 px-4 py-3 rounded-xl cursor-pointer hover:bg-yellow-100 transition-all text-sm font-semibold"
+                            variant="outline"
+                            fullWidth
+                            className="flex items-center justify-center gap-2 bg-orange-50 text-orange-700 border-orange-300 hover:bg-orange-100 hover:border-orange-400"
                         >
-                            {/* @ts-ignore */}
                             <Upload className="w-4 h-4" />
                             <span>Upload New Certificate</span>
-                        </button>
+                        </Button>
                         <input
                             type="file"
                             ref={certificateInputRef}
@@ -491,13 +486,14 @@ export default function VerificationAndDocuments({
                         >
                             <div className="flex items-center justify-between p-4 border-b">
                                 <h3 className="text-lg font-semibold text-gray-800 truncate pr-4">{viewDoc.name}</h3>
-                                <button
+                                <Button
                                     onClick={() => setViewDoc(null)}
-                                    className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="p-1 hover:bg-gray-100 rounded-full"
                                 >
-                                    {/* @ts-ignore */}
                                     <X className="w-6 h-6 text-gray-500" />
-                                </button>
+                                </Button>
                             </div>
                             <div className="flex-1 overflow-auto bg-gray-50 p-4 flex items-center justify-center">
                                 {viewDoc.type?.startsWith('image/') || viewDoc.name.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (

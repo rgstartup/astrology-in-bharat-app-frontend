@@ -6,6 +6,8 @@ import { socket } from "@/lib/socket";
 import { toast } from "react-toastify";
 
 import { SearchInput } from "../../../shared/components/SearchInput";
+import { Avatar } from "../../../shared/components/Avatar";
+import { NotificationBell } from "../../../shared/components/NotificationBell";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -264,15 +266,10 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
                   setTimeout(checkClosePopup, 100);
                 }}
               >
-                <button
-                  className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors duration-200"
-                  aria-label="Notifications"
-                >
-                  <FiBell className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold animate-pulse">
-                    {notifications.length}
-                  </span>
-                </button>
+                <NotificationBell
+                  count={notifications.length}
+                  className="bg-transparent hover:bg-gray-100"
+                />
 
                 {/* Notification Popup */}
                 {isNotificationOpen && (
@@ -312,7 +309,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
                       <div className="mt-3">
                         <Link
                           href="/dashboard/notifications"
-                          className="text-sm text-yellow-600 hover:text-yellow-700 font-medium"
+                          className="text-sm text-orange-600 hover:text-orange-700 font-medium"
                           onClick={() => setIsNotificationOpen(false)}
                         >
                           View all notifications
@@ -327,14 +324,14 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
           {/* Profile */}
           <button
-            className="p-0 hover:bg-gray-100 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100"
+            className="p-0 rounded-full focus:outline-none ring-2 ring-transparent focus:ring-purple-200 transition-all duration-200"
             aria-label="User Menu"
           >
             <Link href="/dashboard/profilemanagement">
-              <img
-                src={(user as any)?.avatar || (user as any)?.profilePic || "/images/dummy-astrologer.jpg"}
+              <Avatar
+                src={(user as any)?.avatar || (user as any)?.profilePic}
                 alt="Profile"
-                className="w-10 h-10 text-gray-600 object-cover rounded-full border-2 border-yellow-500 shadow-md bg-top"
+                className="border-2 border-orange-500 shadow-md bg-top hover:scale-105 transition-transform duration-200"
               />
             </Link>
           </button>

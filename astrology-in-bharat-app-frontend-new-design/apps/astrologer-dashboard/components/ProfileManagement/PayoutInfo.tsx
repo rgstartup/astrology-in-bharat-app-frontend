@@ -8,6 +8,7 @@ import {
     deleteBankAccount,
     setPrimaryBankAccount
 } from "@/lib/profile";
+import { Button } from "../../../shared/components/Button";
 
 interface BankAccount {
     id: string;
@@ -110,7 +111,7 @@ export default function PayoutInfo() {
     };
 
     return (
-        <div className={`overflow-hidden rounded-2xl shadow-xl transition-all duration-300 border-2 ${editingAccountId ? 'border-amber-400 bg-white' : 'border-amber-50 bg-gradient-to-br from-amber-50/50 via-white to-yellow-50/30'}`}>
+        <div className={`overflow-hidden rounded-2xl shadow-xl transition-all duration-300 border-2 ${editingAccountId ? 'border-orange-400 bg-white' : 'border-orange-400 bg-gradient-to-br from-amber-50/50 via-white to-yellow-50/30'}`}>
             <div
                 className={`p-4 flex justify-between items-center cursor-pointer ${editingAccountId ? 'bg-amber-600 outline-none' : 'bg-gradient-to-r from-amber-600 to-yellow-600'}`}
                 onClick={() => setIsExpanded(!isExpanded)}
@@ -234,21 +235,21 @@ export default function PayoutInfo() {
                             </div>
 
                             <div className="flex space-x-3 justify-end pt-5">
-                                <button
+                                <Button
                                     onClick={() => setEditingAccountId(null)}
-                                    className="px-6 py-2.5 text-sm font-bold text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-xl transition-all"
+                                    variant="secondary"
                                 >
                                     Cancel
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                     onClick={saveCurrentEdit}
                                     disabled={!formData.account_number || formData.account_number !== confirmAccNo}
-                                    className="flex items-center space-x-2 bg-gradient-to-r from-amber-600 to-yellow-600 text-white px-8 py-2.5 rounded-xl hover:shadow-lg hover:shadow-amber-500/30 transition-all shadow-md active:scale-95 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed text-sm font-bold"
+                                    variant="primary"
+                                    className="flex items-center gap-2"
                                 >
-                                    {/* @ts-ignore */}
                                     <Save className="w-4 h-4" />
                                     <span>{editingAccountId === 'new' ? 'Add Account' : 'Update Account'}</span>
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     ) : (
@@ -286,41 +287,46 @@ export default function PayoutInfo() {
 
                                                 <div className="flex items-center justify-end gap-2 pt-2 sm:pt-0">
                                                     {!acc.is_primary && (
-                                                        <button
+                                                        <Button
                                                             onClick={() => handleSetPrimary(acc.id)}
-                                                            className="text-[9px] font-bold text-emerald-600 hover:bg-emerald-50 px-2 py-1 rounded-md transition-colors"
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="text-emerald-600 hover:bg-emerald-50 text-[9px]"
                                                         >
                                                             Set Primary
-                                                        </button>
+                                                        </Button>
                                                     )}
-                                                    <button
+                                                    <Button
                                                         onClick={() => handleEditAccount(acc)}
-                                                        className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="p-1.5 text-blue-500 hover:bg-blue-50"
                                                         title="Edit"
                                                     >
-                                                        {/* @ts-ignore */}
                                                         <Edit3 className="w-3.5 h-3.5" />
-                                                    </button>
-                                                    <button
+                                                    </Button>
+                                                    <Button
                                                         onClick={() => handleDeleteAccount(acc.id)}
-                                                        className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="p-1.5 text-red-500 hover:bg-red-50"
                                                         title="Delete"
                                                     >
-                                                        {/* @ts-ignore */}
                                                         <Trash2 className="w-3.5 h-3.5" />
-                                                    </button>
+                                                    </Button>
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
 
-                                    <button
+                                    <Button
                                         onClick={handleAddAccount}
-                                        className="w-full py-4 border-2 border-dashed border-amber-200 rounded-3xl text-amber-600 font-bold text-sm bg-amber-50/20 hover:bg-amber-50/40 hover:border-amber-400 transition-all flex items-center justify-center gap-2"
+                                        variant="outline"
+                                        fullWidth
+                                        className="py-4 border-2 border-dashed border-amber-200 hover:border-amber-400 bg-amber-50/20 hover:bg-amber-50/40 flex items-center justify-center gap-2 rounded-3xl"
                                     >
-                                        {/* @ts-ignore */}
                                         <Plus className="w-4 h-4" /> Add Another Bank Account
-                                    </button>
+                                    </Button>
                                 </div>
                             ) : (
                                 <div className="text-center py-10 relative z-10">
@@ -332,13 +338,13 @@ export default function PayoutInfo() {
                                     <p className="text-gray-400 text-xs font-medium px-4">
                                         Please add at least one bank account for payouts.
                                     </p>
-                                    <button
+                                    <Button
                                         onClick={handleAddAccount}
-                                        className="mt-6 bg-amber-600 text-white px-6 py-2 rounded-xl font-bold text-xs hover:bg-amber-700 transition-all shadow-md active:scale-95 flex items-center gap-2 mx-auto"
+                                        variant="primary"
+                                        className="mt-6 flex items-center gap-2 mx-auto"
                                     >
-                                        {/* @ts-ignore */}
                                         <Plus className="w-4 h-4" /> Setup First Bank Account
-                                    </button>
+                                    </Button>
                                 </div>
                             )}
                         </div>

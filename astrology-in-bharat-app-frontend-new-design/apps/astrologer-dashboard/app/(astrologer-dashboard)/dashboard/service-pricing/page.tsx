@@ -5,6 +5,7 @@ import { Star, Edit3, Gift, Save, X, Loader2, Trash2 } from "lucide-react";
 import { getProfile, updateProfile } from "@/lib/profile";
 import { Profile } from "@/components/ProfileManagement/types";
 import { toast } from "react-toastify";
+import { Button } from "../../../../../shared/components/Button";
 
 const ServicePricingPage = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -179,13 +180,13 @@ const ServicePricingPage = () => {
         <p className="text-gray-600 mt-3 text-sm sm:text-lg">
           Manage your services, set attractive pricing, and create offers for your clients.
         </p>
-        <button
+        <Button
           onClick={() => setIsAddingNew(true)}
-          className="mt-6 bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-2.5 rounded-full font-bold shadow-lg transition-all flex items-center gap-2"
+          className="mt-6 font-bold shadow-lg flex items-center gap-2 px-6 py-2.5 rounded-full"
         >
           <Star className="w-4 h-4 fill-white" />
           Add Custom Service
-        </button>
+        </Button>
       </div>
 
       {/* Add New Service Modal/Form */}
@@ -250,13 +251,16 @@ const ServicePricingPage = () => {
                 />
               </div>
 
-              <button
+              <Button
                 onClick={handleAddNewService}
                 disabled={saving === "new"}
-                className="w-full mt-4 bg-yellow-600 hover:bg-yellow-700 text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-yellow-600/20 transition-all active:scale-95 disabled:opacity-50"
+                loading={saving === "new"}
+                variant="primary"
+                fullWidth
+                className="mt-4 py-4 rounded-2xl font-black text-lg shadow-xl active:scale-95"
               >
-                {saving === "new" ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : "Save Service"}
-              </button>
+                Save Service
+              </Button>
             </div>
           </div>
         </div>
@@ -315,41 +319,40 @@ const ServicePricingPage = () => {
             <div className="flex gap-2">
               {editMode === service.key ? (
                 <>
-                  <button
+                  <Button
                     onClick={() => handleSave(service.key)}
                     disabled={saving === service.key}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-xl flex items-center justify-center gap-2 font-bold shadow-md transition-all disabled:opacity-50"
+                    loading={saving === service.key}
+                    variant="success"
+                    className="flex-1 rounded-xl shadow-md"
                   >
-                    {saving === service.key ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Save className="w-4 h-4" />
-                    )}
                     Save
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => setEditMode(null)}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-600 p-2.5 rounded-xl transition-all"
+                    variant="secondary"
+                    className="px-3 rounded-xl"
                   >
                     <X className="w-5 h-5" />
-                  </button>
+                  </Button>
                 </>
               ) : (
                 <div className="flex w-full gap-2">
-                  <button
+                  <Button
                     onClick={() => handleEdit(service.key, service.price)}
-                    className="flex-1 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all border border-yellow-100"
+                    variant="primary"
+                    className="flex-1 rounded-xl shadow-sm"
                   >
                     <Edit3 className="w-4 h-4" />
                     Edit Pricing
-                  </button>
+                  </Button>
                   {service.isCustom && (
-                    <button
+                    <Button
                       onClick={() => handleDeleteService(service.id)}
-                      className="bg-red-50 hover:bg-red-100 text-red-600 p-2.5 rounded-xl transition-all border border-red-100"
+                      className="px-3 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-xl"
                     >
                       <Trash2 className="w-5 h-5" />
-                    </button>
+                    </Button>
                   )}
                 </div>
               )}

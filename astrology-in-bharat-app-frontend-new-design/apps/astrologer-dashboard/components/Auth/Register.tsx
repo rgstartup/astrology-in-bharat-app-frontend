@@ -9,6 +9,7 @@ import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 
+import { Button } from "../../../shared/components/Button";
 const Image = NextImage as any;
 const Link = NextLink as any;
 const UserIcon = User as any;
@@ -214,26 +215,22 @@ const RegisterPage: React.FC = () => {
                         </div>
 
                         <div className="pt-2 space-y-3">
-                            <button
+                            <Button
                                 type="submit"
-                                disabled={loading}
-                                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-bold text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
+                                loading={loading}
+                                fullWidth
+                                variant="warning"
+                                className="bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500 shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
                             >
-                                {loading ? (
-                                    <>
-                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                        </svg>
-                                        Processing...
-                                    </>
-                                ) : "Create Expert Account"}
-                            </button>
+                                Create Expert Account
+                            </Button>
 
-                            <button
+                            <Button
                                 type="button"
                                 onClick={handleGoogleLogin}
-                                className="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-all duration-200 transform hover:-translate-y-0.5"
+                                variant="outline"
+                                fullWidth
+                                className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-yellow-500 transform hover:-translate-y-0.5 shadow-sm"
                             >
                                 <Image
                                     src="/images/google-color-svgrepo-com.svg"
@@ -243,7 +240,7 @@ const RegisterPage: React.FC = () => {
                                     className="mr-2"
                                 />
                                 Sign up with Google
-                            </button>
+                            </Button>
                         </div>
 
                         <div className="text-center mt-6">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ListTodo, Plus, CheckCircle2, Circle, Trash2 } from "lucide-react";
 import { Todo } from "./types";
+import { Button } from "../../../shared/components/Button";
 
 interface TodoListProps {
     todos: Todo[];
@@ -25,10 +26,10 @@ export default function TodoList({
     };
 
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-gray-100">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg border-2 border-orange-400">
             <div className="flex items-center justify-between mb-4">
                 <h2 className="flex items-center text-base sm:text-lg font-semibold">
-                    <ListTodo className="w-5 h-5 mr-2 text-yellow-600" /> My Todo List
+                    <ListTodo className="w-5 h-5 mr-2 text-orange-600" /> My Todo List
                 </h2>
                 <span className="text-xs sm:text-sm text-gray-500">
                     {todos.filter((t) => !t.completed).length} pending
@@ -43,14 +44,16 @@ export default function TodoList({
                     onChange={(e) => setNewTodo(e.target.value)}
                     onKeyPress={(e) => e.key === "Enter" && handleAdd()}
                     placeholder="Add a new task..."
-                    className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
-                <button
+                <Button
                     onClick={handleAdd}
-                    className="p-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                    variant="primary"
+                    size="sm"
+                    className="p-2"
                 >
                     <Plus className="w-5 h-5" />
-                </button>
+                </Button>
             </div>
 
             {/* Todo List */}
@@ -64,8 +67,8 @@ export default function TodoList({
                         <div
                             key={todo.id}
                             className={`flex items-center space-x-3 p-3 rounded-lg border transition-all ${todo.completed
-                                    ? "bg-gray-50 border-gray-200"
-                                    : "bg-yellow-50 border-yellow-200"
+                                ? "bg-gray-50 border-gray-200"
+                                : "bg-orange-50 border-orange-200"
                                 }`}
                         >
                             <button
@@ -75,23 +78,25 @@ export default function TodoList({
                                 {todo.completed ? (
                                     <CheckCircle2 className="w-5 h-5 text-green-600" />
                                 ) : (
-                                    <Circle className="w-5 h-5 text-gray-400 hover:text-yellow-600" />
+                                    <Circle className="w-5 h-5 text-gray-400 hover:text-orange-600" />
                                 )}
                             </button>
                             <span
                                 className={`flex-1 text-sm ${todo.completed
-                                        ? "line-through text-gray-500"
-                                        : "text-gray-800"
+                                    ? "line-through text-gray-500"
+                                    : "text-gray-800"
                                     }`}
                             >
                                 {todo.text}
                             </span>
-                            <button
+                            <Button
                                 onClick={() => onDelete(todo.id)}
-                                className="flex-shrink-0 text-red-500 hover:text-red-700"
+                                variant="ghost"
+                                size="sm"
+                                className="flex-shrink-0 text-red-500 hover:text-red-700 p-1"
                             >
                                 <Trash2 className="w-4 h-4" />
-                            </button>
+                            </Button>
                         </div>
                     ))
                 )}

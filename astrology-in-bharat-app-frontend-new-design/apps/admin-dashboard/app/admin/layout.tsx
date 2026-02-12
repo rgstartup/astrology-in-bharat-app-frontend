@@ -34,6 +34,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { SearchInput } from "../../../shared/components/SearchInput";
+import { Avatar } from "../../../shared/components/Avatar";
+import { NotificationBell } from "../../../shared/components/NotificationBell";
 import { toast } from "react-toastify";
 interface MenuItem {
   label: string;
@@ -400,21 +402,17 @@ export default function AdminLayout({
 
 
                   {/* Notifications */}
-                  <button className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors">
-                    <Bell className="w-5 h-5" />
-                    <span className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
-                      30
-                    </span>
-                  </button>
+                  <NotificationBell
+                    count={30}
+                    className="hover:text-gray-800 hover:bg-gray-100"
+                  />
 
                   {/* Profile */}
                   <div className="w-10 h-10 rounded-full overflow-hidden">
-                    <img
+                    <Avatar
                       src="https://i.pravatar.cc/150?img=12"
                       alt="Profile"
-                      className="w-full h-full rounded-full cursor-pointer
-                 hover:ring-2 hover:ring-yellow-500
-                 transition-all"
+                      className="cursor-pointer hover:ring-2 hover:ring-yellow-500 transition-all"
                     />
                   </div>
                 </div>
