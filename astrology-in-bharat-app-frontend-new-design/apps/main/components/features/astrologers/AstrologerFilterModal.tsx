@@ -76,24 +76,7 @@ const AstrologerFilterModal: React.FC<AstrologerFilterModalProps> = ({
                             </div>
                         </div>
 
-                        {/* 2. Service Type */}
-                        <div className="mb-4">
-                            <label className="form-label font-bold text-gray-700 mb-2 block">Service Type</label>
-                            <div className="grid grid-cols-2 gap-2">
-                                {["all", "chat", "call", "video_call"].map((type) => (
-                                    <label key={type} className={`cursor-pointer border rounded-lg p-2 text-center transition ${localFilter.serviceType === type ? 'bg-orange-50 border-[#fd6410] text-[#fd6410] font-semibold' : 'border-gray-200 hover:bg-gray-50'}`}>
-                                        <input
-                                            type="radio"
-                                            name="serviceType"
-                                            className="hidden"
-                                            checked={localFilter.serviceType === type}
-                                            onChange={() => setLocalFilter({ ...localFilter, serviceType: type })}
-                                        />
-                                        {type === "all" ? "All Services" : type === "video_call" ? "Video Call" : type.charAt(0).toUpperCase() + type.slice(1)}
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
+
 
                         {/* 3. Sort Order */}
                         <div className="mb-4">

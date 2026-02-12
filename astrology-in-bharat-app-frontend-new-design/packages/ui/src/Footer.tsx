@@ -57,10 +57,10 @@ const Footer: React.FC = () => {
                   <Link href={PATHS.MARRIAGE_AGE_CALCULATOR}>Marriage Age </Link>
                 </li>
                 <li>
-                   <Link href={PATHS.DAHEJ_CALCULATOR}>Dahej Calculator</Link>
+                  <Link href={PATHS.DAHEJ_CALCULATOR}>Dahej Calculator</Link>
                 </li>
                 <li>
-                 <Link href={PATHS.LOVE_COMPATIBILITY_CALCULATOR}>Love Compatibility </Link>
+                  <Link href={PATHS.LOVE_COMPATIBILITY_CALCULATOR}>Love Compatibility </Link>
                 </li>
                 <li>
                   <Link href={PATHS.LUCKY_NUMBER_CALCULATOR}>Lucky Number  </Link>
@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
                   <Link href={PATHS.LIFE_PATH_CALCULATOR}>Life Path  </Link>
                 </li>
                 <li>
-                   <Link href={PATHS.NAKSHATRA_FINDER}>Nakshatra Finder  </Link>
+                  <Link href={PATHS.NAKSHATRA_FINDER}>Nakshatra Finder  </Link>
                 </li>
               </ul>
             </div>
@@ -126,16 +126,16 @@ const Footer: React.FC = () => {
               <h4 className="aib-footer-title">Helpful Info</h4>
               <ul className="aib-footer-links">
                 <li>
-                  <a href="#">Refund Policy</a>
+                  <Link href={PATHS.REFUND_POLICY}>Refund Policy</Link>
                 </li>
                 <li>
-                  <a href="#">Privacy Policy</a>
+                  <Link href={PATHS.PRIVACY_POLICY}>Privacy Policy</Link>
                 </li>
                 <li>
-                  <a href="#">Terms & Conditions</a>
+                  <Link href={PATHS.TERMS_AND_CONDITIONS}>Terms & Conditions</Link>
                 </li>
                 <li>
-                  <a href="#">Copyright Notice</a>
+                  <Link href={PATHS.COPYRIGHT}>Copyright Notice</Link>
                 </li>
                 <li>
                   <Link href={PATHS.HELP}>Help & Support</Link>

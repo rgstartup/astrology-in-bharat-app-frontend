@@ -23,6 +23,11 @@ export const PATHS = {
   FAMOUS_PLACES: "/famous-places",
   BLOG: "/blog",
 
+  PRIVACY_POLICY: "/privacy-policy",
+  REFUND_POLICY: "/refund-policy",
+  TERMS_AND_CONDITIONS: "/terms-and-conditions",
+  COPYRIGHT: "/copyright",
+
   WALLET: "/wallet",
 
   // FREE CALCULATORS
@@ -32,7 +37,7 @@ export const PATHS = {
   MARRIAGE_AGE_CALCULATOR: "/calculator/marriage-age",
   SOULMATE_NAME_INITALS_CALCULATOR: "/calculator/soulmate-name-initials",
   LUCKY_NUMBER_CALCULATOR: "/calculator/lucky-number-color",
-  
+
   LIFE_PATH_CALCULATOR: "/calculator/life-path",
   NAME_NUMEROLOGY_CALCULATOR: "/calculator/name-numerology",
   ZODIAC_SIGN_CALCULATOR: "/calculator/zodiac-sign-compatibility",
