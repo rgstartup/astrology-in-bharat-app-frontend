@@ -162,7 +162,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                         size="md"
                         onClick={handleBuy}
                         loading={isAdding}
-                        className="flex-1 !rounded-full border-[#F95E09] text-[#F95E09] hover:bg-orange-50 h-10 text-[13px]"
+                        className="flex-1 !rounded-full border-[#F95E09] text-[#F95E09] hover:bg-orange-50 h-10 text-[10px] p-6"
                     >
                         Add to Cart
                     </Button>
@@ -178,7 +178,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                             router.push(`/checkout?type=order`);
                         }}
                         loading={isAdding}
-                        className="flex-1 !rounded-full h-10 text-[13px]"
+                        className="flex-1 rounded-full h-10 text-[10px] p-6"
                     >
                         Buy Now
                     </Button>
