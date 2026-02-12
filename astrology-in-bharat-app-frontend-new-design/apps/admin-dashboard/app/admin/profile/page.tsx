@@ -2,6 +2,12 @@
 
 import React from "react";
 import { User, Mail, Shield, Calendar } from "lucide-react";
+import { Button } from "../../../../shared/components/Button";
+
+const UserComp = User as any;
+const MailComp = Mail as any;
+const ShieldComp = Shield as any;
+const CalendarComp = Calendar as any;
 
 export default function AdminProfilePage() {
     // Mock admin data - replace with actual API call
@@ -25,7 +31,7 @@ export default function AdminProfilePage() {
                 <div className="bg-white rounded-lg shadow-sm p-6">
                     <div className="flex items-center space-x-4 mb-6">
                         <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center">
-                            <User className="w-10 h-10 text-yellow-600" />
+                            <UserComp className="w-10 h-10 text-yellow-600" />
                         </div>
                         <div>
                             <h2 className="text-xl font-semibold text-gray-800">{adminData.name}</h2>
@@ -36,7 +42,7 @@ export default function AdminProfilePage() {
                     <div className="space-y-4">
                         {/* Email */}
                         <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
-                            <Mail className="w-5 h-5 text-gray-600" />
+                            <MailComp className="w-5 h-5 text-gray-600" />
                             <div>
                                 <p className="text-sm text-gray-600">Email Address</p>
                                 <p className="font-medium text-gray-800">{adminData.email}</p>
@@ -45,7 +51,7 @@ export default function AdminProfilePage() {
 
                         {/* Role */}
                         <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
-                            <Shield className="w-5 h-5 text-gray-600" />
+                            <ShieldComp className="w-5 h-5 text-gray-600" />
                             <div>
                                 <p className="text-sm text-gray-600">Role</p>
                                 <p className="font-medium text-gray-800">{adminData.role}</p>
@@ -54,7 +60,7 @@ export default function AdminProfilePage() {
 
                         {/* Joined Date */}
                         <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
-                            <Calendar className="w-5 h-5 text-gray-600" />
+                            <CalendarComp className="w-5 h-5 text-gray-600" />
                             <div>
                                 <p className="text-sm text-gray-600">Member Since</p>
                                 <p className="font-medium text-gray-800">{adminData.joinedDate}</p>
@@ -64,12 +70,12 @@ export default function AdminProfilePage() {
 
                     {/* Action Buttons */}
                     <div className="mt-6 flex space-x-4">
-                        <button className="px-6 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+                        <Button variant="primary">
                             Edit Profile
-                        </button>
-                        <button className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        </Button>
+                        <Button variant="outline">
                             Change Password
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>

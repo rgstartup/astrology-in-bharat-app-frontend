@@ -4,6 +4,11 @@
 import React from "react";
 import { Calendar, Clock, MoreVertical, MessageSquare } from "lucide-react";
 import { Button } from "../../../../shared/components/Button";
+
+const CalendarComp = Calendar as any;
+const ClockComp = Clock as any;
+const MoreVerticalComp = MoreVertical as any;
+const MessageSquareComp = MessageSquare as any;
 import { RefundStatusBadge } from "./RefundStatusBadge";
 import { RefundAmount } from "./RefundAmount";
 import { UserInfoCard } from "./UserInfoCard";
@@ -34,11 +39,11 @@ export function RefundCard({
             <div className="flex flex-wrap items-center gap-2 mt-1 text-xs sm:text-sm">
 
               <div className="flex items-center gap-1 text-sm text-gray-600">
-                <Calendar className="w-3 h-3" />
+                <CalendarComp className="w-3 h-3" />
                 {refund.requestedAt.toLocaleDateString()}
               </div>
               <div className="flex items-center gap-1 text-sm text-gray-600">
-                <Clock className="w-3 h-3" />
+                <ClockComp className="w-3 h-3" />
                 {refund.requestedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>
@@ -47,7 +52,7 @@ export function RefundCard({
           <div className="flex items-center gap-2">
             <RefundStatusBadge status={refund.status} />
             <button className="p-1 hover:bg-gray-100 rounded-lg">
-              <MoreVertical className="w-5 h-5 text-gray-500" />
+              <MoreVerticalComp className="w-5 h-5 text-gray-500" />
             </button>
           </div>
         </div>
@@ -126,7 +131,7 @@ export function RefundCard({
           <Button
             variant="outline"
             size="sm"
-            icon={MessageSquare}
+            icon={MessageSquareComp}
             onClick={() => onViewDetails(refund)}
             className="flex-1"
           >

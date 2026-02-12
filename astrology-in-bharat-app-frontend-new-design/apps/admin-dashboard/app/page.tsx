@@ -4,6 +4,7 @@ import { Lock, User } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import { Button } from "../../shared/components/Button";
 
 import { toast } from "react-toastify";
 
@@ -192,13 +193,15 @@ export default function AdminLoginPage() {
             </div>
 
             <div>
-              <button
+              <Button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2 px-4 rounded-md text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 disabled:opacity-60"
+                loading={loading}
+                fullWidth
+                variant="primary"
               >
-                {loading ? "Signing in..." : "Sign in"}
-              </button>
+                Sign in
+              </Button>
 
               {error && (
                 <p className="text-red-500 text-center mt-2">{error}</p>

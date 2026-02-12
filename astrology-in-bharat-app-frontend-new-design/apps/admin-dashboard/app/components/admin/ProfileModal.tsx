@@ -11,6 +11,7 @@ const AlertCircleComp = AlertCircle as any;
 const CircleComp = Circle as any;
 const ChevronDownComp = ChevronDown as any;
 const ChevronUpComp = ChevronUp as any;
+import { Button } from "../../../../shared/components/Button";
 
 interface DetailItem {
   icon: LucideIcon;
@@ -313,20 +314,22 @@ export function ProfileModal({
 
             {/* Footer Actions - Now explicitly at the bottom of content grid area */}
             <div className="flex gap-4 pt-10 border-t border-gray-100">
-              <button
+              <Button
                 onClick={() => handleStatusUpdate('active')}
+                loading={isSubmitting}
                 disabled={isSubmitting}
-                className="flex-1 py-5 rounded-[2rem] bg-gray-900 text-white font-black uppercase text-xs tracking-widest shadow-2xl shadow-gray-900/40 hover:bg-orange-500 transition-all hover:translate-y-[-4px] disabled:opacity-50"
+                className="flex-1 py-5 rounded-[2rem] bg-gray-900 text-white font-black uppercase text-xs tracking-widest shadow-2xl shadow-gray-900/40 hover:bg-orange-500 transition-all hover:translate-y-[-4px]"
               >
-                {isSubmitting ? "Processing..." : "Approve Expert Profile"}
-              </button>
-              <button
+                Approve Expert Profile
+              </Button>
+              <Button
                 onClick={() => setIsRejecting(true)}
                 disabled={isSubmitting}
-                className="px-10 py-5 rounded-[2rem] bg-rose-50 text-rose-500 font-black uppercase text-xs tracking-widest border border-rose-100 hover:bg-rose-100 transition-all disabled:opacity-50"
+                variant="danger"
+                className="px-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest transition-all"
               >
                 {action2Label || "Reject"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -355,19 +358,22 @@ export function ProfileModal({
             />
 
             <div className="flex gap-4">
-              <button
+              <Button
                 onClick={() => setIsRejecting(false)}
-                className="flex-1 py-4 rounded-2xl bg-gray-50 text-gray-500 font-black uppercase text-[10px] tracking-widest hover:bg-gray-100 transition-all"
+                variant="secondary"
+                className="flex-1 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => handleStatusUpdate('rejected', rejectReason)}
                 disabled={isSubmitting || !rejectReason.trim()}
-                className="flex-[2] py-4 rounded-2xl bg-rose-500 text-white font-black uppercase text-[10px] tracking-widest shadow-lg shadow-rose-500/30 hover:bg-rose-600 transition-all hover:translate-y-[-2px] disabled:opacity-50"
+                loading={isSubmitting}
+                variant="danger"
+                className="flex-[2] py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-rose-500/30 transition-all hover:translate-y-[-2px]"
               >
-                {isSubmitting ? "Rejecting..." : "Confirm Rejection"}
-              </button>
+                Confirm Rejection
+              </Button>
             </div>
           </div>
         </div>

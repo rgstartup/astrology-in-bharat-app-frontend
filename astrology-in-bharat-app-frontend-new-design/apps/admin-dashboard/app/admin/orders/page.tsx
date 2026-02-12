@@ -15,6 +15,7 @@ import {
 import { toast } from "react-toastify";
 import { Order, OrderService } from "../../../src/services/orders.service";
 import { SearchInput } from "../../../../shared/components/SearchInput";
+import { Button } from "../../../../shared/components/Button";
 import { getNotificationSocket, connectAdminSocket } from "../../../src/utils/socket";
 
 // Cast icons
@@ -193,16 +194,15 @@ export default function OrdersPage() {
             {/* Filter Tabs */}
             <div className="flex overflow-x-auto pb-4 mb-4 gap-2 no-scrollbar">
                 {tabs.map(tab => (
-                    <button
+                    <Button
                         key={tab.id}
                         onClick={() => setFilterStatus(tab.id)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${filterStatus === tab.id
-                            ? 'bg-yellow-600 text-white shadow-md'
-                            : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
-                            }`}
+                        variant={filterStatus === tab.id ? 'primary' : 'outline'}
+                        size="sm"
+                        className="rounded-full whitespace-nowrap"
                     >
                         {tab.label}
-                    </button>
+                    </Button>
                 ))}
             </div>
 
@@ -338,29 +338,27 @@ export default function OrdersPage() {
                                                                 <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Update Status</h4>
                                                                 <div className="flex flex-wrap gap-2">
                                                                     {['pending', 'packed', 'shipped', 'delivered'].map(s => (
-                                                                        <button
+                                                                        <Button
                                                                             key={s}
                                                                             onClick={() => handleStatusUpdate(String(order.id), s)}
                                                                             disabled={order.status === s}
-                                                                            className={`px-3 py-1 rounded text-xs border capitalize transition-all ${order.status === s
-                                                                                ? 'bg-gray-800 text-white border-gray-800'
-                                                                                : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
-                                                                                }`}
+                                                                            size="sm"
+                                                                            variant={order.status === s ? 'primary' : 'outline'}
+                                                                            className="capitalize"
                                                                         >
                                                                             {s}
-                                                                        </button>
+                                                                        </Button>
                                                                     ))}
                                                                     {/* Cancel Button - Opens Modal */}
-                                                                    <button
+                                                                    <Button
                                                                         onClick={() => openCancelModal(String(order.id))}
                                                                         disabled={order.status === 'cancelled'}
-                                                                        className={`px-3 py-1 rounded text-xs border capitalize transition-all ${order.status === 'cancelled'
-                                                                            ? 'bg-gray-800 text-white border-gray-800'
-                                                                            : 'bg-red-50 text-red-600 border-red-200 hover:border-red-400'
-                                                                            }`}
+                                                                        size="sm"
+                                                                        variant="danger"
+                                                                        className="capitalize"
                                                                     >
                                                                         cancelled
-                                                                    </button>
+                                                                    </Button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -394,23 +392,25 @@ export default function OrdersPage() {
                         />
 
                         <div className="flex gap-3 mt-6">
-                            <button
+                            <Button
                                 onClick={() => {
                                     setShowCancelModal(false);
                                     setCancelOrderId(null);
                                     setCancelReason("");
                                 }}
-                                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+                                variant="outline"
+                                className="flex-1"
                             >
                                 Cancel
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={handleCancelOrder}
                                 disabled={!cancelReason.trim()}
-                                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                variant="danger"
+                                className="flex-1"
                             >
                                 Confirm Cancellation
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>

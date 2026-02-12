@@ -8,6 +8,13 @@ import type { Dispute } from "@/app/components/dispute/dispute";
 import { updateDisputeStatus } from "@/src/services/admin.service";
 import { DisputeChatModal } from "./DisputeChatModal";
 
+const XCircleComp = XCircle as any;
+const CheckCircleComp = CheckCircle as any;
+const EyeComp = Eye as any;
+const CalendarComp = Calendar as any;
+const IndianRupeeComp = IndianRupee as any;
+const MessageSquareComp = MessageSquare as any;
+
 interface DisputeModalProps {
   dispute: Dispute;
   onClose: () => void;
@@ -22,6 +29,7 @@ const badges = {
   medium: "bg-blue-100 text-blue-700",
   high: "bg-orange-100 text-orange-700",
   urgent: "bg-red-100 text-red-700",
+  close_requested: "bg-purple-100 text-purple-700 border-purple-200",
 };
 
 export function DisputeModal({ dispute, onClose }: DisputeModalProps) {
@@ -65,7 +73,7 @@ export function DisputeModal({ dispute, onClose }: DisputeModalProps) {
               </p>
             </div>
             <button onClick={onClose} className="text-gray-300 hover:text-white">
-              <XCircle className="w-6 h-6" />
+              <XCircleComp className="w-6 h-6" />
             </button>
           </div>
         </header>
@@ -74,10 +82,10 @@ export function DisputeModal({ dispute, onClose }: DisputeModalProps) {
         <div className="p-6 space-y-5">
           {/* Badges */}
           <div className="flex gap-3 flex-wrap">
-            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${badges[dispute.status || 'pending']}`}>
+            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${(badges as any)[dispute.status || 'pending']}`}>
               {(dispute.status || 'pending').replace("_", " ").toUpperCase()}
             </span>
-            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold ${badges[dispute.priority || 'medium']}`}>
+            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold ${(badges as any)[dispute.priority || 'medium']}`}>
               {(dispute.priority || 'medium').toUpperCase()}
             </span>
             <span className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-bold">
@@ -118,14 +126,14 @@ export function DisputeModal({ dispute, onClose }: DisputeModalProps) {
             <div>
               <h3 className="text-xs font-bold text-gray-500 uppercase mb-1">Amount</h3>
               <p className="text-3xl font-extrabold text-green-600 flex items-center gap-1">
-                <IndianRupee className="w-6 h-6" />
+                <IndianRupeeComp className="w-6 h-6" />
                 {dispute.amount ? dispute.amount.toLocaleString() : 'N/A'}
               </p>
             </div>
 
             {dispute.resolvedAt && (
               <div className="flex items-center gap-2 text-sm bg-green-50 p-3 rounded-lg">
-                <CheckCircle className="w-5 h-5 text-green-600" />
+                <CheckCircleComp className="w-5 h-5 text-green-600" />
                 <span className="text-gray-700">
                   Resolved on {new Date(dispute.resolvedAt).toLocaleDateString("en-IN")}
                 </span>
@@ -142,7 +150,7 @@ export function DisputeModal({ dispute, onClose }: DisputeModalProps) {
               variant="secondary"
               className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-200"
               onClick={() => setShowChatModal(true)}
-              icon={MessageSquare}
+              icon={MessageSquareComp}
             >
               Start Chat
             </Button>
@@ -150,23 +158,23 @@ export function DisputeModal({ dispute, onClose }: DisputeModalProps) {
             <div className="flex gap-2">
               {dispute.status === "pending" && (
                 <>
-                  <Button variant="secondary" size="sm" onClick={() => handleAction("review")} icon={Eye}>
+                  <Button variant="secondary" size="sm" onClick={() => handleAction("review")} icon={EyeComp}>
                     Review
                   </Button>
-                  <Button variant="success" size="sm" onClick={() => handleAction("resolve")} icon={CheckCircle}>
+                  <Button variant="success" size="sm" onClick={() => handleAction("resolve")} icon={CheckCircleComp}>
                     Resolve
                   </Button>
-                  <Button variant="danger" size="sm" onClick={() => handleAction("reject")} icon={XCircle}>
+                  <Button variant="danger" size="sm" onClick={() => handleAction("reject")} icon={XCircleComp}>
                     Reject
                   </Button>
                 </>
               )}
               {dispute.status === "under_review" && (
                 <>
-                  <Button variant="success" size="sm" onClick={() => handleAction("resolve")} icon={CheckCircle}>
+                  <Button variant="success" size="sm" onClick={() => handleAction("resolve")} icon={CheckCircleComp}>
                     Resolve
                   </Button>
-                  <Button variant="danger" size="sm" onClick={() => handleAction("reject")} icon={XCircle}>
+                  <Button variant="danger" size="sm" onClick={() => handleAction("reject")} icon={XCircleComp}>
                     Reject
                   </Button>
                 </>
