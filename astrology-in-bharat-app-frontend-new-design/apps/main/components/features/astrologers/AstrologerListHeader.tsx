@@ -69,14 +69,7 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
                     )}
                 </button>
 
-                <button
-                    type="button"
-                    className="filter-btn border-0 bg-transparent cursor-pointer hover:text-[#fd6410] transition-colors ml-3"
-                    data-bs-toggle="modal"
-                    data-bs-target={`#${sortModalId}`}
-                >
-                    <i className="fa-solid fa-sort"></i> Sort
-                </button>
+
 
                 {hasActiveFilters && (
                     <button

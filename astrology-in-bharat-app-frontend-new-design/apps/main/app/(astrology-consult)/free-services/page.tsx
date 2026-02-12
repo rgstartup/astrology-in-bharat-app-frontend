@@ -48,6 +48,10 @@ const FreeServicesPage = () => {
                           Matching
                         </li>
                         <li>
+                          <i className="fa-solid fa-check"></i> Free Kundali
+                          Matching
+                        </li>
+                        <li>
                           <i className="fa-solid fa-check"></i> Blogs & Articles
                         </li>
                       </ul>

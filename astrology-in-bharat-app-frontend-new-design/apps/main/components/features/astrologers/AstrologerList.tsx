@@ -13,7 +13,7 @@ import { socket } from "@/libs/socket";
 
 import AstrologerListHeader from "./AstrologerListHeader";
 import AstrologerFilterModal from "./AstrologerFilterModal";
-import AstrologerSortModal from "./AstrologerSortModal";
+
 
 const apiEnvVar = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "");
 const API_BASE_URL = apiEnvVar ? `${apiEnvVar}/api/v1` : (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:6543/api/v1");
@@ -435,13 +435,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
           resetFilters={resetFilters}
         />
 
-        {/* Sort Modal */}
-        <AstrologerSortModal
-          modalId={sortModalId}
-          sortBy={localFilter.sortBy}
-          setSortBy={(val) => setLocalFilter({ ...localFilter, sortBy: val })}
-          applySort={applyFilters}
-        />
+
 
         {/* Astrologer List Content */}
         {layout === 'slider' ? (

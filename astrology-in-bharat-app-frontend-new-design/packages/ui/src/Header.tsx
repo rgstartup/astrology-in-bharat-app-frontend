@@ -640,14 +640,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                             Horoscope
                           </Link>
                         </li>
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.KUNDALI_MATCHING}
-                          >
-                            Kundali Matching
-                          </Link>
-                        </li>
+                     
 
                         <li>
                           <Link
