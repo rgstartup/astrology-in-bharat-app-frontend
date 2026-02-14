@@ -6,23 +6,28 @@ export const getUserProfileModalProps = (user: User) => ({
   name: user.name,
   badges: [
     {
-      label: user.status,
-      color: user.status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700",
+      label: user.status || (user.isBlocked ? "Blocked" : "Active"),
+      color: user.isBlocked ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700",
     },
   ],
   details: [
-    { icon: Mail, label: "Email", value: user.email },
-    { icon: Phone, label: "Phone", value: user.phone },
+    { icon: Mail, label: "Email", value: user.email || "N/A" },
+    { icon: Phone, label: "Phone", value: user.phone || "N/A" },
     {
       icon: MapPin,
       label: "Location",
       value: user.city && user.state ? `${user.city}, ${user.state}` : "Not provided",
     },
-    { icon: Calendar, label: "Join Date", value: user.joinDate },
+    { icon: Calendar, label: "Join Date", value: user.joinDate || "N/A" },
     {
       icon: DollarSign,
-      label: "Total Spent",
+      label: "Consultation Spending",
       value: `₹${user.totalSpent?.toLocaleString() || 0}`,
+    },
+    {
+      icon: DollarSign,
+      label: "Wallet Balance",
+      value: `₹${(user as any).walletBalance?.toLocaleString() || 0}`,
     },
     {
       icon: Clock,

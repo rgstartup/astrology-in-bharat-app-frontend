@@ -2,19 +2,19 @@
 "use client";
 
 import React from "react";
-import { 
-  Video, 
-  Mic, 
-  MessageSquare, 
-  Clock, 
-  MoreVertical, 
-  Download, 
-  AlertCircle, 
-  Eye, 
-  PhoneOff 
-  
+import {
+  Video,
+  Mic,
+  MessageSquare,
+  Clock,
+  MoreVertical,
+  Download,
+  AlertCircle,
+  Eye,
+  PhoneOff
+
 } from "lucide-react";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 import type { LiveSession } from "@/app/components/live-sessions/session";
 
 interface LiveSessionCardProps {
@@ -30,10 +30,10 @@ export function LiveSessionCard({
   onEndSession,
   onToggleRecording,
 }: LiveSessionCardProps) {
-  
+
   // SessionTypeIcon
   const SessionTypeIcon = ({ type }: { type: string }) => {
-    switch(type) {
+    switch (type) {
       case "video": return <Video className="w-5 h-5 text-blue-600" />;
       case "audio": return <Mic className="w-5 h-5 text-green-600" />;
       case "chat": return <MessageSquare className="w-5 h-5 text-purple-600" />;
@@ -49,9 +49,9 @@ export function LiveSessionCard({
       ended: { color: "bg-gray-100 text-gray-800", text: "Ended" },
       "technical-issue": { color: "bg-red-100 text-red-800", text: "Technical Issue" }
     };
-    
+
     const { color, text } = config[status] || config.ended;
-    
+
     return (
       <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${color}`}>
         <span className="capitalize">{text}</span>
@@ -67,7 +67,7 @@ export function LiveSessionCard({
       fair: "bg-yellow-500",
       poor: "bg-red-500"
     };
-    
+
     return (
       <div className="flex items-center gap-2">
         <div className={`w-2 h-2 rounded-full ${colors[quality] || colors.fair}`} />
@@ -159,7 +159,7 @@ export function LiveSessionCard({
               {calculateDuration()} min
             </p>
           </div>
-          
+
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Chat Messages</span>
@@ -179,19 +179,18 @@ export function LiveSessionCard({
               <QualityIndicator quality={session.connectionQuality} />
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <button
-              className={`p-2 rounded-lg ${
-                session.recording 
-                  ? "bg-red-100 text-red-600 hover:bg-red-200" 
+              className={`p-2 rounded-lg ${session.recording
+                  ? "bg-red-100 text-red-600 hover:bg-red-200"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
+                }`}
               onClick={() => onToggleRecording(session.id)}
             >
               <Video className="w-4 h-4" />
             </button>
-            
+
             <button className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200">
               <Download className="w-4 h-4" />
             </button>
@@ -227,7 +226,7 @@ export function LiveSessionCard({
           >
             Join Session
           </Button>
-          
+
           <Button
             variant="danger"
             size="sm"
