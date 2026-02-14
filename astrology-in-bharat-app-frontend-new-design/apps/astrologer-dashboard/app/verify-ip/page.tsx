@@ -10,7 +10,7 @@ const Loader2Icon = Loader2 as any;
 const CheckCircleIcon = CheckCircle as any;
 const AlertCircleIcon = AlertCircle as any;
 
-const VerifyIpPage = () => {
+const VerifyIpContent = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { login } = useAuth();
@@ -85,6 +85,16 @@ const VerifyIpPage = () => {
                 )}
             </div>
         </div>
+    );
+};
+
+import { Suspense } from 'react';
+
+const VerifyIpPage = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <VerifyIpContent />
+        </Suspense>
     );
 };
 

@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 const Image = NextImage as any;
 const Link = NextLink as any;
-import { Button } from "../../../shared/components/Button";
+import { Button } from "../../shared/components/Button";
 const UserIcon = User as any;
 const LockIcon = Lock as any;
 const EyeIcon = Eye as any;

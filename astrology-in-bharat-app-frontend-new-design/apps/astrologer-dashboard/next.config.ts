@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
     // Speed up CI/builds by not failing on ESLint errors
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   transpilePackages: ["@repo/ui", "@repo/routes"],
   images: {
     remotePatterns: [

@@ -17,7 +17,7 @@ import UserDisputeChatModal from "@/components/features/user/UserDisputeChatModa
 import DisputesTab from "@/components/features/profile/DisputesTab";
 import { useProfileLogic } from "@/components/features/profile/useProfileLogic";
 
-const ProfilePage: React.FC = () => {
+const ProfileContent: React.FC = () => {
   const {
     clientUser, clientLoading, clientBalance,
     profileData, loading,
@@ -289,4 +289,16 @@ const ProfilePage: React.FC = () => {
   );
 };
 
-export default ProfilePage;
+import { Suspense } from 'react';
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<div className="min-vh-100 d-flex justify-content-center align-items-center">
+      <div className="spinner-border text-primary" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>}>
+      <ProfileContent />
+    </Suspense>
+  );
+}

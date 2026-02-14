@@ -31,7 +31,7 @@ const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:654
 
 const Page: React.FC = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams(); // Unused and causes build error if not suspended
   const { clientLogin } = useClientAuth();
 
   const [formData, setFormData] = useState<FormData>({

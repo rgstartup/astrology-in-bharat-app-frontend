@@ -4,7 +4,7 @@ import { Lock, User } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
-import { Button } from "../../shared/components/Button";
+import { Button } from "../shared/components/Button";
 
 import { toast } from "react-toastify";
 
