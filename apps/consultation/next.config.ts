@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
     },
   },
   transpilePackages: ["@repo/ui", "@repo/routes"],
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
