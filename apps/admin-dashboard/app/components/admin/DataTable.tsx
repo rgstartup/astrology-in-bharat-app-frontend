@@ -1,7 +1,14 @@
 "use client";
 import React, { useState, useMemo, useCallback, memo } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SearchInput } from "./SearchInput";
+import { ChevronLeft, ChevronRight, Search, Eye } from "lucide-react";
+import { SearchInput } from "../../../../shared/components/SearchInput";
+import { Loading } from "../../../../shared/components/Loading";
+const LoadingComp = Loading as any;
+import { Button } from "../../../../shared/components/Button";
+
+const ChevronLeftComp = ChevronLeft as any;
+const ChevronRightComp = ChevronRight as any;
+const EyeComp = Eye as any;
 
 // Types
 interface Column<T> {
@@ -20,7 +27,13 @@ interface DataTableProps<T> {
   title?: string;
   statsCards?: React.ReactNode;
   emptyMessage?: string;
- 
+  onSearch?: (value: string) => void;
+  isLoading?: boolean;
+  manualPagination?: boolean;
+  totalItems?: number;
+  onPageChange?: (page: number) => void;
+  filterElement?: React.ReactNode;
+  headerAction?: React.ReactNode;
 }
 
 const TableRow = memo(function TableRow<T extends { id: number | string }>({
@@ -39,8 +52,8 @@ const TableRow = memo(function TableRow<T extends { id: number | string }>({
   return (
     <tr className="hover:bg-gray-50 transition-colors">
       {columns.map((column, colIndex) => (
-        <td 
-          key={colIndex} 
+        <td
+          key={colIndex}
           className="px-6 py-4 text-sm text-gray-900"
           style={{ maxWidth: '250px' }}
         >
@@ -54,13 +67,14 @@ const TableRow = memo(function TableRow<T extends { id: number | string }>({
       ))}
       {onViewDetails && (
         <td className="px-6 py-4 whitespace-nowrap">
-          <button
+          <Button
+            size="sm"
+            variant="outline"
             onClick={handleViewDetails}
-            className="px-4 py-2 text-sm font-medium text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 rounded-lg transition-colors"
             aria-label={`View details for item ${item.id}`}
           >
             View Details
-          </button>
+          </Button>
         </td>
       )}
     </tr>
@@ -88,11 +102,10 @@ const PaginationButton = memo(function PaginationButton({
       onClick={handleClick}
       aria-label={`Go to page ${page}`}
       aria-current={isActive ? "page" : undefined}
-      className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-        isActive
-          ? "bg-gray-900 text-white"
-          : "border border-gray-200 hover:bg-gray-100 text-gray-700"
-      }`}
+      className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${isActive
+        ? "bg-gray-900 text-white"
+        : "border border-gray-200 hover:bg-gray-100 text-gray-700"
+        }`}
     >
       {page}
     </button>
@@ -109,6 +122,13 @@ export function DataTable<T extends { id: number | string }>({
   renderCell,
   title = "Data Management",
   statsCards,
+  onSearch,
+  isLoading = false,
+  manualPagination = false,
+  totalItems = 0,
+  onPageChange,
+  filterElement,
+  headerAction,
 }: DataTableProps<T>) {
   // State for pagination and search
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -117,8 +137,12 @@ export function DataTable<T extends { id: number | string }>({
   // Filter function (memoized)
   const filterItem = useCallback(
     (item: T) => {
+      // If server-side search is enabled (onSearch provided), skip client-side filtering
+      // as the data passed is already filtered by the server
+      if (onSearch) return true;
+
       if (!searchTerm) return true;
-      
+
       return searchKeys.some((key) => {
         const value = item[key];
         return (
@@ -127,7 +151,7 @@ export function DataTable<T extends { id: number | string }>({
         );
       });
     },
-    [searchKeys, searchTerm]
+    [searchKeys, searchTerm, onSearch]
   );
 
   // Filtered data (memoized)
@@ -137,18 +161,29 @@ export function DataTable<T extends { id: number | string }>({
 
   // Pagination calculations (memoized)
   const paginationData = useMemo(() => {
+    // If manual (server-side) pagination is enabled
+    if (manualPagination) {
+      return {
+        totalPages: Math.ceil((totalItems || 0) / itemsPerPage),
+        currentItems: data, // Data is already sliced by server
+        startIndex: (currentPage - 1) * itemsPerPage,
+        endIndex: Math.min((currentPage - 1) * itemsPerPage + data.length, totalItems || 0),
+      };
+    }
+
+    // Client-side pagination logic
     const total = Math.ceil(filteredData.length / itemsPerPage);
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const items = filteredData.slice(start, end);
-    
+
     return {
       totalPages: total,
       currentItems: items,
       startIndex: start,
       endIndex: end,
     };
-  }, [filteredData, currentPage, itemsPerPage]);
+  }, [filteredData, currentPage, itemsPerPage, manualPagination, totalItems, data]);
 
   // Page numbers array (memoized)
   const pageNumbers = useMemo(() => {
@@ -158,20 +193,26 @@ export function DataTable<T extends { id: number | string }>({
   // Event handlers (memoized)
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
-  }, []);
+    onPageChange?.(page);
+  }, [onPageChange]);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value);
     setCurrentPage(1);
-  }, []);
+    onSearch?.(value);
+  }, [onSearch]);
 
   const handlePrevPage = useCallback(() => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  }, []);
+    const newPage = Math.max(currentPage - 1, 1);
+    setCurrentPage(newPage);
+    onPageChange?.(newPage);
+  }, [currentPage, onPageChange]);
 
   const handleNextPage = useCallback(() => {
-    setCurrentPage((prev) => Math.min(prev + 1, paginationData.totalPages));
-  }, [paginationData.totalPages]);
+    const newPage = Math.min(currentPage + 1, paginationData.totalPages);
+    setCurrentPage(newPage);
+    onPageChange?.(newPage);
+  }, [currentPage, paginationData.totalPages, onPageChange]);
 
   // Empty state checks
   const isEmpty = paginationData.currentItems.length === 0;
@@ -188,73 +229,97 @@ export function DataTable<T extends { id: number | string }>({
         <header className="px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-            
-            {/* Search Input */}
-            <SearchInput
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="Search..."
-              className="w-full md:w-64"
-              size="md"
-              aria-label={`Search ${title.toLowerCase()}`}
-            />
+
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+              {/* Header Action Button */}
+              {headerAction && (
+                <div className="flex-shrink-0">
+                  {headerAction}
+                </div>
+              )}
+
+              {/* Custom Filter Element */}
+              {filterElement && (
+                <div className="min-w-[150px]">
+                  {filterElement}
+                </div>
+              )}
+
+              {/* Search Input */}
+              <SearchInput
+                value={searchTerm}
+                onChange={handleSearchChange}
+                placeholder="Search..."
+                className="w-full md:w-64"
+                size="md"
+                aria-label={`Search ${title.toLowerCase()}`}
+              />
+            </div>
           </div>
         </header>
 
         {/* Table with horizontal scroll only when needed */}
-{/* ===== TABLE HEADER (FIXED) ===== */}
-<div className="w-full overflow-x-hidden">
-  <table className="w-full table-fixed">
-    <thead className="bg-gray-50 border-b border-gray-200">
-      <tr>
-        {columns.map((column, index) => (
-          <th
-            key={index}
-            className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap"
-          >
-            {column.label}
-          </th>
-        ))}
-        {onViewDetails && (
-          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
-            Actions
-          </th>
-        )}
-      </tr>
-    </thead>
-  </table>
-</div>
+        {/* ===== TABLE HEADER (FIXED) ===== */}
+        <div className="w-full overflow-x-hidden">
+          <table className="w-full table-fixed">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                {columns.map((column, index) => (
+                  <th
+                    key={index}
+                    className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap"
+                  >
+                    {column.label}
+                  </th>
+                ))}
+                {onViewDetails && (
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
+                    Actions
+                  </th>
+                )}
+              </tr>
+            </thead>
+          </table>
+        </div>
 
-{/* ===== TABLE BODY (SCROLL ONLY DATA) ===== */}
-<div className="w-full max-h-[320px] overflow-y-auto">
-  <table className="w-full table-fixed">
-    <tbody className="divide-y divide-gray-100">
-      {isEmpty ? (
-        <tr>
-          <td
-            colSpan={columns.length + (onViewDetails ? 1 : 0)}
-            className="px-6 py-12 text-center text-gray-500"
-          >
-            {hasData ? "No results found" : "No data available"}
-          </td>
-        </tr>
-      ) : (
-        paginationData.currentItems.map((item) => (
-          <TableRow
-            key={item.id}
-            item={item}
-            columns={columns as any}
-            onViewDetails={onViewDetails as any}
-          />
-        ))
-      )}
-    </tbody>
-  </table>
-</div>
+        {/* ===== TABLE BODY (SCROLL ONLY DATA) ===== */}
+        <div className="w-full max-h-[320px] overflow-y-auto">
+          <table className="w-full table-fixed">
+            <tbody className="divide-y divide-gray-100">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={columns.length + (onViewDetails ? 1 : 0)} className="px-6 py-10 text-center">
+                    <div className="flex justify-center items-center">
+                      <LoadingComp size="lg" text="Loading data..." />
+                    </div>
+                  </td>
+                </tr>
+              ) : paginationData.currentItems.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={columns.length + (onViewDetails ? 1 : 0)}
+                    className="px-6 py-12 text-center text-gray-500"
+                  >
+                    {hasData ? "No results found" : "No data available"}
+                  </td>
+                </tr>
+              ) : (
+                paginationData.currentItems.map((item) => (
+                  <TableRow
+                    key={item.id}
+                    item={item}
+                    columns={columns as any}
+                    onViewDetails={onViewDetails as any}
+                  />
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
 
         {/* Pagination */}
-        {hasData && paginationData.totalPages > 0 && (
+        {!isLoading && hasData && paginationData.totalPages > 0 && (
           <footer className="px-6 py-4 border-t border-gray-200 bg-gray-50">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               {/* Results info */}
@@ -280,14 +345,14 @@ export function DataTable<T extends { id: number | string }>({
                 aria-label="Pagination"
               >
                 {/* Previous button */}
-                
+
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage === 1}
                   aria-label="Go to previous page"
                   className="p-2 rounded-lg border border-gray-200 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+                  <ChevronLeftComp className="w-4 h-4" aria-hidden="true" />
                 </button>
 
                 {/* Page numbers */}
@@ -307,7 +372,7 @@ export function DataTable<T extends { id: number | string }>({
                   aria-label="Go to next page"
                   className="p-2 rounded-lg border border-gray-200 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ChevronRight className="w-4 h-4" aria-hidden="true" />
+                  <ChevronRightComp className="w-4 h-4" aria-hidden="true" />
                 </button>
               </nav>
             </div>

@@ -1,45 +1,77 @@
 "use client";
-import React, { useState, useMemo ,lazy, Suspense } from "react";
-
-// Icons
-import { Plus, Search, Tag } from "lucide-react";
-
-// Components
-import { StatsCards } from "@/app/components/admin/StatsCard";
+import React, { useState, useEffect, useMemo, lazy, Suspense } from "react";
+import { Plus, Search, Tag, Loader2 } from "lucide-react";
+import { StatsCards } from "../../../../shared/components/StatsCard";
 import { CouponCard } from "@/app/components/coupons/CouponCard";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
+import { getCoupons, getCouponStats } from "@/src/services/admin.service";
+import { toast } from "react-toastify";
+
 const CreateCoupon = lazy(() => import("@/app/components/coupons/CreateCoupon"));
 
-
-// Data config
-import { couponsData, getStatsConfig } from "@/app/components/coupons/couponsConfig";
+const SearchIcon = Search as any;
+const LoaderIcon = Loader2 as any;
+const TagIcon = Tag as any;
 
 export default function CouponsPage() {
-  // Search query state
+  const [coupons, setCoupons] = useState<any[]>([]);
+  const [realStats, setRealStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  
-  // Filter state (all, active, inactive, expired)
   const [statusFilter, setStatusFilter] = useState("all");
-  
-  // Create modal state
   const [showCreateCoupon, setShowCreateCoupon] = useState(false);
 
-  // Get stats config (memoized)
-  const statsConfig = useMemo(() => getStatsConfig(couponsData), []);
+  const fetchStats = async () => {
+    try {
+      const stats = await getCouponStats();
+      setRealStats(stats);
+    } catch (error) {
+      console.error("Failed to fetch coupon stats:", error);
+    }
+  };
 
-  
-  // Filter coupons based on search and status
+  const fetchCoupons = async () => {
+    setLoading(true);
+    try {
+      const [couponsData] = await Promise.all([
+        getCoupons(),
+        fetchStats()
+      ]);
+      setCoupons(Array.isArray(couponsData) ? couponsData : (couponsData.data || []));
+    } catch (error) {
+      console.error("Failed to fetch coupons:", error);
+      // Keep empty array on error
+      setCoupons([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
+
+  const statsConfig = useMemo(() => {
+    return [
+      { title: "Total Coupons", value: (realStats?.totalCoupons || 0).toString(), icon: Tag as any, iconColor: "text-blue-600", iconBgColor: "bg-blue-50" },
+      { title: "Active Offers", value: (realStats?.activeCoupons || 0).toString(), icon: Tag as any, iconColor: "text-green-600", iconBgColor: "bg-green-50" },
+      { title: "Redemptions", value: (realStats?.totalRedemptions || 0).toString(), icon: Tag as any, iconColor: "text-purple-600", iconBgColor: "bg-purple-50" },
+      { title: "Used Today", value: (realStats?.usedToday || 0).toString(), icon: Tag as any, iconColor: "text-orange-600", iconBgColor: "bg-orange-50" },
+    ];
+  }, [realStats]);
+
   const filteredCoupons = useMemo(() => {
-    return couponsData.filter((coupon) => {
+    return coupons.filter((coupon) => {
       const matchesSearch =
-        coupon.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        coupon.description.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesStatus = statusFilter === "all" || coupon.status === statusFilter;
+        (coupon.code || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (coupon.description || "").toLowerCase().includes(searchQuery.toLowerCase());
+
+      const cStatus = (coupon.status || 'active').toLowerCase();
+      const matchesStatus = statusFilter === "all" || cStatus === statusFilter.toLowerCase();
       return matchesSearch && matchesStatus;
     });
-  }, [searchQuery, statusFilter]);
+  }, [coupons, searchQuery, statusFilter]);
 
-  // Filter button configs
   const filterButtons = [
     { value: "all", label: "All", variant: "primary" },
     { value: "active", label: "Active", variant: "success" },
@@ -47,108 +79,136 @@ export default function CouponsPage() {
     { value: "expired", label: "Expired", variant: "danger" },
   ];
 
-  // Copy coupon code to clipboard
   const handleCopyCoupon = (code: string) => {
     navigator.clipboard.writeText(code);
-    alert(`Coupon code "${code}" copied!`);
+    toast.success(`Coupon code "${code}" copied!`);
   };
 
-  // Action handlers
-  const handleEdit = (id: number) => console.log("Edit:", id);
-  const handleDelete = (id: number) => console.log("Delete:", id);
-  const handleToggleStatus = (id: number) => console.log("Toggle:", id);
+  // Delete Dialog/Logic
+  const handleDelete = async (id: number) => {
+    if (!window.confirm("Are you sure you want to delete this coupon?")) return;
+    try {
+      await import("@/src/services/admin.service").then(m => m.deleteCoupon(id));
+      toast.success("Coupon deleted successfully");
+      fetchCoupons();
+    } catch (error) {
+      toast.error("Failed to delete coupon");
+    }
+  };
+
+  const handleToggleStatus = async (id: number, coupon: any) => {
+    try {
+      // Use isActive as source of truth if available, otherwise check status
+      const currentlyActive = typeof coupon.isActive === 'boolean' ? coupon.isActive : (coupon.status?.toLowerCase() === 'active' || !coupon.status);
+      const nextActive = !currentlyActive;
+      const nextStatus = nextActive ? "active" : "inactive";
+
+      await import("@/src/services/admin.service").then(m => m.updateCoupon(id.toString(), {
+        status: nextStatus,
+        isActive: nextActive
+      }));
+
+      toast.success(`Coupon ${nextActive ? 'activated' : 'deactivated'} successfully`);
+      fetchCoupons();
+    } catch (error) {
+      toast.error("Failed to update status");
+    }
+  };
+
+  const [editingCoupon, setEditingCoupon] = useState<any>(null);
+
+  const handleEdit = (coupon: any) => {
+    setEditingCoupon(coupon);
+  };
 
   return (
     <main className="space-y-6 px-4 sm:px-6 lg:px-0">
-
-      {/* Header with title and create button */}
-    <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <div className="min-w-0">
-         <h1 className="text-xl sm:text-3xl font-bold text-gray-800 truncate">Coupons & Offers</h1>
-           <p className="text-sm sm:text-base text-gray-600 mt-1">Manage discount coupons and offers</p>
+      <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-800 tracking-tight">Coupons & Offers</h1>
+          <p className="text-sm sm:text-base text-gray-500 mt-1">Manage platform-wide and private discount codes</p>
         </div>
-        <Button variant="primary" size="md" icon={Plus}  onClick={() => {
-    
-    setShowCreateCoupon(true);
-  }}
->
+        <Button variant="primary" size="md" icon={Plus} onClick={() => setShowCreateCoupon(true)}>
           Create Coupon
         </Button>
       </header>
 
-      {/* Stats cards - Total, Active, Redemptions, Avg Discount */}
       <StatsCards stats={statsConfig} columns={4} />
 
-     {/* Search and filter section */}
-<div className="flex flex-col gap-4 md:flex-row md:items-center">
-  {/* Search input */}
-  <div className="relative flex-1 min-w-0">
-    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-    <input
-      type="text"
-      placeholder="Search coupons..."
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-    />
-  </div>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+        <div className="relative flex-1">
+          <SearchIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search coupon code or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none text-sm"
+          />
+        </div>
 
-  {/* Status filter buttons */}
-  <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
-    {filterButtons.map(({ value, label, variant }) => (
-      <Button
-        key={value}
-        variant={statusFilter === value ? (variant as any) : "outline"}
-        size="md"
-        onClick={() => setStatusFilter(value)}
-        className="w-full sm:w-auto"
-      >
-        {label}
-      </Button>
-    ))}
-  </div>
-</div>
-
-
-      {/* Coupons grid or empty state */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredCoupons.length === 0 ? (
-          // Empty state
-          <div className="col-span-2 text-center py-12 bg-white rounded-xl border border-gray-200">
-            <Tag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg font-medium">No coupons found</p>
-            <p className="text-gray-400 text-sm mt-1">Try adjusting your filters</p>
-          </div>
-        ) : (
-          // Coupon cards
-          filteredCoupons.map((coupon) => (
-            <CouponCard
-              key={coupon.id}
-              {...coupon}
-              onCopy={handleCopyCoupon}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onToggleStatus={handleToggleStatus}
-            />
-          ))
-        )}
+        <div className="flex gap-2">
+          {filterButtons.map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={() => setStatusFilter(value)}
+              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${statusFilter === value
+                ? "bg-orange-500 text-white shadow-md"
+                : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+                }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
+      {loading ? (
+        <div className="flex flex-col items-center justify-center py-20 gap-3">
+          <LoaderIcon className="animate-spin text-orange-500" size={40} />
+          <p className="text-gray-400 font-medium">Loading coupons...</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {filteredCoupons.length === 0 ? (
+            <div className="col-span-2 text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+              <TagIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 text-lg font-bold">No coupons found</p>
+              <p className="text-gray-400 text-sm mt-1">Try a different search term or create a new one</p>
+            </div>
+          ) : (
+            filteredCoupons.map((coupon) => (
+              <CouponCard
+                key={coupon.id}
+                {...coupon}
+                onCopy={handleCopyCoupon}
+                onDelete={() => handleDelete(coupon.id)}
+                onToggleStatus={() => handleToggleStatus(coupon.id, coupon)}
+                onEdit={() => handleEdit(coupon)}
+              />
+            ))
+          )}
+        </div>
+      )}
 
-    <Suspense
-  fallback={
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white px-6 py-3 rounded-lg shadow">
-        Loading...
-      </div>
-    </div>
-  }
->
-  
-  {showCreateCoupon && (
-    <CreateCoupon onClose={() => setShowCreateCoupon(false)} />
-  )}
-</Suspense>
+      {showCreateCoupon && (
+        <Suspense fallback={null}>
+          <CreateCoupon
+            onClose={() => setShowCreateCoupon(false)}
+            onSuccess={fetchCoupons}
+          />
+        </Suspense>
+      )}
+
+      {editingCoupon && (
+        <Suspense fallback={null}>
+          <CreateCoupon
+            onClose={() => setEditingCoupon(null)}
+            onSuccess={fetchCoupons}
+            initialData={editingCoupon}
+          />
+        </Suspense>
+      )}
     </main>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
 
 interface AnalyticsHeaderProps {
   timeFilter: string;

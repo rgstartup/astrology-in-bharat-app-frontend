@@ -1,7 +1,11 @@
 // refund-management/components/RefundFilters.tsx
 import React from "react";
 import { Filter, Calendar, Download } from "lucide-react";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "../../../../shared/components/Button";
+
+const FilterComp = Filter as any;
+const CalendarComp = Calendar as any;
+const DownloadComp = Download as any;
 
 interface FilterItem {
   key: string;
@@ -14,10 +18,10 @@ interface RefundFiltersProps {
   onFilterChange: (filter: string) => void;
 }
 
-export function RefundFilters({ 
-  filters, 
-  activeFilter, 
-  onFilterChange 
+export function RefundFilters({
+  filters,
+  activeFilter,
+  onFilterChange
 }: RefundFiltersProps) {
   return (
     <div className="bg-white rounded-xl border p-4">
@@ -25,29 +29,26 @@ export function RefundFilters({
         {/* Left side - Filter buttons */}
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex items-center gap-2 mr-2">
-            <Filter className="w-4 h-4 text-gray-500" />
+            <FilterComp className="w-4 h-4 text-gray-500" />
             <span className="text-sm font-medium text-gray-700">Filter by:</span>
           </div>
-          
+
           {filters.map((filter) => (
-            <button
+            <Button
               key={filter.key}
               onClick={() => onFilterChange(filter.key)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                activeFilter === filter.key
-                  ? "bg-gray-900 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
+              variant={activeFilter === filter.key ? "primary" : "secondary"}
+              size="sm"
             >
               {filter.label}
-            </button>
+            </Button>
           ))}
         </div>
 
         {/* Right side - Date range and export */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-lg">
-            <Calendar className="w-4 h-4 text-gray-500" />
+            <CalendarComp className="w-4 h-4 text-gray-500" />
             <select className="bg-transparent text-sm outline-none">
               <option>Last 7 days</option>
               <option>Last 30 days</option>
@@ -55,8 +56,8 @@ export function RefundFilters({
               <option>Custom range</option>
             </select>
           </div>
-          
-          <Button variant="outline" size="sm" icon={Download}>
+
+          <Button variant="outline" size="sm" icon={DownloadComp}>
             Export
           </Button>
         </div>

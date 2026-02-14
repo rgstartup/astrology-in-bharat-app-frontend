@@ -1,9 +1,18 @@
 // live-sessions/components/LiveSessionCard.tsx
-import React from "react";
-import { Video, Mic, MessageSquare, Clock, MoreVertical, VideoOff, Download, AlertCircle, Eye, PhoneOff  } from "lucide-react";
-import { Button } from "@/app/components/admin/Button";
+import React, { useState, useEffect } from "react";
+import { Video, Mic, MessageSquare, Clock, VideoOff, AlertCircle, Eye, PhoneOff } from "lucide-react";
+import { Button } from "../../../../shared/components/Button";
+
+const VideoComp = Video as any;
+const MicComp = Mic as any;
+const MessageSquareComp = MessageSquare as any;
+const ClockComp = Clock as any;
+const VideoOffComp = VideoOff as any;
+const AlertCircleComp = AlertCircle as any;
+const EyeComp = Eye as any;
+const PhoneOffComp = PhoneOff as any;
 import { ParticipantCard } from "./ParticipantCard";
-import { QualityIndicator } from "./QualityIndicator";
+
 import { StatusBadge } from "./StatusBadge";
 import type { LiveSession } from "../live-sessions/session";
 
@@ -20,16 +29,36 @@ export function LiveSessionCard({
   onEndSession,
   onToggleRecording,
 }: LiveSessionCardProps) {
-  
+
   // SessionTypeIcon component
   const SessionTypeIcon = ({ type }: { type: string }) => {
-    switch(type) {
-      case "video": return <Video className="w-5 h-5 text-blue-600" />;
-      case "audio": return <Mic className="w-5 h-5 text-green-600" />;
-      case "chat": return <MessageSquare className="w-5 h-5 text-purple-600" />;
+    switch (type) {
+      case "video": return <VideoComp className="w-5 h-5 text-blue-600" />;
+      case "audio": return <MicComp className="w-5 h-5 text-green-600" />;
+      case "chat": return <MessageSquareComp className="w-5 h-5 text-purple-600" />;
       default: return null;
     }
   };
+
+  const [elapsed, setElapsed] = useState(
+    session.status === 'live'
+      ? Math.floor((Date.now() - session.startTime.getTime()) / 60000)
+      : session.duration
+  );
+
+  useEffect(() => {
+    if (session.status === 'live') {
+      const updateTimer = () => {
+        setElapsed(Math.floor((Date.now() - session.startTime.getTime()) / 60000));
+      };
+
+      updateTimer();
+      const timer = setInterval(updateTimer, 30000); // Update every 30s
+      return () => clearInterval(timer);
+    } else {
+      setElapsed(session.duration);
+    }
+  }, [session.status, session.startTime, session.duration]);
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -41,15 +70,13 @@ export function LiveSessionCard({
             <div>
               <h3 className="font-semibold text-gray-900">Session #{session.id}</h3>
               <p className="text-sm text-gray-600 capitalize">
-                {session.sessionType} Session • {session.duration} mins
+                {session.sessionType} Session • {elapsed} mins
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <StatusBadge status={session.status} />
-            <button className="p-1 hover:bg-gray-100 rounded-lg">
-              <MoreVertical className="w-5 h-5 text-gray-500" />
-            </button>
+
           </div>
         </div>
       </div>
@@ -57,33 +84,33 @@ export function LiveSessionCard({
       {/* Card Content */}
       <div className="p-4">
         {/* Participants */}
-       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <ParticipantCard user={session.user} type="user" />
-          <ParticipantCard 
-            user={session.astrologer} 
-            type="astrologer" 
+          <ParticipantCard
+            user={session.astrologer}
+            type="astrologer"
             experience={session.astrologer.experience}
             specialty={session.astrologer.specialty}
           />
         </div>
 
         {/* Session Stats */}
-       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
 
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Duration</span>
-              <Clock className="w-4 h-4 text-gray-500" />
+              <ClockComp className="w-4 h-4 text-gray-500" />
             </div>
             <p className="text-lg font-semibold text-gray-900 mt-1">
-              {Math.floor((Date.now() - session.startTime.getTime()) / 60000)} min
+              {elapsed} min
             </p>
           </div>
-          
+
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Chat Messages</span>
-              <MessageSquare className="w-4 h-4 text-gray-500" />
+              <MessageSquareComp className="w-4 h-4 text-gray-500" />
             </div>
             <p className="text-lg font-semibold text-gray-900 mt-1">
               {session.chatMessages}
@@ -92,39 +119,23 @@ export function LiveSessionCard({
         </div>
 
         {/* Connection & Controls */}
-       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
 
           <div>
-            <span className="text-sm text-gray-600">Connection Quality:</span>
-            <div className="mt-1">
+            {/* <span className="text-sm text-gray-600">Connection Quality:</span> */}
+            {/* <div className="mt-1">
               <QualityIndicator quality={session.connectionQuality} />
-            </div>
+            </div> */}
           </div>
-          
-        <div className="flex flex-col sm:flex-row gap-2">
 
-            <button
-              className={`p-2 rounded-lg ${
-                session.recording 
-                  ? "bg-red-100 text-red-600 hover:bg-red-200" 
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-              onClick={() => onToggleRecording(session.id)}
-            >
-              <Video className="w-4 h-4" />
-            </button>
-            
-            <button className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200">
-              <Download className="w-4 h-4" />
-            </button>
-          </div>
+
         </div>
 
         {/* Issues Alert */}
         {session.issues && session.issues.length > 0 && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-lg mb-4">
             <div className="flex items-center gap-2 mb-2">
-              <AlertCircle className="w-5 h-5 text-red-600" />
+              <AlertCircleComp className="w-5 h-5 text-red-600" />
               <h4 className="font-medium text-red-700">Technical Issues</h4>
             </div>
             <ul className="text-sm text-red-600 space-y-1">
@@ -140,23 +151,35 @@ export function LiveSessionCard({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          <Button
-            variant="primary"
-            size="sm"
-            icon={Eye}
-            fullWidth
-            onClick={() => onJoinSession(session)}
-          >
-            Join Session
-          </Button>
-          
+          {session.sessionType === 'chat' ? (
+            <Button
+              variant="primary"
+              size="sm"
+              icon={EyeComp}
+              fullWidth
+              onClick={() => onJoinSession(session)}
+            >
+              View Conversation
+            </Button>
+          ) : (
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={VideoOffComp}
+              fullWidth
+              disabled
+            >
+              Join Restricted
+            </Button>
+          )}
+
           <Button
             variant="danger"
             size="sm"
-            icon={PhoneOff}
+            icon={PhoneOffComp}
             onClick={() => onEndSession(session.id)}
           >
-            End Session
+            End
           </Button>
         </div>
       </div>

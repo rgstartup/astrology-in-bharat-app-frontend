@@ -1,14 +1,35 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const apiEnvVar = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "");
+const API_BASE_URL = apiEnvVar ? `${apiEnvVar}/api/v1` : 'http://localhost:6543/api/v1';
+
+console.log("DEBUG: process.env.NEXT_PUBLIC_API_URL =", process.env.NEXT_PUBLIC_API_URL);
+console.log("DEBUG: Resolved API_BASE_URL =", API_BASE_URL);
+
+// Cookie helper
+const getCookie = (name: string) => {
+    if (typeof document === 'undefined') return null;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift();
+    return null;
+};
+
+const setCookie = (name: string, value: string, days: number = 30) => {
+    if (typeof document === 'undefined') return;
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+};
+
+const deleteCookie = (name: string) => {
+    if (typeof document === 'undefined') return;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+};
 
 // Create axios instance
 export const apiClient = axios.create({
     baseURL: API_BASE_URL,
     withCredentials: true, // Important for cookies
-    headers: {
-        'Content-Type': 'application/json',
-    },
 });
 
 let isRefreshing = false;
@@ -32,10 +53,15 @@ const processQueue = (error: any, token: string | null = null) => {
 // Request interceptor - Add access token to requests
 apiClient.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('accessToken');
+        const token = typeof window !== "undefined" ? getCookie('accessToken') : null;
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`;
+            // Debug log
+            console.log(`[API] ${config.method?.toUpperCase()} ${config.url} - Auth Header Set. Token starts with: ${token.substring(0, 10)}...`);
+        } else {
+            console.warn(`[API] ${config.method?.toUpperCase()} ${config.url} - No Token Found in Cookies!`);
         }
+
         return config;
     },
     (error) => {
@@ -51,8 +77,41 @@ apiClient.interceptors.response.use(
     async (error: AxiosError) => {
         const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
+        if (error.response) {
+            const baseURL = error.config?.baseURL || '';
+            const relativeURL = error.config?.url || '';
+            const fullUrl = baseURL.endsWith('/') && relativeURL.startsWith('/')
+                ? baseURL + relativeURL.substring(1)
+                : (baseURL.endsWith('/') || relativeURL.startsWith('/') ? baseURL + relativeURL : baseURL + '/' + relativeURL);
+
+            const method = error.config?.method?.toUpperCase();
+            const status = error.response.status;
+
+            if (status === 404) {
+                console.warn(`[API 404] ${method} ${fullUrl} | Resource not found`);
+            } else {
+                console.error(`[API Error] ${method} ${fullUrl} | Status: ${status} | Data:`, error.response.data);
+            }
+        }
+
         // If error is 401 and we haven't retried yet
         if (error.response?.status === 401 && !originalRequest._retry) {
+            // Check if it's actually a throttle error (misconfigured backend returning 401 for 429)
+            const errorData = error.response?.data as any;
+            let errorMessage = "";
+
+            if (typeof errorData?.message === 'string') {
+                errorMessage = errorData.message;
+            } else if (Array.isArray(errorData?.message)) {
+                errorMessage = errorData.message.join(" ");
+            } else if (typeof errorData?.message === 'object') {
+                errorMessage = JSON.stringify(errorData.message);
+            }
+
+            if (errorMessage.toLowerCase().includes('too many requests')) {
+                return Promise.reject(error);
+            }
+
             if (isRefreshing) {
                 // If already refreshing, queue this request
                 return new Promise((resolve, reject) => {
@@ -84,8 +143,8 @@ apiClient.interceptors.response.use(
 
                 const { accessToken } = response.data;
 
-                // Store new access token
-                localStorage.setItem('accessToken', accessToken);
+                // Store new access token in Cookies
+                setCookie('accessToken', accessToken);
 
                 // Update default header
                 apiClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
@@ -103,11 +162,11 @@ apiClient.interceptors.response.use(
                 processQueue(refreshError, null);
 
                 // Clear tokens
-                localStorage.removeItem('accessToken');
+                deleteCookie('accessToken');
 
                 // Redirect to sign-in
                 if (typeof window !== 'undefined') {
-                    window.location.href = '/sign-in';
+                    window.location.href = '/';
                 }
 
                 return Promise.reject(refreshError);

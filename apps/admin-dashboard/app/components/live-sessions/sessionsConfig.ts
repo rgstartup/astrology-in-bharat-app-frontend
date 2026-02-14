@@ -103,9 +103,8 @@ export const mockLiveSessions: LiveSession[] = [
 ];
 
 export const filters = [
-  { key: "all", label: "All Sessions" },
-  { key: "video", label: "Video Sessions" },
-  { key: "audio", label: "Audio Sessions" },
-  { key: "chat", label: "Chat Sessions" },
-  { key: "issues", label: "With Issues" },
+  { key: "all", label: "All Live Sessions" },
+  { key: "chat_live", label: "Live Chat Sessions" },
+  { key: "expired", label: "Expired Sessions" },
+  { key: "admin_terminated", label: "Admin Terminated" },
 ];

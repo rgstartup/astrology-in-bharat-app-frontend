@@ -1,23 +1,24 @@
 {
-    "name": "@repo/shared",
-    "version": "0.0.0",
-    "private": true,
-    "exports": {
-        "./lib/*": "./lib/*",
-        "./hooks/*": "./hooks/*",
-        "./components/*": "./components/*",
-        "./styles/*": "./styles/*"
-    },
-    "dependencies": {
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "next": "^14.0.0",
-        "axios": "^1.6.0"
-    },
-    "devDependencies": {
-        "@types/react": "^18.2.0",
-        "@types/react-dom": "^18.2.0",
-        "@types/node": "^20.0.0",
-        "typescript": "^5.0.0"
-    }
+  "name": "@repo/shared",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./safeFetch": "./lib/safeFetch/*",
+    "./lib/*": "./lib/*",
+    "./hooks/*": "./hooks/*",
+    "./components/*": "./components/*",
+    "./styles/*": "./styles/*"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "next": "^14.0.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
 }
