@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { Header, Footer, useClientAuth } from "@repo/ui";
+import { Header, Footer } from "@repo/ui";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 import ToastProvider from "./ToastProvider";
 import FloatingChatButton from "../features/chat/FloatingChatButton";
 
@@ -14,7 +15,7 @@ export default function ClientLayout({
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin");
   const isChatRoom = pathname?.includes("/chat/room");
-  const { isClientAuthenticated, clientUser, clientLogout } = useClientAuth();
+  const { isClientAuthenticated, clientUser, clientLogout } = useAuthStore(); // Changed usage
 
   // Load Bootstrap JS for modal functionality
   useEffect(() => {

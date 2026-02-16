@@ -3,13 +3,15 @@
 import React from "react";
 import { Button } from "@repo/ui";
 import NextImage from "next/image";
-import { useClientAuth } from "@repo/ui";
-import { useCart } from "@repo/ui";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
+import { useCartStore } from "@/store/useCartStore"; // Changed import
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useWishlist } from "@/context/WishlistContext";
+import { useWishlistStore } from "@/store/useWishlistStore";
 
 const Image = NextImage as any;
+// ... (omitted) ...
+
 
 export interface Product {
     id?: string;
@@ -45,12 +47,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
     const price = Number(product.price) || 0;
     const percentageOff = Number(product.percentageOff) || 0;
 
-    const { isClientAuthenticated } = useClientAuth();
-    const { addToCart } = useCart();
+    const { isClientAuthenticated } = useAuthStore();
+    // Using Store
+    const { addToCart } = useCartStore();
     const [isAdding, setIsAdding] = React.useState(false);
     const router = useRouter();
 
-    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+    // Changed usage to store
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore();
     const isLiked = product.id ? isInWishlist(Number(product.id || product._id)) : false;
 
     const handleLike = async (e: React.MouseEvent) => {
@@ -69,7 +73,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
         if (isLiked) {
             await removeFromWishlist(Number(product.id || product._id));
         } else {
-            await addToWishlist(Number(product.id || product._id));
+            // Updated to pass isClientAuthenticated
+            await addToWishlist(Number(product.id || product._id), isClientAuthenticated);
         }
     };
 
@@ -88,7 +93,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
 
         try {
             setIsAdding(true);
-            await addToCart(Number(product.id || product._id), 1);
+            // Pass isClientAuthenticated to store action
+            await addToCart(Number(product.id || product._id), 1, isClientAuthenticated);
         } finally {
             setIsAdding(false);
         }

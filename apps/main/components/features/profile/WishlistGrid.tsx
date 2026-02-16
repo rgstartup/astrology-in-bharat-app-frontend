@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { useWishlist } from "@/context/WishlistContext";
+import { useWishlistStore } from "@/store/useWishlistStore";
 import { ProductCard } from "@/components/features/shop/ProductCard";
 import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
 
 const WishlistGrid: React.FC = () => {
-    const { wishlistItems, expertWishlistItems, isLoading } = useWishlist();
+    const { wishlistItems, expertWishlistItems, isLoading } = useWishlistStore();
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
     const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");

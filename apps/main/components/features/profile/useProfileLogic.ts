@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { useClientAuth } from "@repo/ui";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 import apiClient, {
     getClientProfile, updateClientProfile, uploadClientDocument,
     ClientProfileData, AddressDto, getAllChatSessions, getChatHistory, getMyOrders,
@@ -17,7 +17,7 @@ type ProfileData = ClientProfileData;
 export const useProfileLogic = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { clientUser, isClientAuthenticated, clientLoading, clientBalance, refreshBalance, refreshAuth } = useClientAuth();
+    const { clientUser, isClientAuthenticated, clientLoading, clientBalance, refreshBalance, refreshAuth } = useAuthStore(); // Changed usage
 
     const [profileData, setProfileData] = useState<ProfileData>({});
     const [loading, setLoading] = useState(false);

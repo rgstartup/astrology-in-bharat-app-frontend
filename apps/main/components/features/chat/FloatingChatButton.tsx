@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as LucideIcons from "lucide-react";
 import apiClient from "@/libs/api-profile";
-import { useClientAuth } from "@repo/ui";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 
 import { getActiveChatSessions, getPendingChatSessions } from "@/libs/api-profile";
 
@@ -15,7 +15,7 @@ export default function FloatingChatButton() {
     const [position, setPosition] = useState({ x: 24, y: 24 }); // Bottom-right offset
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-    const { isClientAuthenticated, clientUser } = useClientAuth();
+    const { isClientAuthenticated, clientUser } = useAuthStore(); // Changed usage
     const router = useRouter();
 
     useEffect(() => {

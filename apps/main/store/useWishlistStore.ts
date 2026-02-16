@@ -1,8 +1,5 @@
-"use client";
-
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { create } from "zustand";
 import { toast } from "react-toastify";
-import { useClientAuth } from "@repo/ui";
 import { WishlistService } from "../services/wishlist.service";
 
 export interface WishlistItem {
@@ -39,76 +36,59 @@ export interface WishlistItem {
     };
 }
 
-interface WishlistContextType {
+interface WishlistState {
     wishlistItems: WishlistItem[];
     expertWishlistItems: WishlistItem[];
     isLoading: boolean;
-    addToWishlist: (productId: number) => Promise<void>;
+    
+    // Actions
+    fetchWishlist: (isClientAuthenticated: boolean) => Promise<void>;
+    addToWishlist: (productId: number, isClientAuthenticated: boolean) => Promise<void>;
     removeFromWishlist: (productId: number) => Promise<void>;
     isInWishlist: (productId: number) => boolean;
-    refreshWishlist: () => Promise<void>;
-
-    // Expert Wishlist
-    addExpertToWishlist: (expertId: number) => Promise<void>;
+    
+    // Expert Actions
+    addExpertToWishlist: (expertId: number, isClientAuthenticated: boolean) => Promise<void>;
     removeExpertFromWishlist: (expertId: number) => Promise<void>;
     isExpertInWishlist: (expertId: number) => boolean;
-    toggleExpertWishlist: (expertId: number) => Promise<void>;
+    toggleExpertWishlist: (expertId: number, isClientAuthenticated: boolean) => Promise<void>;
+    
+    // Reset
+    resetWishlist: () => void;
 }
 
-const WishlistContext = createContext<WishlistContextType>({
+export const useWishlistStore = create<WishlistState>((set, get) => ({
     wishlistItems: [],
     expertWishlistItems: [],
     isLoading: false,
-    addToWishlist: async () => { },
-    removeFromWishlist: async () => { },
-    isInWishlist: () => false,
-    refreshWishlist: async () => { },
-    addExpertToWishlist: async () => { },
-    removeExpertFromWishlist: async () => { },
-    isExpertInWishlist: () => false,
-    toggleExpertWishlist: async () => { },
-});
 
-export const WishlistProvider = ({ children }: { children: React.ReactNode }) => {
-    const { isClientAuthenticated } = useClientAuth();
-    const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
-    const [expertWishlistItems, setExpertWishlistItems] = useState<WishlistItem[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    // Fetch Wishlist
-    const fetchWishlist = useCallback(async () => {
+    fetchWishlist: async (isClientAuthenticated: boolean) => {
         if (!isClientAuthenticated) {
-            setWishlistItems([]);
-            setExpertWishlistItems([]);
+            set({ wishlistItems: [], expertWishlistItems: [] });
             return;
         }
 
+        set({ isLoading: true });
         try {
-            setIsLoading(true);
             const [productsData, expertsData] = await Promise.all([
                 WishlistService.getWishlist(),
                 WishlistService.getExpertWishlist()
             ]);
 
-            console.log("Fetched Wishlist Data:", { productsData, expertsData });
+            console.log("Fetched Wishlist Data (Zustand):", { productsData, expertsData });
 
             const pItems = Array.isArray(productsData) ? productsData : (productsData.items || productsData.data || productsData.wishlist || []);
             const eItems = Array.isArray(expertsData) ? expertsData : (expertsData.items || expertsData.data || expertsData.wishlist || []);
 
-            setWishlistItems(pItems);
-            setExpertWishlistItems(eItems);
+            set({ wishlistItems: pItems, expertWishlistItems: eItems });
         } catch (error) {
             console.error("Failed to fetch wishlist:", error);
         } finally {
-            setIsLoading(false);
+            set({ isLoading: false });
         }
-    }, [isClientAuthenticated]);
+    },
 
-    useEffect(() => {
-        fetchWishlist();
-    }, [fetchWishlist]);
-
-    const addToWishlist = async (productId: number) => {
+    addToWishlist: async (productId: number, isClientAuthenticated: boolean) => {
         if (!isClientAuthenticated) {
             toast.error("Please login to use wishlist");
             return;
@@ -117,35 +97,35 @@ export const WishlistProvider = ({ children }: { children: React.ReactNode }) =>
         try {
             await WishlistService.addToWishlist(productId);
             toast.success("Added to wishlist");
-            await fetchWishlist();
+            await get().fetchWishlist(true);
         } catch (error: any) {
             if (error.response?.status === 409) {
                 toast.info("Already in wishlist");
-                await fetchWishlist(); // Sync state if already exists
+                await get().fetchWishlist(true);
             } else {
                 console.error("Add to wishlist error:", error);
                 toast.error("Failed to add to wishlist");
             }
         }
-    };
+    },
 
-    const removeFromWishlist = async (productId: number) => {
+    removeFromWishlist: async (productId: number) => {
         try {
             await WishlistService.removeFromWishlist(productId);
             toast.success("Removed from wishlist");
-            await fetchWishlist();
+            await get().fetchWishlist(true);
         } catch (error) {
             console.error("Remove from wishlist error:", error);
             toast.error("Failed to remove from wishlist");
         }
-    };
+    },
 
-    const isInWishlist = (productId: number) => {
+    isInWishlist: (productId: number) => {
+        const { wishlistItems } = get();
         return wishlistItems.some(item => (Number(item.productId) === Number(productId) || Number(item.product?.id) === Number(productId)));
-    };
+    },
 
-    // Expert Wishlist Handlers
-    const addExpertToWishlist = async (expertId: number) => {
+    addExpertToWishlist: async (expertId: number, isClientAuthenticated: boolean) => {
         if (!isClientAuthenticated) {
             toast.error("Please login to use wishlist");
             return;
@@ -154,66 +134,48 @@ export const WishlistProvider = ({ children }: { children: React.ReactNode }) =>
         try {
             await WishlistService.addExpertToWishlist(expertId);
             toast.success("Added to liked astrologers");
-            await fetchWishlist();
+            await get().fetchWishlist(true);
         } catch (error: any) {
             if (error.response?.status === 409) {
                 toast.info("Already in liked list");
-                await fetchWishlist(); // Sync state if already exists
+                await get().fetchWishlist(true);
             } else {
                 console.error("Add expert wishlist error:", error);
                 toast.error("Failed to add to liked list");
             }
         }
-    };
+    },
 
-    const removeExpertFromWishlist = async (expertId: number) => {
+    removeExpertFromWishlist: async (expertId: number) => {
         try {
             await WishlistService.removeExpertFromWishlist(expertId);
             toast.success("Removed from liked list");
-            await fetchWishlist();
+            await get().fetchWishlist(true);
         } catch (error) {
             console.error("Remove expert wishlist error:", error);
             toast.error("Failed to remove from liked list");
         }
-    };
+    },
 
-    const isExpertInWishlist = (expertId: number) => {
+    isExpertInWishlist: (expertId: number) => {
+        const { expertWishlistItems } = get();
         return expertWishlistItems.some(item => (
             Number(item.expertId) === Number(expertId) ||
             Number(item.expert?.id) === Number(expertId) ||
-            (item.expert?.user && Number((item.expert.user as any).id) === Number(expertId)) // Check nested User ID
+            (item.expert?.user && Number((item.expert.user as any).id) === Number(expertId))
         ));
-    };
+    },
 
-    const toggleExpertWishlist = async (expertId: number) => {
+    toggleExpertWishlist: async (expertId: number, isClientAuthenticated: boolean) => {
+        const { isExpertInWishlist, removeExpertFromWishlist, addExpertToWishlist } = get();
         if (isExpertInWishlist(expertId)) {
             await removeExpertFromWishlist(expertId);
         } else {
-            await addExpertToWishlist(expertId);
+            await addExpertToWishlist(expertId, isClientAuthenticated);
         }
-    };
+    },
 
-    return (
-        <WishlistContext.Provider
-            value={{
-                wishlistItems,
-                expertWishlistItems,
-                isLoading,
-                addToWishlist,
-                removeFromWishlist,
-                isInWishlist,
-                refreshWishlist: fetchWishlist,
-                addExpertToWishlist,
-                removeExpertFromWishlist,
-                isExpertInWishlist,
-                toggleExpertWishlist
-            }}
-        >
-            {children}
-        </WishlistContext.Provider>
-    );
-};
-
-export const useWishlist = () => useContext(WishlistContext);
-
-
+    resetWishlist: () => {
+        set({ wishlistItems: [], expertWishlistItems: [] });
+    }
+}));

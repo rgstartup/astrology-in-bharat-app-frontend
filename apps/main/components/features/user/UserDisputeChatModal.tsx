@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { X, Send, Paperclip, Image as ImageIcon, FileText, Download, AlertCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import { getNotificationSocket, getSupportSocket } from "@packages/ui/src/utils/socket";
-import { useClientAuth } from "@repo/ui";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 import { getDisputeMessages, sendDisputeMessage, markDisputeMessagesRead, uploadClientDocument, getDisputeById } from "@/libs/api-profile";
 
 // Define message types locally since we can't import from admin
@@ -36,7 +36,7 @@ const FileTextIcon = FileText as any;
 const AlertCircleIcon = AlertCircle as any;
 
 export default function UserDisputeChatModal({ disputeId, category, onClose }: UserDisputeChatModalProps) {
-    const { clientUser } = useClientAuth();
+    const { clientUser } = useAuthStore(); // Changed usage
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [loading, setLoading] = useState(false);
