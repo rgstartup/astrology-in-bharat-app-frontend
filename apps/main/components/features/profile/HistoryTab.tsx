@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+const NextLink = Link as any;
 
 interface HistoryTabProps {
     loadingHistory: boolean;
@@ -45,7 +46,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                 ) : (
                     <div className="session-list">
                         {consultationHistory.map((session: any, idx: number) => (
-                            <div key={session.id || idx} className="session-card border rounded-4 p-0 mb-4 overflow-hidden shadow-sm transition-all hover-shadow-md">
+                            <div key={session.id || idx} className="session-card border rounded-4 p-0 mb-4 overflow-hidden shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
                                 <div className="bg-light p-3 d-flex justify-content-between align-items-center border-bottom flex-wrap gap-3">
                                     <div className="d-flex flex-column">
                                         <span className="text-muted small fw-bold text-uppercase">Session ID</span>
@@ -63,7 +64,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                                     </div>
                                     <div className="d-flex flex-column">
                                         <span className="text-muted small fw-bold text-uppercase">Amount Paid</span>
-                                        <span className="fw-bold text-orange-500">₹{session.totalCost || 0}</span>
+                                        <span className="fw-bold text-primary">₹{session.totalCost || 0}</span>
                                     </div>
                                     <div className="d-flex flex-column align-items-end gap-2">
                                         <span className={`px-3 py-1 rounded-pill text-[10px] uppercase font-bold tracking-wide ${session.terminatedBy === 'admin'
@@ -146,9 +147,9 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                                                 )}
                                             </div>
 
-                                            <Link href={`/astrologer-details?id=${session.expert?.id}`} className="btn-orange-gradient px-4 py-2 rounded-pill text-white text-decoration-none d-inline-block fw-bold shadow-sm">
+                                            <NextLink href={`/astrologer-details?id=${session.expert?.id}`} className="bg-linear-to-r from-primary to-primary-hover px-4 py-2 rounded-pill text-white text-decoration-none d-inline-block fw-bold shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/30">
                                                 Consult Again
-                                            </Link>
+                                            </NextLink>
                                         </div>
                                     </div>
                                 )}
@@ -157,28 +158,10 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                     </div>
                 )}
             </div>
-            <style jsx>{`
-                .hover-shadow-md:hover {
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-                    transform: translateY(-2px);
-                }
-                .btn-orange-gradient {
-                    background: linear-gradient(135deg, #fd6410 0%, #ff8c00 100%);
-                    transition: all 0.3s ease;
-                }
-                .btn-orange-gradient:hover {
-                    transform: scale(1.05);
-                    box-shadow: 0 4px 12px rgba(253, 100, 16, 0.3);
-                }
-                .last-border-none:last-child {
-                    border-bottom: none !important;
-                }
-                .text-orange-500 {
-                    color: #fd6410;
-                }
-            `}</style>
         </div>
     );
 };
 
 export default HistoryTab;
+
+

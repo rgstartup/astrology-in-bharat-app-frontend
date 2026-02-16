@@ -1,3 +1,70 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+:root {
+  /* Brand Colors */
+  --primary: #FF6B00;
+  --primary-hover: #E65100;
+  --secondary: #4A1D1F;
+  --accent-gold: #D4AF37;
+  --bg-light: #FFF9F4;
+
+  /* Bootstrap Overrides */
+  --bs-primary: var(--primary) !important;
+  --bs-primary-rgb: 255, 107, 0 !important;
+  --bs-link-color: var(--primary) !important;
+  --bs-link-hover-color: var(--primary-hover) !important;
+  --bs-border-radius: 0.5rem !important;
+}
+
+/* Global Styles */
+body {
+  background-color: var(--bg-light);
+  color: #1A1A1A;
+}
+
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.text-primary {
+  color: var(--primary) !important;
+}
+
+/* Premium Button Style */
+.btn-premium {
+  background-color: var(--primary);
+  color: white !important;
+  padding: 0.625rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-premium:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 8px 25px rgba(255, 107, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Specific component overrides */
+a.btn-ask-expert,
+.btn-ask-expert {
+  background-color: var(--primary) !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  border-radius: 25px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+  font-weight: bold !important;
+  font-size: 14px !important;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.15) !important;
+}

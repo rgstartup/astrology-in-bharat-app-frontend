@@ -2,7 +2,7 @@
 import React, { useState, useMemo, lazy, Suspense } from "react";
 
 // Components
-import { StatsCards } from "../../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 
 // Icons
 import {
@@ -159,3 +159,6 @@ export default function DashboardPage() {
     </main>
   );
 }
+
+
+

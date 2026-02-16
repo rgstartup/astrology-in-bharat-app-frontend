@@ -2,9 +2,9 @@
 import React, { useState, useMemo } from "react";
 
 // Components
-import { StatsCards } from "../../../../shared/components/StatsCard";
-import { SearchInput } from "../../../../shared/components/SearchInput";
-import { Button } from "../../../../shared/components/Button";
+import { StatsCards } from "@repo/ui";
+import { SearchInput } from "@repo/ui";
+import { Button } from "@repo/ui";
 import { ReviewCard } from "@/app/components/reviews/ReviewCard";
 
 // Icons
@@ -109,3 +109,6 @@ export default function ReviewsPage() {
     </main>
   );
 }
+
+
+

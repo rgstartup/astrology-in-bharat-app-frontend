@@ -2,7 +2,7 @@
 
 import React from "react";
 import { User, Mail, Shield, Calendar } from "lucide-react";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 const UserComp = User as any;
 const MailComp = Mail as any;
@@ -82,3 +82,7 @@ export default function AdminProfilePage() {
         </div>
     );
 }
+
+
+
+

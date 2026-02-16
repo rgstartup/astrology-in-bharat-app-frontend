@@ -23,3 +23,5 @@ export interface BankAccount {
     ifsc_code: string;
     is_primary: boolean;
 }
+
+

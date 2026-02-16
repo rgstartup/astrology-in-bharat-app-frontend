@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from "@shared/components/Button";
+import { Button } from "@repo/ui";
 
 interface ProfileFormProps {
     profileData: any;
@@ -43,7 +43,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
             <div className="card border-0 shadow-sm rounded-4 mb-4">
                 <div className="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
                     <h5 className="fw-bold mb-0">
-                        <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "#ffefe5", color: "#fd6410" }}>
+                        <span className="me-2 p-2 rounded-circle" style={{ backgroundColor: "rgba(242, 94, 10, 0.1)", color: "var(--primary)" }}>
                             <i className="fa-regular fa-id-card"></i>
                         </span>
                         Personal Details
@@ -421,3 +421,5 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
 };
 
 export default ProfileForm;
+
+

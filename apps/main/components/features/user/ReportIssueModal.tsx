@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { apiClient } from "@packages/ui/src/context/ClientAuthContext";
+import { apiClient } from "@repo/ui";
 
 interface ReportIssueModalProps {
     isOpen: boolean;
@@ -296,3 +296,5 @@ export default function ReportIssueModal({
         </div>
     );
 }
+
+

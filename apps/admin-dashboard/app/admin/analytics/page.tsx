@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 
 // Components
-import { StatsCards } from "../../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 import { AnalyticsHeader } from "@/app/components//analytics/AnalyticsHeader";
 import { RevenueChart } from "@/app/components/analytics/RevenueChart";
 import { UserGrowthChart } from "@/app/components/analytics/UserGrowthChart";
@@ -73,3 +73,6 @@ export default function AnalyticsPage() {
     </main>
   );
 }
+
+
+

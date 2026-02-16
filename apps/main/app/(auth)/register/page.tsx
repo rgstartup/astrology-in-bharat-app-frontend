@@ -6,7 +6,7 @@ import React, { useState, useCallback, FormEvent, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 
 // --- Types ---
 interface RegistrationPayload {
@@ -216,7 +216,7 @@ const Page: React.FC = () => {
                             height={80}
                             width={80}
                             className="rounded-circle object-cover"
-                            style={{ border: "2px solid #fd6410", padding: "2px" }}
+                            style={{ border: "2px solid var(--primary-color, black)", padding: "2px" }}
                           />
                           {expert.is_online && (
                             <span className="position-absolute bottom-0 end-0 bg-success border border-white rounded-circle" style={{ width: "12px", height: "12px" }}></span>
@@ -422,7 +422,7 @@ const Page: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="btn  w-100 mt-4 py-2 fw-semibold sign-button" style={{ backgroundColor: "#fd6410", color: "white" }}
+                  className="btn w-100 mt-4 py-2 fw-semibold bg-primary hover:bg-primary-hover text-white border-0 transition-all font-bold"
                   disabled={isLoading}
                 >
                   {isLoading ? "Signing Up..." : "Sign Up"}
@@ -437,3 +437,5 @@ const Page: React.FC = () => {
 };
 
 export default Page;
+
+

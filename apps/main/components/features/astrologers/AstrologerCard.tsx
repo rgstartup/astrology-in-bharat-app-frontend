@@ -4,11 +4,11 @@ import NextLink from "next/link";
 const Link = NextLink as any;
 
 import React, { useState, useRef } from "react";
-import { Button } from "@shared/components/Button";
+import { Button } from "@repo/ui";
 import { Modal } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 import { toast } from "react-toastify";
 
 interface Astrologer {
@@ -320,7 +320,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
           {/* Experience */}
           <div className="px-4 my-2 text-[16px] text-[#1a1a1a]">
             <strong>Exp:</strong>
-            <span className="ml-2 font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
+            <span className="ml-2 font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded">
               {experience} Years
             </span>
           </div>
@@ -422,3 +422,5 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
 };
 
 export default AstrologerCard;
+
+

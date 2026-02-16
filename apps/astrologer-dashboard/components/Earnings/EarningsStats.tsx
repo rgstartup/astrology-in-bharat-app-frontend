@@ -1,6 +1,6 @@
 import React from "react";
 import { Landmark, Wallet, ArrowUpRight, TrendingUp } from "lucide-react";
-import { StatsCards } from "../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 import { EarningsStatsData } from "./types";
 
 interface EarningsStatsProps {
@@ -57,3 +57,5 @@ export default function EarningsStats({ stats }: EarningsStatsProps) {
         </div>
     );
 }
+
+

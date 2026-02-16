@@ -1,6 +1,6 @@
 import React from "react";
 import { Calendar, CheckCircle, XCircle, Wallet } from "lucide-react";
-import { StatsCards } from "../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 import { DashboardStats } from "@/lib/dashboard";
 
 interface AppointmentStatsProps {
@@ -52,3 +52,5 @@ export default function AppointmentStats({ stats }: AppointmentStatsProps) {
         </section>
     );
 }
+
+

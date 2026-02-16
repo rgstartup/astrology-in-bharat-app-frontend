@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { X, Filter, Users, Gift, Loader2, TrendingUp, Calendar, MapPin, Star, ChevronDown, ChevronUp, Eye } from "lucide-react";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 import { assignCouponBulk, getCoupons, getFilteredUsersCount, getFilteredUsers } from "@/src/services/admin.service";
 import { toast } from "react-toastify";
 
@@ -535,3 +535,7 @@ const BulkAssignCouponModal = ({ onClose, onSuccess }: Props) => {
 };
 
 export default BulkAssignCouponModal;
+
+
+
+

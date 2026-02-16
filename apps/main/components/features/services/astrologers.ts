@@ -127,3 +127,5 @@ export const ListOfAllAstrologers: AstrologerData[] = [
         modalId: "exampleModal8",
     },
 ];
+
+

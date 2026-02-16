@@ -117,7 +117,7 @@ const AstrologerFilterModal: React.FC<AstrologerFilterModalProps> = ({
                         <div className="mb-4">
                             <div className="d-flex justify-content-between mb-2">
                                 <label className="form-label font-bold text-gray-700">Price Range</label>
-                                <span className="px-3 py-1 rounded-full font-bold text-sm shadow-sm" style={{ backgroundColor: "#F25E0A", color: "#fff" }}>
+                                <span className="px-3 py-1 rounded-full font-bold text-sm shadow-sm bg-primary text-white">
                                     Up to ₹{localFilter.maxPrice}/min
                                 </span>
                             </div>
@@ -125,7 +125,8 @@ const AstrologerFilterModal: React.FC<AstrologerFilterModalProps> = ({
                                 type="range"
                                 className="form-range w-full h-2 rounded-lg appearance-none cursor-pointer"
                                 style={{
-                                    background: `linear-gradient(to right, #F25E0A ${(localFilter.maxPrice / 1000) * 100}%, #e5e7eb ${(localFilter.maxPrice / 1000) * 100}%)`
+                                    background: `linear-gradient(to right, var(--color-primary, #FFC0CB) ${(localFilter.maxPrice / 1000) * 100}%, #e5e7eb ${(localFilter.maxPrice / 1000) * 100}%)`,
+                                    accentColor: "var(--color-primary, #FFC0CB)"
                                 }}
                                 min="0"
                                 max="1000"
@@ -210,3 +211,5 @@ const AstrologerFilterModal: React.FC<AstrologerFilterModalProps> = ({
 };
 
 export default AstrologerFilterModal;
+
+

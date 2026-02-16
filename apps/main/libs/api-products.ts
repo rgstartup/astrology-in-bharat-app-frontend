@@ -36,3 +36,5 @@ export const getProducts = async (): Promise<Product[]> => {
         return []; // backend band → kuch bhi show nahi
     }
 };
+
+

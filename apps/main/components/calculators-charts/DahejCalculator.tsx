@@ -446,7 +446,7 @@ const DahejCalculator = () => {
             <section className="relative pt-32 pb-20 bg-gradient-to-br from-[#301118] via-[#4a1c26] to-[#301118] text-white overflow-hidden">
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-[#d4af37] opacity-[0.05] rounded-full blur-[100px] animate-pulse-soft"></div>
-                    <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-[#fd6410] opacity-[0.03] rounded-full blur-[100px] animate-pulse-soft"></div>
+                    <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-primary opacity-[0.03] rounded-full blur-[100px] animate-pulse-soft"></div>
 
                     <div className="absolute top-[18%] right-[10%] opacity-10 animate-float">
                         <GiGoldBar size={180} className="text-white" />
@@ -769,3 +769,4 @@ const DahejCalculator = () => {
 };
 
 export default DahejCalculator;
+

@@ -221,3 +221,5 @@ const HoroscopePage = () => {
 };
 
 export default HoroscopePage;
+
+

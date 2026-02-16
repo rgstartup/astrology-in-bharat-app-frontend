@@ -4,3 +4,5 @@ import ProfileManagement from '@/components/ProfileManagement/ProfileManagement'
 export default function ProfilePage() {
     return <ProfileManagement />;
 }
+
+

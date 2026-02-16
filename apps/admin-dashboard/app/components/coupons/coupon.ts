@@ -13,3 +13,6 @@ export interface Coupon {
   status: "active" | "inactive" | "expired";
   createdBy: string;
 }
+
+
+

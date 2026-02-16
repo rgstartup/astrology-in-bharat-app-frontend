@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Users, CalendarCheck, Clock, Wallet, CheckCircle, XCircle } from "lucide-react";
-import { StatsCards } from "../../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 import { RecentActivity } from "@/components/dashboard/ActivityFeed";
 import { UpcomingAppointments } from "@/components/dashboard/UserTable";
 import { ManageConsultaions } from "@/components/dashboard/ManageConsultaions";
@@ -231,3 +231,5 @@ const Page = () => {
 };
 
 export default Page;
+
+

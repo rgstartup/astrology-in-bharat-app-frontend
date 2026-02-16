@@ -87,14 +87,14 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ label, value }) => {
         <p className="m-0 text-[11px] font-black uppercase tracking-[3px] text-burgundy/50">
           {label}
         </p>
-        <p className="m-0 text-[11px] font-black uppercase tracking-[3px] text-[#fd6410]">
+        <p className="m-0 text-[11px] font-black uppercase tracking-[3px] text-primary">
           {value}%
         </p>
       </div>
 
-      <div className="w-full h-3 rounded-full bg-[#fd6410]/10 overflow-hidden border border-orange-100">
+      <div className="w-full h-3 rounded-full bg-primary/10 overflow-hidden border border-orange-100">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-[#fd6410] to-[#ff8c42] transition-all duration-700"
+          className="h-full rounded-full bg-gradient-to-r from-primary to-primary-hover transition-all duration-700"
           style={{ width: `${value}%` }}
         />
       </div>
@@ -160,7 +160,7 @@ const LoveCompatibilityCalcultor: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fffaf7] selection:bg-[#fd6410]/20">
+    <div className="min-h-screen bg-[#fffaf7] selection:bg-primary/20">
       <style dangerouslySetInnerHTML={{ __html: premiumCardStyles }} />
 
       {/* Reusable Hero */}
@@ -174,7 +174,7 @@ const LoveCompatibilityCalcultor: React.FC = () => {
       {/* Form Section */}
       <section className="py-24 relative overflow-hidden">
         <div className="container px-6">
-          <div className="glass-card rounded-[3rem] p-8 md:p-16 shadow-[0_20px_50px_rgba(48,17,24,0.1)] border-t-4 border-t-[#fd6410]/50 relative overflow-hidden">
+          <div className="glass-card rounded-[3rem] p-8 md:p-16 shadow-[0_20px_50px_rgba(48,17,24,0.1)] border-t-4 border-t-primary/50 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none">
               <GiLotus size={150} />
             </div>
@@ -295,29 +295,29 @@ const LoveCompatibilityCalcultor: React.FC = () => {
 
                   <div className="relative z-10">
                     <div className="text-center mb-16">
-                      <span className="inline-block bg-[#fd6410]/10 text-[#fd6410] px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
+                      <span className="inline-block bg-primary/10 text-primary px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
                         Match Results
                       </span>
 
                       <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-6 tracking-tight">
-                        Your <span className="text-[#fd6410]">Love Score</span>
+                        Your <span className="text-primary">Love Score</span>
                       </h2>
 
-                      <div className="w-32 h-1 bg-gradient-to-r from-transparent via-[#fd6410] to-transparent mx-auto mb-16"></div>
+                      <div className="w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-16"></div>
                     </div>
 
                     <div className="flex flex-col items-center">
                       {/* Love Ring */}
                       <div className="relative mb-16">
                         <div className="w-64 h-64 md:w-80 md:h-80 rounded-full bg-white shadow-2xl flex items-center justify-center p-8 border-8 border-orange-50 relative group">
-                          <div className="absolute inset-0 rounded-full border-8 border-[#fd6410] border-t-transparent animate-spin-slow opacity-20"></div>
+                          <div className="absolute inset-0 rounded-full border-8 border-primary border-t-transparent animate-spin-slow opacity-20"></div>
 
                           <div className="text-center">
                             <span className="block text-7xl md:text-9xl font-black text-burgundy leading-none group-hover:scale-110 transition-transform duration-500">
                               {result.love}
-                              <span className="text-4xl text-[#fd6410]">%</span>
+                              <span className="text-4xl text-primary">%</span>
                             </span>
-                            <span className="text-[12px] font-black uppercase tracking-[4px] text-[#fd6410] mt-4 block">
+                            <span className="text-[12px] font-black uppercase tracking-[4px] text-primary mt-4 block">
                               Cosmic Bond
                             </span>
                           </div>
@@ -329,7 +329,7 @@ const LoveCompatibilityCalcultor: React.FC = () => {
                       {/* Message */}
                       <div className="max-w-2xl text-center mb-14">
                         <div className="bg-burgundy text-white p-10 rounded-[3rem] shadow-2xl relative">
-                          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#fd6410] p-4 rounded-2xl shadow-lg">
+                          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary p-4 rounded-2xl shadow-lg">
                             <GiSparkles size={28} />
                           </div>
 
@@ -346,8 +346,8 @@ const LoveCompatibilityCalcultor: React.FC = () => {
                             Relationship Breakdown
                           </h4>
                           <div className="px-4 py-2 bg-white rounded-xl shadow-sm border border-orange-50 flex items-center gap-2">
-                            <FaStar className="text-[#fd6410]" size={14} />
-                            <span className="text-xs font-black text-[#fd6410] uppercase tracking-widest">
+                            <FaStar className="text-primary" size={14} />
+                            <span className="text-xs font-black text-primary uppercase tracking-widest">
                               Premium Insight
                             </span>
                           </div>
@@ -360,7 +360,7 @@ const LoveCompatibilityCalcultor: React.FC = () => {
                         </div>
 
                         <div className="mt-10 flex items-start gap-4 bg-white rounded-2xl p-6 border border-orange-50 shadow-sm">
-                          <div className="w-12 h-12 rounded-2xl bg-[#fd6410]/10 flex items-center justify-center text-[#fd6410]">
+                          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                             <FaBalanceScale size={18} />
                           </div>
                           <div>
@@ -387,3 +387,5 @@ const LoveCompatibilityCalcultor: React.FC = () => {
 };
 
 export default LoveCompatibilityCalcultor;
+
+

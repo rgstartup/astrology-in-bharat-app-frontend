@@ -9,12 +9,12 @@ const StaticPageLayout: React.FC<StaticPageLayoutProps> = ({ title, children }) 
     return (
         <section className="banner-part light-back p-20 md:py-20 min-h-[600px]">
             <div className="container">
-                <div className="contant-hero bg-white/90 backdrop-blur-sm px-10 py-12 md:px-20 md:py-20 rounded-[20px] border border-[#fd64102b] shadow-lg" style={{paddingLeft:"60px" , paddingRight:"60px"}}>
+                <div className="contant-hero bg-white/90 backdrop-blur-sm px-10 py-12 md:px-20 md:py-20 rounded-[20px] border border-primary/20 shadow-lg" style={{ paddingLeft: "60px", paddingRight: "60px" }}>
                     <div className="mb-10 text-center md:text-left">
                         <h1 className="text-3xl md:text-5xl font-bold text-[#2b1b1b] mb-4">
                             {title}
                         </h1>
-                        <div className="w-24 h-1 bg-[#fd6410] rounded-full mx-auto md:mx-0"></div>
+                        <div className="w-24 h-1 bg-primary rounded-full mx-auto md:mx-0"></div>
                     </div>
                     <div className="static-content text-[#333333] leading-relaxed text-sm md:text-base
                         [&_h2]:text-xl [&_h2]:md:text-3xl [&_h2]:font-bold [&_h2]:text-[#301118] [&_h2]:mt-8 [&_h2]:mb-4 
@@ -31,3 +31,5 @@ const StaticPageLayout: React.FC<StaticPageLayoutProps> = ({ title, children }) 
 };
 
 export default StaticPageLayout;
+
+

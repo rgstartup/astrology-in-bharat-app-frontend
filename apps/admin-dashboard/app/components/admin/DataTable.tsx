@@ -1,10 +1,8 @@
 "use client";
 import React, { useState, useMemo, useCallback, memo } from "react";
 import { ChevronLeft, ChevronRight, Search, Eye } from "lucide-react";
-import { SearchInput } from "../../../../shared/components/SearchInput";
-import { Loading } from "../../../../shared/components/Loading";
+import { SearchInput, Loading, Button } from "@repo/ui";
 const LoadingComp = Loading as any;
-import { Button } from "../../../../shared/components/Button";
 
 const ChevronLeftComp = ChevronLeft as any;
 const ChevronRightComp = ChevronRight as any;
@@ -382,3 +380,6 @@ export function DataTable<T extends { id: number | string }>({
     </div>
   );
 }
+
+
+

@@ -144,8 +144,7 @@ const VerifyEmailContent: React.FC = () => {
                                 <div className="mt-4">
                                     <Link
                                         href="/sign-in"
-                                        className="btn w-100 py-2 fw-semibold"
-                                        style={{ backgroundColor: "#fd6410", color: "white" }}
+                                        className="btn w-100 py-2 fw-semibold bg-primary hover:bg-primary-hover text-white border-0 transition-all font-bold"
                                     >
                                         {error ? "Go to Sign In" : "Continue to Sign In"}
                                     </Link>
@@ -179,3 +178,5 @@ const Page: React.FC = () => {
 };
 
 export default Page;
+
+

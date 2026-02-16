@@ -30,3 +30,5 @@ export const requestWithdrawal = async (amount: number, bankAccountId: string) =
         throw error;
     }
 };
+
+

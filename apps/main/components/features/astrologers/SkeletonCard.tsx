@@ -47,3 +47,5 @@ export const AstrologerGridSkeleton = ({ count = 8 }: { count?: number }) => {
         </div>
     );
 };
+
+

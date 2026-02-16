@@ -14,7 +14,7 @@ import {
   PhoneOff
 
 } from "lucide-react";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 import type { LiveSession } from "@/app/components/live-sessions/session";
 
 interface LiveSessionCardProps {
@@ -240,3 +240,6 @@ export function LiveSessionCard({
     </div>
   );
 }
+
+
+

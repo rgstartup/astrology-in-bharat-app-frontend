@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 import { XCircle, CheckCircle, Eye, Calendar, IndianRupee, MessageSquare } from "lucide-react";
 import type { Dispute } from "@/app/components/dispute/dispute";
 import { updateDisputeStatus } from "@/src/services/admin.service";
@@ -199,3 +199,6 @@ export function DisputeModal({ dispute, onClose }: DisputeModalProps) {
     </div>
   );
 }
+
+
+

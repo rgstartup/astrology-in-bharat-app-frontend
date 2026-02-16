@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { Button } from "@shared/components/Button";
+import { Button } from "@repo/ui";
 import NextImage from "next/image";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
-import { useCart } from "@packages/ui/src/context/CartContext";
+import { useClientAuth } from "@repo/ui";
+import { useCart } from "@repo/ui";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
@@ -187,3 +187,5 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
         </div>
     );
 };
+
+

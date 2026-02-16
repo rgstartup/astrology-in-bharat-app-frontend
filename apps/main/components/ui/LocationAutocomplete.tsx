@@ -123,7 +123,7 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
       <div className="relative group/input">
         <input
           type="text"
-          className="form-control rounded-3 py-3 pl-10 pr-10 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-[#fd641022] transition-all w-full"
+          className="form-control rounded-3 py-3 pl-10 pr-10 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-primary/10 transition-all w-full"
           placeholder={placeholder}
           value={query}
           onChange={(e) => {
@@ -155,12 +155,12 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
               {results.map((result) => (
                 <li
                   key={result.place_id}
-                  className="px-4 py-3 hover:bg-orange-50 cursor-pointer transition-colors border-b border-gray-50 last:border-0"
+                  className="px-4 py-3 hover:bg-primary/5 cursor-pointer transition-colors border-b border-gray-50 last:border-0"
                   onClick={() => handleSelect(result)}
                 >
                   <div className="flex items-start gap-3">
                     <FaMapMarkerAlt
-                      className="text-[#fd6410] mt-1 shrink-0"
+                      className="text-primary mt-1 shrink-0"
                       size={12}
                     />
                     <span className="text-sm text-gray-700 leading-tight">
@@ -178,3 +178,5 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
 };
 
 export default LocationAutocomplete;
+
+

@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { PATHS } from "@repo/routes";
 
+const NextLink = Link as any;
+
 interface OrdersTabProps {
     orders: any[];
     loadingOrders: boolean;
@@ -48,9 +50,9 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                         </div>
                         <h6 className="fw-bold">No Orders Found</h6>
                         <p className="text-muted small">You haven't placed any orders yet.</p>
-                        <Link href={PATHS.BUY_PRODUCTS} className="btn-orange-gradient px-4 py-2 mt-2 rounded-pill text-white text-decoration-none d-inline-block">
+                        <NextLink href={PATHS.BUY_PRODUCTS} className="btn-orange-gradient px-4 py-2 mt-2 rounded-pill text-white text-decoration-none d-inline-block">
                             Shop Now
-                        </Link>
+                        </NextLink>
                     </div>
                 ) : (
                     <div className="order-list">
@@ -130,7 +132,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                                         <div className="text-muted small d-flex justify-content-between mt-1">
                                                             <span>Qty: {item.quantity || 1}</span>
                                                             {order.status?.toLowerCase() === 'delivered' && (
-                                                                <Link href="#" className="text-orange-500 text-decoration-none fw-bold">Write Review</Link>
+                                                                <NextLink href="#" className="text-orange-500 text-decoration-none fw-bold">Write Review</NextLink>
                                                             )}
                                                         </div>
                                                     </div>
@@ -154,7 +156,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                                     <button
                                                         onClick={() => onViewChat(orderDisputes[order.id])}
                                                         className="btn btn-primary btn-sm rounded-pill px-3 position-relative"
-                                                        style={{ backgroundColor: '#fd6410', borderColor: '#fd6410', color: 'white' }}
+                                                        style={{ backgroundColor: 'var(--primary)', borderColor: 'var(--primary)', color: 'white' }}
                                                     >
                                                         <i className="fa-solid fa-comments me-1"></i>
                                                         Chat Support
@@ -227,3 +229,5 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
 };
 
 export default OrdersTab;
+
+

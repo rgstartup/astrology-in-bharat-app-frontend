@@ -90,3 +90,5 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
 };
 
 export default PlaceCard;
+
+

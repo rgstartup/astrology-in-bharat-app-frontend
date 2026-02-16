@@ -33,7 +33,7 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Modal Header */}
-                <div className="d-flex justify-content-between align-items-center p-4 border-bottom" style={{ backgroundColor: "#fd6410" }}>
+                <div className="d-flex justify-content-between align-items-center p-4 border-bottom" style={{ backgroundColor: "var(--primary)" }}>
                     <div className="d-flex align-items-center gap-3">
                         <div
                             className="rounded-circle overflow-hidden"
@@ -89,7 +89,7 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
                                         style={{
                                             width: "40px",
                                             height: "40px",
-                                            border: `2px solid ${msg.senderType === 'user' ? '#fd6410' : '#e0e0e0'}`
+                                            border: `2px solid ${msg.senderType === 'user' ? 'var(--primary)' : '#e0e0e0'}`
                                         }}
                                     >
                                         <img
@@ -160,3 +160,5 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
 };
 
 export default ConsultationChatModal;
+
+

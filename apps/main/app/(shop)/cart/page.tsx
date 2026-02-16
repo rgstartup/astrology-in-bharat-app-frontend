@@ -2,10 +2,10 @@
 import React from "react";
 import ProductsCarousel from "@/components/features/shop/ProductsCarousel";
 import { Button, Form } from "react-bootstrap";
-import { useCart } from "@packages/ui/src/context/CartContext";
+import { useCart } from "@repo/ui";
 
 import { useRouter } from "next/navigation";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 
 const CartPage: React.FC = () => {
   const router = useRouter();
@@ -212,3 +212,5 @@ const CartPage: React.FC = () => {
 };
 
 export default CartPage;
+
+

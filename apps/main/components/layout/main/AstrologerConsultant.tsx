@@ -30,3 +30,4 @@ const  AstrologerConsultant = () => {
 }
 
 export default AstrologerConsultant
+

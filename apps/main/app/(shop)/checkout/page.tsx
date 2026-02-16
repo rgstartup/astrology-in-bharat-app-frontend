@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCart } from "@packages/ui/src/context/CartContext";
+import { useCart } from "@repo/ui";
 import apiClient, { getClientProfile, applyCoupon } from "@/libs/api-profile";
 import { toast } from "react-toastify";
 import { loadRazorpay } from "@/libs/razorpay";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 
 const CheckoutContent = () => {
   const router = useRouter();
@@ -694,3 +694,5 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
+
+

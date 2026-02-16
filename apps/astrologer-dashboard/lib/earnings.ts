@@ -11,3 +11,5 @@ export const getEarningsStats = async (range: string = 'last_6_months'): Promise
         throw error;
     }
 };
+
+

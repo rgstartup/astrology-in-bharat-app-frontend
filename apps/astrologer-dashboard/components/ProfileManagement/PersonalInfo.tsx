@@ -1,8 +1,8 @@
 import React from "react";
 import { Edit3, Save, ChevronDown, ChevronUp, X, Plus } from "lucide-react";
 import { Profile, Gender } from "./types";
-import { Button } from "../../../shared/components/Button";
-import { Avatar } from "../../../shared/components/Avatar";
+import { Button } from "@repo/ui";
+import { Avatar } from "@repo/ui";
 
 interface PersonalInfoProps {
     profile: Profile;
@@ -458,3 +458,5 @@ export default function PersonalInfo({
         </div>
     );
 }
+
+

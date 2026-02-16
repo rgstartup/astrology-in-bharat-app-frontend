@@ -22,3 +22,4 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, onSearchChange }) =>
 }
 
 export default SearchBar
+

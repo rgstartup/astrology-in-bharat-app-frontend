@@ -63,7 +63,7 @@ const HomePage: React.FC = () => {
                     Across India
                   </li>
                 </ul>
-                <a href="#" className="btn-link wfc mt-4 mb-4">
+                <a href="#" className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all mt-4 mb-4 inline-block text-decoration-none">
                   Start Consultation
                 </a>
               </div>
@@ -102,7 +102,7 @@ const HomePage: React.FC = () => {
 
           <div className="search-box">
             <input type="text" placeholder="Search Astrologer By Name..." />
-            <button>Search</button>
+            <button className="bg-primary hover:bg-primary-hover text-white transition-all">Search</button>
           </div>
 
           {/* <!-- Astrologer Card 1 --> */}
@@ -117,7 +117,7 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="view-all">
-            <a href="#" className="btn-link wfc m-auto">
+            <a href="#" className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all m-auto flex items-center justify-center w-fit text-decoration-none">
               View All Astrologers
             </a>
           </div>
@@ -438,3 +438,5 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
+

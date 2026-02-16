@@ -1,6 +1,6 @@
 import React from "react";
 import { Wallet, Landmark, Clock, ArrowUpRight } from "lucide-react";
-import { StatsCards } from "../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 import { WalletStatsData } from "./types";
 
 interface WalletStatsProps {
@@ -53,3 +53,5 @@ export default function WalletStats({ stats }: WalletStatsProps) {
         </div>
     );
 }
+
+

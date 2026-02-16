@@ -3,8 +3,8 @@ import React, { useState, useMemo, lazy, Suspense, useEffect } from "react";
 
 // Components
 import { DataTable } from "@/app/components/admin/DataTable";
-import { StatsCards } from "../../../../shared/components/StatsCard";
-import { Loading } from "../../../../shared/components/Loading";
+import { StatsCards } from "@repo/ui";
+import { Loading } from "@repo/ui";
 
 // Data config and types
 import { getStatsConfig, getColumns, type ExpertStats } from "@/app/components/expert/expertsConfig";
@@ -185,3 +185,6 @@ export default function ExpertsPage() {
     </>
   );
 }
+
+
+

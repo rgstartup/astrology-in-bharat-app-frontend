@@ -129,3 +129,6 @@ export function UserInfoCard({ user, astrologer, type }: UserInfoCardProps) {
     </div>
   );
 }
+
+
+

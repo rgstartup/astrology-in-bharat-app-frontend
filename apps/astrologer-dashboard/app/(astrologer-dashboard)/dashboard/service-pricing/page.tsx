@@ -5,7 +5,7 @@ import { Star, Edit3, Gift, Save, X, Loader2, Trash2 } from "lucide-react";
 import { getProfile, updateProfile } from "@/lib/profile";
 import { Profile } from "@/components/ProfileManagement/types";
 import { toast } from "react-toastify";
-import { Button } from "../../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 const ServicePricingPage = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -365,3 +365,4 @@ const ServicePricingPage = () => {
 };
 
 export default ServicePricingPage;
+

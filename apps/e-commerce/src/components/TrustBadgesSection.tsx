@@ -118,3 +118,4 @@ const TrustBadgesSection = () => {
 };
 
 export default TrustBadgesSection;
+

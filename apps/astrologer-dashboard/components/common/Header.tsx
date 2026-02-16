@@ -5,9 +5,9 @@ import apiClient from "@/lib/apiClient";
 import { socket } from "@/lib/socket";
 import { toast } from "react-toastify";
 
-import { SearchInput } from "../../../shared/components/SearchInput";
-import { Avatar } from "../../../shared/components/Avatar";
-import { NotificationBell } from "../../../shared/components/NotificationBell";
+import { SearchInput } from "@repo/ui";
+import { Avatar } from "@repo/ui";
+import { NotificationBell } from "@repo/ui";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -340,3 +340,5 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
     </header>
   );
 };
+
+

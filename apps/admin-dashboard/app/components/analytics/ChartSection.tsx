@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo } from "react";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 import { TrendingUp } from "lucide-react";
 import {
   LineChart,
@@ -225,3 +225,6 @@ export default function ChartSection({ activeTab, setActiveTab }: ChartSectionPr
     </article>
   );
 }
+
+
+

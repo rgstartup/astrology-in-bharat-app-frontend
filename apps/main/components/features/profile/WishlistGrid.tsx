@@ -20,7 +20,7 @@ const WishlistGrid: React.FC = () => {
     if (isLoading) {
         return (
             <div className="text-center py-5">
-                <div className="spinner-border text-[#fd6410]" role="status">
+                <div className="spinner-border text-primary" role="status">
                     <span className="visually-hidden">Loading...</span>
                 </div>
                 <p className="mt-2 text-muted">Loading your favorites...</p>
@@ -30,9 +30,9 @@ const WishlistGrid: React.FC = () => {
 
     if (wishlistItems.length === 0 && expertWishlistItems.length === 0) {
         return (
-            <div className="text-center py-10 bg-orange-50 rounded-2xl border border-dashed border-[#fd641033] mx-4">
+            <div className="text-center py-10 bg-orange-50 rounded-2xl border border-dashed border-primary/20 mx-4">
                 <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                    <i className="fa-regular fa-heart fa-2x text-[#fd641055]"></i>
+                    <i className="fa-regular fa-heart fa-2x text-primary/30"></i>
                 </div>
                 <h5 className="text-[#13070b] font-bold">Your wishlist is empty</h5>
                 <p className="small text-gray-500 mb-0">Start exploring and save your favorite items here!</p>
@@ -45,7 +45,7 @@ const WishlistGrid: React.FC = () => {
             {wishlistItems.length > 0 && (
                 <section>
                     <h5 className="flex items-center gap-2 mb-4 font-bold text-[#13070b]">
-                        <i className="fa-solid fa-gift text-[#fd6410]"></i> Liked Products
+                        <i className="fa-solid fa-gift text-primary"></i> Liked Products
                     </h5>
                     <div className="row g-4">
                         {wishlistItems.map((item) => (
@@ -69,15 +69,15 @@ const WishlistGrid: React.FC = () => {
             {expertWishlistItems.length > 0 && (
                 <section>
                     <h5 className="flex items-center gap-2 mb-4 font-bold text-[#13070b]">
-                        <i className="fa-solid fa-user-astronaut text-[#fd6410]"></i> Liked Astrologers
+                        <i className="fa-solid fa-user-astronaut text-primary"></i> Liked Astrologers
                     </h5>
                     <div className="row g-4">
                         {expertWishlistItems.map((item) => {
                             const expert = item.expert;
 
                             // Handling response where user data might be flat on expert or nested
-                            const name = expert?.name || (expert as any)?.user?.name || "Astrologer";
-                            const avatar = expert?.avatar || (expert as any)?.user?.avatar;
+                            const name = (expert as any)?.name || (expert as any)?.user?.name || "Astrologer";
+                            const avatar = (expert as any)?.avatar || (expert as any)?.user?.avatar;
 
                             return (
                                 <div key={item.id} className="col-md-6 col-lg-4">
@@ -113,3 +113,5 @@ const WishlistGrid: React.FC = () => {
 };
 
 export default WishlistGrid;
+
+

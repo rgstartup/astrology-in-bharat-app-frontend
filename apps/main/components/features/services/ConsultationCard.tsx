@@ -20,3 +20,5 @@ const ConsultationCard: React.FC<ConsultationCardProps> = ({ item }) => {
 };
 
 export default ConsultationCard;
+
+

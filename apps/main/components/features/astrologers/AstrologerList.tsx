@@ -544,8 +544,8 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
 
         {layout === 'slider' && (
           <div className="view-all mt-4">
-            <Link href="/our-astrologers" className="btn-link wfc mt-4 mb-4 mx-auto">
-              <i className="fa-regular fa-user mr-2"></i> View All Astrologers
+            <Link href="/our-astrologers" className="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-full font-bold shadow-lg transition-all mx-auto flex items-center justify-center gap-2 w-fit">
+              <i className="fa-regular fa-user"></i> View All Astrologers
             </Link>
           </div>
         )}
@@ -555,3 +555,5 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
 };
 
 export default AstrologerList;
+
+

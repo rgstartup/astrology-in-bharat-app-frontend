@@ -138,7 +138,7 @@ const nameToNumber = (name: string) => {
   let sum = 0;
   for (let i = 0; i < cleaned.length; i++) {
     const ch = cleaned[i];
-    sum += pythagoreanMap[ch] || 0;
+    sum += pythagoreanMap[ch as string] || 0;
   }
   return reduceToSingleDigit(sum);
 };
@@ -232,9 +232,9 @@ const LuckyColorNumberCalculator: React.FC = () => {
 
     setResult({
       luckyNumber,
-      luckyColor,
-      secondaryColor,
-      luckyDay,
+      luckyColor: luckyColor!,
+      secondaryColor: secondaryColor!,
+      luckyDay: luckyDay!,
       element,
       dobNumber,
       nameNumber,
@@ -249,7 +249,7 @@ const LuckyColorNumberCalculator: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fffaf7] selection:bg-[#fd6410]/20">
+    <div className="min-h-screen bg-[#fffaf7] selection:bg-primary/20">
       <style dangerouslySetInnerHTML={{ __html: premiumCardStyles }} />
 
       {/* Hero */}
@@ -263,16 +263,16 @@ const LuckyColorNumberCalculator: React.FC = () => {
       {/* Form */}
       <section className="py-24 relative overflow-hidden">
         <div className="container px-6">
-          <div className="glass-card rounded-[3rem] p-8 md:p-16 shadow-[0_20px_50px_rgba(48,17,24,0.1)] border-t-4 border-t-[#fd6410]/50 relative overflow-hidden">
+          <div className="glass-card rounded-[3rem] p-8 md:p-16 shadow-[0_20px_50px_rgba(48,17,24,0.1)] border-t-4 border-t-primary/50 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none">
               <GiLotus size={150} />
             </div>
 
             <div className="text-center mb-10">
               <h2 className="text-xl md:text-3xl font-black text-burgundy mb-2 tracking-tight">
-                Lucky Color <span className="text-[#fd6410]">&</span> Lucky Number
+                Lucky Color <span className="text-primary">&</span> Lucky Number
               </h2>
-              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-[#fd6410] to-transparent mx-auto mt-2"></div>
+              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-2"></div>
             </div>
 
             <form onSubmit={handleCalculate} className="max-w-4xl mx-auto">
@@ -304,7 +304,7 @@ const LuckyColorNumberCalculator: React.FC = () => {
                         type="date"
                         required
                         style={{ borderRadius: "9999px" }}
-                        className="w-full bg-white border-2 border-burgundy/5 px-5 py-3.5 text-burgundy font-bold focus:border-[#fd6410] outline-none transition-all shadow-sm text-sm"
+                        className="w-full bg-white border-2 border-burgundy/5 px-5 py-3.5 text-burgundy font-bold focus:border-primary outline-none transition-all shadow-sm text-sm"
                         value={dob}
                         onChange={(e) => setDob(e.target.value)}
                       />
@@ -324,7 +324,7 @@ const LuckyColorNumberCalculator: React.FC = () => {
                     value={zodiac}
                     onChange={(e) => setZodiac(e.target.value as ZodiacSign)}
                     style={{ borderRadius: "9999px" }}
-                    className="w-full mt-2 bg-white border-2 border-burgundy/5 px-5 py-3.5 text-burgundy font-black focus:border-[#fd6410] outline-none transition-all shadow-sm text-sm"
+                    className="w-full mt-2 bg-white border-2 border-burgundy/5 px-5 py-3.5 text-burgundy font-black focus:border-primary outline-none transition-all shadow-sm text-sm"
                   >
                     {SIGNS.map((s) => (
                       <option key={s} value={s}>
@@ -374,40 +374,40 @@ const LuckyColorNumberCalculator: React.FC = () => {
 
                   <div className="relative z-10">
                     <div className="text-center mb-16">
-                      <span className="inline-block bg-[#fd6410]/10 text-[#fd6410] px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
+                      <span className="inline-block bg-primary/10 text-primary px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
                         Lucky Results
                       </span>
 
                       <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-6 tracking-tight">
-                        Your <span className="text-[#fd6410]">Lucky</span> Vibes
+                        Your <span className="text-primary">Lucky</span> Vibes
                       </h2>
 
-                      <div className="w-32 h-1 bg-gradient-to-r from-transparent via-[#fd6410] to-transparent mx-auto mb-16"></div>
+                      <div className="w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-16"></div>
                     </div>
 
                     {/* Lucky Number Ring */}
                     <div className="flex flex-col items-center mb-14">
                       <div className="relative mb-10">
                         <div className="w-64 h-64 md:w-80 md:h-80 rounded-full bg-white shadow-2xl flex items-center justify-center p-8 border-8 border-orange-50 relative group">
-                          <div className="absolute inset-0 rounded-full border-8 border-[#fd6410] border-t-transparent animate-spin-slow opacity-20"></div>
+                          <div className="absolute inset-0 rounded-full border-8 border-primary border-t-transparent animate-spin-slow opacity-20"></div>
 
                           <div className="text-center">
                             <span className="block text-7xl md:text-9xl font-black text-burgundy leading-none group-hover:scale-110 transition-transform duration-500">
                               {result.luckyNumber}
                             </span>
-                            <span className="text-[12px] font-black uppercase tracking-[4px] text-[#fd6410] mt-4 block">
+                            <span className="text-[12px] font-black uppercase tracking-[4px] text-primary mt-4 block">
                               Lucky Number
                             </span>
                           </div>
 
-                          <FaHashtag className="absolute -top-4 -right-4 text-[#fd6410] text-5xl animate-bounce shadow-xl" />
+                          <FaHashtag className="absolute -top-4 -right-4 text-primary text-5xl animate-bounce shadow-xl" />
                         </div>
                       </div>
 
                       {/* Message */}
                       <div className="max-w-3xl text-center">
                         <div className="bg-burgundy text-white p-10 rounded-[3rem] shadow-2xl relative">
-                          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#fd6410] p-4 rounded-2xl shadow-lg">
+                          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary p-4 rounded-2xl shadow-lg">
                             <GiSparkles size={28} />
                           </div>
 
@@ -423,8 +423,8 @@ const LuckyColorNumberCalculator: React.FC = () => {
                       {/* Lucky Color */}
                       <div className="bg-[#fff9f6] rounded-[2.5rem] p-8 border border-orange-100 shadow-sm">
                         <div className="flex items-center gap-4 mb-6">
-                          <div className="w-14 h-14 rounded-2xl bg-[#fd6410]/10 flex items-center justify-center">
-                            <FaPalette className="text-[#fd6410]" size={20} />
+                          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                            <FaPalette className="text-primary" size={20} />
                           </div>
                           <div>
                             <p className="m-0 text-xs font-black uppercase tracking-widest text-gray-400">
@@ -442,8 +442,8 @@ const LuckyColorNumberCalculator: React.FC = () => {
                       {/* Lucky Day */}
                       <div className="bg-[#fff9f6] rounded-[2.5rem] p-8 border border-orange-100 shadow-sm">
                         <div className="flex items-center gap-4 mb-6">
-                          <div className="w-14 h-14 rounded-2xl bg-[#fd6410]/10 flex items-center justify-center">
-                            <FaCalendarAlt className="text-[#fd6410]" size={20} />
+                          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                            <FaCalendarAlt className="text-primary" size={20} />
                           </div>
                           <div>
                             <p className="m-0 text-xs font-black uppercase tracking-widest text-gray-400">
@@ -461,8 +461,8 @@ const LuckyColorNumberCalculator: React.FC = () => {
                       {/* Numerology */}
                       <div className="bg-[#fff9f6] rounded-[2.5rem] p-8 border border-orange-100 shadow-sm">
                         <div className="flex items-center gap-4 mb-6">
-                          <div className="w-14 h-14 rounded-2xl bg-[#fd6410]/10 flex items-center justify-center">
-                            <TbCrystalBall className="text-[#fd6410]" size={22} />
+                          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                            <TbCrystalBall className="text-primary" size={22} />
                           </div>
                           <div>
                             <p className="m-0 text-xs font-black uppercase tracking-widest text-gray-400">
@@ -485,8 +485,8 @@ const LuckyColorNumberCalculator: React.FC = () => {
 
                     {/* Footer badge */}
                     <div className="mt-14 flex justify-center">
-                      <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#fd6410]/10 border border-orange-100">
-                        <span className="text-[10px] font-black uppercase tracking-[4px] text-[#fd6410]">
+                      <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary/10 border border-orange-100">
+                        <span className="text-[10px] font-black uppercase tracking-[4px] text-primary">
                           Deterministic • Same Input = Same Lucky Result
                         </span>
                       </div>
@@ -504,3 +504,5 @@ const LuckyColorNumberCalculator: React.FC = () => {
 };
 
 export default LuckyColorNumberCalculator;
+
+

@@ -11,13 +11,13 @@ const Testimonial = () => {
           <div className="row">
             <div className="col-lg-4 col-md-6 col-12">
               {/* <!-- Testimonial Card --> */}
-              <div className="bg-white rounded-[18px] p-6 max-w-[360px] transition duration-300 border border-[#fd641047] shadow-[0_10px_25px_rgba(0,0,0,0.08)] my-2.5 hover:-translate-y-1.5 mx-auto">
+              <div className="bg-white rounded-[18px] p-6 max-w-[360px] transition duration-300 border border-primary/30 shadow-[0_10px_25px_rgba(0,0,0,0.08)] my-2.5 hover:-translate-y-1.5 mx-auto">
                 <div className="flex items-center mb-3">
                   <div className="mr-3">
                     <img
                       src="/images/t1.png"
                       alt="User Review"
-                      className="w-[55px] h-[55px] rounded-full object-cover border-[3px] border-[#ff7a18]"
+                      className="w-[55px] h-[55px] rounded-full object-cover border-[3px] border-primary"
                     />
                   </div>
                   <div>
@@ -29,7 +29,7 @@ const Testimonial = () => {
                     </span>
                   </div>
                 </div>
-                <div className="text-[#fd6410] text-[25px] mb-1 tracking-[3px]">
+                <div className="text-primary text-[25px] mb-1 tracking-[3px]">
                   ★★★★★
                 </div>
                 <p className="text-base text-[#311219] leading-[1.6]">
@@ -42,13 +42,13 @@ const Testimonial = () => {
 
             <div className="col-lg-4 col-md-6 col-12">
               {/* <!-- Testimonial Card --> */}
-              <div className="bg-white rounded-[18px] p-6 max-w-[360px] transition duration-300 border border-[#fd641047] shadow-[0_10px_25px_rgba(0,0,0,0.08)] my-2.5 hover:-translate-y-1.5 mx-auto">
+              <div className="bg-white rounded-[18px] p-6 max-w-[360px] transition duration-300 border border-primary/30 shadow-[0_10px_25px_rgba(0,0,0,0.08)] my-2.5 hover:-translate-y-1.5 mx-auto">
                 <div className="flex items-center mb-3">
                   <div className="mr-3">
                     <img
                       src="/images/t1.png"
                       alt="User Review"
-                      className="w-[55px] h-[55px] rounded-full object-cover border-[3px] border-[#ff7a18]"
+                      className="w-[55px] h-[55px] rounded-full object-cover border-[3px] border-primary"
                     />
                   </div>
                   <div>
@@ -60,7 +60,7 @@ const Testimonial = () => {
                     </span>
                   </div>
                 </div>
-                <div className="text-[#fd6410] text-[25px] mb-1 tracking-[3px]">
+                <div className="text-primary text-[25px] mb-1 tracking-[3px]">
                   ★★★★★
                 </div>
                 <p className="text-base text-[#311219] leading-[1.6]">
@@ -73,13 +73,13 @@ const Testimonial = () => {
 
             <div className="col-lg-4 col-md-6 col-12">
               {/* <!-- Testimonial Card --> */}
-              <div className="bg-white rounded-[18px] p-6 max-w-[360px] transition duration-300 border border-[#fd641047] shadow-[0_10px_25px_rgba(0,0,0,0.08)] my-2.5 hover:-translate-y-1.5 mx-auto">
+              <div className="bg-white rounded-[18px] p-6 max-w-[360px] transition duration-300 border border-primary/30 shadow-[0_10px_25px_rgba(0,0,0,0.08)] my-2.5 hover:-translate-y-1.5 mx-auto">
                 <div className="flex items-center mb-3">
                   <div className="mr-3">
                     <img
                       src="images/t1.png"
                       alt="User Review"
-                      className="w-[55px] h-[55px] rounded-full object-cover border-[3px] border-[#ff7a18]"
+                      className="w-[55px] h-[55px] rounded-full object-cover border-[3px] border-primary"
                     />
                   </div>
                   <div>
@@ -91,7 +91,7 @@ const Testimonial = () => {
                     </span>
                   </div>
                 </div>
-                <div className="text-[#fd6410] text-[25px] mb-1 tracking-[3px]">
+                <div className="text-primary text-[25px] mb-1 tracking-[3px]">
                   ★★★★★
                 </div>
                 <p className="text-base text-[#311219] leading-[1.6]">
@@ -109,3 +109,5 @@ const Testimonial = () => {
 };
 
 export default Testimonial;
+
+

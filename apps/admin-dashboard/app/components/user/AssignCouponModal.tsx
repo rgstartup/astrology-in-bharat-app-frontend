@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { X, Gift, Loader2 } from "lucide-react";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 import { assignCouponToUser, getCoupons } from "@/src/services/admin.service";
 import { toast } from "react-toastify";
 import type { User } from "@/app/components/user/user";
@@ -138,3 +138,7 @@ const AssignCouponModal = ({ user, onClose }: Props) => {
 };
 
 export default AssignCouponModal;
+
+
+
+

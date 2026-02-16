@@ -1,7 +1,7 @@
 // live-sessions/components/SessionHeader.tsx
 import React from "react";
 import { RefreshCw, Eye } from "lucide-react";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 interface SessionHeaderProps {
   onRefresh: () => void;
@@ -39,3 +39,7 @@ export function SessionHeader({ onRefresh, isRefreshing }: SessionHeaderProps) {
     </header>
   );
 }
+
+
+
+

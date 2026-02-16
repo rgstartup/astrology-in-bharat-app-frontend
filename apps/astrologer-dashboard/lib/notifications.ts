@@ -24,3 +24,5 @@ export const deleteNotification = async (id: string) => {
     const response = await apiClient.delete(`/notifications/${id}`);
     return response.data;
 };
+
+

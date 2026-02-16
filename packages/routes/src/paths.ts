@@ -49,3 +49,8 @@ export const PATHS = {
   DAHEJ_CALCULATOR: "/calculator/dahej",
 
 } as const;
+
+
+
+
+

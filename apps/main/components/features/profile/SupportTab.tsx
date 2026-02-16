@@ -27,7 +27,7 @@ const SupportTab: React.FC<SupportTabProps> = ({ supportSettings }) => {
                         <div className="card border-0 bg-light h-100 hover:shadow-md transition-all">
                             <div className="card-body text-center p-4">
                                 <div className="mb-3">
-                                    <i className="fa-solid fa-envelope fa-2x" style={{ color: "#fd6410" }}></i>
+                                    <i className="fa-solid fa-envelope fa-2x" style={{ color: "var(--primary)" }}></i>
                                 </div>
                                 <h6 className="fw-bold mb-2">Email Support</h6>
                                 <p className="text-primary small mb-3 fw-bold">{supportSettings.email || 'support@astrologyinbharat.com'}</p>
@@ -57,7 +57,7 @@ const SupportTab: React.FC<SupportTabProps> = ({ supportSettings }) => {
                         <div className="card border-0 bg-light h-100 hover:shadow-md transition-all">
                             <div className="card-body text-center p-4">
                                 <div className="mb-3">
-                                    <i className="fa-solid fa-phone fa-2x" style={{ color: "#fd6410" }}></i>
+                                    <i className="fa-solid fa-phone fa-2x" style={{ color: "var(--primary)" }}></i>
                                 </div>
                                 <h6 className="fw-bold mb-2">Phone Support</h6>
                                 <p className="text-primary small mb-3 fw-bold">{supportSettings.phone || '+91 9876543210'}</p>
@@ -72,9 +72,9 @@ const SupportTab: React.FC<SupportTabProps> = ({ supportSettings }) => {
 
 
                 {/* Additional Resources */}
-                <div className="mt-5 p-4 rounded-3" style={{ backgroundColor: "#fff7ed" }}>
+                <div className="mt-5 p-4 rounded-3" style={{ backgroundColor: "rgba(242, 94, 10, 0.05)" }}>
                     <h6 className="fw-bold mb-3">
-                        <i className="fa-solid fa-lightbulb me-2" style={{ color: "#fd6410" }}></i>
+                        <i className="fa-solid fa-lightbulb me-2" style={{ color: "var(--primary)" }}></i>
                         Additional Resources
                     </h6>
                     <ul className="list-unstyled mb-0">
@@ -102,3 +102,5 @@ const SupportTab: React.FC<SupportTabProps> = ({ supportSettings }) => {
 };
 
 export default SupportTab;
+
+

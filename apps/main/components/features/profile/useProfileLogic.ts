@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 import apiClient, {
     getClientProfile, updateClientProfile, uploadClientDocument,
     ClientProfileData, AddressDto, getAllChatSessions, getChatHistory, getMyOrders,
@@ -395,7 +395,7 @@ export const useProfileLogic = () => {
                     name: profileData.full_name || clientUser?.name || "",
                     email: clientUser?.email || "",
                 },
-                theme: { color: "#fd6410" },
+                theme: { color: "#f25e0a" },
                 modal: { ondismiss: () => setIsProcessing(false) }
             };
 
@@ -605,3 +605,5 @@ export const useProfileLogic = () => {
         handleImageChange, handleInputChange, handleAddressChange, handleSaveSection, loadOrdersAndDisputes
     };
 };
+
+
