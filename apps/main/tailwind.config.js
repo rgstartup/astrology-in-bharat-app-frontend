@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  important: true,
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",         // All pages in app folder
     "./components/**/*.{js,ts,jsx,tsx}",  // All reusable components
@@ -11,11 +12,11 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          orange: "#F25E0A",
+          orange: "#000000 ",
           brown: "#4A1D1F",
           white: "#FFFFFF",
         },
-        primary: "#F25E0A", // Vibrant Orange
+        primary: "#000000 ", // Vibrant Orange
         "primary-hover": "#D94E00",
         secondary: "#4A1D1F", // Dark Brown/Maroon
         "secondary-dark": "#3D1111",

@@ -188,7 +188,7 @@ a {
 
 .title-line span:after {
   content: "";
-  background: #fd6410;
+  background: var(--primary-color, black);
   width: 100%;
   height: 2px;
   position: absolute;
@@ -229,7 +229,7 @@ a {
 }
 
 .top-menu-main li a:hover {
-  color: #fd6410 !important;
+  color: var(--primary-color, black) !important;
 }
 
 .top-menu-main li ul.dropdown-menu li a {
@@ -247,7 +247,7 @@ a {
   justify-content: center;
   gap: 8px;
   color: #fff;
-  background: #fd6410 !important;
+  background: var(--primary-color, black) !important;
 }
 
 .btn-link img {
@@ -275,7 +275,7 @@ ul.dropdown-menu::-webkit-scrollbar-track {
 }
 
 ul.dropdown-menu::-webkit-scrollbar-thumb {
-  background: #fd6410;
+  background: var(--primary-color, black);
   border-radius: 10px;
 }
 
@@ -289,7 +289,7 @@ ul.dropdown-menu::-webkit-scrollbar-thumb:hover {
 }
 
 .top-menu-main li ul.dropdown-menu li a:hover {
-  background: #fd6410 !important;
+  background: var(--primary-color, black) !important;
   color: #fff !important;
 }
 
@@ -299,7 +299,7 @@ ul.dropdown-menu::-webkit-scrollbar-thumb:hover {
   z-index: 50;
   background: #fff;
   backdrop-filter: saturate(160%) blur(8px);
-  border-bottom: solid 1px #fd64102e;
+  border-bottom: solid 1px var(--primary-color, black)2e;
   box-shadow: 0 8px 11px #0000000d;
 }
 
@@ -310,7 +310,7 @@ ul.dropdown-menu::-webkit-scrollbar-thumb:hover {
   text-align: center;
   color: #fff;
   margin-left: 10px;
-  background: #fd6410 !important;
+  background: var(--primary-color, black) !important;
 }
 
 .filter-btn:hover {
@@ -333,7 +333,7 @@ ul.dropdown-menu::-webkit-scrollbar-thumb:hover {
   background: #f7f3ec;
   padding: 20px 18px;
   border-radius: 20px;
-  border: solid 1px #fd64102b;
+  border: solid 1px var(--primary-color, black)2b;
 }
 
 nav.navbar {
@@ -431,7 +431,7 @@ nav.navbar {
 .services-card img {
   width: 85%;
   border-radius: 100%;
-  border: solid 2px #fd6410;
+  border: solid 2px var(--primary-color, black);
   margin-bottom: 10px;
 }
 
@@ -462,7 +462,7 @@ nav.navbar {
   position: absolute;
   left: 10px;
   top: -12px;
-  background: #fd6410;
+  background: var(--primary-color, black);
   width: 16px;
   height: 16px;
   border-radius: 100px;
@@ -473,7 +473,7 @@ nav.navbar {
 
 /**/
 .services-list-card {
-  background: #fd6410;
+  background: var(--primary-color, black);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -508,12 +508,12 @@ nav.navbar {
   width: 32px;
   height: 32px;
   background: #ffffff;
-  border: 1px solid #fd6410;
+  border: 1px solid var(--primary-color, black);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fd6410;
+  color: var(--primary-color, black);
   cursor: pointer;
   z-index: 100;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -614,7 +614,7 @@ nav.navbar {
 }
 
 .account-btn i {
-  color: #fd6410;
+  color: var(--primary-color, black);
 }
 
 .account-menu a:hover {
@@ -639,7 +639,7 @@ nav.navbar {
 
 .card-title {
   font-size: 22px;
-  color: #fd6410;
+  color: var(--primary-color, black);
   margin: 15px 0 10px 0;
 }
 
@@ -665,7 +665,7 @@ nav.navbar {
   height: 25px;
   text-align: center;
   background: #ff6e20;
-  border: 2px solid #fd6410;
+  border: 2px solid var(--primary-color, black);
   color: #ffffff;
 }
 
@@ -729,7 +729,7 @@ nav.navbar {
 
 .search-box button {
   padding: 13px 24px;
-  background: #fd6410;
+  background: var(--primary-color, black);
   color: #fff;
   border: none;
   border-radius: 0 30px 30px 0;
@@ -750,7 +750,7 @@ nav.navbar {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.3s ease;
-  border: solid 1px #fd6410;
+  border: solid 1px var(--primary-color, black);
   align-items: center;
   background: rgb(255 255 255);
   padding: 12px 10px;
@@ -761,7 +761,7 @@ nav.navbar {
 }
 
 .rating-star {
-  color: #fd6410;
+  color: var(--primary-color, black);
   font-size: 22px;
 }
 
@@ -783,7 +783,7 @@ nav.navbar {
   bottom: 6px;
   right: 18px;
   font-size: 19px;
-  background: #fd6410;
+  background: var(--primary-color, black);
   width: 35px;
   height: 35px;
   padding-top: 4px;
@@ -828,7 +828,7 @@ button.btn-close {
 
 .astro-tags {
   display: inline-block;
-  background: #fd6410;
+  background: var(--primary-color, black);
   color: #fff;
   font-size: 14px;
   padding: 4px 10px;
@@ -901,7 +901,7 @@ button.btn-close {
   padding: 25px;
   max-width: 360px;
   transition: 0.3s ease;
-  border: solid 1px #fd641047;
+  border: solid 1px var(--primary-color, black)47;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   margin: 10px 0;
 }
@@ -940,7 +940,7 @@ button.btn-close {
 
 /* Stars */
 .aib-testimonial-stars {
-  color: #fd6410;
+  color: var(--primary-color, black);
   font-size: 25px;
   margin-bottom: 4px;
   letter-spacing: 3px;
@@ -976,7 +976,7 @@ button.btn-close {
 }
 
 .aib-cta-btn {
-  background: #fd6410;
+  background: var(--primary-color, black);
   color: #fff;
   padding: 14px 34px;
   border-radius: 30px;
@@ -1000,7 +1000,7 @@ button.btn-close {
 .aib-footer-title {
   font-size: 18px;
   font-weight: 600;
-  color: #fd6410;
+  color: var(--primary-color, black);
   margin-bottom: 15px;
 }
 
@@ -1028,7 +1028,7 @@ button.btn-close {
 }
 
 .aib-footer-links a:hover {
-  color: #fd6410;
+  color: var(--primary-color, black);
 }
 
 /* Bottom Bar */
@@ -1052,7 +1052,7 @@ button.btn-close {
   width: 35px;
   height: 35px;
   border-radius: 100px;
-  border: solid 2px #fd6410;
+  border: solid 2px var(--primary-color, black);
   text-align: center;
   padding: 4px 0;
   color: #141414;

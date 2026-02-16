@@ -112,13 +112,13 @@ const TimelineCard: React.FC<{
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <p className="m-0 text-[10px] font-black uppercase tracking-[4px] text-[#fd6410]">
+            <p className="m-0 text-[10px] font-black uppercase tracking-[4px] text-primary">
               Prediction Window
             </p>
             <h3 className="m-0 text-xl font-black text-burgundy">{item.title}</h3>
           </div>
 
-          <div className="w-12 h-12 rounded-2xl bg-[#fd6410]/10 flex items-center justify-center text-[#fd6410]">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
             {icon}
           </div>
         </div>
@@ -130,18 +130,17 @@ const TimelineCard: React.FC<{
                 {item.percent}%
               </span>
             </div>
-            <div className="absolute inset-0 rounded-full border-4 border-[#fd6410] border-t-transparent animate-spin-slow opacity-20"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin-slow opacity-20"></div>
           </div>
 
           <div className="flex-1">
             <span
-              className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                item.percent <= 40
+              className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${item.percent <= 40
                   ? "bg-red-50 text-red-600"
                   : item.percent <= 70
-                  ? "bg-orange-50 text-[#fd6410]"
-                  : "bg-green-100 text-green-700"
-              }`}
+                    ? "bg-orange-50 text-primary"
+                    : "bg-green-100 text-green-700"
+                }`}
             >
               {item.label}
             </span>
@@ -216,8 +215,8 @@ const RelationshipFutureTimeline: React.FC = () => {
       mood7 <= 40 || bond30 <= 40 || stability180 <= 40
         ? "This phase needs patience. Avoid ego clashes and focus on calm communication."
         : mood7 <= 70 || bond30 <= 70 || stability180 <= 70
-        ? "A balanced period ahead. Small consistent efforts can make your bond stronger."
-        : "Strong growth is visible. Your connection feels smooth, supportive, and positive.";
+          ? "A balanced period ahead. Small consistent efforts can make your bond stronger."
+          : "Strong growth is visible. Your connection feels smooth, supportive, and positive.";
 
     setResult({
       mood7: {
@@ -249,7 +248,7 @@ const RelationshipFutureTimeline: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fffaf7] selection:bg-[#fd6410]/20">
+    <div className="min-h-screen bg-[#fffaf7] selection:bg-primary/20">
       <style dangerouslySetInnerHTML={{ __html: premiumCardStyles }} />
 
       {/* Hero */}
@@ -263,16 +262,16 @@ const RelationshipFutureTimeline: React.FC = () => {
       {/* Form */}
       <section className="py-24 relative overflow-hidden">
         <div className="container px-6">
-          <div className="glass-card rounded-[3rem] p-8 md:p-16 shadow-[0_20px_50px_rgba(48,17,24,0.1)] border-t-4 border-t-[#fd6410]/50 relative overflow-hidden">
+          <div className="glass-card rounded-[3rem] p-8 md:p-16 shadow-[0_20px_50px_rgba(48,17,24,0.1)] border-t-4 border-t-primary/50 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none">
               <GiLotus size={150} />
             </div>
 
             <div className="text-center mb-10">
               <h2 className="text-xl md:text-3xl font-black text-burgundy mb-2 tracking-tight">
-                Relationship <span className="text-[#fd6410]">Future</span> Timeline
+                Relationship <span className="text-primary">Future</span> Timeline
               </h2>
-              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-[#fd6410] to-transparent mx-auto mt-2"></div>
+              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-2"></div>
             </div>
 
             <form onSubmit={handleCalculate} className="max-w-3xl mx-auto">
@@ -332,7 +331,7 @@ const RelationshipFutureTimeline: React.FC = () => {
                       onChange={(e) =>
                         setRelationshipType(e.target.value as RelationshipType)
                       }
-                      className="w-full bg-white border-2 border-burgundy/5 rounded-2xl px-5 py-4 text-burgundy font-black outline-none focus:border-[#fd6410] transition-all"
+                      className="w-full bg-white border-2 border-burgundy/5 rounded-2xl px-5 py-4 text-burgundy font-black outline-none focus:border-primary transition-all"
                     >
                       <option value="Crush">Crush</option>
                       <option value="Dating">Dating</option>
@@ -381,18 +380,18 @@ const RelationshipFutureTimeline: React.FC = () => {
 
                   <div className="relative z-10">
                     <div className="text-center mb-16">
-                      <span className="inline-block bg-[#fd6410]/10 text-[#fd6410] px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
+                      <span className="inline-block bg-primary/10 text-primary px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
                         Timeline Report
                       </span>
 
                       <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-6 tracking-tight">
-                        Relationship <span className="text-[#fd6410]">Forecast</span>
+                        Relationship <span className="text-primary">Forecast</span>
                       </h2>
 
-                      <div className="w-32 h-1 bg-gradient-to-r from-transparent via-[#fd6410] to-transparent mx-auto mb-10"></div>
+                      <div className="w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-10"></div>
 
                       <div className="bg-burgundy text-white px-10 py-6 rounded-[3rem] shadow-2xl max-w-3xl mx-auto relative">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#fd6410] p-4 rounded-2xl shadow-lg">
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary p-4 rounded-2xl shadow-lg">
                           <GiSparkles size={28} />
                         </div>
                         <p className="m-0 text-lg md:text-xl font-light italic text-orange-100/90">

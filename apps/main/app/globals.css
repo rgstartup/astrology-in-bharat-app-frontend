@@ -1,3 +1,41 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+/* Override Bootstrap Blue with Pink */
+:root {
+  --bs-primary: #000000 !important;
+  --bs-primary-rgb: 0, 0, 0 !important;
+  --bs-link-color: #000000 !important;
+  --bs-link-hover-color: #D94E00 !important;
+  --primary-color: #000000;
+}
+
+/* Fix for buttons and active states */
+.bg-primary {
+  background-color: #000000 !important;
+}
+
+.text-primary {
+  color: #000000 !important;
+}
+
+/* Force Ask Astrologer button to be primary color */
+a.btn-ask-expert,
+.btn-ask-expert {
+  background-color: var(--primary-color, black) !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  border-radius: 25px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+  font-weight: bold !important;
+  font-size: 14px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+a.btn-ask-expert:hover {
+  opacity: 0.9 !important;
+  color: white !important;
+}

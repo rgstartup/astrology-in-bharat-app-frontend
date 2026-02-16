@@ -130,9 +130,9 @@ const Planet = () => {
                 {/* Header Section */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
-                        Planet Positions <span className="text-[#fd6410]">&</span> Analysis
+                        Planet Positions <span className="text-primary">&</span> Analysis
                     </h1>
-                    <div className="h-1 w-24 bg-[#fd6410] mx-auto mb-6 rounded-full"></div>
+                    <div className="h-1 w-24 bg-primary mx-auto mb-6 rounded-full"></div>
                     <p className="text-slate-600 max-w-2xl mx-auto text-lg">
                         Unlock cosmic insights with accurate planetary positions. Enter your birth details
                         below to analyze the celestial alignment.
@@ -145,7 +145,7 @@ const Planet = () => {
                         <div className="bg-white rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 sticky top-24">
                             <div className="flex items-center gap-3 mb-8">
                                 <div className="bg-orange-50 p-3 rounded-2xl">
-                                    {renderIcon(Calendar, { className: "text-[#fd6410]", size: 24 })}
+                                    {renderIcon(Calendar, { className: "text-primary", size: 24 })}
                                 </div>
                                 <h2 className="text-2xl font-bold text-slate-800">Birth Details</h2>
                             </div>
@@ -157,7 +157,7 @@ const Planet = () => {
                                         <input
                                             type="number"
                                             name="date"
-                                            className="w-full px-4 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-[#fd6410] transition-all"
+                                            className="w-full px-4 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-primary transition-all"
                                             placeholder="DD"
                                             value={formData.date}
                                             onChange={handleChange}
@@ -169,7 +169,7 @@ const Planet = () => {
                                         <input
                                             type="number"
                                             name="month"
-                                            className="w-full px-4 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-[#fd6410] transition-all"
+                                            className="w-full px-4 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-primary transition-all"
                                             placeholder="MM"
                                             value={formData.month}
                                             onChange={handleChange}
@@ -183,7 +183,7 @@ const Planet = () => {
                                     <input
                                         type="number"
                                         name="year"
-                                        className="w-full px-4 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-[#fd6410] transition-all"
+                                        className="w-full px-4 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-primary transition-all"
                                         placeholder="YYYY"
                                         value={formData.year}
                                         onChange={handleChange}
@@ -197,7 +197,7 @@ const Planet = () => {
                                         <input
                                             type="number"
                                             name="hours"
-                                            className="w-full px-3 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-[#fd6410] transition-all"
+                                            className="w-full px-3 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-primary transition-all"
                                             placeholder="HH"
                                             value={formData.hours}
                                             onChange={handleChange}
@@ -209,7 +209,7 @@ const Planet = () => {
                                         <input
                                             type="number"
                                             name="minutes"
-                                            className="w-full px-3 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-[#fd6410] transition-all"
+                                            className="w-full px-3 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-primary transition-all"
                                             placeholder="MM"
                                             value={formData.minutes}
                                             onChange={handleChange}
@@ -221,7 +221,7 @@ const Planet = () => {
                                         <input
                                             type="number"
                                             name="seconds"
-                                            className="w-full px-3 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-[#fd6410] transition-all"
+                                            className="w-full px-3 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-primary transition-all"
                                             placeholder="SS"
                                             value={formData.seconds}
                                             onChange={handleChange}
@@ -245,7 +245,7 @@ const Planet = () => {
                                         type="number"
                                         step="0.1"
                                         name="timezone"
-                                        className="w-full px-4 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-[#fd6410] transition-all"
+                                        className="w-full px-4 py-3 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-primary transition-all"
                                         value={formData.timezone}
                                         onChange={handleChange}
                                         required
@@ -254,7 +254,7 @@ const Planet = () => {
 
                                 <button
                                     type="submit"
-                                    className="w-full py-4 bg-[#fd6410] hover:bg-[#e55a0e] text-white rounded-2xl font-bold shadow-[0_10px_20px_rgba(253,100,16,0.3)] transition-all flex items-center justify-center gap-3 group mt-8"
+                                    className="w-full py-4 bg-primary hover:bg-primary-hover text-white rounded-2xl font-bold shadow-[0_10px_20px_rgba(242,94,10,0.3)] transition-all flex items-center justify-center gap-3 group mt-8"
                                     disabled={loading}
                                 >
                                     {loading ? (
@@ -319,7 +319,7 @@ const Planet = () => {
                             {planetData.map((planet: any, index: number) => {
                                 if (!planet || typeof planet !== 'object') return null;
 
-                                const meta = PLANET_META[planet.name] || { color: "#fd6410", icon: Compass };
+                                const meta = PLANET_META[planet.name] || { color: "#f25e0a", icon: Compass };
                                 const signIndex = parseInt(planet.current_sign || 0);
                                 const signName = ZODIAC_SIGNS[signIndex - 1] || "Unknown";
 
@@ -374,10 +374,10 @@ const Planet = () => {
 
                         {planetData.length > 0 && (
                             <div className="mt-10 bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group shadow-2xl">
-                                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-[#fd6410]/20 rounded-full blur-3xl group-hover:bg-[#fd6410]/30 transition-colors"></div>
+                                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-colors"></div>
                                 <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
                                     <div className="bg-white/10 p-4 rounded-3xl backdrop-blur-sm">
-                                        {renderIcon(Star, { className: "text-[#fd6410]", size: 32 })}
+                                        {renderIcon(Star, { className: "text-primary", size: 32 })}
                                     </div>
                                     <div>
                                         <h4 className="text-xl font-bold mb-1">Celestial Insight</h4>

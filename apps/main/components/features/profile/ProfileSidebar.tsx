@@ -72,7 +72,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
                                 alignItems: "center",
                                 justifyContent: "center",
                                 cursor: "pointer",
-                                color: "var(--primary, #F25E0A)",
+                                color: "var(--primary-color, black)",
                                 border: "2px solid #fff",
                                 transition: "all 0.3s ease"
                             }}
@@ -102,7 +102,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
             <div
                 className="card border-0 rounded-bottom-4 overflow-y-auto shadow-lg"
                 style={{
-                    backgroundColor: "#F25E0A",
+                    backgroundColor: "var(--primary-color, black)",
                     maxHeight: "calc(100vh - 350px)",
                     scrollbarWidth: "thin",
                     scrollbarColor: "rgba(255, 255, 255, 0.5) transparent"

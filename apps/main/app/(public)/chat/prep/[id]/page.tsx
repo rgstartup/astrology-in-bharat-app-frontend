@@ -111,7 +111,7 @@ export default function ConsultationPrep() {
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fd6410]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
     );
 
@@ -126,7 +126,7 @@ export default function ConsultationPrep() {
             </p>
             <button
                 onClick={() => router.push("/")}
-                className="px-8 py-3 bg-[#fd6410] text-white rounded-full font-bold shadow-lg hover:bg-orange-600 transition-all"
+                className="px-8 py-3 bg-primary text-white rounded-full font-bold shadow-lg hover:bg-primary-hover transition-all"
             >
                 Go to Home
             </button>
@@ -155,9 +155,9 @@ export default function ConsultationPrep() {
             <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-gray-100 px-4 py-4 md:px-10 flex items-center justify-between">
                 <button
                     onClick={() => router.back()}
-                    className="flex items-center gap-2 group text-gray-400 hover:text-[#fd6410] transition-colors"
+                    className="flex items-center gap-2 group text-gray-400 hover:text-primary transition-colors"
                 >
-                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-[#fd6410]/10 transition-colors">
+                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                         <ChevronLeft className="w-5 h-5" />
                     </div>
                     <span className="font-bold text-xs uppercase tracking-widest">Back</span>
@@ -175,12 +175,12 @@ export default function ConsultationPrep() {
                     {/* Left: Interactive Onboarding Card */}
                     <div className="lg:col-span-7 space-y-8 animate-in fade-in slide-in-from-left duration-1000">
                         <div className="space-y-4">
-                            <span className="px-4 py-1.5 bg-[#fd6410]/10 text-[#fd6410] text-[10px] font-black uppercase tracking-[0.3em] rounded-full border border-[#fd6410]/20 inline-block">
+                            <span className="px-4 py-1.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.3em] rounded-full border border-primary/20 inline-block">
                                 Preparing Connection
                             </span>
                             <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-[1.1] tracking-tight">
                                 Talk to <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fd6410] to-orange-400">
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-400">
                                     {astrologer?.name}
                                 </span>
                             </h1>
@@ -192,8 +192,8 @@ export default function ConsultationPrep() {
                         {/* Feature Grid */}
                         <div className="grid grid-cols-2 gap-4">
                             <div className="p-6 rounded-[2.5rem] bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:translate-y-[-5px] transition-all duration-500 group">
-                                <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center mb-4 group-hover:bg-[#fd6410] transition-colors">
-                                    <MessageSquare className="w-6 h-6 text-[#fd6410] group-hover:text-white" />
+                                <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center mb-4 group-hover:bg-primary transition-colors">
+                                    <MessageSquare className="w-6 h-6 text-primary group-hover:text-white" />
                                 </div>
                                 <h3 className="font-bold text-gray-900 mb-1">Live Chat</h3>
                                 <p className="text-xs text-gray-400 leading-relaxed font-medium">Real-time answers from verified experts.</p>
@@ -209,9 +209,9 @@ export default function ConsultationPrep() {
 
                         {/* Consultation Checklist */}
                         <div className="p-8 rounded-[3rem] bg-[#1a1a1a] text-white overflow-hidden relative group">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-[#fd6410] opacity-10 blur-[80px] -mr-32 -mt-32"></div>
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-primary opacity-10 blur-[80px] -mr-32 -mt-32"></div>
                             <h3 className="text-lg font-bold mb-6 flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-[#fd6410] flex items-center justify-center">
+                                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
                                     <User className="w-5 h-5 text-white" />
                                 </div>
                                 Session Checklist

@@ -185,7 +185,7 @@ export default function AstrologerDetailsClient({
                   </button>
                   <button
                     onClick={handleChatClick}
-                    className="flex items-center justify-center gap-1.5 bg-blue-50 text-blue-700 border border-blue-200 py-2 rounded-lg font-semibold active:scale-95 transition-all hover:bg-blue-100 shadow-sm text-xs"
+                    className="flex items-center justify-center gap-1.5 bg-primary/10 text-primary border border-primary/20 py-2 rounded-lg font-semibold active:scale-95 transition-all hover:bg-primary/20 shadow-sm text-xs"
                   >
                     <i className="fa-solid fa-video text-[12px]"></i>
                     Video Call

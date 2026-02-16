@@ -20,7 +20,7 @@ const AstrologyProduct = async () => {
           <ProductSection products={productList} />
           {/* <!-- View All Button --> */}
           <div className="view-all mt-4 mb-3">
-            <LinkComponent href="/product" className="btn-link wfc m-auto text-decoration-none">
+            <LinkComponent href="/product" className="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-full font-bold shadow-lg transition-all mx-auto flex items-center justify-center gap-2 w-fit text-decoration-none">
               View All Products
             </LinkComponent>
           </div>

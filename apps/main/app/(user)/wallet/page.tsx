@@ -39,7 +39,7 @@ export default function UserWalletPage() {
     if (clientLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 text-black">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#fd6410]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
             </div>
         );
     }
@@ -52,7 +52,7 @@ export default function UserWalletPage() {
                     <h1 className="text-2xl font-bold">Please Login to view Wallet</h1>
                     <button
                         onClick={() => window.location.href = PATHS.SIGN_IN}
-                        className="px-8 py-3 bg-[#fd6410] text-white rounded-full font-bold shadow-lg hover:bg-orange-600 transition-all"
+                        className="px-8 py-3 bg-primary text-white rounded-full font-bold shadow-lg primary-hover transition-all"
                     >
                         Login Now
                     </button>
@@ -65,7 +65,7 @@ export default function UserWalletPage() {
         <div className="min-h-screen bg-[#f8f9fa] text-black">
             {/* Header / Hero Section */}
             <div className="bg-[#1a1a1a] text-white pt-32 pb-40 px-4 md:px-10 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-[#fd6410] opacity-10 blur-[100px] -mr-48 -mt-48"></div>
+                <div className="absolute top-0 right-0 w-96 h-96 bg-primary opacity-10 blur-[100px] -mr-48 -mt-48"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-400 opacity-5 blur-[80px] -ml-32 -mb-32"></div>
 
                 <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
@@ -76,7 +76,7 @@ export default function UserWalletPage() {
                         </div>
                         <h1 className="text-5xl md:text-7xl font-black tracking-tighter">
                             Available <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fd6410] to-orange-400">Funds</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-400">Funds</span>
                         </h1>
                         <p className="text-gray-400 font-medium max-w-sm leading-relaxed">
                             Use your wallet balance to book instant consultations with India's top astrologers.
@@ -84,7 +84,7 @@ export default function UserWalletPage() {
                     </div>
 
                     <div className="bg-white/5 backdrop-blur-2xl p-10 rounded-[3rem] border border-white/10 shadow-2xl relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-[#fd6410] to-orange-400 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                        <div className="absolute -inset-1 bg-gradient-to-r from-primary to-orange-400 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
                         <div className="relative space-y-2">
                             <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">Total Balance</p>
                             <div className="flex items-baseline gap-2">
@@ -131,7 +131,7 @@ export default function UserWalletPage() {
                                         key={amt}
                                         onClick={() => setRechargeAmount(amt)}
                                         className={`py-5 rounded-2xl font-bold flex flex-col items-center gap-1 transition-all duration-300 ${rechargeAmount === amt
-                                            ? 'bg-[#fd6410] text-white shadow-lg shadow-orange-200 scale-105 border-b-4 border-orange-700'
+                                            ? 'bg-primary text-white shadow-lg shadow-orange-200 scale-105 border-b-4 border-orange-700'
                                             : 'bg-white border border-gray-100 hover:border-orange-200 hover:bg-orange-50 text-gray-500'
                                             }`}
                                     >
@@ -144,7 +144,7 @@ export default function UserWalletPage() {
                             <button
                                 onClick={handleRecharge}
                                 disabled={isProcessing}
-                                className="w-full py-6 bg-[#1a1a1a] text-white rounded-[2rem] font-black text-xl hover:bg-[#fd6410] transition-all duration-500 flex items-center justify-center gap-4 shadow-xl active:scale-[0.98] disabled:opacity-50"
+                                className="w-full py-6 bg-[#1a1a1a] text-white rounded-[2rem] font-black text-xl hover:bg-primary transition-all duration-500 flex items-center justify-center gap-4 shadow-xl active:scale-[0.98] disabled:opacity-50"
                             >
                                 {isProcessing ? (
                                     <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"></div>
@@ -184,7 +184,7 @@ export default function UserWalletPage() {
                                 <p className="text-sm text-gray-400 font-medium">Keep track of your consultations and recharges. Your history is waiting for you in the dashboard.</p>
                                 <button
                                     onClick={() => window.location.href = PATHS.SESSION_HISTORY}
-                                    className="text-[#fd6410] font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all mt-4"
+                                    className="text-primary font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all mt-4"
                                 >
                                     View Session History <ChevronRight className="w-4 h-4" />
                                 </button>
@@ -192,14 +192,14 @@ export default function UserWalletPage() {
                         </div>
                     </div>
 
-                    <div className="lg:col-span-4 bg-[#fd6410] rounded-[2.5rem] p-10 text-white relative overflow-hidden group shadow-xl shadow-orange-200">
+                    <div className="lg:col-span-4 bg-primary rounded-[2.5rem] p-10 text-white relative overflow-hidden group shadow-xl shadow-orange-200">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl -mr-16 -mt-16"></div>
                         <CreditCard className="w-12 h-12 mb-6" />
                         <h3 className="text-xl font-bold mb-2">Need Help?</h3>
                         <p className="text-white/80 text-sm leading-relaxed mb-6 font-medium">If you face any issues while recharging, reach out to our dedicated support team via the help section.</p>
                         <button
                             onClick={() => window.location.href = PATHS.HELP}
-                            className="bg-white text-[#fd6410] px-6 py-2.5 rounded-full font-bold text-sm hover:translate-x-1 transition-transform"
+                            className="bg-white text-primary px-6 py-2.5 rounded-full font-bold text-sm hover:translate-x-1 transition-transform"
                         >
                             Get Support
                         </button>

@@ -288,7 +288,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
 
   return (
     <>
-      <header className="bg-[#301118] text-[#2b1b00] py-1 px-4">
+      <header className="bg-[#301118] text-white py-2 px-4 shadow-sm relative z-[1001]">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-8 col-md-6">
@@ -304,20 +304,13 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                       <div
                         onMouseEnter={() => setShowFullBalance(true)}
                         onMouseLeave={() => setShowFullBalance(false)}
-                        className="d-flex align-items-center gap-2 px-3 py-2 rounded-xl transition-all hover:scale-105 active:scale-95 cursor-help whitespace-nowrap"
+                        className="d-flex align-items-center gap-2 px-3 py-1.5 rounded-xl transition-all hover:scale-105 active:scale-95 cursor-help whitespace-nowrap bg-primary hover:bg-primary-hover shadow-lg"
                         style={{
-                          background: 'linear-gradient(145deg, #fd6410, #ff8c42)',
-                          boxShadow: `
-                            0 4px 6px -1px rgba(0, 0, 0, 0.3), 
-                            0 2px 4px -1px rgba(0, 0, 0, 0.2),
-                            inset 0 1px 1px rgba(255, 255, 255, 0.4),
-                            inset 0 -2px 1px rgba(0, 0, 0, 0.2)
-                          `,
-                          border: '1px solid #bf4d00',
                           minWidth: '85px',
                           justifyContent: 'center',
                           position: 'relative',
-                          overflow: 'hidden'
+                          overflow: 'hidden',
+                          border: '1px solid rgba(255, 255, 255, 0.1)'
                         }}
                       >
                         {/* Subtle gloss effect */}
@@ -474,11 +467,11 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                               onClick={() => setShowProfileDropdown(!showProfileDropdown)}
                             >
                               <div style={{
-                                width: "40px",
-                                height: "40px",
+                                width: "35px",
+                                height: "35px",
                                 borderRadius: "50%",
                                 overflow: "hidden",
-                                border: "2px solid #fa6310",
+                                border: "2px solid var(--primary-color, black)",
                                 padding: "2px",
                                 display: "flex",
                                 alignItems: "center",
@@ -487,8 +480,8 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                                 <NextImage
                                   src={clientUser?.avatar || "/images/aa.webp"}
                                   alt="Profile"
-                                  width={40}
-                                  height={40}
+                                  width={35}
+                                  height={35}
                                   className="object-cover w-100 h-100 rounded-circle"
                                 />
                               </div>
@@ -541,7 +534,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                           <Link
                             href={PATHS.SIGN_IN}
                             style={{
-                              backgroundColor: "#fa6310",
+                              backgroundColor: "var(--primary-color, black)",
                               color: "white",
                               borderRadius: "5px",
                               padding: "6px 15px",
@@ -556,7 +549,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                           <Link
                             href={PATHS.REGISTER}
                             style={{
-                              backgroundColor: "#fa6310",
+                              backgroundColor: "var(--primary-color, black)",
                               color: "white",
                               borderRadius: "5px",
                               padding: "6px 15px",
@@ -640,7 +633,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                             Horoscope
                           </Link>
                         </li>
-                     
+
 
                         <li>
                           <Link
@@ -758,14 +751,31 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
               </nav>
             </div>
             <div className="col-lg-2 col-md-5 mobile-none">
-              <Link href="/our-astrologers" className="btn-link">
+              <Link
+                href="/our-astrologers"
+                className="btn-ask-expert"
+                style={{
+                  backgroundColor: "var(--primary-color, black)",
+                  color: "white",
+                  padding: "10px 20px",
+                  borderRadius: "25px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  textDecoration: "none",
+                  fontWeight: "bold",
+                  fontSize: "14px",
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.1)"
+                }}
+              >
                 <NextImage
                   src="/images/chat.svg"
-                  className="chat-icon"
+                  className="chat-icon filter-white"
                   alt="chat"
-                  width={24}
-                  height={24}
-                />{" "}
+                  width={20}
+                  height={20}
+                  style={{ filter: "brightness(0) invert(1)" }}
+                />
                 Ask Astrologer
               </Link>
             </div>
@@ -774,7 +784,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
       </header>
 
       {isClient && (
-        <header className="services-list-card">
+        <header className="services-list-card" style={{ backgroundColor: "var(--primary-color, black)" }}>
           <div className="container position-relative">
             <Swiper
               modules={[Navigation, Autoplay]}

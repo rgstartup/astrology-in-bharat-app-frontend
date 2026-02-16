@@ -156,7 +156,7 @@ const NameNumerologyCalculator: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fffaf7] selection:bg-[#fd6410]/20">
+    <div className="min-h-screen bg-[#fffaf7] selection:bg-primary/20">
       <style dangerouslySetInnerHTML={{ __html: premiumCardStyles }} />
 
       {/* Hero */}
@@ -170,16 +170,16 @@ const NameNumerologyCalculator: React.FC = () => {
       {/* Form */}
       <section className="py-24 relative overflow-hidden">
         <div className="container px-6">
-          <div className="glass-card rounded-[3rem] p-8 md:p-16 shadow-[0_20px_50px_rgba(48,17,24,0.1)] border-t-4 border-t-[#fd6410]/50 relative overflow-hidden">
+          <div className="glass-card rounded-[3rem] p-8 md:p-16 shadow-[0_20px_50px_rgba(48,17,24,0.1)] border-t-4 border-t-primary/50 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none">
               <GiLotus size={150} />
             </div>
 
             <div className="text-center mb-10">
               <h2 className="text-xl md:text-3xl font-black text-burgundy mb-2 tracking-tight">
-                Find Your <span className="text-[#fd6410]">Name Number</span>
+                Find Your <span className="text-primary">Name Number</span>
               </h2>
-              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-[#fd6410] to-transparent mx-auto mt-2"></div>
+              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-2"></div>
             </div>
 
             <form onSubmit={handleCalculate} className="max-w-3xl mx-auto">
@@ -249,40 +249,40 @@ const NameNumerologyCalculator: React.FC = () => {
 
                   <div className="relative z-10">
                     <div className="text-center mb-16">
-                      <span className="inline-block bg-[#fd6410]/10 text-[#fd6410] px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
+                      <span className="inline-block bg-primary/10 text-primary px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
                         Your Numerology Result
                       </span>
 
                       <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-6 tracking-tight">
-                        Name <span className="text-[#fd6410]">Number</span>
+                        Name <span className="text-primary">Number</span>
                       </h2>
 
-                      <div className="w-32 h-1 bg-gradient-to-r from-transparent via-[#fd6410] to-transparent mx-auto mb-16"></div>
+                      <div className="w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-16"></div>
                     </div>
 
                     <div className="flex flex-col items-center">
                       {/* Ring */}
                       <div className="relative mb-16">
                         <div className="w-64 h-64 md:w-80 md:h-80 rounded-full bg-white shadow-2xl flex items-center justify-center p-8 border-8 border-orange-50 relative group">
-                          <div className="absolute inset-0 rounded-full border-8 border-[#fd6410] border-t-transparent animate-spin-slow opacity-20"></div>
+                          <div className="absolute inset-0 rounded-full border-8 border-primary border-t-transparent animate-spin-slow opacity-20"></div>
 
                           <div className="text-center">
                             <span className="block text-7xl md:text-9xl font-black text-burgundy leading-none group-hover:scale-110 transition-transform duration-500">
                               {result.nameNumber}
                             </span>
-                            <span className="text-[12px] font-black uppercase tracking-[4px] text-[#fd6410] mt-4 block">
+                            <span className="text-[12px] font-black uppercase tracking-[4px] text-primary mt-4 block">
                               Your vibe: {result.vibe}
                             </span>
                           </div>
 
-                          <FaStar className="absolute -top-4 -right-4 text-[#fd6410] text-5xl animate-bounce shadow-xl" />
+                          <FaStar className="absolute -top-4 -right-4 text-primary text-5xl animate-bounce shadow-xl" />
                         </div>
                       </div>
 
                       {/* Message */}
                       <div className="max-w-2xl text-center">
                         <div className="bg-burgundy text-white p-10 rounded-[3rem] shadow-2xl relative">
-                          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#fd6410] p-4 rounded-2xl shadow-lg">
+                          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary p-4 rounded-2xl shadow-lg">
                             <GiSparkles size={28} />
                           </div>
 

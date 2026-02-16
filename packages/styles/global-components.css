@@ -9,7 +9,7 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #fd6410; /* Modern orange theme matching the brand */
+  background: var(--primary-color, black); /* Modern orange theme matching the brand */
   border-radius: 10px;
   transition: background 0.3s ease;
 }
@@ -21,5 +21,5 @@
 /* Support for Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #fd6410 #f1f1f1;
+  scrollbar-color: var(--primary-color, black) #f1f1f1;
 }

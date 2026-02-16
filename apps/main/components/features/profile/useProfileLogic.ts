@@ -395,7 +395,7 @@ export const useProfileLogic = () => {
                     name: profileData.full_name || clientUser?.name || "",
                     email: clientUser?.email || "",
                 },
-                theme: { color: "#fd6410" },
+                theme: { color: "#f25e0a" },
                 modal: { ondismiss: () => setIsProcessing(false) }
             };
 

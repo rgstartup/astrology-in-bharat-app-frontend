@@ -80,8 +80,7 @@ const ForgotPasswordContent: React.FC = () => {
 
                                     <button
                                         type="submit"
-                                        className="btn btn-primary w-100 py-2 fw-semibold sign-button"
-                                        style={{ backgroundColor: "#fd6410", color: "white" }}
+                                        className="btn w-100 py-2 fw-semibold bg-primary hover:bg-primary-hover text-white border-0 transition-all font-bold"
                                         disabled={isLoading}
                                     >
                                         {isLoading ? "Sending..." : "Send Reset Link"}
@@ -108,7 +107,7 @@ const ForgotPasswordContent: React.FC = () => {
                                         Resend Email
                                     </button>
                                     <div className="mt-4">
-                                        <Link href="/sign-in" className="btn btn-primary px-4" style={{ backgroundColor: "#fd6410", color: "white" }}>
+                                        <Link href="/sign-in" className="btn bg-primary hover:bg-primary-hover text-white border-0 transition-all font-bold px-4">
                                             Back to Sign In
                                         </Link>
                                     </div>

@@ -207,7 +207,7 @@ const OurAstrologer = () => {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
-                            <button type="button">Search</button>
+                            <button type="button" className="bg-primary hover:bg-primary-hover text-white transition-all">Search</button>
                         </div>
                     </div>
                     <div className="col-sm-3 text-end">
@@ -277,28 +277,28 @@ const OurAstrologer = () => {
                             </div>
                             <div className="modal-body p-4">
                                 <div className="space-y-3">
-                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "none" ? "#F25E0A" : "#e5e7eb", backgroundColor: sortOption === "none" ? "#fff7ed" : "white" }}>
-                                        <input type="radio" name="sortOption" value="none" checked={sortOption === "none"} onChange={() => setSortOption("none")} className="form-check-input me-3" style={{ accentColor: "#F25E0A" }} />
+                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "none" ? "primary" : "#e5e7eb", backgroundColor: sortOption === "none" ? "#fff7ed" : "white" }}>
+                                        <input type="radio" name="sortOption" value="none" checked={sortOption === "none"} onChange={() => setSortOption("none")} className="form-check-input me-3" style={{ accentColor: "primary" }} />
                                         <i className="fa-solid fa-ban text-primary mr-3"></i>
                                         <span className="font-medium">None (Default Order)</span>
                                     </label>
-                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "rating" ? "#F25E0A" : "#e5e7eb", backgroundColor: sortOption === "rating" ? "#fff7ed" : "white" }}>
-                                        <input type="radio" name="sortOption" value="rating" checked={sortOption === "rating"} onChange={() => setSortOption("rating")} className="form-check-input me-3" style={{ accentColor: "#F25E0A" }} />
+                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "rating" ? "primary" : "#e5e7eb", backgroundColor: sortOption === "rating" ? "#fff7ed" : "white" }}>
+                                        <input type="radio" name="sortOption" value="rating" checked={sortOption === "rating"} onChange={() => setSortOption("rating")} className="form-check-input me-3" style={{ accentColor: "primary" }} />
                                         <i className="fa-solid fa-star text-primary mr-3"></i>
                                         <span className="font-medium">Rating: High to Low</span>
                                     </label>
-                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "experience" ? "#F25E0A" : "#e5e7eb", backgroundColor: sortOption === "experience" ? "#fff7ed" : "white" }}>
-                                        <input type="radio" name="sortOption" value="experience" checked={sortOption === "experience"} onChange={() => setSortOption("experience")} className="form-check-input me-3" style={{ accentColor: "#F25E0A" }} />
+                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "experience" ? "primary" : "#e5e7eb", backgroundColor: sortOption === "experience" ? "#fff7ed" : "white" }}>
+                                        <input type="radio" name="sortOption" value="experience" checked={sortOption === "experience"} onChange={() => setSortOption("experience")} className="form-check-input me-3" style={{ accentColor: "primary" }} />
                                         <i className="fa-solid fa-briefcase text-primary mr-3"></i>
                                         <span className="font-medium">Experience: High to Low</span>
                                     </label>
-                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "price_desc" ? "#F25E0A" : "#e5e7eb", backgroundColor: sortOption === "price_desc" ? "#fff7ed" : "white" }}>
-                                        <input type="radio" name="sortOption" value="price_desc" checked={sortOption === "price_desc"} onChange={() => setSortOption("price_desc")} className="form-check-input me-3" style={{ accentColor: "#F25E0A" }} />
+                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "price_desc" ? "primary" : "#e5e7eb", backgroundColor: sortOption === "price_desc" ? "#fff7ed" : "white" }}>
+                                        <input type="radio" name="sortOption" value="price_desc" checked={sortOption === "price_desc"} onChange={() => setSortOption("price_desc")} className="form-check-input me-3" style={{ accentColor: "primary" }} />
                                         <i className="fa-solid fa-arrow-down-9-1 text-primary mr-3"></i>
                                         <span className="font-medium">Price: High to Low</span>
                                     </label>
-                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "price_asc" ? "#F25E0A" : "#e5e7eb", backgroundColor: sortOption === "price_asc" ? "#fff7ed" : "white" }}>
-                                        <input type="radio" name="sortOption" value="price_asc" checked={sortOption === "price_asc"} onChange={() => setSortOption("price_asc")} className="form-check-input me-3" style={{ accentColor: "#F25E0A" }} />
+                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "price_asc" ? "primary" : "#e5e7eb", backgroundColor: sortOption === "price_asc" ? "#fff7ed" : "white" }}>
+                                        <input type="radio" name="sortOption" value="price_asc" checked={sortOption === "price_asc"} onChange={() => setSortOption("price_asc")} className="form-check-input me-3" style={{ accentColor: "primary" }} />
                                         <i className="fa-solid fa-arrow-up-1-9 text-primary mr-3"></i>
                                         <span className="font-medium">Price: Low to High</span>
                                     </label>
@@ -344,7 +344,7 @@ const OurAstrologer = () => {
                                         <label className="form-label font-bold text-gray-700 mb-0">Price Range</label>
                                         <span className="badge bg-primary text-white px-3 py-1.5 rounded-full">Up to ₹{localFilter.maxPrice}/min</span>
                                     </div>
-                                    <input type="range" className="form-range w-100" min="0" max="1000" step="10" value={localFilter.maxPrice} onChange={(e) => setLocalFilter({ ...localFilter, maxPrice: parseInt(e.target.value) })} style={{ accentColor: "#F25E0A" }} />
+                                    <input type="range" className="form-range w-100" min="0" max="1000" step="10" value={localFilter.maxPrice} onChange={(e) => setLocalFilter({ ...localFilter, maxPrice: parseInt(e.target.value) })} style={{ accentColor: "primary" }} />
                                     <div className="d-flex justify-content-between text-xs text-gray-500 mt-1 px-1">
                                         <span>₹0</span>
                                         <span>₹250</span>
