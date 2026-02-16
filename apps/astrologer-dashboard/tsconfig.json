@@ -15,7 +15,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -26,8 +26,17 @@
       "@/*": [
         "./*"
       ],
-      "@shared/*": [
-        "../../shared/*"
+      "@repo/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@repo/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@repo/lib": [
+        "../../packages/lib/src/index.ts"
+      ],
+      "@repo/lib/*": [
+        "../../packages/lib/src/*"
       ]
     }
   },
@@ -36,8 +45,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "../../shared/**/*.ts",
-    "../../shared/**/*.tsx"
+    "../../packages/ui/src/**/*.ts",
+    "../../packages/ui/src/**/*.tsx",
+    "../../packages/lib/src/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

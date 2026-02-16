@@ -147,3 +147,5 @@ const FamousPlacesPage = () => {
 };
 
 export default FamousPlacesPage;
+
+

@@ -2,10 +2,8 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import Header from "@packages/ui/src/Header";
-import Footer from "@packages/ui/src/Footer";
+import { Header, Footer, useClientAuth } from "@repo/ui";
 import ToastProvider from "./ToastProvider";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
 import FloatingChatButton from "../features/chat/FloatingChatButton";
 
 export default function ClientLayout({
@@ -44,3 +42,5 @@ export default function ClientLayout({
     </>
   );
 }
+
+

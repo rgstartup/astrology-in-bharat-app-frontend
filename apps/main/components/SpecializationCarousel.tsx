@@ -73,3 +73,5 @@ const SpecializationCarousel: React.FC<SpecializationCarouselProps> = ({
 };
 
 export default SpecializationCarousel;
+
+

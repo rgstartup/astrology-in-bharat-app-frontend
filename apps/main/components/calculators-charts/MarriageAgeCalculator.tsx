@@ -320,3 +320,5 @@ const MarriageAgeCalculator: React.FC = () => {
 };
 
 export default MarriageAgeCalculator;
+
+

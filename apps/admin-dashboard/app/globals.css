@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #000000;
-  --primary-hover: #D94E00;
+  --primary-color: #FF6B00;
+  --primary-hover: #E65100;
+  --secondary-color: #4A1D1F;
 }
 
 /* Hide scrollbar but keep functionality */

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { X, LucideIcon, Play, Image as ImageIcon, FileText, CheckCircle2, AlertCircle, ExternalLink, Download, CheckCircle, Circle, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@repo/ui";
 
 const XComp = X as any;
 const PlayComp = Play as any;
@@ -11,7 +12,6 @@ const AlertCircleComp = AlertCircle as any;
 const CircleComp = Circle as any;
 const ChevronDownComp = ChevronDown as any;
 const ChevronUpComp = ChevronUp as any;
-import { Button } from "../../../../shared/components/Button";
 
 interface DetailItem {
   icon: LucideIcon;
@@ -381,3 +381,6 @@ export function ProfileModal({
     </div>
   );
 }
+
+
+

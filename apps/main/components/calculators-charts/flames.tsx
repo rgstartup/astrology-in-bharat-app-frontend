@@ -357,3 +357,5 @@ const FlamesCalculator: React.FC = () => {
 };
 
 export default FlamesCalculator;
+
+

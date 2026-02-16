@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Shield, CheckCircle2, FileText, Upload, Trash2, File as FileIcon, Award, ChevronRight, ChevronDown, ChevronUp, CreditCard, UserSquare2, X } from "lucide-react";
 import { DocumentItem } from "./types";
-import { Button } from "../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 interface VerificationAndDocumentsProps {
     kycCompleted: boolean;
@@ -517,3 +517,5 @@ export default function VerificationAndDocuments({
         </div >
     );
 }
+
+

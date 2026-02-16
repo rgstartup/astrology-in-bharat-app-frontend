@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Landmark, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
 import { BankAccount } from "./types";
 import { toast } from "react-toastify";
-import { Button } from "../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 interface WithdrawMoneyProps {
     availableBalance: number;
@@ -116,3 +116,5 @@ export default function WithdrawMoney({ availableBalance, bankAccounts, onWithdr
         </div>
     );
 }
+
+

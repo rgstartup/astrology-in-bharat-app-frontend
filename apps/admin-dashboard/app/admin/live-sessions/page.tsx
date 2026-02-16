@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import { StatsCards } from "../../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 import { toast } from "react-toastify";
 
 import {
@@ -231,3 +231,7 @@ export default function LiveSessionsPage() {
     </main>
   );
 }
+
+
+
+

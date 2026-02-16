@@ -5,10 +5,10 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "swiper/css";
 import "swiper/css/navigation";
 
-import "@packages/styles/index.css";
+import "@repo/ui/styles/index.css";
 import ClientLayout from "@/components/layout/ClientLayout";
-import { ClientAuthProvider } from "@packages/ui/src/context/ClientAuthContext";
-import { CartProvider } from "@packages/ui/src/context/CartContext";
+import { ClientAuthProvider } from "@repo/ui";
+import { CartProvider } from "@repo/ui";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { Metadata } from "next";
 
@@ -74,3 +74,5 @@ export default function RootLayout({
 // Helper to handle client-side conditional rendering of Header/Footer
 // Actually, it's cleaner to just put Header/Footer inside ClientLayout and handle logic there.
 // I will update ClientLayout in the next step to include Header/Footer logic.
+
+

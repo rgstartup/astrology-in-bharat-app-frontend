@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { Plus, X, Upload, Link as LinkIcon, Image as ImageIcon, Pencil, Trash2, Search } from "lucide-react";
 import { toast } from "react-toastify";
-import { Button } from "../../../../shared/components/Button";
-import { SearchInput } from "../../../../shared/components/SearchInput";
+import { Button } from "@repo/ui";
+import { SearchInput } from "@repo/ui";
 import { Product, ProductService } from "../../../src/services/products.service";
 
 // Cast icons to any to avoid React 19 type errors
@@ -457,3 +457,7 @@ export default function ProductsPage() {
         </div>
     );
 }
+
+
+
+

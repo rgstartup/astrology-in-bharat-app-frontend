@@ -387,3 +387,6 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
 };
 
 export const useClientAuth = () => useContext(ClientAuthContext);
+
+
+

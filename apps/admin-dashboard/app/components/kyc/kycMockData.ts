@@ -124,3 +124,6 @@ export const mockKYCData: ExpertKYC[] = [
     address: "654, Temple Road, Mysore, KA - 570001",
   },
 ];
+
+
+

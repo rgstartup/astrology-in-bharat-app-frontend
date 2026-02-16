@@ -6,7 +6,7 @@ import React, { useState, useCallback, FormEvent, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 
 // --- Types ---
 interface RegistrationPayload {
@@ -437,3 +437,5 @@ const Page: React.FC = () => {
 };
 
 export default Page;
+
+

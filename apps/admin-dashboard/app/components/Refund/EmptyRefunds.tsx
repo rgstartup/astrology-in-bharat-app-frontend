@@ -1,7 +1,7 @@
 // refund-management/components/EmptyRefunds.tsx
 import React from "react";
 import { Receipt, RefreshCw } from "lucide-react";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 export function EmptyRefunds() {
   return (
@@ -33,3 +33,6 @@ export function EmptyRefunds() {
     </div>
   );
 }
+
+
+

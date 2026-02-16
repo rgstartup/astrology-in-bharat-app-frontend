@@ -99,3 +99,5 @@ const SortModal: React.FC<SortModalProps> = ({ isOpen, onClose, onApply }) => {
 };
 
 export default SortModal;
+
+

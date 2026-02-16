@@ -284,3 +284,5 @@ const NumerologyLifePathCalculator: React.FC = () => {
 };
 
 export default NumerologyLifePathCalculator;
+
+

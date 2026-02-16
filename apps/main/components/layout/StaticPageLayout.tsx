@@ -31,3 +31,5 @@ const StaticPageLayout: React.FC<StaticPageLayoutProps> = ({ title, children }) 
 };
 
 export default StaticPageLayout;
+
+

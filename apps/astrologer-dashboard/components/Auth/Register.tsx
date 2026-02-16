@@ -9,7 +9,7 @@ import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 
-import { Button } from "../../../shared/components/Button";
+import { Button } from "@repo/ui";
 const Image = NextImage as any;
 const Link = NextLink as any;
 const UserIcon = User as any;
@@ -259,3 +259,5 @@ const RegisterPage: React.FC = () => {
 };
 
 export default RegisterPage;
+
+

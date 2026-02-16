@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 interface AnalyticsHeaderProps {
   timeFilter: string;
@@ -39,3 +39,6 @@ export function AnalyticsHeader({ timeFilter, setTimeFilter }: AnalyticsHeaderPr
     </div>
   );
 }
+
+
+

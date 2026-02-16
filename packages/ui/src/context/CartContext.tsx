@@ -203,3 +203,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const useCart = () => useContext(CartContext);
+
+
+

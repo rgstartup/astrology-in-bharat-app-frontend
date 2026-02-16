@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { X, Clock, Sparkles } from "lucide-react";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 interface AddServiceProps {
   onClose: () => void;
@@ -295,3 +295,7 @@ const AddService: React.FC<AddServiceProps> = ({ onClose }) => {
 };
 
 export default AddService;
+
+
+
+

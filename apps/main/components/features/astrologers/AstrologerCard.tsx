@@ -4,11 +4,11 @@ import NextLink from "next/link";
 const Link = NextLink as any;
 
 import React, { useState, useRef } from "react";
-import { Button } from "@shared/components/Button";
+import { Button } from "@repo/ui";
 import { Modal } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import { useWishlist } from "@/context/WishlistContext";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 import { toast } from "react-toastify";
 
 interface Astrologer {
@@ -422,3 +422,5 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
 };
 
 export default AstrologerCard;
+
+

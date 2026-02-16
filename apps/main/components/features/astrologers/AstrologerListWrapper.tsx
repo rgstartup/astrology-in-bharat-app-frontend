@@ -75,3 +75,5 @@ export default function AstrologerListWrapper({ searchParams, layout, title }: A
         </Suspense>
     );
 }
+
+

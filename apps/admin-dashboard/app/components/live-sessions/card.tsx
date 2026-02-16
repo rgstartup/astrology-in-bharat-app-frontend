@@ -1,7 +1,7 @@
 // live-sessions/components/LiveSessionCard.tsx
 import React, { useState, useEffect } from "react";
 import { Video, Mic, MessageSquare, Clock, VideoOff, AlertCircle, Eye, PhoneOff } from "lucide-react";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 const VideoComp = Video as any;
 const MicComp = Mic as any;
@@ -186,3 +186,6 @@ export function LiveSessionCard({
     </div>
   );
 }
+
+
+

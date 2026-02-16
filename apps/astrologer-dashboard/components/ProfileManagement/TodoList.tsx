@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ListTodo, Plus, CheckCircle2, Circle, Trash2 } from "lucide-react";
 import { Todo } from "./types";
-import { Button } from "../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 interface TodoListProps {
     todos: Todo[];
@@ -104,3 +104,5 @@ export default function TodoList({
         </div>
     );
 }
+
+

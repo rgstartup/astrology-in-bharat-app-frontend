@@ -1,5 +1,5 @@
 import React from "react";
-import { StatsCards } from "../../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 import { FileText, Clock, CheckCircle, XCircle } from "lucide-react";
 
 interface KYCStatsCardsProps {
@@ -50,3 +50,6 @@ export default function KYCStatsCards({
     />
   );
 }
+
+
+

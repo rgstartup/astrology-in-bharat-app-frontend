@@ -3,8 +3,8 @@ import React, { useState, useMemo, lazy, Suspense, useEffect, useCallback } from
 
 // Components
 import { DataTable } from "@/app/components/admin/DataTable";
-import { StatsCards } from "../../../../shared/components/StatsCard";
-import { Loading } from "../../../../shared/components/Loading";
+import { StatsCards } from "@repo/ui";
+import { Loading } from "@repo/ui";
 import { ConfirmationModal } from "@/app/components/admin/ConfirmationModal";
 
 // Data config and types
@@ -248,3 +248,6 @@ export default function UsersPage() {
     </>
   );
 }
+
+
+

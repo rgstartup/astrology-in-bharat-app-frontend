@@ -59,3 +59,6 @@ export function RevenueChart({ data }: RevenueChartProps) {
     </div>
   );
 }
+
+
+

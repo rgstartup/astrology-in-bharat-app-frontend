@@ -23,3 +23,6 @@ export function QualityIndicator({ quality }: QualityIndicatorProps) {
     </div>
   );
 }
+
+
+

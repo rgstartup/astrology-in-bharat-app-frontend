@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 import { toast } from "react-toastify";
 import apiClient from "@/libs/api-profile";
 import * as LucideIcons from "lucide-react";
@@ -209,3 +209,5 @@ export default function UserWalletPage() {
         </div>
     );
 }
+
+

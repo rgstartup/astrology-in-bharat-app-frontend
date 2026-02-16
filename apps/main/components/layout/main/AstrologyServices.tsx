@@ -42,3 +42,5 @@ const AstrologyServices = () => {
 };
 
 export default AstrologyServices;
+
+

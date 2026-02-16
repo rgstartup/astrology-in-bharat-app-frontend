@@ -152,3 +152,5 @@ export function getPlaceBySlug(slug: string): Place | null {
   const cached = getAllCachedPlaces();
   return cached.find((p) => p.slug === slug) || null;
 }
+
+

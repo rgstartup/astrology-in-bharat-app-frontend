@@ -8,7 +8,7 @@ import {
     deleteBankAccount,
     setPrimaryBankAccount
 } from "@/lib/profile";
-import { Button } from "../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 interface BankAccount {
     id: string;
@@ -354,3 +354,5 @@ export default function PayoutInfo() {
         </div>
     );
 }
+
+

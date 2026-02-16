@@ -5,10 +5,10 @@ import React, { useState, useMemo, lazy, Suspense } from "react";
 import { Plus } from "lucide-react";
 
 // Components
-import { StatsCards } from "../../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 import { ServiceCard } from "@/app/components/Service/ServiceCard";
-import { Button } from "../../../../shared/components/Button";
-import { SearchInput } from "../../../../shared/components/SearchInput";
+import { Button } from "@repo/ui";
+import { SearchInput } from "@repo/ui";
 
 const AddService = lazy(() => import("@/app/components/Service/AddService"));
 // Data config
@@ -135,3 +135,6 @@ export default function ServicesPage() {
     </main>
   );
 }
+
+
+

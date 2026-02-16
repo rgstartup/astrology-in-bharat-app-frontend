@@ -120,3 +120,4 @@ const AstrologyServicesSection = () => {
 };
 
 export default AstrologyServicesSection;
+

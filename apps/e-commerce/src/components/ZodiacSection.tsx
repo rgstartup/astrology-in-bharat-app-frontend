@@ -62,3 +62,4 @@ const ZodiacSection = () => {
 };
 
 export default ZodiacSection;
+

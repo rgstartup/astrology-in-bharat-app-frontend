@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as LucideIcons from "lucide-react";
 import apiClient from "@/libs/api-profile";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 
 import { getActiveChatSessions, getPendingChatSessions } from "@/libs/api-profile";
 
@@ -154,3 +154,5 @@ export default function FloatingChatButton() {
         </div>
     );
 }
+
+

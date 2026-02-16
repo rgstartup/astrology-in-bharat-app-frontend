@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useMemo } from "react";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 import { Star, Calendar, CheckCircle, Flag, Trash2 } from "lucide-react";
 import type { Review } from "@/app/components/reviews/review";
 
@@ -111,3 +111,6 @@ export function ReviewCard({ review, isLast }: ReviewCardProps) {
     </div>
   );
 }
+
+
+

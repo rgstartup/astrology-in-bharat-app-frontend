@@ -11,3 +11,6 @@ export interface Service {
   rating: number;
   popularity: "high" | "medium" | "low";
 }
+
+
+

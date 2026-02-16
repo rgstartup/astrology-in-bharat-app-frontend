@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,8 +23,21 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
-      "@shared/*": ["../../shared/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@repo/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@repo/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@repo/lib": [
+        "../../packages/lib/src/index.ts"
+      ],
+      "@repo/lib/*": [
+        "../../packages/lib/src/*"
+      ]
     }
   },
   "include": [
@@ -30,8 +47,11 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts",
-    "../../shared/**/*.ts",
-    "../../shared/**/*.tsx"
+    "../../packages/ui/src/**/*.ts",
+    "../../packages/ui/src/**/*.tsx",
+    "../../packages/lib/src/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

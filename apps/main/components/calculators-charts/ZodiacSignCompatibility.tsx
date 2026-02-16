@@ -534,3 +534,5 @@ const ZodiacCompatibilityCalculator: React.FC = () => {
 };
 
 export default ZodiacCompatibilityCalculator;
+
+

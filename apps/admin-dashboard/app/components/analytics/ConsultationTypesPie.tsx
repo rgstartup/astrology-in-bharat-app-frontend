@@ -39,3 +39,6 @@ export function ConsultationTypesPie({ data }: ConsultationTypesPieProps) {
     </div>
   );
 }
+
+
+

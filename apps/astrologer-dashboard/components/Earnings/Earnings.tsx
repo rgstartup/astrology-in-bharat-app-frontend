@@ -7,7 +7,7 @@ import TopInsights from "./TopInsights";
 import { EarningsDashboardData } from "./types";
 import { ChevronDown, Calendar, Download } from "lucide-react";
 import { getEarningsStats } from "@/lib/earnings";
-import { Button } from "../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 export default function EarningsPage() {
   const [timeRange, setTimeRange] = useState("last_6_months");
@@ -121,3 +121,5 @@ export default function EarningsPage() {
     </div>
   );
 }
+
+

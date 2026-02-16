@@ -3,7 +3,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { toast } from "react-toastify";
 
 // Components
-import { StatsCards } from "../../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 import { DataTable } from "@/app/components/admin/DataTable";
 import { DisputeModal } from "@/app/components/dispute/DisputeModal";
 
@@ -111,3 +111,6 @@ export default function DisputesPage() {
     </main>
   );
 }
+
+
+

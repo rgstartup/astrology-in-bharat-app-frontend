@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source "../../shared";
+@source "../../packages/ui/src";
 
 /* Hide Scrolbar */
 .no-scrollbar {

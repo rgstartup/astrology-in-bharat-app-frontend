@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from "@shared/components/Button";
+import { Button } from "@repo/ui";
 
 interface ProfileFormProps {
     profileData: any;
@@ -421,3 +421,5 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
 };
 
 export default ProfileForm;
+
+

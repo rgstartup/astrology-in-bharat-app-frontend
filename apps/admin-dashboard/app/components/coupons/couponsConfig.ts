@@ -113,3 +113,6 @@ export const getStatsConfig = (coupons: Coupon[]) => [
     trend: { value: "+5%", isPositive: true, period: "vs last month" },
   },
 ];
+
+
+

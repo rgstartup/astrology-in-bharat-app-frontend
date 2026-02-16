@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { Plus, Search, Tag, Loader2 } from "lucide-react";
-import { StatsCards } from "../../../../shared/components/StatsCard";
+import { StatsCards } from "@repo/ui";
 import { CouponCard } from "@/app/components/coupons/CouponCard";
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 import { getCoupons, getCouponStats } from "@/src/services/admin.service";
 import { toast } from "react-toastify";
 
@@ -212,3 +212,6 @@ export default function CouponsPage() {
     </main>
   );
 }
+
+
+

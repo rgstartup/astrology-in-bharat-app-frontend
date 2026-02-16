@@ -7,12 +7,11 @@ import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import apiClient from "@/lib/apiClient";
 import { useAuth } from "@/context/AuthContext";
-
+import { Button } from "@repo/ui";
 import { toast } from "react-toastify";
 
 const Image = NextImage as any;
 const Link = NextLink as any;
-import { Button } from "../../../shared/components/Button";
 const UserIcon = User as any;
 const LockIcon = Lock as any;
 const EyeIcon = Eye as any;
@@ -249,3 +248,5 @@ const LoginPage: React.FC = () => {
 }
 
 export default LoginPage;
+
+

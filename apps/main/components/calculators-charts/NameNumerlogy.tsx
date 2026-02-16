@@ -321,3 +321,5 @@ const NameNumerologyCalculator: React.FC = () => {
 };
 
 export default NameNumerologyCalculator;
+
+

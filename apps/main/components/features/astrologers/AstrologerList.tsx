@@ -555,3 +555,5 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
 };
 
 export default AstrologerList;
+
+

@@ -60,3 +60,5 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({
 };
 
 export default AppointmentCard;
+
+

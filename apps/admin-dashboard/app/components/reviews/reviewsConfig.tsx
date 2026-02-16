@@ -88,3 +88,6 @@ export const getStatsConfig = (reviews: Review[]) => [
     trend: { value: "+18%", isPositive: true, period: "this month" },
   },
 ];
+
+
+

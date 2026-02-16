@@ -31,3 +31,5 @@ const AstrologyProduct = async () => {
 };
 
 export default AstrologyProduct;
+
+

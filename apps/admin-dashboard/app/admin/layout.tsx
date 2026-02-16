@@ -33,9 +33,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
-import { SearchInput } from "../../../shared/components/SearchInput";
-import { Avatar } from "../../../shared/components/Avatar";
-import { NotificationBell } from "../../../shared/components/NotificationBell";
+import { SearchInput, Avatar, NotificationBell } from "@repo/ui";
 import { toast } from "react-toastify";
 interface MenuItem {
   label: string;
@@ -427,3 +425,6 @@ export default function AdminLayout({
     </AdminGuard>
   );
 }
+
+
+

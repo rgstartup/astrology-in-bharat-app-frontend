@@ -114,3 +114,5 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
 };
 
 export default RewardsTab;
+
+

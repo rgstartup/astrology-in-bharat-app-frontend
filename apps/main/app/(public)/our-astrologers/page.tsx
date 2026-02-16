@@ -29,3 +29,5 @@ const page = ({ searchParams }: { searchParams: any }) => {
 };
 
 export default page;
+
+

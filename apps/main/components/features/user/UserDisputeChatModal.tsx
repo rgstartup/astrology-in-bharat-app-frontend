@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { X, Send, Paperclip, Image as ImageIcon, FileText, Download, AlertCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import { getNotificationSocket, getSupportSocket } from "@packages/ui/src/utils/socket";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 import { getDisputeMessages, sendDisputeMessage, markDisputeMessagesRead, uploadClientDocument, getDisputeById } from "@/libs/api-profile";
 
 // Define message types locally since we can't import from admin
@@ -378,3 +378,5 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
         </div>
     );
 }
+
+

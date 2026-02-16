@@ -690,3 +690,5 @@ const MangalDoshaPage = () => {
 };
 
 export default MangalDoshaPage;
+
+

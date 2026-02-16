@@ -1,4 +1,4 @@
-import { apiClient } from "@packages/ui/src/context/ClientAuthContext";
+import { apiClient } from "@repo/ui";
 
 export interface ClientProfileData {
     id?: number;
@@ -185,3 +185,5 @@ export const markDisputeMessagesRead = async (disputeId: number) => {
 };
 
 export default apiClient;
+
+

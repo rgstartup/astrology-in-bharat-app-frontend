@@ -14,8 +14,8 @@ import {
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { Order, OrderService } from "../../../src/services/orders.service";
-import { SearchInput } from "../../../../shared/components/SearchInput";
-import { Button } from "../../../../shared/components/Button";
+import { SearchInput } from "@repo/ui";
+import { Button } from "@repo/ui";
 import { getNotificationSocket, connectAdminSocket } from "../../../src/utils/socket";
 
 // Cast icons
@@ -418,3 +418,7 @@ export default function OrdersPage() {
         </div>
     );
 }
+
+
+
+

@@ -108,3 +108,5 @@ export const ConsultationRatings: React.FC<ConsultationRatingsProps> = ({
         </div>
     );
 };
+
+

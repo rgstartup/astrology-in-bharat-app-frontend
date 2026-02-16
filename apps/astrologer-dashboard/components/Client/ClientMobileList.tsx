@@ -121,3 +121,5 @@ export default function ClientMobileList({ clients, onViewChat }: ClientMobileLi
         </div>
     );
 }
+
+

@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowDownLeft, ArrowUpRight, Clock, CheckCircle2, XCircle, Landmark } from "lucide-react";
 import { WalletTransaction } from "./types";
-import { Button } from "../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 interface WalletTableProps {
     transactions: WalletTransaction[];
@@ -111,3 +111,5 @@ export default function WalletTable({ transactions }: WalletTableProps) {
         </div>
     );
 }
+
+

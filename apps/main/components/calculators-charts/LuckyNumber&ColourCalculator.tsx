@@ -504,3 +504,5 @@ const LuckyColorNumberCalculator: React.FC = () => {
 };
 
 export default LuckyColorNumberCalculator;
+
+

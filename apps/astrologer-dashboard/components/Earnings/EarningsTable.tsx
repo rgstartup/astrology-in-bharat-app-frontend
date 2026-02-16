@@ -88,3 +88,5 @@ export default function EarningsTable({ transactions }: EarningsTableProps) {
         </div>
     );
 }
+
+

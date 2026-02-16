@@ -53,3 +53,5 @@ export interface EarningsDashboardData {
     topUsers: TopUser[];
     topServices: TopService[];
 }
+
+

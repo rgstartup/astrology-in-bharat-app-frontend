@@ -160,3 +160,5 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
 };
 
 export default ConsultationChatModal;
+
+

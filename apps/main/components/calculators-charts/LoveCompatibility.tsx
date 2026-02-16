@@ -387,3 +387,5 @@ const LoveCompatibilityCalcultor: React.FC = () => {
 };
 
 export default LoveCompatibilityCalcultor;
+
+

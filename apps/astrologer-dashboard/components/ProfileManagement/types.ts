@@ -93,3 +93,5 @@ export interface DocumentItem {
     category?: 'aadhar' | 'pan' | 'other';
     side?: 'front' | 'back';
 }
+
+

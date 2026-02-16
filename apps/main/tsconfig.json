@@ -3,9 +3,24 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@shared/*": ["../shared/*"],
-      "@packages/*": ["../../packages/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@repo/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@repo/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@repo/lib": [
+        "../../packages/lib/src/index.ts"
+      ],
+      "@repo/lib/*": [
+        "../../packages/lib/src/*"
+      ],
+      "@packages/*": [
+        "../../packages/*"
+      ]
     },
     "plugins": [
       {
@@ -19,8 +34,14 @@
     "next-env.d.ts",
     "next.config.js",
     ".next/types/**/*.ts",
-    "../shared/**/*.ts",
-    "../shared/**/*.tsx"
-, "app/test/page.tsx"  ],
-  "exclude": ["node_modules", ".next", "dist", "build"]
+    "../../packages/ui/src/**/*.ts",
+    "../../packages/ui/src/**/*.tsx",
+    "../../packages/lib/src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "build"
+  ]
 }

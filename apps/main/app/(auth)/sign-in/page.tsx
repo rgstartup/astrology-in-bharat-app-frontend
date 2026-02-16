@@ -7,7 +7,7 @@ const Link = NextLink as any;
 import React, { useState, useCallback, FormEvent, Suspense, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 import { toast } from "react-toastify";
 
 // --- 1. Define Typescript Interfaces ---
@@ -387,3 +387,5 @@ const Page: React.FC = () => {
 };
 
 export default Page;
+
+

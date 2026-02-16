@@ -346,3 +346,5 @@ const LoyalPartnerCalculator: React.FC = () => {
 };
 
 export default LoyalPartnerCalculator;
+
+

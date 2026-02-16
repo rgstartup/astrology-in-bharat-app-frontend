@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { AlertTriangle, X } from 'lucide-react';
-import { Button } from "../../../../shared/components/Button";
+import { Button } from "@repo/ui";
 
 const AlertTriangleComp = AlertTriangle as any;
 const XComp = X as any;
@@ -115,3 +115,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         </div>
     );
 };
+
+
+
+

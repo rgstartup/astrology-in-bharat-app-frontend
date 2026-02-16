@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useClientAuth } from "@repo/ui";
 import { WishlistService } from "../services/wishlist.service";
 
 export interface WishlistItem {
@@ -215,3 +215,5 @@ export const WishlistProvider = ({ children }: { children: React.ReactNode }) =>
 };
 
 export const useWishlist = () => useContext(WishlistContext);
+
+

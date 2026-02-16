@@ -32,3 +32,4 @@ const FloatingCartButton = () => {
 };
 
 export default FloatingCartButton;
+
