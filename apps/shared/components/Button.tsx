@@ -33,9 +33,9 @@ export function Button({
 
     const variants = {
         primary:
-            "bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/20 focus:ring-orange-400",
+            "bg-primary hover:bg-primary-hover text-white shadow-lg shadow-primary/20 focus:ring-primary-hover",
         secondary:
-            "bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 focus:ring-gray-300",
+            "bg-secondary hover:bg-secondary-dark text-white focus:ring-secondary",
         success:
             "bg-green-600 hover:bg-green-700 text-white shadow-md focus:ring-green-400",
         danger:
@@ -43,7 +43,7 @@ export function Button({
         warning:
             "bg-yellow-500 hover:bg-yellow-600 text-white shadow-md focus:ring-yellow-400",
         outline:
-            "bg-white border border-gray-300 hover:border-orange-500 hover:text-orange-500 text-gray-700 focus:ring-orange-200",
+            "bg-white border border-border-light hover:border-primary hover:text-primary text-text-light focus:ring-primary/20",
         ghost:
             "bg-transparent hover:bg-black/5",
     };

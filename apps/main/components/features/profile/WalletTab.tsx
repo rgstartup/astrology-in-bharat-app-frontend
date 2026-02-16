@@ -36,13 +36,13 @@ const WalletTab: React.FC<WalletTabProps> = ({
             <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6 relative overflow-hidden">
                 {/* Abstract shapes */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-                <div className="absolute bottom-0 left-0 w-48 h-48 bg-orange-500/10 rounded-full -ml-10 -mb-10 blur-xl"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary/10 rounded-full -ml-10 -mb-10 blur-xl"></div>
 
                 <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
                         <div className="flex items-center gap-3 mb-2">
                             <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
-                                <i className="fa-solid fa-wallet text-orange-400 text-xl"></i>
+                                <i className="fa-solid fa-wallet text-primary text-xl"></i>
                             </div>
                             <h5 className="font-bold text-white text-xl tracking-wide">My Wallet</h5>
                         </div>
@@ -54,7 +54,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                             variant={walletView === 'recharge' ? 'primary' : 'ghost'}
                             size="sm"
                             onClick={() => setWalletView('recharge')}
-                            className={walletView === 'recharge' ? "shadow-orange-500/30" : "text-gray-300 hover:text-white"}
+                            className={walletView === 'recharge' ? "shadow-primary/30" : "text-gray-300 hover:text-white"}
                         >
                             <i className="fa-solid fa-plus-circle"></i>
                             Add Money
@@ -102,8 +102,8 @@ const WalletTab: React.FC<WalletTabProps> = ({
                         {/* Section Header */}
                         <div className="mb-6">
                             <div className="flex items-center mb-2">
-                                <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-lg mr-3">
-                                    <i className="fa-solid fa-money-bill-transfer text-orange-500"></i>
+                                <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-lg mr-3">
+                                    <i className="fa-solid fa-money-bill-transfer text-primary"></i>
                                 </div>
                                 <h6 className="font-bold text-gray-800 text-lg">Add Money to Wallet</h6>
                             </div>
@@ -131,7 +131,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                                             type="number"
                                             value={rechargeAmount}
                                             onChange={(e) => setRechargeAmount(parseInt(e.target.value) || 0)}
-                                            className="w-full pl-10 pr-4 py-4 border border-gray-300 rounded-xl font-bold text-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                                            className="w-full pl-10 pr-4 py-4 border border-gray-300 rounded-xl font-bold text-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                                             placeholder="0"
                                             min="100"
                                             max="50000"
@@ -157,8 +157,8 @@ const WalletTab: React.FC<WalletTabProps> = ({
                                         type="button"
                                         onClick={() => setRechargeAmount(amt)}
                                         className={`relative p-5 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center min-h-[120px] group ${rechargeAmount === amt
-                                            ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg'
-                                            : 'border-gray-200 bg-white hover:border-orange-300 hover:shadow-md'
+                                            ? 'border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg'
+                                            : 'border-gray-200 bg-white hover:border-primary/50 hover:shadow-md'
                                             }`}
                                     >
                                         {/* Active indicator */}
@@ -171,7 +171,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                                         {/* Amount */}
                                         <div className="flex items-center mb-2">
                                             <span className="text-lg font-bold mr-1">₹</span>
-                                            <span className={`text-3xl font-black ${rechargeAmount === amt ? 'text-orange-600' : 'text-gray-800'
+                                            <span className={`text-3xl font-black ${rechargeAmount === amt ? 'text-primary' : 'text-gray-800'
                                                 }`}>
                                                 {amt}
                                             </span>
@@ -188,7 +188,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                                         )}
 
                                         {/* Hover effect */}
-                                        <div className="absolute inset-0 rounded-2xl bg-orange-500 opacity-0 group-hover:opacity-5 transition-opacity"></div>
+                                        <div className="absolute inset-0 rounded-2xl bg-primary opacity-0 group-hover:opacity-5 transition-opacity"></div>
                                     </button>
                                 ))}
                             </div>
@@ -234,7 +234,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                     <div className="mt-0 pt-0">
                         <div className="flex items-center justify-between mb-6">
                             <h6 className="font-bold text-gray-800 text-lg flex items-center">
-                                <i className="fa-solid fa-clock-rotate-left mr-3 text-orange-500 bg-orange-100 p-2 rounded-lg"></i>
+                                <i className="fa-solid fa-clock-rotate-left mr-3 text-primary bg-primary/10 p-2 rounded-lg"></i>
                                 Transaction History
                             </h6>
                             <div className="flex gap-2">
@@ -274,7 +274,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                                             <tr>
                                                 <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                                                     <div className="flex flex-col items-center justify-center">
-                                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mb-3"></div>
+                                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-3"></div>
                                                         <p>Loading transactions...</p>
                                                     </div>
                                                 </td>

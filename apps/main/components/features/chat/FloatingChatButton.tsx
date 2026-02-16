@@ -113,7 +113,7 @@ export default function FloatingChatButton() {
                     margin-left: -75%;
                     margin-top: -75%;
                     border-radius: 50%;
-                    background-color: #fd6410;
+                    background-color: #F25E0A;
                     animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
                     pointer-events: none;
                     z-index: 1;
@@ -124,10 +124,10 @@ export default function FloatingChatButton() {
             <div className="relative group">
                 {/* Floating Content */}
                 <div className="absolute right-full mr-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none scale-90 group-hover:scale-100">
-                    <span className="bg-white/90 backdrop-blur-md text-[#2A0A0A] text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-2xl shadow-xl border border-orange-500/20">
+                    <span className="bg-white/90 backdrop-blur-md text-[#2A0A0A] text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-2xl shadow-xl border border-primary/20">
                         {activeSession.expert?.user?.name || "Expert"} is waiting
                     </span>
-                    <span className="text-[9px] font-bold text-orange-500 bg-orange-50 px-2 py-0.5 rounded-full border border-orange-100 uppercase tracking-tighter self-end shadow-sm animate-pulse">
+                    <span className="text-[9px] font-bold text-primary bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10 uppercase tracking-tighter self-end shadow-sm animate-pulse">
                         Return to Chat
                     </span>
                 </div>
@@ -140,7 +140,7 @@ export default function FloatingChatButton() {
                             router.push(`/chat/room/${activeSession.expertId}?sessionId=${activeSession.id}`);
                         }
                     }}
-                    className={`relative w-16 h-16 bg-gradient-to-tr from-[#fd6410] to-[#ff8c4a] rounded-full flex items-center justify-center shadow-[0_15px_40px_rgba(253,100,16,0.4)] hover:shadow-[0_20px_60px_rgba(253,100,16,0.6)] transition-all active:scale-90 cursor-grab active:cursor-grabbing border-4 border-white overflow-visible`}
+                    className={`relative w-16 h-16 bg-gradient-to-tr from-primary to-primary-hover rounded-full flex items-center justify-center shadow-lg shadow-primary/40 hover:shadow-xl hover:shadow-primary/60 transition-all active:scale-90 cursor-grab active:cursor-grabbing border-4 border-white overflow-visible`}
                 >
                     <div className="absolute inset-0 pulse-ring-active"></div>
                     <div className="relative z-10">

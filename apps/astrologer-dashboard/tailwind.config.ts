@@ -10,6 +10,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          orange: "#F25E0A",
+          brown: "#4A1D1F",
+          white: "#FFFFFF",
+        },
         gold: "#daa23e",
         "astro-primary": "#732882",
         "astro-bg": "#fcfbf5",

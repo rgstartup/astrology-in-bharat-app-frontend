@@ -103,7 +103,7 @@ const AstrologerFilterModal: React.FC<AstrologerFilterModalProps> = ({
                                         key={rating}
                                         onClick={() => setLocalFilter({ ...localFilter, minRating: rating })}
                                         className={`flex-1 py-1.5 rounded-md border text-sm transition ${localFilter.minRating === rating
-                                            ? 'bg-[#fd6410] text-white border-[#fd6410]'
+                                            ? 'bg-primary text-white border-primary'
                                             : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
                                             }`}
                                     >
@@ -117,7 +117,7 @@ const AstrologerFilterModal: React.FC<AstrologerFilterModalProps> = ({
                         <div className="mb-4">
                             <div className="d-flex justify-content-between mb-2">
                                 <label className="form-label font-bold text-gray-700">Price Range</label>
-                                <span className="px-3 py-1 rounded-full font-bold text-sm shadow-sm" style={{ backgroundColor: "#fd6410", color: "#fff" }}>
+                                <span className="px-3 py-1 rounded-full font-bold text-sm shadow-sm" style={{ backgroundColor: "#F25E0A", color: "#fff" }}>
                                     Up to ₹{localFilter.maxPrice}/min
                                 </span>
                             </div>
@@ -125,7 +125,7 @@ const AstrologerFilterModal: React.FC<AstrologerFilterModalProps> = ({
                                 type="range"
                                 className="form-range w-full h-2 rounded-lg appearance-none cursor-pointer"
                                 style={{
-                                    background: `linear-gradient(to right, #fd6410 ${(localFilter.maxPrice / 1000) * 100}%, #e5e7eb ${(localFilter.maxPrice / 1000) * 100}%)`
+                                    background: `linear-gradient(to right, #F25E0A ${(localFilter.maxPrice / 1000) * 100}%, #e5e7eb ${(localFilter.maxPrice / 1000) * 100}%)`
                                 }}
                                 min="0"
                                 max="1000"
@@ -135,25 +135,25 @@ const AstrologerFilterModal: React.FC<AstrologerFilterModalProps> = ({
                             />
                             <div className="d-flex justify-content-between text-xs mt-2 font-medium">
                                 <span
-                                    className={`cursor-pointer transition-colors ${localFilter.maxPrice <= 50 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                                    className={`cursor-pointer transition-colors ${localFilter.maxPrice <= 50 ? 'text-primary font-bold' : 'text-gray-400 hover:text-primary'}`}
                                     onClick={() => setLocalFilter({ ...localFilter, maxPrice: 50 })}
                                 >
                                     ₹50
                                 </span>
                                 <span
-                                    className={`cursor-pointer transition-colors ${localFilter.maxPrice > 50 && localFilter.maxPrice <= 200 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                                    className={`cursor-pointer transition-colors ${localFilter.maxPrice > 50 && localFilter.maxPrice <= 200 ? 'text-primary font-bold' : 'text-gray-400 hover:text-primary'}`}
                                     onClick={() => setLocalFilter({ ...localFilter, maxPrice: 200 })}
                                 >
                                     ₹200
                                 </span>
                                 <span
-                                    className={`cursor-pointer transition-colors ${localFilter.maxPrice > 200 && localFilter.maxPrice <= 500 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                                    className={`cursor-pointer transition-colors ${localFilter.maxPrice > 200 && localFilter.maxPrice <= 500 ? 'text-primary font-bold' : 'text-gray-400 hover:text-primary'}`}
                                     onClick={() => setLocalFilter({ ...localFilter, maxPrice: 500 })}
                                 >
                                     ₹500
                                 </span>
                                 <span
-                                    className={`cursor-pointer transition-colors ${localFilter.maxPrice > 500 ? 'text-[#fd6410] font-bold' : 'text-gray-400 hover:text-orange-500'}`}
+                                    className={`cursor-pointer transition-colors ${localFilter.maxPrice > 500 ? 'text-primary font-bold' : 'text-gray-400 hover:text-primary'}`}
                                     onClick={() => setLocalFilter({ ...localFilter, maxPrice: 1000 })}
                                 >
                                     Any Price
@@ -196,8 +196,7 @@ const AstrologerFilterModal: React.FC<AstrologerFilterModalProps> = ({
                         </button>
                         <button
                             type="button"
-                            className="btn text-white grow font-semibold py-2 shadow-sm"
-                            style={{ backgroundColor: "#fd6410", borderColor: "#fd6410" }}
+                            className="btn text-white grow font-semibold py-2 shadow-sm bg-primary border-primary"
                             data-bs-dismiss="modal"
                             onClick={applyFilters}
                         >

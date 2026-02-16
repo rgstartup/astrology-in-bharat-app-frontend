@@ -231,7 +231,7 @@ const OurAstrologer = () => {
                     <div className="col-sm-4 d-flex align-items-center">
                         <button
                             onClick={() => scroll("left")}
-                            className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full mr-2 hover:bg-[#fd64101a] transition shrink-0"
+                            className="d-flex align-items-center justify-content-center text-primary rounded-full mr-2 hover:bg-primary/10 transition shrink-0"
                             style={{ width: "30px", height: "30px", border: "none", background: "transparent" }}
                         >
                             <i className="fa-solid fa-chevron-left"></i>
@@ -243,7 +243,7 @@ const OurAstrologer = () => {
                         >
                             <div
                                 onClick={() => setSelectedSpecialization("")}
-                                className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-[#fd6410] cursor-pointer transition duration-300 ${selectedSpecialization === "" ? "bg-[#fd6410] text-white" : "bg-white text-[#1e0b0f] hover:bg-[#fd6410] hover:text-white"}`}
+                                className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-primary cursor-pointer transition duration-300 ${selectedSpecialization === "" ? "bg-primary text-white" : "bg-white text-[#1e0b0f] hover:bg-primary hover:text-white"}`}
                             >
                                 All
                             </div>
@@ -251,7 +251,7 @@ const OurAstrologer = () => {
                                 <div
                                     key={spec}
                                     onClick={() => setSelectedSpecialization(spec)}
-                                    className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-[#fd6410] cursor-pointer transition duration-300 ${selectedSpecialization === spec ? "bg-[#fd6410] text-white" : "bg-white text-[#1e0b0f] hover:bg-[#fd6410] hover:text-white"}`}
+                                    className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-primary cursor-pointer transition duration-300 ${selectedSpecialization === spec ? "bg-primary text-white" : "bg-white text-[#1e0b0f] hover:bg-primary hover:text-white"}`}
                                 >
                                     {spec}
                                 </div>
@@ -259,7 +259,7 @@ const OurAstrologer = () => {
                         </div>
                         <button
                             onClick={() => scroll("right")}
-                            className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full ml-2 hover:bg-[#fd64101a] transition shrink-0"
+                            className="d-flex align-items-center justify-content-center text-primary rounded-full ml-2 hover:bg-primary/10 transition shrink-0"
                             style={{ width: "30px", height: "30px", border: "none", background: "transparent" }}
                         >
                             <i className="fa-solid fa-chevron-right"></i>
@@ -272,34 +272,34 @@ const OurAstrologer = () => {
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content text-dark border-0 shadow-lg rounded-3">
                             <div className="modal-header bg-linear-to-r from-orange-50 to-white border-0 py-3 px-4">
-                                <h5 className="modal-title font-bold text-lg"><i className="fa-solid fa-sort mr-2 text-[#fd6410]"></i>Sort By</h5>
+                                <h5 className="modal-title font-bold text-lg"><i className="fa-solid fa-sort mr-2 text-primary"></i>Sort By</h5>
                                 <button type="button" className="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">X</button>
                             </div>
                             <div className="modal-body p-4">
                                 <div className="space-y-3">
-                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-[#fd6410] hover:bg-orange-50" style={{ borderColor: sortOption === "none" ? "#fd6410" : "#e5e7eb", backgroundColor: sortOption === "none" ? "#fff7ed" : "white" }}>
-                                        <input type="radio" name="sortOption" value="none" checked={sortOption === "none"} onChange={() => setSortOption("none")} className="form-check-input me-3" style={{ accentColor: "#fd6410" }} />
-                                        <i className="fa-solid fa-ban text-[#fd6410] mr-3"></i>
+                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "none" ? "#F25E0A" : "#e5e7eb", backgroundColor: sortOption === "none" ? "#fff7ed" : "white" }}>
+                                        <input type="radio" name="sortOption" value="none" checked={sortOption === "none"} onChange={() => setSortOption("none")} className="form-check-input me-3" style={{ accentColor: "#F25E0A" }} />
+                                        <i className="fa-solid fa-ban text-primary mr-3"></i>
                                         <span className="font-medium">None (Default Order)</span>
                                     </label>
-                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-[#fd6410] hover:bg-orange-50" style={{ borderColor: sortOption === "rating" ? "#fd6410" : "#e5e7eb", backgroundColor: sortOption === "rating" ? "#fff7ed" : "white" }}>
-                                        <input type="radio" name="sortOption" value="rating" checked={sortOption === "rating"} onChange={() => setSortOption("rating")} className="form-check-input me-3" style={{ accentColor: "#fd6410" }} />
-                                        <i className="fa-solid fa-star text-[#fd6410] mr-3"></i>
+                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "rating" ? "#F25E0A" : "#e5e7eb", backgroundColor: sortOption === "rating" ? "#fff7ed" : "white" }}>
+                                        <input type="radio" name="sortOption" value="rating" checked={sortOption === "rating"} onChange={() => setSortOption("rating")} className="form-check-input me-3" style={{ accentColor: "#F25E0A" }} />
+                                        <i className="fa-solid fa-star text-primary mr-3"></i>
                                         <span className="font-medium">Rating: High to Low</span>
                                     </label>
-                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-[#fd6410] hover:bg-orange-50" style={{ borderColor: sortOption === "experience" ? "#fd6410" : "#e5e7eb", backgroundColor: sortOption === "experience" ? "#fff7ed" : "white" }}>
-                                        <input type="radio" name="sortOption" value="experience" checked={sortOption === "experience"} onChange={() => setSortOption("experience")} className="form-check-input me-3" style={{ accentColor: "#fd6410" }} />
-                                        <i className="fa-solid fa-briefcase text-[#fd6410] mr-3"></i>
+                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "experience" ? "#F25E0A" : "#e5e7eb", backgroundColor: sortOption === "experience" ? "#fff7ed" : "white" }}>
+                                        <input type="radio" name="sortOption" value="experience" checked={sortOption === "experience"} onChange={() => setSortOption("experience")} className="form-check-input me-3" style={{ accentColor: "#F25E0A" }} />
+                                        <i className="fa-solid fa-briefcase text-primary mr-3"></i>
                                         <span className="font-medium">Experience: High to Low</span>
                                     </label>
-                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-[#fd6410] hover:bg-orange-50" style={{ borderColor: sortOption === "price_desc" ? "#fd6410" : "#e5e7eb", backgroundColor: sortOption === "price_desc" ? "#fff7ed" : "white" }}>
-                                        <input type="radio" name="sortOption" value="price_desc" checked={sortOption === "price_desc"} onChange={() => setSortOption("price_desc")} className="form-check-input me-3" style={{ accentColor: "#fd6410" }} />
-                                        <i className="fa-solid fa-arrow-down-9-1 text-[#fd6410] mr-3"></i>
+                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "price_desc" ? "#F25E0A" : "#e5e7eb", backgroundColor: sortOption === "price_desc" ? "#fff7ed" : "white" }}>
+                                        <input type="radio" name="sortOption" value="price_desc" checked={sortOption === "price_desc"} onChange={() => setSortOption("price_desc")} className="form-check-input me-3" style={{ accentColor: "#F25E0A" }} />
+                                        <i className="fa-solid fa-arrow-down-9-1 text-primary mr-3"></i>
                                         <span className="font-medium">Price: High to Low</span>
                                     </label>
-                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-[#fd6410] hover:bg-orange-50" style={{ borderColor: sortOption === "price_asc" ? "#fd6410" : "#e5e7eb", backgroundColor: sortOption === "price_asc" ? "#fff7ed" : "white" }}>
-                                        <input type="radio" name="sortOption" value="price_asc" checked={sortOption === "price_asc"} onChange={() => setSortOption("price_asc")} className="form-check-input me-3" style={{ accentColor: "#fd6410" }} />
-                                        <i className="fa-solid fa-arrow-up-1-9 text-[#fd6410] mr-3"></i>
+                                    <label className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-orange-50" style={{ borderColor: sortOption === "price_asc" ? "#F25E0A" : "#e5e7eb", backgroundColor: sortOption === "price_asc" ? "#fff7ed" : "white" }}>
+                                        <input type="radio" name="sortOption" value="price_asc" checked={sortOption === "price_asc"} onChange={() => setSortOption("price_asc")} className="form-check-input me-3" style={{ accentColor: "#F25E0A" }} />
+                                        <i className="fa-solid fa-arrow-up-1-9 text-primary mr-3"></i>
                                         <span className="font-medium">Price: Low to High</span>
                                     </label>
                                 </div>
@@ -316,7 +316,7 @@ const OurAstrologer = () => {
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content text-dark border-0 shadow-lg rounded-3">
                             <div className="modal-header bg-linear-to-r from-orange-50 to-white border-0 py-3 px-4">
-                                <h5 className="modal-title font-bold text-lg"><i className="fa-solid fa-filter mr-2 text-[#fd6410]"></i>Filter Astrologers</h5>
+                                <h5 className="modal-title font-bold text-lg"><i className="fa-solid fa-filter mr-2 text-primary"></i>Filter Astrologers</h5>
                                 <button type="button" className="btn-close shadow-none text-red-500" data-bs-dismiss="modal" aria-label="Close ">X</button>
                             </div>
                             <div className="modal-body p-4">
@@ -324,7 +324,7 @@ const OurAstrologer = () => {
                                 <div className="mb-4">
                                     <label className="form-label font-bold text-gray-700 mb-2">Language</label>
                                     <div className="input-group">
-                                        <span className="input-group-text bg-white border-end-0 rounded-start-lg"><i className="fa-solid fa-language text-[#fd6410]"></i></span>
+                                        <span className="input-group-text bg-white border-end-0 rounded-start-lg"><i className="fa-solid fa-language text-primary"></i></span>
                                         <input type="text" className="form-control border-start-0 shadow-none rounded-end-lg" placeholder="e.g. Hindi, English" value={localFilter.language} onChange={(e) => setLocalFilter({ ...localFilter, language: e.target.value })} />
                                     </div>
                                 </div>
@@ -333,7 +333,7 @@ const OurAstrologer = () => {
                                 <div className="mb-4">
                                     <label className="form-label font-bold text-gray-700 mb-2">State</label>
                                     <div className="input-group">
-                                        <span className="input-group-text bg-white border-end-0 rounded-start-lg"><i className="fa-solid fa-location-dot text-[#fd6410]"></i></span>
+                                        <span className="input-group-text bg-white border-end-0 rounded-start-lg"><i className="fa-solid fa-location-dot text-primary"></i></span>
                                         <input type="text" className="form-control border-start-0 shadow-none rounded-end-lg" placeholder="e.g. Maharashtra, Delhi" value={localFilter.addressState} onChange={(e) => setLocalFilter({ ...localFilter, addressState: e.target.value })} />
                                     </div>
                                 </div>
@@ -342,9 +342,9 @@ const OurAstrologer = () => {
                                 <div className="mb-4">
                                     <div className="d-flex justify-content-between align-items-center mb-2">
                                         <label className="form-label font-bold text-gray-700 mb-0">Price Range</label>
-                                        <span className="badge bg-[#fd6410] text-white px-3 py-1.5 rounded-full">Up to ₹{localFilter.maxPrice}/min</span>
+                                        <span className="badge bg-primary text-white px-3 py-1.5 rounded-full">Up to ₹{localFilter.maxPrice}/min</span>
                                     </div>
-                                    <input type="range" className="form-range w-100" min="0" max="1000" step="10" value={localFilter.maxPrice} onChange={(e) => setLocalFilter({ ...localFilter, maxPrice: parseInt(e.target.value) })} style={{ accentColor: "#fd6410" }} />
+                                    <input type="range" className="form-range w-100" min="0" max="1000" step="10" value={localFilter.maxPrice} onChange={(e) => setLocalFilter({ ...localFilter, maxPrice: parseInt(e.target.value) })} style={{ accentColor: "#F25E0A" }} />
                                     <div className="d-flex justify-content-between text-xs text-gray-500 mt-1 px-1">
                                         <span>₹0</span>
                                         <span>₹250</span>
@@ -402,24 +402,24 @@ const OurAstrologer = () => {
 
                 {loading && astrologers.length > 0 && (
                     <div className="text-center my-4">
-                        <div className="spinner-border text-[#fd6410]" role="status"><span className="visually-hidden">Loading...</span></div>
+                        <div className="spinner-border text-primary" role="status"><span className="visually-hidden">Loading...</span></div>
                     </div>
                 )}
 
                 {!loading && astrologers.length === 0 && (
-                    <div className="text-center my-10 py-10 bg-orange-50 rounded-2xl border border-dashed border-[#fd641033]">
+                    <div className="text-center my-10 py-10 bg-orange-50 rounded-2xl border border-dashed border-primary/20">
                         <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                            <i className="fa-solid fa-magnifying-glass fa-2x text-[#fd641055]"></i>
+                            <i className="fa-solid fa-magnifying-glass fa-2x text-primary/30"></i>
                         </div>
                         <h4 className="text-[#13070b] font-bold">No Astrologers Match Your Selection</h4>
                         <p className="text-gray-500 mb-4">Try clearing some filters or searching with different keywords.</p>
-                        <button onClick={() => { setSearchQuery(""); setSelectedSpecialization(""); resetFilters(); setSortOption("newest"); }} className="btn bg-[#fd6410] text-white px-4 py-2 font-semibold rounded-lg shadow-md hover:opacity-90 transition">Reset All Filters</button>
+                        <button onClick={() => { setSearchQuery(""); setSelectedSpecialization(""); resetFilters(); setSortOption("newest"); }} className="btn bg-primary text-white px-4 py-2 font-semibold rounded-lg shadow-md hover:opacity-90 transition">Reset All Filters</button>
                     </div>
                 )}
 
                 {hasMore && !loading && (
                     <div className="view-all mt-4 mb-4">
-                        <button onClick={handleLoadMore} className="btn bg-white border border-[#fd6410] text-[#fd6410] px-5 py-2.5 rounded-full font-bold hover:bg-[#fd6410] hover:text-white transition duration-300 shadow-sm m-auto block">
+                        <button onClick={handleLoadMore} className="btn bg-white border border-primary text-primary px-5 py-2.5 rounded-full font-bold hover:bg-primary hover:text-white transition duration-300 shadow-sm m-auto block">
                             Load More Experts
                         </button>
                     </div>

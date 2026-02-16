@@ -442,7 +442,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
           <div className="flex items-center relative mt-4">
             <button
               onClick={() => scrollCards("left")}
-              className="shrink-0 w-10 h-10 flex items-center justify-center text-[#fd6410] hover:scale-110 transition cursor-pointer z-10"
+              className="shrink-0 w-10 h-10 flex items-center justify-center text-primary hover:scale-110 transition cursor-pointer z-10"
               style={{ background: "transparent" }}
             >
               <i className="fa-solid fa-chevron-left fa-2x"></i>
@@ -463,7 +463,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
               ) : !loading && initialError ? (
                 <div className="w-full text-center py-10 flex flex-col items-center justify-center">
                   <p className="text-red-500 font-semibold mb-2">Failed to load astrologers</p>
-                  <button onClick={() => window.location.reload()} className="px-4 py-2 bg-[#fd6410] text-white rounded-full text-sm">Retry</button>
+                  <button onClick={() => window.location.reload()} className="px-4 py-2 bg-primary text-white rounded-full text-sm">Retry</button>
                 </div>
               ) : !loading && astrologers.length === 0 ? (
                 <div className="w-full text-center py-10">
@@ -479,7 +479,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
 
               {loading && astrologers.length > 0 && (
                 <div className="d-flex align-items-center justify-content-center min-w-[200px]">
-                  <div className="spinner-border text-[#fd6410]" role="status">
+                  <div className="spinner-border text-primary" role="status">
                     <span className="visually-hidden">Loading...</span>
                   </div>
                 </div>
@@ -488,7 +488,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
 
             <button
               onClick={() => scrollCards("right")}
-              className="shrink-0 w-10 h-10 flex items-center justify-content-center text-[#fd6410] hover:scale-110 transition cursor-pointer z-10"
+              className="shrink-0 w-10 h-10 flex items-center justify-center text-primary hover:scale-110 transition cursor-pointer z-10"
               style={{ background: "transparent" }}
             >
               <i className="fa-solid fa-chevron-right fa-2x"></i>
@@ -506,7 +506,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
               ) : !loading && initialError ? (
                 <div className="col-12 text-center py-10">
                   <p className="text-red-500 font-semibold mb-2">Failed to load astrologers</p>
-                  <button onClick={() => window.location.reload()} className="px-4 py-2 bg-[#fd6410] text-white rounded-full text-sm">Retry</button>
+                  <button onClick={() => window.location.reload()} className="px-4 py-2 bg-primary text-white rounded-full text-sm">Retry</button>
                 </div>
               ) : !loading && astrologers.length === 0 ? (
                 <div className="col-12 text-center py-10">
@@ -523,7 +523,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
 
             {loading && astrologers.length > 0 && (
               <div className="text-center my-4">
-                <div className="spinner-border text-[#fd6410]" role="status">
+                <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
               </div>
@@ -533,7 +533,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
               <div className="view-all mt-4 mb-4 text-center">
                 <button
                   onClick={handleLoadMore}
-                  className="btn bg-white border border-[#fd6410] text-[#fd6410] px-5 py-2.5 rounded-full font-bold hover:bg-[#fd6410] hover:text-white transition duration-300 shadow-sm mx-auto"
+                  className="btn bg-white border border-primary text-primary px-5 py-2.5 rounded-full font-bold hover:bg-primary hover:text-white transition duration-300 shadow-sm mx-auto"
                 >
                   Load More Experts
                 </button>

@@ -115,7 +115,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
 
             {/* 🖼️ Image Area with Glow */}
             <div className="relative w-full aspect-square bg-[#f9f9f9] flex items-center justify-center overflow-hidden shrink-0">
-                <div className="absolute w-32 h-32 bg-orange-100 rounded-full blur-3xl opacity-60"></div>
+                <div className="absolute w-32 h-32 bg-primary/10 rounded-full blur-3xl opacity-60"></div>
                 <div className="relative w-full h-full">
                     <Image
                         src={imageUrl}
@@ -145,7 +145,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
 
                 {/* 💰 Price Section */}
                 <div className="flex items-end gap-2 mt-auto pt-2">
-                    <span className="text-2xl font-bold text-[#F95E09]">
+                    <span className="text-2xl font-bold text-primary">
                         ₹{price}
                     </span>
                     {originalPrice > price && (
@@ -162,7 +162,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                         size="md"
                         onClick={handleBuy}
                         loading={isAdding}
-                        className="flex-1 !rounded-full border-[#F95E09] text-[#F95E09] hover:bg-orange-50 h-10 text-[10px] p-6"
+                        className="flex-1 !rounded-full border-primary text-primary hover:bg-primary/5 h-10 text-[10px] p-6"
                     >
                         Add to Cart
                     </Button>

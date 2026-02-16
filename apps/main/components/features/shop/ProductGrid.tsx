@@ -54,7 +54,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search products..."
                                     className="w-full border border-gray-300 rounded-lg py-2.5 pl-10 pr-10 text-base outline-none transition-all 
-                                    hover:border-[#F25E0A] focus:border-[#F25E0A] focus:ring-1 focus:ring-[#F25E0A] placeholder-gray-400 text-gray-700 bg-white"
+                                    hover:border-primary focus:border-primary focus:ring-1 focus:ring-primary placeholder-gray-400 text-gray-700 bg-white"
                                 />
                                 {searchQuery && (
                                     <button

@@ -6,6 +6,8 @@ import NextImage from "next/image";
 import { Search, X } from "lucide-react";
 
 const Image = NextImage as any;
+const SearchIcon = Search as any;
+const XIcon = X as any;
 
 interface Product {
     id?: string;
@@ -68,21 +70,21 @@ const ProductSection: React.FC<ProductSectionProps> = ({ products }) => {
                     <div className="w-100" style={{ maxWidth: '300px' }}>
                         {/* 🔹 Local Search Input Implementation */}
                         <div className="relative w-full">
-                            <Search className="absolute top-1/2 -translate-y-1/2 left-3 w-5 h-5 text-gray-400" />
+                            <SearchIcon className="absolute top-1/2 -translate-y-1/2 left-3 w-5 h-5 text-gray-400" />
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search products..."
                                 className="w-full border border-gray-300 rounded-lg py-2.5 pl-10 pr-10 text-base outline-none transition-all 
-                                    hover:border-[#F25E0A] focus:border-[#F25E0A] focus:ring-1 focus:ring-[#F25E0A] placeholder-gray-400 text-gray-700 bg-white"
+                                    hover:border-primary focus:border-primary focus:ring-1 focus:ring-primary placeholder-gray-400 text-gray-700 bg-white"
                             />
                             {searchQuery && (
                                 <button
                                     onClick={handleClear}
                                     className="absolute top-1/2 -translate-y-1/2 right-3 p-1 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
                                 >
-                                    <X className="w-4 h-4" />
+                                    <XIcon className="w-4 h-4" />
                                 </button>
                             )}
                         </div>

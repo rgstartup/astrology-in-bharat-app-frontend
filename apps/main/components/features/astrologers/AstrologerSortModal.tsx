@@ -35,7 +35,7 @@ const AstrologerSortModal: React.FC<AstrologerSortModalProps> = ({
                 <div className="modal-content text-dark border-0 shadow-lg rounded-3">
                     <div className="modal-header bg-linear-to-r from-orange-50 to-white border-0 py-3 px-4">
                         <h5 className="modal-title font-bold text-lg">
-                            <i className="fa-solid fa-sort mr-2 text-[#fd6410]"></i>Sort By
+                            <i className="fa-solid fa-sort mr-2 text-primary"></i>Sort By
                         </h5>
                         <button
                             type="button"
@@ -50,10 +50,10 @@ const AstrologerSortModal: React.FC<AstrologerSortModalProps> = ({
                             {options.map((option) => (
                                 <label
                                     key={option.value}
-                                    className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-[#fd6410] hover:bg-orange-50 mb-2"
+                                    className="d-flex align-items-center p-3 rounded-lg border cursor-pointer transition hover:border-primary hover:bg-primary/5 mb-2"
                                     style={{
-                                        borderColor: sortBy === option.value ? "#fd6410" : "#e5e7eb",
-                                        backgroundColor: sortBy === option.value ? "#fff7ed" : "white",
+                                        borderColor: sortBy === option.value ? "#F25E0A" : "#e5e7eb",
+                                        backgroundColor: sortBy === option.value ? "#fffaf5" : "white",
                                     }}
                                 >
                                     <input
@@ -63,10 +63,10 @@ const AstrologerSortModal: React.FC<AstrologerSortModalProps> = ({
                                         checked={sortBy === option.value}
                                         onChange={() => setSortBy(option.value)}
                                         className="form-check-input me-3"
-                                        style={{ accentColor: "#fd6410" }}
+                                        style={{ accentColor: "#F25E0A" }}
                                     />
-                                    <i className={`fa-solid ${option.icon} text-[#fd6410] mr-3`} style={{ width: "20px" }}></i>
-                                    <span className={`font-medium ${sortBy === option.value ? 'text-[#fd6410]' : 'text-gray-700'}`}>
+                                    <i className={`fa-solid ${option.icon} text-primary mr-3`} style={{ width: "20px" }}></i>
+                                    <span className={`font-medium ${sortBy === option.value ? 'text-primary' : 'text-gray-700'}`}>
                                         {option.label}
                                     </span>
                                 </label>

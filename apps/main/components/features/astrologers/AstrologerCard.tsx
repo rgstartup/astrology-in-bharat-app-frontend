@@ -214,7 +214,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
     drop-shadow-lg
     transition-all
     duration-300
-    hover:text-orange-500
+    hover:text-primary
     hover:scale-110
   "
                 onClick={(e) => {
@@ -309,7 +309,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
               ).map((service, index) => (
                 <span
                   key={index}
-                  className="whitespace-nowrap inline-block bg-[#fd6410] text-white text-[12px] px-2 py-0.5 rounded-full flex-shrink-0 animate-fadeIn"
+                  className="whitespace-nowrap inline-block bg-primary text-white text-[12px] px-2 py-0.5 rounded-full flex-shrink-0 animate-fadeIn"
                 >
                   {service}
                 </span>

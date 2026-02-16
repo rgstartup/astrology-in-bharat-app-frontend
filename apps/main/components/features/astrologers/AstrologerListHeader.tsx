@@ -59,13 +59,13 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
             <div className="col-lg-3 col-md-6 text-md-end text-center d-flex align-items-center justify-content-md-end justify-content-center">
                 <button
                     type="button"
-                    className="filter-btn border-0 bg-transparent cursor-pointer hover:text-[#fd6410] transition-colors relative"
+                    className="filter-btn border-0 bg-transparent cursor-pointer hover:text-primary transition-colors relative"
                     data-bs-toggle="modal"
                     data-bs-target={`#${filterModalId}`}
                 >
                     <i className="fa-solid fa-filter"></i> Filter
                     {hasActiveFilters && (
-                        <span className="absolute top-0 right-0 w-2 h-2 bg-[#fd6410] rounded-full translate-x-1/2 -translate-y-1/2"></span>
+                        <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full translate-x-1/2 -translate-y-1/2"></span>
                     )}
                 </button>
 
@@ -84,7 +84,7 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
             <div className="col-lg-4 col-md-12 d-flex align-items-center">
                 <button
                     onClick={() => scrollTabs("left")}
-                    className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full mr-2 hover:bg-[#fd64101a] transition shrink-0"
+                    className="d-flex align-items-center justify-content-center text-primary rounded-full mr-2 hover:bg-primary/10 transition shrink-0"
                     style={{
                         width: "30px",
                         height: "30px",
@@ -101,7 +101,7 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
                 >
                     <div
                         onClick={() => setSelectedSpecialization("")}
-                        className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-[#fd6410] cursor-pointer transition duration-300 ${selectedSpecialization === "" ? "bg-[#fd6410] text-white" : "bg-white text-[#1e0b0f] hover:bg-[#fd6410] hover:text-white"}`}
+                        className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-primary cursor-pointer transition duration-300 ${selectedSpecialization === "" ? "bg-primary text-white" : "bg-white text-[#1e0b0f] hover:bg-primary hover:text-white"}`}
                     >
                         All
                     </div>
@@ -109,7 +109,7 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
                         <div
                             key={spec}
                             onClick={() => setSelectedSpecialization(spec)}
-                            className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-[#fd6410] cursor-pointer transition duration-300 ${selectedSpecialization === spec ? "bg-[#fd6410] text-white" : "bg-white text-[#1e0b0f] hover:bg-[#fd6410] hover:text-white"}`}
+                            className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-primary cursor-pointer transition duration-300 ${selectedSpecialization === spec ? "bg-primary text-white" : "bg-white text-[#1e0b0f] hover:bg-primary hover:text-white"}`}
                         >
                             {spec}
                         </div>
@@ -117,7 +117,7 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
                 </div>
                 <button
                     onClick={() => scrollTabs("right")}
-                    className="d-flex align-items-center justify-content-center text-[#fd6410] rounded-full ml-2 hover:bg-[#fd64101a] transition shrink-0"
+                    className="d-flex align-items-center justify-content-center text-primary rounded-full ml-2 hover:bg-primary/10 transition shrink-0"
                     style={{
                         width: "30px",
                         height: "30px",
