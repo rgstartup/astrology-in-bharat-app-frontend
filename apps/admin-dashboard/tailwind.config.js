@@ -9,6 +9,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        primary: "#000000",
+        "primary-hover": "#D94E00",
         brand: {
           orange: "#F25E0A",
           brown: "#4A1D1F",

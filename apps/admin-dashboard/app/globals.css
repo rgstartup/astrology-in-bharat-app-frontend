@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-color: #000000;
+  --primary-hover: #D94E00;
+}
+
 /* Hide scrollbar but keep functionality */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -29,10 +34,10 @@
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background: #b45309;
+  background: var(--primary-color, black);
   border-radius: 3px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  background: #92400e;
+  background: var(--primary-hover, #D94E00);
 }

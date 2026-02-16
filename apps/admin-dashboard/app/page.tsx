@@ -79,7 +79,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 rounded-2xl overflow-hidden shadow-2xl bg-white">
         {/* Left Side: Image / Visual Section */}
         <div className="relative hidden lg:block h-[500px]">
-          <div className="absolute inset-0 bg-yellow-600 bg-opacity-70 flex flex-col items-center justify-center text-white p-8 z-10">
+          <div className="absolute inset-0 bg-primary bg-opacity-70 flex flex-col items-center justify-center text-white p-8 z-10">
             <img
               src="/images/Astrologer.png"
               alt="Logo"
@@ -127,7 +127,7 @@ export default function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                   placeholder="admin@astrologyinbharat.com"
                 />
               </div>
@@ -153,7 +153,7 @@ export default function AdminLoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                   placeholder="********"
                 />
                 <button
@@ -173,7 +173,7 @@ export default function AdminLoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
+                  className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
                 />
                 <label
                   htmlFor="remember-me"
@@ -185,7 +185,7 @@ export default function AdminLoginPage() {
               <div className="text-sm">
                 <a
                   href="#"
-                  className="font-medium text-yellow-600 hover:text-yellow-500"
+                  className="font-medium text-primary hover:text-primary-hover"
                 >
                   Forgot your password?
                 </a>

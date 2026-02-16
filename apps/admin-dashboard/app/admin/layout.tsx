@@ -139,8 +139,8 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
           className={cn(
             "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-left",
             isActiveLink
-              ? "bg-yellow-800 text-white shadow-lg"
-              : "text-white hover:bg-yellow-700"
+              ? "bg-primary-hover text-white shadow-lg"
+              : "text-white hover:bg-primary-hover"
           )}
         >
           <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -155,8 +155,8 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         className={cn(
           "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200",
           isActiveLink
-            ? "bg-yellow-800 text-white shadow-lg"
-            : "text-white hover:bg-yellow-700"
+            ? "bg-primary-hover text-white shadow-lg"
+            : "text-white hover:bg-primary-hover"
         )}
         aria-current={isActiveLink ? "page" : undefined}
       >
@@ -172,8 +172,8 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
       <button
         onClick={() => onToggleSubmenu(item.label)}
         className={cn(
-          "w-full px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-between text-white hover:bg-yellow-700 transition-colors duration-200",
-          isSubmenuOpen && "bg-yellow-700"
+          "w-full px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-between text-white hover:bg-primary-hover transition-colors duration-200",
+          isSubmenuOpen && "bg-primary-hover"
         )}
         aria-expanded={isSubmenuOpen}
         aria-controls={`submenu-${item.label.replace(/\s/g, "-").toLowerCase()}`}
@@ -234,8 +234,8 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
                     }, 1000);
                   }}
                   className={cn(
-                    "block w-full text-left px-3 py-2 rounded-lg text-sm text-yellow-100 hover:bg-yellow-600 hover:text-white transition-colors duration-200",
-                    isSubmenuActive && "bg-yellow-600 text-white font-medium"
+                    "block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-primary-hover hover:text-white transition-colors duration-200",
+                    isSubmenuActive && "bg-primary-hover text-white font-medium"
                   )}
                 >
                   {subItem.label}
@@ -248,8 +248,8 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
                 key={subItem.label}
                 href={subItem.href}
                 className={cn(
-                  "block px-3 py-2 rounded-lg text-sm text-yellow-100 hover:bg-yellow-600 hover:text-white transition-colors duration-200",
-                  isSubmenuActive && "bg-yellow-600 text-white font-medium"
+                  "block px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-primary-hover hover:text-white transition-colors duration-200",
+                  isSubmenuActive && "bg-primary-hover text-white font-medium"
                 )}
                 aria-current={isSubmenuActive ? "page" : undefined}
               >
@@ -292,7 +292,7 @@ const Sidebar: React.FC<SidebarProps> = memo(
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed left-0 top-0 h-full w-64 flex flex-col bg-yellow-600 text-white transition-transform duration-300 ease-in-out z-50 shadow-xl shadow-gray-400",
+            "fixed left-0 top-0 h-full w-64 flex flex-col bg-primary text-white transition-transform duration-300 ease-in-out z-50 shadow-xl shadow-gray-400",
             isOpen ? "translate-x-0" : "-translate-x-full",
             "lg:translate-x-0"
           )}
@@ -315,7 +315,7 @@ const Sidebar: React.FC<SidebarProps> = memo(
             />
             <button
               onClick={toggleSidebar}
-              className="lg:hidden p-1 hover:bg-yellow-700 rounded transition-colors duration-200 text-gray-800"
+              className="lg:hidden p-1 hover:bg-primary-hover rounded transition-colors duration-200 text-gray-800"
               aria-label="Close sidebar"
             >
               <X className="w-5 h-5" />
