@@ -38,10 +38,10 @@ interface AuthState {
     refreshAuth: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
     user: null,
     isAuthenticated: false,
-    loading: false,
+    loading: true,
 
     login: (newToken: string, userData?: User) => {
         // If newToken is provided, we set it (for non-server action flows if any)
@@ -49,8 +49,12 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({
             isAuthenticated: true,
             user: userData || null,
-            loading: false
+            loading: !userData // If no user data, keep loading true until refreshAuth completes
         });
+
+        if (!userData) {
+            get().refreshAuth();
+        }
     },
 
     logout: async () => {
@@ -67,6 +71,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     },
 
     refreshAuth: async () => {
+        const token = getCookie('accessToken');
+        if (!token) {
+            set({ isAuthenticated: false, user: null, loading: false });
+            return;
+        }
+
+        set({ loading: true });
         try {
             // Using /users/me as confirmed from backend analysis
             const res = await api.get('/users/me');

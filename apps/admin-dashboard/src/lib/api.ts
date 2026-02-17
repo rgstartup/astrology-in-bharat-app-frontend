@@ -34,9 +34,11 @@ api.interceptors.response.use(
                 toast.error(backendMessage, { toastId: 'admin-auth-error' });
             }
 
-            if (typeof document !== 'undefined') {
+            if (typeof window !== 'undefined') {
                 deleteCookie('accessToken');
                 deleteCookie('user');
+                // Force redirect to login page
+                window.location.href = '/';
             }
         }
         return Promise.reject(error);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
+import { useEffect, ReactNode, useRef } from "react";
 import { useAuthStore } from "@/src/store/useAuthStore";
 import { useSearchParams, useRouter } from "next/navigation";
 
@@ -14,8 +14,12 @@ export const AuthInitializer = ({
     const { login, refreshAuth } = useAuthStore();
     const searchParams = useSearchParams();
     const router = useRouter();
+    const initializedRef = useRef(false);
 
     useEffect(() => {
+        if (initializedRef.current) return;
+        initializedRef.current = true;
+
         // 1. Capture tokens from URL (for OAuth/External Login)
         const token = searchParams.get("token");
         if (token) {

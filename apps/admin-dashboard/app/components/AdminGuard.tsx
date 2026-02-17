@@ -11,7 +11,7 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     if (!loading) {
       if (!isAuthenticated || !user) {
-        router.replace("/");
+        window.location.href = "/";
         return;
       }
 
@@ -25,12 +25,16 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
     }
   }, [isAuthenticated, user, loading, router]);
 
-  if (loading || !isAuthenticated) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
+  }
+
+  if (!isAuthenticated) {
+    return null;
   }
 
   return <>{children}</>;
