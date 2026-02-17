@@ -48,7 +48,7 @@ export const getProfileModalProps = (expert: Expert) => {
     { label: "Gender", isComplete: !!expert.gender, value: expert.gender },
     { label: "Date of Birth", isComplete: !!formattedDob, value: formattedDob },
     { label: "Phone Number", isComplete: !!phone, value: phone },
-    { label: "Languages Spoken", isComplete: expert.languages && expert.languages.length > 0, value: expert.languages?.join(", ") },
+    { label: "Languages Spoken", isComplete: !!(expert.languages && expert.languages.length > 0), value: expert.languages?.join(", ") },
     { label: "Bio / Introduction", isComplete: !!bio, value: bio },
     {
       label: "Office/Home Address",
@@ -57,7 +57,7 @@ export const getProfileModalProps = (expert: Expert) => {
     },
     {
       label: "Gallery Photos",
-      isComplete: gallery && gallery.length > 0,
+      isComplete: !!(gallery && gallery.length > 0),
       value: gallery.map((img: any) => ({ url: typeof img === 'string' ? img : img.url }))
     },
     {
@@ -73,7 +73,7 @@ export const getProfileModalProps = (expert: Expert) => {
     },
     {
       label: "Certificates",
-      isComplete: expert.certificates && expert.certificates.length > 0,
+      isComplete: !!(expert.certificates && expert.certificates.length > 0),
       value: expert.certificates?.map((url: string) => ({ url }))
     },
     {

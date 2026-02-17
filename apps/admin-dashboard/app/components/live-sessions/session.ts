@@ -16,7 +16,8 @@ export interface Astrologer {
 
 export type SessionType = "video" | "audio" | "chat";
 export type SessionStatus = "live" | "pending" | "ended" | "technical-issue" | "expired" | "admin-terminated";
-;
+
+export type ConnectionQuality = "excellent" | "good" | "fair" | "poor";
 
 export interface LiveSession {
   id: string;
