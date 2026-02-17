@@ -3,12 +3,16 @@ import SignUpForm from "@/components/features/auth/SignUpForm";
 import TopExpertsSection from "@/components/features/auth/TopExpertsSection";
 import { Metadata } from "next";
 
+import authContent from "@/public/data/auth-content.json";
+
 export const metadata: Metadata = {
   title: "Sign Up - Astrology Bharat",
   description: "Create your free account and start your cosmic journey today.",
 };
 
 export default function RegisterPage() {
+  const { signUp } = authContent;
+
   return (
     <section className="signin-part">
       <div className="container">
@@ -24,7 +28,7 @@ export default function RegisterPage() {
                 </span>
               </h3>
               <p className="text-muted">
-                Join us and unlock personalized astrology insights.
+                {signUp.description}
               </p>
             </div>
 

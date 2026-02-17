@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { parseJwt } from './utils/jwt';
+import safeFetch from '@packages/safe-fetch/safeFetch';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543";
 
 export async function middleware(request: NextRequest) {
     const { pathname, searchParams } = request.nextUrl;
@@ -63,32 +64,29 @@ export async function middleware(request: NextRequest) {
 
     // 4. Logic for Refreshing Token
     if (shouldRefresh && refreshToken) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Cookie": `refreshToken=${refreshToken}`
-                },
-            });
+        const [data, error] = await safeFetch<any>(`${API_BASE_URL}/api/v1/auth/refresh`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Cookie": `refreshToken=${refreshToken}`
+            },
+        });
 
-            if (response.ok) {
-                const data = await response.json();
-                accessToken = data.accessToken;
+        if (data && !error) {
+            accessToken = data.accessToken;
 
-                const nextResponse = NextResponse.next();
-                if (accessToken) {
-                    nextResponse.cookies.set('clientAccessToken', accessToken, {
-                        httpOnly: true,
-                        secure: process.env.NODE_ENV === 'production',
-                        sameSite: 'strict',
-                        path: '/',
-                        maxAge: 60 * 60 * 24 * 7,
-                    });
-                }
-                return nextResponse;
+            const nextResponse = NextResponse.next();
+            if (accessToken) {
+                nextResponse.cookies.set('clientAccessToken', accessToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'strict',
+                    path: '/',
+                    maxAge: 60 * 60 * 24 * 7,
+                });
             }
-        } catch (error) {
+            return nextResponse;
+        } else if (error) {
             console.error("Middleware refresh error:", error);
         }
     }

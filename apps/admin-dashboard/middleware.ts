@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import safeFetch from '@packages/safe-fetch/safeFetch';
 
 // Simple JWT parser for middleware
 function parseJwt(token: string) {
@@ -52,32 +53,29 @@ export async function middleware(request: NextRequest) {
 
     // 3. Logic for Refreshing Token
     if (shouldRefresh && refreshToken) {
-        try {
-            const response = await fetch(`${cleanApiBase}/api/v1/auth/refresh`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Cookie": `refreshToken=${refreshToken}`
-                },
-            });
+        const [data, error] = await safeFetch<any>(`${cleanApiBase}/api/v1/auth/refresh`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Cookie": `refreshToken=${refreshToken}`
+            },
+        });
 
-            if (response.ok) {
-                const data = await response.json();
-                accessToken = data.accessToken;
+        if (data && !error) {
+            accessToken = data.accessToken;
 
-                const nextResponse = NextResponse.next();
-                if (accessToken) {
-                    nextResponse.cookies.set('accessToken', accessToken, {
-                        httpOnly: true,
-                        secure: process.env.NODE_ENV === 'production',
-                        sameSite: 'strict',
-                        path: '/',
-                        maxAge: 60 * 60 * 24 * 7,
-                    });
-                }
-                return nextResponse;
+            const nextResponse = NextResponse.next();
+            if (accessToken) {
+                nextResponse.cookies.set('accessToken', accessToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'strict',
+                    path: '/',
+                    maxAge: 60 * 60 * 24 * 7,
+                });
             }
-        } catch (error) {
+            return nextResponse;
+        } else if (error) {
             console.error("Middleware refresh error:", error);
         }
     }

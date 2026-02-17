@@ -20,6 +20,8 @@ const EyeOffIcon = EyeOff as any;
 
 import { astrologerRegisterAction } from "@/src/actions/auth";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
+
 const RegisterPage: React.FC = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -62,14 +64,9 @@ const RegisterPage: React.FC = () => {
     };
 
     const handleGoogleLogin = () => {
-        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/api\/v1\/?$/, "");
-        if (!baseUrl) {
-            toast.error("API URL not configured");
-            return;
-        }
-        const redirectUri = typeof window !== 'undefined' ? window.location.origin : "";
-        const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=expert&redirect_uri=${redirectUri}`;
-        window.location.href = googleLoginUrl;
+        const baseUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+        const redirectUri = window.location.origin;
+        window.location.href = `${baseUrl}/api/v1/auth/google/login?role=expert&redirect_uri=${redirectUri}`;
     };
 
     return (

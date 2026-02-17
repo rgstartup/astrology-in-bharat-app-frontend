@@ -11,6 +11,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 const Image = NextImage as any;
 const Link = NextLink as any;
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
+
 const SignInForm: React.FC = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -68,7 +70,7 @@ const SignInForm: React.FC = () => {
     };
 
     const handleGoogleLogin = () => {
-        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+        const baseUrl = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
         const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=client&redirect_uri=${window.location.origin}`;
         window.location.href = googleLoginUrl;
     };

@@ -3,12 +3,16 @@ import SignInForm from "@/components/features/auth/SignInForm";
 import TopExpertsSection from "@/components/features/auth/TopExpertsSection";
 import { Metadata } from "next";
 
+import authContent from "@/public/data/auth-content.json";
+
 export const metadata: Metadata = {
   title: "Sign In - Astrology Bharat",
   description: "Sign in to your account and unlock personalized astrology insights.",
 };
 
 export default function SignInPage() {
+  const { signIn } = authContent;
+
   return (
     <section className="signin-part">
       <div className="container">
@@ -25,10 +29,9 @@ export default function SignInPage() {
                 </span>
               </h3>
               <p className="text-muted">
-                Join us and unlock personalized astrology insights just for you.
+                {signIn.description1}
                 <br />
-                Create your free account in seconds and start your journey
-                today!
+                {signIn.description2}
               </p>
             </div>
 

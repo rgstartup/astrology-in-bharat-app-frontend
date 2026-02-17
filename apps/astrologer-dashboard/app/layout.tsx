@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
 const cleanApiBase = API_URL.replace(/\/api\/v1\/?$/, "");
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
