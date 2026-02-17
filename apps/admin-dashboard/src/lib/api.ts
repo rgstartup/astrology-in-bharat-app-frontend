@@ -1,10 +1,10 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-// DIRECT CONNECTION TO BACKEND (No Proxy)
-// Required: Backend must have app.enableCors() set.
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
-const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+import { API_BASE_URL, getBasePath } from "@/src/utils/api-config";
+
+// DIRECT CONNECTION TO BACKEND (No Proxy) - still available if needed via getBasePath()
+// const cleanApiUrl = getBasePath();
 
 const isServer = typeof window === 'undefined';
 

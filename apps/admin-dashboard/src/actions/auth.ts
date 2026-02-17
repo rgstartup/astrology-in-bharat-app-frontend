@@ -3,8 +3,9 @@
 import { cookies } from "next/headers";
 import safeFetch from "@packages/safe-fetch/safeFetch";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
-const API_BASE_URL = API_URL.replace(/\/api\/v1\/?$/, "");
+import { getApiUrl } from "@/src/utils/api-config";
+
+const API_BASE_URL = getApiUrl();
 
 export async function adminLoginAction(formData: any) {
     const [data, error] = await safeFetch<any>(`${API_BASE_URL}/api/v1/auth/login`, {
