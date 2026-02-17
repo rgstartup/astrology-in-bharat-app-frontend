@@ -736,11 +736,11 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                       </ul>
                     </li>
 
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                       <Link className="nav-link" href={PATHS.BLOG}>
                         Blog
                       </Link>
-                    </li>
+                    </li> */}
                     <li className="nav-item">
                       <Link className="nav-link" href={PATHS.FAMOUS_PLACES}>
                         Famous Places
@@ -791,7 +791,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
               spaceBetween={25}
               slidesPerView={2}
               grabCursor={true}
-              loop={true}
+              loop={SERVICES_DATA.length >= 4}
               autoplay={{
                 delay: 3000,
                 disableOnInteraction: false,

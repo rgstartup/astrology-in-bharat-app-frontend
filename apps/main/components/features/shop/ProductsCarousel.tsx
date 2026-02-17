@@ -13,16 +13,16 @@ import { ProductCard } from "./ProductCard";
 const Swiper = SwiperComp as any;
 const SwiperSlide = SwiperSlideComp as any;
 
+import { API_BASE_URL } from "@/utils/api-config";
+
 const ProductsCarousel = () => {
   const [productList, setProductList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/v1/products`);
+        const res = await axios.get(`${API_BASE_URL}/products`);
         const data = Array.isArray(res.data) ? res.data : (res.data.data || []);
         setProductList(data);
       } catch (error) {
@@ -32,7 +32,7 @@ const ProductsCarousel = () => {
       }
     };
     fetchProducts();
-  }, [API_URL]);
+  }, []);
 
   if (loading) {
     return (

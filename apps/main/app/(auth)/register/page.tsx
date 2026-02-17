@@ -7,6 +7,7 @@ import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/useAuthStore"; // Changed import
+import { API_BASE_URL, getBasePath } from "@/utils/api-config";
 
 // --- Types ---
 interface RegistrationPayload {
@@ -27,8 +28,7 @@ interface FormData {
 }
 
 // --- API ---
-const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
-const API_ENDPOINT = `${apiBase}/api/v1/auth/email/register`;
+const API_ENDPOINT = `${API_BASE_URL}/auth/email/register`;
 
 const Page: React.FC = () => {
   const router = useRouter();
@@ -93,7 +93,7 @@ const Page: React.FC = () => {
   };
 
   const handleGoogleLogin = () => {
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+    const baseUrl = getBasePath();
     const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=client&redirect_uri=${process.env.NEXT_PUBLIC_MAIN_URL}`;
     window.location.href = googleLoginUrl;
   };
@@ -164,8 +164,7 @@ const Page: React.FC = () => {
     const fetchTopExperts = async () => {
       setExpertsLoading(true);
       try {
-        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
-        const response = await axios.get(`${baseUrl}/api/v1/expert/top-rated?limit=3`);
+        const response = await axios.get(`${API_BASE_URL}/expert/top-rated?limit=3`);
         setTopExperts(response.data);
       } catch (err) {
         console.error("Failed to fetch top experts:", err);
@@ -195,12 +194,12 @@ const Page: React.FC = () => {
               <p className="text-muted">
                 Join us and unlock personalized astrology insights.
               </p>
-                 <p className="text-muted">
+              <p className="text-muted">
                 Join us and unlock personalized astrology insights.
               </p>   <p className="text-muted">
                 Join us and unlock personalized astrology insights.
               </p>
-             
+
             </div>
 
             <div className="popular-astrology m-hidden pt-3">

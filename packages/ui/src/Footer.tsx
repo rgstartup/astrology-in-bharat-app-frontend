@@ -90,7 +90,7 @@ const Footer: React.FC = () => {
                   <Link href={PATHS.KUNDALI_MATCHING}>Kundli Matching</Link>
                 </li>
                 <li>
-                  <a href="/kundali-matching">Kundli Prediction</a>
+                  <Link href={PATHS.KUNDALI_MATCHING}>Kundli Prediction</Link>
                 </li>
                 <li>
                   <a href="/calculator/name-numerology">Numerology  Report</a>

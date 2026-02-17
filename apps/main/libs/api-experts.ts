@@ -1,7 +1,6 @@
 // Native fetch is used instead of axios for Next.js caching support
 
-const apiEnvVar = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "");
-const API_BASE_URL = apiEnvVar ? `${apiEnvVar}/api/v1` : "http://localhost:6543/api/v1";
+import { API_BASE_URL } from '../utils/api-config';
 
 export interface ExpertProfile {
   id: number;

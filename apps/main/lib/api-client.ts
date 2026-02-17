@@ -4,11 +4,10 @@ import { toast } from 'react-toastify';
 import { getCookie, deleteCookie } from '../utils/cookie';
 
 // API Client Creation
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+import { API_BASE_URL } from '../utils/api-config';
 
 export const apiClient = axios.create({
-    baseURL: `${cleanApiUrl}/api/v1`,
+    baseURL: API_BASE_URL,
     withCredentials: false, // Set to false to avoid cookie collision with Dashboard on localhost if needed
 });
 
