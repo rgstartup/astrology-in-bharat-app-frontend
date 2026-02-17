@@ -8,13 +8,13 @@ import { Client, SortConfig, SortKey } from "./types";
 import { apiClient } from "@/lib/apiClient";
 import { toast } from "react-toastify";
 import * as LucideIcons from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { getExpertReviews } from "@/lib/reviews";
 
 const { X, MessageSquare, Clock, IndianRupee, Calendar, Star } = LucideIcons as any;
 
 export default function ClientsPage() {
-  const { user: expertUser } = useAuth();
+  const { user: expertUser } = useAuthStore();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import apiClient from "@/lib/apiClient";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-toastify";
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 
@@ -13,7 +13,7 @@ const AlertCircleIcon = AlertCircle as any;
 const VerifyIpContent = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
-    const { login } = useAuth();
+    const { login } = useAuthStore();
     const token = searchParams.get("token");
     const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
     const [message, setMessage] = useState("Verifying your login...");

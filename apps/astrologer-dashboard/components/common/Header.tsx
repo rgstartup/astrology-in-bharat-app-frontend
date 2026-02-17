@@ -13,10 +13,10 @@ interface HeaderProps {
   toggleSidebar: () => void;
 }
 
-import { useAuth } from "../../context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuthStore();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(false); // Toggle state
   const [searchQuery, setSearchQuery] = useState("");
@@ -155,12 +155,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
       setLoading(true);
       const newStatus = !isOnline;
 
-      // DEBUG LOGS
-      const token = typeof window !== "undefined" ? localStorage.getItem('accessToken') : "window_undefined";
-      console.log("[AuthDebug] Attempting status update. Token length:", token?.length || 0);
-      console.log("[AuthDebug] Token preview:", token ? token.substring(0, 10) + "..." : "null");
-      console.log("[AuthDebug] Sending payload:", { is_available: newStatus });
-
+      console.log("[Presence] Updating expert availability to:", newStatus);
       await apiClient.patch('/expert/status', { is_available: newStatus });
       setIsOnline(newStatus);
 

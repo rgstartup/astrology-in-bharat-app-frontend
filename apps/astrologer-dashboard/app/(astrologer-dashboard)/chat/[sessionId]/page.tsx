@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { chatSocket } from "@/lib/socket";
 import apiClient from "@/lib/apiClient";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-toastify";
 import * as LucideIcons from "lucide-react";
 
@@ -33,7 +33,7 @@ function ExpertChatRoomContent() {
     const router = useRouter();
     const sessionId = params.sessionId as string;
 
-    const { user, isAuthenticated } = useAuth();
+    const { user, isAuthenticated } = useAuthStore();
     const [messages, setMessages] = useState<Message[]>([]);
     const [sessionStatus, setSessionStatus] = useState<'pending' | 'active' | 'completed'>('pending');
     const [timeLeft, setTimeLeft] = useState(0);

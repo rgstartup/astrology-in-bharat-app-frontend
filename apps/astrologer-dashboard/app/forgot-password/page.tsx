@@ -17,10 +17,13 @@ const ForgotPasswordPage: React.FC = () => {
         setLoading(true);
 
         try {
-            const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/forgot/password`;
+            const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/api\/v1\/?$/, "");
+            const API_URL = `${API_BASE}/api/v1/auth/forgot/password`;
+            const origin = typeof window !== 'undefined' ? window.location.origin : "";
+
             await axios.post(API_URL, {
                 email,
-                origin: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3003'
+                origin
             });
 
             toast.success("Password reset link sent! Please check your email.");

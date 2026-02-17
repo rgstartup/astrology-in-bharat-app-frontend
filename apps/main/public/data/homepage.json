@@ -1,0 +1,144 @@
+{
+    "astrologyServices": [
+        {
+            "id": 1,
+            "image": "/images/ser1.jpg",
+            "title": "Kundli (Birth Chart)",
+            "description": "Unlock the secrets of your destiny with a personalized birth chart.",
+            "price": 499,
+            "slug": "kundli-birth-chart"
+        },
+        {
+            "id": 2,
+            "image": "/images/ser2.jpg",
+            "title": "Panchang",
+            "description": "Daily planetary timings and festivals stay aligned with cosmic time.",
+            "price": 199,
+            "slug": "panchang"
+        },
+        {
+            "id": 3,
+            "image": "/images/ser3.jpg",
+            "title": "Numerology",
+            "description": "Discover the power of numbers and what they reveal about your life.",
+            "price": 599,
+            "slug": "numerology"
+        },
+        {
+            "id": 4,
+            "image": "/images/ser4.jpg",
+            "title": "Vedic Astrology",
+            "description": "Ancient Vedic wisdom to guide your present and shape your future.",
+            "price": 999,
+            "slug": "vedic-astrology"
+        },
+        {
+            "id": 5,
+            "image": "/images/ser5.jpg",
+            "title": "Matchmaking",
+            "description": "Check marriage compatibility based on traditional astrological methods.",
+            "price": 799,
+            "slug": "matchmaking"
+        },
+        {
+            "id": 6,
+            "image": "/images/ser6.jpg",
+            "title": "Relationship Guidance",
+            "description": "Strengthen bonds and resolve love challenges through astrology.",
+            "price": 699,
+            "slug": "relationship-guidance"
+        },
+        {
+            "id": 7,
+            "image": "/images/ser7.jpg",
+            "title": "Muhurat (Auspicious Timing)",
+            "description": "Choose the perfect time for important events with expert muhurat analysis.",
+            "price": 299,
+            "slug": "muhurat-auspicious-timing"
+        },
+        {
+            "id": 8,
+            "image": "/images/ser8.jpg",
+            "title": "Nakshatra",
+            "description": "Know your nakshatra traits and their influence on your personality.",
+            "price": 399,
+            "slug": "nakshatra"
+        }
+    ],
+    "consultationServices": [
+        {
+            "id": 1,
+            "image": "/images/services/services1.jpg",
+            "title": "Love Problem Solution",
+            "price": 599,
+            "slug": "love-problem-solution",
+            "description": "Expert remedies to solve love problems and bring back lost love."
+        },
+        {
+            "id": 2,
+            "image": "/images/services/services2.jpg",
+            "title": "Marriage Problem",
+            "price": 699,
+            "slug": "marriage-problem",
+            "description": "Solutions for marriage predictions, compatibility, and delays."
+        }
+    ],
+    "testimonials": [
+        {
+            "id": 1,
+            "name": "Rahul Sharma",
+            "location": "Delhi, India",
+            "image": "/images/t1.png",
+            "rating": 5,
+            "text": "I had a great experience with Astrology in Bharat. The astrologer was very accurate and guided me properly about my career and future decisions."
+        },
+        {
+            "id": 2,
+            "name": "Rahul Sharma",
+            "location": "Delhi, India",
+            "image": "/images/t1.png",
+            "rating": 5,
+            "text": "I had a great experience with Astrology in Bharat. The astrologer was very accurate and guided me properly about my career and future decisions."
+        },
+        {
+            "id": 3,
+            "name": "Rahul Sharma",
+            "location": "Delhi, India",
+            "image": "/images/t1.png",
+            "rating": 5,
+            "text": "I had a great experience with Astrology in Bharat. The astrologer was very accurate and guided me properly about my career and future decisions."
+        }
+    ],
+    "whyChooseUs": [
+        {
+            "id": 1,
+            "icon": "fa-user-check",
+            "title": "Verified & Experienced Astrologers"
+        },
+        {
+            "id": 2,
+            "icon": "fa-comments",
+            "title": "Instant Chat, Call & Video Support"
+        },
+        {
+            "id": 3,
+            "icon": "fa-shield-halved",
+            "title": "100% Privacy & Confidentiality"
+        },
+        {
+            "id": 4,
+            "icon": "fa-bullseye",
+            "title": "Accurate Predictions & Effective Remedies"
+        },
+        {
+            "id": 5,
+            "icon": "fa-user-gear",
+            "title": "Personalized Astrology Consultations"
+        },
+        {
+            "id": 6,
+            "icon": "fa-hand-holding-heart",
+            "title": "Expert Guidance for Life Problems"
+        }
+    ]
+}

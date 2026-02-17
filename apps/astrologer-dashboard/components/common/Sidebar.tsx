@@ -1,7 +1,7 @@
 "use client";
 
 import React, { memo, useCallback, useState, Fragment } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   X,
@@ -17,7 +17,19 @@ import {
   Wallet,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
+import astrologerMenu from "@/public/data/astrologer_menu.json";
+
+const IconMap: Record<string, React.ElementType> = {
+  LayoutDashboard,
+  CalendarCheck,
+  Coins,
+  History,
+  User,
+  Settings,
+  LogOut,
+  Wallet,
+};
 
 interface MenuItem {
   label: string;
@@ -138,40 +150,28 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   );
 };
 
+
 export const Sidebar: React.FC<SidebarProps> = memo(
   ({ isOpen, toggleSidebar }) => {
     const pathname = usePathname();
-    const { logout } = useAuth();
+    const router = useRouter();
+    const { logout } = useAuthStore();
 
-    const menuItems: MenuItem[] = [
-      { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-      { label: "Appointment", href: "/dashboard/appointment", icon: CalendarCheck },
-      {
-        label: "Service & Pricing",
-        href: "/dashboard/service-pricing",
-        icon: Coins,
-      },
-      {
-        label: "Clients History",
-        href: "/dashboard/client-history",
-        icon: History,
-      },
-      { label: "Earnings", href: "/dashboard/earnings", icon: Coins },
-      { label: "My Wallet", href: "/dashboard/wallet", icon: Wallet },
-      {
-        label: "Account",
-        href: "#",
-        icon: Settings,
-        submenu: [
-          {
-            label: "Profile Management",
-            href: "/dashboard/profilemanagement",
-            icon: User,
-          },
-          { label: "Signout", href: "#", icon: LogOut, onClick: logout },
-        ],
-      },
-    ];
+    const handleLogout = async () => {
+      await logout();
+      router.push('/');
+    };
+
+    const menuItems: MenuItem[] = astrologerMenu.menuItems.map((item: any) => ({
+      ...item,
+      icon: IconMap[item.icon] || User,
+      onClick: item.isLogout ? handleLogout : undefined,
+      submenu: item.submenu?.map((sub: any) => ({
+        ...sub,
+        icon: IconMap[sub.icon] || User,
+        onClick: sub.isLogout ? handleLogout : undefined,
+      })),
+    }));
 
     const initialOpenSubmenu = menuItems.find(
       (item) => item.submenu && item.submenu.some((sub) => sub.href === pathname)
@@ -232,7 +232,7 @@ export const Sidebar: React.FC<SidebarProps> = memo(
 
           {/* Verification Status Banner (Sidebar Bottom) */}
           {(() => {
-            const { user } = useAuth();
+            const { user } = useAuthStore();
             const status = (
               user?.status ||
               user?.kycStatus ||

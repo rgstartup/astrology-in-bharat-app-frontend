@@ -6,48 +6,33 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { getCookie, setCookie } from "../../utils/cookie";
 import { toast } from "react-toastify";
 
-export const AuthInitializer = ({ children }: { children: React.ReactNode }) => {
-    const { clientLogin, refreshAuth, clientLoading, isClientAuthenticated } = useAuthStore();
+export const AuthInitializer = ({
+    children,
+    initialUser = null
+}: {
+    children: React.ReactNode,
+    initialUser?: any
+}) => {
+    const { clientLogin, refreshAuth } = useAuthStore();
     const authCheckRef = useRef(false);
 
     useEffect(() => {
         if (authCheckRef.current) return;
+        authCheckRef.current = true;
 
-        const initClientAuth = async () => {
-            // 1. URL Token Check
-            const searchParams = new URLSearchParams(window.location.search);
-            const urlAccessToken = searchParams.get('accessToken') || searchParams.get('token');
-            const urlRefreshToken = searchParams.get('refreshToken') || searchParams.get('refresh_token');
-
-            if (urlAccessToken) {
-                setCookie('clientAccessToken', urlAccessToken);
-                if (urlRefreshToken) {
-                    setCookie('refreshToken', urlRefreshToken);
-                }
-
-                clientLogin(urlAccessToken); // Trigger login state update
-                toast.success("Login Successful!");
-
-                // Clean URL
-                const newUrl = window.location.pathname + window.location.hash;
-                window.history.replaceState({}, document.title, newUrl);
-                return;
-            }
-
-            // 2. Cookie Token Check
+        if (initialUser) {
+            // If server already found a user, just update the store
+            clientLogin("", initialUser);
+        } else {
+            // Otherwise, double check on client (for cases where server didn't fetch)
             const token = getCookie('clientAccessToken');
             if (token) {
-                // Trigger refreshAuth which sets isLoading and fetches profile
-                await refreshAuth();
+                refreshAuth();
             } else {
-                // No token, ensure loading is false
                 useAuthStore.setState({ clientLoading: false, isClientAuthenticated: false });
             }
-        };
-
-        authCheckRef.current = true;
-        initClientAuth();
-    }, [clientLogin, refreshAuth]);
+        }
+    }, [clientLogin, refreshAuth, initialUser]);
 
     return <>{children}</>;
 };

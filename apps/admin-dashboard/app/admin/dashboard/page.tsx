@@ -16,6 +16,7 @@ import {
 import { getDashboardStats } from "@/src/services/admin.service";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
+import adminData from "@/public/data/admin_data.json";
 
 const MoreVerticalIcon = MoreVertical as any;
 
@@ -87,13 +88,7 @@ export default function DashboardPage() {
 
   // Recent activities data (memoized)
   const activities = useMemo(
-    () => [
-      { id: 1, name: "Avni Pandit", action: "Booked a consultation", time: "2h ago", avatar: "A", color: "bg-yellow-600" },
-      { id: 2, name: "Mahesh Joshi", action: "Completed a session", time: "5h ago", avatar: "M", color: "bg-yellow-600" },
-      { id: 3, name: "Vijay Sharma", action: "Rescheduled consultation", time: "6h ago", avatar: "V", color: "bg-yellow-600" },
-      { id: 4, name: "Priya Desai", action: "Left a 5-star review", time: "8h ago", avatar: "P", color: "bg-yellow-600" },
-      { id: 5, name: "Rahul Gupta", action: "Payment received", time: "10h ago", avatar: "R", color: "bg-yellow-600" },
-    ],
+    () => adminData.dashboard.activities,
     []
   );
 
@@ -121,7 +116,7 @@ export default function DashboardPage() {
 
             {/* Activity list */}
             <ul className="divide-y divide-gray-100 max-h-96 overflow-y-auto" role="list">
-              {activities.map((activity) => (
+              {activities.map((activity: any) => (
                 <li
                   key={activity.id}
                   className="flex items-center space-x-4 px-6 py-4 hover:bg-gray-50 transition-colors"

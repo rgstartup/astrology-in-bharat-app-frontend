@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { chatSocket } from "@/lib/socket";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import * as LucideIcons from "lucide-react";
@@ -10,7 +10,7 @@ import * as LucideIcons from "lucide-react";
 const { MessageSquare } = LucideIcons as any;
 
 export const ChatNotificationListener: React.FC = () => {
-    const { user, isAuthenticated } = useAuth();
+    const { user, isAuthenticated } = useAuthStore();
     const router = useRouter();
 
     useEffect(() => {

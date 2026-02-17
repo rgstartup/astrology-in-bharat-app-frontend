@@ -9,24 +9,12 @@ const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
 
 export const apiClient = axios.create({
     baseURL: `${cleanApiUrl}/api/v1`,
-    withCredentials: false, // Set to false to avoid cookie collision with Dashboard on localhost if needed
+    withCredentials: true, // Crucial for httpOnly cookies
 });
 
-// Add a request interceptor to include the clientAccessToken
-apiClient.interceptors.request.use(
-    (config) => {
-        if (typeof window !== 'undefined') {
-            const token = getCookie('clientAccessToken');
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+// Request interceptor - No longer needs to manually set Bearer token if using withCredentials + httpOnly cookies
+// But if the backend STILL expects Bearer header, we might have a problem unless the backend also accepts cookies.
+// Sushant sir said "set them as httpOnly cookie", usually implying the backend will read from cookies.
 
 // Add a response interceptor to handle errors globally
 apiClient.interceptors.response.use(

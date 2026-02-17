@@ -6,7 +6,7 @@ import NextImage from "next/image";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import apiClient from "@/lib/apiClient";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { Button } from "@repo/ui";
 import { toast } from "react-toastify";
 
@@ -17,6 +17,8 @@ const LockIcon = Lock as any;
 const EyeIcon = Eye as any;
 const EyeOffIcon = EyeOff as any;
 
+import { astrologerLoginAction } from "@/src/actions/auth";
+
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -24,7 +26,7 @@ const LoginPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
-    const { login } = useAuth();
+    const { login } = useAuthStore();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,50 +34,33 @@ const LoginPage: React.FC = () => {
         setLoading(true);
 
         try {
-            console.log("Attempting login for:", email);
-            const response = await apiClient.post("/auth/login", {
-                email,
-                password,
-                expert: true,
-            });
+            const result = await astrologerLoginAction({ email, password, expert: true });
 
-            console.log("Login successful response:", response.status);
-
-            if (response.data?.accessToken) {
-                login(response.data.accessToken, response.data.user);
-
+            if (result.success) {
+                // Initial login in store (profile will be fetched by AuthInitializer)
+                await login("", result.user);
                 toast.success("Login successful!");
                 router.push("/dashboard");
             } else {
-                setError("Login failed. No access token received.");
+                setError(result.error || "Login failed");
             }
         } catch (err: any) {
-            console.error("Login error details:", err.response?.data || err.message);
-            const backendMessage = err.response?.data?.message;
-            let message = Array.isArray(backendMessage) ? backendMessage.join(", ") : backendMessage;
-
-            if (message === "IP_MISMATCH") {
-                toast.warning("Verify from your registered mail. Your astrology in bharat astrologer profile get signin by a different ip address verify its you", {
-                    autoClose: 10000,
-                    position: "top-center"
-                });
-                return;
-            }
-
-            if (err.response?.status === 401 && (message?.toLowerCase().includes("verify") || message?.toLowerCase().includes("email"))) {
-                message = "Email not verified. Please check your inbox for the verification link.";
-                toast.error(message, { autoClose: 5000 });
-            }
-
-            setError(message || "Invalid email or password.");
+            console.error("Login error:", err);
+            setError("An unexpected error occurred");
         } finally {
             setLoading(false);
         }
     };
 
     const handleGoogleLogin = () => {
-        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
-        const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=expert&redirect_uri=http://localhost:3003`;
+        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/api\/v1\/?$/, "");
+        if (!baseUrl) {
+            toast.error("API URL not configured");
+            return;
+        }
+        // Use window.location.origin for dynamic redirect_uri
+        const redirectUri = typeof window !== 'undefined' ? window.location.origin : "";
+        const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=expert&redirect_uri=${redirectUri}`;
         window.location.href = googleLoginUrl;
     };
 

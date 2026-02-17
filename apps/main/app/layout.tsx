@@ -11,6 +11,8 @@ import { AuthInitializer } from "@/components/layout/AuthInitializer";
 import { CartInitializer } from "@/components/layout/CartInitializer"; // Changed import
 import { WishlistInitializer } from "@/components/layout/WishlistInitializer";
 import { Metadata } from "next";
+import { cookies } from "next/headers";
+import { AuthService } from "@/services/auth.service";
 
 // Google Fonts setup
 const outfit = Outfit({
@@ -31,35 +33,38 @@ export const metadata: Metadata = {
   description: "Find the best astrologers in Bharat",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // We can't use usePathname here in a Server Component for conditional rendering of Header/Footer based on path.
-  // However, Header/Footer are usually client components or can be rendered always.
-  // The original code used `usePathname` to hide Header/Footer on `/admin`.
-  // Since we are moving to Server Component, we need a way to handle this.
-  // OPTION: We can pass the logic to ClientLayout or just keep Header/Footer inside ClientLayout?
-  // BUT the Header/Footer might need to be server rendered for SEO (nav links).
-  // FOR NOW, to be safe and stick to the plan, I will keep Header/Footer here but I cannot use usePathname.
-  // I will move the Header/Footer inside ClientLayout OR make a specific ClientWrapper for them.
-  // Actually, checking standard practices:
-  // If we need conditional rendering based on path in Layout, that part MUST be client side.
-  // So I will move Header/Footer rendering into a ClientWrapper or just ClientLayout.
-  // Let's modify ClientLayout to accept `isAdminRoute` or handle it inside.
+  // 1. Fetch user on server
+  const cookieStore = await cookies();
+  const token = cookieStore.get("clientAccessToken")?.value;
+  let user = null;
+
+  if (token) {
+    try {
+      const res = await AuthService.fetchProfile({
+        Authorization: `Bearer ${token}`,
+      });
+      // Handle the nested user object or direct object
+      user = res.data.user || (res.data.id ? res.data : null);
+    } catch (err) {
+      console.error("Server-side auth check failed:", err);
+    }
+  }
 
   return (
     <html lang="en" className={`${outfit.variable} ${poppins.variable}`}>
       <head>
-        {/* Font Awesome CDN is optional since we already import it via npm */}
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
         />
       </head>
       <body className="min-h-screen bg-white text-black">
-        <AuthInitializer>
+        <AuthInitializer initialUser={user}>
           <CartInitializer>
             <WishlistInitializer>
               <ClientLayout>{children}</ClientLayout>

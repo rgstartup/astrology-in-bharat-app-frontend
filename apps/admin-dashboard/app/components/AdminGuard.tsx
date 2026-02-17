@@ -1,47 +1,36 @@
-"use client"; // 🔥 mandatory for client hooks
+"use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // 👈 App Router version
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/src/store/useAuthStore";
 
 export default function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [authorized, setAuthorized] = useState(false);
+  const { user, isAuthenticated, loading } = useAuthStore();
 
   useEffect(() => {
-    const checkAuth = () => {
-      const getCookie = (name: string) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop()?.split(";").shift();
-      };
-
-      const token = getCookie("accessToken");
-      const userCookie = getCookie("user");
-
-      if (!token || !userCookie) {
+    if (!loading) {
+      if (!isAuthenticated || !user) {
         router.replace("/");
         return;
       }
 
-      try {
-        const user = JSON.parse(decodeURIComponent(userCookie));
-        const isAdmin = user?.roles?.some((r: any) => r.name.toUpperCase() === "ADMIN");
+      const isAdmin = user?.roles?.some((r: any) =>
+        (typeof r === 'string' ? r : r.name).toUpperCase() === "ADMIN"
+      );
 
-        if (!isAdmin) {
-          router.replace("/"); // or unauthorized page
-        } else {
-          setAuthorized(true);
-        }
-      } catch (e) {
+      if (!isAdmin) {
         router.replace("/");
       }
-    };
+    }
+  }, [isAuthenticated, user, loading, router]);
 
-    checkAuth();
-  }, [router]);
-
-  if (!authorized) {
-    return null; // or a loading spinner
+  if (loading || !isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return <>{children}</>;
