@@ -44,10 +44,14 @@ export async function middleware(request: NextRequest) {
 
     let shouldRefresh = false;
 
-    // 3. Expiry Check (Sushant Sir's 5-minute rule)
+    // 3. Expiry & Validity Check
     if (accessToken) {
         const payload = parseJwt(accessToken);
-        if (payload && payload.exp) {
+
+        if (!payload) {
+            console.log("⚠️ Invalid JWT token detected in middleware. Treating as unauthenticated.");
+            accessToken = undefined; // Invalidate the token
+        } else if (payload.exp) {
             const expiryTime = payload.exp * 1000; // convert to ms
             const currentTime = Date.now();
             const fiveMinutesInMs = 5 * 60 * 1000;
@@ -99,10 +103,11 @@ export async function middleware(request: NextRequest) {
     }
 
     // 5. Redirect to profile if already logged in and trying to access sign-in/register
-    const isAuthPage = pathname.startsWith('/sign-in') || pathname.startsWith('/register');
+    // REMOVED: This causes issues if the token is invalid/stale. Let the client-side handle redirects if valid.
+    /* const isAuthPage = pathname.startsWith('/sign-in') || pathname.startsWith('/register');
     if (isAuthPage && accessToken) {
         return NextResponse.redirect(new URL('/profile', request.url));
-    }
+    } */
 
     return NextResponse.next();
 }

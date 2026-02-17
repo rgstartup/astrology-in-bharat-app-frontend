@@ -120,9 +120,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             }
         } catch (err: any) {
             console.error("❌ Refresh auth error:", err);
-            if (err.response?.status === 401) {
+
+            // If 401 (Unauthorized) OR if we were trying to authenticate initially and failed
+            // We should clear the corrupted state/cookies to allow re-login.
+            if (err.response?.status === 401 || !get().isClientAuthenticated) {
+                console.log("⚠️ Auth verification failed. Clearing session.");
                 set({ isClientAuthenticated: false, clientUser: null });
                 deleteCookie('clientAccessToken');
+                // Also optionally clear refreshToken if needed, but clientAccessToken is the gatekeeper
             } else if (err.response?.status === 404) {
                 // Profile not found but authenticated
                 set({
@@ -135,7 +140,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                     }
                 });
             }
-            // Other errors Keep state as is (authenticated but API failed)
+            // Other errors (e.g. 500, network) -> Keep previous state if it was authenticated, 
+            // but if we were unauthenticated, we remain so (and cleared cookie above).
         } finally {
             set({ clientLoading: false });
         }

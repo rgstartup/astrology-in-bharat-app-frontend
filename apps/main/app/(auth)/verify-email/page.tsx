@@ -24,6 +24,9 @@ const VerifyEmailContent: React.FC = () => {
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
 
+    console.log("[VerifyEmail] Search Params:", searchParams.toString()); // Debug log
+    console.log("[VerifyEmail] Extracted Token:", token); // Debug log
+
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -32,6 +35,7 @@ const VerifyEmailContent: React.FC = () => {
     useEffect(() => {
         const verifyEmail = async () => {
             if (!token) {
+                console.warn("[VerifyEmail] Token missing from URL parameters");
                 setError("Verification token is missing. Please check your email link.");
                 setIsLoading(false);
                 return;
