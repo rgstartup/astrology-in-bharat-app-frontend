@@ -796,7 +796,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
               spaceBetween={25}
               slidesPerView={2}
               grabCursor={true}
-              loop={SERVICES_DATA.length >= 4}
+              loop={SERVICES_DATA.length > 5}
               autoplay={{
                 delay: 3000,
                 disableOnInteraction: false,
