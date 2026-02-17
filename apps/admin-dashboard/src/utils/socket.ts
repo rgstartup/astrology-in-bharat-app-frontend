@@ -1,6 +1,8 @@
 import { io, Socket } from 'socket.io-client';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543';
+import { getBasePath } from './api-config';
+
+const API_URL = getBasePath();
 
 // Notification Socket
 let notificationSocket: Socket | null = null;

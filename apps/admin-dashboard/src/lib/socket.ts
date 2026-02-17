@@ -1,7 +1,8 @@
 import { io, Socket } from "socket.io-client";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
-const SOCKET_URL = API_URL.includes("/api/v1") ? API_URL.replace("/api/v1", "") : API_URL;
+import { getBasePath } from "@/src/utils/api-config";
+
+const SOCKET_URL = getBasePath();
 
 console.log("[Socket] Admin Dashboard connecting to:", SOCKET_URL);
 

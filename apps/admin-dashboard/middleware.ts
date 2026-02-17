@@ -20,8 +20,10 @@ function parseJwt(token: string) {
     }
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
-const cleanApiBase = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
+import { getBasePath, getApiUrl } from '@/src/utils/api-config';
+
+const API_BASE_URL = getApiUrl();
+const cleanApiBase = getBasePath();
 
 export async function middleware(request: NextRequest) {
     const { pathname, searchParams } = request.nextUrl;

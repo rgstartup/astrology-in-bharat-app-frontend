@@ -21,10 +21,16 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
+    const backendUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:6543').replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
+
     return [
       {
         source: "/api/v1/:path*",
-        destination: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/:path*`, // Proxy to Backend
+        destination: `${backendUrl}/api/v1/:path*`, // Proxy to Backend
+      },
+      {
+        source: '/uploads/:path*',
+        destination: `${backendUrl}/uploads/:path*`,
       },
     ];
   },
