@@ -63,7 +63,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products }) => {
                     delay: 0,
                     disableOnInteraction: false,
                 }}
-                loop={true}
+                loop={products.length > 4}
                 navigation={{
                     nextEl: '.swiper-button-next-custom',
                     prevEl: '.swiper-button-prev-custom',

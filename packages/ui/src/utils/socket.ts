@@ -1,6 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543';
+const getRawUrl = () => process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543';
+const API_URL = getRawUrl().replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
 
 // Notification Socket
 export const notificationSocket: Socket = io(`${API_URL}/notifications`, {

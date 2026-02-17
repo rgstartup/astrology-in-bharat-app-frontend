@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const getRawUrl = () => process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543';
+const API_BASE_URL = getRawUrl().replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "") + "/api/v1";
 
 // Create axios instance
 export const apiClient = axios.create({
