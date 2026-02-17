@@ -7,8 +7,8 @@ import React, { useState, useRef } from "react";
 import { Button } from "@repo/ui";
 import { Modal } from "react-bootstrap";
 import { useRouter } from "next/navigation";
-import { useWishlist } from "@/context/WishlistContext";
-import { useClientAuth } from "@repo/ui";
+import { useWishlistStore } from "@/store/useWishlistStore"; // Changed import
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 import { toast } from "react-toastify";
 
 interface Astrologer {
@@ -64,8 +64,9 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
 
   const [show, setShow] = useState(false);
   const [serviceIndex, setServiceIndex] = useState(0);
-  const { isExpertInWishlist, toggleExpertWishlist } = useWishlist();
-  const { isClientAuthenticated } = useClientAuth();
+  // Changed hook usage
+  const { isExpertInWishlist, toggleExpertWishlist } = useWishlistStore();
+  const { isClientAuthenticated } = useAuthStore();
   const router = useRouter();
 
   // Local state for optimistic updates
@@ -117,7 +118,8 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
 
       setCurrentLikes((prev) => (newIsLiked ? prev + 1 : Math.max(0, prev - 1)));
 
-      await toggleExpertWishlist(wishlistTargetId);
+      // Updated to pass isClientAuthenticated
+      await toggleExpertWishlist(wishlistTargetId, isClientAuthenticated);
     } catch (error) {
       // Revert on failure
       const revertedIsLiked = !isLiked;

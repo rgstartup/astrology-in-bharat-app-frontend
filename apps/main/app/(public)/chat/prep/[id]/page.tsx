@@ -6,7 +6,7 @@ import NextImage from "next/image";
 import * as LucideIcons from "lucide-react";
 import apiClient from "@/libs/api-profile";
 import { toast } from "react-toastify";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 
 const Image = NextImage as any;
 const { ChevronLeft, MessageSquare, User, Calendar, MapPin, UserX } = LucideIcons as any;
@@ -38,7 +38,7 @@ export default function ConsultationPrep() {
     const [actionLoading, setActionLoading] = useState(false);
     const [askSomeoneElse, setAskSomeoneElse] = useState(true);
     const [showSecurityModal, setShowSecurityModal] = useState(false);
-    const { isClientAuthenticated } = useClientAuth();
+    const { isClientAuthenticated } = useAuthStore();
 
     useEffect(() => {
         const fetchAstro = async () => {

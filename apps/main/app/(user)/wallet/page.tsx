@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useClientAuth } from "@repo/ui";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 import { toast } from "react-toastify";
 import apiClient from "@/libs/api-profile";
 import * as LucideIcons from "lucide-react";
@@ -12,7 +12,7 @@ const {
 } = LucideIcons as any;
 
 export default function UserWalletPage() {
-    const { clientBalance, refreshBalance, isClientAuthenticated, clientLoading } = useClientAuth();
+    const { clientBalance, refreshBalance, isClientAuthenticated, clientLoading } = useAuthStore(); // Changed usage
     const [rechargeAmount, setRechargeAmount] = useState<number>(500);
     const [isProcessing, setIsProcessing] = useState(false);
 

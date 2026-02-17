@@ -1,17 +1,17 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCart } from "@repo/ui";
+import { useCartStore } from "@/store/useCartStore"; // Changed import
 import apiClient, { getClientProfile, applyCoupon } from "@/libs/api-profile";
 import { toast } from "react-toastify";
 import { loadRazorpay } from "@/libs/razorpay";
-import { useClientAuth } from "@repo/ui";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 
 const CheckoutContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { cartItems, cartTotal } = useCart();
-  const { clientUser } = useClientAuth();
+  const { cartItems, cartTotal } = useCartStore(); // Changed usage
+  const { clientUser } = useAuthStore(); // Changed usage
   const [isProcessing, setIsProcessing] = useState(false);
 
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);

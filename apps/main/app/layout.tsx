@@ -7,9 +7,9 @@ import "swiper/css/navigation";
 
 import "@repo/ui/styles/index.css";
 import ClientLayout from "@/components/layout/ClientLayout";
-import { ClientAuthProvider } from "@repo/ui";
-import { CartProvider } from "@repo/ui";
-import { WishlistProvider } from "@/context/WishlistContext";
+import { AuthInitializer } from "@/components/layout/AuthInitializer";
+import { CartInitializer } from "@/components/layout/CartInitializer"; // Changed import
+import { WishlistInitializer } from "@/components/layout/WishlistInitializer";
 import { Metadata } from "next";
 
 // Google Fonts setup
@@ -59,13 +59,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-white text-black">
-        <ClientAuthProvider>
-          <CartProvider>
-            <WishlistProvider>
+        <AuthInitializer>
+          <CartInitializer>
+            <WishlistInitializer>
               <ClientLayout>{children}</ClientLayout>
-            </WishlistProvider>
-          </CartProvider>
-        </ClientAuthProvider>
+            </WishlistInitializer>
+          </CartInitializer>
+        </AuthInitializer>
       </body>
     </html>
   );

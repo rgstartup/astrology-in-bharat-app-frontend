@@ -6,7 +6,7 @@ import React, { useState, useCallback, FormEvent, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { useClientAuth } from "@repo/ui";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 
 // --- Types ---
 interface RegistrationPayload {
@@ -32,7 +32,7 @@ const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:654
 const Page: React.FC = () => {
   const router = useRouter();
   // const searchParams = useSearchParams(); // Unused and causes build error if not suspended
-  const { clientLogin } = useClientAuth();
+  const { clientLogin } = useAuthStore(); // Changed usage
 
   const [formData, setFormData] = useState<FormData>({
     fullName: "",

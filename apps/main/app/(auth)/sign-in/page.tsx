@@ -7,7 +7,7 @@ const Link = NextLink as any;
 import React, { useState, useCallback, FormEvent, Suspense, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useClientAuth } from "@repo/ui";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 import { toast } from "react-toastify";
 
 // --- 1. Define Typescript Interfaces ---
@@ -41,7 +41,7 @@ export const dynamic = 'force-dynamic';
 const SignInContent: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { clientLogin } = useClientAuth();
+  const { clientLogin } = useAuthStore(); // Changed usage
 
   // Get the callback URL from query params, default to /profile
   const callbackUrl = searchParams.get('callbackUrl') || '/profile';

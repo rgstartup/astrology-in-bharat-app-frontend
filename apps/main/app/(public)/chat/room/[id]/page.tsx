@@ -6,7 +6,7 @@ import NextImage from "next/image";
 import * as LucideIcons from "lucide-react";
 import { chatSocket } from "@/libs/socket";
 import apiClient, { uploadClientDocument } from "@/libs/api-profile";
-import { useClientAuth } from "@packages/ui/src/context/ClientAuthContext";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 import { toast } from "react-toastify";
 import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
 
@@ -80,7 +80,7 @@ function ChatRoomContent() {
     const id = params.id as string;
     const sessionId = searchParams.get('sessionId');
 
-    const { clientUser, isClientAuthenticated, refreshBalance } = useClientAuth();
+    const { clientUser, isClientAuthenticated, refreshBalance } = useAuthStore();
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [timeLeft, setTimeLeft] = useState(0); // Initialize at 0
     const [elapsedTime, setElapsedTime] = useState(0);

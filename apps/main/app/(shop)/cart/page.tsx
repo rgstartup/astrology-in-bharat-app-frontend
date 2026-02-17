@@ -2,21 +2,21 @@
 import React from "react";
 import ProductsCarousel from "@/components/features/shop/ProductsCarousel";
 import { Button, Form } from "react-bootstrap";
-import { useCart } from "@repo/ui";
+import { useCartStore } from "@/store/useCartStore"; // Changed import
 
 import { useRouter } from "next/navigation";
-import { useClientAuth } from "@repo/ui";
+import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 
 const CartPage: React.FC = () => {
   const router = useRouter();
-  const { isClientAuthenticated } = useClientAuth();
+  const { isClientAuthenticated } = useAuthStore(); // Changed usage
   const {
     cartItems,
     updateQuantity,
     removeFromCart,
     cartTotal,
     isLoading
-  } = useCart();
+  } = useCartStore(); // Changed usage
 
   React.useEffect(() => {
     // If not authenticated, redirect to login
