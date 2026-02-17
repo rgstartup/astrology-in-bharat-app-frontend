@@ -30,7 +30,7 @@ const ForgotPasswordContent: React.FC = () => {
                 API_ENDPOINT,
                 {
                     email,
-                    origin: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'
+                    origin: typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL
                 },
                 {
                     headers: {

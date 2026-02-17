@@ -157,7 +157,7 @@ const SignInContent: React.FC = () => {
 
   const handleGoogleLogin = () => {
     const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
-    const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=client&redirect_uri=http://localhost:3000`;
+    const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=client&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}`;
     window.location.href = googleLoginUrl;
   };
 
