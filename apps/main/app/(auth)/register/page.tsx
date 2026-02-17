@@ -195,6 +195,11 @@ const Page: React.FC = () => {
               <p className="text-muted">
                 Join us and unlock personalized astrology insights.
               </p>
+                 <p className="text-muted">
+                Join us and unlock personalized astrology insights.
+              </p>   <p className="text-muted">
+                Join us and unlock personalized astrology insights.
+              </p>
              
             </div>
 
