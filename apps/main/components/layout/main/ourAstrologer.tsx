@@ -6,7 +6,8 @@ import axios from "axios";
 import { SkeletonCard } from "../../features/astrologers/SkeletonCard";
 import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
 
-const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1`;
+const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+const API_BASE_URL = `${apiBase}/api/v1`;
 
 interface ExpertProfile {
     id: number;

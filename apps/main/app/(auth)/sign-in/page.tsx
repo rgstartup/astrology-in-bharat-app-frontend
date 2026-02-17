@@ -33,7 +33,8 @@ interface FormData {
 }
 
 // --- API Endpoint Constant ---
-const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/client/login`;
+const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+const API_ENDPOINT = `${apiBase}/api/v1/auth/client/login`;
 
 // Disable static generation for this page
 export const dynamic = 'force-dynamic';
@@ -169,7 +170,7 @@ const SignInContent: React.FC = () => {
     const fetchTopExperts = async () => {
       setExpertsLoading(true);
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
         const response = await axios.get(`${baseUrl}/api/v1/expert/top-rated?limit=3`);
         setTopExperts(response.data);
       } catch (err) {

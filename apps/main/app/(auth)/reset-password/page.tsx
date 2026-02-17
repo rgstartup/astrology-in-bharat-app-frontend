@@ -46,7 +46,8 @@ const ResetPasswordContent: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const API_URL = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/reset/password?token=${token}`;
+            const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+            const API_URL = `${apiBase}/api/v1/auth/reset/password?token=${token}`;
             const response = await axios.post(
                 API_URL,
                 { password },
