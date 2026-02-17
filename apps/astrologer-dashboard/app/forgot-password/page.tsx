@@ -17,8 +17,8 @@ const ForgotPasswordPage: React.FC = () => {
         setLoading(true);
 
         try {
-            const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/api\/v1\/?$/, "");
-            const API_URL = `${API_BASE}/api/v1/auth/forgot/password`;
+            const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543").replace(/\/api\/v1\/?$/, "");
+            const API_URL = `${apiBase}/api/v1/auth/forgot/password`;
             const origin = typeof window !== 'undefined' ? window.location.origin : "";
 
             await axios.post(API_URL, {
@@ -108,5 +108,3 @@ const ForgotPasswordPage: React.FC = () => {
 };
 
 export default ForgotPasswordPage;
-
-

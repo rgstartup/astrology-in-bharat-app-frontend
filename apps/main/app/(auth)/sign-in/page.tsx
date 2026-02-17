@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 import SignInForm from "@/components/features/auth/SignInForm";
 import TopExpertsSection from "@/components/features/auth/TopExpertsSection";
 import { Metadata } from "next";
-
 import authContent from "@/public/data/auth-content.json";
 
 export const metadata: Metadata = {

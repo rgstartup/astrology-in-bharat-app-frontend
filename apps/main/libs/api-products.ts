@@ -9,12 +9,11 @@ export interface Product {
     percentageOff?: number;
 }
 
-const apiEnvVar = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/, "");
-const API_BASE_URL = apiEnvVar || "http://localhost:6543";
+import { API_BASE_URL } from '../utils/api-config';
 
 export const getProducts = async (): Promise<Product[]> => {
     try {
-        const res = await fetch(`${API_BASE_URL}/api/v1/products`, {
+        const res = await fetch(`${API_BASE_URL}/products`, {
             cache: "no-store" // ❌ NO CACHE AT ALL
         });
 

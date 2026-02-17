@@ -1,7 +1,7 @@
 export const PATHS = {
   HOME: "/",
   HOROSCOPE: "/horoscope",
-  KUNDALI_MATCHING: "/kundali-matching",
+  KUNDALI_MATCHING: "/kundali-matching-by-name",
   NAKSHATRA_MILAN: "/nakshatra-milan",
   KUNDALI_MATCHING_BY_NAME: "/kundali-matching-by-name",
   MANGAL_DOSHA: "/mangal-dosha",

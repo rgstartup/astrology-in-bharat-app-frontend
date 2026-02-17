@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 import SignUpForm from "@/components/features/auth/SignUpForm";
 import TopExpertsSection from "@/components/features/auth/TopExpertsSection";
 import { Metadata } from "next";
-
 import authContent from "@/public/data/auth-content.json";
 
 export const metadata: Metadata = {
@@ -29,6 +28,9 @@ export default function RegisterPage() {
               </h3>
               <p className="text-muted">
                 {signUp.description}
+              </p>
+              <p className="text-muted">
+                Join us and unlock personalized astrology insights.
               </p>
             </div>
 
