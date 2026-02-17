@@ -4,8 +4,10 @@ import { toast } from 'react-toastify';
 import { deleteCookie } from '../utils/cookie';
 import { API_BASE_URL } from '../utils/api-config';
 
+const isServer = typeof window === 'undefined';
+
 export const apiClient = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: isServer ? API_BASE_URL : '/api/v1',
     withCredentials: true, // Required for httpOnly cookies as per Sushant Sir's guidelines
 });
 

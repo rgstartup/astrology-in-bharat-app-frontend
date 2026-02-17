@@ -15,7 +15,7 @@ export default function ClientLayout({
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin");
   const isChatRoom = pathname?.includes("/chat/room");
-  const { isClientAuthenticated, clientUser, clientLogout } = useAuthStore(); // Changed usage
+  const { isClientAuthenticated, clientUser, clientLogout, clientBalance } = useAuthStore(); // Changed usage
 
   // Load Bootstrap JS for modal functionality
   useEffect(() => {
@@ -32,6 +32,7 @@ export default function ClientLayout({
           authState={isClientAuthenticated}
           userData={clientUser}
           logoutHandler={clientLogout}
+          balance={clientBalance}
         />
       )}
       <main>{children}</main>

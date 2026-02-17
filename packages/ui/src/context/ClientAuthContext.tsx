@@ -25,9 +25,14 @@ const deleteCookie = (name: string) => {
 };
 
 // API client with proper cookie handling
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543";
+const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+
+const isServer = typeof window === 'undefined';
+
 export const apiClient = axios.create({
-    baseURL: '/api/v1',
-    withCredentials: false, // Set to false to avoid cookie collision with Dashboard on localhost
+    baseURL: isServer ? `${cleanApiUrl}/api/v1` : '/api/v1',
+    withCredentials: true, // Crucial for httpOnly cookies
 });
 
 // Add a request interceptor to include the clientAccessToken

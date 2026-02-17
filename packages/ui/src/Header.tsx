@@ -99,9 +99,10 @@ interface HeaderProps {
   authState?: boolean;
   userData?: any;
   logoutHandler?: () => void;
+  balance?: number;
 }
 
-const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) => {
+const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, balance }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isClient, setIsClient] = useState(false);
@@ -131,6 +132,8 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
   // Prioritize props if available, otherwise use context
   const isAuthenticated = authState ?? contextIsAuthenticated;
   const clientUser = userData ?? contextUser;
+  const currentBalance = balance ?? clientBalance;
+
   const clientLogout = async () => {
     if (logoutHandler) {
       logoutHandler();
@@ -319,10 +322,10 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler }) =
                         <i className="fa-solid fa-coins text-white text-xs" style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))' }}></i>
                         <span className="text-white font-black text-sm tracking-tight" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
                           ₹{showFullBalance
-                            ? clientBalance?.toLocaleString()
-                            : (clientBalance >= 1000
-                              ? `${(clientBalance / 1000).toFixed(clientBalance % 1000 === 0 ? 0 : 1)} k`
-                              : clientBalance)}
+                            ? currentBalance?.toLocaleString()
+                            : (currentBalance >= 1000
+                              ? `${(currentBalance / 1000).toFixed(currentBalance % 1000 === 0 ? 0 : 1)} k`
+                              : currentBalance)}
                         </span>
                       </div>
                     )}

@@ -1,4 +1,4 @@
-import { apiClient } from "@repo/ui";
+import { apiClient } from "../lib/api-client";
 
 export interface ClientProfileData {
     id?: number;
