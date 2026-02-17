@@ -1,9 +1,11 @@
 import React from 'react'
-import { ConsultationServicesData } from "@/components/features/services/data";
+import homepageData from "../../../public/data/homepage.json";
 import ConsultationCard from "@/components/features/services/ConsultationCard";
 import NextLink from "next/link";
+
 const Link = NextLink as any;
-const  AstrologerConsultant = () => {
+
+const AstrologerConsultant = () => {
   return (
     <section className="bg-edeef1 space-section">
       <div className='container'>
@@ -12,7 +14,7 @@ const  AstrologerConsultant = () => {
             <span>Consult The Right Astrologer For You</span>
           </h2>
           <div className="row">
-            {ConsultationServicesData.map((service) => (
+            {homepageData.consultationServices.map((service) => (
               <div className="col-sm-3" key={service.id}>
                 <Link
                   href={`/our-astrologers?specializations=${encodeURIComponent(service.title)}`}
@@ -26,8 +28,7 @@ const  AstrologerConsultant = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default AstrologerConsultant
-
+export default AstrologerConsultant;

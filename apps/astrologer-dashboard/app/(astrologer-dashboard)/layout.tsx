@@ -4,7 +4,7 @@ import { Sidebar } from "@/components/common/Sidebar";
 import { Header } from "@/components/common/Header";
 import "react-calendar/dist/Calendar.css";
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { ChatNotificationListener } from "@/components/ChatNotificationListener";
 
@@ -14,7 +14,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {

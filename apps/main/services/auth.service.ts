@@ -15,9 +15,10 @@ export const AuthService = {
         return await apiClient.post('/auth/client-logout');
     },
 
-    fetchProfile: async () => {
+    fetchProfile: async (serverHeaders?: any) => {
         const response = await apiClient.get('/client', {
             headers: {
+                ...serverHeaders,
                 'Cache-Control': 'no-cache, no-store, must-revalidate',
                 'Pragma': 'no-cache',
                 'Expires': '0'

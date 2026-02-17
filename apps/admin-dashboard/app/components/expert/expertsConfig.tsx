@@ -1,34 +1,16 @@
 import { UserCheck, Clock } from "lucide-react";
 import type { Expert } from "@/app/components/expert/expert";
 
-export const expertsData: Expert[] = [
-  {
-    id: 1,
-    name: "Pandit Raj Kumar",
-    email: "raj.kumar@astro.com",
-    emailVerified: true,
-    createdAt: "2023-06-15",
-    avatar: "https://i.pravatar.cc/150?img=51",
-    profile_expert: {
-      id: 1,
-      specialization: "Vedic Astrology",
-      experience: 15,
-      rating: 4.8,
-      totalConsultations: 450,
-      totalEarnings: 225000,
-      kycStatus: "Verified",
-      addresses: [{ city: "Varanasi", state: "Uttar Pradesh" }],
-      languages: ["Hindi", "English", "Sanskrit"],
-    },
-  },
-  // ... other mock items omitted for brevity as they are not used
-];
+import sampleData from "@/public/data/sample_data.json";
+
+export const expertsData: Expert[] = sampleData.experts as any;
 
 // Define types
 export interface ExpertStats {
   totalExperts: number;
   activeExperts: number;
   pendingExperts: number;
+  totalRevenue?: number;
 }
 
 export const getStatsConfig = (data: Expert[] | ExpertStats) => {

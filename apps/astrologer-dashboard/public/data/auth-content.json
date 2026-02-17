@@ -1,0 +1,18 @@
+{
+    "login": {
+        "title": "Welcome Back, Expert!",
+        "subtitle": "Please enter your credentials to sign in.",
+        "description": "Access your personalized dashboard, manage your appointments, and grow your practice.",
+        "branding": "Welcome Back, Expert!",
+        "noAccount": "Don't have an account?",
+        "signUpLink": "Sign Up here"
+    },
+    "register": {
+        "title": "Expert Sign Up",
+        "subtitle": "Create your professional account",
+        "description": "Register today to start providing your astrology expertise to thousands of seeking clients.",
+        "branding": "Join Our Expert Community",
+        "alreadyAccount": "Already have an account?",
+        "signInLink": "Sign In here"
+    }
+}

@@ -38,24 +38,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     clientLogout: async () => {
         console.log("🚪 Starting logout process...");
 
-        // Optimistic clear state
+        try {
+            // 1. Call server action to clear httpOnly cookies
+            const { logoutAction } = await import("../actions/auth");
+            await logoutAction();
+
+            // 2. Clear backend session (optional)
+            await AuthService.logout();
+            console.log("✅ Logout successful");
+        } catch (err) {
+            console.error("❌ Logout error:", err);
+        }
+
+        // 3. Reset local state
         set({
             clientUser: null,
             isClientAuthenticated: false,
             clientLoading: false,
             clientBalance: 0
         });
-
-        // Clear cookies
-        deleteCookie('clientAccessToken');
-        deleteCookie('refreshToken');
-
-        try {
-            await AuthService.logout();
-            console.log("✅ Backend logout successful");
-        } catch (err) {
-            console.error("❌ Backend logout error (ignored):", err);
-        }
 
         if (typeof window !== 'undefined') {
             window.location.href = '/';

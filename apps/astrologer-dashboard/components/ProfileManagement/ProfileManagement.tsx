@@ -10,7 +10,7 @@ import PayoutInfo from "./PayoutInfo";
 import PortfolioGallery from "./PortfolioGallery";
 import VerificationAndDocuments from "./VerificationAndDocuments";
 import { Todo, LeaveDate, Profile, Gender, DocumentItem, ExperienceItem } from "./types";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import {
   getProfile,
   updateProfile,
@@ -30,7 +30,7 @@ import {
 } from "@/lib/profile";
 
 const ProfileManagement = () => {
-  const { user: authUser } = useAuth();
+  const { user: authUser } = useAuthStore();
   const [profile, setProfile] = useState<Profile>({
     name: authUser?.name || "",
     email: authUser?.email || "",

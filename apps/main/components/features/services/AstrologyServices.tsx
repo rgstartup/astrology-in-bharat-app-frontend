@@ -1,8 +1,8 @@
 import React from "react";
-import { AstrologyServicesData, ConsultationServicesData } from "./data";
+import homepageData from "../../../public/data/homepage.json";
 import ServiceCard from "./ServiceCard";
-import ConsultationCard from "./ConsultationCard";
 import NextLink from "next/link";
+
 const Link = NextLink as any;
 
 const AstrologyServices = () => {
@@ -16,7 +16,7 @@ const AstrologyServices = () => {
           <div className="overflow-hidden">
             <div className="h-[550px] overflow-y-auto pr-2 custom-scrollbar">
               <div className="row mx-0">
-                {AstrologyServicesData.map((service) => (
+                {homepageData.astrologyServices.map((service) => (
                   <div className="col-lg-3 col-md-4 px-2 mb-4" key={service.id}>
                     <Link
                       href={`/services/${service.slug}`}
@@ -30,15 +30,10 @@ const AstrologyServices = () => {
             </div>
           </div>
         </div>
-
         <br className="mobile-none" />
-
- 
       </div>
     </section>
   );
 };
 
 export default AstrologyServices;
-
-

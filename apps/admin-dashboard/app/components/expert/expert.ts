@@ -83,6 +83,7 @@ export interface Expert {
   // UI specific fields
   joinDate?: string;
   lastActive?: string;
+  certificates?: string[];
 }
 
 

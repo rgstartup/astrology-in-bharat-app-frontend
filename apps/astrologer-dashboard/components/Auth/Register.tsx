@@ -6,7 +6,7 @@ import NextImage from "next/image";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import apiClient from "@/lib/apiClient";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-toastify";
 
 import { Button } from "@repo/ui";
@@ -18,6 +18,10 @@ const LockIcon = Lock as any;
 const EyeIcon = Eye as any;
 const EyeOffIcon = EyeOff as any;
 
+import { astrologerRegisterAction } from "@/src/actions/auth";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
+
 const RegisterPage: React.FC = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -28,14 +32,6 @@ const RegisterPage: React.FC = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-    const { login } = useAuth();
-
-    useEffect(() => {
-        // Migration cleanup
-        if (typeof window !== "undefined") {
-            localStorage.removeItem("accessToken");
-        }
-    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -49,40 +45,28 @@ const RegisterPage: React.FC = () => {
         setLoading(true);
 
         try {
-            console.log("Attempting registration for:", email);
-            const response = await apiClient.post("/auth/email/register", {
-                name,
-                email,
-                password,
-                roles: ["expert"],
-            });
+            const result = await astrologerRegisterAction({ name, email, password });
 
-            console.log("Registration successful response:", response.status);
-
-            if (response.status === 201 || response.status === 200) {
-                toast.success("Signup successful. Please verify your email before logging in.", { autoClose: 5000 });
+            if (result.success) {
+                toast.success(result.message || "Signup successful. Please verify your email.");
                 setTimeout(() => {
                     router.push("/");
                 }, 3000);
+            } else {
+                setError(result.error || "Registration failed");
             }
         } catch (err: any) {
-            console.error("Full Registration Error Object:", err);
-            console.error("Registration error stringified:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
-
-            const backendMessage = err.response?.data?.message || err.message || "Unknown error occurred";
-            const message = Array.isArray(backendMessage) ? backendMessage.join(", ") : backendMessage;
-
-            toast.error(message || "Failed to register. Please try again later.");
-            setError(message || "Failed to register. Please try again later.");
+            console.error("Registration error:", err);
+            setError("An unexpected error occurred");
         } finally {
             setLoading(false);
         }
     };
 
     const handleGoogleLogin = () => {
-        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
-        const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=expert&redirect_uri=http://localhost:3003`;
-        window.location.href = googleLoginUrl;
+        const baseUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+        const redirectUri = window.location.origin;
+        window.location.href = `${baseUrl}/api/v1/auth/google/login?role=expert&redirect_uri=${redirectUri}`;
     };
 
     return (

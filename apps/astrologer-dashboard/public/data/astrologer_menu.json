@@ -1,0 +1,52 @@
+{
+    "menuItems": [
+        {
+            "label": "Dashboard",
+            "href": "/dashboard",
+            "icon": "LayoutDashboard"
+        },
+        {
+            "label": "Appointment",
+            "href": "/dashboard/appointment",
+            "icon": "CalendarCheck"
+        },
+        {
+            "label": "Service & Pricing",
+            "href": "/dashboard/service-pricing",
+            "icon": "Coins"
+        },
+        {
+            "label": "Clients History",
+            "href": "/dashboard/client-history",
+            "icon": "History"
+        },
+        {
+            "label": "Earnings",
+            "href": "/dashboard/earnings",
+            "icon": "Coins"
+        },
+        {
+            "label": "My Wallet",
+            "href": "/dashboard/wallet",
+            "icon": "Wallet"
+        },
+        {
+            "label": "Account",
+            "href": "#",
+            "icon": "Settings",
+            "submenu": [
+                {
+                    "label": "Profile Management",
+                    "href": "/dashboard/profilemanagement",
+                    "icon": "User"
+                },
+                {
+                    "label": "Signout",
+                    "href": "#",
+                    "icon": "LogOut",
+                    "isLogout": true
+                }
+            ]
+        }
+    ]
+}

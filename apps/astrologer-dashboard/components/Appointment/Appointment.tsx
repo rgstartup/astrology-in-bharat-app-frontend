@@ -8,13 +8,13 @@ import AppointmentCalendar from "./AppointmentCalendar";
 import RescheduleModal from "./RescheduleModal";
 import { Appointment } from "./types";
 import apiClient from "@/lib/apiClient";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { chatSocket } from "@/lib/socket";
 import { getExpertReviews } from "@/lib/reviews";
 import { getDashboardStats, DashboardStats } from "@/lib/dashboard";
 
 export default function AppointmentsPage() {
-  const { user: expertUser, isAuthenticated: isExpertAuthenticated } = useAuth();
+  const { user: expertUser, isAuthenticated: isExpertAuthenticated } = useAuthStore();
 
   console.log("[AppointmentDebug] AppointmentsPage Rendered");
 

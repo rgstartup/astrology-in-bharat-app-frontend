@@ -1,8 +1,9 @@
 "use client";
 import React, { memo, useCallback, useState, Fragment } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import AdminGuard from "@/app/components/AdminGuard";
+import { useAuthStore } from "@/src/store/useAuthStore";
 
 import {
   X,
@@ -35,47 +36,49 @@ import {
 import { cn } from "@/utils/cn";
 import { SearchInput, Avatar, NotificationBell } from "@repo/ui";
 import { toast } from "react-toastify";
+import adminData from "../../public/data/admin_data.json";
+
 interface MenuItem {
   label: string;
   href: string;
-  icon: React.ElementType;
+  icon: any; // Changed to any to handle mapped components
   submenu?: Omit<MenuItem, "submenu">[];
 }
 
-const menuItems: MenuItem[] = [
-  { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "User Management", href: "/admin/users", icon: Users },
-  { label: "Expert Management", href: "/admin/experts", icon: UserCheck },
-  // { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
-  // { label: "Expert KYC Review", href: "/admin/kyc", icon: FileText },
-  { label: "Services & Pricing", href: "/admin/services", icon: Package },
-  // { label: "Promo Configuration", href: "/admin/promos", icon: Ticket },
-  { label: "Coupons/Offers", href: "/admin/coupons", icon: Tag },
-  { label: "Live Sessions Monitor", href: "/admin/live-sessions", icon: Tv },
-  // { label: "Session Logs", href: "/admin/session-logs", icon: History },
-  { label: "Payout Requests", href: "/admin/payouts", icon: Wallet },
-  { label: "Refund Management", href: "/admin/refunds", icon: RefreshCw },
-  { label: "Dispute Resolution", href: "/admin/disputes", icon: AlertCircle },
-  { label: "Reviews Moderation", href: "/admin/reviews", icon: Star },
-  { label: "Analytics Dashboard", href: "/admin/analytics", icon: BarChart3 },
-  { label: "Products", href: "/admin/products", icon: ShoppingBag },
-  { label: "Order Management", href: "/admin/orders", icon: Package },
-  // { label: "Earnings", href: "/admin/earnings", icon: IndianRupee },
-  { label: "Settings", href: "/admin/settings", icon: Settings },
-  {
-    label: "Account",
-    href: "#",
-    icon: User,
-    submenu: [
-      {
-        label: "Profile Management",
-        href: "/admin/profile",
-        icon: User,
-      },
-    ],
-  },
-  { label: "Signout", href: "#", icon: LogOut },
-];
+const IconMap: Record<string, React.ElementType> = {
+  LayoutDashboard,
+  CalendarCheck,
+  Tag,
+  History,
+  IndianRupee,
+  Users,
+  UserCheck,
+  Settings,
+  LogOut,
+  Tv,
+  FileText,
+  Wallet,
+  RefreshCw,
+  AlertCircle,
+  Star,
+  BarChart3,
+  Ticket,
+  User,
+  Menu,
+  Bell,
+  Search,
+  Package,
+  ShoppingBag,
+};
+
+const menuItems: MenuItem[] = adminData.menuItems.map((item: any) => ({
+  ...item,
+  icon: IconMap[item.icon] || User,
+  submenu: item.submenu?.map((sub: any) => ({
+    ...sub,
+    icon: IconMap[sub.icon] || User,
+  })),
+}));
 
 interface SidebarProps {
   isOpen: boolean;
@@ -98,41 +101,17 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   const isSubmenuOpen = openSubmenu === item.label;
   const isActiveLink = pathname === item.href;
 
+  const { logout, user } = useAuthStore();
+  const router = useRouter();
+
   if (!item.submenu) {
     if (item.label === "Signout") {
       return (
         <button
-          onClick={async () => {
-            // 1. Get token
-            const getCookie = (name: string) => {
-              const value = `; ${document.cookie}`;
-              const parts = value.split(`; ${name}=`);
-              if (parts.length === 2) return parts.pop()?.split(";").shift();
-            };
-            const token = getCookie("accessToken");
-
-            // 2. Call API
-            try {
-              await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/logout`, {
-                method: "POST",
-                headers: {
-                  "Authorization": `Bearer ${token}`,
-                  "Content-Type": "application/json",
-                },
-              });
-            } catch (e) {
-              console.error("Logout API failed", e);
-            }
-
-            // 3. Clear cookies
-            document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-            document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-
-            // 4. Toast and Redirect
+          onClick={() => {
+            logout();
             toast.success("Signed out successfully");
-            setTimeout(() => {
-              window.location.href = "/";
-            }, 1000);
+            router.push("/");
           }}
           className={cn(
             "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-left",
@@ -199,37 +178,10 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
               return (
                 <button
                   key={subItem.label}
-                  onClick={async () => {
-                    // 1. Get token
-                    const getCookie = (name: string) => {
-                      const value = `; ${document.cookie}`;
-                      const parts = value.split(`; ${name}=`);
-                      if (parts.length === 2) return parts.pop()?.split(";").shift();
-                    };
-                    const token = getCookie("accessToken");
-
-                    // 2. Call API
-                    try {
-                      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/auth/logout`, {
-                        method: "POST",
-                        headers: {
-                          "Authorization": `Bearer ${token}`,
-                          "Content-Type": "application/json",
-                        },
-                      });
-                    } catch (e) {
-                      console.error("Logout API failed", e);
-                    }
-
-                    // 3. Clear cookies
-                    document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-                    document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-
-                    // 4. Toast and Redirect
+                  onClick={() => {
+                    logout();
                     toast.success("Signed out successfully");
-                    setTimeout(() => {
-                      window.location.href = "/";
-                    }, 1000);
+                    router.push("/");
                   }}
                   className={cn(
                     "block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-primary-hover hover:text-white transition-colors duration-200",
@@ -346,6 +298,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { user } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [globalSearch, setGlobalSearch] = useState("");
   const pathname = usePathname();
@@ -395,22 +348,17 @@ export default function AdminLayout({
                   </h1>
                 </div>
 
-                <div className="flex items-center space-x-4">
-
-
-
-                  {/* Notifications */}
-                  <NotificationBell
-                    count={30}
-                    className="hover:text-gray-800 hover:bg-gray-100"
-                  />
-
-                  {/* Profile */}
-                  <div className="w-10 h-10 rounded-full overflow-hidden">
+                {/* Profile */}
+                <div className="flex items-center gap-3">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-sm font-bold text-gray-800">{user?.name || "Admin"}</p>
+                    <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">Administrator</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
                     <Avatar
-                      src="https://i.pravatar.cc/150?img=12"
+                      src={user?.avatar || user?.profile_picture || ""}
                       alt="Profile"
-                      className="cursor-pointer hover:ring-2 hover:ring-yellow-500 transition-all"
+                      className="cursor-pointer hover:ring-2 hover:ring-primary transition-all"
                     />
                   </div>
                 </div>

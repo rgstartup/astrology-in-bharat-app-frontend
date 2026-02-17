@@ -9,7 +9,7 @@ import { ManageConsultaions } from "@/components/dashboard/ManageConsultaions";
 import { ConsultationRatings } from "@/components/dashboard/ConsulationRating";
 import { ReviewsList } from "@/components/dashboard/ReviewsList";
 import { ReviewsModal } from "@/components/dashboard/ReviewsModal";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { getExpertReviewStats, getExpertReviews, Review, ReviewStats } from "@/lib/reviews";
 import { getDashboardStats, DashboardStats } from "@/lib/dashboard";
 import apiClient from "@/lib/apiClient";
@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 import { AlertTriangle, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 const Page = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const [ratingStats, setRatingStats] = useState<ReviewStats | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);

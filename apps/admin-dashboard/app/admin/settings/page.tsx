@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { api } from "@/src/lib/api";
 import {
     Mail,
     Phone,
@@ -82,24 +83,9 @@ const SettingsPage: React.FC = () => {
 
         setSaving(true);
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-            const getCookie = (name: string) => {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop()?.split(";").shift();
-            };
-            const token = getCookie("accessToken");
+            const response = await api.post("/admin/settings/support", settings);
 
-            const response = await fetch(`${API_URL}/api/v1/admin/settings/support`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(settings),
-            });
-
-            if (response.ok) {
+            if (response.status === 200 || response.status === 201) {
                 toast.success("Synchronized successfully");
                 setOriginalSettings(settings);
                 setIsEditing(false);
@@ -166,8 +152,8 @@ const SettingsPage: React.FC = () => {
                                     onClick={handleSave}
                                     disabled={saving || !isChanged}
                                     className={`flex items-center gap-2.5 px-8 py-3.5 rounded-2xl font-black text-sm transition-all duration-300 ${!isChanged
-                                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
-                                            : 'bg-orange-500 text-white hover:bg-orange-600 shadow-xl shadow-orange-500/20'
+                                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
+                                        : 'bg-orange-500 text-white hover:bg-orange-600 shadow-xl shadow-orange-500/20'
                                         }`}
                                 >
                                     {saving ? (

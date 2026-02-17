@@ -37,6 +37,9 @@
       ],
       "@repo/lib/*": [
         "../../packages/lib/src/*"
+      ],
+      "@packages/*": [
+        "../../packages/*"
       ]
     }
   },
