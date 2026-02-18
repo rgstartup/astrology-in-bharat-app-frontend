@@ -534,7 +534,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                         </div>
                       ) : (
                         <div className="d-flex gap-3">
-                          <a
+                          <Link
                             href={PATHS.SIGN_IN}
                             style={{
                               backgroundColor: "var(--primary-color, black)",
@@ -547,10 +547,10 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                               display: "inline-block"
                             }}
                           >
-                            SignIn
-                          </a>
+                            Sign In
+                          </Link>
 
-                          <a
+                          <Link
                             href={PATHS.REGISTER}
                             style={{
                               backgroundColor: "var(--primary-color, black)",
@@ -564,7 +564,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                             }}
                           >
                             Register
-                          </a>
+                          </Link>
                         </div>
                       )}
                     </div>
