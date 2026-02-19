@@ -5,11 +5,11 @@ import NextImage from "next/image";
 import NextLink from "next/link";
 import { toast } from "react-toastify";
 import { registerAction } from "@/actions/auth";
+import { getApiUrl, getBasePath } from "@/utils/api-config";
 
 const Image = NextImage as any;
 const Link = NextLink as any;
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
 
 const SignUpForm: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -57,16 +57,25 @@ const SignUpForm: React.FC = () => {
     };
 
     const handleGoogleLogin = () => {
-        const baseUrl = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
+        // Direct call to Backend for Google Login (Important for Cookies)
+        const baseUrl = getBasePath();
         const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=client&redirect_uri=${window.location.origin}`;
+
+        console.log("[GoogleLogin] Redirecting to:", googleLoginUrl);
         window.location.href = googleLoginUrl;
     };
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        if (!validateForm()) return;
+        console.log("[SignUpForm] Form submitted", formData);
+
+        if (!validateForm()) {
+            console.warn("[SignUpForm] Validation failed");
+            return;
+        }
 
         setIsLoading(true);
+        console.log("[SignUpForm] Calling registerAction...");
 
         const payload = {
             name: formData.fullName,
@@ -77,6 +86,7 @@ const SignUpForm: React.FC = () => {
 
         try {
             const result = await registerAction(payload);
+            console.log("[SignUpForm] registerAction result:", result);
             if (result.error) {
                 toast.error(result.error);
             } else if (result.success) {
@@ -84,6 +94,7 @@ const SignUpForm: React.FC = () => {
                 setFormData({ fullName: "", email: "", password: "", confirmPassword: "", phoneNumber: "" });
             }
         } catch (err) {
+            console.error("[SignUpForm] Error:", err);
             toast.error("An unexpected error occurred.");
         } finally {
             setIsLoading(false);

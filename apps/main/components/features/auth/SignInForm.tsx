@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { loginAction } from "@/actions/auth";
 import { useAuthStore } from "@/store/useAuthStore";
+import { getApiUrl, getBasePath } from "@/utils/api-config";
 
 const Image = NextImage as any;
 const Link = NextLink as any;
@@ -70,8 +71,11 @@ const SignInForm: React.FC = () => {
     };
 
     const handleGoogleLogin = () => {
-        const baseUrl = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
+        // Direct call to Backend for Google Login (Important for Cookies)
+        const baseUrl = getBasePath();
         const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=client&redirect_uri=${window.location.origin}`;
+
+        console.log("[GoogleLogin] Redirecting to:", googleLoginUrl);
         window.location.href = googleLoginUrl;
     };
 

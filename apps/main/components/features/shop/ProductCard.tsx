@@ -50,7 +50,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
     const { isClientAuthenticated } = useAuthStore();
     // Using Store
     const { addToCart } = useCartStore();
-    const [isAdding, setIsAdding] = React.useState(false);
+    const [isCartLoading, setIsCartLoading] = React.useState(false);
+    const [isBuyLoading, setIsBuyLoading] = React.useState(false);
     const router = useRouter();
 
     // Changed usage to store
@@ -78,7 +79,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
         }
     };
 
-    const handleBuy = async (e: React.MouseEvent) => {
+    const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -92,11 +93,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
         }
 
         try {
-            setIsAdding(true);
+            setIsCartLoading(true);
             // Pass isClientAuthenticated to store action
             await addToCart(Number(product.id || product._id), 1, isClientAuthenticated);
         } finally {
-            setIsAdding(false);
+            setIsCartLoading(false);
         }
     };
 
@@ -166,9 +167,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                     <Button
                         variant="outline"
                         size="md"
-                        onClick={handleBuy}
-                        loading={isAdding}
-                        className="flex-1 !rounded-full border-primary text-primary hover:bg-primary/5 h-10 text-[10px] p-6"
+                        onClick={handleAddToCart}
+                        loading={isCartLoading}
+                        className="flex-1 !rounded-full border-primary text-primary hover:bg-primary/5 h-10 text-[13px] px-3 font-semibold"
                     >
                         Add to Cart
                     </Button>
@@ -178,13 +179,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+                            setIsBuyLoading(true);
                             const id = product.id || product._id;
                             // Store in sessionStorage for a clean URL
                             sessionStorage.setItem('buyNowItem', JSON.stringify({ productId: id, quantity: 1 }));
                             router.push(`/checkout?type=order`);
                         }}
-                        loading={isAdding}
-                        className="flex-1 rounded-full h-10 text-[10px] p-6"
+                        loading={isBuyLoading}
+                        className="flex-1 rounded-full h-10 text-[13px] px-3 font-semibold"
                     >
                         Buy Now
                     </Button>

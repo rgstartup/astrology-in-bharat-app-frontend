@@ -18,20 +18,23 @@ export async function middleware(request: NextRequest) {
     const urlRefreshToken = searchParams.get('refreshToken') || searchParams.get('refresh_token');
 
     if (urlAccessToken) {
+        console.log("[Middleware] 🔑 Capturing token from URL redirect");
         const nextResponse = NextResponse.redirect(new URL(pathname, request.url));
-        nextResponse.cookies.set('clientAccessToken', urlAccessToken, {
+
+        // Use 'lax' instead of 'strict' for social login redirects to be safer
+        const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax' as const,
             path: '/',
             maxAge: 60 * 60 * 24 * 7,
-        });
+        };
+
+        nextResponse.cookies.set('clientAccessToken', urlAccessToken, cookieOptions);
+
         if (urlRefreshToken) {
             nextResponse.cookies.set('refreshToken', urlRefreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
-                path: '/',
+                ...cookieOptions,
                 maxAge: 60 * 60 * 24 * 30,
             });
         }

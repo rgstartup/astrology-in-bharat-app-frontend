@@ -25,30 +25,21 @@ export const AuthInitializer = ({
         authCheckRef.current = true;
 
         if (initialUser) {
-            // If server already found a user, just update the store
             clientLogin("", initialUser);
-        } else {
-            // Otherwise, double check on client (for cases where server didn't fetch)
-            const token = getCookie('clientAccessToken');
-            if (token) {
-                refreshAuth();
-            } else {
-                useAuthStore.setState({ clientLoading: false, isClientAuthenticated: false });
-
-                // ZOMBIE COOKIE KILLER:
-                // If we are on a protected route (e.g. /profile, /wallet) AND we have no user,
-                // it implies the Middleware let us through (likely due to a stale httpOnly cookie),
-                // but the RootLayout failed to validate it.
-                // We MUST clear the cookie to break the infinite loop.
-                const protectedPrefixes = ['/profile', '/wallet', '/settings', '/session-history'];
-                if (protectedPrefixes.some(p => pathname?.startsWith(p))) {
-                    console.log("🧟 Zombie session detected. Clearing invalid cookies...");
-                    logoutAction().then(() => {
-                        // Force reload to get fresh state (middleware will now block us or we land on public page)
-                        window.location.href = '/sign-in';
-                    });
+        } else if (!useAuthStore.getState().isClientAuthenticated) {
+            // Only refresh if we don't already have a valid client session
+            refreshAuth().finally(() => {
+                const state = useAuthStore.getState();
+                if (!state.isClientAuthenticated) {
+                    // ZOMBIE COOKIE KILLER:
+                    const protectedPrefixes = ['/profile', '/wallet', '/settings', '/session-history'];
+                    if (protectedPrefixes.some(p => pathname?.startsWith(p))) {
+                        logoutAction().then(() => {
+                            window.location.href = '/sign-in';
+                        });
+                    }
                 }
-            }
+            });
         }
     }, [clientLogin, refreshAuth, initialUser, pathname]);
 

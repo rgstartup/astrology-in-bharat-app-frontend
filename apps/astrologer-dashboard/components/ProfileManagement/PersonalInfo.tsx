@@ -83,7 +83,7 @@ export default function PersonalInfo({
                                 className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                             >
                                 {/* @ts-ignore */}
-                                <Edit3 className="w-6 h-6 text-white" />
+                                <Edit3 className="w-6 h-6 text-orange-500" />
                             </div>
                             <input
                                 type="file"

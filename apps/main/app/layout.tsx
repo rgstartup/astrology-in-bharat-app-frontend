@@ -48,10 +48,9 @@ export default async function RootLayout({
       const res = await AuthService.fetchProfile({
         Authorization: `Bearer ${token}`,
       });
-      // Handle the nested user object or direct object
       user = res.data.user || (res.data.id ? res.data : null);
-    } catch (err) {
-      console.error("Server-side auth check failed:", err);
+    } catch (err: any) {
+      console.error("[RootLayout] Server-side auth check failed:", err.message);
     }
   }
 

@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
-const SOCKET_URL = API_URL.replace(/\/api\/v1\/?$/, "");
+import { BACKEND_URL } from "./config";
+const SOCKET_URL = BACKEND_URL;
 
 console.log("[Socket] Dashboard connecting to:", SOCKET_URL);
 

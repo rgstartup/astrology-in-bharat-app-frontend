@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import safeFetch from '@packages/safe-fetch/safeFetch';
 
-// Simple JWT parser for middleware
+// Simple JWT parser for proxy
 function parseJwt(token: string) {
     try {
         const base64Url = token.split('.')[1];
@@ -25,7 +25,7 @@ import { getBasePath, getApiUrl } from '@/src/utils/api-config';
 const API_BASE_URL = getApiUrl();
 const cleanApiBase = getBasePath();
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname, searchParams } = request.nextUrl;
 
     // 0. Protected Routes Check
@@ -78,7 +78,7 @@ export async function middleware(request: NextRequest) {
             }
             return nextResponse;
         } else if (error) {
-            console.error("Middleware refresh error:", error);
+            console.error("Proxy refresh error:", error);
         }
     }
 
@@ -96,7 +96,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
 }
 
-// Config for middleware matcher
+// Config for proxy matcher
 export const config = {
     matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images).*)'],
 };

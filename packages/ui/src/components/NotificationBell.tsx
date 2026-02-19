@@ -33,7 +33,10 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
             <Bell className={clsx("w-5 h-5", isActive && "fill-current")} />
 
             {count > 0 && (
-                <span className="absolute top-1 right-1 bg-red-500 text-white text-[10px] sm:text-xs rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center font-bold animate-pulse transform -translate-y-1 translate-x-1 shadow-sm border border-white">
+                <span
+                    className="absolute bg-red-500 text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center font-bold shadow-sm border border-white z-10"
+                    style={{ top: '-4px', right: '-4px', bottom: 'auto', left: 'auto' }}
+                >
                     {count > 99 ? '99+' : count}
                 </span>
             )}

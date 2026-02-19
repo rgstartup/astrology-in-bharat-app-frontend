@@ -199,13 +199,26 @@ a {
 /**/
 
 .top-head {
-  background: #411f1f;
+  background: #301118;
+  color: #ffffff;
+  padding: 10px 1rem;
+  min-height: 52px;
+  overflow: visible !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
-.top-head {
-  background: #301118;
-  color: #2b1b00;
-  padding: 0.25rem 1rem;
+.top-head::-webkit-scrollbar {
+  display: none !important;
+}
+
+.top-head * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.top-head *::-webkit-scrollbar {
+  display: none !important;
 }
 
 /**/
@@ -1058,4 +1071,3 @@ button.btn-close {
   color: #141414;
   transition: 0.6s;
 }
-

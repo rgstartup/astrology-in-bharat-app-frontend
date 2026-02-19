@@ -233,28 +233,6 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Update URL when filters change (Client -> URL -> Server -> Client)
-  const updateUrl = useCallback(
-    (updates: Record<string, string | number | undefined | null>) => {
-      const params = new URLSearchParams(searchParams.toString());
-
-      Object.entries(updates).forEach(([key, value]) => {
-        if (
-          value === "" ||
-          value === 0 ||
-          value === undefined ||
-          value === null
-        ) {
-          params.delete(key);
-        } else {
-          params.set(key, String(value));
-        }
-      });
-
-      router.push(`${window.location.pathname}?${params.toString()}`, { scroll: false });
-    },
-    [router, searchParams]
-  );
 
   // Effect to sync state changes to URL
   const isFirstRun = useRef(true);
@@ -277,13 +255,26 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
       online: filterState.onlyOnline ? "true" : undefined,
     };
 
-    updateUrl(updates);
-    setOffset(0);
+    // Robust loop prevention: Compare final stringified params
+    const nextParams = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === "" || value === 0 || value === undefined || value === null) {
+        nextParams.delete(key);
+      } else {
+        nextParams.set(key, String(value));
+      }
+    });
+
+    if (nextParams.toString() !== searchParams.toString()) {
+      router.replace(`${window.location.pathname}?${nextParams.toString()}`, { scroll: false });
+      setOffset(0);
+    }
   }, [
     debouncedSearch,
     selectedSpecialization,
     filterState,
-    updateUrl,
+    router,
+    searchParams
   ]);
 
   // Infinite Scroll Fetcher

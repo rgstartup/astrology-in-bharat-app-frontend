@@ -20,7 +20,8 @@ const EyeOffIcon = EyeOff as any;
 
 import { astrologerRegisterAction } from "@/src/actions/auth";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
+import { CLIENT_API_URL } from "@/lib/config";
+const API_URL = CLIENT_API_URL;
 
 const RegisterPage: React.FC = () => {
     const [name, setName] = useState("");

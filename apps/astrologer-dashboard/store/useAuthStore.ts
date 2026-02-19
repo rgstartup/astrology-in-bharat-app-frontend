@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     login: async (newToken: string, userData?: User) => {
         // Token is already set as httpOnly cookie by server action
-        set({ isAuthenticated: true });
+        set({ isAuthenticated: true, loading: false });
 
         // Fetch full profile
         try {
@@ -52,10 +52,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     refreshAuth: async () => {
         try {
+            console.log("[AuthStore] Refreshing auth...");
             const res = await apiClient.get('/expert');
-            if (res.data) {
+            if (res.data && (res.data.id || res.data.user)) {
+                console.log("[AuthStore] Auth refresh success, expert found");
                 const fullUserData = { ...res.data.user, ...res.data, profileId: res.data.id };
                 set({ user: fullUserData, isAuthenticated: true, loading: false });
+            } else {
+                console.warn("[AuthStore] Auth refresh: No expert data in response", res.data);
+                set({ loading: false, isAuthenticated: false, user: null });
             }
         } catch (err: any) {
             console.error("Auth refresh error:", err);

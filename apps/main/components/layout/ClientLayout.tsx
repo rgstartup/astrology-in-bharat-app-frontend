@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Header, Footer } from "@repo/ui";
-import { useAuthStore } from "@/store/useAuthStore"; // Changed import
+import { useAuthStore } from "@/store/useAuthStore";
+import { useCartStore } from "@/store/useCartStore";
 import ToastProvider from "./ToastProvider";
 import FloatingChatButton from "../features/chat/FloatingChatButton";
 
@@ -15,7 +16,8 @@ export default function ClientLayout({
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin");
   const isChatRoom = pathname?.includes("/chat/room");
-  const { isClientAuthenticated, clientUser, clientLogout, clientBalance } = useAuthStore(); // Changed usage
+  const { isClientAuthenticated, clientUser, clientLogout, clientBalance } = useAuthStore();
+  const { cartCount } = useCartStore();
 
   // Load Bootstrap JS for modal functionality
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function ClientLayout({
           userData={clientUser}
           logoutHandler={clientLogout}
           balance={clientBalance}
+          cartCount={cartCount}
         />
       )}
       <main>{children}</main>

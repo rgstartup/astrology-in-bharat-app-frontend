@@ -20,8 +20,8 @@ function parseJwt(token: string) {
     }
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
-const cleanApiBase = API_URL.replace(/\/api\/v1\/?$/, "");
+import { BACKEND_URL } from "@/lib/config";
+const cleanApiBase = BACKEND_URL;
 
 export async function middleware(request: NextRequest) {
     const { pathname, searchParams } = request.nextUrl;
@@ -103,6 +103,12 @@ export async function middleware(request: NextRequest) {
             return nextResponse;
         } else if (error) {
             console.error("Astrologer Middleware refresh error:", error);
+            // If refresh fails (e.g. 401 Unauthorized), clear cookies and force redirect to login
+            const loginUrl = new URL('/', request.url);
+            const response = NextResponse.redirect(loginUrl);
+            response.cookies.delete('accessToken');
+            response.cookies.delete('refreshToken');
+            return response;
         }
     }
 

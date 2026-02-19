@@ -38,24 +38,26 @@ const Page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (user?.profileId) {
-        try {
-          const [stats, reviewsData, dStats] = await Promise.all([
-            getExpertReviewStats(user.profileId),
-            getExpertReviews(user.profileId, 1, 4), // Fetch 4 recent reviews
-            getDashboardStats('total').catch(err => {
-              console.error("[Dashboard] Total stats fetch failed:", err);
-              return null;
-            })
-          ]);
-          setRatingStats(stats);
-          setReviews(reviewsData.data || []);
-          setDashboardStats(dStats);
-        } catch (error) {
-          console.error("Error fetching ratings/reviews:", error);
-        } finally {
-          setLoading(false);
-        }
+      if (!user?.profileId) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const [stats, reviewsData, dStats] = await Promise.all([
+          getExpertReviewStats(user.profileId),
+          getExpertReviews(user.profileId, 1, 4), // Fetch 4 recent reviews
+          getDashboardStats('total').catch(err => {
+            console.error("[Dashboard] Total stats fetch failed:", err);
+            return null;
+          })
+        ]);
+        setRatingStats(stats);
+        setReviews(reviewsData.data || []);
+        setDashboardStats(dStats);
+      } catch (error) {
+        console.error("Error fetching ratings/reviews:", error);
+      } finally {
+        setLoading(false);
       }
     };
 

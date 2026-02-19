@@ -3,8 +3,9 @@
 import { cookies } from "next/headers";
 import safeFetch from "@packages/safe-fetch/safeFetch";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
-const API_BASE_URL = API_URL.replace(/\/api\/v1\/?$/, "");
+import { CLIENT_API_URL, BACKEND_URL } from "@/lib/config";
+const API_URL = CLIENT_API_URL;
+const API_BASE_URL = BACKEND_URL;
 
 export async function astrologerLoginAction(formData: any) {
     const [data, error] = await safeFetch<any>(`${API_BASE_URL}/api/v1/auth/login`, {

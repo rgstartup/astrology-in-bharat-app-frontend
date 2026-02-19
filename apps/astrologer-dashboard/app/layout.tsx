@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ['latin'] })
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
-const cleanApiBase = API_URL.replace(/\/api\/v1\/?$/, "");
+import { BACKEND_URL } from '@/lib/config';
+const cleanApiBase = BACKEND_URL;
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
@@ -23,23 +23,31 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       const response = await fetch(`${cleanApiBase}/api/v1/expert`, {
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`,
           Cookie: `accessToken=${accessToken}; refreshToken=${refreshToken}`,
         },
+        cache: 'no-store'
       });
 
       if (response.ok) {
-        const data = await response.json();
-        // Construct full user object like the store does
-        initialUser = { ...data.user, ...data, profileId: data.id };
+        const text = await response.text();
+        if (text) {
+          try {
+            const data = JSON.parse(text);
+            // Construct full user object like the store does
+            initialUser = { ...data.user, ...data, profileId: data.id };
 
-        // Final sanity check for expert role
-        const isExpert = initialUser?.roles?.some(
-          (r: any) => (typeof r === 'string' ? r : r.name).toUpperCase() === "EXPERT"
-        );
+            // Final sanity check for expert role
+            const isExpert = initialUser?.roles?.some(
+              (r: any) => (typeof r === 'string' ? r : r.name).toUpperCase() === "EXPERT"
+            );
 
-        if (!isExpert) {
-          initialUser = null;
-          // Note: Middleware usually handles redirection, but safety first
+            if (!isExpert) {
+              initialUser = null;
+            }
+          } catch (e) {
+            console.error("Failed to parse astrologer profile JSON:", e);
+          }
         }
       }
     } catch (error) {
