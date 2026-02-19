@@ -10,7 +10,7 @@ export { Loading } from "./components/Loading";
 export { NotFound } from "./components/NotFound";
 export { NotificationBell } from "./components/NotificationBell";
 export { SearchInput } from "./components/SearchInput";
-export { StatsCards } from "./components/StatsCard";
+export { StatsCards, type StatConfig } from "./components/StatsCard";
 
 // Profile components
 export * from "./components/profile";

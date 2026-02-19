@@ -32,6 +32,9 @@ import {
   Search,
   Package,
   ShoppingBag,
+  Handshake,
+  BookOpen,
+  BadgeIndianRupee,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { SearchInput, Avatar, NotificationBell } from "@repo/ui";
@@ -69,6 +72,9 @@ const IconMap: Record<string, React.ElementType> = {
   Search,
   Package,
   ShoppingBag,
+  Handshake,
+  BookOpen,
+  BadgeIndianRupee,
 };
 
 const menuItems: MenuItem[] = adminData.menuItems.map((item: any) => ({
@@ -248,28 +254,59 @@ const Sidebar: React.FC<SidebarProps> = memo(
           )}
           aria-label="Sidebar navigation"
         >
-          {/* Logo Section - Fixed */}
-          <div className="flex items-center justify-between p-6 bg-gray-50 border-r border-gray-200 flex-shrink-0"
+          {/* Premium Logo Section */}
+          <div
+            className="relative flex flex-col p-6 flex-shrink-0 border-b border-white/10 overflow-hidden"
             style={{
               backgroundImage: "url('/images/back-image.webp')",
               backgroundSize: "cover",
               backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
             }}
           >
+            {/* Subtle Dark Overlay for better text contrast */}
+            <div className="absolute inset-0 bg-black/20 pointer-events-none" />
 
-            <img
-              src="/images/logo.png"
-              alt="Logo"
-              className="rounded-2xl"
-            />
-            <button
-              onClick={toggleSidebar}
-              className="lg:hidden p-1 hover:bg-primary-hover rounded transition-colors duration-200 text-gray-800"
-              aria-label="Close sidebar"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                {/* Larger flipped Baba Ji with premium glow */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full animate-pulse" />
+                  <img
+                    src="/images/Astrologer.png"
+                    alt="AstrologyInBharat"
+                    className="w-16 h-16 object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+                    style={{ transform: "scaleX(-1)" }}
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <div className="leading-none mb-1">
+                    <h2 className="text-white text-lg font-black tracking-tighter drop-shadow-md">
+                      ASTROLOGY
+                    </h2>
+                    <p className="text-white/90 text-[11px] font-bold tracking-[0.2em] -mt-1 drop-shadow-sm uppercase">
+                      IN BHARAT
+                    </p>
+                  </div>
+
+                  {/* Sleek Pill Badge (Admin specific color) */}
+                  <div className="mt-1 flex">
+                    <span className="bg-gradient-to-r from-red-600 to-orange-600 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg border border-white/20 uppercase tracking-widest flex items-center gap-1">
+                      <div className="w-1 h-1 bg-white rounded-full animate-ping" />
+                      Admin
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={toggleSidebar}
+                className="lg:hidden p-2 hover:bg-white/10 rounded-full transition-all text-white"
+                aria-label="Close sidebar"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
           </div>
 
           {/* Navigation Menu - Scrollable */}

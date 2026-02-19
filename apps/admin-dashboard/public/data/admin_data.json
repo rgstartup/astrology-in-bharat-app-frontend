@@ -66,6 +66,16 @@
             "icon": "Package"
         },
         {
+            "label": "Agent Management",
+            "href": "/admin/agents",
+            "icon": "Handshake"
+        },
+        {
+            "label": "Commissions",
+            "href": "/admin/commissions",
+            "icon": "BadgeIndianRupee"
+        },
+        {
             "label": "Settings",
             "href": "/admin/settings",
             "icon": "Settings"

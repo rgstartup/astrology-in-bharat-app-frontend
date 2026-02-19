@@ -40,8 +40,13 @@ export const toggleUserBlock = async (id: number, isBlocked: boolean) => {
 };
 
 export const getDashboardStats = async () => {
-  const res = await api.get("/admin/dashboard/stats");
-  return res.data;
+  try {
+    const res = await api.get("/admin/dashboard/stats");
+    return res.data;
+  } catch (error) {
+    console.error("Dashboard stats fetch failed, returning mock fallback", error);
+    return null; // Return null so the UI can handle empty state or keep loading false
+  }
 };
 
 export const getUserGrowthStats = async (days: number) => {

@@ -71,27 +71,49 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     },
 
     refreshAuth: async () => {
-        const token = getCookie('accessToken');
-        if (!token) {
-            set({ isAuthenticated: false, user: null, loading: false });
-            return;
-        }
-
+        // Since accessToken is HttpOnly, getCookie will return null.
+        // We MUST always attempt the fetch because withCredentials will send the cookie.
         set({ loading: true });
+
+        // Safety timeout - never stay loading more than 10 seconds
+        const safetyTimeout = setTimeout(() => {
+            if (get().loading) {
+                console.warn("Auth refresh safety timeout triggered");
+                set({ loading: false });
+            }
+        }, 10000);
+
         try {
-            // Using /users/me as confirmed from backend analysis
-            const res = await api.get('/users/me');
-            if (res.data) {
+            console.log("Refreshing admin auth...");
+            let res;
+            try {
+                // Try fetching user profile
+                res = await api.get('/users/me');
+            } catch (firstErr: any) {
+                // If 401/404, try with admin prefix just in case
+                if (firstErr.response?.status === 404) {
+                    res = await api.get('/admin/users/me');
+                } else {
+                    throw firstErr;
+                }
+            }
+
+            if (res?.data) {
+                console.log("Admin auth successful", res.data);
                 set({
                     user: res.data,
                     isAuthenticated: true,
                     loading: false
                 });
+            } else {
+                throw new Error("No user data");
             }
         } catch (err: any) {
-            console.error("Admin Auth refresh error:", err.message);
-            // Clear state on failure (e.g., Invalid Refresh Token)
+            console.error("Auth refresh failed:", err.response?.data?.message || err.message);
             set({ isAuthenticated: false, user: null, loading: false });
+        } finally {
+            clearTimeout(safetyTimeout);
+            set({ loading: false });
         }
     },
 }));

@@ -10,13 +10,27 @@ const isServer = typeof window === 'undefined';
 
 export const api = axios.create({
     // Using relative path to trigger Next.js Rewrite (Proxy)
-    // This solves the cookie origin issue
     baseURL: "/api/v1",
     timeout: 30000,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     }
+});
+
+// Request interceptor for Auth Token
+api.interceptors.request.use((config) => {
+    if (typeof document !== "undefined") {
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("accessToken="))
+            ?.split("=")[1];
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+    }
+    return config;
 });
 
 // Helper to delete cookies
@@ -37,8 +51,11 @@ api.interceptors.response.use(
             if (typeof window !== 'undefined') {
                 deleteCookie('accessToken');
                 deleteCookie('user');
-                // Force redirect to login page
-                window.location.href = '/';
+
+                // Only redirect if NOT already on the login page
+                if (window.location.pathname !== '/' && window.location.pathname !== '/admin') {
+                    window.location.href = '/';
+                }
             }
         }
         return Promise.reject(error);
