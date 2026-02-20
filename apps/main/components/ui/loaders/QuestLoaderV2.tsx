@@ -22,7 +22,8 @@ export default function QuotesLoaderV2() {
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/quotes`);
+        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
+        const response = await axios.get(`${baseUrl}/api/v1/quotes`);
         if (Array.isArray(response.data) && response.data.length > 0) {
           setQuotes(response.data);
           const randomQuote =

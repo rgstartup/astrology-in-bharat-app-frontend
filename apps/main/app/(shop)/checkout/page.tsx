@@ -66,8 +66,9 @@ const CheckoutContent = () => {
       const fetchDirectProduct = async () => {
         try {
           setLoadingProduct(true);
-          const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-          const res = await fetch(`${apiUrl}/api/v1/products/${buyNowInfo.productId}`);
+          const rawUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+          const baseUrl = rawUrl.replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
+          const res = await fetch(`${baseUrl}/api/v1/products/${buyNowInfo.productId}`);
           if (res.ok) {
             const data = await res.json();
             setDirectProduct(data.data || data);

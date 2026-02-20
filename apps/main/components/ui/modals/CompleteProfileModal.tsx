@@ -32,7 +32,8 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
   onSkip,
 }) => {
   const router = useRouter();
-  const API_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/client/profile`;
+  const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
+  const API_ENDPOINT = `${baseUrl}/api/v1/client/profile`;
 
   const [formData, setFormData] = useState<ProfileFormData>({
     gender: "",

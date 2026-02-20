@@ -13,7 +13,7 @@ interface VerificationResponse {
 }
 
 // --- API ---
-const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
 const API_ENDPOINT = `${apiBase}/api/v1/auth/email/verify`;
 
 // Disable static generation for this page

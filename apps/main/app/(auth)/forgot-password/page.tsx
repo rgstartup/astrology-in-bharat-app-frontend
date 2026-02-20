@@ -8,7 +8,7 @@ import React, { useState, useCallback, FormEvent, Suspense } from "react";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
-const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/api\/v1\/?$/, "");
+const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
 const API_ENDPOINT = `${apiBase}/api/v1/auth/forgot/password`;
 
 const ForgotPasswordContent: React.FC = () => {
