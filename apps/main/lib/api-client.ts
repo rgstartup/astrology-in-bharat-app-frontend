@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API_ROUTES } from './api-config';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const apiClient = axios.create({
     baseURL: API_BASE_URL,

@@ -17,7 +17,7 @@ export const WishlistService = {
         return response.data;
     },
 
-    // Expert Likes APIs - /api/v1/expert-like
+
     getExpertWishlist: async () => {
         const response = await apiClient.get('/expert-like');
         return response.data;
