@@ -17,6 +17,7 @@ import {
     ShoppingBag,
     BadgeIndianRupee,
     User,
+    UserPlus,
     LogOut,
     Menu,
     Handshake,
@@ -33,23 +34,13 @@ interface MenuItem {
 const MENU_ITEMS: MenuItem[] = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "My Profile", href: "/dashboard/profile", icon: User },
+    { label: "Register User", href: "/dashboard/register-user", icon: UserPlus },
     { label: "Astrologers", href: "/dashboard/astrologers", icon: Star },
     { label: "Mandirs", href: "/dashboard/mandirs", icon: Building2 },
     { label: "Puja Shops", href: "/dashboard/puja-shops", icon: ShoppingBag },
     { label: "Commissions", href: "/dashboard/commissions", icon: BadgeIndianRupee },
     { label: "Signout", href: "#", icon: LogOut },
 ];
-
-// ── Guard ────────────────────────────────────────────────────
-function AgentGuard({ children }: { children: React.ReactNode }) {
-    const isAuthenticated = useAgentAuthStore((s) => s.isAuthenticated);
-    const router = useRouter();
-    React.useEffect(() => {
-        if (!isAuthenticated) router.replace("/");
-    }, [isAuthenticated, router]);
-    if (!isAuthenticated) return null;
-    return <>{children}</>;
-}
 
 // ── SidebarMenuItem — exact same pattern as admin-dashboard ──
 const SidebarMenuItem: React.FC<{
@@ -67,10 +58,15 @@ const SidebarMenuItem: React.FC<{
     if (!item.submenu && item.label === "Signout") {
         return (
             <button
-                onClick={() => {
+                onClick={async () => {
+                    // 1. Clear HttpOnly cookies server-side
+                    const { agentLogoutAction } = await import("@/src/actions/auth");
+                    await agentLogoutAction();
+                    // 2. Clear Zustand store
                     logout();
                     toast.success("Signed out successfully");
-                    router.push("/");
+                    // 3. Full reload so server sees cleared cookies
+                    window.location.href = "/";
                 }}
                 className={cn(
                     "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-left",
@@ -254,53 +250,51 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const currentPage = MENU_ITEMS.find((m) => m.href === pathname)?.label ?? "Dashboard";
 
     return (
-        <AgentGuard>
-            <div
-                className="flex min-h-screen bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: "url('/images/back-image.webp')" }}
-            >
-                <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+        <div
+            className="flex min-h-screen bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/images/back-image.webp')" }}
+        >
+            <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
-                {/* Main Content */}
-                <div className="flex-1 lg:ml-64">
-                    {/* Header — same as admin */}
-                    <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                                <button
-                                    onClick={toggleSidebar}
-                                    className="lg:hidden text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors"
-                                    aria-label="Toggle sidebar"
-                                >
-                                    <Menu className="w-6 h-6" />
-                                </button>
-                                <h1 className="text-2xl font-semibold text-gray-800">{currentPage}</h1>
-                            </div>
-
-                            {/* Agent info — right side (using @repo/ui Avatar) */}
-                            <div className="flex items-center gap-3">
-                                <div className="text-right hidden sm:block">
-                                    <p className="text-sm font-bold text-gray-800">{agent?.name ?? "Agent"}</p>
-                                    <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest flex items-center gap-1 justify-end">
-                                        <Handshake className="w-3 h-3 text-primary-hover" />
-                                        {agent?.agent_id ?? "Field Agent"}
-                                    </p>
-                                </div>
-                                {/* @repo/ui Avatar component */}
-                                <Avatar
-                                    src={agent?.avatar ?? null}
-                                    alt={agent?.name ?? "Agent"}
-                                    size="md"
-                                    className="cursor-pointer hover:ring-2 hover:ring-primary-hover transition-all border-2 border-primary/10"
-                                />
-                            </div>
+            {/* Main Content */}
+            <div className="flex-1 lg:ml-64">
+                {/* Header — same as admin */}
+                <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                            <button
+                                onClick={toggleSidebar}
+                                className="lg:hidden text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors"
+                                aria-label="Toggle sidebar"
+                            >
+                                <Menu className="w-6 h-6" />
+                            </button>
+                            <h1 className="text-2xl font-semibold text-gray-800">{currentPage}</h1>
                         </div>
-                    </header>
 
-                    {/* Page content */}
-                    <main className="p-6">{children}</main>
-                </div>
+                        {/* Agent info — right side (using @repo/ui Avatar) */}
+                        <div className="flex items-center gap-3">
+                            <div className="text-right hidden sm:block">
+                                <p className="text-sm font-bold text-gray-800">{agent?.name ?? "Agent"}</p>
+                                <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest flex items-center gap-1 justify-end">
+                                    <Handshake className="w-3 h-3 text-primary-hover" />
+                                    {agent?.agent_id ?? "Field Agent"}
+                                </p>
+                            </div>
+                            {/* @repo/ui Avatar component */}
+                            <Avatar
+                                src={agent?.avatar ?? null}
+                                alt={agent?.name ?? "Agent"}
+                                size="md"
+                                className="cursor-pointer hover:ring-2 hover:ring-primary-hover transition-all border-2 border-primary/10"
+                            />
+                        </div>
+                    </div>
+                </header>
+
+                {/* Page content */}
+                <main className="p-6">{children}</main>
             </div>
-        </AgentGuard>
+        </div>
     );
 }

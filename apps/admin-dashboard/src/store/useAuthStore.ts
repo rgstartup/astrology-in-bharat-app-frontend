@@ -45,7 +45,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     login: (newToken: string, userData?: User) => {
         // If newToken is provided, we set it (for non-server action flows if any)
-        if (newToken) setCookie('accessToken', newToken);
+        if (newToken) setCookie('adminAccessToken', newToken);
         set({
             isAuthenticated: true,
             user: userData || null,

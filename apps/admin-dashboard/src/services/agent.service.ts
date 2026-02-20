@@ -78,12 +78,22 @@ export const getAllListings = async (params?: {
     type?: string;
     search?: string;
 }) => {
+    // ✅ Admin must use /admin/listings to avoid role conflicts
     const res = await api.get("/admin/listings", {
         params: {
             type: params?.type === "" ? undefined : params?.type,
             search: params?.search
         }
     });
+    return res.data;
+};
+
+export const updateListingStatus = async (
+    id: string | number,
+    status: "approved" | "rejected" | "pending",
+    reason?: string
+) => {
+    const res = await api.patch(`/admin/listings/${id}/status`, { status, reason });
     return res.data;
 };
 

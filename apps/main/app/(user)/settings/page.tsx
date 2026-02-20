@@ -1,10 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { apiClient } from "../../../lib/api-client";
 
 export default function ClientSettingsPage() {
-  const API = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543"}/api/v1/client`;
-
   const [preview, setPreview] = useState("");
   const [status, setStatus] = useState("");
 
@@ -29,40 +27,28 @@ export default function ClientSettingsPage() {
   });
 
   function convertIsoToDisplayDate(isoDateString: string) {
-    // 1. Create a Date object from the ISO string
     const date = new Date(isoDateString);
-
-    // Check if the date is valid
     if (isNaN(date.getTime())) {
       return "Invalid Date";
     }
-
-    // 2. Define formatting options
     const options: Intl.DateTimeFormatOptions = {
-      day: "numeric", // Day of the month (e.g., 15)
-      month: "long", // Full month name (e.g., August)
-      year: "numeric", // Full year (e.g., 1995)
-      timeZone: "UTC", // Ensures the date is interpreted as UTC to avoid local timezone shifting the date
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
     };
-
-    // 3. Format the date using Intl.DateTimeFormat
-    // 'en-US' locale is used for standard English names (e.g., "December")
     const formatter = new Intl.DateTimeFormat("en-US", options);
-
     return formatter.format(date);
   }
+
   // ------------------------------------
   // GET PROFILE DATA ON PAGE LOAD
   // ------------------------------------
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get(API, {
-          withCredentials: true, // ALWAYS IMPORTANT FOR COOKIES
-        });
-
+        const res = await apiClient.get('/client');
         const data = res.data;
-        console.log(data);
 
         setFormData({
           full_name: data.user.name || "",
@@ -86,7 +72,7 @@ export default function ClientSettingsPage() {
             ],
         });
       } catch (err) {
-        console.log("Error fetching profile:", err);
+        // console.error("Error fetching profile"); // Keep logs clean
       }
     };
 
@@ -133,9 +119,7 @@ export default function ClientSettingsPage() {
 
     try {
       // First, update the profile data
-      await axios.patch(API, formData, {
-        withCredentials: true,
-      });
+      await apiClient.patch('/client', formData);
 
       // If there's a profile picture to upload
       const fileInput = document.getElementById('profile-upload') as HTMLInputElement;
@@ -144,8 +128,7 @@ export default function ClientSettingsPage() {
         formDataWithFile.append('file', fileInput.files[0]);
 
         // Upload the profile picture
-        await axios.patch(`${API}/picture`, formDataWithFile, {
-          withCredentials: true,
+        await apiClient.patch('/client/picture', formDataWithFile, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -159,7 +142,7 @@ export default function ClientSettingsPage() {
         window.location.reload();
       }, 1000);
     } catch (err) {
-      console.log("Update failed:", err);
+      // console.error("Update failed"); // Keep logs clean
       setStatus("Update Failed!");
     }
   };
@@ -377,5 +360,3 @@ export default function ClientSettingsPage() {
     </>
   );
 }
-
-

@@ -76,6 +76,16 @@
             "icon": "BadgeIndianRupee"
         },
         {
+            "label": "Mandir Approvals",
+            "href": "/admin/mandirs",
+            "icon": "Building2"
+        },
+        {
+            "label": "Shop Approvals",
+            "href": "/admin/puja-shops",
+            "icon": "ShoppingBag"
+        },
+        {
             "label": "Settings",
             "href": "/admin/settings",
             "icon": "Settings"

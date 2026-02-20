@@ -13,9 +13,8 @@ export interface AgentUser {
 
 interface AuthState {
     agent: AgentUser | null;
-    token: string | null;
     isAuthenticated: boolean;
-    login: (agent: AgentUser, token: string) => void;
+    login: (agent: AgentUser) => void;
     logout: () => void;
     setAgent: (agent: AgentUser) => void;
 }
@@ -24,14 +23,13 @@ export const useAgentAuthStore = create<AuthState>()(
     persist(
         (set) => ({
             agent: null,
-            token: null,
             isAuthenticated: false,
 
-            login: (agent, token) =>
-                set({ agent, token, isAuthenticated: true }),
+            login: (agent) =>
+                set({ agent, isAuthenticated: true }),
 
             logout: () =>
-                set({ agent: null, token: null, isAuthenticated: false }),
+                set({ agent: null, isAuthenticated: false }),
 
             setAgent: (agent) =>
                 set({ agent }),

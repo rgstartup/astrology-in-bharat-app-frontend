@@ -23,7 +23,7 @@ api.interceptors.request.use((config) => {
     if (typeof document !== "undefined") {
         const token = document.cookie
             .split("; ")
-            .find((row) => row.startsWith("accessToken="))
+            .find((row) => row.startsWith("adminAccessToken="))
             ?.split("=")[1];
 
         if (token) {
@@ -49,7 +49,7 @@ api.interceptors.response.use(
             }
 
             if (typeof window !== 'undefined') {
-                deleteCookie('accessToken');
+                deleteCookie('adminAccessToken');
                 deleteCookie('user');
 
                 // Only redirect if NOT already on the login page

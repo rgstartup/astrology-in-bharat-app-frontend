@@ -40,19 +40,19 @@ interface WishlistState {
     wishlistItems: WishlistItem[];
     expertWishlistItems: WishlistItem[];
     isLoading: boolean;
-    
+
     // Actions
     fetchWishlist: (isClientAuthenticated: boolean) => Promise<void>;
     addToWishlist: (productId: number, isClientAuthenticated: boolean) => Promise<void>;
     removeFromWishlist: (productId: number) => Promise<void>;
     isInWishlist: (productId: number) => boolean;
-    
+
     // Expert Actions
     addExpertToWishlist: (expertId: number, isClientAuthenticated: boolean) => Promise<void>;
     removeExpertFromWishlist: (expertId: number) => Promise<void>;
     isExpertInWishlist: (expertId: number) => boolean;
     toggleExpertWishlist: (expertId: number, isClientAuthenticated: boolean) => Promise<void>;
-    
+
     // Reset
     resetWishlist: () => void;
 }
@@ -75,14 +75,12 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
                 WishlistService.getExpertWishlist()
             ]);
 
-            console.log("Fetched Wishlist Data (Zustand):", { productsData, expertsData });
-
             const pItems = Array.isArray(productsData) ? productsData : (productsData.items || productsData.data || productsData.wishlist || []);
             const eItems = Array.isArray(expertsData) ? expertsData : (expertsData.items || expertsData.data || expertsData.wishlist || []);
 
             set({ wishlistItems: pItems, expertWishlistItems: eItems });
-        } catch (error) {
-            console.error("Failed to fetch wishlist:", error);
+        } catch {
+            // Silent fail — wishlist is non-critical
         } finally {
             set({ isLoading: false });
         }
@@ -103,7 +101,6 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
                 toast.info("Already in wishlist");
                 await get().fetchWishlist(true);
             } else {
-                console.error("Add to wishlist error:", error);
                 toast.error("Failed to add to wishlist");
             }
         }
@@ -114,8 +111,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
             await WishlistService.removeFromWishlist(productId);
             toast.success("Removed from wishlist");
             await get().fetchWishlist(true);
-        } catch (error) {
-            console.error("Remove from wishlist error:", error);
+        } catch {
             toast.error("Failed to remove from wishlist");
         }
     },
@@ -140,7 +136,6 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
                 toast.info("Already in liked list");
                 await get().fetchWishlist(true);
             } else {
-                console.error("Add expert wishlist error:", error);
                 toast.error("Failed to add to liked list");
             }
         }
@@ -151,8 +146,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
             await WishlistService.removeExpertFromWishlist(expertId);
             toast.success("Removed from liked list");
             await get().fetchWishlist(true);
-        } catch (error) {
-            console.error("Remove expert wishlist error:", error);
+        } catch {
             toast.error("Failed to remove from liked list");
         }
     },

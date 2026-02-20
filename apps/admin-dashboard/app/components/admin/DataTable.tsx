@@ -52,11 +52,9 @@ const TableRow = memo(function TableRow<T extends { id: number | string }>({
       {columns.map((column, colIndex) => (
         <td
           key={colIndex}
-          className="px-6 py-4 text-sm text-gray-900"
-          style={{ maxWidth: '250px' }}
+          className="px-6 py-4 text-sm text-gray-900 border-b border-gray-100"
         >
-          {/* Truncate long text to prevent horizontal scroll */}
-          <div className="truncate" title={String(item[column.key as keyof T] || "-")}>
+          <div className={column.render ? "" : "truncate max-w-[200px]"} title={!column.render ? String(item[column.key as keyof T] || "-") : undefined}>
             {column.render
               ? column.render(item)
               : String(item[column.key as keyof T] || "-")}
@@ -258,8 +256,8 @@ export function DataTable<T extends { id: number | string }>({
 
         {/* Table with horizontal scroll only when needed */}
         {/* ===== TABLE HEADER (FIXED) ===== */}
-        <div className="w-full overflow-x-hidden">
-          <table className="w-full table-fixed">
+        <div className="w-full overflow-x-auto scrollbar-hide">
+          <table className="w-full table-auto">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 {columns.map((column, index) => (
@@ -281,8 +279,8 @@ export function DataTable<T extends { id: number | string }>({
         </div>
 
         {/* ===== TABLE BODY (SCROLL ONLY DATA) ===== */}
-        <div className="w-full max-h-[320px] overflow-y-auto">
-          <table className="w-full table-fixed">
+        <div className="w-full max-h-[400px] overflow-y-auto overflow-x-auto scrollbar-hide">
+          <table className="w-full table-auto">
             <tbody className="divide-y divide-gray-100">
               {isLoading ? (
                 <tr>

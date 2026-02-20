@@ -5,7 +5,7 @@ import NextImage from "next/image";
 import NextLink from "next/link";
 import { toast } from "react-toastify";
 import { registerAction } from "@/actions/auth";
-import { getApiUrl, getBasePath } from "@/utils/api-config";
+import { API_CONFIG } from "@/lib/api-config";
 
 const Image = NextImage as any;
 const Link = NextLink as any;
@@ -57,25 +57,19 @@ const SignUpForm: React.FC = () => {
     };
 
     const handleGoogleLogin = () => {
-        // Direct call to Backend for Google Login (Important for Cookies)
-        const baseUrl = getBasePath();
-        const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=client&redirect_uri=${window.location.origin}`;
-
-        console.log("[GoogleLogin] Redirecting to:", googleLoginUrl);
+        // Redirect to backend Google OAuth — browser handles cookie automatically
+        const googleLoginUrl = `${API_CONFIG.AUTH.GOOGLE_LOGIN.url}?role=client&redirect_uri=${window.location.origin}`;
         window.location.href = googleLoginUrl;
     };
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        console.log("[SignUpForm] Form submitted", formData);
 
         if (!validateForm()) {
-            console.warn("[SignUpForm] Validation failed");
             return;
         }
 
         setIsLoading(true);
-        console.log("[SignUpForm] Calling registerAction...");
 
         const payload = {
             name: formData.fullName,
@@ -86,16 +80,14 @@ const SignUpForm: React.FC = () => {
 
         try {
             const result = await registerAction(payload);
-            console.log("[SignUpForm] registerAction result:", result);
             if (result.error) {
                 toast.error(result.error);
             } else if (result.success) {
                 toast.success(result.message || "Registration successful! Please verify your email.");
                 setFormData({ fullName: "", email: "", password: "", confirmPassword: "", phoneNumber: "" });
             }
-        } catch (err) {
-            console.error("[SignUpForm] Error:", err);
-            toast.error("An unexpected error occurred.");
+        } catch {
+            toast.error("An unexpected error occurred. Please try again.");
         } finally {
             setIsLoading(false);
         }

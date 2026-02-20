@@ -115,12 +115,12 @@ export const getColumns = () => [
     key: "kycStatus",
     label: "KYC Status",
     render: (expert: Expert) => {
-      const status = expert.profile_expert?.kycStatus || "Pending";
+      const status = expert.status || "pending";
       return (
         <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold ${status === "Verified"
+          className={`px-3 py-1 rounded-full text-xs font-semibold ${status === "approved"
             ? "bg-green-100 text-green-700"
-            : status === "Rejected"
+            : status === "rejected"
               ? "bg-red-100 text-red-700"
               : "bg-yellow-100 text-yellow-700"
             }`}

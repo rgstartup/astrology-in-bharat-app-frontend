@@ -29,7 +29,7 @@ async function AstrologerListServer({ searchParams, layout, title }: AstrologerL
         offset: 0,
         ...filteredParams,
     } as any);
-    console.log("Server Side - Astrologer Data Init:", response.data);
+    // console.log("Server Side - Astrologer Data Init:", response.data);
 
     return (
         <AstrologerList

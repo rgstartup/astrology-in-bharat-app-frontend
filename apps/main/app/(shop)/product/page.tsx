@@ -1,5 +1,6 @@
 import React from "react";
 import ProductGrid from "@/components/features/shop/ProductGrid";
+import { getBasePath } from "@/utils/api-config";
 
 interface Product {
   id?: string;
@@ -12,17 +13,14 @@ interface Product {
 }
 
 async function getProducts(): Promise<Product[]> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+  // Use getBasePath() to avoid double /api/v1 (NEXT_PUBLIC_API_URL already contains it)
+  const baseUrl = getBasePath();
   try {
-    const res = await fetch(`${apiUrl}/api/v1/products`, { cache: "no-store" });
-    if (!res.ok) {
-      console.error("Failed to fetch products", res.status);
-      return [];
-    }
+    const res = await fetch(`${baseUrl}/api/v1/products`, { cache: "no-store" });
+    if (!res.ok) return [];
     const data = await res.json();
     return Array.isArray(data) ? data : (data.data || []);
-  } catch (error) {
-    console.error("Error fetching products:", error);
+  } catch {
     return [];
   }
 }

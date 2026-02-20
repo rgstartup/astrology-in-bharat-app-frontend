@@ -47,8 +47,15 @@ export interface AgentListing {
     listing_type: ListingType;
     listing_name: string;
     listing_location?: string;
-    listing_contact?: string;
-    status: "active" | "inactive" | "pending";
+    status: "approved" | "inactive" | "pending" | "rejected";
+    name?: string;           // Standardized name field
+    location?: string;       // Standardized location field
+    phone?: string;          // Standardized phone field
+    agent_code?: string;     // Standardized agent code
+    agent_name?: string;     // Standardized agent name
+    deity?: string;          // mandir
+    specialization?: string; // astrologer
+    items?: string;          // puja_shop
     created_at: string;
 }
 

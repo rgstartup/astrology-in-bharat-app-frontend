@@ -27,9 +27,11 @@ function AgentLoginForm() {
         const result = await agentLoginAction({ email, password });
 
         if (result.success) {
-            login(result.user, result.token);
+            login(result.user);
             toast.success("Login Successful! Redirecting...");
-            router.push("/dashboard");
+            // ✅ Full page reload — middleware needs fresh request to read the
+            // newly set HttpOnly cookie (client-side router.push doesn't work)
+            window.location.href = "/dashboard";
         } else {
             const msg = result.error || "Invalid email or password.";
             setError(msg);

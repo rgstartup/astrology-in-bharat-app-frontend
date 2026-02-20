@@ -1,6 +1,5 @@
-
 import { apiClient } from "../lib/api-client";
-import { getCookie } from "../utils/cookie";
+import { API_ROUTES } from "../lib/api-routes";
 
 export interface ClientUser {
     id: number;
@@ -12,11 +11,11 @@ export interface ClientUser {
 
 export const AuthService = {
     logout: async () => {
-        return await apiClient.post('/auth/client-logout');
+        return await apiClient.post(API_ROUTES.AUTH.LOGOUT);
     },
 
     fetchProfile: async (serverHeaders?: any) => {
-        const response = await apiClient.get('/client', {
+        const response = await apiClient.get(API_ROUTES.AUTH.ME, {
             headers: {
                 ...serverHeaders,
                 'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -31,7 +30,7 @@ export const AuthService = {
     },
 
     fetchBalance: async () => {
-        const response = await apiClient.get('/wallet/balance');
+        const response = await apiClient.get(API_ROUTES.WALLET.BALANCE);
         return response.data;
     }
 };

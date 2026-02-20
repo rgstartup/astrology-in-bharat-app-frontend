@@ -241,8 +241,11 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
                                         <label className={labelCls}>Full Name *</label>
                                         <div className="relative">
                                             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                            <input required placeholder="e.g. Ramesh Kumar" value={form.name}
-                                                onChange={set("name")} className={inputCls} />
+                                            <input required placeholder="e.g. Ramesh Kumar"
+                                                value={form.name} // Bind to form state
+                                                onChange={set("name")}
+                                                className={inputCls}
+                                            />
                                         </div>
                                     </div>
 
@@ -304,8 +307,13 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
                                         <label className={labelCls}>Phone Number *</label>
                                         <div className="relative">
                                             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                            <input required placeholder="10-digit mobile" value={form.phone}
-                                                onChange={set("phone")} className={inputCls} pattern="[0-9]{10}" maxLength={10} />
+                                            <input required placeholder="10-digit mobile"
+                                                value={form.phone} // Bind to form state
+                                                onChange={set("phone")}
+                                                className={inputCls}
+                                                pattern="[0-9]{10}"
+                                                maxLength={10}
+                                            />
                                         </div>
                                     </div>
                                     {/* State */}

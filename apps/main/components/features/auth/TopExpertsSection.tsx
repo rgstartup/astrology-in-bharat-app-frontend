@@ -2,21 +2,33 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import axios from "axios";
+import { apiClient } from "../../../lib/api-client";
+
+interface ExpertUser {
+    name: string;
+    avatar: string;
+}
+
+interface TopExpert {
+    id: number;
+    user: ExpertUser;
+    is_online: boolean;
+    rating: number;
+    specialization: string;
+}
 
 const TopExpertsSection: React.FC = () => {
-    const [topExperts, setTopExperts] = useState<any[]>([]);
+    const [topExperts, setTopExperts] = useState<TopExpert[]>([]);
     const [expertsLoading, setExpertsLoading] = useState(false);
 
     useEffect(() => {
         const fetchTopExperts = async () => {
             setExpertsLoading(true);
             try {
-                const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-                const response = await axios.get(`${baseUrl}/api/v1/expert/top-rated?limit=3`);
+                const response = await apiClient.get('/expert/top-rated?limit=3');
                 setTopExperts(response.data);
             } catch (err) {
-                console.error("Failed to fetch top experts:", err);
+                // console.error("Failed to fetch top experts");
             } finally {
                 setExpertsLoading(false);
             }

@@ -1,7 +1,5 @@
-
 import { create } from "zustand";
 import { AuthService, ClientUser } from "../services/auth.service";
-import { setCookie, deleteCookie } from "../utils/cookie";
 
 interface AuthState {
     clientUser: ClientUser | null;
@@ -10,7 +8,7 @@ interface AuthState {
     isClientAuthenticated: boolean;
 
     // Actions
-    clientLogin: (token: string, userData?: ClientUser) => void;
+    clientLogin: (userData?: ClientUser) => void;
     clientLogout: () => Promise<void>;
     refreshAuth: () => Promise<void>;
     refreshBalance: () => Promise<void>;
@@ -22,44 +20,54 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     clientLoading: true,
     isClientAuthenticated: false,
 
-    clientLogin: (newToken: string, userData?: ClientUser) => {
-        setCookie('clientAccessToken', newToken);
+    // ── NOTE: Token is NEVER passed here. ──────────────────────────────
+    // HttpOnly cookie is already set by the Server Action (actions/auth.ts).
+    // Frontend's job: just update UI state.
+    // ───────────────────────────────────────────────────────────────────
+    clientLogin: (userData?: ClientUser) => {
         if (userData) {
-            set({ clientUser: userData });
+            set({ clientUser: userData, isClientAuthenticated: true });
         }
         set({ isClientAuthenticated: true });
+
+        // Fetch balance after login
         get().refreshBalance();
-        // Trigger generic refresh to load profile if missing
+
+        // Load full profile if user data is incomplete
         if (!userData) {
             get().refreshAuth();
         }
     },
 
     clientLogout: async () => {
-        console.log("🚪 Starting logout process...");
-
+        // 1. Tell the backend to invalidate the session (best-effort)
         try {
-            // 1. Call server action to clear httpOnly cookies
-            const { logoutAction } = await import("../actions/auth");
-            await logoutAction();
-
-            // 2. Clear backend session (optional)
             await AuthService.logout();
-            console.log("✅ Logout successful");
-        } catch (err) {
-            console.error("❌ Logout error:", err);
+        } catch {
+            // Backend logout failed — continue anyway to clear local state
         }
 
-        // 3. Reset local state
+        // 2. Clear HttpOnly cookies via a dedicated API route
+        //    (Server Actions can't be reliably dynamic-imported from client stores)
+        try {
+            await fetch("/api/auth/logout", { method: "POST" });
+        } catch {
+            // If the route fails, cookies may persist until expiry
+            // But we still clear local state so UI reflects logout
+            console.warn("[Logout] Failed to clear server cookies.");
+        }
+
+        // 3. Reset Zustand state — always happens regardless of above failures
         set({
             clientUser: null,
             isClientAuthenticated: false,
             clientLoading: false,
-            clientBalance: 0
+            clientBalance: 0,
         });
 
-        if (typeof window !== 'undefined') {
-            window.location.href = '/';
+        // 4. Full page redirect — forces server to re-render with cleared cookies
+        if (typeof window !== "undefined") {
+            window.location.href = "/?_logout=1"; // cache-busting param
         }
     },
 
@@ -67,83 +75,60 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         try {
             const balance = await AuthService.fetchBalance();
             set({ clientBalance: balance });
-        } catch (err) {
-            console.error("❌ Error fetching balance:", err);
+        } catch {
+            // Silently fail — balance is non-critical
         }
     },
 
     refreshAuth: async () => {
-        // Only set loading if not already authenticated to avoid flickering
         if (!get().isClientAuthenticated) {
             set({ clientLoading: true });
         }
 
         try {
             const res = await AuthService.fetchProfile();
-            console.log("📊 Profile response:", res.data);
 
             if (res.status === 200) {
+                const raw = res.data;
                 let user: ClientUser | null = null;
 
-                if (res.data && res.data.user) {
-                    user = res.data.user;
-                } else if (res.data && res.data.id) {
+                if (raw?.user) {
                     user = {
-                        id: res.data.user?.id || res.data.id,
-                        name: res.data.user?.name || res.data.full_name,
-                        email: res.data.user?.email,
-                        roles: res.data.user?.roles || [],
-                        avatar: res.data.user?.avatar || res.data.profile_picture
+                        id: raw.user.id,
+                        name: raw.user.name,
+                        email: raw.user.email,
+                        roles: raw.user.roles || [],
+                        avatar: raw.user.avatar,
                     };
-                } else {
-                    // Minimal user object
+                } else if (raw?.id) {
                     user = {
-                        id: 0,
-                        name: "User",
-                        email: "",
-                        roles: []
+                        id: raw.id,
+                        name: raw.full_name || "User",
+                        email: raw.email || "",
+                        roles: [],
+                        avatar: raw.profile_picture,
                     };
                 }
 
-                set({
-                    clientUser: user,
-                    isClientAuthenticated: true
-                });
-
-                // Fetch balance after successful auth
+                set({ clientUser: user, isClientAuthenticated: true });
                 get().refreshBalance();
             } else {
-                set({
-                    isClientAuthenticated: false,
-                    clientUser: null
-                });
+                set({ isClientAuthenticated: false, clientUser: null });
             }
         } catch (err: any) {
-            console.error("❌ Refresh auth error:", err);
-
-            // If 401 (Unauthorized) OR if we were trying to authenticate initially and failed
-            // We should clear the corrupted state/cookies to allow re-login.
             if (err.response?.status === 401 || !get().isClientAuthenticated) {
-                console.log("⚠️ Auth verification failed. Clearing session.");
+                // Session invalid — clear state silently (no popup)
                 set({ isClientAuthenticated: false, clientUser: null });
-                deleteCookie('clientAccessToken');
-                // Also optionally clear refreshToken if needed, but clientAccessToken is the gatekeeper
             } else if (err.response?.status === 404) {
-                // Profile not found but authenticated
+                // Authenticated but no profile yet (new user)
                 set({
                     isClientAuthenticated: true,
-                    clientUser: {
-                        id: 0,
-                        name: "New Cosmic Explorer",
-                        email: "",
-                        roles: []
-                    }
+                    clientUser: { id: 0, name: "New Cosmic Explorer", email: "", roles: [] },
                 });
             }
-            // Other errors (e.g. 500, network) -> Keep previous state if it was authenticated, 
-            // but if we were unauthenticated, we remain so (and cleared cookie above).
+            // Network / 500 errors: keep existing state
         } finally {
             set({ clientLoading: false });
         }
-    }
+    },
 }));

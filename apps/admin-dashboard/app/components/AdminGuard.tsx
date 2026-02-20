@@ -15,11 +15,17 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
         return;
       }
 
-      const isAdmin = user?.roles?.some((r: any) =>
+      console.log("AdminGuard - Current User:", user);
+
+      const roles = user?.roles || [];
+      const isAdmin = roles.some((r: any) =>
         (typeof r === 'string' ? r : r.name).toUpperCase() === "ADMIN"
       );
 
+      console.log("AdminGuard - Is Admin:", isAdmin, "Roles:", roles);
+
       if (!isAdmin) {
+        console.error("Access denied: User does not have ADMIN role");
         router.replace("/");
       }
     }

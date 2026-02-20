@@ -1,17 +1,5 @@
 
-import axios from "axios";
-
-// API Client
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
-
-const apiClient = axios.create({
-    baseURL: `${cleanApiUrl}/api/v1`,
-    withCredentials: true,
-    headers: {
-        "Content-Type": "application/json",
-    },
-});
+import { apiClient } from "../lib/api-client";
 
 export const CartService = {
     getCart: async () => {

@@ -7,12 +7,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { loginAction } from "@/actions/auth";
 import { useAuthStore } from "@/store/useAuthStore";
-import { getApiUrl, getBasePath } from "@/utils/api-config";
+import { API_CONFIG } from "@/lib/api-config";
 
 const Image = NextImage as any;
 const Link = NextLink as any;
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
 
 const SignInForm: React.FC = () => {
     const router = useRouter();
@@ -55,10 +53,9 @@ const SignInForm: React.FC = () => {
             if (result.error) {
                 toast.error(result.error);
             } else if (result.success) {
-                // Update local Zustand store
-                // Note: The cookie is already set by the server action as httpOnly
-                // We just need to trigger the state update in Zustand
-                clientLogin("", result.user);
+                // Cookie already set as HttpOnly by the Server Action
+                // Just update the Zustand UI state — NO token passed to client
+                clientLogin(result.user);
 
                 toast.success("Sign In successful!");
                 window.location.href = callbackUrl;
@@ -71,11 +68,8 @@ const SignInForm: React.FC = () => {
     };
 
     const handleGoogleLogin = () => {
-        // Direct call to Backend for Google Login (Important for Cookies)
-        const baseUrl = getBasePath();
-        const googleLoginUrl = `${baseUrl}/api/v1/auth/google/login?role=client&redirect_uri=${window.location.origin}`;
-
-        console.log("[GoogleLogin] Redirecting to:", googleLoginUrl);
+        // Redirect to backend Google OAuth — browser handles cookie automatically
+        const googleLoginUrl = `${API_CONFIG.AUTH.GOOGLE_LOGIN.url}?role=client&redirect_uri=${window.location.origin}`;
         window.location.href = googleLoginUrl;
     };
 

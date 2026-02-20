@@ -64,13 +64,11 @@ export const getExperts = async (
     const queryParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
-        console.log(`[API Debug] Setting param: ${key}=${value} (${typeof value})`);
         queryParams.set(key, String(value));
       }
     });
 
     const url = `${API_BASE_URL}/expert/list?${queryParams.toString()}`;
-    console.log(`[API Debug] Fetching experts from: ${url}`);
 
     const response = await fetch(url, {
       cache: 'no-store',
@@ -78,12 +76,10 @@ export const getExperts = async (
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`[API Debug] Fetch failed with status: ${response.status}. Body: ${errorText}`);
       throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
     }
 
     const result = await response.json();
-    console.log(`[API Debug] Successfully fetched ${result.data?.length} experts`);
 
     return {
       success: true,
@@ -91,7 +87,6 @@ export const getExperts = async (
       pagination: result.pagination,
     };
   } catch (error: any) {
-    console.error("[API Debug] getExperts Error:", error.message);
     const isNetworkError =
       error.message.includes("fetch failed") ||
       error.message.includes("Network Error");
@@ -134,8 +129,7 @@ export const getExpertReviews = async (
     if (!response.ok) throw new Error("Failed to fetch reviews");
 
     return await response.json();
-  } catch (error) {
-    console.error("Error fetching expert reviews:", error);
+  } catch {
     return { data: [], total: 0, page, limit };
   }
 };
