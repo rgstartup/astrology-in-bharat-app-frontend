@@ -43,7 +43,7 @@ export default function ConsultationPrep() {
     useEffect(() => {
         const fetchAstro = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/v1/expert/${id}`);
+                const response = await fetch(`${API_BASE_URL}/expert/${id}`);
                 if (response.ok) {
                     const data = await response.json();
                     setAstrologer({

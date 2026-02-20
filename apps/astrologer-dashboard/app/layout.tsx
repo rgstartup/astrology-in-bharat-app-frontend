@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   if (accessToken) {
     try {
-      const response = await fetch(`${cleanApiBase}/api/v1/expert`, {
+      const response = await fetch(`${cleanApiBase}/expert`, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${accessToken}`,

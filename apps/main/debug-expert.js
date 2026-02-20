@@ -1,6 +1,6 @@
 const http = require('http');
 
-http.get('http://localhost:6543/api/v1/expert/list', (resp) => {
+http.get(`${API_BASE_URL}/expert/list`, (resp) => {
     let data = '';
 
     // A chunk of data has been received.
