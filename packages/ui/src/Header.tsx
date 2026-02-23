@@ -113,6 +113,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showMobileSubMenu, setShowMobileSubMenu] = useState(false);
   const [showFullBalance, setShowFullBalance] = useState(false);
 
   // Use the authentication context
@@ -262,14 +263,18 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
       if (!target.closest(".notification-dropdown-container")) {
         setShowNotificationDropdown(false);
       }
+      // Mobile menu — close when clicking outside the navbar
+      if (!target.closest(".main-head")) {
+        setIsMenuOpen(false);
+      }
     };
 
-    if (showLanguageDropdown || showProfileDropdown || showNotificationDropdown) {
+    if (showLanguageDropdown || showProfileDropdown || showNotificationDropdown || isMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
       return () =>
         document.removeEventListener("mousedown", handleClickOutside);
     }
-  }, [showLanguageDropdown, showProfileDropdown, showNotificationDropdown]);
+  }, [showLanguageDropdown, showProfileDropdown, showNotificationDropdown, isMenuOpen]);
 
   return (
     <>
@@ -549,156 +554,134 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                   <span className="navbar-toggler-icon"></span>
                 </button>
                 <div
-                  className={`d-none d-lg-flex align-items-center justify-content-center flex-grow-1 ${isMenuOpen ? "d-block position-absolute bg-white w-100 start-0 top-100 shadow-sm p-3" : ""}`}
+                  className={`align-items-center justify-content-center flex-grow-1 ${isMenuOpen ? "d-block position-absolute bg-white w-100 start-0 top-100 shadow-sm" : "d-none d-lg-flex"}`}
                   id="navbarSupportedContent"
                   style={{ zIndex: 1000 }}
                 >
                   <ul
-                    className="navbar-nav mx-auto top-menu-main d-flex flex-row align-items-center gap-2 gap-xl-4"
+                    className={`navbar-nav mx-auto top-menu-main d-flex align-items-center gap-2 gap-xl-4 ${isMenuOpen
+                        ? "flex-column align-items-start w-100 py-2 px-3 gap-0"
+                        : "flex-row"
+                      }`}
                   >
-                    <li className="nav-item">
-                      <Link className="nav-link" href="/">
+                    {/* Home */}
+                    <li className={`nav-item ${isMenuOpen ? "w-100 border-bottom" : ""}`}>
+                      <Link
+                        className="nav-link"
+                        href="/"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
                         Home
                       </Link>
                     </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" href={PATHS.HOROSCOPE}>
+
+                    {/* Daily Horoscope */}
+                    <li className={`nav-item ${isMenuOpen ? "w-100 border-bottom" : ""}`}>
+                      <Link
+                        className="nav-link"
+                        href={PATHS.HOROSCOPE}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
                         Daily Horoscope
                       </Link>
                     </li>
-                    <li className="nav-item dropdown">
-                      <a
-                        className="nav-link dropdown-toggle"
-                        href="#"
-                        id="navbarDropdown"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        Astrology Consult
-                      </a>
-                      <ul
-                        className="dropdown-menu"
-                        aria-labelledby="navbarDropdown"
-                      >
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.HOROSCOPE}
+
+                    {/* Astrology Consult — Bootstrap dropdown on desktop, accordion on mobile */}
+                    <li className={`nav-item dropdown ${isMenuOpen ? "w-100 border-bottom" : ""}`}>
+                      {isMenuOpen ? (
+                        /* Mobile accordion toggle */
+                        <>
+                          <button
+                            className="nav-link w-100 text-start bg-transparent border-0 d-flex justify-content-between align-items-center"
+                            style={{ fontWeight: 500 }}
+                            onClick={() => setShowMobileSubMenu(!showMobileSubMenu)}
                           >
-                            Horoscope
-                          </Link>
-                        </li>
-
-
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.LOVE_CALCULATOR}
+                            Astrology Consult
+                            <i
+                              className={`fa-solid fa-chevron-${showMobileSubMenu ? "up" : "down"} text-muted`}
+                              style={{ fontSize: "12px" }}
+                            />
+                          </button>
+                          {showMobileSubMenu && (
+                            <ul className="list-unstyled ps-3 pb-2" style={{ borderLeft: "3px solid var(--primary-color, #e67e22)" }}>
+                              {[
+                                { label: "Horoscope", href: PATHS.HOROSCOPE },
+                                { label: "Love Calculator", href: PATHS.LOVE_CALCULATOR },
+                                { label: "Dahej Calculator", href: PATHS.DAHEJ_CALCULATOR },
+                                { label: "Flames Calculator", href: PATHS.FLAMES_CALCULATOR },
+                                { label: "Love Compatibility Calculator", href: PATHS.LOVE_COMPATIBILITY_CALCULATOR },
+                                { label: "Marriage Age Calculator", href: PATHS.MARRIAGE_AGE_CALCULATOR },
+                                { label: "Soulmate Name Initials Calculator", href: PATHS.SOULMATE_NAME_INITALS_CALCULATOR },
+                                { label: "Lucky Number & Colour Calculator", href: PATHS.LUCKY_NUMBER_CALCULATOR },
+                                { label: "Life Path Calculator", href: PATHS.LIFE_PATH_CALCULATOR },
+                                { label: "Name Numerology Calculator", href: PATHS.NAME_NUMEROLOGY_CALCULATOR },
+                                { label: "Zodiac Sign Compatibility Calculator", href: PATHS.ZODIAC_SIGN_CALCULATOR },
+                                { label: "Nakshatra Finder", href: PATHS.NAKSHATRA_FINDER },
+                                { label: "Loyal Partner Calculator", href: PATHS.LOYAL_PARTNER_CALCULATOR },
+                                { label: "Breakup Patchup Calculator", href: PATHS.BREAKUP_PATCHUP_CALCULATOR },
+                                { label: "Online Puja", href: PATHS.ONLINE_PUJA },
+                              ].map((item) => (
+                                <li key={item.href} className="py-1">
+                                  <Link
+                                    href={item.href}
+                                    className="text-decoration-none text-dark"
+                                    style={{ fontSize: "14px" }}
+                                    onClick={() => {
+                                      setIsMenuOpen(false);
+                                      setShowMobileSubMenu(false);
+                                    }}
+                                  >
+                                    {item.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </>
+                      ) : (
+                        /* Desktop Bootstrap dropdown */
+                        <>
+                          <a
+                            className="nav-link dropdown-toggle"
+                            href="#"
+                            id="navbarDropdown"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
                           >
-                            Love Calculator
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.DAHEJ_CALCULATOR}
+                            Astrology Consult
+                          </a>
+                          <ul
+                            className="dropdown-menu"
+                            aria-labelledby="navbarDropdown"
                           >
-                            Dahej Calculator
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.FLAMES_CALCULATOR}
-                          >
-                            Flames Calculator
-                          </Link>
-                        </li>
-                        <li>
-                          <Link className="dropdown-item" href={PATHS.LOVE_COMPATIBILITY_CALCULATOR}>
-                            Love Compatibility Calculator
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link className="dropdown-item" href={PATHS.MARRIAGE_AGE_CALCULATOR}>
-                            Marriage Age Calculator
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link className="dropdown-item" href={PATHS.SOULMATE_NAME_INITALS_CALCULATOR}>
-                            Soulmate Name Initials Calculator
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link className="dropdown-item" href={PATHS.LUCKY_NUMBER_CALCULATOR}>
-                            Lucky Number & Colour Calculator
-                          </Link>
-                        </li>
-
-
-
-                        <li>
-                          <Link className="dropdown-item" href={PATHS.LIFE_PATH_CALCULATOR}>
-                            Life Path Calculator
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link className="dropdown-item" href={PATHS.NAME_NUMEROLOGY_CALCULATOR}>
-                            Name Numerology Calculator
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link className="dropdown-item" href={PATHS.ZODIAC_SIGN_CALCULATOR}>
-                            Zodiac Sign Compatibility Calculator
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link className="dropdown-item" href={PATHS.NAKSHATRA_FINDER}>
-                            Nakshatra Finder
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link className="dropdown-item" href={PATHS.LOYAL_PARTNER_CALCULATOR}>
-                            Loyal Partner Calculator
-                          </Link>
-                        </li>
-
-                        <li>
-                          <Link className="dropdown-item" href={PATHS.BREAKUP_PATCHUP_CALCULATOR}>
-                            Breakup Patchup Calculator
-                          </Link>
-                        </li>
-
-
-
-
-
-                        <li>
-                          <Link
-                            className="dropdown-item"
-                            href={PATHS.ONLINE_PUJA}
-                          >
-                            Online Puja
-                          </Link>
-                        </li>
-                      </ul>
+                            <li><Link className="dropdown-item" href={PATHS.HOROSCOPE}>Horoscope</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.LOVE_CALCULATOR}>Love Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.DAHEJ_CALCULATOR}>Dahej Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.FLAMES_CALCULATOR}>Flames Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.LOVE_COMPATIBILITY_CALCULATOR}>Love Compatibility Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.MARRIAGE_AGE_CALCULATOR}>Marriage Age Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.SOULMATE_NAME_INITALS_CALCULATOR}>Soulmate Name Initials Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.LUCKY_NUMBER_CALCULATOR}>Lucky Number & Colour Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.LIFE_PATH_CALCULATOR}>Life Path Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.NAME_NUMEROLOGY_CALCULATOR}>Name Numerology Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.ZODIAC_SIGN_CALCULATOR}>Zodiac Sign Compatibility Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.NAKSHATRA_FINDER}>Nakshatra Finder</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.LOYAL_PARTNER_CALCULATOR}>Loyal Partner Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.BREAKUP_PATCHUP_CALCULATOR}>Breakup Patchup Calculator</Link></li>
+                            <li><Link className="dropdown-item" href={PATHS.ONLINE_PUJA}>Online Puja</Link></li>
+                          </ul>
+                        </>
+                      )}
                     </li>
 
-                    {/* <li className="nav-item">
-                      <Link className="nav-link" href={PATHS.BLOG}>
-                        Blog
-                      </Link>
-                    </li> */}
-                    <li className="nav-item">
-                      <Link className="nav-link" href={PATHS.FAMOUS_PLACES}>
+                    {/* Famous Places */}
+                    <li className={`nav-item ${isMenuOpen ? "w-100" : ""}`}>
+                      <Link
+                        className="nav-link"
+                        href={PATHS.FAMOUS_PLACES}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
                         Famous Places
                       </Link>
                     </li>
