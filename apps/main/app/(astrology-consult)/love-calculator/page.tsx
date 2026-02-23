@@ -58,7 +58,7 @@ import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
 import CTA from "@/components/layout/main/CTA";
 import { ZodiacSignsData } from "@/components/features/services/homePagaData";
 import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
-import axios from "axios";
+import safeFetch from "@packages/safe-fetch/safeFetch";
 import { toast } from "react-toastify";
 
 // Premium Section Animations & Styles
@@ -163,27 +163,25 @@ const LoveCalculatorPage = () => {
     setResult(null);
 
     try {
-      const response = await axios.post("/api/v1/matchmaking/love-calculator", {
-        yourName: simpleData.p1Name,
-        partnerName: simpleData.p2Name
+      const [data, err] = await safeFetch<any>("/api/v1/matchmaking/love-calculator", {
+        method: "POST",
+        body: JSON.stringify({
+          yourName: simpleData.p1Name,
+          partnerName: simpleData.p2Name
+        }),
       });
 
-      if (response.data.success) {
-        setResult({ type: "simple", ...response.data.data });
+      if (err || !data) {
+        toast.error(err?.message || "Failed to calculate love score.");
+      } else if (data.success) {
+        setResult({ type: "simple", ...data.data });
         toast.success("Love score calculated!");
-        // Scroll to results
         setTimeout(() => {
-          resultsRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
+          resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 300);
       } else {
-        toast.error(response.data.message || "Failed to calculate love score.");
+        toast.error(data.message || "Failed to calculate love score.");
       }
-    } catch (err: any) {
-      console.error("Love Calculator Error:", err);
-      toast.error(err.response?.data?.message || err.message || "Failed to calculate love score.");
     } finally {
       setLoading(false);
     }
@@ -201,34 +199,33 @@ const LoveCalculatorPage = () => {
     setResult(null);
 
     try {
-      const response = await axios.post("/api/v1/matchmaking/guna-milan", {
-        girl: {
-          name: girl.name || "Girl",
-          datetime: `${girl.date}T${girl.time}:00Z`,
-          location: { lat: parseFloat(girl.lat), lon: parseFloat(girl.lon), tz: girl.tz }
-        },
-        boy: {
-          name: boy.name || "Boy",
-          datetime: `${boy.date}T${boy.time}:00Z`,
-          location: { lat: parseFloat(boy.lat), lon: parseFloat(boy.lon), tz: boy.tz }
-        }
+      const [data, err] = await safeFetch<any>("/api/v1/matchmaking/guna-milan", {
+        method: "POST",
+        body: JSON.stringify({
+          girl: {
+            name: girl.name || "Girl",
+            datetime: `${girl.date}T${girl.time}:00Z`,
+            location: { lat: parseFloat(girl.lat), lon: parseFloat(girl.lon), tz: girl.tz }
+          },
+          boy: {
+            name: boy.name || "Boy",
+            datetime: `${boy.date}T${boy.time}:00Z`,
+            location: { lat: parseFloat(boy.lat), lon: parseFloat(boy.lon), tz: boy.tz }
+          }
+        }),
       });
 
-      if (response.data.success) {
-        setResult({ type: "advanced", data: response.data.data });
+      if (err || !data) {
+        toast.error(err?.message || "Something went wrong. Please try again.");
+      } else if (data.success) {
+        setResult({ type: "advanced", data: data.data });
         toast.success("Advanced Guna Milan report generated!");
         setTimeout(() => {
-          resultsRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
+          resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 300);
       } else {
-        toast.error(response.data.message || "Failed to calculate match");
+        toast.error(data.message || "Failed to calculate match");
       }
-    } catch (error: any) {
-      console.error("Matchmaking Error:", error);
-      toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

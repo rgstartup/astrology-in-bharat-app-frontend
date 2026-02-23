@@ -18,16 +18,15 @@ export async function proxy(request: NextRequest) {
     const isProtectedRoute = protectedPaths.some(path => pathname.startsWith(path));
 
     // 1. Social Login Logic (Keep it)
-    const urlAccessToken = searchParams.get('accessToken') || searchParams.get('token');
-    const urlRefreshToken = searchParams.get('refreshToken') || searchParams.get('refresh_token');
+    // Backend sends: accessToken, refreshToken (exact names — no fallbacks)
+    const urlAccessToken = searchParams.get('accessToken');
+    const urlRefreshToken = searchParams.get('refreshToken');
 
     if (urlAccessToken) {
         const nextUrl = new URL(pathname, request.url);
         // Clear search params to clean URL
         nextUrl.searchParams.delete('accessToken');
-        nextUrl.searchParams.delete('token');
         nextUrl.searchParams.delete('refreshToken');
-        nextUrl.searchParams.delete('refresh_token');
 
         const nextResponse = NextResponse.redirect(nextUrl);
         const cookieOptions = {
@@ -37,7 +36,7 @@ export async function proxy(request: NextRequest) {
             path: '/',
             maxAge: 60 * 60 * 24 * 7,
         };
-        nextResponse.cookies.set('clientAccessToken', urlAccessToken, cookieOptions);
+        nextResponse.cookies.set('accessToken', urlAccessToken, cookieOptions);
         if (urlRefreshToken) {
             nextResponse.cookies.set('refreshToken', urlRefreshToken, { ...cookieOptions, maxAge: 60 * 60 * 24 * 30 });
         }
@@ -45,8 +44,7 @@ export async function proxy(request: NextRequest) {
     }
 
     // 2. Cookie Logic
-    let accessToken = request.cookies.get('clientAccessToken')?.value ||
-        request.cookies.get('accessToken')?.value;
+    let accessToken = request.cookies.get('accessToken')?.value;
     const refreshToken = request.cookies.get('refreshToken')?.value;
 
     let shouldRefresh = false;
@@ -89,11 +87,11 @@ export async function proxy(request: NextRequest) {
 
             if (refreshRes.ok) {
                 const data = await refreshRes.json();
-                const newAccessToken = data.accessToken || data.token;
+                const newAccessToken = data.accessToken;
 
                 if (newAccessToken) {
                     const nextResponse = NextResponse.next();
-                    nextResponse.cookies.set('clientAccessToken', newAccessToken, {
+                    nextResponse.cookies.set('accessToken', newAccessToken, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production',
                         sameSite: 'strict',
@@ -101,11 +99,7 @@ export async function proxy(request: NextRequest) {
                         maxAge: 60 * 60 * 24 * 7,
                     });
 
-                    // Also update request cookie so downstream components/layouts (server components) see new token
-                    // But middleware runs before request reaches them?
-                    // Modifying request cookies:
-                    // request.cookies.set('clientAccessToken', newAccessToken); 
-                    // (This might require cloning request or specific Next.js pattern, but response cookie is key for client)
+                    // Also update request cookie so downstream server components see new token
 
                     return nextResponse;
                 }

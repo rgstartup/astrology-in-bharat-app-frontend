@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import {
   FaMapMarkerAlt as FaMa,
   FaSpinner as FaSp,
@@ -70,12 +69,11 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${encodeURIComponent(
-            query
-          )}&limit=5`
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${encodeURIComponent(query)}&limit=5`
         );
-        setResults(response.data);
+        const data = await res.json();
+        setResults(data);
       } catch (error) {
         console.error("Error fetching locations:", error);
       } finally {

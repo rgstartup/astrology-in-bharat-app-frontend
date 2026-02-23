@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect, Suspense } from "react";
-import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 
 // --- Types ---
@@ -42,41 +41,14 @@ const VerifyEmailContent: React.FC = () => {
             }
 
             try {
-                const response = await axios.get<VerificationResponse>(
-                    `${API_ENDPOINT}?token=${token}`,
-                    {
-                        headers: { "Content-Type": "application/json" },
-                    }
-                );
+                const res = await fetch(`${API_ENDPOINT}?token=${token}`, {
+                    headers: { "Content-Type": "application/json" },
+                });
+                const data = await res.json().catch(() => ({}));
 
-                setSuccessMessage(
-                    response.data.message || "Email verified successfully! Redirecting to sign in..."
-                );
-                setIsLoading(false);
-
-                // Start countdown and redirect
-                const countdownInterval = setInterval(() => {
-                    setCountdown((prev) => {
-                        if (prev <= 1) {
-                            clearInterval(countdownInterval);
-                            router.push('/sign-in');
-                            return 0;
-                        }
-                        return prev - 1;
-                    });
-                }, 1000);
-
-            } catch (err) {
-                const error = err as AxiosError;
-                setIsLoading(false);
-
-                if (error.response) {
-                    const status = error.response.status;
-                    const msg =
-                        (error.response.data as any)?.message ||
-                        (error.response.data as any)?.error ||
-                        `Server responded with status ${status}.`;
-
+                if (!res.ok) {
+                    const status = res.status;
+                    const msg = data?.message || data?.error || `Server responded with status ${status}.`;
                     if (status === 400) {
                         setError("Invalid or expired verification token. Please request a new verification email.");
                     } else if (status === 404) {
@@ -86,11 +58,19 @@ const VerifyEmailContent: React.FC = () => {
                     } else {
                         setError(msg);
                     }
-                } else if (error.request) {
-                    setError("Network Error: Could not reach the server.");
                 } else {
-                    setError("An unexpected error occurred.");
+                    setSuccessMessage(data?.message || "Email verified successfully! Redirecting to sign in...");
+                    const countdownInterval = setInterval(() => {
+                        setCountdown((prev) => {
+                            if (prev <= 1) { clearInterval(countdownInterval); router.push('/sign-in'); return 0; }
+                            return prev - 1;
+                        });
+                    }, 1000);
                 }
+                setIsLoading(false);
+            } catch {
+                setError("Network Error: Could not reach the server.");
+                setIsLoading(false);
             }
         };
 

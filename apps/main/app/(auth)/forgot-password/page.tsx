@@ -5,7 +5,6 @@ import NextLink from "next/link";
 const Image = NextImage as any;
 const Link = NextLink as any;
 import React, { useState, useCallback, FormEvent, Suspense } from "react";
-import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
 const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
@@ -27,25 +26,21 @@ const ForgotPasswordContent: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post(
-                API_ENDPOINT,
-                {
+            const res = await fetch(API_ENDPOINT, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
                     email,
                     origin: typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            toast.success(response.data.message || "Password reset link sent! Please check your email.");
-            setIsSent(true);
-        } catch (err) {
-            const error = err as AxiosError;
-            const serverMessage = (error.response?.data as any)?.message || "Failed to send reset link. Please try again.";
-            toast.error(serverMessage);
+                }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                toast.error(data?.message || "Failed to send reset link. Please try again.");
+            } else {
+                toast.success(data?.message || "Password reset link sent! Please check your email.");
+                setIsSent(true);
+            }
         } finally {
             setIsLoading(false);
         }

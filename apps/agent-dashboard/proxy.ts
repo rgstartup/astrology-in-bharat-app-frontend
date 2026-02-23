@@ -18,7 +18,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.next();
     }
 
-    // 1. Get Tokens — backend uses "accessToken" and "refreshToken" (confirmed)
+    // 1. Get Tokens — unified cookie names across all roles; role is in JWT payload
     const accessToken = request.cookies.get('accessToken')?.value;
     const refreshToken = request.cookies.get('refreshToken')?.value;
 
@@ -56,7 +56,7 @@ export async function proxy(request: NextRequest) {
 
             if (refreshRes.ok) {
                 const data = await refreshRes.json();
-                const newToken = data.token || data.accessToken || data.access_token;
+                const newToken = data.accessToken;
 
                 if (newToken) {
                     const nextResponse = NextResponse.next();

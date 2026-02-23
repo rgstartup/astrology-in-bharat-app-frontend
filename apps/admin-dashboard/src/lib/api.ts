@@ -1,63 +1,82 @@
-import axios from "axios";
+/**
+ * Admin Dashboard API Client — built on safeFetch.
+ *
+ * Architecture:
+ * - All requests go through relative `/api/v1/...` paths which are proxied by
+    * Next.js rewrites to the real backend.
+ * - httpOnly cookies are sent automatically via credentials: "include".
+ * - 401 handling: show toast + redirect to admin login(if not already there).
+ * - Token refresh: handled in proxy.ts middleware(not here).
+ */
+
 import { toast } from "react-toastify";
+import safeFetch from "@packages/safe-fetch/safeFetch";
 
-import { API_BASE_URL, getBasePath } from "@/src/utils/api-config";
+type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-// DIRECT CONNECTION TO BACKEND (No Proxy) - still available if needed via getBasePath()
-// const cleanApiUrl = getBasePath();
+interface RequestOptions {
+    method?: HttpMethod;
+    body?: Record<string, unknown> | FormData | null;
+    headers?: Record<string, string>;
+    timeoutMs?: number;
+}
 
-const isServer = typeof window === 'undefined';
+const ADMIN_LOGIN_PATHS = ["/", "/admin", "/admin/login"];
 
-export const api = axios.create({
-    // Using relative path to trigger Next.js Rewrite (Proxy)
-    baseURL: "/api/v1",
-    timeout: 30000,
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json',
-    }
-});
+function isOnLoginPage(): boolean {
+    if (typeof window === "undefined") return false;
+    return ADMIN_LOGIN_PATHS.includes(window.location.pathname);
+}
 
-// Request interceptor for Auth Token
-api.interceptors.request.use((config) => {
-    if (typeof document !== "undefined") {
-        const token = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("adminAccessToken="))
-            ?.split("=")[1];
+async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+    const { method = "GET", body = null, headers = {}, timeoutMs = 30000 } = options;
 
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+    const [data, error] = await safeFetch<T>(path, {
+        method,
+        credentials: "include",
+        headers: {
+            ...(body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+            ...headers,
+        },
+        ...(body ? { body: body instanceof FormData ? body : JSON.stringify(body) } : {}),
+        timeoutMs,
+    } as any);
+
+    if (error) {
+        const status = (error as any)?.status;
+        if (status === 401) {
+            const backendMessage = (error as any)?.data?.message;
+            if (backendMessage && typeof backendMessage === "string") {
+                toast.error(backendMessage, { toastId: "admin-auth-error" });
+            }
+            if (typeof window !== "undefined" && !isOnLoginPage()) {
+                window.location.href = "/";
+            }
         }
+        throw error;
     }
-    return config;
-});
 
-// Helper to delete cookies
-const deleteCookie = (name: string) => {
-    if (typeof document === 'undefined') return;
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    return data as T;
+}
+
+export const api = {
+    get: <T>(path: string, opts?: Omit<RequestOptions, "method" | "body">) =>
+        request<T>(path, { ...opts, method: "GET" }),
+
+    post: <T>(path: string, body?: Record<string, unknown>, opts?: Omit<RequestOptions, "method">) =>
+        request<T>(path, { ...opts, method: "POST", body }),
+
+    put: <T>(path: string, body?: Record<string, unknown>, opts?: Omit<RequestOptions, "method">) =>
+        request<T>(path, { ...opts, method: "PUT", body }),
+
+    patch: <T>(path: string, body?: Record<string, unknown>, opts?: Omit<RequestOptions, "method">) =>
+        request<T>(path, { ...opts, method: "PATCH", body }),
+
+    delete: <T>(path: string, opts?: Omit<RequestOptions, "method" | "body">) =>
+        request<T>(path, { ...opts, method: "DELETE" }),
+
+    upload: <T>(path: string, formData: FormData, opts?: Omit<RequestOptions, "method" | "body">) =>
+        request<T>(path, { ...opts, method: "POST", body: formData }),
 };
 
-api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        if (error.response && error.response.status === 401) {
-            const backendMessage = error.response.data?.message;
-            if (backendMessage && typeof backendMessage === 'string') {
-                toast.error(backendMessage, { toastId: 'admin-auth-error' });
-            }
-
-            if (typeof window !== 'undefined') {
-                deleteCookie('adminAccessToken');
-                deleteCookie('user');
-
-                // Only redirect if NOT already on the login page
-                if (window.location.pathname !== '/' && window.location.pathname !== '/admin') {
-                    window.location.href = '/';
-                }
-            }
-        }
-        return Promise.reject(error);
-    }
-);
+export default api;

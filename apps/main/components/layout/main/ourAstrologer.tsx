@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import axios from "axios";
+import safeFetch from "@packages/safe-fetch/safeFetch";
 import { SkeletonCard } from "../../features/astrologers/SkeletonCard";
 import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
 
@@ -72,22 +72,23 @@ const OurAstrologer = () => {
     const fetchAstrologers = useCallback(async (currentOffset: number, isLoadMore: boolean = false, isSilent: boolean = false) => {
         try {
             if (!isSilent) setLoading(true);
-            const response = await axios.get(`${API_BASE_URL}/expert/list`, {
-                params: {
-                    limit,
-                    offset: currentOffset,
-                    q: debouncedSearch,
-                    specializations: selectedSpecialization,
-                    sort: sortOption,
-                    languages: filterState.language,
-                    minPrice: filterState.minPrice,
-                    maxPrice: filterState.maxPrice === 1000 ? undefined : filterState.maxPrice,
-                    state: filterState.addressState,
-                    onlineOnly: filterState.onlineOnly ? 'true' : undefined
-                },
-            });
+            const [responseData, fetchErr] = await safeFetch<{ data: ExpertProfile[]; pagination: PaginationInfo }>(
+                `${API_BASE_URL}/expert/list?${new URLSearchParams(Object.entries({
+                    limit: String(limit),
+                    offset: String(currentOffset),
+                    ...(debouncedSearch && { q: debouncedSearch }),
+                    ...(selectedSpecialization && { specializations: selectedSpecialization }),
+                    ...(sortOption && { sort: sortOption }),
+                    ...(filterState.language && { languages: filterState.language }),
+                    minPrice: String(filterState.minPrice),
+                    ...(filterState.maxPrice < 1000 && { maxPrice: String(filterState.maxPrice) }),
+                    ...(filterState.addressState && { state: filterState.addressState }),
+                    ...(filterState.onlineOnly && { onlineOnly: 'true' }),
+                }).filter(([, v]) => v !== undefined)).toString()}`
+            );
 
-            const { data, pagination }: { data: ExpertProfile[]; pagination: PaginationInfo } = response.data;
+            if (fetchErr || !responseData) throw fetchErr;
+            const { data, pagination }: { data: ExpertProfile[]; pagination: PaginationInfo } = responseData;
 
             const getImageUrl = (path?: string) => {
                 if (!path) return "/images/dummy-astrologer.jpg";

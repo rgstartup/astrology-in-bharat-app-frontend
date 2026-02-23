@@ -5,7 +5,7 @@ import NextImage from "next/image";
 const NextImageComp = NextImage as any;
 const Link = NextLink as any;
 import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
+import safeFetch from "@packages/safe-fetch/safeFetch";
 import { toast } from "react-toastify";
 import { SkeletonCard } from "./SkeletonCard";
 import AstrologerCard from "./AstrologerCard";
@@ -286,26 +286,26 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
         isFetchingRef.current = true;
         setLoading(true);
 
-        const params = {
-          limit,
-          offset: currentOffset,
-          q: debouncedSearch,
-          specializations: selectedSpecialization,
+        const queryString = new URLSearchParams(Object.entries({
+          limit: String(limit),
+          offset: String(currentOffset),
+          ...(debouncedSearch && { q: debouncedSearch }),
+          ...(selectedSpecialization && { specializations: selectedSpecialization }),
           sort: filterState.sortBy,
-          languages: filterState.language,
-          minPrice: filterState.minPrice,
-          maxPrice: filterState.maxPrice === 1000 ? undefined : filterState.maxPrice,
-          state: filterState.addressState,
-          service: filterState.serviceType,
-          rating: filterState.minRating,
-          online: filterState.onlyOnline,
-        };
+          ...(filterState.language && { languages: filterState.language }),
+          minPrice: String(filterState.minPrice),
+          ...(filterState.maxPrice < 1000 && { maxPrice: String(filterState.maxPrice) }),
+          ...(filterState.addressState && { state: filterState.addressState }),
+          ...(filterState.serviceType !== "all" && { service: filterState.serviceType }),
+          ...(filterState.minRating > 0 && { rating: String(filterState.minRating) }),
+          ...(filterState.onlyOnline && { online: "true" }),
+        }).filter(([, v]) => v !== undefined)).toString();
 
-        const response = await axios.get(
-          `${API_BASE_URL}/expert/list`,
-          { params }
+        const [responseData, fetchErr] = await safeFetch<{ data: ExpertProfile[]; pagination: { hasMore: boolean } }>(
+          `${API_BASE_URL}/expert/list?${queryString}`
         );
-        const { data, pagination } = response.data;
+        if (fetchErr || !responseData) throw fetchErr;
+        const { data, pagination } = responseData;
         const mappedData = data.map(mapExpert);
 
         setAstrologers((prev) => [...prev, ...mappedData]);

@@ -1,77 +1,59 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+import safeFetch from "@packages/safe-fetch/safeFetch";
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
-// Cookie helpers
-const getCookie = (name: string) => {
-    if (typeof document === 'undefined') return null;
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()?.split(';').shift();
-    return null;
-};
+// NOTE: accessToken is an httpOnly cookie set by the server-side proxy.
+// JS cannot read httpOnly cookies — that is intentional for security.
+// The browser sends them automatically with credentials: "include".
+// We do NOT manually read, set, or delete the accessToken cookie from JS.
 
-const setCookie = (name: string, value: string, days: number = 30) => {
-    if (typeof document === 'undefined') return;
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
-};
-
-const deleteCookie = (name: string) => {
+// Helper: delete a non-httpOnly cookie (only used for legacy cleanup)
+const deleteLegacyCookie = (name: string) => {
     if (typeof document === 'undefined') return;
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 };
 
-// API client with proper cookie handling
+// Thin API helper using safeFetch
+const isServer = typeof window === 'undefined';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543";
 const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
 
-const isServer = typeof window === 'undefined';
-
-export const apiClient = axios.create({
-    baseURL: isServer ? `${cleanApiUrl}/api/v1` : '/api/v1',
-    withCredentials: true, // Crucial for httpOnly cookies
-});
-
-// Add a request interceptor to include the clientAccessToken
-apiClient.interceptors.request.use(
-    (config) => {
-        if (typeof window !== 'undefined') {
-            const token = getCookie('clientAccessToken');
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
+function buildUrl(path: string): string {
+    if (isServer) {
+        return `${cleanApiUrl}/api/v1${path.startsWith("/") ? "" : "/"}${path}`;
     }
-);
+    return `/api/v1${path.startsWith("/") ? "" : "/"}${path}`;
+}
 
-// Add a response interceptor to handle errors globally
-apiClient.interceptors.response.use(
-    (response) => {
-        return response;
-    },
-    (error) => {
-        if (error.response && error.response.status === 401) {
-            const backendMessage = error.response.data?.message;
-            if (backendMessage && typeof backendMessage === 'string') {
-                // Show the specific message from backend (e.g., "Aapka session expire ho gaya hai")
-                toast.error(backendMessage, { toastId: 'auth-error' });
-            }
-
-            // If it's a 401, the token is likely expired or invalid
-            if (typeof window !== 'undefined') {
-                deleteCookie('clientAccessToken');
-            }
-        }
-        return Promise.reject(error);
+async function apiGet<T>(path: string, params?: Record<string, string | number>): Promise<{ data: T; status: number }> {
+    let url = buildUrl(path);
+    if (params) {
+        const qs = new URLSearchParams(
+            Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)]))
+        ).toString();
+        url = `${url}?${qs}`;
     }
-);
+    const [data, error] = await safeFetch<T>(url, { credentials: "include" });
+    if (error) throw error;
+    return { data: data as T, status: 200 };
+}
+
+async function apiPost<T>(path: string, body?: Record<string, unknown>): Promise<{ data: T; status: number }> {
+    const url = buildUrl(path);
+    const [data, error] = await safeFetch<T>(url, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        ...(body ? { body: JSON.stringify(body) } : {}),
+    } as any);
+    if (error) throw error;
+    return { data: data as T, status: 200 };
+}
+
+// Re-export named apiClient for backward compat with any direct imports
+export const apiClient = { get: apiGet, post: apiPost };
 
 interface ClientUser {
     id: number;
@@ -109,98 +91,88 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
     const [clientLoading, setClientLoading] = useState(true);
     const [isClientAuthenticated, setIsClientAuthenticated] = useState(false);
     const router = useRouter();
-    const authCheckRef = useRef(false); // Add ref to prevent multiple checks
+    const authCheckRef = useRef(false);
 
-    const clientLogin = (newToken: string, userData?: ClientUser) => {
-        setCookie('clientAccessToken', newToken);
-        if (userData) {
-            setClientUser(userData);
-        }
+    const clientLogin = (_newToken: string, userData?: ClientUser) => {
+        if (userData) setClientUser(userData);
         setIsClientAuthenticated(true);
         refreshBalance();
     };
 
     const clientLogout = async () => {
-        console.log("🚪 Starting logout process...");
-
-        // Clear all local state first
         setClientUser(null);
         setIsClientAuthenticated(false);
         setClientLoading(false);
-
-        // Clear cookies
-        deleteCookie('clientAccessToken');
-        deleteCookie('refreshToken');
-
-        console.log("🗑️ Cleared cookies and state");
+        deleteLegacyCookie('clientAccessToken');
 
         try {
-            // Call backend logout endpoint
-            console.log("📡 Calling backend logout...");
-            const response = await apiClient.post('/auth/client-logout');
-            console.log("✅ Backend logout successful:", response.data);
+            await apiPost('/auth/client-logout');
         } catch (err: any) {
-            console.error("❌ Backend logout error:", err);
-
             // Even if backend fails, continue with frontend logout
-            if (err.response?.status === 401) {
-                console.log("ℹ️ User was already logged out (401)");
-            } else if (err.response?.status === 404) {
-                console.log("ℹ️ Logout endpoint not found (404)");
-            } else {
-                console.log("⚠️ Network error during logout, but continuing...");
-            }
         }
 
-        console.log("🔄 Redirecting to home...");
         router.push('/');
     };
 
     const refreshBalance = async () => {
         try {
-            const res = await apiClient.get('/wallet/balance');
+            const res = await apiGet<any>('/wallet/balance');
             setClientBalance(res.data);
-        } catch (err) {
-            console.error("❌ Error fetching balance:", err);
-        }
+        } catch (_) { }
     };
 
     const refreshAuth = async () => {
         const token = getCookie('clientAccessToken');
-        console.log("🔄 Manually refreshing authentication... Token present:", !!token);
         if (!token) {
             setIsClientAuthenticated(false);
             setClientLoading(false);
             return;
         }
-        // Only set loading if we don't have an auth status yet
-        if (!isClientAuthenticated) {
-            setClientLoading(true);
-        }
+        if (!isClientAuthenticated) setClientLoading(true);
         try {
-            const res = await apiClient.get('/client', {
-                headers: {
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache',
-                    'Expires': '0'
-                },
-                params: {
-                    _t: new Date().getTime() // Anti-cache timestamp
-                }
-            });
-            console.log("📊 Profile response:", res.data);
+            const res = await apiGet<any>('/client', { _t: new Date().getTime() });
+            if (res.data?.user) {
+                setClientUser(res.data.user);
+                setIsClientAuthenticated(true);
+                refreshBalance();
+            } else if (res.data?.id) {
+                setClientUser({
+                    id: res.data.user?.id || res.data.id,
+                    name: res.data.user?.name || res.data.full_name,
+                    email: res.data.user?.email,
+                    roles: res.data.user?.roles || [],
+                    avatar: res.data.user?.avatar || res.data.profile_picture
+                });
+                setIsClientAuthenticated(true);
+            } else {
+                setClientUser({ id: 0, name: "User", email: "", roles: [] });
+                setIsClientAuthenticated(true);
+            }
+        } catch (err: any) {
+            if (err?.status === 401) {
+                setIsClientAuthenticated(false);
+                setClientUser(null);
+            }
+        } finally {
+            setClientLoading(false);
+        }
+    };
 
-            // If we get a 200 response (even with empty data), user is authenticated
-            // because the endpoint is protected by JwtAuthGuard
-            if (res.status === 200) {
-                // Try to get user info from response
-                if (res.data && res.data.user) {
+    useEffect(() => {
+        if (authCheckRef.current) return;
+
+        const initClientAuth = async () => {
+            if (typeof window === 'undefined') return;
+            deleteLegacyCookie('clientAccessToken');
+
+            try {
+                const res = await apiGet<any>('/client', { _t: new Date().getTime() });
+
+                if (res.data?.user) {
                     setClientUser(res.data.user);
                     setIsClientAuthenticated(true);
                     refreshBalance();
-                    console.log("✅ User authenticated via user data:", res.data.user);
-                } else if (res.data && res.data.id) {
-                    // Profile exists but no nested user object
+                } else if (res.data?.id) {
                     setClientUser({
                         id: res.data.user?.id || res.data.id,
                         name: res.data.user?.name || res.data.full_name,
@@ -209,160 +181,20 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
                         avatar: res.data.user?.avatar || res.data.profile_picture
                     });
                     setIsClientAuthenticated(true);
-                    console.log("✅ User authenticated via profile data:", res.data);
                 } else {
-                    // User is authenticated but has no profile yet
-                    // We need to get user info from somewhere else or use minimal data
-                    console.log("✅ User authenticated but no profile exists");
-
-                    // Try to get user info from login response or create minimal user object
-                    // For now, we'll consider them authenticated with minimal data
-                    setClientUser({
-                        id: 0, // Will be updated when profile is created
-                        name: "User",
-                        email: "",
-                        roles: []
-                    });
+                    setClientUser({ id: 0, name: "User", email: "", roles: [] });
                     setIsClientAuthenticated(true);
-                }
-            } else {
-                setIsClientAuthenticated(false);
-                setClientUser(null);
-                console.log("❌ No authentication data found");
-            }
-        } catch (err: any) {
-            console.error("❌ Refresh auth error:", err);
-            // If we get 401, user is not authenticated
-            if (err.response?.status === 401) {
-                setIsClientAuthenticated(false);
-                setClientUser(null);
-                console.log("❌ User not authenticated (401)");
-            } else {
-                // Other errors might be network issues, don't clear auth state
-                console.log("⚠️ Network error, keeping current auth state");
-            }
-        } finally {
-            setClientLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        // Prevent multiple simultaneous authentication checks
-        if (authCheckRef.current) {
-            return;
-        }
-
-        const initClientAuth = async () => {
-            if (typeof window === 'undefined') return;
-
-            // Capture tokens from URL (Google OAuth Redirect)
-            const searchParams = new URLSearchParams(window.location.search);
-            const urlAccessToken = searchParams.get('accessToken') || searchParams.get('token');
-            const urlRefreshToken = searchParams.get('refreshToken') || searchParams.get('refresh_token');
-
-            if (urlAccessToken) {
-                console.log("🎁 [ClientAuth] Found tokens in URL, processing...");
-                setCookie('clientAccessToken', urlAccessToken);
-                if (urlRefreshToken) {
-                    setCookie('refreshToken', urlRefreshToken);
-                }
-
-                setIsClientAuthenticated(true);
-                toast.success("Login Successful!");
-
-                // Clean URL parameters
-                const newUrl = window.location.pathname + window.location.hash;
-                window.history.replaceState({}, document.title, newUrl);
-            }
-
-            const token = getCookie('clientAccessToken');
-            console.log("🔍 [ClientAuth] Initializing... Token found:", !!token);
-
-            if (!token) {
-                console.log("ℹ️ [ClientAuth] No clientAccessToken found, skipping auth check");
-                setIsClientAuthenticated(false);
-                setClientLoading(false);
-                return;
-            }
-
-            // OPTIMISTIC: Assume authenticated if we have a token
-            setIsClientAuthenticated(true);
-
-            try {
-                console.log("🔍 [ClientAuth] Verifying session via /client/profile...");
-                const res = await apiClient.get('/client', {
-                    headers: {
-                        'Cache-Control': 'no-cache, no-store, must-revalidate',
-                        'Pragma': 'no-cache',
-                        'Expires': '0'
-                    },
-                    params: {
-                        _t: new Date().getTime() // Anti-cache timestamp
-                    }
-                });
-
-                console.log("📊 [ClientAuth] Profile response mapping...");
-
-                // If we get a 200 response (even with empty data), user is authenticated
-                // because the endpoint is protected by JwtAuthGuard
-                if (res.status === 200) {
-                    // Try to get user info from response
-                    if (res.data && res.data.user) {
-                        setClientUser(res.data.user);
-                        setIsClientAuthenticated(true);
-                        refreshBalance();
-                        console.log("✅ User authenticated via user data:", res.data.user);
-                    } else if (res.data && res.data.id) {
-                        // Profile exists but no nested user object
-                        setClientUser({
-                            id: res.data.user?.id || res.data.id,
-                            name: res.data.user?.name || res.data.full_name,
-                            email: res.data.user?.email,
-                            roles: res.data.user?.roles || [],
-                            avatar: res.data.user?.avatar || res.data.profile_picture
-                        });
-                        setIsClientAuthenticated(true);
-                        console.log("✅ User authenticated via profile data:", res.data);
-                    } else {
-                        // User is authenticated but has no profile yet
-                        console.log("✅ User authenticated but no profile exists");
-
-                        // Try to get user info from login response or create minimal user object
-                        // For now, we'll consider them authenticated with minimal data
-                        setClientUser({
-                            id: 0, // Will be updated when profile is created
-                            name: "User",
-                            email: "",
-                            roles: []
-                        });
-                        setIsClientAuthenticated(true);
-                    }
-                } else {
-                    setIsClientAuthenticated(false);
-                    setClientUser(null);
-                    console.log("❌ No authentication data found");
                 }
             } catch (err: any) {
-                console.error("❌ [ClientAuth] Auth init error:", err);
-                // If we get 401, user is definitely not authenticated or token expired
-                if (err.response?.status === 401) {
-                    console.log("❌ [ClientAuth] User not authenticated (401), clearing session");
-                    localStorage.removeItem('clientAccessToken'); // Migration cleanup
-                    deleteCookie('clientAccessToken');
-                } else if (err.response?.status === 404) {
-                    // NEW: Treat 404 as authenticated but no profile yet
-                    console.log("✅ [ClientAuth] Profile not found (404), but user is authenticated");
+                if (err?.status === 401) {
+                    setIsClientAuthenticated(false);
+                    setClientUser(null);
+                    localStorage.removeItem('clientAccessToken');
+                    deleteLegacyCookie('clientAccessToken');
+                } else if (err?.status === 404) {
                     setIsClientAuthenticated(true);
-                    setClientUser({
-                        id: 0,
-                        name: "New Cosmic Explorer",
-                        email: "",
-                        roles: []
-                    });
+                    setClientUser({ id: 0, name: "New Cosmic Explorer", email: "", roles: [] });
                 } else {
-                    // Other errors (500, network) - better to stay "authenticated" 
-                    // and let the page handle the error or show cached data
-                    console.log("⚠️ [ClientAuth] Network or server error, assuming session is still valid");
                     setIsClientAuthenticated(true);
                 }
             } finally {
@@ -371,7 +203,7 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
             }
         };
 
-        authCheckRef.current = true; // Set ref to prevent multiple calls
+        authCheckRef.current = true;
         initClientAuth();
     }, []);
 
@@ -393,5 +225,9 @@ export const ClientAuthProvider = ({ children }: { children: React.ReactNode }) 
 
 export const useClientAuth = () => useContext(ClientAuthContext);
 
-
-
+// Helper to read a cookie value (only for non-httpOnly cookies)
+function getCookie(name: string): string | null {
+    if (typeof document === 'undefined') return null;
+    const match = document.cookie.match(new RegExp(`(^|;\\s*)${name}=([^;]*)`));
+    return match ? decodeURIComponent(match[2]) : null;
+}

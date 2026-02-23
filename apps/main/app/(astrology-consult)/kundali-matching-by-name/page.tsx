@@ -30,7 +30,7 @@ const MdOutlineSecurity = MdOs as any;
 import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
 import CTA from "@/components/layout/main/CTA";
 import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
-import axios from "axios";
+import safeFetch from "@packages/safe-fetch/safeFetch";
 
 const KundaliMatchingByNamePage = () => {
   const [boyDetails, setBoyDetails] = useState({
@@ -128,48 +128,33 @@ const KundaliMatchingByNamePage = () => {
 
     setLoading(true);
     try {
-      console.log("Submitting Kundali Matching Advanced Request...");
-      const response = await axios.get("/api/kundali-matching-advanced", {
-        params: {
-          boy_dob: `${boyDetails.date}T${boyDetails.time}:00+05:30`,
-          boy_lat: boyDetails.lat,
-          boy_lon: boyDetails.lon,
-          girl_dob: `${girlDetails.date}T${girlDetails.time}:00+05:30`,
-          girl_lat: girlDetails.lat,
-          girl_lon: girlDetails.lon,
-        },
-      });
+      const query = new URLSearchParams({
+        boy_dob: `${boyDetails.date}T${boyDetails.time}:00+05:30`,
+        boy_lat: boyDetails.lat,
+        boy_lon: boyDetails.lon,
+        girl_dob: `${girlDetails.date}T${girlDetails.time}:00+05:30`,
+        girl_lat: girlDetails.lat,
+        girl_lon: girlDetails.lon,
+      }).toString();
 
-      console.log("Kundali Matching Full API Response:", response);
+      const [rawData, fetchErr] = await safeFetch<any>(`/api/kundali-matching-advanced?${query}`);
 
-      // Handle nesting
-      let finalData = response.data;
-      if (finalData?.data) finalData = finalData.data;
+      if (fetchErr) {
+        const errMsg = fetchErr?.message || "Failed to generate report.";
+        setError(typeof errMsg === "string" ? errMsg : JSON.stringify(errMsg));
+        return;
+      }
 
-      console.log("Extracted Matching Result Data:", finalData);
+      let finalData = rawData?.data ?? rawData;
 
       if (finalData) {
         setMatchingResult(finalData);
-        // Scroll to results after a short delay to allow rendering
         setTimeout(() => {
-          resultsRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
+          resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 300);
       } else {
         setError("Received incomplete data from the server.");
       }
-    } catch (err: any) {
-      console.error(
-        "Matching Error Details:",
-        err.response?.data || err.message
-      );
-      const errMsg =
-        err.response?.data?.error ||
-        err.message ||
-        "Failed to generate report.";
-      setError(typeof errMsg === "string" ? errMsg : JSON.stringify(errMsg));
     } finally {
       setLoading(false);
     }
@@ -663,25 +648,24 @@ const KundaliMatchingByNamePage = () => {
 
                         <div className="mt-10">
                           <div
-                            className={`inline-flex items-center gap-2 px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest ${
-                              (matchingResult.guna_milan?.total_points ??
+                            className={`inline-flex items-center gap-2 px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest ${(matchingResult.guna_milan?.total_points ??
                                 matchingResult.guna_milan?.total?.score ??
                                 matchingResult.total?.score ??
                                 matchingResult.total_score ??
                                 0) >=
-                              (matchingResult.guna_milan?.maximum_points ??
-                                36) /
+                                (matchingResult.guna_milan?.maximum_points ??
+                                  36) /
                                 2
                                 ? "bg-green-500 text-white shadow-lg shadow-green-100"
                                 : "bg-[#301118] text-white shadow-lg shadow-orange-100"
-                            }`}
+                              }`}
                           >
                             {(matchingResult.guna_milan?.total_points ??
                               matchingResult.guna_milan?.total?.score ??
                               matchingResult.total?.score ??
                               matchingResult.total_score ??
                               0) >=
-                            (matchingResult.guna_milan?.maximum_points ?? 36) /
+                              (matchingResult.guna_milan?.maximum_points ?? 36) /
                               2
                               ? "High Compatibility"
                               : "Moderate Match"}
@@ -710,9 +694,9 @@ const KundaliMatchingByNamePage = () => {
                                 matchingResult.ashtakoot ||
                                 matchingResult.ashtakoot_points ||
                                 {}) as Record<
-                                string,
-                                { score: number; maximum_score: number }
-                              >
+                                  string,
+                                  { score: number; maximum_score: number }
+                                >
                             ).map(([key, value]) => ({
                               name: key,
                               obtained_points: value.score,
@@ -749,86 +733,86 @@ const KundaliMatchingByNamePage = () => {
                     {/* Mangal Dosha Section (NEW) */}
                     {(matchingResult.girl_mangal_dosha_details ||
                       matchingResult.boy_mangal_dosha_details) && (
-                      <div className="col-12">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                          {/* Boy Dosha */}
-                          <div
-                            className={`p-8 rounded-[2rem] border ${matchingResult.boy_mangal_dosha_details?.has_dosha ? "bg-red-50 border-red-100" : "bg-green-50 border-green-100"}`}
-                          >
-                            <div className="flex items-center gap-4 mb-4">
-                              <div
-                                className={`w-12 h-12 rounded-full flex items-center justify-center text-white ${matchingResult.boy_mangal_dosha_details?.has_dosha ? "bg-red-500" : "bg-green-500"}`}
-                              >
-                                {matchingResult.boy_mangal_dosha_details
-                                  ?.has_dosha ? (
-                                  <FaExclamationTriangle />
-                                ) : (
-                                  <FaCheckCircle />
+                        <div className="col-12">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            {/* Boy Dosha */}
+                            <div
+                              className={`p-8 rounded-[2rem] border ${matchingResult.boy_mangal_dosha_details?.has_dosha ? "bg-red-50 border-red-100" : "bg-green-50 border-green-100"}`}
+                            >
+                              <div className="flex items-center gap-4 mb-4">
+                                <div
+                                  className={`w-12 h-12 rounded-full flex items-center justify-center text-white ${matchingResult.boy_mangal_dosha_details?.has_dosha ? "bg-red-500" : "bg-green-500"}`}
+                                >
+                                  {matchingResult.boy_mangal_dosha_details
+                                    ?.has_dosha ? (
+                                    <FaExclamationTriangle />
+                                  ) : (
+                                    <FaCheckCircle />
+                                  )}
+                                </div>
+                                <div>
+                                  <h4 className="text-lg font-bold text-[#301118]">
+                                    Groom Mangal Dosha
+                                  </h4>
+                                  <p className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    Status Check
+                                  </p>
+                                </div>
+                              </div>
+                              <p className="text-sm font-medium opacity-80 leading-relaxed">
+                                {renderContent(
+                                  matchingResult.boy_mangal_dosha_details
+                                    ?.description
+                                ) || "No specific details available."}
+                              </p>
+                              {matchingResult.boy_mangal_dosha_details
+                                ?.has_exception && (
+                                  <div className="mt-3 text-xs bg-white/50 p-2 rounded-lg font-bold text-[#301118]">
+                                    Exception Applied: True
+                                  </div>
                                 )}
-                              </div>
-                              <div>
-                                <h4 className="text-lg font-bold text-[#301118]">
-                                  Groom Mangal Dosha
-                                </h4>
-                                <p className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                  Status Check
-                                </p>
-                              </div>
                             </div>
-                            <p className="text-sm font-medium opacity-80 leading-relaxed">
-                              {renderContent(
-                                matchingResult.boy_mangal_dosha_details
-                                  ?.description
-                              ) || "No specific details available."}
-                            </p>
-                            {matchingResult.boy_mangal_dosha_details
-                              ?.has_exception && (
-                              <div className="mt-3 text-xs bg-white/50 p-2 rounded-lg font-bold text-[#301118]">
-                                Exception Applied: True
-                              </div>
-                            )}
-                          </div>
 
-                          {/* Girl Dosha */}
-                          <div
-                            className={`p-8 rounded-[2rem] border ${matchingResult.girl_mangal_dosha_details?.has_dosha ? "bg-red-50 border-red-100" : "bg-green-50 border-green-100"}`}
-                          >
-                            <div className="flex items-center gap-4 mb-4">
-                              <div
-                                className={`w-12 h-12 rounded-full flex items-center justify-center text-white ${matchingResult.girl_mangal_dosha_details?.has_dosha ? "bg-red-500" : "bg-green-500"}`}
-                              >
-                                {matchingResult.girl_mangal_dosha_details
-                                  ?.has_dosha ? (
-                                  <FaExclamationTriangle />
-                                ) : (
-                                  <FaCheckCircle />
+                            {/* Girl Dosha */}
+                            <div
+                              className={`p-8 rounded-[2rem] border ${matchingResult.girl_mangal_dosha_details?.has_dosha ? "bg-red-50 border-red-100" : "bg-green-50 border-green-100"}`}
+                            >
+                              <div className="flex items-center gap-4 mb-4">
+                                <div
+                                  className={`w-12 h-12 rounded-full flex items-center justify-center text-white ${matchingResult.girl_mangal_dosha_details?.has_dosha ? "bg-red-500" : "bg-green-500"}`}
+                                >
+                                  {matchingResult.girl_mangal_dosha_details
+                                    ?.has_dosha ? (
+                                    <FaExclamationTriangle />
+                                  ) : (
+                                    <FaCheckCircle />
+                                  )}
+                                </div>
+                                <div>
+                                  <h4 className="text-lg font-bold text-[#301118]">
+                                    Bride Mangal Dosha
+                                  </h4>
+                                  <p className="text-xs font-bold uppercase tracking-wider opacity-60">
+                                    Status Check
+                                  </p>
+                                </div>
+                              </div>
+                              <p className="text-sm font-medium opacity-80 leading-relaxed">
+                                {renderContent(
+                                  matchingResult.girl_mangal_dosha_details
+                                    ?.description
+                                ) || "No specific details available."}
+                              </p>
+                              {matchingResult.girl_mangal_dosha_details
+                                ?.has_exception && (
+                                  <div className="mt-3 text-xs bg-white/50 p-2 rounded-lg font-bold text-[#301118]">
+                                    Exception Applied: True
+                                  </div>
                                 )}
-                              </div>
-                              <div>
-                                <h4 className="text-lg font-bold text-[#301118]">
-                                  Bride Mangal Dosha
-                                </h4>
-                                <p className="text-xs font-bold uppercase tracking-wider opacity-60">
-                                  Status Check
-                                </p>
-                              </div>
                             </div>
-                            <p className="text-sm font-medium opacity-80 leading-relaxed">
-                              {renderContent(
-                                matchingResult.girl_mangal_dosha_details
-                                  ?.description
-                              ) || "No specific details available."}
-                            </p>
-                            {matchingResult.girl_mangal_dosha_details
-                              ?.has_exception && (
-                              <div className="mt-3 text-xs bg-white/50 p-2 rounded-lg font-bold text-[#301118]">
-                                Exception Applied: True
-                              </div>
-                            )}
                           </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
                     {/* Conclusion Card */}
                     <div className="col-12">
@@ -847,11 +831,11 @@ const KundaliMatchingByNamePage = () => {
                                 &quot;
                                 {renderContent(
                                   matchingResult.message?.description ||
-                                    matchingResult.guna_milan?.conclusion
-                                      ?.report ||
-                                    matchingResult.conclusion?.report ||
-                                    matchingResult.conclusion ||
-                                    "Our analysis suggests consulting with a professional astrologer for a truly personalized compatibility reading."
+                                  matchingResult.guna_milan?.conclusion
+                                    ?.report ||
+                                  matchingResult.conclusion?.report ||
+                                  matchingResult.conclusion ||
+                                  "Our analysis suggests consulting with a professional astrologer for a truly personalized compatibility reading."
                                 )}
                                 &quot;
                               </p>

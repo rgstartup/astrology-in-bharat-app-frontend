@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import axios from "axios";
+import safeFetch from "@packages/safe-fetch/safeFetch";
 
 interface Quote {
   id: number;
@@ -23,12 +23,11 @@ export default function QuotesLoaderV2() {
     const fetchQuotes = async () => {
       try {
         const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
-        const response = await axios.get(`${baseUrl}/api/v1/quotes`);
-        if (Array.isArray(response.data) && response.data.length > 0) {
-          setQuotes(response.data);
-          const randomQuote =
-            response.data[Math.floor(Math.random() * response.data.length)];
-          setCurrentQuote(randomQuote);
+        const [data] = await safeFetch<Quote[]>(`${baseUrl}/api/v1/quotes`);
+        if (Array.isArray(data) && data.length > 0) {
+          setQuotes(data);
+          const randomQuote = data[Math.floor(Math.random() * data.length)];
+          setCurrentQuote(randomQuote ?? null);
         }
       } catch (error) {
         console.error("Error fetching quotes:", error);

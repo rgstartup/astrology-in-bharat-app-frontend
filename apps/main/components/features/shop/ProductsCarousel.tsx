@@ -7,7 +7,7 @@ import {
   SwiperSlide as SwiperSlideComp,
 } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import axios from "axios";
+import safeFetch from "@packages/safe-fetch/safeFetch";
 import { ProductCard } from "./ProductCard";
 
 const Swiper = SwiperComp as any;
@@ -22,11 +22,13 @@ const ProductsCarousel = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/products`);
-        const data = Array.isArray(res.data) ? res.data : (res.data.data || []);
-        setProductList(data);
-      } catch (error) {
-        console.error("Error fetching products for carousel:", error);
+        const [data, err] = await safeFetch<any>(`${API_BASE_URL}/products`);
+        if (err || !data) {
+          console.error("Error fetching products for carousel:", err);
+        } else {
+          const list = Array.isArray(data) ? data : (data.data || []);
+          setProductList(list);
+        }
       } finally {
         setLoading(false);
       }

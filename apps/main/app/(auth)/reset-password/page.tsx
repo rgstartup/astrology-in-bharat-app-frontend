@@ -3,7 +3,6 @@
 import NextLink from "next/link";
 const Link = NextLink as any;
 import React, { useState, FormEvent, Suspense, useEffect } from "react";
-import axios, { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -48,25 +47,19 @@ const ResetPasswordContent: React.FC = () => {
         try {
             const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
             const API_URL = `${apiBase}/api/v1/auth/reset/password?token=${token}`;
-            const response = await axios.post(
-                API_URL,
-                { password },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            toast.success(response.data.message || "Password reset successful!");
-            setIsSuccess(true);
-            setTimeout(() => {
-                router.push("/sign-in");
-            }, 3000);
-        } catch (err) {
-            const error = err as AxiosError;
-            const serverMessage = (error.response?.data as any)?.message || "Failed to reset password. The link may have expired.";
-            toast.error(serverMessage);
+            const res = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                toast.error(data?.message || "Failed to reset password. The link may have expired.");
+            } else {
+                toast.success(data?.message || "Password reset successful!");
+                setIsSuccess(true);
+                setTimeout(() => { router.push("/sign-in"); }, 3000);
+            }
         } finally {
             setIsLoading(false);
         }

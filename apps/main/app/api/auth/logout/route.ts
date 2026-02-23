@@ -11,8 +11,7 @@ import { cookies } from "next/headers";
 export async function POST() {
     const cookieStore = await cookies();
 
-    // Delete all auth cookies
-    cookieStore.delete("clientAccessToken");
+    // Delete all auth cookies (standard COOKIE_NAMES from backend)
     cookieStore.delete("accessToken");
     cookieStore.delete("refreshToken");
 
@@ -21,7 +20,6 @@ export async function POST() {
         headers: {
             // Belt + suspenders: also clear via Set-Cookie header
             "Set-Cookie": [
-                "clientAccessToken=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict",
                 "accessToken=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict",
                 "refreshToken=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict",
             ].join(", "),

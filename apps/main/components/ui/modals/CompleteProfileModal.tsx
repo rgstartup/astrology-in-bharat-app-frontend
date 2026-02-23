@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, FormEvent } from "react";
-import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 
 interface AddressDto {
@@ -236,71 +235,45 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
     }
 
     try {
-      const response = await axios.post(API_ENDPOINT, payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
+      const res = await fetch(API_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
       });
 
-      setSuccessMessage(
-        response.data?.message || "Profile saved successfully!"
-      );
+      const resData = await res.json().catch(() => ({}));
 
-      setTimeout(() => {
-        onClose();
-      }, 1500);
-    } catch (err) {
-      const error = err as AxiosError;
-      if (error.response) {
-        const status = error.response.status;
-        const errorData = error.response.data as any;
-
+      if (!res.ok) {
+        const status = res.status;
         if (status === 401) {
           setError("You are not authenticated. Please sign in first.");
-          setTimeout(() => {
-            onClose();
-            router.push("/sign-in");
-          }, 3000);
+          setTimeout(() => { onClose(); router.push("/sign-in"); }, 3000);
           setIsLoading(false);
           return;
         }
 
         let msg: string = "";
-
-        if (typeof errorData === "string") {
-          msg = errorData;
-        } else if (errorData?.message) {
-          if (typeof errorData.message === "string") {
-            msg = errorData.message;
-          } else if (Array.isArray(errorData.message)) {
-            msg = errorData.message.join(", ");
-          } else if (typeof errorData.message === "object") {
-            msg = JSON.stringify(errorData.message);
-          }
-        } else if (errorData?.error) {
-          if (typeof errorData.error === "string") {
-            msg = errorData.error;
-          } else if (
-            errorData.error?.message &&
-            typeof errorData.error.message === "string"
-          ) {
-            msg = errorData.error.message;
-          } else {
-            msg = JSON.stringify(errorData.error);
-          }
+        if (typeof resData === "string") {
+          msg = resData;
+        } else if (resData?.message) {
+          if (typeof resData.message === "string") msg = resData.message;
+          else if (Array.isArray(resData.message)) msg = resData.message.join(", ");
+          else msg = JSON.stringify(resData.message);
+        } else if (resData?.error) {
+          if (typeof resData.error === "string") msg = resData.error;
+          else if (resData.error?.message && typeof resData.error.message === "string") msg = resData.error.message;
+          else msg = JSON.stringify(resData.error);
         } else {
           msg = `Server responded with status ${status}.`;
         }
-
         setError(msg || `An error occurred (${status})`);
-      } else if (error.request) {
-        setError(
-          "Network Error: Could not reach the server. Please check your connection."
-        );
       } else {
-        setError("An unexpected error occurred. Please try again.");
+        setSuccessMessage(resData?.message || "Profile saved successfully!");
+        setTimeout(() => { onClose(); }, 1500);
       }
+    } catch {
+      setError("Network Error: Could not reach the server. Please check your connection.");
     } finally {
       setIsLoading(false);
     }

@@ -5,8 +5,8 @@ import { API_CONFIG } from "../lib/api-config";
 
 // ─────────────────────────────────────────────────────────
 // LOGIN — Server Action
-// Backend High-Standard: cookie name = "agentAccessToken"
-// Updated to prevent collision with User/Admin tokens.
+// Cookie names: unified "accessToken" / "refreshToken" for all roles.
+// Role is embedded inside the JWT payload — no need for separate cookie names.
 // ─────────────────────────────────────────────────────────
 export async function agentLoginAction(data: any) {
     try {
@@ -26,28 +26,18 @@ export async function agentLoginAction(data: any) {
             };
         }
 
-        // Backend response: { success, token, agent }
+        // Backend response: { accessToken, refreshToken, agent }
         const agent = result.agent || result.user;
-        const accessToken = result.token || result.accessToken;
-        const refreshToken = result.refreshToken || result.refresh_token;
+        const accessToken = result.accessToken;
+        const refreshToken = result.refreshToken;
 
         if (!accessToken) {
             return { success: false, error: "Login failed — no token in response" };
         }
 
-        // ✅ Set cookies with BOTH names for safety during migration
+        // ✅ Unified cookie names — role is read from JWT, not from cookie name
         const cookieStore = await cookies();
 
-        // 🟢 New Standard
-        cookieStore.set("agentAccessToken", accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: 60 * 60 * 24 * 7,
-        });
-
-        // 🟡 Legacy Fallback (Wait for backend to catch up)
         cookieStore.set("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
@@ -57,13 +47,6 @@ export async function agentLoginAction(data: any) {
         });
 
         if (refreshToken) {
-            cookieStore.set("agentRefreshToken", refreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                path: "/",
-                maxAge: 60 * 60 * 24 * 30,
-            });
             cookieStore.set("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
@@ -85,16 +68,14 @@ export async function agentLoginAction(data: any) {
 
 // ─────────────────────────────────────────────────────────
 // LOGOUT — Server Action
-// Clears the correct cookie names
+// Clears unified cookie names
 // ─────────────────────────────────────────────────────────
 export async function agentLogoutAction() {
     const cookieStore = await cookies();
 
-    // Clear exact cookie names for Agent
-    cookieStore.delete("agentAccessToken");
-    cookieStore.delete("agentRefreshToken");
-    cookieStore.delete("accessToken"); // Cleanup legacy
-    cookieStore.delete("refreshToken"); // Cleanup legacy
+    // Clear unified cookie names
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
 
     return { success: true };
 }

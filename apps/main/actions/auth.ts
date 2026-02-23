@@ -27,7 +27,7 @@ export async function loginAction(formData: { email: string; password: string })
     const cookieStore = await cookies();
 
     if (data?.accessToken) {
-        cookieStore.set("clientAccessToken", data.accessToken, {
+        cookieStore.set("accessToken", data.accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
@@ -54,7 +54,7 @@ export async function loginAction(formData: { email: string; password: string })
 // ─────────────────────────────────────────────────────────
 export async function logoutAction() {
     const cookieStore = await cookies();
-    cookieStore.delete("clientAccessToken");
+    cookieStore.delete("accessToken");
     cookieStore.delete("refreshToken");
     return { success: true };
 }

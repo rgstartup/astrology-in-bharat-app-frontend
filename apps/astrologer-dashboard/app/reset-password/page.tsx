@@ -3,7 +3,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
 import { toast } from "react-toastify";
 
 const Link = NextLink as any;
@@ -43,16 +42,21 @@ const ResetPasswordContent: React.FC = () => {
         try {
             const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/api\/v1\/?$/, "");
             const API_URL = `${API_BASE}/api/v1/auth/reset/password?token=${token}`;
-            await axios.post(API_URL, { password });
 
-            toast.success("Password reset successful!");
-            setIsSuccess(true);
-            setTimeout(() => {
-                router.push("/");
-            }, 3000);
-        } catch (err: any) {
-            const message = err.response?.data?.message || "Failed to reset password. The link may have expired.";
-            toast.error(message);
+            const res = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password }),
+            });
+
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                toast.error(errData?.message || "Failed to reset password. The link may have expired.");
+            } else {
+                toast.success("Password reset successful!");
+                setIsSuccess(true);
+                setTimeout(() => { router.push("/"); }, 3000);
+            }
         } finally {
             setLoading(false);
         }

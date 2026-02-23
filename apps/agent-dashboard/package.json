@@ -10,7 +10,6 @@
     },
     "dependencies": {
         "@repo/ui": "workspace:*",
-        "axios": "^1.13.2",
         "clsx": "^2.1.1",
         "jwt-decode": "^4.0.0",
         "lucide-react": "^0.539.0",

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import NextLink from "next/link";
-import axios from "axios";
 import { toast } from "react-toastify";
 
 const Link = NextLink as any;
@@ -21,16 +20,19 @@ const ForgotPasswordPage: React.FC = () => {
             const API_URL = `${apiBase}/api/v1/auth/forgot/password`;
             const origin = typeof window !== 'undefined' ? window.location.origin : "";
 
-            await axios.post(API_URL, {
-                email,
-                origin
+            const res = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, origin }),
             });
 
-            toast.success("Password reset link sent! Please check your email.");
-            setIsSent(true);
-        } catch (err: any) {
-            const message = err.response?.data?.message || "Failed to send reset link. Please try again.";
-            toast.error(message);
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                toast.error(errData?.message || "Failed to send reset link. Please try again.");
+            } else {
+                toast.success("Password reset link sent! Please check your email.");
+                setIsSent(true);
+            }
         } finally {
             setLoading(false);
         }

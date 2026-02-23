@@ -1,17 +1,13 @@
-import { api } from "../lib/api";
+import apiClient from "../lib/api-client";
 import { API_ROUTES } from "../lib/api-routes";
 
 // ── Profile ──────────────────────────────────────────────────────────────────
 export const getAgentProfile = async () => {
-    const res = await api.get(API_ROUTES.AGENTS.PROFILE);
-    return res.data;
+    return apiClient.get(API_ROUTES.AGENTS.PROFILE);
 };
 
 export const updateAgentProfile = async (formData: FormData) => {
-    const res = await api.patch(API_ROUTES.AGENTS.PROFILE, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-    });
-    return res.data;
+    return apiClient.patch(API_ROUTES.AGENTS.PROFILE, formData);
 };
 
 // ── Listings ─────────────────────────────────────────────────────────────────
@@ -33,13 +29,11 @@ export interface CreateListingPayload {
 }
 
 export const getAgentListings = async (params?: ListingParams) => {
-    const res = await api.get(API_ROUTES.AGENTS.LISTINGS, { params });
-    return res.data;
+    return apiClient.get(API_ROUTES.AGENTS.LISTINGS, params as Record<string, any>);
 };
 
 export const createListing = async (payload: CreateListingPayload) => {
-    const res = await api.post(API_ROUTES.AGENTS.LISTINGS, payload);
-    return res.data;
+    return apiClient.post(API_ROUTES.AGENTS.LISTINGS, payload as Record<string, any>);
 };
 
 // ── Register User/Expert ─────────────────────────────────────────────────────
@@ -64,17 +58,14 @@ export interface RegisterUserResponse {
 }
 
 export const registerUserByAgent = async (payload: RegisterUserPayload): Promise<RegisterUserResponse> => {
-    const res = await api.post(API_ROUTES.AGENTS.REGISTER_USER, payload);
-    return res.data;
+    return apiClient.post<RegisterUserResponse>(API_ROUTES.AGENTS.REGISTER_USER, payload as Record<string, any>);
 };
 
 // ── Dashboard Stats ──────────────────────────────────────────────────────────
 export const getAgentDashboardStats = async () => {
     try {
-        const res = await api.get(API_ROUTES.AGENTS.DASHBOARD_STATS);
-        return res.data;
-    } catch (error) {
-        console.error("Dashboard stats endpoint not ready, returning empty data", error);
+        return await apiClient.get(API_ROUTES.AGENTS.DASHBOARD_STATS);
+    } catch {
         return {
             totalListings: 0,
             activeListings: 0,

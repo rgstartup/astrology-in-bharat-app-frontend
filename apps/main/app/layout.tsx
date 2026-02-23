@@ -40,7 +40,7 @@ export default async function RootLayout({
 }>) {
   // 1. Fetch user on server
   const cookieStore = await cookies();
-  const token = cookieStore.get("clientAccessToken")?.value;
+  const token = cookieStore.get("accessToken")?.value;
   let user = null;
 
   if (token) {

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
 import {
     Sun, Moon, Zap, MessageCircle, Globe, Compass, Clock, Calendar, MapPin,
     RotateCw, Skull, Ghost, Star, Info, Loader2
@@ -78,9 +77,13 @@ const Planet = () => {
         const url = `${process.env.NEXT_PUBLIC_CALCULATOR_URL || "https://json.freeastrologyapi.com"}/planets`;
 
         try {
-            const response = await axios.post(
-                url,
-                {
+            const res = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": apiKey,
+                },
+                body: JSON.stringify({
                     year: parseInt(formData.year.toString()),
                     month: parseInt(formData.month.toString()),
                     date: parseInt(formData.date.toString()),
@@ -94,18 +97,12 @@ const Planet = () => {
                         observation_point: "topocentric",
                         ayanamsha: "lahiri",
                     },
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-api-key": apiKey,
-                    },
-                }
-            );
+                }),
+            });
 
-            if (response.data && response.data.output) {
-                // The output is an array containing an object with numeric keys
-                const outputObj = response.data.output[0];
+            const resData = await res.json();
+            if (resData && resData.output) {
+                const outputObj = resData.output[0];
                 const formattedData = Object.values(outputObj).filter((item: any) => item && typeof item === 'object' && item.name);
                 setPlanetData(formattedData);
             } else {

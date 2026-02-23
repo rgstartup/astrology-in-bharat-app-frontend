@@ -26,7 +26,7 @@ const MdAutoAwesome = MdAa as any;
 import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
 import CTA from "@/components/layout/main/CTA";
 import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
-import axios from "axios";
+import safeFetch from "@packages/safe-fetch/safeFetch";
 
 const NakshatraMilanPage = () => {
   const [boyDetails, setBoyDetails] = useState({
@@ -126,53 +126,35 @@ const NakshatraMilanPage = () => {
     setLoading(true);
 
     try {
-      // Fetch for both Boy, Girl and the Match result
-      const [boyRes, girlRes, matchRes] = await Promise.all([
-        axios.get("/api/birth-details", {
-          params: {
-            datetime: `${boyDetails.date}T${boyDetails.time}:00+05:30`,
-            lat: boyDetails.lat,
-            lon: boyDetails.lon,
-          },
-        }),
-        axios.get("/api/birth-details", {
-          params: {
-            datetime: `${girlDetails.date}T${girlDetails.time}:00+05:30`,
-            lat: girlDetails.lat,
-            lon: girlDetails.lon,
-          },
-        }),
-        axios.get("/api/kundali-matching", {
-          params: {
-            boy_dob: `${boyDetails.date}T${boyDetails.time}:00+05:30`,
-            boy_lat: boyDetails.lat,
-            boy_lon: boyDetails.lon,
-            girl_dob: `${girlDetails.date}T${girlDetails.time}:00+05:30`,
-            girl_lat: girlDetails.lat,
-            girl_lon: girlDetails.lon,
-          },
-        }),
+      const boyQuery = new URLSearchParams({ datetime: `${boyDetails.date}T${boyDetails.time}:00+05:30`, lat: boyDetails.lat, lon: boyDetails.lon }).toString();
+      const girlQuery = new URLSearchParams({ datetime: `${girlDetails.date}T${girlDetails.time}:00+05:30`, lat: girlDetails.lat, lon: girlDetails.lon }).toString();
+      const matchQuery = new URLSearchParams({
+        boy_dob: `${boyDetails.date}T${boyDetails.time}:00+05:30`,
+        boy_lat: boyDetails.lat,
+        boy_lon: boyDetails.lon,
+        girl_dob: `${girlDetails.date}T${girlDetails.time}:00+05:30`,
+        girl_lat: girlDetails.lat,
+        girl_lon: girlDetails.lon,
+      }).toString();
+
+      const [[boyData, boyErr], [girlData, girlErr], [matchData, matchErr]] = await Promise.all([
+        safeFetch<any>(`/api/birth-details?${boyQuery}`),
+        safeFetch<any>(`/api/birth-details?${girlQuery}`),
+        safeFetch<any>(`/api/kundali-matching?${matchQuery}`),
       ]);
 
-      setResults({
-        boy: boyRes.data?.data || boyRes.data,
-        girl: girlRes.data?.data || girlRes.data,
-        match: matchRes.data?.data || matchRes.data,
-      });
-
-      setTimeout(() => {
-        resultsRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
+      if (boyErr || girlErr || matchErr) {
+        setError("Failed to fetch birth details. Please check your inputs.");
+      } else {
+        setResults({
+          boy: boyData?.data || boyData,
+          girl: girlData?.data || girlData,
+          match: matchData?.data || matchData,
         });
-      }, 300);
-    } catch (err: any) {
-      console.error("Fetch Error Diagnosis:", {
-        message: err.message,
-        response: err.response?.data,
-        status: err.response?.status,
-      });
-      setError("Failed to fetch birth details. Please check your inputs.");
+        setTimeout(() => {
+          resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 300);
+      }
     } finally {
       setLoading(false);
     }
@@ -422,11 +404,10 @@ const NakshatraMilanPage = () => {
                         </span>
                       </div>
                       <div
-                        className={`px-8 py-2 rounded-full text-[13px] font-bold uppercase tracking-widest ${
-                          results.match.guna_milan.total_points >= 18
+                        className={`px-8 py-2 rounded-full text-[13px] font-bold uppercase tracking-widest ${results.match.guna_milan.total_points >= 18
                             ? "bg-green-50 text-green-600"
                             : "bg-red-50 text-red-600"
-                        }`}
+                          }`}
                       >
                         {results.match.guna_milan.total_points >= 25
                           ? "Perfect Match"
@@ -720,11 +701,10 @@ const NakshatraMilanPage = () => {
             {faqs.map((faq, i) => (
               <div
                 key={i}
-                className={`light-card border rounded-3xl transition-all duration-300 ${
-                  openFaq === i
+                className={`light-card border rounded-3xl transition-all duration-300 ${openFaq === i
                     ? "border-[#fd6410] bg-white shadow-xl"
                     : "border-[#fd64101a] hover:bg-white hover:border-[#fd641044]"
-                }`}
+                  }`}
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
@@ -743,11 +723,10 @@ const NakshatraMilanPage = () => {
                 </button>
 
                 <div
-                  className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                    openFaq === i
+                  className={`overflow-hidden transition-all duration-500 ease-in-out ${openFaq === i
                       ? "max-h-[200px] opacity-100"
                       : "max-h-0 opacity-0"
-                  }`}
+                    }`}
                 >
                   <div className="p-5 md:p-6 pt-0 border-t border-orange-50 mt-1">
                     <p className="text-sm text-gray-500 leading-relaxed italic m-0">

@@ -1,4 +1,4 @@
-// Native fetch is used instead of axios for Next.js caching support
+// Native fetch is used instead of previously used HTTP clients for Next.js caching support
 
 import { API_BASE_URL } from '../utils/api-config';
 
