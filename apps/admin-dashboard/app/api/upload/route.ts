@@ -24,9 +24,7 @@ export async function POST(req: NextRequest) {
         const filepath = path.join(uploadDir, filename);
         await writeFile(filepath, buffer);
 
-        // Return the URL. Admin dashboard can serve it from /uploads
-        // Note: If Main app needs it, it can access http://localhost:PORT_ADMIN/uploads/...
-        // Ideally, we'd use a cloud storage.
+
 
         return NextResponse.json({
             url: `/uploads/${filename}`,

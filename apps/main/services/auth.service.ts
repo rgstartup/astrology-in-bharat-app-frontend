@@ -5,7 +5,8 @@ export interface ClientUser {
     id: number;
     name?: string;
     email?: string;
-    roles?: string[];
+    role?: string;      // Single role from JWT (new backend format)
+    roles?: string[];   // Array format (backward compat)
     avatar?: string;
 }
 
@@ -15,22 +16,17 @@ export const AuthService = {
     },
 
     fetchProfile: async (serverHeaders?: any) => {
-        const response = await apiClient.get(API_ROUTES.AUTH.ME, {
+        return await apiClient.get(API_ROUTES.AUTH.ME, {
             headers: {
                 ...serverHeaders,
                 'Cache-Control': 'no-cache, no-store, must-revalidate',
                 'Pragma': 'no-cache',
                 'Expires': '0'
-            },
-            params: {
-                _t: new Date().getTime() // Anti-cache timestamp
             }
         });
-        return response;
     },
 
     fetchBalance: async () => {
-        const response = await apiClient.get(API_ROUTES.WALLET.BALANCE);
-        return response.data;
+        return await apiClient.get(API_ROUTES.WALLET.BALANCE);
     }
 };

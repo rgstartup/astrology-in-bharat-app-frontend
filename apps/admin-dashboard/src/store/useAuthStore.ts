@@ -1,31 +1,12 @@
 import { create } from 'zustand';
 import { api } from "@/src/lib/api";
 
-// Cookie helpers
-const getCookie = (name: string) => {
-    if (typeof document === 'undefined') return null;
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()?.split(';').shift();
-    return null;
-};
-
-const setCookie = (name: string, value: string, days: number = 30) => {
-    if (typeof document === 'undefined') return;
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
-};
-
-const deleteCookie = (name: string) => {
-    if (typeof document === 'undefined') return;
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-};
-
 interface User {
     id: number;
     name?: string;
     email?: string;
-    roles?: string[];
+    role?: string;       // Single role from JWT (new format)
+    roles?: string[];    // Array format (backward compat)
     [key: string]: any;
 }
 
@@ -33,7 +14,7 @@ interface AuthState {
     user: User | null;
     isAuthenticated: boolean;
     loading: boolean;
-    login: (token: string, userData?: User) => void;
+    login: (userData?: User) => void;
     logout: () => void;
     refreshAuth: () => Promise<void>;
 }
@@ -43,9 +24,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     isAuthenticated: false,
     loading: true,
 
-    login: (newToken: string, userData?: User) => {
-        // If newToken is provided, we set it (for non-server action flows if any)
-        if (newToken) setCookie('adminAccessToken', newToken);
+    login: (userData?: User) => {
+        // HttpOnly cookies are managed by Server Actions, not client JS
         set({
             isAuthenticated: true,
             user: userData || null,
@@ -84,8 +64,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         }, 10000);
 
         try {
-            console.log("Refreshing admin auth...");
-            let res;
+
+            let res: any;
             try {
                 // Try fetching user profile
                 res = await api.get('/users/me');
@@ -98,10 +78,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 }
             }
 
-            if (res?.data) {
-                console.log("Admin auth successful", res.data);
+            if (res) {
                 set({
-                    user: res.data,
+                    user: res,
                     isAuthenticated: true,
                     loading: false
                 });

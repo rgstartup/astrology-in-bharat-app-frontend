@@ -47,7 +47,7 @@ export default function ClientSettingsPage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await apiClient.get('/client');
+        const res = await apiClient.get('/client/profile');
         const data = res.data;
 
         setFormData({
@@ -119,7 +119,7 @@ export default function ClientSettingsPage() {
 
     try {
       // First, update the profile data
-      await apiClient.patch('/client', formData);
+      await apiClient.patch('/client/profile', formData);
 
       // If there's a profile picture to upload
       const fileInput = document.getElementById('profile-upload') as HTMLInputElement;

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { getApiUrl } from "@/utils/api-config";
 import NextImage from "next/image";
 import * as LucideIcons from "lucide-react";
 import { chatSocket } from "@/libs/socket";
@@ -111,7 +112,7 @@ function ChatRoomContent() {
     const isEndingSession = useRef(false);
 
 
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+    const API_BASE_URL = getApiUrl();
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -156,11 +157,11 @@ function ChatRoomContent() {
         const fetchInitialData = async () => {
             try {
                 // Fetch history
-                const historyRes = await apiClient.get(`/chat/history/${sessionId}`);
+                const historyRes = await apiClient.get<any>(`/chat/history/${sessionId}`);
                 setMessages(historyRes.data);
 
                 // Fetch session details for expiresAt
-                const sessionRes = await apiClient.get(`/chat/session/${sessionId}?_t=${Date.now()}`);
+                const sessionRes = await apiClient.get<any>(`/chat/session/${sessionId}?_t=${Date.now()}`);
                 if (sessionRes.data) {
                     console.log(`[UserChatDebug] Session Data Loaded: Status=${sessionRes.data.status}, maxMinutes=${sessionRes.data.maxMinutes}, isFree=${sessionRes.data.isFree}`);
                     setExpiresAt(sessionRes.data.expiresAt);

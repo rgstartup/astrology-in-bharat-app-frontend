@@ -15,8 +15,9 @@ import AstrologerListHeader from "./AstrologerListHeader";
 import AstrologerFilterModal from "./AstrologerFilterModal";
 
 
-const apiEnvVar = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
-const API_BASE_URL = apiEnvVar ? `${apiEnvVar}/api/v1` : (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:6543/api/v1");
+import { getApiUrl, getBasePath } from "@/utils/api-config";
+
+const API_BASE_URL = getApiUrl();
 
 interface ExpertProfile {
   id: number;
@@ -84,7 +85,7 @@ interface AstrologerListProps {
 const getImageUrl = (path?: string) => {
   if (!path) return "/images/dummy-astrologer.jpg";
   if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
-  return `${API_BASE_URL.replace(/\/api\/v1\/?$/i, "")}/uploads/${path}`;
+  return `${getBasePath()}/uploads/${path}`;
 };
 
 const mapExpert = (item: ExpertProfile): ClientExpertProfile => ({

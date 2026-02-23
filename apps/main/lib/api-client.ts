@@ -1,14 +1,11 @@
 /**
  * Main App API Client — built on safeFetch.
- * - Client-side: uses relative paths (/api/v1/...) which are rewritten by
- *   Next.js to the backend via next.config.js rewrites (proxy).
- * - Server-side: uses NEXT_PUBLIC_API_URL for absolute requests.
- *
- * Token refresh and 401 handling are managed by proxy.ts middleware, so
+ * - Client-side: Uses full URL directly to backend for better cookie handling (CORS).
+ * - Server-side: Uses full URL via NEXT_PUBLIC_API_URL.
  */
 
-import safeFetch, { ApiError } from "@packages/safe-fetch/safeFetch";
-import { API_ROUTES } from "./api-config";
+import safeFetch from "@packages/safe-fetch/safeFetch";
+import { getBasePath } from "../utils/api-config";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -21,15 +18,25 @@ interface RequestOptions {
 
 const isServer = typeof window === "undefined";
 
+/**
+ * Builds the full backend URL.
+ * Always returns absolute URL to ensure browser sends cookies to the backend domain.
+ */
 function buildUrl(path: string): string {
-    if (isServer) {
-        const base = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543")
-            .replace(/\/+$/, "")
-            .replace(/\/api\/v1\/?$/i, "");
-        return `${base}${path.startsWith("/") ? "" : "/"}${path}`;
+    if (path.startsWith("http://") || path.startsWith("https://")) {
+        return path;
     }
-    // Client: use relative path — Next.js rewrite handles proxying
-    return path;
+
+    // Normalize path
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+    // Ensure path has /api/v1 prefix
+    const apiPath = normalizedPath.startsWith("/api/v1")
+        ? normalizedPath
+        : `/api/v1${normalizedPath}`;
+
+    const base = getBasePath(); // From NEXT_PUBLIC_API_URL
+    return `${base}${apiPath}`;
 }
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
@@ -39,7 +46,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
 
     const fetchOptions: RequestInit = {
         method,
-        credentials: "include",
+        credentials: "include", // Essential for sending cookies
         headers: {
             ...(body instanceof FormData ? {} : { "Content-Type": "application/json" }),
             ...headers,

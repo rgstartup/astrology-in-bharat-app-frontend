@@ -31,7 +31,7 @@ export default function AdminLoginForm() {
                 toast.error(result.error);
             } else if (result.success) {
                 // ✅ Login through store (tokens already set as httpOnly)
-                storeLogin("", result.user);
+                storeLogin(result.user);
                 toast.success("Login Successful! Redirecting...");
                 router.push("/admin/dashboard");
             }

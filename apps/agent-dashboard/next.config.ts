@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
         ],
     },
     async rewrites() {
-        const backendUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543")
+        const backendUrl = (process.env.NEXT_PUBLIC_API_URL || "")
             .replace(/\/api\/v1\/?$/, "")
             .replace(/\/+$/, "");
         return [

@@ -20,10 +20,12 @@ export async function adminLoginAction(formData: any) {
         return { error: error.body?.message || error.message || "Login failed" };
     }
 
-    // Admin role check on server
-    const isAdmin = data?.user?.roles?.some(
-        (r: any) => (typeof r === 'string' ? r : r.name).toUpperCase() === "ADMIN"
-    );
+    // Admin role check — supports both new JWT (role) and legacy (roles[])
+    const isAdmin =
+        data?.user?.role === 'admin' ||
+        data?.user?.roles?.some(
+            (r: any) => (typeof r === 'string' ? r : r.name).toUpperCase() === "ADMIN"
+        );
 
     if (!isAdmin) {
         return { error: "Access denied: Not an administrator" };
@@ -33,7 +35,7 @@ export async function adminLoginAction(formData: any) {
     const cookieStore = await cookies();
 
     if (data.accessToken) {
-        cookieStore.set("adminAccessToken", data.accessToken, {
+        cookieStore.set("accessToken", data.accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
@@ -43,7 +45,7 @@ export async function adminLoginAction(formData: any) {
     }
 
     if (data.refreshToken) {
-        cookieStore.set("adminRefreshToken", data.refreshToken, {
+        cookieStore.set("refreshToken", data.refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
@@ -57,9 +59,9 @@ export async function adminLoginAction(formData: any) {
 
 export async function adminLogoutAction() {
     const cookieStore = await cookies();
-    cookieStore.delete("adminAccessToken");
-    cookieStore.delete("adminRefreshToken");
-    cookieStore.delete("accessToken"); // Cleanup legacy
-    cookieStore.delete("refreshToken"); // Cleanup legacy
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
+    cookieStore.delete("adminAccessToken"); // Cleanup legacy
+    cookieStore.delete("adminRefreshToken"); // Cleanup legacy
     return { success: true };
 }

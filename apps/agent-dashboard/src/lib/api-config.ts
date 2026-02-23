@@ -4,15 +4,17 @@
  * NO magic strings anywhere.
  */
 
-const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
+import { getApiUrl, getBasePath } from "../utils/api-config";
+
+const BASE = getApiUrl();
 // Strip trailing /api/v1 if present for safeFetch full-URL usage, if needed
-export const CLEAN_BASE = BASE.replace(/\/api\/v1\/?$/, "");
+export const CLEAN_BASE = getBasePath();
 
 export const API_CONFIG = {
     AUTH: {
-        LOGIN: { url: `${CLEAN_BASE}/api/v1/agent/login`, method: "POST" },
-        LOGOUT: { url: `/agent/logout`, method: "POST" },
-        REFRESH: { url: `${CLEAN_BASE}/api/v1/agent/refresh`, method: "POST" },
+        LOGIN: { url: `${CLEAN_BASE}/api/v1/auth/login`, method: "POST" },
+        LOGOUT: { url: `/auth/logout`, method: "POST" },
+        REFRESH: { url: `${CLEAN_BASE}/api/v1/auth/refresh`, method: "POST" },
         ME: { url: `/agent/profile`, method: "GET" },
     },
     AGENT: {
@@ -27,7 +29,7 @@ export const API_ROUTES = {
     AUTH: {
         LOGIN: API_CONFIG.AUTH.LOGIN.url,
         LOGOUT: API_CONFIG.AUTH.LOGOUT.url,
-        REFRESH: "/agent/refresh",             // local/relative for interceptor check
+        REFRESH: "/auth/refresh",              // local/relative for interceptor check
         ME: API_CONFIG.AUTH.ME.url,
     },
     AGENTS: {

@@ -31,17 +31,17 @@ export interface AddressDto {
 }
 
 export const getClientProfile = async () => {
-    const response = await apiClient.get('/client');
+    const response = await apiClient.get('/client/profile');
     return response.data;
 };
 
 export const updateClientProfile = async (data: Partial<ClientProfileData>) => {
-    const response = await apiClient.patch('/client', data);
+    const response = await apiClient.patch('/client/profile', data);
     return response.data;
 };
 
 export const createClientProfile = async (data: Partial<ClientProfileData>) => {
-    const response = await apiClient.post('/client', data);
+    const response = await apiClient.post('/client/profile', data);
     return response.data;
 };
 

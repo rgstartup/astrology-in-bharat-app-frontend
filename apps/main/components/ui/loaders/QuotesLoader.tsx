@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { getApiUrl } from "@/utils/api-config";
 import safeFetch from "@packages/safe-fetch/safeFetch";
 
 interface Quote {
@@ -36,8 +37,7 @@ export default function QuotesLoader() {
         return;
       }
 
-      const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
-      const [data, err] = await safeFetch<Quote[]>(`${baseUrl}/api/v1/quotes`);
+      const [data, err] = await safeFetch<Quote[]>(`${getApiUrl()}/quotes`);
 
       const quotesData = data ?? [];
       if (!err && Array.isArray(quotesData) && quotesData.length > 0) {
@@ -170,7 +170,7 @@ export default function QuotesLoader() {
       <span className="quote-symbol">”</span>
 
       <img
-        src="http://localhost:3000/images/logo.png"
+        src="/images/logo.png"
         className="quote-img"
         alt="Astrology in Bharat Logo"
       />

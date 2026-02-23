@@ -4,12 +4,12 @@ import React from "react";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { ProductCard } from "@/components/features/shop/ProductCard";
 import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
+import { getBasePath } from "@/utils/api-config";
 
 const WishlistGrid: React.FC = () => {
     const { wishlistItems, expertWishlistItems, isLoading } = useWishlistStore();
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-    const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+    const cleanApiUrl = getBasePath();
 
     const getImageUrl = (path?: string) => {
         if (!path) return "/images/dummy-astrologer.jpg";

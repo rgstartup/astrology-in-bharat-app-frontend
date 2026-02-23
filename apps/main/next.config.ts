@@ -7,10 +7,6 @@ const nextConfig: NextConfig = {
     unoptimized: true,
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost",
-      },
-      {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
@@ -26,14 +22,15 @@ const nextConfig: NextConfig = {
     },
   },
   async rewrites() {
+    const backendUrl = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
     return [
       {
         source: "/api/v1/:path*",
-        destination: `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "")}/api/v1/:path*`, // Proxy to Backend
+        destination: `${backendUrl}/api/v1/:path*`, // Proxy to Backend
       },
       {
         source: "/uploads/:path*",
-        destination: `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "")}/uploads/:path*`, // Proxy to Backend
+        destination: `${backendUrl}/uploads/:path*`, // Proxy to Backend
       },
     ];
   },

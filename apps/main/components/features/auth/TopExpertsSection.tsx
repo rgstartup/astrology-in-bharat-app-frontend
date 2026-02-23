@@ -25,10 +25,11 @@ const TopExpertsSection: React.FC = () => {
         const fetchTopExperts = async () => {
             setExpertsLoading(true);
             try {
-                const response = await apiClient.get('/expert/top-rated?limit=3');
-                setTopExperts(response.data);
+                const response = await apiClient.get<TopExpert[]>('/expert/top-rated?limit=3');
+                setTopExperts(Array.isArray(response) ? response : []);
             } catch (err) {
                 // console.error("Failed to fetch top experts");
+                setTopExperts([]);
             } finally {
                 setExpertsLoading(false);
             }

@@ -5,12 +5,15 @@ import { jwtDecode } from 'jwt-decode';
 interface JwtPayload {
     exp?: number;
     iat?: number;
-    sub?: string;
+    userId?: number;
+    role?: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
+import { getApiUrl } from './src/utils/api-config';
 
-export async function proxy(request: NextRequest) {
+const API_BASE_URL = getApiUrl();
+
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // 0. Only protect dashboard routes
@@ -18,7 +21,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.next();
     }
 
-    // 1. Get Tokens — unified cookie names across all roles; role is in JWT payload
+    // 1. Get Tokens — standard cookie names
     const accessToken = request.cookies.get('accessToken')?.value;
     const refreshToken = request.cookies.get('refreshToken')?.value;
 
@@ -46,7 +49,7 @@ export async function proxy(request: NextRequest) {
     // 4. Token expired or missing — try refresh
     if (refreshToken) {
         try {
-            const refreshRes = await fetch(`${API_BASE_URL}/agent/refresh`, {
+            const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

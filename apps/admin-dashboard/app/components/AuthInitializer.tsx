@@ -11,7 +11,7 @@ export const AuthInitializer = ({
     children: ReactNode,
     initialUser?: any
 }) => {
-    const { login, refreshAuth } = useAuthStore();
+    const { refreshAuth } = useAuthStore();
     const searchParams = useSearchParams();
     const router = useRouter();
     const initializedRef = useRef(false);
@@ -20,17 +20,18 @@ export const AuthInitializer = ({
         if (initializedRef.current) return;
         initializedRef.current = true;
 
-        // 1. Capture tokens from URL (for OAuth/External Login)
+        // 1. Capture OAuth redirect (token in URL means backend already set HttpOnly cookies)
         const token = searchParams.get("token");
         if (token) {
-            login(token);
+            // Clean URL, then refresh auth (cookies are already set by backend)
             const nextUrl = window.location.pathname;
             router.replace(nextUrl);
+            refreshAuth();
             return;
         }
 
         refreshAuth();
-    }, [searchParams, login, refreshAuth, router]);
+    }, [searchParams, refreshAuth, router]);
 
     return <>{children}</>;
 };

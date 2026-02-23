@@ -25,15 +25,15 @@ import { getBasePath, getApiUrl } from '@/src/utils/api-config';
 const API_BASE_URL = getApiUrl();
 const cleanApiBase = getBasePath();
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname, searchParams } = request.nextUrl;
 
     // 0. Protected Routes Check
     const isDashboardRoute = pathname.startsWith('/admin');
 
-    // 1. Get tokens from cookies (admin-specific names)
-    let accessToken = request.cookies.get('adminAccessToken')?.value;
-    const refreshToken = request.cookies.get('adminRefreshToken')?.value;
+    // 1. Get tokens from cookies (standard names)
+    let accessToken = request.cookies.get('accessToken')?.value;
+    const refreshToken = request.cookies.get('refreshToken')?.value;
 
     let shouldRefresh = false;
 
@@ -59,7 +59,7 @@ export async function proxy(request: NextRequest) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Cookie": `adminRefreshToken=${refreshToken}`
+                "Cookie": `refreshToken=${refreshToken}`
             },
         });
 
@@ -68,7 +68,7 @@ export async function proxy(request: NextRequest) {
 
             const nextResponse = NextResponse.next();
             if (accessToken) {
-                nextResponse.cookies.set('adminAccessToken', accessToken, {
+                nextResponse.cookies.set('accessToken', accessToken, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === 'production',
                     sameSite: 'strict',

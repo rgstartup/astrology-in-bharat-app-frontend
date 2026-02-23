@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
+import { getBasePath } from "@/utils/api-config";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore"; // Changed import
 import apiClient, { getClientProfile, applyCoupon } from "@/libs/api-profile";
@@ -66,8 +67,7 @@ const CheckoutContent = () => {
       const fetchDirectProduct = async () => {
         try {
           setLoadingProduct(true);
-          const rawUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-          const baseUrl = rawUrl.replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
+          const baseUrl = getBasePath();
           const res = await fetch(`${baseUrl}/api/v1/products/${buyNowInfo.productId}`);
           if (res.ok) {
             const data = await res.json();
@@ -203,7 +203,7 @@ const CheckoutContent = () => {
           };
           console.log("📦 Sending Order Payload:", orderPayload);
 
-          const createOrderRes = await apiClient.post("/order", orderPayload);
+          const createOrderRes = await apiClient.post<any>("/order", orderPayload);
           dbOrderId = createOrderRes.data.id;
 
           // Clear buyNowItem if order is successfully created
@@ -218,7 +218,7 @@ const CheckoutContent = () => {
       }
 
       // 3. Initiate Payment
-      const orderRes = await apiClient.post("/payment/orders/create", {
+      const orderRes = await apiClient.post<any>("/payment/orders/create", {
         amount: total,
         type: isOrder ? 'product' : 'consultation',
         couponCode: appliedCoupon?.code, // Pass coupon code to backend for tracking
@@ -243,7 +243,7 @@ const CheckoutContent = () => {
         handler: async (response: any) => {
           try {
             // 4. Verify Payment on Backend
-            const verifyRes = await apiClient.post("/payment/orders/verify", {
+            const verifyRes = await apiClient.post<any>("/payment/orders/verify", {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,

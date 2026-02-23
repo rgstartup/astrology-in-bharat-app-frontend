@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { getBasePath } from "@/utils/api-config";
 import ProductsCarousel from "@/components/features/shop/ProductsCarousel";
 import { Button, Form } from "react-bootstrap";
 import { useCartStore } from "@/store/useCartStore"; // Changed import
@@ -68,8 +69,7 @@ const CartPage: React.FC = () => {
             <div className="col-lg-8">
               <div className="bg-white rounded shadow-sm p-4">
                 {cartItems.map((item) => {
-                  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-                  const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+                  const cleanApiUrl = getBasePath();
 
                   // Handle property mismatch (backend might send 'image' or 'imageUrl')
                   const productImg = item.product?.image || (item.product as any)?.imageUrl;

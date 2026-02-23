@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { PATHS } from "@repo/routes";
+import { getBasePath } from "@/utils/api-config";
 
 const NextLink = Link as any;
 
@@ -106,8 +107,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                             const formatImageUrl = (url: string) => {
                                                 if (!url) return "/images/no-image.png";
                                                 if (url.startsWith("http")) return url;
-                                                const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
-                                                const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
+                                                const cleanApiUrl = getBasePath();
                                                 if (url.startsWith("/uploads/")) return `${cleanApiUrl}${url}`;
                                                 if (url.startsWith("/")) return url;
                                                 return `${cleanApiUrl}/uploads/${url}`;

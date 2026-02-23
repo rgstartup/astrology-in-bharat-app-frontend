@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getApiUrl } from "@/utils/api-config";
 
 // --- Types ---
 interface VerificationResponse {
@@ -12,8 +13,7 @@ interface VerificationResponse {
 }
 
 // --- API ---
-const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
-const API_ENDPOINT = `${apiBase}/api/v1/auth/email/verify`;
+const API_ENDPOINT = `${getApiUrl()}/auth/email/verify`;
 
 // Disable static generation for this page
 export const dynamic = 'force-dynamic';

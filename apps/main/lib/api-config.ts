@@ -5,17 +5,19 @@
  * Usage: apiClient.request(API_CONFIG.AUTH.LOGIN)
  */
 
-const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
+import { getApiUrl, getBasePath } from "@/utils/api-config";
+
+const BASE = getApiUrl();
 // Strip trailing /api/v1 if present, for safeFetch full-URL usage
-export const CLEAN_BASE = BASE.replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
+export const CLEAN_BASE = getBasePath();
 
 export const API_CONFIG = {
     AUTH: {
-        LOGIN: { url: `${CLEAN_BASE}/api/v1/auth/client/login`, method: "POST" },
+        LOGIN: { url: `${CLEAN_BASE}/api/v1/auth/login`, method: "POST" },
         REGISTER: { url: `${CLEAN_BASE}/api/v1/auth/email/register`, method: "POST" },
-        LOGOUT: { url: "auth/client-logout", method: "POST" },
+        LOGOUT: { url: "auth/logout", method: "POST" },
         REFRESH: { url: `${CLEAN_BASE}/api/v1/auth/refresh`, method: "POST" },
-        ME: { url: "client", method: "GET" },
+        ME: { url: "client/profile", method: "GET" },
         GOOGLE_LOGIN: { url: `${CLEAN_BASE}/api/v1/auth/google/login`, method: "GET" },
     },
     WALLET: {
@@ -38,8 +40,8 @@ export const API_CONFIG = {
         REMOVE: { url: "cart/remove", method: "DELETE" },
     },
     CLIENT: {
-        PROFILE: { url: "client", method: "GET" },
-        UPDATE: { url: "client", method: "PATCH" },
+        PROFILE: { url: "client/profile", method: "GET" },
+        UPDATE: { url: "client/profile", method: "PATCH" },
         PICTURE: { url: "client/picture", method: "PATCH" },
     },
     EXPERT: {

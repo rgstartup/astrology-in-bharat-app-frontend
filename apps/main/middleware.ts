@@ -5,12 +5,15 @@ import { jwtDecode } from 'jwt-decode';
 interface JwtPayload {
     exp?: number;
     iat?: number;
-    sub?: string;
+    userId?: number;
+    role?: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
+import { getApiUrl } from '@/utils/api-config';
 
-export async function proxy(request: NextRequest) {
+const API_BASE_URL = getApiUrl();
+
+export async function middleware(request: NextRequest) {
     const { pathname, searchParams } = request.nextUrl;
 
     // 0. Protected Routes
@@ -94,7 +97,7 @@ export async function proxy(request: NextRequest) {
                     nextResponse.cookies.set('accessToken', newAccessToken, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production',
-                        sameSite: 'strict',
+                        sameSite: 'lax' as const,
                         path: '/',
                         maxAge: 60 * 60 * 24 * 7,
                     });

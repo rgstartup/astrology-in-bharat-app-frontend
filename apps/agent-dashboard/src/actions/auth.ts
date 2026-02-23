@@ -5,8 +5,7 @@ import { API_CONFIG } from "../lib/api-config";
 
 // ─────────────────────────────────────────────────────────
 // LOGIN — Server Action
-// Cookie names: unified "accessToken" / "refreshToken" for all roles.
-// Role is embedded inside the JWT payload — no need for separate cookie names.
+// Cookie names: standard "accessToken" / "refreshToken".
 // ─────────────────────────────────────────────────────────
 export async function agentLoginAction(data: any) {
     try {
@@ -35,7 +34,7 @@ export async function agentLoginAction(data: any) {
             return { success: false, error: "Login failed — no token in response" };
         }
 
-        // ✅ Unified cookie names — role is read from JWT, not from cookie name
+        // ✅ Standard cookie names — matches backend
         const cookieStore = await cookies();
 
         cookieStore.set("accessToken", accessToken, {
@@ -68,14 +67,18 @@ export async function agentLoginAction(data: any) {
 
 // ─────────────────────────────────────────────────────────
 // LOGOUT — Server Action
-// Clears unified cookie names
+// Clears standard cookie names
 // ─────────────────────────────────────────────────────────
 export async function agentLogoutAction() {
     const cookieStore = await cookies();
 
-    // Clear unified cookie names
+    // Clear standard cookies
     cookieStore.delete("accessToken");
     cookieStore.delete("refreshToken");
+
+    // Clear legacy role-specific cookies (cleanup)
+    cookieStore.delete("agentAccessToken");
+    cookieStore.delete("agentRefreshToken");
 
     return { success: true };
 }

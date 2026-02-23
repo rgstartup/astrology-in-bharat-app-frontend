@@ -2,8 +2,9 @@ import React from "react";
 import AstrologerDetailsClient from "@/components/features/astrologers/AstrologerDetailsClient";
 import { notFound } from "next/navigation";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:6543/api/v1";
+import { getApiUrl } from "@/utils/api-config";
+
+const API_BASE_URL = getApiUrl();
 
 interface ExpertData {
   id: number;

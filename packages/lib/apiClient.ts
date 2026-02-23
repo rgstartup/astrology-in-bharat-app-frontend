@@ -9,7 +9,7 @@
  * - Token refresh itself is idempotent; concurrent 401s are queued.
  */
 
-const getRawUrl = () => process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+const getRawUrl = () => process.env.NEXT_PUBLIC_API_URL || "";
 const API_BASE_URL =
     getRawUrl().replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "") + "/api/v1";
 

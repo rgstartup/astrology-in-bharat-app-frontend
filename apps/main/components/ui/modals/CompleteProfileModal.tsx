@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { getApiUrl } from "@/utils/api-config";
 
 interface AddressDto {
   line1: string;
@@ -31,8 +32,7 @@ const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({
   onSkip,
 }) => {
   const router = useRouter();
-  const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
-  const API_ENDPOINT = `${baseUrl}/api/v1/client/profile`;
+  const API_ENDPOINT = `${getApiUrl()}/client/profile`;
 
   const [formData, setFormData] = useState<ProfileFormData>({
     gender: "",

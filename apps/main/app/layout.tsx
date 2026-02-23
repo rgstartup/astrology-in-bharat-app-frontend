@@ -45,10 +45,12 @@ export default async function RootLayout({
 
   if (token) {
     try {
-      const res = await AuthService.fetchProfile({
+      // Pass both header and cookie to support different backend auth strategies
+      const res: any = await AuthService.fetchProfile({
         Authorization: `Bearer ${token}`,
+        Cookie: `accessToken=${token}`
       });
-      user = res.data.user || (res.data.id ? res.data : null);
+      user = res?.user || (res?.id ? res : null);
     } catch (err: any) {
       console.error("[RootLayout] Server-side auth check failed:", err.message);
     }

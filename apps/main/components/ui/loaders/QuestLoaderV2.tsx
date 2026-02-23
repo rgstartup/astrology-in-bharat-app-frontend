@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { getApiUrl } from "@/utils/api-config";
 import safeFetch from "@packages/safe-fetch/safeFetch";
 
 interface Quote {
@@ -22,8 +23,7 @@ export default function QuotesLoaderV2() {
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
-        const [data] = await safeFetch<Quote[]>(`${baseUrl}/api/v1/quotes`);
+        const [data] = await safeFetch<Quote[]>(`${getApiUrl()}/quotes`);
         if (Array.isArray(data) && data.length > 0) {
           setQuotes(data);
           const randomQuote = data[Math.floor(Math.random() * data.length)];

@@ -4,6 +4,7 @@ import NextLink from "next/link";
 const Link = NextLink as any;
 import React, { useState, FormEvent, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getApiUrl } from "@/utils/api-config";
 import { toast } from "react-toastify";
 
 const ResetPasswordContent: React.FC = () => {
@@ -45,8 +46,7 @@ const ResetPasswordContent: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
-            const API_URL = `${apiBase}/api/v1/auth/reset/password?token=${token}`;
+            const API_URL = `${getApiUrl()}/auth/reset/password?token=${token}`;
             const res = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

@@ -1,8 +1,8 @@
 export const API_ROUTES = {
     AUTH: {
-        LOGIN: '/agent/login',
-        LOGOUT: '/agent/logout',
-        REFRESH: '/agent/refresh',
+        LOGIN: '/auth/login',
+        LOGOUT: '/auth/logout',
+        REFRESH: '/auth/refresh',
         ME: '/agent/profile',
     },
     AGENTS: {

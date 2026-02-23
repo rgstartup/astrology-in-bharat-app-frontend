@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { getApiUrl } from "@/utils/api-config";
 import NextImage from "next/image";
 import * as LucideIcons from "lucide-react";
 import apiClient from "@/libs/api-profile";
@@ -26,7 +27,7 @@ interface AstrologerData {
     is_available: boolean;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+const API_BASE_URL = getApiUrl();
 
 export default function ConsultationPrep() {
     const params = useParams();
@@ -87,7 +88,7 @@ export default function ConsultationPrep() {
         setShowSecurityModal(false);
         setActionLoading(true);
         try {
-            const response = await apiClient.post("/chat/initiate", { expertId: parseInt(id) });
+            const response = await apiClient.post<any>("/chat/initiate", { expertId: parseInt(id) });
             if (response.data && response.data.id) {
                 // Save to localStorage for the global floating button
                 localStorage.setItem('activeChatSession', JSON.stringify({

@@ -6,9 +6,9 @@ const Image = NextImage as any;
 const Link = NextLink as any;
 import React, { useState, useCallback, FormEvent, Suspense } from "react";
 import { toast } from "react-toastify";
+import { getApiUrl } from "@/utils/api-config";
 
-const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
-const API_ENDPOINT = `${apiBase}/api/v1/auth/forgot/password`;
+const API_ENDPOINT = `${getApiUrl()}/auth/forgot/password`;
 
 const ForgotPasswordContent: React.FC = () => {
     const [email, setEmail] = useState("");
