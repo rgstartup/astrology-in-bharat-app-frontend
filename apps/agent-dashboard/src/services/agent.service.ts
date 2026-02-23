@@ -28,8 +28,27 @@ export interface CreateListingPayload {
     items?: string;          // puja_shop
 }
 
-export const getAgentListings = async (params?: ListingParams) => {
-    return apiClient.get(API_ROUTES.AGENTS.LISTINGS, params as Record<string, any>);
+export interface ListingItem {
+    id?: string;
+    _id?: string;
+    name: string;
+    status: string;
+    specialization?: string;
+    location?: string;
+    phone?: string;
+    createdAt?: string;
+    [key: string]: any;
+}
+
+export interface ListingsResponse {
+    data: ListingItem[];
+    total?: number;
+    page?: number;
+    limit?: number;
+}
+
+export const getAgentListings = async (params?: ListingParams): Promise<ListingsResponse> => {
+    return apiClient.get<ListingsResponse>(API_ROUTES.AGENTS.LISTINGS, params as Record<string, any>);
 };
 
 export const createListing = async (payload: CreateListingPayload) => {
