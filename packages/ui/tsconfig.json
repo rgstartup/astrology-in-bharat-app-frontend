@@ -1,7 +1,12 @@
 {
   "extends": "@repo/typescript-config/react-library.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@repo/safe-fetch": ["../safe-fetch/index.ts"],
+      "@repo/safe-fetch/*": ["../safe-fetch/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

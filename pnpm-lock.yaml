@@ -517,6 +517,15 @@ importers:
         specifier: 5.8.3
         version: 5.8.3
 
+  packages/safe-fetch:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+
   packages/styles: {}
 
   packages/typescript-config: {}
@@ -560,6 +569,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@repo/safe-fetch':
+        specifier: workspace:*
+        version: link:../safe-fetch
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config

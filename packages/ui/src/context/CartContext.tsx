@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
-import safeFetch from "@packages/safe-fetch/safeFetch";
+import { safeFetch } from "@repo/safe-fetch";
 import { toast } from "react-toastify";
 import { useClientAuth } from "./ClientAuthContext";
 
