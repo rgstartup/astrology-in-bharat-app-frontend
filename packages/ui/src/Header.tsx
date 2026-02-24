@@ -557,9 +557,9 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                   <span className="navbar-toggler-icon"></span>
                 </button>
                 <div
-                  className={`flex-grow-1 ${isMenuOpen ? "d-block position-absolute bg-white w-100 start-0 shadow-sm border-top" : "d-none d-lg-flex align-items-center justify-content-center"}`}
+                  className={`flex-grow-1 ${isMenuOpen ? "d-block position-absolute bg-white w-100 start-0 shadow-sm border-top no-scrollbar" : "d-none d-lg-flex align-items-center justify-content-center"}`}
                   id="navbarSupportedContent"
-                  style={isMenuOpen ? { top: '100%', zIndex: 1000 } : { zIndex: 1000 }}
+                  style={isMenuOpen ? { top: '100%', zIndex: 1000, maxHeight: '80vh', overflowY: 'auto' } : { zIndex: 1000 }}
                 >
                   <ul
                     className={`navbar-nav mx-auto top-menu-main d-flex align-items-center gap-2 gap-xl-4 ${isMenuOpen
