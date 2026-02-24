@@ -8,7 +8,7 @@ import { getApiUrl } from "@/src/utils/api-config";
 const API_BASE_URL = getApiUrl();
 
 export async function adminLoginAction(formData: any) {
-    const [data, error] = await safeFetch<any>(`${API_BASE_URL}/auth/login`, {
+    const [data, error] = await safeFetch<any>(`${API_BASE_URL}/auth/email/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

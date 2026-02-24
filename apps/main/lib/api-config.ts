@@ -13,7 +13,7 @@ export const CLEAN_BASE = getBasePath();
 
 export const API_CONFIG = {
     AUTH: {
-        LOGIN: { url: `${CLEAN_BASE}/api/v1/auth/login`, method: "POST" },
+        LOGIN: { url: `${CLEAN_BASE}/api/v1/auth/email/login`, method: "POST" },
         REGISTER: { url: `${CLEAN_BASE}/api/v1/auth/email/register`, method: "POST" },
         LOGOUT: { url: "auth/logout", method: "POST" },
         REFRESH: { url: `${CLEAN_BASE}/api/v1/auth/refresh`, method: "POST" },

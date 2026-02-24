@@ -13,12 +13,14 @@ import { toast } from "react-toastify";
 import safeFetch from "@packages/safe-fetch/safeFetch";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+type QueryParams = Record<string, string | number | boolean | null | undefined>;
 
 interface RequestOptions {
     method?: HttpMethod;
     body?: Record<string, unknown> | FormData | null;
     headers?: Record<string, string>;
     timeoutMs?: number;
+    params?: QueryParams;
 }
 
 const ADMIN_LOGIN_PATHS = ["/", "/admin", "/admin/login"];
@@ -29,9 +31,25 @@ function isOnLoginPage(): boolean {
 }
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-    const { method = "GET", body = null, headers = {}, timeoutMs = 30000 } = options;
+    const { method = "GET", body = null, headers = {}, timeoutMs = 30000, params } = options;
 
-    const [data, error] = await safeFetch<T>(path, {
+    const normalizePath = (inputPath: string) => {
+        if (inputPath.startsWith("http://") || inputPath.startsWith("https://")) return inputPath;
+        const normalized = inputPath.startsWith("/") ? inputPath : `/${inputPath}`;
+        return normalized.startsWith("/api/v1") ? normalized : `/api/v1${normalized}`;
+    };
+
+    const appendParams = (url: string, query?: QueryParams) => {
+        if (!query) return url;
+        const entries = Object.entries(query).filter(([, value]) => value !== undefined && value !== null);
+        if (entries.length === 0) return url;
+        const search = new URLSearchParams(entries.map(([k, v]) => [k, String(v)])).toString();
+        return `${url}${url.includes("?") ? "&" : "?"}${search}`;
+    };
+
+    const url = appendParams(normalizePath(path), params);
+
+    const [data, error] = await safeFetch<T>(url, {
         method,
         credentials: "include",
         headers: {
@@ -45,7 +63,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     if (error) {
         const status = (error as any)?.status;
         if (status === 401) {
-            const backendMessage = (error as any)?.data?.message;
+            const backendMessage = (error as any)?.body?.message || (error as any)?.data?.message;
             if (backendMessage && typeof backendMessage === "string") {
                 toast.error(backendMessage, { toastId: "admin-auth-error" });
             }
@@ -56,7 +74,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
         throw error;
     }
 
-    return data as T;
+    return { data: data as T, status: 200 } as any;
 }
 
 export const api = {

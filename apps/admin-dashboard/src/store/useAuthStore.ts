@@ -71,16 +71,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 res = await api.get('/users/me');
             } catch (firstErr: any) {
                 // If 401/404, try with admin prefix just in case
-                if (firstErr.response?.status === 404) {
+                const status = firstErr?.status ?? firstErr?.response?.status;
+                if (status === 404) {
                     res = await api.get('/admin/users/me');
                 } else {
                     throw firstErr;
                 }
             }
 
-            if (res) {
+            const userPayload = res?.data ?? res;
+            if (userPayload) {
                 set({
-                    user: res,
+                    user: userPayload,
                     isAuthenticated: true,
                     loading: false
                 });
@@ -88,7 +90,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 throw new Error("No user data");
             }
         } catch (err: any) {
-            console.error("Auth refresh failed:", err.response?.data?.message || err.message);
+            console.error("Auth refresh failed:", err?.body?.message || err?.response?.data?.message || err.message);
             set({ isAuthenticated: false, user: null, loading: false });
         } finally {
             clearTimeout(safetyTimeout);

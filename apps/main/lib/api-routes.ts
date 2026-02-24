@@ -1,6 +1,6 @@
 export const API_ROUTES = {
     AUTH: {
-        LOGIN: '/auth/login', // Verify endpoint
+        LOGIN: '/auth/email/login',
         LOGOUT: '/auth/logout',
         REFRESH: '/auth/refresh',
         ME: '/client/profile',
