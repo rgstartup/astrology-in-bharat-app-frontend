@@ -1,5 +1,7 @@
 import { apiClient } from "../lib/api-client";
 
+const unwrap = <T = any>(response: any): T => (response as any)?.data ?? response;
+
 export interface ClientProfileData {
     id?: number;
     userId?: number;
@@ -26,98 +28,99 @@ export interface AddressDto {
     city: string;
     state: string;
     country: string;
-    zipCode: string;
+    zipCode?: string;
+    zip_code?: string;
     tag?: string;
 }
 
 export const getClientProfile = async () => {
     const response = await apiClient.get('/client/profile');
-    return response.data;
+    return (response as any)?.data ?? response;
 };
 
 export const updateClientProfile = async (data: Partial<ClientProfileData>) => {
     const response = await apiClient.patch('/client/profile', data);
-    return response.data;
+    return (response as any)?.data ?? response;
 };
 
 export const createClientProfile = async (data: Partial<ClientProfileData>) => {
     const response = await apiClient.post('/client/profile', data);
-    return response.data;
+    return (response as any)?.data ?? response;
 };
 
 export const uploadClientDocument = async (file: File): Promise<{ url: string; message: string }> => {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await apiClient.post('/client/upload-document', formData);
-    return response.data;
+    const response = await apiClient.post('/client/profile/upload-document', formData);
+    return ((response as any)?.data ?? response) as { url: string; message: string };
 };
 
 export const getActiveChatSessions = async () => {
     const response = await apiClient.get('/chat/sessions/pending');
-    return response.data;
+    return unwrap(response);
 };
 
 export const getPendingChatSessions = async () => {
     const response = await apiClient.get('/chat/sessions/pending');
-    return response.data;
+    return unwrap(response);
 };
 
 export const endChatSession = async (sessionId: number) => {
     const response = await apiClient.post(`/chat/end/${sessionId}`);
-    return response.data;
+    return unwrap(response);
 };
 
 export const getAllChatSessions = async () => {
     const response = await apiClient.get('/chat/sessions/my-sessions');
-    return response.data;
+    return unwrap(response);
 };
 
 export const getChatHistory = async (sessionId: number) => {
     const response = await apiClient.get(`/chat/history/${sessionId}`);
-    return response.data;
+    return unwrap(response);
 };
 
 
 export const getMyOrders = async () => {
     const response = await apiClient.get('/orders/my-orders');
-    return response.data;
+    return unwrap(response);
 };
 
 export const getWalletTransactions = async (params?: { purpose?: string, page?: number, limit?: number }) => {
     const response = await apiClient.get('/wallet/transactions', { params });
-    return response.data;
+    return (response as any)?.data ?? response;
 };
 
 export const getNotifications = async () => {
     const response = await apiClient.get('/notifications');
-    return response.data;
+    return unwrap(response);
 };
 
 export const getUnreadCount = async () => {
     const response = await apiClient.get('/notifications/unread-count');
-    return response.data;
+    return unwrap(response);
 };
 
 export const markNotificationAsRead = async (id: number) => {
     const response = await apiClient.patch(`/notifications/${id}/read`);
-    return response.data;
+    return unwrap(response);
 };
 
 export const deleteNotification = async (id: number) => {
     const response = await apiClient.delete(`/notifications/${id}`);
-    return response.data;
+    return unwrap(response);
 };
 
 export const clearAllNotifications = async () => {
     const response = await apiClient.delete('/notifications/all');
-    return response.data;
+    return unwrap(response);
 };
 
 // Rewards & Coupons
 export const getMyRewards = async () => {
     const response = await apiClient.get('/coupons/my-rewards');
-    return response.data;
+    return unwrap(response);
 };
 
 export const applyCoupon = async (code: string, amount: number, serviceType: string) => {
@@ -128,7 +131,7 @@ export const applyCoupon = async (code: string, amount: number, serviceType: str
         orderValue: amount,
         serviceType
     });
-    return response.data;
+    return unwrap(response);
 };
 
 // Support Settings
@@ -140,7 +143,7 @@ export interface SupportSettings {
 
 export const getSupportSettings = async (): Promise<SupportSettings> => {
     const response = await apiClient.get('/settings/support');
-    return response.data;
+    return unwrap(response);
 };
 
 // Disputes / Support Tickets
@@ -156,32 +159,32 @@ export interface CreateDisputeDto {
 
 export const createDispute = async (data: CreateDisputeDto) => {
     const response = await apiClient.post('/support/disputes', data);
-    return response.data;
+    return unwrap(response);
 };
 
 export const getMyDisputes = async () => {
     const response = await apiClient.get('/support/disputes');
-    return response.data;
+    return unwrap(response);
 };
 
 export const getDisputeById = async (disputeId: number) => {
     const response = await apiClient.get(`/support/disputes/${disputeId}`);
-    return response.data;
+    return unwrap(response);
 };
 
 export const getDisputeMessages = async (disputeId: number) => {
     const response = await apiClient.get(`/support/disputes/${disputeId}/messages`);
-    return response.data;
+    return unwrap(response);
 };
 
 export const sendDisputeMessage = async (disputeId: number, data: { message?: string, attachmentUrl?: string, attachmentType?: string }) => {
     const response = await apiClient.post(`/support/disputes/${disputeId}/messages`, data);
-    return response.data;
+    return unwrap(response);
 };
 
 export const markDisputeMessagesRead = async (disputeId: number) => {
     const response = await apiClient.patch(`/support/disputes/${disputeId}/messages/read`);
-    return response.data;
+    return unwrap(response);
 };
 
 export default apiClient;

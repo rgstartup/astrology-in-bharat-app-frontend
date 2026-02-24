@@ -298,10 +298,12 @@ const WalletTab: React.FC<WalletTabProps> = ({
                                                 return (
                                                     <tr key={tx.id || idx} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                                                         <td className="px-6 py-4 text-gray-600">
-                                                            {tx.createdAt ? new Date(tx.createdAt).toLocaleDateString('en-IN') : 'N/A'}
+                                                            {(tx.createdAt || tx.created_at)
+                                                                ? new Date(tx.createdAt || tx.created_at).toLocaleDateString('en-IN')
+                                                                : 'N/A'}
                                                         </td>
                                                         <td className="px-6 py-4 font-medium text-gray-800">
-                                                            {tx.description || tx.reason || 'Wallet Transaction'}
+                                                            {tx.description || tx.reason || tx.purpose || 'Wallet Transaction'}
                                                         </td>
                                                         <td className="px-6 py-4 text-center">
                                                             <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${tx.type?.toLowerCase() === 'debit' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>

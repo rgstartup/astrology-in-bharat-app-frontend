@@ -12,6 +12,11 @@ interface JwtPayload {
 import { getApiUrl } from '@/utils/api-config';
 
 const API_BASE_URL = getApiUrl();
+const debug = (...args: unknown[]) => {
+    if (process.env.NODE_ENV !== 'production') {
+        console.log('[AuthDebug][middleware]', ...args);
+    }
+};
 
 export async function middleware(request: NextRequest) {
     const { pathname, searchParams } = request.nextUrl;
@@ -24,8 +29,15 @@ export async function middleware(request: NextRequest) {
     // Backend sends: accessToken, refreshToken (exact names — no fallbacks)
     const urlAccessToken = searchParams.get('accessToken');
     const urlRefreshToken = searchParams.get('refreshToken');
+    debug('request', {
+        pathname,
+        isProtectedRoute,
+        hasUrlAccessToken: Boolean(urlAccessToken),
+        hasUrlRefreshToken: Boolean(urlRefreshToken),
+    });
 
     if (urlAccessToken) {
+        debug('social callback tokens found, setting cookies and redirecting clean URL');
         const nextUrl = new URL(pathname, request.url);
         // Clear search params to clean URL
         nextUrl.searchParams.delete('accessToken');
@@ -49,6 +61,10 @@ export async function middleware(request: NextRequest) {
     // 2. Cookie Logic
     let accessToken = request.cookies.get('accessToken')?.value;
     const refreshToken = request.cookies.get('refreshToken')?.value;
+    debug('cookie snapshot', {
+        hasAccessToken: Boolean(accessToken),
+        hasRefreshToken: Boolean(refreshToken),
+    });
 
     let shouldRefresh = false;
 
@@ -68,6 +84,8 @@ export async function middleware(request: NextRequest) {
                 if (refreshToken) shouldRefresh = true;
             }
         } catch {
+            debug('refresh request threw network/error');
+            debug('access token decode failed, will consider refresh');
             // Malformed token — try refresh
             if (refreshToken) shouldRefresh = true;
         }
@@ -75,24 +93,30 @@ export async function middleware(request: NextRequest) {
         // No access token but have refresh token -> Refresh
         shouldRefresh = true;
     }
+    debug('token evaluation', {
+        shouldRefresh,
+        hasAccessToken: Boolean(accessToken),
+        hasRefreshToken: Boolean(refreshToken),
+    });
 
     // 4. Refresh Logic (Server Side)
     if (shouldRefresh && refreshToken) {
         try {
             // Use fetch for server-side call
             const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh`, {
-                method: 'POST',
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Cookie': `refreshToken=${refreshToken}`
                 }
             });
+            debug('refresh response', { status: refreshRes.status, ok: refreshRes.ok });
 
             if (refreshRes.ok) {
                 const data = await refreshRes.json();
                 const newAccessToken = data.accessToken;
 
                 if (newAccessToken) {
+                    debug('refresh success, issuing new access token cookie');
                     const nextResponse = NextResponse.next();
                     nextResponse.cookies.set('accessToken', newAccessToken, {
                         httpOnly: true,
@@ -107,6 +131,7 @@ export async function middleware(request: NextRequest) {
                     return nextResponse;
                 }
             } else {
+                debug('refresh failed with non-ok status');
                 // Refresh endpoint returned non-OK status
                 // Will fall through to Final Guard
             }
@@ -120,13 +145,14 @@ export async function middleware(request: NextRequest) {
         if (!accessToken) {
             // If we failed to get accessToken and refresh failed
             if (refreshToken && shouldRefresh) {
+                debug('redirecting to sign-in: refresh attempted but no access token');
                 // Refresh failed, so redirect
                 const loginUrl = new URL('/sign-in', request.url);
                 loginUrl.searchParams.set('callbackUrl', pathname);
                 return NextResponse.redirect(loginUrl);
             }
 
-            // No tokens at all
+            debug('redirecting to sign-in: no tokens');
             const loginUrl = new URL('/sign-in', request.url);
             loginUrl.searchParams.set('callbackUrl', pathname);
             return NextResponse.redirect(loginUrl);
@@ -142,6 +168,7 @@ export async function middleware(request: NextRequest) {
         }
 
         if (isExpired) {
+            debug('redirecting to sign-in: access token expired');
             // Expired and refresh failed or didn't happen
             const loginUrl = new URL('/sign-in', request.url);
             loginUrl.searchParams.set('callbackUrl', pathname);

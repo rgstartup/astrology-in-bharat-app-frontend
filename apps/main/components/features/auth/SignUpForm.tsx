@@ -58,7 +58,8 @@ const SignUpForm: React.FC = () => {
 
     const handleGoogleLogin = () => {
         // Redirect to backend Google OAuth — browser handles cookie automatically
-        const googleLoginUrl = `${API_CONFIG.AUTH.GOOGLE_LOGIN.url}?role=client&redirect_uri=${window.location.origin}`;
+        const redirectUri = `${window.location.origin}/profile`;
+        const googleLoginUrl = `${API_CONFIG.AUTH.GOOGLE_LOGIN.url}?role=client&redirect_uri=${encodeURIComponent(redirectUri)}`;
         window.location.href = googleLoginUrl;
     };
 
@@ -244,3 +245,4 @@ const SignUpForm: React.FC = () => {
 };
 
 export default SignUpForm;
+

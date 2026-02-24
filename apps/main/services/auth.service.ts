@@ -19,9 +19,6 @@ export const AuthService = {
         return await apiClient.get(API_ROUTES.AUTH.ME, {
             headers: {
                 ...serverHeaders,
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0'
             }
         });
     },

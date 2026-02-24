@@ -18,6 +18,12 @@ export default function UserWalletPage() {
 
     const rechargeOptions = [100, 200, 500, 1000, 2000, 5000];
 
+    useEffect(() => {
+        if (isClientAuthenticated) {
+            refreshBalance();
+        }
+    }, [isClientAuthenticated, refreshBalance]);
+
     const handleRecharge = async () => {
         if (rechargeAmount < 10) {
             toast.error("Minimum recharge amount is ₹10");

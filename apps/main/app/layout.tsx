@@ -64,7 +64,7 @@ export default async function RootLayout({
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
         />
       </head>
-      <body className="min-h-screen bg-white text-black">
+      <body className="min-h-screen bg-white text-black" suppressHydrationWarning>
         <AuthInitializer initialUser={user}>
           <CartInitializer>
             <WishlistInitializer>

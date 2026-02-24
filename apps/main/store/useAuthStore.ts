@@ -1,5 +1,10 @@
 import { create } from "zustand";
 import { AuthService, ClientUser } from "../services/auth.service";
+const authDebug = (...args: unknown[]) => {
+    if (process.env.NODE_ENV !== "production") {
+        console.log("[AuthDebug][store]", ...args);
+    }
+};
 
 interface AuthState {
     clientUser: ClientUser | null;
@@ -26,9 +31,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // ───────────────────────────────────────────────────────────────────
     clientLogin: (userData?: ClientUser) => {
         if (userData) {
-            set({ clientUser: userData, isClientAuthenticated: true });
+            set({ clientUser: userData, isClientAuthenticated: true, clientLoading: false });
         }
-        set({ isClientAuthenticated: true });
+        set({ isClientAuthenticated: true, clientLoading: false });
 
         // Fetch balance after login
         get().refreshBalance();
@@ -73,8 +78,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     refreshBalance: async () => {
         try {
-            const balance = await AuthService.fetchBalance();
-            set({ clientBalance: balance });
+            const balanceRes: any = await AuthService.fetchBalance();
+            const raw = balanceRes?.data ?? balanceRes;
+
+            let parsed = 0;
+            if (typeof raw === "number") {
+                parsed = raw;
+            } else if (typeof raw === "string") {
+                const n = Number(raw);
+                parsed = Number.isFinite(n) ? n : 0;
+            } else if (raw && typeof raw === "object") {
+                const candidate = raw.balance ?? raw.amount ?? raw.walletBalance;
+                const n = Number(candidate);
+                parsed = Number.isFinite(n) ? n : 0;
+            }
+
+            set({ clientBalance: parsed });
         } catch {
             // Silently fail — balance is non-critical
         }
@@ -84,51 +103,84 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         if (!get().isClientAuthenticated) {
             set({ clientLoading: true });
         }
+        authDebug("refreshAuth:start", {
+            isClientAuthenticated: get().isClientAuthenticated,
+            hasClientUser: Boolean(get().clientUser),
+        });
 
         try {
-            const res = await AuthService.fetchProfile();
+            const res: any = await AuthService.fetchProfile();
+            // Support both shapes:
+            // 1) direct payload (safeFetch-based apiClient)
+            // 2) wrapped payload { status, data }
+            const raw = res?.data ?? res;
+            let user: ClientUser | null = null;
+            authDebug("refreshAuth:response", {
+                hasResponse: Boolean(res),
+                isNullRaw: raw == null,
+                rawType: typeof raw,
+                hasRawUser: Boolean(raw?.user),
+                hasRawId: Boolean(raw?.id),
+            });
 
-            if (res.status === 200) {
-                const raw = res.data;
-                let user: ClientUser | null = null;
+            if (raw?.user?.id) {
+                user = {
+                    id: raw.user.id,
+                    name: raw.user.name,
+                    email: raw.user.email,
+                    roles: raw.user.roles || [],
+                    avatar: raw.user.avatar,
+                };
+            } else if (raw?.id) {
+                user = {
+                    id: raw.id,
+                    name: raw.full_name || raw.name || "User",
+                    email: raw.email || "",
+                    roles: raw.roles || [],
+                    avatar: raw.profile_picture || raw.avatar,
+                };
+            }
 
-                if (raw?.user) {
-                    user = {
-                        id: raw.user.id,
-                        name: raw.user.name,
-                        email: raw.user.email,
-                        roles: raw.user.roles || [],
-                        avatar: raw.user.avatar,
-                    };
-                } else if (raw?.id) {
-                    user = {
-                        id: raw.id,
-                        name: raw.full_name || "User",
-                        email: raw.email || "",
-                        roles: [],
-                        avatar: raw.profile_picture,
-                    };
-                }
-
+            if (user) {
                 set({ clientUser: user, isClientAuthenticated: true });
+                authDebug("refreshAuth:user resolved", { id: user.id, name: user.name });
                 get().refreshBalance();
             } else {
-                set({ isClientAuthenticated: false, clientUser: null });
+                // If protected endpoint returned 2xx but payload is empty/unknown
+                // (null/false/string/etc), session is still valid.
+                set({
+                    isClientAuthenticated: true,
+                    clientUser: get().clientUser ?? { id: 0, name: "New Cosmic Explorer", email: "", roles: [] },
+                });
+                authDebug("refreshAuth:2xx with non-user payload -> keep authenticated");
             }
         } catch (err: any) {
-            if (err.response?.status === 401 || !get().isClientAuthenticated) {
-                // Session invalid — clear state silently (no popup)
+            const status = err?.status ?? err?.response?.status;
+            authDebug("refreshAuth:error", {
+                status,
+                message: err?.message,
+            });
+
+            if (status === 401) {
+                // Session invalid
                 set({ isClientAuthenticated: false, clientUser: null });
-            } else if (err.response?.status === 404) {
-                // Authenticated but no profile yet (new user)
+            } else if (status === 404) {
+                // Authenticated but no profile yet (new Google user)
                 set({
                     isClientAuthenticated: true,
                     clientUser: { id: 0, name: "New Cosmic Explorer", email: "", roles: [] },
                 });
+            } else if (!get().isClientAuthenticated) {
+                // For network/CORS/unknown errors during bootstrap, keep as unauth.
+                set({ isClientAuthenticated: false, clientUser: null });
             }
             // Network / 500 errors: keep existing state
         } finally {
             set({ clientLoading: false });
+            authDebug("refreshAuth:final", {
+                isClientAuthenticated: get().isClientAuthenticated,
+                hasClientUser: Boolean(get().clientUser),
+            });
         }
     },
 }));

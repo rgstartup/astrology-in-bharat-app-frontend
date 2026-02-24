@@ -40,8 +40,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                 ? `${cleanApiUrl}${product.imageUrl}`
                 : product.imageUrl.startsWith("/")
                     ? product.imageUrl
-                    : `/uploads/${product.imageUrl}`
-        : "";
+                    : `${cleanApiUrl}/uploads/${product.imageUrl}`
+        : "/images/placeholder-product.png"; // Fallback placeholder
 
     const originalPrice = Number(product.originalPrice) || 0;
     const price = Number(product.price) || 0;

@@ -136,6 +136,15 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
   const isAuthenticated = authState ?? contextIsAuthenticated;
   const clientUser = userData ?? contextUser;
   const currentBalance = balance ?? clientBalance;
+  const avatarSrc = clientUser?.avatar || clientUser?.profile_picture || clientUser?.user?.avatar || "/images/aa.webp";
+
+  const unwrapResponse = (res: any) => res?.data ?? res;
+  const normalizeNotification = (notif: any) => ({
+    ...notif,
+    id: notif?.id ?? notif?.notification_id,
+    isRead: notif?.isRead ?? notif?.is_read ?? false,
+    createdAt: notif?.createdAt ?? notif?.created_at,
+  });
 
   const clientLogout = async () => {
     if (logoutHandler) {
@@ -155,7 +164,9 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
     try {
       const { apiClient } = require("./context/ClientAuthContext");
       const res = await apiClient.get('/notifications');
-      setNotifications(res.data);
+      const payload = unwrapResponse(res);
+      const rawList = Array.isArray(payload) ? payload : (payload?.items || payload?.data || []);
+      setNotifications(rawList.map(normalizeNotification));
     } catch (err) {
       console.error('Failed to fetch notifications', err);
     }
@@ -165,7 +176,9 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
     try {
       const { apiClient } = require("./context/ClientAuthContext");
       const res = await apiClient.get('/notifications/unread-count');
-      setUnreadCount(res.data.count);
+      const payload = unwrapResponse(res);
+      const count = payload?.count ?? payload?.unreadCount ?? payload?.unread_count ?? 0;
+      setUnreadCount(Number(count) || 0);
     } catch (err) {
       console.error('Failed to fetch unread count', err);
     }
@@ -439,7 +452,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                             justifyContent: "center"
                           }}>
                             <NextImage
-                              src={clientUser?.avatar || "/images/aa.webp"}
+                              src={avatarSrc}
                               alt="Profile"
                               width={35}
                               height={35}

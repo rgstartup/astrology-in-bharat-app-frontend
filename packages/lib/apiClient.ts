@@ -39,8 +39,12 @@ async function waitForRefresh(): Promise<void> {
 }
 
 async function doRefresh(): Promise<void> {
-    const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
-        method: "POST",
+    const refreshUrl = isServer
+        ? `${API_BASE_URL}/auth/refresh`
+        : "/api/v1/auth/refresh";
+
+    const res = await fetch(refreshUrl, {
+        method: "GET",
         credentials: "include",
     });
     if (!res.ok) throw new Error("Refresh failed");

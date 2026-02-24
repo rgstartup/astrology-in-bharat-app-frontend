@@ -3,6 +3,9 @@ import { create } from "zustand";
 import { toast } from "react-toastify";
 import { CartService } from "../services/cart.service";
 
+const getErrorMessage = (error: any, fallback: string) =>
+    error?.body?.message || error?.response?.data?.message || error?.message || fallback;
+
 // Define Types
 export interface CartItem {
     id: number;
@@ -98,7 +101,7 @@ export const useCartStore = create<CartState>((set, get) => ({
             await get().fetchCart(true);
         } catch (error: any) {
             console.error("Add to cart error:", error);
-            toast.error(error.response?.data?.message || "Failed to add to cart");
+            toast.error(getErrorMessage(error, "Failed to add to cart"));
         } finally {
             set({ isLoading: false });
         }
@@ -134,7 +137,7 @@ export const useCartStore = create<CartState>((set, get) => ({
                 // No fetch fetchCart() to define truth, relying on optimistic UI
             } catch (error: any) {
                 console.error("Update quantity error:", error);
-                toast.error(error.response?.data?.message || "Failed to update quantity");
+                toast.error(getErrorMessage(error, "Failed to update quantity"));
                 // Revert on error
                 await fetchCart(true);
             } finally {
@@ -150,7 +153,7 @@ export const useCartStore = create<CartState>((set, get) => ({
             await get().fetchCart(true);
         } catch (error: any) {
             console.error("Remove item error:", error);
-            toast.error(error.response?.data?.message || "Failed to remove item");
+            toast.error(getErrorMessage(error, "Failed to remove item"));
         }
     },
 

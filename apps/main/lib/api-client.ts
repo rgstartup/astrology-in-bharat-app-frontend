@@ -14,13 +14,15 @@ interface RequestOptions {
     body?: Record<string, unknown> | FormData | null;
     headers?: Record<string, string>;
     timeoutMs?: number;
+    _retry?: boolean;
 }
 
 const isServer = typeof window === "undefined";
 
 /**
- * Builds the full backend URL.
- * Always returns absolute URL to ensure browser sends cookies to the backend domain.
+ * Build request URL:
+ * - Browser: relative /api/v1 path (Next rewrite proxy)
+ * - Server: absolute backend URL (from NEXT_PUBLIC_API_URL)
  */
 function buildUrl(path: string): string {
     if (path.startsWith("http://") || path.startsWith("https://")) {
@@ -35,12 +37,16 @@ function buildUrl(path: string): string {
         ? normalizedPath
         : `/api/v1${normalizedPath}`;
 
-    const base = getBasePath(); // From NEXT_PUBLIC_API_URL
-    return `${base}${apiPath}`;
+    if (isServer) {
+        const base = getBasePath(); // From NEXT_PUBLIC_API_URL
+        return `${base}${apiPath}`;
+    }
+
+    return apiPath;
 }
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-    const { method = "GET", body = null, headers = {}, timeoutMs } = options;
+    const { method = "GET", body = null, headers = {}, timeoutMs, _retry = false } = options;
 
     const url = buildUrl(path);
 
@@ -62,6 +68,18 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     } as any);
 
     if (error) {
+        // Access token may expire during session; refresh once and retry.
+        if (error.status === 401 && !_retry) {
+            const refreshUrl = isServer ? `${getBasePath()}/api/v1/auth/refresh` : "/api/v1/auth/refresh";
+            const [, refreshError] = await safeFetch(refreshUrl, {
+                method: "GET",
+                credentials: "include",
+            } as any);
+
+            if (!refreshError) {
+                return request<T>(path, { ...options, _retry: true });
+            }
+        }
         throw error;
     }
 

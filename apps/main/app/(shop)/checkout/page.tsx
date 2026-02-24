@@ -230,7 +230,11 @@ const CheckoutContent = () => {
         }
       });
 
-      const { id: order_id, amount, currency, key_id } = orderRes.data;
+      const orderPayload: any = (orderRes as any)?.data ?? orderRes;
+      const { id: order_id, amount, currency, key_id } = orderPayload || {};
+      if (!order_id || !amount || !currency) {
+        throw new Error("Invalid payment order response");
+      }
 
       // 3. Open Razorpay Modal
       const options = {
@@ -250,7 +254,8 @@ const CheckoutContent = () => {
               shippingAddress: isOrder ? address : undefined
             });
 
-            if (verifyRes.data.success) {
+            const verifyPayload: any = (verifyRes as any)?.data ?? verifyRes;
+            if (verifyPayload?.success) {
               toast.success(isOrder ? "Order placed successfully!" : "Payment successful!");
 
               if (isOrder) {

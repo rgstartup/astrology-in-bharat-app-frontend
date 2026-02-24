@@ -3,7 +3,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 import apiClient, {
-    getClientProfile, updateClientProfile, uploadClientDocument,
+    getClientProfile, createClientProfile, updateClientProfile, uploadClientDocument,
     ClientProfileData, AddressDto, getAllChatSessions, getChatHistory, getMyOrders,
     getWalletTransactions, getNotifications, markNotificationAsRead, deleteNotification,
     clearAllNotifications, getMyRewards, getSupportSettings, SupportSettings, getMyDisputes
@@ -13,6 +13,13 @@ import { getNotificationSocket, connectNotificationSocket } from "@packages/ui/s
 
 // Types
 type ProfileData = ClientProfileData;
+const normalizeAddressesForUI = (addresses?: any[]) => {
+    if (!Array.isArray(addresses)) return addresses;
+    return addresses.map((addr: any) => ({
+        ...addr,
+        zipCode: addr?.zipCode ?? addr?.zip_code ?? "",
+    }));
+};
 
 export const useProfileLogic = () => {
     const router = useRouter();
@@ -127,7 +134,10 @@ export const useProfileLogic = () => {
             setLoading(true);
             const data = await getClientProfile();
             if (data) {
-                setProfileData(data);
+                setProfileData({
+                    ...data,
+                    addresses: normalizeAddressesForUI(data.addresses),
+                });
                 if (data.profile_picture) {
                     setImagePreview(data.profile_picture);
                 }
@@ -359,7 +369,11 @@ export const useProfileLogic = () => {
                 type: 'wallet_recharge'
             });
 
-            const { id: order_id, amount, currency, key_id } = orderRes.data;
+            const orderPayload: any = (orderRes as any)?.data ?? orderRes;
+            const { id: order_id, amount, currency, key_id } = orderPayload || {};
+            if (!order_id || !amount || !currency) {
+                throw new Error("Invalid payment order response");
+            }
 
             const options = {
                 key: key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -376,7 +390,8 @@ export const useProfileLogic = () => {
                             razorpay_signature: response.razorpay_signature,
                         });
 
-                        if (verifyRes.data.success) {
+                        const verifyPayload: any = (verifyRes as any)?.data ?? verifyRes;
+                        if (verifyPayload?.success) {
                             toast.success(`Successfully recharged ₹${rechargeAmount}!`);
                             refreshBalance();
                             loadTransactions();
@@ -404,7 +419,15 @@ export const useProfileLogic = () => {
 
         } catch (err: any) {
             console.error("Recharge error:", err);
-            toast.error(err.response?.data?.message || "Recharge failed. Please try again.");
+            const backendMessage =
+                err?.body?.message ||
+                err?.response?.data?.message ||
+                err?.message;
+            toast.error(
+                Array.isArray(backendMessage)
+                    ? backendMessage.join(", ")
+                    : (backendMessage || "Recharge failed. Please try again."),
+            );
             setIsProcessing(false);
         }
     };
@@ -423,7 +446,16 @@ export const useProfileLogic = () => {
                 setProfileData(prev => ({ ...prev, profile_picture: imageUrl }));
                 setImagePreview(imageUrl);
 
-                await updateClientProfile({ profile_picture: imageUrl });
+                try {
+                    await updateClientProfile({ profile_picture: imageUrl });
+                } catch (err: any) {
+                    const status = err?.status ?? err?.response?.status;
+                    if (status === 404) {
+                        await createClientProfile({ profile_picture: imageUrl });
+                    } else {
+                        throw err;
+                    }
+                }
                 await refreshAuth(); // Refresh global auth state to update header
                 setSuccessMessage("Profile picture updated successfully!");
                 setTimeout(() => setSuccessMessage(""), 3000);
@@ -483,6 +515,17 @@ export const useProfileLogic = () => {
                 }
             });
 
+            // Backend DTO treats optional fields as absent/null/undefined.
+            // Remove blank strings to avoid validation errors (e.g. phone, marital_status).
+            Object.keys(payload).forEach((key) => {
+                if (typeof payload[key] === "string") {
+                    payload[key] = payload[key].trim();
+                    if (payload[key] === "") {
+                        delete payload[key];
+                    }
+                }
+            });
+
             if (section === 'personal' && (!payload.gender || payload.gender.trim() === '')) {
                 payload.gender = 'other';
             }
@@ -490,15 +533,33 @@ export const useProfileLogic = () => {
             if (section === 'address' && payload.addresses && Array.isArray(payload.addresses)) {
                 payload.addresses = payload.addresses.map((addr: any) => {
                     const { createdAt, updatedAt, user, profile_client, ...cleanAddr } = addr;
+                    if (cleanAddr.zipCode !== undefined) {
+                        cleanAddr.zip_code = cleanAddr.zipCode;
+                        delete cleanAddr.zipCode;
+                    }
                     return cleanAddr;
                 });
             }
 
-            const savedData = await updateClientProfile(payload);
+            let savedData: any;
+            try {
+                savedData = await updateClientProfile(payload);
+            } catch (err: any) {
+                const status = err?.status ?? err?.response?.status;
+                if (status === 404) {
+                    savedData = await createClientProfile(payload);
+                } else {
+                    throw err;
+                }
+            }
             toast.success(`${section.charAt(0).toUpperCase() + section.slice(1)} updated successfully!`);
 
             if (savedData) {
-                setProfileData(prev => ({ ...prev, ...savedData }));
+                setProfileData(prev => ({
+                    ...prev,
+                    ...savedData,
+                    addresses: normalizeAddressesForUI((savedData as any).addresses),
+                }));
             }
             await refreshAuth(); // Refresh global auth state to update header
             setEditingSections(prev => ({ ...prev, [section]: false }));
