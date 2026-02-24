@@ -59,7 +59,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
 
     const imageUrl = normalizedImageValue
         ? toRelativeUploadPath(normalizedImageValue)
-        : "/images/placeholder-product.png"; // Fallback placeholder
+        : "/images/image-not-found.png"; // Fallback placeholder
 
     const originalPrice = Number(product.originalPrice) || 0;
     const price = Number(product.price) || 0;
