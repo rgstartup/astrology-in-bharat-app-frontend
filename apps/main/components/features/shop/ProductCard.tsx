@@ -33,14 +33,35 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
     const cleanApiUrl = getBasePath();
 
-    const imageUrl = product.imageUrl
-        ? product.imageUrl.startsWith("http")
-            ? product.imageUrl
-            : product.imageUrl.startsWith("/uploads/")
-                ? `${cleanApiUrl}${product.imageUrl}`
-                : product.imageUrl.startsWith("/")
-                    ? product.imageUrl
-                    : `${cleanApiUrl}/uploads/${product.imageUrl}`
+    const toRelativeUploadPath = (value: string): string => {
+        if (!value) return value;
+
+        if (value.startsWith("/uploads/")) return value;
+
+        if (value.startsWith("http://") || value.startsWith("https://")) {
+            try {
+                const parsed = new URL(value);
+                if (parsed.pathname.startsWith("/uploads/")) {
+                    return parsed.pathname;
+                }
+                return value;
+            } catch {
+                return value;
+            }
+        }
+
+        if (value.startsWith("/")) return value;
+        return `/uploads/${value}`;
+    };
+
+    const rawImage: any = product.imageUrl as any;
+    const normalizedImageValue =
+        typeof rawImage === "string"
+            ? rawImage
+            : rawImage?.secure_url || rawImage?.url || rawImage?.image || rawImage?.image_url || rawImage?.path || "";
+
+    const imageUrl = normalizedImageValue
+        ? toRelativeUploadPath(normalizedImageValue)
         : "/images/placeholder-product.png"; // Fallback placeholder
 
     const originalPrice = Number(product.originalPrice) || 0;
