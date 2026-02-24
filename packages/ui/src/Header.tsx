@@ -560,21 +560,24 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                   />
                 </Link>
                 <button
-                  className="navbar-toggler"
+                  className="navbar-toggler ms-auto"
                   type="button"
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  aria-controls="navbarSupportedContent"
+                  aria-expanded={isMenuOpen}
+                  aria-label="Toggle navigation"
                 >
                   <span className="navbar-toggler-icon"></span>
                 </button>
                 <div
-                  className={`align-items-center justify-content-center flex-grow-1 ${isMenuOpen ? "d-block position-absolute bg-white w-100 start-0 top-100 shadow-sm" : "d-none d-lg-flex"}`}
+                  className={`flex-grow-1 ${isMenuOpen ? "d-block position-absolute bg-white w-100 start-0 shadow-sm border-top no-scrollbar" : "d-none d-lg-flex align-items-center justify-content-center"}`}
                   id="navbarSupportedContent"
-                  style={{ zIndex: 1000 }}
+                  style={isMenuOpen ? { top: '100%', zIndex: 1000, maxHeight: '80vh', overflowY: 'auto' } : { zIndex: 1000 }}
                 >
                   <ul
                     className={`navbar-nav mx-auto top-menu-main d-flex align-items-center gap-2 gap-xl-4 ${isMenuOpen
-                        ? "flex-column align-items-start w-100 py-2 px-3 gap-0"
-                        : "flex-row"
+                      ? "flex-column align-items-start w-100 py-2 px-3 gap-0"
+                      : "flex-row"
                       }`}
                   >
                     {/* Home */}

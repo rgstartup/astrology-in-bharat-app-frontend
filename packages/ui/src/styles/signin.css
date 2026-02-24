@@ -16,18 +16,27 @@
 }
 
 .form-data {
-  margin: 5rem 0px 0px 10rem;
+  margin: 5rem auto 0;
   border: 2px solid var(--border-color);
   border-radius: 12px;
   background-color: white;
   padding: 20px;
+  width: 100%;
+  max-width: 550px;
+  box-sizing: border-box;
+  /* Ensure padding doesn't cause overflow */
+}
+
+/* Match the class used in both SignInForm and SignUpForm */
+.sign-in-heading {
+  margin-bottom: 1.5rem;
 }
 
 .sign-form-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 5rem;
+  gap: 1rem;
 }
 
 .sign-up {
@@ -42,10 +51,12 @@
   gap: 10px;
   background-color: var(--google-color);
   color: var(--black-color);
-  width: 50%;
-  padding: 5px 20px;
+  width: 100%;
+  padding: 8px 20px;
   border-radius: 12px;
   cursor: pointer;
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
 }
 
 .links-images {
@@ -64,41 +75,24 @@
   border-radius: 12px;
   padding: 7px 30px;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
-.form-email input {
-  width: 90%;
-  padding: 8px 10px;
-  border-radius: 15px;
-  border: none;
-  border: 2px solid var(--border-color);
-  margin-top: 5px;
-}
-
-.form-email input:focus {
-  border-color: #732882;
-  /* custom border color */
-  outline: none;
-  /* removes default black/blue outline */
-  box-shadow: 0 0 5px rgba(115, 40, 130, 0.3);
-  /* optional glow */
-}
-
+.form-email input,
 .form-password input {
-  width: 90%;
-  padding: 8px 10px;
-  border-radius: 15px;
-  border: none;
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 10px;
   border: 2px solid var(--border-color);
   margin-top: 5px;
+  box-sizing: border-box;
 }
 
+.form-email input:focus,
 .form-password input:focus {
   border-color: var(--primary-color);
-  /* custom border color */
   outline: none;
-  /* removes default black/blue outline */
-  box-shadow: 0 0 5px rgba(115, 40, 130, 0.3);
+  box-shadow: 0 0 5px rgba(255, 107, 0, 0.3);
 }
 
 .form-password {
@@ -122,25 +116,18 @@
 
 .sign-button {
   margin-top: 20px;
-  padding: 10px 10px;
+  padding: 12px;
   border: none;
-  border-radius: 20px;
+  border-radius: 10px;
   background-color: var(--primary-color);
   width: 100%;
+  color: white;
+  font-weight: 600;
+  box-sizing: border-box;
 }
 
 .sign-button:hover {
-  margin-top: 20px;
-  padding: 10px 10px;
-  border: none;
-  border-radius: 20px;
   background-color: var(--button-hover);
-  width: 100%;
-}
-
-.sign-button a {
-  text-decoration: none;
-  color: rgb(255, 255, 255);
 }
 
 .astrology-heading {
@@ -153,7 +140,9 @@
   border: 2px solid var(--border-color);
   border-radius: 10px;
   text-align: center;
-  padding: 20px;
+  padding: 15px;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .horoscopes-items h6 {
@@ -163,6 +152,7 @@
 
 .horoscopes-items img {
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .popular-astrology span {
@@ -170,31 +160,62 @@
   font-size: 15px;
 }
 
-@media (max-width: 768px) {
-  .m-hidden {
-    display: none;
+@media (max-width: 991px) {
+  .signin-part {
+    padding-bottom: 60px;
+    margin-bottom: 0;
+    overflow-x: hidden;
+    /* Prevent horizontal scroll on the section */
   }
 
-  .banner-data p {
-    display: none;
+  .banner-data {
+    text-align: center;
+    padding-top: 1rem;
   }
 
-  .social-button {
-    width: 80%;
+  .banner-data h3 {
+    font-size: 1.8rem;
   }
 
   .form-data {
-    position: relative;
-    right: 50%;
-    width: 100%;
+    margin: 2rem auto 0;
+    max-width: 100%;
+  }
+
+  .m-hidden {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-data p {
+    display: none;
   }
 
   .social-links {
     flex-direction: column;
   }
 
+  .social-button,
   .social-button2 {
-    margin-top: 20px;
     width: 100%;
+  }
+
+  /* Target the welcome text header in the form */
+  .form-data>.d-flex:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem;
+  }
+
+  .form-data>.d-flex:first-child h6:last-child {
+    text-align: left;
+  }
+
+  .sign-form-heading,
+  .sign-in-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 }

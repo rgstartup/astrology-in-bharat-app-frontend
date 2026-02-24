@@ -51,7 +51,7 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="col-lg-2 col-md-6">
-              <h4 className="aib-footer-title">Free Calculator</h4>
+              <h4 className="aib-footer-title text-orange-600">Free Calculator</h4>
               <ul className="aib-footer-links">
                 <li>
                   <Link href={PATHS.MARRIAGE_AGE_CALCULATOR}>Marriage Age </Link>
@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="col-lg-2 col-md-6">
-              <h4 className="aib-footer-title">Astrology Services</h4>
+              <h4 className="aib-footer-title text-orange-600">Astrology Services</h4>
               <ul className="aib-footer-links">
                 <li>
                   <Link href={PATHS.ONLINE_PUJA}>Online Puja</Link>
@@ -99,7 +99,7 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="col-lg-2 col-md-6">
-              <h4 className="aib-footer-title">Important Links</h4>
+              <h4 className="aib-footer-title text-orange-600 ">Important Links</h4>
               <ul className="aib-footer-links">
                 <li>
                   <a href="#">Astrologer Login</a>
@@ -123,7 +123,7 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="col-lg-2 col-md-6">
-              <h4 className="aib-footer-title">Helpful Info</h4>
+              <h4 className="aib-footer-title text-orange-600">Helpful Info</h4>
               <ul className="aib-footer-links">
                 <li>
                   <Link href={PATHS.REFUND_POLICY}>Refund Policy</Link>
