@@ -8,7 +8,6 @@ import { useCartStore } from "@/store/useCartStore"; // Changed import
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useWishlistStore } from "@/store/useWishlistStore";
-import { getBasePath } from "@/utils/api-config";
 
 const Image = NextImage as any;
 // ... (omitted) ...
@@ -31,8 +30,6 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
-    const cleanApiUrl = getBasePath();
-
     const toRelativeUploadPath = (value: string): string => {
         if (!value) return value;
 

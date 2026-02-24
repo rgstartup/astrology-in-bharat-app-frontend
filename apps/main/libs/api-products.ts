@@ -17,7 +17,7 @@ const normalizeProduct = (raw: any): Product => {
     const firstImageUrl =
         typeof firstImage === "string"
             ? firstImage
-            : firstImage?.url || firstImage?.image || firstImage?.image_url;
+            : firstImage?.secure_url || firstImage?.url || firstImage?.image || firstImage?.image_url || firstImage?.path;
 
     return {
         id: raw?.id ?? raw?._id,
@@ -26,7 +26,7 @@ const normalizeProduct = (raw: any): Product => {
         description: raw?.description || "",
         price: Number(raw?.price ?? raw?.sale_price ?? 0),
         originalPrice: Number(raw?.originalPrice ?? raw?.original_price ?? raw?.price ?? 0),
-        imageUrl: raw?.imageUrl || raw?.image_url || raw?.image || firstImageUrl || "",
+        imageUrl: raw?.secure_url || raw?.imageUrl || raw?.image_url || raw?.image || raw?.image_path || firstImageUrl || "",
         percentageOff: Number(raw?.percentageOff ?? raw?.percentage_off ?? 0),
     };
 };
