@@ -79,19 +79,6 @@ export default function ProductsPage() {
         }
     };
 
-    const uploadFile = async (file: File): Promise<string | null> => {
-        try {
-            setUploading(true);
-            const url = await ProductService.uploadFile(file);
-            return url;
-        } catch (error) {
-            console.error("Error uploading file:", error);
-            return null;
-        } finally {
-            setUploading(false);
-        }
-    };
-
     const resetForm = () => {
         setFormData({
             name: "",
@@ -178,27 +165,7 @@ export default function ProductsPage() {
             }
 
             if (editingId) {
-                // For update, we might need a similar FormData logic or keeping JSON if backend allows.
-                // Assuming update also supports moving to FormData or separate logic.
-                // For now, retaining original logic for update (JSON) unless user specified update issues too.
-                // But typically update also needs file support.
-                // Let's assume update stays JSON or we'd need to update ProductService.updateProduct too.
-                // Given the instructions focused on "Creates Product", I'll switch back to JSON for update 
-                // OR ideally upgrade updateProduct too. 
-                // Let's stick to JSON for update for now to minimize risk, unless we want to support file update.
-                // If the user wants to update the image via file, we'd need to handle that. 
-                // Let's keep the uploadFile logic ONLY for update for now as a fallback if not changing updateProduct.
-
-                let updatePayload: any = { ...formData };
-
-                // If editing and chose a new file, we might still need the old upload flow OR upgrade updateProduct.
-                // Let's use the old flow for EDIT to be safe, as backend instructions were specific to CREATE.
-                if (imageMode === "file" && selectedFile) {
-                    const uploadedUrl = await uploadFile(selectedFile);
-                    if (uploadedUrl) updatePayload.imageUrl = uploadedUrl;
-                }
-
-                await ProductService.updateProduct(editingId, updatePayload);
+                await ProductService.updateProduct(editingId, submissionData);
                 toast.success("Product updated successfully");
             } else {
                 // Create Product using FormData

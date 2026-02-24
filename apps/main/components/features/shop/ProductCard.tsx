@@ -30,16 +30,19 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
-    const toRelativeUploadPath = (value: string): string => {
+    const legacyUploadsOrigin = process.env.NEXT_PUBLIC_ADMIN_UPLOADS_ORIGIN || "http://localhost:3001";
+
+    const normalizeImagePath = (value: string): string => {
         if (!value) return value;
 
-        if (value.startsWith("/uploads/")) return value;
+        if (value.startsWith("/uploads/")) return `${legacyUploadsOrigin}${value}`;
 
         if (value.startsWith("http://") || value.startsWith("https://")) {
             try {
                 const parsed = new URL(value);
                 if (parsed.pathname.startsWith("/uploads/")) {
-                    return parsed.pathname;
+                    // Legacy uploads are stored in admin-dashboard /public/uploads
+                    return `${legacyUploadsOrigin}${parsed.pathname}`;
                 }
                 return value;
             } catch {
@@ -48,7 +51,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
         }
 
         if (value.startsWith("/")) return value;
-        return `/uploads/${value}`;
+        return `${legacyUploadsOrigin}/uploads/${value}`;
     };
 
     const rawImage: any = product.imageUrl as any;
@@ -58,7 +61,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
             : rawImage?.secure_url || rawImage?.url || rawImage?.image || rawImage?.image_url || rawImage?.path || "";
 
     const imageUrl = normalizedImageValue
-        ? toRelativeUploadPath(normalizedImageValue)
+        ? normalizeImagePath(normalizedImageValue)
         : "/images/image-not-found.png"; // Fallback placeholder
 
     const originalPrice = Number(product.originalPrice) || 0;

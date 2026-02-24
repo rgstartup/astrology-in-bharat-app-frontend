@@ -104,16 +104,23 @@ export const ProductService = {
         return res.json();
     },
 
-    updateProduct: async (id: string, product: Partial<Product>) => {
-        const payload = toApiPayload(product);
+    updateProduct: async (id: string, product: Partial<Product> | FormData) => {
+        const isFormData = product instanceof FormData;
+        const headers: Record<string, string> = {
+            ...getAuthHeaders(),
+        };
+        const payload = isFormData
+            ? normalizeProductFormData(product as FormData)
+            : toApiPayload(product as Partial<Product>);
+
+        if (!isFormData) {
+            headers["Content-Type"] = "application/json";
+        }
 
         const res = await fetch(`${API_BASE}/api/v1/products/${id}`, {
             method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                ...getAuthHeaders(),
-            },
-            body: JSON.stringify(payload),
+            headers,
+            body: isFormData ? payload : JSON.stringify(payload),
         });
         if (!res.ok) {
             const error = await res.json();

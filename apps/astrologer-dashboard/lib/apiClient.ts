@@ -1,18 +1,12 @@
- * Astrologer Dashboard API Client — built on safeFetch.
- *
- * Architecture:
- * - Client - side: uses relative paths(/api/v1 /...) which are rewritten by
-    * Next.js via next.config.js rewrites to the real backend.
- * - Server - side: uses NEXT_PUBLIC_API_URL for absolute requests.
- *
- * Auth(httpOnly cookies) are sent automatically via credentials: "include".
- * 401 handling and token refresh is done in proxy.ts middleware — no
-    * interceptors are needed here.
+/**
+ * Astrologer Dashboard API Client built on safeFetch.
+ * - Client-side: uses relative /api/v1 paths rewritten by Next.js.
+ * - Server-side: uses NEXT_PUBLIC_API_URL absolute base.
  */
 
 import { toast } from "react-toastify";
 import safeFetch from "@packages/safe-fetch/safeFetch";
-import { CLIENT_API_URL, BACKEND_URL } from "./config";
+import { BACKEND_URL } from "./config";
 
 const isServer = typeof window === "undefined";
 
@@ -23,6 +17,12 @@ interface RequestOptions {
     body?: Record<string, unknown> | FormData | null;
     headers?: Record<string, string>;
     timeoutMs?: number;
+}
+
+function isPublicAuthPath(): boolean {
+    if (typeof window === "undefined") return false;
+    const path = window.location.pathname;
+    return path === "/" || path === "/sign-up" || path === "/forgot-password";
 }
 
 function buildUrl(path: string): string {
@@ -51,8 +51,8 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
 
     if (error) {
         if ((error as any)?.status === 401) {
-            const backendMessage = (error as any)?.data?.message;
-            if (backendMessage && typeof backendMessage === "string") {
+            const backendMessage = (error as any)?.body?.message || (error as any)?.data?.message;
+            if (backendMessage && typeof backendMessage === "string" && !isPublicAuthPath()) {
                 toast.error(backendMessage, { toastId: "auth-error" });
             }
         }

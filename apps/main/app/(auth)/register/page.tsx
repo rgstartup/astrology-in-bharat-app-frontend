@@ -3,6 +3,7 @@ import SignUpForm from "@/components/features/auth/SignUpForm";
 import TopExpertsSection from "@/components/features/auth/TopExpertsSection";
 import { Metadata } from "next";
 import authContent from "@/public/data/auth-content.json";
+// dummy comment 
 
 export const metadata: Metadata = {
   title: "Sign Up - Astrology Bharat",

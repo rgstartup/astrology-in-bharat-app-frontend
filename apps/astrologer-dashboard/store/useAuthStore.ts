@@ -32,9 +32,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
         // Fetch full profile
         try {
-            const res = await apiClient.get('/expert');
-            if (res.data) {
-                const fullUserData = { ...res.data.user, ...res.data, profileId: res.data.id };
+            const res: any = await apiClient.get('/expert');
+            const payload = res?.data ?? res;
+            if (payload) {
+                const fullUserData = { ...payload.user, ...payload, profileId: payload.id };
                 set({ user: fullUserData });
             } else if (userData) {
                 set({ user: userData });
@@ -53,17 +54,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     refreshAuth: async () => {
         try {
             console.log("[AuthStore] Refreshing auth...");
-            const res = await apiClient.get('/expert');
-            if (res.data && (res.data.id || res.data.user)) {
+            const res: any = await apiClient.get('/expert');
+            const payload = res?.data ?? res;
+            if (payload && (payload.id || payload.user)) {
                 console.log("[AuthStore] Auth refresh success, expert found");
-                const fullUserData = { ...res.data.user, ...res.data, profileId: res.data.id };
+                const fullUserData = { ...payload.user, ...payload, profileId: payload.id };
                 set({ user: fullUserData, isAuthenticated: true, loading: false });
             } else {
-                console.warn("[AuthStore] Auth refresh: No expert data in response", res.data);
+                console.warn("[AuthStore] Auth refresh: No expert data in response", payload);
                 set({ loading: false, isAuthenticated: false, user: null });
             }
         } catch (err: any) {
-            console.error("Auth refresh error:", err);
+            const status = err?.status ?? err?.response?.status;
+            if (status !== 401) {
+                console.error("Auth refresh error:", err);
+            }
             set({ loading: false, isAuthenticated: false, user: null });
         }
     },
