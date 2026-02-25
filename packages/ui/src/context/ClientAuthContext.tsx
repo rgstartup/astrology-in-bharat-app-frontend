@@ -90,10 +90,10 @@ interface ClientAuthContextType {
 const ClientAuthContext = createContext<ClientAuthContextType>({
   clientUser: null,
   clientBalance: 0,
-  clientLogin: () => {},
-  clientLogout: () => {},
-  refreshAuth: async () => {},
-  refreshBalance: async () => {},
+  clientLogin: () => { },
+  clientLogout: () => { },
+  refreshAuth: async () => { },
+  refreshBalance: async () => { },
   isClientAuthenticated: false,
   clientLoading: true,
 });
@@ -135,7 +135,7 @@ export const ClientAuthProvider = ({
     try {
       const res = await apiGet<any>("/wallet/balance");
       setClientBalance(res.data);
-    } catch (_) {}
+    } catch (_) { }
   };
 
   const refreshAuth = async () => {
@@ -147,7 +147,7 @@ export const ClientAuthProvider = ({
     }
     if (!isClientAuthenticated) setClientLoading(true);
     try {
-      const res = await apiGet<any>("/client", { _t: new Date().getTime() });
+      const res = await apiGet<any>("/client/profile", { _t: new Date().getTime() });
       if (res.data?.user) {
         setClientUser(res.data.user);
         setIsClientAuthenticated(true);
@@ -162,14 +162,12 @@ export const ClientAuthProvider = ({
         });
         setIsClientAuthenticated(true);
       } else {
-        setClientUser({ id: 0, name: "User", email: "", roles: [] });
-        setIsClientAuthenticated(true);
+        setClientUser(null);
+        setIsClientAuthenticated(false);
       }
     } catch (err: any) {
-      if (err?.status === 401) {
-        setIsClientAuthenticated(false);
-        setClientUser(null);
-      }
+      setIsClientAuthenticated(false);
+      setClientUser(null);
     } finally {
       setClientLoading(false);
     }
@@ -183,7 +181,7 @@ export const ClientAuthProvider = ({
       deleteLegacyCookie("clientAccessToken");
 
       try {
-        const res = await apiGet<any>("/client", { _t: new Date().getTime() });
+        const res = await apiGet<any>("/client/profile", { _t: new Date().getTime() });
 
         if (res.data?.user) {
           setClientUser(res.data.user);
@@ -199,25 +197,15 @@ export const ClientAuthProvider = ({
           });
           setIsClientAuthenticated(true);
         } else {
-          setClientUser({ id: 0, name: "User", email: "", roles: [] });
-          setIsClientAuthenticated(true);
+          setClientUser(null);
+          setIsClientAuthenticated(false);
         }
       } catch (err: any) {
+        setIsClientAuthenticated(false);
+        setClientUser(null);
         if (err?.status === 401) {
-          setIsClientAuthenticated(false);
-          setClientUser(null);
           localStorage.removeItem("clientAccessToken");
           deleteLegacyCookie("clientAccessToken");
-        } else if (err?.status === 404) {
-          setIsClientAuthenticated(true);
-          setClientUser({
-            id: 0,
-            name: "New Cosmic Explorer",
-            email: "",
-            roles: [],
-          });
-        } else {
-          setIsClientAuthenticated(true);
         }
       } finally {
         setClientLoading(false);

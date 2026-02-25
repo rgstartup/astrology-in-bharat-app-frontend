@@ -50,9 +50,67 @@ const buildSignInUrl = (
 
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
-  const isProtectedRoute = protectedPaths.some((path) =>
-    pathname.startsWith(path),
-  );
+
+  // 1. Handle Social Login Callback (Success)
+  const urlAccessToken = searchParams.get("accessToken");
+  const urlRefreshToken = searchParams.get("refreshToken");
+
+  if (urlAccessToken) {
+    debug("social callback tokens found, setting cookies and redirecting based on role");
+
+    let targetPath = pathname;
+    let targetHost = request.nextUrl.origin;
+
+    try {
+      const payload = jwtDecode<JwtPayload>(urlAccessToken);
+      if (payload.role === "agent") {
+        targetHost = process.env.ASTROLOGER_FRONTEND_URL || "http://localhost:3003";
+        targetPath = "/dashboard";
+      } else if (payload.role === "admin") {
+        targetHost = process.env.ADMIN_FRONTEND_URL || "http://localhost:3001";
+        targetPath = "/dashboard";
+      }
+    } catch (err) {
+      debug("failed to decode urlAccessToken for role check", err);
+    }
+
+    const nextUrl = new URL(targetPath, targetHost);
+    nextUrl.searchParams.delete("accessToken");
+    nextUrl.searchParams.delete("refreshToken");
+
+    const nextResponse = NextResponse.redirect(nextUrl);
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax" as const,
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    };
+    nextResponse.cookies.set("accessToken", urlAccessToken, cookieOptions);
+    if (urlRefreshToken) {
+      nextResponse.cookies.set("refreshToken", urlRefreshToken, {
+        ...cookieOptions,
+        maxAge: 60 * 60 * 24 * 30,
+      });
+    }
+    return nextResponse;
+  }
+
+  // 2. Handle Social Login Callback (Failure)
+  const googleError = searchParams.get("error");
+  const googleErrorDescription = searchParams.get("error_description");
+
+  if (googleError) {
+    debug("social login error found, redirecting to sign-in");
+    const loginUrl = buildSignInUrl(request, pathname, {
+      error: googleError,
+      ...(googleErrorDescription ? { error_description: googleErrorDescription } : {}),
+    });
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // 3. Protection and Refresh Logic
+  const isProtectedRoute = protectedPaths.some((path) => pathname.startsWith(path));
 
   if (!isProtectedRoute) {
     return NextResponse.next();
@@ -60,27 +118,12 @@ export async function middleware(request: NextRequest) {
 
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
-  const googleError = searchParams.get("error");
-  const googleErrorDescription = searchParams.get("error_description");
 
   debug("token evaluation", {
     path: pathname,
     hasAccessToken: Boolean(accessToken),
     hasRefreshToken: Boolean(refreshToken),
-    hasGoogleError: Boolean(googleError),
   });
-
-  // Google OAuth callback failures can land on protected routes (e.g. /profile?error=...).
-  // Redirect to sign-in and preserve the error details.
-  if (googleError) {
-    const loginUrl = buildSignInUrl(request, pathname, {
-      error: googleError,
-      ...(googleErrorDescription
-        ? { error_description: googleErrorDescription }
-        : {}),
-    });
-    return NextResponse.redirect(loginUrl);
-  }
 
   if (isAccessTokenValid(accessToken)) {
     return NextResponse.next();
