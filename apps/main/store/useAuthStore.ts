@@ -129,7 +129,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                     name: raw.user.name,
                     email: raw.user.email,
                     roles: raw.user.roles || [],
-                    avatar: raw.user.avatar,
+                    avatar: raw.profile_picture || raw.user.avatar,
                 };
             } else if (raw?.id) {
                 user = {

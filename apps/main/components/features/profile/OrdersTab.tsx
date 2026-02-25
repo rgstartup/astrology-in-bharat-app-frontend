@@ -67,7 +67,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                     <div className="d-flex flex-column">
                                         <span className="text-muted small fw-bold text-uppercase">Date</span>
                                         <span className="fw-bold">
-                                            {order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', {
+                                            {(order.createdAt || order.created_at) ? new Date(order.createdAt || order.created_at).toLocaleDateString('en-IN', {
                                                 day: 'numeric',
                                                 month: 'short',
                                                 year: 'numeric'
@@ -76,7 +76,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                     </div>
                                     <div className="d-flex flex-column">
                                         <span className="text-muted small fw-bold text-uppercase">Total Amount</span>
-                                        <span className="fw-bold text-orange-500">₹{order.totalAmount || order.amount || 0}</span>
+                                        <span className="fw-bold text-orange-500">₹{order.totalAmount || order.total_amount || order.amount || 0}</span>
                                     </div>
                                     <div className="flex flex-col items-end gap-2">
                                         <span className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wide ${order.status?.toLowerCase() === 'delivered' || order.status?.toLowerCase() === 'paid'
@@ -141,10 +141,10 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                         })}
 
                                         <div className="d-flex justify-content-between align-items-center mt-3 pt-2">
-                                            {order.shippingAddress && (
+                                            {(order.shippingAddress || order.shipping_address) && (
                                                 <div className="small text-muted">
                                                     <i className="fa-solid fa-location-dot me-1"></i>
-                                                    {order.shippingAddress.city}, {order.shippingAddress.state}
+                                                    {(order.shippingAddress || order.shipping_address).city}, {(order.shippingAddress || order.shipping_address).state}
                                                 </div>
                                             )}
                                             <div className="d-flex gap-2">
@@ -183,13 +183,13 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
                                                     <h6 className="font-bold text-gray-800 mb-3 text-sm uppercase tracking-wider">Shipping Address</h6>
-                                                    {order.shippingAddress ? (
+                                                    {(order.shippingAddress || order.shipping_address) ? (
                                                         <div className="text-sm text-gray-600 leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                                            <p className="font-bold text-gray-800 mb-1">{order.shippingAddress.full_name || userName}</p>
-                                                            <p className="mb-0">{order.shippingAddress.line1}</p>
-                                                            {order.shippingAddress.line2 && <p className="mb-0">{order.shippingAddress.line2}</p>}
-                                                            <p className="mb-0">{order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.zipCode}</p>
-                                                            <p className="mt-2 text-gray-500"><i className="fa-solid fa-phone me-2"></i>{order.shippingAddress.phone || userPhone}</p>
+                                                            <p className="font-bold text-gray-800 mb-1">{(order.shippingAddress || order.shipping_address).full_name || userName}</p>
+                                                            <p className="mb-0">{(order.shippingAddress || order.shipping_address).line1}</p>
+                                                            {(order.shippingAddress || order.shipping_address).line2 && <p className="mb-0">{(order.shippingAddress || order.shipping_address).line2}</p>}
+                                                            <p className="mb-0">{(order.shippingAddress || order.shipping_address).city}, {(order.shippingAddress || order.shipping_address).state} - {(order.shippingAddress || order.shipping_address).zipCode || (order.shippingAddress || order.shipping_address).zip_code}</p>
+                                                            <p className="mt-2 text-gray-500"><i className="fa-solid fa-phone me-2"></i>{(order.shippingAddress || order.shipping_address).phone || userPhone}</p>
                                                         </div>
                                                     ) : (
                                                         <p className="text-sm text-gray-500 bg-gray-50 p-3 rounded-xl">Shipping address details not available.</p>
@@ -200,7 +200,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                                     <div className="bg-gray-50 p-3 rounded-xl border border-gray-100 space-y-2">
                                                         <div className="flex justify-between text-sm">
                                                             <span className="text-gray-500">Subtotal</span>
-                                                            <span className="font-medium">₹{order.totalAmount || 0}</span>
+                                                            <span className="font-medium">₹{order.totalAmount || order.total_amount || 0}</span>
                                                         </div>
                                                         <div className="flex justify-between text-sm">
                                                             <span className="text-gray-500">Shipping</span>
@@ -208,7 +208,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                                         </div>
                                                         <div className="pt-2 mt-2 border-t border-gray-200 flex justify-between">
                                                             <span className="font-bold text-gray-800">Total</span>
-                                                            <span className="font-bold text-orange-600 text-lg">₹{order.totalAmount || 0}</span>
+                                                            <span className="font-bold text-orange-600 text-lg">₹{order.totalAmount || order.total_amount || 0}</span>
                                                         </div>
                                                         <div className="mt-3 text-[10px] text-gray-400 text-center italic">
                                                             Paid via Razorpay Online
