@@ -45,6 +45,7 @@ export interface Profile {
     bank_details: string;
     is_available: boolean;
     profilePic?: string;
+    kycStatus?: string;
     kycCompleted: boolean;
     addresses: Address[];
     phoneNumber?: string; // Mobile number field

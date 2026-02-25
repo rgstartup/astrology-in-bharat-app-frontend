@@ -123,8 +123,8 @@ const Page = () => {
 
       {/* KYC Rejection Alert */}
       {(() => {
-        const kycStatus = (user?.kycStatus || user?.status || "").toString().toLowerCase();
-        const reason = user?.rejectionReason || user?.profile_expert?.rejectionReason || user?.kyc_details?.rejectionReason;
+        const kycStatus = (user?.kycStatus || "").toLowerCase();
+        const reason = user?.rejectionReason;
 
         // Backend logic: Status remains 'pending' but rejectionReason is filled when rejected
         const isRejected = kycStatus === 'rejected' || (kycStatus === 'pending' && !!reason);
@@ -149,7 +149,7 @@ const Page = () => {
               </div>
             </div>
             <button
-              onClick={() => window.location.href = '/profile'}
+              onClick={() => router.push('/dashboard/profilemanagement')}
               className="px-6 py-3 rounded-2xl bg-white border border-rose-200 text-rose-600 font-bold text-xs uppercase tracking-widest hover:bg-rose-100 transition-all shadow-sm"
             >
               Edit Profile
@@ -160,7 +160,7 @@ const Page = () => {
 
       {/* Account Approved Success Banner */}
       {(() => {
-        const kycStatus = (user?.kycStatus || user?.status || "").toString().toLowerCase();
+        const kycStatus = (user?.kycStatus || "").toLowerCase();
         const isApproved = kycStatus === 'active' || kycStatus === 'approved';
 
         if (!isApproved) return null;
@@ -181,7 +181,7 @@ const Page = () => {
               </div>
             </div>
             <button
-              onClick={() => router.push('/profile')}
+              onClick={() => router.push('/dashboard/profilemanagement')}
               className="px-6 py-3 rounded-2xl bg-white border border-emerald-200 text-emerald-600 font-bold text-xs uppercase tracking-widest hover:bg-emerald-100 transition-all shadow-sm"
             >
               View Profile

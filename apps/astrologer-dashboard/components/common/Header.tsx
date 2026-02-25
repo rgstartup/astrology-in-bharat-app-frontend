@@ -23,8 +23,8 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user?.is_available !== undefined) {
-      setIsOnline(user.is_available);
+    if (user?.isAvailable !== undefined) {
+      setIsOnline(user.isAvailable);
     }
   }, [user]);
 
@@ -122,7 +122,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
       { id: 2, message: "System update available", time: "10m ago", type: 'info' },
     ];
 
-    const status = (user?.status || user?.kycStatus || user?.kyc_status || user?.kyc_details?.status || "").toLowerCase();
+    const status = (user?.kycStatus || "").toLowerCase();
     if (status === 'rejected') {
       initial.unshift({
         id: Date.now(),
@@ -324,7 +324,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           >
             <Link href="/dashboard/profilemanagement">
               <Avatar
-                src={(user as any)?.avatar || (user as any)?.profilePic}
+                src={user?.profilePic}
                 alt="Profile"
                 className="border-2 border-orange-500 shadow-md bg-top hover:scale-105 transition-transform duration-200"
               />
@@ -335,5 +335,3 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
     </header>
   );
 };
-
-
