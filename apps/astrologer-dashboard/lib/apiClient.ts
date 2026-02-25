@@ -79,7 +79,7 @@ export const apiClient = {
         request<T>(path, { ...opts, method: "DELETE" }),
 
     upload: <T>(path: string, formData: FormData, opts?: Omit<RequestOptions, "method" | "body">) =>
-        request<T>(path, { ...opts, method: "POST", body: formData }),
+        request<T>(path, { ...opts, method: "POST", body: formData, timeoutMs: 60000 }),
 };
 
 export default apiClient;

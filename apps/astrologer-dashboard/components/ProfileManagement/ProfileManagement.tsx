@@ -468,8 +468,13 @@ const ProfileManagement = () => {
     } catch (err: any) {
       console.error("File upload failed:", err);
 
-      const errorData = err.response?.data;
+      // ApiError from safeFetch uses err.body, not err.response.data
+      const errorData = err.body || err.response?.data;
       let errorMessage = "Failed to upload file. Please try again.";
+
+      if (err.message && err.message !== "Network error") {
+        errorMessage = err.message;
+      }
 
       if (errorData) {
         if (typeof errorData.message === 'string') {
