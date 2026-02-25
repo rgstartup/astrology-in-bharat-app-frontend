@@ -63,12 +63,12 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                                             <h6 className={`mb-1 ${notif.isRead ? 'text-gray-600' : 'text-gray-900 fw-bold'}`}>{notif.title}</h6>
                                             <p className="text-muted small mb-1" style={{ lineHeight: '1.4' }}>{notif.message}</p>
                                             <span className="text-[10px] text-primary font-medium uppercase tracking-wider">
-                                                {new Date(notif.createdAt).toLocaleString('en-IN', {
+                                                {(notif.createdAt || notif.created_at) ? new Date(notif.createdAt || notif.created_at).toLocaleString('en-IN', {
                                                     day: 'numeric',
                                                     month: 'short',
                                                     hour: 'numeric',
                                                     minute: 'numeric'
-                                                })}
+                                                }) : 'N/A'}
                                             </span>
                                         </div>
                                     </div>

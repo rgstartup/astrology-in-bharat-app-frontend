@@ -55,7 +55,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                                     <div className="d-flex flex-column">
                                         <span className="text-muted small fw-bold text-uppercase">Date</span>
                                         <span className="fw-bold">
-                                            {session.createdAt ? new Date(session.createdAt).toLocaleDateString('en-IN', {
+                                            {(session.createdAt || session.created_at) ? new Date(session.createdAt || session.created_at).toLocaleDateString('en-IN', {
                                                 day: 'numeric',
                                                 month: 'short',
                                                 year: 'numeric'
@@ -64,7 +64,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                                     </div>
                                     <div className="d-flex flex-column">
                                         <span className="text-muted small fw-bold text-uppercase">Amount Paid</span>
-                                        <span className="fw-bold text-primary">₹{session.totalCost || 0}</span>
+                                        <span className="fw-bold text-primary">₹{session.totalCost || session.total_cost || 0}</span>
                                     </div>
                                     <div className="d-flex flex-column align-items-end gap-2">
                                         <span className={`px-3 py-1 rounded-pill text-[10px] uppercase font-bold tracking-wide ${session.terminatedBy === 'admin'
@@ -107,14 +107,14 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                                                         <p className="text-muted mb-0 small">{session.expert?.category || session.expert?.specialization || "Expert Astrologer"}</p>
                                                     </div>
                                                     <div className="text-end">
-                                                        <span className="fw-bold d-block">₹{session.totalCost || 0}</span>
+                                                        <span className="fw-bold d-block">₹{session.totalCost || session.total_cost || 0}</span>
                                                         <span className="text-muted small">Consultation Fee</span>
                                                     </div>
                                                 </div>
                                                 <div className="d-flex gap-3 text-muted small">
                                                     <span>
                                                         <i className={`fa-solid ${session.chatType === 'video' ? 'fa-video' : session.chatType === 'audio' ? 'fa-phone' : 'fa-message'} me-1`}></i>
-                                                        {session.duration || session.chatDuration || '0'} mins
+                                                        {session.duration || session.chatDuration || session.chat_duration || '0'} mins
                                                     </span>
                                                     <span><i className="fa-solid fa-star text-warning me-1"></i> {session.expert?.rating || 'N/A'} Rating</span>
                                                 </div>
