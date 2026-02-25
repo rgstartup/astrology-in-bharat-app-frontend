@@ -2,34 +2,35 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  emailVerified?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-  avatar?: string; // Potentially missing from API, handle carefully
+  email_verified_at?: string | Date | null;
+  created_at?: string;
+  updated_at?: string;
+  avatar?: string;
+  is_blocked: boolean;
+
   profile_client?: {
     id: number;
+    phone_number?: string;
+    gender?: string;
+    date_of_birth?: string | Date | null;
     addresses?: {
+      id: number;
+      house_no?: string;
+      line1?: string;
       city?: string;
+      district?: string;
       state?: string;
       country?: string;
-      street?: string;
-      zipCode?: string;
+      pincode?: string;
+      tag?: string;
     }[];
   };
-  // Legacy/Optional fields for UI compatibility
+
+  // UI / Logic derived fields
   phone?: string;
-  status?: string; // Derived in UI possibly
-  isBlocked?: boolean;
-  joinDate?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  dateOfBirth?: string;
-  gender?: string;
-  totalConsultations?: number;
-  totalSpent?: number;
-  lastActive?: string;
-  // ... other fields as needed
+  total_spent?: number;
+  total_consultations?: number;
+  wallet_balance?: number;
 }
 
 
