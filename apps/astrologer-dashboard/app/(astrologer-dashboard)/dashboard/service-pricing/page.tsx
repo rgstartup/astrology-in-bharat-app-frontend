@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Star, Edit3, Gift, Save, X, Loader2, Trash2 } from "lucide-react";
-import { getProfile, updateProfile } from "@/lib/profile";
+import { getProfile, updateProfile, updatePricing } from "@/lib/profile";
 import { Profile } from "@/components/ProfileManagement/types";
 import { toast } from "react-toastify";
 import { Button } from "@repo/ui";
@@ -41,7 +41,11 @@ const ServicePricingPage = () => {
   };
 
   const handleSave = async (serviceKey: string) => {
-    if (!profile) return;
+    console.log("handleSave triggered for:", serviceKey, "with price:", tempPrice);
+    if (!profile) {
+      console.warn("handleSave: No profile data found.");
+      return;
+    }
 
     if (tempPrice < 0) {
       toast.error("Price cannot be negative.");
@@ -50,6 +54,7 @@ const ServicePricingPage = () => {
 
     try {
       setSaving(serviceKey);
+      console.log("Saving status set for:", serviceKey);
 
       // Check if it's a custom service
       if (serviceKey.startsWith('custom-')) {
@@ -57,26 +62,33 @@ const ServicePricingPage = () => {
         const updatedCustomServices = (profile.custom_services || []).map(s =>
           s.id === serviceId ? { ...s, price: Number(tempPrice) } : s
         );
+        console.log("Updating custom services...");
         await updateProfile({ custom_services: updatedCustomServices });
         setProfile({ ...profile, custom_services: updatedCustomServices });
       } else {
         const payload = {
           [serviceKey]: Number(tempPrice)
         };
-        await updateProfile(payload);
+        console.log("Updating standard pricing with payload:", payload);
+        // Use more specific pricing endpoint for standard fields
+        await updatePricing(payload);
+
         setProfile({
           ...profile,
-          ...payload
+          ...payload as any
         });
       }
 
+      console.log("Save successful for:", serviceKey);
       setEditMode(null);
       toast.success("Price updated successfully!");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to update price:", error);
-      toast.error("Failed to save price.");
+      const errorMessage = error?.body?.message || error?.message || "Failed to save price.";
+      toast.error(errorMessage);
     } finally {
       setSaving(null);
+      console.log("Saving process finished for:", serviceKey);
     }
   };
 

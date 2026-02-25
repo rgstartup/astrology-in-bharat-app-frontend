@@ -70,20 +70,51 @@ export default function ExpertiseAvailability({
                         <p className="text-[10px] text-gray-400 mt-1">Separate with commas for multiple.</p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Experience (Years)</label>
-                            <input
-                                type="number"
-                                name="experience_in_years"
-                                value={tempProfile.experience_in_years}
-                                onChange={onChange}
-                                min="0"
-                                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
-                            />
+                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Chat Price (per minute)</label>
+                            <div className="relative">
+                                <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <input
+                                    type="number"
+                                    name="chat_price"
+                                    value={tempProfile.chat_price}
+                                    onChange={onChange}
+                                    min="0"
+                                    className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                                />
+                            </div>
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Price (per minute)</label>
+                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Audio Call Price (per minute)</label>
+                            <div className="relative">
+                                <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <input
+                                    type="number"
+                                    name="call_price"
+                                    value={tempProfile.call_price}
+                                    onChange={onChange}
+                                    min="0"
+                                    className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Video Call Price (per minute)</label>
+                            <div className="relative">
+                                <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <input
+                                    type="number"
+                                    name="video_call_price"
+                                    value={tempProfile.video_call_price}
+                                    onChange={onChange}
+                                    min="0"
+                                    className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none text-sm text-black"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Report/Horoscope Price</label>
                             <div className="relative">
                                 <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                 <input
@@ -154,8 +185,16 @@ export default function ExpertiseAvailability({
                             <p className="text-sm font-semibold text-gray-700">{profile.experience_in_years} Years</p>
                         </div>
                         <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Price</p>
-                            <p className="text-sm font-semibold text-gray-700">${profile.price}/min</p>
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Chat Price</p>
+                            <p className="text-sm font-semibold text-gray-700">₹{profile.chat_price}/min</p>
+                        </div>
+                        <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Audio Price</p>
+                            <p className="text-sm font-semibold text-gray-700">₹{profile.call_price}/min</p>
+                        </div>
+                        <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Video Price</p>
+                            <p className="text-sm font-semibold text-gray-700">₹{profile.video_call_price}/min</p>
                         </div>
                     </div>
 

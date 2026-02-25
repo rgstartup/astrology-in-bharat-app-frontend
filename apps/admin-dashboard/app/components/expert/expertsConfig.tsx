@@ -20,9 +20,9 @@ export const getStatsConfig = (data: Expert[] | ExpertStats) => {
   if (Array.isArray(data)) {
     stats = {
       totalExperts: data.length,
-      activeExperts: data.filter((e) => e.emailVerified).length,
-      pendingExperts: data.filter((e) => !e.emailVerified).length,
-      totalRevenue: data.reduce((acc, curr) => acc + (curr.profile_expert?.totalEarnings || 0), 0),
+      activeExperts: data.filter((e) => e.email_verified_at || (e as any).emailVerified).length,
+      pendingExperts: data.filter((e) => !e.email_verified_at && !(e as any).emailVerified).length,
+      totalRevenue: data.reduce((acc, curr) => acc + (curr.profile_expert?.total_earnings || (curr as any).totalEarnings || 0), 0),
     };
   } else {
     // Handle object input (pre-calculated from API)
@@ -108,14 +108,14 @@ export const getColumns = () => [
     key: "consultations",
     label: "Consultations",
     render: (expert: Expert) => (
-      <p className="text-sm text-gray-900 font-medium">{expert.profile_expert?.totalConsultations || 0}</p>
+      <p className="text-sm text-gray-900 font-medium">{expert.profile_expert?.consultation_count || expert.totalConsultations || 0}</p>
     ),
   },
   {
     key: "kycStatus",
     label: "KYC Status",
     render: (expert: Expert) => {
-      const status = expert.status || "pending";
+      const status = expert.profile_expert?.kyc_status || expert.status || "pending";
       return (
         <span
           className={`px-3 py-1 rounded-full text-xs font-semibold ${status === "approved"
@@ -135,12 +135,12 @@ export const getColumns = () => [
     label: "Status",
     render: (expert: Expert) => (
       <span
-        className={`px-3 py-1 rounded-full text-xs font-semibold ${expert.emailVerified
+        className={`px-3 py-1 rounded-full text-xs font-semibold ${expert.email_verified_at || (expert as any).emailVerified
           ? "bg-green-100 text-green-700"
           : "bg-red-100 text-red-700"
           }`}
       >
-        {expert.emailVerified ? "Verified" : "Pending"}
+        {expert.email_verified_at || (expert as any).emailVerified ? "Verified" : "Pending"}
       </span>
     ),
   },

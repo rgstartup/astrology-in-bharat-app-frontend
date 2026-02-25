@@ -3,7 +3,10 @@ export interface Expert {
   name: string;
   email: string;
   emailVerified: boolean;
+  email_verified_at?: string | null;
+  kyc_status?: string;
   createdAt: string;
+  created_at: string;
   avatar?: string;
   phone?: string;
   status?: string;
@@ -78,6 +81,9 @@ export interface Expert {
     }[];
     languages?: string[];
     kycStatus?: "Verified" | "Pending" | "Rejected";
+    kyc_status?: string;
+    consultation_count?: number;
+    total_earnings?: number;
   };
 
   // UI specific fields

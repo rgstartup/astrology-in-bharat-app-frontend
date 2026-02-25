@@ -63,7 +63,10 @@ export default function ExpertsPage() {
         limit: 10,
         status: statusFilter || undefined
       });
-      if (response && response.data) {
+      if (response && response.items) {
+        setExperts(response.items);
+        setTotalExperts(response.total || 0);
+      } else if (response && response.data) {
         setExperts(response.data);
         setTotalExperts(response.total || response.count || 0);
       } else if (Array.isArray(response)) {

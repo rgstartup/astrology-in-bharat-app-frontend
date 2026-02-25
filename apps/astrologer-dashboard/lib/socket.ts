@@ -16,6 +16,12 @@ export const chatSocket: Socket = io(`${SOCKET_URL}/chat`, {
     autoConnect: false,
 });
 
+// Expert specific call socket
+export const callSocket: Socket = io(`${SOCKET_URL}/call`, {
+    transports: ["websocket"],
+    autoConnect: false,
+});
+
 socket.on("connect", () => {
     console.log("[Socket] ✅ Dashboard Connected! ID:", socket.id);
 });
@@ -30,6 +36,14 @@ chatSocket.on("connect", () => {
 
 chatSocket.on("connect_error", (err) => {
     console.error("[ChatSocket] ❌ Connection Error:", err.message);
+});
+
+callSocket.on("connect", () => {
+    console.log("[CallSocket] ✅ Connected! ID:", callSocket.id);
+});
+
+callSocket.on("connect_error", (err) => {
+    console.error("[CallSocket] ❌ Connection Error:", err.message);
 });
 
 

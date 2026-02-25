@@ -9,6 +9,7 @@ import TodoList from "./TodoList";
 import PayoutInfo from "./PayoutInfo";
 import PortfolioGallery from "./PortfolioGallery";
 import VerificationAndDocuments from "./VerificationAndDocuments";
+import ExpertiseAvailability from "./ExpertiseAvailability";
 import { Todo, LeaveDate, Profile, Gender, DocumentItem, ExperienceItem } from "./types";
 import { useAuthStore } from "@/store/useAuthStore";
 import {
@@ -734,6 +735,17 @@ const ProfileManagement = () => {
           onChange={handleChange}
           onProfilePicUpdate={handleProfilePicUpdate}
           onLanguageChange={handleLanguageChange}
+        />
+
+        <ExpertiseAvailability
+          profile={profile}
+          tempProfile={tempProfile}
+          isEditing={editMode === "pricing"}
+          onEdit={() => handleEditClick("pricing")}
+          onSave={() => handleSave("pricing")}
+          onCancel={handleCancel}
+          onChange={handleChange}
+          onLanguageChange={(langs) => setTempProfile(prev => ({ ...prev, languages: langs }))}
         />
 
 

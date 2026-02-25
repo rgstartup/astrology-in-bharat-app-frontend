@@ -15,6 +15,7 @@
     "@repo/styles": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@twilio/voice-sdk": "^2.18.0",
     "bootstrap": "^5.3.7",
     "chart.js": "^4.5.1",
     "clsx": "^2.1.1",

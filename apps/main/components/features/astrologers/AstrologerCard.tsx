@@ -137,6 +137,18 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
     router.push(`/chat/prep/${expertProfileId}`);
   };
 
+  const handleCallClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/call/prep/${expertProfileId}?type=audio`);
+  };
+
+  const handleVideoCallClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/call/prep/${expertProfileId}?type=video`);
+  };
+
   const createDetailsUrl = () => (id ? `/astrologer/${id}` : "#");
 
   // Combine expertise and custom services for display
@@ -354,7 +366,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
 
             <Button
               variant="primary"
-              onClick={handleChatClick}
+              onClick={handleCallClick}
               className="flex-1 flex-col py-1.5 leading-tight !rounded-full text-[13px]"
             >
               <div className="flex items-center gap-1.5">
@@ -368,7 +380,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
 
           <Button
             variant="primary"
-            onClick={handleChatClick}
+            onClick={handleVideoCallClick}
             className="w-full flex-col py-1.5 leading-tight !rounded-full text-[13px]"
           >
             <div className="flex items-center gap-1.5">

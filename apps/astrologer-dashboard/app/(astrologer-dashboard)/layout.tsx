@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { ChatNotificationListener } from "@/components/ChatNotificationListener";
+import { CallNotificationListener } from "@/components/CallNotificationListener";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -40,6 +41,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <ChatNotificationListener />
+      <CallNotificationListener />
       <div className="min-h-screen bg-gray-50 flex">
         {/* Sidebar */}
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />

@@ -58,34 +58,34 @@ function ExpertChatRoomContent() {
                 console.log("[ExpertChatDebug] Fetching status for session:", sessionId);
 
                 // Fetch basic session info
-                const sessionRes = await apiClient.get(`/chat/session/${sessionId}?_t=${Date.now()}`);
-                if (sessionRes.data) {
-                    const status = sessionRes.data.status;
+                const sessionRes: any = await apiClient.get(`/chat/session/${sessionId}?_t=${Date.now()}`);
+                if (sessionRes) {
+                    const status = sessionRes.status;
                     setSessionStatus(status);
-                    if (sessionRes.data.user?.name) {
-                        setClientName(sessionRes.data.user.name);
+                    if (sessionRes.user?.name) {
+                        setClientName(sessionRes.user.name);
                     }
-                    if (sessionRes.data.user?.profile_picture || sessionRes.data.user?.avatar) {
-                        setClientAvatar(sessionRes.data.user.profile_picture || sessionRes.data.user.avatar);
+                    if (sessionRes.user?.profile_picture || sessionRes.user?.avatar) {
+                        setClientAvatar(sessionRes.user.profile_picture || sessionRes.user.avatar);
                     }
 
                     // Pure sync from backend's improved fields
                     console.log("[ExpertChatDebug] Server Sync Data:", {
-                        remainingSeconds: sessionRes.data.remainingSeconds,
-                        elapsedSeconds: sessionRes.data.elapsedSeconds
+                        remainingSeconds: sessionRes.remainingSeconds,
+                        elapsedSeconds: sessionRes.elapsedSeconds
                     });
 
-                    if (sessionRes.data.remainingSeconds !== undefined) {
-                        setTimeLeft(sessionRes.data.remainingSeconds);
+                    if (sessionRes.remainingSeconds !== undefined) {
+                        setTimeLeft(sessionRes.remainingSeconds);
                     }
-                    if (sessionRes.data.elapsedSeconds !== undefined) {
-                        setElapsedTime(sessionRes.data.elapsedSeconds);
+                    if (sessionRes.elapsedSeconds !== undefined) {
+                        setElapsedTime(sessionRes.elapsedSeconds);
                     }
                 }
 
                 // Fetch history
-                const historyRes = await apiClient.get(`/chat/history/${sessionId}`);
-                setMessages(historyRes.data);
+                const historyRes: any = await apiClient.get(`/chat/history/${sessionId}`);
+                setMessages(historyRes || []);
             } catch (err) {
                 console.error("Failed to fetch info:", err);
             }

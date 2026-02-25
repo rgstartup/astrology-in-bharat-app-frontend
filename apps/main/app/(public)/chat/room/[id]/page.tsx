@@ -158,33 +158,33 @@ function ChatRoomContent() {
             try {
                 // Fetch history
                 const historyRes = await apiClient.get<any>(`/chat/history/${sessionId}`);
-                setMessages(historyRes.data);
+                setMessages(historyRes);
 
                 // Fetch session details for expiresAt
                 const sessionRes = await apiClient.get<any>(`/chat/session/${sessionId}?_t=${Date.now()}`);
-                if (sessionRes.data) {
-                    console.log(`[UserChatDebug] Session Data Loaded: Status=${sessionRes.data.status}, maxMinutes=${sessionRes.data.maxMinutes}, isFree=${sessionRes.data.isFree}`);
-                    setExpiresAt(sessionRes.data.expiresAt);
-                    setSessionStatus(sessionRes.data.status);
+                if (sessionRes) {
+                    console.log(`[UserChatDebug] Session Data Loaded: Status=${sessionRes.status}, maxMinutes=${sessionRes.maxMinutes}, isFree=${sessionRes.isFree}`);
+                    setExpiresAt(sessionRes.expiresAt);
+                    setSessionStatus(sessionRes.status);
 
-                    const freeChat = !!sessionRes.data.isFree;
-                    const mins = sessionRes.data.freeMinutes || 0;
+                    const freeChat = !!sessionRes.isFree;
+                    const mins = sessionRes.freeMinutes || 0;
                     setIsFree(freeChat);
                     setFreeMinutes(mins);
 
                     // Pure sync from backend's improved fields
                     console.log("[UserChatDebug] Server Sync Data:", {
-                        status: sessionRes.data.status,
-                        remainingSeconds: sessionRes.data.remainingSeconds,
-                        elapsedSeconds: sessionRes.data.elapsedSeconds,
-                        expiresAt: sessionRes.data.expiresAt
+                        status: sessionRes.status,
+                        remainingSeconds: sessionRes.remainingSeconds,
+                        elapsedSeconds: sessionRes.elapsedSeconds,
+                        expiresAt: sessionRes.expiresAt
                     });
 
-                    if (sessionRes.data.remainingSeconds !== undefined) {
-                        setTimeLeft(sessionRes.data.remainingSeconds);
+                    if (sessionRes.remainingSeconds !== undefined) {
+                        setTimeLeft(sessionRes.remainingSeconds);
                     }
-                    if (sessionRes.data.elapsedSeconds !== undefined) {
-                        setElapsedTime(sessionRes.data.elapsedSeconds);
+                    if (sessionRes.elapsedSeconds !== undefined) {
+                        setElapsedTime(sessionRes.elapsedSeconds);
                     }
                 }
             } catch (err) {

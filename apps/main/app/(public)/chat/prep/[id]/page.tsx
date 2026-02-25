@@ -89,17 +89,17 @@ export default function ConsultationPrep() {
         setActionLoading(true);
         try {
             const response = await apiClient.post<any>("/chat/initiate", { expertId: parseInt(id) });
-            if (response.data && response.data.id) {
+            if (response && response.id) {
                 // Save to localStorage for the global floating button
                 localStorage.setItem('activeChatSession', JSON.stringify({
-                    id: response.data.id,
+                    id: response.id,
                     expertId: id,
                     status: 'pending',
                     timestamp: Date.now()
                 }));
 
                 toast.success("Connecting to expert...");
-                router.push(`/chat/room/${id}?sessionId=${response.data.id}`);
+                router.push(`/chat/room/${id}?sessionId=${response.id}`);
             }
         } catch (error: any) {
             console.error("Initiation error:", error);
