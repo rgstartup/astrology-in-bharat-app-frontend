@@ -20,12 +20,15 @@ export const RecentActivity: React.FC = () => {
     const fetchActivities = async () => {
       try {
         const sessions = await getRecentSessions();
-        const recent5 = sessions.slice(0, 5).map(session => ({
-          name: session.user?.name || "Client",
-          action: "consultation",
-          time: format(new Date(session.createdAt), 'h:mm a'),
-          relativeTime: formatDistanceToNow(new Date(session.createdAt), { addSuffix: true })
-        }));
+        const recent5 = sessions.slice(0, 5).map(session => {
+          const date = new Date(session.created_at || session.createdAt || Date.now());
+          return {
+            name: session.user?.name || "Client",
+            action: "consultation",
+            time: format(date, 'h:mm a'),
+            relativeTime: formatDistanceToNow(date, { addSuffix: true })
+          };
+        });
         setActivities(recent5);
       } catch (error) {
         console.error("Failed to fetch recent activities:", error);

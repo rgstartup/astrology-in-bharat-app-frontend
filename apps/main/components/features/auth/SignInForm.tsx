@@ -18,6 +18,16 @@ const SignInForm: React.FC = () => {
   const { clientLogin } = useAuthStore();
   const callbackUrl = searchParams.get("callbackUrl") || "/profile";
 
+  React.useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam) {
+      const message = errorParam === "google_auth_failed" ? "Google login failed." : decodeURIComponent(errorParam);
+      toast.error(message);
+      // Clean up URL
+      router.replace(window.location.pathname);
+    }
+  }, [searchParams, router]);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -183,4 +193,3 @@ const SignInForm: React.FC = () => {
 };
 
 export default SignInForm;
-

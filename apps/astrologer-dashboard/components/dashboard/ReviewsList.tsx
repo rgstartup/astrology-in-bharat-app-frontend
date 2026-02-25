@@ -46,7 +46,7 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({ reviews, loading }) =>
                                 </div>
                             </div>
                             <span className="text-[10px] text-gray-400">
-                                {new Date(review.createdAt).toLocaleDateString()}
+                                {new Date((review as any).created_at || review.createdAt || Date.now()).toLocaleDateString()}
                             </span>
                         </div>
                         <p className="text-sm text-gray-600 line-clamp-2 italic">
