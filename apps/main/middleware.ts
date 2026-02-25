@@ -135,7 +135,7 @@ export async function middleware(request: NextRequest) {
 
   try {
     const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh`, {
-      method: "GET",
+      method: "POST",
       cache: "no-store",
       credentials: "include",
       headers: {
