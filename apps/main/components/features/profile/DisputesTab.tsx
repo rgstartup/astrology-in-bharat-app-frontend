@@ -53,19 +53,19 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
                                         <td className="px-3 py-3">
                                             <span className="fw-bold">#DS-{dispute.id}</span>
                                             <div className="small text-muted">
-                                                {new Date(dispute.createdAt).toLocaleDateString()}
+                                                {(dispute.createdAt || dispute.created_at) ? new Date(dispute.createdAt || dispute.created_at).toLocaleDateString() : 'N/A'}
                                             </div>
                                         </td>
                                         <td>
-                                            <span className="badge bg-light text-dark border">{dispute.category}</span>
+                                            <span className="badge bg-light text-dark border">{dispute.category || dispute.subject || 'Support Ticket'}</span>
                                             <div className="small text-muted mt-1 text-truncate" style={{ maxWidth: '200px' }}>
                                                 {dispute.description}
                                             </div>
                                         </td>
                                         <td>
                                             <span className={`badge ${dispute.status === 'open' ? 'bg-info' :
-                                                    dispute.status === 'pending' ? 'bg-warning' :
-                                                        dispute.status === 'resolved' ? 'bg-success' : 'bg-secondary'
+                                                dispute.status === 'pending' ? 'bg-warning' :
+                                                    dispute.status === 'resolved' ? 'bg-success' : 'bg-secondary'
                                                 }`}>
                                                 {dispute.status}
                                             </span>
