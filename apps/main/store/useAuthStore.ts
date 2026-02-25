@@ -146,13 +146,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 authDebug("refreshAuth:user resolved", { id: user.id, name: user.name });
                 get().refreshBalance();
             } else {
-                // If protected endpoint returned 2xx but payload is empty/unknown
-                // (null/false/string/etc), session is still valid.
                 set({
-                    isClientAuthenticated: true,
-                    clientUser: get().clientUser ?? { id: 0, name: "New Cosmic Explorer", email: "", roles: [] },
+                    isClientAuthenticated: false,
+                    clientUser: null,
                 });
-                authDebug("refreshAuth:2xx with non-user payload -> keep authenticated");
+                authDebug("refreshAuth:2xx with non-user payload -> unauthenticated");
             }
         } catch (err: any) {
             const status = err?.status ?? err?.response?.status;
@@ -161,20 +159,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 message: err?.message,
             });
 
-            if (status === 401) {
-                // Session invalid
-                set({ isClientAuthenticated: false, clientUser: null });
-            } else if (status === 404) {
-                // Authenticated but no profile yet (new Google user)
-                set({
-                    isClientAuthenticated: true,
-                    clientUser: { id: 0, name: "New Cosmic Explorer", email: "", roles: [] },
-                });
-            } else if (!get().isClientAuthenticated) {
-                // For network/CORS/unknown errors during bootstrap, keep as unauth.
-                set({ isClientAuthenticated: false, clientUser: null });
-            }
-            // Network / 500 errors: keep existing state
+            // On ANY error, we assume unauthenticated for safety.
+            set({
+                isClientAuthenticated: false,
+                clientUser: null,
+            });
         } finally {
             set({ clientLoading: false });
             authDebug("refreshAuth:final", {

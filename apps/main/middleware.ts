@@ -38,7 +38,25 @@ export async function middleware(request: NextRequest) {
 
     if (urlAccessToken) {
         debug('social callback tokens found, setting cookies and redirecting clean URL');
-        const nextUrl = new URL(pathname, request.url);
+
+        // 1. Determine redirection target based on role
+        let targetPath = pathname;
+        let targetHost = request.nextUrl.origin;
+
+        try {
+            const payload = jwtDecode<JwtPayload>(urlAccessToken);
+            if (payload.role === 'agent') {
+                targetHost = process.env.ASTROLOGER_FRONTEND_URL || 'http://localhost:3003';
+                targetPath = '/dashboard';
+            } else if (payload.role === 'admin') {
+                targetHost = process.env.ADMIN_FRONTEND_URL || 'http://localhost:3001';
+                targetPath = '/dashboard';
+            }
+        } catch (err) {
+            debug('failed to decode urlAccessToken for role check', err);
+        }
+
+        const nextUrl = new URL(targetPath, targetHost);
         // Clear search params to clean URL
         nextUrl.searchParams.delete('accessToken');
         nextUrl.searchParams.delete('refreshToken');
