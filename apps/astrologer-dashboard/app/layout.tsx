@@ -8,8 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { BACKEND_URL } from '@/lib/config';
-const cleanApiBase = BACKEND_URL;
+import { CLIENT_API_URL } from '@/lib/config';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
@@ -20,7 +19,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   if (accessToken) {
     try {
-      const response = await fetch(`${cleanApiBase}/expert`, {
+      const response = await fetch(`${CLIENT_API_URL}/expert`, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${accessToken}`,

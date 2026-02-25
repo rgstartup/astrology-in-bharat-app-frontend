@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
         setLoading(true);
 
         try {
-            const result = await astrologerLoginAction({ email, password, expert: true });
+            const result = await astrologerLoginAction({ email, password });
 
             if (result.success) {
                 // Initial login in store (profile will be fetched by AuthInitializer)
