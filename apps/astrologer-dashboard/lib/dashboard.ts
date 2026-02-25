@@ -13,7 +13,7 @@ export interface DashboardStats {
 
 export const getDashboardStats = async (type: 'today' | 'total' = 'today'): Promise<DashboardStats> => {
     try {
-        const response = await apiClient.get(`expert-dashboard/stats?type=${type}`);
+        const response: any = await apiClient.get(`expert-dashboard/stats?type=${type}`);
         return response.data?.data;
     } catch (error) {
         console.error(`[Dashboard] Stats API call failed for type ${type}:`, error);
@@ -43,7 +43,11 @@ export const getRecentSessions = async (): Promise<any[]> => {
         const uniqueSessions = Array.from(new Map(allSessions.map(item => [item.id, item])).values());
 
         // Sort by date (newest first)
-        return uniqueSessions.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        return uniqueSessions.sort((a: any, b: any) => {
+            const dateA = new Date(a.created_at || a.createdAt || 0).getTime();
+            const dateB = new Date(b.created_at || b.createdAt || 0).getTime();
+            return dateB - dateA;
+        });
     } catch (error) {
         console.error("[Dashboard] Failed to fetch recent sessions:", error);
         return [];

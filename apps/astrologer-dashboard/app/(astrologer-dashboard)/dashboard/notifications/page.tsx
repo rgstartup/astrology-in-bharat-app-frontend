@@ -84,7 +84,7 @@ const NotificationItem: FC<{
                     dateTime={notification.createdAt}
                     className="mt-1 inline-block text-xs text-gray-400"
                 >
-                    {new Date(notification.createdAt).toLocaleString()}
+                    {new Date(notification.createdAt || Date.now()).toLocaleString()}
                 </time>
             </div>
             <div className="flex flex-col gap-2">
@@ -124,7 +124,7 @@ const NotificationPage = () => {
                 id: n.id,
                 title: n.title,
                 description: n.message,
-                createdAt: n.createdAt,
+                createdAt: (n as any).created_at || n.createdAt,
                 read: n.isRead,
                 type: n.type === 'error' ? 'error' : n.type === 'success' ? 'success' : 'info'
             }));

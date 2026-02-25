@@ -82,7 +82,7 @@ export const ReviewsModal: React.FC<ReviewsModalProps> = ({ isOpen, onClose, exp
                                         </div>
                                     </div>
                                     <span className="text-sm text-gray-400">
-                                        {new Date(review.createdAt).toLocaleDateString(undefined, {
+                                        {new Date((review as any).created_at || review.createdAt || Date.now()).toLocaleDateString(undefined, {
                                             year: 'numeric',
                                             month: 'long',
                                             day: 'numeric'

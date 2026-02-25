@@ -58,11 +58,11 @@ export default function AppointmentsPage() {
       let allSessions: any[] = [];
 
       if (pendingRes.status === 'fulfilled') {
-        allSessions = [...allSessions, ...pendingRes.value.data];
+        allSessions = [...allSessions, ...(pendingRes.value as any).data];
       }
 
       if (completedRes.status === 'fulfilled') {
-        allSessions = [...allSessions, ...completedRes.value.data];
+        allSessions = [...allSessions, ...(completedRes.value as any).data];
       }
 
       const reviews = (reviewsRes.status === 'fulfilled' && (reviewsRes.value as any).data) ? (reviewsRes.value as any).data : [];
@@ -78,7 +78,11 @@ export default function AppointmentsPage() {
       const uniqueSessions = Array.from(uniqueSessionsMap.values());
 
       // Sort by date (newest first)
-      uniqueSessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      uniqueSessions.sort((a: any, b: any) => {
+        const dateA = new Date(a.created_at || a.createdAt || 0).getTime();
+        const dateB = new Date(b.created_at || b.createdAt || 0).getTime();
+        return dateB - dateA;
+      });
 
       const chatAppointments: Appointment[] = await Promise.all(uniqueSessions.map(async (session: any) => {
         let currentStatus = session.status;
@@ -89,7 +93,7 @@ export default function AppointmentsPage() {
           const matchingReview = reviews.find((r: any) =>
             r.sessionId === session.id ||
             (session.user?.name && r.user?.name === session.user?.name &&
-              Math.abs(new Date(r.createdAt).getTime() - new Date(session.createdAt).getTime()) < 24 * 60 * 60 * 1000)
+              Math.abs(new Date(r.created_at || r.createdAt || 0).getTime() - new Date(session.created_at || session.createdAt || 0).getTime()) < 24 * 60 * 60 * 1000)
           );
           if (matchingReview) {
             sessionReview = {
@@ -103,7 +107,7 @@ export default function AppointmentsPage() {
         // We double-check the status for any "active" session using the individual session endpoint.
         if (currentStatus === 'active') {
           try {
-            const verificationRes = await apiClient.get(`/chat/session/${session.id}?_t=${Date.now()}`);
+            const verificationRes: any = await apiClient.get(`/chat/session/${session.id}?_t=${Date.now()}`);
             if (verificationRes.data && verificationRes.data.status) {
               console.log(`[AppointmentDebug] Verified status for session ${session.id}: ${verificationRes.data.status}`);
               currentStatus = verificationRes.data.status;
@@ -124,7 +128,7 @@ export default function AppointmentsPage() {
           name: session.user?.name || "Client",
           avatar: session.user?.profile_picture || session.user?.avatar,
           service: "Chat Consultation",
-          date: session.createdAt || new Date().toISOString(),
+          date: session.created_at || session.createdAt || new Date().toISOString(),
           status: currentStatus, // Use the verified status
           type: "new",
           reminder: false,
@@ -218,7 +222,7 @@ export default function AppointmentsPage() {
           name: session.user?.name || "Client",
           avatar: session.user?.profile_picture || session.user?.avatar,
           service: "Chat Consultation",
-          date: session.createdAt || new Date().toISOString(),
+          date: session.created_at || session.createdAt || new Date().toISOString(),
           status: "pending",
           type: "new",
           reminder: false,

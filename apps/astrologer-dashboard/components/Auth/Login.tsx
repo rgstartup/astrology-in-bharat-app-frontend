@@ -31,6 +31,20 @@ const LoginPage: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
     const { login } = useAuthStore();
+    const [isMounted, setIsMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsMounted(true);
+        const params = new URLSearchParams(window.location.search);
+        const errorParam = params.get("error");
+        if (errorParam) {
+            const message = errorParam === 'google_auth_failed' ? 'Google login failed.' : decodeURIComponent(errorParam);
+            setError(message);
+            toast.error(message);
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -145,7 +159,7 @@ const LoginPage: React.FC = () => {
                                     <input
                                         id="password"
                                         name="password"
-                                        type={showPassword ? "test" : "password"}
+                                        type={showPassword ? "text" : "password"}
                                         autoComplete="current-password"
                                         required
                                         value={password}
