@@ -188,6 +188,7 @@ const CheckoutContent = () => {
       const isLoaded = await loadRazorpay();
       if (!isLoaded) {
         toast.error("Razorpay SDK failed to load. Are you online?");
+        setIsProcessing(false);
         return;
       }
 
@@ -196,15 +197,16 @@ const CheckoutContent = () => {
       if (isOrder) {
         try {
           const orderPayload = {
-            shippingAddress: address,
-            productId: buyNowInfo ? Number(buyNowInfo.productId) : undefined,
+            shipping_address: address,
+            product_id: buyNowInfo ? Number(buyNowInfo.productId) : undefined,
             quantity: buyNowInfo ? Number(buyNowInfo.quantity) : undefined,
-            couponCode: appliedCoupon?.code || undefined
+            coupon_code: appliedCoupon?.code || undefined
           };
           console.log("📦 Sending Order Payload:", orderPayload);
 
           const createOrderRes = await apiClient.post<any>("/order", orderPayload);
-          dbOrderId = createOrderRes.data.id;
+          const orderData = (createOrderRes as any)?.data ?? createOrderRes;
+          dbOrderId = orderData.id;
 
           // Clear buyNowItem if order is successfully created
           sessionStorage.removeItem('buyNowItem');
@@ -218,25 +220,27 @@ const CheckoutContent = () => {
       }
 
       // 3. Initiate Payment
-      const orderRes = await apiClient.post<any>("/payment/orders/create", {
+      const paymentOrderPayload = {
         amount: total,
         type: isOrder ? 'product' : 'consultation',
-        couponCode: appliedCoupon?.code, // Pass coupon code to backend for tracking
+        coupon_code: appliedCoupon?.code,
         notes: {
-          astrologerName,
-          isOrder,
-          orderId: dbOrderId, // Link razorpay order to internal DB order
-          discountApplied: discountAmount
+          astrologer_name: astrologerName,
+          is_order: isOrder,
+          order_id: dbOrderId,
+          discount_applied: discountAmount
         }
-      });
+      };
 
-      const orderPayload: any = (orderRes as any)?.data ?? orderRes;
-      const { id: order_id, amount, currency, key_id } = orderPayload || {};
+      const orderRes = await apiClient.post<any>("/payment/orders/create", paymentOrderPayload);
+      const orderPayloadData: any = (orderRes as any)?.data ?? orderRes;
+      const { id: order_id, amount, currency, key_id } = orderPayloadData || {};
+
       if (!order_id || !amount || !currency) {
         throw new Error("Invalid payment order response");
       }
 
-      // 3. Open Razorpay Modal
+      // 4. Open Razorpay Modal
       const options = {
         key: key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: amount,
@@ -246,12 +250,12 @@ const CheckoutContent = () => {
         order_id: order_id,
         handler: async (response: any) => {
           try {
-            // 4. Verify Payment on Backend
+            // 5. Verify Payment on Backend
             const verifyRes = await apiClient.post<any>("/payment/orders/verify", {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
-              shippingAddress: isOrder ? address : undefined
+              shipping_address: isOrder ? address : undefined
             });
 
             const verifyPayload: any = (verifyRes as any)?.data ?? verifyRes;
@@ -270,12 +274,14 @@ const CheckoutContent = () => {
           } catch (err: any) {
             console.error("Verification error:", err);
             toast.error("Error verifying payment.");
+          } finally {
+            setIsProcessing(false);
           }
         },
         prefill: {
           name: clientUser?.name || "",
           email: clientUser?.email || "",
-          contact: "" // Could get from profile if needed
+          contact: ""
         },
         theme: {
           color: "#fd6410",
@@ -293,8 +299,7 @@ const CheckoutContent = () => {
     } catch (err: any) {
       console.error("Payment error:", err);
       toast.error(err.response?.data?.message || "Something went wrong with the payment.");
-    } finally {
-      // Don't set isProcessing false here if modal is open, handled in ondismiss or handler
+      setIsProcessing(false);
     }
   };
 
