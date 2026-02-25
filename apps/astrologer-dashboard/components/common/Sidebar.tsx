@@ -66,7 +66,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         onClick={item.onClick}
         className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-white hover:bg-[#2d1111] mt-auto"
       >
-        <item.icon className="w-5 h-5 flex-shrink-0" />
+        <item.icon className="w-5 h-5 shrink-0" />
         <span>{item.label}</span>
       </button>
     );
@@ -84,7 +84,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         )}
         aria-current={isActiveLink ? "page" : undefined}
       >
-        <item.icon className="w-5 h-5 flex-shrink-0" />
+        <item.icon className="w-5 h-5 shrink-0" />
         <span>{item.label}</span>
       </Link>
     );
@@ -102,7 +102,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         aria-controls={`submenu-${item.label.replace(/\s/g, "-").toLowerCase()}`}
       >
         <div className="flex items-center space-x-3">
-          <item.icon className="w-5 h-5 flex-shrink-0" />
+          <item.icon className="w-5 h-5 shrink-0" />
           <span>{item.label}</span>
         </div>
         {isSubmenuOpen ? (
@@ -202,7 +202,7 @@ export const Sidebar: React.FC<SidebarProps> = memo(
           )}
           aria-label="Sidebar navigation"
         >
-          <div className="flex items-center justify-between p-6 bg-white border-b border-orange-100 flex-shrink-0">
+          <div className="flex items-center justify-between p-6 bg-white border-b border-orange-100 shrink-0">
             <img
               src="/images/logo.png"
               alt="Logo"
@@ -233,14 +233,7 @@ export const Sidebar: React.FC<SidebarProps> = memo(
           {/* Verification Status Banner (Sidebar Bottom) */}
           {(() => {
             const { user } = useAuthStore();
-            const status = (
-              user?.status ||
-              user?.kycStatus ||
-              user?.kyc_status ||
-              user?.kyc_details?.status ||
-              user?.profile_expert?.kycStatus ||
-              ""
-            ).toLowerCase();
+            const status = (user?.kycStatus || "").toLowerCase();
 
             if (status !== 'rejected') return null;
 

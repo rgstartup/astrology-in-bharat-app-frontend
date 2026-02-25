@@ -110,7 +110,7 @@ const ProfileManagement = () => {
         gender: fullUser.gender || Gender.OTHER,
         bio: fullUser.bio || "",
         specialization: fullUser.specialization || "",
-        experience_in_years: fullUser.experience_in_years || 0,
+        experience_in_years: fullUser.experience_in_years || fullUser.experienceInYears || 0,
         languages: typeof fullUser.languages === 'string' ? fullUser.languages.split(',').map((l: string) => l.trim()) : (fullUser.languages || []),
         price: fullUser.price || 0,
         chat_price: fullUser.chat_price || 0,
@@ -118,23 +118,26 @@ const ProfileManagement = () => {
         video_call_price: fullUser.video_call_price || 0,
         report_price: fullUser.report_price || 0,
         horoscope_price: fullUser.horoscope_price || 0,
-        phoneNumber: fullUser.phoneNumber || "",
+        phoneNumber: fullUser.phoneNumber || fullUser.phone_number || "",
         // Extract address fields from addresses array
-        houseNo: firstAddress?.houseNo || firstAddress?.line1 || "",
+        houseNo: firstAddress?.house_no || firstAddress?.houseNo || firstAddress?.line1 || firstAddress?.street || "",
         state: firstAddress?.state || "",
         district: firstAddress?.district || firstAddress?.city || "",
         country: firstAddress?.country || "",
-        pincode: firstAddress?.pincode || firstAddress?.zipCode || "",
-        bank_details: fullUser.bank_details || "",
-        is_available: fullUser.is_available || false,
-        kycCompleted: false, // Placeholder
+        pincode: firstAddress?.pincode || firstAddress?.zip_code || firstAddress?.zipCode || "",
+        bank_details: fullUser.bank_details || fullUser.bankDetails || "",
+        is_available: fullUser.is_available ?? fullUser.isAvailable ?? false,
+        kycStatus: fullUser.kyc_status || fullUser.kycStatus || fullUser.status || "pending",
+        kycCompleted: (fullUser.kyc_status || fullUser.kycStatus || fullUser.status) === 'approved' || (fullUser.kyc_status || fullUser.kycStatus || fullUser.status) === 'active',
         addresses: fullUser.addresses?.map((a: any) => ({
-          line1: a.line1,
+          line1: a.line1 || a.street,
           line2: a.line2,
           city: a.city,
           state: a.state,
           country: a.country,
-          zipCode: a.zipCode,
+          zipCode: a.zip_code || a.zipCode,
+          pincode: a.pincode,
+          houseNo: a.house_no || a.houseNo,
           tag: a.tag
         })) || [],
         profilePic: fullUser.avatar || fullUser.user?.avatar || fullUser.profilePic || fullUser.user?.profilePic || "",
@@ -142,8 +145,8 @@ const ProfileManagement = () => {
         gallery: fullUser.gallery || [],
         videos: fullUser.videos || [],
         video: fullUser.video || "",
-        detailed_experience: fullUser.detailed_experience || [],
-        date_of_birth: fullUser.date_of_birth,
+        detailed_experience: fullUser.detailed_experience || fullUser.detailedExperience || [],
+        date_of_birth: fullUser.date_of_birth || fullUser.dateOfBirth,
         documents: fullUser.documents || [],
       };
       setProfile(mappedProfile);
@@ -269,7 +272,7 @@ const ProfileManagement = () => {
       bank_details: dataToSave.bank_details,
       is_available: dataToSave.is_available,
       date_of_birth: dataToSave.date_of_birth,
-      phoneNumber: dataToSave.phoneNumber,
+      phone_number: dataToSave.phoneNumber,
       addresses: addressesArray,
       avatar: dataToSave.profilePic,
       gallery: dataToSave.gallery,
@@ -344,7 +347,7 @@ const ProfileManagement = () => {
               experience_in_years: payload.experience_in_years,
               languages: payload.languages,
               date_of_birth: payload.date_of_birth,
-              phoneNumber: payload.phoneNumber,
+              phone_number: payload.phone_number,
               addresses: payload.addresses,
               avatar: payload.avatar
             });
@@ -705,10 +708,9 @@ const ProfileManagement = () => {
           );
         }
 
-        // Default "Pending" or other non-approved state
         return (
           <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-start sm:items-center space-x-3">
-            <AlertTriangle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5 sm:mt-0" />
+            <AlertTriangle className="w-5 h-5 text-orange-600 shrink-0 mt-0.5 sm:mt-0" />
             <p className="text-orange-800 font-medium text-sm sm:text-base">
               Your account is currently inactive and not visible to users. Please complete your profile and KYC verification for review.
             </p>
