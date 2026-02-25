@@ -80,7 +80,10 @@ export default function UsersPage() {
       setIsLoading(true);
       const response = await getUsers({ search: searchQuery, page: page, limit: 10 });
 
-      if (response && response.data) {
+      if (response && response.items) {
+        setUsers(response.items);
+        setTotalUsers(response.total || response.count || 0);
+      } else if (response && response.data) {
         setUsers(response.data);
         setTotalUsers(response.total || response.count || 0);
       } else if (Array.isArray(response)) {
@@ -132,7 +135,7 @@ export default function UsersPage() {
     setConfirmModal(prev => ({ ...prev, isLoading: true }));
 
     try {
-      await toggleUserBlock(confirmModal.user.id, !confirmModal.user.isBlocked);
+      await toggleUserBlock(confirmModal.user.id, !confirmModal.user.is_blocked);
 
       // Refresh data
       await Promise.all([fetchUsers(), fetchStats()]);
@@ -203,10 +206,10 @@ export default function UsersPage() {
               setDetailedUser(null);
             }}
             action2Label="Close"
-            checklist={detailedUser?.addresses?.map((addr: any) => ({
+            checklist={detailedUser?.profile_client?.addresses?.map((addr: any) => ({
               label: `${addr.tag || 'Address'}`,
               isComplete: !!addr.line1,
-              value: `${addr.line1}, ${addr.city}, ${addr.state}, ${addr.country} - ${addr.zipCode}`
+              value: `${addr.house_no || ''} ${addr.line1 || ''}, ${addr.city || ''}, ${addr.state || ''}, ${addr.country || ''} - ${addr.pincode || ''}`
             }))}
             purchases={detailedUser?.purchases}
             subtitle="User Profile"
@@ -218,10 +221,10 @@ export default function UsersPage() {
       <ConfirmationModal
         isOpen={confirmModal.isOpen}
         isLoading={confirmModal.isLoading}
-        title={confirmModal.user?.isBlocked ? "Unblock User" : "Block User"}
-        message={`Are you sure you want to ${confirmModal.user?.isBlocked ? 'unblock' : 'block'} ${confirmModal.user?.name}?`}
-        confirmLabel={confirmModal.user?.isBlocked ? "Yes, Unblock" : "Yes, Block"}
-        type={confirmModal.user?.isBlocked ? "info" : "warning"}
+        title={confirmModal.user?.is_blocked ? "Unblock User" : "Block User"}
+        message={`Are you sure you want to ${confirmModal.user?.is_blocked ? 'unblock' : 'block'} ${confirmModal.user?.name}?`}
+        confirmLabel={confirmModal.user?.is_blocked ? "Yes, Unblock" : "Yes, Block"}
+        type={confirmModal.user?.is_blocked ? "info" : "warning"}
         onConfirm={handleConfirmAction}
         onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
       />

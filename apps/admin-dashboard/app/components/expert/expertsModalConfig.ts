@@ -24,21 +24,20 @@ export const getProfileModalProps = (expert: Expert) => {
   const documents = expert.documents || profile?.documents || [];
   const intro_video_url = expert.intro_video_url || profile?.intro_video_url;
   const specialization = expert.specialization || profile?.specialization || "Expert Astrologer";
-  const experience = expert.experience ?? profile?.experience ?? 0;
+  const experience = expert.experience_in_years ?? profile?.experience_in_years ?? 0;
   const rating = expert.rating ?? profile?.rating ?? "0.0";
-  const totalConsultations = expert.consultationCount ?? expert.totalConsultations ?? profile?.totalConsultations ?? 0;
-  const totalEarnings = expert.totalEarnings ?? profile?.totalEarnings ?? 0;
-  const kycStatus = expert.kyc_details?.status || expert.kycStatus || profile?.kycStatus || "Pending";
-  const phone = expert.phone;
+  const consultation_count = expert.consultation_count ?? profile?.consultation_count ?? 0;
+  const kyc_status = expert.kyc_status || profile?.kyc_status || "pending";
+  const phone = expert.phone_number || profile?.phone_number;
   const email = expert.email;
 
   // Extract primary address from the array if present
-  const primaryAddress = expert.addresses?.[0];
+  const primaryAddress = expert.addresses?.[0] || profile?.addresses?.[0];
   const addressStr = primaryAddress
-    ? `House: ${primaryAddress.houseNo || primaryAddress.line1 || 'N/A'}, District: ${primaryAddress.district || 'N/A'}, City: ${primaryAddress.city || 'N/A'}, State: ${primaryAddress.state || 'N/A'}, Pin: ${primaryAddress.pincode || primaryAddress.zipCode || 'N/A'}`
-    : (expert.city ? `${expert.city}, ${expert.state}` : "Address not provided");
+    ? `House: ${primaryAddress.house_no || primaryAddress.line1 || 'N/A'}, District: ${primaryAddress.district || 'N/A'}, City: ${primaryAddress.city || 'N/A'}, State: ${primaryAddress.state || 'N/A'}, Pin: ${primaryAddress.pincode || 'N/A'}`
+    : "Address not provided";
 
-  const formattedDob = expert.dob ? new Date(expert.dob).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : null;
+  const formattedDob = expert.date_of_birth ? new Date(expert.date_of_birth).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : null;
 
   // Verification Checklist Logic (Comprehensive)
   const checklist = [
@@ -48,11 +47,11 @@ export const getProfileModalProps = (expert: Expert) => {
     { label: "Gender", isComplete: !!expert.gender, value: expert.gender },
     { label: "Date of Birth", isComplete: !!formattedDob, value: formattedDob },
     { label: "Phone Number", isComplete: !!phone, value: phone },
-    { label: "Languages Spoken", isComplete: !!(expert.languages && expert.languages.length > 0), value: expert.languages?.join(", ") },
+    { label: "Languages Spoken", isComplete: !!expert.languages, value: expert.languages },
     { label: "Bio / Introduction", isComplete: !!bio, value: bio },
     {
       label: "Office/Home Address",
-      isComplete: !!primaryAddress || (!!expert.city && !!expert.state),
+      isComplete: !!primaryAddress,
       value: addressStr
     },
     {
@@ -67,9 +66,9 @@ export const getProfileModalProps = (expert: Expert) => {
     },
     {
       label: "Aadhaar Card (KYC)",
-      isComplete: documents.some((d: any) => d.category === 'aadhar' && d.side === 'front') &&
+      isComplete: Array.isArray(documents) && documents.some((d: any) => d.category === 'aadhar' && d.side === 'front') &&
         documents.some((d: any) => d.category === 'aadhar' && d.side === 'back'),
-      value: documents.filter((d: any) => d.category === 'aadhar').map((d: any) => ({ url: d.url, side: d.side }))
+      value: Array.isArray(documents) ? documents.filter((d: any) => d.category === 'aadhar').map((d: any) => ({ url: d.url, side: d.side })) : []
     },
     {
       label: "Certificates",
@@ -78,9 +77,9 @@ export const getProfileModalProps = (expert: Expert) => {
     },
     {
       label: "PAN Card (KYC)",
-      isComplete: documents.some((d: any) => d.category === 'pan' && d.side === 'front') &&
+      isComplete: Array.isArray(documents) && documents.some((d: any) => d.category === 'pan' && d.side === 'front') &&
         documents.some((d: any) => d.category === 'pan' && d.side === 'back'),
-      value: documents.filter((d: any) => d.category === 'pan').map((d: any) => ({ url: d.url, side: d.side }))
+      value: Array.isArray(documents) ? documents.filter((d: any) => d.category === 'pan').map((d: any) => ({ url: d.url, side: d.side })) : []
     },
   ];
 
@@ -96,25 +95,24 @@ export const getProfileModalProps = (expert: Expert) => {
 
     badges: [
       {
-        label: expert.status || "Pending",
-        color: expert.status === "Active" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700",
+        label: kyc_status.charAt(0).toUpperCase() + kyc_status.slice(1),
+        color: kyc_status === "approved" ? "bg-green-100 text-green-700" : kyc_status === "rejected" ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700",
       },
       {
-        label: `KYC: ${kycStatus}`,
-        color: kycStatus === "Verified" || kycStatus === "verified" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700",
+        label: `KYC: ${kyc_status.toUpperCase()}`,
+        color: kyc_status === "approved" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700",
       },
     ],
     stats: [
-      { icon: StarIcon, value: rating, label: "Rating", bgColor: "bg-yellow-50", iconColor: "text-yellow-600" },
-      { icon: BriefcaseIcon, value: String(totalConsultations), label: "Consultations", bgColor: "bg-blue-50", iconColor: "text-blue-600" },
+      { icon: StarIcon, value: String(rating), label: "Rating", bgColor: "bg-yellow-50", iconColor: "text-yellow-600" },
+      { icon: BriefcaseIcon, value: String(consultation_count), label: "Consultations", bgColor: "bg-blue-50", iconColor: "text-blue-600" },
       { icon: AwardIcon, value: `${experience}y Exp`, label: "Experience", bgColor: "bg-purple-50", iconColor: "text-purple-600" },
-      { icon: DollarSignIcon, value: totalEarnings >= 1000 ? `₹${(totalEarnings / 1000).toFixed(1)}k` : `₹${totalEarnings}`, label: "Total Earnings", bgColor: "bg-green-50", iconColor: "text-green-600" },
+      { icon: DollarSignIcon, value: "N/A", label: "Earnings", bgColor: "bg-green-50", iconColor: "text-green-600" },
     ],
     details: [
       { icon: MailIcon, label: "Email", value: email },
       { icon: PhoneIcon, label: "Phone", value: phone || "Not provided" },
-      { icon: MapPinIcon, label: "Location", value: expert.city ? `${expert.city}, ${expert.state}` : "Not specified" },
-      { icon: CalendarIcon, label: "Joined", value: new Date(expert.createdAt).toLocaleDateString("en-IN") },
+      { icon: MapPinIcon, label: "Joined", value: expert.created_at ? new Date(expert.created_at).toLocaleDateString("en-IN") : "N/A" },
     ],
   };
 };

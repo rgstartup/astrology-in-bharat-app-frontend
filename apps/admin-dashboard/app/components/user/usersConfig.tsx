@@ -22,8 +22,8 @@ export const getStatsConfig = (data: User[] | UserStats) => {
 
     stats = {
       totalUsers: data.length,
-      recentUsers: data.filter((u) => u.createdAt && new Date(u.createdAt) >= sevenDaysAgo).length,
-      blockedUsers: data.filter((u) => u.isBlocked).length,
+      recentUsers: data.filter((u) => u.created_at && new Date(u.created_at) >= sevenDaysAgo).length,
+      blockedUsers: data.filter((u) => u.is_blocked).length,
     };
   } else {
     // Handle object input (pre-calculated from API)
@@ -78,11 +78,11 @@ export const getColumns = (
             />
           ) : (
             <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
-              {user.name.charAt(0)}
+              {user.name ? user.name.charAt(0) : "U"}
             </div>
           )}
           <div>
-            <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+            <p className="text-sm font-semibold text-gray-900">{user.name || "N/A"}</p>
             <p className="text-xs text-gray-500">{user.email}</p>
           </div>
         </div>
@@ -94,7 +94,9 @@ export const getColumns = (
       render: (user: User) => (
         <div>
           <p className="text-sm text-gray-600">{user.email}</p>
-          {user.phone && <p className="text-xs text-gray-500">{user.phone}</p>}
+          {(user.phone || user.profile_client?.phone_number) && (
+            <p className="text-xs text-gray-500">{user.phone || user.profile_client?.phone_number}</p>
+          )}
         </div>
       ),
     },
@@ -103,7 +105,7 @@ export const getColumns = (
       label: "Join Date",
       render: (user: User) => (
         <span className="text-sm text-gray-600">
-          {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-"}
+          {user.created_at ? new Date(user.created_at).toLocaleDateString() : "-"}
         </span>
       ),
     },
@@ -124,7 +126,7 @@ export const getColumns = (
       )
     },
     {
-      key: "isBlocked",
+      key: "is_blocked",
       label: "Admin Actions",
       render: (user: User) => (
         <span
@@ -132,12 +134,12 @@ export const getColumns = (
             e.stopPropagation();
             onToggleBlock?.(user);
           }}
-          className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors hover:opacity-80 ${user.isBlocked
+          className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors hover:opacity-80 ${user.is_blocked
             ? "bg-red-100 text-red-700"
             : "bg-green-100 text-green-700"
             }`}
         >
-          {user.isBlocked ? "Unblock" : "Block"}
+          {user.is_blocked ? "Unblock" : "Block"}
         </span>
       ),
     },

@@ -6,38 +6,32 @@ export const getUserProfileModalProps = (user: User) => ({
   name: user.name,
   badges: [
     {
-      label: user.status || (user.isBlocked ? "Blocked" : "Active"),
-      color: user.isBlocked ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700",
+      label: user.is_blocked ? "Blocked" : "Active",
+      color: user.is_blocked ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700",
     },
   ],
   details: [
     { icon: Mail, label: "Email", value: user.email || "N/A" },
-    { icon: Phone, label: "Phone", value: user.phone || "N/A" },
+    { icon: Phone, label: "Phone", value: user.phone || user.profile_client?.phone_number || "N/A" },
     {
-      icon: MapPin,
-      label: "Location",
-      value: user.city && user.state ? `${user.city}, ${user.state}` : "Not provided",
+      icon: Calendar,
+      label: "Join Date",
+      value: user.created_at ? new Date(user.created_at).toLocaleDateString() : "N/A",
     },
-    { icon: Calendar, label: "Join Date", value: user.joinDate || "N/A" },
     {
       icon: DollarSign,
       label: "Consultation Spending",
-      value: `₹${user.totalSpent?.toLocaleString() || 0}`,
+      value: `₹${user.total_spent?.toLocaleString() || 0}`,
     },
     {
       icon: DollarSign,
       label: "Wallet Balance",
-      value: `₹${(user as any).walletBalance?.toLocaleString() || 0}`,
-    },
-    {
-      icon: Clock,
-      label: "Last Active",
-      value: user.lastActive || "N/A",
+      value: `₹${user.wallet_balance?.toLocaleString() || 0}`,
     },
   ],
   extraInfo: {
     label: "Total Consultations",
-    value: String(user.totalConsultations || 0),
+    value: String(user.total_consultations || 0),
   },
 });
 

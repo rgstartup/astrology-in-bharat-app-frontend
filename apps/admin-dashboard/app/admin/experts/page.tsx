@@ -13,7 +13,6 @@ import type { Expert } from "@/app/components/expert/expert";
 
 // Services
 import { getExperts, getExpertStats, getExpertById } from "@/src/services/admin.service";
-import { toast } from "react-toastify";
 
 
 // Lazy load ProfileModal (loads only when needed)
@@ -107,16 +106,40 @@ export default function ExpertsPage() {
     };
   }, [searchQuery, page, statusFilter]);
 
+  // Normalize expert data: flatten profile_expert fields onto root level
+  const normalizeExpert = (expert: Expert): Expert => {
+    const profile = expert.profile_expert;
+    if (!profile) return expert;
+
+    return {
+      ...expert,
+      bio: expert.bio || profile.bio,
+      specialization: expert.specialization || profile.specialization,
+      experience_in_years: expert.experience_in_years ?? profile.experience_in_years,
+      rating: expert.rating ?? profile.rating,
+      consultation_count: expert.consultation_count ?? profile.consultation_count,
+      kyc_status: expert.kyc_status || profile.kyc_status,
+      rejection_reason: expert.rejection_reason ?? profile.rejection_reason,
+      phone_number: expert.phone_number || profile.phone_number,
+      intro_video_url: expert.intro_video_url || profile.intro_video_url,
+      gallery: expert.gallery || profile.gallery,
+      documents: expert.documents || profile.documents,
+      languages: expert.languages || profile.languages,
+      addresses: expert.addresses || profile.addresses,
+    };
+  };
+
   // Handle View Details - Fetch full profile for modal
   const handleViewDetails = async (expert: Expert) => {
     try {
-      // Show short loading if needed, or just let modal handle it
-      // For best UX, we fetch before opening
+      // Try fetching detailed profile from API first
       const fullExpert = await getExpertById(expert.id);
-      setSelectedExpert(fullExpert.data || fullExpert);
+      const data = fullExpert.data || fullExpert;
+      setSelectedExpert(normalizeExpert(data));
     } catch (error) {
-      console.error("Failed to fetch expert details:", error);
-      toast.error("Could not load expert details");
+      console.warn("Detail API failed, using list data with profile_expert:", error);
+      // Fallback: use the expert data already loaded from the list (which includes profile_expert)
+      setSelectedExpert(normalizeExpert(expert));
     }
   };
 

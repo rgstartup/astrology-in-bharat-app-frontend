@@ -109,7 +109,7 @@ export function ProfileModal({
 
       await updateExpertStatus(expertId, { status, reason });
 
-      toast.success(status === 'active' ? 'Expert approved successfully!' : 'Expert rejected');
+      toast.success(status === 'approved' ? 'Expert approved successfully!' : 'Expert rejected');
       setIsRejecting(false);
       onStatusUpdate?.();
       onClose();
@@ -315,7 +315,7 @@ export function ProfileModal({
             {/* Footer Actions - Now explicitly at the bottom of content grid area */}
             <div className="flex gap-4 pt-10 border-t border-gray-100">
               <Button
-                onClick={() => handleStatusUpdate('active')}
+                onClick={() => handleStatusUpdate('approved')}
                 loading={isSubmitting}
                 disabled={isSubmitting}
                 className="flex-1 py-5 rounded-[2rem] bg-gray-900 text-white font-black uppercase text-xs tracking-widest shadow-2xl shadow-gray-900/40 hover:bg-orange-500 transition-all hover:translate-y-[-4px]"
