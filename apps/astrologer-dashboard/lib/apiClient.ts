@@ -1,4 +1,4 @@
-import { safeFetch } from "@repo/safe-fetch";
+import { safeFetch } from "../../../packages/safe-fetch/index";
 import { BACKEND_URL } from "./config";
 
 const isServer = typeof window === "undefined";
