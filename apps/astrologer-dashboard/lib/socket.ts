@@ -7,7 +7,7 @@ console.log("[Socket] Dashboard connecting to:", SOCKET_URL);
 
 export const socket: Socket = io(SOCKET_URL, {
     transports: ["websocket"],
-    autoConnect: true,
+    autoConnect: false,
 });
 
 // Expert specific chat socket
