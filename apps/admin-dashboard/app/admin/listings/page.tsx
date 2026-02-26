@@ -86,7 +86,7 @@ const COLUMNS = [
         key: "contact",
         label: "Contact",
         render: (l: AgentListing) => (
-            <p className="text-sm text-gray-700">{l.listing_contact || "—"}</p>
+            <p className="text-sm text-gray-700">{l.phone || "—"}</p>
         ),
     },
     {
