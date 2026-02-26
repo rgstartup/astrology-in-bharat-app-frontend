@@ -25,9 +25,32 @@ export default function ExpertCallRoom() {
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const deviceRef = useRef<any>(null);
 
+    const checkHardwareAndNetwork = async () => {
+        if (!navigator.onLine) {
+            throw new Error("No internet connection. Please check your network.");
+        }
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const hasMic = devices.some(device => device.kind === 'audioinput');
+            if (!hasMic) {
+                throw new Error("No microphone detected. Please connect a mic to continue.");
+            }
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(track => track.stop());
+        } catch (err: any) {
+            if (err.name === 'NotAllowedError') {
+                throw new Error("Microphone permission denied. Access is required for calls.");
+            }
+            throw new Error(err.message || "Microphone access failed.");
+        }
+    };
+
     useEffect(() => {
         const acceptAndConnect = async () => {
             try {
+                // Pre-check hardware
+                await checkHardwareAndNetwork();
+
                 // Step 1: Accept call via REST API → get Twilio token for expert
                 const response: any = await apiClient.post('/call/accept', {
                     sessionId: parseInt(sessionId),
@@ -94,6 +117,11 @@ export default function ExpertCallRoom() {
         });
 
         await device.register();
+
+        // Actually connect to the TwiML app to join the conference
+        console.log('[ExpertTwilio] Connecting to Twilio App...');
+        await device.connect({ params: { sessionId } });
+
         toast.success('Connected! Call is live.');
         setStatus('connected');
         startTimer();

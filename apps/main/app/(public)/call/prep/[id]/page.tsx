@@ -83,10 +83,47 @@ function CallPrepContent() {
         setShowSecurityModal(true);
     };
 
+    const checkHardwareAndNetwork = async () => {
+        // 1. Check Internet
+        if (!navigator.onLine) {
+            throw new Error("No internet connection. Please check your network.");
+        }
+
+        // 2. Check for Microphone
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const hasMic = devices.some(device => device.kind === 'audioinput');
+            if (!hasMic) {
+                throw new Error("No microphone detected. Please connect a mic to continue.");
+            }
+
+            // 3. Check/Request Permission
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            // Close stream immediately after check
+            stream.getTracks().forEach(track => track.stop());
+        } catch (err: any) {
+            if (err.name === 'NotAllowedError') {
+                throw new Error("Microphone permission denied. Please allow mic access in your browser settings.");
+            }
+            throw new Error(err.message || "Could not access microphone. Please check your hardware.");
+        }
+    };
+
     const proceedToCall = async () => {
+        const checkbox = document.getElementById('agreeTerms') as HTMLInputElement;
+        if (!checkbox?.checked) {
+            toast.warning("Please agree to guidelines");
+            return;
+        }
+
         setShowSecurityModal(false);
         setActionLoading(true);
+
         try {
+            // Run Pre-call checks
+            toast.info("Checking hardware & connection...", { autoClose: 2000 });
+            await checkHardwareAndNetwork();
+
             const response: any = await apiClient.post("/call/initiate", {
                 expertId: parseInt(id),
                 type: type
@@ -99,7 +136,7 @@ function CallPrepContent() {
             }
         } catch (error: any) {
             console.error("Initiation error:", error);
-            const msg = error.response?.data?.message || "Failed to start call";
+            const msg = error.message || error.response?.data?.message || "Failed to start call";
             toast.error(msg);
         } finally {
             setActionLoading(false);
