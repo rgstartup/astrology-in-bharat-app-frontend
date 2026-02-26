@@ -80,8 +80,9 @@ const SignInForm: React.FC = () => {
 
   const handleGoogleLogin = () => {
     // Redirect to backend Google OAuth — browser handles cookie automatically
+    const safeCallback = (!callbackUrl || callbackUrl === "undefined") ? "/profile" : callbackUrl;
     const redirectUri = new URL(
-      callbackUrl,
+      safeCallback,
       globalThis.window.location.origin,
     ).toString();
     const googleLoginUrl = `${API_CONFIG.AUTH.GOOGLE_LOGIN.url}?role=client&redirect_uri=${encodeURIComponent(redirectUri)}`;
