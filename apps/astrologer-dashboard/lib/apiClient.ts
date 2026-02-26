@@ -26,11 +26,18 @@ function isPublicAuthPath(): boolean {
 }
 
 function buildUrl(path: string): string {
+    const cleanPath = path.startsWith("/") ? path : `/${path}`;
+
     if (isServer) {
         const base = (BACKEND_URL || "").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
-        return `${base}/api/v1${path.startsWith("/") ? "" : "/"}${path}`;
+        return `${base}/api/v1${cleanPath}`;
     }
-    return `/api/v1${path.startsWith("/") ? "" : "/"}${path}`;
+
+    // Client-side: If it's already an absolute URL starting with http, return it
+    if (path.startsWith('http')) return path;
+
+    // Base already has /api/v1 or next.js rewrites handle it
+    return `/api/v1${cleanPath}`;
 }
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
