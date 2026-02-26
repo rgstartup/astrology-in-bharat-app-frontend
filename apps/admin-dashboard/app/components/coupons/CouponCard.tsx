@@ -20,26 +20,36 @@ interface CouponCardProps {
   onToggleStatus: (id: number) => void;
 }
 
-export function CouponCard({
-  id,
-  code,
-  description,
-  discountType,
-  discountValue,
-  minOrderValue,
-  maxDiscount,
-  usageLimit,
-  usedCount,
-  validFrom,
-  validUntil,
-  status,
-  onCopy,
-  onEdit,
-  onDelete,
-  onToggleStatus,
-}: CouponCardProps) {
-  const getStatusBadge = (status: string) => {
-    switch (status) {
+export function CouponCard(props: any) {
+  const {
+    id,
+    code,
+    description = "",
+    type,
+    value,
+    minOrderValue,
+    maxDiscount = 0,
+    maxUsageLimit,
+    redemptionsCount = 0,
+    expiryDate,
+    status,
+    onCopy,
+    onEdit,
+    onDelete,
+    onToggleStatus,
+  } = props;
+
+  // Minimal fallbacks for display only
+  const _status = status || "active";
+  const _type = type || "percentage";
+  const _value = value || 0;
+  const _minOrder = minOrderValue || 0;
+  const _limit = maxUsageLimit || 0;
+  const _used = redemptionsCount || 0;
+  const _expiry = expiryDate;
+
+  const getStatusBadge = (s: string) => {
+    switch (s?.toLowerCase()) {
       case "active":
         return "bg-green-100 text-green-700 border-green-200";
       case "inactive":
@@ -47,11 +57,11 @@ export function CouponCard({
       case "expired":
         return "bg-red-100 text-red-700 border-red-200";
       default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
+        return "bg-blue-100 text-blue-700 border-blue-200";
     }
   };
 
-  const usagePercentage = Math.round((usedCount / usageLimit) * 100);
+  const usagePercentage = _limit > 0 ? Math.round((_used / _limit) * 100) : 0;
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all hover:border-orange-300">
@@ -60,24 +70,24 @@ export function CouponCard({
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
             <div className="px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold text-lg rounded-lg shadow-md">
-              {code}
+              {code || "N/A"}
             </div>
-            <button
-              onClick={() => onCopy(code)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Copy code"
-            >
-              <Copy className="w-4 h-4 text-gray-600" />
-            </button>
+            {code && (
+              <button
+                onClick={() => onCopy?.(code)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                title="Copy code"
+              >
+                <Copy className="w-4 h-4 text-gray-600" />
+              </button>
+            )}
           </div>
-          <p className="text-gray-700 text-sm">{description}</p>
+          <p className="text-gray-700 text-sm">{description || "No description provided"}</p>
         </div>
         <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusBadge(
-            status
-          )}`}
+          className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusBadge(_status)}`}
         >
-          {status.toUpperCase()}
+          {String(_status).toUpperCase()}
         </span>
       </div>
 
@@ -86,9 +96,9 @@ export function CouponCard({
         <div>
           <p className="text-xs text-gray-600 mb-1">Discount</p>
           <p className="font-bold text-lg text-orange-600">
-            {discountType === "percentage"
-              ? `${discountValue}%`
-              : `₹${discountValue}`}
+            {_type === "percentage"
+              ? `${_value}%`
+              : `₹${_value}`}
           </p>
         </div>
         <div>
@@ -97,46 +107,47 @@ export function CouponCard({
         </div>
         <div>
           <p className="text-xs text-gray-600 mb-1">Min Order</p>
-          <p className="font-semibold text-gray-700">₹{minOrderValue}</p>
+          <p className="font-semibold text-gray-700">₹{_minOrder}</p>
         </div>
         <div>
           <p className="text-xs text-gray-600 mb-1">Usage</p>
           <p className="font-semibold text-gray-700">
-            {usedCount} / {usageLimit}
+            {_used} / {_limit || "∞"}
           </p>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="mb-4">
-        <div className="flex justify-between text-xs text-gray-600 mb-1">
-          <span>Redemption Progress</span>
-          <span>{usagePercentage}%</span>
+      {_limit > 0 && (
+        <div className="mb-4">
+          <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <span>Redemption Progress</span>
+            <span>{usagePercentage}%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-gradient-to-r from-orange-500 to-yellow-500 h-2 rounded-full transition-all"
+              style={{ width: `${usagePercentage}%` }}
+            ></div>
+          </div>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-gradient-to-r from-orange-500 to-yellow-500 h-2 rounded-full transition-all"
-            style={{ width: `${usagePercentage}%` }}
-          ></div>
-        </div>
-      </div>
+      )}
 
       {/* Validity */}
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
         <Clock className="w-4 h-4" />
         <span>
-          Valid: {new Date(validFrom).toLocaleDateString()} -{" "}
-          {new Date(validUntil).toLocaleDateString()}
+          Expires: {_expiry ? new Date(_expiry).toLocaleDateString() : "No expiry"}
         </span>
       </div>
 
       {/* Actions */}
       <div className="flex gap-2 pt-4 border-t border-gray-200">
         <button
-          onClick={() => onToggleStatus(id)}
+          onClick={() => onToggleStatus?.(id)}
           className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors text-sm"
         >
-          {status === "active" ? (
+          {_status === "active" ? (
             <>
               <EyeOff className="w-4 h-4" />
               <span>Deactivate</span>
@@ -149,14 +160,14 @@ export function CouponCard({
           )}
         </button>
         <button
-          onClick={() => onEdit(id)}
+          onClick={() => onEdit?.(id)}
           className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors text-sm"
         >
           <Edit2 className="w-4 h-4" />
           <span>Edit</span>
         </button>
         <button
-          onClick={() => onDelete(id)}
+          onClick={() => onDelete?.(id)}
           className="flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
         >
           <Trash2 className="w-4 h-4" />
@@ -165,3 +176,6 @@ export function CouponCard({
     </div>
   );
 }
+
+
+

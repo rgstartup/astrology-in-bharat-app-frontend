@@ -1,10 +1,10 @@
 // refund-management/components/RefundStats.tsx
 import React from "react";
-import { StatsCards } from "@/app/components/admin/StatsCard";
-import { 
-  IndianRupee, 
-  Clock, 
-  CheckCircle, 
+import { StatsCards } from "@repo/ui";
+import {
+  IndianRupee,
+  Clock,
+  CheckCircle,
   XCircle,
   AlertTriangle
 } from "lucide-react";
@@ -67,7 +67,7 @@ export function RefundStats({ stats }: RefundStatsProps) {
   ];
 
   const displayStats = stats.length > 0 ? stats : defaultStats;
-  
+
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-4">
@@ -75,8 +75,11 @@ export function RefundStats({ stats }: RefundStatsProps) {
         <div className="text-sm text-gray-600">
           Last updated: {new Date().toLocaleDateString()}
         </div>
-    </div>
+      </div>
       <StatsCards stats={displayStats} columns={4} />
     </div>
   );
 }
+
+
+

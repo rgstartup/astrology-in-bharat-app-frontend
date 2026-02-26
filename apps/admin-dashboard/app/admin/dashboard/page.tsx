@@ -2,7 +2,7 @@
 import React, { useState, useMemo, lazy, Suspense } from "react";
 
 // Components
-import { StatsCards } from "@/app/components/admin/StatsCard";
+import { StatsCards } from "@repo/ui";
 
 // Icons
 import {
@@ -13,69 +13,82 @@ import {
   MoreVertical,
 } from "lucide-react";
 
-// Dynamic import for Recharts components (reduces initial bundle size)
+import { getDashboardStats } from "@/src/services/admin.service";
 import dynamic from "next/dynamic";
+import { useEffect } from "react";
+import adminData from "@/public/data/admin_data.json";
 
-// Lazy load chart section with loading fallback
+const MoreVerticalIcon = MoreVertical as any;
+
 const ChartSection = dynamic(() => import("@/app/components/analytics/ChartSection"), {
   loading: () => (
     <div className="h-[400px] bg-gray-100 animate-pulse rounded-xl" />
   ),
   ssr: false,
-});
+}) as any;
 
 export default function DashboardPage() {
   // Active chart tab state (revenue, users, etc.)
   const [activeTab, setActiveTab] = useState("revenue");
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await getDashboardStats();
+        setDashboardData(data);
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
 
   // Stats data (memoized for performance)
   const stats = useMemo(
     () => [
       {
-        title: "Total Consultations",
-        value: "12.5k",
+        title: "Total Chat Sessions",
+        value: loading ? "..." : (dashboardData?.totalChatSessions?.toString() || "0"),
         icon: Calendar,
         iconColor: "text-purple-600",
         iconBgColor: "bg-purple-100",
-        trend: { value: "+2.3%", isPositive: true, period: "last week" },
+        trend: { value: dashboardData?.trends?.new?.value || "+0%", isPositive: true, period: "last week" },
       },
       {
         title: "Total Astrologers",
-        value: "9.1k",
+        value: loading ? "..." : (dashboardData?.totalExperts?.toString() || "0"),
         icon: Clock,
         iconColor: "text-orange-600",
         iconBgColor: "bg-orange-100",
-        trend: { value: "+9.1%", isPositive: true, period: "last week" },
+        trend: { value: dashboardData?.trends?.total?.value || "+0%", isPositive: true, period: "last week" },
       },
       {
         title: "Total Users",
-        value: "3.2k",
+        value: loading ? "..." : (dashboardData?.totalUsers?.toString() || "0"),
         icon: Users,
         iconColor: "text-green-600",
         iconBgColor: "bg-green-100",
-        trend: { value: "-19%", isPositive: false, period: "last week" },
+        trend: { value: dashboardData?.trends?.active?.value || "+0%", isPositive: true, period: "last week" },
       },
       {
         title: "Earnings This Month",
-        value: "₹945k",
+        value: loading ? "..." : `₹${dashboardData?.totalEarnings || "0"}`,
         icon: Wallet,
         iconColor: "text-blue-600",
         iconBgColor: "bg-blue-100",
-        trend: { value: "+12%", isPositive: true, period: "last week" },
+        trend: { value: "+0%", isPositive: true, period: "last week" },
       },
     ],
-    []
+    [dashboardData, loading]
   );
 
   // Recent activities data (memoized)
   const activities = useMemo(
-    () => [
-      { id: 1, name: "Avni Pandit", action: "Booked a consultation", time: "2h ago", avatar: "A", color: "bg-yellow-600" },
-      { id: 2, name: "Mahesh Joshi", action: "Completed a session", time: "5h ago", avatar: "M", color: "bg-yellow-600" },
-      { id: 3, name: "Vijay Sharma", action: "Rescheduled consultation", time: "6h ago", avatar: "V", color: "bg-yellow-600" },
-      { id: 4, name: "Priya Desai", action: "Left a 5-star review", time: "8h ago", avatar: "P", color: "bg-yellow-600" },
-      { id: 5, name: "Rahul Gupta", action: "Payment received", time: "10h ago", avatar: "R", color: "bg-yellow-600" },
-    ],
+    () => adminData.dashboard.activities,
     []
   );
 
@@ -97,13 +110,13 @@ export default function DashboardPage() {
                 className="text-gray-400 hover:text-gray-600 transition-colors"
                 aria-label="More options for recent activity"
               >
-                <MoreVertical className="w-5 h-5" />
+                <MoreVerticalIcon className="w-5 h-5" />
               </button>
             </header>
-            
+
             {/* Activity list */}
             <ul className="divide-y divide-gray-100 max-h-96 overflow-y-auto" role="list">
-              {activities.map((activity) => (
+              {activities.map((activity: any) => (
                 <li
                   key={activity.id}
                   className="flex items-center space-x-4 px-6 py-4 hover:bg-gray-50 transition-colors"
@@ -116,7 +129,7 @@ export default function DashboardPage() {
                     {activity.avatar}
                   </div>
 
-                {/* Activity details */}
+                  {/* Activity details */}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-900">
                       <span className="font-semibold">{activity.name}</span> {activity.action}
@@ -131,7 +144,7 @@ export default function DashboardPage() {
           </article>
         </section>
 
-       {/* Analytics Charts Section (8 columns, lazy loaded) */}
+        {/* Analytics Charts Section (8 columns, lazy loaded) */}
         <section className="lg:col-span-8" aria-labelledby="analytics-heading">
           <Suspense fallback={<div className="h-[500px] bg-gray-100 animate-pulse rounded-xl" />}>
             <ChartSection activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -141,3 +154,6 @@ export default function DashboardPage() {
     </main>
   );
 }
+
+
+

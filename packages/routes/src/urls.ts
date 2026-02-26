@@ -8,10 +8,10 @@ const getBaseUrl = (key: string, defaultUrl: string) => {
 };
 
 export const BASE_URLS = {
-  MAIN: getBaseUrl("NEXT_PUBLIC_MAIN_URL", "http://localhost:3000"),
-  ECOMMERCE: getBaseUrl("NEXT_PUBLIC_ECOMMERCE_URL", "http://localhost:3001"),
-  ADMIN: getBaseUrl("NEXT_PUBLIC_ADMIN_URL", "http://localhost:3002"),
-  ASTROLOGER: getBaseUrl("NEXT_PUBLIC_ASTROLOGER_URL", "http://localhost:3003"),
+  MAIN: getBaseUrl("NEXT_PUBLIC_MAIN_URL", ""),
+  ECOMMERCE: getBaseUrl("NEXT_PUBLIC_ECOMMERCE_URL", ""),
+  ADMIN: getBaseUrl("NEXT_PUBLIC_ADMIN_URL", ""),
+  ASTROLOGER: getBaseUrl("NEXT_PUBLIC_ASTROLOGER_URL", ""),
 } as const;
 
 export const URLS = {
@@ -26,3 +26,8 @@ export const URLS = {
     CART: `${BASE_URLS.ECOMMERCE}${PATHS.CART}`,
   },
 } as const;
+
+
+
+
+

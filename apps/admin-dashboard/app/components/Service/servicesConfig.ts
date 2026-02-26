@@ -301,3 +301,6 @@ export const getStatsConfig = (services: Service[]) => [
     trend: { value: "+8%", isPositive: true, period: "vs last month" },
   },
 ];
+
+
+

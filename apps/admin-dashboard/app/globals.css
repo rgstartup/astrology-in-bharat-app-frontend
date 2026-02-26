@@ -2,7 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Hide scrollbar but keep functionality */
+:root {
+  --primary-color: #FF6B00;
+  --primary-hover: #E65100;
+  --secondary-color: #4A1D1F;
+}
+
+/* Base styles */
+body {
+  @apply antialiased;
+}
+
+/* Webkit scrollbars can sometimes cause issues in Turbopack CSS parsing on Windows */
+/* Commenting them out temporarily to verify stability */
+
+/*
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -12,14 +26,6 @@
   scrollbar-width: none;
 }
 
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Custom Scrollbar for Sidebar */
 .overflow-y-auto::-webkit-scrollbar {
   width: 6px;
 }
@@ -29,10 +35,11 @@
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background: #b45309;
+  background: var(--primary-color, black);
   border-radius: 3px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  background: #92400e;
+  background: var(--primary-hover, #D94E00);
 }
+*/

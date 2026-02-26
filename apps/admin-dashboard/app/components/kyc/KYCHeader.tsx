@@ -24,3 +24,6 @@ export default function KYCHeader({ onExport }: KYCHeaderProps) {
     </div>
   );
 }
+
+
+

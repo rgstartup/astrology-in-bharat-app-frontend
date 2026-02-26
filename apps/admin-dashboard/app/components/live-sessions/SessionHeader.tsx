@@ -1,7 +1,7 @@
 // live-sessions/components/SessionHeader.tsx
 import React from "react";
 import { RefreshCw, Eye } from "lucide-react";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "@repo/ui";
 
 interface SessionHeaderProps {
   onRefresh: () => void;
@@ -20,22 +20,12 @@ export function SessionHeader({ onRefresh, isRefreshing }: SessionHeaderProps) {
           Monitor and manage ongoing user-astrologer sessions in real-time
         </p>
       </div>
-      
-      {/* Actions */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-        <Button
-          variant="secondary"
-          icon={RefreshCw}
-          loading={isRefreshing}
-          onClick={onRefresh}
-        >
-          Refresh
-        </Button>
-        
-        <Button variant="primary" icon={Eye}>
-          Join All Sessions
-        </Button>
-      </div>
+
+     
     </header>
   );
 }
+
+
+
+

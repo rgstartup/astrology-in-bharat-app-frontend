@@ -1,7 +1,7 @@
 export const PATHS = {
   HOME: "/",
   HOROSCOPE: "/horoscope",
-  KUNDALI_MATCHING: "/kundali-matching",
+  KUNDALI_MATCHING: "/kundali-matching-by-name",
   NAKSHATRA_MILAN: "/nakshatra-milan",
   KUNDALI_MATCHING_BY_NAME: "/kundali-matching-by-name",
   MANGAL_DOSHA: "/mangal-dosha",
@@ -20,5 +20,37 @@ export const PATHS = {
   REGISTER: "/register",
   HELP: "/help",
   SESSION_HISTORY: "/session-history",
+  FAMOUS_PLACES: "/famous-places",
   BLOG: "/blog",
+
+  PRIVACY_POLICY: "/privacy-policy",
+  REFUND_POLICY: "/refund-policy",
+  TERMS_AND_CONDITIONS: "/terms-and-conditions",
+  COPYRIGHT: "/copyright",
+
+  WALLET: "/wallet",
+
+  // FREE CALCULATORS
+  PLANET: "/calculator/planet",
+  FLAMES_CALCULATOR: "/calculator/flames",
+  LOVE_COMPATIBILITY_CALCULATOR: "/calculator/love-compatibility",
+  MARRIAGE_AGE_CALCULATOR: "/calculator/marriage-age",
+  SOULMATE_NAME_INITALS_CALCULATOR: "/calculator/soulmate-name-initials",
+  LUCKY_NUMBER_CALCULATOR: "/calculator/lucky-number-color",
+
+  LIFE_PATH_CALCULATOR: "/calculator/life-path",
+  NAME_NUMEROLOGY_CALCULATOR: "/calculator/name-numerology",
+  ZODIAC_SIGN_CALCULATOR: "/calculator/zodiac-sign-compatibility",
+  NAKSHATRA_FINDER: "/calculator/nakshatra-finder",
+  LOYAL_PARTNER_CALCULATOR: "/calculator/loyal-partner",
+  BREAKUP_PATCHUP_CALCULATOR: "/calculator/breakup-patchup",
+  WHO_LOVES_MORE_CALCULATOR: "/calculator/who-loves-more",
+  COMPATIBILITY_BY_ZODIAC_CALCULATOR: "/calculator/compatibility-by-zodiac",
+  DAHEJ_CALCULATOR: "/calculator/dahej",
+
 } as const;
+
+
+
+
+

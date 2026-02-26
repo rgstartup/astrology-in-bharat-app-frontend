@@ -7,9 +7,12 @@ export interface Dispute {
   description: string;
   amount: number;
   category: "Payment" | "Service Quality" | "Refund" | "Technical" | "Other";
-  status: "pending" | "under_review" | "resolved" | "rejected";
+  status: "pending" | "under_review" | "resolved" | "rejected" | "close_requested";
   priority: "low" | "medium" | "high" | "urgent";
   createdAt: string;
   resolvedAt: string | null;
   raisedBy: "user" | "expert";
 }
+
+
+

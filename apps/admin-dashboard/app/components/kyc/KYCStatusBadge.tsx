@@ -27,3 +27,6 @@ export default function KYCStatusBadge({ status }: KYCStatusBadgeProps) {
     </span>
   );
 }
+
+
+

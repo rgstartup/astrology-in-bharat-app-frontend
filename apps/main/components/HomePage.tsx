@@ -1,20 +1,21 @@
-"use client";
 import React from "react";
 import {
-  featuredCardsHeroSection,
   ListOfAllAstrologers,
   ZodiacSignsData,
   AstrologyServicesData,
   ClientsTestimoinialData,
-} from "@/data/homePagaData";
+} from "@/components/features/services/homePagaData";
 import "swiper/css";
 import "swiper/css/navigation";
-// import { Swiper, SwiperSlide } from "swiper/react";
-// import { Navigation, Autoplay } from "swiper/modules";
-import Link from "next/link";
-import ProductsCarousel from "./ProductsCarousel";
+import NextLink from "next/link";
+const Link = NextLink as any;
+import ProductsCarousel from "@/components/features/shop/ProductsCarousel";
+import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
+import homePageData from "@/public/data/home-page-data.json";
 
 const HomePage: React.FC = () => {
+  const { hero, whyChooseUs } = homePageData;
+
   return (
     <>
       {/* Hero Section */}
@@ -31,37 +32,19 @@ const HomePage: React.FC = () => {
                   Online
                 </h1>
                 <h4 className="card-title mt-4 mb-4">
-                  Instant Chat, Call, or Video Consultations
+                  {hero.subtitle}
                 </h4>
                 <p>
-                  At Astrology in Bharat, find trusted astrologers for love,
-                  career, health, or life guidance. Connect anytime via chat,
-                  audio, or video and get personalized solutions with full
-                  privacy.
+                  {hero.description}
                 </p>
                 <ul className="list-check">
-                  <li>
-                    <i className="fa-solid fa-check"></i> Verified & Experienced
-                    Astrologers
-                  </li>
-                  <li>
-                    <i className="fa-solid fa-check"></i> Instant Chat, Call &
-                    Video Support
-                  </li>
-                  <li>
-                    <i className="fa-solid fa-check"></i> 100% Privacy &
-                    Confidentiality
-                  </li>
-                  <li>
-                    <i className="fa-solid fa-check"></i> Accurate Predictions &
-                    Remedies
-                  </li>
-                  <li>
-                    <i className="fa-solid fa-check"></i> Trusted by Thousands
-                    Across India
-                  </li>
+                  {hero.benefits.map((benefit, idx) => (
+                    <li key={idx}>
+                      <i className="fa-solid fa-check"></i> {benefit}
+                    </li>
+                  ))}
                 </ul>
-                <a href="#" className="btn-link wfc mt-4 mb-4">
+                <a href="#" className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all mt-4 mb-4 inline-block text-decoration-none">
                   Start Consultation
                 </a>
               </div>
@@ -77,11 +60,11 @@ const HomePage: React.FC = () => {
             </div>
 
             <div className="row mt-4">
-              {featuredCardsHeroSection.map((card) => (
+              {hero.cards.map((card) => (
                 <div key={card.id} className="col-sm-3 col-6">
                   <a href={card.link}>
                     <div className="card-hero vert-move">
-                      <img src={card.image} alt={card.altText} />
+                      <img src={card.image} alt={card.title} />
                       <h5>{card.title}</h5>
                       <p>{card.description}</p>
                     </div>
@@ -98,111 +81,29 @@ const HomePage: React.FC = () => {
         <div className="container">
           <h2>Find Your Astrologer</h2>
 
-          <div className="search-box"  >
-            <input
-              type="text"
-              placeholder="Search Astrologer By Name..."
-            />
-            <button>Search</button>
+          <div className="search-box">
+            <input type="text" placeholder="Search Astrologer By Name..." />
+            <button className="bg-primary hover:bg-primary-hover text-white transition-all">Search</button>
           </div>
 
-          {/* <!-- Astrologer Card 1 --> */}
           <div className="astro-grid">
-            {ListOfAllAstrologers.map((item) => {
-              return (
-                <Link href="/astrologer-details" className="grid-item" key={item.id}>
-                  <div className="astro-card">
-                    <div className="vid-part">
-                      <img
-                        src={item.image}
-                        alt=""
-                        className="astro-profile-img"
-                      />
-                      <span
-                        className="play-vid fa-beat"
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal"
-                      >
-                        <i className="fa-solid fa-circle-play"></i>
-                      </span>
-                    </div>
-                    <div className="rating-star">★★★</div>
-                    <div className="astro-name">{item.name}</div>
-                    <div className="astro-tags">{item.expertise}</div>
-                    <div className="astro-info">
-                      <strong>Exp:</strong> {item.experience} Years
-                    </div>
-                    <div className="astro-info">
-                      <strong>Lang:</strong> {item.language}
-                    </div>
-                    <div className="astro-info">
-                      <strong>Price:</strong> ₹{item.price}/min
-                    </div>
-                    <div className="astro-actions">
-                      <button>
-                        <i className="fa-regular fa-comment-dots"></i> Chat
-                      </button>
-                      <button className="call">
-                        <i className="fa-solid fa-phone-volume"></i> Call
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* <!-- Modal --> */}
-                  <div
-                    className="modal fade"
-                    id="exampleModal"
-                    tabIndex={-1}
-                    aria-labelledby="exampleModalLabel"
-                    aria-hidden="true"
-                  >
-                    <div className="modal-dialog modal-dialog-centered modal-xl">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h4
-                            className="modal-title-astro-about"
-                            id="exampleModalLabel"
-                          >
-                            Meet Astrologer Parbhata Giri Introduction Video
-                          </h4>
-                          <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          >
-                            <i className="fa-solid fa-xmark"></i>
-                          </button>
-                        </div>
-                        <div className="modal-body">
-                          <iframe
-                            width="100%"
-                            height="500"
-                            src={item.video}
-                            title="शिव जी ने माता पार्वती को क्यों दिया ये भयंकर श्राप 😱😱 ?  #shivshankar #mataparvati"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
-                          ></iframe>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+            {ListOfAllAstrologers.map((item) => (
+              <AstrologerCard key={item.id} astrologerData={{
+                ...item,
+                is_available: true,
+                video: item.video || ""
+              }} />
+            ))}
           </div>
 
           <div className="view-all">
-            <a href="#" className="btn-link wfc m-auto">
+            <a href="#" className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all m-auto flex items-center justify-center w-fit text-decoration-none">
               View All Astrologers
             </a>
           </div>
         </div>
       </section>
 
-      {/* <!--Zodiac Signs & Horoscopes-section --> */}
       <section className="horoscopes-container">
         <div className="container">
           <div className="row">
@@ -213,48 +114,42 @@ const HomePage: React.FC = () => {
               Discover Your Daily, Monthly and Yearly Horoscope
             </p>
 
-            {ZodiacSignsData.map((item) => {
-              return (
-                <div className="col-lg-2 col-sm-6 col-md-4 col-6" key={item.id}>
-                  <a href="#">
-                    <div className="horoscopes-items">
-                      <img src={item.image} alt="Image Not Found" />
-                      <h3>{item.title}</h3>
-                      <p className="fw-normal">{item.date}</p>
-                    </div>
-                  </a>
-                </div>
-              );
-            })}
+            {ZodiacSignsData.map((item) => (
+              <div className="col-lg-2 col-sm-6 col-md-4 col-6" key={item.id}>
+                <a href="#">
+                  <div className="horoscopes-items">
+                    <img src={item.image} alt={item.title} />
+                    <h3>{item.title}</h3>
+                    <p className="fw-normal">{item.date}</p>
+                  </div>
+                </a>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Astrology Servicees */}
       <section className="astrology-services py-5">
         <div className="container">
           <h2>Astrology Services</h2>
           <div className="row">
-            {AstrologyServicesData.map((item) => {
-              return (
-                <div className="col-lg-3 col-md-6" key={item.id}>
-                  <div className="ser-card vert-move">
-                    <img
-                      src={item.image}
-                      alt="Kundli"
-                      className="services-img"
-                    />
-                    <h4>{item.title}</h4>
-                    <p>{item.description}</p>
-                  </div>
+            {AstrologyServicesData.map((item) => (
+              <div className="col-lg-3 col-md-6" key={item.id}>
+                <div className="ser-card vert-move">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="services-img"
+                  />
+                  <h4>{item.title}</h4>
+                  <p>{item.description}</p>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Prodcuts list Section */}
       <section className="product-slider-section py-50 bg-cream">
         <div className="container">
           <h2 className="text-center mb-5 heading section-title">
@@ -266,107 +161,52 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Why Talk to our astrologer*/}
       <section className="py-50 why-choose-us text-white">
         <div className="container">
           <h2 className="text-center  mb-5 heading text-black">
-            Why Talk to Our Astrologer?
+            {whyChooseUs.title}
           </h2>
           <div className="row d-flex align-items-center">
-            {/* Left Column of Promises */}
             <div className="col-lg-4 col-md-12 mb-4 mb-lg-0">
               <div className="d-flex flex-column gap-3">
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-chart-line fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Accurate Predictions
-                    </h6>
-                    <small className="text-muted">
-                      Gain clarity with precise and insightful astrological
-                      readings.
-                    </small>
+                {whyChooseUs.promises.slice(0, 3).map((promise, idx) => (
+                  <div key={idx} className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
+                    <i className={`${promise.icon} fa-2x me-3 text-sand`}></i>
+                    <div className="text-start">
+                      <h6 className="fw-bold mb-0 text-black">{promise.title}</h6>
+                      <small className="text-muted">{promise.description}</small>
+                    </div>
                   </div>
-                </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-lock fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      100% Confidentiality
-                    </h6>
-                    <small className="text-muted">
-                      Your conversations and data are completely private.
-                    </small>
-                  </div>
-                </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-history fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Vedic & Modern Approach
-                    </h6>
-                    <small className="text-muted">
-                      Our experts blend traditional wisdom with contemporary
-                      insights.
-                    </small>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
-            {/* Center Image */}
             <div className="col-lg-4 col-md-12 text-center my-4 my-lg-0">
               <img
-                src="/images/Astrologer.png" // Replace with your image path
+                src="/images/Astrologer.png"
                 alt="Astrologer talking"
                 className="img-fluid rounded-circle border border-gray"
                 style={{ width: "300px", height: "300px", objectFit: "cover" }}
               />
             </div>
 
-            {/* Right Column of Promises */}
             <div className="col-lg-4 col-md-12">
               <div className="d-flex flex-column gap-3">
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-gem fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Remedial Solutions
-                    </h6>
-                    <small className="text-muted">
-                      Receive practical solutions to mitigate planetary effects.
-                    </small>
+                {whyChooseUs.promises.slice(3, 6).map((promise, idx) => (
+                  <div key={idx} className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
+                    <i className={`${promise.icon} fa-2x me-3 text-sand`}></i>
+                    <div className="text-start">
+                      <h6 className="fw-bold mb-0 text-black">{promise.title}</h6>
+                      <small className="text-muted">{promise.description}</small>
+                    </div>
                   </div>
-                </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-star fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Personalized Consultations
-                    </h6>
-                    <small className="text-muted">
-                      Get tailored advice for your unique birth chart.
-                    </small>
-                  </div>
-                </div>
-                <div className="promise-item p-3 border border-secondary rounded-3 d-flex align-items-center">
-                  <i className="fas fa-comments fa-2x me-3 text-sand"></i>
-                  <div className="text-start">
-                    <h6 className="fw-bold mb-0 text-black">
-                      Accessible Anytime
-                    </h6>
-                    <small className="text-muted">
-                      Connect with our astrologers on your schedule.
-                    </small>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
       <section className="testimonials-section bg-cream py-50">
         <div className="container text-center">
           <h2 className="section-heading heading mb-5">What Our Clients Say</h2>
@@ -381,7 +221,7 @@ const HomePage: React.FC = () => {
                   <p>{client.review}</p>
                   <div className="mt-3 d-flex align-items-center justify-content-center flex-column">
                     <img
-                      src="images/astro-img1.png"
+                      src="/images/dummy-astrologer.jpg"
                       alt={client.name}
                       className="rounded-circle mb-2"
                       style={{
@@ -403,7 +243,6 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Featured Astrologers List */}
       <section className="featured-astrologers  py-50 ">
         <div className="container text-center">
           <h2 className="section-heading heading mb-5">
@@ -421,7 +260,6 @@ const HomePage: React.FC = () => {
                       transition: "transform 0.3s ease, box-shadow 0.3s ease",
                     }}
                   >
-                    {/* Profile Image */}
                     <div className="position-relative p-4 pb-0">
                       <img
                         src={item.image}
@@ -448,14 +286,12 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
 
-                    {/* Card Body */}
                     <div className="card-body mt-3">
                       <h5 className="fw-bold astro-name">{item.name}</h5>
                       <p className="card-subtitle mb-2 text-muted">
                         {item.expertise}
                       </p>
 
-                      {/* Ratings */}
                       <div className="d-flex justify-content-center align-items-center mb-3">
                         <div
                           className="rating-star text-warning"
@@ -468,7 +304,6 @@ const HomePage: React.FC = () => {
                         </small>
                       </div>
 
-                      {/* Details */}
                       <div className="d-flex justify-content-between text-muted small mb-2">
                         <span>
                           Experience:{" "}
@@ -480,7 +315,6 @@ const HomePage: React.FC = () => {
                         </span>
                       </div>
 
-                      {/* Price & Status */}
                       <div className="d-flex justify-content-between align-items-center mb-3">
                         <h6 className="mb-0 fw-bold text-success">
                           ₹{item.price}/min
@@ -488,7 +322,6 @@ const HomePage: React.FC = () => {
                         <span className="badge bg-success">● Online</span>
                       </div>
 
-                      {/* CTA Button */}
                       <div className="d-grid">
                         <button
                           className="btn"

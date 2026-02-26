@@ -1,0 +1,110 @@
+/**
+ * Main App API Client — built on safeFetch.
+ * - Client-side: Uses full URL directly to backend for better cookie handling (CORS).
+ * - Server-side: Uses full URL via NEXT_PUBLIC_API_URL.
+ */
+
+import safeFetch from "@packages/safe-fetch/safeFetch";
+import { getBasePath } from "../utils/api-config";
+
+type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+interface RequestOptions {
+    method?: HttpMethod;
+    body?: Record<string, unknown> | FormData | null;
+    headers?: Record<string, string>;
+    timeoutMs?: number;
+    _retry?: boolean;
+}
+
+const isServer = typeof window === "undefined";
+
+/**
+ * Build request URL:
+ * - Browser: relative /api/v1 path (Next rewrite proxy)
+ * - Server: absolute backend URL (from NEXT_PUBLIC_API_URL)
+ */
+function buildUrl(path: string): string {
+    if (path.startsWith("http://") || path.startsWith("https://")) {
+        return path;
+    }
+
+    // Normalize path
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+    // Ensure path has /api/v1 prefix
+    const apiPath = normalizedPath.startsWith("/api/v1")
+        ? normalizedPath
+        : `/api/v1${normalizedPath}`;
+
+    if (isServer) {
+        const base = getBasePath(); // From NEXT_PUBLIC_API_URL
+        return `${base}${apiPath}`;
+    }
+
+    return apiPath;
+}
+
+async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+    const { method = "GET", body = null, headers = {}, timeoutMs, _retry = false } = options;
+
+    const url = buildUrl(path);
+
+    const fetchOptions: RequestInit = {
+        method,
+        credentials: "include", // Essential for sending cookies
+        headers: {
+            ...(body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+            ...headers,
+        },
+        ...(body
+            ? { body: body instanceof FormData ? body : JSON.stringify(body) }
+            : {}),
+    };
+
+    const [data, error] = await safeFetch<T>(url, {
+        ...fetchOptions,
+        ...(timeoutMs ? { timeoutMs } : {}),
+    } as any);
+
+    if (error) {
+        // Access token may expire during session; refresh once and retry.
+        if (error.status === 401 && !_retry) {
+            const refreshUrl = isServer ? `${getBasePath()}/api/v1/auth/refresh` : "/api/v1/auth/refresh";
+            const [, refreshError] = await safeFetch(refreshUrl, {
+                method: "GET",
+                credentials: "include",
+            } as any);
+
+            if (!refreshError) {
+                return request<T>(path, { ...options, _retry: true });
+            }
+        }
+        throw error;
+    }
+
+    return data as T;
+}
+
+// Convenience methods
+export const apiClient = {
+    get: <T>(path: string, opts?: Omit<RequestOptions, "method" | "body">) =>
+        request<T>(path, { ...opts, method: "GET" }),
+
+    post: <T>(path: string, body?: Record<string, unknown>, opts?: Omit<RequestOptions, "method">) =>
+        request<T>(path, { ...opts, method: "POST", body }),
+
+    put: <T>(path: string, body?: Record<string, unknown>, opts?: Omit<RequestOptions, "method">) =>
+        request<T>(path, { ...opts, method: "PUT", body }),
+
+    patch: <T>(path: string, body?: Record<string, unknown>, opts?: Omit<RequestOptions, "method">) =>
+        request<T>(path, { ...opts, method: "PATCH", body }),
+
+    delete: <T>(path: string, opts?: Omit<RequestOptions, "method" | "body">) =>
+        request<T>(path, { ...opts, method: "DELETE" }),
+
+    upload: <T>(path: string, formData: FormData, opts?: Omit<RequestOptions, "method" | "body">) =>
+        request<T>(path, { ...opts, method: "POST", body: formData }),
+};
+
+export default apiClient;

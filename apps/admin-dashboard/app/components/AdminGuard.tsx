@@ -1,18 +1,51 @@
-"use client"; // 🔥 mandatory for client hooks
+"use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation"; // 👈 App Router version
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/src/store/useAuthStore";
 
 export default function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const { user, isAuthenticated, loading } = useAuthStore();
 
   useEffect(() => {
-    const hasToken = document.cookie.includes("accessToken");
+    if (!loading) {
+      if (!isAuthenticated || !user) {
+        window.location.href = "/";
+        return;
+      }
 
-    if (!hasToken) {
-      router.replace("/"); // redirect if no token
+      console.log("AdminGuard - Current User:", user);
+
+      const roles = user?.roles || [];
+      const isAdmin = roles.some((r: any) =>
+        (typeof r === 'string' ? r : r.name).toUpperCase() === "ADMIN"
+      );
+
+      console.log("AdminGuard - Is Admin:", isAdmin, "Roles:", roles);
+
+      if (!isAdmin) {
+        console.error("Access denied: User does not have ADMIN role");
+        router.replace("/");
+      }
     }
-  }, [router]);
+  }, [isAuthenticated, user, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return <>{children}</>;
 }
+
+
+
+

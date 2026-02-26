@@ -2,9 +2,9 @@
 import React, { useState, useMemo } from "react";
 
 // Components
-import { StatsCards } from "@/app/components/admin/StatsCard";
-import { SearchInput } from "@/app/components/admin/SearchInput";
-import { Button } from "@/app/components/admin/Button";
+import { StatsCards } from "@repo/ui";
+import { SearchInput } from "@repo/ui";
+import { Button } from "@repo/ui";
 import { ReviewCard } from "@/app/components/reviews/ReviewCard";
 
 // Icons
@@ -16,7 +16,7 @@ import { reviewsData, getStatsConfig } from "@/app/components/reviews/reviewsCon
 export default function ReviewsPage() {
   // Filter state (all, pending, flagged, approved)
   const [filter, setFilter] = useState("all");
-  
+
   // Search query state
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -109,3 +109,6 @@ export default function ReviewsPage() {
     </main>
   );
 }
+
+
+

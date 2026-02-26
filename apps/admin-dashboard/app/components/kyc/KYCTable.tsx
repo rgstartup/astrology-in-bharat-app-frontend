@@ -80,3 +80,6 @@ export default function KYCTable({
       renderCell={renderCell} searchKeys={[]}    />
   );
 }
+
+
+

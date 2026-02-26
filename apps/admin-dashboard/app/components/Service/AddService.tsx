@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { X, Clock, Sparkles } from "lucide-react";
-import { Button } from "@/app/components/admin/Button";
+import { Button } from "@repo/ui";
 
 interface AddServiceProps {
   onClose: () => void;
@@ -10,7 +10,7 @@ interface AddServiceProps {
 const AddService: React.FC<AddServiceProps> = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-      
+
       {/* MODAL (SIZE SAME) */}
       <div className="w-full max-w-5xl max-h-[90vh] bg-gradient-to-br from-[#fafafa] to-[#f1f1f1]
                       rounded-2xl shadow-2xl flex flex-col overflow-hidden">
@@ -35,28 +35,28 @@ const AddService: React.FC<AddServiceProps> = ({ onClose }) => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             {/* LEFT */}
-          <div
-  className="
+            <div
+              className="
     bg-white rounded-xl p-5 space-y-5
     border border-gray-200
     transition-all duration-300
     hover:shadow-lg hover:-translate-y-0.5
     hover:border-orange-300
   "
->
-  {/* Title */}
-  <h3 className="font-semibold text-gray-800 flex items-center gap-2">
-    <span className="inline-block h-2 w-2 rounded-full bg-orange-500" />
-    Service Details
-  </h3>
+            >
+              {/* Title */}
+              <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+                <span className="inline-block h-2 w-2 rounded-full bg-orange-500" />
+                Service Details
+              </h3>
 
-  {/* Service Name */}
- <div className="space-y-1">
- <label className="text-sm font-bold text-gray-800">
-  Service Name
-</label>
-  <input
-    className="
+              {/* Service Name */}
+              <div className="space-y-1">
+                <label className="text-sm font-bold text-gray-800">
+                  Service Name
+                </label>
+                <input
+                  className="
       w-full px-4 py-3 
       border border-gray-300
       rounded-xl
@@ -69,17 +69,17 @@ const AddService: React.FC<AddServiceProps> = ({ onClose }) => {
       focus:ring-2 focus:ring-orange-400 focus:ring-opacity-30
       outline-none
     "
-    placeholder="Birth Chart Reading"
-  />
-</div>
+                  placeholder="Birth Chart Reading"
+                />
+              </div>
 
-  {/* Category */}
- <div className="space-y-1">
-<label className="text-sm font-bold text-gray-900 tracking-tight">
-  Category
-</label>
-  <select
-    className="
+              {/* Category */}
+              <div className="space-y-1">
+                <label className="text-sm font-bold text-gray-900 tracking-tight">
+                  Category
+                </label>
+                <select
+                  className="
       w-full px-4 py-3 
       border border-gray-300
       rounded-xl
@@ -93,22 +93,22 @@ const AddService: React.FC<AddServiceProps> = ({ onClose }) => {
       appearance-none
       cursor-pointer
     "
-  >
-    <option className="text-gray-400">Select Category</option>
-    <option>Vedic Astrology</option>
-    <option>Marriage</option>
-    <option>Career</option>
-  </select>
-</div>
+                >
+                  <option className="text-gray-400">Select Category</option>
+                  <option>Vedic Astrology</option>
+                  <option>Marriage</option>
+                  <option>Career</option>
+                </select>
+              </div>
 
-  {/* Duration + Demand */}
-  <div className="grid grid-cols-2 gap-4">
-  <div className="space-y-1">
-    <label className="text-sm font-bold text-gray-900">
-      Duration
-    </label>
-    <input
-      className="
+              {/* Duration + Demand */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-gray-900">
+                    Duration
+                  </label>
+                  <input
+                    className="
         w-full px-4 py-3 
         border border-gray-300
         rounded-xl
@@ -121,16 +121,16 @@ const AddService: React.FC<AddServiceProps> = ({ onClose }) => {
         focus:ring-2 focus:ring-orange-400 focus:ring-opacity-30
         outline-none
       "
-      placeholder="30 min"
-    />
-  </div>
+                    placeholder="30 min"
+                  />
+                </div>
 
-  <div className="space-y-1">
-    <label className="text-sm font-bold text-gray-900">
-      Demand
-    </label>
-    <select
-      className="
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-gray-900">
+                    Demand
+                  </label>
+                  <select
+                    className="
         w-full px-4 py-3 
         border border-gray-300
         rounded-xl
@@ -144,52 +144,52 @@ const AddService: React.FC<AddServiceProps> = ({ onClose }) => {
         appearance-none
         cursor-pointer
       "
-    >
-      <option>High</option>
-      <option>Medium</option>
-      <option>Low</option>
-    </select>
-  </div>
-</div>
+                  >
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                  </select>
+                </div>
+              </div>
 
-  {/* Toggles */}
-  <div className="flex gap-6 text-sm pt-2">
-    <label className="flex items-center gap-2 cursor-pointer group">
-      <input
-        type="checkbox"
-        className="accent-orange-500"
-      />
-      <span className="text-gray-700 group-hover:text-orange-600 transition">
-        Active
-      </span>
-    </label>
+              {/* Toggles */}
+              <div className="flex gap-6 text-sm pt-2">
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    className="accent-orange-500"
+                  />
+                  <span className="text-gray-700 group-hover:text-orange-600 transition">
+                    Active
+                  </span>
+                </label>
 
-    <label className="flex items-center gap-2 cursor-pointer group">
-      <input
-        type="checkbox"
-        className="accent-orange-500"
-      />
-      <span className="text-gray-700 group-hover:text-orange-600 transition">
-        Featured
-      </span>
-    </label>
-  </div>
-</div>
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    className="accent-orange-500"
+                  />
+                  <span className="text-gray-700 group-hover:text-orange-600 transition">
+                    Featured
+                  </span>
+                </label>
+              </div>
+            </div>
 
             {/* CENTER */}
-           <div className="bg-white rounded-xl p-6 space-y-5 border border-gray-200
+            <div className="bg-white rounded-xl p-6 space-y-5 border border-gray-200
                 hover:shadow-lg transition-all duration-300">
-  <div className="space-y-1">
-    <h3 className="text-lg font-bold text-gray-900">Description</h3>
-    <p className="text-sm text-gray-500">Add detailed description about the service</p>
-  </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-bold text-gray-900">Description</h3>
+                <p className="text-sm text-gray-500">Add detailed description about the service</p>
+              </div>
 
-  <div className="space-y-1">
-    <label className="text-sm font-bold text-gray-900">
-      Service Description
-    </label>
-    <textarea
-      className="
+              <div className="space-y-1">
+                <label className="text-sm font-bold text-gray-900">
+                  Service Description
+                </label>
+                <textarea
+                  className="
         w-full px-4 py-3 
         border border-gray-300
         rounded-xl
@@ -204,16 +204,16 @@ const AddService: React.FC<AddServiceProps> = ({ onClose }) => {
         resize-none
         h-32
       "
-      placeholder="Short service description"
-    />
-  </div>
+                  placeholder="Short service description"
+                />
+              </div>
 
-  <div className="space-y-1">
-    <label className="text-sm font-bold text-gray-900">
-      Key Points / Specifications
-    </label>
-    <textarea
-      className="
+              <div className="space-y-1">
+                <label className="text-sm font-bold text-gray-900">
+                  Key Points / Specifications
+                </label>
+                <textarea
+                  className="
         w-full px-4 py-3 
         border border-gray-300
         rounded-xl
@@ -228,10 +228,10 @@ const AddService: React.FC<AddServiceProps> = ({ onClose }) => {
         resize-none
         h-28
       "
-      placeholder="Key points / Specifications"
-    />
-  </div>
-</div>
+                  placeholder="Key points / Specifications"
+                />
+              </div>
+            </div>
 
             {/* RIGHT */}
             <div className="bg-white rounded-xl p-5 border border-gray-100
@@ -295,3 +295,7 @@ const AddService: React.FC<AddServiceProps> = ({ onClose }) => {
 };
 
 export default AddService;
+
+
+
+

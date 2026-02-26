@@ -19,8 +19,8 @@ export function UserGrowthChart({ data }: UserGrowthChartProps) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">User Growth</h3>
-        <p className="text-sm text-gray-500">New vs Returning users</p>
+        <h3 className="text-lg font-semibold text-gray-900">User and Astrologer Growth Chart</h3>
+        <p className="text-sm text-gray-500">New user vs New Astrologer registrations</p>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
@@ -35,15 +35,18 @@ export function UserGrowthChart({ data }: UserGrowthChartProps) {
             }}
           />
           <Legend />
-          <Bar dataKey="new" fill="#3b82f6" radius={[8, 8, 0, 0]} name="New Users" />
+          <Bar dataKey="users" fill="#3b82f6" radius={[8, 8, 0, 0]} name="Users" />
           <Bar
-            dataKey="returning"
+            dataKey="astrologers"
             fill="#10b981"
             radius={[8, 8, 0, 0]}
-            name="Returning Users"
+            name="Astrologers"
           />
         </BarChart>
       </ResponsiveContainer>
     </div>
   );
 }
+
+
+

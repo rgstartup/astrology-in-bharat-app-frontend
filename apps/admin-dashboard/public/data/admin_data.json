@@ -1,0 +1,155 @@
+{
+    "menuItems": [
+        {
+            "label": "Dashboard",
+            "href": "/admin/dashboard",
+            "icon": "LayoutDashboard"
+        },
+        {
+            "label": "User Management",
+            "href": "/admin/users",
+            "icon": "Users"
+        },
+        {
+            "label": "Expert Management",
+            "href": "/admin/experts",
+            "icon": "UserCheck"
+        },
+        {
+            "label": "Services & Pricing",
+            "href": "/admin/services",
+            "icon": "Package"
+        },
+        {
+            "label": "Coupons/Offers",
+            "href": "/admin/coupons",
+            "icon": "Tag"
+        },
+        {
+            "label": "Live Sessions Monitor",
+            "href": "/admin/live-sessions",
+            "icon": "Tv"
+        },
+        {
+            "label": "Payout Requests",
+            "href": "/admin/payouts",
+            "icon": "Wallet"
+        },
+        {
+            "label": "Refund Management",
+            "href": "/admin/refunds",
+            "icon": "RefreshCw"
+        },
+        {
+            "label": "Dispute Resolution",
+            "href": "/admin/disputes",
+            "icon": "AlertCircle"
+        },
+        {
+            "label": "Reviews Moderation",
+            "href": "/admin/reviews",
+            "icon": "Star"
+        },
+        {
+            "label": "Analytics Dashboard",
+            "href": "/admin/analytics",
+            "icon": "BarChart3"
+        },
+        {
+            "label": "Products",
+            "href": "/admin/products",
+            "icon": "ShoppingBag"
+        },
+        {
+            "label": "Order Management",
+            "href": "/admin/orders",
+            "icon": "Package"
+        },
+        {
+            "label": "Agent Management",
+            "href": "/admin/agents",
+            "icon": "Handshake"
+        },
+        {
+            "label": "Commissions",
+            "href": "/admin/commissions",
+            "icon": "BadgeIndianRupee"
+        },
+        {
+            "label": "Mandir Approvals",
+            "href": "/admin/mandirs",
+            "icon": "Building2"
+        },
+        {
+            "label": "Shop Approvals",
+            "href": "/admin/puja-shops",
+            "icon": "ShoppingBag"
+        },
+        {
+            "label": "Settings",
+            "href": "/admin/settings",
+            "icon": "Settings"
+        },
+        {
+            "label": "Account",
+            "href": "#",
+            "icon": "User",
+            "submenu": [
+                {
+                    "label": "Profile Management",
+                    "href": "/admin/profile",
+                    "icon": "User"
+                }
+            ]
+        },
+        {
+            "label": "Signout",
+            "href": "#",
+            "icon": "LogOut"
+        }
+    ],
+    "dashboard": {
+        "activities": [
+            {
+                "id": 1,
+                "name": "Avni Pandit",
+                "action": "Booked a consultation",
+                "time": "2h ago",
+                "avatar": "A",
+                "color": "bg-yellow-600"
+            },
+            {
+                "id": 2,
+                "name": "Mahesh Joshi",
+                "action": "Completed a session",
+                "time": "5h ago",
+                "avatar": "M",
+                "color": "bg-yellow-600"
+            },
+            {
+                "id": 3,
+                "name": "Vijay Sharma",
+                "action": "Rescheduled consultation",
+                "time": "6h ago",
+                "avatar": "V",
+                "color": "bg-yellow-600"
+            },
+            {
+                "id": 4,
+                "name": "Priya Desai",
+                "action": "Left a 5-star review",
+                "time": "8h ago",
+                "avatar": "P",
+                "color": "bg-yellow-600"
+            },
+            {
+                "id": 5,
+                "name": "Rahul Gupta",
+                "action": "Payment received",
+                "time": "10h ago",
+                "avatar": "R",
+                "color": "bg-yellow-600"
+            }
+        ]
+    }
+}

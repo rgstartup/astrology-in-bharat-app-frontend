@@ -1,0 +1,79 @@
+{
+    "hero": {
+        "title": "Connect with Verified Astrologers Online",
+        "subtitle": "Instant Chat, Call, or Video Consultations",
+        "description": "At Astrology in Bharat, find trusted astrologers for love, career, health, or life guidance. Connect anytime via chat, audio, or video and get personalized solutions with full privacy.",
+        "benefits": [
+            "Verified & Experienced Astrologers",
+            "Instant Chat, Call & Video Support",
+            "100% Privacy & Confidentiality",
+            "Accurate Predictions & Remedies",
+            "Trusted by Thousands Across India"
+        ],
+        "cards": [
+            {
+                "id": 1,
+                "image": "/images/icon1.png",
+                "title": "Live Chat Support",
+                "description": "Get instant answers from expert astrologers through live chat sessions.",
+                "link": "#"
+            },
+            {
+                "id": 2,
+                "image": "/images/icon2.png",
+                "title": "Speak with Astrologer",
+                "description": "Connect via phone call for personal guidance on your life questions.",
+                "link": "#"
+            },
+            {
+                "id": 3,
+                "image": "/images/icon3.png",
+                "title": "Astrology Product Store",
+                "description": "Shop gemstones, yantras, and spiritual items recommended by experts.",
+                "link": "#"
+            },
+            {
+                "id": 4,
+                "image": "/images/icon4.png",
+                "title": "Book A Pooja",
+                "description": "Book religious ceremonies & rituals performed by experienced priests.",
+                "link": "#"
+            }
+        ]
+    },
+    "whyChooseUs": {
+        "title": "Why Talk to Our Astrologer?",
+        "promises": [
+            {
+                "icon": "fas fa-chart-line",
+                "title": "Accurate Predictions",
+                "description": "Gain clarity with precise and insightful astrological readings."
+            },
+            {
+                "icon": "fas fa-lock",
+                "title": "100% Confidentiality",
+                "description": "Your conversations and data are completely private."
+            },
+            {
+                "icon": "fas fa-history",
+                "title": "Vedic & Modern Approach",
+                "description": "Our experts blend traditional wisdom with contemporary insights."
+            },
+            {
+                "icon": "fas fa-gem",
+                "title": "Remedial Solutions",
+                "description": "Receive practical solutions to mitigate planetary effects."
+            },
+            {
+                "icon": "fas fa-star",
+                "title": "Personalized Consultations",
+                "description": "Get tailored advice for your unique birth chart."
+            },
+            {
+                "icon": "fas fa-comments",
+                "title": "Accessible Anytime",
+                "description": "Connect with our astrologers on your schedule."
+            }
+        ]
+    }
+}

@@ -1,8 +1,9 @@
 "use client";
 import React, { memo, useCallback, useState, Fragment } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import AdminGuard from "@/app/components/AdminGuard";
+import { useAuthStore } from "@/src/store/useAuthStore";
 
 import {
   X,
@@ -29,48 +30,61 @@ import {
   Menu,
   Bell,
   Search,
-   Package,
+  Package,
+  ShoppingBag,
+  Handshake,
+  BookOpen,
+  BadgeIndianRupee,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
-import { SearchInput } from "@/app/components/admin/SearchInput";
+import { SearchInput, Avatar, NotificationBell } from "@repo/ui";
+import { toast } from "react-toastify";
+import adminData from "../../public/data/admin_data.json";
+
 interface MenuItem {
   label: string;
   href: string;
-  icon: React.ElementType;
+  icon: any; // Changed to any to handle mapped components
   submenu?: Omit<MenuItem, "submenu">[];
 }
 
-const menuItems: MenuItem[] = [
-  { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "User Management", href: "/admin/users", icon: Users },
-  { label: "Expert Management", href: "/admin/experts", icon: UserCheck },
-  // { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
-  { label: "Expert KYC Review", href: "/admin/kyc", icon: FileText },
- { label: "Services & Pricing", href: "/admin/services", icon: Package },
-  // { label: "Promo Configuration", href: "/admin/promos", icon: Ticket },
-  { label: "Coupons/Offers", href: "/admin/coupons", icon: Tag },
-  { label: "Live Sessions Monitor", href: "/admin/live-sessions", icon: Tv },
-  // { label: "Session Logs", href: "/admin/session-logs", icon: History },
-  // { label: "Payout Requests", href: "/admin/payouts", icon: Wallet },
-  { label: "Refund Management", href: "/admin/refunds", icon: RefreshCw },
-  { label: "Dispute Resolution", href: "/admin/disputes", icon: AlertCircle },
-  { label: "Reviews Moderation", href: "/admin/reviews", icon: Star },
-  { label: "Analytics Dashboard", href: "/admin/analytics", icon: BarChart3 },
-  // { label: "Earnings", href: "/admin/earnings", icon: IndianRupee },
-  {
-    label: "Account",
-    href: "#",
-    icon: Settings,
-    submenu: [
-      {
-        label: "Profile Management",
-        href: "/admin/profile",
-        icon: User,
-      },
-      { label: "Signout", href: "/admin", icon: LogOut },
-    ],
-  },
-];
+const IconMap: Record<string, React.ElementType> = {
+  LayoutDashboard,
+  CalendarCheck,
+  Tag,
+  History,
+  IndianRupee,
+  Users,
+  UserCheck,
+  Settings,
+  LogOut,
+  Tv,
+  FileText,
+  Wallet,
+  RefreshCw,
+  AlertCircle,
+  Star,
+  BarChart3,
+  Ticket,
+  User,
+  Menu,
+  Bell,
+  Search,
+  Package,
+  ShoppingBag,
+  Handshake,
+  BookOpen,
+  BadgeIndianRupee,
+};
+
+const menuItems: MenuItem[] = adminData.menuItems.map((item: any) => ({
+  ...item,
+  icon: IconMap[item.icon] || User,
+  submenu: item.submenu?.map((sub: any) => ({
+    ...sub,
+    icon: IconMap[sub.icon] || User,
+  })),
+}));
 
 interface SidebarProps {
   isOpen: boolean;
@@ -93,15 +107,39 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   const isSubmenuOpen = openSubmenu === item.label;
   const isActiveLink = pathname === item.href;
 
+  const { logout, user } = useAuthStore();
+  const router = useRouter();
+
   if (!item.submenu) {
+    if (item.label === "Signout") {
+      return (
+        <button
+          onClick={() => {
+            logout();
+            toast.success("Signed out successfully");
+            router.push("/");
+          }}
+          className={cn(
+            "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 text-left",
+            isActiveLink
+              ? "bg-primary-hover text-white shadow-lg"
+              : "text-white hover:bg-primary-hover"
+          )}
+        >
+          <item.icon className="w-5 h-5 flex-shrink-0" />
+          <span>{item.label}</span>
+        </button>
+      );
+    }
+
     return (
       <Link
         href={item.href}
         className={cn(
           "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200",
           isActiveLink
-            ? "bg-yellow-800 text-white shadow-lg"
-            : "text-white hover:bg-yellow-700"
+            ? "bg-primary-hover text-white shadow-lg"
+            : "text-white hover:bg-primary-hover"
         )}
         aria-current={isActiveLink ? "page" : undefined}
       >
@@ -112,13 +150,13 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   }
 
   return (
-     <AdminGuard>
+
     <Fragment>
       <button
         onClick={() => onToggleSubmenu(item.label)}
         className={cn(
-          "w-full px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-between text-white hover:bg-yellow-700 transition-colors duration-200",
-          isSubmenuOpen && "bg-yellow-700"
+          "w-full px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-between text-white hover:bg-primary-hover transition-colors duration-200",
+          isSubmenuOpen && "bg-primary-hover"
         )}
         aria-expanded={isSubmenuOpen}
         aria-controls={`submenu-${item.label.replace(/\s/g, "-").toLowerCase()}`}
@@ -141,13 +179,33 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         >
           {item.submenu.map((subItem) => {
             const isSubmenuActive = pathname === subItem.href;
+
+            if (subItem.label === "Signout") {
+              return (
+                <button
+                  key={subItem.label}
+                  onClick={() => {
+                    logout();
+                    toast.success("Signed out successfully");
+                    router.push("/");
+                  }}
+                  className={cn(
+                    "block w-full text-left px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-primary-hover hover:text-white transition-colors duration-200",
+                    isSubmenuActive && "bg-primary-hover text-white font-medium"
+                  )}
+                >
+                  {subItem.label}
+                </button>
+              );
+            }
+
             return (
               <Link
                 key={subItem.label}
                 href={subItem.href}
                 className={cn(
-                  "block px-3 py-2 rounded-lg text-sm text-yellow-100 hover:bg-yellow-600 hover:text-white transition-colors duration-200",
-                  isSubmenuActive && "bg-yellow-600 text-white font-medium"
+                  "block px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-primary-hover hover:text-white transition-colors duration-200",
+                  isSubmenuActive && "bg-primary-hover text-white font-medium"
                 )}
                 aria-current={isSubmenuActive ? "page" : undefined}
               >
@@ -158,7 +216,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         </div>
       )}
     </Fragment>
-    </AdminGuard>
+
   );
 };
 
@@ -190,34 +248,65 @@ const Sidebar: React.FC<SidebarProps> = memo(
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed left-0 top-0 h-full w-64 flex flex-col bg-yellow-600 text-white transition-transform duration-300 ease-in-out z-50 shadow-xl shadow-gray-400",
+            "fixed left-0 top-0 h-full w-64 flex flex-col bg-primary text-white transition-transform duration-300 ease-in-out z-50 shadow-xl shadow-gray-400",
             isOpen ? "translate-x-0" : "-translate-x-full",
             "lg:translate-x-0"
           )}
           aria-label="Sidebar navigation"
         >
-          {/* Logo Section - Fixed */}
-          <div className="flex items-center justify-between p-6 bg-gray-50 border-r border-gray-200 flex-shrink-0"
-          style={{
-    backgroundImage: "url('/images/back-image.webp')",
-    backgroundSize: "cover",     
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat", 
-  }}
->
-            
-            <img
-              src="/images/logo.png"
-              alt="Logo"
-              className="rounded-2xl"
-            />
-            <button
-              onClick={toggleSidebar}
-              className="lg:hidden p-1 hover:bg-yellow-700 rounded transition-colors duration-200 text-gray-800"
-              aria-label="Close sidebar"
-            >
-              <X className="w-5 h-5" />
-            </button>
+          {/* Premium Logo Section */}
+          <div
+            className="relative flex flex-col p-6 flex-shrink-0 border-b border-white/10 overflow-hidden"
+            style={{
+              backgroundImage: "url('/images/back-image.webp')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            {/* Subtle Dark Overlay for better text contrast */}
+            <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                {/* Larger flipped Baba Ji with premium glow */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full animate-pulse" />
+                  <img
+                    src="/images/Astrologer.png"
+                    alt="AstrologyInBharat"
+                    className="w-16 h-16 object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+                    style={{ transform: "scaleX(-1)" }}
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <div className="leading-none mb-1">
+                    <h2 className="text-white text-lg font-black tracking-tighter drop-shadow-md">
+                      ASTROLOGY
+                    </h2>
+                    <p className="text-white/90 text-[11px] font-bold tracking-[0.2em] -mt-1 drop-shadow-sm uppercase">
+                      IN BHARAT
+                    </p>
+                  </div>
+
+                  {/* Sleek Pill Badge (Admin specific color) */}
+                  <div className="mt-1 flex">
+                    <span className="bg-gradient-to-r from-red-600 to-orange-600 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg border border-white/20 uppercase tracking-widest flex items-center gap-1">
+                      <div className="w-1 h-1 bg-white rounded-full animate-ping" />
+                      Admin
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={toggleSidebar}
+                className="lg:hidden p-2 hover:bg-white/10 rounded-full transition-all text-white"
+                aria-label="Close sidebar"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
           </div>
 
           {/* Navigation Menu - Scrollable */}
@@ -246,8 +335,9 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { user } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-   const [globalSearch, setGlobalSearch] = useState("");
+  const [globalSearch, setGlobalSearch] = useState("");
   const pathname = usePathname();
 
   const toggleSidebar = useCallback(() => {
@@ -257,7 +347,7 @@ export default function AdminLayout({
   // ✅ FIX: Check if it's an admin route (including login/register which shouldn't show sidebar)
   const isAdminRoute = pathname?.startsWith("/admin");
   const isLoginOrRegister = pathname === "/admin/login" || pathname === "/admin/register" || pathname === "/admin";
-  
+
   // ✅ Show sidebar only for admin routes (except login/register)
   const shouldShowSidebar = isAdminRoute && !isLoginOrRegister;
 
@@ -265,79 +355,61 @@ export default function AdminLayout({
   // Now all children will render with appropriate layout
 
   return (
-       <AdminGuard>
- <div
-  className="flex min-h-screen bg-cover bg-center bg-no-repeat"
-  style={{ backgroundImage: "url('/images/back-image.webp')" }}
->
-
-      {/* Sidebar Component - Only show when needed */}
-      {shouldShowSidebar && (
-        <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      )}
-
-      {/* Main Content */}
-      <div className={cn("flex-1", shouldShowSidebar && "lg:ml-64")}>
-        {/* Top Header - Only show when sidebar is visible */}
+    <AdminGuard>
+      <div
+        className="flex min-h-screen bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/images/back-image.webp')" }}
+      >
+        {/* Sidebar Component - Only show when needed */}
         {shouldShowSidebar && (
-          <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={toggleSidebar}
-                  className="lg:hidden text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors"
-                  aria-label="Toggle sidebar"
-                >
-                  <Menu className="w-6 h-6" />
-                </button>
-                <h1 className="text-2xl font-semibold text-gray-800">
-                  {menuItems.find((item) => item.href === pathname)?.label ||
-                    "Dashboard"}
-                </h1>
-              </div>
-
-              <div className="flex items-center space-x-4">
-                {/* Search */}
-                 <div className="hidden md:block">
-                  <SearchInput
-                    value={globalSearch}
-                    onChange={setGlobalSearch}
-                    placeholder="Search..."
-                    className="w-64"
-                    size="md"
-                  />
-                </div>
-
-                {/* Notifications */}
-                <button className="relative text-gray-600 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors">
-                  <Bell className="w-5 h-5" />
-                  <span className="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
-                    3
-                  </span>
-                </button>
-
-                {/* Profile */}
-                <div className="w-10 h-10 rounded-full overflow-hidden">
-  <img
-    src="https://i.pravatar.cc/150?img=12"
-    alt="Profile"
-    className="w-full h-full rounded-full cursor-pointer
-               hover:ring-2 hover:ring-yellow-500
-               transition-all"
-  />
-</div>
-
-              </div>
-            </div>
-          </header>
+          <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
         )}
 
         {/* Main Content */}
-        <main className={cn(shouldShowSidebar && "p-6")}>
-          {children}
-        </main>
+        <div className={cn("flex-1", shouldShowSidebar && "lg:ml-64")}>
+          {/* Top Header - Only show when sidebar is visible */}
+          {shouldShowSidebar && (
+            <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={toggleSidebar}
+                    className="lg:hidden text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors"
+                    aria-label="Toggle sidebar"
+                  >
+                    <Menu className="w-6 h-6" />
+                  </button>
+                  <h1 className="text-2xl font-semibold text-gray-800">
+                    {menuItems.find((item) => item.href === pathname)?.label ||
+                      "Dashboard"}
+                  </h1>
+                </div>
+
+                {/* Profile */}
+                <div className="flex items-center gap-3">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-sm font-bold text-gray-800">{user?.name || "Admin"}</p>
+                    <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest">Administrator</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+                    <Avatar
+                      src={user?.avatar || user?.profile_picture || ""}
+                      alt="Profile"
+                      className="cursor-pointer hover:ring-2 hover:ring-primary transition-all"
+                    />
+                  </div>
+                </div>
+              </div>
+            </header>
+          )}
+
+          {/* Main Content */}
+          <main className={cn(shouldShowSidebar && "p-6")}>{children}</main>
+        </div>
       </div>
-    </div>
     </AdminGuard>
   );
 }
+
+
+

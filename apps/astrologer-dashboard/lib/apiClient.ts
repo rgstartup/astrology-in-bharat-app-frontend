@@ -1,123 +1,62 @@
-import axios, { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+import { safeFetch } from "../../../packages/safe-fetch/index";
+import { BACKEND_URL } from "./config";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const isServer = typeof window === "undefined";
 
-// Create axios instance
-export const apiClient = axios.create({
-    baseURL: API_BASE_URL,
-    withCredentials: true, // Important for cookies
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
+function isPublicAuthPath(): boolean {
+    if (typeof window === "undefined") return false;
+    const path = window.location.pathname;
+    return path === "/" || path === "/sign-up" || path === "/forgot-password";
+}
 
-let isRefreshing = false;
-let failedQueue: Array<{
-    resolve: (value?: any) => void;
-    reject: (reason?: any) => void;
-}> = [];
+function buildUrl(path: string): string {
+    if (path.startsWith('http')) return path;
+    const cleanPath = path.startsWith("/") ? path : `/${path}`;
+    if (isServer) {
+        const base = (BACKEND_URL || "").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
+        return `${base}/api/v1${cleanPath}`;
+    }
+    return `/api/v1${cleanPath}`;
+}
 
-const processQueue = (error: any, token: string | null = null) => {
-    failedQueue.forEach((prom) => {
-        if (error) {
-            prom.reject(error);
-        } else {
-            prom.resolve(token);
+async function request<T>(path: string, options: any = {}): Promise<T> {
+    const { method = "GET", body = null, headers = {}, timeoutMs = 10000 } = options;
+    const url = buildUrl(path);
+
+    const [data, error] = await safeFetch<T>(url, {
+        method,
+        credentials: "include",
+        headers: {
+            ...(body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+            ...headers,
+        },
+        ...(body ? { body: body instanceof FormData ? body : JSON.stringify(body) } : {}),
+        timeoutMs,
+    } as any);
+
+    if (error) {
+        if ((error as any)?.status === 401) {
+            const backendMessage = (error as any)?.body?.message || (error as any)?.data?.message;
+            if (backendMessage && typeof backendMessage === "string" && !isPublicAuthPath()) {
+                if (!isServer) {
+                    import("react-toastify").then(({ toast }) => {
+                        toast.error(backendMessage, { toastId: "auth-error" });
+                    }).catch(() => { });
+                }
+            }
         }
-    });
+        throw error;
+    }
+    return data as T;
+}
 
-    failedQueue = [];
+export const apiClient = {
+    get: <T>(path: string, opts?: any) => request<T>(path, { ...opts, method: "GET" }),
+    post: <T>(path: string, body?: any, opts?: any) => request<T>(path, { ...opts, method: "POST", body }),
+    put: <T>(path: string, body?: any, opts?: any) => request<T>(path, { ...opts, method: "PUT", body }),
+    patch: <T>(path: string, body?: any, opts?: any) => request<T>(path, { ...opts, method: "PATCH", body }),
+    delete: <T>(path: string, opts?: any) => request<T>(path, { ...opts, method: "DELETE" }),
+    upload: <T>(path: string, formData: FormData, opts?: any) => request<T>(path, { ...opts, method: "POST", body: formData, timeoutMs: 60000 }),
 };
-
-// Request interceptor - Add access token to requests
-apiClient.interceptors.request.use(
-    (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('accessToken');
-        if (token && config.headers) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
-
-// Response interceptor - Handle token refresh
-apiClient.interceptors.response.use(
-    (response) => {
-        return response;
-    },
-    async (error: AxiosError) => {
-        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
-
-        // If error is 401 and we haven't retried yet
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            if (isRefreshing) {
-                // If already refreshing, queue this request
-                return new Promise((resolve, reject) => {
-                    failedQueue.push({ resolve, reject });
-                })
-                    .then((token) => {
-                        if (originalRequest.headers) {
-                            originalRequest.headers.Authorization = `Bearer ${token}`;
-                        }
-                        return apiClient(originalRequest);
-                    })
-                    .catch((err) => {
-                        return Promise.reject(err);
-                    });
-            }
-
-            originalRequest._retry = true;
-            isRefreshing = true;
-
-            try {
-                // Try to refresh the token
-                const response = await axios.post(
-                    `${API_BASE_URL}/auth/refresh`,
-                    {},
-                    {
-                        withCredentials: true, // Send cookies with refresh token
-                    }
-                );
-
-                const { accessToken } = response.data;
-
-                // Store new access token
-                localStorage.setItem('accessToken', accessToken);
-
-                // Update default header
-                apiClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-
-                // Process queued requests
-                processQueue(null, accessToken);
-
-                // Retry original request
-                if (originalRequest.headers) {
-                    originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-                }
-                return apiClient(originalRequest);
-            } catch (refreshError: any) {
-                // Refresh token is also expired or invalid
-                processQueue(refreshError, null);
-
-                // Clear tokens
-                localStorage.removeItem('accessToken');
-
-                // Redirect to sign-in
-                if (typeof window !== 'undefined') {
-                    window.location.href = '/sign-in';
-                }
-
-                return Promise.reject(refreshError);
-            } finally {
-                isRefreshing = false;
-            }
-        }
-
-        return Promise.reject(error);
-    }
-);
 
 export default apiClient;
