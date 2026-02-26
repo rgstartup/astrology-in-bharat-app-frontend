@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  transpilePackages: ["@repo/ui", "@repo/routes"],
+  transpilePackages: ["@repo/ui", "@repo/routes", "@repo/safe-fetch"],
   images: {
     remotePatterns: [
       {

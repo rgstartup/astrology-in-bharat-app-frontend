@@ -163,6 +163,9 @@ importers:
 
   apps/astrologer-dashboard:
     dependencies:
+      '@repo/safe-fetch':
+        specifier: workspace:*
+        version: link:../../packages/safe-fetch
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
