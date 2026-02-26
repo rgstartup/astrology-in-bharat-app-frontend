@@ -4,7 +4,6 @@
  * - Server-side: uses NEXT_PUBLIC_API_URL absolute base.
  */
 
-import { toast } from "react-toastify";
 import safeFetch from "@packages/safe-fetch/safeFetch";
 import { BACKEND_URL } from "./config";
 
@@ -60,7 +59,12 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
         if ((error as any)?.status === 401) {
             const backendMessage = (error as any)?.body?.message || (error as any)?.data?.message;
             if (backendMessage && typeof backendMessage === "string" && !isPublicAuthPath()) {
-                toast.error(backendMessage, { toastId: "auth-error" });
+                // Dynamically import toast to avoid server-side issues
+                if (!isServer) {
+                    import("react-toastify").then(({ toast }) => {
+                        toast.error(backendMessage, { toastId: "auth-error" });
+                    }).catch(() => { });
+                }
             }
         }
         throw error;
