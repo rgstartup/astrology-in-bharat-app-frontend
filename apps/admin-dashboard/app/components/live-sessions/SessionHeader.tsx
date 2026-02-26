@@ -21,21 +21,7 @@ export function SessionHeader({ onRefresh, isRefreshing }: SessionHeaderProps) {
         </p>
       </div>
 
-      {/* Actions */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-        <Button
-          variant="secondary"
-          icon={RefreshCw}
-          loading={isRefreshing}
-          onClick={onRefresh}
-        >
-          Refresh
-        </Button>
-
-        <Button variant="primary" icon={Eye}>
-          Join All Sessions
-        </Button>
-      </div>
+     
     </header>
   );
 }
