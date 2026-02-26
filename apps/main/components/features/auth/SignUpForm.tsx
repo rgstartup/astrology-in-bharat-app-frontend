@@ -65,18 +65,24 @@ const SignUpForm: React.FC = () => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        console.log("Submit clicked, validating...");
 
         if (!validateForm()) {
             return;
         }
 
         setIsLoading(true);
+        toast.info("Registering your account...");
 
         const payload = {
             name: formData.fullName,
             email: formData.email,
             password: formData.password,
+            // Keep phone for now if it's meant to be there, but backend DTO doesn't show it.
+            // Actually, let's keep it but check backend DTO again.
+            // If it's not in DTO, it might be rejected.
             phone: formData.phoneNumber,
+            roles: ["client"]
         };
 
         try {
