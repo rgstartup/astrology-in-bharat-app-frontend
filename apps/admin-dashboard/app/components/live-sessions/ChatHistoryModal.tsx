@@ -9,9 +9,11 @@ const { X, AlertTriangle, ShieldAlert, MessageSquare } = LucideIcons as any;
 
 interface Message {
     id: number;
-    senderType: 'user' | 'expert' | 'admin';
+    senderType?: 'user' | 'expert' | 'admin';
+    sender_type?: 'user' | 'expert' | 'admin';
     content: string;
-    createdAt: string;
+    createdAt?: string;
+    created_at?: string;
 }
 
 interface ChatHistoryModalProps {
@@ -145,9 +147,9 @@ export function ChatHistoryModal({ isOpen, onClose, messages: initialMessages, s
                     <div className={`flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50 transition-all duration-300`}>
                         {messages && messages.length > 0 ? (
                             messages.map((msg: any) => {
-                                const isUser = msg.senderType === 'user';
-                                const isExpert = msg.senderType === 'expert';
-                                const isAdmin = msg.senderType === 'admin';
+                                const isUser = msg.sender_type === 'user' || msg.senderType === 'user';
+                                const isExpert = msg.sender_type === 'expert' || msg.senderType === 'expert';
+                                const isAdmin = msg.sender_type === 'admin' || msg.senderType === 'admin';
 
                                 return (
                                     <div
@@ -155,10 +157,10 @@ export function ChatHistoryModal({ isOpen, onClose, messages: initialMessages, s
                                         className={`flex flex-col ${isUser ? 'items-end' : isExpert ? 'items-start' : 'items-center'}`}
                                     >
                                         <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 shadow-sm relative ${isUser
-                                                ? 'bg-blue-600 text-white rounded-tr-none'
-                                                : isExpert
-                                                    ? 'bg-white text-gray-800 rounded-tl-none border border-gray-100'
-                                                    : 'bg-red-50 text-red-700 border border-red-100 rounded-lg text-center font-bold italic'
+                                            ? 'bg-blue-600 text-white rounded-tr-none'
+                                            : isExpert
+                                                ? 'bg-white text-gray-800 rounded-tl-none border border-gray-100'
+                                                : 'bg-red-50 text-red-700 border border-red-100 rounded-lg text-center font-bold italic'
                                             }`}>
                                             {!isAdmin && (
                                                 <p className="text-[10px] font-black mb-1 opacity-60 uppercase tracking-widest">
@@ -172,7 +174,7 @@ export function ChatHistoryModal({ isOpen, onClose, messages: initialMessages, s
                                             )}
                                             <p className="text-[15px] leading-relaxed font-medium">{msg.content}</p>
                                             <p className={`text-[9px] mt-1.5 font-bold ${isUser ? 'text-blue-200' : 'text-gray-400'}`}>
-                                                {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {new Date(msg.created_at || msg.createdAt || '').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </p>
                                         </div>
                                     </div>

@@ -60,18 +60,18 @@ export default function LiveSessionsPage() {
           specialty: s.expert?.specialization || "Astrology",
           experience: s.expert?.experience_in_years || 0
         },
-        sessionType: s.sessionType || "chat",
+        sessionType: s.session_type || s.sessionType || "chat",
         status: s.status === 'active' ? 'live' :
           s.status === 'pending' ? 'pending' :
             s.status === 'expired' ? 'expired' :
               (s.status === 'completed' && s.terminatedBy === 'admin') ? 'admin-terminated' :
                 s.status === 'completed' ? 'ended' : 'live',
-        startTime: new Date(s.startTime || s.createdAt),
+        startTime: new Date(s.start_time || s.startTime || s.created_at || s.createdAt),
         duration: s.duration || 0,
         connectionQuality: "excellent",
-        chatMessages: s.messageCount || 0,
+        chatMessages: s.message_count || s.messageCount || 0,
         recording: false,
-        lastActive: new Date(s.updatedAt || s.createdAt),
+        lastActive: new Date(s.updated_at || s.updatedAt || s.created_at || s.createdAt),
         issues: []
       }));
 
