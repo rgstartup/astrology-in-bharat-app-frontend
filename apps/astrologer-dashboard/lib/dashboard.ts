@@ -14,7 +14,11 @@ export interface DashboardStats {
 export const getDashboardStats = async (type: 'today' | 'total' = 'today'): Promise<DashboardStats> => {
     try {
         const response: any = await apiClient.get(`expert-dashboard/stats?type=${type}`);
-        return response.data?.data;
+        console.log('[Dashboard] Raw API response:', response);
+        // apiClient returns the parsed JSON body directly — try all common backend shapes
+        const stats = response?.data?.data ?? response?.data ?? response;
+        console.log('[Dashboard] Parsed stats:', stats);
+        return stats;
     } catch (error) {
         console.error(`[Dashboard] Stats API call failed for type ${type}:`, error);
         throw error;
