@@ -29,7 +29,7 @@ import { getLiveSessions, getChatHistory } from "@/src/services/admin.service";
 export default function LiveSessionsPage() {
   // Simple state
   const [sessions, setSessions] = useState<LiveSession[]>([]);
-  const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [activeFilter, setActiveFilter] = useState<string>("chat_live");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [volume, setVolume] = useState<number>(80);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -42,43 +42,51 @@ export default function LiveSessionsPage() {
   const fetchSessions = async () => {
     try {
       setIsRefreshing(true);
-      const data = await getLiveSessions(activeFilter);
+      const supportedFilters = ["chat_live", "expired", "admin_terminated"];
+      const apiFilter = supportedFilters.includes(activeFilter) ? activeFilter : undefined;
 
-      // Map backend data to frontend interface
+      const response = await getLiveSessions(apiFilter);
+      const data = Array.isArray(response) ? response : (response?.data || []);
+
       const mappedSessions: LiveSession[] = data.map((s: any) => ({
-        id: s.id.toString(),
+        id: (s.id || "").toString(),
         user: {
-          id: s.user?.id.toString() || "0",
-          name: s.user?.name || "Unknown User",
-          avatar: s.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${s.user?.id}`,
-          rating: 4.5
+          id: (s.user?.id || s.user_id || "0").toString(),
+          name: s.user?.name || s.user?.full_name || s.userName || s.user_name || "Unknown User",
+          avatar: s.user?.avatar || s.userAvatar || s.user_avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${s.user?.id || s.user_id || s.id}`,
+          rating: s.user?.rating || 4.5
         },
         astrologer: {
-          id: s.expert?.id.toString() || "0",
-          name: s.expert?.user?.name || "Unknown Expert",
-          avatar: s.expert?.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${s.expert?.id}`,
-          specialty: s.expert?.specialization || "Astrology",
-          experience: s.expert?.experience_in_years || 0
+          id: (s.expert?.id || s.expert_id || "0").toString(),
+          name: s.expert?.user?.name || s.expert?.user?.full_name || s.expertName || s.expert_name || "Unknown Expert",
+          avatar: s.expert?.user?.avatar || s.expertAvatar || s.expert_avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${s.expert?.id || s.expert_id || s.id}`,
+          specialty: s.expert?.specialization || s.specialization || "Astrology",
+          experience: s.expert?.experience_in_years || s.experienceInYears || s.experience_in_years || 0
         },
-        sessionType: s.sessionType || "chat",
-        status: s.status === 'active' ? 'live' :
-          s.status === 'pending' ? 'pending' :
-            s.status === 'expired' ? 'expired' :
-              (s.status === 'completed' && s.terminatedBy === 'admin') ? 'admin-terminated' :
-                s.status === 'completed' ? 'ended' : 'live',
-        startTime: new Date(s.startTime || s.createdAt),
+        sessionType: s.session_type || s.sessionType || "chat",
+        status: (s.status === 'active' || s.status === 'ACTIVE') ? 'live' :
+          (s.status === 'pending' || s.status === 'PENDING') ? 'pending' :
+            (s.status === 'expired' || s.status === 'EXPIRED') ? 'expired' :
+              (s.status === 'completed' || s.status === 'COMPLETED') && (s.terminated_by === 'admin' || s.terminatedBy === 'admin') ? 'admin-terminated' :
+                (s.status === 'completed' || s.status === 'COMPLETED') ? 'ended' :
+                  (s.status === 'cancelled' || s.status === 'CANCELLED') ? 'ended' : 'ended',
+        startTime: new Date(s.start_time || s.startTime || s.created_at || s.createdAt || Date.now()),
         duration: s.duration || 0,
-        connectionQuality: "excellent",
-        chatMessages: s.messageCount || 0,
-        recording: false,
-        lastActive: new Date(s.updatedAt || s.createdAt),
-        issues: []
+        connectionQuality: s.connection_quality || s.connectionQuality || "excellent",
+        chatMessages: s.message_count || s.messageCount || 0,
+        recording: s.is_recording || s.recording || false,
+        lastActive: new Date(s.updated_at || s.updatedAt || s.created_at || s.createdAt || Date.now()),
+        issues: s.issues || []
       }));
 
       setSessions(mappedSessions);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to fetch sessions:", error);
-      toast.error("Failed to fetch live sessions");
+      setSessions([]);
+      // Only show toast if it's a real server error, not a 404 or missing route
+      if (error?.status && error.status !== 404) {
+        toast.error("Failed to fetch live sessions");
+      }
     } finally {
       setIsRefreshing(false);
     }
@@ -133,13 +141,24 @@ export default function LiveSessionsPage() {
     ];
   }, [sessions]);
 
-  // Simple filter
+  // Filter logic aligned with sessionsConfig.ts
   const filteredSessions = useMemo(() => {
-    if (activeFilter === "all") return sessions;
+    if (activeFilter === "chat_live") {
+      return sessions.filter(s => s.status === "live" && s.sessionType === "chat");
+    }
+    if (activeFilter === "expired") {
+      return sessions.filter(s => s.status === "expired" || s.status === "ended");
+    }
+    if (activeFilter === "admin_terminated") {
+      return sessions.filter(s => s.status === "admin-terminated");
+    }
+
+    // Secondary filters
     if (activeFilter === "video") return sessions.filter(s => s.sessionType === "video");
     if (activeFilter === "audio") return sessions.filter(s => s.sessionType === "audio");
     if (activeFilter === "chat") return sessions.filter(s => s.sessionType === "chat");
     if (activeFilter === "issues") return sessions.filter(s => s.status === "technical-issue");
+
     return sessions;
   }, [sessions, activeFilter]);
 
