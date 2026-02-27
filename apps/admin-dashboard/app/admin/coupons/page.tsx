@@ -37,10 +37,22 @@ export default function CouponsPage() {
         getCoupons(),
         fetchStats()
       ]);
-      setCoupons(Array.isArray(couponsData) ? couponsData : (couponsData.data || []));
+      const rawCoupons = Array.isArray(couponsData) ? couponsData : (couponsData.data || []);
+
+      // Map backend snake_case to frontend camelCase expected by CouponCard
+      const mappedCoupons = rawCoupons.map((c: any) => ({
+        ...c,
+        minOrderValue: c.min_order_value ?? c.minOrderValue,
+        maxDiscount: c.max_discount ?? c.maxDiscount,
+        maxUsageLimit: c.max_usage_limit ?? c.maxUsageLimit,
+        redemptionsCount: c.usage_count ?? c.redemptionsCount,
+        expiryDate: c.expiry_date ?? c.expiryDate,
+        isActive: c.is_active ?? c.isActive
+      }));
+
+      setCoupons(mappedCoupons);
     } catch (error) {
       console.error("Failed to fetch coupons:", error);
-      // Keep empty array on error
       setCoupons([]);
     } finally {
       setLoading(false);
