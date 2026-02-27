@@ -46,15 +46,28 @@ export default function ExpertCallRoom() {
     };
 
     useEffect(() => {
+        // `cancelled` acts as a guard against React StrictMode double-invocation.
+        // When StrictMode unmounts the component immediately after first mount,
+        // the cleanup sets `cancelled = true`, aborting any in-flight async work.
+        // The second (real) mount creates a fresh closure with `cancelled = false`.
+        let cancelled = false;
+
         const acceptAndConnect = async () => {
+            console.log('[ExpertCallRoom] 🚀 Starting acceptAndConnect for sessionId:', sessionId);
             try {
                 // Pre-check hardware
+                console.log('[ExpertCallRoom] 🎤 Checking hardware & network...');
                 await checkHardwareAndNetwork();
+                if (cancelled) { console.log('[ExpertCallRoom] ⚠️ Cancelled after hardware check (StrictMode cleanup).'); return; }
+                console.log('[ExpertCallRoom] ✅ Hardware check passed.');
 
                 // Step 1: Accept call via REST API → get Twilio token for expert
+                console.log('[ExpertCallRoom] 📡 Calling /call/accept API...');
                 const response: any = await apiClient.post('/call/accept', {
                     sessionId: parseInt(sessionId),
                 });
+                if (cancelled) { console.log('[ExpertCallRoom] ⚠️ Cancelled after API call (StrictMode cleanup).'); return; }
+                console.log('[ExpertCallRoom] 📡 /call/accept response:', { hasToken: !!response?.token, session: response?.session });
 
                 if (!response?.token) {
                     throw new Error('No token received from accept endpoint');
@@ -63,13 +76,16 @@ export default function ExpertCallRoom() {
                 setSessionData(response.session);
 
                 // Step 2: Join socket room so user gets notified
+                console.log('[ExpertCallRoom] 🔌 Emitting join_call_room for sessionId:', sessionId);
                 callSocket.emit('join_call_room', { sessionId: parseInt(sessionId) });
 
                 // Step 3: Init Twilio Device
+                console.log('[ExpertCallRoom] 📞 Initializing Twilio Device...');
                 await initTwilioDevice(response.token);
 
             } catch (err: any) {
-                console.error('[ExpertCallRoom] Failed to accept call:', err);
+                if (cancelled) return;
+                console.error('[ExpertCallRoom] ❌ Failed to accept call:', err);
                 toast.error(err?.message || 'Failed to join call');
                 setTimeout(() => router.push('/dashboard'), 3000);
             }
@@ -80,14 +96,26 @@ export default function ExpertCallRoom() {
         callSocket.on('call_ended', () => handleCallEnded());
 
         return () => {
+            console.log('[ExpertCallRoom] 🧹 Cleanup running (sessionId:', sessionId, '). Setting cancelled=true.');
+            cancelled = true;
             if (timerRef.current) clearInterval(timerRef.current);
-            deviceRef.current?.destroy();
+            if (deviceRef.current) {
+                console.log('[ExpertCallRoom] 🗑️ Destroying Twilio Device on cleanup.');
+                deviceRef.current.destroy();
+                deviceRef.current = null;
+            }
             callSocket.off('call_ended');
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionId]);
 
     const initTwilioDevice = async (token: string) => {
+        // Safety guard — don't create a second device if one already exists
+        if (deviceRef.current) {
+            console.warn('[ExpertTwilio] Device already initialized, skipping.');
+            return;
+        }
+
         const { Device } = await import('@twilio/voice-sdk');
 
         const device = new Device(token, {
@@ -98,33 +126,45 @@ export default function ExpertCallRoom() {
         deviceRef.current = device;
 
         device.on('ready', () => {
-            console.log('[ExpertTwilio] Device ready & incoming call accepted.');
+            console.log('[ExpertTwilio] ✅ Device ready. Connecting to TwiML conference...');
+        });
+
+        // Listen for when a call we made is connected (conference joined)
+        device.on('connect', (call: any) => {
+            console.log('[ExpertTwilio] � device:connect — expert joined conference room.', {
+                callSid: call?.parameters?.CallSid,
+            });
+            toast.success('Connected! Call is live.');
             setStatus('connected');
             startTimer();
         });
 
-        device.on('connect', () => {
-            setStatus('connected');
-            startTimer();
+        device.on('disconnect', (call: any) => {
+            console.log('[ExpertTwilio] 📴 device:disconnect fired.', { callSid: call?.parameters?.CallSid });
+            handleCallEnded();
         });
-
-        device.on('disconnect', () => handleCallEnded());
 
         device.on('error', (err: any) => {
-            console.error('[ExpertTwilio] Error:', err);
+            console.error('[ExpertTwilio] ❌ Device error:', { code: err.code, message: err.message, twilioError: err.twilioError });
             toast.error(`Call error: ${err.message}`);
             handleCallEnded();
         });
 
+        console.log('[ExpertTwilio] 📡 Registering device with Twilio...');
         await device.register();
+        console.log('[ExpertTwilio] ✅ Device registered. Connecting to conference room:', `call_room_${sessionId}`);
 
-        // Actually connect to the TwiML app to join the conference
-        console.log('[ExpertTwilio] Connecting to Twilio App...');
-        await device.connect({ params: { sessionId } });
+        // Both user & expert call the TwiML App with sessionId.
+        // TwiML App uses <Dial><Conference>call_room_{sessionId}</Conference></Dial>
+        // to put both into the same conference room.
+        const call = await device.connect({ params: { sessionId } });
+        console.log('[ExpertTwilio] � device.connect() called. Waiting for conference to start...');
 
-        toast.success('Connected! Call is live.');
-        setStatus('connected');
-        startTimer();
+        // Per-call event handlers
+        call.on('accept', () => console.log('[ExpertTwilio] ✅ call:accept — media negotiation complete.'));
+        call.on('disconnect', () => { console.log('[ExpertTwilio] 📴 call:disconnect fired.'); handleCallEnded(); });
+        call.on('cancel', () => { console.log('[ExpertTwilio] ❌ call:cancel — call cancelled.'); handleCallEnded(); });
+        call.on('error', (err: any) => { console.error('[ExpertTwilio] ❌ call:error', err); toast.error(`Call error: ${err.message}`); handleCallEnded(); });
     };
 
     const startTimer = () => {
@@ -133,9 +173,13 @@ export default function ExpertCallRoom() {
     };
 
     const handleCallEnded = () => {
+        console.log('[ExpertCallRoom] 📴 handleCallEnded called. Cleaning up device and redirecting...');
         setStatus('ended');
         if (timerRef.current) clearInterval(timerRef.current);
-        deviceRef.current?.destroy();
+        if (deviceRef.current) {
+            deviceRef.current.destroy();
+            deviceRef.current = null;
+        }
         toast.info('Session ended');
         setTimeout(() => router.push('/dashboard'), 3000);
     };
