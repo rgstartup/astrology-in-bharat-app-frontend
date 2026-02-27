@@ -27,8 +27,8 @@ export default function CallRoomPage() {
 
     const socketRef = useRef<Socket | null>(null);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-    // Twilio Device ref (typed as any to avoid TS import issues with dynamic loading)
     const deviceRef = useRef<any>(null);
+    const callRef = useRef<any>(null); // Store active call for mute/unmute
 
     // ─── Setup Socket ──────────────────────────────────────────────────────
     useEffect(() => {
@@ -80,36 +80,38 @@ export default function CallRoomPage() {
         deviceRef.current = device;
 
         device.on('ready', () => {
-            console.log('[Twilio] Device ready. Placing call...');
-            setStatus('connected');
-            startTimer();
-        });
-
-        device.on('connect', () => {
-            console.log('[Twilio] Call connected!');
-            setStatus('connected');
-            startTimer();
+            console.log('[UserTwilio] ✅ Device ready. Placing call into conference...');
         });
 
         device.on('disconnect', () => {
-            console.log('[Twilio] Call disconnected.');
+            console.log('[UserTwilio] 📴 device:disconnect fired.');
             handleCallEnded();
         });
 
         device.on('error', (err: any) => {
-            console.error('[Twilio] Device error:', err);
+            console.error('[UserTwilio] ❌ Device error:', { code: err.code, message: err.message });
             toast.error(`Call error: ${err.message}`);
             handleCallEnded();
         });
 
+        console.log('[UserTwilio] 📡 Registering device...');
         await device.register();
+        console.log('[UserTwilio] ✅ Device registered. Connecting to conference...');
 
-        // Make the outgoing call using TwiML App
-        const call = await device.connect({
-            params: { sessionId },
+        // Both user & expert call TwiML App → placed in same conference room
+        const call = await device.connect({ params: { sessionId } });
+        callRef.current = call; // Store for mute/unmute
+        console.log('[UserTwilio] 📞 device.connect() called. Status:', call.status());
+
+        // Twilio SDK v2.x — use call.on('accept') not device.on('connect')
+        call.on('accept', () => {
+            console.log('[UserTwilio] ✅ call:accept — media connected! Starting timer.');
+            setStatus('connected');
+            startTimer();
         });
-
-        console.log('[Twilio] Call object created:', call.status());
+        call.on('disconnect', () => { console.log('[UserTwilio] 📴 call:disconnect.'); handleCallEnded(); });
+        call.on('cancel', () => { console.log('[UserTwilio] ❌ call:cancel.'); handleCallEnded(); });
+        call.on('error', (err: any) => { console.error('[UserTwilio] ❌ call:error', err); toast.error(`Call error: ${err.message}`); handleCallEnded(); });
     };
 
     // ─── Helpers ───────────────────────────────────────────────────────────
@@ -136,10 +138,12 @@ export default function CallRoomPage() {
     };
 
     const toggleMute = () => {
-        const calls = deviceRef.current?.calls || [];
-        calls.forEach((c: any) => {
-            isMuted ? c.mute(false) : c.mute(true);
-        });
+        if (callRef.current) {
+            callRef.current.mute(!isMuted);
+            console.log('[UserCallRoom] 🎤 Mute toggled:', !isMuted ? 'MUTED' : 'UNMUTED');
+        } else {
+            console.warn('[UserCallRoom] ⚠️ No active call to mute.');
+        }
         setIsMuted(!isMuted);
     };
 

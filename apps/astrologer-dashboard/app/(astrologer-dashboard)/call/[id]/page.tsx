@@ -24,6 +24,7 @@ export default function ExpertCallRoom() {
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const deviceRef = useRef<any>(null);
+    const callRef = useRef<any>(null); // Store active call object for mute/unmute
 
     const checkHardwareAndNetwork = async () => {
         if (!navigator.onLine) {
@@ -158,10 +159,16 @@ export default function ExpertCallRoom() {
         // TwiML App uses <Dial><Conference>call_room_{sessionId}</Conference></Dial>
         // to put both into the same conference room.
         const call = await device.connect({ params: { sessionId } });
-        console.log('[ExpertTwilio] � device.connect() called. Waiting for conference to start...');
+        callRef.current = call; // Store for mute/unmute
 
-        // Per-call event handlers
-        call.on('accept', () => console.log('[ExpertTwilio] ✅ call:accept — media negotiation complete.'));
+        // Per-call event handlers (Twilio SDK v2.x — use call events, not device events)
+        call.on('accept', (call: any) => {
+            // 'accept' fires when media is connected — this is when call is truly live
+            console.log('[ExpertTwilio] ✅ call:accept — media connected! Starting timer.');
+            toast.success('Connected! Call is live.');
+            setStatus('connected');
+            startTimer();
+        });
         call.on('disconnect', () => { console.log('[ExpertTwilio] 📴 call:disconnect fired.'); handleCallEnded(); });
         call.on('cancel', () => { console.log('[ExpertTwilio] ❌ call:cancel — call cancelled.'); handleCallEnded(); });
         call.on('error', (err: any) => { console.error('[ExpertTwilio] ❌ call:error', err); toast.error(`Call error: ${err.message}`); handleCallEnded(); });
@@ -191,8 +198,12 @@ export default function ExpertCallRoom() {
     };
 
     const toggleMute = () => {
-        const calls = deviceRef.current?.calls || [];
-        calls.forEach((c: any) => c.mute(!isMuted));
+        if (callRef.current) {
+            callRef.current.mute(!isMuted);
+            console.log('[ExpertCallRoom] 🎤 Mute toggled:', !isMuted ? 'MUTED' : 'UNMUTED');
+        } else {
+            console.warn('[ExpertCallRoom] ⚠️ No active call to mute.');
+        }
         setIsMuted(!isMuted);
     };
 
