@@ -57,7 +57,10 @@ export const CallNotificationListener: React.FC = () => {
                         <button
                             onClick={() => {
                                 toast.dismiss();
-                                router.push(`/call/${session.id}`);
+                                const route = callType === 'video'
+                                    ? `/video/${session.id}`
+                                    : `/call/${session.id}`;
+                                router.push(route);
                             }}
                             className="flex-1 bg-primary text-white py-2.5 rounded-xl font-black text-[10px] uppercase shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95"
                         >
