@@ -366,7 +366,7 @@ export default function AdminLayout({
         )}
 
         {/* Main Content */}
-        <div className={cn("flex-1", shouldShowSidebar && "lg:ml-64")}>
+        <div className={cn("flex-1 min-w-0", shouldShowSidebar && "lg:ml-64")}>
           {/* Top Header - Only show when sidebar is visible */}
           {shouldShowSidebar && (
             <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">

@@ -163,13 +163,16 @@ export default function ExpertsPage() {
 
   return (
     <>
+      <div className="mb-6 w-full">
+        <StatsCards stats={statsConfig} columns={3} />
+      </div>
       <DataTable
         data={experts}
         columns={columns}
         searchKeys={["name", "email", "specialization"]}
         title="Expert Management"
+        tableMinWidth="min-w-[1000px]"
         onViewDetails={handleViewDetails}
-        statsCards={<StatsCards stats={statsConfig} columns={3} />}
         onSearch={handleSearch}
         isLoading={isLoading}
         manualPagination={true}
