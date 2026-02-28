@@ -159,11 +159,15 @@ export default function UsersPage() {
 
   return (
     <>
+      <div className="mb-6 w-full">
+        <StatsCards stats={statsConfig} columns={3} />
+      </div>
       <DataTable
         data={users}
         columns={columns}
         searchKeys={["name", "email"]}
         title="User Management"
+        tableMinWidth="min-w-[1000px]"
         onViewDetails={async (user) => {
           setSelectedUser(user);
           try {
@@ -176,7 +180,6 @@ export default function UsersPage() {
             setIsDetailLoading(false);
           }
         }}
-        statsCards={<StatsCards stats={statsConfig} columns={3} />}
         onSearch={handleSearch}
         isLoading={isLoading}
         manualPagination={true}

@@ -32,6 +32,7 @@ interface DataTableProps<T> {
   onPageChange?: (page: number) => void;
   filterElement?: React.ReactNode;
   headerAction?: React.ReactNode;
+  tableMinWidth?: string;
 }
 
 const TableRow = memo(function TableRow<T extends { id: number | string }>({
@@ -125,6 +126,7 @@ export function DataTable<T extends { id: number | string }>({
   onPageChange,
   filterElement,
   headerAction,
+  tableMinWidth,
 }: DataTableProps<T>) {
   // State for pagination and search
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -254,33 +256,28 @@ export function DataTable<T extends { id: number | string }>({
           </div>
         </header>
 
-        {/* Table with horizontal scroll only when needed */}
-        {/* ===== TABLE HEADER (FIXED) ===== */}
-        <div className="w-full overflow-x-auto scrollbar-hide">
-          <table className="w-full table-auto">
-            <thead className="bg-gray-50 border-b border-gray-200">
+        {/* ===== TABLE (SCROLLABLE & STICKY HEADER) ===== */}
+        <div className="w-full max-h-[400px] overflow-auto scrollbar-hide relative z-[1]">
+          <table className={`w-full table-auto ${tableMinWidth || ""}`}>
+            <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 shadow-sm z-10">
               <tr>
                 {columns.map((column, index) => (
                   <th
                     key={index}
-                    className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap"
+                    className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap bg-gray-50 bg-clip-padding"
                   >
                     {column.label}
                   </th>
                 ))}
                 {onViewDetails && (
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap bg-gray-50 bg-clip-padding">
                     Actions
                   </th>
                 )}
               </tr>
             </thead>
-          </table>
-        </div>
 
-        {/* ===== TABLE BODY (SCROLL ONLY DATA) ===== */}
-        <div className="w-full max-h-[400px] overflow-y-auto overflow-x-auto scrollbar-hide">
-          <table className="w-full table-auto">
+            {/* ===== TABLE BODY ===== */}
             <tbody className="divide-y divide-gray-100">
               {isLoading ? (
                 <tr>

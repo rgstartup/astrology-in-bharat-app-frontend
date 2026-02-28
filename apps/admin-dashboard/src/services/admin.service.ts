@@ -105,13 +105,23 @@ export const getFilteredUsers = async (params: any) => {
 
 // Disputes / Support Tickets Management
 export const getDisputes = async (params?: { page?: number; limit?: number; status?: string }) => {
-  const res = await api.get("/admin/support/disputes", { params });
-  return res.data;
+  try {
+    const res = await api.get("/admin/support/disputes", { params });
+    return res.data;
+  } catch (err) {
+    console.error("Failed to fetch disputes:", err);
+    return [];
+  }
 };
 
 export const getDisputeById = async (id: number) => {
-  const res = await api.get(`/admin/support/disputes/${id}`);
-  return res.data;
+  try {
+    const res = await api.get(`/admin/support/disputes/${id}`);
+    return res.data;
+  } catch (err) {
+    console.error(`Failed to fetch dispute ${id}:`, err);
+    return null;
+  }
 };
 
 export const updateDisputeStatus = async (id: number, data: { status: string; notes?: string }) => {
@@ -120,24 +130,51 @@ export const updateDisputeStatus = async (id: number, data: { status: string; no
 };
 
 export const getDisputeStats = async () => {
-  const res = await api.get("/admin/support/disputes/stats");
-  return res.data;
+  try {
+    // If backend returns 500/404 because this endpoint missing/broken
+    const res = await api.get("/admin/support/disputes/stats");
+    return res.data;
+  } catch (err) {
+    console.error("Failed to fetch dispute stats:", err);
+    return {
+      total: 0,
+      pending: 0,
+      underReview: 0,
+      resolved: 0,
+      rejected: 0,
+    };
+  }
 };
 
 // Chat APIs
 export const getDisputeMessages = async (disputeId: number) => {
-  const res = await api.get(`/admin/support/disputes/${disputeId}/messages`);
-  return res.data;
+  try {
+    const res = await api.get(`/admin/support/disputes/${disputeId}/messages`);
+    return res.data;
+  } catch (err) {
+    console.error(`Failed to fetch messages for dispute ${disputeId}:`, err);
+    return [];
+  }
 };
 
 export const sendDisputeMessage = async (disputeId: number, data: { message?: string, attachmentUrl?: string, attachmentType?: string }) => {
-  const res = await api.post(`/admin/support/disputes/${disputeId}/messages`, data);
-  return res.data;
+  try {
+    const res = await api.post(`/admin/support/disputes/${disputeId}/messages`, data);
+    return res.data;
+  } catch (err) {
+    console.error(`Failed to send dispute message:`, err);
+    throw err;
+  }
 };
 
 export const markDisputeMessagesRead = async (disputeId: number) => {
-  const res = await api.patch(`/admin/support/disputes/${disputeId}/messages/read`);
-  return res.data;
+  try {
+    const res = await api.patch(`/admin/support/disputes/${disputeId}/messages/read`);
+    return res.data;
+  } catch (err) {
+    console.error(`Failed to mark messages as read:`, err);
+    return null;
+  }
 };
 
 // Live Sessions

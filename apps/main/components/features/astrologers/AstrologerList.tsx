@@ -88,33 +88,47 @@ const getImageUrl = (path?: string) => {
   return `${getBasePath()}/uploads/${path}`;
 };
 
-const mapExpert = (item: ExpertProfile): ClientExpertProfile => ({
-  id: item.id,
-  userId: item.user?.id, // Map User ID
-  image: getImageUrl(item.user?.avatar),
-  ratings: item.rating || 0,
-  name: item.user?.name || "Astrologer",
-  expertise: item.specialization || "Vedic Astrology",
-  experience: item.experience_in_years || 0,
-  language: Array.isArray(item.languages)
-    ? item.languages.join(", ")
-    : item.user?.language || "Hindi",
-  price: item.price || 0,
-  chat_price: item.chat_price,
-  call_price: item.call_price,
-  video_call_price: item.video_call_price,
-  report_price: item.report_price,
-  horoscope_price: item.horoscope_price,
-  video: item.video || "",
-  modalId: `home-modal-${item.id}`,
-  is_available: item.is_available,
-  total_likes: item.total_likes || 0, // ADDED
-  custom_services: Array.isArray(item.custom_services)
-    ? item.custom_services
-    : typeof item.custom_services === 'string'
-      ? (() => { try { return JSON.parse(item.custom_services); } catch { return []; } })()
-      : [],
-});
+const mapExpert = (item: any): ClientExpertProfile => {
+  // Robust field mapping to handle both backend conventions (snake_case/camelCase)
+  // and potential relation differences (nested user vs flattened fields)
+
+  const id = item.id;
+  const userId = item.user?.id || item.userId || item.user_id;
+  const name = item.user?.name || item.name || "Astrologer";
+  const avatar = item.user?.avatar || item.avatar || item.image;
+  const specialization = item.specialization || item.expertise || "Vedic Astrology";
+  const experience = item.experience_in_years !== undefined ? item.experience_in_years : (item.experience || 0);
+  const rating = item.rating !== undefined ? item.rating : (item.ratings || 0);
+  const isAvailable = item.is_available !== undefined ? item.is_available : (item.isAvailable || false);
+
+  return {
+    id: id,
+    userId: userId,
+    image: getImageUrl(avatar),
+    ratings: rating,
+    name: name,
+    expertise: specialization,
+    experience: experience,
+    language: Array.isArray(item.languages)
+      ? item.languages.join(", ")
+      : item.user?.language || item.language || "Hindi",
+    price: item.price || 0,
+    chat_price: item.chat_price || item.chatPrice,
+    call_price: item.call_price || item.callPrice,
+    video_call_price: item.video_call_price || item.videoCallPrice,
+    report_price: item.report_price || item.reportPrice,
+    horoscope_price: item.horoscope_price || item.horoscopePrice,
+    video: item.video || "",
+    modalId: `home-modal-${id}`,
+    is_available: isAvailable,
+    total_likes: item.total_likes || item.totalLikes || 0,
+    custom_services: Array.isArray(item.custom_services)
+      ? item.custom_services
+      : typeof item.custom_services === 'string'
+        ? (() => { try { return JSON.parse(item.custom_services); } catch { return []; } })()
+        : [],
+  };
+};
 
 const AstrologerList: React.FC<AstrologerListProps> = ({
   initialExperts,

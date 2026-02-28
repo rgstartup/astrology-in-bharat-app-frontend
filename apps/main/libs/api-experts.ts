@@ -80,13 +80,21 @@ export const getExperts = async (
     }
 
     const result = await response.json();
+    console.log(`🔍 [API Experts] List response keys:`, Object.keys(result));
+
+    const finalData = Array.isArray(result) ? result : (result.data || result.experts || []);
+    if (finalData.length > 0) {
+      console.log(`🔍 [API Experts] Sample data structure (Expert 0):`, JSON.stringify(finalData[0], null, 2));
+    }
+    const finalPagination = result.pagination || { total: finalData.length, hasMore: false };
 
     return {
       success: true,
-      data: result.data,
-      pagination: result.pagination,
+      data: finalData,
+      pagination: finalPagination,
     };
   } catch (error: any) {
+    console.error(`❌ [API Experts] Fetch error:`, error.message);
     const isNetworkError =
       error.message.includes("fetch failed") ||
       error.message.includes("Network Error");
