@@ -45,12 +45,18 @@ export default function DisputesPage() {
     }
   };
 
-  // Fetch stats from backend
   const fetchStats = async () => {
     try {
       const response = await getDisputeStats();
       if (response) {
-        setStats(response);
+        // Handle snake_case from backend by normalizing to camelCase
+        setStats({
+          total: response.total ?? 0,
+          pending: response.pending ?? 0,
+          underReview: response.underReview ?? response.under_review ?? 0,
+          resolved: response.resolved ?? 0,
+          rejected: response.rejected ?? 0,
+        });
       }
     } catch (error: any) {
       console.warn("⚠️ Dispute stats API failed (500), using local state defaults.");
@@ -90,7 +96,7 @@ export default function DisputesPage() {
         <DataTable
           data={disputes}
           columns={columns}
-          searchKeys={["disputeId", "user", "expert", "subject", "category"]}
+          searchKeys={["disputeId", "dispute_id", "user", "expert", "subject", "category", "status"]}
           title="All Disputes"
           itemsPerPage={10}
           onViewDetails={setSelectedDispute}

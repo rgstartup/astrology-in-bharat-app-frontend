@@ -220,7 +220,7 @@ export default function ProductsPage() {
                     </h2>
                     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Product Name */}
-                        <div className="col-span-2 md:col-span-1">
+                        <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
                             <input
                                 type="text"
@@ -234,7 +234,7 @@ export default function ProductsPage() {
                         </div>
 
                         {/* Image Input Section */}
-                        <div className="col-span-2 md:col-span-1">
+                        <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
 
                             {/* Toggles */}
@@ -295,7 +295,7 @@ export default function ProductsPage() {
                         </div>
 
                         {/* Description */}
-                        <div className="col-span-2">
+                        <div className="md:col-span-2">
                             <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                             <textarea
                                 name="description"
@@ -348,7 +348,7 @@ export default function ProductsPage() {
                             <p className="text-xs text-gray-500 mt-1 ml-7">Inactive products will be hidden from the public shop.</p>
                         </div>
 
-                        <div className="col-span-2 flex justify-end gap-3 mt-4">
+                        <div className="md:col-span-2 flex justify-end gap-3 mt-4">
                             <Button
                                 type="button"
                                 variant="outline"

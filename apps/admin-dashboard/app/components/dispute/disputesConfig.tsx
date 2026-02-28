@@ -84,7 +84,7 @@ export const getStatsConfig = (disputes: Dispute[], stats?: any) => [
   },
   {
     title: "Pending",
-    value: stats?.pending || disputes.filter((d) => d.status === "pending").length,
+    value: stats?.pending || disputes.filter((d) => d.status === "pending" || d.status === "open").length,
     icon: Clock,
     iconColor: "text-yellow-600",
     iconBgColor: "bg-yellow-100",
@@ -92,7 +92,7 @@ export const getStatsConfig = (disputes: Dispute[], stats?: any) => [
   },
   {
     title: "Under Review",
-    value: stats?.underReview || disputes.filter((d) => d.status === "under_review").length,
+    value: stats?.underReview || stats?.under_review || disputes.filter((d) => d.status === "under_review" || d.status === "in_progress").length,
     icon: MessageSquare,
     iconColor: "text-blue-600",
     iconBgColor: "bg-blue-100",
@@ -112,9 +112,12 @@ export const getStatsConfig = (disputes: Dispute[], stats?: any) => [
 const getBadge = (status: string) => {
   const badges = {
     pending: "bg-yellow-100 text-yellow-700 border-yellow-200",
+    open: "bg-yellow-100 text-yellow-700 border-yellow-200",
     under_review: "bg-blue-100 text-blue-700 border-blue-200",
+    in_progress: "bg-blue-100 text-blue-700 border-blue-200",
     resolved: "bg-green-100 text-green-700 border-green-200",
     rejected: "bg-red-100 text-red-700 border-red-200",
+    closed: "bg-gray-100 text-gray-700 border-gray-200",
     low: "bg-gray-100 text-gray-700",
     medium: "bg-blue-100 text-blue-700",
     high: "bg-orange-100 text-orange-700",
@@ -127,7 +130,7 @@ export const getColumns = () => [
   {
     key: "disputeId",
     label: "ID",
-    render: (d: Dispute) => <span className="font-semibold">{d.disputeId || d.id || 'N/A'}</span>,
+    render: (d: Dispute) => <span className="font-semibold">{d.dispute_id || d.disputeId || d.id || 'N/A'}</span>,
   },
   {
     key: "user",
@@ -199,7 +202,7 @@ export const getColumns = () => [
     render: (d: Dispute) => (
       <div className="flex items-center gap-1 text-xs text-gray-600">
         <Calendar className="w-3 h-3" />
-        {d.createdAt ? new Date(d.createdAt).toLocaleDateString("en-IN") : 'N/A'}
+        {d.created_at || d.createdAt ? new Date((d.created_at || d.createdAt) as string).toLocaleDateString("en-IN") : 'N/A'}
       </div>
     ),
   },

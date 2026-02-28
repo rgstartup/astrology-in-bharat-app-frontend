@@ -9,15 +9,23 @@ import { getSupportSocket } from "@/src/utils/socket";
 
 interface Message {
     id: number;
-    disputeId: number;
-    senderType: "user" | "admin";
-    senderId: number;
-    senderName: string;
+    disputeId?: number;
+    dispute_id?: number;
+    senderType?: "user" | "admin";
+    sender_type?: "user" | "admin";
+    senderId?: number;
+    sender_id?: number;
+    senderName?: string;
+    sender_name?: string;
     message?: string;
     attachmentUrl?: string;
+    attachment_url?: string;
     attachmentType?: "image" | "document" | "pdf";
-    isRead: boolean;
-    createdAt: string;
+    attachment_type?: "image" | "document" | "pdf";
+    isRead?: boolean;
+    is_read?: boolean;
+    createdAt?: string;
+    created_at?: string;
     isSystemNote?: boolean;
     is_system_note?: boolean;
 }
@@ -99,7 +107,7 @@ export function DisputeChatModal({ dispute, onClose, isAdmin = true }: DisputeCh
 
         const handleNewMessage = (message: Message) => {
             console.log("📩 [AdminSocket] New message received:", message);
-            if (Number(message.disputeId) === Number(dispute.id)) {
+            if (Number(message.dispute_id || message.disputeId) === Number(dispute.id)) {
                 setMessages((prev) => {
                     const exists = prev.some(m => m.id === message.id);
                     if (exists) return prev;
@@ -111,7 +119,7 @@ export function DisputeChatModal({ dispute, onClose, isAdmin = true }: DisputeCh
         const handleEndChatRequest = (data: any) => {
             console.log("🚨 [AdminSocket] END CHAT REQUEST RECEIVED!", data);
             // Check if the IDs match
-            const incomingId = Number(data.disputeId);
+            const incomingId = Number(data.dispute_id || data.disputeId);
             const currentId = Number(dispute.id);
 
             console.log("📊 [AdminSocket] ID Compare:", { incomingId, currentId, match: incomingId === currentId });
@@ -213,10 +221,12 @@ export function DisputeChatModal({ dispute, onClose, isAdmin = true }: DisputeCh
                 senderId: 1,
                 senderName: "Admin",
                 message: `Sent a ${file.type.startsWith("image") ? "photo" : "file"}`,
-                attachmentUrl: URL.createObjectURL(file),
+                attachmentUrl: URL.createObjectURL(file), // This is local so stay same
                 attachmentType: file.type.startsWith("image") ? "image" : "document",
                 isRead: false,
+                is_read: false,
                 createdAt: new Date().toISOString(),
+                created_at: new Date().toISOString(),
             };
 
             setMessages([...messages, mockMessage]);
@@ -267,7 +277,7 @@ export function DisputeChatModal({ dispute, onClose, isAdmin = true }: DisputeCh
                     <div>
                         <h2 className="text-xl font-bold">Dispute Chat</h2>
                         <p className="text-sm text-white/90">
-                            {dispute.disputeId || `#${dispute.id}`} • {dispute.category || "General"}
+                            {dispute.dispute_id || dispute.disputeId || `#${dispute.id}`} • {dispute.category || "General"}
                         </p>
                     </div>
 
@@ -325,7 +335,7 @@ export function DisputeChatModal({ dispute, onClose, isAdmin = true }: DisputeCh
                                                     User Requested to End Chat
                                                 </div>
                                                 <div className="text-xs text-yellow-600 font-medium italic text-center">
-                                                    {msg.message || `This request was made at ${new Date(msg.createdAt).toLocaleTimeString("en-IN", { hour: '2-digit', minute: '2-digit' })}`}
+                                                    {msg.message || `This request was made at ${new Date((msg.created_at || msg.createdAt) as string).toLocaleTimeString("en-IN", { hour: '2-digit', minute: '2-digit' })}`}
                                                 </div>
                                             </div>
                                         </div>
@@ -391,9 +401,10 @@ export function DisputeChatModal({ dispute, onClose, isAdmin = true }: DisputeCh
 }
 
 function MessageBubble({ message, isAdmin }: { message: Message; isAdmin: boolean }) {
+    const senderType = message.sender_type || message.senderType;
     const isSentByMe = isAdmin
-        ? message.senderType === "admin"
-        : message.senderType === "user";
+        ? senderType === "admin"
+        : senderType === "user";
 
     return (
         <div className={`flex flex-col !w-full mb-3 ${isSentByMe ? "items-end" : "items-start"}`}>
@@ -414,7 +425,7 @@ function MessageBubble({ message, isAdmin }: { message: Message; isAdmin: boolea
                 <div className={`flex flex-col ${isSentByMe ? "items-end" : "items-start"} gap-1`}>
                     {!isSentByMe && (
                         <span className="text-xs text-gray-500 font-semibold px-2">
-                            {message.senderName}
+                            {message.sender_name || message.senderName}
                         </span>
                     )}
 
@@ -424,17 +435,17 @@ function MessageBubble({ message, isAdmin }: { message: Message; isAdmin: boolea
                             : "bg-white border border-gray-200 text-gray-800 rounded-bl-sm"
                             }`}
                     >
-                        {message.attachmentUrl && (
+                        {(message.attachment_url || message.attachmentUrl) && (
                             <div className="mb-2">
-                                {message.attachmentType === "image" ? (
+                                {(message.attachment_type || message.attachmentType) === "image" ? (
                                     <img
-                                        src={message.attachmentUrl}
+                                        src={message.attachment_url || message.attachmentUrl}
                                         alt="Attachment"
                                         className="rounded-lg max-w-full h-auto max-h-64 object-cover"
                                     />
                                 ) : (
                                     <a
-                                        href={message.attachmentUrl}
+                                        href={message.attachment_url || message.attachmentUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className={`flex items-center gap-2 p-3 rounded-lg ${isSentByMe ? "bg-white/20" : "bg-gray-100"}`}
@@ -453,7 +464,7 @@ function MessageBubble({ message, isAdmin }: { message: Message; isAdmin: boolea
                     </div>
 
                     <span className="text-xs text-gray-400 px-2 mt-1">
-                        {message.createdAt ? new Date(message.createdAt).toLocaleTimeString("en-IN", {
+                        {message.created_at || message.createdAt ? new Date((message.created_at || message.createdAt) as string).toLocaleTimeString("en-IN", {
                             hour: "2-digit",
                             minute: "2-digit",
                         }) : ""}

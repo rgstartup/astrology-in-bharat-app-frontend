@@ -22,9 +22,12 @@ interface DisputeModalProps {
 
 const badges = {
   pending: "bg-yellow-100 text-yellow-700 border-yellow-200",
+  open: "bg-yellow-100 text-yellow-700 border-yellow-200",
   under_review: "bg-blue-100 text-blue-700 border-blue-200",
+  in_progress: "bg-blue-100 text-blue-700 border-blue-200",
   resolved: "bg-green-100 text-green-700 border-green-200",
   rejected: "bg-red-100 text-red-700 border-red-200",
+  closed: "bg-gray-100 text-gray-700 border-gray-200",
   low: "bg-gray-100 text-gray-700",
   medium: "bg-blue-100 text-blue-700",
   high: "bg-orange-100 text-orange-700",
@@ -66,10 +69,10 @@ export function DisputeModal({ dispute, onClose }: DisputeModalProps) {
         <header className="px-6 py-5 border-b bg-gradient-to-r from-gray-900 to-gray-800 text-white rounded-t-2xl">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-2xl font-bold">{dispute.disputeId || dispute.id || 'N/A'}</h2>
+              <h2 className="text-2xl font-bold">{dispute.dispute_id || dispute.disputeId || dispute.id || 'N/A'}</h2>
               <p className="text-sm text-gray-300 mt-1">
-                Raised by <span className="font-semibold">{dispute.raisedBy || 'User'}</span> •{" "}
-                {dispute.createdAt ? new Date(dispute.createdAt).toLocaleDateString("en-IN") : 'N/A'}
+                Raised by <span className="font-semibold">{dispute.raised_by || dispute.raisedBy || 'User'}</span> •{" "}
+                {dispute.created_at || dispute.createdAt ? new Date((dispute.created_at || dispute.createdAt) as string).toLocaleDateString("en-IN") : 'N/A'}
               </p>
             </div>
             <button onClick={onClose} className="text-gray-300 hover:text-white">
@@ -131,11 +134,11 @@ export function DisputeModal({ dispute, onClose }: DisputeModalProps) {
               </p>
             </div>
 
-            {dispute.resolvedAt && (
+            {(dispute.resolved_at || dispute.resolvedAt) && (
               <div className="flex items-center gap-2 text-sm bg-green-50 p-3 rounded-lg">
                 <CheckCircleComp className="w-5 h-5 text-green-600" />
                 <span className="text-gray-700">
-                  Resolved on {new Date(dispute.resolvedAt).toLocaleDateString("en-IN")}
+                  Resolved on {new Date((dispute.resolved_at || dispute.resolvedAt) as string).toLocaleDateString("en-IN")}
                 </span>
               </div>
             )}
