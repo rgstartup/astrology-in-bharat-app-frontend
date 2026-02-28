@@ -5,14 +5,14 @@
  * or have a trailing slash.
  */
 
-export const getBasePath = (): string => {
-    const rawUrl = process.env.NEXT_PUBLIC_API_URL || "";
-    // Remove any trailing /api/v1 (recursive and case-insensitive) and trailing slashes
-    return rawUrl.replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "").replace(/\/+$/, "");
-};
+// export const getBasePath = (): string => {
+//     const rawUrl = process.env.NEXT_PUBLIC_API_URL || "";
+//     // Remove any trailing /api/v1 (recursive and case-insensitive) and trailing slashes
+//     return rawUrl.replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "").replace(/\/+$/, "");
+// };
 
 export const getApiUrl = (): string => {
-    return `${getBasePath()}/api/v1`;
+    return `${process.env.NEXT_PUBLIC_API_URL}`;
 };
 
 export const API_BASE_URL = getApiUrl();
