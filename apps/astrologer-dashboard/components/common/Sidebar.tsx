@@ -188,7 +188,7 @@ export const Sidebar: React.FC<SidebarProps> = memo(
       <>
         {isOpen && (
           <div
-            className="fixed inset-0 z-40 lg:hidden bg-black/70 transition-opacity duration-300 ease-in-out"
+            className="fixed inset-0 z-50 lg:hidden bg-black/70 transition-opacity duration-300 ease-in-out"
             onClick={toggleSidebar}
             aria-hidden="true"
           />

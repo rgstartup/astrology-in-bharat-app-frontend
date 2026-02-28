@@ -196,26 +196,26 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-40 shadow-sm">
-      <div className="flex items-center justify-between">
+    <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 sticky top-0 z-40 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
         {/* Left Section */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3 sm:space-x-4">
           <button
             onClick={toggleSidebar}
-            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="lg:hidden p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shrink-0"
             aria-label="Open Sidebar"
           >
             <FiMenu className="w-5 h-5 text-gray-700" />
           </button>
-          <h1 className="text-xl md:text-2xl font-semibold text-gray-900 tracking-wide">
+          <h1 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 tracking-wide truncate max-w-[120px] sm:max-w-none">
             Dashboard
           </h1>
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center space-x-6">
-          {/* Search */}
-          <div className="flex items-center space-x-4 sm:space-x-6">
+        <div className="flex items-center gap-3 sm:gap-6">
+          {/* Search and Icons */}
+          <div className="flex items-center gap-3 sm:gap-6">
             {/* Search Bar */}
             <div className="hidden md:block w-40 sm:w-64">
               <SearchInput
@@ -317,6 +317,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
             </div>
           </div>
 
+          {/* Profile */}
           {/* Profile */}
           <button
             className="p-0 rounded-full focus:outline-none ring-2 ring-transparent focus:ring-purple-200 transition-all duration-200"

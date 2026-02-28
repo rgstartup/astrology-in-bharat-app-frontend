@@ -47,9 +47,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
         {/* Main Section */}
-        <div className="flex-1 lg:ml-64">
+        <div className="flex-1 min-w-0 lg:ml-64 flex flex-col min-h-screen">
           <Header toggleSidebar={toggleSidebar} />
-          <main className="p-6 text-black"> {children}</main>
+          <main className="p-4 sm:p-6 text-black flex-1"> {children}</main>
         </div>
       </div>
     </>

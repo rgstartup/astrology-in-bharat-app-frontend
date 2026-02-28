@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronDown, Plus, Video, Phone} from "lucide-react";
+import { ChevronDown, Plus, Video, Phone } from "lucide-react";
 
 export const ManageConsultaions: React.FC = () => {
     const services = [
@@ -27,15 +27,15 @@ export const ManageConsultaions: React.FC = () => {
     return (
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 w-2/5">Manage Consultations </h3>
-                <div className="flex items-center space-x-3">
-                    <button className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 w-full sm:w-auto">Manage Consultations</h3>
+                <div className="flex flex-wrap items-center gap-3">
+                    <button className="flex items-center justify-center space-x-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm flex-1 sm:flex-none">
                         <span>All Services</span>
                         <ChevronDown className="w-4 h-4" />
                     </button>
-                    <button className="flex items-center space-x-2 px-3 py-2.5 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm shadow-sm">
-                        <Plus className="w-4 h-4" />
+                    <button className="flex items-center justify-center space-x-2 px-3 py-2.5 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm shadow-sm flex-1 sm:flex-none whitespace-nowrap">
+                        <Plus className="w-4 h-4 shrink-0" />
                         <span>Add Service</span>
                     </button>
                 </div>
