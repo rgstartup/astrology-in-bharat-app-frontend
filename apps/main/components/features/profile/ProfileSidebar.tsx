@@ -37,18 +37,16 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
 
     return (
         <div className="sticky top-24">
-            {/* Profile Card - Fixed at top */}
-            <div className="card border-0 rounded-top-4 mb-0 text-center p-3 shadow-lg" style={{ backgroundColor: "white" }}>
-                <div className="card-body">
-                    <div className="position-relative d-inline-block mb-3">
+            <div className="card border-0 rounded-top-4 mb-0 p-3 shadow-lg" style={{ backgroundColor: "white" }}>
+                <div className="card-body p-0 d-flex align-items-center gap-3">
+                    <div className="position-relative d-inline-block flex-shrink-0">
                         <div style={{
-                            width: "100px",
-                            height: "100px",
+                            width: "60px",
+                            height: "60px",
                             borderRadius: "50%",
                             overflow: "hidden",
-                            border: "4px solid #fff",
+                            border: "3px solid #fff",
                             boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-                            margin: "0 auto"
                         }}>
                             {savingSections.personal ? (
                                 <div className="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
@@ -64,21 +62,22 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
                         </div>
                         <label
                             htmlFor="profile-upload"
-                            className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 cursor-pointer"
+                            className="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm cursor-pointer mb-0"
                             style={{
-                                width: "35px",
-                                height: "35px",
+                                width: "24px",
+                                height: "24px",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 cursor: "pointer",
-                                color: "var(--primary-color, black)",
-                                border: "2px solid #fff",
-                                transition: "all 0.3s ease"
+                                color: "#301118",
+                                border: "1px solid #fff",
+                                transition: "all 0.3s ease",
+                                transform: "translate(20%, 20%)"
                             }}
                             title="Update Profile Picture"
                         >
-                            <i className="fa-solid fa-camera" style={{ fontSize: "14px" }}></i>
+                            <i className="fa-solid fa-camera" style={{ fontSize: "10px" }}></i>
                             <input
                                 id="profile-upload"
                                 type="file"
@@ -94,16 +93,20 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
                         </label>
                     </div>
 
-                    <h5 className="fw-bold mb-1">{profileData.username || "User Name"} <i className="fa-solid fa-check-circle text-primary small"></i></h5>
+                    <div className="text-start">
+                        <h6 className="fw-bold mb-0 text-dark d-flex align-items-center gap-1">
+                            {profileData.username || "User Name"}
+                            <i className="fa-solid fa-check-circle text-brown" style={{ fontSize: "12px" }}></i>
+                        </h6>
+                    </div>
                 </div>
             </div>
 
             {/* Navigation Menu - Scrollable */}
             <div
-                className="card border-0 rounded-bottom-4 overflow-y-auto shadow-lg"
+                className="card border-0 rounded-bottom-4 overflow-y-auto shadow-lg bg-brown"
                 style={{
-                    backgroundColor: "var(--primary-color, black)",
-                    maxHeight: "calc(100vh - 350px)",
+                    maxHeight: "calc(100vh - 120px)",
                     scrollbarWidth: "thin",
                     scrollbarColor: "rgba(255, 255, 255, 0.5) transparent"
                 }}
@@ -122,12 +125,12 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
                                 }`}
                             style={
                                 activeTab === item.id
-                                    ? { backgroundColor: "#2d1111", color: "white" }
+                                    ? { backgroundColor: "#FF6B00", color: "white" }
                                     : { color: "white" }
                             }
                             onMouseEnter={(e) => {
                                 if (activeTab !== item.id) {
-                                    e.currentTarget.style.backgroundColor = "#2d1111";
+                                    e.currentTarget.style.backgroundColor = "#FF6B00";
                                     e.currentTarget.style.color = "white";
                                 }
                             }}

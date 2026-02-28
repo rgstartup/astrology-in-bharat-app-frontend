@@ -96,10 +96,10 @@ const ProductsCarousel = () => {
       </Swiper>
 
       {/* Custom Navigation Arrows */}
-      <div className="swiper-button-prev-unique absolute top-1/2 -translate-y-1/2 !-left-4 !w-10 !h-10 !bg-white !rounded-full !shadow-lg !text-primary hover:!bg-primary hover:!text-white transition-all flex items-center justify-center cursor-pointer z-10">
+      <div className="swiper-button-prev-unique absolute top-1/2 -translate-y-1/2 !-left-4 !w-10 !h-10 !bg-white !rounded-full !shadow-lg !text-orange hover:!bg-orange hover:!text-white transition-all flex items-center justify-center cursor-pointer z-10">
         <i className="fa-solid fa-chevron-left"></i>
       </div>
-      <div className="swiper-button-next-unique absolute top-1/2 -translate-y-1/2 !-right-4 !w-10 !h-10 !bg-white !rounded-full !shadow-lg !text-primary hover:!bg-primary hover:!text-white transition-all flex items-center justify-center cursor-pointer z-10">
+      <div className="swiper-button-next-unique absolute top-1/2 -translate-y-1/2 !-right-4 !w-10 !h-10 !bg-white !rounded-full !shadow-lg !text-orange hover:!bg-orange hover:!text-white transition-all flex items-center justify-center cursor-pointer z-10">
         <i className="fa-solid fa-chevron-right"></i>
       </div>
     </div>

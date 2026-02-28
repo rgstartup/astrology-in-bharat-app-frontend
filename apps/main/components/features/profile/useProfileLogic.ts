@@ -24,7 +24,7 @@ const normalizeAddressesForUI = (addresses?: any[]) => {
 export const useProfileLogic = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { clientUser, isClientAuthenticated, clientLoading, clientBalance, refreshBalance, refreshAuth } = useAuthStore(); // Changed usage
+    const { clientUser, isClientAuthenticated, clientLoading, clientBalance, refreshBalance, refreshAuth, updateClientUser } = useAuthStore(); // Changed usage
 
     const [profileData, setProfileData] = useState<ProfileData>({});
     const [loading, setLoading] = useState(false);
@@ -445,6 +445,7 @@ export const useProfileLogic = () => {
                 const imageUrl = uploadResult.url;
                 setProfileData(prev => ({ ...prev, profile_picture: imageUrl }));
                 setImagePreview(imageUrl);
+                updateClientUser({ avatar: imageUrl, profile_picture: imageUrl });
 
                 try {
                     await updateClientProfile({ profile_picture: imageUrl });

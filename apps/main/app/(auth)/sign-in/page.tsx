@@ -23,7 +23,7 @@ export default function SignInPage() {
                 <span style={{ color: "var(--secondary-color)" }}>Sign In</span>{" "}
                 to
                 <br />
-                <span style={{ color: "var(--primary-color)" }}>
+                <span className="text-orange">
                   Astrology Bharat
                 </span>
               </h3>

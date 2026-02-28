@@ -53,7 +53,7 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                    <button type="button">Search</button>
+                    <button type="button" className="bg-orange text-white hover:opacity-90 transition-all">Search</button>
                 </div>
             </div>
             <div className="col-lg-3 col-md-6 text-md-end text-center d-flex align-items-center justify-content-md-end justify-content-center">
@@ -84,7 +84,7 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
             <div className="col-lg-4 col-md-12 d-flex align-items-center">
                 <button
                     onClick={() => scrollTabs("left")}
-                    className="d-flex align-items-center justify-content-center text-primary rounded-full mr-2 hover:bg-primary/10 transition shrink-0"
+                    className="d-flex align-items-center justify-content-center text-orange rounded-full mr-2 hover:bg-orange/10 transition shrink-0"
                     style={{
                         width: "30px",
                         height: "30px",
@@ -101,7 +101,7 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
                 >
                     <div
                         onClick={() => setSelectedSpecialization("")}
-                        className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-primary cursor-pointer transition duration-300 ${selectedSpecialization === "" ? "bg-primary text-white" : "bg-white text-[#1e0b0f] hover:bg-primary hover:text-white"}`}
+                        className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-orange cursor-pointer transition duration-300 ${selectedSpecialization === "" ? "bg-orange text-white" : "bg-white text-[#1e0b0f] hover:bg-orange hover:text-white"}`}
                     >
                         All
                     </div>
@@ -109,7 +109,7 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
                         <div
                             key={spec}
                             onClick={() => setSelectedSpecialization(spec)}
-                            className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-primary cursor-pointer transition duration-300 ${selectedSpecialization === spec ? "bg-primary text-white" : "bg-white text-[#1e0b0f] hover:bg-primary hover:text-white"}`}
+                            className={`px-[15px] py-2 rounded-[20px] text-sm font-medium border border-orange cursor-pointer transition duration-300 ${selectedSpecialization === spec ? "bg-orange text-white" : "bg-white text-[#1e0b0f] hover:bg-orange hover:text-white"}`}
                         >
                             {spec}
                         </div>
@@ -117,7 +117,7 @@ const AstrologerListHeader: React.FC<AstrologerListHeaderProps> = ({
                 </div>
                 <button
                     onClick={() => scrollTabs("right")}
-                    className="d-flex align-items-center justify-content-center text-primary rounded-full ml-2 hover:bg-primary/10 transition shrink-0"
+                    className="d-flex align-items-center justify-content-center text-orange rounded-full ml-2 hover:bg-orange/10 transition shrink-0"
                     style={{
                         width: "30px",
                         height: "30px",

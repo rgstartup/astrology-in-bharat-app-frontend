@@ -7,7 +7,8 @@ export interface ClientUser {
     email?: string;
     role?: string;      // Single role from JWT (new backend format)
     roles?: string[];   // Array format (backward compat)
-    avatar?: string;
+    avatar?: string;    // Current active avatar
+    profile_picture?: string; // Specifically the user's uploaded picture
 }
 
 export const AuthService = {

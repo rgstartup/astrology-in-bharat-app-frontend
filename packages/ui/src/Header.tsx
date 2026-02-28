@@ -115,6 +115,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMobileSubMenu, setShowMobileSubMenu] = useState(false);
   const [showFullBalance, setShowFullBalance] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   // Use the authentication context
   const {
@@ -136,7 +137,20 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
   const isAuthenticated = authState ?? contextIsAuthenticated;
   const clientUser = userData ?? contextUser;
   const currentBalance = balance ?? clientBalance;
-  const avatarSrc = clientUser?.avatar || clientUser?.profile_picture || clientUser?.user?.avatar || "/images/aa.webp";
+
+  const legacyUploadsOrigin = process.env.NEXT_PUBLIC_ADMIN_UPLOADS_ORIGIN || "http://localhost:3001";
+
+  const normalizeImagePath = (value: string | null | undefined): string => {
+    if (!value) return "/images/aa.webp";
+    if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("data:") || value.startsWith("blob:")) {
+      return value;
+    }
+    if (value.startsWith("/uploads/")) return value; // Use relative path to trigger Next.js proxy
+    if (value.startsWith("/")) return value;
+    return `${legacyUploadsOrigin}/uploads/${value}`;
+  };
+
+  const avatarSrc = normalizeImagePath(clientUser?.profile_picture || clientUser?.avatar);
 
   const unwrapResponse = (res: any) => res?.data ?? res;
   const normalizeNotification = (notif: any) => ({
@@ -291,9 +305,9 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
 
   return (
     <>
-      <header className="top-head text-white shadow-sm relative z-[1001]" style={{ height: 'auto', minHeight: '52px' }}>
+      <header className="top-head bg-brown text-white shadow-sm relative z-[1001]" style={{ height: 'auto', minHeight: '52px' }}>
         <div className="container" style={{ overflow: 'visible' }}>
-          <div className="row align-items-center py-1">
+          <div className="row align-items-center">
             {/* Left section: Welcome Text */}
             <div className="col-lg-8 col-md-6 d-none d-md-block">
               <p className="top-text mb-0 text-white">
@@ -308,7 +322,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                   <div
                     onMouseEnter={() => setShowFullBalance(true)}
                     onMouseLeave={() => setShowFullBalance(false)}
-                    className="d-flex align-items-center gap-1 gap-md-2 px-2 px-md-3 py-1.5 rounded-xl transition-all hover:scale-105 active:scale-95 cursor-help whitespace-nowrap bg-primary hover:bg-primary-hover shadow-lg"
+                    className="d-flex align-items-center gap-1 gap-md-2 px-2 px-md-3 py-1.5 rounded-xl transition-all hover:scale-105 active:scale-95 cursor-help whitespace-nowrap bg-orange hover:opacity-90 shadow-lg"
                     style={{
                       minWidth: '75px',
                       justifyContent: 'center',
@@ -362,12 +376,26 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                       {/* Notification Bell */}
                       <div className="notification-dropdown-container position-relative">
                         <div
-                          className="cursor-pointer"
+                          className="cursor-pointer position-relative d-inline-flex"
                           onClick={() => setShowNotificationDropdown(!showNotificationDropdown)}
                         >
                           <i className="fa-solid fa-bell text-white text-xl"></i>
                           {unreadCount > 0 && (
-                            <span className="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: '9px', padding: '0.2em 0.4em', marginTop: '-1px', marginLeft: '-2px' }}>
+                            <span
+                              className="position-absolute badge rounded-pill bg-danger"
+                              style={{
+                                top: '-6px',
+                                right: '-10px',
+                                fontSize: '9px',
+                                padding: '2px 5px',
+                                minWidth: '15px',
+                                height: '15px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                border: '1px solid #331a1a'
+                              }}
+                            >
                               {unreadCount}
                             </span>
                           )}
@@ -436,21 +464,26 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
 
                       {/* User Profile & Dropdown */}
                       <div className="profile-dropdown-container position-relative">
-                        <div
-                          className="d-flex align-items-center gap-2 cursor-pointer"
-                          onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                        >
-                          <div style={{
-                            width: "35px",
-                            height: "35px",
-                            borderRadius: "50%",
-                            overflow: "hidden",
-                            border: "2px solid var(--primary-color, black)",
-                            padding: "2px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center"
-                          }}>
+                        <div className="d-flex align-items-center gap-2">
+                          <div
+                            className="cursor-pointer"
+                            onClick={() => setShowImageModal(true)}
+                            title="View Profile Picture"
+                            style={{
+                              width: "35px",
+                              height: "35px",
+                              borderRadius: "50%",
+                              overflow: "hidden",
+                              border: "2px solid var(--primary-color, black)",
+                              padding: "2px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              transition: "transform 0.2s"
+                            }}
+                            onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                            onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                          >
                             <NextImage
                               src={avatarSrc}
                               alt="Profile"
@@ -459,46 +492,111 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                               className="object-cover w-100 h-100 rounded-circle"
                             />
                           </div>
-                          <i className="fa-solid fa-ellipsis-vertical text-white" style={{ fontSize: '18px' }}></i>
+                          <i
+                            className="fa-solid fa-ellipsis-vertical text-white cursor-pointer p-1"
+                            style={{ fontSize: '18px' }}
+                            onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                          ></i>
                         </div>
 
                         {showProfileDropdown && (
                           <div
-                            className="position-absolute bg-white shadow-lg rounded-3 overflow-hidden"
+                            className="position-absolute bg-white shadow-2xl rounded-4 overflow-hidden border-0"
                             style={{
-                              top: "120%",
+                              top: "140%",
                               right: "0",
-                              minWidth: "180px",
+                              minWidth: "280px",
                               zIndex: 1000,
-                              border: "1px solid #eee"
+                              animation: "fadeInUp 0.3s ease-out",
+                              boxShadow: "0 15px 40px rgba(0,0,0,0.2)",
+                              border: "1px solid rgba(242, 94, 10, 0.1)"
                             }}
                           >
-                            <div className="px-3 py-2 border-bottom bg-light">
-                              <p className="mb-0 fw-bold text-dark small">{clientUser?.name || 'User'}</p>
-                              <p className="mb-0 text-muted" style={{ fontSize: '10px' }}>{clientUser?.phone || ''}</p>
+                            {/* User Header Section - Tailwind Orange */}
+                            <div
+                              className="p-3 mb-1 bg-orange"
+                              style={{
+                                color: "white"
+                              }}
+                            >
+                              <div className="d-flex align-items-center gap-3">
+                                <div
+                                  className="rounded-circle overflow-hidden border-2 border-white shadow-sm"
+                                  style={{ width: "50px", height: "50px", backgroundColor: "white" }}
+                                >
+                                  <NextImage
+                                    src={avatarSrc}
+                                    alt="User"
+                                    width={50}
+                                    height={50}
+                                    className="object-cover w-100 h-100"
+                                  />
+                                </div>
+                                <div className="overflow-hidden">
+                                  <p className="mb-0 fw-bold text-truncate" style={{ fontSize: '16px', letterSpacing: '0.2px' }}>
+                                    {clientUser?.name || 'User Name'}
+                                  </p>
+                                  <div className="d-flex align-items-center gap-1 opacity-90">
+                                    <i className="fa-solid fa-envelope" style={{ fontSize: '10px' }}></i>
+                                    <p className="mb-0 text-truncate" style={{ fontSize: '11px' }}>
+                                      {clientUser?.email || clientUser?.phone || 'Verified Profile'}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
 
-                            <Link
-                              href={PATHS.PROFILE}
-                              className="d-block px-3 py-2 text-decoration-none text-dark hover-bg-light transition-all d-flex align-items-center gap-2"
-                              onClick={() => setShowProfileDropdown(false)}
-                              style={{ fontSize: '14px' }}
-                            >
-                              <i className="fa-solid fa-user text-orange-500 w-5"></i>
-                              My Profile
-                            </Link>
+                            {/* Menu Items */}
+                            <div className="p-2">
+                              <Link
+                                href={PATHS.PROFILE}
+                                className="d-flex align-items-center gap-3 px-3 py-2 text-decoration-none text-dark rounded-3 hover-bhagwa-light transition-all mb-1"
+                                onClick={() => setShowProfileDropdown(false)}
+                                style={{ fontSize: '14px' }}
+                              >
+                                <div className="rounded-circle d-flex align-items-center justify-content-center shadow-sm bg-orange bg-opacity-10 text-orange" style={{ width: "34px", height: "34px" }}>
+                                  <i className="fa-solid fa-user-circle"></i>
+                                </div>
+                                <span className="fw-medium">My Profile</span>
+                              </Link>
 
-                            <button
-                              onClick={() => {
-                                setShowProfileDropdown(false);
-                                handleLogout();
-                              }}
-                              className="w-100 text-start border-0 bg-transparent px-3 py-2 text-danger hover-bg-light transition-all d-flex align-items-center gap-2"
-                              style={{ fontSize: '14px' }}
-                            >
-                              <i className="fa-solid fa-right-from-bracket w-5"></i>
-                              Logout
-                            </button>
+                              <Link
+                                href={`${PATHS.PROFILE}?tab=wallet`}
+                                className="d-flex align-items-center gap-3 px-3 py-2 text-decoration-none text-dark rounded-3 hover-bhagwa-light transition-all mb-1"
+                                onClick={() => setShowProfileDropdown(false)}
+                                style={{ fontSize: '14px' }}
+                              >
+                                <div className="rounded-circle d-flex align-items-center justify-content-center shadow-sm bg-orange bg-opacity-10 text-orange" style={{ width: "34px", height: "34px" }}>
+                                  <i className="fa-solid fa-wallet"></i>
+                                </div>
+                                <span className="fw-medium">My Wallet</span>
+                              </Link>
+
+                              <div className="my-2 border-bottom opacity-50 mx-2"></div>
+
+                              <button
+                                onClick={() => {
+                                  setShowProfileDropdown(false);
+                                  handleLogout();
+                                }}
+                                className="w-100 d-flex align-items-center gap-3 px-3 py-2 border-0 bg-transparent text-danger rounded-3 hover-bg-red-50 transition-all"
+                                style={{ fontSize: '14px' }}
+                              >
+                                <div className="bg-red-100 text-red-600 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style={{ width: "34px", height: "34px" }}>
+                                  <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                                </div>
+                                <span className="fw-bold">Logout Session</span>
+                              </button>
+                            </div>
+
+                            <style>{`
+                              @keyframes fadeInUp {
+                                from { opacity: 0; transform: translateY(10px); }
+                                to { opacity: 1; transform: translateY(0); }
+                              }
+                              .hover-bhagwa-light:hover { background-color: rgba(242, 94, 10, 0.05); color: #f25e0a !important; }
+                              .hover-bg-red-50:hover { background-color: #fff5f5; }
+                            `}</style>
                           </div>
                         )}
                       </div>
@@ -507,32 +605,14 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                     <div className="d-flex gap-3">
                       <Link
                         href={PATHS.SIGN_IN}
-                        style={{
-                          backgroundColor: "var(--primary-color, black)",
-                          color: "white",
-                          borderRadius: "5px",
-                          padding: "6px 15px",
-                          textDecoration: "none",
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          display: "inline-block"
-                        }}
+                        className="bg-orange text-white rounded-[5px] px-[15px] py-[6px] text-sm font-semibold inline-block no-underline transition-all hover:opacity-90 active:scale-95"
                       >
                         Sign In
                       </Link>
 
                       <Link
                         href={PATHS.REGISTER}
-                        style={{
-                          backgroundColor: "var(--primary-color, black)",
-                          color: "white",
-                          borderRadius: "5px",
-                          padding: "6px 15px",
-                          textDecoration: "none",
-                          fontSize: "14px",
-                          fontWeight: "600",
-                          display: "inline-block"
-                        }}
+                        className="bg-orange text-white rounded-[5px] px-[15px] py-[6px] text-sm font-semibold inline-block no-underline transition-all hover:opacity-90 active:scale-95"
                       >
                         Register
                       </Link>
@@ -708,10 +788,8 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
             <div className="col-lg-2 col-md-5 mobile-none">
               <Link
                 href="/our-astrologers"
-                className="btn-ask-expert"
+                className="btn-ask-expert bg-orange text-white transition-all hover:scale-105 active:scale-95"
                 style={{
-                  backgroundColor: "var(--primary-color, black)",
-                  color: "white",
                   padding: "10px 20px",
                   borderRadius: "25px",
                   display: "flex",
@@ -720,7 +798,8 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                   textDecoration: "none",
                   fontWeight: "bold",
                   fontSize: "14px",
-                  boxShadow: "0 4px 15px rgba(0,0,0,0.1)"
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                  whiteSpace: "nowrap"
                 }}
               >
                 <NextImage
@@ -740,7 +819,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
 
       {
         isClient && (
-          <header className="services-list-card" style={{ backgroundColor: "var(--primary-color, black)" }}>
+          <header className="services-list-card bg-orange">
             <div className="container position-relative">
               <Swiper
                 modules={[Navigation, Autoplay]}
@@ -798,6 +877,82 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
           </header>
         )
       }
+
+      {/* Profile Image Preview Modal */}
+      {showImageModal && (
+        <div
+          onClick={() => setShowImageModal(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backdropFilter: 'blur(3px)',
+            padding: '20px'
+          }}
+        >
+          <div
+            className="bg-white rounded-4 shadow-lg"
+            style={{
+              position: 'relative',
+              padding: '10px',
+              maxWidth: 'min(500px, 95vw)',
+              maxHeight: '95vh',
+              animation: 'zoomIn 0.3s ease-out'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="btn btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+              style={{
+                position: 'absolute',
+                top: '-15px',
+                right: '-15px',
+                width: '35px',
+                height: '35px',
+                zIndex: 10,
+                border: '1px solid #ddd',
+                backgroundColor: '#fff'
+              }}
+              onClick={() => setShowImageModal(false)}
+            >
+              <i className="fa-solid fa-xmark text-dark fs-5"></i>
+            </button>
+
+            <div
+              className="overflow-hidden rounded-3 d-flex align-items-center justify-content-center"
+              style={{
+                maxWidth: '90vw',
+                maxHeight: '80vh',
+                backgroundColor: '#f8f9fa'
+              }}
+            >
+              <img
+                src={avatarSrc}
+                alt="Profile Preview"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '80vh',
+                  objectFit: 'contain',
+                  display: 'block'
+                }}
+              />
+            </div>
+          </div>
+          <style>{`
+            @keyframes zoomIn {
+              from { opacity: 0; transform: scale(0.9); }
+              to { opacity: 1; transform: scale(1); }
+            }
+          `}</style>
+        </div>
+      )}
     </>
   );
 };

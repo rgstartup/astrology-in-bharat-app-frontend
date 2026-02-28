@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { AuthService, ClientUser } from "../services/auth.service";
+import { apiClient } from "../lib/api-client";
 const authDebug = (...args: unknown[]) => {
     if (process.env.NODE_ENV !== "production") {
         console.log("[AuthDebug][store]", ...args);
@@ -17,6 +18,7 @@ interface AuthState {
     clientLogout: () => Promise<void>;
     refreshAuth: () => Promise<void>;
     refreshBalance: () => Promise<void>;
+    updateClientUser: (data: Partial<ClientUser>) => void;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -109,7 +111,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         });
 
         try {
-            const res: any = await AuthService.fetchProfile();
+            // Priority: Try fetching the more detailed client profile first
+            // This ensures we get the latest 'profile_picture' which might not be joined in /auth/me
+            let res: any;
+            try {
+                res = await apiClient.get('/client/profile');
+            } catch {
+                res = await AuthService.fetchProfile();
+            }
+
             // Support both shapes:
             // 1) direct payload (safeFetch-based apiClient)
             // 2) wrapped payload { status, data }
@@ -129,6 +139,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                     name: raw.user.name,
                     email: raw.user.email,
                     roles: raw.user.roles || [],
+                    profile_picture: raw.profile_picture || raw.user.profile_picture,
                     avatar: raw.profile_picture || raw.user.avatar,
                 };
             } else if (raw?.id) {
@@ -137,12 +148,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                     name: raw.full_name || raw.name || "User",
                     email: raw.email || "",
                     roles: raw.roles || [],
+                    profile_picture: raw.profile_picture,
                     avatar: raw.profile_picture || raw.avatar,
                 };
             }
 
             if (user) {
-                set({ clientUser: user, isClientAuthenticated: true });
+                set({
+                    clientUser: {
+                        ...(get().clientUser || {}),
+                        ...user
+                    } as ClientUser,
+                    isClientAuthenticated: true
+                });
                 authDebug("refreshAuth:user resolved", { id: user.id, name: user.name });
                 get().refreshBalance();
             } else {
@@ -170,6 +188,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 isClientAuthenticated: get().isClientAuthenticated,
                 hasClientUser: Boolean(get().clientUser),
             });
+        }
+    },
+
+    updateClientUser: (data: Partial<ClientUser>) => {
+        const current = get().clientUser;
+        if (current) {
+            set({ clientUser: { ...current, ...data } });
         }
     },
 }));
