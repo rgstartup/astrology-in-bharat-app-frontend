@@ -285,7 +285,7 @@ export default function PayoutInfo() {
                                                     </p>
                                                 </div>
 
-                                                <div className="flex items-center justify-end gap-2 pt-2 sm:pt-0">
+                                                <div className="flex items-center justify-end gap-2 pt-2 sm:pt-0 col-span-1 sm:col-span-1">
                                                     {!acc.is_primary && (
                                                         <Button
                                                             onClick={() => handleSetPrimary(acc.id)}

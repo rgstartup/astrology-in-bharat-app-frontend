@@ -161,16 +161,16 @@ export default function ExpertiseAvailability({
                     </div>
 
 
-                    <div className="flex space-x-2 justify-end pt-2">
+                    <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
                         <button
                             onClick={onCancel}
-                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                            className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={onSave}
-                            className="flex items-center space-x-2 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-all shadow-md text-sm font-medium"
+                            className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-all shadow-md text-sm font-medium"
                         >
                             <Save className="w-4 h-4" />
                             <span>Save Changes</span>

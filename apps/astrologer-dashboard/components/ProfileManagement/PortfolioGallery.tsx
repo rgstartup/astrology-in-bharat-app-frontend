@@ -210,7 +210,7 @@ export default function PortfolioGallery({
                     {/* Videos Content */}
                     {activeTab === 'videos' && (
                         <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-                            <div className="flex justify-end mb-4 gap-2">
+                            <div className="flex flex-wrap justify-end mb-4 gap-2">
                                 {onUploadVideoFile && (
                                     <>
                                         <Button

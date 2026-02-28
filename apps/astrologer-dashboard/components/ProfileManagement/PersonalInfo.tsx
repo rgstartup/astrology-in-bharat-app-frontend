@@ -61,10 +61,10 @@ export default function PersonalInfo({
         if (e.target) e.target.value = "";
     };
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg border-2 border-orange-400 h-full">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4 p-2 -m-2 rounded-xl transition-colors">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg border-2 border-orange-400">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-3 sm:space-y-0 sm:space-x-4 mb-4 p-2 -m-2 rounded-xl transition-colors">
                 <div
-                    className="relative group flex-shrink-0 cursor-default"
+                    className="relative group shrink-0 cursor-default"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <Avatar
@@ -96,23 +96,23 @@ export default function PersonalInfo({
                     )}
                 </div>
                 <div
-                    className="flex-1 min-w-0 cursor-pointer hover:bg-gray-50/50 p-2 rounded-lg transition-colors"
+                    className="flex-1 min-w-0 w-full cursor-pointer hover:bg-gray-50/50 p-2 rounded-lg transition-colors"
                     onClick={() => setIsExpanded(!isExpanded)}
                 >
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 truncate">{profile.name}</h2>
+                    <div className="flex items-center justify-between gap-2">
+                        <h2 className="text-lg sm:text-2xl font-bold text-gray-800 truncate min-w-0">{profile.name}</h2>
                         {/* @ts-ignore */}
-                        {isExpanded ? <ChevronUp className="w-5 h-5 text-gray-500" /> : <ChevronDown className="w-5 h-5 text-gray-500" />}
+                        <div className="shrink-0">{isExpanded ? <ChevronUp className="w-5 h-5 text-gray-500" /> : <ChevronDown className="w-5 h-5 text-gray-500" />}</div>
                     </div>
                     <p className="text-sm text-gray-500 mb-2 truncate">{profile.email}</p>
-                    <div className="flex flex-wrap items-center gap-2 mt-1">
-                        <span className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-full ${profile.is_available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                        <span className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${profile.is_available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                             {profile.is_available ? 'Available' : 'Unavailable'}
                         </span>
                         {specs.map((spec, i) => (
                             <span
                                 key={i}
-                                className="bg-orange-100 text-orange-800 text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-full"
+                                className="bg-orange-100 text-orange-800 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full"
                             >
                                 {spec}
                             </span>
@@ -124,7 +124,7 @@ export default function PersonalInfo({
             {isExpanded && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-300">
 
-                    <div className="flex justify-between items-center mb-4 mt-6">
+                    <div className="flex flex-wrap justify-between items-center gap-2 mb-4 mt-6">
                         <h3 className="text-base sm:text-lg font-semibold text-gray-800">
                             About Expert
                         </h3>
@@ -133,7 +133,7 @@ export default function PersonalInfo({
                                 onClick={onEdit}
                                 variant="primary"
                                 size="sm"
-                                className="flex items-center gap-1"
+                                className="flex items-center gap-1 shrink-0"
                             >
                                 <Edit3 className="w-4 h-4" />
                                 <span>Edit Profile</span>
@@ -350,17 +350,18 @@ export default function PersonalInfo({
                                 />
                             </div>
 
-                            <div className="flex space-x-2 justify-end pt-2">
+                            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
                                 <Button
                                     onClick={onCancel}
                                     variant="secondary"
+                                    className="w-full sm:w-auto"
                                 >
                                     Cancel
                                 </Button>
                                 <Button
                                     onClick={onSave}
                                     variant="primary"
-                                    className="flex items-center gap-2"
+                                    className="flex items-center justify-center gap-2 w-full sm:w-auto"
                                 >
                                     <Save className="w-4 h-4" />
                                     <span>Save Changes</span>

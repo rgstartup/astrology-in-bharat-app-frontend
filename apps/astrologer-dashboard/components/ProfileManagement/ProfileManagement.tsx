@@ -697,17 +697,17 @@ const ProfileManagement = () => {
           const displayReason = reason || "Please verify your documents and profile information and try again.";
 
           return (
-            <div className="mb-6 bg-rose-50 border-2 border-rose-100 rounded-2xl p-6 flex items-start gap-4 shadow-sm">
-              <div className="w-12 h-12 rounded-xl bg-rose-500 flex items-center justify-center text-white shrink-0">
-                <AlertTriangle className="w-6 h-6" />
+            <div className="mb-6 bg-rose-50 border-2 border-rose-100 rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row items-start gap-3 sm:gap-4 shadow-sm">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-rose-500 flex items-center justify-center text-white shrink-0">
+                <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <div className="flex-1">
-                <h4 className="text-lg font-bold text-rose-900 mb-1">Update Required: Profile Rejected</h4>
-                <p className="text-sm text-rose-700 leading-relaxed italic">
-                  " {displayReason} "
+              <div className="flex-1 min-w-0">
+                <h4 className="text-base sm:text-lg font-bold text-rose-900 mb-1">Update Required: Profile Rejected</h4>
+                <p className="text-xs sm:text-sm text-rose-700 leading-relaxed italic break-words">
+                  &quot;{displayReason}&quot;
                 </p>
                 <p className="mt-3 text-xs font-semibold text-rose-500 uppercase tracking-wider bg-white/50 w-fit px-3 py-1 rounded-full border border-rose-100">
-                  Please correct these issues and we'll re-review your profile
+                  Please correct these issues and we&apos;ll re-review your profile
                 </p>
               </div>
             </div>
@@ -724,7 +724,7 @@ const ProfileManagement = () => {
         );
       })()}
 
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <PersonalInfo
           profile={profile}
           tempProfile={tempProfile}
