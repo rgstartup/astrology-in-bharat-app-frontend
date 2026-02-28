@@ -74,6 +74,7 @@ interface ClientUser {
   email?: string;
   roles?: string[];
   avatar?: string;
+  profile_picture?: string;
 }
 
 interface ClientAuthContextType {
@@ -158,7 +159,8 @@ export const ClientAuthProvider = ({
           name: res.data.user?.name || res.data.full_name,
           email: res.data.user?.email,
           roles: res.data.user?.roles || [],
-          avatar: res.data.user?.avatar || res.data.profile_picture,
+          profile_picture: res.data.profile_picture || res.data.user?.profile_picture,
+          avatar: res.data.profile_picture || res.data.user?.avatar,
         });
         setIsClientAuthenticated(true);
       } else {
@@ -193,7 +195,8 @@ export const ClientAuthProvider = ({
             name: res.data.user?.name || res.data.full_name,
             email: res.data.user?.email,
             roles: res.data.user?.roles || [],
-            avatar: res.data.user?.avatar || res.data.profile_picture,
+            profile_picture: res.data.profile_picture || res.data.user?.profile_picture,
+            avatar: res.data.profile_picture || res.data.user?.avatar,
           });
           setIsClientAuthenticated(true);
         } else {

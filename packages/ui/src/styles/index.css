@@ -4,3 +4,31 @@
 @import url("./main.css");
 @import url("./footer.css");
 @import url("./signin.css");
+
+/* Custom Layout Width - To create horizontal gap like reference design */
+.container,
+.container-sm,
+.container-md,
+.container-lg,
+.container-xl,
+.container-xxl {
+    max-width: 900px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 60px !important;
+    padding-right: 60px !important;
+}
+
+@media (min-width: 1400px) {
+
+    .container,
+    .container-sm,
+    .container-md,
+    .container-lg,
+    .container-xl,
+    .container-xxl {
+        max-width: 1000px !important;
+        padding-left: 100px !important;
+        padding-right: 100px !important;
+    }
+}

@@ -94,7 +94,7 @@ const SignInForm: React.FC = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h6 className="mb-0">
           Welcome to <br />
-          <span style={{ color: "var(--primary-color)" }}>
+          <span className="text-orange">
             Astrology Bharat
           </span>
         </h6>
@@ -107,7 +107,7 @@ const SignInForm: React.FC = () => {
       </div>
 
       <div className="sign-in-heading mb-4">
-        <h2 style={{ color: "var(--primary-color)" }}>Sign In</h2>
+        <h2 className="text-orange">Sign In</h2>
       </div>
 
       <div className="social-links d-flex gap-3 mb-4">
@@ -183,7 +183,7 @@ const SignInForm: React.FC = () => {
 
         <button
           type="submit"
-          className="btn w-100 py-2 fw-semibold bg-primary hover:bg-primary-hover text-white border-0 transition-all font-bold"
+          className="btn w-100 py-2 fw-semibold bg-orange hover:opacity-90 text-white border-0 transition-all font-bold"
           disabled={isLoading}
         >
           {isLoading ? "Signing In..." : "Sign In"}

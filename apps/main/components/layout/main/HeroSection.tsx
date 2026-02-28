@@ -8,8 +8,8 @@ const HeroSection = () => {
     <section className="banner-part light-back">
       <div className="overlay-hero">
         <div className="container">
-          <div className="contant-hero">
-            <div className="row align column-reverse">
+          <div className="contant-hero !overflow-visible">
+            <div className="row align column-reverse !overflow-visible">
               <div className="col-lg-7 col-md-12">
                 <div className="hero-card shine">
                   <div className="card-z">
@@ -55,26 +55,29 @@ const HeroSection = () => {
                     </ul>
                     <Link
                       href="/our-astrologers"
-                      className="btn-link wfc mt-4 mb-4"
+                      className="bg-orange text-white wfc mt-4 mb-4 inline-block no-underline rounded-full font-bold transition-all hover:opacity-90 active:scale-95"
                     >
                       Start Consultation
                     </Link>
                   </div>
                 </div>
               </div>
-              <div className="col-lg-5 col-md-12">
-                <div className="right-illus relative h-[400px]">
+              <div className="col-lg-5 col-md-12 !overflow-visible">
+                <div className="right-illus relative h-[400px] !overflow-visible">
                   <Image
                     src="/images/Astrologer-h.png"
                     alt="Astrologer background"
                     fill
-                    className="Astrologer-img-h fa-spin object-contain opacity-30"
+                    unoptimized
+                    className="Astrologer-img-h fa-spin object-contain -translate-y-20 translate-x-6 scale-[1.0]"
                   />
                   <Image
                     src="/images/Astrologer.png"
                     alt="Astrologer"
                     fill
-                    className="Astrologer-img object-contain"
+                    unoptimized
+                    priority
+                    className="Astrologer-img object-contain scale-[1.4] origin-bottom translate-y-16 -translate-x-2 pointer-events-none"
                   />
                 </div>
               </div>

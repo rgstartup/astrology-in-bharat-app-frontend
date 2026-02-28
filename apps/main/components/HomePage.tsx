@@ -44,7 +44,7 @@ const HomePage: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-                <a href="#" className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all mt-4 mb-4 inline-block text-decoration-none">
+                <a href="#" className="bg-orange hover:opacity-90 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all mt-4 mb-4 inline-block text-decoration-none">
                   Start Consultation
                 </a>
               </div>

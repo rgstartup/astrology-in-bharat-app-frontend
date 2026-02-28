@@ -1,12 +1,11 @@
 "use client";
 import React from "react";
-import { getBasePath } from "@/utils/api-config";
-import ProductsCarousel from "@/components/features/shop/ProductsCarousel";
+import { getProductImageUrl } from "@/utils/image-utils";
+import ProductCarousel from "@/components/features/shop/ProductCarousel";
 import { Button, Form } from "react-bootstrap";
-import { useCartStore } from "@/store/useCartStore"; // Changed import
-
+import { useCartStore } from "@/store/useCartStore";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/useAuthStore"; // Changed import
+import { useAuthStore } from "@/store/useAuthStore";
 
 const CartPage: React.FC = () => {
   const router = useRouter();
@@ -19,11 +18,29 @@ const CartPage: React.FC = () => {
     isLoading
   } = useCartStore(); // Changed usage
 
+  const [suggestedProducts, setSuggestedProducts] = React.useState<any[]>([]);
+
   React.useEffect(() => {
     // If not authenticated, redirect to login
     if (!isClientAuthenticated) {
       router.push("/sign-in");
     }
+
+    // Fetch products for "You may also like" section
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1"}/products`);
+        if (res.ok) {
+          const data = await res.json();
+          const products = Array.isArray(data) ? data : data.data || [];
+          setSuggestedProducts(products);
+        }
+      } catch (error) {
+        console.error("Failed to fetch suggested products:", error);
+      }
+    };
+
+    fetchProducts();
   }, [isClientAuthenticated, router]);
 
   // If redirecting, show nothing or spinner
@@ -33,7 +50,7 @@ const CartPage: React.FC = () => {
 
   const handleQuantityChange = async (id: number, delta: number) => {
     // Find the item to get current quantity
-    const item = cartItems.find(i => i.productId === id);
+    const item = cartItems.find((i: any) => i.productId === id);
     if (item) {
       await updateQuantity(id, item.quantity + delta);
     }
@@ -68,21 +85,8 @@ const CartPage: React.FC = () => {
             {/* Cart Items */}
             <div className="col-lg-8">
               <div className="bg-white rounded shadow-sm p-4">
-                {cartItems.map((item) => {
-                  const cleanApiUrl = getBasePath();
-
-                  // Handle property mismatch (backend might send 'image' or 'imageUrl')
-                  const productImg = item.product?.image || (item.product as any)?.imageUrl;
-
-                  const imageUrl = productImg
-                    ? productImg.startsWith("http")
-                      ? productImg
-                      : productImg.startsWith("/uploads/")
-                        ? `${cleanApiUrl}${productImg}`
-                        : productImg.startsWith("/")
-                          ? productImg
-                          : `/uploads/${productImg}`
-                    : "/images/image-not-found.png";
+                {cartItems.map((item: any) => {
+                  const imageUrl = getProductImageUrl(item.product);
 
                   return (
                     <div
@@ -204,7 +208,7 @@ const CartPage: React.FC = () => {
         {/* Suggested Products */}
         <div className="mt-5">
           <h2 className="fw-semibold mb-3">You may also like</h2>
-          <ProductsCarousel />
+          <ProductCarousel products={suggestedProducts} />
         </div>
       </div>
     </div>

@@ -11,43 +11,70 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // orange: "#1a0e05ff",
+        orange: "#FF6B00",
+        brown: "#301118",
+        white: "#FFFFFF",
+        /*
+        bhagwa: {
+          DEFAULT: "var(--color-bhagwa)",
+          hover: "var(--color-bhagwa-hover)",
+          light: "var(--color-bhagwa-light)",
+          dark: "var(--color-bhagwa-dark)",
+        },
+        brown_old: {
+          DEFAULT: "var(--color-maroon)",
+          hover: "var(--color-maroon-hover)",
+          light: "var(--color-maroon-light)",
+          dark: "var(--color-maroon-dark)",
+        },
+        black: {
+          DEFAULT: "var(--color-black)",
+          soft: "var(--color-black-soft)",
+          muted: "var(--color-black-muted)",
+        },
+        white_old: {
+          DEFAULT: "var(--color-white)",
+          cream: "var(--color-cream)",
+          off: "#F5E6E6",
+        },
         brand: {
-          orange: "#FF6B00",
-          maroon: "#4A1D1F",
-          gold: "#D4AF37",
-          cream: "#FFF9F4",
+          orange: "var(--color-bhagwa)",
+          maroon: "var(--color-maroon)",
+          gold: "var(--color-gold)",
+          cream: "var(--color-cream)",
         },
         primary: {
-          DEFAULT: "#FF6B00",
-          hover: "#E65100",
-          light: "#FFF3E0",
-          dark: "#C45000",
+          DEFAULT: "var(--color-primary)",
+          hover: "var(--color-primary-hover)",
+          light: "var(--color-primary-light)",
+          dark: "var(--color-primary-dark)",
         },
         secondary: {
-          DEFAULT: "#4A1D1F",
-          hover: "#381416",
-          light: "#6D2D2F",
-          dark: "#2D1112",
+          DEFAULT: "var(--color-secondary)",
+          hover: "var(--color-secondary-hover)",
+          light: "var(--color-secondary-light)",
+          dark: "var(--color-secondary-dark)",
         },
         accent: {
-          gold: "#D4AF37",
-          "gold-light": "#F2E2B0",
-          "gold-dark": "#B8860B",
+          gold: "var(--color-gold)",
+          "gold-light": "var(--color-gold-light)",
+          "gold-dark": "var(--color-gold-dark)",
         },
         background: {
-          light: "#FFF9F4",
-          dark: "#0F0808",
+          light: "var(--color-background-light)",
+          dark: "var(--color-background-dark)",
           alt: "#F8F0E8",
         },
         surface: {
-          light: "#FFFFFF",
+          light: "var(--color-white)",
           dark: "#1A1111",
           muted: "#F5E6E6",
         },
         text: {
-          primary: "#1A1A1A",
-          secondary: "#4A4A4A",
-          muted: "#767676",
+          primary: "var(--color-text-primary)",
+          secondary: "var(--color-text-secondary)",
+          muted: "var(--color-text-muted)",
           dark: {
             primary: "#F5E6E6",
             secondary: "#B3A5A5",
@@ -55,9 +82,10 @@ module.exports = {
           }
         },
         border: {
-          light: "#E0D5D0",
-          dark: "#3D2B2B",
+          light: "var(--color-border-light)",
+          dark: "var(--color-border-dark)",
         }
+        */
       },
       fontFamily: {
         sans: ["var(--font-poppins)", "sans-serif"],

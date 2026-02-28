@@ -1,0 +1,51 @@
+:root {
+  /* Brand Colors */
+  --color-bhagwa: #FF6B00;
+  --color-bhagwa-hover: #E65100;
+  --color-bhagwa-light: #FFF3E0;
+  --color-bhagwa-dark: #C45000;
+
+  --color-maroon: #4A1D1F;
+  --color-maroon-hover: #381416;
+  --color-maroon-light: #6D2D2F;
+  --color-maroon-dark: #2D1112;
+
+  --color-gold: #D4AF37;
+  --color-gold-light: #F2E2B0;
+  --color-gold-dark: #B8860B;
+
+  /* Theme Colors (Semantic aliases) */
+  --color-primary: var(--color-bhagwa);
+  --color-primary-hover: var(--color-bhagwa-hover);
+  --color-primary-light: var(--color-bhagwa-light);
+  --color-primary-dark: var(--color-bhagwa-dark);
+
+  --color-secondary: var(--color-maroon);
+  --color-secondary-hover: var(--color-maroon-hover);
+  --color-secondary-light: var(--color-maroon-light);
+  --color-secondary-dark: var(--color-maroon-dark);
+
+  --color-accent: var(--color-gold);
+
+  /* Neutrals & UI */
+  --color-white: #FFFFFF;
+  --color-cream: #FFF9F4;
+  --color-black: #000000;
+  --color-black-soft: #1A1A1A;
+  --color-black-muted: #4A4A4A;
+
+  --color-background-light: var(--color-cream);
+  --color-background-dark: #0F0808;
+
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #4A4A4A;
+  --color-text-muted: #767676;
+
+  --color-border-light: #E0D5D0;
+  --color-border-dark: #3D2B2B;
+
+  /* Feedback Colors */
+  --color-success: #16a34a; /* green-600 */
+  --color-danger: #dc2626;  /* red-600 */
+  --color-warning: #eab308; /* yellow-500 */
+}

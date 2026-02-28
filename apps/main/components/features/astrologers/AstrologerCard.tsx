@@ -293,7 +293,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
                       e.stopPropagation();
                       setServiceIndex((prev) => Math.max(0, prev - 1));
                     }}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full w-5 h-5 flex items-center justify-center shadow-sm cursor-pointer hover:bg-white text-gray-700 border border-gray-100"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-orange rounded-full w-5 h-5 flex items-center justify-center shadow-sm cursor-pointer hover:opacity-80 text-white border-0"
                   >
                     <i className="fa-solid fa-chevron-left text-[10px]" />
                   </button>
@@ -307,7 +307,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
                       e.stopPropagation();
                       setServiceIndex((prev) => Math.min(allServices.length - 2, prev + 1));
                     }}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full w-5 h-5 flex items-center justify-center shadow-sm cursor-pointer hover:bg-white text-gray-700 border border-gray-100"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-orange rounded-full w-5 h-5 flex items-center justify-center shadow-sm cursor-pointer hover:opacity-80 text-white border-0"
                   >
                     <i className="fa-solid fa-chevron-right text-[10px]" />
                   </button>
@@ -354,7 +354,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
             <Button
               variant="primary"
               onClick={handleChatClick}
-              className="flex-1 flex-col py-1.5 leading-tight !rounded-full text-[13px]"
+              className="flex-1 flex-col py-1.5 leading-tight !rounded-full text-[13px] !bg-orange hover:!opacity-90"
             >
               <div className="flex items-center gap-1.5">
                 <i className="fa-regular fa-comment-dots" /> Chat
@@ -367,7 +367,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
             <Button
               variant="primary"
               onClick={handleCallClick}
-              className="flex-1 flex-col py-1.5 leading-tight !rounded-full text-[13px]"
+              className="flex-1 flex-col py-1.5 leading-tight !rounded-full text-[13px] !bg-orange hover:!opacity-90"
             >
               <div className="flex items-center gap-1.5">
                 <i className="fa-solid fa-phone-volume" /> Call
@@ -381,7 +381,7 @@ const AstrologerCard: React.FC<AstrologerCardProps> = ({
           <Button
             variant="primary"
             onClick={handleVideoCallClick}
-            className="w-full flex-col py-1.5 leading-tight !rounded-full text-[13px]"
+            className="w-full flex-col py-1.5 leading-tight !rounded-full text-[13px] !bg-orange hover:!opacity-90"
           >
             <div className="flex items-center gap-1.5">
               <i className="fa-solid fa-video" /> Video Call

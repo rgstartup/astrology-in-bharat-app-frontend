@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useWishlistStore } from "@/store/useWishlistStore";
 
+import { getProductImageUrl } from "@/utils/image-utils";
+
 const Image = NextImage as any;
 // ... (omitted) ...
 
@@ -30,39 +32,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
-    const legacyUploadsOrigin = process.env.NEXT_PUBLIC_ADMIN_UPLOADS_ORIGIN || "http://localhost:3001";
-
-    const normalizeImagePath = (value: string): string => {
-        if (!value) return value;
-
-        if (value.startsWith("/uploads/")) return `${legacyUploadsOrigin}${value}`;
-
-        if (value.startsWith("http://") || value.startsWith("https://")) {
-            try {
-                const parsed = new URL(value);
-                if (parsed.pathname.startsWith("/uploads/")) {
-                    // Legacy uploads are stored in admin-dashboard /public/uploads
-                    return `${legacyUploadsOrigin}${parsed.pathname}`;
-                }
-                return value;
-            } catch {
-                return value;
-            }
-        }
-
-        if (value.startsWith("/")) return value;
-        return `${legacyUploadsOrigin}/uploads/${value}`;
-    };
-
-    const rawImage: any = product.imageUrl as any;
-    const normalizedImageValue =
-        typeof rawImage === "string"
-            ? rawImage
-            : rawImage?.secure_url || rawImage?.url || rawImage?.image || rawImage?.image_url || rawImage?.path || "";
-
-    const imageUrl = normalizedImageValue
-        ? normalizeImagePath(normalizedImageValue)
-        : "/images/image-not-found.png"; // Fallback placeholder
+    const imageUrl = getProductImageUrl(product);
 
     const originalPrice = Number(product.originalPrice) || 0;
     const price = Number(product.price) || 0;
@@ -143,7 +113,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
 
             {/* 🖼️ Image Area with Glow */}
             <div className="relative w-full aspect-square bg-[#f9f9f9] flex items-center justify-center overflow-hidden shrink-0">
-                <div className="absolute w-32 h-32 bg-primary/10 rounded-full blur-3xl opacity-60"></div>
+                <div className="absolute w-32 h-32 bg-orange/10 rounded-full blur-3xl opacity-60"></div>
                 <div className="relative w-full h-full">
                     <Image
                         src={imageUrl}
@@ -173,7 +143,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
 
                 {/* 💰 Price Section */}
                 <div className="flex items-end gap-2 mt-auto pt-2">
-                    <span className="text-2xl font-bold text-primary">
+                    <span className="text-2xl font-bold text-orange">
                         ₹{price}
                     </span>
                     {originalPrice > price && (
@@ -190,7 +160,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                         size="md"
                         onClick={handleAddToCart}
                         loading={isCartLoading}
-                        className="flex-1 !rounded-full border-primary text-primary hover:bg-primary/5 h-10 text-[13px] px-3 font-semibold"
+                        className="flex-1 !rounded-full border-orange text-orange hover:bg-orange/5 h-10 text-[13px] px-3 font-semibold"
                     >
                         Add to Cart
                     </Button>
@@ -207,7 +177,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) 
                             router.push(`/checkout?type=order`);
                         }}
                         loading={isBuyLoading}
-                        className="flex-1 rounded-full h-10 text-[13px] px-3 font-semibold"
+                        className="flex-1 rounded-full h-10 text-[13px] px-3 font-semibold !bg-orange hover:!opacity-90"
                     >
                         Buy Now
                     </Button>

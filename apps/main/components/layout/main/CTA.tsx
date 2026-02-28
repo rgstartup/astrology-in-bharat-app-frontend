@@ -20,7 +20,7 @@ const CTA = () => {
           <div className="col-lg-4 col-md-12 text-center text-lg-end">
             <a
               href="#"
-              className="inline-block py-3 px-[40px] bg-primary text-white rounded-[30px] text-lg font-semibold hover:bg-primary-hover hover:text-white hover:-translate-y-1 transition-all shadow-[0_4px_15px_rgba(242,94,10,0.4)]"
+              className="inline-block py-3 px-[40px] bg-orange text-white rounded-[30px] text-lg font-semibold hover:opacity-90 hover:-translate-y-1 transition-all shadow-[0_4px_15px_rgba(255,107,0,0.4)]"
             >
               Consult Now
             </a>

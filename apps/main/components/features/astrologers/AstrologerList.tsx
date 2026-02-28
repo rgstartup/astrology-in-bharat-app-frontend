@@ -434,7 +434,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
           <div className="flex items-center relative mt-4">
             <button
               onClick={() => scrollCards("left")}
-              className="shrink-0 w-10 h-10 flex items-center justify-center text-primary hover:scale-110 transition cursor-pointer z-10"
+              className="shrink-0 w-10 h-10 flex items-center justify-center text-orange hover:scale-110 transition cursor-pointer z-10"
               style={{ background: "transparent" }}
             >
               <i className="fa-solid fa-chevron-left fa-2x"></i>
@@ -480,7 +480,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
 
             <button
               onClick={() => scrollCards("right")}
-              className="shrink-0 w-10 h-10 flex items-center justify-center text-primary hover:scale-110 transition cursor-pointer z-10"
+              className="shrink-0 w-10 h-10 flex items-center justify-center text-orange hover:scale-110 transition cursor-pointer z-10"
               style={{ background: "transparent" }}
             >
               <i className="fa-solid fa-chevron-right fa-2x"></i>
@@ -536,7 +536,7 @@ const AstrologerList: React.FC<AstrologerListProps> = ({
 
         {layout === 'slider' && (
           <div className="view-all mt-4">
-            <Link href="/our-astrologers" className="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-full font-bold shadow-lg transition-all mx-auto flex items-center justify-center gap-2 w-fit">
+            <Link href="/our-astrologers" className="bg-orange hover:opacity-90 text-white px-6 py-3 rounded-full font-bold shadow-lg transition-all mx-auto flex items-center justify-center gap-2 w-fit">
               <i className="fa-regular fa-user"></i> View All Astrologers
             </Link>
           </div>
