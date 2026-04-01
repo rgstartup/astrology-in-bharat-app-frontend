@@ -8,7 +8,7 @@ import {
     Calendar, Users, Info, Filter, Loader2,
     CalendarCheck, Image as LucideImage
 } from "lucide-react";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import { API_ROUTES } from "@/lib/api-routes";
 import { ExpertPuja } from "@/lib/types/puja";
 import Image from "next/image";

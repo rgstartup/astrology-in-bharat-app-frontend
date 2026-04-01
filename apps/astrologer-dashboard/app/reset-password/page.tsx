@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import apiClientSafe from "../../lib/apiClientSafe";
+import { api } from "../../lib/api";
 
 const Link = NextLink as any;
 
@@ -43,7 +43,7 @@ const ResetPasswordContent: React.FC = () => {
         try {
             const API_URL = `/auth/reset/password?token=${token}`;
 
-            const [data, error] = await apiClientSafe.post<any>(API_URL, { password });
+            const [data, error] = await api.post<any>(API_URL, { password });
 
             if (error) {
                 toast.error((error as any)?.message || "Failed to reset password. The link may have expired.");

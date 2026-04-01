@@ -42,3 +42,9 @@ yarn-error.log*
 .agents/
 skills-lock.json
 
+# Build Logs
+*-build.log
+*-build-utf8.log
+full-build.log
+full-build-utf8.log
+

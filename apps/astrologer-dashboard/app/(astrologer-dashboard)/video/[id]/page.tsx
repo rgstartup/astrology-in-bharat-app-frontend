@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { callSocket } from "@/lib/socket";
 import * as LucideIcons from "lucide-react";
 import { toast } from "react-toastify";
-import apiClientSafe from "@/lib/apiClientSafe";
+import { api } from "@/lib/api";
 
 const { PhoneOff, Mic, MicOff, Video, VideoOff, Clock, User } = LucideIcons as any;
 
@@ -38,7 +38,7 @@ export default function ExpertVideoCallPage() {
             console.log('[ExpertVideo] 🚀 Starting video call for sessionId:', sessionId);
 
             console.log('[ExpertVideo] 📡 Calling /call/accept...');
-            const [data, error] = await apiClientSafe.post<any>('/call/accept', { sessionId: parseInt(sessionId) });
+            const [data, error] = await api.post<any>('/call/accept', { sessionId: parseInt(sessionId) });
             
             if (error) {
                 console.error('[ExpertVideo] ❌ Error:', error);
@@ -187,7 +187,7 @@ export default function ExpertVideoCallPage() {
     };
 
     const handleEndCall = async () => {
-        const [_, error] = await apiClientSafe.post(`/call/end`, { sessionId: parseInt(sessionId) });
+        const [_, error] = await api.post(`/call/end`, { sessionId: parseInt(sessionId) });
         if (error) {
             console.error('[ExpertVideo] Failed to end call on backend', error);
         }

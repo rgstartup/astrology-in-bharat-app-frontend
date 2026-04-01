@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { getApiUrl } from "@/utils/api-config";
 import NextImage from "next/image";
 import * as LucideIcons from "lucide-react";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -29,7 +28,6 @@ interface AstrologerData {
 
 
 function CallPrepContent() {
-    const API_BASE_URL = getApiUrl();
     const params = useParams();
     const router = useRouter();
     const searchParams = useSearchParams();

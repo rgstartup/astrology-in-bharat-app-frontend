@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import apiClientSafe from "@/lib/apiClientSafe";
 import { toast } from "react-toastify";
 import { astrologerVerifyEmailAction } from "@/src/actions/auth";
 import { useAuthStore } from "@/store/useAuthStore";

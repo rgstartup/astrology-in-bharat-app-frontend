@@ -2,11 +2,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import safeFetch from "@packages/safe-fetch/safeFetch";
+import { api } from "@/lib/api";
 import { SkeletonCard } from "../../features/astrologers/SkeletonCard";
 import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
 
-import { getBasePath, getApiUrl } from "@/utils/api-config";
 import { useLanguageStore } from "../../../store/languageStore";
 import { homeTranslations } from "../../../lib/translations/home";
 
@@ -76,8 +75,8 @@ const OurAstrologer = () => {
     const fetchAstrologers = useCallback(async (currentOffset: number, isLoadMore: boolean = false, isSilent: boolean = false) => {
         try {
             if (!isSilent) setLoading(true);
-            const [responseData, fetchErr] = await safeFetch<{ data: ExpertProfile[]; pagination: PaginationInfo }>(
-                `${getApiUrl()}/expert/list?${new URLSearchParams(Object.entries({
+            const [responseData, fetchErr] = await api.get<any>(
+                `/expert/list?${new URLSearchParams(Object.entries({
                     limit: String(limit),
                     offset: String(currentOffset),
                     ...(debouncedSearch && { q: debouncedSearch }),
@@ -97,7 +96,7 @@ const OurAstrologer = () => {
             const getImageUrl = (path?: string) => {
                 if (!path) return "/images/dummy-astrologer.jpg";
                 if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
-                const baseUrl = getBasePath();
+                const baseUrl = "http://localhost:6543/api/v1";
                 return `${baseUrl}/uploads/${path}`;
             };
 
@@ -458,5 +457,3 @@ const OurAstrologer = () => {
 };
 
 export default OurAstrologer;
-
-

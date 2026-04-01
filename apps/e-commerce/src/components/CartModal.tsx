@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { loadRazorpay } from "@/lib/razorpay";
 import { useRouter } from "next/navigation";
-import { useClientAuth, apiClientSafe } from "@repo/ui";
+import { useClientAuth, api } from "@repo/ui";
 
 const CartModal = () => {
   const {
@@ -46,7 +46,7 @@ const CartModal = () => {
         return;
       }
 
-      const [res, error] = await apiClientSafe.post<any>("/orders", {
+      const [res, error] = await api.post<any>("/orders", {
         payment_method: "wallet",
         shipping_address: shippingAddress,
       });
@@ -94,7 +94,7 @@ const CartModal = () => {
       image: "/images/web-logo.png",
       handler: async function (response: any) {
         // In a real app, we'd verify payment and create/update order on backend
-        const [_, error] = await apiClientSafe.post("/orders", {
+        const [_, error] = await api.post("/orders", {
           payment_method: "razorpay",
           shipping_address: shippingAddress,
           razorpay_payment_id: response.razorpay_payment_id

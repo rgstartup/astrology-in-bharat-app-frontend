@@ -1,4 +1,4 @@
-import apiClientSafe from '@/lib/fetch-handler';
+import { api } from '@/lib/api';
 
 export interface CalendarDay {
   date: string;       // ISO format: YYYY-MM-DD
@@ -38,7 +38,7 @@ export const getMonthlyCalendar = async (
     });
     if (locationId) query.set('locationId', locationId);
 
-    const [result, error] = await apiClientSafe.get<any>(`/calendar/monthly?${query.toString()}`, { cache: 'no-store' } as any);
+    const [result, error] = await api.get<any>(`/calendar/monthly?${query.toString()}`, { cache: 'no-store' } as any);
 
     if (error) throw new Error(error.message);
 
@@ -57,7 +57,7 @@ export const getDailyPanchang = async (
 ): Promise<{ success: boolean; data: PanchangData | null; error?: string }> => {
   try {
     const query = new URLSearchParams({ date, lat, lon, lang });
-    const [result, error] = await apiClientSafe.get<any>(`/calendar/panchang/daily?${query.toString()}`, { cache: 'no-store' } as any);
+    const [result, error] = await api.get<any>(`/calendar/panchang/daily?${query.toString()}`, { cache: 'no-store' } as any);
 
     if (error) throw new Error(error.message);
 
@@ -74,7 +74,7 @@ export const getYearlyFestivals = async (
 ): Promise<{ success: boolean; data: FestivalItem[]; error?: string }> => {
   try {
     const query = new URLSearchParams({ year: year.toString(), lang });
-    const [result, error] = await apiClientSafe.get<any>(`/calendar/festivals?${query.toString()}`, { cache: 'no-store' } as any);
+    const [result, error] = await api.get<any>(`/calendar/festivals?${query.toString()}`, { cache: 'no-store' } as any);
 
     if (error) throw new Error(error.message);
 

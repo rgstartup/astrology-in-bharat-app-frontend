@@ -93,7 +93,7 @@ export async function proxy(request: NextRequest) {
   }
 
   try {
-    const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+    const refreshRes = await fetch("http://localhost:6543/api/v1/auth/refresh", {
       method: "POST",
       cache: "no-store",
       credentials: "include",

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import apiClientSafe from '@/lib/apiClientSafe';
+import { api } from '@/lib/api';
 import { astrologerLogoutAction } from '@/src/actions/auth';
 
 interface User {
@@ -31,7 +31,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({ isAuthenticated: true, loading: false });
 
         // Fetch full profile
-        const [res, error] = await apiClientSafe.get<any>('/expert');
+        const [res, error] = await api.get<any>('/expert');
         
         if (error) {
             console.error("Error fetching expert profile after login:", error);
@@ -72,7 +72,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         console.log("[AuthStore] Refreshing auth...");
         set({ loading: true });
         
-        const [res, error] = await apiClientSafe.get<any>('/expert');
+        const [res, error] = await api.get<any>('/expert');
         
         if (error) {
             const status = error.status;

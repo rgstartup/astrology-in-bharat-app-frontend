@@ -1,5 +1,6 @@
-import apiClientSafe, { SafeFetchResponse } from "../lib/fetch-handler";
+import { api } from "../lib/api";
 import { API_ROUTES } from "../lib/api-routes";
+import { ApiError } from "@repo/safe-fetch";
 
 export interface ClientUser {
     id: number;
@@ -13,20 +14,20 @@ export interface ClientUser {
 }
 
 export const AuthService = {
-    logout: async (): Promise<SafeFetchResponse<any>> => {
-        return await apiClientSafe.post(API_ROUTES.AUTH.LOGOUT);
+    logout: async (): Promise<[any | null, ApiError | null]> => {
+        return await api.post(API_ROUTES.AUTH.LOGOUT);
     },
 
-    fetchProfile: async (serverHeaders?: any): Promise<SafeFetchResponse<any>> => {
-        return await apiClientSafe.get(API_ROUTES.AUTH.ME, {
+    fetchProfile: async (serverHeaders?: any): Promise<[any | null, ApiError | null]> => {
+        return await api.get(API_ROUTES.AUTH.ME, {
             headers: {
                 ...serverHeaders,
             }
         });
     },
 
-    fetchBalance: async (): Promise<SafeFetchResponse<any>> => {
-        return await apiClientSafe.get(API_ROUTES.WALLET.BALANCE);
+    fetchBalance: async (): Promise<[any | null, ApiError | null]> => {
+        return await api.get(API_ROUTES.WALLET.BALANCE);
     }
 };
 

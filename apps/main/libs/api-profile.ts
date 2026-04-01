@@ -1,4 +1,5 @@
-import http, { SafeFetchResponse } from "../lib/fetch-handler";
+import { api } from "../lib/api";
+import { ApiError } from "@repo/safe-fetch";
 import { ClientProfileData, AddressDto, SupportSettings, CreateDisputeDto } from "../lib/types";
 
 export type { SupportSettings, CreateDisputeDto, ClientProfileData, AddressDto };
@@ -7,79 +8,79 @@ export type { SupportSettings, CreateDisputeDto, ClientProfileData, AddressDto }
  * All functions now return [data, error] tuples instead of throwing.
  */
 
-export const getClientProfile = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/client/profile');
+export const getClientProfile = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/client/profile');
 };
 
-export const updateClientProfile = async (data: Partial<ClientProfileData>): Promise<SafeFetchResponse<any>> => {
-    return await http.patch('/client/profile', data);
+export const updateClientProfile = async (data: Partial<ClientProfileData>): Promise<[any | null, ApiError | null]> => {
+    return await api.patch('/client/profile', data);
 };
 
-export const createClientProfile = async (data: Partial<ClientProfileData>): Promise<SafeFetchResponse<any>> => {
-    return await http.post('/client/profile', data);
+export const createClientProfile = async (data: Partial<ClientProfileData>): Promise<[any | null, ApiError | null]> => {
+    return await api.post('/client/profile', data);
 };
 
-export const uploadClientDocument = async (file: File): Promise<SafeFetchResponse<{ url: string; message: string }>> => {
+export const uploadClientDocument = async (file: File): Promise<[{ url: string; message: string } | null, ApiError | null]> => {
     const formData = new FormData();
     formData.append('file', file);
-    return await http.post('/client/profile/upload-document', formData);
+    return await api.post('/client/profile/upload-document', formData);
 };
 
-export const getActiveChatSessions = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/chat/sessions/pending');
+export const getActiveChatSessions = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/chat/sessions/pending');
 };
 
-export const getPendingChatSessions = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/chat/sessions/pending');
+export const getPendingChatSessions = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/chat/sessions/pending');
 };
 
-export const endChatSession = async (sessionId: number): Promise<SafeFetchResponse<any>> => {
-    return await http.post(`/chat/end/${sessionId}`);
+export const endChatSession = async (sessionId: number): Promise<[any | null, ApiError | null]> => {
+    return await api.post(`/chat/end/${sessionId}`);
 };
 
-export const getAllChatSessions = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/chat/sessions/my-sessions');
+export const getAllChatSessions = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/chat/sessions/my-sessions');
 };
 
-export const getChatHistory = async (sessionId: number): Promise<SafeFetchResponse<any>> => {
-    return await http.get(`/chat/history/${sessionId}`);
+export const getChatHistory = async (sessionId: number): Promise<[any | null, ApiError | null]> => {
+    return await api.get(`/chat/history/${sessionId}`);
 };
 
-export const getMyOrders = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/orders/my-orders');
+export const getMyOrders = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/orders/my-orders');
 };
 
-export const getWalletTransactions = async (params?: { purpose?: string, page?: number, limit?: number }): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/wallet/transactions', { params } as any);
+export const getWalletTransactions = async (params?: { purpose?: string, page?: number, limit?: number }): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/wallet/transactions', { params } as any);
 };
 
-export const getNotifications = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/notifications');
+export const getNotifications = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/notifications');
 };
 
-export const getUnreadCount = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/notifications/unread-count');
+export const getUnreadCount = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/notifications/unread-count');
 };
 
-export const markNotificationAsRead = async (id: number): Promise<SafeFetchResponse<any>> => {
-    return await http.patch(`/notifications/${id}/read`);
+export const markNotificationAsRead = async (id: number): Promise<[any | null, ApiError | null]> => {
+    return await api.patch(`/notifications/${id}/read`);
 };
 
-export const deleteNotification = async (id: number): Promise<SafeFetchResponse<any>> => {
-    return await http.del(`/notifications/${id}`);
+export const deleteNotification = async (id: number): Promise<[any | null, ApiError | null]> => {
+    return await api.delete(`/notifications/${id}`);
 };
 
-export const clearAllNotifications = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.del('/notifications/all');
+export const clearAllNotifications = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.delete('/notifications/all');
 };
 
 // Rewards & Coupons
-export const getMyRewards = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/coupons/my-rewards');
+export const getMyRewards = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/coupons/my-rewards');
 };
 
-export const applyCoupon = async (code: string, amount: number, serviceType: string): Promise<SafeFetchResponse<any>> => {
-    return await http.post('/coupons/apply', {
+export const applyCoupon = async (code: string, amount: number, serviceType: string): Promise<[any | null, ApiError | null]> => {
+    return await api.post('/coupons/apply', {
         code,
         couponCode: code,
         amount,
@@ -88,8 +89,8 @@ export const applyCoupon = async (code: string, amount: number, serviceType: str
     });
 };
 
-export const getSupportSettings = async (): Promise<SafeFetchResponse<SupportSettings>> => {
-    const [data, error] = await http.get('/settings/support');
+export const getSupportSettings = async (): Promise<[SupportSettings | null, ApiError | null]> => {
+    const [data, error] = await api.get('/settings/support');
     
     // Fallback if backend API is not yet available
     if (error || !data) {
@@ -104,38 +105,38 @@ export const getSupportSettings = async (): Promise<SafeFetchResponse<SupportSet
 };
 
 // Disputes / Support Tickets
-export const createDispute = async (data: CreateDisputeDto): Promise<SafeFetchResponse<any>> => {
-    return await http.post('/support/disputes', data);
+export const createDispute = async (data: CreateDisputeDto): Promise<[any | null, ApiError | null]> => {
+    return await api.post('/support/disputes', data);
 };
 
-export const getMyDisputes = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/support/disputes');
+export const getMyDisputes = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/support/disputes');
 };
 
-export const getDisputeById = async (disputeId: number): Promise<SafeFetchResponse<any>> => {
-    return await http.get(`/support/disputes/${disputeId}`);
+export const getDisputeById = async (disputeId: number): Promise<[any | null, ApiError | null]> => {
+    return await api.get(`/support/disputes/${disputeId}`);
 };
 
-export const getDisputeMessages = async (disputeId: number): Promise<SafeFetchResponse<any>> => {
-    return await http.get(`/support/disputes/${disputeId}/messages`);
+export const getDisputeMessages = async (disputeId: number): Promise<[any | null, ApiError | null]> => {
+    return await api.get(`/support/disputes/${disputeId}/messages`);
 };
 
-export const sendDisputeMessage = async (disputeId: number, data: { message?: string, attachmentUrl?: string, attachmentType?: string }): Promise<SafeFetchResponse<any>> => {
-    return await http.post(`/support/disputes/${disputeId}/messages`, data);
+export const sendDisputeMessage = async (disputeId: number, data: { message?: string, attachmentUrl?: string, attachmentType?: string }): Promise<[any | null, ApiError | null]> => {
+    return await api.post(`/support/disputes/${disputeId}/messages`, data);
 };
 
-export const markDisputeMessagesRead = async (disputeId: number): Promise<SafeFetchResponse<any>> => {
-    return await http.patch(`/support/disputes/${disputeId}/messages/read`);
+export const markDisputeMessagesRead = async (disputeId: number): Promise<[any | null, ApiError | null]> => {
+    return await api.patch(`/support/disputes/${disputeId}/messages/read`);
 };
 
 // Puja Bookings
-export const getMyPujaAppointments = async (): Promise<SafeFetchResponse<any>> => {
-    return await http.get('/puja-appointments/user');
+export const getMyPujaAppointments = async (): Promise<[any | null, ApiError | null]> => {
+    return await api.get('/puja-appointments/user');
 };
 
-export const updatePujaAppointmentStatus = async (id: number, data: any): Promise<SafeFetchResponse<any>> => {
-    return await http.patch(`/puja-appointments/${id}/status`, data);
+export const updatePujaAppointmentStatus = async (id: number, data: any): Promise<[any | null, ApiError | null]> => {
+    return await api.patch(`/puja-appointments/${id}/status`, data);
 };
 
 // For backward compatibility during migration, export http as default
-export default http;
+export default api;

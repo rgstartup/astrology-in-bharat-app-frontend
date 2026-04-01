@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as LucideIcons from "lucide-react";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const { MessageSquare, X } = LucideIcons as any;

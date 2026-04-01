@@ -2,16 +2,15 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import safeFetch from "@packages/safe-fetch/safeFetch";
 import { toast } from "react-toastify";
-import { getApiUrl, getBasePath } from "@/utils/api-config";
+import { api } from "@/lib/api";
 import { socket } from "@/libs/socket";
 import { ExpertProfile, ClientExpertProfile } from "@/lib/types";
 
 const getImageUrl = (path?: string) => {
   if (!path) return "/images/dummy-astrologer.jpg";
   if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("/")) return path;
-  return `${getBasePath()}/uploads/${path}`;
+  return `http://localhost:6543/uploads/${path}`;
 };
 
 const mapExpert = (item: any): ClientExpertProfile => {
@@ -185,7 +184,7 @@ export const useAstrologerListLogic = (
           ...(filterState.onlyOnline && { online: "true" }),
         };
         const query = new URLSearchParams(params).toString();
-        const [responseData, fetchErr] = await safeFetch<any>(`${getApiUrl()}/expert/list?${query}`);
+        const [responseData, fetchErr] = await api.get<any>(`/expert/list?${query}`);
         if (fetchErr || !responseData) throw fetchErr;
         setAstrologers((prev) => [...prev, ...responseData.data.map(mapExpert)]);
         setHasMore(responseData.pagination.hasMore);

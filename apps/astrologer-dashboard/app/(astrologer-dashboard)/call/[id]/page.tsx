@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { callSocket } from "@/lib/socket";
-import apiClientSafe from "@/lib/apiClientSafe";
+import { api } from "@/lib/api";
 import * as LucideIcons from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -69,7 +69,7 @@ export default function ExpertCallRoom() {
 
             // Step 1: Accept call via REST API → get Twilio token for expert
             console.log('[ExpertCallRoom] 📡 Calling /call/accept API...');
-            const [data, error] = await apiClientSafe.post<any>('/call/accept', {
+            const [data, error] = await api.post<any>('/call/accept', {
                 sessionId: parseInt(sessionId),
             });
 

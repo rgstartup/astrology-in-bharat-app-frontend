@@ -20,6 +20,9 @@
       ],
       "@packages/*": [
         "../../packages/*"
+      ],
+      "@repo/safe-fetch": [
+        "../../packages/safe-fetch/index.ts"
       ]
     },
     "plugins": [

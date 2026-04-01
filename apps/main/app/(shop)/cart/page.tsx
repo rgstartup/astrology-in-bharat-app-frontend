@@ -6,7 +6,7 @@ import ProductCarousel from "@/components/features/shop/ProductCarousel";
 import { useCartStore } from "@/store/useCartStore";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
-import safeFetch from "@packages/safe-fetch/safeFetch";
+import { api } from "@/lib/api";
 
 const CartPage: React.FC = () => {
   const router = useRouter();
@@ -28,8 +28,7 @@ const CartPage: React.FC = () => {
     }
 
     const fetchProducts = async () => {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
-        const [data, fetchError] = await safeFetch<any>(`${baseUrl}/products`);
+        const [data, fetchError] = await api.get<any>(`/products`);
         
         if (!fetchError && data) {
           const products = Array.isArray(data) ? data : data.data || [];
@@ -261,5 +260,3 @@ const CartPage: React.FC = () => {
 };
 
 export default CartPage;
-
-

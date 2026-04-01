@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import safeFetch from "@packages/safe-fetch/safeFetch";
-import { API_CONFIG } from "@/lib/api-config";
+import { api } from "@/lib/api";
 import HeroComponent from "./hero.component";
 import MatchingForm from "./matching-form.component";
 import ResultComponent from "./result.component";
@@ -92,8 +91,8 @@ const KundaliMatchingByNamePage = () => {
         girl_lon: girlDetails.lon,
       }).toString();
 
-      const [rawData, fetchErr] = await safeFetch<any>(
-        `${API_CONFIG.ASTROLOGY.KUNDLI_MATCHING.url}?${query}`,
+      const [rawData, fetchErr] = await api.get<any>(
+        `/astrology/matching/advanced?${query}`,
       );
 
       if (fetchErr) {

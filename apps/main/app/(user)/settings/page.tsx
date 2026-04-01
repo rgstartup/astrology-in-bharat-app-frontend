@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import http from "../../../lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import SettingsForm, { type ProfileData } from "./SettingsForm";
 import { PATHS } from "@repo/routes";
 

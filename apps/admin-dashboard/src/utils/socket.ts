@@ -1,8 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 
-import { getBasePath } from './api-config';
-
-const API_URL = getBasePath();
+const API_URL = "http://localhost:6543";
 
 // Notification Socket
 let notificationSocket: Socket | null = null;
@@ -52,6 +50,3 @@ export const connectAdminSocket = () => {
     }
     socket.emit('register_admin');
 };
-
-
-

@@ -7,7 +7,7 @@ import AppointmentList from "./AppointmentList";
 import AppointmentCalendar from "./AppointmentCalendar";
 import RescheduleModal from "./RescheduleModal";
 import { Appointment } from "./types";
-import apiClientSafe from "@/lib/apiClientSafe";
+import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { chatSocket, callSocket } from "@/lib/socket";
 import { getReviews } from "@/lib/reviews";
@@ -54,12 +54,12 @@ export default function AppointmentsPage() {
         reviewsRes,
         statsRes
       ] = await Promise.all([
-        apiClientSafe.get<any>("/chat/sessions/appointments/pending"),
-        apiClientSafe.get<any>("/chat/sessions/appointments/completed"),
-        apiClientSafe.get<any>("/call/sessions/appointments/pending"),
-        apiClientSafe.get<any>("/call/sessions/appointments/completed"),
-        apiClientSafe.get<any>("/puja-appointments/expert"),
-        expertUser?.profileId ? getReviews(1, 50) : Promise.resolve([null, null] as [any, any]),
+        api.get<any>("/chat/sessions/appointments/pending"),
+        api.get<any>("/chat/sessions/appointments/completed"),
+        api.get<any>("/call/sessions/appointments/pending"),
+        api.get<any>("/call/sessions/appointments/completed"),
+        api.get<any>("/puja-appointments/expert"),
+        expertUser?.profileId ? getReviews(expertUser.profileId, 1, 50) : Promise.resolve([null, null] as [any, any]),
         getDashboardStats('today')
       ]);
 
@@ -123,7 +123,7 @@ export default function AppointmentsPage() {
         // Verification logic (placeholder for calls if needed, mostly for chat status sync)
         if (source === 'chat' && currentStatus === 'active') {
           try {
-            const [verificationRes, verificationError] = await apiClientSafe.get<any>(`/chat/session/${session.id}?_t=${Date.now()}`);
+            const [verificationRes, verificationError] = await api.get<any>(`/chat/session/${session.id}?_t=${Date.now()}`);
             const verifiedPayload = verificationRes?.data ?? verificationRes;
             if (verifiedPayload && verifiedPayload.status) {
               currentStatus = verifiedPayload.status;

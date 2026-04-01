@@ -5,7 +5,7 @@ import NextImage from "next/image";
 import NextLink from "next/link";
 import { toast } from "react-toastify";
 import { registerAction } from "@/actions/auth";
-import { API_CONFIG } from "@/lib/api-config";
+import { API_ROUTES as API_CONFIG } from "@/lib/api-routes";
 import { useLanguageStore } from "@/store/languageStore";
 import { authTranslations } from "@/lib/translations/auth";
 import { VerificationPopup } from "@repo/ui";
@@ -28,6 +28,7 @@ const SignUpForm: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showVerification, setShowVerification] = useState(false);
     const [registeredEmail, setRegisteredEmail] = useState("");
+    const cleanApiUrl = "http://localhost:6543/api/v1";
     const { lang } = useLanguageStore();
     const t = authTranslations[lang as keyof typeof authTranslations] || authTranslations.en;
 
@@ -67,7 +68,7 @@ const SignUpForm: React.FC = () => {
     const handleGoogleLogin = () => {
         // Redirect to backend Google OAuth — browser handles cookie automatically
         const redirectUri = `${window.location.origin}/profile`;
-        const googleLoginUrl = `${API_CONFIG.AUTH.GOOGLE_LOGIN.url}?role=client&redirect_uri=${encodeURIComponent(redirectUri)}`;
+        const googleLoginUrl = `http://localhost:6543/api/v1/auth/google/login?role=client&redirect_uri=${encodeURIComponent(redirectUri)}`;
         window.location.href = googleLoginUrl;
     };
 

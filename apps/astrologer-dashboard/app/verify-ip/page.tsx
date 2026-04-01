@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import apiClientSafe from "@/lib/apiClientSafe";
+import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-toastify";
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
@@ -26,7 +26,7 @@ const VerifyIpContent = () => {
         }
 
         const verify = async () => {
-            const [data, error] = await apiClientSafe.get<any>(`/auth/email/verify-ip?token=${token}`);
+            const [data, error] = await api.get<any>(`/auth/email/verify-ip?token=${token}`);
 
             if (error) {
                 console.error("IP verification error:", error);

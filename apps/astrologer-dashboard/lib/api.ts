@@ -1,19 +1,19 @@
-import { createSafeFetchInstance, ApiError } from "@repo/safe-fetch";
+import { createSafeFetchInstance, ApiError } from '@repo/safe-fetch';
 
 export { ApiError };
 
 /**
- * 🚀 Simplified Admin API Client (Sushant Sir's Standard)
+ * 🚀 Standardized API Client (Astrologer Dashboard)
  * - Base URL: http://localhost:6543/api/v1 (Hardcoded for simplicity)
  * - Headers: JSON by default
  * - Credentials: included by default in safeFetch
  */
 export const api = createSafeFetchInstance({
-  baseUrl: "http://localhost:6543/api/v1",
+  baseUrl: 'http://localhost:6543/api/v1',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
-  timeoutMs: 30_000,
+  timeoutMs: 10_000,
 });
 
 export default api;

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Search, CalendarDays, Loader2 } from "lucide-react";
 import { cn } from "@/utils/cn";
-import apiClientSafe from "@/lib/apiClientSafe";
+import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { format } from "date-fns";
 
@@ -55,10 +55,10 @@ export const UpcomingAppointments: React.FC = () => {
 
         const [chatPendingRes, chatCompletedRes, callPendingRes, callCompletedRes] =
           await Promise.allSettled([
-            apiClientSafe.get("/chat/sessions/appointments/pending"),
-            apiClientSafe.get("/chat/sessions/appointments/completed"),
-            apiClientSafe.get("/call/sessions/appointments/pending"),
-            apiClientSafe.get("/call/sessions/appointments/completed"),
+            api.get("/chat/sessions/appointments/pending"),
+            api.get("/chat/sessions/appointments/completed"),
+            api.get("/call/sessions/appointments/pending"),
+            api.get("/call/sessions/appointments/completed"),
           ]);
 
         const getSessions = (res: PromiseSettledResult<any>) => {

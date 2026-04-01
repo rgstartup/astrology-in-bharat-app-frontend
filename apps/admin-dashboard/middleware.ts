@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import safeFetch from '@packages/safe-fetch/safeFetch';
+import safeFetch from '@repo/safe-fetch';
 
 // Simple JWT parser for proxy
 function parseJwt(token: string) {
@@ -20,10 +20,7 @@ function parseJwt(token: string) {
     }
 }
 
-import { getBasePath, getApiUrl } from '@/src/utils/api-config';
-
-const API_BASE_URL = getApiUrl();
-const cleanApiBase = getBasePath();
+const API_BASE_URL = "http://localhost:6543/api/v1";
 
 export async function middleware(request: NextRequest) {
     const { pathname, searchParams } = request.nextUrl;
@@ -55,7 +52,7 @@ export async function middleware(request: NextRequest) {
 
     // 3. Logic for Refreshing Token
     if (shouldRefresh && refreshToken) {
-        const [data, error] = await safeFetch<any>(`${cleanApiBase}/api/v1/auth/refresh`, {
+        const [data, error] = await safeFetch<any>(`${API_BASE_URL}/auth/refresh`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

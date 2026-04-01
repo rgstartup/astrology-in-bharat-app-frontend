@@ -5,11 +5,9 @@ import { Lock, User, Eye, EyeOff } from "lucide-react";
 import NextImage from "next/image";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import apiClientSafe from "@/lib/apiClientSafe";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Button } from "@repo/ui";
 import { toast } from "react-toastify";
-// dummy commit 
 
 const Image = NextImage as any;
 const Link = NextLink as any;
@@ -245,5 +243,3 @@ const LoginPage: React.FC = () => {
 }
 
 export default LoginPage;
-
-

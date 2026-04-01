@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getApiUrl } from "@/utils/api-config";
 import * as LucideIcons from "lucide-react";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import { getClientProfile } from "@/libs/api-profile";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -19,7 +18,6 @@ import SecurityTipsModal from "./security-modal.component";
 const { ChevronLeft } = LucideIcons as any;
 
 export default function ConsultationPrep() {
-  const API_BASE_URL = getApiUrl();
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
@@ -119,7 +117,7 @@ export default function ConsultationPrep() {
       }
     };
     fetchProfile();
-  }, [id, isClientAuthenticated, API_BASE_URL]);
+  }, [id, isClientAuthenticated]);
 
   const handleStartConsultation = async () => {
     if (!isClientAuthenticated) {

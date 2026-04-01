@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { getBasePath } from "@/utils/api-config";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import { getClientProfile, applyCoupon } from "@/libs/api-profile";
 import { loadRazorpay } from "@/libs/razorpay";
 import { useAuthStore } from "@/store/useAuthStore";

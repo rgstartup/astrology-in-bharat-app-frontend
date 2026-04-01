@@ -1,6 +1,6 @@
 "use client";
 
-import apiClientSafe from "@/lib/fetch-handler";
+import { api } from "@/lib/api";
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -25,7 +25,7 @@ const LiveDarshanPage = () => {
             try {
                 // Use the Next.js proxy rewrite (/api/v1 → backend) so the request
                 // stays on 'self' origin and doesn't violate CSP.
-                const [result, fetchError] = await apiClientSafe.get<any>(`/live-darshan`);
+                const [result, fetchError] = await api.get<any>(`/live-darshan`);
 
                 if (fetchError) {
                     throw new Error('Network response from backend was not ok');

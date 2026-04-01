@@ -5,7 +5,7 @@ import ClientHeader from "./ClientHeader";
 import ClientTable from "./ClientTable";
 import ClientMobileList from "./ClientMobileList";
 import { Client, SortConfig, SortKey } from "./types";
-import apiClientSafe from "@/lib/apiClientSafe";
+import { api } from "@/lib/api";
 import { toast } from "react-toastify";
 import * as LucideIcons from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -54,8 +54,8 @@ export default function ClientsPage() {
       try {
         setLoading(true);
         const [sessionsResult, reviewsResult] = await Promise.all([
-          apiClientSafe.get<any>('/chat/sessions/all'),
-          expertUser?.profileId ? getReviews(1, 50) : Promise.resolve([null, null] as [any, any])
+          api.get<any>('/chat/sessions/all'),
+          expertUser?.profileId ? getReviews(expertUser.profileId, 1, 50) : Promise.resolve([null, null] as [any, any])
         ]);
 
         const [sessionsData, sessionsError] = sessionsResult;
@@ -167,7 +167,7 @@ export default function ClientsPage() {
     setLoadingChat(true);
 
     try {
-      const [res, error] = await apiClientSafe.get<any>(`/chat/history/${session.id}`);
+      const [res, error] = await api.get<any>(`/chat/history/${session.id}`);
       if (error) throw error;
       const messages = (res as any)?.data || res || [];
       setChatMessages(messages);

@@ -7,14 +7,12 @@ import {
   SwiperSlide as SwiperSlideComp,
 } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import safeFetch from "@packages/safe-fetch/safeFetch";
+import { api } from "@/lib/api";
 import { ProductCard } from "./ProductCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Swiper = SwiperComp as any;
 const SwiperSlide = SwiperSlideComp as any;
-
-import { getApiUrl } from "@/utils/api-config";
 
 const ProductsCarousel = () => {
   const [productList, setProductList] = useState<any[]>([]);
@@ -23,7 +21,7 @@ const ProductsCarousel = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const [data, err] = await safeFetch<any>(`${getApiUrl()}/products`);
+        const [data, err] = await api.get<any>(`/products`);
         if (err || !data) {
           console.error("Error fetching products for carousel:", err);
         } else {

@@ -1,6 +1,5 @@
 import { Product } from "@/lib/types";
-import { getApiUrl } from "@/utils/api-config";
-import apiClientSafe from "@/lib/fetch-handler";
+import { api } from "@/lib/api";
 
 
 const normalizeProduct = (raw: any): Product => {
@@ -25,7 +24,7 @@ const normalizeProduct = (raw: any): Product => {
 
 export const getProducts = async (): Promise<Product[]> => {
     try {
-        const [data, error] = await apiClientSafe.get("/products", {} as any);
+        const [data, error] = await api.get("/products", {} as any);
 
         if (error) {
             console.error("Failed to fetch products:", error);

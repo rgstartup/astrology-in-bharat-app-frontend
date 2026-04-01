@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import safeFetch from "@packages/safe-fetch/safeFetch";
-import { API_CONFIG } from "@/lib/api-config";
+import { api } from "@/lib/api";
 
 import HeroSection from "./hero.component";
 import InputForm from "./input-form.component";
@@ -66,8 +65,8 @@ const MangalDoshaPage = () => {
         lon: details.lon,
       }).toString();
 
-      const [rawData, fetchErr] = await safeFetch<any>(
-        `${API_CONFIG.ASTROLOGY.MANGAL_DOSHA.url}?${query}`,
+      const [rawData, fetchErr] = await api.get<any>(
+        `/astrology/mangal-dosha?${query}`,
       );
 
       if (fetchErr || !rawData) {

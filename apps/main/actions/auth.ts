@@ -1,8 +1,8 @@
 "use server";
 
 import { cookies } from "next/headers";
-import safeFetch from "@packages/safe-fetch/safeFetch";
-import { API_CONFIG } from "@/lib/api-config";
+import { api } from "@/lib/api";
+import { API_ROUTES } from "@/lib/api-routes";
 
 import {
   LoginFormData,
@@ -12,15 +12,11 @@ import {
 } from "@/lib/types";
 
 // ─────────────────────────────────────────────────────────
-// LOGIN — Calls backend via safeFetch (Server-Side Only)
+// LOGIN — Calls backend via api (Server-Side Only)
 // Credentials NEVER appear in the browser Network tab.
 // ─────────────────────────────────────────────────────────
 export async function loginAction(formData: LoginFormData): Promise<AuthActionResponse> {
-  const [data, error] = await safeFetch<AuthResponse>(API_CONFIG.AUTH.LOGIN.url, {
-    method: API_CONFIG.AUTH.LOGIN.method,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-  });
+  const [data, error] = await api.post<AuthResponse>(API_ROUTES.AUTH.LOGIN, formData);
 
   if (error) {
     return {
@@ -68,16 +64,12 @@ export async function logoutAction(): Promise<AuthActionResponse> {
 }
 
 // ─────────────────────────────────────────────────────────
-// REGISTER — Calls backend via safeFetch (Server-Side Only)
+// REGISTER — Calls backend via api (Server-Side Only)
 // ─────────────────────────────────────────────────────────
 export async function registerAction(registerData: RegisterFormData): Promise<AuthActionResponse> {
-  const [data, error] = await safeFetch<AuthResponse>(
-    API_CONFIG.AUTH.REGISTER.url,
-    {
-      method: API_CONFIG.AUTH.REGISTER.method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(registerData),
-    },
+  const [data, error] = await api.post<AuthResponse>(
+    API_ROUTES.AUTH.REGISTER,
+    registerData,
   );
 
   if (error) {
@@ -100,12 +92,8 @@ export async function registerAction(registerData: RegisterFormData): Promise<Au
 // VERIFY EMAIL — Calls backend, sets cookies on success
 // ─────────────────────────────────────────────────────────
 export async function verifyEmailAction(token: string): Promise<AuthActionResponse> {
-  const [data, error] = await safeFetch<AuthResponse>(
-    `${API_CONFIG.AUTH.VERIFY_EMAIL.url}?token=${encodeURIComponent(token)}`,
-    {
-      method: API_CONFIG.AUTH.VERIFY_EMAIL.method,
-      headers: { "Content-Type": "application/json" },
-    },
+  const [data, error] = await api.get<AuthResponse>(
+    `${API_ROUTES.AUTH.VERIFY_EMAIL}?token=${encodeURIComponent(token)}`,
   );
 
   if (error) {
@@ -142,4 +130,3 @@ export async function verifyEmailAction(token: string): Promise<AuthActionRespon
 
   return { success: true, user: data?.user, message: data?.message };
 }
-

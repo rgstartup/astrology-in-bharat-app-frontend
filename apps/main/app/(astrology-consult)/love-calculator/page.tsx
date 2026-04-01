@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useRef } from "react";
 
-import safeFetch from "@packages/safe-fetch/safeFetch";
+import { api } from "@/lib/api";
 import { toast } from "react-toastify";
 import { useLanguageStore } from "@/store/languageStore";
 import { loveCalculatorTranslations } from "@/lib/translations/calculators/love-calculator";
@@ -101,14 +101,11 @@ const LoveCalculatorPage = () => {
     setResult(null);
 
     try {
-      const [data, err] = await safeFetch<any>(
-        "/api/v1/matchmaking/love-calculator",
+      const [data, err] = await api.post<any>(
+        "/matchmaking/love-calculator",
         {
-          method: "POST",
-          body: JSON.stringify({
-            yourName: simpleData.p1Name,
-            partnerName: simpleData.p2Name,
-          }),
+          yourName: simpleData.p1Name,
+          partnerName: simpleData.p2Name,
         },
       );
 
@@ -150,30 +147,27 @@ const LoveCalculatorPage = () => {
     setResult(null);
 
     try {
-      const [data, err] = await safeFetch<any>(
-        "/api/v1/matchmaking/guna-milan",
+      const [data, err] = await api.post<any>(
+        "/matchmaking/guna-milan",
         {
-          method: "POST",
-          body: JSON.stringify({
-            girl: {
-              name: girl.name || "Girl",
-              datetime: `${girl.date}T${girl.time}:00Z`,
-              location: {
-                lat: parseFloat(girl.lat),
-                lon: parseFloat(girl.lon),
-                tz: girl.tz,
-              },
+          girl: {
+            name: girl.name || "Girl",
+            datetime: `${girl.date}T${girl.time}:00Z`,
+            location: {
+              lat: parseFloat(girl.lat),
+              lon: parseFloat(girl.lon),
+              tz: girl.tz,
             },
-            boy: {
-              name: boy.name || "Boy",
-              datetime: `${boy.date}T${boy.time}:00Z`,
-              location: {
-                lat: parseFloat(boy.lat),
-                lon: parseFloat(boy.lon),
-                tz: boy.tz,
-              },
+          },
+          boy: {
+            name: boy.name || "Boy",
+            datetime: `${boy.date}T${boy.time}:00Z`,
+            location: {
+              lat: parseFloat(boy.lat),
+              lon: parseFloat(boy.lon),
+              tz: boy.tz,
             },
-          }),
+          },
         },
       );
 

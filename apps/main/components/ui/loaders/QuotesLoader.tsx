@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { getApiUrl } from "@/utils/api-config";
-import safeFetch from "@packages/safe-fetch/safeFetch";
+import { api } from "@/lib/api";
 
 interface Quote {
   id: number;
@@ -38,7 +37,7 @@ export default function QuotesLoader() {
         return;
       }
 
-      const [data, err] = await safeFetch<Quote[]>(`${getApiUrl()}/quotes`);
+      const [data, err] = await api.get<Quote[]>(`/quotes`);
 
       const quotesData = data ?? [];
       if (!err && Array.isArray(quotesData) && quotesData.length > 0) {
@@ -79,7 +78,7 @@ export default function QuotesLoader() {
       clearTimeout(fadeStart);
       clearTimeout(hide);
     };
-  }, [pathname]);
+  }, [pathname, quotes]);
 
   if (!isVisible) return null;
 
@@ -181,5 +180,3 @@ export default function QuotesLoader() {
     </div>
   );
 }
-
-

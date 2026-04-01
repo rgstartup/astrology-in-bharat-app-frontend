@@ -4,12 +4,10 @@ import NextLink from "next/link";
 const Link = NextLink as any;
 import React, { useState, FormEvent, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getApiUrl } from "@/utils/api-config";
+import { api } from "@/lib/api";
 import { toast } from "react-toastify";
 import { useLanguageStore } from "@/store/languageStore";
 import { authTranslations } from "@/lib/translations/auth";
-
-import safeFetch from "@packages/safe-fetch/safeFetch";
 
 const ResetPasswordContent: React.FC = () => {
     const { lang } = useLanguageStore();
@@ -53,11 +51,8 @@ const ResetPasswordContent: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const API_URL = `${getApiUrl()}/auth/reset/password?token=${token}`;
-            const [data, fetchError] = await safeFetch<any>(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ password }),
+            const [data, fetchError] = await api.post<any>(`/auth/reset/password?token=${token}`, {
+                 password 
             });
 
             if (fetchError) {
@@ -182,5 +177,3 @@ const Page: React.FC = () => {
 };
 
 export default Page;
-
-

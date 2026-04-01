@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import http from "../../../lib/fetch-handler";
+import { api as http } from "@/lib/api";
 
 interface ReportIssueModalProps {
     isOpen: boolean;

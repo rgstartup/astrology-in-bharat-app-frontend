@@ -1,4 +1,4 @@
-import apiClientSafe, { ApiError } from "./apiClientSafe";
+import { api, ApiError } from "./api";
 
 export interface DashboardStats {
     totalChatSessions: number;
@@ -12,10 +12,10 @@ export interface DashboardStats {
 }
 
 export const getDashboardStats = async (type: string = 'monthly'): Promise<[DashboardStats | null, ApiError | null]> => {
-    const [res, error] = await apiClientSafe.get(`expert-dashboard/stats?type=${type}`);
+    const [res, error] = await api.get(`expert-dashboard/stats?type=${type}`);
     if (error) return [null, error];
 
-    // apiClientSafe returns the parsed JSON body directly — try all common backend shapes
+    // api client result returns the data directly
     const data = (res as any)?.data?.data || (res as any)?.data || res;
 
     return [{
@@ -32,8 +32,8 @@ export const getDashboardStats = async (type: string = 'monthly'): Promise<[Dash
 
 export const getRecentAppointments = async (): Promise<[any[] | null, ApiError | null]> => {
     const [pendingRes, completedRes] = await Promise.all([
-        apiClientSafe.get<any>("/chat/sessions/appointments/pending"),
-        apiClientSafe.get<any>("/chat/sessions/appointments/completed")
+        api.get<any>("/chat/sessions/appointments/pending"),
+        api.get<any>("/chat/sessions/appointments/completed")
     ]);
 
     const extractData = (result: [any | null, ApiError | null]) => {
@@ -70,8 +70,3 @@ export const getRecentSessions = async () => {
     }
     return sessions || [];
 };
-
-
-
-
-

@@ -1,14 +1,10 @@
 import React from "react";
 import ProductGrid from "@/components/features/shop/ProductGrid";
-import { getBasePath } from "@/utils/api-config";
-import safeFetch from "@packages/safe-fetch/safeFetch";
-
+import { api } from "@/lib/api";
 import { Product } from "@/lib/types";
 
 async function getProducts(): Promise<Product[]> {
-  // Use getBasePath() to avoid double /api/v1 (NEXT_PUBLIC_API_URL already contains it)
-  const baseUrl = getBasePath();
-  const [data, fetchError] = await safeFetch<any>(`${baseUrl}/api/v1/products`, { cache: "no-store" });
+  const [data, fetchError] = await api.get<any>(`/products`, { cache: "no-store" });
   
   if (fetchError) {
     console.error("Failed to fetch products:", fetchError);
@@ -29,5 +25,3 @@ const ProductPage = async () => {
 };
 
 export default ProductPage;
-
-

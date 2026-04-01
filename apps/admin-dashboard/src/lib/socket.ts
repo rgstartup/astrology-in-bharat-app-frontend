@@ -1,8 +1,6 @@
 import { io, Socket } from "socket.io-client";
 
-import { getBasePath } from "@/src/utils/api-config";
-
-const SOCKET_URL = getBasePath();
+const SOCKET_URL = "http://localhost:6543";
 
 console.log("[Socket] Admin Dashboard connecting to:", SOCKET_URL);
 
@@ -24,6 +22,3 @@ socket.on("connect", () => {
 chatSocket.on("connect", () => {
     console.log("[ChatSocket] ✅ Admin Connected! ID:", chatSocket.id);
 });
-
-
-

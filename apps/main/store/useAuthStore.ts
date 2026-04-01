@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { AuthService, ClientUser } from "../services/auth.service";
-import apiClientSafe from "../lib/fetch-handler";
+import { api } from "../lib/api";
 const authDebug = (...args: unknown[]) => {
     if (process.env.NODE_ENV !== "production") {
         console.log("[AuthDebug][store]", ...args);
@@ -105,7 +105,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         });
 
         // Priority: Try fetching the more detailed client profile first
-        let [res, error] = await apiClientSafe.get<any>('/client/profile');
+        let [res, error] = await api.get<any>('/client/profile');
         if (error) {
             const [profileRes, profileError] = await AuthService.fetchProfile();
             res = profileRes;
@@ -126,7 +126,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         }
 
         // Support both shapes:
-        // 1) direct payload (safeFetch-based apiClientSafe)
+        // 1) direct payload (api instance result)
         // 2) wrapped payload { status, data }
         const raw = res?.data ?? res;
 

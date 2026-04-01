@@ -6,7 +6,9 @@ import React, {
   useState,
   useRef,
 } from "react";
-import { safeFetch } from "@repo/safe-fetch";
+import { api } from "../utils/api";
+export { api };
+import { ApiError } from "@repo/safe-fetch";
 import { useRouter } from "next/navigation";
 
 // NOTE: accessToken is an httpOnly cookie set by the server-side proxy.
@@ -18,80 +20,6 @@ import { useRouter } from "next/navigation";
 const deleteLegacyCookie = (name: string) => {
   if (typeof document === "undefined") return;
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-};
-
-// Thin API helper using safeFetch
-const isServer = typeof window === "undefined";
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543";
-const cleanApiUrl = API_URL.replace(/\/api\/v1\/?$/, "");
-
-function buildUrl(path: string): string {
-  if (isServer) {
-    return `${cleanApiUrl}/api/v1${path.startsWith("/") ? "" : "/"}${path}`;
-  }
-  return `/api/v1${path.startsWith("/") ? "" : "/"}${path}`;
-}
-
-// --- SAFE TUPLE-BASED HELPERS ---
-
-async function apiGetSafe<T>(
-  path: string,
-  params?: Record<string, string | number>,
-): Promise<[T | null, any | null]> {
-  let url = buildUrl(path);
-  if (params) {
-    const qs = new URLSearchParams(
-      Object.fromEntries(
-        Object.entries(params).map(([k, v]) => [k, String(v)]),
-      ),
-    ).toString();
-    url = `${url}?${qs}`;
-  }
-  return await safeFetch<T>(url, { credentials: "include" });
-}
-
-async function apiPostSafe<T>(
-  path: string,
-  body?: Record<string, unknown>,
-): Promise<[T | null, any | null]> {
-  const url = buildUrl(path);
-  return await safeFetch<T>(url, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  } as any);
-}
-
-async function apiPatchSafe<T>(
-  path: string,
-  body?: Record<string, unknown>,
-): Promise<[T | null, any | null]> {
-  const url = buildUrl(path);
-  return await safeFetch<T>(url, {
-    method: "PATCH",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  } as any);
-}
-
-async function apiDeleteSafe<T>(
-  path: string,
-): Promise<[T | null, any | null]> {
-  const url = buildUrl(path);
-  return await safeFetch<T>(url, {
-    method: "DELETE",
-    credentials: "include",
-  });
-}
-
-// NEW: Export tuplified apiClientSafe for modernized apps
-export const apiClientSafe = {
-  get: apiGetSafe,
-  post: apiPostSafe,
-  patch: apiPatchSafe,
-  delete: apiDeleteSafe
 };
 
 interface ClientUser {
@@ -150,7 +78,7 @@ export const ClientAuthProvider = ({
     deleteLegacyCookie("clientAccessToken");
 
     try {
-      await apiPostSafe("/auth/client-logout");
+      await api.post("/auth/client-logout");
     } catch (err: any) {
       // Even if backend fails, continue with frontend logout
     }
@@ -160,7 +88,7 @@ export const ClientAuthProvider = ({
 
   const refreshBalance = async () => {
     try {
-      const [res, error] = await apiGetSafe<any>("/wallet/balance");
+      const [res, error] = await api.get<any>("/wallet/balance");
       if (!error && res) {
           setClientBalance(res as any);
       }
@@ -176,7 +104,7 @@ export const ClientAuthProvider = ({
     }
     if (!isClientAuthenticated) setClientLoading(true);
     try {
-      const [res, error] = await apiGetSafe<any>("/client/profile", { _t: new Date().getTime() });
+      const [res, error] = await api.get<any>(`/client/profile?_t=${new Date().getTime()}`);
       const data = res as any;
       if (!error && data?.user) {
         setClientUser(data.user);
@@ -212,7 +140,7 @@ export const ClientAuthProvider = ({
       deleteLegacyCookie("clientAccessToken");
 
       try {
-        const [res, error] = await apiGetSafe<any>("/client/profile", { _t: new Date().getTime() });
+        const [res, error] = await api.get<any>(`/client/profile?_t=${new Date().getTime()}`);
         const data = res as any;
 
         if (!error && data?.user) {

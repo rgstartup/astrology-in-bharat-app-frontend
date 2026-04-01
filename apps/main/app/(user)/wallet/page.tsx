@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 import { toast } from "react-toastify";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import * as LucideIcons from "lucide-react";
 import { PATHS } from "@repo/routes";
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import { getWalletTransactions } from "@/libs/api-profile";
 import { loadRazorpay } from "@/libs/razorpay";
 

@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useClientAuth, apiClientSafe } from "@repo/ui";
+import { useClientAuth, api } from "@repo/ui";
 
 export interface CartItem {
   id: number;
@@ -62,7 +62,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Sync with backend if authenticated
     if (isClientAuthenticated) {
-      const [_, error] = await apiClientSafe.post("/cart/add", {
+      const [_, error] = await api.post("/cart/add", {
         product_id: item.id,
         quantity: 1,
       });

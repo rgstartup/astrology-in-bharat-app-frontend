@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Search, MapPin, Monitor, Sparkles, ChevronDown, Loader2 } from "lucide-react";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import { API_ROUTES } from "@/lib/api-routes";
 import { ExpertPuja } from "@/lib/types/puja";
 import { PujaCard } from "@/components/features/puja/PujaCard";

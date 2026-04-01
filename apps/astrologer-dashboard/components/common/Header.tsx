@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FiBell, FiMenu } from "react-icons/fi";
 import Link from "next/link";
-import apiClientSafe from "@/lib/apiClientSafe";
+import { api } from "@/lib/api";
 import { socket } from "@/lib/socket";
 import { toast } from "react-toastify";
 
@@ -154,7 +154,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
     const newStatus = !isOnline;
 
     console.log("[Presence] Updating expert availability to:", newStatus);
-    const [res, error] = await apiClientSafe.patch<{ is_available: boolean }>('/expert/status', { is_available: newStatus });
+    const [res, error] = await api.patch<{ is_available: boolean }>('/expert/status', { is_available: newStatus });
 
     if (error) {
       console.error("Failed to update status:", error);

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import { chatSocket } from "@/libs/socket";
 import { uploadClientDocument } from "@/libs/api-profile";
 import { useAuthStore } from "@/store/useAuthStore";

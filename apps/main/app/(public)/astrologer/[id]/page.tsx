@@ -1,9 +1,8 @@
 import React from "react";
 import AstrologerDetailsClient from "@/components/features/astrologers/AstrologerDetailsClient";
 import { notFound } from "next/navigation";
-import { getApiUrl } from "@/utils/api-config";
 import { Product } from "@/lib/types";
-import safeFetch from "@packages/safe-fetch/safeFetch";
+import { api } from "@/lib/api";
 
 const normalizeProduct = (raw: any): Product => {
   const images = Array.isArray(raw?.images) ? raw.images : [];
@@ -31,20 +30,19 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const API_BASE_URL = getApiUrl();
 
   if (!id || typeof id !== "string") {
     return notFound();
   }
 
   try {
-    // Fetch astrologer details + products in parallel using safeFetch
+    // Fetch astrologer details + products in parallel using the centralized api client
     const [
       [data, astroError],
       [pData, productsError]
     ] = await Promise.all([
-      safeFetch<any>(`${API_BASE_URL}/expert/details/${id}`, { cache: "no-store" }),
-      safeFetch<any>(`${API_BASE_URL}/products`, { cache: "no-store" }),
+      api.get<any>(`/expert/details/${id}`, { cache: "no-store" }),
+      api.get<any>(`/products`, { cache: "no-store" }),
     ]);
 
     if (astroError) {

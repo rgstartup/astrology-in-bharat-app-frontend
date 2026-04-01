@@ -4,15 +4,11 @@ import NextImage from "next/image";
 import NextLink from "next/link";
 const Image = NextImage as any;
 const Link = NextLink as any;
-import React, { useState, useCallback, FormEvent, Suspense } from "react";
+import React, { useState, FormEvent, Suspense } from "react";
 import { toast } from "react-toastify";
-import { getApiUrl } from "@/utils/api-config";
+import { api } from "@/lib/api";
 import { useLanguageStore } from "@/store/languageStore";
 import { authTranslations } from "@/lib/translations/auth";
-
-import safeFetch from "@packages/safe-fetch/safeFetch";
-
-const API_ENDPOINT = `${getApiUrl()}/auth/forgot/password`;
 
 const ForgotPasswordContent: React.FC = () => {
     const { lang } = useLanguageStore();
@@ -33,13 +29,9 @@ const ForgotPasswordContent: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const [data, fetchError] = await safeFetch<any>(API_ENDPOINT, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    email,
-                    origin: typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL
-                }),
+            const [data, fetchError] = await api.post<any>(`/auth/forgot/password`, {
+                email,
+                origin: typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_APP_URL
             });
 
             if (fetchError) {
@@ -163,5 +155,3 @@ const Page: React.FC = () => {
 };
 
 export default Page;
-
-

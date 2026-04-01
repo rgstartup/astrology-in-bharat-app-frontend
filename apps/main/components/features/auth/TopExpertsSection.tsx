@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import http from "../../../lib/fetch-handler";
+import { api as http } from "@/lib/api";
 
 interface ExpertUser {
     name: string;

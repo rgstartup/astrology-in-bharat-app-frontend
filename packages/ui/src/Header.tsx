@@ -23,6 +23,7 @@ import { headerTranslations } from "../../../apps/main/lib/translations/header";
 const Swiper = SwiperComponent as any;
 const SwiperSlide = SwiperSlideComponent as any;
 import { getNotificationSocket, connectNotificationSocket } from "./utils/socket";
+import { api } from "./utils/api";
 
 
 
@@ -157,8 +158,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
   // API functions for notifications
   const fetchNotifications = useCallback(async () => {
     try {
-      const { apiClientSafe } = require("./context/ClientAuthContext");
-      const [res, error] = await apiClientSafe.get('/notifications');
+      const [res, error] = await api.get('/notifications');
       if (error) throw error;
       const payload = unwrapResponse(res);
       const rawList = Array.isArray(payload) ? payload : (payload?.items || payload?.data || []);
@@ -170,8 +170,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
 
   const fetchUnreadCount = useCallback(async () => {
     try {
-      const { apiClientSafe } = require("./context/ClientAuthContext");
-      const [res, error] = await apiClientSafe.get('/notifications/unread-count');
+      const [res, error] = await api.get('/notifications/unread-count');
       if (error) throw error;
       const payload = unwrapResponse(res);
       const count = payload?.count ?? payload?.unreadCount ?? payload?.unread_count ?? 0;
@@ -183,8 +182,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
 
   const markAsRead = async (id: number) => {
     try {
-      const { apiClientSafe } = require("./context/ClientAuthContext");
-      const [_, error] = await apiClientSafe.patch(`/notifications/${id}/read`);
+      const [_, error] = await api.patch(`/notifications/${id}/read`);
       if (error) throw error;
       fetchUnreadCount();
       fetchNotifications();
@@ -195,8 +193,7 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
 
   const handleClearAll = async () => {
     try {
-      const { apiClientSafe } = require("./context/ClientAuthContext");
-      const [_, error] = await apiClientSafe.delete('/notifications/all');
+      const [_, error] = await api.delete('/notifications/all');
       if (error) throw error;
       setNotifications([]);
       setUnreadCount(0);

@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { getApiUrl } from "@/utils/api-config";
+import { api } from "@/lib/api";
 
 export interface AddressDto {
   line1: string;
@@ -23,7 +23,6 @@ export interface ProfileFormData {
 
 export const useCompleteProfile = (onClose: () => void) => {
   const router = useRouter();
-  const API_ENDPOINT = `${getApiUrl()}/client/profile`;
 
   const [formData, setFormData] = useState<ProfileFormData>({
     gender: "",
@@ -175,23 +174,17 @@ export const useCompleteProfile = (onClose: () => void) => {
     }
 
     try {
-      const res = await fetch(API_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
+      const [data, fetchErr] = await api.post<any>(`/client/profile`, payload);
 
-      const resData = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        if (res.status === 401) {
+      if (fetchErr) {
+        if (fetchErr.status === 401) {
           setError("You are not authenticated. Please sign in first.");
           setTimeout(() => { onClose(); router.push("/sign-in"); }, 3000);
         } else {
-          setError(resData?.message || `An error occurred (${res.status})`);
+          setError(fetchErr.message || `An error occurred (${fetchErr.status})`);
         }
       } else {
-        setSuccessMessage(resData?.message || "Profile saved successfully!");
+        setSuccessMessage(data?.message || "Profile saved successfully!");
         setTimeout(() => { onClose(); }, 1500);
       }
     } catch {

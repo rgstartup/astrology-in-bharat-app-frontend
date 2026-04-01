@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@repo/ui';
-import http from '@/lib/fetch-handler';
+import http from '@/lib/api';
 
 interface PhoneVerifyModalProps {
     isOpen: boolean;

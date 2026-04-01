@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { chatSocket } from "@/lib/socket";
-import apiClientSafe from "@/lib/apiClientSafe";
+import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-toastify";
 import * as LucideIcons from "lucide-react";
@@ -57,7 +57,7 @@ function ExpertChatRoomContent() {
             console.log("[ExpertChatDebug] Fetching status for session:", sessionId);
 
             // Fetch basic session info
-            const [sessionRes, sessionErr] = await apiClientSafe.get<any>(`/chat/session/${sessionId}?_t=${Date.now()}`);
+            const [sessionRes, sessionErr] = await api.get<any>(`/chat/session/${sessionId}?_t=${Date.now()}`);
             if (sessionErr) {
                 console.error("Failed to fetch session info:", sessionErr);
             } else if (sessionRes) {
@@ -79,7 +79,7 @@ function ExpertChatRoomContent() {
             }
 
             // Fetch history
-            const [historyRes, historyErr] = await apiClientSafe.get<any>(`/chat/history/${sessionId}`);
+            const [historyRes, historyErr] = await api.get<any>(`/chat/history/${sessionId}`);
             if (historyErr) {
                 console.error("Failed to fetch history:", historyErr);
             } else {
@@ -160,7 +160,7 @@ function ExpertChatRoomContent() {
         chatSocket.emit('activate_session', { sessionId: parseInt(sessionId) });
 
         // 2. API call (Data Persistence)
-        const [_, error] = await apiClientSafe.post(`/chat/activate/${sessionId}`);
+        const [_, error] = await api.post(`/chat/activate/${sessionId}`);
 
         if (error) {
             console.error("[ExpertChatDebug] Activation failed:", error);
@@ -208,7 +208,10 @@ function ExpertChatRoomContent() {
             setUploading(true);
             const formData = new FormData();
             formData.append('file', file);
-            const [data, error] = await apiClientSafe.post<any>('/client/upload-document', formData);
+            const [data, error] = await api<any>(`/client/upload-document`, {
+                method: 'POST',
+                body: formData,
+            });
 
             if (error) {
                 console.error("Upload error:", error);

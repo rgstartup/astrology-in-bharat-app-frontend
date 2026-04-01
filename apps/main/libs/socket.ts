@@ -1,5 +1,4 @@
 import { io, Socket } from "socket.io-client";
-import { getBasePath } from "@/utils/api-config";
 
 // We use a dummy socket for SSR to avoid build-time crashes with socket.io-client
 const createDummySocket = () => ({
@@ -13,7 +12,7 @@ const createDummySocket = () => ({
 
 const isBrowser = typeof window !== "undefined";
 
-const SOCKET_URL = isBrowser ? getBasePath() : "";
+const SOCKET_URL = isBrowser ? "http://localhost:6543" : "";
 
 export const socket: Socket = isBrowser
     ? io(SOCKET_URL, {
@@ -46,5 +45,3 @@ if (isBrowser) {
         console.error("[ChatSocket] ❌ Connection Error:", err.message);
     });
 }
-
-

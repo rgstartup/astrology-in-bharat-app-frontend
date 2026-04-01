@@ -1,96 +1,87 @@
 // Example: How to use the API client in your components/pages
 
-import apiClientSafe from './apiClientSafe';
+import { api } from './src/api';
 
 /**
- * NEW: The modernized API client (apiClientSafe) uses a [data, error] tuple pattern.
- * This eliminates the need for try/catch blocks and provides type safety for errors.
+ * 🚀 API Client Usage Guide (Modernized)
+ * The modernized API client (api) uses a [data, error] tuple pattern.
+ * This simplifies error handling and eliminates try-catch blocks everywhere.
  */
 
-// Example 1: Fetching data
-export const fetchExperts = async () => {
-    // No more try/catch needed!
-    const [data, error] = await apiClientSafe.get<any>('/expert/profile/list', {
-        params: {
-            limit: 20,
-            offset: 0,
-        },
+async function exampleGetRequest() {
+    // 1. All GET requests use the .get method
+    const [data, error] = await api.get<any>('/expert/profile/list', {
+        params: { limit: 10, offset: 0 }
     });
 
     if (error) {
-        console.error('Error fetching experts:', error.message);
-        return [];
+        console.error('Failed to fetch experts:', error.message);
+        return;
     }
 
-    return data?.data || data || [];
-};
+    console.log('Experts list:', data);
+}
 
-// Example 2: Updating data
-export const updateProfile = async (profileData: any) => {
-    const [data, error] = await apiClientSafe.put('/user/profile', profileData);
+async function examplePostRequest(profileData: any) {
+    // 2. POST/PUT/PATCH requests use their respective methods
+    const [data, error] = await api.put('/user/profile', profileData);
 
     if (error) {
-        console.error('Error updating profile:', error.message);
-        return null;
+        // Error object contains status, message, and backend errors
+        if (error.status === 422) {
+             console.error('Validation errors:', error.body?.errors);
+        }
+        return;
     }
 
-    return data;
-};
+    console.log('Profile updated successfully:', data);
+}
 
-// Example 3: Deleting data
-export const deleteItem = async (itemId: string) => {
-    const [data, error] = await apiClientSafe.delete(`/items/${itemId}`);
+async function exampleDeleteRequest(itemId: string) {
+    const [data, error] = await api.delete(`/items/${itemId}`);
 
     if (error) {
-        console.error('Error deleting item:', error.message);
-        return false;
+        alert('Could not delete item!');
+        return;
     }
 
-    return true;
-};
+    console.log('Item deleted');
+}
 
-// Example 4: Uploading files
-export const uploadFile = async (file: File) => {
+async function exampleFileUpload(file: File) {
     const formData = new FormData();
     formData.append('file', file);
 
-    // apiClientSafe.upload handles FormData correctly
-    const [data, error] = await apiClientSafe.upload<any>('/upload', formData);
+    // 3. For FormData, use api directly with { method, body } to bypass JSON stringification
+    const [data, error] = await api<any>('/upload', {
+        method: 'POST',
+        body: formData,
+    });
 
     if (error) {
-        console.error('Error uploading file:', error.message);
-        return null;
+        console.error('File upload failed');
+        return;
     }
 
-    return data;
-};
-
-// Example 5: Using in a service class
-export class ExpertService {
-    static async getAll(params?: { limit?: number; offset?: number }) {
-        const [data, error] = await apiClientSafe.get<any>('/expert/profile/list', { params });
-        if (error) return [];
-        return data?.data || data || [];
-    }
-
-    static async getById(id: number) {
-        const [data, error] = await apiClientSafe.get(`/expert/profile/${id}`);
-        return data;
-    }
-
-    static async create(data: any) {
-        const [res, error] = await apiClientSafe.post('/expert/profile', data);
-        return res;
-    }
-
-    static async update(id: number, data: any) {
-        return await apiClientSafe.put(`/expert/profile/${id}`, data);
-    }
-
-    static async delete(id: number) {
-        return await apiClientSafe.delete(`/expert/profile/${id}`);
-    }
+    console.log('File uploaded:', data.url);
 }
+
+/**
+ * ─── BEST PRACTICES ──────────────────────────────────────────────────────────
+ * 1. ALWAYS destructure [data, error].
+ * 2. Check for `error` first before using `data`.
+ * 3. Use generic types for `data` when possible: api.get<MyUser[]>('/users').
+ * 4. For FormData (file uploads), use the base api(...) call as shown above.
+ */
+
+// ─── MIGRATION STATUS ────────────────────────────────────────────────────────
+/**
+ * All apps and packages have been successfully migrated to the new 
+ * standardized `api` client. 
+ * 
+ * Standard Pattern:
+ * const [data, error] = await api.get('/endpoint');
+ */
 
 /*
  * REACT COMPONENT USAGE EXAMPLE
@@ -99,7 +90,7 @@ export class ExpertService {
  * 
  * "use client";
  * import { useEffect, useState } from 'react';
- * import apiClientSafe from '@/lib/apiClientSafe';
+ * import { api } from '@/lib/api';
  * 
  * export const ExampleComponent = () => {
  *   const [data, setData] = useState(null);
@@ -108,7 +99,7 @@ export class ExpertService {
  * 
  *   useEffect(() => {
  *     const loadData = async () => {
- *       const [result, error] = await apiClientSafe.get('/some-endpoint');
+ *       const [result, error] = await api.get('/some-endpoint');
  *       
  *       if (error) {
  *         setErrorMsg(error.message);

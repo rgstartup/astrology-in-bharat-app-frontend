@@ -1,4 +1,4 @@
-import apiClientSafe from "../lib/apiClientSafe";
+import { api } from "../lib/api";
 
 export interface Product {
     id?: string;
@@ -37,12 +37,13 @@ const normalizeFormData = (input: FormData) => {
     return out;
 };
 
-const BASE = "/api/v1/expert/products";
+// baseURL already contains /api/v1
+const BASE = "/expert/products";
 
 export const ProductService = {
     /** Fetch only this expert's own products */
     getProducts: async (): Promise<Product[]> => {
-        const [data, error] = await apiClientSafe.get<any>(BASE);
+        const [data, error] = await api.get<any>(BASE);
         if (error) throw new Error("Failed to fetch products");
         if (Array.isArray(data)) return data.map(fromApiProduct);
         if (Array.isArray(data?.data)) return (data.data as any[]).map(fromApiProduct);
@@ -51,7 +52,7 @@ export const ProductService = {
 
     /** Create a new product under this expert */
     createProduct: async (fd: FormData): Promise<any> => {
-        const [data, error] = await apiClientSafe.upload<any>(BASE, normalizeFormData(fd));
+        const [data, error] = await api.post<any>(BASE, normalizeFormData(fd));
         if (error) {
             throw new Error((error as any)?.message || "Failed to create product");
         }
@@ -60,7 +61,7 @@ export const ProductService = {
 
     /** Update an existing product */
     updateProduct: async (id: string, fd: FormData): Promise<any> => {
-        const [data, error] = await apiClientSafe.patch<any>(`${BASE}/${id}`, normalizeFormData(fd));
+        const [data, error] = await api.patch<any>(`${BASE}/${id}`, normalizeFormData(fd));
         if (error) {
             throw new Error((error as any)?.message || "Failed to update product");
         }
@@ -69,7 +70,7 @@ export const ProductService = {
 
     /** Delete a product */
     deleteProduct: async (id: string): Promise<any> => {
-        const [data, error] = await apiClientSafe.delete<any>(`${BASE}/${id}`);
+        const [data, error] = await api.delete<any>(`${BASE}/${id}`);
         if (error) {
             throw new Error((error as any)?.message || "Failed to delete product");
         }

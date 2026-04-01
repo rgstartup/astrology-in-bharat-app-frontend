@@ -1,13 +1,17 @@
-import apiClientSafe, { ApiError } from "../lib/apiClientSafe";
+import { api } from "../lib/api";
+import { ApiError } from "@repo/safe-fetch";
 import { API_ROUTES } from "../lib/api-routes";
 
 // ── Profile ──────────────────────────────────────────────────────────────────
 export const getAgentProfile = async (): Promise<[any | null, ApiError | null]> => {
-    return apiClientSafe.get(API_ROUTES.AGENTS.PROFILE);
+    return api.get(API_ROUTES.AGENTS.PROFILE);
 };
 
 export const updateAgentProfile = async (formData: FormData): Promise<[any | null, ApiError | null]> => {
-    return apiClientSafe.patch(API_ROUTES.AGENTS.PROFILE, formData);
+    return api<any>(API_ROUTES.AGENTS.PROFILE, {
+        method: 'PATCH',
+        body: formData,
+    });
 };
 
 // ── Listings ─────────────────────────────────────────────────────────────────
@@ -48,7 +52,7 @@ export interface ListingsResponse {
 }
 
 export const getAgentListings = async (params?: ListingParams): Promise<[ListingsResponse | null, ApiError | null]> => {
-    return apiClientSafe.get<ListingsResponse>(API_ROUTES.AGENTS.LISTINGS, params as Record<string, any>);
+    return api.get<ListingsResponse>(API_ROUTES.AGENTS.LISTINGS, params as Record<string, any>);
 };
 
 export interface ReferredUser {
@@ -84,12 +88,12 @@ export interface ReferredUsersParams {
 }
 
 export const getReferredUsers = async (params?: ReferredUsersParams): Promise<[ReferredUsersResponse | null, ApiError | null]> => {
-    return apiClientSafe.get<ReferredUsersResponse>(API_ROUTES.AGENTS.REFERRED_USERS, params as Record<string, any>);
+    return api.get<ReferredUsersResponse>(API_ROUTES.AGENTS.REFERRED_USERS, params as Record<string, any>);
 };
 
 
 export const createListing = async (payload: CreateListingPayload): Promise<[any | null, ApiError | null]> => {
-    return apiClientSafe.post(API_ROUTES.AGENTS.LISTINGS, payload as Record<string, any>);
+    return api.post(API_ROUTES.AGENTS.LISTINGS, payload as Record<string, any>);
 };
 
 // ── Register User/Expert ─────────────────────────────────────────────────────
@@ -121,12 +125,12 @@ export const registerUserByAgent = async (payload: RegisterUserPayload): Promise
         ...rest,
         roles: [userType], // 'expert' or 'client'
     };
-    return apiClientSafe.post<RegisterUserResponse>(API_ROUTES.AGENTS.REGISTER_USER, body as Record<string, any>);
+    return api.post<RegisterUserResponse>(API_ROUTES.AGENTS.REGISTER_USER, body as Record<string, any>);
 };
 
 // ── Dashboard Stats ──────────────────────────────────────────────────────────
 export const getAgentDashboardStats = async (): Promise<[any | null, ApiError | null]> => {
-    const [data, error] = await apiClientSafe.get(API_ROUTES.AGENTS.DASHBOARD_STATS);
+    const [data, error] = await api.get(API_ROUTES.AGENTS.DASHBOARD_STATS);
     if (error) {
         // Return null data and any default object if needed by UI, 
         // but here we stick to the tuple pattern.

@@ -1,40 +1,41 @@
-import http, { SafeFetchResponse } from "../lib/fetch-handler";
+import { api } from "../lib/api";
+import { ApiError } from "@repo/safe-fetch";
 
 export const WishlistService = {
 
-    getWishlist: async (): Promise<SafeFetchResponse<any>> => {
-        return await http.get("/product-like");
+    getWishlist: async (): Promise<[any | null, ApiError | null]> => {
+        return await api.get("/product-like");
     },
 
-    addToWishlist: async (productId: number): Promise<SafeFetchResponse<any>> => {
-        return await http.post("/product-like/add", { productId });
+    addToWishlist: async (productId: number): Promise<[any | null, ApiError | null]> => {
+        return await api.post("/product-like/add", { productId });
     },
 
-    removeFromWishlist: async (productId: number): Promise<SafeFetchResponse<any>> => {
-        return await http.del(`/product-like/remove/${productId}`);
+    removeFromWishlist: async (productId: number): Promise<[any | null, ApiError | null]> => {
+        return await api.delete(`/product-like/remove/${productId}`);
     },
 
-    getExpertWishlist: async (): Promise<SafeFetchResponse<any>> => {
-        return await http.get("/expert-like");
+    getExpertWishlist: async (): Promise<[any | null, ApiError | null]> => {
+        return await api.get("/expert-like");
     },
 
-    addExpertToWishlist: async (expertId: number): Promise<SafeFetchResponse<any>> => {
-        return await http.post("/expert-like/add", { expertId });
+    addExpertToWishlist: async (expertId: number): Promise<[any | null, ApiError | null]> => {
+        return await api.post("/expert-like/add", { expertId });
     },
 
-    removeExpertFromWishlist: async (expertId: number): Promise<SafeFetchResponse<any>> => {
-        return await http.del(`/expert-like/remove/${expertId}`);
+    removeExpertFromWishlist: async (expertId: number): Promise<[any | null, ApiError | null]> => {
+        return await api.delete(`/expert-like/remove/${expertId}`);
     },
     
-    getPujaWishlist: async (): Promise<SafeFetchResponse<any>> => {
-        return await http.get("/puja-like");
+    getPujaWishlist: async (): Promise<[any | null, ApiError | null]> => {
+        return await api.get("/puja-like");
     },
 
-    addPujaToWishlist: async (pujaId: number): Promise<SafeFetchResponse<any>> => {
-        return await http.post("/puja-like/add", { pujaId });
+    addPujaToWishlist: async (pujaId: number): Promise<[any | null, ApiError | null]> => {
+        return await api.post("/puja-like/add", { pujaId });
     },
 
-    removePujaFromWishlist: async (pujaId: number): Promise<SafeFetchResponse<any>> => {
-        return await http.del(`/puja-like/remove/${pujaId}`);
+    removePujaFromWishlist: async (pujaId: number): Promise<[any | null, ApiError | null]> => {
+        return await api.delete(`/puja-like/remove/${pujaId}`);
     }
 };

@@ -3,7 +3,7 @@
 import React from "react";
 import * as LucideIcons from "lucide-react";
 import { toast } from "react-toastify";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 
 const { Star } = LucideIcons as any;
 

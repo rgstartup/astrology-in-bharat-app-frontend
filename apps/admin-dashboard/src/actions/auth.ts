@@ -1,11 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import safeFetch from "@packages/safe-fetch/safeFetch";
+import safeFetch from "@repo/safe-fetch";
 
-import { getApiUrl } from "@/src/utils/api-config";
-
-const API_BASE_URL = getApiUrl();
+const API_BASE_URL = "http://localhost:6543/api/v1";
 
 export async function adminLoginAction(formData: any) {
     const [data, error] = await safeFetch<any>(`${API_BASE_URL}/auth/email/login`, {

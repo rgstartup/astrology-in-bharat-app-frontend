@@ -13,7 +13,7 @@ import {
 import { format } from "date-fns";
 import { Appointment } from "./types";
 import Button from "../ui/Button";
-import apiClientSafe from "@/lib/apiClientSafe";
+import { api } from "@/lib/api";
 import { toast } from "react-toastify";
 
 const Clock = LucideClock as any;
@@ -70,7 +70,7 @@ function PujaActions({ appt, onUpdate }: { appt: Appointment, onUpdate?: () => v
 
     const updateStatus = async (status: string, extra: any = {}) => {
         setIsUpdating(true);
-        const [res, error] = await apiClientSafe.patch(`/puja-appointments/${appt.id}/status`, {
+        const [res, error] = await api.patch(`/puja-appointments/${appt.id}/status`, {
             status,
             expert_message: message || undefined,
             ...extra

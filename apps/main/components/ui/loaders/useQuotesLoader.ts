@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { getApiUrl } from "@/utils/api-config";
-import safeFetch from "@packages/safe-fetch/safeFetch";
+import { api } from "@/lib/api";
 
 export interface Quote {
   id: number;
@@ -22,7 +21,7 @@ export const useQuotesLoader = () => {
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const [data] = await safeFetch<Quote[]>(`${getApiUrl()}/quotes`);
+        const [data] = await api.get<Quote[]>(`/quotes`);
         if (Array.isArray(data) && data.length > 0) {
           setQuotes(data);
           const randomQuote = data[Math.floor(Math.random() * data.length)];

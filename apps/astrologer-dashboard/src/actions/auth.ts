@@ -1,27 +1,17 @@
 "use server";
 
 import { cookies } from "next/headers";
-import safeFetch from "@packages/safe-fetch/safeFetch";
-
-import { CLIENT_API_URL, BACKEND_URL } from "@/lib/config";
-const API_URL = CLIENT_API_URL;
-const API_BASE_URL = BACKEND_URL;
+import { api } from "@/lib/api";
 
 export async function astrologerLoginAction(formData: any) {
-    const [data, error] = await safeFetch<any>(`${API_BASE_URL}/api/v1/auth/login`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-    });
+    const [data, error] = await api.post<any>('/auth/login', formData);
 
     if (error) {
         return { error: error.body?.message || error.message || "Login failed" };
     }
 
     // Token existence check
-    if (!data.accessToken) {
+    if (!data?.accessToken) {
         return { error: "No access token received" };
     }
 
@@ -59,15 +49,9 @@ export async function astrologerLoginAction(formData: any) {
 }
 
 export async function astrologerRegisterAction(formData: any) {
-    const [data, error] = await safeFetch<any>(`${API_BASE_URL}/api/v1/auth/email/register`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            ...formData,
-            roles: ["expert"],
-        }),
+    const [data, error] = await api.post<any>('/auth/email/register', {
+        ...formData,
+        roles: ["expert"],
     });
 
     if (error) {
@@ -85,12 +69,7 @@ export async function astrologerLogoutAction() {
 }
 
 export async function astrologerVerifyEmailAction(token: string) {
-    const [data, error] = await safeFetch<any>(`${API_BASE_URL}/api/v1/auth/email/verify?token=${encodeURIComponent(token)}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+    const [data, error] = await api.get<any>(`/auth/email/verify?token=${encodeURIComponent(token)}`);
 
     if (error) {
         return { error: error.body?.message || error.message || "Verification failed" };
@@ -121,4 +100,3 @@ export async function astrologerVerifyEmailAction(token: string) {
 
     return { success: true, user: data?.user, message: data?.message };
 }
-

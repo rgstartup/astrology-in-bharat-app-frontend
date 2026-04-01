@@ -4,7 +4,6 @@ import React from "react";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { ProductCard } from "@/components/features/shop/ProductCard";
 import AstrologerCard from "@/components/features/astrologers/AstrologerCard";
-import { getBasePath } from "@/utils/api-config";
 import { FaHeart, FaGift, FaUserAstronaut, FaSpinner } from "react-icons/fa";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { MdStars } from "react-icons/md";
@@ -13,7 +12,7 @@ import { PujaCard } from "@/components/features/puja/PujaCard";
 const WishlistGrid: React.FC = () => {
     const { wishlistItems, expertWishlistItems, pujaWishlistItems, isLoading } = useWishlistStore();
 
-    const cleanApiUrl = getBasePath();
+    const cleanApiUrl = "http://localhost:6543/api/v1";
 
     const getImageUrl = (path?: string) => {
         if (!path) return "/images/dummy-astrologer.jpg";

@@ -1,5 +1,4 @@
-import { getApiUrl } from '../utils/api-config';
-import apiClientSafe from '@/lib/fetch-handler';
+import { api } from '@/lib/api';
 
 
 export interface ExpertProfile {
@@ -70,7 +69,7 @@ export const getExperts = async (
 
     const url = `/expert/list?${queryParams.toString()}`;
 
-    const [result, fetchError] = await apiClientSafe.get<any>(url, {
+    const [result, fetchError] = await api.get<any>(url, {
       cache: 'no-store',
     } as any);
 
@@ -130,7 +129,7 @@ export const getExpertReviews = async (
 ): Promise<FetchReviewsResponse> => {
   try {
     const url = `/reviews/expert/${expertId}?page=${page}&limit=${limit}`;
-    const [data, error] = await apiClientSafe.get<any>(url, { cache: 'no-store' } as any);
+    const [data, error] = await api.get<any>(url, { cache: 'no-store' } as any);
 
     if (error) throw new Error("Failed to fetch reviews");
 

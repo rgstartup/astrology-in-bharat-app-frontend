@@ -1,5 +1,5 @@
 import { Place } from "@/lib/types";
-import { API_BASE_URL } from "@/utils/api-config";
+const API_BASE_URL = 'http://localhost:6543/api/v1';
 export type { Place };
 
 const BLOCKED_DOMAINS = [

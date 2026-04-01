@@ -3,13 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { io, Socket } from "socket.io-client";
-import { getApiUrl } from "@/utils/api-config";
 import { toast } from "react-toastify";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import { CallStatus, CallSession } from "@/lib/types";
 
 export const useCallLogic = () => {
-  const SOCKET_URL = getApiUrl().replace("/api/v1", "");
+  const SOCKET_URL = "http://localhost:6543";
   const params = useParams();
   const router = useRouter();
   const sessionId = params.id as string;

@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { loginAction } from "@/actions/auth";
 import { useAuthStore } from "@/store/useAuthStore";
-import { API_CONFIG } from "@/lib/api-config";
+import { API_ROUTES as API_CONFIG } from "@/lib/api-routes";
 import { useLanguageStore } from "@/store/languageStore";
 import { authTranslations } from "@/lib/translations/auth";
 
@@ -90,7 +90,7 @@ const SignInForm: React.FC = () => {
       safeCallback,
       globalThis.window.location.origin,
     ).toString();
-    const googleLoginUrl = `${API_CONFIG.AUTH.GOOGLE_LOGIN.url}?role=client&redirect_uri=${encodeURIComponent(redirectUri)}`;
+    const googleLoginUrl = `http://localhost:6543/api/v1/auth/google/login?role=client&redirect_uri=${encodeURIComponent(redirectUri)}`;
     globalThis.window.location.href = googleLoginUrl;
   };
 

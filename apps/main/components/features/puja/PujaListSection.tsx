@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import NextLink from "next/link";
 const Link = NextLink as any;
 import { Loader2, Search, ChevronDown } from "lucide-react";
-import http from "@/lib/fetch-handler";
+import { api as http } from "@/lib/api";
 import { API_ROUTES } from "@/lib/api-routes";
 import { ExpertPuja } from "@/lib/types/puja";
 import { PujaCard } from "./PujaCard";

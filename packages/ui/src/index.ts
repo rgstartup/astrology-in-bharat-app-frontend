@@ -1,6 +1,6 @@
 export { default as Header } from "./Header";
 export { default as Footer } from "./Footer";
-export { ClientAuthProvider, useClientAuth, apiClientSafe } from "./context/ClientAuthContext";
+export { ClientAuthProvider, useClientAuth, api } from "./context/ClientAuthContext";
 export { CartProvider, useCart } from "./context/CartContext";
 
 // Components from shared
