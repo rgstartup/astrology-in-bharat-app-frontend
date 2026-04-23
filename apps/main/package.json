@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.0.0",
+    "@repo/auth-client": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "@repo/routes": "workspace:*",
     "@repo/safe-fetch": "workspace:*",

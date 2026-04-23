@@ -1,12 +1,13 @@
 import { create } from "zustand";
+import { authClient } from "@repo/auth-client";
 import { AuthService, ClientUser } from "../services/auth.service";
-import { api } from "../lib/api";
 
 interface AuthState {
     clientUser: ClientUser | null;
     clientBalance: number;
     clientLoading: boolean;
     isClientAuthenticated: boolean;
+    isLoggingOut: boolean;
 
     // Actions
     clientLogin: (userData?: ClientUser) => void;
@@ -21,29 +22,24 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     clientBalance: 0,
     clientLoading: true,
     isClientAuthenticated: false,
+    isLoggingOut: false,
 
-    // ── NOTE: Token is NEVER passed here. ──────────────────────────────
-    // HttpOnly cookie is already set by the Server Action (actions/auth.ts).
-    // Frontend's job: just update UI state.
-    // ───────────────────────────────────────────────────────────────────
     clientLogin: (userData?: ClientUser) => {
         if (userData) {
             set({ clientUser: userData, isClientAuthenticated: true, clientLoading: false });
+            get().refreshBalance();
+            return;
         }
-        set({ isClientAuthenticated: true, clientLoading: false });
 
-        // Fetch balance after login
-        get().refreshBalance();
-
-        // Load full profile if user data is incomplete
-        if (!userData) {
-            get().refreshAuth();
-        }
+        // For Better Auth client sign-in, wait for the session cookie to be
+        // readable through getSession() before marking the client authenticated.
+        set({ clientLoading: true });
+        get().refreshAuth();
     },
 
     clientLogout: async () => {
         // Guard to prevent multiple simultaneous logout calls or redundant loops
-        if (!get().isClientAuthenticated && !get().clientUser) {
+        if (get().isLoggingOut || (!get().isClientAuthenticated && !get().clientUser)) {
             return;
         }
 
@@ -53,20 +49,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             isClientAuthenticated: false,
             clientLoading: false,
             clientBalance: 0,
+            isLoggingOut: true,
         });
 
-        // 1. Tell the backend to invalidate the session (best-effort)
-        // Since isClientAuthenticated is now false, any 401 here won't trigger recursion.
-        await AuthService.logout();
-
-        // 2. Clear HttpOnly cookies via a dedicated API route
         try {
-            await fetch("/api/auth/logout", { method: "POST" });
+            await authClient.signOut();
         } catch {
             // Silently fail logout cleanup
         }
 
-        // 3. Full page redirect — forces server to re-render with cleared cookies
+        // Full page redirect — forces server to re-render with cleared cookies
         if (typeof window !== "undefined") {
             window.location.href = "/?_logout=1"; // cache-busting param
         }
@@ -101,70 +93,36 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             set({ clientLoading: true });
         }
 
-        // Priority: Try fetching the more detailed client profile first
-        let [res, error] = await api.get<any>('/client/profile');
-        if (error) {
-            const [profileRes, profileError] = await AuthService.fetchProfile();
-            res = profileRes;
-            error = profileError;
-        }
+        const result = await authClient.getSession();
+        const session = result?.data;
 
-        if (error) {
+        if (session?.user) {
+            const su = session.user as any;
+            const betterAuthUser: ClientUser = {
+                id: su.id,
+                uid: su.id,
+                name: su.name || "User",
+                email: su.email || "",
+                roles: su.role ? [su.role] : [],
+                profile_picture: su.image || su.avatar,
+                avatar: su.image || su.avatar,
+            };
             set({
-                isClientAuthenticated: false,
-                clientUser: null,
-                clientLoading: false
+                clientUser: { ...(get().clientUser || {}), ...betterAuthUser } as ClientUser,
+                isClientAuthenticated: true,
+                clientLoading: false,
+                isLoggingOut: false,
             });
+            get().refreshBalance();
             return;
         }
 
-        // Support both shapes:
-        // 1) direct payload (api instance result)
-        // 2) wrapped payload { status, data }
-        const raw = res?.data ?? res;
-
-        let user: ClientUser | null = null;
-        
-
-        if (raw?.user?.id) {
-            user = {
-                id: raw.user.id,
-                uid: raw.user.uid || raw.uid,
-                name: raw.user.name,
-                email: raw.user.email,
-                roles: raw.user.roles || [],
-                profile_picture: raw.user.profile_picture || raw.profile_picture || raw.user.avatar || raw.avatar,
-                avatar: raw.user.profile_picture || raw.profile_picture || raw.user.avatar || raw.avatar,
-            };
-        } else if (raw?.id) {
-            user = {
-                id: raw.id,
-                uid: raw.uid,
-                name: raw.full_name || raw.name || "User",
-                email: raw.email || "",
-                roles: raw.roles || [],
-                profile_picture: raw.profile_picture || raw.avatar,
-                avatar: raw.profile_picture || raw.avatar,
-            };
-        }
-
-        if (user) {
-            set({
-                clientUser: {
-                    ...(get().clientUser || {}),
-                    ...user
-                } as ClientUser,
-                isClientAuthenticated: true,
-                clientLoading: false
-            });
-            get().refreshBalance();
-        } else {
-            set({
-                isClientAuthenticated: false,
-                clientUser: null,
-                clientLoading: false
-            });
-        }
+        set({
+            isClientAuthenticated: false,
+            clientUser: null,
+            clientLoading: false,
+            isLoggingOut: false,
+        });
     },
 
     updateClientUser: (data: Partial<ClientUser>) => {

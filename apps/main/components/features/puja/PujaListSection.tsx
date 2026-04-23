@@ -21,7 +21,7 @@ const SwiperSlide = SwiperSlideComp as any;
 const PujaListSection = () => {
     const { lang } = useLanguageStore();
     const t = pujaTranslations[lang as "en" | "hi"] || pujaTranslations.en;
-    const content = (pujaContent[lang as "en" | "hi"] || pujaContent.en) || {};
+    const content: Record<string, string> = pujaContent[lang as "en" | "hi"] || pujaContent.en;
     const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
     
     const [pujas, setPujas] = useState<ExpertPuja[]>([]);
@@ -116,7 +116,7 @@ const PujaListSection = () => {
                                 className="w-full flex items-center justify-between px-4 py-2.5 bg-black/40 border border-white/10 rounded-xl focus:ring-2 focus:ring-orange-500/20 outline-none text-sm font-bold text-gray-300 transition-all"
                                 style={fontStyle}
                             >
-                                <span className="truncate pr-2">{selectedPujaName === t.filters.allPujas ? t.filters.allPujas : (pujaContent[selectedPujaName] || selectedPujaName)}</span>
+                                <span className="truncate pr-2">{selectedPujaName === t.filters.allPujas ? t.filters.allPujas : (content[selectedPujaName] || selectedPujaName)}</span>
                                 <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${isDropdownOpen ? 'rotate-180 text-orange-500' : ''}`} />
                             </button>
                             
@@ -132,7 +132,7 @@ const PujaListSection = () => {
                                             className={`w-full text-left px-4 py-2.5 text-sm hover:bg-orange-600 hover:text-white transition-colors ${selectedPujaName === name ? 'text-orange-500 bg-black/20 font-bold' : 'text-gray-400 font-medium'}`}
                                             style={fontStyle}
                                         >
-                                            {name === t.filters.allPujas ? t.filters.allPujas : (pujaContent[name] || name)}
+                                            {name === t.filters.allPujas ? t.filters.allPujas : (content[name] || name)}
                                         </button>
                                     ))}
                                 </div>

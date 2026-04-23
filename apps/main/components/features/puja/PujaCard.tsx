@@ -55,7 +55,7 @@ export const PujaCard: React.FC<PujaCardProps> = ({ puja }) => {
     const { lang } = useLanguageStore();
     const translationSet = (pujaTranslations[lang as "en" | "hi"] || pujaTranslations.en) as any;
     const t = translationSet.card;
-    const content = (pujaContent[lang as "en" | "hi"] || pujaContent.en) || {};
+    const content: Record<string, string> = pujaContent[lang as "en" | "hi"] || pujaContent.en;
     const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
     const localizedName = content[puja.name] || puja.name;

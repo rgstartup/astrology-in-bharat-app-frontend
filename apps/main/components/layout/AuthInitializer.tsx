@@ -12,7 +12,7 @@ export const AuthInitializer = ({
     children: React.ReactNode,
     initialUser?: any
 }) => {
-    const { clientLogin, refreshAuth } = useAuthStore();
+    const { clientLogin, refreshAuth, isLoggingOut } = useAuthStore();
     // This ref persists across re-renders and route changes
     const authCheckRef = useRef(false);
     const pathname = usePathname();
@@ -32,7 +32,7 @@ export const AuthInitializer = ({
 
             refreshAuth().finally(() => {
                 const state = useAuthStore.getState();
-                if (!state.isClientAuthenticated) {
+                if (!state.isClientAuthenticated && !state.isLoggingOut) {
                     // Only redirect if user was trying to access a protected page
                     const protectedPrefixes = ['/profile', '/wallet', '/settings', '/session-history', '/cart', '/checkout'];
                     if (protectedPrefixes.some(p => currentPath.startsWith(p))) {

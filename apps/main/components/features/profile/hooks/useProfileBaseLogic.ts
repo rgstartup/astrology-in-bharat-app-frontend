@@ -30,6 +30,7 @@ export const useProfileBaseLogic = () => {
     const {
         clientUser,
         isClientAuthenticated,
+        isLoggingOut,
         clientLoading,
         clientBalance,
         refreshBalance,
@@ -60,10 +61,10 @@ export const useProfileBaseLogic = () => {
 
     // Auth Redirection
     useEffect(() => {
-        if (!clientLoading && !isClientAuthenticated) {
+        if (!clientLoading && !isClientAuthenticated && !isLoggingOut) {
             router.push("/sign-in?callbackUrl=/profile");
         }
-    }, [clientLoading, isClientAuthenticated, router]);
+    }, [clientLoading, isClientAuthenticated, isLoggingOut, router]);
 
     // Tab Initialization
     useEffect(() => {

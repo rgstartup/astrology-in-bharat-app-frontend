@@ -45,7 +45,7 @@ const securityHeaders = [
 
       // API & WebSocket connections
       // In development, also allow direct backend connections on localhost
-      `connect-src 'self' https://checkout.razorpay.com https://www.youtube.com https://*.twilio.com wss: ws: wss://*.twilio.com ${process.env.NEXT_PUBLIC_API_URL || ""} ${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/i, "").replace(/^http/, 'ws') || ""}${process.env.NODE_ENV !== "production" ? " http://localhost:6543 http://127.0.0.1:6543 ws://localhost:6543" : ""}`,
+      `connect-src 'self' https://checkout.razorpay.com https://www.youtube.com https://*.twilio.com wss: ws: wss://*.twilio.com ${process.env.NEXT_PUBLIC_API_URL || ""} ${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/i, "").replace(/^http/, 'ws') || ""} ${process.env.NEXT_PUBLIC_AUTH_SERVER_URL || "http://localhost:3001"}${process.env.NODE_ENV !== "production" ? " http://localhost:6543 http://127.0.0.1:6543 ws://localhost:6543" : ""}`,
 
       // Frames: Razorpay checkout iframe and YouTube embeds
       "frame-src https://api.razorpay.com https://checkout.razorpay.com https://www.youtube.com https://www.youtube-nocookie.com",
@@ -82,6 +82,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // ── Legacy product routes ─────────────────────────────────────────
       {
         source: "/buy-products",
         destination: "/product",
@@ -97,14 +98,19 @@ const nextConfig: NextConfig = {
 
   async rewrites() {
     const backendUrl = (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543").replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
+    const authServerUrl = (process.env.AUTH_SERVER_URL || "http://localhost:3001").replace(/\/+$/, "");
     return [
       {
         source: "/api/v1/:path*",
-        destination: `${backendUrl}/api/v1/:path*`, // Proxy to Backend
+        destination: `${backendUrl}/api/v1/:path*`,
       },
       {
         source: "/uploads/:path*",
-        destination: `${backendUrl}/uploads/:path*`, // Proxy to Backend
+        destination: `${backendUrl}/uploads/:path*`,
+      },
+      {
+        source: "/api/auth/:path*",
+        destination: `${authServerUrl}/api/auth/:path*`,
       },
     ];
   },

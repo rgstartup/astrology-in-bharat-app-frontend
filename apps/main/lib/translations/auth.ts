@@ -24,7 +24,8 @@ export const authTranslations = {
                 googleFailed: "Google login failed.",
                 unexpected: "An unexpected error occurred."
             },
-            success: "Sign In successful!"
+            success: "Sign In successful!",
+            verificationSent: "Your email is not verified. A verification link has been sent to your email."
         },
         signUp: {
             title: "Sign Up",
@@ -132,7 +133,8 @@ export const authTranslations = {
                 googleFailed: "गूगल लॉगिन विफल रहा।",
                 unexpected: "एक अप्रत्याशित त्रुटि हुई।"
             },
-            success: "साइन इन सफल रहा!"
+            success: "साइन इन सफल रहा!",
+            verificationSent: "आपका ईमेल सत्यापित नहीं है। एक सत्यापन लिंक आपके ईमेल पर भेज दिया गया है।"
         },
         signUp: {
             title: "साइन अप करें",

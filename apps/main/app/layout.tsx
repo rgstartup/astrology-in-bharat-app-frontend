@@ -11,7 +11,6 @@ import { CartInitializer } from "@/components/layout/CartInitializer"; // Change
 import { WishlistInitializer } from "@/components/layout/WishlistInitializer";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
-import { AuthService } from "@/services/auth.service";
 import QueryProvider from "@/providers/QueryProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 
@@ -39,34 +38,35 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // 1. Fetch user on server
+  // Fetch user on server via the better-auth session cookie
   const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
+  const betterAuthToken = cookieStore.get("better-auth.session_token")?.value;
   let user = null;
 
-  if (token) {
+  if (betterAuthToken) {
     try {
-      // Pass both header and cookie to support different backend auth strategies
-      const [res, authError] = await AuthService.fetchProfile({
-        Authorization: `Bearer ${token}`,
-        Cookie: `accessToken=${token}`
-      }) as any;
-      
-      if (!authError && res) {
-        const raw = res?.data ?? res;
-        user = raw?.user || (raw?.id ? raw : null);
-        
-        if (user) {
-          // Unify the profile picture field so that Header has consistent data on SSR
-          user.profile_picture = user.profile_picture || user.avatar || raw?.profile_picture || raw?.avatar;
-          user.avatar = user.profile_picture;
+      const authServerUrl = process.env.AUTH_SERVER_URL || "http://localhost:3001";
+      const sessionRes = await fetch(`${authServerUrl}/api/auth/get-session`, {
+        headers: { Cookie: `better-auth.session_token=${betterAuthToken}` },
+        cache: "no-store",
+      });
+      if (sessionRes.ok) {
+        const session = await sessionRes.json();
+        if (session?.user) {
+          const su = session.user;
+          user = {
+            id: su.id,
+            uid: su.id,
+            name: su.name || "User",
+            email: su.email || "",
+            profile_picture: su.image || su.avatar,
+            avatar: su.image || su.avatar,
+            roles: su.role ? [su.role] : [],
+          };
         }
       }
-    } catch (err: any) {
-      const errorMsg = err.message || String(err);
-      if (errorMsg !== "Unauthorized" && !errorMsg.includes("Unauthorized")) {
-        console.error("[RootLayout] Server-side auth check failed:", errorMsg);
-      }
+    } catch {
+      // non-critical — session fetch failed, user will be treated as unauthenticated
     }
   }
 

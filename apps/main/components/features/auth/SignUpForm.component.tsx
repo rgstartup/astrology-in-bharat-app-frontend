@@ -4,8 +4,7 @@ import React, { useState, useCallback, FormEvent } from "react";
 import NextImage from "next/image";
 import NextLink from "next/link";
 import { toast } from "react-toastify";
-import { registerAction } from "@/actions/auth";
-import { API_ROUTES as API_CONFIG } from "@/lib/api-routes";
+import { authClient } from "@repo/auth-client";
 import { useLanguageStore } from "@/store/languageStore";
 import { authTranslations } from "@/lib/translations/auth";
 import { VerificationPopup } from "@repo/ui";
@@ -28,7 +27,6 @@ const SignUpForm: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showVerification, setShowVerification] = useState(false);
     const [registeredEmail, setRegisteredEmail] = useState("");
-    const cleanApiUrl = "http://localhost:6543/api/v1";
     const { lang } = useLanguageStore();
     const t = authTranslations[lang as keyof typeof authTranslations] || authTranslations.en;
 
@@ -65,12 +63,12 @@ const SignUpForm: React.FC = () => {
         return true;
     };
 
-    const handleGoogleLogin = () => {
-        // Redirect to backend Google OAuth — browser handles cookie automatically
-        const redirectUri = `${window.location.origin}/profile`;
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
-        const googleLoginUrl = `${baseUrl.replace(/\/+$/, "")}/auth/google/login?role=client&redirect_uri=${encodeURIComponent(redirectUri)}`;
-        window.location.href = googleLoginUrl;
+    const handleGoogleLogin = async () => {
+        await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "/profile",
+            errorCallbackURL: window.location.href,
+        });
     };
 
     const handleSubmit = async (e: FormEvent) => {
@@ -83,22 +81,17 @@ const SignUpForm: React.FC = () => {
         setIsLoading(true);
         toast.info(t.signUp.registering);
 
-        const payload = {
-            name: formData.fullName,
-            email: formData.email,
-            password: formData.password,
-            // Keep phone for now if it's meant to be there, but backend DTO doesn't show it.
-            // Actually, let's keep it but check backend DTO again.
-            // If it's not in DTO, it might be rejected.
-            phone: formData.phoneNumber,
-            roles: ["client"]
-        };
-
         try {
-            const result = await registerAction(payload);
-            if (result.error) {
-                toast.error(result.error);
-            } else if (result.success) {
+            const { error } = await authClient.signUp.email({
+                name: formData.fullName,
+                email: formData.email,
+                password: formData.password,
+                callbackURL: `${window.location.origin}/verify-email`,
+            });
+
+            if (error) {
+                toast.error(error.message || t.signUp.errors.unexpected);
+            } else {
                 setRegisteredEmail(formData.email);
                 setShowVerification(true);
                 // Clear form data after showing popup
@@ -285,4 +278,3 @@ const SignUpForm: React.FC = () => {
 };
 
 export default SignUpForm;
-

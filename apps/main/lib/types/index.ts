@@ -1,7 +1,6 @@
 export * from "./expert";
 export * from "./product";
 export * from "./user";
-export * from "./auth";
 export * from "./call";
 export * from "./client";
 export * from "./chat";

@@ -1,21 +1,32 @@
 import { Metadata } from "next";
-import RegisterPageClient from "@/components/features/auth/RegisterPageClient";
-
-export const metadata: Metadata = {
-  title: "Sign Up - Astrology Bharat",
-  description: "Create your free account and start your cosmic journey today.",
-};
-
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import SignUpForm from "./SignUpForm";
 
-export default async function RegisterPage() {
+export const metadata: Metadata = {
+  title: "Register — Astrology Bharat",
+  description: "Create your account and begin your cosmic journey.",
+};
+
+export default async function RegisterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ callbackUrl?: string }>;
+}) {
   const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
-  
-  if (token) {
-    redirect("/profile");
+  const session = cookieStore.get("better-auth.session_token")?.value;
+  const { callbackUrl } = await searchParams;
+
+  if (session) {
+    redirect(callbackUrl || "/profile");
   }
 
-  return <RegisterPageClient />;
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center py-12 px-4"
+      style={{ backgroundImage: "url('/images/white-background.png')", backgroundSize: "cover", backgroundPosition: "center" }}
+    >
+      <SignUpForm callbackUrl={callbackUrl} />
+    </div>
+  );
 }
