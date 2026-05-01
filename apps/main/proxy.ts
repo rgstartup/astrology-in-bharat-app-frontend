@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import safeFetch from "@repo/safe-fetch";
 
 const AUTH_ROUTES = [
   "/sign-in",
@@ -13,7 +14,9 @@ const IGNORED_PREFIXES = ["/.well-known", "/images", "/uploads"];
 const SESSION_COOKIE = "better-auth.session_token";
 
 function matchesRoute(pathname: string, routes: string[]) {
-  return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
+  return routes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
 }
 
 function getSafeCallbackPath(rawValue: string | null | undefined) {
@@ -24,7 +27,7 @@ function getSafeCallbackPath(rawValue: string | null | undefined) {
   return rawValue;
 }
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const session = request.cookies.get(SESSION_COOKIE)?.value;
 
@@ -34,8 +37,7 @@ export function proxy(request: NextRequest) {
 
   const isAuthRoute = matchesRoute(pathname, AUTH_ROUTES);
   const isPublicRoute =
-    pathname === "/" ||
-    matchesRoute(pathname, PUBLIC_ROUTES);
+    pathname === "/" || matchesRoute(pathname, PUBLIC_ROUTES);
 
   // Logged-in user visiting an auth page → redirect to callbackUrl or profile
   if (session && isAuthRoute) {
@@ -43,6 +45,19 @@ export function proxy(request: NextRequest) {
       request.nextUrl.searchParams.get("callbackUrl"),
     );
     return NextResponse.redirect(new URL(callbackUrl, request.url));
+  }
+
+  // Logged-in user visiting /onboarding → redirect to /profile if they already have a profile
+  if (session && pathname === "/onboarding") {
+    const apiBase = process.env.NEXT_PUBLIC_API_URL;
+    if (apiBase) {
+      const [profile] = await safeFetch(`${apiBase}/client/profile`, {
+        headers: { Cookie: request.headers.get("cookie") ?? "" },
+      });
+      if (profile) {
+        return NextResponse.redirect(new URL("/profile", request.url));
+      }
+    }
   }
 
   // Not logged in, accessing a protected route → redirect to sign-in

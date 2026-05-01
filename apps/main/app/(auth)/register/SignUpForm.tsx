@@ -54,7 +54,7 @@ const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
   };
 
   const handleGoogleLogin = async () => {
-    const destination = callbackUrl || "/profile";
+    const destination = callbackUrl || "/onboarding";
     await authClient.signIn.social({
       provider: "google",
       callbackURL: destination,
@@ -74,7 +74,7 @@ const SignUpForm: React.FC<Props> = ({ callbackUrl }) => {
         email: formData.email,
         password: formData.password,
         name: formData.fullName,
-        callbackURL: `${window.location.origin}/verify-email`,
+        callbackURL: `${window.location.origin}/onboarding`,
       });
 
       if (error) {

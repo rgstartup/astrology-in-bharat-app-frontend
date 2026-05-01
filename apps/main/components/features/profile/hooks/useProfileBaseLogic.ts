@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/useAuthStore";
 import {
@@ -26,6 +26,7 @@ export const normalizeAddressesForUI = (addresses?: any[]) => {
 
 export const useProfileBaseLogic = () => {
     const router = useRouter();
+    const pathname = usePathname();
     const searchParams = useSearchParams();
     const {
         clientUser,
@@ -62,9 +63,9 @@ export const useProfileBaseLogic = () => {
     // Auth Redirection
     useEffect(() => {
         if (!clientLoading && !isClientAuthenticated && !isLoggingOut) {
-            router.push("/sign-in?callbackUrl=/profile");
+            router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname)}`);
         }
-    }, [clientLoading, isClientAuthenticated, isLoggingOut, router]);
+    }, [clientLoading, isClientAuthenticated, isLoggingOut, router, pathname]);
 
     // Tab Initialization
     useEffect(() => {
