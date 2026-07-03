@@ -239,7 +239,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                 fullWidth
                 loading={isProcessing}
                 onClick={handleRecharge}
-                className="h-16 md:h-20 !rounded-2xl md:!rounded-3xl bg-orange hover:bg-orange/90 border-0 shadow-lg shadow-orange/20 overflow-hidden group"
+                className="min-h-[4rem] py-3 md:py-0 md:h-20 !rounded-2xl md:!rounded-3xl bg-orange hover:bg-orange/90 border-0 shadow-lg shadow-orange/20 overflow-hidden group"
                 disabled={rechargeAmount < 100}
               >
                 <div className="flex items-center justify-between w-full px-4">
@@ -262,7 +262,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                       </div>
                     </div>
                   </div>
-                  <i className="fa-solid fa-arrow-right text-lg md:text-xl text-white/40 group-hover:translate-x-2 transition-transform duration-300 ml-2 md:ml-4"></i>
+                  <i className="fa-solid fa-arrow-right text-lg md:text-xl text-white/40 group-hover:translate-x-2 transition-transform duration-300 ml-2"></i>
                 </div>
               </Button>
             </div>
