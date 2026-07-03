@@ -89,7 +89,9 @@ function ExpertChatRoomContent() {
         fetchSessionInfo();
 
         // 2. Socket Connection
+        console.log(`[Socket] Connecting to chat for session ${sessionId}...`);
         chatSocket.connect();
+        console.log(`[Socket] Emitting join_room for session ${sessionId}`);
         chatSocket.emit('join_room', { sessionId: sessionId });
 
         // Registration for general notifications
@@ -97,7 +99,7 @@ function ExpertChatRoomContent() {
         chatSocket.emit('register_expert', { expert_id: registrationId });
 
         chatSocket.on('new_message', (msg: ChatMessage) => {
-
+            console.log(`[Socket] 📩 Received new_message:`, msg);
             setMessages((prev) => [...prev, msg]);
         });
 
@@ -222,7 +224,20 @@ function ExpertChatRoomContent() {
         }
 
 
-        chatSocket.emit('send_message', payload);
+        console.log(`[Socket] 📤 Sending message:`, payload);
+        chatSocket.emit('send_message', payload, (response: any) => {
+            console.log(`[Socket] 📬 Received ACK for send_message:`, response);
+            // Fallback: If socket broadcast doesn't work for the sender, append it manually from ACK
+            if (response && response.id) {
+                setMessages(prev => {
+                    if (!prev.some(m => m.id === response.id)) {
+                        console.log(`[Socket] 🔧 Appending message manually from ACK`);
+                        return [...prev, response];
+                    }
+                    return prev;
+                });
+            }
+        });
         setInputValue("");
         setPendingAttachment(null);
     };

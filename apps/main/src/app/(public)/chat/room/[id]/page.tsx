@@ -129,10 +129,13 @@ function ChatRoomContent() {
     useEffect(() => {
         if (!sessionId) return;
 
+        console.log(`[Socket] Connecting to chat for session ${sessionId}...`);
         chatSocket.connect();
+        console.log(`[Socket] Emitting join_room for session ${sessionId}`);
         chatSocket.emit('join_room', { sessionId: sessionId });
 
         chatSocket.on('new_message', (message: ChatMessage) => {
+            console.log(`[Socket] 📩 Received new_message:`, message);
             setMessages(prev => [...prev, message]);
             setTypingStatus(null);
         });
@@ -245,7 +248,21 @@ function ChatRoomContent() {
             payload.attachmentType = pendingAttachment.type;
         }
 
-        chatSocket.emit('send_message', payload);
+        console.log(`[Socket] 📤 Sending message:`, payload);
+        chatSocket.emit('send_message', payload, (response: any) => {
+            console.log(`[Socket] 📬 Received ACK for send_message:`, response);
+            // Fallback: If socket broadcast doesn't work for the sender, append it manually from ACK
+            if (response && response.id) {
+                setMessages(prev => {
+                    // Check if already exists to prevent duplicate if broadcast DOES work
+                    if (!prev.some(m => m.id === response.id)) {
+                        console.log(`[Socket] 🔧 Appending message manually from ACK`);
+                        return [...prev, response];
+                    }
+                    return prev;
+                });
+            }
+        });
         setInputValue("");
         setPendingAttachment(null);
     };
