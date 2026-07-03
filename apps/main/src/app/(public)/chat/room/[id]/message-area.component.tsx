@@ -226,17 +226,19 @@ export default function MessageArea({
                     );
                 })}
 
-                {typingStatus?.isTyping && (
-                    <div className="flex gap-3 items-center animate-pulse py-2">
-                        <div className="w-6 h-6 rounded-full bg-orange-500/10 flex items-center justify-center">
-                            <div className="w-1 h-1 bg-orange-500 rounded-full animate-bounce"></div>
-                            <div className="w-1 h-1 bg-orange-500 rounded-full animate-bounce [animation-delay:0.2s] mx-0.5"></div>
-                            <div className="w-1 h-1 bg-orange-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                <div className="!mt-4">
+                    {typingStatus?.isTyping && (
+                        <div className="flex gap-3 items-center animate-pulse py-1">
+                            <div className="w-6 h-6 rounded-full bg-orange-500/10 flex items-center justify-center">
+                                <div className="w-1 h-1 bg-orange-500 rounded-full animate-bounce"></div>
+                                <div className="w-1 h-1 bg-orange-500 rounded-full animate-bounce [animation-delay:0.2s] mx-0.5"></div>
+                                <div className="w-1 h-1 bg-orange-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                            </div>
+                            <span className="text-[10px] uppercase font-bold text-orange-500 tracking-widest">{typingStatus.senderName} is typing...</span>
                         </div>
-                        <span className="text-[10px] uppercase font-bold text-orange-500 tracking-widest">{typingStatus.senderName} is typing...</span>
-                    </div>
-                )}
-                <div ref={messagesEndRef} />
+                    )}
+                    <div ref={messagesEndRef} className="h-1" />
+                </div>
             </div>
         </div>
     );

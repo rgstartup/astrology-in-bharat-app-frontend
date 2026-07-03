@@ -51,6 +51,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   // Local state for optimistic updates
   const [currentLikes, setCurrentLikes] = useState(total_likes);
   const [isAvailable, setIsAvailable] = useState(is_available);
+  const [isBusy, setIsBusy] = useState((expertData as any).is_busy || false);
 
   // Sync with prop if it changes
   React.useEffect(() => {
@@ -73,13 +74,23 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
       if (String(expertIdFromEvent) === String(id) || String(expertIdFromEvent) === String(userId)) {
         console.log(`[Presence] Expert ${name} status changed to ${data.is_available ? 'Online' : 'Offline'}`);
         setIsAvailable(data.is_available);
+        if (!data.is_available) setIsBusy(false); // offline expert can't be busy
+      }
+    };
+
+    const handleBusySync = (data: any) => {
+      const expertIdFromEvent = data.expert_id || data.id;
+      if (String(expertIdFromEvent) === String(id) || String(expertIdFromEvent) === String(userId)) {
+        setIsBusy(data.is_busy);
       }
     };
 
     socket.on("expert_status_changed", handleStatusSync);
+    socket.on("expert_busy_changed", handleBusySync);
 
     return () => {
       socket.off("expert_status_changed", handleStatusSync);
+      socket.off("expert_busy_changed", handleBusySync);
     };
   }, [id, userId, name]);
 
@@ -178,19 +189,23 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
               )}
             </div>
 
-            {/* 🟢 ONLINE / OFFLINE — TOP RIGHT (OUTSIDE IMAGE) */}
+            {/* 🟢 ONLINE / OFFLINE / BUSY — TOP RIGHT (OUTSIDE IMAGE) */}
             <div
               className={`absolute top-2 right-3 z-20 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2 shadow-md
-              ${isAvailable
+              ${
+                isBusy
+                  ? "bg-amber-100 text-amber-700"
+                  : isAvailable
                   ? "bg-green-100 text-green-700"
                   : "bg-gray-100 text-gray-600"
-                }`}
+              }`}
             >
               <i
-                className={`fa-solid fa-circle ${isAvailable ? "text-green-500" : "text-gray-400"
-                  }`}
+                className={`fa-solid fa-circle ${
+                  isBusy ? "text-amber-500" : isAvailable ? "text-green-500" : "text-gray-400"
+                }`}
               />
-              {isAvailable ? t.expertCard.online : t.expertCard.offline}
+              {isBusy ? "Busy" : isAvailable ? t.expertCard.online : t.expertCard.offline}
             </div>
 
             {/* PROFILE IMAGE */}

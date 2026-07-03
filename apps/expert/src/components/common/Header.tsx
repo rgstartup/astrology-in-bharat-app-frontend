@@ -247,7 +247,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
       }
     }
 
-    toast.success(`You are now ${newStatus ? 'Online' : 'Offline'}`);
     setLoading(false);
 
   };

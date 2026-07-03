@@ -16,6 +16,7 @@ type ChatFooterProps = {
     inputValue: string;
     setInputValue: (val: string) => void;
     handleSendMessage: () => void;
+    handleInputTyping?: () => void;
 };
 
 export default function ChatFooter({
@@ -28,14 +29,15 @@ export default function ChatFooter({
     uploading,
     inputValue,
     setInputValue,
-    handleSendMessage
+    handleSendMessage,
+    handleInputTyping
 }: ChatFooterProps) {
     return (
-        <footer className={`flex-shrink-0 transition-all duration-300 ${isDarkMode ? 'bg-[#1a0c0c]/80 border-white/5' : 'bg-white/80 border-black/5'} backdrop-blur-xl border-t px-3 md:px-12 py-3 md:py-10 shadow-[0_-20px_50px_rgba(0,0,0,0.05)] overflow-visible`}>
+        <footer className={`flex-shrink-0 transition-all duration-300 ${isDarkMode ? 'bg-[#1a0c0c]/80 border-white/5' : 'bg-white/80 border-black/5'} backdrop-blur-xl border-t px-3 md:px-12 py-3 md:py-6 shadow-[0_-20px_50px_rgba(0,0,0,0.05)] overflow-visible`}>
             <div className={`relative flex items-center gap-2 md:gap-5 max-w-6xl mx-auto overflow-visible ${sessionStatus !== 'active' ? 'opacity-40 pointer-events-none grayscale' : ''}`}>
                 <div className="flex-1 relative group overflow-visible">
                     <div className="absolute -inset-1 bg-gradient-to-r from-[#fd6410]/20 to-orange-500/20 rounded-[34px] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                    <div className={`relative flex flex-col ${isDarkMode ? 'bg-white/5 border-white/5' : 'bg-gray-50 border-black/5'} border rounded-[20px] md:rounded-[34px] p-1.5 md:p-3 overflow-visible transition-all duration-500 focus-within:ring-2 focus-within:ring-[#fd6410]/50`}>
+                    <div className={`relative flex flex-col ${isDarkMode ? 'bg-white/5' : 'bg-gray-50'} border-2 border-[#fd6410] rounded-[20px] md:rounded-[34px] p-1 md:p-1.5 overflow-visible transition-all duration-300 shadow-[0_0_0_4px_rgba(253,100,16,0.1)]`}>
                         {pendingAttachment && (
                             <div className="mx-2 mb-2 p-2 bg-[#fd6410]/10 rounded-2xl border border-[#fd6410]/20 flex items-center justify-between animate-in slide-in-from-bottom-2">
                                 <span className="text-[10px] font-black uppercase text-[#fd6410] truncate max-w-[180px]">📎 {pendingAttachment.name}</span>
@@ -43,14 +45,17 @@ export default function ChatFooter({
                             </div>
                         )}
                         <div className="flex items-center gap-1.5 md:gap-4 overflow-visible px-1 md:px-2">
-                            <button onClick={() => fileInputRef.current?.click()} className={`shrink-0 p-1.5 md:p-4 rounded-full ${isDarkMode ? 'bg-white/5 text-gray-400 hover:text-white' : 'bg-white text-gray-400 hover:text-[#fd6410]'} transition-all hover:scale-110 active:scale-95 shadow-sm group relative overflow-visible`}>
+                            <button onClick={() => fileInputRef.current?.click()} className={`shrink-0 p-1.5 md:p-2.5 rounded-full ${isDarkMode ? 'bg-white/5 text-gray-400 hover:text-white' : 'bg-white text-gray-400 hover:text-[#fd6410]'} transition-all hover:scale-110 active:scale-95 shadow-sm group relative overflow-visible`}>
                                 <Paperclip className={`w-4 h-4 md:w-6 md:h-6 ${uploading ? 'animate-pulse' : ''}`} />
                                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all pointer-events-none whitespace-nowrap uppercase tracking-widest shadow-xl border border-white/10 z-[100]">Attach File</div>
                             </button>
                             <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept="image/*,.pdf,.doc,.docx" />
                             <textarea
                                 value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
+                                onChange={(e) => {
+                                    setInputValue(e.target.value);
+                                    if (handleInputTyping) handleInputTyping();
+                                }}
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter' && !e.shiftKey) {
                                         e.preventDefault();
@@ -60,7 +65,7 @@ export default function ChatFooter({
                                 rows={1}
                                 style={{ minHeight: '36px' }}
                                 placeholder="Consult with intention..."
-                                className={`flex-1 bg-transparent py-1.5 md:py-4 text-sm md:text-base ${isDarkMode ? 'text-white placeholder:text-gray-500' : 'text-gray-800 placeholder:text-gray-400'} outline-none border-none resize-none max-h-28 custom-scrollbar font-medium leading-relaxed m-0`}
+                                className={`flex-1 bg-transparent py-1.5 md:py-2.5 text-sm md:text-base ${isDarkMode ? 'text-white placeholder:text-gray-500' : 'text-gray-800 placeholder:text-gray-400'} outline-none border-none resize-none max-h-28 custom-scrollbar font-medium leading-relaxed m-0`}
                             />
                             <div className="items-center gap-2 pr-3 pb-3 hidden md:flex">
                                 <span className="text-[9px] font-black tracking-widest uppercase opacity-20">Shift + Enter for new line</span>

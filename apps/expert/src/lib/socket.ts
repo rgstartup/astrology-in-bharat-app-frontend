@@ -13,8 +13,11 @@ export const socket: Socket = io(SOCKET_URL, {
 
 // Expert specific chat socket
 export const chatSocket: Socket = io(`${SOCKET_URL}/chat`, {
-    transports: ["websocket"],
+    transports: ["websocket", "polling"],
     autoConnect: false,
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000,
 });
 
 // Expert specific call socket
@@ -31,6 +34,11 @@ socket.on("connect_error", (err) => {
 });
 
 chatSocket.on("connect", () => {
+    console.log("[ChatSocket] ✅ Expert Connected! Socket ID:", chatSocket.id);
+});
+
+chatSocket.on("disconnect", (reason) => {
+    console.warn("[ChatSocket] ⚠️ Expert Disconnected:", reason);
 });
 
 chatSocket.on("connect_error", (err) => {

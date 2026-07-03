@@ -40,6 +40,8 @@ function ExpertChatRoomContent() {
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [typingStatus, setTypingStatus] = useState<{ senderName: string; isTyping: boolean } | null>(null);
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const [clientName, setClientName] = useState("Client");
     const [clientAvatar, setClientAvatar] = useState<string | null>(null);
@@ -89,18 +91,30 @@ function ExpertChatRoomContent() {
         fetchSessionInfo();
 
         // 2. Socket Connection
-        console.log(`[Socket] Connecting to chat for session ${sessionId}...`);
-        chatSocket.connect();
-        console.log(`[Socket] Emitting join_room for session ${sessionId}`);
-        chatSocket.emit('join_room', { sessionId: sessionId });
+        const joinRoom = () => {
+            console.log(`[Socket] ✅ Connected! Joining room_${sessionId}...`);
+            chatSocket.emit('join_room', { sessionId: sessionId });
+        };
 
-        // Registration for general notifications
-        const registrationId = user.profileId || user.id;
-        chatSocket.emit('register_expert', { expert_id: registrationId });
+        // If already connected, join room immediately
+        if (chatSocket.connected) {
+            joinRoom();
+        }
+
+        // Join room when socket connects (or reconnects)
+        chatSocket.on('connect', joinRoom);
+
+        console.log(`[Socket] Connecting to chat socket for session ${sessionId}...`);
+        chatSocket.connect();
 
         chatSocket.on('new_message', (msg: ChatMessage) => {
             console.log(`[Socket] 📩 Received new_message:`, msg);
             setMessages((prev) => [...prev, msg]);
+            setTypingStatus(null);
+        });
+
+        chatSocket.on('typing_status', (data: { senderName: string; isTyping: boolean }) => {
+            setTypingStatus(data);
         });
 
         chatSocket.on('session_activated', (session: any) => {
@@ -140,7 +154,9 @@ function ExpertChatRoomContent() {
         });
 
         return () => {
+            chatSocket.off('connect', joinRoom);
             chatSocket.off('new_message');
+            chatSocket.off('typing_status');
             chatSocket.off('session_activated');
             chatSocket.off('session_ended');
             // Do NOT disconnect, as the shared socket is needed for global notifications (ChatNotificationListener)
@@ -186,8 +202,11 @@ function ExpertChatRoomContent() {
     }, [timeLeft, sessionStatus, expiresAt]);
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+        const timer = setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+        return () => clearTimeout(timer);
+    }, [messages, typingStatus]);
 
     const handleActivate = async () => {
         setIsActivating(true);
@@ -206,6 +225,24 @@ function ExpertChatRoomContent() {
             }
         }
         setIsActivating(false);
+    };
+
+    const handleInputTyping = () => {
+        if (!sessionId || !user) return;
+        chatSocket.emit('typing', {
+            sessionId,
+            senderName: user.name || 'Expert',
+            isTyping: true
+        });
+
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = setTimeout(() => {
+            chatSocket.emit('typing', {
+                sessionId,
+                senderName: user.name || 'Expert',
+                isTyping: false
+            });
+        }, 1500);
     };
 
     const handleSendMessage = () => {
@@ -559,15 +596,27 @@ function ExpertChatRoomContent() {
                         </div>
                     );
                 })}
-                <div ref={messagesEndRef} />
+                <div className="!mt-4">
+                    {typingStatus?.isTyping && (
+                        <div className="flex gap-3 items-center animate-pulse py-1">
+                            <div className="w-6 h-6 rounded-full bg-gray-500/10 flex items-center justify-center">
+                                <div className="w-1 h-1 bg-gray-500 rounded-full animate-bounce"></div>
+                                <div className="w-1 h-1 bg-gray-500 rounded-full animate-bounce [animation-delay:0.2s] mx-0.5"></div>
+                                <div className="w-1 h-1 bg-gray-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                            </div>
+                            <span className="text-[10px] uppercase font-bold text-gray-500 tracking-widest">{typingStatus.senderName} is typing...</span>
+                        </div>
+                    )}
+                    <div ref={messagesEndRef} className="h-1" />
+                </div>
             </div>
 
             {/* Input Area */}
-            <div className="p-2 sm:p-4 border-t border-gray-100 bg-white">
-                <div className="flex flex-col gap-2">
+            <div className="p-3 sm:p-6 border-t border-gray-100 bg-white">
+                <div className="flex flex-col bg-gray-50 border-2 border-[#fd6410] rounded-[24px] md:rounded-[34px] p-1.5 md:p-2 shadow-[0_0_0_4px_rgba(253,100,16,0.1)] transition-all">
                     {/* Preview Area */}
                     {pendingAttachment && (
-                        <div className="flex items-center self-start gap-2 bg-orange-50 border border-orange-100 rounded-xl px-2 py-1.5 mb-2 animate-in slide-in-from-bottom-2">
+                        <div className="flex items-center self-start gap-2 bg-orange-100 border border-orange-200 rounded-xl px-3 py-2 mb-2 ml-2 animate-in slide-in-from-bottom-2">
                             {pendingAttachment.type === 'image' ? (
                                 <img src={pendingAttachment.url} className="w-8 h-8 rounded object-cover border border-orange-200" alt="Preview" />
                             ) : (
@@ -580,11 +629,11 @@ function ExpertChatRoomContent() {
                         </div>
                     )}
 
-                    <div className="flex items-center gap-1 sm:gap-4">
+                    <div className="flex items-center gap-1.5 sm:gap-3 px-1 md:px-2">
                         <button
                             onClick={() => fileInputRef.current?.click()}
                             disabled={uploading}
-                            className={`p-2 sm:p-3 text-gray-400 hover:text-[#fd6410] hover:bg-orange-50 rounded-xl transition-all ${uploading ? 'animate-pulse' : ''} shrink-0`}
+                            className={`p-2.5 sm:p-3 text-gray-400 hover:text-[#fd6410] bg-white hover:bg-orange-50 rounded-full transition-all shadow-sm border border-black/5 ${uploading ? 'animate-pulse' : ''} shrink-0`}
                         >
                             {uploading ? <div className="w-5 h-5 border-2 border-[#fd6410]/30 border-t-[#fd6410] rounded-full animate-spin" /> : <Paperclip className="w-5 h-5" />}
                         </button>
@@ -595,31 +644,34 @@ function ExpertChatRoomContent() {
                             onChange={handleFileUpload}
                             accept="image/*,.pdf,.doc,.docx"
                         />
-                        <div className="flex-1 bg-gray-50 rounded-2xl border border-gray-200 px-3 sm:px-4 py-1.5 sm:py-2 focus-within:border-[#fd6410] focus-within:ring-1 focus-within:ring-[#fd6410] transition-all min-w-0">
+                        <div className="flex-1 min-w-0">
                             <textarea
                                 rows={1}
                                 placeholder="Type your message..."
                                 value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
+                                onChange={(e) => {
+                                    setInputValue(e.target.value);
+                                    handleInputTyping();
+                                }}
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter' && !e.shiftKey) {
                                         e.preventDefault();
                                         handleSendMessage();
                                     }
                                 }}
-                                className="bg-transparent border-none outline-none text-sm w-full text-black placeholder:text-gray-400 resize-none min-h-[36px] sm:min-h-[40px] max-h-32 py-2"
+                                className="bg-transparent border-none outline-none text-sm w-full text-black placeholder:text-gray-400 resize-none min-h-[36px] sm:min-h-[40px] max-h-32 py-2 px-2"
                             />
                         </div>
                         <button
                             onClick={handleSendMessage}
                             disabled={!inputValue.trim() && !pendingAttachment}
-                            className={`p-2.5 sm:p-4 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all shrink-0 ${
+                            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all shrink-0 ${
                                 inputValue.trim() || pendingAttachment
                                     ? 'bg-[#fd6410] text-white shadow-lg shadow-orange-500/30 hover:bg-[#e55a0e] hover:-translate-y-0.5'
-                                    : 'bg-gray-100 text-gray-400'
+                                    : 'bg-white text-gray-400 border border-black/5 shadow-sm'
                             }`}
                         >
-                            <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                            <Send className="w-4 h-4 sm:w-5 sm:h-5 ml-1" />
                         </button>
                     </div>
                 </div>

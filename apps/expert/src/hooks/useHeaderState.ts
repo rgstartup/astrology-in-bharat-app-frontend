@@ -24,7 +24,10 @@ export const useHeaderState = () => {
     if (user?.isAvailable !== undefined && !isSessionReady) {
       const hasInitialized = sessionStorage.getItem("expert_session_initialized");
 
-      if (!hasInitialized) {
+      // Check if we're on the chat page — if so, don't force offline mid-session
+      const isOnChatPage = typeof window !== 'undefined' && window.location.pathname.includes('/chat/');
+
+      if (!hasInitialized && !isOnChatPage) {
         
         // Force offline in state immediately
         setIsOnline(false);
@@ -40,7 +43,11 @@ export const useHeaderState = () => {
         sessionStorage.setItem("expert_session_initialized", "true");
         setIsSessionReady(true);
       } else {
-        setIsOnline(user.isAvailable);
+        // Either already initialized or on chat page — just use current availability
+        setIsOnline(user.isAvailable ?? false);
+        if (!hasInitialized) {
+          sessionStorage.setItem("expert_session_initialized", "true");
+        }
         setIsSessionReady(true);
       }
     }
@@ -193,7 +200,6 @@ export const useHeaderState = () => {
       }
     }
 
-    toast.success(`You are now ${newStatus ? 'Online' : 'Offline'}`);
     setLoading(false);
   };
 

@@ -25,8 +25,11 @@ export const socket: Socket = isBrowser
 
 export const chatSocket: Socket = isBrowser
     ? io(`${SOCKET_URL}/chat`, {
-        transports: ["websocket"],
+        transports: ["websocket", "polling"],
         autoConnect: false,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
     })
     : createDummySocket();
 
@@ -37,7 +40,13 @@ if (isBrowser) {
         console.error("[Socket] ❌ Main App Connection Error:", getErrorMessage(err));
     });
 
-    chatSocket.on("connect", () => { });
+    chatSocket.on("connect", () => {
+        console.log("[ChatSocket] ✅ Connected! Socket ID:", chatSocket.id);
+    });
+
+    chatSocket.on("disconnect", (reason) => {
+        console.warn("[ChatSocket] ⚠️ Disconnected:", reason);
+    });
 
     chatSocket.on("connect_error", (err) => {
         console.error("[ChatSocket] ❌ Connection Error:", getErrorMessage(err));

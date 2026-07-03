@@ -29,17 +29,15 @@ export const ChatNotificationListener: React.FC = () => {
     useEffect(() => {
         if (!isAuthenticated || !user) return;
 
-        if (!chatSocket.connected) {
-            chatSocket.connect();
-        } else {
-            registerExpert();
-        }
+        const registrationId = user.profileId || user.id;
 
         const onConnect = () => {
-            registerExpert();
+            console.log('[ChatNotification] ✅ Socket connected! Registering expert:', registrationId);
+            chatSocket.emit('register_expert', { expert_id: registrationId });
         };
 
         const handleNewRequest = (session: any) => {
+            console.log('[ChatNotification] 🔔 New chat request received:', session);
             const isFree = !!session.isFree;
             const callerName = session.user?.name || "A Client";
             const callerAvatar = 
@@ -101,7 +99,7 @@ export const ChatNotificationListener: React.FC = () => {
                 </div>),
                 {
                     containerId: "notification",
-                    position: "top-center",
+                    position: "bottom-right",
                     autoClose: false,
                     closeOnClick: false,
                     draggable: false,
@@ -139,9 +137,19 @@ export const ChatNotificationListener: React.FC = () => {
             );
         };
 
+        // Register listeners
         chatSocket.on('connect', onConnect);
         chatSocket.on('new_chat_request', handleNewRequest);
         chatSocket.on('session_ended', handleSessionEnded);
+
+        // If already connected, register immediately
+        if (chatSocket.connected) {
+            console.log('[ChatNotification] Already connected, registering expert immediately:', registrationId);
+            chatSocket.emit('register_expert', { expert_id: registrationId });
+        } else {
+            console.log('[ChatNotification] Socket not connected yet, will register on connect...');
+            chatSocket.connect();
+        }
 
         return () => {
             chatSocket.off('new_chat_request', handleNewRequest);

@@ -72,7 +72,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <SocketConnectionManager />
             {children}
             <ToastContainer position="top-right" />
-            <ToastContainer containerId="notification" position="top-center" />
+            <ToastContainer containerId="notification" position="bottom-right" />
           </AuthInitializer>
         </ReactQueryProvider>
       </body>

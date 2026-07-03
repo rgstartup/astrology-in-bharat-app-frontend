@@ -140,7 +140,7 @@ export default function Header({
 
             {/* ── DESKTOP: Timers + End Button inline (hidden on mobile) ── */}
             {sessionStatus === 'active' && (
-                <div className="hidden md:flex items-center gap-5 absolute right-8 top-1/2 -translate-y-1/2">
+                <div className="hidden md:flex items-center gap-5 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
                     <div className="flex flex-col items-end gap-0.5">
                         <span className="text-[9px] font-black uppercase tracking-[0.1em] text-white/80 whitespace-nowrap leading-none">Elapsed</span>
                         <span className="text-base font-black tabular-nums text-white leading-none">

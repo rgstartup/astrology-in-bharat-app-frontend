@@ -57,6 +57,7 @@ function ChatRoomContent() {
     const [pendingAttachment, setPendingAttachment] = useState<{ url: string; type: "image" | "document"; name: string } | null>(null);
 
     const isEndingSession = useRef(false);
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const [mounted, setMounted] = useState(false);
 
@@ -129,10 +130,21 @@ function ChatRoomContent() {
     useEffect(() => {
         if (!sessionId) return;
 
-        console.log(`[Socket] Connecting to chat for session ${sessionId}...`);
+        const joinRoom = () => {
+            console.log(`[Socket] ✅ Connected! Joining room_${sessionId}...`);
+            chatSocket.emit('join_room', { sessionId: sessionId });
+        };
+
+        // If already connected, join room immediately
+        if (chatSocket.connected) {
+            joinRoom();
+        }
+
+        // Join room when socket connects (or reconnects)
+        chatSocket.on('connect', joinRoom);
+
+        console.log(`[Socket] Connecting to chat socket for session ${sessionId}...`);
         chatSocket.connect();
-        console.log(`[Socket] Emitting join_room for session ${sessionId}`);
-        chatSocket.emit('join_room', { sessionId: sessionId });
 
         chatSocket.on('new_message', (message: ChatMessage) => {
             console.log(`[Socket] 📩 Received new_message:`, message);
@@ -177,6 +189,7 @@ function ChatRoomContent() {
         });
 
         return () => {
+            chatSocket.off('connect', joinRoom);
             chatSocket.off('new_message');
             chatSocket.off('typing_status');
             chatSocket.off('session_activated');
@@ -283,6 +296,24 @@ function ChatRoomContent() {
         }
 
         chatSocket.emit('end_chat', { sessionId: sessionId });
+    };
+
+    const handleInputTyping = () => {
+        if (!sessionId || !user) return;
+        chatSocket.emit('typing', {
+            sessionId,
+            senderName: user.name || 'User',
+            isTyping: true
+        });
+
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = setTimeout(() => {
+            chatSocket.emit('typing', {
+                sessionId,
+                senderName: user.name || 'User',
+                isTyping: false
+            });
+        }, 1500);
     };
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -399,6 +430,7 @@ function ChatRoomContent() {
                         inputValue={inputValue}
                         setInputValue={setInputValue}
                         handleSendMessage={handleSendMessage}
+                        handleInputTyping={handleInputTyping}
                     />
                 </div>
 
