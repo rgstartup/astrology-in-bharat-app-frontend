@@ -1,5 +1,6 @@
 import StaticPageLayout from "@/components/layout/StaticPageLayout";
 import { Metadata } from "next";
+import TermsSeoContent from "./terms-seo.component";
 
 export const metadata: Metadata = {
     title: "Terms & Conditions | Astrology in Bharat",
@@ -64,6 +65,7 @@ export default function TermsAndConditionsPage() {
             <p>
                 If you have any questions about these Terms and Conditions, please contact us at legal@astrologyinbharat.com.
             </p>
+            <TermsSeoContent />
         </StaticPageLayout>
     );
 }

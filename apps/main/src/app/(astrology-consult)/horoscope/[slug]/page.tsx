@@ -15,6 +15,7 @@ import PlanetaryInfluence from "./planetary-influence.component";
 import { LuckyAspects, RemedyForYou } from "./bottom-cards.component";
 import ZodiacDetailsSidebar from "./sidebar.component";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
+import ZodiacSignSeoContent from "./zodiac-seo-content.component";
 
 export default function ZodiacDetailsPage() {
   const params = useParams();
@@ -172,6 +173,9 @@ export default function ZodiacDetailsPage() {
 
         </div>
       </div>
+
+      {/* SEO/Content Section Specific to Sign */}
+      <ZodiacSignSeoContent signSlug={slug} />
 
     </div>
   );

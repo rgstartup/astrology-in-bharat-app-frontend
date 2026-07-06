@@ -12,11 +12,13 @@ import { api as http } from "@/lib/api";
 import { API_ROUTES } from "@/lib/api-routes";
 import { ExpertPuja } from "@/lib/types/puja";
 import Image from "next/image";
-import Link from "next/link";
+import LoginModal from "@/components/features/auth/LoginModal";
+import PujaDetailSeoContent from "./puja-detail-seo.component";
 import { Loading } from "@repo/ui";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@repo/lib";
+import Link from "next/link";
 
 const PujaDetailPage = () => {
     const { id } = useParams();
@@ -596,6 +598,9 @@ const PujaDetailPage = () => {
                     ) : null}
                 </div>
             </div>
+
+            {/* Dynamic SEO Content */}
+            <PujaDetailSeoContent pujaName={puja.name} />
 
             {isBooking && <Loading fullScreen />}
         </div>

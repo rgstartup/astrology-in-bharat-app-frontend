@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import NakshatraSeoContent from "./nakshatra-seo.component";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 
 // ── 27 Nakshatras Data ────────────────────────────────────────────────────────
@@ -204,6 +205,10 @@ export default function NakshatraFinderPage() {
           </Link>
         </section>
       </div>
+
+      {/* ── SEO Section ── */}
+      <NakshatraSeoContent />
+
     </div>
   );
 }

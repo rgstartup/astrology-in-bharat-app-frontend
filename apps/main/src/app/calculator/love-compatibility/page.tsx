@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
+import LoveCompatibilitySeoContent from "./love-compatibility-seo.component";
 
 // ── Circular Progress Ring ───────────────────────────────────────────────────
 const CircleProgress = ({ percent }: { percent: number }) => {
@@ -342,6 +343,10 @@ const LoveCompatibilityPage = () => {
         </section>
 
       </div>
+
+      {/* ── SEO Section ── */}
+      <LoveCompatibilitySeoContent />
+
     </div>
   );
 };

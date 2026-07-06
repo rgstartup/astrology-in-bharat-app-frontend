@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
+import FlamesSeoContent from "./flames-seo.component";
 
 // ─── FLAMES Logic ────────────────────────────────────────────────────────────
 const FLAMES_DATA = [
@@ -240,6 +241,10 @@ const FlamesCalculatorPage = () => {
         </section>
 
       </div>
+
+      {/* ── SEO Section ── */}
+      <FlamesSeoContent />
+
     </div>
   );
 };

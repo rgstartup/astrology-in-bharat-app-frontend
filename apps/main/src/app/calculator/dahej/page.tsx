@@ -5,6 +5,7 @@ import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
 import { hashSeed, normalizeName, getJobTier, formatIndianCurrency } from "./helpers";
+import DahejSeoContent from "./dahej-seo.component";
 
 // ─── Dropdown options ────────────────────────────────────────────────────────
 const EDUCATION_OPTIONS = [
@@ -269,6 +270,10 @@ const DahejCalculatorPage = () => {
         </div>
 
       </div>
+
+      {/* ── SEO & Awareness Section ── */}
+      <DahejSeoContent />
+
     </div>
   );
 };

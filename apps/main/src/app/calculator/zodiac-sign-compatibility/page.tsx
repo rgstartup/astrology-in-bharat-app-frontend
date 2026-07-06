@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
+import ZodiacCompatibilitySeoContent from "./zodiac-compatibility-seo.component";
 import ChooseYourZodiac from "@/components/layout/main/ChooseYourZodiac";
 
 const ZODIAC_SIGNS = [
@@ -262,6 +263,10 @@ export default function ZodiacCompatibilityPage() {
           </Link>
         </section>
       </div>
+
+      {/* ── SEO Section ── */}
+      <ZodiacCompatibilitySeoContent />
+
     </div>
   );
 }

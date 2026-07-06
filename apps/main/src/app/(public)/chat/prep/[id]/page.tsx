@@ -15,6 +15,7 @@ import { Expert } from "@/lib/types";
 import HeroInfo from "./hero-info.component";
 import ExpertPreview from "./expert-preview.component";
 import SecurityTipsModal from "./security-modal.component";
+import ChatPrepSeoContent from "./chat-prep-seo.component";
 
 const { ChevronLeft } = LucideIcons as any;
 
@@ -231,7 +232,7 @@ export default function ConsultationPrep() {
 
 
 
-      <main className="max-w-6xl mx-auto px-4 pt-10 md:pt-16">
+      <main className="max-w-6xl mx-auto px-4 pt-10 md:pt-16 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <HeroInfo expertName={expert?.name} />
 
@@ -245,6 +246,9 @@ export default function ConsultationPrep() {
             actionLoading={actionLoading}
           />
         </div>
+
+        {/* --- SEO Section --- */}
+        <ChatPrepSeoContent />
       </main>
 
       <SecurityTipsModal

@@ -3,6 +3,7 @@ import React from "react";
 import ProductGrid from "@/components/features/shop/ProductGrid";
 import { api } from "@/lib/api";
 import { Product } from "@/lib/types";
+import ProductSeoContent from "./product-seo.component";
 
 async function getProducts(): Promise<Product[]> {
   const [data, fetchError] = await api.get<any>(`/products?limit=100`, { cache: "no-store" });
@@ -21,6 +22,7 @@ const ProductPage = async () => {
   return (
     <>
       <ProductGrid products={products} />
+      <ProductSeoContent />
     </>
   );
 };

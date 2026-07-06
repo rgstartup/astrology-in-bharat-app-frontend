@@ -20,6 +20,7 @@ import {
 import { DEFAULT_QUERIES, TEMPLE_CATEGORIES } from "@/components/features/famous-places/constants";
 import PlaceCard from "@/components/features/famous-places/PlaceCard";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
+import FamousPlacesSeoContent from "./famous-places-seo.component";
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -182,6 +183,8 @@ const FamousPlacesPage = () => {
           buttonLink="/chat"
           buttonIcon="fa-solid fa-comments"
         />
+        {/* 6. SEO Content */}
+        <FamousPlacesSeoContent />
       </div>
 
       {/* Global loading overlay */}

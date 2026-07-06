@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
+import LoveCalculatorSeoContent from "./love-calculator-seo.component";
 
 // ── Circular Progress Ring ───────────────────────────────────────────────────
 const CircleProgress = ({ percent }: { percent: number }) => {
@@ -259,16 +260,11 @@ const LoveCalculatorPage = () => {
           description="Talk to our Astrology Experts and get personalized relationship guidance."
         />
 
-        {/* ── Section Label ── */}
-        <div className="mt-12">
-          <p className="text-[#F26500] font-black text-xl tracking-widest uppercase">
-            02. LOVE CALCULATOR
-          </p>
-          <p className="text-[#666] text-sm mt-2 max-w-2xl">
-            Our Love Calculator uses ancient Vedic astrology principles combined with modern numerology to calculate your love compatibility score. Enter both names and birth dates for the most accurate result.
-          </p>
-        </div>
       </div>
+
+      {/* ── SEO Section ── */}
+      <LoveCalculatorSeoContent />
+
     </div>
   );
 };

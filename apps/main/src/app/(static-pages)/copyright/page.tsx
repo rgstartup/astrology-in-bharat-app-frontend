@@ -1,5 +1,6 @@
 import StaticPageLayout from "@/components/layout/StaticPageLayout";
 import { Metadata } from "next";
+import CopyrightSeoContent from "./copyright-seo.component";
 
 export const metadata: Metadata = {
     title: "Copyright Notice | Astrology in Bharat",
@@ -56,6 +57,8 @@ export default function CopyrightNoticePage() {
             <p className="mt-8 font-semibold">
                 © 2026 Astrology in Bharat. All rights reserved.
             </p>
+
+            <CopyrightSeoContent />
         </StaticPageLayout>
     );
 }

@@ -20,9 +20,8 @@ const AstrologyServices = () => {
             <span>{t.services.title}</span>
           </h2>
           <div className="overflow-hidden">
-            <div className="h-[460px] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-orange/50 [&::-webkit-scrollbar-thumb]:rounded-full">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-1 pb-1">
-                {homepageData.astrologyServices.map((service) => (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-1 pb-1">
+              {homepageData.astrologyServices.map((service) => (
                   <div key={service.id} className="mb-4">
                     <Link
                       href="/our-experts"
@@ -36,7 +35,6 @@ const AstrologyServices = () => {
             </div>
           </div>
         </div>
-      </div>
     </section>
   );
 };

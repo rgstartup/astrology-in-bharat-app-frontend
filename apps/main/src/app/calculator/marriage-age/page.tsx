@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
+import MarriageAgeSeoContent from "./marriage-age-seo.component";
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 const icons = {
@@ -366,6 +367,10 @@ const MarriageAgeCalculatorPage = () => {
         </section>
 
       </div>
+
+      {/* ── SEO Section ── */}
+      <MarriageAgeSeoContent />
+
     </div>
   );
 };

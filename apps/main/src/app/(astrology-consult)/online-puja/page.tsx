@@ -5,8 +5,9 @@ import Image from "next/image";
 import { 
     Search, MapPin, Monitor, ChevronDown, Loader2, 
     ShieldCheck, Sparkles, Star, Users, BookOpen, 
-    ThumbsUp, PhoneCall, MessageCircle, HeartHandshake
+    ThumbsUp, PhoneCall, MessageCircle, HeartHandshake, CheckCircle2
 } from "lucide-react";
+import OnlinePujaSeoContent from "./online-puja-seo.component";
 import { api as http } from "@/lib/api";
 import { API_ROUTES } from "@/lib/api-routes";
 import { ExpertPuja } from "@/lib/types/puja";
@@ -252,6 +253,9 @@ const OnlinePujaPage = () => {
                     </Link>
                 </section>
             </div>
+
+            {/* SEO Content */}
+            <OnlinePujaSeoContent />
 
         </div>
     );

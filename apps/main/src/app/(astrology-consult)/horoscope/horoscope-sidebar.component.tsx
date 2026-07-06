@@ -132,7 +132,7 @@ const HoroscopeSidebar = () => {
           <p className="text-white/80 text-[13px] leading-relaxed mb-6">
             Get detailed predictions based on your birth chart from our expert astrologers.
           </p>
-          <Link href="/expert" className="bg-[#F26500] hover:bg-orange-600 transition-colors text-white text-[14px] font-bold px-4 py-2 rounded-lg flex items-center justify-center gap-2 w-fit">
+          <Link href="/our-experts" className="bg-[#F26500] hover:bg-orange-600 transition-colors text-white text-[14px] font-bold px-4 py-2 rounded-lg flex items-center justify-center gap-2 w-fit">
             <i className="fa-solid fa-comments"></i> Talk to Expert
           </Link>
         </div>

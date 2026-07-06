@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import OurExpert from "@/components/layout/main/ourExpert";
 import { ExpertGridSkeleton } from "@/components/features/experts/SkeletonCard";
 import ExpertListWrapper from "@/components/features/experts/ExpertListWrapper";
+import OurExpertsSeoContent from "./our-experts-seo.component";
 
 function OurExpertsLoading() {
   return (
@@ -19,12 +20,15 @@ function OurExpertsLoading() {
 
 const page = ({ searchParams }: { searchParams: any }) => {
   return (
-    <Suspense fallback={<OurExpertsLoading />}>
-      <ExpertListWrapper
-        searchParams={searchParams}
-        layout="grid"
-      />
-    </Suspense>
+    <>
+      <Suspense fallback={<OurExpertsLoading />}>
+        <ExpertListWrapper
+          searchParams={searchParams}
+          layout="grid"
+        />
+      </Suspense>
+      <OurExpertsSeoContent />
+    </>
   );
 };
 

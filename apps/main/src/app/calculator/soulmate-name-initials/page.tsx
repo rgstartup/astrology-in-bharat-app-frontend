@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
+import SoulmateSeoContent from "./soulmate-seo.component";
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 const icons = {
@@ -298,6 +299,10 @@ const SoulmateInitialsPage = () => {
         </section>
 
       </div>
+
+      {/* ── SEO Section ── */}
+      <SoulmateSeoContent />
+
     </div>
   );
 };

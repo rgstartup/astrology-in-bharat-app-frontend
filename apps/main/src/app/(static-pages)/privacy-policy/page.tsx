@@ -1,5 +1,6 @@
 import StaticPageLayout from "@/components/layout/StaticPageLayout";
 import { Metadata } from "next";
+import PrivacySeoContent from "./privacy-seo.component";
 
 export const metadata: Metadata = {
     title: "Privacy Policy | Astrology in Bharat",
@@ -64,6 +65,7 @@ export default function PrivacyPolicyPage() {
             <p>
                 If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us at support@astrologyinbharat.com.
             </p>
+            <PrivacySeoContent />
         </StaticPageLayout>
     );
 }

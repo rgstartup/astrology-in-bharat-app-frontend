@@ -5,8 +5,8 @@ import { getSupportSettings, SupportSettings } from "@/libs/api-profile";
 import Image from "next/image";
 import Link from "next/link";
 import { FaSpinner } from "react-icons/fa";
-
 import { Loading } from "@repo/ui";
+import ContactSeoContent from "./contact-seo.component";
 
 const HelpSupportPage = () => {
   const [supportSettings, setSupportSettings] = useState<SupportSettings>({
@@ -173,6 +173,9 @@ const HelpSupportPage = () => {
         </div>
         
 
+
+        {/* --- SEO Section --- */}
+        <ContactSeoContent />
 
       </div>
     </div>

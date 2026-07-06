@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import LuckyNumberColorSeoContent from "./lucky-number-color-seo.component";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 
 // Helper function to calculate lucky number from date
@@ -216,6 +217,10 @@ export default function LuckyNumberColorCalculatorPage() {
           </Link>
         </section>
       </div>
+
+      {/* ── SEO Section ── */}
+      <LuckyNumberColorSeoContent />
+
     </div>
   );
 }

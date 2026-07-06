@@ -24,7 +24,9 @@ import AuspiciousMuhuratWidget from "@/components/features/calendar/AuspiciousMu
 import MoonPhaseWidget from "@/components/features/calendar/MoonPhaseWidget";
 import UpcomingFestivalsWidget from "@/components/features/calendar/UpcomingFestivalsWidget";
 import ZodiacHoroscopeWidget from "@/components/features/calendar/ZodiacHoroscopeWidget";
+import MonthView from "@/components/features/hindu-calendar/MonthView";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
+import HinduCalendarSeoContent from "./hindu-calendar-seo.component";
 
 export default function HinduCalendarPage() {
   const { lang } = useLanguageStore();
@@ -152,6 +154,9 @@ export default function HinduCalendarPage() {
             description="Talk to our Astrology Experts and get accurate personal guidance."
           />
         </div>
+
+        {/* ── SEO Section ── */}
+        <HinduCalendarSeoContent />
 
       </div>
     </div>

@@ -65,6 +65,70 @@
             "description": "Know your nakshatra traits and their influence on your personality.",
             "price": 399,
             "slug": "nakshatra"
+        },
+        {
+            "id": 9,
+            "image": "/images/ser9.jpg",
+            "title": "Tarot Reading",
+            "description": "Gain insights into your past, present, and future through tarot cards.",
+            "price": 499,
+            "slug": "tarot-reading"
+        },
+        {
+            "id": 10,
+            "image": "/images/ser10.jpg",
+            "title": "Vastu Shastra",
+            "description": "Align your home and workspace for positive energy and prosperity.",
+            "price": 999,
+            "slug": "vastu-shastra"
+        },
+        {
+            "id": 11,
+            "image": "/images/ser11.jpg",
+            "title": "Palmistry",
+            "description": "Unveil your destiny and traits written in the lines of your hands.",
+            "price": 399,
+            "slug": "palmistry"
+        },
+        {
+            "id": 12,
+            "image": "/images/ser12.jpg",
+            "title": "Face Reading",
+            "description": "Discover hidden traits and future possibilities through physiognomy.",
+            "price": 299,
+            "slug": "face-reading"
+        },
+        {
+            "id": 13,
+            "image": "/images/ser16.jpg",
+            "title": "Gemstone Consultation",
+            "description": "Find the lucky gemstone to attract positivity, wealth, and success.",
+            "price": 499,
+            "slug": "gemstone-consultation"
+        },
+        {
+            "id": 14,
+            "image": "/images/ser4.jpg",
+            "title": "Nadi Astrology",
+            "description": "Discover past-life karmas and their impact on your present life.",
+            "price": 899,
+            "slug": "nadi-astrology"
+        },
+        {
+            "id": 15,
+            "image": "/images/ser2.jpg",
+            "title": "Prashna Kundli",
+            "description": "Get precise answers to your specific and immediate life questions.",
+            "price": 399,
+            "slug": "prashna-kundli"
+        },
+        {
+            "id": 16,
+            "image": "/images/ser5.jpg",
+            "title": "Mangal Dosh Niwaran",
+            "description": "Remedies to minimize Manglik dosha and improve marital bliss.",
+            "price": 1099,
+            "slug": "mangal-dosh-niwaran"
         }
     ],
     "consultationServices": [
@@ -139,6 +203,30 @@
             "price": 849,
             "slug": "business-problem-solution",
             "description": "Expand your business and overcome financial hurdles with astrology."
+        },
+        {
+            "id": 10,
+            "image": "/images/ser13.jpg",
+            "title": "Career Problem Solution",
+            "price": 799,
+            "slug": "career-problem-solution",
+            "description": "Get expert guidance to choose the right career path and overcome obstacles."
+        },
+        {
+            "id": 11,
+            "image": "/images/ser14.jpg",
+            "title": "Health Problem Solution",
+            "price": 599,
+            "slug": "health-problem-solution",
+            "description": "Astrological remedies to improve your health and well-being."
+        },
+        {
+            "id": 12,
+            "image": "/images/ser15.jpg",
+            "title": "Financial Problem Solution",
+            "price": 699,
+            "slug": "financial-problem-solution",
+            "description": "Attract wealth and overcome financial difficulties with expert remedies."
         }
     ],
     "testimonials": [

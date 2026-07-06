@@ -9,6 +9,7 @@ import { ZodiacSignsData } from "@/components/features/services/zodiac";
 import HeroComponent from "./hero.component";
 import ZodiacGrid from "./zodiac-grid.component";
 import HoroscopeSidebar from "./horoscope-sidebar.component";
+import HoroscopeSeoContent from "./horoscope-seo-content.component";
 
 const HoroscopeContent = () => {
   const router = useRouter();
@@ -114,7 +115,7 @@ const HoroscopeContent = () => {
             <p className="text-white/80 text-[13px] md:text-[14px]">Talk to our Astrology Experts and get personalized temple recommendations.</p>
           </div>
           <div className="relative z-10">
-            <Link href="/expert" className="bg-[#F26500] hover:bg-orange-600 transition-colors text-white text-[15px] font-bold px-6 py-3 rounded-xl flex items-center justify-center gap-2 whitespace-nowrap">
+            <Link href="/our-experts" className="bg-[#F26500] hover:bg-orange-600 transition-colors text-white text-[15px] font-bold px-6 py-3 rounded-xl flex items-center justify-center gap-2 whitespace-nowrap">
               <i className="fa-solid fa-comments"></i> Talk to Expert
             </Link>
           </div>
@@ -124,6 +125,9 @@ const HoroscopeContent = () => {
           </div>
         </div>
       </div>
+
+      {/* SEO/Content Section */}
+      <HoroscopeSeoContent />
 
     </div>
   );

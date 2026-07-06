@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
+import NameNumerologySeoContent from "./name-numerology-seo.component";
 
 // ── Pythagorean Numerology ────────────────────────────────────────────────────
 const letterValue = (ch: string): number => {
@@ -230,6 +231,10 @@ export default function NameNumerologyPage() {
           </Link>
         </section>
       </div>
+
+      {/* ── SEO Section ── */}
+      <NameNumerologySeoContent />
+
     </div>
   );
 }

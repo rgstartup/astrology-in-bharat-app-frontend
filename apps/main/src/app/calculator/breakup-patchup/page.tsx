@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
+import BreakupPatchupSeoContent from "./breakup-patchup-seo.component";
 
 const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
 
@@ -225,6 +226,10 @@ export default function BreakupPatchupPage() {
           </Link>
         </section>
       </div>
+
+      {/* ── SEO Section ── */}
+      <BreakupPatchupSeoContent />
+
     </div>
   );
 }

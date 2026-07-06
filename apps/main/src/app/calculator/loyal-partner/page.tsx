@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
+import LoyalPartnerSeoContent from "./loyal-partner-seo.component";
 
 const hashSeed = (str: string): number => {
   let hash = 0;
@@ -202,6 +203,10 @@ export default function LoyalPartnerPage() {
           </Link>
         </section>
       </div>
+
+      {/* ── SEO Section ── */}
+      <LoyalPartnerSeoContent />
+
     </div>
   );
 }

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import LifePathSeoContent from "./life-path-seo.component";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 
 // Helper function to calculate life path number
@@ -206,6 +207,10 @@ export default function LifePathCalculatorPage() {
           </Link>
         </section>
       </div>
+
+      {/* ── SEO Section ── */}
+      <LifePathSeoContent />
+
     </div>
   );
 }

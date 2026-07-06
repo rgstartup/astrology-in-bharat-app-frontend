@@ -24,6 +24,8 @@ import {
   UserCheck,
   Users,
 } from "lucide-react";
+import { ChevronRight } from 'lucide-react';
+import AboutSeoContent from './about-seo.component';
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
 
 const storyHighlights = [
@@ -358,6 +360,9 @@ export default function AboutRedesign({ children }: { children: React.ReactNode 
       <section className="mx-auto max-w-[1180px] px-4 pb-12 pt-6 sm:px-6 lg:px-8">
         <GuidanceCTA />
       </section>
+
+      {/* --- SEO Section --- */}
+      <AboutSeoContent />
     </main>
   );
 }
