@@ -25,6 +25,9 @@ export const footerTranslations = {
         // Important Links
         expertLogin: "Expert Login",
         expertRegistration: "Expert Registration",
+        userRegistration: "User Registration",
+        merchantLogin: "Merchant Login",
+        merchantRegistration: "Merchant Registration",
         shubhMuhurat: "Hindu Calendar",
         shopProducts: "Shop Our Products",
         aboutUs: "About Us",
@@ -66,6 +69,9 @@ export const footerTranslations = {
         // Important Links
         expertLogin: "ज्योतिषी लॉगिन",
         expertRegistration: "ज्योतिषी पंजीकरण",
+        userRegistration: "उपयोगकर्ता पंजीकरण",
+        merchantLogin: "व्यापारी लॉगिन",
+        merchantRegistration: "व्यापारी पंजीकरण",
         shubhMuhurat: "हिन्दू पंचांग",
         shopProducts: "हमारे उत्पाद खरीदें",
         aboutUs: "हमारे बारे में",

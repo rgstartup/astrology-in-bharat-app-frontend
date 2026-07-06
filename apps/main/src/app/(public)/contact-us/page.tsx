@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaSpinner } from "react-icons/fa";
 
+import { Loading } from "@repo/ui";
+
 const HelpSupportPage = () => {
   const [supportSettings, setSupportSettings] = useState<SupportSettings>({
     email: 'support@astrologyinbharat.com',
@@ -32,9 +34,8 @@ const HelpSupportPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#fffaf5] flex flex-col items-center justify-center">
-        <FaSpinner className="animate-spin text-orange text-4xl mb-4" />
-        <p className="text-sm font-bold text-gray-500 uppercase tracking-widest">Loading Support Center...</p>
+      <div className="min-h-screen bg-[#fffaf5] flex items-center justify-center">
+        <Loading size="lg" text="Loading Support Center..." />
       </div>
     );
   }

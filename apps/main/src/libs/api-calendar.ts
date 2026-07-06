@@ -43,7 +43,10 @@ export const getMonthlyCalendar = async (
 
     const [result, error] = await api.get<any>(`/calendar/monthly?${query.toString()}`, { cache: 'no-store' } as any);
 
-    if (error) throw new Error(getErrorMessage(error));
+    if (error) {
+      console.warn(`[API Calendar] Fetch monthly warning:`, getErrorMessage(error));
+      return { success: false, data: [], error: 'failed_to_fetch' };
+    }
 
     return { success: true, data: result.data || result || [] };
   } catch (error: any) {
@@ -62,7 +65,10 @@ export const getDailyPanchang = async (
     const query = new URLSearchParams({ date, lat, lon, lang });
     const [result, error] = await api.get<any>(`/calendar/panchang/daily?${query.toString()}`, { cache: 'no-store' } as any);
 
-    if (error) throw new Error(getErrorMessage(error));
+    if (error) {
+      console.warn(`[API Calendar] Fetch daily panchang warning:`, getErrorMessage(error));
+      return { success: false, data: null, error: 'failed_to_fetch' };
+    }
 
     return { success: true, data: result.data || result || null };
   } catch (error: any) {
@@ -79,7 +85,10 @@ export const getYearlyFestivals = async (
     const query = new URLSearchParams({ year: year.toString(), lang });
     const [result, error] = await api.get<any>(`/calendar/festivals?${query.toString()}`, { cache: 'no-store' } as any);
 
-    if (error) throw new Error(getErrorMessage(error));
+    if (error) {
+      console.warn(`[API Calendar] Fetch yearly festivals warning:`, getErrorMessage(error));
+      return { success: false, data: [], error: 'failed_to_fetch' };
+    }
 
     return { success: true, data: result.data || result || [] };
   } catch (error: any) {
