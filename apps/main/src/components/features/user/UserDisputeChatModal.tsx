@@ -213,26 +213,26 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
 
                 {/* Header */}
                 <div className="px-5 py-4 border-b bg-linear-to-r from-orange-500 to-red-500 text-white rounded-t-2xl flex justify-between items-center shrink-0">
-                    <div className="flex-1">
-                        <h2 className="text-lg font-bold flex items-center gap-2">
+                    <div className="flex-1 min-w-0 mr-2">
+                        <h2 className="text-lg font-bold flex flex-wrap items-center gap-2">
                             Support Chat
-                            <span className="bg-white/20 text-xs px-2 py-0.5 rounded-full">
+                            <span className="bg-white/20 text-[10px] px-2 py-0.5 rounded-full truncate max-w-[120px] sm:max-w-[200px]" title={`#${disputeId}`}>
                                 #{disputeId}
                             </span>
                         </h2>
                         <p className="text-xs text-white/90">{category || "General Issue"}</p>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                         <button
                             type="button"
                             onClick={handleRequestEndChat}
-                            className="text-[10px] sm:text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-full font-bold transition-all flex items-center gap-1 text-white"
+                            className="text-[10px] sm:text-xs bg-white/20 hover:bg-white/30 px-2 sm:px-3 py-1.5 rounded-full font-bold transition-all flex items-center gap-1 text-white whitespace-nowrap"
                         >
                             <AlertCircleIcon className="w-3 h-3" />
                             End Chat
                         </button>
-                        <button type="button" onClick={onClose} className="p-2 hover:bg-white/20 rounded-full transition-all">
+                        <button type="button" onClick={onClose} className="p-1 sm:p-2 hover:bg-white/20 rounded-full transition-all">
                             <XIcon className="w-5 h-5" />
                         </button>
                     </div>
@@ -388,7 +388,7 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
                         <button
                             type="button"
                             onClick={(e) => { e.preventDefault(); fileInputRef.current?.click(); }}
-                            className="p-3 text-gray-500 hover:bg-gray-100 rounded-full transition-all"
+                            className="p-2 sm:p-3 text-gray-500 hover:bg-gray-100 rounded-full transition-all shrink-0"
                         >
                             <PaperclipIcon className="w-5 h-5" />
                         </button>
@@ -410,7 +410,7 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
                                 }
                             }}
                             placeholder="Type a message..."
-                            className="flex-1 bg-gray-100 border-0 rounded-full px-4 py-3 focus:ring-2 focus:ring-orange outline-none text-sm"
+                            className="flex-1 min-w-0 bg-gray-100 border-0 rounded-full px-4 py-3 focus:ring-2 focus:ring-orange outline-none text-sm"
                         />
 
                         <button
@@ -420,7 +420,7 @@ export default function UserDisputeChatModal({ disputeId, category, onClose }: U
                                 handleSendMessage();
                             }}
                             disabled={!newMessage.trim() || loading}
-                            className="p-3 bg-orange text-white rounded-full hover:bg-orange/90 disabled:opacity-50 transition-all shadow-md hover:shadow-lg"
+                            className="p-3 bg-orange text-white rounded-full hover:bg-orange/90 disabled:opacity-50 transition-all shadow-md hover:shadow-lg shrink-0"
                         >
                             {loading ? (
                                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

@@ -281,7 +281,7 @@ const ReportsTab: React.FC = () => {
                 <h5 className="text-xl font-bold text-gray-900 m-0" style={fontStyle}>{t.reports.title}</h5>
             </div>
 
-            <div className="px-6 pb-6 pt-0">
+            <div className="px-4 sm:px-6 pb-6 pt-0">
                 {loading ? (
                     <div className="flex justify-center p-8">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
@@ -309,7 +309,7 @@ const ReportsTab: React.FC = () => {
                                 : "—";
 
                             return (
-                                <div key={report.id} className="border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                                <div key={report.id} className="border-y sm:border border-gray-100 sm:rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow -mx-4 sm:mx-0 bg-white">
                                     {/* ── Card Header ── */}
                                     <div className="relative flex flex-col md:flex-row items-center justify-center py-2">
                                         

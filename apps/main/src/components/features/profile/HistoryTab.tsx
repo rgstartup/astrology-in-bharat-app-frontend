@@ -48,7 +48,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
           {t.title}
         </h5>
       </div>
-      <div className="p-6 md:p-8">
+      <div className="p-4 sm:p-6 md:p-8">
         {loadingHistory ? (
           <div className="space-y-6">
             {[1, 2, 3].map((i) => (
@@ -86,11 +86,11 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {consultationHistory.filter(Boolean).map((session: any, idx: number) => (
               <div
                 key={session.id || idx}
-                className="group border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 bg-white"
+                className="group border-y sm:border border-gray-100 sm:rounded-3xl overflow-hidden sm:shadow-sm hover:shadow-md transition-all duration-300 bg-white -mx-4 sm:mx-0"
               >
                 {/* Session Summary Header */}
                 <div

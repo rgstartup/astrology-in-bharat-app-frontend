@@ -168,9 +168,9 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
             </div>
 
             {/* Mobile Cards */}
-            <div className="md:hidden flex flex-col gap-4 p-4">
+            <div className="md:hidden flex flex-col gap-4 py-4">
               {disputes.filter(Boolean).map((dispute) => (
-                <div key={dispute.id} className="border border-gray-100 rounded-2xl p-4 bg-white shadow-sm">
+                <div key={dispute.id} className="border-y sm:border border-gray-100 sm:rounded-2xl p-5 bg-white">
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <span className="block font-black text-gray-900 mb-1">

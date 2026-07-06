@@ -51,7 +51,7 @@ const PaymentMethod = ({
         <div className="p-6">
           <div className="space-y-4">
             {/* Wallet */}
-            <label className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
+            <label className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 p-4 rounded-xl border transition-all cursor-pointer ${
               paymentMethod === "wallet" && !useSplitPayment ? "border-[#ff6b00] bg-orange/5" : "border-gray-200 bg-white hover:border-gray-300"
             } ${!canPayFullWallet ? "opacity-75" : ""}`}>
               <div className="flex items-center gap-4">
@@ -69,7 +69,7 @@ const PaymentMethod = ({
                 </div>
               </div>
               {!canPayFullWallet && (
-                <div className="text-right">
+                <div className="text-left sm:text-right pl-14 sm:pl-0">
                   <span className="block text-xs font-bold text-red-500 mb-0.5">Insufficient Funds</span>
                   <span className="text-xs text-gray-500">₹{total} needed</span>
                 </div>
@@ -77,7 +77,7 @@ const PaymentMethod = ({
             </label>
 
             {/* UPI */}
-            <label className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
+            <label className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 p-4 rounded-xl border transition-all cursor-pointer ${
               paymentMethod === "upi" && !useSplitPayment ? "border-[#ff6b00] bg-orange/5" : "border-gray-200 bg-white hover:border-gray-300"
             }`}>
               <div className="flex items-center gap-4">
@@ -94,14 +94,14 @@ const PaymentMethod = ({
                   <span className="text-xs text-gray-500">Instant Payment via UPI</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 pl-14 sm:pl-0">
                 <span className="text-xl font-black italic text-gray-800">UPI</span>
                 <span className="text-lg font-black italic text-green-700">BHIM</span>
               </div>
             </label>
 
             {/* Card */}
-            <label className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
+            <label className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 p-4 rounded-xl border transition-all cursor-pointer ${
               paymentMethod === "card" && !useSplitPayment ? "border-[#ff6b00] bg-orange/5" : "border-gray-200 bg-white hover:border-gray-300"
             }`}>
               <div className="flex items-center gap-4">
@@ -118,7 +118,7 @@ const PaymentMethod = ({
                   <span className="text-xs text-gray-500">All major cards accepted</span>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pl-14 sm:pl-0">
                 <i className="fa-brands fa-cc-visa text-3xl text-[#1a1f71]"></i>
                 <i className="fa-brands fa-cc-mastercard text-3xl text-[#eb001b]"></i>
                 <span className="text-[#0070ba] font-black italic text-lg">RuPay</span>
@@ -126,7 +126,7 @@ const PaymentMethod = ({
             </label>
 
             {/* Net Banking */}
-            <label className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
+            <label className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 p-4 rounded-xl border transition-all cursor-pointer ${
               paymentMethod === "netbanking" && !useSplitPayment ? "border-[#ff6b00] bg-orange/5" : "border-gray-200 bg-white hover:border-gray-300"
             }`}>
               <div className="flex items-center gap-4">
@@ -143,7 +143,7 @@ const PaymentMethod = ({
                   <span className="text-xs text-gray-500">Secure Bank Portal</span>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3 pl-14 sm:pl-0">
                 <span className="text-blue-600 font-black text-sm">SBI</span>
                 <span className="text-red-600 font-black text-sm">HDFC BANK</span>
                 <span className="text-orange font-black text-sm">ICICI Bank</span>
@@ -165,14 +165,14 @@ const PaymentMethod = ({
                 {/* Toggle Switch */}
                 <button
                   type="button"
-                  className={`w-10 h-6 rounded-full p-1 transition-colors ${useSplitPayment ? 'bg-[#ff6b00]' : 'bg-gray-300'}`}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${useSplitPayment ? 'bg-[#ff6b00]' : 'bg-gray-300'}`}
                   onClick={() => {
                     const next = !useSplitPayment;
                     setUseSplitPayment(next);
                     if (next) setWalletAmountToUse(Math.floor(maxWalletUse));
                   }}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full transition-transform ${useSplitPayment ? 'translate-x-4' : 'translate-x-0'}`}></div>
+                  <span className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${useSplitPayment ? 'translate-x-5' : 'translate-x-0'}`} />
                 </button>
               </div>
 

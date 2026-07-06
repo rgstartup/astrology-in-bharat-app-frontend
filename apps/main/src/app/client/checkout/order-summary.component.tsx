@@ -159,17 +159,17 @@ const OrderSummary = ({
             <label className="text-sm font-semibold text-gray-900 block mb-3">Have a Promo Code?</label>
             
             {!appliedCoupon ? (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
-                  className="flex-grow px-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange focus:ring-1 focus:ring-orange transition-all outline-none text-sm text-gray-900 uppercase"
+                  className="w-full sm:flex-grow px-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange focus:ring-1 focus:ring-orange transition-all outline-none text-sm text-gray-900 uppercase"
                   placeholder="PROMO CODE"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   disabled={isApplying}
                 />
                 <button
-                  className="px-6 py-2.5 bg-[#ff4500] text-white rounded-lg font-bold text-sm hover:bg-orange transition-all disabled:opacity-50"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-[#ff4500] text-white rounded-lg font-bold text-sm hover:bg-orange transition-all disabled:opacity-50 flex items-center justify-center"
                   onClick={handleApplyCoupon}
                   disabled={isApplying || !couponCode}
                   type="button"
@@ -242,19 +242,19 @@ const OrderSummary = ({
           </div>
 
           {/* Grand Total */}
-          <div className="pt-4 border-t border-gray-100 flex justify-between items-end mb-6">
+          <div className="pt-4 border-t border-gray-100 flex flex-wrap sm:flex-nowrap justify-between items-start sm:items-end gap-4 mb-6">
             <div>
               <h6 className="text-base font-bold text-gray-900 mb-1">Grand Total</h6>
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-600 rounded border border-green-100">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-600 rounded border border-green-100 whitespace-nowrap">
                   <i className="fa-solid fa-shield-check text-[10px]"></i>
                   <span className="text-[10px] font-bold">Verified</span>
                 </div>
-                <span className="text-xs text-gray-500">Included all taxes</span>
+                <span className="text-xs text-gray-500 whitespace-nowrap">Included all taxes</span>
               </div>
             </div>
-            <div className="text-3xl font-black text-[#ff6b00]">
-              ₹ {total}
+            <div className="text-3xl font-black text-[#ff6b00] whitespace-nowrap text-right">
+              ₹{total}
             </div>
           </div>
           

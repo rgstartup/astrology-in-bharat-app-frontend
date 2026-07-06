@@ -129,7 +129,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
       </div>
 
       {/* Card Body */}
-      <div className="p-6 md:p-10">
+      <div className="p-4 sm:p-6 md:p-10">
         {walletView === "recharge" ? (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Section Header */}
@@ -286,7 +286,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
           </div>
         ) : (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-6 sm:mb-8 px-2 sm:px-0">
               <h6
                 className="font-bold text-gray-900 text-xl m-0 flex items-center"
                 style={fontStyle}
@@ -322,37 +322,37 @@ const WalletTab: React.FC<WalletTabProps> = ({
               </div>
             </div>
 
-            <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-premium">
+            <div className="bg-white sm:rounded-3xl sm:border border-gray-100 overflow-hidden sm:shadow-premium -mx-4 sm:mx-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-gray-50/50 border-b border-gray-100">
                       <th
-                        className="px-8 py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400"
+                        className="px-4 sm:px-8 py-4 sm:py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400"
                         style={fontStyle}
                       >
                         {t.tableDate}
                       </th>
                       <th
-                        className="px-8 py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400"
+                        className="px-4 sm:px-8 py-4 sm:py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400"
                         style={fontStyle}
                       >
                         {t.tableDescription}
                       </th>
                       <th
-                        className="px-8 py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400 text-center"
+                        className="px-4 sm:px-8 py-4 sm:py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400 text-center"
                         style={fontStyle}
                       >
                         {t.tableType}
                       </th>
                       <th
-                        className="px-8 py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400 text-right"
+                        className="px-4 sm:px-8 py-4 sm:py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400 text-right"
                         style={fontStyle}
                       >
                         {t.tableAmount}
                       </th>
                       <th
-                        className="px-8 py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400 text-right"
+                        className="px-4 sm:px-8 py-4 sm:py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400 text-right"
                         style={fontStyle}
                       >
                         {t.tableStatus}
@@ -363,11 +363,11 @@ const WalletTab: React.FC<WalletTabProps> = ({
                     {loadingTransactions ? (
                       [1, 2, 3, 4, 5].map((i) => (
                         <tr key={i} className="border-b border-gray-50">
-                          <td className="px-8 py-6"><Skeleton width={80} height={16} /></td>
-                          <td className="px-8 py-6"><Skeleton width={150} height={16} /></td>
-                          <td className="px-8 py-6 text-center"><Skeleton width={60} height={20} className="mx-auto rounded-full" /></td>
-                          <td className="px-8 py-6 text-right"><Skeleton width={60} height={16} className="ml-auto" /></td>
-                          <td className="px-8 py-6 text-right"><Skeleton width={70} height={20} className="ml-auto rounded-lg" /></td>
+                          <td className="px-4 sm:px-8 py-4 sm:py-6"><Skeleton width={80} height={16} /></td>
+                          <td className="px-4 sm:px-8 py-4 sm:py-6"><Skeleton width={150} height={16} /></td>
+                          <td className="px-4 sm:px-8 py-4 sm:py-6 text-center"><Skeleton width={60} height={20} className="mx-auto rounded-full" /></td>
+                          <td className="px-4 sm:px-8 py-4 sm:py-6 text-right"><Skeleton width={60} height={16} className="ml-auto" /></td>
+                          <td className="px-4 sm:px-8 py-4 sm:py-6 text-right"><Skeleton width={70} height={20} className="ml-auto rounded-lg" /></td>
                         </tr>
                       ))
                     ) : !Array.isArray(transactions) || transactions.length === 0 ? (
@@ -397,7 +397,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                             key={tx.id || idx}
                             className="group hover:bg-gray-50/50 transition-colors"
                           >
-                            <td className="px-8 py-6 text-sm font-bold text-gray-400">
+                            <td className="px-4 sm:px-8 py-4 sm:py-6 text-sm font-bold text-gray-400">
                               {(() => {
                                 const dateVal = tx.createdAt || tx.created_at;
                                 if (!dateVal) return "N/A";
@@ -411,7 +411,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                                     });
                               })()}
                             </td>
-                            <td className="px-8 py-6">
+                            <td className="px-4 sm:px-8 py-4 sm:py-6">
                               <p className="text-sm font-bold text-gray-800 m-0">
                                 {tx.description || tx.reason || tx.purpose || t.defaultTransaction}
                               </p>
@@ -420,7 +420,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                               </p>
 
                             </td>
-                            <td className="px-8 py-6 text-center">
+                            <td className="px-4 sm:px-8 py-4 sm:py-6 text-center">
                               <span
                                 className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
                                   isHold
@@ -434,7 +434,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                               </span>
                             </td>
                             <td
-                              className={`px-8 py-6 text-right font-black text-base ${
+                              className={`px-4 sm:px-8 py-4 sm:py-6 text-right font-black text-base ${
                                 isHold
                                   ? "text-amber-500"
                                   : isNegative
@@ -444,7 +444,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                             >
                               {isNegative ? "-" : "+"}₹{amount.toLocaleString()}
                             </td>
-                            <td className="px-8 py-6 text-right">
+                            <td className="px-4 sm:px-8 py-4 sm:py-6 text-right">
                               <span
                                 className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide ${
                                   ["failed", "cancelled", "error"].includes(
@@ -480,7 +480,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                   <button
                     onClick={onLoadMore}
                     disabled={loadingMore}
-                    className="px-10 py-3.5 bg-white border border-gray-200 text-gray-600 font-bold rounded-2xl hover:border-orange/30 hover:text-orange hover:bg-orange-50/50 transition-all duration-300 flex items-center gap-3 shadow-sm active:scale-95 disabled:opacity-50"
+                    className="px-6 sm:px-10 py-3.5 bg-white border border-gray-200 text-gray-600 text-sm sm:text-base font-bold rounded-2xl hover:border-orange/30 hover:text-orange hover:bg-orange-50/50 transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 shadow-sm active:scale-95 disabled:opacity-50 whitespace-nowrap"
                     style={fontStyle}
                   >
                     {loadingMore ? (

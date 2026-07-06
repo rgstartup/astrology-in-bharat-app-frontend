@@ -248,14 +248,14 @@ const DahejCalculatorPage = () => {
         </div>
 
         {/* ── Awareness Section ── */}
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {AWARENESS.map((a) => (
-            <div key={a.title} className="flex flex-col items-center gap-3 text-center p-4">
-              <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center">
-                <i className={`${a.icon} text-[#F26500] text-lg`} />
+            <div key={a.title} className="flex flex-col items-center gap-3 text-center p-6 bg-white rounded-2xl border border-[#F0E0D0] shadow-sm hover:shadow-md transition-all hover:-translate-y-1 group">
+              <div className="w-14 h-14 rounded-full bg-[#FFF0E6] flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i className={`${a.icon} text-[#F26500] text-xl`} />
               </div>
               <p className="text-sm font-black text-[#1A1A1A]">{a.title}</p>
-              <p className="text-xs text-[#777]">{a.desc}</p>
+              <p className="text-xs text-[#777] leading-relaxed">{a.desc}</p>
             </div>
           ))}
         </div>

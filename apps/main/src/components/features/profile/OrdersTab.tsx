@@ -66,7 +66,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
           {t.title}
         </h5>
       </div>
-      <div className="p-6 md:p-8">
+      <div className="p-4 sm:p-6 md:p-8">
         {loadingOrders ? (
           <div className="space-y-6">
             {[1, 2].map((i) => (
@@ -111,7 +111,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
             </NextLink>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {(() => {
                 console.log("DEBUG: Total Orders found:", orders.length);
                 console.table(orders.map(o => ({ 
@@ -126,7 +126,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
               return (
               <div
                 key={order.trackingId || order.id || idx}
-                className="group border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 bg-white"
+                className="group border-y sm:border border-gray-100 sm:rounded-3xl overflow-hidden sm:shadow-sm hover:shadow-md transition-all duration-300 bg-white -mx-4 sm:mx-0"
               >
                 {/* Order Summary Header */}
                 <div

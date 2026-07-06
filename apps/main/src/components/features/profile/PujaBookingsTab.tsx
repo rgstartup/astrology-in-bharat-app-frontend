@@ -131,9 +131,9 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {bookings.map((booking) => (
-        <div key={booking.id} className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+        <div key={booking.id} className="bg-white sm:rounded-3xl border-y sm:border border-gray-100 sm:shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 -mx-4 sm:mx-0">
           <div className="p-6 md:p-8">
             <div className="flex flex-col md:flex-row gap-8">
               {/* Left: Expert & Ritual Info */}

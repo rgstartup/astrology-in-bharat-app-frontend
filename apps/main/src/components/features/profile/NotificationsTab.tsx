@@ -28,20 +28,20 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
 
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden">
-      <div className="px-6 py-5 bg-white border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="px-4 sm:px-6 py-4 sm:py-5 bg-white border-b border-gray-100 flex flex-row justify-between items-center gap-2 sm:gap-4">
         <h5
-          className="text-lg font-bold text-gray-900 mb-0 flex items-center"
+          className="text-base sm:text-lg font-bold text-gray-900 mb-0 flex items-center"
           style={fontStyle}
         >
-          <span className="w-10 h-10 rounded-full bg-orange/5 text-orange flex items-center justify-center mr-3 flex-shrink-0">
-            <i className="fa-solid fa-bell"></i>
+          <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-orange/5 text-orange flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+            <i className="fa-solid fa-bell text-sm sm:text-base"></i>
           </span>
           {t.title}
         </h5>
         {notifications.length > 0 && (
           <button
             onClick={onClearAll}
-            className="px-4 py-2 text-red-500 hover:text-red-600 font-bold text-sm bg-red-50 hover:bg-red-100 rounded-xl transition-all flex items-center gap-2 border-0 shrink-0"
+            className="px-3 sm:px-4 py-1.5 sm:py-2 text-red-500 hover:text-red-600 font-bold text-xs sm:text-sm bg-red-50 hover:bg-red-100 rounded-xl transition-all flex items-center gap-1.5 sm:gap-2 border-0 shrink-0"
             style={fontStyle}
           >
             <i className="fa-solid fa-trash-can"></i>
@@ -49,7 +49,7 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
           </button>
         )}
       </div>
-      <div className="p-6 md:p-8">
+      <div className="p-4 sm:p-6 md:p-8">
         {loadingNotifications ? (
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
@@ -82,10 +82,10 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
             {notifications.filter(Boolean).map((notif: any) => (
               <div
                 key={notif.id}
-                className={`p-4 md:p-5 rounded-2xl border transition-all duration-300 cursor-pointer group ${
+                className={`p-4 md:p-5 border-y sm:border sm:rounded-2xl transition-all duration-300 cursor-pointer group -mx-4 sm:mx-0 ${
                   notif.isRead
                     ? "bg-white border-gray-100 opacity-70 hover:opacity-100"
-                    : "bg-orange/5 border-orange/10 shadow-sm hover:shadow-md hover:bg-orange/10"
+                    : "bg-orange/5 border-orange/10 sm:shadow-sm hover:shadow-md hover:bg-orange/10"
                 }`}
                 onClick={() => !notif.isRead && onMarkAsRead(notif.id)}
               >

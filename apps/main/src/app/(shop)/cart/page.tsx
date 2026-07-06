@@ -233,18 +233,6 @@ const CartPage: React.FC = () => {
                     <i className="fa-solid fa-arrow-right-long animate-bounce-x" />
                   </button>
                 </div>
-
-                {/* Info Badges */}
-                <div className="grid grid-cols-2 gap-4">
-                   <div className="p-4 bg-white rounded-2xl border border-gray-100 flex flex-col items-center text-center gap-1">
-                    <i className="fa-solid fa-shield-check text-emerald-500 text-lg"></i>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t.cart.securePayments}</p>
-                  </div>
-                   <div className="p-4 bg-white rounded-2xl border border-gray-100 flex flex-col items-center text-center gap-1">
-                    <i className="fa-solid fa-rotate-left text-blue-500 text-lg"></i>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{t.cart.easyReturns}</p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

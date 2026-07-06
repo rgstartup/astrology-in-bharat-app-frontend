@@ -277,7 +277,7 @@ const ProfileContent: React.FC = () => {
                         {t.sidebar.tabs.pujas}
                       </h5>
                     </div>
-                    <div className="px-6 pb-6 pt-0">
+                    <div className="px-4 sm:px-6 pb-6 pt-0">
                       <PujaBookingsTab 
                         loading={loadingPuja} 
                         bookings={pujaBookings} 
