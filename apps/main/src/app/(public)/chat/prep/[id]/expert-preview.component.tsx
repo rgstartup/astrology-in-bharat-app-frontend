@@ -32,7 +32,7 @@ const ExpertPreview = ({
       <div className="sticky top-28">
         <div className="p-2 bg-white rounded-[3.5rem] shadow-[0_40px_100px_rgba(0,0,0,0.08)] relative overflow-hidden">
           {/* Expert Image Section */}
-          <div className="relative h-[480px] rounded-[3rem] overflow-hidden group">
+          <div className="relative h-[380px] rounded-[3rem] overflow-hidden group">
             <Image
               src={expert?.image || "/images/dummy-expert.jpg"}
               alt={expert?.name || "Expert"}
@@ -107,7 +107,7 @@ const ExpertPreview = ({
             </div>
           </div>
 
-          <div className="p-8 space-y-6">
+          <div className="p-6 space-y-5">
             {/* Option to toggle who is asking */}
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
@@ -248,29 +248,11 @@ const ExpertPreview = ({
                 <ArrowRight className="w-5 h-5 text-white/70 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
               </button>
 
-              <div className="flex flex-col items-center gap-4 mt-8">
-                <div className="text-[10px] text-gray-400 font-black uppercase tracking-[0.4em] flex items-center gap-3">
-                  <div className="w-10 h-[1px] bg-gray-200"></div>
-                  Privacy Protected
-                  <div className="w-10 h-[1px] bg-gray-200"></div>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
 
-        {/* Trust Pill */}
-        <div className="mt-8 flex items-center justify-center gap-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="w-2 h-2 bg-orange/20 rounded-full"></div>
-          ))}
-          <span className="text-[9px] font-black text-gray-300 uppercase tracking-[0.5em]">
-            Trust & Integrity
-          </span>
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="w-2 h-2 bg-orange/20 rounded-full"></div>
-          ))}
-        </div>
       </div>
     </div>
   );

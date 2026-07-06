@@ -7,6 +7,7 @@ import { homeTranslations } from "../../../lib/translations/home";
 
 
 const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
+    title,
     searchQuery,
     setSearchQuery,
     selectedSpecialization,
@@ -72,7 +73,36 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
     };
 
     return (
-        <div className="flex flex-col lg:flex-row items-center gap-6 mb-8 text-white">
+        <>
+            {/* Title & Mobile Buttons Row */}
+            <div className="flex justify-between items-center mb-6 lg:mb-10 text-white" style={{ '--heading-border-color': 'rgba(255,255,255,0.2)' } as any}>
+                <h2 className="section-heading-premium m-0" style={lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {}}>
+                    <span>{title}</span>
+                </h2>
+
+                {/* Mobile Filter & Sort */}
+                <div className="flex lg:hidden items-center gap-2">
+                    <button
+                        type="button"
+                        className="flex items-center gap-1.5 bg-orange text-white px-3 py-1.5 rounded-full font-medium hover:opacity-90 transition-all relative text-xs shadow-md whitespace-nowrap"
+                        onClick={onOpenFilter}
+                    >
+                        <i className="fa-solid fa-filter"></i> {t.expertSection.filterBtn}
+                        {hasActiveFilters && (
+                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-white border-2 border-orange rounded-full animate-pulse"></span>
+                        )}
+                    </button>
+                    <button
+                        type="button"
+                        className="flex items-center gap-1.5 bg-orange text-white px-3 py-1.5 rounded-full font-medium hover:opacity-90 transition-all text-xs shadow-md whitespace-nowrap"
+                        onClick={onOpenSort}
+                    >
+                        <i className="fa-solid fa-sort"></i> {t.expertSection.sortByTitle}
+                    </button>
+                </div>
+            </div>
+
+            <div className="flex flex-col lg:flex-row items-center gap-6 mb-8 text-white">
             {/* Search Box */}
             <div className="w-full lg:w-5/12">
                 <div className="flex w-full shadow-lg h-[50px] rounded-full overflow-hidden">
@@ -89,8 +119,8 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
                 </div>
             </div>
 
-            {/* Filter & Reset & Sort */}
-            <div className="w-full lg:w-3/12 flex items-center justify-center lg:justify-end gap-3 md:gap-6">
+            {/* Desktop Filter & Reset & Sort */}
+            <div className="hidden lg:flex w-full lg:w-3/12 items-center justify-end gap-3 md:gap-6">
                 <button
                     type="button"
                     className="flex items-center gap-2 bg-orange text-white px-4 md:px-5 py-2 rounded-full font-medium hover:opacity-90 transition-all relative whitespace-nowrap text-sm md:text-base shadow-md"
@@ -164,6 +194,7 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
                 </button>
             </div>
         </div>
+        </>
     );
 };
 

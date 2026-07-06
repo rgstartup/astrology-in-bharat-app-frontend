@@ -756,35 +756,37 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
         className="main-head sticky top-0 z-50 bg-white border-b border-[#FF6B002e] shadow-[0_8px_11px_#0000000d]"
         style={{ backdropFilter: 'saturate(160%) blur(8px)' }}
       >
-        <div className="max-w-[1320px] mx-auto px-8 lg:px-16 py-3">
+        <div className="max-w-[1320px] mx-auto px-2 sm:px-4 md:px-8 lg:px-16 py-3">
           <div className="flex items-center justify-between">
             {/* Logo + Nav — takes most of the space */}
             <div className="flex-1">
               <nav className="flex items-center">
                 {/* Logo */}
-                <Link className="flex-shrink-0 mr-2 sm:mr-4 w-[130px] sm:w-[180px] lg:w-[200px] flex items-center" href="/">
+                <Link className="flex-shrink-0 mr-2 sm:mr-4 w-[160px] sm:w-[210px] lg:w-[240px] flex items-center" href="/">
                   <NextImage
                     src="/images/web-logo.png"
                     alt="logo"
-                    width={180}
-                    height={60}
+                    width={240}
+                    height={80}
                     loading="eager"
                     priority
-                    style={{ width: '100%', height: 'auto', maxHeight: '50px' }}
+                    quality={100}
+                    unoptimized
+                    style={{ width: '100%', height: 'auto', maxHeight: '65px' }}
                     className="object-contain"
                   />
                 </Link>
 
                 {/* Hamburger — mobile only */}
                 <button
-                  className="ml-auto lg:hidden flex flex-col gap-1.5 p-2 border-2 border-orange/50 bg-[#FAE8D6] hover:border-orange hover:bg-[#F2D9C1] transition-all"
+                  className="ml-auto lg:hidden flex flex-col items-center justify-center gap-1.5 w-10 h-10 border-2 border-orange/50 bg-[#FAE8D6] hover:border-orange hover:bg-[#F2D9C1] transition-all"
                   type="button"
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
                   aria-label="Toggle navigation"
                 >
-                  <span className={`block w-6 h-0.5 bg-gray-700 transition-all ${isMenuOpen ? 'rotate-45 translate-y-2 bg-orange' : ''}`} />
-                  <span className={`block w-6 h-0.5 bg-gray-700 transition-all ${isMenuOpen ? 'opacity-0' : ''}`} />
-                  <span className={`block w-6 h-0.5 bg-gray-700 transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2 bg-orange' : ''}`} />
+                  <span className={`block w-5 h-0.5 bg-gray-700 transition-all ${isMenuOpen ? 'rotate-45 translate-y-[8px] bg-orange' : ''}`} />
+                  <span className={`block w-5 h-0.5 bg-gray-700 transition-all ${isMenuOpen ? 'opacity-0' : ''}`} />
+                  <span className={`block w-5 h-0.5 bg-gray-700 transition-all ${isMenuOpen ? '-rotate-45 -translate-y-[8px] bg-orange' : ''}`} />
                 </button>
 
                 {/* Nav links */}

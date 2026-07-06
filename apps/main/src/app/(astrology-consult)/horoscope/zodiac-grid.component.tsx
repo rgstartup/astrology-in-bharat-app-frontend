@@ -31,8 +31,8 @@ const ZodiacGrid: React.FC<ZodiacGridProps> = ({ onSelectSign, selectedSignId, s
             <div
               key={sign.id}
               onClick={() => onSelectSign(sign)}
-              className={`flex flex-col bg-white rounded-xl p-5 border cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md ${
-                isSelected ? 'border-[#F26500] shadow-sm' : 'border-[#E8D5C0]'
+              className={`group flex flex-col bg-white rounded-xl p-5 border cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md border-[#F26500] hover:bg-[#F26500] ${
+                isSelected ? 'shadow-sm' : ''
               }`}
             >
               {/* Top part: Icon + Name/Date */}
@@ -42,13 +42,13 @@ const ZodiacGrid: React.FC<ZodiacGridProps> = ({ onSelectSign, selectedSignId, s
                   <Image src={sign.image} alt={sign.title} width={30} height={30} className="object-contain opacity-80" />
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="font-bold text-[#3D1A0B] text-[16px]">{sign.title}</h3>
-                  <p className="text-[12px] text-gray-500">{sign.date}</p>
+                  <h3 className="font-bold text-[#3D1A0B] group-hover:text-white transition-colors text-[16px]">{sign.title}</h3>
+                  <p className="text-[12px] text-gray-500 group-hover:text-white/80 transition-colors">{sign.date}</p>
                 </div>
               </div>
 
               {/* Preview text */}
-              <p className="text-[13px] text-gray-600 leading-relaxed flex-1">
+              <p className="text-[13px] text-gray-600 group-hover:text-white/90 transition-colors leading-relaxed flex-1">
                 {activeTab === "Daily Horoscope" 
                   ? (signPreviews[sign.title] || "Discover what the stars have in store for you today.")
                   : `Select your sign to get detailed insights for your ${activeTab.toLowerCase()}.`
@@ -56,7 +56,7 @@ const ZodiacGrid: React.FC<ZodiacGridProps> = ({ onSelectSign, selectedSignId, s
               </p>
 
               {/* Link */}
-              <div className="mt-4 flex justify-between items-center text-[#F26500] font-bold text-[13px]">
+              <div className="mt-4 flex justify-between items-center text-[#F26500] group-hover:text-white transition-colors font-bold text-[13px]">
                 View Horoscope
                 <i className="fa-solid fa-arrow-right-long transition-transform group-hover:translate-x-1"></i>
               </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 interface FamousPlacesSearchProps {
   onSearch: (query: string, location?: string) => void;
@@ -28,6 +29,11 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!query.trim() && !state && !district && !city) {
+      toast.warning("Please enter a search term or select a location before searching.");
+      return;
+    }
+
     let locationStr = [city.trim(), district.trim(), state.trim(), "India"].filter(Boolean).join(", ");
     
     let baseQuery = query.trim() ? query.trim() : "temples";

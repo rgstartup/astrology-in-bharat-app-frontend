@@ -106,6 +106,7 @@ export interface ExpertSortModalProps {
 }
 
 export interface ExpertListHeaderProps {
+    title?: string;
     searchQuery: string;
     setSearchQuery: (q: string) => void;
     selectedSpecialization: string;

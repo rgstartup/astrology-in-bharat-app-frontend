@@ -1,14 +1,35 @@
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // We mock trending articles data
 const TRENDING_ARTICLES = [
-  { title: 'What is Your Moon Sign and Why It Matters?', image: '/horoscope_img/ARIES_04bdeca59e.svg' },
-  { title: 'How Planetary Transits Affect Your Life?', image: '/horoscope_img/TAURUS_198b4c97e9.svg' },
-  { title: 'Top 5 Remedies for a Better Life', image: '/horoscope_img/GEMINI_9d35540bb9.svg' }
+  { 
+    title: 'What is Your Moon Sign and Why It Matters?', 
+    image: '/images/ser1.jpg', 
+    content: 'Your Moon sign represents your inner self, emotions, and subconscious. It reveals how you process feelings and what you need to feel secure in life.' 
+  },
+  { 
+    title: 'How Planetary Transits Affect Your Life?', 
+    image: '/images/ser2.jpg', 
+    content: 'Planetary transits influence your daily life, mood, and opportunities. Understanding them helps you navigate challenges and seize the right moments.' 
+  },
+  { 
+    title: 'Top 5 Remedies for a Better Life', 
+    image: '/images/ser3.jpg', 
+    content: 'Discover simple astrological remedies like chanting mantras, wearing gemstones, and donating to charity to attract positivity and reduce obstacles.' 
+  }
 ];
 
 export default function ZodiacDetailsSidebar({ signData }: { signData: any }) {
+  const [expandedArticle, setExpandedArticle] = useState<number | null>(null);
+
+  const toggleArticle = (idx: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    setExpandedArticle(expandedArticle === idx ? null : idx);
+  };
+
   return (
     <div className="space-y-6">
       
@@ -120,16 +141,34 @@ export default function ZodiacDetailsSidebar({ signData }: { signData: any }) {
         </h3>
         
         <div className="space-y-4">
-          {TRENDING_ARTICLES.map((article, idx) => (
-            <div key={idx} className="flex gap-4 items-center group cursor-pointer">
-              <div className="w-16 h-16 rounded-xl overflow-hidden relative shrink-0">
-                <Image src={article.image} alt={article.title} fill className="object-cover group-hover:scale-110 transition-transform" />
+          {TRENDING_ARTICLES.map((article, idx) => {
+            const isExpanded = expandedArticle === idx;
+            return (
+            <div key={idx} className="flex flex-col gap-3">
+              <div 
+                className="flex gap-4 items-center group cursor-pointer no-underline"
+                onClick={(e) => toggleArticle(idx, e)}
+              >
+                <div className="w-16 h-16 rounded-xl overflow-hidden relative shrink-0">
+                  <Image src={article.image} alt={article.title} fill className="object-cover group-hover:scale-110 transition-transform" />
+                </div>
+                <div className="flex-1 flex items-center justify-between gap-2">
+                  <p className="text-sm font-bold text-[#3D1A0B] group-hover:text-[#F26500] transition-colors leading-snug m-0">
+                    {article.title}
+                  </p>
+                  <i className={`fa-solid fa-chevron-${isExpanded ? 'up' : 'down'} text-xs text-slate-400 group-hover:text-[#F26500] transition-colors`}></i>
+                </div>
               </div>
-              <p className="text-sm font-bold text-[#3D1A0B] group-hover:text-[#F26500] transition-colors leading-snug">
-                {article.title}
-              </p>
+              
+              {/* Expanded Content */}
+              {isExpanded && (
+                <div className="bg-[#FAF8F5] p-4 rounded-xl border border-[#F0E6DD] text-xs text-slate-600 leading-relaxed">
+                  {article.content}
+                </div>
+              )}
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

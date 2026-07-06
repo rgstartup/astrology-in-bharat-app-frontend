@@ -76,6 +76,24 @@ export default function ConsultationPrep() {
 
   useEffect(() => {
     const fetchAstro = async () => {
+      if (id?.startsWith("dummy-")) {
+        setExpert({
+          id: id,
+          userId: id,
+          name: "Expert",
+          image: "/images/dummy-expert.jpg",
+          expertise: "Vedic, Numerology",
+          experience: 5,
+          price: 50,
+          chat_price: 50,
+          call_price: 50,
+          video_call_price: 100,
+          language: "Hindi, English",
+          ratings: 5,
+        });
+        return;
+      }
+
       const [res, fetchError] = await http.get<any>(
         `/expert/details/${id}`,
       );

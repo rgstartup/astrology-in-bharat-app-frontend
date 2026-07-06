@@ -17,31 +17,30 @@ const HeroInfo = ({ expertName }: Props) => {
           Preparing Connection
         </span>
         <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-[1.1] tracking-tight">
-          Talk to <br />
+          Talk to{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-orange">
             {expertName}
           </span>
         </h1>
-        <p className="text-gray-500 text-lg md:text-xl font-medium max-w-lg leading-relaxed">
+        <p className="text-black text-lg md:text-xl font-medium max-w-lg leading-relaxed">
           Get deep cosmic insights about your career, marriage, and future. Your
           session is 100% private.
         </p>
       </div>
 
-      {/* Feature Grid */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="p-6 rounded-[2.5rem] bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:translate-y-[-5px] transition-all duration-500 group">
-          <div className="w-12 h-12 rounded-2xl bg-orange/5 flex items-center justify-center mb-4 group-hover:bg-orange transition-colors">
-            <MessageSquare className="w-6 h-6 text-orange group-hover:text-white" />
+        <div className="p-6 rounded-[2.5rem] bg-white hover:bg-gray-50 border-2 border-orange shadow-sm hover:shadow-xl hover:translate-y-[-5px] transition-all duration-500 group">
+          <div className="w-12 h-12 rounded-2xl bg-orange/20 flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
+            <MessageSquare className="w-6 h-6 text-orange" />
           </div>
           <h3 className="font-bold text-gray-900 mb-1">Live Chat</h3>
           <p className="text-xs text-gray-400 leading-relaxed font-medium">
             Real-time answers from verified experts.
           </p>
         </div>
-        <div className="p-6 rounded-[2.5rem] bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:translate-y-[-5px] transition-all duration-500 group">
-          <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-            <Calendar className="w-6 h-6 text-blue-500 group-hover:text-white" />
+        <div className="p-6 rounded-[2.5rem] bg-white hover:bg-gray-50 border-2 border-orange shadow-sm hover:shadow-xl hover:translate-y-[-5px] transition-all duration-500 group">
+          <div className="w-12 h-12 rounded-2xl bg-orange/20 flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
+            <Calendar className="w-6 h-6 text-orange" />
           </div>
           <h3 className="font-bold text-gray-900 mb-1">Instant Access</h3>
           <p className="text-xs text-gray-400 leading-relaxed font-medium">

@@ -220,7 +220,7 @@ const PujaDetailPage = () => {
                         <div className="bg-white rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center text-xl">🕉️</div>
-                                <h2 className="text-lg font-black text-[#1A1A1A]">About {puja.name}</h2>
+                                <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">About {puja.name}</h2>
                             </div>
                             <p className="text-gray-600 leading-relaxed text-sm font-medium">
                                 {puja.description || "This sacred Vedic ceremony is performed by our highly experienced pandits following strict traditional protocols. It aims to invoke divine energy and blessings into your life, ensuring spiritual growth, protection, and prosperity."}
@@ -233,7 +233,7 @@ const PujaDetailPage = () => {
                                 <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
                                     <Star className="w-5 h-5 text-[#FF5500]" />
                                 </div>
-                                <h2 className="text-lg font-black text-[#1A1A1A]">Key Benefits</h2>
+                                <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">Key Benefits</h2>
                             </div>
                             <div className="flex flex-wrap gap-x-8 gap-y-4">
                                 {[
@@ -244,12 +244,12 @@ const PujaDetailPage = () => {
                                     { icon: "⭐", label: "Spiritual Growth", sub: "& Protection" },
                                 ].map((b, i) => (
                                     <div key={i} className="flex items-center gap-3 min-w-[140px]">
-                                        <div className="w-10 h-10 bg-[#FFF0E6] border border-[#F5D5C0] rounded-full flex items-center justify-center text-lg shrink-0">
+                                        <div className="w-12 h-12 bg-[#FFF0E6] border border-[#F5D5C0] rounded-full flex items-center justify-center text-xl shrink-0">
                                             {b.icon}
                                         </div>
                                         <div>
-                                            <p className="text-[11px] font-bold text-[#333] leading-tight">{b.label}</p>
-                                            <p className="text-[10px] text-gray-400 leading-tight">{b.sub}</p>
+                                            <p className="text-sm font-bold text-[#333] leading-tight">{b.label}</p>
+                                            <p className="text-xs text-gray-500 leading-tight">{b.sub}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -257,59 +257,62 @@ const PujaDetailPage = () => {
                         </div>
 
                         {/* Pandit */}
-                        <div className="bg-white rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
+                        <div className="bg-white rounded-3xl p-4 sm:p-6 border border-[#F0E0D0] shadow-sm">
                             <div className="flex items-center gap-3 mb-5">
                                 <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
                                     <Users className="w-5 h-5 text-[#FF5500]" />
                                 </div>
-                                <h2 className="text-lg font-black text-[#1A1A1A]">Pandit Performing this Puja</h2>
+                                <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">Pandit Performing this Puja</h2>
                             </div>
-                            <div className="flex gap-5 items-start">
-                                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shrink-0 border-2 border-[#F0E0D0] relative">
-                                    {puja.expert?.user?.avatar ? (
-                                        <Image src={puja.expert.user.avatar} alt="Pandit" fill className="object-cover" />
-                                    ) : (
-                                        <div className="w-full h-full bg-[#FFF0E6] flex items-center justify-center text-3xl font-black text-[#FF5500]">
-                                            {(puja.expert?.user?.name || "P").charAt(0)}
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="flex-1 flex flex-col md:flex-row gap-4 justify-between">
+                            <div className="flex flex-col lg:flex-row gap-5 items-start">
+                                <div className="flex-1 w-full">
+                                    <div className="flex gap-3 sm:gap-5 items-start w-full mb-3">
+                                    <div className="w-24 h-32 sm:w-32 sm:h-40 rounded-2xl overflow-hidden shrink-0 border-2 border-[#F0E0D0] relative">
+                                        {puja.expert?.user?.avatar ? (
+                                            <Image src={puja.expert.user.avatar} alt="Pandit" fill className="object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full bg-[#FFF0E6] flex items-center justify-center text-3xl font-black text-[#FF5500]">
+                                                {(puja.expert?.user?.name || "P").charAt(0)}
+                                            </div>
+                                        )}
+                                    </div>
                                     <div className="flex-1">
                                         <div className="flex flex-wrap items-center gap-2 mb-1">
-                                            <h3 className="text-base font-black text-[#1A1A1A]">{puja.expert?.user?.name || puja.expert?.name || "Pandit Ji"}</h3>
-                                            <span className="px-2 py-0.5 bg-yellow-50 border border-yellow-200 text-yellow-700 text-[9px] font-black rounded-lg uppercase flex items-center gap-1">
-                                                <Star className="w-2 h-2 fill-yellow-500 text-yellow-500" /> Top Rated Pandit
+                                            <h3 className="text-lg font-black text-[#1A1A1A]">{puja.expert?.user?.name || puja.expert?.name || "Pandit Ji"}</h3>
+                                            <span className="px-2 py-0.5 bg-yellow-50 border border-yellow-200 text-yellow-700 text-[10px] font-black rounded-lg uppercase flex items-center gap-1">
+                                                <Star className="w-2.5 h-2.5 fill-yellow-500 text-yellow-500" /> Top Rated Pandit
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-1 mb-2">
                                             {[1, 2, 3, 4, 5].map((s) => (
-                                                <Star key={s} className={`w-3.5 h-3.5 ${s <= (puja.expert?.rating || 4.8) ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-200 text-gray-200'}`} />
+                                                <Star key={s} className={`w-4 h-4 ${s <= (puja.expert?.rating || 0) ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-200 text-gray-200'}`} />
                                             ))}
-                                            <span className="text-xs font-bold text-gray-700 ml-1">{puja.expert?.rating || "4.8"}</span>
-                                            <span className="text-[11px] text-gray-400">({puja.expert?.total_reviews || 128} Reviews)</span>
+                                            <span className="text-sm font-bold text-gray-700 ml-1">{puja.expert?.rating || "0"}</span>
+                                            <span className="text-xs text-gray-500">({puja.expert?.total_reviews || 0} Reviews)</span>
                                         </div>
-                                        <p className="text-[11px] font-bold text-[#1A1A1A] mb-1">{puja.expert?.experience_in_years || "12+"} Years of Experience <span className="text-gray-300 mx-1">|</span> Vedic Expert</p>
-                                        <p className="text-[11px] text-gray-500 mb-3">{puja.expert?.specialization || "Specialized in Shiva Puja, Rudra Abhishek, Mahamrityunjaya Jaap and other Vedic Rituals."}</p>
-                                        <Link href={`/expert/${puja.expert_id}`} className="inline-flex items-center gap-1 text-[#FF5500] text-xs font-black hover:underline">
-                                            View Full Profile <ArrowRight className="w-3.5 h-3.5" />
-                                        </Link>
+                                        <p className="text-sm font-bold text-[#1A1A1A] mb-1">{puja.expert?.experience_in_years || "0"} Yrs Experience <span className="text-gray-300 mx-1">|</span> Vedic Expert</p>
+                                        </div>
                                     </div>
-                                    <div className="bg-[#FCF9F7] rounded-3xl p-5 shrink-0 min-w-[180px] flex flex-col gap-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-9 h-9 text-[#FF5500] bg-white rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">📜</div>
-                                            <div>
-                                                <p className="text-[11px] font-bold text-gray-600 leading-tight mb-1">Pujas Performed</p>
-                                                <p className="text-sm font-black text-[#1A1A1A] leading-tight">{puja.expert?.consultation_count ? `${puja.expert.consultation_count}+` : "2,500+"}</p>
-                                            </div>
+                                    <p className="text-sm text-gray-600 mb-3 leading-relaxed">{puja.expert?.specialization || "Specialized in Shiva Puja, Rudra Abhishek, Mahamrityunjaya Jaap and other Vedic Rituals."}</p>
+                                    <Link href={`/expert/${puja.expert_id}`} className="inline-flex items-center gap-1 text-[#FF5500] text-[15px] font-black hover:underline">
+                                        View Full Profile <ArrowRight className="w-4 h-4" />
+                                    </Link>
+                                </div>
+                                
+                                <div className="bg-[#FCF9F7] rounded-3xl p-5 shrink-0 w-full lg:w-auto lg:min-w-[180px] flex flex-row lg:flex-col justify-around lg:justify-start gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-9 h-9 text-[#FF5500] bg-white rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">📜</div>
+                                        <div>
+                                            <p className="text-[11px] font-bold text-gray-600 leading-tight mb-1">Pujas Performed</p>
+                                            <p className="text-sm font-black text-[#1A1A1A] leading-tight">{puja.expert?.consultation_count ? `${puja.expert.consultation_count}+` : "0"}</p>
                                         </div>
-                                        <div className="h-px bg-[#F0E0D0] w-full" />
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-9 h-9 text-[#FF5500] bg-white rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">🗣️</div>
-                                            <div>
-                                                <p className="text-[11px] font-bold text-gray-600 leading-tight mb-1">Languages</p>
-                                                <p className="text-sm font-black text-[#1A1A1A] leading-tight capitalize">{puja.expert?.languages?.length ? puja.expert.languages.join(", ") : "Hindi, Sanskrit"}</p>
-                                            </div>
+                                    </div>
+                                    <div className="w-px h-auto lg:h-px lg:w-full bg-[#F0E0D0]" />
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-9 h-9 text-[#FF5500] bg-white rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">🗣️</div>
+                                        <div>
+                                            <p className="text-[11px] font-bold text-gray-600 leading-tight mb-1">Languages</p>
+                                            <p className="text-sm font-black text-[#1A1A1A] leading-tight capitalize">{puja.expert?.languages?.length ? puja.expert.languages.join(", ") : "Hindi, Sanskrit"}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -324,8 +327,8 @@ const PujaDetailPage = () => {
                                         <Package className="w-5 h-5 text-[#FF5500]" />
                                     </div>
                                     <div>
-                                        <h2 className="text-lg font-black text-[#1A1A1A]">Essential Samagri</h2>
-                                        <p className="text-[10px] text-gray-400">(Provided by Pandit for Home Visit - Premium)</p>
+                                        <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">Essential Samagri</h2>
+                                        <p className="text-xs text-gray-400">(Provided by Pandit for Home Visit - Premium)</p>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-6">
@@ -335,13 +338,13 @@ const PujaDetailPage = () => {
                                                 🌿
                                             </div>
                                             <div>
-                                                <p className="text-[11px] font-black text-[#1A1A1A] leading-tight">{item.name}</p>
-                                                <p className="text-[10px] text-gray-500 leading-tight">{item.quantity}</p>
+                                                <p className="text-sm font-black text-[#1A1A1A] leading-tight">{item.name}</p>
+                                                <p className="text-xs text-gray-500 leading-tight">{item.quantity}</p>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
-                                <p className="text-[10px] text-gray-400 mt-3 italic">Note: Samagri may vary slightly based on availability and local customs.</p>
+                                <p className="text-xs text-gray-500 mt-3 italic">Note: Samagri may vary slightly based on availability and local customs.</p>
                             </div>
                         )}
 
@@ -352,7 +355,7 @@ const PujaDetailPage = () => {
                                     <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
                                         <MapPin className="w-5 h-5 text-green-500" />
                                     </div>
-                                    <h2 className="text-lg font-black text-[#1A1A1A]">Available Districts for Home Visit</h2>
+                                    <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">Available Districts for Home Visit</h2>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {puja.districts.map((district, idx) => (
@@ -367,16 +370,16 @@ const PujaDetailPage = () => {
                         {/* Trust Badges */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                             {[
-                                { icon: "📜", title: "Vedic Certified Ritual", sub: "Performed as per Vedic\nscriptures and tradition" },
-                                { icon: "✅", title: "Verified Pandit", sub: "Experienced & background\nverified pandits" },
-                                { icon: "🌺", title: "Pure & Authentic", sub: "Pure Samagri &\nauthentic rituals" },
-                                { icon: "🔒", title: "Secure & Trusted", sub: "Your booking is safe\nand secure with us" },
+                                { icon: "📜", title: "Vedic Certified Ritual", sub: "Performed as per Vedic scriptures and tradition" },
+                                { icon: "✅", title: "Verified Pandit", sub: "Experienced & background verified pandits" },
+                                { icon: "🌺", title: "Pure & Authentic", sub: "Pure Samagri & authentic rituals" },
+                                { icon: "🔒", title: "Secure & Trusted", sub: "Your booking is safe and secure with us" },
                             ].map((b, i) => (
-                                <div key={i} className="bg-white rounded-2xl p-3 border border-[#F0E0D0] flex items-center gap-3">
-                                    <div className="text-2xl shrink-0 text-[#FF5500] opacity-80">{b.icon}</div>
+                                <div key={i} className="bg-white rounded-2xl p-4 border border-[#F0E0D0] flex items-center gap-4">
+                                    <div className="text-4xl shrink-0 text-[#FF5500] opacity-80">{b.icon}</div>
                                     <div>
-                                        <p className="text-[11px] font-black text-[#1A1A1A] leading-tight mb-0.5">{b.title}</p>
-                                        <p className="text-[9px] text-gray-400 leading-tight whitespace-pre-line">{b.sub}</p>
+                                        <p className="text-[15px] sm:text-base font-black text-[#1A1A1A] leading-tight mb-1">{b.title}</p>
+                                        <p className="text-sm text-gray-600 leading-tight">{b.sub}</p>
                                     </div>
                                 </div>
                             ))}
@@ -392,13 +395,13 @@ const PujaDetailPage = () => {
                         {/* Header */}
                         <div className="px-6 py-5 border-b border-[#F0E0D0]">
                             <h3 className="text-lg font-black text-[#1A1A1A]">Book Your Puja</h3>
-                            <p className="text-gray-400 text-xs font-medium mt-0.5">Send request to our expert pandit</p>
+                            <p className="text-gray-500 text-sm font-medium mt-0.5">Send request to our expert pandit</p>
                         </div>
 
                         <div className="p-5 space-y-5">
                             {/* Mode Selection */}
                             <div>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-3">1. Select Puja Mode</p>
+                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">1. Select Puja Mode</p>
                                 <div className="space-y-2">
                                     {puja.is_online && (
                                         <button
@@ -412,8 +415,8 @@ const PujaDetailPage = () => {
                                                 <Video className="w-5 h-5" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className={`text-xs font-black ${selectedMode === 'online' ? 'text-[#FF5500]' : 'text-gray-800'}`}>Online / Video Call</p>
-                                                <p className="text-[10px] text-gray-400 leading-tight">Participate from the comfort of your home</p>
+                                                <p className={`text-sm font-black ${selectedMode === 'online' ? 'text-[#FF5500]' : 'text-gray-800'}`}>Online / Video Call</p>
+                                                <p className="text-xs text-gray-500 leading-tight">Participate from the comfort of your home</p>
                                             </div>
                                         </button>
                                     )}
@@ -430,8 +433,8 @@ const PujaDetailPage = () => {
                                                     <MapPin className="w-5 h-5" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className={`text-xs font-black ${selectedMode === 'home_visit_without' ? 'text-[#FF5500]' : 'text-gray-800'}`}>Home Visit (Basic)</p>
-                                                    <p className="text-[10px] text-gray-400 leading-tight">Pandit ji will come to your home (Without Samagri)</p>
+                                                    <p className={`text-sm font-black ${selectedMode === 'home_visit_without' ? 'text-[#FF5500]' : 'text-gray-800'}`}>Home Visit (Basic)</p>
+                                                    <p className="text-xs text-gray-500 leading-tight">Pandit ji will come to your home (Without Samagri)</p>
                                                 </div>
                                             </button>
                                             <button
@@ -445,8 +448,8 @@ const PujaDetailPage = () => {
                                                     <Package className="w-5 h-5" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className={`text-xs font-black ${selectedMode === 'home_visit_with' ? 'text-[#FF5500]' : 'text-gray-800'}`}>Home Visit (Premium)</p>
-                                                    <p className="text-[10px] text-gray-400 leading-tight">Pandit ji will come with Full Samagri Kit</p>
+                                                    <p className={`text-sm font-black ${selectedMode === 'home_visit_with' ? 'text-[#FF5500]' : 'text-gray-800'}`}>Home Visit (Premium)</p>
+                                                    <p className="text-xs text-gray-500 leading-tight">Pandit ji will come with Full Samagri Kit</p>
                                                 </div>
                                             </button>
                                         </>
@@ -456,7 +459,7 @@ const PujaDetailPage = () => {
 
                             {/* Date & Time */}
                             <div className="border-t border-gray-100 pt-4">
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-3">2. Select Date & Time</p>
+                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">2. Select Date & Time</p>
                                 <label className="flex items-center gap-2 mb-3 cursor-pointer">
                                     <input
                                         type="checkbox"
@@ -464,20 +467,20 @@ const PujaDetailPage = () => {
                                         onChange={(e) => setAskExpertForDate(e.target.checked)}
                                         className="w-4 h-4 accent-[#FF5500]"
                                     />
-                                    <span className="text-xs font-bold text-gray-600">Ask the expert for date and time</span>
-                                    <Info className="w-3.5 h-3.5 text-gray-300" />
+                                    <span className="text-sm font-bold text-gray-700">Ask the expert for date and time</span>
+                                    <Info className="w-3.5 h-3.5 text-gray-400" />
                                 </label>
                                 {!askExpertForDate && (
                                     <div className="space-y-2">
-                                        <p className="text-[10px] text-gray-400 font-bold uppercase">OR Choose your preferred date & time</p>
+                                        <p className="text-xs text-gray-500 font-bold uppercase">OR Choose your preferred date & time</p>
                                         <div className="relative">
                                             <input type="text" placeholder="Select Date" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => !e.target.value && (e.target.type = 'text')} value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} min={new Date().toISOString().split('T')[0]}
-                                                className="w-full px-4 pr-10 py-3 border border-gray-200 rounded-xl text-xs font-medium focus:border-[#FF5500] outline-none transition-all text-gray-700" />
+                                                className="w-full px-4 pr-10 py-3 border border-gray-200 rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-gray-700" />
                                             <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                                         </div>
                                         <div className="relative">
                                             <input type="text" placeholder="Select Time" onFocus={(e) => e.target.type = 'time'} onBlur={(e) => !e.target.value && (e.target.type = 'text')} value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)}
-                                                className="w-full px-4 pr-10 py-3 border border-gray-200 rounded-xl text-xs font-medium focus:border-[#FF5500] outline-none transition-all text-gray-700" />
+                                                className="w-full px-4 pr-10 py-3 border border-gray-200 rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-gray-700" />
                                             <Clock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                                         </div>
                                     </div>
@@ -486,60 +489,60 @@ const PujaDetailPage = () => {
 
                             {/* Message */}
                             <div className="border-t border-gray-100 pt-4">
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">3. Add a Message <span className="text-gray-300 normal-case font-medium">(Optional)</span></p>
+                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">3. Add a Message <span className="text-gray-400 normal-case font-medium">(Optional)</span></p>
                                 <textarea
                                     placeholder="Enter any special request or family details..."
                                     value={userMessage}
                                     onChange={(e) => setUserMessage(e.target.value)}
                                     rows={3}
                                     maxLength={250}
-                                    className="w-full p-3 border-2 border-gray-100 rounded-2xl text-xs focus:border-[#FF5500] outline-none resize-none text-gray-600 placeholder-gray-300"
+                                    className="w-full p-3 border-2 border-gray-100 rounded-2xl text-sm focus:border-[#FF5500] outline-none resize-none text-gray-700 placeholder-gray-400"
                                 />
-                                <p className="text-right text-[10px] text-gray-300">{userMessage.length}/250</p>
+                                <p className="text-right text-xs text-gray-400">{userMessage.length}/250</p>
                             </div>
 
                             {/* Price Summary */}
                             <div className="border-t border-gray-100 pt-4">
                                 <div className="flex items-center justify-between mb-3">
-                                    <p className="text-sm font-black text-gray-700">Price Summary</p>
-                                    <div className="flex items-center gap-1 text-emerald-500 text-[10px] font-black">
-                                        <ShieldCheck className="w-3 h-3" /> Secure Price
+                                    <p className="text-base font-black text-gray-700">Price Summary</p>
+                                    <div className="flex items-center gap-1 text-emerald-500 text-xs font-black">
+                                        <ShieldCheck className="w-3.5 h-3.5" /> Secure Price
                                     </div>
                                 </div>
                                 <div className="space-y-2 mb-4">
-                                    <div className="flex justify-between text-xs">
-                                        <span className="text-gray-400 font-medium">Puja Price (Online)</span>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-gray-500 font-medium">Puja Price (Online)</span>
                                         <span className="font-black text-[#1A1A1A]">₹ {getCurrentCost()}</span>
                                     </div>
-                                    <div className="flex justify-between text-xs">
-                                        <span className="text-gray-400 font-medium">Taxes & Charges</span>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-gray-500 font-medium">Taxes & Charges</span>
                                         <span className="font-black text-emerald-500">₹ 0</span>
                                     </div>
                                     <div className="h-px bg-[#F0E0D0]" />
                                     <div className="flex justify-between">
-                                        <span className="text-sm font-black text-[#1A1A1A]">Total (All Taxes Inc.)</span>
-                                        <span className="text-base font-black text-[#FF5500]">₹ {getCurrentCost()}</span>
+                                        <span className="text-base font-black text-[#1A1A1A]">Total (All Taxes Inc.)</span>
+                                        <span className="text-lg font-black text-[#FF5500]">₹ {getCurrentCost()}</span>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={handleBookingRequest}
                                     disabled={isBooking}
-                                    className="w-full py-3.5 bg-[#FF5500] hover:bg-[#E64D00] text-white font-black rounded-2xl flex items-center justify-center gap-2 text-sm shadow-lg shadow-orange-200 active:scale-[0.98] transition-all disabled:opacity-50"
+                                    className="w-full py-4 bg-[#FF5500] hover:bg-[#E64D00] text-white font-black rounded-2xl flex items-center justify-center gap-2 text-[13px] sm:text-base whitespace-nowrap shadow-lg shadow-orange-200 active:scale-[0.98] transition-all disabled:opacity-50"
                                 >
-                                    {isBooking ? <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</> : <><Send className="w-4 h-4" /> Send request to expert for pooja</>}
+                                    {isBooking ? <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</> : <><Send className="w-4 h-4 sm:w-5 sm:h-5" /> Send Booking Request</>}
                                 </button>
 
-                                <p className="mt-3 text-[10px] text-center text-gray-400 flex items-start justify-center gap-1">
-                                    <Info className="w-3 h-3 shrink-0 mt-0.5" />
+                                <p className="mt-3 text-xs text-center text-gray-500 flex items-start justify-center gap-1.5">
+                                    <Info className="w-4 h-4 shrink-0 mt-0.5" />
                                     You will not be charged at this stage. Your request will be sent to the pandit for confirmation.
                                 </p>
 
                                 <div className="flex items-center justify-around pt-4 border-t border-gray-100 mt-3">
                                     {[{ icon: "🔒", label: "Secure\nBooking" }, { icon: "✅", label: "Verified\nPandits" }, { icon: "💯", label: "100%\nAuthentic" }].map((b, i) => (
-                                        <div key={i} className="flex flex-col items-center gap-1">
-                                            <span className="text-lg">{b.icon}</span>
-                                            <p className="text-[9px] text-gray-400 font-bold text-center whitespace-pre-line leading-tight">{b.label}</p>
+                                        <div key={i} className="flex flex-col items-center gap-1.5">
+                                            <span className="text-2xl">{b.icon}</span>
+                                            <p className="text-[11px] text-gray-500 font-bold text-center whitespace-pre-line leading-tight">{b.label}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -579,14 +582,14 @@ const PujaDetailPage = () => {
                                         <div className="w-full h-full bg-gradient-to-br from-[#FFF0E6] to-[#FFD9BF]" />
                                     )}
                                     <div className="absolute top-2 left-2 flex gap-1 flex-wrap">
-                                        {p.is_online && <span className="bg-[#FF5500] text-white text-[9px] font-black px-2 py-0.5 rounded-md">Online</span>}
-                                        {p.is_home_visit && <span className="bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-md">Home Visit</span>}
+                                        {p.is_online && <span className="bg-[#FF5500] text-white text-[10px] font-black px-2 py-0.5 rounded-md">Online</span>}
+                                        {p.is_home_visit && <span className="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md">Home Visit</span>}
                                     </div>
                                 </div>
                                 <div className="p-4">
-                                    <p className="text-sm font-black text-[#1A1A1A] leading-tight mb-2 group-hover:text-[#FF5500] transition-colors">{p.name}</p>
-                                    <p className="text-[10px] text-gray-400">Starting from</p>
-                                    <p className="text-base font-black text-[#FF5500]">₹ {Math.min(...[p.online_cost, p.home_visit_without_samagri_cost, p.home_visit_with_samagri_cost].filter(Boolean))}</p>
+                                    <p className="text-base font-black text-[#1A1A1A] leading-tight mb-2 group-hover:text-[#FF5500] transition-colors">{p.name}</p>
+                                    <p className="text-xs text-gray-500">Starting from</p>
+                                    <p className="text-lg font-black text-[#FF5500]">₹ {Math.min(...[p.online_cost, p.home_visit_without_samagri_cost, p.home_visit_with_samagri_cost].filter(Boolean))}</p>
                                 </div>
                             </div>
                         ))

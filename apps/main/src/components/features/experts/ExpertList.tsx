@@ -132,13 +132,8 @@ const ExpertList: React.FC<ExpertListProps> = ({
       }}
     >
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
-        <div className="text-white mb-10" style={{ '--heading-border-color': 'rgba(255,255,255,0.2)' } as any}>
-          <h2 className="section-heading-premium" style={fontStyle}>
-            <span>{title || (t as any).expertSection.title}</span>
-          </h2>
-        </div>
-
         <ExpertListHeader
+          title={title || (t as any).expertSection.title}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           selectedSpecialization={selectedSpecialization}

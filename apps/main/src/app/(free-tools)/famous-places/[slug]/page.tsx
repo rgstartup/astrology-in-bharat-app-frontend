@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useLanguageStore } from "@repo/store";
 import { famousPlacesTranslations } from "@/lib/famous-places-translations";
 import { Loading } from "@repo/ui";
+import GuidanceCTA from "@/components/ui/GuidanceCTA";
 
 const PlaceDetailPage = () => {
   const { lang, toggleLang } = useLanguageStore();
@@ -583,18 +584,18 @@ const PlaceDetailPage = () => {
               <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-4 flex items-center gap-2">
                 <i className="fa-solid fa-map-location-dot text-[#F26500]"></i> Location
               </h3>
-              <div className="w-full h-[220px] rounded-xl overflow-hidden bg-slate-100 relative border border-slate-200 mb-5">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  allowFullScreen
-                  referrerPolicy="no-referrer-when-downgrade"
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(place.title)}&hl=en&z=14&output=embed`}
-                  className="absolute inset-0 grayscale-[0.2] contrast-[1.1]"
-                ></iframe>
-              </div>
+              <a 
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.title + " " + (place.address || ""))}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full h-[220px] rounded-xl overflow-hidden bg-[#FAF5EE] flex flex-col items-center justify-center relative border border-[#E8D5C0] mb-5 group hover:border-orange-300 transition-all no-underline"
+              >
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-3 group-hover:scale-110 group-hover:shadow-md transition-all">
+                  <i className="fa-solid fa-map-location-dot text-3xl text-[#F26500]"></i>
+                </div>
+                <p className="text-sm font-bold text-[#3D1A0B] group-hover:text-[#F26500] transition-colors m-0">Click to open Interactive Map</p>
+                <p className="text-[11px] text-gray-400 mt-1 font-medium">Opens in a new tab</p>
+              </a>
               <div className="flex items-start gap-3 text-black text-[14px] font-medium mb-6">
                 <i className="fa-solid fa-location-dot text-[#F26500] mt-1"></i>
                 <p className="leading-relaxed">{place.title}, {place.address || "India"}</p>
@@ -648,6 +649,17 @@ const PlaceDetailPage = () => {
           </div>
 
         </div>
+
+        {/* Bottom CTA Banner */}
+        <GuidanceCTA 
+          className="mt-12 mb-8"
+          subtitle="Personalized Guidance"
+          title="Want to know more about this temple?"
+          description="Talk to our Astrology Experts and get personalized guidance and temple recommendations."
+          buttonText="Talk to Expert"
+          buttonLink="/chat"
+          buttonIcon="fa-solid fa-comments"
+        />
 
       </div>
     </div>

@@ -14,7 +14,7 @@ import PredictionList from "./prediction-list.component";
 import PlanetaryInfluence from "./planetary-influence.component";
 import { LuckyAspects, RemedyForYou } from "./bottom-cards.component";
 import ZodiacDetailsSidebar from "./sidebar.component";
-import TalkExpertBanner from "./talk-expert-banner.component";
+import GuidanceCTA from "@/components/ui/GuidanceCTA";
 
 export default function ZodiacDetailsPage() {
   const params = useParams();
@@ -146,7 +146,14 @@ export default function ZodiacDetailsPage() {
                 <PlanetaryInfluence />
 
                 {/* Talk to Expert Banner */}
-                <TalkExpertBanner />
+                <GuidanceCTA 
+                  className="mt-8"
+                  subtitle="Personalized Guidance"
+                  title="Get More Personalized Predictions"
+                  description="Talk to our expert astrologers for in-depth guidance based on your birth chart."
+                  buttonText="Talk to Expert"
+                  buttonIcon="fa-solid fa-headset"
+                />
 
                 {/* Bottom Cards Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">

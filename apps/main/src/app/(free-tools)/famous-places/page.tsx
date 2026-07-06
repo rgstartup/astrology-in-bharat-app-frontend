@@ -19,6 +19,7 @@ import {
 } from "@/components/features/famous-places/SidebarWidgets";
 import { DEFAULT_QUERIES, TEMPLE_CATEGORIES } from "@/components/features/famous-places/constants";
 import PlaceCard from "@/components/features/famous-places/PlaceCard";
+import GuidanceCTA from "@/components/ui/GuidanceCTA";
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -172,26 +173,15 @@ const FamousPlacesPage = () => {
         />
 
         {/* 5. Bottom CTA Banner */}
-        <section className="mt-12 bg-[#1a0b0b] rounded-3xl px-5 py-6 sm:px-8 sm:py-8 md:py-10 flex flex-col md:flex-row items-center justify-between gap-5 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <Image src="/images/horoscope-round2.png" alt="" fill className="object-cover" />
-          </div>
-          <div className="relative z-10 w-full text-center md:text-left">
-            <p className="text-orange-400 font-bold text-[13px] sm:text-sm mb-1">Personalized Guidance</p>
-            <h3 className="text-white text-[15px] sm:text-[19px] md:text-2xl font-black leading-snug md:leading-normal text-balance mx-auto">
-              Want to know which temple is best for you?
-            </h3>
-            <p className="text-white/60 text-sm mt-1">
-              Talk to our Astrology Experts and get personalized temple recommendations.
-            </p>
-          </div>
-          <Link
-            href="/chat"
-            className="relative z-10 flex-shrink-0 bg-orange-500 hover:bg-orange-600 text-white font-black px-8 py-3 rounded-xl flex items-center gap-2 transition-colors text-sm"
-          >
-            <i className="fa-solid fa-comments" /> Talk to Expert
-          </Link>
-        </section>
+        <GuidanceCTA 
+          className="mt-12"
+          subtitle="Personalized Guidance"
+          title="Want to know which temple is best for you?"
+          description="Talk to our Astrology Experts and get personalized temple recommendations."
+          buttonText="Talk to Expert"
+          buttonLink="/chat"
+          buttonIcon="fa-solid fa-comments"
+        />
       </div>
 
       {/* Global loading overlay */}
