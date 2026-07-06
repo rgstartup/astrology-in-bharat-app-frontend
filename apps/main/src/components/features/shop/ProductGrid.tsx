@@ -30,12 +30,12 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     };
 
     return (
-    <section className="py-24 bg-white relative overflow-hidden">
+    <section className="py-8 md:py-24 bg-white relative overflow-hidden">
       {/* Decorative Background Element */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-orange/5 rounded-full blur-[120px] translate-x-1/2 -translate-y-1/2"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-8 md:mb-20">
           <div className="max-w-2xl">
             <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 inline-block relative">
               {t.products.pageTitle}

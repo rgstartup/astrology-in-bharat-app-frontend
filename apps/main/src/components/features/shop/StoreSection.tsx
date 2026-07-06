@@ -119,7 +119,7 @@ const StoreSection = () => {
                                 placeholder={t.searchPlaceholder}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-11 pr-4 py-3.5 bg-[#1f0b10]/80 border border-white/10 rounded-full text-white placeholder:text-gray-500 focus:outline-none focus:border-orange-500/50 focus:bg-[#1f0b10] focus:ring-4 focus:ring-orange-500/10 transition-all duration-300 text-sm backdrop-blur-md"
+                                className="w-full pl-11 pr-4 py-3.5 bg-[#1f0b10]/80 border border-[#d95a00] rounded-full text-white placeholder:text-gray-500 hover:border-[#ff6b00] focus:outline-none focus:border-orange-500/50 focus:bg-[#1f0b10] focus:ring-4 focus:ring-[#d95a00]/30 transition-all duration-300 text-sm backdrop-blur-md"
                             />
                             <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
                         </div>
@@ -127,7 +127,7 @@ const StoreSection = () => {
                         <div className="relative w-full sm:w-[180px]" ref={dropdownRef}>
                             <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="w-full px-5 py-3.5 bg-[#1f0b10]/80 border border-white/10 rounded-full text-white hover:border-white/20 focus:outline-none focus:border-orange-500/50 focus:bg-[#1f0b10] focus:ring-4 focus:ring-orange-500/10 transition-all duration-300 text-sm font-medium flex items-center justify-between backdrop-blur-md"
+                                className="w-full px-5 py-3.5 bg-[#1f0b10]/80 border border-[#d95a00] rounded-full text-white hover:border-[#ff6b00] focus:outline-none focus:border-orange-500/50 focus:bg-[#1f0b10] focus:ring-4 focus:ring-[#d95a00]/30 transition-all duration-300 text-sm font-medium flex items-center justify-between backdrop-blur-md"
                             >
                                 <span className="truncate mr-2">{selectedCity === "all" ? t.allCities : selectedCity}</span>
                                 <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-orange-500' : 'text-gray-400'}`} />

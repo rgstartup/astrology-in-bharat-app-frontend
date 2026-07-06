@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
-import OurExpert from "@/components/layout/main/ourExpert";
+import { Suspense, useState, useEffect } from "react";
 import {
   ArrowRight,
   Award,
@@ -25,33 +24,7 @@ import {
   UserCheck,
   Users,
 } from "lucide-react";
-
-const stats = [
-  {
-    icon: Users,
-    value: "50k+",
-    title: "Happy Users",
-    desc: "Across India",
-  },
-  {
-    icon: Award,
-    value: "300+",
-    title: "Verified Astrologers",
-    desc: "Expert & Experienced",
-  },
-  {
-    icon: Star,
-    value: "4.9/5",
-    title: "User Rating",
-    desc: "Based on Reviews",
-  },
-  {
-    icon: CalendarDays,
-    value: "10k+",
-    title: "Consultations Daily",
-    desc: "Trusted by Thousands",
-  },
-];
+import GuidanceCTA from "@/components/ui/GuidanceCTA";
 
 const storyHighlights = [
   { icon: UserCheck, label: "Verified Experts" },
@@ -159,68 +132,67 @@ const IconBubble = ({
   </div>
 );
 
-export default function AboutRedesign() {
+export default function AboutRedesign({ children }: { children: React.ReactNode }) {
+  const [platformStats, setPlatformStats] = useState<{
+    totalUsers: number;
+    verifiedAstrologers: number;
+    totalConsultations: number;
+    totalProductsSold: number;
+  } | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/v1/public/stats/platform-stats')
+      .then((r) => r.json())
+      .then((res) => {
+        if (res.success) setPlatformStats(res.data);
+      })
+      .catch(() => {})
+      .finally(() => setStatsLoading(false));
+  }, []);
   return (
-    <main className="bg-[#fffaf5] text-[#2f1119]">
-      <section className="mx-auto max-w-[1180px] px-4 pb-8 pt-10 sm:px-6 lg:px-8">
-        <div className="mb-8 flex items-center gap-2 text-xs font-medium text-[#b78368]">
-          <Home className="h-3.5 w-3.5 text-[#ff5c00]" />
-          <Link
-            href="/"
-            className="text-[#b78368] no-underline hover:text-[#ff5c00]"
-          >
-            Home
-          </Link>
-          <span>•</span>
-          <span>About Us</span>
-        </div>
+    <main className="bg-[#fffaf5] text-[#2f1119] overflow-x-hidden w-full max-w-[100vw]">
+      <section className="mx-auto max-w-[1180px] px-4 pb-8 pt-4 sm:px-6 lg:px-8">
 
-        <div className="grid items-center gap-10 lg:grid-cols-[0.86fr_1.14fr]">
-          <div>
-            <SectionLabel>About Us</SectionLabel>
-            <h1 className="mb-6 font-serif text-[42px] font-bold leading-[1.08] tracking-normal text-[#32131b] sm:text-6xl lg:text-[64px]">
-              About Astrology
-              <span className="block text-[#ff5c00]">In Bharat</span>
-            </h1>
-            <p className="max-w-md text-base font-medium leading-8 text-[#6f5c58]">
-              We combine ancient Vedic wisdom with modern technology to provide
-              accurate, reliable and personalized astrology solutions.
-            </p>
-
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+        <div className="flex flex-col items-center w-full max-w-full">
+          <div className="relative w-full max-w-full overflow-hidden rounded-[24px] md:rounded-[36px] border border-[#ffd8c0] shadow-[0_18px_45px_rgba(105,47,16,0.12)] mb-8">
+            <Image
+              src="/images/about-banner-full.png"
+              alt="About Astrology in Bharat"
+              width={1200}
+              height={500}
+              priority
+              className="w-full max-w-full h-auto object-cover"
+            />
+            
+            {/* Absolute Buttons over Image */}
+            <div className="absolute bottom-2 left-4 md:bottom-8 md:left-12 lg:bottom-10 lg:left-16 flex flex-row gap-2 sm:gap-3">
               <Link
                 href="/our-experts"
-                className="inline-flex h-14 items-center justify-center gap-3 rounded-xl bg-[#ff5c00] px-7 text-sm font-extrabold text-white no-underline shadow-[0_12px_24px_rgba(255,92,0,0.22)] transition hover:-translate-y-0.5 hover:bg-[#e95300]"
+                className="inline-flex h-7 sm:h-12 lg:h-14 items-center justify-center gap-1 sm:gap-3 rounded-lg sm:rounded-xl bg-[#ff5c00] px-3 sm:px-6 lg:px-9 text-[9px] sm:text-sm font-extrabold text-white no-underline shadow-[0_4px_12px_rgba(255,92,0,0.22)] sm:shadow-[0_12px_24px_rgba(255,92,0,0.22)] transition hover:-translate-y-0.5 hover:bg-[#e95300]"
               >
-                <MessageSquare className="h-5 w-5" />
+                <MessageSquare className="h-3 w-3 sm:h-5 sm:w-5" />
                 Talk to Expert
               </Link>
               <Link
                 href="/our-experts"
-                className="inline-flex h-14 items-center justify-center gap-3 rounded-xl border border-[#ff8b4d] bg-white px-7 text-sm font-extrabold text-[#ff5c00] no-underline transition hover:-translate-y-0.5 hover:bg-[#fff3eb]"
+                className="inline-flex h-7 sm:h-12 lg:h-14 items-center justify-center gap-1 sm:gap-3 rounded-lg sm:rounded-xl border border-[#ff8b4d] bg-white px-3 sm:px-6 lg:px-9 text-[9px] sm:text-sm font-extrabold text-[#ff5c00] no-underline transition hover:-translate-y-0.5 hover:bg-[#fff3eb]"
               >
                 Explore Services
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-3 w-3 sm:h-5 sm:w-5" />
               </Link>
             </div>
-          </div>
-
-          <div className="relative overflow-hidden rounded-[36px] rounded-tl-[70px] border border-[#ffd8c0] bg-white shadow-[0_18px_45px_rgba(105,47,16,0.12)]">
-            <Image
-              src="/images/online-puja-banner.png"
-              alt="Astrology consultation"
-              width={1200}
-              height={620}
-              priority
-              className="h-[270px] w-full object-cover object-[70%_center] sm:h-[420px]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-transparent"></div>
           </div>
         </div>
 
         <div className="mt-10 rounded-xl border border-[#ffd8c0] bg-white/80 p-5 shadow-[0_12px_32px_rgba(105,47,16,0.08)]">
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((item) => (
+            {[
+              { icon: Users, value: platformStats?.totalUsers, title: "Happy Users", desc: "Registered Clients" },
+              { icon: Award, value: platformStats?.verifiedAstrologers, title: "Verified Astrologers", desc: "Expert & Experienced" },
+              { icon: CalendarDays, value: platformStats?.totalConsultations, title: "Consultations Done", desc: "Chat & Call Sessions" },
+              { icon: ShieldCheck, value: platformStats?.totalProductsSold, title: "Products Sold", desc: "From Our Shop" },
+            ].map((item) => (
               <div
                 key={item.title}
                 className="flex items-center gap-5 px-2 py-3"
@@ -228,7 +200,11 @@ export default function AboutRedesign() {
                 <IconBubble icon={item.icon} />
                 <div>
                   <div className="text-3xl font-black leading-none text-[#32131b]">
-                    {item.value}
+                    {statsLoading ? (
+                      <span className="inline-block h-8 w-16 animate-pulse rounded-md bg-[#ffd8c0]" />
+                    ) : (
+                      <>{(item.value ?? 0).toLocaleString('en-IN')}</>  
+                    )}
                   </div>
                   <div className="mt-2 text-sm font-extrabold text-[#32131b]">
                     {item.title}
@@ -347,9 +323,7 @@ export default function AboutRedesign() {
         </div>
       </section>
 
-      <Suspense fallback={null}>
-        <OurExpert />
-      </Suspense>
+      {children}
 
       <section className="mx-auto max-w-[1180px] px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-5 lg:grid-cols-3">
@@ -382,34 +356,7 @@ export default function AboutRedesign() {
       </section>
 
       <section className="mx-auto max-w-[1180px] px-4 pb-12 pt-6 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-2xl bg-[#351019] px-8 py-11 text-white shadow-[0_18px_45px_rgba(47,17,25,0.18)] md:px-16">
-          <Image
-            src="/images/bg-dark.png"
-            alt=""
-            width={900}
-            height={400}
-            className="absolute inset-0 h-full w-full object-cover opacity-35"
-          />
-          <div className="relative z-10 grid items-center gap-8 md:grid-cols-[1fr_auto]">
-            <div>
-              <h2 className="mb-4 flex items-center gap-3 font-serif text-3xl font-bold">
-                <BadgeCheck className="h-7 w-7 text-[#ff7a2f]" />
-                Need Personal Guidance?
-              </h2>
-              <p className="max-w-xl text-base font-medium leading-7 text-white/85">
-                Connect with our verified experts and get answers to all your
-                questions.
-              </p>
-            </div>
-            <Link
-              href="/our-experts"
-              className="inline-flex h-14 items-center justify-center gap-3 rounded-full bg-[#ff5c00] px-10 text-sm font-extrabold text-white no-underline shadow-[0_12px_26px_rgba(255,92,0,0.25)] transition hover:bg-[#e95300]"
-            >
-              <MessageSquare className="h-5 w-5" />
-              Talk to an Astrologer
-            </Link>
-          </div>
-        </div>
+        <GuidanceCTA />
       </section>
     </main>
   );

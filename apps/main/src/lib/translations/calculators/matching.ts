@@ -15,19 +15,19 @@ export const matchingTranslations = {
             accuracyBadge: "99.9% Accurate"
         },
         form: {
-            boyTitle: "Boy's Details",
-            boySubtitle: "The Groom's Profile",
-            girlTitle: "Girl's Details",
-            girlSubtitle: "The Bride's Profile",
+            boyTitle: "Person 1 (You / Male)",
+            boySubtitle: "Enter your birth details",
+            girlTitle: "Person 2 (Partner / Female)",
+            girlSubtitle: "Enter partner birth details",
             labels: {
                 name: "Full Name",
-                date: "Birth Date",
-                time: "Birth Time",
+                date: "Date of Birth",
+                time: "Time of Birth",
                 place: "Birth Place"
             },
             placeholders: {
-                boyName: "Enter boy's name",
-                girlName: "Enter girl's name",
+                boyName: "Enter full name",
+                girlName: "Enter full name",
                 searchPlace: "Search city or location"
             },
             errorFillAll: "Please fill in all birth details for both individuals.",
@@ -130,8 +130,8 @@ export const matchingTranslations = {
                 place: "जन्म स्थान"
             },
             placeholders: {
-                boyName: "लड़के का नाम दर्ज करें",
-                girlName: "लड़की का नाम दर्ज करें",
+                boyName: "पूरा नाम दर्ज करें",
+                girlName: "पूरा नाम दर्ज करें",
                 searchPlace: "शहर या स्थान खोजें"
             },
             errorFillAll: "कृपया दोनों व्यक्तियों के लिए जन्म का पूरा विवरण भरें।",

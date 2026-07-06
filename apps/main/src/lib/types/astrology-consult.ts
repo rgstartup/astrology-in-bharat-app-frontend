@@ -27,6 +27,7 @@ export interface MatchFormProps {
     location: ConsultLocation
   ) => void;
   handleMatch: () => void;
+  handleSwap: () => void;
   loading: boolean;
   error: string | null;
 }

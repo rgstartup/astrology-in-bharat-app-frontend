@@ -62,11 +62,11 @@ const FamousPlacesPage = () => {
   }, []);
 
   // ── Handlers ─────────────────────────────────────────────────────────────────
-  const handleSearch = async (query: string) => {
+  const handleSearch = async (query: string, location?: string) => {
     if (!query.trim()) return;
     setIsSearching(true);
     try {
-      const results = await fetchPlaces(`${query} temple`, "India");
+      const results = await fetchPlaces(query, location || "India");
       setSearchResults(results);
     } catch (err) {
       console.error("Search failed:", err);

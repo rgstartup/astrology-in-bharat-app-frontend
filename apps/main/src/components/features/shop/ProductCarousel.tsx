@@ -67,7 +67,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products }) => {
 
     return (
         <div
-            className="w-full relative px-2 md:px-12 group"
+            className="w-full relative px-2 md:px-12"
             onMouseEnter={() => {
                 if (swiperInstance) {
                     swiperInstance.autoplay.stop();
@@ -116,10 +116,10 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products }) => {
 
             {displayProducts.length > 0 && (
                 <>
-                    <button className="product-prev absolute top-1/2 -translate-y-1/2 left-0 w-10 h-10 rounded-full bg-white shadow-xl hidden md:flex items-center justify-center text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-300 z-20 active:scale-90 group-hover:scale-110 border-0">
+                    <button className="product-prev absolute top-1/2 -translate-y-1/2 left-0 w-10 h-10 rounded-full bg-white shadow-xl hidden md:flex items-center justify-center text-orange-600 hover:bg-orange-600 hover:text-white hover:scale-110 transition-all duration-300 z-20 active:scale-90 border-0">
                         <ChevronLeft className="w-5 h-5 stroke-[3]" />
                     </button>
-                    <button className="product-next absolute top-1/2 -translate-y-1/2 right-0 w-10 h-10 rounded-full bg-white shadow-xl hidden md:flex items-center justify-center text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-300 z-20 active:scale-90 group-hover:scale-110 border-0">
+                    <button className="product-next absolute top-1/2 -translate-y-1/2 right-0 w-10 h-10 rounded-full bg-white shadow-xl hidden md:flex items-center justify-center text-orange-600 hover:bg-orange-600 hover:text-white hover:scale-110 transition-all duration-300 z-20 active:scale-90 border-0">
                         <ChevronRight className="w-5 h-5 stroke-[3]" />
                     </button>
                 </>

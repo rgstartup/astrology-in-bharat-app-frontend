@@ -34,7 +34,7 @@ const WhyChooseUs = () => {
             {leftItems.map((item, index) => (
               <div
                 key={item.id}
-                className="group bg-[#1e0b0fa6] border border-white/10 hover:border-orange/30 rounded-3xl p-5 md:p-6 flex flex-col items-center justify-center min-h-[160px] text-center hover:bg-[#2a1016a6] transition-all duration-500 shadow-xl hover:shadow-orange/5 hover:-translate-y-1"
+                className="group bg-[#1e0b0fa6] border border-orange/80 hover:border-orange rounded-3xl p-5 md:p-6 flex flex-col items-center justify-center min-h-[160px] text-center hover:bg-[#2a1016a6] transition-all duration-500 shadow-xl hover:shadow-orange/10 hover:-translate-y-1"
               >
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-orange flex items-center justify-center mb-4 md:mb-5 shadow-[0_0_15px_rgba(255,107,0,0.3)] group-hover:bg-orange/90 transition-all duration-500 border border-orange/50">
                   <i className={`fa-solid ${item.icon} text-2xl md:text-2xl text-white group-hover:scale-110 transition-transform duration-500 drop-shadow-md`}></i>
@@ -75,7 +75,7 @@ const WhyChooseUs = () => {
             {rightItems.map((item, index) => (
               <div
                 key={item.id}
-                className="group bg-[#1e0b0fa6] border border-white/10 hover:border-orange/30 rounded-3xl p-5 md:p-6 flex flex-col items-center justify-center min-h-[160px] text-center hover:bg-[#2a1016a6] transition-all duration-500 shadow-xl hover:shadow-orange/5 hover:-translate-y-1"
+                className="group bg-[#1e0b0fa6] border border-orange/80 hover:border-orange rounded-3xl p-5 md:p-6 flex flex-col items-center justify-center min-h-[160px] text-center hover:bg-[#2a1016a6] transition-all duration-500 shadow-xl hover:shadow-orange/10 hover:-translate-y-1"
               >
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-orange flex items-center justify-center mb-4 md:mb-5 shadow-[0_0_15px_rgba(255,107,0,0.3)] group-hover:bg-orange/90 transition-all duration-500 border border-orange/50">
                   <i className={`fa-solid ${item.icon} text-2xl md:text-2xl text-white group-hover:scale-110 transition-transform duration-500 drop-shadow-md`}></i>

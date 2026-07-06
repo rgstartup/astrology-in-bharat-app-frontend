@@ -10,6 +10,7 @@ import { homeTranslations } from "../../../lib/translations/home";
 
 interface ProductSectionProps {
     products: Product[];
+    isLoading?: boolean;
 }
 
 /* 🔹 Premium Skeleton Card */
@@ -28,7 +29,7 @@ const ProductSkeleton = () => {
     );
 };
 
-const ProductSection: React.FC<ProductSectionProps> = ({ products }) => {
+const ProductSection: React.FC<ProductSectionProps> = ({ products, isLoading = false }) => {
     const { lang } = useLanguageStore();
     const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
     const [searchQuery, setSearchQuery] = useState("");
@@ -59,7 +60,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({ products }) => {
                 <div className="w-full lg:w-auto shrink-0">
                     <div className="relative group">
                         <div className="absolute -inset-1 bg-gradient-to-r from-orange/80 to-orange rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition duration-500"></div>
-                        <div className="relative flex items-center bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm focus-within:shadow-xl focus-within:border-orange focus-within:ring-2 focus-within:ring-orange/20 transition-all duration-500 w-full sm:min-w-[320px]">
+                        <div className="relative flex items-center bg-white rounded-2xl border border-[#d95a00] overflow-hidden shadow-sm hover:border-[#ff6b00] focus-within:shadow-xl focus-within:border-[#ff6b00] focus-within:ring-2 focus-within:ring-[#d95a00]/30 transition-all duration-500 w-full sm:min-w-[320px]">
                             <Search className="ml-5 w-5 h-5 text-slate-400" />
                             <input
                                 type="text"
@@ -82,12 +83,22 @@ const ProductSection: React.FC<ProductSectionProps> = ({ products }) => {
             </div>
 
             <div>
-                {products.length === 0 ? (
-                    /* 🔥 4 Skeleton Cards for empty initial state */
+                {isLoading ? (
+                    /* 🔥 4 Skeleton Cards for loading state */
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                         {Array.from({ length: 4 }).map((_, index) => (
                             <ProductSkeleton key={index} />
                         ))}
+                    </div>
+                ) : products.length === 0 ? (
+                    <div className="w-full text-center py-20 bg-slate-50 rounded-[4rem] border-2 border-dashed border-slate-200 space-y-4">
+                        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto text-slate-300 shadow-sm">
+                           <Search className="w-10 h-10" />
+                        </div>
+                        <h4 className="text-xl font-black text-slate-900 uppercase tracking-tighter">No products found</h4>
+                        <p className="text-slate-400 font-medium">
+                            Check back later for new inventory.
+                        </p>
                     </div>
                 ) : filteredProducts.length === 0 ? (
                     <div className="w-full text-center py-32 bg-slate-50 rounded-[4rem] border-2 border-dashed border-slate-200 space-y-6">

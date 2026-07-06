@@ -170,7 +170,7 @@ const PujaListSection = () => {
                                 placeholder={t.filters.searchPlaceholder}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 bg-black/40 border border-orange-500/40 text-white rounded-xl focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 hover:border-orange-500/80 outline-none transition-all text-sm placeholder:text-gray-300"
+                                className="w-full pl-10 pr-4 py-2.5 bg-black/40 border border-[#d95a00] text-white rounded-xl focus:ring-2 focus:ring-[#d95a00]/30 hover:border-[#ff6b00] outline-none transition-all text-sm placeholder:text-gray-300"
                                 style={fontStyle}
                             />
                         </div>
@@ -179,7 +179,7 @@ const PujaListSection = () => {
                         <div className="relative w-full sm:w-48 md:w-56" ref={dropdownRef}>
                             <button 
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="w-full flex items-center justify-between px-4 py-2.5 bg-black/40 border border-orange-500/40 rounded-xl focus:ring-2 focus:ring-orange-500/30 hover:border-orange-500/80 outline-none text-sm font-bold text-white transition-all"
+                                className="w-full flex items-center justify-between px-4 py-2.5 bg-black/40 border border-[#d95a00] rounded-xl focus:ring-2 focus:ring-[#d95a00]/30 hover:border-[#ff6b00] outline-none text-sm font-bold text-white transition-all"
                                 style={fontStyle}
                             >
                                 <span className="truncate pr-2">{selectedPujaName === t.filters.allPujas ? t.filters.allPujas : (content[selectedPujaName] || selectedPujaName)}</span>

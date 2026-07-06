@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const accessToken = searchParams.get("accessToken");
     const refreshToken = searchParams.get("refreshToken");
-    const redirect = searchParams.get("redirect") || "/client/profile";
+    const redirect = searchParams.get("redirect") || "/dashboard";
 
     console.log("[set-tokens] Called with:", {
         hasAccessToken: !!accessToken,
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
     if (!accessToken || !refreshToken) {
         console.error("[set-tokens] Missing tokens!");
-        return NextResponse.redirect(new URL("/sign-in?error=missing_tokens", request.url));
+        return NextResponse.redirect(new URL("/login?error=missing_tokens", request.url));
     }
 
     // Clean redirect path

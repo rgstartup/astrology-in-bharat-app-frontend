@@ -38,167 +38,183 @@ const PaymentMethod = ({
 
   return (
     <div className="flex-grow">
-      <div className="bg-white rounded-[2.5rem] shadow-premium border border-gray-100 overflow-hidden h-full relative">
-        <div className="absolute top-0 left-0 w-64 h-64 bg-orange/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden h-full">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-100 flex items-start gap-3">
+           <i className="fa-regular fa-credit-card text-orange text-2xl mt-1"></i>
+           <div>
+             <h5 className="text-lg font-bold text-gray-900 leading-tight">Payment Method</h5>
+             <p className="text-xs text-gray-500 mt-1">Choose a payment option to proceed securely</p>
+           </div>
+        </div>
 
-        <div className="p-8 md:p-12 relative z-10">
-          <div className="mb-10">
-            <h5 className="text-2xl font-black text-gray-900 mb-2">Select Payment Method</h5>
-            <p className="text-gray-400 font-bold text-sm tracking-wide">Choose your preferred way to pay securely</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="p-6">
+          <div className="space-y-4">
             {/* Wallet */}
-            <label className={`group relative flex flex-col p-6 rounded-[2rem] border-2 transition-all duration-300 cursor-pointer ${
-              paymentMethod === "wallet" && !useSplitPayment ? "border-orange bg-orange/[0.02] shadow-xl shadow-orange/5" : "border-gray-100 bg-white hover:border-gray-200"
-            } ${!canPayFullWallet ? "opacity-40 grayscale cursor-not-allowed" : ""}`}>
-              <input type="radio" name="payment" className="hidden" checked={paymentMethod === "wallet" && !useSplitPayment}
-                onChange={() => { setPaymentMethod("wallet"); setUseSplitPayment(false); }} disabled={!canPayFullWallet} />
-              <div className="flex justify-between items-start mb-6">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition-all ${paymentMethod === "wallet" && !useSplitPayment ? "bg-orange text-white" : "bg-gray-50 text-orange"}`}>
+            <label className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
+              paymentMethod === "wallet" && !useSplitPayment ? "border-[#ff6b00] bg-orange/5" : "border-gray-200 bg-white hover:border-gray-300"
+            } ${!canPayFullWallet ? "opacity-75" : ""}`}>
+              <div className="flex items-center gap-4">
+                <input type="radio" name="payment" className="hidden" checked={paymentMethod === "wallet" && !useSplitPayment}
+                  onChange={() => { setPaymentMethod("wallet"); setUseSplitPayment(false); }} disabled={!canPayFullWallet} />
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === "wallet" && !useSplitPayment ? "border-[#ff6b00] bg-white" : "border-gray-300"}`}>
+                  {paymentMethod === "wallet" && !useSplitPayment && <div className="w-2.5 h-2.5 rounded-full bg-[#ff6b00]"></div>}
+                </div>
+                <div className="w-10 h-10 rounded-lg bg-orange/10 flex items-center justify-center text-[#ff6b00] text-lg">
                   <i className="fa-solid fa-wallet"></i>
                 </div>
-                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === "wallet" && !useSplitPayment ? "border-orange bg-orange" : "border-gray-200"}`}>
-                  {paymentMethod === "wallet" && !useSplitPayment && <div className="w-2 h-2 rounded-full bg-white"></div>}
+                <div>
+                  <span className="block text-sm font-bold text-gray-900 mb-0.5">Wallet Credits</span>
+                  <span className="text-xs text-gray-500">Available Balance: ₹{balance?.toLocaleString() || '0'}</span>
                 </div>
               </div>
-              <div>
-                <span className="block text-lg font-black text-gray-900 mb-1">Wallet Credits</span>
-                <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${!canPayFullWallet ? "text-red-500" : "text-emerald-500"}`}>
-                  Balance: ₹{balance?.toLocaleString() || '0'}
-                </span>
-                {!canPayFullWallet && <span className="block text-[10px] font-black text-red-400 uppercase tracking-widest mt-1">Insufficient Funds</span>}
-              </div>
+              {!canPayFullWallet && (
+                <div className="text-right">
+                  <span className="block text-xs font-bold text-red-500 mb-0.5">Insufficient Funds</span>
+                  <span className="text-xs text-gray-500">₹{total} needed</span>
+                </div>
+              )}
             </label>
 
             {/* UPI */}
-            <label className={`group relative flex flex-col p-6 rounded-[2rem] border-2 transition-all duration-300 cursor-pointer ${
-              paymentMethod === "upi" && !useSplitPayment ? "border-orange bg-orange/[0.02] shadow-xl shadow-orange/5" : "border-gray-100 bg-white hover:border-gray-200"
+            <label className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
+              paymentMethod === "upi" && !useSplitPayment ? "border-[#ff6b00] bg-orange/5" : "border-gray-200 bg-white hover:border-gray-300"
             }`}>
-              <input type="radio" name="payment" className="hidden" checked={paymentMethod === "upi" && !useSplitPayment}
-                onChange={() => { setPaymentMethod("upi"); setUseSplitPayment(false); }} />
-              <div className="flex justify-between items-start mb-6">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition-all ${paymentMethod === "upi" && !useSplitPayment ? "bg-orange text-white" : "bg-gray-50 text-emerald-500"}`}>
-                  <i className="fa-solid fa-mobile-screen-button"></i>
+              <div className="flex items-center gap-4">
+                <input type="radio" name="payment" className="hidden" checked={paymentMethod === "upi" && !useSplitPayment}
+                  onChange={() => { setPaymentMethod("upi"); setUseSplitPayment(false); }} />
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === "upi" && !useSplitPayment ? "border-[#ff6b00] bg-white" : "border-gray-300"}`}>
+                  {paymentMethod === "upi" && !useSplitPayment && <div className="w-2.5 h-2.5 rounded-full bg-[#ff6b00]"></div>}
                 </div>
-                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === "upi" && !useSplitPayment ? "border-orange bg-orange" : "border-gray-200"}`}>
-                  {paymentMethod === "upi" && !useSplitPayment && <div className="w-2 h-2 rounded-full bg-white"></div>}
+                <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-green-600 text-xl font-bold italic">
+                   UPI
+                </div>
+                <div>
+                  <span className="block text-sm font-bold text-gray-900 mb-0.5">UPI / QR</span>
+                  <span className="text-xs text-gray-500">Instant Payment via UPI</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="block text-lg font-black text-gray-900 mb-1 leading-none">UPI / QR</span>
-                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Instant Payment</span>
-                </div>
-                <Image src="https://cdn-icons-png.flaticon.com/512/10109/10109919.png" alt="upi" width={24} height={24} className="object-contain grayscale brightness-125" />
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-black italic text-gray-800">UPI</span>
+                <span className="text-lg font-black italic text-green-700">BHIM</span>
               </div>
             </label>
 
             {/* Card */}
-            <label className={`group relative flex flex-col p-6 rounded-[2rem] border-2 transition-all duration-300 cursor-pointer ${
-              paymentMethod === "card" && !useSplitPayment ? "border-orange bg-orange/[0.02] shadow-xl shadow-orange/5" : "border-gray-100 bg-white hover:border-gray-200"
+            <label className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
+              paymentMethod === "card" && !useSplitPayment ? "border-[#ff6b00] bg-orange/5" : "border-gray-200 bg-white hover:border-gray-300"
             }`}>
-              <input type="radio" name="payment" className="hidden" checked={paymentMethod === "card" && !useSplitPayment}
-                onChange={() => { setPaymentMethod("card"); setUseSplitPayment(false); }} />
-              <div className="flex justify-between items-start mb-6">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition-all ${paymentMethod === "card" && !useSplitPayment ? "bg-orange text-white" : "bg-gray-50 text-blue-500"}`}>
+              <div className="flex items-center gap-4">
+                <input type="radio" name="payment" className="hidden" checked={paymentMethod === "card" && !useSplitPayment}
+                  onChange={() => { setPaymentMethod("card"); setUseSplitPayment(false); }} />
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === "card" && !useSplitPayment ? "border-[#ff6b00] bg-white" : "border-gray-300"}`}>
+                  {paymentMethod === "card" && !useSplitPayment && <div className="w-2.5 h-2.5 rounded-full bg-[#ff6b00]"></div>}
+                </div>
+                <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-lg">
                   <i className="fa-solid fa-credit-card"></i>
                 </div>
-                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === "card" && !useSplitPayment ? "border-orange bg-orange" : "border-gray-200"}`}>
-                  {paymentMethod === "card" && !useSplitPayment && <div className="w-2 h-2 rounded-full bg-white"></div>}
+                <div>
+                  <span className="block text-sm font-bold text-gray-900 mb-0.5">Credit / Debit Card</span>
+                  <span className="text-xs text-gray-500">All major cards accepted</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="block text-lg font-black text-gray-900 mb-1 leading-none">Credit / Debit</span>
-                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">All cards accepted</span>
-                </div>
-                <div className="flex gap-1.5 text-gray-300">
-                  <i className="fa-brands fa-cc-visa text-xl"></i>
-                  <i className="fa-brands fa-cc-mastercard text-xl"></i>
-                </div>
+              <div className="flex items-center gap-3">
+                <i className="fa-brands fa-cc-visa text-3xl text-[#1a1f71]"></i>
+                <i className="fa-brands fa-cc-mastercard text-3xl text-[#eb001b]"></i>
+                <span className="text-[#0070ba] font-black italic text-lg">RuPay</span>
               </div>
             </label>
 
             {/* Net Banking */}
-            <label className={`group relative flex flex-col p-6 rounded-[2rem] border-2 transition-all duration-300 cursor-pointer ${
-              paymentMethod === "netbanking" && !useSplitPayment ? "border-orange bg-orange/[0.02] shadow-xl shadow-orange/5" : "border-gray-100 bg-white hover:border-gray-200"
+            <label className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
+              paymentMethod === "netbanking" && !useSplitPayment ? "border-[#ff6b00] bg-orange/5" : "border-gray-200 bg-white hover:border-gray-300"
             }`}>
-              <input type="radio" name="payment" className="hidden" checked={paymentMethod === "netbanking" && !useSplitPayment}
-                onChange={() => { setPaymentMethod("netbanking"); setUseSplitPayment(false); }} />
-              <div className="flex justify-between items-start mb-6">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition-all ${paymentMethod === "netbanking" && !useSplitPayment ? "bg-orange text-white" : "bg-gray-50 text-purple-500"}`}>
+              <div className="flex items-center gap-4">
+                <input type="radio" name="payment" className="hidden" checked={paymentMethod === "netbanking" && !useSplitPayment}
+                  onChange={() => { setPaymentMethod("netbanking"); setUseSplitPayment(false); }} />
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === "netbanking" && !useSplitPayment ? "border-[#ff6b00] bg-white" : "border-gray-300"}`}>
+                  {paymentMethod === "netbanking" && !useSplitPayment && <div className="w-2.5 h-2.5 rounded-full bg-[#ff6b00]"></div>}
+                </div>
+                <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 text-lg">
                   <i className="fa-solid fa-building-columns"></i>
                 </div>
-                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === "netbanking" && !useSplitPayment ? "border-orange bg-orange" : "border-gray-200"}`}>
-                  {paymentMethod === "netbanking" && !useSplitPayment && <div className="w-2 h-2 rounded-full bg-white"></div>}
+                <div>
+                  <span className="block text-sm font-bold text-gray-900 mb-0.5">Net Banking</span>
+                  <span className="text-xs text-gray-500">Secure Bank Portal</span>
                 </div>
               </div>
-              <div>
-                <span className="block text-lg font-black text-gray-900 mb-1 leading-none">Net Banking</span>
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Secure Bank Portal</span>
+              <div className="flex items-center gap-3">
+                <span className="text-blue-600 font-black text-sm">SBI</span>
+                <span className="text-red-600 font-black text-sm">HDFC BANK</span>
+                <span className="text-orange font-black text-sm">ICICI Bank</span>
+                <span className="text-xs text-gray-400 ml-2">+ More</span>
               </div>
             </label>
           </div>
 
-          {/* ── Split Payment Option (only shown when wallet has some but not enough balance) ── */}
+          {/* ── Split Payment Option ── */}
           {canSplitPay && (
-            <div className={`mt-6 rounded-[2rem] border-2 transition-all duration-300 overflow-hidden ${
-              useSplitPayment ? "border-orange bg-orange/[0.02] shadow-xl shadow-orange/5" : "border-dashed border-orange/40 bg-orange/[0.01]"
+            <div className={`mt-6 rounded-xl border transition-all overflow-hidden ${
+              useSplitPayment ? "border-orange bg-orange/5" : "border-gray-200 bg-white"
             }`}>
-              <div
-                className="flex items-start gap-4 p-6 cursor-pointer"
-                onClick={() => {
-                  const next = !useSplitPayment;
-                  setUseSplitPayment(next);
-                  if (next) setWalletAmountToUse(Math.floor(maxWalletUse));
-                }}
-              >
-                <div className={`mt-1 w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${useSplitPayment ? "border-orange bg-orange" : "border-gray-300"}`}>
-                  {useSplitPayment && <div className="w-2 h-2 rounded-full bg-white"></div>}
+              <div className="p-4 border-b border-orange/10 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-[#ff6b00]">Split Payment</span>
+                  <span className="text-xs text-gray-500">(Use wallet balance + pay remaining)</span>
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <i className="fa-solid fa-wallet text-orange text-sm"></i>
-                    <i className="fa-solid fa-plus text-gray-400 text-xs"></i>
-                    <i className="fa-solid fa-mobile-screen-button text-emerald-500 text-sm"></i>
-                    <span className="text-lg font-black text-gray-900 ml-1">Split Payment</span>
-                    <span className="text-[9px] font-black bg-orange text-white px-2 py-0.5 rounded-full uppercase tracking-widest">Smart</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500 font-medium">
-                    Use your ₹{balance?.toLocaleString()} wallet balance + pay ₹{(total - balance)?.toLocaleString()} via Razorpay
-                  </p>
-                </div>
+                {/* Toggle Switch */}
+                <button
+                  type="button"
+                  className={`w-10 h-6 rounded-full p-1 transition-colors ${useSplitPayment ? 'bg-[#ff6b00]' : 'bg-gray-300'}`}
+                  onClick={() => {
+                    const next = !useSplitPayment;
+                    setUseSplitPayment(next);
+                    if (next) setWalletAmountToUse(Math.floor(maxWalletUse));
+                  }}
+                >
+                  <div className={`w-4 h-4 bg-white rounded-full transition-transform ${useSplitPayment ? 'translate-x-4' : 'translate-x-0'}`}></div>
+                </button>
               </div>
 
-              {/* Slider & Breakdown */}
               {useSplitPayment && (
-                <div className="px-6 pb-6 space-y-4">
-                  <div className="h-px bg-orange/10 mb-4"></div>
-                  <div className="flex justify-between text-xs font-bold text-gray-600 mb-1">
-                    <span>Adjust Wallet Amount</span>
-                    <span className="text-orange font-black">₹{walletAmountToUse.toLocaleString()}</span>
+                <div className="p-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <span className="block text-xs text-gray-500 mb-1">Use wallet balance</span>
+                      <span className="text-lg font-bold text-green-600">₹{walletAmountToUse.toLocaleString()}</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="block text-xs text-gray-500 mb-1">Pay remaining</span>
+                      <span className="text-lg font-bold text-[#ff6b00]">₹{razorpayDue.toLocaleString()}</span>
+                    </div>
                   </div>
+                  
                   <input
                     type="range"
                     min={1}
                     max={maxWalletUse}
                     value={walletAmountToUse}
                     onChange={(e) => setWalletAmountToUse(Number(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-orange"
+                    className="w-full h-1.5 bg-gray-200 rounded-full appearance-none cursor-pointer accent-[#ff6b00] mb-6"
                   />
-                  <div className="grid grid-cols-2 gap-3 mt-4">
-                    <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-center">
-                      <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">
-                        <i className="fa-solid fa-wallet mr-1"></i> From Wallet
-                      </p>
-                      <p className="text-xl font-black text-emerald-700">₹{walletAmountToUse.toLocaleString()}</p>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 flex items-center justify-center gap-2 bg-green-50 border border-green-200 rounded-lg p-3">
+                      <i className="fa-solid fa-wallet text-green-600 text-lg"></i>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-green-600 font-medium">From Wallet</span>
+                        <span className="text-sm font-bold text-green-700">₹{walletAmountToUse.toLocaleString()}</span>
+                      </div>
                     </div>
-                    <div className="bg-orange/5 border border-orange/10 rounded-2xl p-4 text-center">
-                      <p className="text-[10px] font-black text-orange uppercase tracking-widest mb-1">
-                        <i className="fa-solid fa-mobile-screen-button mr-1"></i> Via Razorpay
-                      </p>
-                      <p className="text-xl font-black text-orange">₹{razorpayDue.toLocaleString()}</p>
+                    <i className="fa-solid fa-plus text-gray-400"></i>
+                    <div className="flex-1 flex items-center justify-center gap-2 bg-orange/10 border border-orange/20 rounded-lg p-3">
+                      <div className="w-5 h-5 rounded-sm bg-blue-600 flex items-center justify-center text-white font-bold italic text-[10px]">
+                        R
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-orange font-medium">Via Razorpay</span>
+                        <span className="text-sm font-bold text-[#ff6b00]">₹{razorpayDue.toLocaleString()}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -207,38 +223,26 @@ const PaymentMethod = ({
           )}
 
           {/* Pay Button */}
-          <div className="mt-12 space-y-6">
+          <div className="mt-8">
             <button
               onClick={handlePayment}
               disabled={isProcessing}
-              className="group relative w-full py-4 md:py-6 bg-orange text-white rounded-[1.5rem] md:rounded-[2rem] font-black text-[10px] md:text-xs uppercase tracking-widest md:tracking-[0.3em] shadow-premium hover:shadow-2xl hover:shadow-orange/20 overflow-hidden transition-all duration-500 active:scale-[0.98] disabled:opacity-70"
+              className="w-full py-4 bg-[#ff4500] hover:bg-[#ff5500] text-white rounded-xl font-bold text-base shadow-sm transition-colors flex items-center justify-between px-6 disabled:opacity-70"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-              <div className="relative flex items-center justify-center gap-2 md:gap-4 px-2">
+              <div className="flex items-center gap-2">
                 {isProcessing ? (
-                  <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 ) : (
-                  <i className="fa-solid fa-lock-keyhole text-xs md:text-sm"></i>
+                  <i className="fa-solid fa-lock text-sm"></i>
                 )}
-                <span className="text-[11px] md:text-sm leading-tight text-center">
+                <span>
                   {useSplitPayment
                     ? `Pay ₹${walletAmountToUse} Wallet + ₹${razorpayDue} Razorpay`
                     : isOrder ? `Pay ₹${total} & Place Order` : `Pay ₹${total} & Start Session`}
                 </span>
               </div>
+              <i className="fa-solid fa-chevron-right text-sm"></i>
             </button>
-
-            <div className="flex items-center justify-center gap-6">
-              <div className="flex items-center gap-2">
-                <i className="fa-solid fa-shield-check text-emerald-500 text-sm"></i>
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">PCI DSS Compliant</span>
-              </div>
-              <div className="w-1 h-1 bg-gray-200 rounded-full"></div>
-              <div className="flex items-center gap-2">
-                <i className="fa-solid fa-lock text-gray-400 text-xs"></i>
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Secure 256-bit SSL</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>

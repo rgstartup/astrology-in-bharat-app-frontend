@@ -43,6 +43,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
 
   const productId = String(product.id || product._id);
   const isLiked = productId ? isInWishlist(productId) : false;
+  const [currentLikes, setCurrentLikes] = React.useState<number>(Number((product as any).total_likes || (product as any).likes || 0));
 
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -56,6 +57,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
       });
       return;
     }
+
+    // Optimistic like count update
+    const newIsLiked = !isLiked;
+    setCurrentLikes((prev) => (newIsLiked ? prev + 1 : Math.max(0, prev - 1)));
 
     toggleLike({ id: productId, type: "product", isLiked });
   };
@@ -91,12 +96,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
         </div>
       )}
 
-      <button
-        onClick={handleLike}
-        className={`absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-white/90 backdrop-blur-md rounded-full transition-all duration-300 shadow-sm border border-gray-100 group-hover:shadow-md ${isLiked ? 'text-red-500 bg-red-50/50 border-red-100' : 'text-gray-400 hover:text-red-500'}`}
-      >
-        <i className={`${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-lg transition-transform active:scale-125`}></i>
-      </button>
+      <div className="absolute top-4 left-4 z-10 flex flex-col items-center gap-1">
+        <button
+          onClick={handleLike}
+          className={`w-9 h-9 flex items-center justify-center bg-white/90 backdrop-blur-md rounded-full transition-all duration-300 shadow-sm border border-gray-100 hover:scale-110 ${isLiked ? 'text-red-500 bg-red-50/50 border-red-100' : 'text-gray-400 hover:text-red-500'}`}
+        >
+          <i className={`${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-base transition-transform active:scale-125`}></i>
+        </button>
+        {currentLikes > 0 && (
+          <span className="text-[10px] font-semibold text-white bg-black/50 px-1.5 py-0.5 rounded-full backdrop-blur-sm">
+            {currentLikes >= 1000
+              ? (currentLikes / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
+              : currentLikes}
+          </span>
+        )}
+      </div>
 
       {/* 🖼️ Image Area with Glow */}
       <div className={`relative w-full ${isCompact ? 'aspect-[4/3]' : 'aspect-square'} bg-gray-50/50 flex items-center justify-center overflow-hidden shrink-0 group-hover:bg-white transition-colors duration-500`}>
@@ -107,7 +121,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
             alt={product.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 33vw"
-            className="object-contain mix-blend-multiply drop-shadow-2xl"
+            className="object-cover"
           />
         </div>
       </div>

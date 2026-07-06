@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 
 interface FamousPlacesSearchProps {
-  onSearch: (query: string) => void;
+  onSearch: (query: string, location?: string) => void;
   isSearching: boolean;
 }
 
@@ -27,18 +27,52 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Build a smart query from dropdowns + text input
-    const parts = [query.trim(), city.trim(), district.trim(), state.trim()].filter(Boolean);
-    const finalQuery = parts.length > 0 ? parts.join(", ") : "Famous temples in India";
-    onSearch(finalQuery);
+    
+    let locationStr = [city.trim(), district.trim(), state.trim(), "India"].filter(Boolean).join(", ");
+    
+    let baseQuery = query.trim() ? query.trim() : "temples";
+    if (radius) {
+       baseQuery += ` ${radius}`;
+    }
+    
+    onSearch(baseQuery, locationStr);
   };
 
   const handleUseMyLocation = () => {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition((pos) => {
-      const { latitude, longitude } = pos.coords;
-      onSearch(`Famous temples near ${latitude.toFixed(4)},${longitude.toFixed(4)}`);
-    });
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+    
+    // Show a temporary loading state or just proceed
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        onSearch("temples", `${latitude},${longitude}`);
+      }, 
+      (error) => {
+        console.error("Geolocation error:", error);
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            alert("Location permission denied. Please allow location access in your browser settings.");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            alert("Location information is unavailable. Please check if your device's location services (GPS/Wi-Fi) are turned on.");
+            break;
+          case error.TIMEOUT:
+            alert("The request to get your location timed out. Please try again.");
+            break;
+          default:
+            alert("An unknown error occurred while trying to get your location.");
+            break;
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    );
   };
 
   return (

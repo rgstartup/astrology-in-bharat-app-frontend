@@ -39,90 +39,123 @@ const CheckoutContent = () => {
   } = useCheckout();
 
   return (
-    <div className="bg-gray-50/50 min-h-screen">
+    <div className="bg-[#fdfdfd] min-h-screen font-sans">
       {/* Premium Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden bg-gray-900 border-b border-white/5">
-        <div className="absolute top-0 left-0 w-full h-full">
-           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
-           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
+      <section className="relative pt-14 pb-20 overflow-hidden bg-[#050505] border-b border-orange/10">
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+           <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-orange/10 rounded-full blur-[150px] -translate-y-1/2"></div>
+           <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-yellow-500/5 rounded-full blur-[120px] translate-y-1/2"></div>
+           {/* Subtle stars/dots background effect can be added here if needed */}
         </div>
         
-        <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 backdrop-blur-md rounded-full border border-white/10 mb-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
-             <i className="fa-solid fa-shield-check text-orange text-xs text-orange"></i>
-             <span className="text-[10px] font-black text-white/80 uppercase tracking-[0.3em]">SECURE CHECKOUT ENCRYPTED</span>
+        <div className="max-w-[1200px] mx-auto px-4 md:px-6 relative z-10 flex flex-col md:flex-row items-center justify-between">
+          <div className="text-center md:text-left mb-8 md:mb-0">
+             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-orange/10 rounded-full border border-orange/20 mb-6 mx-auto md:mx-0">
+                <i className="fa-solid fa-lock text-orange text-xs"></i>
+                <span className="text-[10px] font-black text-orange uppercase tracking-widest">SECURE CHECKOUT ENCRYPTED</span>
+             </div>
+             <h1 className="text-2xl md:text-4xl font-black text-white mb-4 leading-tight tracking-tight">
+               Finalize Your <span className="text-orange italic">Journey</span>
+             </h1>
+             <p className="text-gray-400 font-medium text-sm md:text-base max-w-xl">
+               {isOrder ? "You're just one step away from placing your order securely." : "You're just one step away from starting your personal consultation session."}
+             </p>
           </div>
-          <h1 className="text-4xl md:text-7xl font-black text-white mb-6 leading-none tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-            Finalize Your <span className="text-orange italic">Journey</span>
-          </h1>
-          <p className="text-gray-400 font-bold max-w-xl mx-auto text-lg leading-relaxed animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-            Complete your payment securely to {isOrder ? "place your order" : "start your personal consultation session"}.
-          </p>
+          
+          <div className="flex items-center gap-4">
+            <span className="text-white text-sm font-medium"><i className="fa-solid fa-headset mr-2"></i> Need Help?</span>
+            <button className="px-6 py-2.5 rounded-full border border-orange/30 text-orange font-bold text-sm hover:bg-orange hover:text-white transition-colors">
+              <i className="fa-solid fa-comment-dots mr-2"></i> Chat With Us
+            </button>
+          </div>
         </div>
       </section>
 
       {/* Main Content Section */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 relative z-20">
-          <div className="flex flex-col lg:flex-row items-start gap-12">
+      <section className="py-12 md:py-16 -mt-28 relative z-20">
+        <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+          <div className="flex flex-col lg:flex-row items-start gap-8">
             {/* Left Column: Order Summary */}
-            <div className="w-full lg:w-[400px] shrink-0 lg:sticky lg:top-32">
-            <OrderSummary
-              isOrder={isOrder}
-              loadingProfile={loadingProfile}
-              address={address}
-              handleAddressChange={handleAddressChange}
-              buyNowInfo={buyNowInfo}
-              directProduct={directProduct}
-              cartItems={cartItems}
-              expertName={expertName}
-              date={date}
-              time={time}
-              duration={duration}
-              couponCode={couponCode}
-              setCouponCode={setCouponCode}
-              appliedCoupon={appliedCoupon}
-              isApplying={isApplying}
-              availableCoupons={availableCoupons}
-              handleApplyCoupon={handleApplyCoupon}
-              handleRemoveCoupon={handleRemoveCoupon}
-              discountAmount={discountAmount}
-              total={total}
-              handleQuantityChange={handleQuantityChange}
-            />
-          </div>
+            <div className="w-full lg:w-[420px] shrink-0">
+              <OrderSummary
+                isOrder={isOrder}
+                loadingProfile={loadingProfile}
+                address={address}
+                handleAddressChange={handleAddressChange}
+                buyNowInfo={buyNowInfo}
+                directProduct={directProduct}
+                cartItems={cartItems}
+                expertName={expertName}
+                date={date}
+                time={time}
+                duration={duration}
+                couponCode={couponCode}
+                setCouponCode={setCouponCode}
+                appliedCoupon={appliedCoupon}
+                isApplying={isApplying}
+                availableCoupons={availableCoupons}
+                handleApplyCoupon={handleApplyCoupon}
+                handleRemoveCoupon={handleRemoveCoupon}
+                discountAmount={discountAmount}
+                total={total}
+                handleQuantityChange={handleQuantityChange}
+              />
+            </div>
 
-          {/* Right: Payment */}
-          <div className="flex-grow w-full max-w-2xl">
-            <PaymentMethod
-              paymentMethod={paymentMethod}
-              setPaymentMethod={setPaymentMethod}
-              balance={balance}
-              total={total}
-              handlePayment={handlePayment}
-              isProcessing={isProcessing}
-              isOrder={isOrder}
-              useSplitPayment={useSplitPayment}
-              setUseSplitPayment={setUseSplitPayment}
-              walletAmountToUse={walletAmountToUse}
-              setWalletAmountToUse={setWalletAmountToUse}
-            />
-          </div>
-          </div>
+            {/* Right: Payment + Trust Cards */}
+            <div className="flex-grow w-full max-w-3xl flex flex-col gap-6">
+              <PaymentMethod
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
+                balance={balance}
+                total={total}
+                handlePayment={handlePayment}
+                isProcessing={isProcessing}
+                isOrder={isOrder}
+                useSplitPayment={useSplitPayment}
+                setUseSplitPayment={setUseSplitPayment}
+                walletAmountToUse={walletAmountToUse}
+                setWalletAmountToUse={setWalletAmountToUse}
+              />
 
-          {/* Footer Badges */}
-          <div className="mt-20 flex flex-wrap justify-center gap-8 md:gap-16 opacity-40 grayscale group hover:opacity-100 hover:grayscale-0 transition-all duration-700">
-             <div className="flex items-center gap-3">
-               <i className="fa-brands fa-cc-visa text-3xl"></i>
-               <i className="fa-brands fa-cc-mastercard text-3xl"></i>
-               <i className="fa-brands fa-cc-apple-pay text-3xl"></i>
-               <i className="fa-brands fa-cc-amazon-pay text-3xl"></i>
-             </div>
-             <div className="h-8 w-px bg-gray-300 hidden md:block"></div>
-             <div className="flex items-center gap-2">
-               <i className="fa-solid fa-lock text-xl"></i>
-               <span className="text-xs font-black uppercase tracking-widest text-gray-900">100% Secure Payments</span>
-             </div>
+              {/* Trust & Payment Cards */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {/* We Accept */}
+                <div className="col-span-2 bg-white rounded-2xl border border-gray-200 shadow-sm p-4">
+                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">We Accept</p>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <i className="fa-brands fa-cc-visa text-3xl text-[#1a1f71]"></i>
+                    <i className="fa-brands fa-cc-mastercard text-3xl text-[#eb001b]"></i>
+                    <span className="text-[#0070ba] font-black italic text-lg">RuPay</span>
+                    <span className="text-gray-800 font-black italic text-lg">UPI</span>
+                    <i className="fa-brands fa-apple-pay text-4xl text-black"></i>
+                    <i className="fa-brands fa-amazon-pay text-3xl text-[#ff9900]"></i>
+                  </div>
+                </div>
+
+                {/* 100% Secure */}
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center shrink-0">
+                    <i className="fa-solid fa-lock text-orange text-lg"></i>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-900 leading-tight">100% Secure</p>
+                    <p className="text-[10px] text-gray-500 mt-0.5">Payments</p>
+                  </div>
+                </div>
+
+                {/* Trusted by 1M+ */}
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center shrink-0">
+                    <i className="fa-solid fa-users text-orange text-lg"></i>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-900 leading-tight">Trusted by 1M+</p>
+                    <p className="text-[10px] text-gray-500 mt-0.5">Customers India</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

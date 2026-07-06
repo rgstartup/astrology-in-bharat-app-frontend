@@ -119,7 +119,7 @@ const Testimonial = () => {
               >
                 {reviews.map((testi, index) => (
                   <SwiperSlide key={testi.id || index} className="h-auto">
-                    <div className="bg-white rounded-[18px] p-6 transition-all duration-300 border border-gray-100 shadow-[0_10px_25px_rgba(0,0,0,0.05)] hover:shadow-lg hover:-translate-y-1.5 flex flex-col h-full mx-1 mt-1">
+                    <div className="bg-white rounded-[18px] p-6 transition-all duration-300 border border-orange/30 shadow-[0_10px_25px_rgba(0,0,0,0.05)] hover:shadow-lg hover:border-orange/60 hover:-translate-y-1.5 flex flex-col h-full mx-1 mt-1">
                       <div className="flex items-center mb-4">
                         {testi.user?.avatar ? (
                           <Image

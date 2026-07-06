@@ -10,7 +10,7 @@ const StaticPageLayout: React.FC<StaticPageLayoutProps> = ({
   children,
 }) => {
   return (
-    <section className="banner-part light-back min-h-[600px] px-0 py-8 sm:py-10 md:py-16 lg:py-20">
+    <section className="banner-part light-back min-h-[600px] px-0 pt-4 pb-8 sm:pt-6 sm:pb-10 md:pt-8 md:pb-16 lg:pt-8 lg:pb-20">
       <div className="container">
         <div className="contant-hero w-full bg-white/90 backdrop-blur-sm px-5 py-8 sm:px-8 sm:py-10 md:px-14 md:py-14 lg:px-16 lg:py-16 rounded-xl sm:rounded-[20px] border border-primary/20 shadow-lg">
           <div className="mb-8 text-left sm:mb-10">
