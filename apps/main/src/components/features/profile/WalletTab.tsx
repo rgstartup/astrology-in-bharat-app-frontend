@@ -242,27 +242,29 @@ const WalletTab: React.FC<WalletTabProps> = ({
                 className="min-h-[4rem] py-3 md:py-0 md:h-20 !rounded-2xl md:!rounded-3xl bg-orange hover:bg-orange/90 border-0 shadow-lg shadow-orange/20 overflow-hidden group"
                 disabled={rechargeAmount < 100}
               >
-                <div className="flex items-center justify-between w-full px-4">
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/20 rounded-xl md:rounded-2xl mr-3 md:mr-5 group-hover:rotate-12 transition-transform duration-500 shadow-inner">
-                      <i className="fa-solid fa-bolt text-white text-lg md:text-xl"></i>
+                <div className="flex items-center justify-between w-full px-2 md:px-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white/20 rounded-xl md:rounded-2xl group-hover:rotate-12 transition-transform duration-500 shadow-inner shrink-0">
+                    <i className="fa-solid fa-bolt text-white text-lg md:text-xl"></i>
+                  </div>
+                  
+                  <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
+                    <div
+                      className="text-white text-base md:text-xl font-black tracking-tight"
+                      style={fontStyle}
+                    >
+                      {t.rechargeBtn} ₹{rechargeAmount.toLocaleString()}
                     </div>
-                    <div className="text-left">
-                      <div
-                        className="text-white text-base md:text-xl font-black tracking-tight"
-                        style={fontStyle}
-                      >
-                        {t.rechargeBtn} ₹{rechargeAmount.toLocaleString()}
-                      </div>
-                      <div
-                        className="text-white/70 text-[9px] md:text-[11px] font-bold uppercase tracking-wider mt-0.5"
-                        style={fontStyle}
-                      >
-                        {t.rechargeHint}
-                      </div>
+                    <div
+                      className="hidden md:block text-white/70 text-[9px] md:text-[11px] font-bold uppercase tracking-wider mt-0.5"
+                      style={fontStyle}
+                    >
+                      {t.rechargeHint}
                     </div>
                   </div>
-                  <i className="fa-solid fa-arrow-right text-lg md:text-xl text-white/40 group-hover:translate-x-2 transition-transform duration-300 ml-2"></i>
+
+                  <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shrink-0">
+                    <i className="fa-solid fa-arrow-right text-lg md:text-xl text-white/40 group-hover:translate-x-2 transition-transform duration-300"></i>
+                  </div>
                 </div>
               </Button>
             </div>
