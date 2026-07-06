@@ -178,7 +178,6 @@ const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
 
           {[
             { label: t.personalDetails.fullName, value: profileData.full_name || user?.name, key: "full_name" },
-            { label: t.personalDetails.userName, value: profileData.username, key: "username" },
             { label: t.personalDetails.email, value: user?.email, key: "email", noEdit: true },
             { label: t.personalDetails.phone, value: profileData.phone, key: "phone", isPhone: true },
             { label: t.personalDetails.gender, value: profileData.gender, key: "gender", isSelect: true },
