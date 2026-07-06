@@ -29,6 +29,23 @@ export default function EarningsPage() {
   const [endDate, setEndDate] = useState<string | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [tempRange, setTempRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -111,18 +128,19 @@ export default function EarningsPage() {
           <p className="text-gray-500 mt-1">Detailed breakdown of your earnings and service performance</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <div className="relative group">
+        <div className="flex flex-nowrap items-center gap-2 sm:gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+          <div className="relative group flex-1 sm:flex-none" ref={dropdownRef}>
             <Button
               variant="outline"
-              className="whitespace-nowrap bg-white border-gray-200 hover:border-orange-400 text-gray-700 shadow-sm rounded-xl gap-2 font-semibold cursor-pointer hover:cursor-pointer"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-full justify-center whitespace-nowrap bg-white border-gray-200 hover:border-orange-400 text-gray-700 shadow-sm rounded-xl gap-1 sm:gap-2 px-2 sm:px-4 font-semibold text-[11px] min-[375px]:text-xs sm:text-base cursor-pointer hover:cursor-pointer"
             >
-              <CalendarIcon className="w-4 h-4 text-orange-500" />
-              {timeRangeLabels[timeRange]}
-              <ChevronDown className="w-4 h-4 text-gray-400" />
+              <CalendarIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-500 shrink-0" />
+              <span className="truncate">{timeRangeLabels[timeRange]}</span>
+              <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 shrink-0" />
             </Button>
 
-            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 invisible group-hover:visible z-50 transition-all opacity-0 group-hover:opacity-100">
+            <div className={`absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 z-50 transition-all ${isDropdownOpen ? 'opacity-100 visible' : 'invisible opacity-0 md:group-hover:opacity-100 md:group-hover:visible'}`}>
               {Object.entries(timeRangeLabels).map(([key, label]) => (
                 <Button
                   key={key}
@@ -132,6 +150,7 @@ export default function EarningsPage() {
                     } else {
                       setTimeRange(key);
                     }
+                    setIsDropdownOpen(false);
                   }}
                   variant="ghost"
                   className={`w-full justify-start px-4 py-2 text-sm font-medium hover:bg-orange-50 transition-colors rounded-lg cursor-pointer hover:cursor-pointer ${timeRange === key ? 'text-orange-600 bg-orange-50' : 'text-gray-600'}`}
@@ -147,10 +166,10 @@ export default function EarningsPage() {
             disabled={isExporting}
             loading={isExporting}
             variant="primary"
-            className="whitespace-nowrap shadow-md rounded-xl cursor-pointer hover:cursor-pointer"
+            className="flex-1 sm:flex-none w-full justify-center whitespace-nowrap shadow-md rounded-xl px-2 sm:px-4 text-[11px] min-[375px]:text-xs sm:text-base cursor-pointer hover:cursor-pointer"
           >
-            <Download className={`w-4 h-4 ${isExporting ? 'animate-bounce' : ''}`} />
-            {isExporting ? 'Exporting...' : 'Export PDF'}
+            <Download className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${isExporting ? 'animate-bounce' : ''}`} />
+            <span className="truncate">{isExporting ? 'Exporting...' : 'Export PDF'}</span>
           </Button>
         </div>
       </header>

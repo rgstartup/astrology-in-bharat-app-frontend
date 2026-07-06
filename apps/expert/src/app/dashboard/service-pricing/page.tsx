@@ -138,6 +138,23 @@ const ServicePricingPage = () => {
   
   const [pujaModalMode, setPujaModalMode] = useState<"add" | "edit" | null>(null);
   const [pujaEditTarget, setPujaEditTarget] = useState<PujaService | undefined>();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   useEffect(() => {
     fetchProfile();
@@ -223,6 +240,7 @@ const ServicePricingPage = () => {
       setPujaEditTarget(undefined);
     }
     setPujaModalMode("add");
+    setIsDropdownOpen(false);
   };
 
   const openPujaEdit = (puja: PujaService) => {
@@ -282,17 +300,18 @@ const ServicePricingPage = () => {
               <p className="text-sm text-gray-500 font-medium mt-0.5">Manage your sacred ritual offerings</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="relative group/dropdown">
+          <div className="flex flex-nowrap items-center gap-2 sm:gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+            <div className="relative group/dropdown flex-1 sm:flex-none" ref={dropdownRef}>
               <button
-                className="whitespace-nowrap flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-orange-200 text-orange-600 font-bold text-sm sm:text-base rounded-2xl shadow-sm transition-all hover:bg-orange-50 active:scale-95 cursor-pointer hover:cursor-pointer"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="w-full justify-center whitespace-nowrap flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 bg-white border border-orange-200 text-orange-600 font-bold text-[11px] min-[375px]:text-xs sm:text-base rounded-2xl shadow-sm transition-all hover:bg-orange-50 active:scale-95 cursor-pointer hover:cursor-pointer"
               >
                 Choose Suggested
                 <ChevronDown className="w-4 h-4" />
               </button>
               
               {/* Dropdown Menu */}
-              <div className="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-100 rounded-2xl shadow-xl opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all z-50 max-h-80 overflow-y-auto py-2">
+              <div className={`absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-64 bg-white border border-gray-100 rounded-2xl shadow-xl transition-all z-50 max-h-80 overflow-y-auto py-2 ${isDropdownOpen ? 'opacity-100 visible' : 'opacity-0 invisible md:group-hover/dropdown:opacity-100 md:group-hover/dropdown:visible'}`}>
                 <div className="px-4 py-2 text-[10px] font-black uppercase text-gray-400 border-b border-gray-50 mb-1">
                   Common Rituals
                 </div>
@@ -310,7 +329,7 @@ const ServicePricingPage = () => {
 
             <button
               onClick={() => openPujaAdd()}
-              className="whitespace-nowrap group flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm sm:text-base rounded-2xl shadow-lg transition-all active:scale-95 hover:translate-y-[-2px] cursor-pointer hover:cursor-pointer"
+              className="flex-1 sm:flex-none w-full justify-center whitespace-nowrap group flex items-center gap-1 sm:gap-2 px-2 sm:px-5 py-2 sm:py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-[11px] min-[375px]:text-xs sm:text-base rounded-2xl shadow-lg transition-all active:scale-95 hover:translate-y-[-2px] cursor-pointer hover:cursor-pointer"
             >
               <Plus className="w-4 h-4 transition-transform group-hover:rotate-90" />
               Add Custom Puja

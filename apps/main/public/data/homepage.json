@@ -6,7 +6,8 @@
             "title": "Kundli (Birth Chart)",
             "description": "Unlock the secrets of your destiny with a personalized birth chart.",
             "price": 499,
-            "slug": "kundli-birth-chart"
+            "slug": "kundli-birth-chart",
+            "link": "/kundali-matching-by-name"
         },
         {
             "id": 2,
@@ -38,7 +39,8 @@
             "title": "Matchmaking",
             "description": "Check marriage compatibility based on traditional astrological methods.",
             "price": 799,
-            "slug": "matchmaking"
+            "slug": "matchmaking",
+            "link": "/kundali-matching-by-name"
         },
         {
             "id": 6,

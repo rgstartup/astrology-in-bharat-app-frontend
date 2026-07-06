@@ -8,6 +8,7 @@ export interface ServiceData {
     price?: number;
     longDescription?: string;
     slug: string;
+    link?: string;
     benefits?: string[];
     process?: string[];
     faq?: { question: string; answer: string }[];

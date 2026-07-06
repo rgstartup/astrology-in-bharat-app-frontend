@@ -25,7 +25,7 @@ export default function WithdrawMoney({ availableBalance, bankAccounts, onWithdr
     };
 
     return (
-        <div className="group bg-white p-10 rounded-[1.5rem] border border-gray-100 shadow-sm space-y-8 relative overflow-hidden transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] hover:-translate-y-1 mb-8">
+        <div className="group bg-white p-6 sm:p-10 rounded-none sm:rounded-[1.5rem] border-none sm:border-solid border-gray-100 shadow-none sm:shadow-sm space-y-6 sm:space-y-8 relative overflow-hidden transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] sm:hover:-translate-y-1 sm:mb-8">
             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50/50 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-orange-100/50 transition-colors duration-700" />
             
             <div className="flex items-center gap-4">

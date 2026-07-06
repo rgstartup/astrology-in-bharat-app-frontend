@@ -25,7 +25,7 @@ const AstrologyServices = () => {
                 {homepageData.astrologyServices.map((service) => (
                   <div key={service.id} className="mb-4">
                     <Link
-                      href={`/services/${service.slug}`}
+                      href="/our-experts"
                       className="block h-full no-underline hover:text-inherit"
                     >
                       <ServiceCard item={{ ...service, id: String(service.id) }} />

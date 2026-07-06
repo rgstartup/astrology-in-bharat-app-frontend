@@ -200,9 +200,9 @@ export default function ClientsPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 min-h-screen relative">
+    <div className="p-0 sm:p-6 lg:p-8 min-h-screen relative">
       <div className="max-w-5xl mx-auto">
-        <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 sm:p-8 relative overflow-hidden">
+        <div className="bg-white sm:rounded-[2rem] sm:shadow-sm border-none sm:border-solid border-gray-100 p-4 sm:p-8 relative overflow-hidden min-h-screen sm:min-h-0">
           {/* Subtle Progress Bar for background loading */}
           {loading && clients.length > 0 && (
             <div className="absolute top-0 left-0 right-0 h-1 z-10 overflow-hidden bg-orange-50">

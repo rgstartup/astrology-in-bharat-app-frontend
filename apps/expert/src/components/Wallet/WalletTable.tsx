@@ -18,8 +18,8 @@ interface TransactionTableProps {
 
 export const WalletTable: React.FC<TransactionTableProps> = ({ transactions }) => {
     return (
-        <div className="bg-white rounded-[1.5rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-            <div className="p-8 border-b border-gray-50 space-y-1">
+        <div className="bg-white rounded-none sm:rounded-[1.5rem] border-none sm:border-solid border-gray-100 shadow-none sm:shadow-sm overflow-hidden flex flex-col">
+            <div className="p-6 sm:p-8 border-b border-gray-50 space-y-1">
                 <h3 className="text-xl font-black text-gray-900 tracking-tight">Transaction History</h3>
                 <p className="text-sm font-medium text-gray-400">Detailed log of all credits and withdrawals</p>
             </div>
@@ -44,8 +44,8 @@ export const WalletTable: React.FC<TransactionTableProps> = ({ transactions }) =
                             </tr>
                         ) : (
                             transactions.map((tx) => (
-                                <tr key={tx.id} className="relative hover:bg-gray-50/80 transition-all duration-300 group cursor-default">
-                                    <td className="px-8 py-6 relative">
+                                <tr key={tx.id} className="relative hover:bg-gray-50/80 transition-all duration-300 group cursor-default border-b border-gray-50 sm:border-none">
+                                    <td className="px-4 sm:px-8 py-6 relative">
                                         {/* Left Accent Line on Hover */}
                                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#F25E0A] opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <div className="flex items-center gap-4 transition-transform duration-300 group-hover:translate-x-1">

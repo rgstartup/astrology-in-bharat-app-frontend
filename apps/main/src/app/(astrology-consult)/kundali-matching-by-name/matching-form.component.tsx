@@ -27,7 +27,7 @@ const MatchingForm = ({
   const [matchingType, setMatchingType] = useState("ashtakoot");
 
   return (
-    <section className="py-8 bg-transparent">
+    <section className="pb-8 pt-2 bg-transparent">
       <div className="max-w-6xl mx-auto px-4">
         {/* Main Card container */}
         <div className="bg-white rounded-[2rem] border border-orange-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden p-6 md:p-10 relative">
