@@ -6,6 +6,7 @@ import HeroComponent from "./hero.component";
 import MatchingForm from "./matching-form.component";
 import ResultComponent from "./result.component";
 import EducationalContent from "./educational-content.component";
+import KundaliMatchingSeoContent from "./kundali-matching-seo.component";
 import { useLanguageStore } from "@repo/store";
 import { matchingTranslations } from "@/lib/translations/calculators/matching";
 
@@ -178,6 +179,8 @@ const KundaliMatchingByNamePage = () => {
 
         <EducationalContent />
       </div>
+      
+      <KundaliMatchingSeoContent />
     </main>
   );
 };

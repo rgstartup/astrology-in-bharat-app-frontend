@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 export default function TermsAndConditionsPage() {
     return (
+        <>
         <StaticPageLayout title="Terms & Conditions">
             <p>Last updated: February 12, 2026</p>
 
@@ -65,8 +66,9 @@ export default function TermsAndConditionsPage() {
             <p>
                 If you have any questions about these Terms and Conditions, please contact us at legal@astrologyinbharat.com.
             </p>
-            <TermsSeoContent />
         </StaticPageLayout>
+        <TermsSeoContent />
+        </>
     );
 }
 

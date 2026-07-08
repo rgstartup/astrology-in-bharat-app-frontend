@@ -12,6 +12,28 @@ interface HeaderProfileProps {
 }
 
 export default function ZodiacHeaderProfile({ signData, formattedDate, luckyStats }: HeaderProfileProps) {
+  const getVibrantColor = (name: string, originalHex: string) => {
+    if (!name) return originalHex;
+    const vibrantColors: Record<string, string> = {
+      'pink': '#EC4899', 
+      'light blue': '#38BDF8', 
+      'white': '#F8FAFC', 
+      'yellow': '#EAB308', 
+      'green': '#22C55E', 
+      'red': '#EF4444', 
+      'orange': '#F97316', 
+      'blue': '#3B82F6', 
+      'purple': '#A855F7', 
+      'black': '#0F172A', 
+      'brown': '#78350F', 
+      'grey': '#64748B', 
+      'cyan': '#06B6D4', 
+      'maroon': '#831843', 
+      'lavender': '#C084FC', 
+    };
+    return vibrantColors[name.toLowerCase()] || originalHex;
+  };
+
   return (
     <div 
       className="rounded-[2rem] p-6 md:p-8 lg:p-10 border border-[#F0E6DD] shadow-sm relative overflow-hidden flex flex-col xl:flex-row items-center xl:items-center justify-between gap-8 mt-6"
@@ -78,7 +100,7 @@ export default function ZodiacHeaderProfile({ signData, formattedDate, luckyStat
             {/* Lucky Color */}
             <div className="flex items-center gap-4 px-4 md:px-8">
               <div className="w-12 h-12 rounded-full border border-[#F26500]/20 flex items-center justify-center text-xl shrink-0">
-                <div className={`w-5 h-5 rounded-full shadow-inner ${luckyStats.lucky_color.name === 'White' ? 'border border-gray-200' : ''}`} style={{ backgroundColor: luckyStats.lucky_color.hex }}></div>
+                <div className="w-6 h-6 rounded-full shadow-inner border border-black/10" style={{ backgroundColor: getVibrantColor(luckyStats.lucky_color.name, luckyStats.lucky_color.hex) }}></div>
               </div>
               <div>
                 <p className="text-[13px] text-slate-500 font-bold mb-0.5">Lucky Color</p>

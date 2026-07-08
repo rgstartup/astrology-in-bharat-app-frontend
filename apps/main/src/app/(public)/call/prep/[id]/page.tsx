@@ -13,6 +13,7 @@ const Image = NextImage as any;
 import { VerificationPopup } from "@repo/ui";
 import { UserX } from "lucide-react";
 const { ChevronLeft, Phone, Video, User, Calendar, MapPin, ShieldCheck } = LucideIcons as any;
+import CallPrepSeoContent from "./call-prep-seo.component";
 
 import { Expert } from "@/lib/types";
 
@@ -191,18 +192,7 @@ function CallPrepContent() {
 
     return (
         <div className="min-h-screen bg-[#fafafa] pb-20">
-            <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 px-4 py-4 md:px-10 flex items-center justify-between">
-                <button onClick={() => router.back()} className="flex items-center gap-2 text-gray-400 hover:text-orange transition-colors">
-                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center">
-                        <ChevronLeft className="w-5 h-5" />
-                    </div>
-                    <span className="font-bold text-xs uppercase tracking-widest">Back</span>
-                </button>
-                <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Secure Call Link</span>
-                </div>
-            </nav>
+
 
             <main className="max-w-6xl mx-auto px-4 pt-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -212,8 +202,7 @@ function CallPrepContent() {
                                 Preparing {type === 'video' ? 'Video' : 'Audio'} Call
                             </span>
                             <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
-                                Consulting <br />
-                                <span className="text-orange">{expert.name}</span>
+                                Consulting <span className="text-orange">{expert.name}</span>
                             </h1>
                             <p className="text-gray-500 text-lg font-medium mt-4">
                                 Experience a personal {type} consultation for precise future predictions and remedies.
@@ -221,14 +210,14 @@ function CallPrepContent() {
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm">
+                            <div className="p-6 rounded-3xl bg-white border border-orange/40 shadow-sm">
                                 <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center mb-4">
                                     {type === 'video' ? <Video className="w-6 h-6 text-orange" /> : <Phone className="w-6 h-6 text-orange" />}
                                 </div>
                                 <h3 className="font-bold text-gray-900">{type === 'video' ? 'HD Video' : 'Crystal Clear Audio'}</h3>
                                 <p className="text-xs text-gray-400 mt-1">High-quality connection for seamless talk.</p>
                             </div>
-                            <div className="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm">
+                            <div className="p-6 rounded-3xl bg-white border border-orange/40 shadow-sm">
                                 <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
                                     <ShieldCheck className="w-6 h-6 text-blue-500" />
                                 </div>
@@ -391,6 +380,8 @@ function CallPrepContent() {
                     </>
                 }
             />
+            
+            <CallPrepSeoContent />
         </div>
     );
 }

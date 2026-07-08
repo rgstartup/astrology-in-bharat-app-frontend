@@ -133,7 +133,7 @@ const Planet = () => {
                  titleAccent={`${t.hero.titlePart2} ${t.hero.titlePart3 || ''}`}
                  paragraph={t.hero.paragraph}
             />
-            <div className="container mx-auto mt-8 px-4">
+            <div className="max-w-[1320px] mx-auto mt-8 px-4">
 
                 <div className="flex flex-col lg:flex-row gap-8">
                     <PlanetForm

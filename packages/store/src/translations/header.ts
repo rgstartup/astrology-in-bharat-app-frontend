@@ -42,11 +42,11 @@ export const headerTranslations = {
         askExpert: "Ask Expert",
 
         // Services Carousel
-        serviceMatchmaking: "Matchmaking",
+        serviceMatchmaking: "Marriage Calculator",
         serviceGunaMilan: "Guna Milan",
         serviceOnlinePuja: "Online Puja",
         serviceLoveMatch: "Love Match",
-        serviceMatchAnalysis: "Match Analysis",
+        serviceMatchAnalysis: "Kundali Matching",
         serviceLiveDarshan: "Live Darshan",
     },
     hi: {
@@ -91,11 +91,11 @@ export const headerTranslations = {
         askExpert: "ज्योतिषी से पूछें",
 
         // Services Carousel
-        serviceMatchmaking: "कुंडली मिलान",
+        serviceMatchmaking: "विवाह कैलकुलेटर",
         serviceGunaMilan: "गुण मिलान",
         serviceOnlinePuja: "ऑनलाइन पूजा",
         serviceLoveMatch: "लव मैच",
-        serviceMatchAnalysis: "मिलान विश्लेषण",
+        serviceMatchAnalysis: "कुंडली मिलान",
         serviceLiveDarshan: "लाइव दर्शन",
     }
 } as const;

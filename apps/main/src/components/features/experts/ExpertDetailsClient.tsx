@@ -46,7 +46,7 @@ export default function ExpertDetailsClient({
 
   return (
     <>
-      <div className="container mx-auto px-4 mt-10">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 mt-10">
         <div className="flex flex-col lg:flex-row gap-8">
           <ExpertProfileCard
             expert={expert}
@@ -78,7 +78,7 @@ export default function ExpertDetailsClient({
       />
 
       <section className="py-12 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
           <ProductSection products={products} />
         </div>
       </section>

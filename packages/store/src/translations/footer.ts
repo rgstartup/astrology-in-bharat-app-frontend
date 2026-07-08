@@ -21,6 +21,7 @@ export const footerTranslations = {
         kundliMatching: "Kundli Matching",
         kundliPrediction: "Kundli Prediction",
         numerologyReport: "Numerology Report",
+        dailyHoroscope: "Daily Horoscope",
 
         // Important Links
         expertLogin: "Expert Login",
@@ -65,6 +66,7 @@ export const footerTranslations = {
         kundliMatching: "कुंडली मिलान",
         kundliPrediction: "कुंडली भविष्यवाणी",
         numerologyReport: "अंकशास्त्र रिपोर्ट",
+        dailyHoroscope: "दैनिक राशिफल",
 
         // Important Links
         expertLogin: "ज्योतिषी लॉगिन",

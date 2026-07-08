@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
     return (
+        <>
         <StaticPageLayout title="Privacy Policy">
             <p>Last updated: February 12, 2026</p>
             <p>
@@ -65,8 +66,9 @@ export default function PrivacyPolicyPage() {
             <p>
                 If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us at support@astrologyinbharat.com.
             </p>
-            <PrivacySeoContent />
         </StaticPageLayout>
+        <PrivacySeoContent />
+        </>
     );
 }
 

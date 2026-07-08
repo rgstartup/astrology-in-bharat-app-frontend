@@ -12,7 +12,7 @@ import ZodiacHeaderProfile from "./header-profile.component";
 import HoroscopeTabs from "./tabs.component";
 import PredictionList from "./prediction-list.component";
 import PlanetaryInfluence from "./planetary-influence.component";
-import { LuckyAspects, RemedyForYou } from "./bottom-cards.component";
+import { LuckyAspects, RemedyForYou, ThingsToAvoid } from "./bottom-cards.component";
 import ZodiacDetailsSidebar from "./sidebar.component";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
 import ZodiacSignSeoContent from "./zodiac-seo-content.component";
@@ -118,7 +118,7 @@ export default function ZodiacDetailsPage() {
   }
 
   return (
-    <div className="bg-white min-h-screen pb-20">
+    <div className="bg-white min-h-screen">
       
       {/* Container */}
       <div className="max-w-[1300px] mx-auto px-4 md:px-8 mt-6">
@@ -156,11 +156,6 @@ export default function ZodiacDetailsPage() {
                   buttonIcon="fa-solid fa-headset"
                 />
 
-                {/* Bottom Cards Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                  <LuckyAspects />
-                  <RemedyForYou />
-                </div>
               </>
             )}
 
@@ -172,6 +167,15 @@ export default function ZodiacDetailsPage() {
           </div>
 
         </div>
+
+        {/* Full width Bottom Cards Row */}
+        {!loading && !error && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 mb-8">
+            <LuckyAspects />
+            <RemedyForYou />
+            <ThingsToAvoid />
+          </div>
+        )}
       </div>
 
       {/* SEO/Content Section Specific to Sign */}

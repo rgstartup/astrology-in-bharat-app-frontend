@@ -120,8 +120,8 @@ export default function PredictionList({ horoscope }: { horoscope: any }) {
 
               {/* Expanded Content */}
               {isExpanded && (
-                <div className="pt-3 pb-2 pl-[68px] md:pl-[76px] pr-2">
-                  <div className="md:hidden mb-4">
+                <div className="pt-3 pb-2 pl-0 md:pl-[76px]">
+                  <div className="md:hidden mb-4 ml-1">
                     <StarRating rating={rating} />
                   </div>
                   <p className="text-black text-[15px] md:text-base leading-[1.8] bg-[#FAF8F5] p-5 md:p-6 rounded-2xl border border-[#F0E6DD]">

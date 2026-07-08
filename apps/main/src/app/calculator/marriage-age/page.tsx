@@ -35,7 +35,9 @@ const REASONS = [
   "Planetary positions and strengths",
   "Dasha and transit periods",
   "Your karma and past life influence",
-  "Cultural and family background"
+  "Cultural and family background",
+  "Manglik and other astrological Doshas",
+  "Navamsha (D9) chart alignment"
 ];
 
 // ── Hash Helper ──────────────────────────────────────────────────────────────
@@ -165,7 +167,7 @@ const MarriageAgeCalculatorPage = () => {
     <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
 
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 py-4">
         <p className="text-sm text-[#888]">
           <span>Home</span><span className="mx-2">›</span>
           <span className="text-[#F26500] font-semibold">Calculators</span><span className="mx-2">›</span>
@@ -174,7 +176,7 @@ const MarriageAgeCalculatorPage = () => {
       </div>
 
       {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 pb-12">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-12">
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
 
           {/* ── Left: Form ── */}
@@ -301,27 +303,27 @@ const MarriageAgeCalculatorPage = () => {
 
           {/* -- Right: Guidance Card -- */}
           <div className={result ? "lg:col-span-1 md:col-span-2" : "col-span-1"}>
-            <PersonalGuidanceCard className="h-full" />
+            <PersonalGuidanceCard className="h-full" showExtraContent={true} />
           </div>
         </div>
 
         {/* ── Bottom Section ── */}
-        <div className="mt-8 bg-[#FDF6F0] rounded-3xl grid md:grid-cols-2 gap-8 border border-[#F0E0D0] p-6 md:p-8">
+        <div className="mt-8 bg-[#FDF6F0] rounded-3xl grid lg:grid-cols-3 gap-8 border border-[#F0E0D0] p-6 md:p-8">
           
           {/* Left: Factors */}
-          <div>
+          <div className="lg:col-span-2">
             <h3 className="text-sm font-black text-[#1A1A1A] flex items-center gap-2 mb-6">
               <i className="fa-solid fa-clipboard-list text-[#F26500]" /> Factors Considered
             </h3>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
               {FACTORS.map((f, i) => (
-                <div key={i} className="flex flex-col items-center text-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-white border border-[#F0E0D0] flex items-center justify-center">
+                <div key={i} className="bg-white border border-[#F0E0D0] rounded-2xl p-4 flex flex-col items-center text-center gap-2 shadow-sm hover:shadow-md hover:border-[#F26500]/30 transition-all">
+                  <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center mb-1">
                     <i className={`${f.icon} text-[#F26500]`} />
                   </div>
                   <div>
-                    <p className="text-[11px] font-black text-[#1A1A1A]">{f.label}</p>
-                    <p className="text-[10px] text-[#888]">{f.desc}</p>
+                    <p className="text-[12px] font-black text-[#1A1A1A]">{f.label}</p>
+                    <p className="text-[11px] text-[#888] mt-0.5">{f.desc}</p>
                   </div>
                 </div>
               ))}
@@ -333,7 +335,7 @@ const MarriageAgeCalculatorPage = () => {
             <h3 className="text-sm font-black text-[#1A1A1A] flex items-center gap-2 mb-6">
               <i className="fa-solid fa-circle-question text-[#F26500]" /> Why Marriage Age Varies?
             </h3>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               {REASONS.map((r, i) => (
                 <div key={i} className="flex items-start gap-2">
                   <i className="fa-regular fa-circle-check text-[#F26500] mt-0.5 text-sm" />

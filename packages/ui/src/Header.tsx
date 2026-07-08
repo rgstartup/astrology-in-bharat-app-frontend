@@ -32,7 +32,7 @@ const SERVICES_DATA_KEYS = [
     id: 1,
     key: "serviceMatchmaking",
     icon: "images/top-icon1.png",
-    href: PATHS.KUNDALI_MATCHING,
+    href: PATHS.MARRIAGE_AGE_CALCULATOR,
     isInternal: true,
   },
   {
@@ -53,7 +53,7 @@ const SERVICES_DATA_KEYS = [
     id: 4,
     key: "serviceLoveMatch",
     icon: "images/top-icon4.png",
-    href: PATHS.KUNDALI_MATCHING,
+    href: "/love-calculator",
     isInternal: true,
   },
   {

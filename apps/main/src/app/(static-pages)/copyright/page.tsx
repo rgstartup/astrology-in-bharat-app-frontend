@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 export default function CopyrightNoticePage() {
     return (
+        <>
         <StaticPageLayout title="Copyright Notice">
             <p>Last updated: February 12, 2026</p>
 
@@ -58,8 +59,9 @@ export default function CopyrightNoticePage() {
                 © 2026 Astrology in Bharat. All rights reserved.
             </p>
 
-            <CopyrightSeoContent />
         </StaticPageLayout>
+        <CopyrightSeoContent />
+        </>
     );
 }
 

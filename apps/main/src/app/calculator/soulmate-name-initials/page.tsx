@@ -162,7 +162,7 @@ const SoulmateInitialsPage = () => {
     <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
 
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 py-4">
         <p className="text-sm text-[#888]">
           <span>Home</span><span className="mx-2">›</span>
           <span className="text-[#F26500] font-semibold">Calculators</span><span className="mx-2">›</span>
@@ -272,7 +272,7 @@ const SoulmateInitialsPage = () => {
 
           {/* ── Right: Guidance Card ── */}
           <div className={result ? "lg:col-span-1 md:col-span-2" : "col-span-1"}>
-            <PersonalGuidanceCard className="h-full" />
+            <PersonalGuidanceCard showExtraContent={true} />
           </div>
         </div>
 

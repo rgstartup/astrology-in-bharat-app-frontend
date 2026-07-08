@@ -177,9 +177,9 @@ const MatchingForm = ({
               <h4 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
                 Matching Type <span className="text-gray-400 font-normal text-xs bg-gray-100 w-4 h-4 rounded-full flex items-center justify-center">i</span>
               </h4>
-              <div className="flex flex-wrap gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
                 <div 
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all ${matchingType === 'ashtakoot' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'}`}
+                  className={`flex items-center justify-center text-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all ${matchingType === 'ashtakoot' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'}`}
                   onClick={() => setMatchingType('ashtakoot')}
                 >
                   <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${matchingType === 'ashtakoot' ? 'border-orange-500' : 'border-gray-300'}`}>
@@ -192,7 +192,7 @@ const MatchingForm = ({
                 </div>
 
                 <div 
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all ${matchingType === 'panch' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'}`}
+                  className={`flex items-center justify-center text-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all ${matchingType === 'panch' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'}`}
                   onClick={() => setMatchingType('panch')}
                 >
                   <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${matchingType === 'panch' ? 'border-orange-500' : 'border-gray-300'}`}>
@@ -205,7 +205,7 @@ const MatchingForm = ({
                 </div>
 
                 <div 
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all ${matchingType === 'basic' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'}`}
+                  className={`flex items-center justify-center text-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all ${matchingType === 'basic' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'}`}
                   onClick={() => setMatchingType('basic')}
                 >
                   <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${matchingType === 'basic' ? 'border-orange-500' : 'border-gray-300'}`}>

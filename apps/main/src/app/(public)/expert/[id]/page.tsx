@@ -4,17 +4,18 @@ import { notFound } from "next/navigation";
 import { Product } from "@/lib/types";
 import { api } from "@/lib/api";
 import { getErrorMessage } from "@repo/lib";
+import ExpertSeoContent from "./expert-seo-content.component";
 
 const normalizeProduct = (raw: any): Product => {
   return {
     id: raw?.id || raw?._id,
     _id: raw?._id,
-    name: raw?.name || "",
-    description: raw?.description || "",
+    name: raw?.product_name || raw?.name || "",
+    description: raw?.short_description || raw?.description || "",
     price: Number(raw?.price || 0),
-    originalPrice: Number(raw?.originalPrice || 0),
-    imageUrl: raw?.imageUrl || "",
-    percentageOff: Number(raw?.percentageOff || 0),
+    originalPrice: Number(raw?.original_price || raw?.originalPrice || 0),
+    imageUrl: raw?.product_image || raw?.image_url || raw?.imageUrl || "",
+    percentageOff: Number(raw?.percentage_off || raw?.percentageOff || 0),
   };
 };
 
@@ -97,7 +98,12 @@ export default async function Page({
       products = rawList.map(normalizeProduct).filter((p: Product) => p.name);
     }
 
-    return <ExpertDetailsClient expert={expert} products={products} />;
+    return (
+      <>
+        <ExpertDetailsClient expert={expert} products={products} />
+        <ExpertSeoContent expertName={expert.name} />
+      </>
+    );
   } catch (error) {
     console.error("SSR Detail Page Error:", error);
     return (

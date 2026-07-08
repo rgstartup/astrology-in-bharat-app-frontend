@@ -30,11 +30,11 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     };
 
     return (
-    <section className="py-8 md:py-24 bg-white relative overflow-hidden">
+    <section className="pt-8 md:pt-12 pb-12 md:pb-24 bg-white relative overflow-hidden">
       {/* Decorative Background Element */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-orange/5 rounded-full blur-[120px] translate-x-1/2 -translate-y-1/2"></div>
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-8 md:mb-20">
           <div className="max-w-2xl">
             <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 inline-block relative">
@@ -49,13 +49,13 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
           <div className="w-full md:w-auto min-w-[320px]">
             {/* 🔹 Local Search Input Implementation */}
             <div className="relative group">
-              <SearchIcon className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-orange transition-colors" />
+              <SearchIcon className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-orange transition-colors" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t.products.searchPlaceholder}
-                className="w-full pl-12 pr-12 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-orange focus:bg-white focus:ring-4 focus:ring-orange/5 transition-all outline-none font-bold text-sm shadow-sm"
+                className="w-full pl-12 pr-12 py-4 bg-white border-2 border-orange rounded-2xl focus:ring-4 focus:ring-orange/10 transition-all outline-none font-bold text-sm shadow-[0_4px_15px_rgba(242,101,0,0.1)]"
               />
               {searchQuery && (
                 <button

@@ -11,7 +11,7 @@ const StaticPageLayout: React.FC<StaticPageLayoutProps> = ({
 }) => {
   return (
     <section className="banner-part light-back min-h-[600px] px-0 pt-4 pb-8 sm:pt-6 sm:pb-10 md:pt-8 md:pb-16 lg:pt-8 lg:pb-20">
-      <div className="container">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="contant-hero w-full bg-white/90 backdrop-blur-sm px-5 py-8 sm:px-8 sm:py-10 md:px-14 md:py-14 lg:px-16 lg:py-16 rounded-xl sm:rounded-[20px] border border-primary/20 shadow-lg">
           <div className="mb-8 text-left sm:mb-10">
             <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold leading-tight text-[#2b1b1b] mb-4">

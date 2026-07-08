@@ -2,8 +2,8 @@ import React from "react";
 
 export default function PrivacySeoContent() {
   return (
-    <section className="not-prose bg-[#edeef1] py-10 md:py-16 mt-16 rounded-[2rem] overflow-hidden shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
-      <div className="max-w-[1000px] mx-auto px-4 md:px-8">
+    <section className="not-prose pt-0 pb-10 md:pb-16">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="bg-white p-5 md:p-8 rounded-[3px]">
           
           <h2 className="text-2xl font-black text-[#1A1A1A] mb-6 flex items-center gap-3 border-b-2 border-[#F26500] inline-flex pb-2">
@@ -61,7 +61,7 @@ export default function PrivacySeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
+            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">
               ❓ Frequently Asked Questions
             </h3>
             
