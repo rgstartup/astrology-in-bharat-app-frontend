@@ -8,7 +8,7 @@ const SOCKET_URL = BACKEND_URL;
 
 export const socket: Socket = io(SOCKET_URL, {
     autoConnect: false,
-    withCredentials: true,
+    transports: ['websocket'],
 });
 
 // Expert specific chat socket
@@ -17,13 +17,13 @@ export const chatSocket: Socket = io(`${SOCKET_URL}/chat`, {
     reconnection: true,
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
-    withCredentials: true,
+    transports: ['websocket'],
 });
 
 // Expert specific call socket
 export const callSocket: Socket = io(`${SOCKET_URL}/call`, {
     autoConnect: false,
-    withCredentials: true,
+    transports: ['websocket'],
 });
 
 socket.on("connect", () => {

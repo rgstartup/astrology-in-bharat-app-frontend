@@ -6,13 +6,13 @@ console.log("[Socket] Admin Dashboard connecting to:", SOCKET_URL);
 
 export const socket: Socket = io(SOCKET_URL, {
     autoConnect: true,
-    withCredentials: true,
+    transports: ['websocket'],
 });
 
 // Chat specific socket instance
 export const chatSocket: Socket = io(`${SOCKET_URL}/chat`, {
     autoConnect: false,
-    withCredentials: true,
+    transports: ['websocket'],
 });
 
 socket.on("connect", () => {

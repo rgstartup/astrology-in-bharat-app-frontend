@@ -329,7 +329,7 @@ const ServicePricingPage = () => {
 
             <button
               onClick={() => openPujaAdd()}
-              className="flex-1 sm:flex-none w-full justify-center whitespace-nowrap group flex items-center gap-1 sm:gap-2 px-2 sm:px-5 py-2 sm:py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-[11px] min-[375px]:text-xs sm:text-base rounded-2xl shadow-lg transition-all active:scale-95 hover:translate-y-[-2px] cursor-pointer hover:cursor-pointer"
+              className="flex-1 sm:flex-none w-full sm:w-auto justify-center whitespace-nowrap group flex items-center gap-1 sm:gap-2 px-2 sm:px-5 py-2 sm:py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-[11px] min-[375px]:text-xs sm:text-base rounded-2xl shadow-lg transition-all active:scale-95 hover:translate-y-[-2px] cursor-pointer hover:cursor-pointer"
             >
               <Plus className="w-4 h-4 transition-transform group-hover:rotate-90" />
               Add Custom Puja

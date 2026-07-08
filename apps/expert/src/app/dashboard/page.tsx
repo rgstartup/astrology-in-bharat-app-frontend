@@ -133,13 +133,13 @@ const Page = () => {
   ];
 
   return (
-    <main className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">
+    <main className="space-y-8 w-full max-w-full overflow-hidden">
+      <div className="flex items-center justify-between min-w-0">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-2xl font-bold text-gray-900 truncate sm:whitespace-normal">
             Welcome back, {user?.name || "Expert"}!
           </h2>
-          <p className="text-gray-500">
+          <p className="text-gray-500 truncate sm:whitespace-normal">
             Here's what's happening with your consultations today.
           </p>
         </div>
