@@ -57,7 +57,13 @@ export const useProfileBaseLogic = () => {
 
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [imagePreview, setImagePreview] = useState<string>("/images/aa.webp");
+    const [imagePreview, setImagePreview] = useState<string>(user?.profile_picture || user?.avatar || "/images/aa.webp");
+
+    useEffect(() => {
+        if (!profileData?.profile_picture && (user?.avatar || user?.profile_picture)) {
+            setImagePreview(user.profile_picture || user.avatar || "/images/aa.webp");
+        }
+    }, [user?.avatar, user?.profile_picture, profileData?.profile_picture]);
 
     // Auth Redirection — small delay to allow Google OAuth cookie hydration
     useEffect(() => {
@@ -106,6 +112,8 @@ export const useProfileBaseLogic = () => {
                 });
                 if ((data as any).profile_picture) {
                     setImagePreview((data as any).profile_picture);
+                } else if (user?.avatar || user?.profile_picture) {
+                    setImagePreview(user.profile_picture || user.avatar || "/images/aa.webp");
                 }
             }
         } catch (error: any) {
@@ -140,16 +148,20 @@ export const useProfileBaseLogic = () => {
                 updateUser({ avatar: imageUrl, profile_picture: imageUrl });
 
                 try {
-                    await updateClientProfile({ profile_picture: imageUrl });
+                    await updateClientProfile({ profile_picture: imageUrl, avatar: imageUrl } as any);
                 } catch (err: any) {
                     const status = err?.status;
                     if (status === 404) {
-                        await createClientProfile({ profile_picture: imageUrl });
+                        await createClientProfile({ profile_picture: imageUrl, avatar: imageUrl } as any);
                     } else {
                         throw err;
                     }
                 }
+                
+                // Update the user store directly so Header updates instantly
+                updateUser({ profile_picture: imageUrl, avatar: imageUrl });
                 await refreshAuth();
+                
                 setSuccessMessage("Profile picture updated successfully!");
                 setTimeout(() => setSuccessMessage(""), 3000);
             } else {
@@ -305,6 +317,11 @@ export const useProfileBaseLogic = () => {
                 ...payload,
                 addresses: payload.addresses ? normalizeAddressesForUI(payload.addresses) : prev.addresses,
             }));
+            
+            // Instantly update global user store if personal details changed
+            if (section === "personal" && payload.full_name) {
+                updateUser({ name: payload.full_name });
+            }
             
             await refreshAuth();
             setEditingSections((prev) => ({ ...prev, [section]: false }));

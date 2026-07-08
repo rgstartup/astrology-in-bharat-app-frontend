@@ -18,14 +18,12 @@ const SOCKET_URL = isBrowser ? RAW_URL.replace(/\/api\/v1\/?$/i, "") : "";
 
 export const socket: Socket = isBrowser
     ? io(SOCKET_URL, {
-        transports: ["websocket", "polling"],
         autoConnect: true,
     })
     : createDummySocket();
 
 export const chatSocket: Socket = isBrowser
     ? io(`${SOCKET_URL}/chat`, {
-        transports: ["websocket", "polling"],
         autoConnect: false,
         reconnection: true,
         reconnectionAttempts: 5,

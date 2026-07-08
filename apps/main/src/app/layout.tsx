@@ -59,7 +59,7 @@ export default async function RootLayout({
         
         if (user) {
           // Unify the profile picture field so that Header has consistent data on SSR
-          user.profile_picture = user.profile_picture || user.avatar || raw?.profile_picture || raw?.avatar;
+          user.profile_picture = raw?.profile_picture || user.profile_picture || raw?.avatar || user.avatar;
           user.avatar = user.profile_picture;
         }
       }

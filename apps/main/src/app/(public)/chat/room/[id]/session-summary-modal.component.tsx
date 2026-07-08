@@ -163,14 +163,12 @@ export default function SessionSummaryModal({
                                     if (err) {
                                         const errMsg = getErrorMessage(err);
                                         if (errMsg.toLowerCase().includes('already reviewed')) {
-                                            toast.success("Thank you for your feedback!");
                                             setTimeout(() => router.push('/'), 1500);
                                         } else {
                                             setReviewSubmitted(false);
                                             toast.error(errMsg || "Failed to submit review. Please try again.");
                                         }
                                     } else {
-                                        toast.success("Thank you for your feedback!");
                                         setTimeout(() => router.push('/'), 1500);
                                     }
                                 }}
@@ -194,7 +192,7 @@ export default function SessionSummaryModal({
 
                     {sessionSummary?.status === 'expired' && (
                         <div className="w-full space-y-4">
-                            <button onClick={() => router.push('/wallet')} className="w-full py-5 bg-[#fd6410] text-white rounded-[24px] font-black text-lg shadow-[0_10px_30px_rgba(253,100,16,0.3)] hover:brightness-110 active:scale-[0.98] transition-all">
+                            <button onClick={() => router.push('/client/profile?tab=wallet')} className="w-full py-5 bg-[#fd6410] text-white rounded-[24px] font-black text-lg shadow-[0_10px_30px_rgba(253,100,16,0.3)] hover:brightness-110 active:scale-[0.98] transition-all">
                                 Recharge Wallet
                             </button>
                             <button onClick={() => router.push('/')} className={`w-full py-4 rounded-[24px] border ${isDarkMode ? 'border-white/5 text-gray-400' : 'border-black/5 text-gray-500'} font-bold transition-all text-sm uppercase tracking-widest`}>

@@ -129,8 +129,8 @@ export const useAuthStore = create<AuthState>()(
                         name: raw.user.name,
                         email: raw.user.email,
                         roles: raw.user.roles || [],
-                        profile_picture: raw.user.profile_picture || raw.profile_picture || raw.user.avatar || raw.avatar,
-                        avatar: raw.user.profile_picture || raw.profile_picture || raw.user.avatar || raw.avatar,
+                        profile_picture: raw.profile_picture || raw.user?.profile_picture || raw.avatar || raw.user?.avatar,
+                        avatar: raw.profile_picture || raw.user?.profile_picture || raw.avatar || raw.user?.avatar,
                         profile: raw.profile || raw.user.profile || raw.id,
                     };
                 } else if (raw?.id) {

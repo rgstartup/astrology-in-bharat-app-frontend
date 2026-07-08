@@ -112,9 +112,10 @@ export default function AdminPujaShopsPage() {
         {
             key: "items",
             label: "Items Sold",
-            render: (l: any) => (
-                <p className="text-xs text-gray-600 line-clamp-1">{l.items || "—"}</p>
-            ),
+            render: (l: any) => {
+                const count = l.total_orders ?? l.totalOrders ?? l.totalSales ?? l.total_sales ?? l.items ?? 0;
+                return <p className="text-xs text-gray-600 font-bold">{count}</p>;
+            },
         },
         {
             key: "agent",

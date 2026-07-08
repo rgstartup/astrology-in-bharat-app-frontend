@@ -3,6 +3,7 @@
 import React from "react";
 import NextImage from "next/image";
 import * as LucideIcons from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Expert } from "@/lib/types";
 
 const Image = NextImage as any;
@@ -16,6 +17,8 @@ type Props = {
   setSomeoneElseData: (val: any) => void;
   handleStartConsultation: () => void;
   actionLoading: boolean;
+  userBalance?: number;
+  isAuthenticated?: boolean;
 };
 
 const ExpertPreview = ({
@@ -26,7 +29,12 @@ const ExpertPreview = ({
   setSomeoneElseData,
   handleStartConsultation,
   actionLoading,
+  userBalance = 0,
+  isAuthenticated = false,
 }: Props) => {
+  const router = useRouter();
+  const chatPrice = expert?.chat_price || expert?.price || 0;
+
   return (
     <div className="order-1 lg:order-2 lg:col-span-5 relative">
       <div className="sticky top-28">
@@ -225,30 +233,63 @@ const ExpertPreview = ({
               )}
             </div>
 
-            {/* Big CTA */}
-            <div className="pt-6 relative group">
-              <div className="absolute -inset-2 bg-gradient-to-r from-orange to-orange/80 rounded-[45px] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
+            {/* Big CTA and Balance Check */}
+            <div className="pt-6 space-y-4">
+              {isAuthenticated && (
+                  <div className="flex items-center justify-between px-6 py-4 bg-gray-50 rounded-2xl border border-gray-100">
+                      <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                              <LucideIcons.Wallet className="w-4 h-4 text-green-600" />
+                          </div>
+                          <span className="text-sm font-bold text-gray-500">Your Balance</span>
+                      </div>
+                      <span className="text-xl font-black text-gray-900">₹{userBalance.toFixed(2)}</span>
+                  </div>
+              )}
 
-              <button
-                onClick={handleStartConsultation}
-                disabled={actionLoading}
-                className={`group relative w-full py-4 md:py-5 bg-gradient-to-r from-[#FF8A00] to-[#FF5500] text-white rounded-[2rem] md:rounded-[2.5rem] font-extrabold text-base md:text-lg flex items-center justify-center gap-3 shadow-[0_10px_25px_rgba(255,85,0,0.3)] hover:shadow-[0_20px_40px_rgba(255,85,0,0.4)] hover:-translate-y-1 active:translate-y-0.5 active:scale-[0.98] transition-all duration-300 border-b-[5px] border-[#CC4400] overflow-hidden cursor-pointer ${
-                  actionLoading ? "opacity-70 cursor-not-allowed" : ""
-                }`}
-              >
-                {/* 3D Depth overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
-                {/* Hover shine effect */}
-                <div className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-30deg] group-hover:animate-[none] group-hover:left-[200%] transition-all duration-1000 ease-in-out pointer-events-none"></div>
-                
-                <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-yellow-300 relative z-10 group-hover:scale-125 transition-transform duration-300" fill="currentColor" />
-                <span className="tracking-wide relative z-10">
-                  {actionLoading ? "CONNECTING..." : "START CONSULTATION"}
-                </span>
-                <ArrowRight className="w-5 h-5 text-white/70 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
-              </button>
+              {isAuthenticated && userBalance < chatPrice * 5 ? (
+                  <div className="p-6 bg-red-50 rounded-3xl border border-red-100">
+                      <div className="flex items-start gap-4 mb-4">
+                          <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                              <LucideIcons.AlertCircle className="w-6 h-6 text-red-500" />
+                          </div>
+                          <div>
+                              <h4 className="font-bold text-red-900 leading-none mb-1">Low Balance</h4>
+                              <p className="text-xs text-red-600 font-medium">You need at least ₹{chatPrice * 5} for 5 mins.</p>
+                          </div>
+                      </div>
+                      <button
+                          onClick={() => router.push("/client/profile?tab=wallet")}
+                          className="w-full py-4 bg-red-500 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-red-600 transition-all flex items-center justify-center gap-2"
+                      >
+                          <LucideIcons.CreditCard className="w-5 h-5" />
+                          <span>RECHARGE NOW</span>
+                      </button>
+                  </div>
+              ) : (
+                <div className="relative group">
+                  <div className="absolute -inset-2 bg-gradient-to-r from-orange to-orange/80 rounded-[45px] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000"></div>
 
-
+                  <button
+                    onClick={handleStartConsultation}
+                    disabled={actionLoading}
+                    className={`group relative w-full py-4 md:py-5 bg-gradient-to-r from-[#FF8A00] to-[#FF5500] text-white rounded-[2rem] md:rounded-[2.5rem] font-extrabold text-base md:text-lg flex items-center justify-center gap-3 shadow-[0_10px_25px_rgba(255,85,0,0.3)] hover:shadow-[0_20px_40px_rgba(255,85,0,0.4)] hover:-translate-y-1 active:translate-y-0.5 active:scale-[0.98] transition-all duration-300 border-b-[5px] border-[#CC4400] overflow-hidden cursor-pointer ${
+                      actionLoading ? "opacity-70 cursor-not-allowed" : ""
+                    }`}
+                  >
+                    {/* 3D Depth overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
+                    {/* Hover shine effect */}
+                    <div className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-30deg] group-hover:animate-[none] group-hover:left-[200%] transition-all duration-1000 ease-in-out pointer-events-none"></div>
+                    
+                    <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-yellow-300 relative z-10 group-hover:scale-125 transition-transform duration-300" fill="currentColor" />
+                    <span className="tracking-wide relative z-10">
+                      {actionLoading ? "CONNECTING..." : "START CONSULTATION"}
+                    </span>
+                    <ArrowRight className="w-5 h-5 text-white/70 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

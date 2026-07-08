@@ -15,7 +15,6 @@ export const socket: Socket = io(SOCKET_URL, {
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
     withCredentials: true,
-    transports: ["websocket"],
 });
 
 socket.on("connect", () => {
@@ -27,7 +26,6 @@ export const merchantSocket: Socket = io(`${SOCKET_URL}/merchant`, {
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
     withCredentials: true,
-    transports: ["websocket"],
 });
 
 merchantSocket.on("connect", () => {

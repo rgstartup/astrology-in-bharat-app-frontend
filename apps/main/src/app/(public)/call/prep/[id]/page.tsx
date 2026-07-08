@@ -43,10 +43,16 @@ function CallPrepContent() {
     const [expert, setExpert] = useState<ExpertData | null>(null);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
-    const [userBalance, setUserBalance] = useState<number>(0);
     const [showSecurityModal, setShowSecurityModal] = useState(false);
     const [showOfflinePopup, setShowOfflinePopup] = useState(false);
-    const { isAuthenticated } = useAuthStore();
+    const [existingCallDetails, setExistingCallDetails] = useState<{sessionId: string, expertId: string} | null>(null);
+    const { isAuthenticated, balance: userBalance, refreshBalance } = useAuthStore();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            refreshBalance();
+        }
+    }, [isAuthenticated, refreshBalance]);
 
     useEffect(() => {
         const fetchAstro = async () => {
@@ -77,17 +83,7 @@ function CallPrepContent() {
             setLoading(false);
         };
         if (id) fetchAstro();
-
-        const fetchBalance = async () => {
-            const [balance, error] = await http.get<number>('/wallet/balance');
-            if (error) {
-                console.error("Failed to fetch balance:", error);
-            } else {
-                setUserBalance(Number(balance));
-            }
-        };
-        if (isAuthenticated) fetchBalance();
-    }, [id, isAuthenticated]);
+    }, [id]);
 
     const handleStartCall = async () => {
         if (!isAuthenticated) {
@@ -156,7 +152,14 @@ function CallPrepContent() {
 
         if (error) {
             console.error("[CallPrep] Initiation error details:", error);
-            toast.error(getErrorMessage(error) || "Failed to start call");
+            const existingSessionId = (error as any).data?.existingSessionId;
+            const existingExpertId = (error as any).data?.existingExpertId;
+
+            if (existingSessionId && existingExpertId) {
+                setExistingCallDetails({ sessionId: existingSessionId, expertId: existingExpertId });
+            } else {
+                toast.error(getErrorMessage(error) || "Failed to start call");
+            }
         } else if (response && response.session?.id) {
             toast.success("Connecting to expert...");
             // Redirect to call room
@@ -300,7 +303,7 @@ function CallPrepContent() {
                                             </div>
                                         </div>
                                         <button
-                                            onClick={() => router.push("/client/wallet")}
+                                            onClick={() => router.push("/client/profile?tab=wallet")}
                                             className="w-full py-4 bg-red-500 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-red-600 transition-all flex items-center justify-center gap-2"
                                         >
                                             <LucideIcons.CreditCard className="w-5 h-5" />
@@ -377,6 +380,26 @@ function CallPrepContent() {
                         <span className="font-bold text-gray-900">{expert?.name}</span>{" "}
                         is offline. <br />
                         Please try again later when the expert is available.
+                    </>
+                }
+            />
+
+            <VerificationPopup
+                isOpen={!!existingCallDetails}
+                onClose={() => setExistingCallDetails(null)}
+                title="Active Call Exists"
+                buttonText="Go to existing call"
+                onConfirm={() => {
+                    if (existingCallDetails) {
+                        router.push(`/call/room/${existingCallDetails.sessionId}`);
+                    }
+                }}
+                icon={<Phone className="w-10 h-10 text-orange" />}
+                description={
+                    <>
+                        You already have an active or pending call request.
+                        <br />
+                        Please go to that call to continue or cancel it before starting a new one.
                     </>
                 }
             />

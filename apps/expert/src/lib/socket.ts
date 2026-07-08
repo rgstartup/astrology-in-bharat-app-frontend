@@ -7,23 +7,23 @@ const SOCKET_URL = BACKEND_URL;
 
 
 export const socket: Socket = io(SOCKET_URL, {
-    transports: ["websocket"],
     autoConnect: false,
+    withCredentials: true,
 });
 
 // Expert specific chat socket
 export const chatSocket: Socket = io(`${SOCKET_URL}/chat`, {
-    transports: ["websocket", "polling"],
     autoConnect: false,
     reconnection: true,
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
+    withCredentials: true,
 });
 
 // Expert specific call socket
 export const callSocket: Socket = io(`${SOCKET_URL}/call`, {
-    transports: ["websocket"],
     autoConnect: false,
+    withCredentials: true,
 });
 
 socket.on("connect", () => {

@@ -54,10 +54,7 @@ export default function FreeEndPromptModal({
 
                 <div className="flex flex-col gap-3">
                     {freeLimitData?.requireRecharge ? (
-                        <button
-                            onClick={() => router.push('/wallet')}
-                            className="w-full py-4 bg-red-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg active:scale-95 transition-all"
-                        >
+                        <button onClick={() => router.push('/client/profile?tab=wallet')} className="w-full py-5 bg-[#fd6410] text-white rounded-[24px] font-black text-lg shadow-[0_10px_30px_rgba(253,100,16,0.3)] hover:brightness-110 active:scale-[0.98] transition-all">
                             Recharge Wallet
                         </button>
                     ) : (

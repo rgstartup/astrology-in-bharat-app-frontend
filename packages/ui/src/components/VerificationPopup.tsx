@@ -13,6 +13,7 @@ interface VerificationPopupProps {
   description?: React.ReactNode;
   icon?: React.ReactNode;
   buttonText?: string;
+  onConfirm?: () => void;
 }
 
 export const VerificationPopup: React.FC<VerificationPopupProps> = ({
@@ -23,6 +24,7 @@ export const VerificationPopup: React.FC<VerificationPopupProps> = ({
   description,
   icon,
   buttonText = "I Understand",
+  onConfirm,
 }) => {
   const [isRendered, setIsRendered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -90,7 +92,7 @@ export const VerificationPopup: React.FC<VerificationPopupProps> = ({
           </div>
 
           <button
-            onClick={onClose}
+            onClick={onConfirm || onClose}
             className="group relative w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-orange to-[#FF5500] text-white font-extrabold text-base tracking-wide shadow-[0_8px_20px_rgba(255,107,0,0.25)] hover:shadow-[0_12px_25px_rgba(255,107,0,0.35)] hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] transition-all duration-300 border-b-[4px] border-[#CC4400] overflow-hidden"
           >
             {/* 3D Depth overlay */}

@@ -30,6 +30,7 @@ export default function ConsultationPrep() {
   const [askSomeoneElse, setAskSomeoneElse] = useState(true);
   const [showSecurityModal, setShowSecurityModal] = useState(false);
   const [showOfflinePopup, setShowOfflinePopup] = useState(false);
+  const [existingChatDetails, setExistingChatDetails] = useState<{sessionId: string, expertId: string} | null>(null);
   const [clientProfile, setClientProfile] = useState<any>(null);
   const [someoneElseData, setSomeoneElseData] = useState({
     name: "",
@@ -38,7 +39,13 @@ export default function ConsultationPrep() {
     tob: "",
     pob: "",
   });
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, balance: userBalance, refreshBalance } = useAuthStore();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      refreshBalance();
+    }
+  }, [isAuthenticated, refreshBalance]);
 
   useEffect(() => {
     const preventDefault = (e: any) => {
@@ -125,7 +132,6 @@ export default function ConsultationPrep() {
       setLoading(false);
     };
     if (id) fetchAstro();
-
     const fetchProfile = async () => {
       if (isAuthenticated) {
         const [profile, err] = await getClientProfile();
@@ -168,7 +174,14 @@ export default function ConsultationPrep() {
 
     if (error) {
       console.error("Initiation error:", error);
-      toast.error(getErrorMessage(error) || "Failed to start consultation");
+      const existingSessionId = (error as any).data?.existingSessionId;
+      const existingExpertId = (error as any).data?.existingExpertId;
+
+      if (existingSessionId && existingExpertId) {
+        setExistingChatDetails({ sessionId: existingSessionId, expertId: existingExpertId });
+      } else {
+        toast.error(getErrorMessage(error) || "Failed to start consultation");
+      }
     } else if (response && response.id) {
       toast.success("Connecting to expert...");
       router.push(`/chat/room/${id}?sessionId=${response.id}`);
@@ -244,6 +257,8 @@ export default function ConsultationPrep() {
             setSomeoneElseData={setSomeoneElseData}
             handleStartConsultation={handleStartConsultation}
             actionLoading={actionLoading}
+            userBalance={userBalance}
+            isAuthenticated={isAuthenticated}
           />
         </div>
 
@@ -269,6 +284,26 @@ export default function ConsultationPrep() {
             <span className="font-bold text-gray-900">{expert?.name}</span>{" "}
             is offline. <br />
             Please try again later when the expert is available.
+          </>
+        }
+      />
+
+      <VerificationPopup
+        isOpen={!!existingChatDetails}
+        onClose={() => setExistingChatDetails(null)}
+        title="Active Chat Exists"
+        buttonText="Go to existing chat"
+        onConfirm={() => {
+          if (existingChatDetails) {
+            router.push(`/chat/room/${existingChatDetails.expertId}?sessionId=${existingChatDetails.sessionId}`);
+          }
+        }}
+        icon={<LucideIcons.MessageCircle className="w-10 h-10 text-orange" />}
+        description={
+          <>
+            You already have an active or pending chat request with another expert.
+            <br />
+            Please go to that chat to continue or cancel it before starting a new one.
           </>
         }
       />

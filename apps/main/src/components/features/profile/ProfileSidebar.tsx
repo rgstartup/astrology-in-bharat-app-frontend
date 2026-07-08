@@ -28,6 +28,20 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
     savingSections,
     loading = false,
 }) => {
+    const legacyUploadsOrigin = process.env.NEXT_PUBLIC_ADMIN_UPLOADS_ORIGIN || "http://localhost:3001";
+
+    const normalizeImagePath = (value: string | null | undefined): string => {
+        if (!value) return "/images/aa.webp";
+        if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("data:") || value.startsWith("blob:")) {
+            return value;
+        }
+        if (value.startsWith("/uploads/")) return value;
+        if (value.startsWith("/")) return value;
+        return `${legacyUploadsOrigin}/uploads/${value}`;
+    };
+
+    const displayImage = normalizeImagePath(imagePreview);
+
     const { lang } = useLanguageStore();
     const t = profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en;
     const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
@@ -65,7 +79,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
                                 </div>
                             ) : (
                                 <Image
-                                    src={imagePreview}
+                                    src={displayImage}
                                     alt="Profile"
                                     width={72}
                                     height={72}

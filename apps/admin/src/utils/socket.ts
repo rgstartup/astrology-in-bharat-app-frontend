@@ -9,7 +9,6 @@ export const getNotificationSocket = (): Socket => {
     if (!notificationSocket) {
         notificationSocket = io(`${API_URL}/notifications`, {
             autoConnect: false,
-            transports: ['websocket', 'polling'],
         });
     }
     return notificationSocket;
@@ -36,7 +35,6 @@ export const getSupportSocket = (): Socket => {
     if (!supportSocket) {
         supportSocket = io(`${API_URL}/support`, {
             autoConnect: false,
-            transports: ['websocket', 'polling'],
         });
     }
     return supportSocket;

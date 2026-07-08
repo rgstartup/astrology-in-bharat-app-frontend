@@ -271,7 +271,7 @@ export default function OrdersPage() {
                                             <React.Fragment key={order.id}>
                                                 <tr className="hover:bg-gray-50 transition-colors">
                                                     <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                                                        #{String(order.id).substring(0, 8)}...
+                                                        #{String(order.id)}
                                                     </td>
                                                     <td className="px-6 py-4 text-sm text-gray-500">
                                                         {new Date((order as any).created_at || order.createdAt).toLocaleDateString('en-IN', {

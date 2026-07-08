@@ -5,14 +5,14 @@ const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || (process.env.NEXT_PUBLI
 console.log("[Socket] Admin Dashboard connecting to:", SOCKET_URL);
 
 export const socket: Socket = io(SOCKET_URL, {
-    transports: ["websocket"],
     autoConnect: true,
+    withCredentials: true,
 });
 
 // Chat specific socket instance
 export const chatSocket: Socket = io(`${SOCKET_URL}/chat`, {
-    transports: ["websocket"],
     autoConnect: false,
+    withCredentials: true,
 });
 
 socket.on("connect", () => {

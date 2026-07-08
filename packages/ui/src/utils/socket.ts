@@ -6,13 +6,11 @@ const API_URL = getRawUrl().replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
 // Notification Socket
 export const notificationSocket: Socket = io(`${API_URL}/notifications`, {
     autoConnect: false,
-    transports: ['websocket', 'polling'],
 });
 
 // Support Socket (for disputes)
 export const supportSocket: Socket = io(`${API_URL}/support`, {
     autoConnect: false,
-    transports: ['websocket', 'polling'],
 });
 
 export const getNotificationSocket = (): Socket => {
