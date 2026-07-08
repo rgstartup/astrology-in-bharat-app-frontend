@@ -30,7 +30,7 @@ const MatchingForm = ({
     <section className="pb-8 pt-2 bg-transparent">
       <div className="max-w-6xl mx-auto px-4">
         {/* Main Card container */}
-        <div className="bg-white rounded-[2rem] border border-orange-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden p-6 md:p-10 relative">
+        <div className="bg-white rounded-[2rem] border border-orange-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-visible p-6 md:p-10 relative">
           
           {/* Header (Inside the Card) */}
           <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -54,7 +54,7 @@ const MatchingForm = ({
             </button>
 
             {/* Boy's Details (Person 1) */}
-            <div className="rounded-2xl border border-blue-100 bg-gradient-to-b from-blue-50/80 to-transparent overflow-hidden">
+            <div className="rounded-2xl border border-blue-100 bg-gradient-to-b from-blue-50/80 to-transparent overflow-visible">
               <div className="px-6 py-4 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center">
                   <FaUser className="text-sm" />
@@ -109,7 +109,7 @@ const MatchingForm = ({
             </div>
 
             {/* Girl's Details (Person 2) */}
-            <div className="rounded-2xl border border-pink-100 bg-gradient-to-b from-pink-50/80 to-transparent overflow-hidden">
+            <div className="rounded-2xl border border-pink-100 bg-gradient-to-b from-pink-50/80 to-transparent overflow-visible">
               <div className="px-6 py-4 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center">
                   <FaUser className="text-sm" />

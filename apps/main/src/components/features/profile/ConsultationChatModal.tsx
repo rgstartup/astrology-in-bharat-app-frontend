@@ -38,41 +38,48 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
             try {
                 const data = JSON.parse(content.replace("[INTRO_CARD]", ""));
                 return (
-                    <div className="my-2 p-3 rounded-4 shadow-sm border-0 position-relative overflow-hidden"
-                        style={{
-                            background: "linear-gradient(135deg, #fff9c4 0%, #fff176 100%)",
-                            border: "1px solid #fdd835",
-                            maxWidth: "100%",
-                            width: "100%",
-                            minWidth: "280px"
-                        }}>
-                        <div className="position-absolute top-0 end-0 p-2 opacity-10">
-                            <i className="fa-solid fa-dharmachakra fa-3x"></i>
-                        </div>
-                        <h6 className="fw-bold mb-3 text-dark d-flex align-items-center gap-2 border-bottom border-dark border-opacity-10 pb-2">
-                            <i className="fa-solid fa-id-card text-warning"></i>
-                            Birth Details Shared
-                        </h6>
-                        <div className="row g-3">
-                            <div className="col-6">
-                                <label className="text-uppercase text-muted fw-bold" style={{ fontSize: '9px', letterSpacing: '0.05em' }}>Name</label>
-                                <p className="mb-0 fw-bold text-dark small">{data.name}</p>
+                    <div className="my-4 w-full shadow-lg rounded-[20px] p-1 mx-auto" style={{ backgroundColor: "#FFEA00", maxWidth: "280px" }}>
+                        <div className="rounded-[16px] px-5 py-5 border" style={{ borderColor: "rgba(0,0,0,0.05)", backgroundColor: "transparent" }}>
+                            {/* Header */}
+                            <div className="flex items-center gap-3 mb-5">
+                                <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "rgba(0,0,0,0.08)" }}>
+                                    <i className="fa-regular fa-user text-black text-lg"></i>
+                                </div>
+                                <div>
+                                    <h5 className="font-black text-black text-[13px] tracking-widest mb-0.5">BIRTH DETAILS</h5>
+                                    <p className="text-black/60 font-bold text-[8px] uppercase tracking-widest mb-0">Shared Profile Info</p>
+                                </div>
                             </div>
-                            <div className="col-6">
-                                <label className="text-uppercase text-muted fw-bold" style={{ fontSize: '9px', letterSpacing: '0.05em' }}>Gender</label>
-                                <p className="mb-0 fw-bold text-dark small capitalize">{data.gender || 'N/A'}</p>
-                            </div>
-                            <div className="col-6">
-                                <label className="text-uppercase text-muted fw-bold" style={{ fontSize: '9px', letterSpacing: '0.05em' }}>Date of Birth</label>
-                                <p className="mb-0 fw-bold text-dark small">{data.dob}</p>
-                            </div>
-                            <div className="col-6">
-                                <label className="text-uppercase text-muted fw-bold" style={{ fontSize: '9px', letterSpacing: '0.05em' }}>Time</label>
-                                <p className="mb-0 fw-bold text-dark small">{data.tob || 'N/A'}</p>
-                            </div>
-                            <div className="col-12 mt-2 border-top border-dark border-opacity-10 pt-2">
-                                <label className="text-uppercase text-muted fw-bold" style={{ fontSize: '9px', letterSpacing: '0.05em' }}>Place of Birth</label>
-                                <p className="mb-0 fw-bold text-dark small"><i className="fa-solid fa-location-dot me-1 text-danger opacity-50"></i> {data.pob || 'N/A'}</p>
+
+                            <div className="h-px w-full mb-5" style={{ backgroundColor: "rgba(0,0,0,0.06)" }}></div>
+
+                            {/* Details Grid */}
+                            <div className="grid grid-cols-2 gap-y-5 gap-x-3 text-left">
+                                <div>
+                                    <label className="block font-black text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(0,0,0,0.4)" }}>Name</label>
+                                    <p className="font-black text-black text-sm m-0 truncate">{data.name}</p>
+                                </div>
+                                <div>
+                                    <label className="block font-black text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(0,0,0,0.4)" }}>Gender</label>
+                                    <p className="font-black text-black text-sm m-0 capitalize">{data.gender || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <label className="block font-black text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(0,0,0,0.4)" }}>DOB</label>
+                                    <p className="font-black text-black text-sm m-0">
+                                        {data.dob ? (!isNaN(new Date(data.dob).getTime()) ? new Date(data.dob).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : data.dob) : 'N/A'}
+                                    </p>
+                                </div>
+                                <div>
+                                    <label className="block font-black text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(0,0,0,0.4)" }}>TOB</label>
+                                    <p className="font-black text-black text-sm m-0">{data.tob || 'N/A'}</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="block font-black text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(0,0,0,0.4)" }}>POB</label>
+                                    <p className="font-black text-black text-[13px] m-0 flex items-start gap-1.5 leading-snug">
+                                        <i className="fa-solid fa-location-dot mt-0.5" style={{ color: "rgba(0,0,0,0.3)" }}></i>
+                                        <span>{data.pob || 'N/A'}</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -107,7 +114,7 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
                 <div className="flex justify-between items-center p-4 border-b shrink-0" style={{ backgroundColor: "#FF6B00" }}>
                     <div className="flex items-center gap-3">
                         <div
-                            className="rounded-circle overflow-hidden position-relative"
+                            className="rounded-full overflow-hidden position-relative"
                             style={{ width: "48px", height: "48px", border: "3px solid white" }}
                         >
                             <Image
@@ -214,22 +221,35 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
                                     const isAdmin = sType === 'admin' || sType === 'system';
 
                                     if (isAdmin) {
-                                        const isEnded = content.toLowerCase().includes('end') || content.toLowerCase().includes('finish') || content.toLowerCase().includes('close');
+                                        const isEnded = content.toLowerCase().includes('end') || content.toLowerCase().includes('finish') || content.toLowerCase().includes('close') || content.toLowerCase().includes('system');
+                                        const bgColor = isEnded ? 'bg-red-50' : 'bg-gray-50';
+                                        const borderColor = isEnded ? 'border-red-200' : 'border-gray-200';
+                                        const textColor = isEnded ? 'text-red-600' : 'text-gray-600';
+                                        
                                         return (
-                                            <div key={msg.id || index} className="text-center my-3 w-100">
-                                                <span
-                                                    className={`px-4 py-2 rounded-pill font-bold shadow-sm d-inline-block border ${isEnded ? 'border-danger border-opacity-25' : 'border-light'}`}
-                                                    style={{
-                                                        fontSize: '11px',
-                                                        textTransform: 'uppercase',
-                                                        letterSpacing: '0.05em',
-                                                        backgroundColor: isEnded ? 'rgba(220, 53, 69, 0.1)' : 'rgba(0, 0, 0, 0.05)',
-                                                        color: isEnded ? '#dc3545' : '#6c757d',
-                                                        minWidth: '200px'
-                                                    }}
-                                                >
-                                                    {msg.content}
-                                                </span>
+                                            <div key={msg.id || index} className="my-4 w-full flex justify-center">
+                                                <div className="flex flex-col items-start" style={{ maxWidth: "85%" }}>
+                                                    <div className={`${bgColor} border ${borderColor} rounded-2xl px-6 py-4 shadow-sm text-center`} style={{ minWidth: "260px" }}>
+                                                        <div className={`flex items-center justify-center gap-1.5 mb-1.5 ${textColor}`}>
+                                                            <i className="fa-solid fa-circle-exclamation text-[11px]"></i>
+                                                            <span className="text-[11px] font-black uppercase tracking-widest">System Message</span>
+                                                        </div>
+                                                        <div className={`${textColor} text-[15px] font-medium`}>
+                                                            {msg.content}
+                                                        </div>
+                                                    </div>
+                                                    <div className="mt-1.5 ml-1">
+                                                        <small className="text-gray-400 font-bold" style={{ fontSize: "10px", letterSpacing: "0.02em" }}>
+                                                            {msg.createdAt || msg.created_at
+                                                                ? new Date(msg.createdAt || msg.created_at).toLocaleTimeString('en-US', {
+                                                                    hour: '2-digit',
+                                                                    minute: '2-digit'
+                                                                })
+                                                                : ''
+                                                            }
+                                                        </small>
+                                                    </div>
+                                                </div>
                                             </div>
                                         );
                                     }
@@ -237,15 +257,16 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
                                     return (
                                         <div
                                             key={msg.id || index}
-                                            className={`flex gap-3 ${content.startsWith("[INTRO_CARD]") ? 'justify-content-center' : (isUser ? 'flex-row-reverse' : 'flex-row')}`}
+                                            className={`flex gap-3 items-start ${content.startsWith("[INTRO_CARD]") ? 'justify-content-center' : (isUser ? 'flex-row-reverse' : 'flex-row')}`}
                                         >
                                             {!content.startsWith("[INTRO_CARD]") && (
                                                 <div
-                                                    className="rounded-circle overflow-hidden flex-shrink-0 shadow-sm relative"
+                                                    className="rounded-full overflow-hidden flex-shrink-0 relative mt-1"
                                                     style={{
-                                                        width: "40px",
-                                                        height: "40px",
-                                                        border: `2px solid ${isUser ? '#FF6B00' : '#e0e0e0'}`
+                                                        width: "36px",
+                                                        height: "36px",
+                                                        border: `1.5px solid ${isUser ? '#FF6B00' : '#e0e0e0'}`,
+                                                        boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
                                                     }}
                                                 >
                                                     <Image
@@ -265,35 +286,36 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
                                                     />
                                                 </div>
                                             )}
-                                    <div className={`shrink-0 ${content.startsWith("[INTRO_CARD]") ? 'w-full flex justify-center' : (isUser ? 'flex justify-end' : 'flex justify-start')}`} style={{ maxWidth: content.startsWith("[INTRO_CARD]") ? "100%" : "85%" }}>
+                                    <div className={`flex flex-col ${content.startsWith("[INTRO_CARD]") ? 'w-full items-center' : (isUser ? 'items-end' : 'items-start')}`} style={{ maxWidth: content.startsWith("[INTRO_CARD]") ? "100%" : "75%" }}>
                                         <div
-                                            className={content.startsWith("[INTRO_CARD]") ? "" : `p-3 shadow-sm inline-block ${isUser
-                                                ? 'text-dark border-0'
-                                                : 'bg-white text-dark border border-gray-100'
+                                            className={content.startsWith("[INTRO_CARD]") ? "" : `px-5 py-4 inline-block ${isUser
+                                                ? 'text-white border-0'
+                                                : 'bg-white text-gray-800 border border-gray-100'
                                                 }`}
                                             style={content.startsWith("[INTRO_CARD]") ? {} : {
-                                                backgroundColor: isUser ? "rgba(255, 107, 0, 0.08)" : "#FFFFFF",
-                                                borderRadius: isUser ? "20px 20px 5px 20px" : "20px 20px 20px 5px",
-                                                textAlign: 'left'
+                                                backgroundColor: isUser ? "#FF6B00" : "#FFFFFF",
+                                                borderRadius: isUser ? "28px 0px 28px 28px" : "0px 28px 28px 28px",
+                                                textAlign: 'left',
+                                                boxShadow: isUser ? "0 4px 12px rgba(255, 107, 0, 0.2)" : "0 4px 12px rgba(0,0,0,0.03)"
                                             }}
                                         >
-                                            <div className="mb-1" style={{ fontSize: "14px", lineHeight: "1.6" }}>
+                                            <div style={{ fontSize: "15px", lineHeight: "1.4", fontWeight: "600", letterSpacing: "0.01em" }}>
                                                 {renderMessageContent(msg)}
                                             </div>
-                                            {!content.startsWith("[INTRO_CARD]") && (
-                                                <div className={`mt-2 ${isUser ? 'text-end' : 'text-start'}`}>
-                                                    <small className="text-gray-400 font-bold" style={{ fontSize: "10px" }}>
-                                                        {msg.createdAt || msg.created_at
-                                                            ? new Date(msg.createdAt || msg.created_at).toLocaleTimeString('en-IN', {
-                                                                hour: '2-digit',
-                                                                minute: '2-digit'
-                                                            })
-                                                            : ''
-                                                        }
-                                                    </small>
-                                                </div>
-                                            )}
                                         </div>
+                                        {!content.startsWith("[INTRO_CARD]") && (
+                                            <div className="mt-2 text-left w-full pl-1">
+                                                <small className="text-gray-400 font-bold" style={{ fontSize: "10px", letterSpacing: "0.02em" }}>
+                                                    {msg.createdAt || msg.created_at
+                                                        ? new Date(msg.createdAt || msg.created_at).toLocaleTimeString('en-US', {
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        })
+                                                        : ''
+                                                    }
+                                                </small>
+                                            </div>
+                                        )}
                                     </div>
                                         </div>
                                     );

@@ -106,7 +106,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                         {t.sessionId}
                       </span>
                       <span className="font-bold text-gray-900">
-                        #{session.id}
+                        {session.displayId || `#${session.id}`}
                       </span>
                     </div>
                     <div>
@@ -203,15 +203,15 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
 
                       <div className="flex-1 text-center md:text-left">
                         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 mb-6">
-                          <div>
-                            <h5 className="font-bold text-gray-900 text-xl md:text-2xl mb-1">
+                          <div className="flex-1 min-w-0">
+                            <h5 className="font-bold text-gray-900 text-xl md:text-2xl mb-1 truncate">
                               {session.expert_name}
                             </h5>
-                            <p className="text-gray-500 font-medium text-sm">
+                            <p className="text-gray-500 font-medium text-sm line-clamp-2">
                               {session.expert_category}
                             </p>
                           </div>
-                          <div className="md:text-right">
+                          <div className="md:text-right flex-shrink-0">
                             <div className="flex flex-col">
                               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{t.amountPaid}</span>
                               <div className="flex items-baseline gap-2 justify-end">
@@ -269,7 +269,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                     <div className="mt-8 pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-6">
                       <button
                         onClick={() => onViewDetails(session)}
-                        className="w-full sm:w-auto px-8 py-3 bg-blue-50 text-blue-600 font-bold rounded-2xl hover:bg-blue-100 transition-all flex items-center justify-center gap-3"
+                        className="w-full sm:w-auto rounded-full px-6 py-2.5 text-sm font-bold border-2 border-[#fd6410] text-[#fd6410] bg-white hover:bg-[#fd6410]/5 flex items-center justify-center gap-2.5 transition-all shadow-sm active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
                         style={fontStyle}
                         disabled={session.type !== "CHAT" && session.session_type !== "chat" && session.session_type !== undefined}
                       >
@@ -279,7 +279,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                             : (session.type === "AUDIO_CALL" || session.session_type === "audio")
                               ? "fa-phone"
                               : "fa-comments"
-                        } text-lg`}></i>
+                        } text-base`}></i>
                         {(session.type === "VIDEO_CALL" || session.session_type === "video")
                           ? t.viewVideo
                           : (session.type === "AUDIO_CALL" || session.session_type === "audio")

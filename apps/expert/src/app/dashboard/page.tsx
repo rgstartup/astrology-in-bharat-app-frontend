@@ -98,7 +98,7 @@ const Page = () => {
     },
     {
       title: "Reviews",
-      value: (dashboardStats?.totalReviews || 0).toString(),
+      value: (reviewsTotal || dashboardStats?.totalReviews || 0).toString(),
       trend: { value: "Feedback", isPositive: true, period: "total" },
       icon: CheckCircle,
       iconBgColor: "bg-green-100",

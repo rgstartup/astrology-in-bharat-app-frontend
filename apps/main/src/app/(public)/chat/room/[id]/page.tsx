@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { getErrorMessage } from "@repo/lib";
 
 import * as LucideIcons from "lucide-react";
-import { Button } from "@repo/ui";
+import { Button, Loading } from "@repo/ui";
 import { ChatMessage, ChatSession, Expert } from "@/lib/types";
 
 import WaitingCountdown from "./waiting-countdown.component";
@@ -369,7 +369,7 @@ function ChatRoomContent() {
     if (!expertData || !mounted) {
         return (
             <div className="flex items-center justify-center h-screen bg-[#1a0c0c]">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fd6410]"></div>
+                <Loading size="lg" text="Connecting to chat..." />
             </div>
         );
     }
@@ -470,7 +470,7 @@ function ChatRoomContent() {
 
 export default function ChatRoom() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div className="flex items-center justify-center h-screen bg-[#1a0c0c]"><Loading size="lg" /></div>}>
             <ChatRoomContent />
         </Suspense>
     );

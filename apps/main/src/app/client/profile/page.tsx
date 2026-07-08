@@ -92,7 +92,7 @@ const ProfileContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#FFF9F4] bg-[url('/images/white-background.png')] bg-cover bg-center bg-fixed bg-no-repeat relative">
       <div className="relative z-10 font-outfit">
-        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+        <div className="max-w-7xl mx-auto px-4 pt-8 pb-4 md:pt-12 md:pb-6">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Sidebar Column */}
             <div className="lg:col-span-1">
@@ -342,7 +342,7 @@ export default function ProfilePage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FFF9F4] py-8 md:py-12">
+        <div className="min-h-screen bg-[#FFF9F4] pt-8 pb-4 md:pt-12 md:pb-6">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               <div className="lg:col-span-1">

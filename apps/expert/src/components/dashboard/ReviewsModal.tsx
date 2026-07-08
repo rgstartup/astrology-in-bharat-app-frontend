@@ -73,10 +73,10 @@ export const ReviewsModal: React.FC<ReviewsModalProps> = ({ isOpen, onClose, exp
                                 <div className="flex justify-between items-start mb-3">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 bg-yellow-50 rounded-full flex items-center justify-center overflow-hidden border border-yellow-100 flex-shrink-0">
-                                            {review.user.avatar ? (
+                                            {(review.user?.avatar || review.client?.avatar || review.client?.profile_picture || review.client?.user?.avatar) ? (
                                                 <img
-                                                    src={review.user.avatar}
-                                                    alt={review.user.name}
+                                                    src={review.user?.avatar || review.client?.avatar || review.client?.profile_picture || review.client?.user?.avatar}
+                                                    alt={review.user?.name || review.client?.name || review.client?.user?.name || "Anonymous"}
                                                     className="w-full h-full object-cover"
                                                     onError={(e) => {
                                                         (e.target as any).src = ""; // Clear src if it fails
@@ -88,7 +88,7 @@ export const ReviewsModal: React.FC<ReviewsModalProps> = ({ isOpen, onClose, exp
                                             )}
                                         </div>
                                         <div>
-                                            <p className="font-semibold text-gray-900">{review.user.name}</p>
+                                            <p className="font-semibold text-gray-900">{review.user?.name || review.client?.name || review.client?.user?.name || "Anonymous"}</p>
                                             <div className="flex gap-0.5">
                                                 {[1, 2, 3, 4, 5].map((s) => (
                                                     <Star

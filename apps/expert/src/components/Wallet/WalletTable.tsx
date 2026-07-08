@@ -12,6 +12,19 @@ interface Transaction {
     transactionNo: string;
 }
 
+const formatTxId = (id: string) => {
+    if (!id) return '';
+    if (id.startsWith('AIB-EXP-CONS-')) {
+        return `AIB-CONS-${id.replace('AIB-EXP-CONS-', '').split('-')[0].toUpperCase()}`;
+    }
+    if (id.length > 20 && id.includes('-')) {
+        const parts = id.split('-');
+        const hexPart = parts.find(p => /^[0-9a-fA-F]{8}$/.test(p)) || parts[parts.length - 1];
+        return `TXN-${hexPart.substring(0, 8).toUpperCase()}`;
+    }
+    return id.length > 15 ? id.substring(0, 12).toUpperCase() + '...' : id.toUpperCase();
+};
+
 interface TransactionTableProps {
     transactions: Transaction[];
 }
@@ -62,8 +75,8 @@ export const WalletTable: React.FC<TransactionTableProps> = ({ transactions }) =
                                                             Note: {tx.remark}
                                                         </span>
                                                     )}
-                                                    <span className="text-[9px] text-gray-400 font-medium px-2 py-0.5 bg-gray-50 rounded border border-gray-100">
-                                                        #{tx.transactionNo}
+                                                    <span className="text-[9px] text-gray-500 font-bold px-2 py-0.5 bg-gray-50 rounded border border-gray-200 uppercase tracking-widest">
+                                                        #{formatTxId(tx.transactionNo)}
                                                     </span>
                                                 </div>
                                             </div>

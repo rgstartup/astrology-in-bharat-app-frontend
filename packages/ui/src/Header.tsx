@@ -63,13 +63,6 @@ const SERVICES_DATA_KEYS = [
     href: PATHS.KUNDALI_MATCHING,
     isInternal: true,
   },
-  {
-    id: 8,
-    key: "serviceLiveDarshan",
-    icon: "images/top-icon3.png",
-    href: PATHS.LIVE_DARSHAN,
-    isInternal: true,
-  },
 ];
 
 interface HeaderProps {
@@ -931,14 +924,14 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                       </Link>
                     </li>
 
-                    {/* Live Darshan */}
+                    {/* Kundali Matching */}
                     <li className={isMenuOpen ? 'w-full' : ''}>
                       <Link
                         className={`text-[15px] no-underline px-3 py-[10px] font-medium block hover:text-orange transition-colors ${isMenuOpen ? 'text-white/90' : 'text-[#1e0b0f]'}`}
-                        href={PATHS.LIVE_DARSHAN}
+                        href={PATHS.KUNDALI_MATCHING}
                         onClick={() => setIsMenuOpen(false)}
                       >
-                        {t.navLiveDarshan}
+                        {lang === 'hi' ? 'कुण्डली मिलान' : 'Kundali Matching'}
                       </Link>
                     </li>
 

@@ -118,15 +118,15 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
                       <div className="flex items-center gap-3">
                         <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-100 bg-gray-50">
                           <Image
-                            src={review.user.avatar || "/images/dummy-expert.jpg"}
-                            alt={review.user.name}
+                            src={review.user?.avatar || (review as any).client?.avatar || (review as any).client?.profile_picture || (review as any).client?.user?.avatar || "/images/dummy-expert.jpg"}
+                            alt={review.user?.name || (review as any).client?.name || (review as any).client?.user?.name || "Anonymous"}
                             fill
                             sizes="40px"
                             className="object-cover"
                           />
                         </div>
                         <div>
-                          <h5 className="font-bold text-sm text-gray-900">{review.user.name}</h5>
+                          <h5 className="font-bold text-sm text-gray-900">{review.user?.name || (review as any).client?.name || (review as any).client?.user?.name || "Anonymous"}</h5>
                           <p className="text-[10px] text-gray-400 font-medium">
                             {(() => {
                               const dateStr = (review as any).createdAt || (review as any).created_at || (review as any).date;

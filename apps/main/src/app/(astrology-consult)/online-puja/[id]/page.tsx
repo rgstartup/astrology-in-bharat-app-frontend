@@ -71,9 +71,10 @@ const PujaDetailPage = () => {
     useEffect(() => {
         const fetchUserWishlist = async () => {
             if (!isAuthenticated) return;
-            const [res] = await http.get<any[]>('/puja-like');
-            if (res && Array.isArray(res)) {
-                const isLiked = res.some((item) => item.puja_id === id || item.puja?.id === id);
+            const [res] = await http.get<any>('/puja-like');
+            if (res) {
+                const items = Array.isArray(res) ? res : (res.data || res.items || res.wishlist || []);
+                const isLiked = items.some((item: any) => String(item.puja_id) === String(id) || String(item.puja?.id) === String(id));
                 setLiked(isLiked);
             }
         };
@@ -109,18 +110,24 @@ const PujaDetailPage = () => {
         setLikesCount(prev => newLikedState ? prev + 1 : prev - 1);
         
         if (newLikedState) {
-            const [, error] = await http.post('/puja-like/add', { pujaId: id });
+            const [, error] = await http.post('/puja-like/add', { pujaId: id }) as any;
             if (error) {
-                setLiked(!newLikedState);
-                setLikesCount(prev => !newLikedState ? prev + 1 : prev - 1);
-                toast.error(getErrorMessage(error) || "Failed to add to wishlist");
+                const status = error.status || error?.response?.status;
+                if (status !== 409) {
+                    setLiked(!newLikedState);
+                    setLikesCount(prev => !newLikedState ? prev + 1 : prev - 1);
+                    toast.error(getErrorMessage(error) || "Failed to add to wishlist");
+                }
             }
         } else {
-            const [, error] = await http.delete(`/puja-like/remove/${id}`);
+            const [, error] = await http.delete(`/puja-like/remove/${id}`) as any;
             if (error) {
-                setLiked(!newLikedState);
-                setLikesCount(prev => !newLikedState ? prev + 1 : prev - 1);
-                toast.error(getErrorMessage(error) || "Failed to remove from wishlist");
+                const status = error.status || error?.response?.status;
+                if (status !== 404 && status !== 400) {
+                    setLiked(!newLikedState);
+                    setLikesCount(prev => !newLikedState ? prev + 1 : prev - 1);
+                    toast.error(getErrorMessage(error) || "Failed to remove from wishlist");
+                }
             }
         }
     };
@@ -314,7 +321,7 @@ const PujaDetailPage = () => {
                                         <div className="w-9 h-9 text-[#FF5500] bg-white rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">🗣️</div>
                                         <div>
                                             <p className="text-[11px] font-bold text-gray-600 leading-tight mb-1">Languages</p>
-                                            <p className="text-sm font-black text-[#1A1A1A] leading-tight capitalize">{puja.expert?.languages?.length ? puja.expert.languages.join(", ") : "Hindi, Sanskrit"}</p>
+                                            <p className="text-sm font-black text-[#1A1A1A] leading-tight capitalize">{Array.isArray(puja.expert?.languages) ? puja.expert.languages.join(", ") : (puja.expert?.languages || "Hindi, Sanskrit")}</p>
                                         </div>
                                     </div>
                                 </div>

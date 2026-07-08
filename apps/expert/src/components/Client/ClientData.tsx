@@ -243,7 +243,7 @@ export default function ClientsPage() {
                       <div className={`p-4 sm:p-5 flex justify-between items-center flex-wrap gap-4 ${isExpanded ? 'bg-gray-50/50 border-b border-gray-100' : 'bg-white'}`}>
                         <div className="flex flex-col w-[45%] sm:w-auto sm:min-w-[100px]">
                           <span className="text-gray-500 text-[11px] font-bold uppercase tracking-wider mb-1">Session ID</span>
-                          <span className="font-extrabold text-gray-800">#{session?.id || client.id}</span>
+                          <span className="font-extrabold text-gray-800">{session?.displayId || `#${session?.id || client.id}`}</span>
                         </div>
                         <div className="flex flex-col w-[45%] sm:w-auto sm:min-w-[100px]">
                           <span className="text-gray-500 text-[11px] font-bold uppercase tracking-wider mb-1">Date</span>
@@ -271,7 +271,7 @@ export default function ClientsPage() {
                              )}
                           </span>
                         </div>
-                        <div className="flex flex-row items-center justify-between w-full sm:w-auto sm:ml-auto gap-3 mt-2 sm:mt-0">
+                        <div className="flex flex-row items-center justify-between w-full sm:w-auto gap-3 mt-2 sm:mt-0">
                           <span className={`px-4 py-1.5 rounded-full text-[10px] uppercase font-black tracking-widest shadow-sm border ${
                             (session?.status?.toLowerCase() === 'completed')
                               ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
@@ -613,6 +613,42 @@ export default function ClientsPage() {
                     {chatMessages.map((msg: any, idx: number) => {
                       const content = msg.content || "";
                       const sType = (msg.senderType || msg.sender_type || "").toLowerCase();
+                      const isAdmin = sType === 'admin' || sType === 'system';
+                      
+                      if (isAdmin) {
+                          const isEnded = content.toLowerCase().includes('end') || content.toLowerCase().includes('finish') || content.toLowerCase().includes('close') || content.toLowerCase().includes('system');
+                          const bgColor = isEnded ? 'bg-red-50' : 'bg-gray-50';
+                          const borderColor = isEnded ? 'border-red-200' : 'border-gray-200';
+                          const textColor = isEnded ? 'text-red-600' : 'text-gray-600';
+                          
+                          return (
+                              <div key={idx} className="my-4 w-full flex justify-center">
+                                  <div className="flex flex-col items-start" style={{ maxWidth: "85%" }}>
+                                      <div className={`${bgColor} border ${borderColor} rounded-2xl px-6 py-4 shadow-sm text-center`} style={{ minWidth: "260px" }}>
+                                          <div className={`flex items-center justify-center gap-1.5 mb-1.5 ${textColor}`}>
+                                              <LucideIcons.AlertCircle className="w-3.5 h-3.5" />
+                                              <span className="text-[11px] font-black uppercase tracking-widest">System Message</span>
+                                          </div>
+                                          <div className={`${textColor} text-[15px] font-medium`}>
+                                              {content}
+                                          </div>
+                                      </div>
+                                      <div className="mt-1.5 ml-1">
+                                          <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                                              {msg.createdAt || msg.created_at
+                                                  ? new Date(msg.createdAt || msg.created_at).toLocaleTimeString('en-US', {
+                                                      hour: '2-digit',
+                                                      minute: '2-digit'
+                                                  })
+                                                  : ''
+                                              }
+                                          </span>
+                                      </div>
+                                  </div>
+                              </div>
+                          );
+                      }
+
                       const isExpert = sType === 'expert' || sType === 'agent';
                       const isUserSide = !isExpert;
 
@@ -639,10 +675,9 @@ export default function ClientsPage() {
                               )}
                             </div>
                             <div className={`flex flex-col ${isExpert ? 'items-end' : 'items-start'}`}>
-                              <div className={`p-4 shadow-sm relative ${isExpert
+                                <div className={`p-4 shadow-sm relative ${isExpert
                                 ? 'bg-[#fd6410] text-white rounded-[1.2rem] rounded-tr-none'
-                                : (content.startsWith('[INTRO_CARD]') ? 'p-0 bg-transparent border-none' : sType === 'admin' 
-                                  ? 'bg-red-50 text-red-600 border-2 border-red-200 rounded-xl text-center w-full shadow-red-100'
+                                : (content.startsWith('[INTRO_CARD]') ? 'p-0 bg-transparent border-none'
                                   : 'bg-white text-dark border border-gray-100 rounded-[1.2rem] rounded-tl-none')
                                 }`}>
                                 {content.startsWith('[INTRO_CARD]') ? (
@@ -703,11 +738,6 @@ export default function ClientsPage() {
                                   </div>
                                 ) : (
                                   <>
-                                    {sType === 'admin' && (
-                                      <div className="flex items-center justify-center gap-2 mb-1 text-[10px] font-black uppercase tracking-tighter">
-                                        <AlertCircle className="w-3 h-3" /> System Message
-                                      </div>
-                                    )}
                                     <p className="text-[14px] leading-relaxed whitespace-pre-wrap m-0 font-medium">{content}</p>
                                   </>
                                 )}

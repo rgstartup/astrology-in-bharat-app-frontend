@@ -75,10 +75,10 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
                         <div className="flex justify-between items-start mb-2">
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden border border-gray-100 flex-shrink-0">
-                                    {(review.user?.avatar || review.client?.avatar || review.client?.user?.avatar) ? (
+                                    {(review.user?.avatar || review.client?.avatar || review.client?.profile_picture || review.client?.user?.avatar) ? (
                                         <img
-                                            src={review.user?.avatar || review.client?.avatar || review.client?.user?.avatar}
-                                            alt={review.user?.name || review.client?.name || "Anonymous"}
+                                            src={review.user?.avatar || review.client?.avatar || review.client?.profile_picture || review.client?.user?.avatar}
+                                            alt={review.user?.name || review.client?.name || review.client?.user?.name || "Anonymous"}
                                             className="w-full h-full object-cover"
                                             onError={(e) => {
                                                 (e.target as any).src = "";

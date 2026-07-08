@@ -39,39 +39,41 @@ export default function WithdrawMoney({ availableBalance, bankAccounts, onWithdr
                 </div>
             </div>
 
-            <form onSubmit={handleWithdraw} className="flex flex-col lg:flex-row items-end gap-6">
-                <div className="w-full lg:w-1/3 space-y-2.5">
-                    <label className="text-[10px] font-black text-orange uppercase tracking-widest ml-1">Amount to Withdraw</label>
+            <form onSubmit={handleWithdraw} className="flex flex-col lg:flex-row items-start gap-4 sm:gap-6">
+                {/* Amount Column */}
+                <div className="w-full lg:w-[28%] flex flex-col justify-start">
+                    <label className="text-[10px] font-black text-orange uppercase tracking-widest ml-1 mb-2">Amount to Withdraw</label>
                     <div className="relative">
-                        <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold">₹</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">₹</span>
                         <input 
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="Enter Amount"
-                            className="w-full pl-10 pr-4 py-5 bg-gray-50 border border-gray-200 rounded-2xl text-[15px] font-bold outline-none focus:border-orange/20 focus:bg-white transition-all"
+                            className="w-full pl-9 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl text-[14px] font-bold outline-none focus:border-orange/20 focus:bg-white transition-all"
                             required
                         />
                     </div>
-                    <p className="text-[10px] text-gray-300 font-medium ml-1 flex items-center gap-1">
+                    <p className="text-[10px] text-gray-400 font-medium ml-1 mt-2 flex items-center gap-1">
                         {/* @ts-ignore */}
                         <Info className="w-3 h-3" /> Min. withdrawal ₹500
                     </p>
                 </div>
 
-                <div className="w-full lg:w-1/3 space-y-2.5">
-                    <label className="text-[10px] font-black text-orange uppercase tracking-widest ml-1">Select Bank Account</label>
+                {/* Bank Account Column */}
+                <div className="w-full lg:w-[32%] flex flex-col justify-start">
+                    <label className="text-[10px] font-black text-orange uppercase tracking-widest ml-1 mb-2">Select Bank Account</label>
                     {bankAccounts.length === 0 ? (
-                        <div className="flex items-center gap-3 p-5 bg-red-50 border border-red-100 rounded-2xl text-red-500">
+                        <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-500">
                             {/* @ts-ignore */}
                             <AlertCircle className="w-4 h-4 shrink-0" />
-                            <p className="text-[11px] font-black uppercase tracking-tight italic">Please add a bank account first</p>
+                            <p className="text-[11px] font-black uppercase tracking-tight italic m-0">Add a bank account first</p>
                         </div>
                     ) : (
                         <select
                             value={selectedBankId}
                             onChange={(e) => setSelectedBankId(e.target.value)}
-                            className="w-full px-4 py-5 bg-gray-50 border border-gray-200 rounded-2xl text-[15px] font-bold outline-none focus:border-orange/20 focus:bg-white transition-all appearance-none cursor-pointer"
+                            className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl text-[14px] font-bold outline-none focus:border-orange/20 focus:bg-white transition-all appearance-none cursor-pointer"
                         >
                             {bankAccounts.map(bank => (
                                 <option key={bank.id} value={bank.id}>
@@ -82,19 +84,20 @@ export default function WithdrawMoney({ availableBalance, bankAccounts, onWithdr
                     )}
                 </div>
 
-                <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 w-full lg:w-auto shrink-0 mt-4 lg:mt-0">
+                {/* Buttons Column */}
+                <div className="flex flex-wrap xl:flex-nowrap items-center gap-3 w-full lg:w-auto shrink-0 mt-2 lg:mt-[22px]">
                     <Button
                         type="submit"
                         disabled={isLoading || !amount || bankAccounts.length === 0 || parseFloat(amount) < 500 || parseFloat(amount) > availableBalance}
-                        className="whitespace-nowrap flex-1 sm:flex-none w-full sm:w-auto rounded-[1.5rem] bg-[#F25E0A] hover:bg-[#d45209] text-white font-black uppercase tracking-widest text-[12px] px-10 py-5 h-auto transition-all duration-300 shadow-lg shadow-orange/20 disabled:opacity-50 disabled:grayscale active:scale-95 border-none"
+                        className="whitespace-nowrap flex-1 sm:flex-none w-full sm:w-auto rounded-2xl bg-[#F25E0A] hover:bg-[#d45209] text-white font-black uppercase tracking-widest text-[11px] px-8 py-4 h-auto transition-all duration-300 shadow-lg shadow-orange/20 disabled:opacity-50 disabled:grayscale active:scale-95 border-none cursor-pointer hover:cursor-pointer"
                     >
                         {isLoading ? "Processing..." : "Withdraw Now"}
                     </Button>
 
-                    <div className="whitespace-nowrap flex-1 sm:flex-none w-full sm:w-auto flex items-center justify-center gap-2.5 px-5 py-3.5 bg-emerald-50 rounded-xl border border-emerald-100 text-emerald-600">
+                    <div className="whitespace-nowrap flex-1 sm:flex-none w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-3.5 bg-emerald-50 rounded-xl border border-emerald-100 text-emerald-600">
                         {/* @ts-ignore */}
                         <ShieldCheck className="w-4 h-4 shrink-0" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-center">Secure Payout System</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-center mt-0.5">Secure Payout System</span>
                     </div>
                 </div>
             </form>

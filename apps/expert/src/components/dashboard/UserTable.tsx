@@ -10,7 +10,7 @@ import { TableSkeleton } from "./DashboardSkeletons";
 interface RecentAppointment {
   id: string | string;
   name: string;
-  email: string;
+  service: string;
   date: string;
   status: string;
   terminatedBy?: string;
@@ -99,7 +99,7 @@ export const UpcomingAppointments: React.FC = () => {
           .map((s: any) => ({
             id: s.id,
             name: s.user?.name || "Client",
-            email: s.user?.email || "—",
+            service: (s.type || s.session_type || (s.puja_name ? 'Puja' : 'Consultation')).toString().replace('_', ' '),
             date: s.created_at || s.createdAt || new Date().toISOString(),
             status: s.status || "pending",
             terminatedBy: s.terminated_by || s.terminatedBy,
@@ -120,7 +120,7 @@ export const UpcomingAppointments: React.FC = () => {
   const filtered = appointments.filter(
     (appt) =>
       appt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      appt.email.toLowerCase().includes(searchTerm.toLowerCase())
+      appt.service.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -155,7 +155,7 @@ export const UpcomingAppointments: React.FC = () => {
             <thead className="border-b border-gray-200 bg-gray-50">
               <tr>
                 <th className="text-left py-3 px-4 font-medium text-gray-700">Name</th>
-                <th className="text-left py-3 px-4 font-medium text-gray-700">Email</th>
+                <th className="text-left py-3 px-4 font-medium text-gray-700">Service</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-700">Consultation Time</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
               </tr>
@@ -165,7 +165,7 @@ export const UpcomingAppointments: React.FC = () => {
                 filtered.map((appt) => (
                   <tr key={appt.id} className="hover:bg-gray-50">
                     <td className="py-3 px-4 font-medium text-gray-900">{appt.name}</td>
-                    <td className="py-3 px-4 text-gray-500 truncate max-w-[160px]">{appt.email}</td>
+                    <td className="py-3 px-4 text-gray-500 capitalize">{appt.service}</td>
                     <td className="py-3 px-4 text-gray-600 whitespace-nowrap">
                       {format(new Date(appt.date), "dd MMM yyyy, hh:mm a")}
                     </td>

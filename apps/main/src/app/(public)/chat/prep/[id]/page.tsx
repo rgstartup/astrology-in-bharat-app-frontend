@@ -207,7 +207,7 @@ export default function ConsultationPrep() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center bg-fixed pb-20 relative"
+      className="min-h-screen bg-cover bg-center bg-fixed relative"
       style={{ backgroundImage: "url('/images/white-background.png')" }}
     >
       <style>
@@ -232,7 +232,7 @@ export default function ConsultationPrep() {
 
 
 
-      <main className="max-w-6xl mx-auto px-4 pt-10 md:pt-16 pb-12">
+      <main className="max-w-6xl mx-auto px-4 pt-10 md:pt-16 pb-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <HeroInfo expertName={expert?.name} />
 

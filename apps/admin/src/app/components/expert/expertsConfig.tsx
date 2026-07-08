@@ -95,23 +95,30 @@ export const getColumns = (
     key: "expert",
     label: "Expert",
     render: (expert: Expert) => {
-      const specialization = expert.specialization || expert.profile_expert?.specialization || "General";
+      let specialization = expert.specialization || expert.profile_expert?.specialization || "General";
+      if (Array.isArray(specialization)) {
+        specialization = specialization.join(' • ');
+      }
       return (
-        <div className="flex items-center space-x-3">
-          {expert.avatar ? (
-            <img
-              src={expert.avatar}
-              alt={expert.name}
-              className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-100"
-            />
-          ) : (
-            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
-              {expert.name ? expert.name.charAt(0) : "E"}
-            </div>
-          )}
-          <div>
-            <p className="text-sm font-semibold text-gray-900">{expert.name || "N/A"}</p>
-            <p className="text-xs text-gray-500">{specialization}</p>
+        <div className="flex items-center space-x-3 max-w-[240px]">
+          <div className="shrink-0">
+            {expert.avatar ? (
+              <img
+                src={expert.avatar}
+                alt={expert.name}
+                className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-100"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">
+                {expert.name ? expert.name.charAt(0).toUpperCase() : "E"}
+              </div>
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-gray-900 truncate">{expert.name || "N/A"}</p>
+            <p className="text-xs text-gray-500 truncate" title={typeof specialization === 'string' ? specialization : ''}>
+              {specialization}
+            </p>
           </div>
         </div>
       );
