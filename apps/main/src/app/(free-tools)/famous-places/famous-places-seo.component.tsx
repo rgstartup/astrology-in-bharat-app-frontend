@@ -3,8 +3,7 @@ import React from "react";
 export default function FamousPlacesSeoContent() {
   return (
     <section className="mt-12 bg-white rounded-3xl p-6 md:p-10 border border-[#F0E0D0] shadow-[0_4px_15px_0_rgba(0,0,0,0.03)]">
-      <h2 className="text-2xl font-black text-[#1A1A1A] mb-6 flex items-center gap-3 border-b-2 border-[#F26500] inline-flex pb-2">
-        <i className="fa-solid fa-om text-[#F26500]"></i> Discover India's Most Sacred Temples
+      <h2 className="text-2xl font-black text-[#1A1A1A] mb-6 flex items-center gap-3 border-b-2 border-[#F26500] inline-flex pb-2">Discover India's Most Sacred Temples
       </h2>
       
       <p className="text-gray-700 text-[15px] leading-relaxed mb-8">
@@ -12,8 +11,7 @@ export default function FamousPlacesSeoContent() {
       </p>
 
       <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-10 rounded-r-xl">
-        <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">
-          <i className="fa-solid fa-star-and-crescent"></i> Astrological Benefits of Pilgrimages
+        <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">Astrological Benefits of Pilgrimages
         </h3>
         <p className="text-blue-800 text-[14.5px] leading-relaxed">
           According to Vedic Astrology, visiting specific temples can directly appease malefic planets in your Kundali (birth chart). For instance, worshipping Lord Shiva at a Jyotirlinga can drastically reduce the negative effects of Rahu and Saturn (Shani), while visiting a goddess temple (Shakti Peetha) can strengthen a weak Moon or Venus, bringing emotional stability and financial prosperity.
@@ -21,8 +19,7 @@ export default function FamousPlacesSeoContent() {
       </div>
 
       <div className="mb-10">
-        <h3 className="text-xl font-black text-[#1A1A1A] mb-6">
-          🕉️ Highly Recommended Spiritual Destinations
+        <h3 className="text-xl font-black text-[#1A1A1A] mb-6">Highly Recommended Spiritual Destinations
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-[#FAF8F5] border border-[#EAE2D6] p-6 rounded-2xl hover:shadow-md transition-shadow">
@@ -46,14 +43,12 @@ export default function FamousPlacesSeoContent() {
 
       <div className="bg-orange-50 border-l-4 border-[#F26500] p-6 mb-10 rounded-r-xl">
         <p className="text-[#993E00] text-[15px] font-medium leading-relaxed">
-          <i className="fa-solid fa-lightbulb text-[#F26500] mr-2"></i>
           <strong>Pilgrimage Tip:</strong> Before planning a major spiritual journey (Yatra), it is highly recommended to consult your Kundali. Traveling during a favorable planetary period (Dasha) multiplies the spiritual and material benefits of the visit.
         </p>
       </div>
 
       <div className="mb-6">
-        <h3 className="text-xl font-black text-[#1A1A1A] mb-6">
-          ❓ Frequently Asked Questions
+        <h3 className="text-xl font-black text-[#1A1A1A] mb-6">Frequently Asked Questions
         </h3>
         
         <div className="space-y-6">

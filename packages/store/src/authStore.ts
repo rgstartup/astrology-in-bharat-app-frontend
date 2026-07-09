@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { api } from "@repo/lib";
+import { toast } from "react-toastify";
 
 export interface ClientUser {
     id: string;
@@ -112,6 +113,7 @@ export const useAuthStore = create<AuthState>()(
                     const status = (error as any)?.status || (error as any)?.response?.status || (error as any)?.statusCode;
                     if (status === 403) {
                         console.warn('[refreshAuth] 403 Forbidden — user authenticated but wrong role, keeping session.');
+                        toast.error("Access forbidden: You are logged in as an Expert. Please login with a User account.");
                         set({ loading: false });
                         return;
                     }

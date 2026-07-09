@@ -2,12 +2,12 @@ import React from "react";
 
 export default function BreakupPatchupSeoContent() {
   return (
-    <section className="!bg-[#edeef1] py-10 md:py-16 mt-8">
+    <section className="!bg-[#edeef1] py-10 md:py-16 mt-0">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="bg-white p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
           
           <h2 className="section-heading-premium mb-6">
-            <span>💔 The Astrology of Breakups & Patch-ups</span>
+            <span>The Astrology of Breakups & Patch-ups</span>
           </h2>
           
           <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
@@ -15,15 +15,14 @@ export default function BreakupPatchupSeoContent() {
           </p>
 
           <div className="bg-blue-50 border-l-4 border-blue-500 p-5 mb-10 rounded-r-md">
-            <h3 className="text-[17px] font-bold text-blue-900 mb-2">🌊 Temporary Separation vs. Permanent Breakup</h3>
+            <h3 className="text-[17px] font-bold text-blue-900 mb-2">Temporary Separation vs. Permanent Breakup</h3>
             <p className="text-blue-800 text-[14.5px] leading-relaxed">
               In astrology, a <strong>temporary separation</strong> is usually caused by the transit of a slow-moving planet (like Saturn) temporarily aspecting your 7th House (house of partnership). Once the transit passes, reconciliation is highly likely. However, a <strong>permanent breakup</strong> occurs when the core relationship planets (Venus and Mars) are severely afflicted by Rahu or Ketu during a major Dasha change, signaling the end of a karmic contract.
             </p>
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              🌑 4 Astrological Reasons Relationships End
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">4 Astrological Reasons Relationships End
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="bg-white border border-gray-200 p-5 rounded-[3px] shadow-sm">
@@ -46,7 +45,7 @@ export default function BreakupPatchupSeoContent() {
           </div>
 
           <div className="bg-orange-50 border-l-4 border-orange-500 p-5 mb-10 rounded-r-md">
-            <h3 className="text-[17px] font-bold text-orange-900 mb-2">✨ Astrological Remedies to Bring Back Love</h3>
+            <h3 className="text-[17px] font-bold text-orange-900 mb-2">Astrological Remedies to Bring Back Love</h3>
             <ul className="list-disc pl-5 text-orange-800 text-[14.5px] space-y-2">
               <li><strong>Strengthen Venus:</strong> Donate white sweets, wear light pink/white clothes on Fridays, and respect the women in your life to strengthen Venus (Shukra).</li>
               <li><strong>Calm Mars:</strong> If ego is ruining the relationship, chant the Hanuman Chalisa daily to calm the fiery energy of Mars.</li>
@@ -55,8 +54,7 @@ export default function BreakupPatchupSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">
-              ❓ Frequently Asked Questions
+            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">Frequently Asked Questions
             </h3>
             
             <div className="space-y-6">
@@ -84,7 +82,6 @@ export default function BreakupPatchupSeoContent() {
           </div>
 
           <div className="bg-gray-50 border border-gray-200 p-6 rounded-[3px] text-center">
-            <i className="fa-solid fa-handshake-angle text-[#F26500] text-2xl mb-3"></i>
             <h3 className="text-[18px] font-bold text-black mb-2">Need Help Navigating Your Breakup?</h3>
             <p className="text-gray-700 text-[14.5px] leading-relaxed">
               If you are feeling lost and need to know whether your ex will come back, our expert astrologers can analyze both your charts and provide clear, honest answers.

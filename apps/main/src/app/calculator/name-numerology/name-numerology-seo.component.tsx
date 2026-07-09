@@ -2,12 +2,12 @@ import React from "react";
 
 export default function NameNumerologySeoContent() {
   return (
-    <section className="!bg-[#edeef1] py-10 md:py-16 mt-8">
+    <section className="!bg-[#edeef1] py-10 md:py-16 mt-0">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="bg-white p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
           
           <h2 className="section-heading-premium mb-6">
-            <span>✨ The Power of Name Numerology</span>
+            <span>The Power of Name Numerology</span>
           </h2>
           
           <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
@@ -15,15 +15,14 @@ export default function NameNumerologySeoContent() {
           </p>
 
           <div className="bg-blue-50 border-l-4 border-blue-500 p-5 mb-10 rounded-r-md">
-            <h3 className="text-[17px] font-bold text-blue-900 mb-2">📜 Chaldean vs. Pythagorean Numerology</h3>
+            <h3 className="text-[17px] font-bold text-blue-900 mb-2">Chaldean vs. Pythagorean Numerology</h3>
             <p className="text-blue-800 text-[14.5px] leading-relaxed">
               There are two primary systems used to calculate name numerology. The <strong>Pythagorean system</strong> assigns numbers 1 through 9 to letters sequentially (A=1, B=2... I=9, J=1). It is highly popular in Western numerology. The ancient <strong>Chaldean system</strong>, however, is considered more mystical and accurate by many Vedic astrologers. It assigns numbers based on the phonetic sound vibration of the letter, not its alphabetical order, and skips the number 9 (considered a holy, untouchable number).
             </p>
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              🔠 The Cornerstone: The First Letter of Your Name
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">The Cornerstone: The First Letter of Your Name
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
               While your total Name Number reveals your destiny, the very first letter of your name is called the <strong>Cornerstone</strong>. It represents your foundational approach to life, how you tackle obstacles, and your initial reaction to new opportunities.
@@ -49,8 +48,7 @@ export default function NameNumerologySeoContent() {
           </div>
 
           <div className="mb-10 bg-[#FFF8F0] p-6 md:p-8 rounded-[3px] border border-[#F26500]/20">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-              💍 How Marriage Changes Your Numerology
+            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">How Marriage Changes Your Numerology
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-4">
               When a person changes their surname after marriage, the numerical vibration of their name shifts. 
@@ -68,8 +66,7 @@ export default function NameNumerologySeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">
-              ❓ Frequently Asked Questions
+            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">Frequently Asked Questions
             </h3>
             
             <div className="space-y-6">
@@ -97,7 +94,6 @@ export default function NameNumerologySeoContent() {
           </div>
 
           <div className="bg-gray-50 border border-gray-200 p-6 rounded-[3px] text-center">
-            <i className="fa-solid fa-pen-nib text-[#F26500] text-2xl mb-3"></i>
             <h3 className="text-[18px] font-bold text-black mb-2">Thinking of Changing Your Name's Spelling?</h3>
             <p className="text-gray-700 text-[14.5px] leading-relaxed">
               Before you legally alter your name to seek better luck, consult with our expert Numerologists. We will carefully analyze your birth chart to recommend the exact phonetic vibration needed for your ultimate success.

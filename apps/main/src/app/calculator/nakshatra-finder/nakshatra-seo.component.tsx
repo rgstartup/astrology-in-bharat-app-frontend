@@ -2,12 +2,12 @@ import React from "react";
 
 export default function NakshatraSeoContent() {
   return (
-    <section className="!bg-[#edeef1] py-10 md:py-16 mt-8">
+    <section className="!bg-[#edeef1] py-10 md:py-16 mt-0">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="bg-white p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
           
           <h2 className="section-heading-premium mb-6">
-            <span>✨ The Secret of Your Janma Nakshatra</span>
+            <span>The Secret of Your Janma Nakshatra</span>
           </h2>
           
           <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
@@ -15,15 +15,14 @@ export default function NakshatraSeoContent() {
           </p>
 
           <div className="bg-blue-50 border-l-4 border-blue-500 p-5 mb-10 rounded-r-md">
-            <h3 className="text-[17px] font-bold text-blue-900 mb-2">🌙 Why the Moon Matters Most</h3>
+            <h3 className="text-[17px] font-bold text-blue-900 mb-2">Why the Moon Matters Most</h3>
             <p className="text-blue-800 text-[14.5px] leading-relaxed">
               In Vedic astrology, the Moon rules your mind, your emotions, and your subconscious instincts. Because the Moon moves very fast (changing Nakshatras roughly every day), your Janma Nakshatra provides a highly specific, unique, and personalized psychological profile that a 30-day Sun Sign simply cannot offer.
             </p>
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              🌌 The 27 Constellations (Nakshatras)
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">The 27 Constellations (Nakshatras)
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
               The 360-degree zodiac belt is divided into 12 Zodiac signs (Rashis) and 27 Nakshatras. Each Nakshatra spans exactly 13 degrees and 20 minutes and is ruled by a specific planetary deity. Here is a quick overview of how they are grouped by their planetary rulers:
@@ -57,8 +56,7 @@ export default function NakshatraSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#FFF8F0] p-6 md:p-8 rounded-[3px] border border-[#F26500]/20">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-              📖 Understanding Padas (The 4 Quarters)
+            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Understanding Padas (The 4 Quarters)
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-4">
               If you check your calculator result carefully, it doesn't just give you a Nakshatra; it gives you a "Pada" (e.g., Ashwini Pada 1). What does that mean?
@@ -75,8 +73,7 @@ export default function NakshatraSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              💼 Nakshatras and Your Career Path
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Nakshatras and Your Career Path
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
               Your Janma Nakshatra is one of the strongest indicators of your natural talents and the career path where you will find the most success and fulfillment.
@@ -102,8 +99,7 @@ export default function NakshatraSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#F9F9F9] p-6 md:p-8 rounded-[3px] border border-gray-200">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-              🐾 What is 'Yoni' in Nakshatra Matching?
+            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">What is 'Yoni' in Nakshatra Matching?
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-4">
               In Ashtakoot (Kundali) matching, one of the crucial tests is <strong>Yoni Koota</strong>, which determines the physical intimacy and biological compatibility between partners.
@@ -114,8 +110,7 @@ export default function NakshatraSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#FFF8F0] p-6 md:p-8 rounded-[3px] border border-[#F26500]/20">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-              👶 Nakshatras and Naming a Child (Namkaran)
+            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Nakshatras and Naming a Child (Namkaran)
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-4">
               In Hindu tradition, a newborn child is not named randomly. The specific Pada of the Janma Nakshatra they are born under dictates the first phonetic sound (Akshar) of their name. For example, a child born in Rohini Nakshatra Pada 1 will have a name starting with the 'O' sound. This ensures the child's name vibrates in perfect harmony with the cosmic energy present at their birth.
@@ -129,8 +124,7 @@ export default function NakshatraSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">
-              ❓ Frequently Asked Questions
+            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">Frequently Asked Questions
             </h3>
             
             <div className="space-y-6">
@@ -165,7 +159,6 @@ export default function NakshatraSeoContent() {
           </div>
 
           <div className="bg-gray-50 border border-gray-200 p-6 rounded-[3px] text-center">
-            <i className="fa-solid fa-star-and-crescent text-[#F26500] text-2xl mb-3"></i>
             <h3 className="text-[18px] font-bold text-black mb-2">Get Your Detailed Nakshatra Reading</h3>
             <p className="text-gray-700 text-[14.5px] leading-relaxed">
               Your Nakshatra holds the secrets to your career path, your ideal life partner, and your deepest psychological traits. Connect with our Vedic Experts today for a full chart analysis.

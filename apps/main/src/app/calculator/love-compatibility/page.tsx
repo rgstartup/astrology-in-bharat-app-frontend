@@ -197,7 +197,7 @@ const LoveCompatibilityPage = () => {
       </div>
 
       {/* Main Card Section */}
-      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-12">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-4">
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
 
           {/* ── Left: Form ── */}
@@ -312,9 +312,9 @@ const LoveCompatibilityPage = () => {
                   <div className="w-8 h-8 rounded-full bg-[#FFF0E6] flex items-center justify-center shrink-0">
                     <i className={`fa-solid ${m.icon} text-lg`} />
                   </div>
-                  <p className="text-xs font-black text-[#1A1A1A] leading-tight">{m.label}</p>
+                  <p className="text-[14px] font-black text-[#1A1A1A] leading-tight">{m.label}</p>
                 </div>
-                <p className="text-[11px] text-[#666] mt-1">{m.desc}</p>
+                <p className="text-[13px] text-[#444] mt-1">{m.desc}</p>
               </div>
             ))}
           </div>

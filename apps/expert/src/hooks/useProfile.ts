@@ -28,8 +28,8 @@ const mapToProfile = (data: any, authUser: any): Profile & { exists: boolean } =
     
     return {
         exists: !!data,
-        name: authUser?.name || data?.user?.name || "",
-        email: authUser?.email || data?.user?.email || "",
+        name: data?.user?.name || data?.name || authUser?.name || "",
+        email: data?.user?.email || data?.email || authUser?.email || "",
         gender: data?.gender || authUser?.gender || Gender.OTHER,
         bio: data?.bio || authUser?.bio || "",
         specialization: data?.specialization || authUser?.specialization || "",
@@ -127,6 +127,7 @@ export const constructProfilePayload = (profile: Profile) => {
     }] : [];
 
     return {
+        name: profile.name,
         gender: profile.gender,
         specialization: profile.specialization,
         bio: profile.bio,
@@ -231,6 +232,7 @@ export const useProfile = () => {
                 const updated: any = { ...oldData };
 
                 // Direct field mappings
+                if (sentData.name !== undefined) updated.name = sentData.name;
                 if (sentData.gender !== undefined) updated.gender = sentData.gender;
                 if (sentData.bio !== undefined) updated.bio = sentData.bio;
                 if (sentData.specialization !== undefined) updated.specialization = sentData.specialization;
@@ -270,9 +272,6 @@ export const useProfile = () => {
             });
 
             toast.success(`${variables.section.charAt(0).toUpperCase() + variables.section.slice(1).replace('_', ' ')} updated!`);
-        },
-        onError: (error: any) => {
-            toast.error(getErrorMessage(error) || "Update failed");
         }
     });
 

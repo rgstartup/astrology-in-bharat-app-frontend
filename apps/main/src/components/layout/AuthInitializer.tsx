@@ -7,10 +7,12 @@ import { useAuthStore } from "../../store/useAuthStore";
 
 export const AuthInitializer = ({
     children,
-    initialUser = null
+    initialUser = null,
+    hasToken = false
 }: {
     children: React.ReactNode,
-    initialUser?: any
+    initialUser?: any,
+    hasToken?: boolean
 }) => {
     const { login, refreshAuth } = useAuthStore();
     // This ref persists across re-renders and route changes
@@ -25,24 +27,22 @@ export const AuthInitializer = ({
         if (initialUser) {
             // Server already validated the user — just hydrate the client store
             login(initialUser);
-        } else if (!useAuthStore.getState().isAuthenticated) {
-            // No server-side user — attempt a client-side refresh
-            // Capture the current path at the time of the check (snapshot, NOT reactive)
+        } else if (hasToken && !useAuthStore.getState().isAuthenticated) {
+            // No server-side user but token exists — attempt a client-side refresh
             const currentPath = window.location.pathname;
 
             refreshAuth().finally(() => {
                 const state = useAuthStore.getState();
                 if (!state.isAuthenticated && !state.loading) {
-                    // Only redirect if user was trying to access a protected page
                     const protectedPrefixes = ['/client'];
                     if (protectedPrefixes.some(p => currentPath.startsWith(p))) {
-                        // BREAK THE LOOP: Clear stale/expired cookies before redirecting
-                        // logout() will clear state, call /api/auth/logout, and redirect to the provided URL
                         useAuthStore.getState().logout("/sign-in?expired=1");
                     }
-                    // Public pages (/, /sign-in, /register, etc.) — do NOT redirect
                 }
             });
+        } else {
+            // No token at all — user is definitely unauthenticated. Just resolve loading state.
+            useAuthStore.setState({ loading: false, isAuthenticated: false });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // ✅ Empty dependency array — run only ONCE on mount, never on re-renders

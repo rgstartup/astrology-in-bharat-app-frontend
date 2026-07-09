@@ -171,7 +171,7 @@ const SoulmateInitialsPage = () => {
       </div>
 
       {/* Main Container */}
-      <div className="max-w-[1400px] mx-auto px-4 pb-12">
+      <div className="max-w-[1400px] mx-auto px-4 pb-4">
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
 
           {/* ── Left: Form ── */}

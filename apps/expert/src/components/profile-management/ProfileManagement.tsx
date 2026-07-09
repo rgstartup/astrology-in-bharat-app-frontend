@@ -121,6 +121,10 @@ const ProfileManagement = () => {
 
             const payload = constructProfilePayload({ ...dataToSave, profilePic: finalProfilePic || "" });
             
+            if (payload.name === fetchedProfile?.name) {
+                delete (payload as any).name;
+            }
+            
             await updateSection({ 
                 section, 
                 data: payload, 

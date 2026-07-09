@@ -4,8 +4,7 @@ export default function ContactSeoContent() {
   return (
     <section className="bg-white rounded-[2rem] p-8 md:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 mt-16 mb-8 relative z-20">
       
-      <h2 className="text-2xl font-black text-[#32131b] mb-6 flex items-center gap-3 border-b-2 border-orange inline-flex pb-2">
-        <i className="fa-solid fa-headset text-orange"></i> Get in Touch with Astrology Experts
+      <h2 className="text-2xl font-black text-[#32131b] mb-6 flex items-center gap-3 border-b-2 border-orange inline-flex pb-2">Get in Touch with Astrology Experts
       </h2>
       
       <p className="text-gray-700 text-[15px] leading-relaxed mb-8 font-medium">
@@ -13,8 +12,7 @@ export default function ContactSeoContent() {
       </p>
 
       <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-10 rounded-r-xl">
-        <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">
-          <i className="fa-solid fa-shield-halved"></i> 100% Privacy & Confidentiality Guaranteed
+        <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">100% Privacy & Confidentiality Guaranteed
         </h3>
         <p className="text-blue-800 text-[14.5px] leading-relaxed font-medium">
           Astrology deals with the most intimate and personal aspects of your life—be it a difficult breakup, severe financial loss, or a private family matter. We guarantee that all your communication, birth details (Kundali), and consultation records are highly encrypted and kept strictly confidential. Your secret is safe with the stars and with us.
@@ -22,31 +20,26 @@ export default function ContactSeoContent() {
       </div>
 
       <div className="mb-10">
-        <h3 className="text-xl font-black text-[#32131b] mb-6">
-          🤝 How Our Support Team Can Assist You
+        <h3 className="text-xl font-black text-[#32131b] mb-6">How Our Support Team Can Assist You
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-[#fffaf5] border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-phone-volume"></i> Consultation Support
+            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">Consultation Support
             </h4>
             <p className="text-[14px] text-gray-600 font-medium leading-relaxed">Having trouble connecting with an astrologer? Wallet recharge failed? We will resolve all call/chat connectivity issues within minutes.</p>
           </div>
           <div className="bg-[#fffaf5] border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-hands-praying"></i> Online Puja Queries
+            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">Online Puja Queries
             </h4>
             <p className="text-[14px] text-gray-600 font-medium leading-relaxed">Need help choosing the right Puja for your Dosh? Want to know how to join the live video link? Our team provides full step-by-step guidance.</p>
           </div>
           <div className="bg-[#fffaf5] border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-box"></i> Astromall Orders
+            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">Astromall Orders
             </h4>
             <p className="text-[14px] text-gray-600 font-medium leading-relaxed">Track your Gemstone, Rudraksha, or Yantra delivery. Ask for lab-certification details or replacement requests if damaged.</p>
           </div>
           <div className="bg-[#fffaf5] border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-star"></i> General Guidance
+            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">General Guidance
             </h4>
             <p className="text-[14px] text-gray-600 font-medium leading-relaxed">Not sure where to start? Let our support executives recommend the best astrologer on our platform based on your specific life problem.</p>
           </div>
@@ -55,14 +48,12 @@ export default function ContactSeoContent() {
 
       <div className="bg-amber-50 border-l-4 border-amber-500 p-6 mb-10 rounded-r-xl">
         <p className="text-amber-900 text-[15px] font-medium leading-relaxed">
-          <i className="fa-solid fa-clock text-amber-600 mr-2"></i>
           <strong>Fast Response Time:</strong> We understand that astrological emergencies (like matching a Kundali for a sudden proposal) require urgent attention. Our WhatsApp support typically responds within 5-10 minutes during active hours!
         </p>
       </div>
 
       <div className="mb-6">
-        <h3 className="text-xl font-black text-[#32131b] mb-6">
-          ❓ Frequently Asked Questions
+        <h3 className="text-xl font-black text-[#32131b] mb-6">Frequently Asked Questions
         </h3>
         
         <div className="space-y-6">

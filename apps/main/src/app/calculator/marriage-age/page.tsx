@@ -82,32 +82,32 @@ const ResultPanel = ({ result }: { result: any }) => {
         <h3 className="text-sm font-bold text-[#1A1A1A] mb-3">Detailed Analysis</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {/* Card 1 */}
-          <div className="border border-[#F0E0D0] rounded-xl p-3 flex flex-col items-center text-center gap-1">
-            <i className={`${icons.calendar} text-[#F26500] text-lg mb-1`} />
-            <span className="text-[10px] text-[#666] font-semibold">Early Marriage</span>
-            <span className="text-sm font-black text-[#1A1A1A]">{result.startAge - 2} - {result.startAge}</span>
-            <span className="text-[10px] text-[#888]">Years</span>
+          <div className="border border-[#F0E0D0] rounded-xl p-4 flex flex-col items-center text-center gap-1.5 shadow-sm">
+            <i className={`${icons.calendar} text-[#F26500] text-xl mb-1`} />
+            <span className="text-xs md:text-sm text-[#666] font-semibold">Early Marriage</span>
+            <span className="text-lg md:text-xl font-black text-[#1A1A1A]">{result.startAge - 2} - {result.startAge}</span>
+            <span className="text-xs text-[#888]">Years</span>
           </div>
           {/* Card 2 (Highlighted) */}
-          <div className="border border-[#F26500] bg-[#FFF8F3] rounded-xl p-3 flex flex-col items-center text-center gap-1">
-            <i className={`${icons.heart} text-[#F26500] text-lg mb-1`} />
-            <span className="text-[10px] text-[#666] font-semibold">Ideal Marriage</span>
-            <span className="text-sm font-black text-[#1A1A1A]">{result.startAge} - {result.endAge}</span>
-            <span className="text-[10px] text-[#888]">Years</span>
+          <div className="border-2 border-[#F26500] bg-[#FFF8F3] rounded-xl p-4 flex flex-col items-center text-center gap-1.5 shadow-md">
+            <i className={`${icons.heart} text-[#F26500] text-xl mb-1`} />
+            <span className="text-xs md:text-sm text-[#666] font-semibold">Ideal Marriage</span>
+            <span className="text-lg md:text-xl font-black text-[#1A1A1A]">{result.startAge} - {result.endAge}</span>
+            <span className="text-xs text-[#888]">Years</span>
           </div>
           {/* Card 3 */}
-          <div className="border border-[#F0E0D0] rounded-xl p-3 flex flex-col items-center text-center gap-1">
-            <i className={`${icons.star} text-[#F26500] text-lg mb-1`} />
-            <span className="text-[10px] text-[#666] font-semibold">Late Marriage</span>
-            <span className="text-sm font-black text-[#1A1A1A]">{result.endAge} - {result.endAge + 3}</span>
-            <span className="text-[10px] text-[#888]">Years</span>
+          <div className="border border-[#F0E0D0] rounded-xl p-4 flex flex-col items-center text-center gap-1.5 shadow-sm">
+            <i className={`${icons.star} text-[#F26500] text-xl mb-1`} />
+            <span className="text-xs md:text-sm text-[#666] font-semibold">Late Marriage</span>
+            <span className="text-lg md:text-xl font-black text-[#1A1A1A]">{result.endAge} - {result.endAge + 3}</span>
+            <span className="text-xs text-[#888]">Years</span>
           </div>
           {/* Card 4 */}
-          <div className="border border-[#F0E0D0] rounded-xl p-3 flex flex-col items-center text-center gap-1">
-            <i className={`${icons.chart} text-[#F26500] text-lg mb-1`} />
-            <span className="text-[10px] text-[#666] font-semibold">Marriage Strength</span>
-            <span className="text-sm font-black text-[#1A1A1A]">{result.strength}%</span>
-            <span className="text-[10px] text-[#888]">{result.strengthLabel}</span>
+          <div className="border border-[#F0E0D0] rounded-xl p-4 flex flex-col items-center text-center gap-1.5 shadow-sm">
+            <i className={`${icons.chart} text-[#F26500] text-xl mb-1`} />
+            <span className="text-xs md:text-sm text-[#666] font-semibold">Marriage Strength</span>
+            <span className="text-lg md:text-xl font-black text-[#1A1A1A]">{result.strength}%</span>
+            <span className="text-xs text-[#888]">{result.strengthLabel}</span>
           </div>
         </div>
       </div>
@@ -164,7 +164,7 @@ const MarriageAgeCalculatorPage = () => {
   const inputCls = "w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition";
 
   return (
-    <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-[#FDF6F0] overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
 
       {/* Breadcrumb */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 py-4">
@@ -176,7 +176,7 @@ const MarriageAgeCalculatorPage = () => {
       </div>
 
       {/* Main Container */}
-      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-12">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-4">
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
 
           {/* ── Left: Form ── */}
@@ -322,8 +322,8 @@ const MarriageAgeCalculatorPage = () => {
                     <i className={`${f.icon} text-[#F26500]`} />
                   </div>
                   <div>
-                    <p className="text-[12px] font-black text-[#1A1A1A]">{f.label}</p>
-                    <p className="text-[11px] text-[#888] mt-0.5">{f.desc}</p>
+                    <p className="text-sm font-black text-[#1A1A1A]">{f.label}</p>
+                    <p className="text-xs text-[#555] font-medium mt-0.5">{f.desc}</p>
                   </div>
                 </div>
               ))}
@@ -339,7 +339,7 @@ const MarriageAgeCalculatorPage = () => {
               {REASONS.map((r, i) => (
                 <div key={i} className="flex items-start gap-2">
                   <i className="fa-regular fa-circle-check text-[#F26500] mt-0.5 text-sm" />
-                  <span className="text-xs text-[#555] font-semibold">{r}</span>
+                  <span className="text-sm text-[#444] font-semibold">{r}</span>
                 </div>
               ))}
             </div>

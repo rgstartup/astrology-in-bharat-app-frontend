@@ -11,8 +11,8 @@ const PersonalGuidanceCard: React.FC<PersonalGuidanceCardProps> = ({ className =
   return (
     <div className={`bg-[#FFF8F3] border border-[#F5E0CC] rounded-[2rem] p-6 pb-8 relative overflow-hidden flex flex-col ${className}`}>
       {/* Text Content */}
-      <div className="relative z-10 mb-6">
-        <h3 className="text-[19px] min-[400px]:text-[20px] lg:text-[22px] font-black text-[#301118] mb-3 leading-tight tracking-tight whitespace-nowrap overflow-hidden text-ellipsis">
+      <div className="relative z-10 mb-2">
+        <h3 className="text-[19px] min-[400px]:text-[20px] lg:text-[22px] font-black text-[#301118] mb-3 leading-tight tracking-tight">
           Need Personal Guidance?
         </h3>
         <p className="text-[#555] text-sm leading-relaxed mb-8">
@@ -67,7 +67,7 @@ const PersonalGuidanceCard: React.FC<PersonalGuidanceCardProps> = ({ className =
       </div>
 
       {/* Image & Button Area */}
-      <div className="relative mt-auto pt-10 flex flex-col items-center">
+      <div className="relative mt-auto pt-4 flex flex-col items-center">
         {/* Background Kundli Watermark */}
         <div className="absolute inset-0 top-0 opacity-10 flex items-center justify-center pointer-events-none">
           <Image 

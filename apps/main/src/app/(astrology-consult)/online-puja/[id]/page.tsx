@@ -340,15 +340,15 @@ const PujaDetailPage = () => {
                                         <p className="text-xs text-gray-400">(Provided by Pandit for Home Visit - Premium)</p>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-6">
                                     {puja.samagri_list.map((item, idx) => (
-                                        <div key={idx} className="flex items-center gap-3">
-                                            <div className="w-10 h-10 flex items-center justify-center text-2xl shrink-0">
-                                                🌿
+                                        <div key={idx} className="flex items-center gap-4 bg-[#FDF6F0]/50 border border-[#F0E0D0] p-4 rounded-xl transition-colors hover:bg-[#FFF0E6]">
+                                            <div className="w-8 h-8 rounded-full bg-[#FFF0E6] text-[#FF5500] font-black text-sm flex items-center justify-center shrink-0 border border-[#FFD9BF]">
+                                                {idx + 1}
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-black text-[#1A1A1A] leading-tight">{item.name}</p>
-                                                <p className="text-xs text-gray-500 leading-tight">{item.quantity}</p>
+                                            <div className="text-left">
+                                                <p className="text-[15px] font-black text-[#1A1A1A] leading-tight">{item.name}</p>
+                                                <p className="text-xs text-gray-500 leading-tight mt-0.5">{item.quantity}</p>
                                             </div>
                                         </div>
                                     ))}

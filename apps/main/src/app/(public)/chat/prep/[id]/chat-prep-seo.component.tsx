@@ -4,8 +4,7 @@ export default function ChatPrepSeoContent() {
   return (
     <section className="bg-white/80 backdrop-blur-md rounded-[2rem] p-8 md:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-orange/10 mt-12 mb-8 relative z-20">
       
-      <h2 className="text-2xl font-black text-[#32131b] mb-6 flex items-center gap-3 border-b-2 border-orange inline-flex pb-2">
-        <i className="fa-solid fa-clipboard-list text-orange"></i> Prepare for Your Astrological Consultation
+      <h2 className="text-2xl font-black text-[#32131b] mb-6 flex items-center gap-3 border-b-2 border-orange inline-flex pb-2">Prepare for Your Astrological Consultation
       </h2>
       
       <p className="text-gray-700 text-[15px] leading-relaxed mb-8 font-medium">
@@ -13,8 +12,7 @@ export default function ChatPrepSeoContent() {
       </p>
 
       <div className="bg-blue-50/80 border-l-4 border-blue-500 p-6 mb-10 rounded-r-xl">
-        <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">
-          <i className="fa-solid fa-clock-rotate-left"></i> Why Exact Birth Details Matter
+        <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">Why Exact Birth Details Matter
         </h3>
         <p className="text-blue-800 text-[14.5px] leading-relaxed font-medium">
           Vedic Astrology relies on calculating the exact degree of the Ascendant (Lagna) at the time of your birth. Even a difference of 5 minutes can change your entire Navamsha (D9) chart, leading to completely different predictions about marriage and career. Please ensure the Date, Time, and Place of birth you provide are as accurate as possible.
@@ -22,31 +20,26 @@ export default function ChatPrepSeoContent() {
       </div>
 
       <div className="mb-10">
-        <h3 className="text-xl font-black text-[#32131b] mb-6">
-          💬 Key Topics You Can Discuss
+        <h3 className="text-xl font-black text-[#32131b] mb-6">Key Topics You Can Discuss
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white/60 border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-briefcase"></i> Career & Business
+            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">Career & Business
             </h4>
             <p className="text-[14px] text-gray-600 font-medium leading-relaxed">Ask about job changes, promotions, hidden talents, or the best time to start a new business venture based on your current Dasha.</p>
           </div>
           <div className="bg-white/60 border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-heart"></i> Love & Marriage
+            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">Love & Marriage
             </h4>
             <p className="text-[14px] text-gray-600 font-medium leading-relaxed">Discuss Kundali matching, overcoming Manglik dosha, resolving marital disputes, or knowing the timing of your marriage.</p>
           </div>
           <div className="bg-white/60 border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-coins"></i> Wealth & Finance
+            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">Wealth & Finance
             </h4>
             <p className="text-[14px] text-gray-600 font-medium leading-relaxed">Find out about periods of financial abundance, property investments, and remedies to remove blockages to your prosperity.</p>
           </div>
           <div className="bg-white/60 border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-leaf"></i> Remedies & Pujas
+            <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">Remedies & Pujas
             </h4>
             <p className="text-[14px] text-gray-600 font-medium leading-relaxed">Get personalized recommendations for Gemstones, Rudraksha, or specific Vedic Pujas to pacify malefic planets in your chart.</p>
           </div>
@@ -54,8 +47,7 @@ export default function ChatPrepSeoContent() {
       </div>
 
       <div className="bg-amber-50/80 border-l-4 border-amber-500 p-6 mb-10 rounded-r-xl">
-        <h3 className="text-[17px] font-bold text-amber-900 mb-2 flex items-center gap-2">
-          <i className="fa-solid fa-lock"></i> 100% Secure & Confidential
+        <h3 className="text-[17px] font-bold text-amber-900 mb-2 flex items-center gap-2">100% Secure & Confidential
         </h3>
         <p className="text-amber-900 text-[14.5px] leading-relaxed font-medium">
           Your privacy is our utmost priority. Whatever you discuss with the astrologer remains strictly between you and them. Your contact details (like your phone number) are masked and never shared with the expert.
@@ -63,8 +55,7 @@ export default function ChatPrepSeoContent() {
       </div>
 
       <div className="mb-6">
-        <h3 className="text-xl font-black text-[#32131b] mb-6">
-          ❓ Frequently Asked Questions
+        <h3 className="text-xl font-black text-[#32131b] mb-6">Frequently Asked Questions
         </h3>
         
         <div className="space-y-6">

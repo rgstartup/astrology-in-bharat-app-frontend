@@ -5,8 +5,7 @@ export default function AboutSeoContent() {
     <section className="mx-auto max-w-[1180px] px-4 pb-12 pt-6 sm:px-6 lg:px-8">
       <div className="bg-white rounded-[2rem] p-8 md:p-12 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100">
         
-        <h2 className="text-2xl font-black text-[#32131b] mb-6 flex items-center gap-3 border-b-2 border-orange inline-flex pb-2">
-          <i className="fa-solid fa-om text-orange"></i> Who We Are & Our Mission
+        <h2 className="text-2xl font-black text-[#32131b] mb-6 flex items-center gap-3 border-b-2 border-orange inline-flex pb-2">Who We Are & Our Mission
         </h2>
         
         <p className="text-gray-700 text-[15px] leading-relaxed mb-8 font-medium">
@@ -14,8 +13,7 @@ export default function AboutSeoContent() {
         </p>
 
         <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-10 rounded-r-xl">
-          <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">
-            <i className="fa-solid fa-eye"></i> Our Vision for the Future
+          <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">Our Vision for the Future
           </h3>
           <p className="text-blue-800 text-[14.5px] leading-relaxed font-medium">
             We envision a world where astrology is not seen as mere superstition, but as a deeply respected psychological and cosmic tool for self-realization. We aim to make highly personalized, actionable, and ethical astrological guidance accessible to everyone, empowering them to navigate life's toughest challenges with confidence and peace.
@@ -23,31 +21,26 @@ export default function AboutSeoContent() {
         </div>
 
         <div className="mb-10">
-          <h3 className="text-xl font-black text-[#32131b] mb-6">
-            🏛️ The 4 Core Pillars of Astrology in Bharat
+          <h3 className="text-xl font-black text-[#32131b] mb-6">The 4 Core Pillars of Astrology in Bharat
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-[#fffaf5] border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-              <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-                <i className="fa-solid fa-certificate"></i> Strict Expert Verification
+              <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">Strict Expert Verification
               </h4>
               <p className="text-[14px] text-gray-600 font-medium leading-relaxed">Every astrologer on our platform undergoes a rigorous 3-step screening process, testing their academic knowledge, predictive accuracy, and ethical counseling skills.</p>
             </div>
             <div className="bg-[#fffaf5] border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-              <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-                <i className="fa-solid fa-lock"></i> 100% Data Privacy
+              <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">100% Data Privacy
               </h4>
               <p className="text-[14px] text-gray-600 font-medium leading-relaxed">Your birth details and consultation history are sacred. We employ bank-grade encryption to ensure your private life remains strictly confidential.</p>
             </div>
             <div className="bg-[#fffaf5] border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-              <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-                <i className="fa-solid fa-seedling"></i> Holistic Healing
+              <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">Holistic Healing
               </h4>
               <p className="text-[14px] text-gray-600 font-medium leading-relaxed">We don't just predict the future; we help you shape it. Our experts provide actionable remedies including Gemstones, Mantras, and customized Vedic Pujas.</p>
             </div>
             <div className="bg-[#fffaf5] border border-orange/10 p-6 rounded-2xl hover:shadow-md transition-shadow">
-              <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">
-                <i className="fa-solid fa-hands-holding-circle"></i> Ethical Practices
+              <h4 className="font-bold text-orange text-[17px] mb-2 flex items-center gap-2">Ethical Practices
               </h4>
               <p className="text-[14px] text-gray-600 font-medium leading-relaxed">We strictly prohibit fear-mongering (Dosh-scare tactics). Our astrologers are trained to deliver guidance with empathy, positivity, and absolute honesty.</p>
             </div>
@@ -55,8 +48,7 @@ export default function AboutSeoContent() {
         </div>
 
         <div className="bg-amber-50 border-l-4 border-amber-500 p-6 mb-10 rounded-r-xl">
-          <h3 className="text-[17px] font-bold text-amber-900 mb-2 flex items-center gap-2">
-            <i className="fa-solid fa-pen-nib"></i> A Note from the Founder
+          <h3 className="text-[17px] font-bold text-amber-900 mb-2 flex items-center gap-2">A Note from the Founder
           </h3>
           <p className="text-amber-900 text-[14.5px] leading-relaxed italic font-medium">
             "Astrology is the language of the cosmos, written in the stars and decoded by the wise. Our goal at Astrology in Bharat is not to dictate your destiny, but to give you the cosmic roadmap so you can drive your life with absolute clarity."
@@ -64,8 +56,7 @@ export default function AboutSeoContent() {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-xl font-black text-[#32131b] mb-6">
-            ❓ Frequently Asked Questions
+          <h3 className="text-xl font-black text-[#32131b] mb-6">Frequently Asked Questions
           </h3>
           
           <div className="space-y-6">

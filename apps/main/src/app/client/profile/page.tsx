@@ -27,7 +27,7 @@ const ProfileContent: React.FC = () => {
   const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const {
-    user, authLoading, profileLoading, balance,
+    user, authLoading, profileLoading, balance, isAuthenticated,
     profileData,
     editingSections, setEditingSections,
     savingSections,
@@ -88,6 +88,14 @@ const ProfileContent: React.FC = () => {
       setShowDisputeChat(true);
     }
   };
+
+  if (authLoading || !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#FFF9F4] flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fd6410]"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FFF9F4] bg-[url('/images/white-background.png')] bg-cover bg-center bg-fixed bg-no-repeat relative">

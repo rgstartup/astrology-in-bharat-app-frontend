@@ -2,12 +2,12 @@ import React from "react";
 
 export default function MarriageAgeSeoContent() {
   return (
-    <section className="!bg-[#edeef1] py-10 md:py-16 mt-8">
+    <section className="!bg-[#edeef1] py-10 md:py-16 mt-0">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="bg-white p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
           
           <h2 className="section-heading-premium mb-6">
-            <span>🕰️ Unlocking the Mystery of Your Marriage Age</span>
+            <span>Unlocking the Mystery of Your Marriage Age</span>
           </h2>
           
           <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
@@ -22,16 +22,14 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#FFF8F0] p-6 md:p-8 rounded-[3px] border border-[#F26500]/20">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-              📜 Signs of Early vs Late Marriage in Your Kundali
+            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Signs of Early vs Late Marriage in Your Kundali
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-4">
               While our calculator provides a quick estimate, a professional astrologer looks deeply into your birth chart (Kundali) to predict your exact marriage timeline. Here are common indicators they look for:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
               <div>
-                <h4 className="font-bold text-[#2ECC71] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-clock-rotate-left"></i> Early Marriage Indicators
+                <h4 className="font-bold text-[#2ECC71] text-[16px] mb-2 flex items-center gap-2">Early Marriage Indicators
                 </h4>
                 <ul className="list-disc pl-5 text-gray-700 text-[14.5px] space-y-2">
                   <li>A strong and unafflicted 7th House (the house of marriage).</li>
@@ -41,8 +39,7 @@ export default function MarriageAgeSeoContent() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-bold text-[#E74C3C] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-hourglass-end"></i> Late Marriage Indicators
+                <h4 className="font-bold text-[#E74C3C] text-[16px] mb-2 flex items-center gap-2">Late Marriage Indicators
                 </h4>
                 <ul className="list-disc pl-5 text-gray-700 text-[14.5px] space-y-2">
                   <li>Saturn's placement or aspect on the 7th House or its lord.</li>
@@ -55,8 +52,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              🔢 The Impact of Numerology on Marriage
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">The Impact of Numerology on Marriage
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
               Just like planetary positions, your Birth Date holds immense numerological power. Your Life Path Number (calculated by adding all the digits of your birth date) often dictates the natural rhythm of your life, including when you are most likely to settle down.
@@ -78,8 +74,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#F9F9F9] p-6 md:p-8 rounded-[3px] border border-gray-200">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-              🚫 Common Myths About Marriage Timing
+            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Common Myths About Marriage Timing
             </h3>
             <ul className="list-disc pl-5 text-gray-700 text-[15px] space-y-4">
               <li><strong>Myth: Late Marriage means a Bad Marriage.</strong> <br/><em>Fact:</em> A delayed marriage (often caused by Saturn) usually results in a very mature, stable, and long-lasting relationship because both partners know exactly what they want.</li>
@@ -89,8 +84,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              ✨ Can We Alter the Timing of Marriage?
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Can We Alter the Timing of Marriage?
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
               In astrology, destiny shows the path, but karma and remedies (Upayas) can help clear the roadblocks. If you are facing unnatural delays in getting married, astrologers often recommend specific rituals, gemstone therapy, or fasting on certain days (like Thursdays for Jupiter) to appease the planets blocking your marriage prospects.
@@ -98,8 +92,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              🎯 Why Knowing Your Marriage Timeline Helps
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Why Knowing Your Marriage Timeline Helps
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed">
               Having an estimated timeline for your marriage helps alleviate anxiety and societal pressure. If you know your astrological chart indicates marriage around the age of 29, you can focus your twenties entirely on building your career, travelling, and self-discovery without feeling "left behind." It allows you to align your personal life goals with your cosmic timeline.
@@ -113,8 +106,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">
-              ❓ Frequently Asked Questions
+            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Frequently Asked Questions
             </h3>
             
             <div className="space-y-6">
@@ -149,7 +141,6 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="bg-gray-50 border border-gray-200 p-6 rounded-[3px] text-center">
-            <i className="fa-solid fa-ring text-[#F26500] text-2xl mb-3"></i>
             <h3 className="text-[18px] font-bold text-black mb-2">Ready to take the next step?</h3>
             <p className="text-gray-700 text-[14.5px] leading-relaxed">
               If you want to know the exact timeline of your marriage, the characteristics of your future spouse, or remedies to overcome delays, connect with our premium astrologers for a one-on-one detailed Kundali reading.

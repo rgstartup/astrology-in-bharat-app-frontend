@@ -6,8 +6,7 @@ export default function ExpertSeoContent({ expertName }: { expertName: string })
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="bg-white p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
           
-          <h2 className="text-2xl font-black text-[#1A1A1A] mb-6 flex items-center gap-3 border-b-2 border-[#F26500] inline-flex pb-2">
-            <i className="fa-solid fa-wand-magic-sparkles text-[#F26500]"></i> Seeking Guidance from {expertName}
+          <h2 className="text-2xl font-black text-[#1A1A1A] mb-6 flex items-center gap-3 border-b-2 border-[#F26500] inline-flex pb-2">Seeking Guidance from {expertName}
           </h2>
           
           <p className="text-gray-700 text-[15px] leading-relaxed mb-4">
@@ -19,8 +18,7 @@ export default function ExpertSeoContent({ expertName }: { expertName: string })
           </p>
 
           <div className="bg-blue-50 border-l-4 border-blue-500 p-5 mb-10 rounded-r-md">
-            <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-list-check"></i> Preparing for Your Session
+            <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">Preparing for Your Session
             </h3>
             <p className="text-blue-800 text-[14.5px] leading-relaxed font-medium">
               To get the most accurate predictions, please ensure you have your exact Date of Birth, Time of Birth, and Place of Birth ready. If you don't know your exact time of birth, let the astrologer know at the beginning of the session so they can perform Birth Time Rectification (Prashna Kundali). Keep a pen and paper handy to note down specific remedies, lucky dates, or mantras!
@@ -28,13 +26,11 @@ export default function ExpertSeoContent({ expertName }: { expertName: string })
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              💬 Top Questions You Can Ask
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Top Questions You Can Ask
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               <div className="bg-white border border-gray-200 p-5 rounded-[3px] shadow-sm hover:border-[#F26500]/30 transition-colors">
-                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-heart"></i> Love & Relationships
+                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">Love & Relationships
                 </h4>
                 <ul className="list-disc pl-5 text-[14px] text-gray-700 font-medium space-y-1">
                   <li>"When will I get married?"</li>
@@ -44,8 +40,7 @@ export default function ExpertSeoContent({ expertName }: { expertName: string })
                 </ul>
               </div>
               <div className="bg-white border border-gray-200 p-5 rounded-[3px] shadow-sm hover:border-[#F26500]/30 transition-colors">
-                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-briefcase"></i> Career & Business
+                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">Career & Business
                 </h4>
                 <ul className="list-disc pl-5 text-[14px] text-gray-700 font-medium space-y-1">
                   <li>"When is the best time to switch jobs?"</li>
@@ -55,8 +50,7 @@ export default function ExpertSeoContent({ expertName }: { expertName: string })
                 </ul>
               </div>
               <div className="bg-white border border-gray-200 p-5 rounded-[3px] shadow-sm hover:border-[#F26500]/30 transition-colors">
-                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-money-bill-trend-up"></i> Wealth & Finance
+                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">Wealth & Finance
                 </h4>
                 <ul className="list-disc pl-5 text-[14px] text-gray-700 font-medium space-y-1">
                   <li>"What are the yogas for wealth in my Kundali?"</li>
@@ -66,8 +60,7 @@ export default function ExpertSeoContent({ expertName }: { expertName: string })
                 </ul>
               </div>
               <div className="bg-white border border-gray-200 p-5 rounded-[3px] shadow-sm hover:border-[#F26500]/30 transition-colors">
-                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-heart-pulse"></i> Health & Well-being
+                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">Health & Well-being
                 </h4>
                 <ul className="list-disc pl-5 text-[14px] text-gray-700 font-medium space-y-1">
                   <li>"Why am I facing continuous health issues?"</li>
@@ -76,8 +69,7 @@ export default function ExpertSeoContent({ expertName }: { expertName: string })
                 </ul>
               </div>
               <div className="bg-white border border-gray-200 p-5 rounded-[3px] shadow-sm hover:border-[#F26500]/30 transition-colors">
-                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-leaf"></i> Remedies & Solutions
+                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">Remedies & Solutions
                 </h4>
                 <ul className="list-disc pl-5 text-[14px] text-gray-700 font-medium space-y-1">
                   <li>"Which gemstone is best suited for my Lagna?"</li>
@@ -86,8 +78,7 @@ export default function ExpertSeoContent({ expertName }: { expertName: string })
                 </ul>
               </div>
               <div className="bg-white border border-gray-200 p-5 rounded-[3px] shadow-sm hover:border-[#F26500]/30 transition-colors">
-                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-hands-praying"></i> Puja & Rituals
+                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">Puja & Rituals
                 </h4>
                 <ul className="list-disc pl-5 text-[14px] text-gray-700 font-medium space-y-1">
                   <li>"Do I have Kaal Sarp Dosha in my chart?"</li>
@@ -99,15 +90,14 @@ export default function ExpertSeoContent({ expertName }: { expertName: string })
           </div>
 
           <div className="bg-orange-50 border-l-4 border-orange-500 p-5 mb-10 rounded-r-md">
-            <h3 className="text-[17px] font-bold text-orange-900 mb-2">🔒 100% Secure & Confidential</h3>
+            <h3 className="text-[17px] font-bold text-orange-900 mb-2">100% Secure & Confidential</h3>
             <p className="text-orange-800 text-[14.5px] leading-relaxed font-medium">
               We strictly adhere to global data privacy standards. All your chats and calls with the expert are highly encrypted. Your personal phone number is masked through our cloud-telephony system and is never shared directly with the astrologer. You can discuss your most intimate life details without any fear of judgment or privacy breach.
             </p>
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">
-              ❓ Frequently Asked Questions
+            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">Frequently Asked Questions
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

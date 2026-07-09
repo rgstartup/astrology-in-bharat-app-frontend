@@ -150,6 +150,18 @@ export default function PersonalInfo({
                     {isEditing ? (
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {/* Full Name Field */}
+                                <div className="sm:col-span-2">
+                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Full Name</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={tempProfile.name || ""}
+                                        onChange={onChange}
+                                        placeholder="Enter your full name"
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange/50 outline-none text-sm text-black"
+                                    />
+                                </div>
                                 <div>
                                     <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Gender</label>
                                     <select

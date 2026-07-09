@@ -76,7 +76,7 @@ export default function NakshatraFinderPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-12">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-4">
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl mx-auto"}`}>
 
           {/* ── Left: Form ── */}
@@ -175,9 +175,9 @@ export default function NakshatraFinderPage() {
                 key={i}
                 className={`bg-white border rounded-2xl p-4 flex flex-col gap-1 text-center transition-all hover:shadow-md ${result?.index === i ? "border-[#F26500] bg-[#FFF8F3] shadow-md ring-2 ring-[#F26500]/20" : "border-[#F0E0D0]"}`}
               >
-                <span className={`text-xs font-black uppercase tracking-wide ${result?.index === i ? "text-[#F26500]" : "text-[#BBB]"}`}>#{i + 1}</span>
-                <span className={`text-base font-black leading-tight ${result?.index === i ? "text-[#F26500]" : "text-[#1A1A1A]"}`}>{n.name}</span>
-                <span className="text-[11px] text-[#888]">{n.lord}</span>
+                <span className={`text-[13px] font-black uppercase tracking-wider ${result?.index === i ? "text-[#F26500]" : "text-[#888]"}`}>#{i + 1}</span>
+                <span className={`text-[17px] font-black leading-tight ${result?.index === i ? "text-[#F26500]" : "text-[#1A1A1A]"}`}>{n.name}</span>
+                <span className="text-[13px] font-bold text-[#555] mt-1">{n.lord}</span>
               </div>
             ))}
           </div>

@@ -155,7 +155,7 @@ const DahejCalculatorPage = () => {
       </div>
 
       {/* Main Cards */}
-      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-12">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-4">
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
 
           {/* ── Left: Form ── */}
@@ -255,8 +255,8 @@ const DahejCalculatorPage = () => {
               <div className="w-14 h-14 rounded-full bg-[#FFF0E6] flex items-center justify-center group-hover:scale-110 transition-transform">
                 <i className={`${a.icon} text-[#F26500] text-xl`} />
               </div>
-              <p className="text-sm font-black text-[#1A1A1A]">{a.title}</p>
-              <p className="text-xs text-[#777] leading-relaxed">{a.desc}</p>
+              <p className="text-[15px] font-black text-[#1A1A1A]">{a.title}</p>
+              <p className="text-[13px] text-[#444] font-medium leading-relaxed">{a.desc}</p>
             </div>
           ))}
         </div>

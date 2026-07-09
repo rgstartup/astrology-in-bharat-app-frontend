@@ -2,12 +2,12 @@ import React from "react";
 
 export default function DahejSeoContent() {
   return (
-    <section className="!bg-[#edeef1] py-10 md:py-16 mt-8">
+    <section className="!bg-[#edeef1] py-10 md:py-16 mt-0">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="bg-white p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
           
           <h2 className="section-heading-premium mb-6">
-            <span>⚖️ Understanding the Dahej Calculator: A Tool for Awareness</span>
+            <span>Understanding the Dahej Calculator: A Tool for Awareness</span>
           </h2>
           
           <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
@@ -22,8 +22,7 @@ export default function DahejSeoContent() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
             <div>
-              <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-                🚫 Why Did We Build This?
+              <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Why Did We Build This?
               </h3>
               <p className="text-gray-700 text-[15px] leading-relaxed">
                 The purpose of this calculator is to hold a mirror to society. It highlights how marriages are often incorrectly treated as business transactions rather than sacred unions. By turning human achievements (like education and profession) into algorithmic "rates," we aim to expose the absurdity and dehumanizing nature of the dowry system. 
@@ -31,8 +30,7 @@ export default function DahejSeoContent() {
             </div>
             
             <div>
-              <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-                💍 Real Marriages Built on Equality
+              <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Real Marriages Built on Equality
               </h3>
               <p className="text-gray-700 text-[15px] leading-relaxed">
                 A true partnership is based on mutual respect, love, trust, and shared responsibilities. A person's worth cannot and should not be calculated based on their income bracket or degree. Let's pledge to build a society where marriages are free of financial extortion and societal pressure.
@@ -41,8 +39,7 @@ export default function DahejSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">
-              ❓ Frequently Asked Questions
+            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">Frequently Asked Questions
             </h3>
             
             <div className="space-y-6">
@@ -70,7 +67,6 @@ export default function DahejSeoContent() {
           </div>
 
           <div className="bg-gray-50 border border-gray-200 p-6 rounded-[3px] text-center">
-            <i className="fa-solid fa-handshake-angle text-[#F26500] text-2xl mb-3"></i>
             <h3 className="text-[18px] font-bold text-black mb-2">Join the Movement</h3>
             <p className="text-gray-700 text-[14.5px] leading-relaxed">
               Let's normalize marriages based on compatibility, astrology, and mutual understanding—not bank balances. Say NO to Dahej, and YES to respect.

@@ -76,7 +76,7 @@ export default async function RootLayout({
 
       <body className="min-h-screen bg-white text-black" suppressHydrationWarning>
         <QueryProvider>
-          <AuthInitializer initialUser={user}>
+          <AuthInitializer initialUser={user} hasToken={!!token}>
             <CartInitializer>
               <WishlistInitializer>
                 <SmoothScroll>

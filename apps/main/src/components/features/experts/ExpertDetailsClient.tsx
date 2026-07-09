@@ -8,14 +8,18 @@ import ExpertContentSection from "./ExpertContentSection";
 import ExpertMediaModals from "./ExpertMediaModals";
 import { useExpertDetails } from "./useExpertDetails";
 import { Expert, Product } from "@/lib/types";
+import { ExpertPuja } from "@/lib/types/puja";
+import { PujaCard } from "@/components/features/puja/PujaCard";
 import { Loading } from "@repo/ui";
 
 export default function ExpertDetailsClient({
   expert,
   products = [],
+  expertPujas = [],
 }: {
   expert: Expert;
   products?: Product[];
+  expertPujas?: ExpertPuja[];
 }) {
   const {
     isReviewModalOpen,
@@ -76,6 +80,22 @@ export default function ExpertDetailsClient({
         onClose={() => setIsReviewModalOpen(false)}
         onSubmit={() => setIsReviewModalOpen(false)}
       />
+
+      {expertPujas && expertPujas.length > 0 && (
+        <section className="py-12 bg-gray-50 border-t border-gray-200">
+          <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
+            <div className="mb-8">
+              <h2 className="text-3xl font-black text-gray-900 mb-2">Pujas by {expert.name}</h2>
+              <p className="text-gray-500 font-medium">Book a personalized puja with this expert astrologer.</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {expertPujas.map((puja) => (
+                <PujaCard key={puja.id} puja={puja} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="py-12 bg-white">
         <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">

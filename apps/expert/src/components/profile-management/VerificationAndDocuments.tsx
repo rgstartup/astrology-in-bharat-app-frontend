@@ -167,7 +167,8 @@ export default function VerificationAndDocuments({
                                     {/* Front Side */}
                                     <div>
                                         <h5 className="text-xs font-semibold text-gray-600 mb-2">Front Side</h5>
-                                        <div
+                                        {!kycCompleted && (
+<div
                                             className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-orange-400 transition-colors cursor-pointer bg-gray-50 hover:bg-orange-50/30 mb-3"
                                             onClick={() => aadharFrontInputRef.current?.click()}
                                         >
@@ -186,6 +187,7 @@ export default function VerificationAndDocuments({
                                                 <p className="text-xs font-semibold text-gray-700">Upload Front</p>
                                             </div>
                                         </div>
+)}
                                         {/* Front Files List */}
                                         {aadharFrontDocs.length > 0 && (
                                             <div className="space-y-2">
@@ -199,9 +201,11 @@ export default function VerificationAndDocuments({
                                                             <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                             <span className="text-xs font-medium truncate">{doc.name}</span>
                                                         </div>
-                                                        <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
+                                                        {!kycCompleted && (
+<Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                             <Trash2 className="w-3 h-3" />
                                                         </Button>
+)}
                                                     </div>
                                                 ))}
                                             </div>
@@ -211,7 +215,8 @@ export default function VerificationAndDocuments({
                                     {/* Back Side */}
                                     <div>
                                         <h5 className="text-xs font-semibold text-gray-600 mb-2">Back Side</h5>
-                                        <div
+                                        {!kycCompleted && (
+<div
                                             className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-orange-400 transition-colors cursor-pointer bg-gray-50 hover:bg-orange-50/30 mb-3"
                                             onClick={() => aadharBackInputRef.current?.click()}
                                         >
@@ -230,6 +235,7 @@ export default function VerificationAndDocuments({
                                                 <p className="text-xs font-semibold text-gray-700">Upload Back</p>
                                             </div>
                                         </div>
+)}
                                         {/* Back Files List */}
                                         {aadharBackDocs.length > 0 && (
                                             <div className="space-y-2">
@@ -243,9 +249,11 @@ export default function VerificationAndDocuments({
                                                             <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                             <span className="text-xs font-medium truncate">{doc.name}</span>
                                                         </div>
-                                                        <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
+                                                        {!kycCompleted && (
+<Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                             <Trash2 className="w-3 h-3" />
                                                         </Button>
+)}
                                                     </div>
                                                 ))}
                                             </div>
@@ -268,9 +276,11 @@ export default function VerificationAndDocuments({
                                                         <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                         <span className="text-xs font-medium truncate">{doc.name}</span>
                                                     </div>
-                                                    <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
+                                                    {!kycCompleted && (
+<Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                         <Trash2 className="w-3 h-3" />
                                                     </Button>
+)}
                                                 </div>
                                             ))}
                                         </div>
@@ -291,7 +301,8 @@ export default function VerificationAndDocuments({
                                     {/* Front Side */}
                                     <div>
                                         <h5 className="text-xs font-semibold text-gray-600 mb-2">Front Side</h5>
-                                        <div
+                                        {!kycCompleted && (
+<div
                                             className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-orange-400 transition-colors cursor-pointer bg-gray-50 hover:bg-orange-50/30 mb-3"
                                             onClick={() => panFrontInputRef.current?.click()}
                                         >
@@ -310,6 +321,7 @@ export default function VerificationAndDocuments({
                                                 <p className="text-xs font-semibold text-gray-700">Upload Front</p>
                                             </div>
                                         </div>
+)}
                                         {/* Front Files List */}
                                         {panFrontDocs.length > 0 && (
                                             <div className="space-y-2">
@@ -323,9 +335,11 @@ export default function VerificationAndDocuments({
                                                             <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                             <span className="text-xs font-medium truncate">{doc.name}</span>
                                                         </div>
-                                                        <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
+                                                        {!kycCompleted && (
+<Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                             <Trash2 className="w-3 h-3" />
                                                         </Button>
+)}
                                                     </div>
                                                 ))}
                                             </div>
@@ -335,7 +349,8 @@ export default function VerificationAndDocuments({
                                     {/* Back Side */}
                                     <div>
                                         <h5 className="text-xs font-semibold text-gray-600 mb-2">Back Side</h5>
-                                        <div
+                                        {!kycCompleted && (
+<div
                                             className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-orange-400 transition-colors cursor-pointer bg-gray-50 hover:bg-orange-50/30 mb-3"
                                             onClick={() => panBackInputRef.current?.click()}
                                         >
@@ -354,6 +369,7 @@ export default function VerificationAndDocuments({
                                                 <p className="text-xs font-semibold text-gray-700">Upload Back</p>
                                             </div>
                                         </div>
+)}
                                         {/* Back Files List */}
                                         {panBackDocs.length > 0 && (
                                             <div className="space-y-2">
@@ -367,9 +383,11 @@ export default function VerificationAndDocuments({
                                                             <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                             <span className="text-xs font-medium truncate">{doc.name}</span>
                                                         </div>
-                                                        <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
+                                                        {!kycCompleted && (
+<Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                             <Trash2 className="w-3 h-3" />
                                                         </Button>
+)}
                                                     </div>
                                                 ))}
                                             </div>
@@ -392,9 +410,11 @@ export default function VerificationAndDocuments({
                                                         <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                         <span className="text-xs font-medium truncate">{doc.name}</span>
                                                     </div>
-                                                    <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
+                                                    {!kycCompleted && (
+<Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                         <Trash2 className="w-3 h-3" />
                                                     </Button>
+)}
                                                 </div>
                                             ))}
                                         </div>
@@ -417,9 +437,11 @@ export default function VerificationAndDocuments({
                                                     <FileIcon className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
                                                     <span className="text-xs font-medium truncate">{doc.name}</span>
                                                 </div>
-                                                <Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
+                                                {!kycCompleted && (
+<Button onClick={() => onDeleteDocument(doc.id)} variant="ghost" size="sm" className="text-gray-400 hover:text-red-500 p-1">
                                                     <Trash2 className="w-3 h-3" />
                                                 </Button>
+)}
                                             </div>
                                         ))}
                                     </div>

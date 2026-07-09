@@ -2,12 +2,12 @@ import React from "react";
 
 export default function FlamesSeoContent() {
   return (
-    <section className="!bg-[#edeef1] py-10 md:py-16 mt-8">
+    <section className="!bg-[#edeef1] py-10 md:py-16 mt-0">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="bg-white p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
           
           <h2 className="section-heading-premium mb-6">
-            <span>🔥 FLAMES Game: Find Your Relationship Prediction</span>
+            <span>FLAMES Game: Find Your Relationship Prediction</span>
           </h2>
           
           <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
@@ -15,7 +15,7 @@ export default function FlamesSeoContent() {
           </p>
 
           <div className="bg-blue-50 border-l-4 border-blue-500 p-5 mb-10 rounded-r-md">
-            <h3 className="text-[17px] font-bold text-blue-900 mb-2">🕰️ The History of the FLAMES Game</h3>
+            <h3 className="text-[17px] font-bold text-blue-900 mb-2">The History of the FLAMES Game</h3>
             <p className="text-blue-800 text-[14.5px] leading-relaxed">
               Long before digital dating apps and online compatibility tests, school students used the FLAMES acronym as a secret matchmaking tool. It became a cultural phenomenon across schools in India and worldwide during the 90s and early 2000s. It was the ultimate test of childhood romance, played hiding in the back benches!
             </p>
@@ -29,8 +29,7 @@ export default function FlamesSeoContent() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
             <div>
-              <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-                🎮 How to Play FLAMES?
+              <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">How to Play FLAMES?
               </h3>
               <p className="text-gray-700 text-[15px] leading-relaxed mb-3">
                 The FLAMES logic is simple and fun. Here is how it calculates your destiny:
@@ -44,8 +43,7 @@ export default function FlamesSeoContent() {
             </div>
             
             <div>
-              <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-                ❤️ What Does Each Letter Mean?
+              <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">What Does Each Letter Mean?
               </h3>
               <ul className="space-y-3 text-gray-700 text-[15px]">
                 <li><strong className="text-[#F26500]">F - Friends:</strong> You guys will always be great buddies.</li>
@@ -59,8 +57,7 @@ export default function FlamesSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#FFF8F0] p-6 md:p-8 rounded-[3px] border border-[#F26500]/20">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-              💍 Can FLAMES Actually Predict Marriage?
+            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Can FLAMES Actually Predict Marriage?
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-4">
               Getting the letter "M" (Marriage) in the FLAMES game has always been the most exciting outcome for anyone with a crush! But does it actually hold any astrological significance? The short answer is: <strong>No</strong>.
@@ -71,8 +68,7 @@ export default function FlamesSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              ✨ Why is the FLAMES Game So Popular?
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Why is the FLAMES Game So Popular?
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white border border-gray-200 p-5 rounded-[3px] shadow-sm">
@@ -91,8 +87,7 @@ export default function FlamesSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">
-              ❓ Frequently Asked Questions
+            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">Frequently Asked Questions
             </h3>
             
             <div className="space-y-6">
@@ -127,7 +122,6 @@ export default function FlamesSeoContent() {
           </div>
 
           <div className="bg-gray-50 border border-gray-200 p-6 rounded-[3px] text-center">
-            <i className="fa-solid fa-face-laugh-squint text-[#F26500] text-2xl mb-3"></i>
             <h3 className="text-[18px] font-bold text-black mb-2">Share the Fun</h3>
             <p className="text-gray-700 text-[14.5px] leading-relaxed">
               If you got a funny or romantic result, don't keep it to yourself! Take a screenshot and share it with your crush, your partner, or your best friends and have a good laugh together.

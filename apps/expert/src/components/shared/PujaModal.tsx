@@ -137,6 +137,32 @@ export const PujaModal = ({ mode, puja, onClose, onSaved }: PujaModalProps) => {
     setNewSamagri({ name: '', quantity: '' });
   };
 
+  const handleSamagriPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const pastedText = e.clipboardData.getData('text');
+    if (!pastedText || !pastedText.includes('\n')) return;
+
+    e.preventDefault();
+    const lines = pastedText.split(/\r?\n/).filter(line => line.trim() !== '');
+    
+    const newItems = lines.map(line => {
+      let parts = line.split('\t');
+      if (parts.length < 2) {
+        parts = line.split(/\s{2,}/); // fallback to multiple spaces
+      }
+      return {
+        name: parts[0]?.trim() || '',
+        quantity: parts[1]?.trim() || ''
+      };
+    }).filter(item => item.name);
+
+    if (newItems.length > 0) {
+      setFormData({
+        ...formData,
+        samagri_list: [...(formData.samagri_list || []), ...newItems],
+      });
+    }
+  };
+
   const removeSamagri = (index: number) => {
     setFormData({
       ...formData,
@@ -377,8 +403,9 @@ export const PujaModal = ({ mode, puja, onClose, onSaved }: PujaModalProps) => {
                 type="text"
                 value={newSamagri.name}
                 onChange={(e) => setNewSamagri({ ...newSamagri, name: e.target.value })}
+                onPaste={handleSamagriPaste}
                 className="px-3 py-2 border border-gray-300 rounded-xl outline-none"
-                placeholder="Item name"
+                placeholder="Item name (Tip: Paste full list here)"
               />
               <div className="flex gap-2">
                 <input

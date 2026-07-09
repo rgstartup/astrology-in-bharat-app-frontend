@@ -67,7 +67,7 @@ export default function BreakupPatchupPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-12">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pb-4">
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl mx-auto"}`}>
 
           {/* ── Left: Form ── */}

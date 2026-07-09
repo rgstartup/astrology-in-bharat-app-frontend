@@ -2,12 +2,12 @@ import React from "react";
 
 export default function LifePathSeoContent() {
   return (
-    <section className="!bg-[#edeef1] py-10 md:py-16 mt-8">
+    <section className="!bg-[#edeef1] py-10 md:py-16 mt-0">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="bg-white p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
           
           <h2 className="section-heading-premium mb-6">
-            <span>✨ Understanding Your Life Path Number</span>
+            <span>Understanding Your Life Path Number</span>
           </h2>
           
           <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
@@ -15,15 +15,14 @@ export default function LifePathSeoContent() {
           </p>
 
           <div className="bg-blue-50 border-l-4 border-blue-500 p-5 mb-10 rounded-r-md">
-            <h3 className="text-[17px] font-bold text-blue-900 mb-2">🔢 How is Your Life Path Number Calculated?</h3>
+            <h3 className="text-[17px] font-bold text-blue-900 mb-2">How is Your Life Path Number Calculated?</h3>
             <p className="text-blue-800 text-[14.5px] leading-relaxed">
               Your Life Path Number is calculated exclusively from your full date of birth. In Pythagorean numerology, the process involves reducing each component of your birth date (Day, Month, Year) to a single digit, and then adding them all together until you arrive at a final single digit (from 1 to 9). 
             </p>
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              🌟 The Significance of Master Numbers (11, 22, 33)
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">The Significance of Master Numbers (11, 22, 33)
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
               During the calculation process, if your final number before the last reduction is 11, 22, or 33, you do not reduce it further. These are known as Master Numbers in numerology, and they carry a highly charged, spiritual, and intense vibration.
@@ -45,8 +44,7 @@ export default function LifePathSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#FFF8F0] p-6 md:p-8 rounded-[3px] border border-[#F26500]/20">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-              ⚖️ Life Path vs. Destiny Number
+            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Life Path vs. Destiny Number
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-4">
               Many people confuse the Life Path Number with the Destiny Number (also known as the Expression Number). While both are crucial, they represent very different energies:
@@ -64,8 +62,7 @@ export default function LifePathSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">
-              ❓ Frequently Asked Questions
+            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">Frequently Asked Questions
             </h3>
             
             <div className="space-y-6">
@@ -86,7 +83,6 @@ export default function LifePathSeoContent() {
           </div>
 
           <div className="bg-gray-50 border border-gray-200 p-6 rounded-[3px] text-center">
-            <i className="fa-solid fa-map-location-dot text-[#F26500] text-2xl mb-3"></i>
             <h3 className="text-[18px] font-bold text-black mb-2">Get Your Full Numerology Reading</h3>
             <p className="text-gray-700 text-[14.5px] leading-relaxed">
               Want to know how your Life Path Number interacts with your Destiny Number and Soul Urge Number? Talk to our expert Numerologists for a complete life blueprint analysis.

@@ -86,12 +86,13 @@ const OnlinePujaPage = () => {
             
             {/* Top Banner Section */}
             <div className="max-w-7xl mx-auto px-4 pt-4 pb-8">
-                <div className="relative w-full h-[220px] sm:h-[300px] md:h-[420px] rounded-2xl md:rounded-[2.5rem] overflow-hidden shadow-2xl">
+                <div className="relative w-full rounded-2xl md:rounded-[2.5rem] overflow-hidden shadow-2xl">
                     <Image 
                         src="/images/online-puja-banner.png" 
                         alt="Online Puja Banner" 
-                        fill 
-                        className="object-cover object-center"
+                        width={1280}
+                        height={420}
+                        className="w-full h-auto"
                         priority
                     />
                 </div>
@@ -180,7 +181,7 @@ const OnlinePujaPage = () => {
 
 
             {/* Results Section */}
-            <div className="max-w-7xl mx-auto px-4 pb-16">
+            <div className="max-w-7xl mx-auto px-4 pb-4">
                 
                 {/* Header */}
                 <div className="flex items-end justify-between mb-8">
@@ -220,7 +221,7 @@ const OnlinePujaPage = () => {
             </div>
 
             {/* Why Choose Our Online Puja */}
-            <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="max-w-7xl mx-auto px-4 pt-2 pb-8">
                 <Image 
                     src="/images/why-choose-puja-banner.png" 
                     alt="Why Choose Our Online Puja" 
@@ -231,7 +232,7 @@ const OnlinePujaPage = () => {
             </div>
 
             {/* Bottom CTA Banner */}
-            <div className="max-w-7xl mx-auto px-4 pb-12">
+            <div className="max-w-7xl mx-auto px-4 pb-2">
                 <section className="bg-[#1a0b0b] rounded-3xl px-5 py-6 sm:px-8 sm:py-8 md:py-10 flex flex-col md:flex-row items-center justify-between gap-5 relative overflow-hidden">
                     <div className="absolute inset-0 opacity-10">
                         <Image src="/images/horoscope-round2.png" alt="" fill className="object-cover" />

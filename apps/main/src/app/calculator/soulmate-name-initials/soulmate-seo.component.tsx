@@ -2,12 +2,12 @@ import React from "react";
 
 export default function SoulmateSeoContent() {
   return (
-    <section className="!bg-[#edeef1] py-10 md:py-16 mt-8">
+    <section className="!bg-[#edeef1] py-10 md:py-16 mt-0">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <div className="bg-white p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
           
           <h2 className="section-heading-premium mb-6">
-            <span>✨ Discovering Your Soulmate's Initials</span>
+            <span>Discovering Your Soulmate's Initials</span>
           </h2>
           
           <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
@@ -15,15 +15,14 @@ export default function SoulmateSeoContent() {
           </p>
 
           <div className="bg-blue-50 border-l-4 border-blue-500 p-5 mb-10 rounded-r-md">
-            <h3 className="text-[17px] font-bold text-blue-900 mb-2">📜 The Astrology of Names (Nakshatras)</h3>
+            <h3 className="text-[17px] font-bold text-blue-900 mb-2">The Astrology of Names (Nakshatras)</h3>
             <p className="text-blue-800 text-[14.5px] leading-relaxed">
               In ancient Vedic Astrology, names are not chosen randomly. A person's birth name traditionally starts with a specific phonetic sound (Akshar) dictated by the Nakshatra (Constellation) the Moon was in at the time of their birth. By analyzing your birth date and the numerical vibration of your name, we trace the cosmic patterns to find the Nakshatra sounds that are most compatible with yours.
             </p>
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              🔠 The Numerology of Initials
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">The Numerology of Initials
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
               In Chaldean and Pythagorean numerology, every letter holds a specific vibrational frequency. The first letter of a name (the Cornerstone) reveals a person's fundamental approach to life and love.
@@ -45,34 +44,29 @@ export default function SoulmateSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#FFF8F0] p-6 md:p-8 rounded-[3px] border border-[#F26500]/20">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              ❤️ 4 Clear Signs You've Found Your Soulmate
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">4 Clear Signs You've Found Your Soulmate
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white border border-orange-100 p-5 rounded-[3px] shadow-sm">
-                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-peace"></i> Instant Comfort
+                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">Instant Comfort
                 </h4>
                 <p className="text-[14px] text-gray-600">You don't feel the need to impress them. From day one, you feel a profound sense of safety and inner peace when they are around.</p>
               </div>
               
               <div className="bg-white border border-orange-100 p-5 rounded-[3px] shadow-sm">
-                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-comments"></i> Effortless Communication
+                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">Effortless Communication
                 </h4>
                 <p className="text-[14px] text-gray-600">Conversations flow naturally. You can talk for hours about the universe, or sit in complete silence without it being awkward.</p>
               </div>
 
               <div className="bg-white border border-orange-100 p-5 rounded-[3px] shadow-sm">
-                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-seedling"></i> Mutual Growth
+                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">Mutual Growth
                 </h4>
                 <p className="text-[14px] text-gray-600">A true soulmate doesn't just accept you; they inspire you to become the best version of yourself without trying to change your core.</p>
               </div>
 
               <div className="bg-white border border-orange-100 p-5 rounded-[3px] shadow-sm">
-                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">
-                  <i className="fa-solid fa-hand-holding-heart"></i> Empathy Without Words
+                <h4 className="font-bold text-[#F26500] text-[16px] mb-2 flex items-center gap-2">Empathy Without Words
                 </h4>
                 <p className="text-[14px] text-gray-600">They know you've had a bad day just by the way you say "hello." There is a deep, almost telepathic emotional connection.</p>
               </div>
@@ -80,8 +74,7 @@ export default function SoulmateSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">
-              🔥 Soulmate vs Twin Flame: What's the Difference?
+            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Soulmate vs Twin Flame: What's the Difference?
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
               Many people confuse soulmates with twin flames, but astrologically and spiritually, they serve very different purposes in your life journey:
@@ -93,8 +86,7 @@ export default function SoulmateSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#F9F9F9] p-6 md:p-8 rounded-[3px] border border-gray-200">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">
-              🌀 Could It Be a Karmic Relationship?
+            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Could It Be a Karmic Relationship?
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-4">
               Sometimes we feel an intense, undeniable pull towards someone, and we immediately assume they are our soulmate. However, astrology teaches us about <strong>Karmic Relationships</strong>. 
@@ -111,8 +103,7 @@ export default function SoulmateSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">
-              ❓ Frequently Asked Questions
+            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block whitespace-nowrap pb-1">Frequently Asked Questions
             </h3>
             
             <div className="space-y-6">
@@ -147,7 +138,6 @@ export default function SoulmateSeoContent() {
           </div>
 
           <div className="bg-gray-50 border border-gray-200 p-6 rounded-[3px] text-center">
-            <i className="fa-solid fa-crystal-ball text-[#F26500] text-2xl mb-3"></i>
             <h3 className="text-[18px] font-bold text-black mb-2">Get Detailed Partner Predictions</h3>
             <p className="text-gray-700 text-[14.5px] leading-relaxed">
               Want to know more than just an initial? Our expert Vedic Astrologers can analyze your 7th House and Navamsha (D9) chart to tell you the direction, profession, and physical characteristics of your future spouse.

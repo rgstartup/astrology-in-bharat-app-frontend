@@ -70,17 +70,8 @@ export const useProfileBaseLogic = () => {
         if (authLoading) return; // still loading, don't redirect yet
         if (isAuthenticated) return; // already authenticated, no redirect
 
-        // Wait a bit before redirecting — allows time for refreshAuth to run
-        // and pick up newly set cookies (e.g. after Google OAuth)
-        const timer = setTimeout(() => {
-            const currentState = useAuthStore.getState();
-            if (!currentState.isAuthenticated) {
-                console.log('[ProfileBaseLogic] Not authenticated after wait, redirecting to sign-in');
-                router.push("/sign-in?callbackUrl=/client/profile");
-            }
-        }, 1500); // 1.5s grace period
-
-        return () => clearTimeout(timer);
+        console.log('[ProfileBaseLogic] Not authenticated after wait, redirecting to sign-in');
+        router.push("/sign-in?callbackUrl=/client/profile");
     }, [authLoading, isAuthenticated, router]);
 
     // Tab Initialization

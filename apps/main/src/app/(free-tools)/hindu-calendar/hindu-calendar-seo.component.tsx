@@ -3,8 +3,7 @@ import React from "react";
 export default function HinduCalendarSeoContent() {
   return (
     <section className="mt-12 bg-white rounded-3xl p-6 md:p-10 border border-[#F0E0D0] shadow-[0_4px_15px_0_rgba(0,0,0,0.03)]">
-      <h2 className="text-2xl font-black text-[#1A1A1A] mb-6 flex items-center gap-3 border-b-2 border-[#F26500] inline-flex pb-2">
-        <i className="fa-solid fa-calendar-days text-[#F26500]"></i> Understanding the Hindu Calendar (Panchang)
+      <h2 className="text-2xl font-black text-[#1A1A1A] mb-6 flex items-center gap-3 border-b-2 border-[#F26500] inline-flex pb-2">Understanding the Hindu Calendar (Panchang)
       </h2>
       
       <p className="text-gray-700 text-[15px] leading-relaxed mb-8">
@@ -12,8 +11,7 @@ export default function HinduCalendarSeoContent() {
       </p>
 
       <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-10 rounded-r-xl">
-        <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">
-          <i className="fa-solid fa-moon"></i> Luni-Solar System Explained
+        <h3 className="text-[17px] font-bold text-blue-900 mb-2 flex items-center gap-2">Luni-Solar System Explained
         </h3>
         <p className="text-blue-800 text-[14.5px] leading-relaxed">
           The Hindu calendar is a <strong>Luni-Solar</strong> system. It tracks the Moon's phases to determine the dates (Tithis) and months, while it tracks the Sun's transit into different zodiacs (Sankranti) to determine the solar year and changing seasons. To keep the lunar months in sync with the solar year, an extra month called <em>Adhik Maas</em> (leap month) is added approximately every 32.5 months!
@@ -21,8 +19,7 @@ export default function HinduCalendarSeoContent() {
       </div>
 
       <div className="mb-10">
-        <h3 className="text-xl font-black text-[#1A1A1A] mb-6">
-          🖐️ The 5 Pillars of Panchang
+        <h3 className="text-xl font-black text-[#1A1A1A] mb-6">The 5 Pillars of Panchang
         </h3>
         <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
           The word "Panchang" literally translates to "Five Limbs". Every single day is defined by the mathematical combination of these five elements:
@@ -53,14 +50,12 @@ export default function HinduCalendarSeoContent() {
 
       <div className="bg-orange-50 border-l-4 border-[#F26500] p-6 mb-10 rounded-r-xl">
         <p className="text-[#993E00] text-[15px] font-medium leading-relaxed">
-          <i className="fa-solid fa-clock text-[#F26500] mr-2"></i>
           <strong>Why check Muhurat?</strong> Doing the right thing at the wrong time often leads to failure. A Shubh Muhurat ensures that planetary energies are aligned in your favor, significantly boosting the chances of success for marriages, housewarmings, or business launches.
         </p>
       </div>
 
       <div className="mb-6">
-        <h3 className="text-xl font-black text-[#1A1A1A] mb-6">
-          ❓ Frequently Asked Questions
+        <h3 className="text-xl font-black text-[#1A1A1A] mb-6">Frequently Asked Questions
         </h3>
         
         <div className="space-y-6">
