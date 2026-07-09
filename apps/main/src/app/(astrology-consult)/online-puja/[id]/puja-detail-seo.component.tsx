@@ -5,11 +5,11 @@ export default function PujaDetailSeoContent({ pujaName }: { pujaName: string })
 
   return (
     <div className="max-w-7xl mx-auto px-4 pb-12 mt-8">
-      <section className="bg-white rounded-3xl p-6 md:p-10 border border-[#F0E0D0] shadow-[0_4px_15px_0_rgba(0,0,0,0.03)]">
+      <section className="bg-[#1A1A1A] rounded-3xl p-6 md:p-10 border border-[#F0E0D0] shadow-[0_4px_15px_0_rgba(0,0,0,0.03)]">
         <h2 className="text-2xl font-black text-[#1A1A1A] mb-6 flex items-center gap-3 border-b-2 border-[#FF5500] inline-flex pb-2">The Spiritual Significance of {safeName}
         </h2>
         
-        <p className="text-gray-700 text-[15px] leading-relaxed mb-8">
+        <p className="text-gray-300 text-[15px] leading-relaxed mb-8">
           Vedic rituals are highly potent cosmic remedies designed to align your individual energy with the universal consciousness. Performing <strong>{safeName}</strong> involves precise chanting of ancient mantras, offering of sacred fire (Havan), and strict adherence to Vedic protocols. This ritual is specifically recommended by astrologers to remove energetic blockages, appease planetary deities, and manifest deep-seated intentions for health, wealth, and peace.
         </p>
 
@@ -28,22 +28,22 @@ export default function PujaDetailSeoContent({ pujaName }: { pujaName: string })
             <div className="bg-[#FAF8F5] border border-[#EAE2D6] p-6 rounded-2xl hover:shadow-md transition-shadow">
               <h4 className="font-bold text-[#FF5500] text-[17px] mb-2 flex items-center gap-2">Karmic Cleansing
               </h4>
-              <p className="text-[14px] text-gray-700 leading-relaxed">The intense vibrations of the mantras used during this puja help dissolve negative karma accumulated over lifetimes, removing unseen obstacles from your current path.</p>
+              <p className="text-[14px] text-gray-300 leading-relaxed">The intense vibrations of the mantras used during this puja help dissolve negative karma accumulated over lifetimes, removing unseen obstacles from your current path.</p>
             </div>
             <div className="bg-[#FAF8F5] border border-[#EAE2D6] p-6 rounded-2xl hover:shadow-md transition-shadow">
               <h4 className="font-bold text-[#FF5500] text-[17px] mb-2 flex items-center gap-2">Planetary Peace (Graha Shanti)
               </h4>
-              <p className="text-[14px] text-gray-700 leading-relaxed">It neutralizes the negative impacts (Doshas) caused by unfavorable planetary transits in your birth chart, protecting you from sudden misfortunes.</p>
+              <p className="text-[14px] text-gray-300 leading-relaxed">It neutralizes the negative impacts (Doshas) caused by unfavorable planetary transits in your birth chart, protecting you from sudden misfortunes.</p>
             </div>
             <div className="bg-[#FAF8F5] border border-[#EAE2D6] p-6 rounded-2xl hover:shadow-md transition-shadow">
               <h4 className="font-bold text-[#FF5500] text-[17px] mb-2 flex items-center gap-2">Mental Clarity & Calmness
               </h4>
-              <p className="text-[14px] text-gray-700 leading-relaxed">The sacred smoke from the Havan and the continuous rhythmic chanting purify the surrounding aura, dramatically reducing anxiety, depression, and mental fog.</p>
+              <p className="text-[14px] text-gray-300 leading-relaxed">The sacred smoke from the Havan and the continuous rhythmic chanting purify the surrounding aura, dramatically reducing anxiety, depression, and mental fog.</p>
             </div>
             <div className="bg-[#FAF8F5] border border-[#EAE2D6] p-6 rounded-2xl hover:shadow-md transition-shadow">
               <h4 className="font-bold text-[#FF5500] text-[17px] mb-2 flex items-center gap-2">Success & Prosperity
               </h4>
-              <p className="text-[14px] text-gray-700 leading-relaxed">By clearing energetic blockages, this puja opens up new avenues for financial growth, career promotions, and harmony in personal relationships.</p>
+              <p className="text-[14px] text-gray-300 leading-relaxed">By clearing energetic blockages, this puja opens up new avenues for financial growth, career promotions, and harmony in personal relationships.</p>
             </div>
           </div>
         </div>
@@ -61,21 +61,21 @@ export default function PujaDetailSeoContent({ pujaName }: { pujaName: string })
           <div className="space-y-6">
             <div className="bg-[#FAF8F5] p-5 rounded-2xl border border-[#EAE2D6]">
               <h4 className="font-bold text-[#FF5500] text-[16px] mb-2">Can someone else perform {safeName} on my behalf?</h4>
-              <p className="text-gray-700 text-[14.5px] leading-relaxed">
+              <p className="text-gray-300 text-[14.5px] leading-relaxed">
                 Yes. If you are physically unwell, traveling, or unavailable, an immediate family member (like a spouse, parent, or child) can sit in the Puja for you. The Pandit will still take the Sankalp using your name, ensuring the benefits reach you.
               </p>
             </div>
             
             <div className="bg-[#FAF8F5] p-5 rounded-2xl border border-[#EAE2D6]">
               <h4 className="font-bold text-[#FF5500] text-[16px] mb-2">Are there any rules I must follow during the Puja?</h4>
-              <p className="text-gray-700 text-[14.5px] leading-relaxed">
+              <p className="text-gray-300 text-[14.5px] leading-relaxed">
                 If you are joining via live video, it is highly recommended to take a bath, wear clean clothes, sit facing East or North, and avoid consuming non-vegetarian food or alcohol on the day of the ritual to maintain spiritual purity.
               </p>
             </div>
 
             <div className="bg-[#FAF8F5] p-5 rounded-2xl border border-[#EAE2D6]">
               <h4 className="font-bold text-[#FF5500] text-[16px] mb-2">How soon will I see the results of the ritual?</h4>
-              <p className="text-gray-700 text-[14.5px] leading-relaxed">
+              <p className="text-gray-300 text-[14.5px] leading-relaxed">
                 Spiritual remedies operate on a cosmic timeline. While many people report feeling an immediate sense of peace and clarity, tangible material results usually begin manifesting within 40 to 90 days, depending on the severity of your planetary afflictions.
               </p>
             </div>

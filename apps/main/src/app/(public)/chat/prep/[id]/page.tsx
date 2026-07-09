@@ -191,18 +191,18 @@ export default function ConsultationPrep() {
 
   if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[#242424]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange"></div>
       </div>
     );
 
   if (!expert)
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center px-4">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#242424] text-center px-4">
         <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6">
           <UserX className="w-12 h-12 text-red-500" />
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-2xl font-bold text-gray-100 mb-2">
           Expert Not Found
         </h2>
         <p className="text-gray-500 max-w-sm mb-8">
@@ -281,7 +281,7 @@ export default function ConsultationPrep() {
         description={
           <>
             Right now{" "}
-            <span className="font-bold text-gray-900">{expert?.name}</span>{" "}
+            <span className="font-bold text-gray-100">{expert?.name}</span>{" "}
             is offline. <br />
             Please try again later when the expert is available.
           </>

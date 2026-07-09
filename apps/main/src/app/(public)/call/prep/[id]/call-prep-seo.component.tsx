@@ -2,7 +2,7 @@ import React from "react";
 
 const CallPrepSeoContent = () => {
   return (
-    <section className="py-12 bg-[#fafafa]">
+    <section className="pt-12 pb-8 bg-[#fafafa]">
       <div className="max-w-6xl mx-auto px-4">
         <div className="prose prose-sm md:prose-base max-w-none prose-headings:text-[#301118] prose-p:text-[#444] prose-a:text-[#F26500] prose-li:text-[#444]">
           <h2 className="text-2xl md:text-3xl font-black mb-4">Why Consult Our Expert Astrologers Online?</h2>

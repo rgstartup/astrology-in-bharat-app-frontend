@@ -67,7 +67,7 @@ export default function MessageArea({
 
             <div className="max-w-4xl mx-auto space-y-8">
                 <div className="flex justify-center mb-10">
-                    <div className={`px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] transition-all border ${sessionSummary?.status === 'terminated' ? 'bg-red-500/10 text-red-500 border-red-500/20' : isDarkMode ? 'bg-white/5 opacity-30 border-white/5' : 'bg-[#fd6410]/10 text-[#fd6410] border-[#fd6410]/20'}`}>
+                    <div className={`px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] transition-all border ${sessionSummary?.status === 'terminated' ? 'bg-red-500/10 text-red-500 border-red-500/20' : isDarkMode ? 'bg-[#1A1A1A]/5 opacity-30 border-white/5' : 'bg-[#fd6410]/10 text-[#fd6410] border-[#fd6410]/20'}`}>
                         {sessionStatus === 'active' ? 'Consultation in Progress' : (sessionStatus === 'completed' && sessionSummary?.status === 'terminated') ? 'Session Terminated by Admin' : sessionStatus === 'completed' ? 'Session Ended' : 'Start your celestial journey'}
                     </div>
                 </div>
@@ -81,14 +81,14 @@ export default function MessageArea({
                         <div key={msg.id} className={`flex gap-3 md:gap-4 ${isUser ? "flex-row-reverse" : "flex-row"} items-start ${isAdmin ? "justify-center w-full" : ""}`}>
                             {!isAdmin && (
                                 <div className="flex-shrink-0 mt-1">
-                                    <div className={`w-8 h-8 rounded-full border-2 ${isUser ? 'border-[#fd6410]/30' : 'border-black/5'} overflow-hidden shadow-sm flex items-center justify-center bg-gray-100`}>
+                                    <div className={`w-8 h-8 rounded-full border-2 ${isUser ? 'border-[#fd6410]/30' : 'border-black/5'} overflow-hidden shadow-sm flex items-center justify-center bg-[#2A2A2A]`}>
                                         {isUser ? (
                                             <Avatar
                                                 src={user?.avatar || user?.profile_picture}
                                                 alt={user?.name || "User"}
                                                 size="sm"
                                                 fallback="/images/default-avatar.svg"
-                                                className="border-gray-200"
+                                                className="border-gray-800"
                                             />
                                         ) : (
                                             <Avatar
@@ -96,7 +96,7 @@ export default function MessageArea({
                                                 alt={expertData?.name || "Expert"}
                                                 size="sm"
                                                 fallback="/images/dummy-expert.jpg"
-                                                className="border-gray-200"
+                                                className="border-gray-800"
                                             />
                                         )}
                                     </div>
@@ -109,8 +109,8 @@ export default function MessageArea({
                                         : isUser 
                                             ? 'bg-[#fd6410] text-white rounded-tr-none' 
                                             : isDarkMode 
-                                                ? 'bg-white/10 text-white rounded-tl-none' 
-                                                : 'bg-white text-gray-800 border border-black/5 rounded-tl-none font-medium'
+                                                ? 'bg-[#1A1A1A]/10 text-white rounded-tl-none' 
+                                                : 'bg-[#1A1A1A] text-gray-200 border border-black/5 rounded-tl-none font-medium'
                                 }`}`}>
                                     {isAdmin && (
                                         <div className="flex items-center justify-center gap-2 mb-1 text-[10px] font-black uppercase tracking-tighter">
@@ -121,14 +121,14 @@ export default function MessageArea({
                                         <div className="bg-gradient-to-br from-[#FFD700] via-[#FFEA00] to-[#FFD700] p-0.5 rounded-2xl shadow-lg border border-black/10 w-full min-w-[240px]">
                                             <div className="bg-yellow-400/20 backdrop-blur-sm rounded-xl p-4 border border-white/20 relative overflow-hidden">
                                                 <div className="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
-                                                    <LucideIcons.User className="w-16 h-16 text-black" />
+                                                    <LucideIcons.User className="w-16 h-16 text-white" />
                                                 </div>
                                                 <div className="flex items-center gap-2 mb-4 border-b border-black/10 pb-3 relative z-10">
                                                     <div className="w-8 h-8 bg-black/10 rounded-full flex items-center justify-center">
-                                                        <LucideIcons.User className="w-4 h-4 text-black" />
+                                                        <LucideIcons.User className="w-4 h-4 text-white" />
                                                     </div>
                                                     <div>
-                                                        <h3 className="text-black font-black text-xs uppercase tracking-widest">Birth Details</h3>
+                                                        <h3 className="text-white font-black text-xs uppercase tracking-widest">Birth Details</h3>
                                                     </div>
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-4 relative z-10">
@@ -156,29 +156,29 @@ export default function MessageArea({
                                                             return (
                                                                 <>
                                                                     <div className="space-y-1">
-                                                                        <span className="text-[9px] font-black text-black/50 uppercase tracking-widest">Name</span>
-                                                                        <p className="text-sm font-black text-black truncate">{data.name || "N/A"}</p>
+                                                                        <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">Name</span>
+                                                                        <p className="text-sm font-black text-white truncate">{data.name || "N/A"}</p>
                                                                     </div>
                                                                     <div className="space-y-1">
-                                                                        <span className="text-[9px] font-black text-black/50 uppercase tracking-widest">Gender</span>
-                                                                        <p className="text-sm font-black text-black capitalize">{data.gender || "N/A"}</p>
+                                                                        <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">Gender</span>
+                                                                        <p className="text-sm font-black text-white capitalize">{data.gender || "N/A"}</p>
                                                                     </div>
                                                                     <div className="space-y-1">
-                                                                        <span className="text-[9px] font-black text-black/50 uppercase tracking-widest">DOB</span>
-                                                                        <p className="text-sm font-black text-black">{formatDate(data.dob || data.dateOfBirth)}</p>
+                                                                        <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">DOB</span>
+                                                                        <p className="text-sm font-black text-white">{formatDate(data.dob || data.dateOfBirth)}</p>
                                                                     </div>
                                                                     <div className="space-y-1">
-                                                                        <span className="text-[9px] font-black text-black/50 uppercase tracking-widest">Time</span>
-                                                                        <p className="text-sm font-black text-black">{data.tob || data.timeOfBirth || "N/A"}</p>
+                                                                        <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">Time</span>
+                                                                        <p className="text-sm font-black text-white">{data.tob || data.timeOfBirth || "N/A"}</p>
                                                                     </div>
                                                                     <div className="space-y-1 col-span-2">
-                                                                        <span className="text-[9px] font-black text-black/50 uppercase tracking-widest">Place</span>
-                                                                        <p className="text-sm font-black text-black truncate">{data.pob || data.placeOfBirth || "N/A"}</p>
+                                                                        <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">Place</span>
+                                                                        <p className="text-sm font-black text-white truncate">{data.pob || data.placeOfBirth || "N/A"}</p>
                                                                     </div>
                                                                 </>
                                                             );
                                                         } catch (e) {
-                                                            return <p className="text-xs text-black/50">Error parsing details</p>;
+                                                            return <p className="text-xs text-white/50">Error parsing details</p>;
                                                         }
                                                     })()}
                                                 </div>
@@ -205,7 +205,7 @@ export default function MessageArea({
                                                             />
                                                         </div>
                                                     ) : (
-                                                        <a href={msg.attachmentUrl || (msg as any).attachment_url} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 p-2 rounded-lg ${isUser ? 'bg-white/10' : 'bg-black/5'} transition-colors`}>
+                                                        <a href={msg.attachmentUrl || (msg as any).attachment_url} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 p-2 rounded-lg ${isUser ? 'bg-[#1A1A1A]/10' : 'bg-black/5'} transition-colors`}>
                                                             <div className="p-1.5 bg-orange-500 rounded flex-shrink-0">
                                                                 <FileText className="w-3.5 h-3.5 text-white" />
                                                             </div>

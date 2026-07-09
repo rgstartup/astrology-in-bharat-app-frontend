@@ -38,7 +38,7 @@ const ExpertPreview = ({
   return (
     <div className="order-1 lg:order-2 lg:col-span-5 relative">
       <div className="sticky top-28">
-        <div className="p-2 bg-white rounded-[3.5rem] shadow-[0_40px_100px_rgba(0,0,0,0.08)] relative overflow-hidden">
+        <div className="p-2 bg-[#1A1A1A] rounded-[3.5rem] shadow-[0_40px_100px_rgba(0,0,0,0.08)] relative overflow-hidden">
           {/* Expert Image Section */}
           <div className="relative h-[380px] rounded-[3rem] overflow-hidden group">
             <Image
@@ -54,7 +54,7 @@ const ExpertPreview = ({
               className={`absolute top-6 left-6 px-4 py-2 backdrop-blur-md rounded-full border shadow-sm flex items-center gap-2 ${
                 expert?.is_available
                   ? "bg-orange border-white/20"
-                  : "bg-white border-gray-200"
+                  : "bg-[#1A1A1A] border-gray-800"
               }`}
             >
               <div
@@ -92,7 +92,7 @@ const ExpertPreview = ({
                       {expert?.expertise || "Astrology, Vastu, Palmistry"}
                     </span>
                   </div>
-                  <div className="w-[1px] h-8 bg-white/20 flex-shrink-0"></div>
+                  <div className="w-[1px] h-8 bg-[#1A1A1A]/20 flex-shrink-0"></div>
                   <div className="flex flex-col flex-shrink-0">
                     <span className="text-white/60 text-[9px] font-black uppercase tracking-widest mb-1 text-right">
                       Experience
@@ -103,7 +103,7 @@ const ExpertPreview = ({
                   </div>
                 </div>
                 
-                <div className="h-[1px] w-full bg-white/10"></div>
+                <div className="h-[1px] w-full bg-[#1A1A1A]/10"></div>
                 
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-orange" />
@@ -118,12 +118,12 @@ const ExpertPreview = ({
           <div className="p-6 space-y-5">
             {/* Option to toggle who is asking */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+              <div className="flex items-center justify-between p-4 bg-[#242424] rounded-2xl border border-[#333333]">
                 <div className="flex flex-col">
                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
                     Consulting for
                   </span>
-                  <span className="text-sm font-bold text-gray-900">
+                  <span className="text-sm font-bold text-gray-100">
                     {askSomeoneElse ? "Myself" : "Someone Else"}
                   </span>
                 </div>
@@ -153,7 +153,7 @@ const ExpertPreview = ({
                             name: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-3 bg-white rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-900 shadow-sm"
+                        className="w-full px-4 py-3 bg-[#1A1A1A] rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-100 shadow-sm"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -169,7 +169,7 @@ const ExpertPreview = ({
                               gender: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-900 shadow-sm appearance-none"
+                          className="w-full px-4 py-3 bg-[#1A1A1A] rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-100 shadow-sm appearance-none"
                         >
                           <option value="">Select</option>
                           <option value="male">Male</option>
@@ -189,7 +189,7 @@ const ExpertPreview = ({
                               dob: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-900 shadow-sm"
+                          className="w-full px-4 py-3 bg-[#1A1A1A] rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-100 shadow-sm"
                         />
                       </div>
                     </div>
@@ -207,7 +207,7 @@ const ExpertPreview = ({
                               tob: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-900 shadow-sm"
+                          className="w-full px-4 py-3 bg-[#1A1A1A] rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-100 shadow-sm"
                         />
                       </div>
                       <div>
@@ -224,7 +224,7 @@ const ExpertPreview = ({
                               pob: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 bg-white rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-900 shadow-sm"
+                          className="w-full px-4 py-3 bg-[#1A1A1A] rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-100 shadow-sm"
                         />
                       </div>
                     </div>
@@ -236,14 +236,14 @@ const ExpertPreview = ({
             {/* Big CTA and Balance Check */}
             <div className="pt-6 space-y-4">
               {isAuthenticated && (
-                  <div className="flex items-center justify-between px-6 py-4 bg-gray-50 rounded-2xl border border-gray-100">
+                  <div className="flex items-center justify-between px-6 py-4 bg-[#242424] rounded-2xl border border-[#333333]">
                       <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                               <LucideIcons.Wallet className="w-4 h-4 text-green-600" />
                           </div>
                           <span className="text-sm font-bold text-gray-500">Your Balance</span>
                       </div>
-                      <span className="text-xl font-black text-gray-900">₹{userBalance.toFixed(2)}</span>
+                      <span className="text-xl font-black text-gray-100">₹{userBalance.toFixed(2)}</span>
                   </div>
               )}
 

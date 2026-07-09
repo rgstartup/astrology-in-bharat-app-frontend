@@ -32,7 +32,7 @@ export default function FreeEndPromptModal({
 
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
-            <div className={`${isDarkMode ? 'bg-[#1a0c0c] border-white/10' : 'bg-white border-[#fd6410]/20'} w-full max-w-sm rounded-[32px] overflow-hidden border p-8 text-center shadow-2xl relative`}>
+            <div className={`${isDarkMode ? 'bg-[#1a0c0c] border-white/10' : 'bg-[#1A1A1A] border-[#fd6410]/20'} w-full max-w-sm rounded-[32px] overflow-hidden border p-8 text-center shadow-2xl relative`}>
                 {/* 30s Countdown Ring */}
                 <div className="absolute top-4 right-4 w-10 h-10 rounded-full border-2 border-[#fd6410]/20 flex items-center justify-center">
                     <span className="text-[10px] font-black text-[#fd6410]">{continuationTimer}s</span>
@@ -69,7 +69,7 @@ export default function FreeEndPromptModal({
                     )}
                     <button
                         onClick={handleEndChat}
-                        className={`w-full py-4 rounded-2xl border ${isDarkMode ? 'border-white/5 text-gray-400' : 'border-gray-200 text-gray-400'} font-bold text-xs uppercase tracking-widest hover:bg-red-500/5 hover:text-red-500 transition-all`}
+                        className={`w-full py-4 rounded-2xl border ${isDarkMode ? 'border-white/5 text-gray-400' : 'border-gray-800 text-gray-400'} font-bold text-xs uppercase tracking-widest hover:bg-red-500/5 hover:text-red-500 transition-all`}
                     >
                         End Session
                     </button>

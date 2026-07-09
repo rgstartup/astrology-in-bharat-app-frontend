@@ -30,7 +30,7 @@ const ServiceDetailsPage = async ({ params }: PageProps) => {
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+      <div className="max-w-7xl mx-auto bg-[#1A1A1A] rounded-2xl shadow-xl overflow-hidden border border-[#333333]">
         <div className="relative h-64 sm:h-80 md:h-96">
           <Image
             src={service.image}
@@ -51,7 +51,7 @@ const ServiceDetailsPage = async ({ params }: PageProps) => {
               <h2 className="text-xl font-semibold text-[#1e0b0f] border-l-4 border-[#fd6410] pl-3">
                 Overview
               </h2>
-              <p className="text-gray-600 leading-relaxed text-lg">
+              <p className="text-gray-400 leading-relaxed text-lg">
                 {service.description || "No description available."}
               </p>
 
@@ -60,7 +60,7 @@ const ServiceDetailsPage = async ({ params }: PageProps) => {
                   <h2 className="text-xl font-semibold text-[#1e0b0f] border-l-4 border-[#fd6410] pl-3 mt-8">
                     Detailed Insight
                   </h2>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-400 leading-relaxed">
                     {service.longDescription}
                   </p>
                 </>
@@ -75,7 +75,7 @@ const ServiceDetailsPage = async ({ params }: PageProps) => {
                     {service.benefits.map((benefit, index) => (
                       <li
                         key={index}
-                        className="flex items-start gap-2 text-gray-600"
+                        className="flex items-start gap-2 text-gray-400"
                       >
                         <span className="text-[#fd6410] mt-1">✓</span>
                         <span>{benefit}</span>
@@ -96,7 +96,7 @@ const ServiceDetailsPage = async ({ params }: PageProps) => {
                         <div className="shrink-0 w-8 h-8 rounded-full bg-[#fff5f0] text-[#fd6410] flex items-center justify-center font-bold border border-[#fee2d5]">
                           {index + 1}
                         </div>
-                        <p className="text-gray-600 pt-1">{step}</p>
+                        <p className="text-gray-400 pt-1">{step}</p>
                       </div>
                     ))}
                   </div>
@@ -114,7 +114,7 @@ const ServiceDetailsPage = async ({ params }: PageProps) => {
                         <h3 className="font-medium text-[#1e0b0f] mb-2">
                           {item.question}
                         </h3>
-                        <p className="text-gray-600 text-sm">{item.answer}</p>
+                        <p className="text-gray-400 text-sm">{item.answer}</p>
                       </div>
                     ))}
                   </div>
@@ -144,7 +144,7 @@ const ServiceDetailsPage = async ({ params }: PageProps) => {
             </div>
           </div>
 
-          <div className="pt-8 mt-8 border-t border-gray-100">
+          <div className="pt-8 mt-8 border-t border-[#333333]">
             <Link
               href="/"
               className="inline-flex items-center text-gray-500 hover:text-[#fd6410] transition-colors font-medium"

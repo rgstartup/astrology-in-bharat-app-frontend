@@ -21,14 +21,14 @@ const SecurityTipsModal = ({
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md animate-in fade-in duration-300 pointer-events-auto"
     >
       <div
-        className="bg-white w-full max-w-lg max-h-[85vh] md:max-h-[90vh] rounded-[2rem] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col relative shrink-0"
+        className="bg-[#1A1A1A] w-full max-w-lg max-h-[85vh] md:max-h-[90vh] rounded-[2rem] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col relative shrink-0"
         data-lenis-prevent="true"
       >
         {/* Header */}
         <div className="p-3 md:p-4 bg-gradient-to-br from-red-500 to-orange-500 text-white relative overflow-hidden flex-shrink-0">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#1A1A1A]/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
           <div className="relative z-10 flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm flex-shrink-0">
+            <div className="w-10 h-10 bg-[#1A1A1A]/20 rounded-lg flex items-center justify-center backdrop-blur-sm flex-shrink-0">
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -109,14 +109,14 @@ const SecurityTipsModal = ({
               ].map((tip, index) => (
                 <div
                   key={index}
-                  className="flex gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-orange-200 transition-colors"
+                  className="flex gap-4 p-4 bg-[#242424] rounded-2xl border border-[#333333] hover:border-orange-200 transition-colors"
                 >
                   <div className="text-3xl flex-shrink-0">{tip.icon}</div>
                   <div>
-                    <h3 className="font-bold text-gray-900 mb-1 text-sm">
+                    <h3 className="font-bold text-gray-100 mb-1 text-sm">
                       {tip.title}
                     </h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">
+                    <p className="text-xs text-gray-400 leading-relaxed">
                       {tip.desc}
                     </p>
                   </div>
@@ -156,7 +156,7 @@ const SecurityTipsModal = ({
                   id="agreeTerms"
                   className="m-2 w-5 h-5 rounded border-2 border-orange-400 text-orange-500 focus:ring-2 focus:ring-orange-500 cursor-pointer flex-shrink-0"
                 />
-                <span className="text-xs md:text-sm font-bold text-gray-800 transition-colors leading-relaxed">
+                <span className="text-xs md:text-sm font-bold text-gray-200 transition-colors leading-relaxed">
                   I have read and understood all the safety guidelines and
                   disclaimer. I agree to follow these precautions during my
                   consultation and will not share any contact details.
@@ -167,10 +167,10 @@ const SecurityTipsModal = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 md:p-5 bg-gray-50 border-t border-gray-100 flex gap-3 flex-shrink-0">
+        <div className="p-4 md:p-5 bg-[#242424] border-t border-[#333333] flex gap-3 flex-shrink-0">
           <button
             onClick={() => setShowSecurityModal(false)}
-            className="flex-1 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 border-gray-200 text-gray-600 font-bold text-xs md:text-sm hover:bg-gray-100 transition-colors"
+            className="flex-1 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 border-gray-800 text-gray-400 font-bold text-xs md:text-sm hover:bg-[#2A2A2A] transition-colors"
           >
             Cancel
           </button>

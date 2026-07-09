@@ -44,7 +44,7 @@ export default function CallRoomPage() {
 
       <div className="z-10 w-full max-w-4xl flex flex-col items-center gap-6">
         {/* Call Timer / Status (Centered Above) */}
-        <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md shadow-xl animate-in fade-in slide-in-from-top-4 duration-500">
+        <div className="flex items-center gap-3 bg-[#1A1A1A]/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md shadow-xl animate-in fade-in slide-in-from-top-4 duration-500">
           {status === "connected" && <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />}
           <span className={`text-xs font-black uppercase tracking-[0.2em] ${status === 'connected' ? 'text-primary' : 'text-white/60'}`}>
             {status === "connected" ? (
@@ -118,7 +118,7 @@ export default function CallRoomPage() {
                         <h3 className="text-2xl font-black text-white drop-shadow-lg">Waiting for expert...</h3>
                         <p className="text-white/70 font-bold mt-1">Please wait for the expert to pick the call</p>
                       </div>
-                      <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full border border-white/20">
+                      <div className="flex items-center gap-2 px-4 py-2 bg-[#1A1A1A]/10 rounded-full border border-white/20">
                         <Loader2 className="w-4 h-4 animate-spin text-primary" />
                         <span className="text-[10px] uppercase tracking-widest font-black">Connecting Securely</span>
                       </div>
@@ -182,7 +182,7 @@ export default function CallRoomPage() {
           <div className="flex items-center gap-6 mt-2">
             <button
               onClick={toggleMute}
-              className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-white text-black" : "bg-white/10 hover:bg-white/20"}`}
+              className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-[#1A1A1A] text-white" : "bg-[#1A1A1A]/10 hover:bg-[#1A1A1A]/20"}`}
             >
               {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
             </button>
@@ -197,7 +197,7 @@ export default function CallRoomPage() {
             {callType === "video" && (
               <button
                 onClick={toggleCamera}
-                className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${isCameraOff ? "bg-white text-black" : "bg-white/10 hover:bg-white/20"}`}
+                className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${isCameraOff ? "bg-[#1A1A1A] text-white" : "bg-[#1A1A1A]/10 hover:bg-[#1A1A1A]/20"}`}
               >
                 {isCameraOff ? <VideoOff className="w-6 h-6" /> : <Video className="w-6 h-6" />}
               </button>
@@ -206,7 +206,7 @@ export default function CallRoomPage() {
             {callType === "audio" && (
               <button
                 onClick={toggleSpeaker}
-                className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${isSpeakerOn ? "bg-white text-black" : "bg-white/10 hover:bg-white/20"}`}
+                className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${isSpeakerOn ? "bg-[#1A1A1A] text-white" : "bg-[#1A1A1A]/10 hover:bg-[#1A1A1A]/20"}`}
               >
                 <Volume2 className="w-6 h-6" />
               </button>
@@ -233,7 +233,7 @@ export default function CallRoomPage() {
                   {endReason?.reason === 'insufficient_balance' ? "Low Balance" : "Rate your Experience"}
                 </h2>
               </div>
-              <button onClick={() => { setShowRatingModal(false); router.push("/"); }} className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all">
+              <button onClick={() => { setShowRatingModal(false); router.push("/"); }} className="w-9 h-9 rounded-full bg-[#1A1A1A]/5 hover:bg-[#1A1A1A]/10 flex items-center justify-center transition-all">
                 <X className="w-4 h-4 text-white/50" />
               </button>
             </div>
@@ -257,7 +257,7 @@ export default function CallRoomPage() {
               onChange={(e) => setReviewComment(e.target.value)}
               placeholder="Share your experience (optional)..."
               rows={3}
-              className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white text-sm placeholder:text-white/20 outline-none focus:border-primary/50"
+              className="w-full bg-[#1A1A1A]/5 border border-white/10 rounded-2xl px-4 py-3 text-white text-sm placeholder:text-white/20 outline-none focus:border-primary/50"
             />
 
             <div className="flex gap-3">

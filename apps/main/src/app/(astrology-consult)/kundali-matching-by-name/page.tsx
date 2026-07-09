@@ -156,7 +156,7 @@ const KundaliMatchingByNamePage = () => {
   return (
     <main className="min-h-screen bg-[#fff7ef] text-slate-900">
       <HeroComponent />
-      <div className="bg-[#fff7f0] pb-14 pt-4">
+      <div className="bg-[#fff7f0] pb-4 pt-4">
         <MatchingForm
           boyDetails={boyDetails}
           girlDetails={girlDetails}

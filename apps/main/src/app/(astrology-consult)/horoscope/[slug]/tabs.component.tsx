@@ -15,7 +15,7 @@ const TABS = [
 export default function HoroscopeTabs({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (t: string) => void }) {
   return (
     <div className="w-full mt-6">
-      <div className="bg-white border border-[#F0E6DD] rounded-2xl p-2 flex items-center gap-1 overflow-x-auto hide-scrollbar shadow-sm">
+      <div className="bg-[#1A1A1A] border border-[#F0E6DD] rounded-2xl p-2 flex items-center gap-1 overflow-x-auto hide-scrollbar shadow-sm">
         <div className="flex items-center gap-1 min-w-max">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id;

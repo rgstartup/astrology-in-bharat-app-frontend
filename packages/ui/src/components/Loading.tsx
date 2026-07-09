@@ -31,15 +31,9 @@ export const Loading: React.FC<LoadingProps> = ({
               style={{ flexShrink: 0, width: `${currentSize.container}px`, height: `${currentSize.container}px`, borderRadius: '50%' }}
             >
               {/* Outer Ring */}
-              <div 
-                className="absolute inset-0 rounded-full border-[3px] border-transparent border-t-[#FF6B00] border-b-[#FF6B00] opacity-80 animate-spin"
-                style={{ animationDuration: '2s', animationTimingFunction: 'linear', animationIterationCount: 'infinite' }}
-              ></div>
+              <div className="absolute inset-0 rounded-full border-[3px] border-transparent border-t-orange border-b-orange animate-[spin_2s_linear_infinite] opacity-80"></div>
               {/* Inner Ring */}
-              <div 
-                className="absolute inset-2.5 rounded-full border-[3px] border-transparent border-l-[#301118] border-r-[#301118] opacity-80 animate-spin"
-                style={{ animationDuration: '1.5s', animationTimingFunction: 'linear', animationIterationCount: 'infinite', animationDirection: 'reverse' }}
-              ></div>
+              <div className="absolute inset-2.5 rounded-full border-[3px] border-transparent border-l-[#301118] border-r-[#301118] animate-[spin_1.5s_linear_infinite_reverse] opacity-80"></div>
               {/* Logo */}
               <div className="relative z-10 bg-white rounded-full p-1.5 flex items-center justify-center w-[75%] h-[75%]">
                 <img src="/images/Expert.png" alt="Loading" className="object-contain w-full h-full" />

@@ -169,17 +169,17 @@ function CallPrepContent() {
     };
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center bg-[#242424]">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange"></div>
         </div>
     );
 
     if (!expert) return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center px-4">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#242424] text-center px-4">
             <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6">
                 <UserX className="w-12 h-12 text-red-500" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Expert Not Found</h2>
+            <h2 className="text-2xl font-bold text-gray-100 mb-2">Expert Not Found</h2>
             <button
                 onClick={() => router.push("/")}
                 className="px-8 py-3 bg-orange text-white rounded-full font-bold shadow-lg mt-4"
@@ -194,37 +194,34 @@ function CallPrepContent() {
         : (expert.call_price || expert.price || 0);
 
     return (
-        <div className="min-h-screen bg-[#fafafa] pb-20">
+        <div className="min-h-screen bg-[#fafafa]">
 
 
             <main className="max-w-6xl mx-auto px-4 pt-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     <div className="lg:col-span-7 space-y-8">
                         <div>
-                            <span className="px-4 py-1.5 bg-orange/10 text-orange text-[10px] font-black uppercase tracking-[0.3em] rounded-full border border-orange/20 inline-block mb-4">
-                                Preparing {type === 'video' ? 'Video' : 'Audio'} Call
-                            </span>
-                            <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
+                            <h1 className="text-4xl md:text-6xl font-black text-gray-100 leading-tight">
                                 Consulting <span className="text-orange">{expert.name}</span>
                             </h1>
-                            <p className="text-gray-500 text-lg font-medium mt-4">
+                            <p className="text-gray-200 text-base md:text-lg leading-relaxed mt-4 font-medium tracking-tight">
                                 Experience a personal {type} consultation for precise future predictions and remedies.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="p-6 rounded-3xl bg-white border border-orange/40 shadow-sm">
+                            <div className="p-6 rounded-3xl bg-[#1A1A1A] border border-orange/40 shadow-sm">
                                 <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center mb-4">
                                     {type === 'video' ? <Video className="w-6 h-6 text-orange" /> : <Phone className="w-6 h-6 text-orange" />}
                                 </div>
-                                <h3 className="font-bold text-gray-900">{type === 'video' ? 'HD Video' : 'Crystal Clear Audio'}</h3>
+                                <h3 className="font-bold text-gray-100">{type === 'video' ? 'HD Video' : 'Crystal Clear Audio'}</h3>
                                 <p className="text-xs text-gray-400 mt-1">High-quality connection for seamless talk.</p>
                             </div>
-                            <div className="p-6 rounded-3xl bg-white border border-orange/40 shadow-sm">
+                            <div className="p-6 rounded-3xl bg-[#1A1A1A] border border-orange/40 shadow-sm">
                                 <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
                                     <ShieldCheck className="w-6 h-6 text-blue-500" />
                                 </div>
-                                <h3 className="font-bold text-gray-900">100% Private</h3>
+                                <h3 className="font-bold text-gray-100">100% Private</h3>
                                 <p className="text-xs text-gray-400 mt-1">Your identity and conversation are encrypted.</p>
                             </div>
                         </div>
@@ -253,13 +250,13 @@ function CallPrepContent() {
                     </div>
 
                     <div className="lg:col-span-5">
-                        <div className="bg-white p-3 rounded-[3.5rem] shadow-xl">
+                        <div className="bg-[#1A1A1A] p-3 rounded-[3.5rem] shadow-xl">
                             <div className="relative h-[400px] rounded-[3rem] overflow-hidden">
                                 <Image src={expert.image} alt={expert.name} fill className="object-cover" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
 
                                 {/* Availability Badge */}
-                                <div className={`absolute top-6 left-6 px-4 py-2 backdrop-blur-md rounded-full border shadow-sm flex items-center gap-2 ${expert.is_available ? 'bg-orange border-white/20' : 'bg-white border-gray-200'}`}>
+                                <div className={`absolute top-6 left-6 px-4 py-2 backdrop-blur-md rounded-full border shadow-sm flex items-center gap-2 ${expert.is_available ? 'bg-orange border-white/20' : 'bg-[#1A1A1A] border-gray-800'}`}>
                                     <div className={`w-2 h-2 rounded-full ${expert.is_available ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]' : 'bg-gray-400'}`}></div>
                                     <span className={`${expert.is_available ? 'text-white' : 'text-gray-400'} text-[10px] font-black uppercase tracking-widest`}>
                                         {expert.is_available ? 'Available Now' : 'Offline'}
@@ -280,14 +277,14 @@ function CallPrepContent() {
                             </div>
                             <div className="p-8 pt-10 space-y-4">
                                 {isAuthenticated && (
-                                    <div className="flex items-center justify-between px-6 py-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                    <div className="flex items-center justify-between px-6 py-4 bg-[#242424] rounded-2xl border border-[#333333]">
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                                                 <LucideIcons.Wallet className="w-4 h-4 text-green-600" />
                                             </div>
                                             <span className="text-sm font-bold text-gray-500">Your Balance</span>
                                         </div>
-                                        <span className="text-xl font-black text-gray-900">₹{userBalance.toFixed(2)}</span>
+                                        <span className="text-xl font-black text-gray-100">₹{userBalance.toFixed(2)}</span>
                                     </div>
                                 )}
 
@@ -304,26 +301,22 @@ function CallPrepContent() {
                                         </div>
                                         <button
                                             onClick={() => router.push("/client/profile?tab=wallet")}
-                                            className="w-full py-4 bg-red-500 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-red-600 transition-all flex items-center justify-center gap-2"
+                                            className="w-full py-3.5 sm:py-4 md:py-5 bg-red-500 text-white rounded-2xl md:rounded-3xl font-black text-base sm:text-lg md:text-xl shadow-lg hover:bg-red-600 hover:-translate-y-1 transition-all flex items-center justify-center gap-2 sm:gap-3 md:gap-4 active:scale-95"
                                         >
-                                            <LucideIcons.CreditCard className="w-5 h-5" />
-                                            <span>RECHARGE NOW</span>
+                                            <LucideIcons.CreditCard className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
+                                            <span className="truncate">RECHARGE NOW</span>
                                         </button>
                                     </div>
                                 ) : (
                                     <button
                                         onClick={handleStartCall}
                                         disabled={actionLoading}
-                                        className="w-full py-5 bg-orange text-white rounded-3xl font-black text-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-4 active:scale-95 disabled:opacity-70"
+                                        className="w-full py-3.5 sm:py-4 md:py-5 bg-orange text-white rounded-2xl md:rounded-3xl font-black text-base sm:text-lg md:text-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-2 sm:gap-3 md:gap-4 active:scale-95 disabled:opacity-70"
                                     >
-                                        {type === 'video' ? <Video className="w-6 h-6" /> : <Phone className="w-6 h-6" />}
-                                        <span>{actionLoading ? "STARTING..." : `START ${type.toUpperCase()} CALL`}</span>
+                                        {type === 'video' ? <Video className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" /> : <Phone className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />}
+                                        <span className="truncate">{actionLoading ? "STARTING..." : `START ${type.toUpperCase()} CALL`}</span>
                                     </button>
                                 )}
-                                
-                                <p className="text-center text-[10px] text-gray-400 font-black uppercase tracking-widest mt-6">
-                                    🔒 Secured by 256-Bit SSL Encryption
-                                </p>
                             </div>
                         </div>
                     </div>
@@ -332,7 +325,7 @@ function CallPrepContent() {
 
             {showSecurityModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-                    <div className="bg-white w-full max-w-lg rounded-[2rem] overflow-hidden shadow-2xl flex flex-col">
+                    <div className="bg-[#1A1A1A] w-full max-w-lg rounded-[2rem] overflow-hidden shadow-2xl flex flex-col">
                         <div className="p-6 bg-gradient-to-r from-orange to-orange-500 text-white">
                             <div className="flex items-center gap-3">
                                 <ShieldCheck className="w-8 h-8" />
@@ -343,17 +336,17 @@ function CallPrepContent() {
                             </div>
                         </div>
                         <div className="p-8 space-y-4">
-                            <p className="text-sm text-gray-600 leading-relaxed font-bold">
+                            <p className="text-sm text-gray-400 leading-relaxed font-bold">
                                 1. Do not share your phone number or email address.<br />
                                 2. Avoid making payments outside our website.<br />
                                 3. If the expert asks for personal contact, report it immediately.
                             </p>
                             <label className="flex items-center gap-4 p-4 bg-orange-50 rounded-2xl border-2 border-orange-100 cursor-pointer">
                                 <input type="checkbox" id="agreeTerms" className="w-5 h-5 accent-orange" />
-                                <span className="text-xs font-bold text-gray-800">I agree to follow the safety guidelines.</span>
+                                <span className="text-xs font-bold text-gray-200">I agree to follow the safety guidelines.</span>
                             </label>
                             <div className="flex gap-4 pt-4">
-                                <button onClick={() => setShowSecurityModal(false)} className="flex-1 py-4 rounded-2xl border-2 border-gray-100 font-bold text-gray-400">Cancel</button>
+                                <button onClick={() => setShowSecurityModal(false)} className="flex-1 py-4 rounded-2xl border-2 border-[#333333] font-bold text-gray-400">Cancel</button>
                                 <button onClick={() => {
                                     const checkbox = document.getElementById('agreeTerms') as HTMLInputElement;
                                     if (!checkbox?.checked) {
@@ -377,7 +370,7 @@ function CallPrepContent() {
                 description={
                     <>
                         Right now{" "}
-                        <span className="font-bold text-gray-900">{expert?.name}</span>{" "}
+                        <span className="font-bold text-gray-100">{expert?.name}</span>{" "}
                         is offline. <br />
                         Please try again later when the expert is available.
                     </>

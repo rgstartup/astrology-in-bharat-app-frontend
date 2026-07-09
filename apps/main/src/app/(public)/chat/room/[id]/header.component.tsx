@@ -66,7 +66,7 @@ export default function Header({
                         <div>
                             <h1 className="font-bold text-[11px] md:text-sm leading-none text-white flex items-center gap-1.5">
                                 {expertData.name}
-                                {isFree && <span className="bg-white text-[#fd6410] px-1.5 py-0.5 rounded text-[7px] font-black uppercase tracking-tighter shadow-sm animate-bounce">Free</span>}
+                                {isFree && <span className="bg-[#1A1A1A] text-[#fd6410] px-1.5 py-0.5 rounded text-[7px] font-black uppercase tracking-tighter shadow-sm animate-bounce">Free</span>}
                             </h1>
                             <p className="text-[8px] text-white/80 mt-0.5">
                                 {sessionStatus === 'active' ? 'Live Session' : sessionStatus === 'completed' ? 'Session Ended' : 'Waiting'}
@@ -130,7 +130,7 @@ export default function Header({
                     {/* End Button */}
                     <button
                         onClick={handleEndChat}
-                        className="bg-white text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-full font-black text-[11px] shadow-lg flex items-center gap-1.5 transition-all active:scale-95"
+                        className="bg-[#1A1A1A] text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-full font-black text-[11px] shadow-lg flex items-center gap-1.5 transition-all active:scale-95"
                     >
                         <AlertCircle className="w-3.5 h-3.5" />
                         End Session
@@ -147,9 +147,9 @@ export default function Header({
                             {mounted ? formatTime(elapsedTime) : "--:--"}
                         </span>
                     </div>
-                    <div className="w-px h-8 bg-white/20" />
+                    <div className="w-px h-8 bg-[#1A1A1A]/20" />
                     <div className="bg-black/20 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-4 border border-white/30 shadow-2xl">
-                        <div className="p-1.5 bg-white/10 rounded-full">
+                        <div className="p-1.5 bg-[#1A1A1A]/10 rounded-full">
                             <Clock className="w-3.5 h-3.5 text-white" />
                         </div>
                         <div className="flex flex-col items-start gap-0.5">
@@ -163,7 +163,7 @@ export default function Header({
                     </div>
                     <button
                         onClick={handleEndChat}
-                        className="bg-white text-red-600 hover:bg-red-50 px-4 py-2 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 transition-all active:scale-95"
+                        className="bg-[#1A1A1A] text-red-600 hover:bg-red-50 px-4 py-2 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 transition-all active:scale-95"
                     >
                         <AlertCircle className="w-4 h-4" />
                         End Session

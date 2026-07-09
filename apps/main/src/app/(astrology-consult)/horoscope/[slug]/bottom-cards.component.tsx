@@ -4,7 +4,7 @@ import Image from 'next/image';
 export function LuckyAspects() {
   return (
     <div 
-      className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden h-full bg-white"
+      className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden h-full bg-[#1A1A1A]"
       style={{
         backgroundImage: "url('/images/back-image.webp')",
         backgroundSize: "cover",
@@ -38,7 +38,7 @@ export function LuckyAspects() {
 export function RemedyForYou() {
   return (
     <div 
-      className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden h-full bg-white"
+      className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden h-full bg-[#1A1A1A]"
       style={{
         backgroundImage: "url('/images/back-image.webp')",
         backgroundSize: "cover",
@@ -72,7 +72,7 @@ export function RemedyForYou() {
 export function ThingsToAvoid() {
   return (
     <div 
-      className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden h-full bg-white"
+      className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden h-full bg-[#1A1A1A]"
       style={{
         backgroundImage: "url('/images/back-image.webp')",
         backgroundSize: "cover",
