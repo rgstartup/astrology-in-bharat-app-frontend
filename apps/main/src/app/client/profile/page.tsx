@@ -20,6 +20,7 @@ import { useProfileLogic } from "@/components/features/profile/useProfileLogic";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
 import Skeleton from "@/components/ui/Skeleton";
+import { Loading } from "@repo/ui";
 
 const ProfileContent: React.FC = () => {
   const { lang } = useLanguageStore();
@@ -90,11 +91,7 @@ const ProfileContent: React.FC = () => {
   };
 
   if (authLoading || !isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-[#FFF9F4] flex justify-center items-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fd6410]"></div>
-      </div>
-    );
+    return <Loading fullScreen />;
   }
 
   return (

@@ -5,7 +5,7 @@ import { FaComments, FaHeart, FaChartLine, FaLock, FaCertificate, FaUsers, FaChe
 
 const EducationalContent = () => {
   return (
-    <div className="bg-transparent py-8">
+    <div className="bg-transparent pb-8 pt-2">
       <div className="max-w-6xl mx-auto px-4">
         
         {/* Unified Educational Card */}

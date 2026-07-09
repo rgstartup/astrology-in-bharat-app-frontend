@@ -17,7 +17,7 @@ const HeroComponent = () => {
             alt="Kundali Matching Banner"
             width={1600}
             height={420}
-            className="w-full h-[200px] md:h-[300px] lg:h-[360px] object-cover object-center"
+            className="w-full h-[180px] md:h-[300px] lg:h-[360px] object-cover object-left md:object-center"
           />
         </div>
       </div>

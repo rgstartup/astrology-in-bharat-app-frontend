@@ -48,15 +48,15 @@ const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
 
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden">
-      <div className="px-6 py-5 bg-white border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="px-4 py-3 sm:px-6 sm:py-5 bg-white border-b border-gray-100 flex flex-row justify-between items-center gap-2 sm:gap-4">
         <h5
-          className="text-lg font-bold text-gray-900 mb-0 flex items-center"
+          className="text-sm sm:text-lg font-bold text-gray-900 mb-0 flex items-center leading-tight sm:leading-normal"
           style={{
             fontFamily:
               lang === "hi" ? "'Noto Sans Devanagari', sans-serif" : "inherit",
           }}
         >
-          <span className="w-10 h-10 rounded-full bg-orange/10 text-orange flex items-center justify-center mr-3 flex-shrink-0">
+          <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-orange/10 text-orange flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 text-sm sm:text-base">
             <i className="fa-regular fa-id-card"></i>
           </span>
           {t.personalDetails.title}
@@ -64,9 +64,9 @@ const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
         {!loading && !editing && (
           <Button
             variant="primary"
-            size="md"
+            size="sm"
             onClick={() => setEditing(true)}
-            className="shadow-gold px-6 cursor-pointer hover:cursor-pointer"
+            className="shadow-gold cursor-pointer hover:cursor-pointer !px-3 sm:!px-5 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
             style={{
               fontFamily:
                 lang === "hi" ? "'Noto Sans Devanagari', sans-serif" : "inherit",
@@ -77,12 +77,12 @@ const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
           </Button>
         )}
         {editing && (
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3">
             <Button
               variant="secondary"
-              size="md"
+              size="sm"
               onClick={() => setEditing(false)}
-              className="px-6 cursor-pointer hover:cursor-pointer"
+              className="cursor-pointer hover:cursor-pointer !px-3 sm:!px-6 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
               style={{
                 fontFamily:
                   lang === "hi"
@@ -94,10 +94,10 @@ const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
             </Button>
             <Button
               variant="primary"
-              size="md"
+              size="sm"
               loading={saving}
               onClick={handleSave}
-              className="px-6 shadow-md cursor-pointer hover:cursor-pointer"
+              className="shadow-md cursor-pointer hover:cursor-pointer !px-3 sm:!px-6 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
               style={{
                 fontFamily:
                   lang === "hi"

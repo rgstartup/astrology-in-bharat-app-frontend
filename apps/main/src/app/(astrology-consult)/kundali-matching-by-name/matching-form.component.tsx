@@ -27,7 +27,7 @@ const MatchingForm = ({
   const [matchingType, setMatchingType] = useState("ashtakoot");
 
   return (
-    <section className="pb-8 pt-2 bg-transparent">
+    <section className="pb-2 pt-2 bg-transparent">
       <div className="max-w-6xl mx-auto px-4">
         {/* Main Card container */}
         <div className="bg-white rounded-[2rem] border border-orange-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-visible p-6 md:p-10 relative">
@@ -99,6 +99,7 @@ const MatchingForm = ({
                   <LocationAutocomplete
                     placeholder={t.placeholders.searchPlace}
                     onSelect={(val) => handleLocationSelect("boy", val)}
+                    inputClassName="w-full rounded-xl border border-gray-100/70 bg-white shadow-sm px-4 py-2.5 pr-10 text-sm font-medium text-slate-900 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all"
                   />
                 </div>
                 <div className="flex items-center gap-2 pt-1">
@@ -154,6 +155,7 @@ const MatchingForm = ({
                   <LocationAutocomplete
                     placeholder={t.placeholders.searchPlace}
                     onSelect={(val) => handleLocationSelect("girl", val)}
+                    inputClassName="w-full rounded-xl border border-gray-100/70 bg-white shadow-sm px-4 py-2.5 pr-10 text-sm font-medium text-slate-900 outline-none focus:border-pink-300 focus:ring-2 focus:ring-pink-100 transition-all"
                   />
                 </div>
                 <div className="flex items-center gap-2 pt-1">

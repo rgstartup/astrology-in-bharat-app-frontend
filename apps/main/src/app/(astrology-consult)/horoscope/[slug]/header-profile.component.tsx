@@ -84,7 +84,7 @@ export default function ZodiacHeaderProfile({ signData, formattedDate, luckyStat
       {/* Right Lucky Stats Section */}
       {luckyStats && (
         <div className="flex items-center w-full xl:w-auto z-10 overflow-x-auto hide-scrollbar pb-2 xl:pb-0">
-          <div className="bg-[#1A1A1A] rounded-2xl p-4 md:p-6 shadow-sm border border-[#F26500] flex flex-row items-center gap-6 md:gap-8 divide-x divide-[#F26500] min-w-max xl:min-w-0">
+          <div className="bg-[#FFFDF9] rounded-2xl p-4 md:p-6 shadow-sm border border-[#F26500] flex flex-row items-center gap-6 md:gap-8 divide-x divide-[#F26500] min-w-max xl:min-w-0">
             
             {/* Lucky Number */}
             <div className="flex items-center gap-4 pr-2 md:pr-4">

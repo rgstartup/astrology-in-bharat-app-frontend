@@ -113,7 +113,7 @@ const TopExpertsSection: React.FC = () => {
                                     <i className="fa-solid fa-star text-orange text-[10px]"></i>
                                     <span className="text-xs font-black text-orange">{expert.rating || '5.0'}</span>
                                 </div>
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider truncate block opacity-70">
+                                <span className="text-[10px] font-bold text-gray-800 uppercase tracking-wider truncate block">
                                     {expert.specialization || "Astrology"}
                                 </span>
                             </div>

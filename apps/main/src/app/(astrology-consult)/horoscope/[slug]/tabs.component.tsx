@@ -15,7 +15,7 @@ const TABS = [
 export default function HoroscopeTabs({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (t: string) => void }) {
   return (
     <div className="w-full mt-6">
-      <div className="bg-[#1A1A1A] border border-[#F0E6DD] rounded-2xl p-2 flex items-center gap-1 overflow-x-auto hide-scrollbar shadow-sm">
+      <div className="bg-[#FFFDF9] border border-[#F0E6DD] rounded-2xl p-2 flex items-center gap-1 overflow-x-auto hide-scrollbar shadow-sm">
         <div className="flex items-center gap-1 min-w-max">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id;
@@ -25,7 +25,7 @@ export default function HoroscopeTabs({ activeTab, setActiveTab }: { activeTab: 
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-[14px] transition-all whitespace-nowrap ${
                   isActive 
-                    ? 'bg-[#2D1205] text-white shadow-md' 
+                    ? 'bg-[#F26500] text-white shadow-md' 
                     : 'bg-transparent text-slate-600 hover:bg-orange-50/50 hover:text-[#F26500]'
                 }`}
               >

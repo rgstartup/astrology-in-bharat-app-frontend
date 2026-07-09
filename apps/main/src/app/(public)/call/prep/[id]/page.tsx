@@ -201,32 +201,32 @@ function CallPrepContent() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     <div className="lg:col-span-7 space-y-8">
                         <div>
-                            <h1 className="text-4xl md:text-6xl font-black text-gray-100 leading-tight">
+                            <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
                                 Consulting <span className="text-orange">{expert.name}</span>
                             </h1>
-                            <p className="text-gray-200 text-base md:text-lg leading-relaxed mt-4 font-medium tracking-tight">
+                            <p className="text-gray-600 text-base md:text-lg leading-relaxed mt-4 font-medium tracking-tight">
                                 Experience a personal {type} consultation for precise future predictions and remedies.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="p-6 rounded-3xl bg-[#1A1A1A] border border-orange/40 shadow-sm">
+                            <div className="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm">
                                 <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center mb-4">
                                     {type === 'video' ? <Video className="w-6 h-6 text-orange" /> : <Phone className="w-6 h-6 text-orange" />}
                                 </div>
-                                <h3 className="font-bold text-gray-100">{type === 'video' ? 'HD Video' : 'Crystal Clear Audio'}</h3>
-                                <p className="text-xs text-gray-400 mt-1">High-quality connection for seamless talk.</p>
+                                <h3 className="font-bold text-gray-900">{type === 'video' ? 'HD Video' : 'Crystal Clear Audio'}</h3>
+                                <p className="text-xs text-gray-500 mt-1">High-quality connection for seamless talk.</p>
                             </div>
-                            <div className="p-6 rounded-3xl bg-[#1A1A1A] border border-orange/40 shadow-sm">
+                            <div className="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm">
                                 <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
                                     <ShieldCheck className="w-6 h-6 text-blue-500" />
                                 </div>
-                                <h3 className="font-bold text-gray-100">100% Private</h3>
-                                <p className="text-xs text-gray-400 mt-1">Your identity and conversation are encrypted.</p>
+                                <h3 className="font-bold text-gray-900">100% Private</h3>
+                                <p className="text-xs text-gray-500 mt-1">Your identity and conversation are encrypted.</p>
                             </div>
                         </div>
 
-                        <div className="p-8 rounded-[2.5rem] bg-gray-900 text-white">
+                        <div className="p-8 rounded-[2.5rem] bg-white text-gray-900 shadow-sm border border-gray-100">
                             <h3 className="text-lg font-bold mb-6 flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-xl bg-orange flex items-center justify-center">
                                     <User className="w-5 h-5 text-white" />
@@ -240,8 +240,8 @@ function CallPrepContent() {
                                     "Keep your basic birth details ready",
                                     "Maintain sufficient wallet balance for the session"
                                 ].map((item, i) => (
-                                    <li key={i} className="flex items-center gap-4 text-sm font-bold opacity-80">
-                                        <div className="w-5 h-5 rounded-full border border-white/20 flex items-center justify-center text-[10px]">{i + 1}</div>
+                                    <li key={i} className="flex items-center gap-4 text-sm font-bold text-gray-700">
+                                        <div className="w-5 h-5 rounded-full border border-gray-200 text-gray-500 flex items-center justify-center text-[10px]">{i + 1}</div>
                                         {item}
                                     </li>
                                 ))}
@@ -250,7 +250,7 @@ function CallPrepContent() {
                     </div>
 
                     <div className="lg:col-span-5">
-                        <div className="bg-[#1A1A1A] p-3 rounded-[3.5rem] shadow-xl">
+                        <div className="bg-white p-3 rounded-[3.5rem] shadow-xl">
                             <div className="relative h-[400px] rounded-[3rem] overflow-hidden">
                                 <Image src={expert.image} alt={expert.name} fill className="object-cover" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>

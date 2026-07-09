@@ -148,13 +148,13 @@ const LoveCalculatorPage = () => {
       </div>
 
       {/* Main Card Section */}
-      <div className="max-w-6xl mx-auto px-4 pb-12">
+      <div className="max-w-6xl mx-auto px-4 pb-4">
       <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
 
           {/* ── Left: Form ── */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5"
+            className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-fit"
           >
             {/* Form Header */}
             <div className="flex items-center gap-3 mb-1">
@@ -163,7 +163,7 @@ const LoveCalculatorPage = () => {
               </div>
               <div>
                 <h1 className="text-xl font-black text-[#1A1A1A]">Love Calculator</h1>
-                <p className="text-xs text-[#888]">Calculate your love compatibility</p>
+                <p className="text-xs text-[#555] font-medium">Calculate your love compatibility</p>
               </div>
             </div>
 
@@ -178,58 +178,56 @@ const LoveCalculatorPage = () => {
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-semibold text-[#333]">Your Name</label>
               <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Enter your name"
-                  value={yourName}
-                  onChange={(e) => setYourName(e.target.value)}
-                  className="w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
-                />
-                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm" />
-              </div>
+                  <input
+                    type="text"
+                    placeholder="Enter your name"
+                    value={yourName}
+                    onChange={(e) => setYourName(e.target.value)}
+                    className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
+                  />
+                  <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm" />
+                </div>
             </div>
 
             {/* Partner Name */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-semibold text-[#333]">Your Partner's Name</label>
               <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Enter partner name"
-                  value={partnerName}
-                  onChange={(e) => setPartnerName(e.target.value)}
-                  className="w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
-                />
-                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm" />
-              </div>
+                  <input
+                    type="text"
+                    placeholder="Enter partner name"
+                    value={partnerName}
+                    onChange={(e) => setPartnerName(e.target.value)}
+                    className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
+                  />
+                  <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm" />
+                </div>
             </div>
 
             {/* Your DOB */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-semibold text-[#333]">Your Birth Date</label>
               <div className="relative">
-                <input
-                  type="date"
-                  value={yourDob}
-                  onChange={(e) => setYourDob(e.target.value)}
-                  className="w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
-                />
-                <i className="fa-regular fa-calendar absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm pointer-events-none" />
-              </div>
+                  <input
+                    type="date"
+                    value={yourDob}
+                    onChange={(e) => setYourDob(e.target.value)}
+                    className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 text-sm text-[#111] font-medium focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
+                  />
+                </div>
             </div>
 
             {/* Partner DOB */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-semibold text-[#333]">Your Partner's Birth Date</label>
               <div className="relative">
-                <input
-                  type="date"
-                  value={partnerDob}
-                  onChange={(e) => setPartnerDob(e.target.value)}
-                  className="w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
-                />
-                <i className="fa-regular fa-calendar absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm pointer-events-none" />
-              </div>
+                  <input
+                    type="date"
+                    value={partnerDob}
+                    onChange={(e) => setPartnerDob(e.target.value)}
+                    className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 text-sm text-[#111] font-medium focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
+                  />
+                </div>
             </div>
 
             {/* Submit */}

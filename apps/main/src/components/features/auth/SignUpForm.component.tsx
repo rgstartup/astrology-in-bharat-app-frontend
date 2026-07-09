@@ -183,7 +183,7 @@ export const SignUpForm: React.FC = () => {
         <div className={`w-full ${step === 3 ? 'max-w-[800px]' : 'max-w-[500px]'} mx-auto lg:ml-auto lg:mr-0 bg-white rounded-3xl shadow-[0_10px_50px_rgba(0,0,0,0.06)] border border-gray-100 p-6 md:p-10 my-0 transition-all duration-300`}>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-gray-50">
                 <div>
-                    <h6 className="text-gray-400 text-[10px] uppercase tracking-[0.15em] mb-0.5">
+                    <h6 className="text-gray-800 text-[10px] uppercase tracking-[0.15em] mb-0.5">
                         {t.signUp.welcome}
                     </h6>
                     <span className="text-xl font-black text-orange block">
@@ -192,7 +192,7 @@ export const SignUpForm: React.FC = () => {
                 </div>
                 {step === 1 && (
                     <div className="text-left sm:text-right">
-                        <h6 className="text-gray-400 text-[10px] uppercase tracking-[0.15em] mb-0.5">
+                        <h6 className="text-gray-800 text-[10px] uppercase tracking-[0.15em] mb-0.5">
                             {t.signUp.alreadyAccount}
                         </h6>
                         <Link href="/sign-in" className="text-base font-bold text-[#4A1D1F] hover:text-orange transition-all">
@@ -206,7 +206,7 @@ export const SignUpForm: React.FC = () => {
                 <h2 className="text-[26px] md:text-3xl font-black text-[#301118]">
                     {step === 1 ? t.signUp.title : "Complete Profile"}
                 </h2>
-                <p className="text-gray-400 text-xs md:text-sm mt-1 font-medium">
+                <p className="text-gray-800 text-xs md:text-sm mt-1 font-medium">
                     {step === 1 ? t.signUp.subtitle : "Please fill in your details to finalize your registration."}
                 </p>
             </div>
@@ -226,7 +226,7 @@ export const SignUpForm: React.FC = () => {
                             width={20}
                             className="group-hover:scale-110 transition-transform"
                         />
-                        <span className="font-bold text-gray-600 text-sm">{t.signUp.google}</span>
+                        <span className="font-bold text-gray-800 text-sm">{t.signUp.google}</span>
                     </button>
                 </div>
 
@@ -234,7 +234,7 @@ export const SignUpForm: React.FC = () => {
                     <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-50"></div>
                     </div>
-                    <span className="relative px-3 text-[10px] font-black text-gray-300 bg-white uppercase tracking-[0.2em]">{t.signUp.orDetails}</span>
+                    <span className="relative px-3 text-[10px] font-black text-gray-700 bg-white uppercase tracking-[0.2em]">{t.signUp.orDetails}</span>
                 </div>
 
                 <form onSubmit={handleStep1Submit} className="space-y-4">
@@ -246,7 +246,7 @@ export const SignUpForm: React.FC = () => {
                             type="email"
                             id="email"
                             name="email"
-                            className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-300 text-black font-semibold text-sm"
+                            className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-700 text-black font-semibold text-sm"
                             placeholder={t.signUp.emailPlaceholder}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -274,7 +274,7 @@ export const SignUpForm: React.FC = () => {
                                 <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Password</label>
                                 <div className="relative">
                                     <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
-                                    <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" onClick={() => setShowPassword(!showPassword)}>
+                                    <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700" onClick={() => setShowPassword(!showPassword)}>
                                         <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} text-base`}></i>
                                     </button>
                                 </div>
@@ -283,7 +283,7 @@ export const SignUpForm: React.FC = () => {
                                 <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Confirm Password</label>
                                 <div className="relative">
                                     <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
-                                    <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                    <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                                         <i className={`fa-solid ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"} text-base`}></i>
                                     </button>
                                 </div>

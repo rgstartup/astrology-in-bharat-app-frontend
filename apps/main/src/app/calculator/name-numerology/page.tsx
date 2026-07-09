@@ -82,14 +82,14 @@ export default function NameNumerologyPage() {
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl mx-auto"}`}>
 
           {/* ── Left: Form ── */}
-          <form onSubmit={handleSubmit} className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-6 shadow-sm">
+          <form onSubmit={handleSubmit} className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-6 shadow-sm h-fit">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center shrink-0">
                 <i className="fa-solid fa-hashtag text-[#F26500] text-xl" />
               </div>
               <div>
                 <h1 className="text-xl md:text-2xl font-black text-[#1A1A1A] leading-tight">Name Numerology</h1>
-                <p className="text-xs md:text-sm text-[#888] mt-1">Discover the hidden power of your name through numbers</p>
+                <p className="text-xs md:text-sm text-[#555] font-medium mt-1">Discover the hidden power of your name through numbers</p>
               </div>
             </div>
 
@@ -104,9 +104,9 @@ export default function NameNumerologyPage() {
                     placeholder="Enter your full name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full border-2 border-[#F0E0D0] rounded-xl px-4 py-3.5 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-4 focus:ring-[#F26500]/10 bg-white transition-all font-medium"
+                    className="w-full border-2 border-[#D0BBA0] rounded-xl px-4 py-3.5 pr-10 text-sm text-[#111] placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-4 focus:ring-[#F26500]/10 bg-white transition-all font-medium"
                   />
-                  <i className="fa-regular fa-user absolute right-4 top-1/2 -translate-y-1/2 text-[#CCC]" />
+                  <i className="fa-regular fa-user absolute right-4 top-1/2 -translate-y-1/2 text-[#888]" />
                 </div>
               </div>
 

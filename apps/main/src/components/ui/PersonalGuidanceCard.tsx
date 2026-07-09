@@ -52,13 +52,13 @@ const PersonalGuidanceCard: React.FC<PersonalGuidanceCardProps> = ({ className =
               <i className="fa-regular fa-comment-dots text-[#F26500]" /> Top Questions to Ask
             </h4>
             <div className="flex flex-col gap-2">
-              <div className="bg-white rounded-lg p-2.5 text-[13px] text-[#555] shadow-sm border border-[#F5E0CC]/50">
+              <div className="bg-white rounded-lg p-2.5 text-[13px] text-[#222] font-medium shadow-sm border border-[#D0BBA0]">
                 "When is the exact time of my marriage?"
               </div>
-              <div className="bg-white rounded-lg p-2.5 text-[13px] text-[#555] shadow-sm border border-[#F5E0CC]/50">
+              <div className="bg-white rounded-lg p-2.5 text-[13px] text-[#222] font-medium shadow-sm border border-[#D0BBA0]">
                 "Will it be a love or arranged marriage?"
               </div>
-              <div className="bg-white rounded-lg p-2.5 text-[13px] text-[#555] shadow-sm border border-[#F5E0CC]/50">
+              <div className="bg-white rounded-lg p-2.5 text-[13px] text-[#222] font-medium shadow-sm border border-[#D0BBA0]">
                 "Are there any delays or Doshas in my chart?"
               </div>
             </div>

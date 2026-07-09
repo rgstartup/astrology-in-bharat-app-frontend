@@ -12,6 +12,7 @@ interface LocationAutocompleteProps {
   onSelect: (location: { name: string; lat: string; lon: string }) => void;
   initialValue?: string;
   className?: string;
+  inputClassName?: string;
 }
 
 interface NominatimResult {
@@ -33,6 +34,7 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
   onSelect,
   initialValue = "",
   className = "",
+  inputClassName = "",
 }) => {
   const [query, setQuery] = useState(initialValue);
   const [results, setResults] = useState<NominatimResult[]>([]);
@@ -117,7 +119,7 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
       <div className="relative group/input">
         <input
           type="text"
-          className="form-control rounded-3 py-3 pl-10 pr-10 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-primary/10 transition-all w-full"
+          className={inputClassName || "form-control rounded-3 py-3 pl-10 pr-10 border bg-gray-50 text-sm shadow-sm focus:bg-white focus:ring-2 focus:ring-primary/10 transition-all w-full"}
           placeholder={placeholder}
           value={query}
           onChange={(e) => {

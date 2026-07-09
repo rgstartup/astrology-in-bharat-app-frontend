@@ -31,7 +31,7 @@ export default function SignInPageClient() {
                                 </span>
                             </h3>
                             <p
-                                className="text-gray-600 text-base md:text-lg leading-relaxed"
+                                className="text-black text-base md:text-lg leading-relaxed font-medium"
                                 style={{ fontFamily: lang === "hi" ? "'Noto Sans Devanagari', sans-serif" : "inherit" }}
                             >
                                 {signIn.description1} {signIn.description2}

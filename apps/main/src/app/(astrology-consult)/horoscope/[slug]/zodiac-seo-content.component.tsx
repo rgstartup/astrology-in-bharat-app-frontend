@@ -273,23 +273,23 @@ export default function ZodiacSignSeoContent({ signSlug }: { signSlug: string })
   const data = signSeoData[signSlug?.toLowerCase()] || fallbackData;
 
   return (
-    <section className="!bg-[#edeef1] py-10 md:py-16 mt-8">
+    <section className="!bg-transparent py-10 md:py-16 mt-8 border-t border-[#F0E6DD]">
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
-        <div className="bg-[#1A1A1A] p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
+        <div className="bg-[#FFFDF9] p-5 md:p-8 rounded-[3px] shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
           
           <h2 className="section-heading-premium mb-6">
             <span>The Complete Guide to {data.name} Zodiac Sign</span>
           </h2>
           
-          <div className="mb-10 text-gray-300 text-[15px] leading-relaxed space-y-4">
-            <p className="font-semibold text-lg text-white">{data.description}</p>
+          <div className="mb-10 text-slate-600 text-[15px] leading-relaxed space-y-4">
+            <p className="font-semibold text-lg text-[#3D1A0B]">{data.description}</p>
             <p>{data.detailedTraits}</p>
           </div>
 
           <div className="space-y-8">
             <div>
-              <h3 className="text-[20px] font-bold text-white mb-3">Element & Planetary Rulers</h3>
-              <p className="text-gray-300 text-[15px] leading-relaxed">
+              <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-3">Element & Planetary Rulers</h3>
+              <p className="text-slate-600 text-[15px] leading-relaxed">
                 <strong>Element:</strong> {data.element} <br />
                 <strong>Ruling Planet:</strong> {data.rulingPlanet} <br />
                 <strong>Lucky Gemstone:</strong> {data.luckyData.gem}
@@ -297,8 +297,8 @@ export default function ZodiacSignSeoContent({ signSlug }: { signSlug: string })
             </div>
 
             <div>
-              <h3 className="text-[20px] font-bold text-white mb-3">Strengths (Faida)</h3>
-              <ul className="list-disc pl-5 space-y-2 text-gray-300 text-[15px]">
+              <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-3">Strengths (Faida)</h3>
+              <ul className="list-disc pl-5 space-y-2 text-slate-600 text-[15px]">
                 {data.strengths.map((str: string, idx: number) => (
                   <li key={idx}>{str}</li>
                 ))}
@@ -306,8 +306,8 @@ export default function ZodiacSignSeoContent({ signSlug }: { signSlug: string })
             </div>
 
             <div>
-              <h3 className="text-[20px] font-bold text-white mb-3">Weaknesses (Nuksan)</h3>
-              <ul className="list-disc pl-5 space-y-2 text-gray-300 text-[15px]">
+              <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-3">Weaknesses (Nuksan)</h3>
+              <ul className="list-disc pl-5 space-y-2 text-slate-600 text-[15px]">
                 {data.weaknesses.map((wk: string, idx: number) => (
                   <li key={idx}>{wk}</li>
                 ))}
@@ -315,22 +315,22 @@ export default function ZodiacSignSeoContent({ signSlug }: { signSlug: string })
             </div>
 
             <div>
-              <h3 className="text-[20px] font-bold text-white mb-3">Career & Money</h3>
-              <p className="text-gray-300 text-[15px] leading-relaxed">
+              <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-3">Career & Money</h3>
+              <p className="text-slate-600 text-[15px] leading-relaxed">
                 {data.career}
               </p>
             </div>
 
             <div>
-              <h3 className="text-[20px] font-bold text-white mb-3">Love & Relationships</h3>
-              <p className="text-gray-300 text-[15px] leading-relaxed">
+              <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-3">Love & Relationships</h3>
+              <p className="text-slate-600 text-[15px] leading-relaxed">
                 {data.love}
               </p>
             </div>
 
             <div>
-              <h3 className="text-[20px] font-bold text-white mb-3">Cosmic Luck</h3>
-              <p className="text-gray-300 text-[15px] leading-relaxed">
+              <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-3">Cosmic Luck</h3>
+              <p className="text-slate-600 text-[15px] leading-relaxed">
                 <strong>Lucky Colors:</strong> {data.luckyData.colors} <br />
                 <strong>Lucky Numbers:</strong> {data.luckyData.numbers}
               </p>

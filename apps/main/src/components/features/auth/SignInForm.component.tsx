@@ -107,7 +107,7 @@ const SignInForm: React.FC = () => {
     <div className="w-full max-w-[480px] mx-auto lg:ml-auto lg:mr-0 bg-white rounded-3xl shadow-[0_10px_50px_rgba(0,0,0,0.06)] border border-gray-100 p-6 md:p-10 my-0">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-gray-50">
         <div>
-          <h6 className="text-gray-400 text-[10px] uppercase tracking-[0.15em] mb-0.5">
+          <h6 className="text-gray-800 text-[10px] uppercase tracking-[0.15em] mb-0.5">
             {t.signIn.welcome}
           </h6>
           <span className="text-xl font-black text-orange block">
@@ -115,7 +115,7 @@ const SignInForm: React.FC = () => {
           </span>
         </div>
         <div className="text-left sm:text-right">
-          <h6 className="text-gray-400 text-[10px] uppercase tracking-[0.15em] mb-0.5">
+          <h6 className="text-gray-800 text-[10px] uppercase tracking-[0.15em] mb-0.5">
             {t.signIn.noAccount}
           </h6>
           <Link href="/register" className="text-base font-bold text-[#4A1D1F] hover:text-orange transition-all">
@@ -126,7 +126,7 @@ const SignInForm: React.FC = () => {
 
       <div className="mb-6">
         <h2 className="text-[26px] md:text-3xl font-black text-[#301118]">{t.signIn.title}</h2>
-        <p className="text-gray-400 text-xs md:text-sm mt-1 font-medium">{t.signIn.subtitle}</p>
+        <p className="text-gray-800 text-xs md:text-sm mt-1 font-medium">{t.signIn.subtitle}</p>
       </div>
 
       <div className="mb-6">
@@ -150,7 +150,7 @@ const SignInForm: React.FC = () => {
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-50"></div>
         </div>
-        <span className="relative px-3 text-[10px] font-black text-gray-300 bg-white uppercase tracking-[0.2em]">{t.signIn.orEmail}</span>
+        <span className="relative px-3 text-[10px] font-black text-gray-700 bg-white uppercase tracking-[0.2em]">{t.signIn.orEmail}</span>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -162,7 +162,7 @@ const SignInForm: React.FC = () => {
             type="email"
             id="email"
             name="email"
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-300 text-black font-semibold text-sm"
+            className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-700 text-black font-semibold text-sm"
             placeholder={t.signIn.emailPlaceholder}
             value={formData.email}
             onChange={handleInputChange}
@@ -179,7 +179,7 @@ const SignInForm: React.FC = () => {
               type={showPassword ? "text" : "password"}
               id="password"
               name="password"
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-300 text-black font-semibold text-sm"
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-700 text-black font-semibold text-sm"
               placeholder={t.signIn.passwordPlaceholder}
               value={formData.password}
               onChange={handleInputChange}

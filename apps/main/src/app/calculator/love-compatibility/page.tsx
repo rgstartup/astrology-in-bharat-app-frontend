@@ -203,7 +203,7 @@ const LoveCompatibilityPage = () => {
           {/* ── Left: Form ── */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5"
+            className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-fit"
           >
             {/* Form Header */}
             <div className="flex items-center gap-3 mb-1">
@@ -212,7 +212,7 @@ const LoveCompatibilityPage = () => {
               </div>
               <div>
                 <h1 className="text-xl font-black text-[#1A1A1A]">Love Compatibility Calculator</h1>
-                <p className="text-xs text-[#888]">Check the love compatibility between you and your partner.</p>
+                <p className="text-xs text-[#555] font-medium">Check the love compatibility between you and your partner.</p>
               </div>
             </div>
 
@@ -230,9 +230,9 @@ const LoveCompatibilityPage = () => {
                 <input
                   type="text" placeholder="Enter your name"
                   value={yourName} onChange={(e) => setYourName(e.target.value)}
-                  className="w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
+                  className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
                 />
-                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm" />
+                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm" />
               </div>
             </div>
 
@@ -243,9 +243,9 @@ const LoveCompatibilityPage = () => {
                 <input
                   type="text" placeholder="Enter your partner's name"
                   value={partnerName} onChange={(e) => setPartnerName(e.target.value)}
-                  className="w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
+                  className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
                 />
-                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm" />
+                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm" />
               </div>
             </div>
 
@@ -256,9 +256,8 @@ const LoveCompatibilityPage = () => {
                 <input
                   type="date"
                   value={yourDob} onChange={(e) => setYourDob(e.target.value)}
-                  className="w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
+                  className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 text-sm text-[#111] font-medium focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
                 />
-                <i className="fa-regular fa-calendar absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm pointer-events-none" />
               </div>
             </div>
 
@@ -269,9 +268,8 @@ const LoveCompatibilityPage = () => {
                 <input
                   type="date"
                   value={partnerDob} onChange={(e) => setPartnerDob(e.target.value)}
-                  className="w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
+                  className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 text-sm text-[#111] font-medium focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
                 />
-                <i className="fa-regular fa-calendar absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm pointer-events-none" />
               </div>
             </div>
 

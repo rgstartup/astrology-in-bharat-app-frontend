@@ -156,7 +156,7 @@ const SoulmateInitialsPage = () => {
     setLoading(false);
   };
 
-  const inputCls = "w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition";
+  const inputCls = "w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition";
 
   return (
     <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -177,7 +177,7 @@ const SoulmateInitialsPage = () => {
           {/* ── Left: Form ── */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5"
+            className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-fit"
           >
             {/* Form Header */}
             <div className="flex items-center gap-3 mb-1">
@@ -186,7 +186,7 @@ const SoulmateInitialsPage = () => {
               </div>
               <div>
                 <h1 className="text-xl font-black text-[#1A1A1A]">Soulmate Name Initials Calculator</h1>
-                <p className="text-xs text-[#888]">Find the possible initials of your soulmate's name.</p>
+                <p className="text-xs text-[#555] font-medium">Find the possible initials of your soulmate's name.</p>
               </div>
             </div>
 
@@ -206,7 +206,7 @@ const SoulmateInitialsPage = () => {
                   value={name} onChange={(e) => setName(e.target.value)}
                   className={inputCls}
                 />
-                <i className={`${icons.user} absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm`} />
+                <i className={`${icons.user} absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm`} />
               </div>
             </div>
 
@@ -219,7 +219,7 @@ const SoulmateInitialsPage = () => {
                   value={dob} onChange={(e) => setDob(e.target.value)}
                   className={`${inputCls} [color-scheme:light]`}
                 />
-                <i className={`${icons.calendar} absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm pointer-events-none`} />
+                <i className={`${icons.calendar} absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm pointer-events-none`} />
               </div>
             </div>
 

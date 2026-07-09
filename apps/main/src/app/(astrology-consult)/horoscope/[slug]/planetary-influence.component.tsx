@@ -13,7 +13,7 @@ const PLANETS = [
 export default function PlanetaryInfluence() {
   return (
     <div 
-      className="mt-8 rounded-3xl px-6 pb-4 pt-5 md:px-8 md:pb-5 md:pt-6 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#1A1A1A]"
+      className="mt-8 rounded-3xl px-6 pb-4 pt-5 md:px-8 md:pb-5 md:pt-6 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#FFFDF9]"
       style={{
         backgroundImage: "url('/images/back-image.webp')",
         backgroundSize: "cover",
@@ -33,7 +33,7 @@ export default function PlanetaryInfluence() {
       <div className="w-full overflow-x-auto pb-2 custom-scrollbar">
         <div className="flex items-center gap-3 min-w-max">
           {PLANETS.map((planet, idx) => (
-            <div key={idx} className="bg-[#1A1A1A] rounded-xl p-3 border border-[#F0E6DD] shadow-sm flex flex-col items-center justify-center min-w-[110px]">
+            <div key={idx} className="bg-[#FFFDF9] rounded-xl p-3 border border-[#F0E6DD] shadow-sm flex flex-col items-center justify-center min-w-[110px]">
               
               {/* Icon & Name Row */}
               <div className="flex items-center gap-2 mb-1">

@@ -135,7 +135,7 @@ const FlamesCalculatorPage = () => {
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
 
           {/* ── Left: Form ── */}
-          <form onSubmit={handleSubmit} className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5">
+          <form onSubmit={handleSubmit} className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-fit">
 
             {/* Header */}
             <div className="flex items-center gap-3 mb-1">
@@ -144,7 +144,7 @@ const FlamesCalculatorPage = () => {
               </div>
               <div>
                 <h1 className="text-xl font-black text-[#1A1A1A]">Flames Calculator</h1>
-                <p className="text-xs text-[#888]">Find your relationship prediction using FLAMES</p>
+                <p className="text-xs text-[#555] font-medium">Find your relationship prediction using FLAMES</p>
               </div>
             </div>
 
@@ -162,9 +162,9 @@ const FlamesCalculatorPage = () => {
                 <input
                   type="text" placeholder="Enter your name"
                   value={name1} onChange={(e) => setName1(e.target.value)}
-                  className="w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
+                  className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
                 />
-                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm" />
+                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm" />
               </div>
             </div>
 
@@ -175,9 +175,9 @@ const FlamesCalculatorPage = () => {
                 <input
                   type="text" placeholder="Enter partner name"
                   value={name2} onChange={(e) => setName2(e.target.value)}
-                  className="w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
+                  className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
                 />
-                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm" />
+                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm" />
               </div>
             </div>
 

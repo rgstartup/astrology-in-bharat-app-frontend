@@ -94,8 +94,8 @@ export default function ZodiacDetailsPage() {
 
   if (!signData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#1A1A1A] p-6">
-        <div className="text-center p-12 bg-[#1A1A1A] rounded-[3rem] shadow-premium border border-[#333333] max-w-lg">
+      <div className="min-h-screen flex items-center justify-center bg-[#FDF6F0] p-6">
+        <div className="text-center p-12 bg-white rounded-[3rem] shadow-premium border border-[#E8D5C0] max-w-lg">
           <div className="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-8 text-4xl shadow-sm border border-orange-100">
             🔮
           </div>
@@ -118,7 +118,7 @@ export default function ZodiacDetailsPage() {
   }
 
   return (
-    <div className="bg-[#1A1A1A] min-h-screen">
+    <div className="bg-[#FDF6F0] min-h-screen">
       
       {/* Container */}
       <div className="max-w-[1300px] mx-auto px-4 md:px-8 mt-6">

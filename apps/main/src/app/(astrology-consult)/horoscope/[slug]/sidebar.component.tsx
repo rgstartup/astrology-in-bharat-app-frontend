@@ -35,7 +35,7 @@ export default function ZodiacDetailsSidebar({ signData }: { signData: any }) {
       
       {/* Zodiac Details Card */}
       <div 
-        className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#1A1A1A]"
+        className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#FFFDF9]"
         style={{
           backgroundImage: "url('/images/back-image.webp')",
           backgroundSize: "cover",
@@ -93,7 +93,7 @@ export default function ZodiacDetailsSidebar({ signData }: { signData: any }) {
 
       {/* Traits Card */}
       <div 
-        className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#1A1A1A]"
+        className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#FFFDF9]"
         style={{
           backgroundImage: "url('/images/back-image.webp')",
           backgroundSize: "cover",
@@ -108,7 +108,7 @@ export default function ZodiacDetailsSidebar({ signData }: { signData: any }) {
         {/* Pills */}
         <div className="flex flex-wrap gap-2 mb-6">
           {['Confident', 'Energetic', 'Courageous', 'Enthusiastic', 'Leader', 'Independent'].map(trait => (
-            <span key={trait} className="bg-[#1A1A1A] border border-[#E8D5C0] text-slate-600 px-3 py-1.5 rounded-full text-xs font-semibold">
+            <span key={trait} className="bg-[#FFFDF9] border border-[#E8D5C0] text-slate-600 px-3 py-1.5 rounded-full text-xs font-semibold">
               {trait}
             </span>
           ))}
@@ -127,7 +127,7 @@ export default function ZodiacDetailsSidebar({ signData }: { signData: any }) {
 
       {/* Trending Articles Card */}
       <div 
-        className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#1A1A1A]"
+        className="rounded-3xl p-6 md:p-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#FFFDF9]"
         style={{
           backgroundImage: "url('/images/back-image.webp')",
           backgroundSize: "cover",
