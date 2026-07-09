@@ -226,18 +226,18 @@ const PujaDetailPage = () => {
                     <div className="mt-6 space-y-5">
 
                         {/* About */}
-                        <div className="bg-[#1A1A1A] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
+                        <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center text-xl">🕉️</div>
                                 <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">About {puja.name}</h2>
                             </div>
-                            <p className="text-gray-400 leading-relaxed text-sm font-medium">
+                            <p className="text-slate-500 leading-relaxed text-sm font-medium">
                                 {puja.description || "This sacred Vedic ceremony is performed by our highly experienced pandits following strict traditional protocols. It aims to invoke divine energy and blessings into your life, ensuring spiritual growth, protection, and prosperity."}
                             </p>
                         </div>
 
                         {/* Key Benefits */}
-                        <div className="bg-[#1A1A1A] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
+                        <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
                             <div className="flex items-center gap-3 mb-5">
                                 <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
                                     <Star className="w-5 h-5 text-[#FF5500]" />
@@ -266,7 +266,7 @@ const PujaDetailPage = () => {
                         </div>
 
                         {/* Pandit */}
-                        <div className="bg-[#1A1A1A] rounded-3xl p-4 sm:p-6 border border-[#F0E0D0] shadow-sm">
+                        <div className="bg-[#FFFDF9] rounded-3xl p-4 sm:p-6 border border-[#F0E0D0] shadow-sm">
                             <div className="flex items-center gap-3 mb-5">
                                 <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
                                     <Users className="w-5 h-5 text-[#FF5500]" />
@@ -296,13 +296,13 @@ const PujaDetailPage = () => {
                                             {[1, 2, 3, 4, 5].map((s) => (
                                                 <Star key={s} className={`w-4 h-4 ${s <= (puja.expert?.rating || 0) ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-200 text-gray-200'}`} />
                                             ))}
-                                            <span className="text-sm font-bold text-gray-300 ml-1">{puja.expert?.rating || "0"}</span>
+                                            <span className="text-sm font-bold text-slate-600 ml-1">{puja.expert?.rating || "0"}</span>
                                             <span className="text-xs text-gray-500">({puja.expert?.total_reviews || 0} Reviews)</span>
                                         </div>
-                                        <p className="text-sm font-bold text-[#1A1A1A] mb-1">{puja.expert?.experience_in_years || "0"} Yrs Experience <span className="text-gray-300 mx-1">|</span> Vedic Expert</p>
+                                        <p className="text-sm font-bold text-[#1A1A1A] mb-1">{puja.expert?.experience_in_years || "0"} Yrs Experience <span className="text-slate-600 mx-1">|</span> Vedic Expert</p>
                                         </div>
                                     </div>
-                                    <p className="text-sm text-gray-400 mb-3 leading-relaxed">{puja.expert?.specialization || "Specialized in Shiva Puja, Rudra Abhishek, Mahamrityunjaya Jaap and other Vedic Rituals."}</p>
+                                    <p className="text-sm text-slate-500 mb-3 leading-relaxed">{puja.expert?.specialization || "Specialized in Shiva Puja, Rudra Abhishek, Mahamrityunjaya Jaap and other Vedic Rituals."}</p>
                                     <Link href={`/expert/${puja.expert_id}`} className="inline-flex items-center gap-1 text-[#FF5500] text-[15px] font-black hover:underline">
                                         View Full Profile <ArrowRight className="w-4 h-4" />
                                     </Link>
@@ -310,17 +310,17 @@ const PujaDetailPage = () => {
                                 
                                 <div className="bg-[#FCF9F7] rounded-3xl p-5 shrink-0 w-full lg:w-auto lg:min-w-[180px] flex flex-row lg:flex-col justify-around lg:justify-start gap-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-9 h-9 text-[#FF5500] bg-[#1A1A1A] rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">📜</div>
+                                        <div className="w-9 h-9 text-[#FF5500] bg-[#FFFDF9] rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">📜</div>
                                         <div>
-                                            <p className="text-[11px] font-bold text-gray-400 leading-tight mb-1">Pujas Performed</p>
+                                            <p className="text-[11px] font-bold text-slate-500 leading-tight mb-1">Pujas Performed</p>
                                             <p className="text-sm font-black text-[#1A1A1A] leading-tight">{puja.expert?.consultation_count ? `${puja.expert.consultation_count}+` : "0"}</p>
                                         </div>
                                     </div>
                                     <div className="w-px h-auto lg:h-px lg:w-full bg-[#F0E0D0]" />
                                     <div className="flex items-center gap-3">
-                                        <div className="w-9 h-9 text-[#FF5500] bg-[#1A1A1A] rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">🗣️</div>
+                                        <div className="w-9 h-9 text-[#FF5500] bg-[#FFFDF9] rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">🗣️</div>
                                         <div>
-                                            <p className="text-[11px] font-bold text-gray-400 leading-tight mb-1">Languages</p>
+                                            <p className="text-[11px] font-bold text-slate-500 leading-tight mb-1">Languages</p>
                                             <p className="text-sm font-black text-[#1A1A1A] leading-tight capitalize">{Array.isArray(puja.expert?.languages) ? puja.expert.languages.join(", ") : (puja.expert?.languages || "Hindi, Sanskrit")}</p>
                                         </div>
                                     </div>
@@ -330,14 +330,14 @@ const PujaDetailPage = () => {
 
                         {/* Samagri */}
                         {puja.samagri_list && puja.samagri_list.length > 0 && (
-                            <div className="bg-[#1A1A1A] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
+                            <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
                                 <div className="flex items-center gap-3 mb-5">
                                     <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
                                         <Package className="w-5 h-5 text-[#FF5500]" />
                                     </div>
                                     <div>
                                         <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">Essential Samagri</h2>
-                                        <p className="text-xs text-gray-400">(Provided by Pandit for Home Visit - Premium)</p>
+                                        <p className="text-xs text-slate-500">(Provided by Pandit for Home Visit - Premium)</p>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-6">
@@ -359,7 +359,7 @@ const PujaDetailPage = () => {
 
                         {/* Districts */}
                         {puja.is_home_visit && puja.districts && puja.districts.length > 0 && (
-                            <div className="bg-[#1A1A1A] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
+                            <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
                                         <MapPin className="w-5 h-5 text-green-500" />
@@ -384,11 +384,11 @@ const PujaDetailPage = () => {
                                 { icon: "🌺", title: "Pure & Authentic", sub: "Pure Samagri & authentic rituals" },
                                 { icon: "🔒", title: "Secure & Trusted", sub: "Your booking is safe and secure with us" },
                             ].map((b, i) => (
-                                <div key={i} className="bg-[#1A1A1A] rounded-2xl p-4 border border-[#F0E0D0] flex items-center gap-4">
+                                <div key={i} className="bg-[#FFFDF9] rounded-2xl p-4 border border-[#F0E0D0] flex items-center gap-4">
                                     <div className="text-4xl shrink-0 text-[#FF5500] opacity-80">{b.icon}</div>
                                     <div>
                                         <p className="text-[15px] sm:text-base font-black text-[#1A1A1A] leading-tight mb-1">{b.title}</p>
-                                        <p className="text-sm text-gray-400 leading-tight">{b.sub}</p>
+                                        <p className="text-sm text-slate-500 leading-tight">{b.sub}</p>
                                     </div>
                                 </div>
                             ))}
@@ -400,7 +400,7 @@ const PujaDetailPage = () => {
 
                 {/* RIGHT: Sticky Booking Widget */}
                 <div className="lg:col-span-4 lg:sticky lg:top-24 h-fit">
-                    <div className="bg-[#1A1A1A] rounded-3xl border border-[#F0E0D0] shadow-lg overflow-hidden">
+                    <div className="bg-[#FFFDF9] rounded-3xl border border-[#F0E0D0] shadow-lg overflow-hidden">
                         {/* Header */}
                         <div className="px-6 py-5 border-b border-[#F0E0D0]">
                             <h3 className="text-lg font-black text-[#1A1A1A]">Book Your Puja</h3>
@@ -415,16 +415,16 @@ const PujaDetailPage = () => {
                                     {puja.is_online && (
                                         <button
                                             onClick={() => setSelectedMode('online')}
-                                            className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left ${selectedMode === 'online' ? 'border-[#FF5500] bg-orange-50' : 'border-[#333333] hover:border-gray-800'}`}
+                                            className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left ${selectedMode === 'online' ? 'border-[#FF5500] bg-orange-50' : 'border-[#E8D5C0] hover:border-orange-200'}`}
                                         >
                                             <div className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${selectedMode === 'online' ? 'border-[#FF5500]' : 'border-gray-700'}`}>
                                                 {selectedMode === 'online' && <div className="w-2 h-2 rounded-full bg-[#FF5500]" />}
                                             </div>
-                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selectedMode === 'online' ? 'bg-[#FF5500]/10 text-[#FF5500]' : 'bg-[#242424] text-gray-400'}`}>
+                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selectedMode === 'online' ? 'bg-[#FF5500]/10 text-[#FF5500]' : 'bg-white text-slate-500'}`}>
                                                 <Video className="w-5 h-5" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className={`text-sm font-black ${selectedMode === 'online' ? 'text-[#FF5500]' : 'text-gray-200'}`}>Online / Video Call</p>
+                                                <p className={`text-sm font-black ${selectedMode === 'online' ? 'text-[#FF5500]' : 'text-[#3D1A0B]'}`}>Online / Video Call</p>
                                                 <p className="text-xs text-gray-500 leading-tight">Participate from the comfort of your home</p>
                                             </div>
                                         </button>
@@ -433,31 +433,31 @@ const PujaDetailPage = () => {
                                         <>
                                             <button
                                                 onClick={() => setSelectedMode('home_visit_without')}
-                                                className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left ${selectedMode === 'home_visit_without' ? 'border-[#FF5500] bg-orange-50' : 'border-[#333333] hover:border-gray-800'}`}
+                                                className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left ${selectedMode === 'home_visit_without' ? 'border-[#FF5500] bg-orange-50' : 'border-[#E8D5C0] hover:border-orange-200'}`}
                                             >
                                                 <div className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${selectedMode === 'home_visit_without' ? 'border-[#FF5500]' : 'border-gray-700'}`}>
                                                     {selectedMode === 'home_visit_without' && <div className="w-2 h-2 rounded-full bg-[#FF5500]" />}
                                                 </div>
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selectedMode === 'home_visit_without' ? 'bg-[#FF5500]/10 text-[#FF5500]' : 'bg-[#242424] text-gray-400'}`}>
+                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selectedMode === 'home_visit_without' ? 'bg-[#FF5500]/10 text-[#FF5500]' : 'bg-white text-slate-500'}`}>
                                                     <MapPin className="w-5 h-5" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className={`text-sm font-black ${selectedMode === 'home_visit_without' ? 'text-[#FF5500]' : 'text-gray-200'}`}>Home Visit (Basic)</p>
+                                                    <p className={`text-sm font-black ${selectedMode === 'home_visit_without' ? 'text-[#FF5500]' : 'text-[#3D1A0B]'}`}>Home Visit (Basic)</p>
                                                     <p className="text-xs text-gray-500 leading-tight">Pandit ji will come to your home (Without Samagri)</p>
                                                 </div>
                                             </button>
                                             <button
                                                 onClick={() => setSelectedMode('home_visit_with')}
-                                                className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left ${selectedMode === 'home_visit_with' ? 'border-[#FF5500] bg-orange-50' : 'border-[#333333] hover:border-gray-800'}`}
+                                                className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left ${selectedMode === 'home_visit_with' ? 'border-[#FF5500] bg-orange-50' : 'border-[#E8D5C0] hover:border-orange-200'}`}
                                             >
                                                 <div className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${selectedMode === 'home_visit_with' ? 'border-[#FF5500]' : 'border-gray-700'}`}>
                                                     {selectedMode === 'home_visit_with' && <div className="w-2 h-2 rounded-full bg-[#FF5500]" />}
                                                 </div>
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selectedMode === 'home_visit_with' ? 'bg-[#FF5500]/10 text-[#FF5500]' : 'bg-[#242424] text-gray-400'}`}>
+                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selectedMode === 'home_visit_with' ? 'bg-[#FF5500]/10 text-[#FF5500]' : 'bg-white text-slate-500'}`}>
                                                     <Package className="w-5 h-5" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className={`text-sm font-black ${selectedMode === 'home_visit_with' ? 'text-[#FF5500]' : 'text-gray-200'}`}>Home Visit (Premium)</p>
+                                                    <p className={`text-sm font-black ${selectedMode === 'home_visit_with' ? 'text-[#FF5500]' : 'text-[#3D1A0B]'}`}>Home Visit (Premium)</p>
                                                     <p className="text-xs text-gray-500 leading-tight">Pandit ji will come with Full Samagri Kit</p>
                                                 </div>
                                             </button>
@@ -467,7 +467,7 @@ const PujaDetailPage = () => {
                             </div>
 
                             {/* Date & Time */}
-                            <div className="border-t border-[#333333] pt-4">
+                            <div className="border-t border-[#E8D5C0] pt-4">
                                 <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">2. Select Date & Time</p>
                                 <label className="flex items-center gap-2 mb-3 cursor-pointer">
                                     <input
@@ -476,44 +476,44 @@ const PujaDetailPage = () => {
                                         onChange={(e) => setAskExpertForDate(e.target.checked)}
                                         className="w-4 h-4 accent-[#FF5500]"
                                     />
-                                    <span className="text-sm font-bold text-gray-300">Ask the expert for date and time</span>
-                                    <Info className="w-3.5 h-3.5 text-gray-400" />
+                                    <span className="text-sm font-bold text-slate-600">Ask the expert for date and time</span>
+                                    <Info className="w-3.5 h-3.5 text-slate-500" />
                                 </label>
                                 {!askExpertForDate && (
                                     <div className="space-y-2">
                                         <p className="text-xs text-gray-500 font-bold uppercase">OR Choose your preferred date & time</p>
                                         <div className="relative">
                                             <input type="text" placeholder="Select Date" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => !e.target.value && (e.target.type = 'text')} value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} min={new Date().toISOString().split('T')[0]}
-                                                className="w-full px-4 pr-10 py-3 border border-gray-800 rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-gray-300" />
-                                            <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                                                className="w-full px-4 pr-10 py-3 border border-[#E8D5C0] rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-slate-600" />
+                                            <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                                         </div>
                                         <div className="relative">
                                             <input type="text" placeholder="Select Time" onFocus={(e) => e.target.type = 'time'} onBlur={(e) => !e.target.value && (e.target.type = 'text')} value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)}
-                                                className="w-full px-4 pr-10 py-3 border border-gray-800 rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-gray-300" />
-                                            <Clock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                                                className="w-full px-4 pr-10 py-3 border border-[#E8D5C0] rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-slate-600" />
+                                            <Clock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                                         </div>
                                     </div>
                                 )}
                             </div>
 
                             {/* Message */}
-                            <div className="border-t border-[#333333] pt-4">
-                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">3. Add a Message <span className="text-gray-400 normal-case font-medium">(Optional)</span></p>
+                            <div className="border-t border-[#E8D5C0] pt-4">
+                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">3. Add a Message <span className="text-slate-500 normal-case font-medium">(Optional)</span></p>
                                 <textarea
                                     placeholder="Enter any special request or family details..."
                                     value={userMessage}
                                     onChange={(e) => setUserMessage(e.target.value)}
                                     rows={3}
                                     maxLength={250}
-                                    className="w-full p-3 border-2 border-[#333333] rounded-2xl text-sm focus:border-[#FF5500] outline-none resize-none text-gray-300 placeholder-gray-400"
+                                    className="w-full p-3 border-2 border-[#E8D5C0] rounded-2xl text-sm focus:border-[#FF5500] outline-none resize-none text-slate-600 placeholder-gray-400"
                                 />
-                                <p className="text-right text-xs text-gray-400">{userMessage.length}/250</p>
+                                <p className="text-right text-xs text-slate-500">{userMessage.length}/250</p>
                             </div>
 
                             {/* Price Summary */}
-                            <div className="border-t border-[#333333] pt-4">
+                            <div className="border-t border-[#E8D5C0] pt-4">
                                 <div className="flex items-center justify-between mb-3">
-                                    <p className="text-base font-black text-gray-300">Price Summary</p>
+                                    <p className="text-base font-black text-slate-600">Price Summary</p>
                                     <div className="flex items-center gap-1 text-emerald-500 text-xs font-black">
                                         <ShieldCheck className="w-3.5 h-3.5" /> Secure Price
                                     </div>
@@ -547,7 +547,7 @@ const PujaDetailPage = () => {
                                     You will not be charged at this stage. Your request will be sent to the pandit for confirmation.
                                 </p>
 
-                                <div className="flex items-center justify-around pt-4 border-t border-[#333333] mt-3">
+                                <div className="flex items-center justify-around pt-4 border-t border-[#E8D5C0] mt-3">
                                     {[{ icon: "🔒", label: "Secure\nBooking" }, { icon: "✅", label: "Verified\nPandits" }, { icon: "💯", label: "100%\nAuthentic" }].map((b, i) => (
                                         <div key={i} className="flex flex-col items-center gap-1.5">
                                             <span className="text-2xl">{b.icon}</span>
@@ -568,7 +568,7 @@ const PujaDetailPage = () => {
                     {relatedLoading ? (
                         // Skeleton Loader — 4 dummy cards
                         Array.from({ length: 4 }).map((_, i) => (
-                            <div key={i} className="bg-[#1A1A1A] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm animate-pulse">
+                            <div key={i} className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm animate-pulse">
                                 <div className="h-32 bg-gradient-to-br from-[#F5E6D8] to-[#EDD5BD]" />
                                 <div className="p-4 space-y-2">
                                     <div className="h-3.5 bg-gray-200 rounded-full w-4/5" />
@@ -582,7 +582,7 @@ const PujaDetailPage = () => {
                             <div
                                 key={p.id}
                                 onClick={() => router.push(`/online-puja/${p.id}`)}
-                                className="bg-[#1A1A1A] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
+                                className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
                             >
                                 <div className="h-32 relative overflow-hidden">
                                     {p.puja_image_url ? (

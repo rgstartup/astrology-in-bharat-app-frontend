@@ -40,11 +40,11 @@ import { useMerchantReviews } from "@/hooks/useMerchantReviews";
 //     <div className="max-w-7xl mx-auto px-4 md:px-6 mt-10 animate-pulse">
 //         <div className="flex flex-col lg:flex-row gap-8 items-start">
 //             <div className="w-full lg:w-[360px] xl:w-[400px] shrink-0 space-y-6">
-//                 <div className="h-[500px] bg-[#1A1A1A] rounded-[40px] border border-slate-100 shadow-sm"></div>
+//                 <div className="h-[500px] bg-white rounded-[40px] border border-slate-100 shadow-sm"></div>
 //             </div>
 //             <div className="w-full flex-1 space-y-6">
-//                 <div className="h-20 bg-[#1A1A1A] rounded-[32px] border border-orange/10"></div>
-//                 <div className="h-[600px] bg-[#1A1A1A] rounded-[32px] border border-orange/10"></div>
+//                 <div className="h-20 bg-white rounded-[32px] border border-orange/10"></div>
+//                 <div className="h-[600px] bg-white rounded-[32px] border border-orange/10"></div>
 //             </div>
 //         </div>
 //     </div>
@@ -110,7 +110,7 @@ const StoreDetailsPage = () => {
         <h1 className="text-3xl font-bold text-white mb-4" style={fontStyle}>
           {t.notFound.title}
         </h1>
-        <p className="text-gray-400 mb-8" style={fontStyle}>
+        <p className="text-slate-500 mb-8" style={fontStyle}>
           {t.notFound.desc}
         </p>
         <Link
@@ -209,10 +209,10 @@ const StoreDetailsPage = () => {
               </div>
 
               {/* Stats Bar */}
-              <div className="mx-6 p-4 bg-[#1A1A1A] rounded-3xl flex justify-between items-center border border-slate-100 shadow-premium group-hover:border-orange/10 transition-colors">
+              <div className="mx-6 p-4 bg-white rounded-3xl flex justify-between items-center border border-slate-100 shadow-premium group-hover:border-orange/10 transition-colors">
                 <div className="text-center px-4">
                   <p
-                    className="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-black mb-1"
+                    className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black mb-1"
                     style={fontStyle}
                   >
                     {t.profile.est}
@@ -227,7 +227,7 @@ const StoreDetailsPage = () => {
                 <div className="h-10 w-px bg-slate-100"></div>
                 <div className="text-center px-4">
                   <p
-                    className="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-black mb-1"
+                    className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black mb-1"
                     style={fontStyle}
                   >
                     {t.profile.rating}
@@ -245,7 +245,7 @@ const StoreDetailsPage = () => {
                 <div className="h-10 w-px bg-slate-100"></div>
                 <div className="text-center px-4">
                   <p
-                    className="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-black mb-1"
+                    className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black mb-1"
                     style={fontStyle}
                   >
                     {t.profile.products}
@@ -272,7 +272,7 @@ const StoreDetailsPage = () => {
                   </div>
                   <div className="flex flex-col">
                     <span
-                      className="text-[10px] font-black text-gray-400 uppercase tracking-widest"
+                      className="text-[10px] font-black text-slate-500 uppercase tracking-widest"
                       style={fontStyle}
                     >
                       {t.trustInfo.scoreLabel}
@@ -292,7 +292,7 @@ const StoreDetailsPage = () => {
                   </div>
                   <div className="flex flex-col">
                     <span
-                      className="text-[10px] font-black text-gray-400 uppercase tracking-widest"
+                      className="text-[10px] font-black text-slate-500 uppercase tracking-widest"
                       style={fontStyle}
                     >
                       {t.trustInfo.hoursLabel}
@@ -311,7 +311,7 @@ const StoreDetailsPage = () => {
                   </div>
                   <div className="flex flex-col">
                     <span
-                      className="text-[10px] font-black text-gray-400 uppercase tracking-widest"
+                      className="text-[10px] font-black text-slate-500 uppercase tracking-widest"
                       style={fontStyle}
                     >
                       {t.trustInfo.addressLabel}
@@ -360,13 +360,13 @@ const StoreDetailsPage = () => {
                     <BadgeCheck className="w-6 h-6 text-orange fill-orange/10" />
                   </div>
                   <p
-                    className="text-gray-400 text-xs font-bold uppercase tracking-widest leading-none"
+                    className="text-slate-500 text-xs font-bold uppercase tracking-widest leading-none"
                     style={fontStyle}
                   >
                     {t.merchantDossier.subtitle}
                   </p>
                 </div>
-                <div className="flex items-center gap-3 bg-[#1A1A1A]/50 backdrop-blur-md px-4 py-2 rounded-2xl border border-orange/5">
+                <div className="flex items-center gap-3 bg-white/50 backdrop-blur-md px-4 py-2 rounded-2xl border border-orange/5">
                   <Heart className="w-4 h-4 text-red-500 fill-red-500" />
                   <span
                     className="text-sm font-black text-slate-800 tracking-tight"
@@ -378,13 +378,13 @@ const StoreDetailsPage = () => {
               </div>
 
               {/* Tabs Navigation */}
-              <div className="sticky top-[110px] z-40 bg-[#1A1A1A] py-3 md:py-6 mb-6 md:mb-10 border-b border-[#333333] overflow-x-auto no-scrollbar flex items-center gap-4 md:gap-10">
+              <div className="sticky top-[110px] z-40 bg-white py-3 md:py-6 mb-6 md:mb-10 border-b border-[#F0E0D0] overflow-x-auto no-scrollbar flex items-center gap-4 md:gap-10">
                 {(["about", "collection", "reviews", "gallery"] as const).map(
                   (tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`font-black text-sm uppercase tracking-widest pb-4 px-1 transition-all relative whitespace-nowrap ${activeTab === tab ? "text-slate-900 border-b-2 border-orange" : "text-gray-400 hover:text-orange/70"}`}
+                      className={`font-black text-sm uppercase tracking-widest pb-4 px-1 transition-all relative whitespace-nowrap ${activeTab === tab ? "text-slate-900 border-b-2 border-orange" : "text-slate-500 hover:text-orange/70"}`}
                       style={fontStyle}
                     >
                       {tab === "about"
@@ -422,7 +422,7 @@ const StoreDetailsPage = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="p-8 rounded-[2.5rem] bg-[#1A1A1A] border border-orange/5 shadow-premium space-y-4">
+                      <div className="p-8 rounded-[2.5rem] bg-white border border-orange/5 shadow-premium space-y-4">
                         <div className="w-12 h-12 rounded-2xl bg-orange/10 flex items-center justify-center text-orange">
                           <BadgeCheck className="w-7 h-7" />
                         </div>
@@ -433,7 +433,7 @@ const StoreDetailsPage = () => {
                           {t.about.authenticityTitle}
                         </h4>
                         <p
-                          className="text-xs text-gray-400 font-bold leading-relaxed"
+                          className="text-xs text-slate-500 font-bold leading-relaxed"
                           style={fontStyle}
                         >
                           {t.about.authenticityDesc.replace(
@@ -442,7 +442,7 @@ const StoreDetailsPage = () => {
                           )}
                         </p>
                       </div>
-                      <div className="p-8 rounded-[2.5rem] bg-[#1A1A1A] border border-orange/5 shadow-premium space-y-4">
+                      <div className="p-8 rounded-[2.5rem] bg-white border border-orange/5 shadow-premium space-y-4">
                         <div className="w-12 h-12 rounded-2xl bg-orange/10 flex items-center justify-center text-orange">
                           <Mail className="w-7 h-7" />
                         </div>
@@ -453,7 +453,7 @@ const StoreDetailsPage = () => {
                           {t.about.digitalAssistanceTitle}
                         </h4>
                         <p
-                          className="text-xs text-gray-400 font-bold leading-relaxed"
+                          className="text-xs text-slate-500 font-bold leading-relaxed"
                           style={fontStyle}
                         >
                           {t.about.digitalAssistanceDesc.replace(
@@ -475,7 +475,7 @@ const StoreDetailsPage = () => {
                         {(shop.features || []).map((f: any, i: number) => (
                           <div
                             key={i}
-                            className="px-6 py-3 bg-[#1A1A1A] rounded-2xl border border-orange/10 flex items-center gap-3 shadow-sm hover:border-orange transition-colors"
+                            className="px-6 py-3 bg-white rounded-2xl border border-orange/10 flex items-center gap-3 shadow-sm hover:border-orange transition-colors"
                           >
                             <div className="w-2 h-2 rounded-full bg-orange"></div>
                             <span
@@ -524,7 +524,7 @@ const StoreDetailsPage = () => {
                             <div className="col-span-full py-20 text-center space-y-4">
                               <ShoppingBag className="w-12 h-12 text-gray-200 mx-auto" />
                               <p
-                                className="text-gray-400 font-bold uppercase tracking-widest text-[10px]"
+                                className="text-slate-500 font-bold uppercase tracking-widest text-[10px]"
                                 style={fontStyle}
                               >
                                 {t.emptyStates.noProducts}
@@ -545,7 +545,7 @@ const StoreDetailsPage = () => {
                     {storeReviews.map((r) => (
                       <div
                         key={r.id}
-                        className="p-8 rounded-[2.5rem] bg-[#1A1A1A] border border-orange/5 shadow-premium space-y-4 hover:shadow-xl transition-shadow group"
+                        className="p-8 rounded-[2.5rem] bg-white border border-orange/5 shadow-premium space-y-4 hover:shadow-xl transition-shadow group"
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
@@ -565,7 +565,7 @@ const StoreDetailsPage = () => {
                                 {r.name}
                               </span>
                               <span
-                                className="text-[10px] font-bold text-gray-400"
+                                className="text-[10px] font-bold text-slate-500"
                                 style={fontStyle}
                               >
                                 {t.emptyStates.verifiedJourney}
@@ -591,7 +591,7 @@ const StoreDetailsPage = () => {
                       <div className="py-20 text-center space-y-4">
                         <MessageSquare className="w-12 h-12 text-gray-200 mx-auto" />
                         <p
-                          className="text-gray-400 font-bold uppercase tracking-widest text-[10px]"
+                          className="text-slate-500 font-bold uppercase tracking-widest text-[10px]"
                           style={fontStyle}
                         >
                           {t.emptyStates.noReviews}
@@ -615,7 +615,7 @@ const StoreDetailsPage = () => {
                             alt="Gallery"
                           />
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
-                            <div className="w-12 h-12 rounded-full bg-[#1A1A1A] flex items-center justify-center text-orange rotate-45 group-hover:rotate-0 transition-transform duration-500">
+                            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-orange rotate-45 group-hover:rotate-0 transition-transform duration-500">
                               <ExternalLink className="w-5 h-5" />
                             </div>
                           </div>
@@ -626,7 +626,7 @@ const StoreDetailsPage = () => {
                         <div className="col-span-full py-20 text-center space-y-4">
                           <Video className="w-12 h-12 text-gray-200 mx-auto" />
                           <p
-                            className="text-gray-400 font-bold uppercase tracking-widest text-[10px]"
+                            className="text-slate-500 font-bold uppercase tracking-widest text-[10px]"
                             style={fontStyle}
                           >
                             {t.emptyStates.noGallery}

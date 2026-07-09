@@ -50,7 +50,7 @@ export default function PredictionList({ horoscope }: { horoscope: any }) {
 
   return (
     <div 
-      className="rounded-[32px] px-6 pb-8 pt-7 md:px-10 md:pb-10 md:pt-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#1A1A1A] w-full"
+      className="rounded-[32px] px-6 pb-8 pt-7 md:px-10 md:pb-10 md:pt-8 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#FFFDF9] w-full"
       style={{
         backgroundImage: "url('/images/back-image.webp')",
         backgroundSize: "cover",
@@ -69,7 +69,7 @@ export default function PredictionList({ horoscope }: { horoscope: any }) {
       </div>
 
       {/* Main Overview Paragraph */}
-      <p className="text-white text-[15px] md:text-base leading-relaxed mb-8">
+      <p className="text-slate-600 text-[15px] md:text-base leading-relaxed mb-8">
         The day brings a mix of opportunities and challenges. Your confidence will be your greatest asset. 
         Stay focused on your goals and avoid distractions. Positive changes are on the way.
       </p>
@@ -100,7 +100,7 @@ export default function PredictionList({ horoscope }: { horoscope: any }) {
                     <h4 className="font-bold text-[#3D1A0B] text-base md:text-[17px] mb-1">{p.type}</h4>
                     {/* One line snippet if collapsed, hidden if expanded so it doesn't duplicate */}
                     {!isExpanded && (
-                      <p className="text-white text-[14.5px] md:text-[15px] line-clamp-1 pr-4 leading-relaxed">
+                      <p className="text-slate-600 text-[14.5px] md:text-[15px] line-clamp-1 pr-4 leading-relaxed">
                         {p.prediction}
                       </p>
                     )}
@@ -124,7 +124,7 @@ export default function PredictionList({ horoscope }: { horoscope: any }) {
                   <div className="md:hidden mb-4 ml-1">
                     <StarRating rating={rating} />
                   </div>
-                  <p className="text-white text-[15px] md:text-base leading-[1.8] bg-[#FAF8F5] p-5 md:p-6 rounded-2xl border border-[#F0E6DD]">
+                  <p className="text-slate-600 text-[15px] md:text-base leading-[1.8] bg-[#FAF8F5] p-5 md:p-6 rounded-2xl border border-[#F0E6DD]">
                     {p.prediction}
                   </p>
                 </div>
