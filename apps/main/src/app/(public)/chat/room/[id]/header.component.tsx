@@ -130,7 +130,7 @@ export default function Header({
                     {/* End Button */}
                     <button
                         onClick={handleEndChat}
-                        className="bg-[#1A1A1A] text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-full font-black text-[11px] shadow-lg flex items-center gap-1.5 transition-all active:scale-95"
+                        className="bg-white text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-full font-black text-[11px] shadow-lg flex items-center gap-1.5 transition-all active:scale-95"
                     >
                         <AlertCircle className="w-3.5 h-3.5" />
                         End Session
@@ -163,7 +163,7 @@ export default function Header({
                     </div>
                     <button
                         onClick={handleEndChat}
-                        className="bg-[#1A1A1A] text-red-600 hover:bg-red-50 px-4 py-2 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 transition-all active:scale-95"
+                        className="bg-white text-red-600 hover:bg-red-50 px-4 py-2 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 transition-all active:scale-95"
                     >
                         <AlertCircle className="w-4 h-4" />
                         End Session

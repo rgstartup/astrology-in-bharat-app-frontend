@@ -91,7 +91,7 @@ const StoreSection = () => {
 
     return (
         <section
-            className="py-[50px] relative overflow-hidden"
+            className="pt-6 pb-10 relative overflow-hidden"
             style={{
                 backgroundColor: "#301118",
                 backgroundImage: "url(/images/bg-dark.png)",
@@ -102,7 +102,7 @@ const StoreSection = () => {
             }}
         >
             <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
-                <div className="relative mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 z-20">
+                <div className="relative mb-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-4 z-20">
                     <div className="text-white w-full md:w-auto" style={{ '--heading-border-color': 'rgba(255,255,255,0.2)' } as any}>
                         <h2 className="section-heading-premium uppercase mb-0" style={fontStyle}>
                             <span>{t.title}</span>
@@ -185,7 +185,7 @@ const StoreSection = () => {
                                 640: { slidesPerView: 2, spaceBetween: 24 },
                                 1024: { slidesPerView: 3, spaceBetween: 30 },
                             }}
-                            className="py-10 !pb-14"
+                            className="py-6 !pb-2"
                         >
                             {displayStores.map((store) => (
                                 <SwiperSlide key={store.id || (store as any)._id} className="h-auto">
@@ -207,7 +207,7 @@ const StoreSection = () => {
                     )}
                 </div>
 
-                <div className="mt-4 md:mt-10 text-center">
+                <div className="mt-6 md:mt-8 text-center">
                     <button 
                         className="inline-flex items-center gap-4 px-12 py-5 bg-white border-2 border-orange-500 text-orange-600 rounded-[2rem] font-black text-[12px] uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all duration-500 shadow-xl shadow-orange-500/20 hover:shadow-orange-500/40"
                         style={fontStyle}

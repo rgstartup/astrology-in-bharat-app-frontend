@@ -45,14 +45,14 @@ const ProductSection: React.FC<ProductSectionProps> = ({ products, isLoading = f
 
     return (
         <div className="w-full">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-6 gap-8 px-4 md:px-0">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4 lg:mb-6 gap-4 lg:gap-8 px-4 md:px-0">
                 <div className="w-full md:w-auto">
                     <div className="w-full">
                         <h2 className="section-heading-premium uppercase mb-0">
                             <span>{t.products.title}</span>
                         </h2>
                     </div>
-                    <p className="text-slate-500 font-medium text-sm mt-4 md:mt-2 max-w-xl">
+                    <p className="text-slate-500 font-medium text-sm mt-2 max-w-xl">
                         {t.products.subtitle}
                     </p>
                 </div>
@@ -61,13 +61,13 @@ const ProductSection: React.FC<ProductSectionProps> = ({ products, isLoading = f
                     <div className="relative group">
                         <div className="absolute -inset-1 bg-gradient-to-r from-orange/80 to-orange rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition duration-500"></div>
                         <div className="relative flex items-center bg-white rounded-2xl border border-[#d95a00] overflow-hidden shadow-sm hover:border-[#ff6b00] focus-within:shadow-xl focus-within:border-[#ff6b00] focus-within:ring-2 focus-within:ring-[#d95a00]/30 transition-all duration-500 w-full sm:min-w-[320px]">
-                            <Search className="ml-5 w-5 h-5 text-slate-400" />
+                            <Search className="ml-4 md:ml-5 w-5 h-5 text-slate-400" />
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder={t.products.searchPlaceholder}
-                                className="w-full py-5 px-4 text-sm font-bold text-slate-900 placeholder:text-slate-400 outline-none bg-transparent"
+                                className="w-full py-3.5 md:py-5 px-4 text-sm font-bold text-slate-900 placeholder:text-slate-400 placeholder:font-medium outline-none bg-transparent"
                             />
                             {searchQuery && (
                                 <button

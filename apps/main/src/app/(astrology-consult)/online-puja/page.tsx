@@ -185,7 +185,7 @@ const OnlinePujaPage = () => {
                 
                 {/* Header */}
                 <div className="flex items-end justify-between mb-8">
-                    <h2 className="text-3xl font-black text-gray-900 border-b-2 border-transparent" style={fontStyle}>Popular Puja</h2>
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 border-b-2 border-transparent" style={fontStyle}>Popular Puja</h2>
                     <span className="text-sm font-bold text-gray-500 mb-1">{pujas.length}+ Puja Available</span>
                 </div>
 

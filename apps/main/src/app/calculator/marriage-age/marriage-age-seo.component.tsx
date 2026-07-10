@@ -22,7 +22,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#FFF8F0] p-6 md:p-8 rounded-[3px] border border-[#F26500]/20">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Signs of Early vs Late Marriage in Your Kundali
+            <h3 className="text-[16px] sm:text-[17px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Signs of Early vs Late Marriage in Your Kundali
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-4">
               While our calculator provides a quick estimate, a professional astrologer looks deeply into your birth chart (Kundali) to predict your exact marriage timeline. Here are common indicators they look for:
@@ -52,7 +52,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">The Impact of Numerology on Marriage
+            <h3 className="text-[16px] sm:text-[17px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">The Impact of Numerology on Marriage
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
               Just like planetary positions, your Birth Date holds immense numerological power. Your Life Path Number (calculated by adding all the digits of your birth date) often dictates the natural rhythm of your life, including when you are most likely to settle down.
@@ -74,7 +74,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10 bg-[#F9F9F9] p-6 md:p-8 rounded-[3px] border border-gray-200">
-            <h3 className="text-[20px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Common Myths About Marriage Timing
+            <h3 className="text-[16px] sm:text-[17px] font-bold text-black mb-4 border-b-2 border-[#F26500] inline-block pb-1">Common Myths About Marriage Timing
             </h3>
             <ul className="list-disc pl-5 text-gray-700 text-[15px] space-y-4">
               <li><strong>Myth: Late Marriage means a Bad Marriage.</strong> <br/><em>Fact:</em> A delayed marriage (often caused by Saturn) usually results in a very mature, stable, and long-lasting relationship because both partners know exactly what they want.</li>
@@ -84,7 +84,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Can We Alter the Timing of Marriage?
+            <h3 className="text-[16px] sm:text-[17px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Can We Alter the Timing of Marriage?
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed mb-6">
               In astrology, destiny shows the path, but karma and remedies (Upayas) can help clear the roadblocks. If you are facing unnatural delays in getting married, astrologers often recommend specific rituals, gemstone therapy, or fasting on certain days (like Thursdays for Jupiter) to appease the planets blocking your marriage prospects.
@@ -92,7 +92,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Why Knowing Your Marriage Timeline Helps
+            <h3 className="text-[16px] sm:text-[17px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Why Knowing Your Marriage Timeline Helps
             </h3>
             <p className="text-gray-700 text-[15px] leading-relaxed">
               Having an estimated timeline for your marriage helps alleviate anxiety and societal pressure. If you know your astrological chart indicates marriage around the age of 29, you can focus your twenties entirely on building your career, travelling, and self-discovery without feeling "left behind." It allows you to align your personal life goals with your cosmic timeline.
@@ -106,7 +106,7 @@ export default function MarriageAgeSeoContent() {
           </div>
 
           <div className="mb-10">
-            <h3 className="text-[18px] sm:text-[20px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Frequently Asked Questions
+            <h3 className="text-[16px] sm:text-[17px] font-bold text-black mb-6 border-b-2 border-[#F26500] inline-block pb-1">Frequently Asked Questions
             </h3>
             
             <div className="space-y-6">

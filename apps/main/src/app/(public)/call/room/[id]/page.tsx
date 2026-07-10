@@ -223,31 +223,31 @@ export default function CallRoomPage() {
 
       {showRatingModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-          <div className="w-full max-w-md bg-neutral-900 border border-white/10 rounded-3xl p-8 flex flex-col gap-6 animate-in zoom-in-95 duration-300">
+          <div className="w-full max-w-md bg-white border-2 border-orange rounded-[2rem] p-8 flex flex-col gap-6 animate-in zoom-in-95 duration-300 shadow-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[10px] text-white/30 font-black uppercase tracking-widest">
+                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">
                   {endReason ? `Call Ended: ${endReason.message}` : "Call Ended"}
                 </p>
-                <h2 className="text-xl font-black text-white">
+                <h2 className="text-xl font-black text-gray-900">
                   {endReason?.reason === 'insufficient_balance' ? "Low Balance" : "Rate your Experience"}
                 </h2>
               </div>
-              <button onClick={() => { setShowRatingModal(false); router.push("/"); }} className="w-9 h-9 rounded-full bg-[#1A1A1A]/5 hover:bg-[#1A1A1A]/10 flex items-center justify-center transition-all">
-                <X className="w-4 h-4 text-white/50" />
+              <button onClick={() => { setShowRatingModal(false); router.push("/"); }} className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all">
+                <X className="w-4 h-4 text-gray-500" />
               </button>
             </div>
 
             {sessionData?.expert?.user?.name && (
-              <p className="text-sm text-white/50 -mt-3">
-                Your consultation with <span className="text-primary font-bold">{sessionData.expert.user.name}</span>
+              <p className="text-sm text-gray-600 -mt-3 font-bold">
+                Your consultation with <span className="text-orange font-black">{sessionData.expert.user.name}</span>
               </p>
             )}
 
             <div className="flex justify-center gap-3">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button key={star} onClick={() => setReviewRating(star)} className="transition-all hover:scale-110 active:scale-95">
-                  <Star className={`w-10 h-10 transition-colors ${star <= reviewRating ? "fill-yellow-400 text-yellow-400" : "text-white/20 fill-transparent"}`} />
+                  <Star className={`w-10 h-10 transition-colors ${star <= reviewRating ? "fill-yellow-400 text-yellow-400" : "text-gray-200 fill-transparent"}`} />
                 </button>
               ))}
             </div>
@@ -257,17 +257,17 @@ export default function CallRoomPage() {
               onChange={(e) => setReviewComment(e.target.value)}
               placeholder="Share your experience (optional)..."
               rows={3}
-              className="w-full bg-[#1A1A1A]/5 border border-white/10 rounded-2xl px-4 py-3 text-white text-sm placeholder:text-white/20 outline-none focus:border-primary/50"
+              className="w-full bg-orange-50 border border-orange-100 rounded-2xl px-4 py-3 text-gray-900 text-sm placeholder:text-gray-400 outline-none focus:border-orange focus:ring-1 focus:ring-orange transition-all font-medium"
             />
 
             <div className="flex gap-3">
-              <button onClick={() => { setShowRatingModal(false); router.push("/"); }} className="flex-1 py-3 rounded-xl border border-white/10 text-white/40 text-xs font-bold uppercase tracking-widest">
+              <button onClick={() => { setShowRatingModal(false); router.push("/"); }} className="flex-1 py-3 rounded-xl border-2 border-gray-200 text-gray-500 hover:bg-gray-50 text-xs font-bold uppercase tracking-widest transition-all">
                 Skip
               </button>
               <button
                 onClick={handleSubmitReview}
                 disabled={reviewSubmitting || reviewSubmitted || reviewRating === 0}
-                className="flex-1 py-3 rounded-xl bg-primary text-white font-black text-sm uppercase tracking-widest disabled:opacity-50 transition-all shadow-lg"
+                className="flex-1 py-3 rounded-xl bg-orange text-white font-black text-sm uppercase tracking-widest disabled:opacity-50 hover:shadow-lg hover:-translate-y-1 transition-all"
               >
                 {reviewSubmitted ? "✅ Submitted!" : reviewSubmitting ? "Submitting..." : "Submit Review"}
               </button>

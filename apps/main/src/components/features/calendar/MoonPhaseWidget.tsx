@@ -19,7 +19,7 @@ export default function MoonPhaseWidget({ panchang, lang }: MoonPhaseWidgetProps
   const strokeDashoffset = circumference - (moonPhase.illumination / 100) * circumference;
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm h-full flex flex-col justify-between items-center text-center">
+    <div className="bg-white rounded-2xl p-6 border-2 border-[#ff6b00] shadow-sm hover:shadow-lg hover:shadow-[#ff6b00]/10 transition-shadow h-full flex flex-col justify-between items-center text-center">
       <h3 className="text-xl md:text-2xl font-bold text-[#2d110f] mb-6 font-display tracking-wide">
         {lang === 'hi' ? 'चंद्र कला' : 'Moon Phase'}
       </h3>

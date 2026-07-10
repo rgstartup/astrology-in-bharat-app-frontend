@@ -90,7 +90,7 @@ const HoroscopeContent = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-[#3D1A0B] text-[15px] sm:text-[18px] leading-tight sm:leading-normal">Want a more accurate prediction?</h3>
-                  <p className="text-gray-600 text-[12px] sm:text-[13px] mt-0.5">Get a personalized horoscope based on your birth details.</p>
+                  <p className="text-gray-800 text-[12px] sm:text-[13px] mt-0.5">Get a personalized horoscope based on your birth details.</p>
                 </div>
               </div>
               <button className="bg-transparent border border-[#F26500] text-[#F26500] hover:bg-[#F26500] hover:text-white transition-colors px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm font-bold whitespace-nowrap w-full sm:w-auto">

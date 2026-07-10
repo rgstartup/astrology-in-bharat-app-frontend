@@ -69,7 +69,7 @@ export default function ZodiacHoroscopeWidget({ horoscope, lang }: ZodiacHorosco
               <Link 
                 href={`/horoscope/${item.sign.toLowerCase()}`}
                 key={idx} 
-                className="min-w-[140px] bg-white rounded-xl border border-gray-200 p-4 shadow-sm snap-start flex flex-col items-center justify-center text-center hover:border-[#f3d3a3] hover:bg-[#fffaf5] hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer group/card"
+                className="min-w-[190px] bg-white rounded-xl border-2 border-[#ff6b00] p-4 shadow-sm snap-start flex flex-col items-center justify-center text-center hover:shadow-lg hover:shadow-[#ff6b00]/20 hover:bg-[#fffaf5] hover:-translate-y-1 transition-all duration-300 cursor-pointer group/card"
               >
                 <div className={`text-3xl mb-3 ${staticMatch.icon}`}>
                   <i className={`fa-solid ${staticMatch.icon.split(' ')[0]}`}></i>

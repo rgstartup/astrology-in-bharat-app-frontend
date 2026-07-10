@@ -9,7 +9,7 @@ interface PersonalGuidanceCardProps {
 
 const PersonalGuidanceCard: React.FC<PersonalGuidanceCardProps> = ({ className = "", showExtraContent = false }) => {
   return (
-    <div className={`bg-[#FFF8F3] border border-[#F5E0CC] rounded-[2rem] p-6 pb-8 relative overflow-hidden flex flex-col ${className}`}>
+    <div className={`bg-[#FFF8F3] border-2 border-[#F26500] rounded-[2rem] p-6 pb-8 relative overflow-hidden flex flex-col ${className}`}>
       {/* Text Content */}
       <div className="relative z-10 mb-2">
         <h3 className="text-[19px] min-[400px]:text-[20px] lg:text-[22px] font-black text-[#301118] mb-3 leading-tight tracking-tight">

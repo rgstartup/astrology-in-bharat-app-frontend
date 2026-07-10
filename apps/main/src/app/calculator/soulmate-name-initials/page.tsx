@@ -49,7 +49,7 @@ function hashSeed(str: string) {
 // ── Result Panel ─────────────────────────────────────────────────────────────
 const ResultPanel = ({ result }: { result: string[] }) => {
   return (
-    <div className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col h-full">
+    <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
@@ -159,13 +159,13 @@ const SoulmateInitialsPage = () => {
   const inputCls = "w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition";
 
   return (
-    <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-[#FDF6F0] overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
 
       {/* Breadcrumb */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 py-4">
-        <p className="text-sm text-[#888]">
-          <span>Home</span><span className="mx-2">›</span>
-          <span className="text-[#F26500] font-semibold">Calculators</span><span className="mx-2">›</span>
+        <p className="text-sm text-[#888] flex items-center">
+          <Link href="/" className="hover:text-[#F26500] transition-colors">Home</Link><span className="mx-2">›</span>
+          <Link href="/calculator" className="text-[#F26500] font-semibold hover:underline">Calculators</Link><span className="mx-2">›</span>
           <span className="text-[#444]">Soulmate Name Initials Calculator</span>
         </p>
       </div>
@@ -177,15 +177,12 @@ const SoulmateInitialsPage = () => {
           {/* ── Left: Form ── */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-fit"
+            className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-fit"
           >
             {/* Form Header */}
             <div className="flex items-center gap-3 mb-1">
-              <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
-                <i className={`${icons.heart} text-[#F26500] text-lg`} />
-              </div>
               <div>
-                <h1 className="text-xl font-black text-[#1A1A1A]">Soulmate Name Initials Calculator</h1>
+                <h1 className="text-[17px] sm:text-xl font-black text-[#1A1A1A] whitespace-normal sm:whitespace-nowrap tracking-tight sm:tracking-normal">Soulmate Name Initials Calculator</h1>
                 <p className="text-xs text-[#555] font-medium">Find the possible initials of your soulmate's name.</p>
               </div>
             </div>

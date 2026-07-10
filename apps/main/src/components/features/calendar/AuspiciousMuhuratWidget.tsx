@@ -66,7 +66,7 @@ export default function AuspiciousMuhuratWidget({ panchang, lang }: AuspiciousMu
   ];
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm h-full flex flex-col">
+    <div className="bg-white rounded-2xl p-6 border-2 border-[#ff6b00] shadow-sm hover:shadow-lg hover:shadow-[#ff6b00]/10 transition-shadow h-full flex flex-col">
       <div className="flex items-center gap-3 mb-6">
         <i className="fa-solid fa-om text-[#c85a17] text-xl"></i>
         <h3 className="text-xl font-bold text-[#5b2a26]">

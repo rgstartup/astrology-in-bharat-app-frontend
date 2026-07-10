@@ -5,7 +5,7 @@ import Link from "next/link";
 
 // ─── Why Visit Temples ───────────────────────────────────────────────────────
 export const WhyVisitSidebar = () => (
-  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+  <div className="bg-white rounded-2xl border-2 border-[#ff6b00] shadow-sm hover:shadow-lg hover:shadow-[#ff6b00]/10 transition-shadow p-5">
     <h3 className="text-sm font-black text-gray-900 mb-4">Why Visit Temples?</h3>
     <div className="space-y-4">
       {WHY_VISIT_ITEMS.map(({ icon, title, desc }) => (

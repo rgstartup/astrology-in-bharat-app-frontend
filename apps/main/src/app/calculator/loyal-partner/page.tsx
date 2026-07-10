@@ -52,13 +52,13 @@ export default function LoyalPartnerPage() {
   const inputCls = "w-full border-2 border-[#F0E0D0] rounded-xl px-4 py-3 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-4 focus:ring-[#F26500]/10 bg-white transition-all font-medium";
 
   return (
-    <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-[#FDF6F0] overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Breadcrumb */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 py-4">
-        <p className="text-sm text-[#888]">
-          <span>Home</span><span className="mx-2">›</span>
-          <span className="text-[#F26500] font-semibold">Calculators</span><span className="mx-2">›</span>
-          <span className="text-[#444]">Loyal Partner Finder</span>
+        <p className="text-sm text-[#888] flex items-center">
+          <Link href="/" className="hover:text-[#F26500] transition-colors">Home</Link><span className="mx-2">›</span>
+          <Link href="/calculator" className="text-[#F26500] font-semibold hover:underline">Calculators</Link><span className="mx-2">›</span>
+          <span className="text-[#444]">Loyal Partner Calculator</span>
         </p>
       </div>
 
@@ -67,11 +67,8 @@ export default function LoyalPartnerPage() {
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl mx-auto"}`}>
 
           {/* ── Left: Form ── */}
-          <form onSubmit={handleSubmit} className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-6 shadow-sm">
+          <form onSubmit={handleSubmit} className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-6 shadow-sm h-fit">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center shrink-0">
-                <i className="fa-solid fa-shield-heart text-[#F26500] text-xl" />
-              </div>
               <div>
                 <h1 className="text-xl md:text-2xl font-black text-[#1A1A1A] leading-tight">Loyal Partner Finder</h1>
                 <p className="text-xs md:text-sm text-[#888] mt-1">Check the loyalty and trust level in your relationship</p>
@@ -129,7 +126,7 @@ export default function LoyalPartnerPage() {
 
           {/* ── Middle: Result ── */}
           {result && (
-            <div className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 shadow-sm relative overflow-hidden items-center text-center">
+            <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5 shadow-sm relative overflow-hidden items-center text-center">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#F26500]/5 rounded-bl-full pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#F26500]/5 rounded-tr-full pointer-events-none" />
 

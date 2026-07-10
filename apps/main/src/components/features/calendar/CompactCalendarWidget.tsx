@@ -46,7 +46,7 @@ export default function CompactCalendarWidget({
   const isAmavasya = (date: Date) => parseInt(format(date, 'd')) === 20;
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm h-full flex flex-col">
+    <div className="bg-white rounded-2xl p-6 border-2 border-[#ff6b00] shadow-sm hover:shadow-lg hover:shadow-[#ff6b00]/10 transition-shadow h-full flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center mb-6 px-2">
         <button onClick={onPrevMonth} className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 hover:bg-gray-50 text-gray-400 transition-colors">

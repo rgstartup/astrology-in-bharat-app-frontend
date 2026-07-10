@@ -91,7 +91,7 @@ Note: This calculator is for fun and informational purposes.
   };
 
   return (
-    <div className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-6 h-full">
+    <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-6 h-full">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
@@ -185,13 +185,13 @@ const LoveCompatibilityPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-[#FDF6F0] overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
 
       {/* Breadcrumb */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 py-4">
-        <p className="text-sm text-[#888]">
-          <span>Home</span><span className="mx-2">›</span>
-          <span className="text-[#F26500] font-semibold">Calculators</span><span className="mx-2">›</span>
+        <p className="text-sm text-[#888] flex items-center">
+          <Link href="/" className="hover:text-[#F26500] transition-colors">Home</Link><span className="mx-2">›</span>
+          <Link href="/calculator" className="text-[#F26500] font-semibold hover:underline">Calculators</Link><span className="mx-2">›</span>
           <span className="text-[#444]">Love Compatibility Calculator</span>
         </p>
       </div>
@@ -203,15 +203,12 @@ const LoveCompatibilityPage = () => {
           {/* ── Left: Form ── */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-fit"
+            className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-fit"
           >
             {/* Form Header */}
             <div className="flex items-center gap-3 mb-1">
-              <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
-                <i className="fa-regular fa-heart text-[#F26500] text-lg" />
-              </div>
               <div>
-                <h1 className="text-xl font-black text-[#1A1A1A]">Love Compatibility Calculator</h1>
+                <h1 className="text-lg sm:text-xl font-black text-[#1A1A1A] whitespace-normal sm:whitespace-nowrap tracking-tight sm:tracking-normal">Love Compatibility Calculator</h1>
                 <p className="text-xs text-[#555] font-medium">Check the love compatibility between you and your partner.</p>
               </div>
             </div>
@@ -298,21 +295,19 @@ const LoveCompatibilityPage = () => {
         </div>
 
         {/* ── Meaning Section ── */}
-        <div className="mt-8 bg-white border border-[#F0E0D0] rounded-3xl p-6">
+        <div className="mt-12">
           <h2 className="text-lg font-black text-[#1A1A1A] flex items-center gap-2 mb-6">
             <i className="fa-regular fa-heart text-[#F26500]" /> What does your score mean?
           </h2>
-          <div className="flex flex-col md:flex-row gap-4 divide-y md:divide-y-0 md:divide-x divide-[#F0E0D0]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
             {MEANING_DATA.map((m, idx) => (
-              <div key={idx} className={`flex-1 flex flex-col gap-1 ${idx !== 0 ? 'pt-4 md:pt-0 md:pl-4' : ''}`}>
-                <p className="text-[#F26500] font-bold text-sm">{m.range}</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="w-8 h-8 rounded-full bg-[#FFF0E6] flex items-center justify-center shrink-0">
-                    <i className={`fa-solid ${m.icon} text-lg`} />
-                  </div>
-                  <p className="text-[14px] font-black text-[#1A1A1A] leading-tight">{m.label}</p>
+              <div key={idx} className="bg-white border-2 border-[#F26500] rounded-2xl p-4 flex flex-col items-center gap-2 text-center hover:shadow-md transition-all">
+                <p className="text-[#F26500] font-black text-[15px]">{m.range}</p>
+                <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center shrink-0 my-1">
+                  <i className={`fa-solid ${m.icon} text-xl`} />
                 </div>
-                <p className="text-[13px] text-[#444] mt-1">{m.desc}</p>
+                <p className="text-[14px] font-black text-[#1A1A1A] leading-tight">{m.label}</p>
+                <p className="text-[12px] text-[#555]">{m.desc}</p>
               </div>
             ))}
           </div>

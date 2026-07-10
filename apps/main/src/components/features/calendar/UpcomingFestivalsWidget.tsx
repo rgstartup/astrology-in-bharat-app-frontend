@@ -9,7 +9,7 @@ const upcomingFestivals = [
 
 export default function UpcomingFestivalsWidget({ lang }: { lang: string }) {
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm flex flex-col h-full">
+    <div className="bg-white rounded-2xl p-6 border-2 border-[#ff6b00] shadow-sm hover:shadow-lg hover:shadow-[#ff6b00]/10 transition-shadow flex flex-col h-full">
       <div className="flex items-center gap-3 mb-6 flex-shrink-0">
         <i className="fa-regular fa-calendar-days text-[#c85a17] text-xl"></i>
         <h3 className="text-xl font-bold text-[#5b2a26]">
@@ -36,9 +36,6 @@ export default function UpcomingFestivalsWidget({ lang }: { lang: string }) {
         </div>
       </div>
 
-      <button className="mt-6 text-center w-full text-[#c85a17] text-sm font-bold hover:underline py-2 flex-shrink-0">
-        {lang === 'hi' ? 'पूरा कैलेंडर देखें' : 'View Full Calendar'} <i className="fa-solid fa-arrow-right ml-1 text-xs"></i>
-      </button>
     </div>
   );
 }

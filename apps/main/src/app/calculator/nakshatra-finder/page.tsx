@@ -65,12 +65,12 @@ export default function NakshatraFinderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-[#FDF6F0] overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Breadcrumb */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 py-4">
-        <p className="text-sm text-[#888]">
-          <span>Home</span><span className="mx-2">›</span>
-          <span className="text-[#F26500] font-semibold">Calculators</span><span className="mx-2">›</span>
+        <p className="text-sm text-[#888] flex items-center">
+          <Link href="/" className="hover:text-[#F26500] transition-colors">Home</Link><span className="mx-2">›</span>
+          <Link href="/calculator" className="text-[#F26500] font-semibold hover:underline">Calculators</Link><span className="mx-2">›</span>
           <span className="text-[#444]">Nakshatra Finder</span>
         </p>
       </div>
@@ -80,11 +80,8 @@ export default function NakshatraFinderPage() {
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl mx-auto"}`}>
 
           {/* ── Left: Form ── */}
-          <form onSubmit={handleSubmit} className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-6 shadow-sm">
+          <form onSubmit={handleSubmit} className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-6 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center shrink-0">
-                <i className="fa-solid fa-star-and-crescent text-[#F26500] text-xl" />
-              </div>
               <div>
                 <h1 className="text-xl md:text-2xl font-black text-[#1A1A1A] leading-tight">Nakshatra Finder</h1>
                 <p className="text-xs md:text-sm text-[#888] mt-1">Discover your birth star based on your date of birth</p>
@@ -125,7 +122,7 @@ export default function NakshatraFinderPage() {
 
           {/* ── Middle: Result ── */}
           {result && (
-            <div className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 shadow-sm relative overflow-hidden">
+            <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#F26500]/5 rounded-bl-full pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#F26500]/5 rounded-tr-full pointer-events-none" />
 
@@ -173,7 +170,7 @@ export default function NakshatraFinderPage() {
             {NAKSHATRAS.map((n, i) => (
               <div
                 key={i}
-                className={`bg-white border rounded-2xl p-4 flex flex-col gap-1 text-center transition-all hover:shadow-md ${result?.index === i ? "border-[#F26500] bg-[#FFF8F3] shadow-md ring-2 ring-[#F26500]/20" : "border-[#F0E0D0]"}`}
+                className={`bg-white border-2 border-[#F26500] rounded-2xl p-4 flex flex-col gap-1 text-center transition-all hover:shadow-md ${result?.index === i ? "bg-[#FFF8F3] shadow-md scale-[1.02]" : ""}`}
               >
                 <span className={`text-[13px] font-black uppercase tracking-wider ${result?.index === i ? "text-[#F26500]" : "text-[#888]"}`}>#{i + 1}</span>
                 <span className={`text-[17px] font-black leading-tight ${result?.index === i ? "text-[#F26500]" : "text-[#1A1A1A]"}`}>{n.name}</span>

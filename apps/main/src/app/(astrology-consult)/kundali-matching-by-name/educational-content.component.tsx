@@ -9,7 +9,7 @@ const EducationalContent = () => {
       <div className="max-w-6xl mx-auto px-4">
         
         {/* Unified Educational Card */}
-        <div className="bg-[#fffdfa] border border-orange-100/60 shadow-[0_4px_24px_rgb(0,0,0,0.02)] rounded-[2.5rem] p-8 lg:p-12">
+        <div className="bg-[#fffdfa] border-2 border-orange-500 shadow-[0_4px_24px_rgb(0,0,0,0.02)] rounded-[2.5rem] p-8 lg:p-12">
           
           {/* Top: What This Means Section */}
           <div className="flex flex-col lg:flex-row gap-10 lg:gap-12 mb-10">
@@ -25,7 +25,7 @@ const EducationalContent = () => {
           
           <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            <div className="flex gap-4">
+            <div className="flex gap-4 bg-white border border-orange-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all hover:border-orange-200">
               <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shrink-0">
                 <FaComments />
               </div>
@@ -35,7 +35,7 @@ const EducationalContent = () => {
               </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 bg-white border border-orange-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all hover:border-orange-200">
               <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shrink-0">
                 <FaHeart />
               </div>
@@ -45,16 +45,13 @@ const EducationalContent = () => {
               </div>
             </div>
 
-            <div className="flex gap-4 relative group cursor-pointer">
+            <div className="flex gap-4 bg-white border border-orange-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all hover:border-orange-200">
               <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shrink-0">
                 <FaChartLine />
               </div>
-              <div className="pr-6">
+              <div>
                 <h4 className="text-sm font-bold text-slate-800 mb-1">Future Prospects</h4>
                 <p className="text-xs text-slate-500 leading-relaxed">Positive signs for a happy married life.</p>
-              </div>
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 text-orange-300 group-hover:text-orange-500 transition-colors">
-                <i className="fa-solid fa-chevron-right"></i>
               </div>
             </div>
           </div>

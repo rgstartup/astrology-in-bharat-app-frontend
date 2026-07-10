@@ -66,16 +66,16 @@ const ChooseYourZodiac: React.FC<ChooseYourZodiacProps> = ({ selectedSignId, sel
               <div
                 className={`flex flex-col items-center justify-center pt-6 pb-5 px-2 rounded-xl transition-all duration-300 cursor-pointer ${
                   isSelected
-                    ? "bg-[#FF6B00] border border-[#FF6B00] shadow-lg scale-[1.02]"
-                    : "border border-orange-200/50 bg-white hover:bg-slate-50 hover:border-orange-300/50 hover:-translate-y-1 hover:shadow-md"
+                    ? "bg-[#F26500] border-2 border-[#F26500] shadow-lg scale-[1.02]"
+                    : "border-2 border-[#F26500] bg-white hover:bg-slate-50 hover:-translate-y-1 hover:shadow-md"
                 }`}
               >
-                <div className={`w-16 h-16 mb-4 relative flex items-center justify-center rounded-full border transition-colors ${isSelected ? "border-white" : "border-[#FF6B00]"}`}>
-                  <div className={`absolute top-1 right-2 w-1 h-1 rounded-full z-10 ${isSelected ? "bg-white" : "bg-[#FF6B00]"}`}></div>
-                  <div className={`absolute bottom-1 left-2 w-1 h-1 rounded-full z-10 ${isSelected ? "bg-white" : "bg-[#FF6B00]"}`}></div>
-                  <div className={`absolute top-4 left-0 w-[2px] h-[2px] rounded-full z-10 ${isSelected ? "bg-white" : "bg-[#FF6B00]"}`}></div>
+                <div className={`w-16 h-16 mb-4 relative flex items-center justify-center rounded-full border transition-colors ${isSelected ? "border-white" : "border-[#F26500]"}`}>
+                  <div className={`absolute top-1 right-2 w-1 h-1 rounded-full z-10 ${isSelected ? "bg-white" : "bg-[#F26500]"}`}></div>
+                  <div className={`absolute bottom-1 left-2 w-1 h-1 rounded-full z-10 ${isSelected ? "bg-white" : "bg-[#F26500]"}`}></div>
+                  <div className={`absolute top-4 left-0 w-[2px] h-[2px] rounded-full z-10 ${isSelected ? "bg-white" : "bg-[#F26500]"}`}></div>
                   
-                  <ZodiacIcon title={sign.title} className={`w-10 h-10 transition-colors ${isSelected ? "text-white" : "text-[#FF6B00]"}`} />
+                  <ZodiacIcon title={sign.title} className={`w-10 h-10 transition-colors ${isSelected ? "text-white" : "text-[#F26500]"}`} />
                 </div>
                 <div className="text-center space-y-0.5">
                   <h3 className={`text-[14px] font-bold transition-colors ${isSelected ? "text-white" : "text-black"}`}>

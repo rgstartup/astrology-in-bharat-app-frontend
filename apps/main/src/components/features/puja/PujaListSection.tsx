@@ -142,7 +142,7 @@ const PujaListSection = () => {
 
     return (
         <section
-            className="py-[50px] relative overflow-hidden"
+            className="pt-6 pb-10 relative overflow-hidden"
             style={{
                 backgroundColor: "#301118",
                 backgroundImage: "url(/images/bg-dark.png)",
@@ -153,8 +153,8 @@ const PujaListSection = () => {
             }}
         >
             <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
-                <div className="relative mb-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 z-20">
-                    <div className="text-white mb-4 w-full md:w-auto" style={{ '--heading-border-color': 'rgba(255,255,255,0.2)' } as any}>
+                <div className="relative mb-4 md:mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-4 z-20">
+                    <div className="text-white mb-0 md:mb-2 w-full md:w-auto" style={{ '--heading-border-color': 'rgba(255,255,255,0.2)' } as any}>
                         <h2 className="section-heading-premium mb-0" style={fontStyle}>
                             <span>{t.page.title} <span className="text-orange-600">{t.page.titleHighlight}</span></span>
                         </h2>
@@ -224,7 +224,7 @@ const PujaListSection = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className="relative puja-swiper-wrapper mt-4 md:px-12 mb-8 z-10">
+                    <div className="relative puja-swiper-wrapper mt-4 md:px-12 mb-0 z-10">
                       <Swiper
                         modules={[Navigation, Autoplay]}
                         speed={800}
@@ -240,7 +240,7 @@ const PujaListSection = () => {
                           992: { slidesPerView: 3, spaceBetween: 20 },
                           1200: { slidesPerView: 3, spaceBetween: 24 },
                         }}
-                        className="py-4 !pb-8"
+                        className="py-4 !pb-2"
                       >
                         {displayPujas.map((puja) => (
                            <SwiperSlide key={puja.id} className="h-auto">
@@ -259,7 +259,7 @@ const PujaListSection = () => {
                 )}
 
                 {!loading && (
-                    <div className="view-all mt-8 text-center">
+                    <div className="view-all mt-6 md:mt-8 text-center">
                         <Link
                             href="/online-puja"
                             className="no-underline bg-orange-600 hover:bg-orange-700 text-white px-8 py-3.5 rounded-full font-bold shadow-lg transition-all mx-auto flex items-center justify-center gap-2 w-fit active:scale-95 shadow-orange-900/40 hover:translate-y-[-2px]"

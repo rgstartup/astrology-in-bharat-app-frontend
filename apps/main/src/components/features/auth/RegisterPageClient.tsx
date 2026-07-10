@@ -21,7 +21,7 @@ export default function RegisterPageClient() {
                     <div className="w-full lg:w-1/2 pt-0 md:pt-4">
                         <div className="mb-8">
                             <h3
-                                className="text-[28px] md:text-4xl lg:text-[42px] font-extrabold leading-tight mb-4"
+                                className="text-[20px] min-[390px]:text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] xl:text-[42px] font-extrabold leading-tight mb-4 whitespace-nowrap tracking-tight md:tracking-normal"
                                 style={{ fontFamily: lang === "hi" ? "'Noto Sans Devanagari', sans-serif" : "inherit" }}
                             >
                                 <span className="text-[#301118]">{t.signUp.title}</span>{" "}

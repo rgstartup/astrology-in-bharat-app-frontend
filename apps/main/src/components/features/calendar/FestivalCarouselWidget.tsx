@@ -50,7 +50,7 @@ export default function FestivalCarouselWidget({ lang }: { lang: string }) {
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {mockFestivals.map((fest, idx) => (
-            <div key={idx} className="group min-w-[180px] lg:min-w-0 lg:flex-1 bg-[#fffaf5] rounded-xl border border-[#f3d3a3] p-4 shadow-sm snap-start flex flex-col items-center justify-center text-center hover:shadow-md hover:-translate-y-1 hover:border-[#e2b075] transition-all duration-300 cursor-pointer">
+            <div key={idx} className="group min-w-[180px] lg:min-w-0 lg:flex-1 bg-[#fffaf5] rounded-xl border-2 border-[#ff6b00] p-4 shadow-sm snap-start flex flex-col items-center justify-center text-center hover:shadow-md hover:-translate-y-1 hover:shadow-[#ff6b00]/20 transition-all duration-300 cursor-pointer">
               <div className={`text-4xl mb-3 drop-shadow-sm ${fest.color}`}>
                 <i className={`fa-solid ${fest.icon}`}></i>
               </div>

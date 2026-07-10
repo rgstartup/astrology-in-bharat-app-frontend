@@ -53,7 +53,7 @@ function hashSeed(str: string) {
 // ── Result Panel ─────────────────────────────────────────────────────────────
 const ResultPanel = ({ result }: { result: any }) => {
   return (
-    <div className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-6 h-full">
+    <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-6 h-full animate-in fade-in slide-in-from-bottom-4 duration-500 relative overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
@@ -161,7 +161,7 @@ const MarriageAgeCalculatorPage = () => {
     setLoading(false);
   };
 
-  const inputCls = "w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition";
+  const inputCls = "w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] placeholder-[#BBB] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-slate-50 transition";
 
   return (
     <div className="min-h-screen bg-[#FDF6F0] overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -182,17 +182,12 @@ const MarriageAgeCalculatorPage = () => {
           {/* ── Left: Form ── */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5"
+            className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5"
           >
             {/* Form Header */}
-            <div className="flex items-center gap-3 mb-1">
-              <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
-                <i className={`${icons.calendar} text-[#F26500] text-lg`} />
-              </div>
-              <div>
-                <h1 className="text-xl font-black text-[#1A1A1A]">Marriage Age Calculator</h1>
-                <p className="text-xs text-[#888]">Find your ideal marriage age based on astrological analysis.</p>
-              </div>
+            <div className="mb-1">
+              <h1 className="text-[18px] sm:text-xl font-black text-[#1A1A1A] whitespace-nowrap sm:whitespace-normal tracking-tight md:tracking-normal">Marriage Age Calculator</h1>
+              <p className="text-xs text-[#888] mt-0.5">Find your ideal marriage age based on astrological analysis.</p>
             </div>
 
             {/* Divider */}
@@ -224,7 +219,6 @@ const MarriageAgeCalculatorPage = () => {
                   value={dob} onChange={(e) => setDob(e.target.value)}
                   className={`${inputCls} [color-scheme:light]`}
                 />
-                <i className={`${icons.calendar} absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm pointer-events-none`} />
               </div>
             </div>
 
@@ -237,7 +231,6 @@ const MarriageAgeCalculatorPage = () => {
                   value={time} onChange={(e) => setTime(e.target.value)}
                   className={`${inputCls} [color-scheme:light]`}
                 />
-                <i className={`${icons.clock} absolute right-3 top-1/2 -translate-y-1/2 text-[#CCC] text-sm pointer-events-none`} />
               </div>
             </div>
 
@@ -317,7 +310,7 @@ const MarriageAgeCalculatorPage = () => {
             </h3>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
               {FACTORS.map((f, i) => (
-                <div key={i} className="bg-white border border-[#F0E0D0] rounded-2xl p-4 flex flex-col items-center text-center gap-2 shadow-sm hover:shadow-md hover:border-[#F26500]/30 transition-all">
+                <div key={i} className="bg-white border-2 border-[#F26500] rounded-2xl p-4 flex flex-col items-center text-center gap-2 shadow-sm hover:shadow-md transition-all">
                   <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center mb-1">
                     <i className={`${f.icon} text-[#F26500]`} />
                   </div>

@@ -59,13 +59,13 @@ export default function LifePathCalculatorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-[#FDF6F0] overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Breadcrumb */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 py-4">
-        <p className="text-sm text-[#888]">
-          <span>Home</span>
+        <p className="text-sm text-[#888] flex items-center">
+          <Link href="/" className="hover:text-[#F26500] transition-colors">Home</Link>
           <span className="mx-2">›</span>
-          <span className="text-[#F26500] font-semibold">Calculators</span>
+          <Link href="/calculator" className="text-[#F26500] font-semibold hover:underline">Calculators</Link>
           <span className="mx-2">›</span>
           <span className="text-[#444]">Life Path Calculator</span>
         </p>
@@ -76,14 +76,11 @@ export default function LifePathCalculatorPage() {
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
           
           {/* ── Left: Form ── */}
-          <form onSubmit={handleSubmit} className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-6 shadow-sm">
+          <form onSubmit={handleSubmit} className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-6 shadow-sm">
             {/* Header */}
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center shrink-0">
-                <i className="fa-solid fa-road text-[#F26500] text-xl" />
-              </div>
               <div>
-                <h1 className="text-xl md:text-2xl font-black text-[#1A1A1A] leading-tight">
+                <h1 className="text-xl md:text-2xl font-black text-[#1A1A1A] leading-tight whitespace-normal sm:whitespace-nowrap tracking-tight sm:tracking-normal">
                   Life Path Calculator
                 </h1>
                 <p className="text-xs md:text-sm text-[#888] mt-1">
@@ -139,7 +136,7 @@ export default function LifePathCalculatorPage() {
 
           {/* ── Middle: Result ── */}
           {result && (
-            <div className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
               {/* Decorative BG */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#F26500]/5 rounded-bl-full pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#F26500]/5 rounded-tr-full pointer-events-none" />

@@ -42,7 +42,7 @@ const ExpertSlider: React.FC<ExpertSliderProps> = ({
           992: { slidesPerView: 3, spaceBetween: 20 },
           1200: { slidesPerView: 4, spaceBetween: 24 },
         }}
-        className="astro-swiper !py-4"
+        className="astro-swiper !py-4 !pb-0"
       >
         {experts.length === 0 ? (
           Array.from({ length: 4 }).map((_, i) => (

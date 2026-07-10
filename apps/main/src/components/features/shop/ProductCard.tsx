@@ -113,7 +113,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
       </div>
 
       {/* 🖼️ Image Area with Glow */}
-      <div className={`relative w-full ${isCompact ? 'aspect-[4/3]' : 'aspect-square'} bg-gray-50/50 flex items-center justify-center overflow-hidden shrink-0 group-hover:bg-white transition-colors duration-500`}>
+      <div className={`relative w-full ${isCompact ? 'aspect-[4/3]' : 'aspect-[4/3] sm:aspect-square'} bg-gray-50/50 flex items-center justify-center overflow-hidden shrink-0 group-hover:bg-white transition-colors duration-500`}>
         <div className="absolute inset-0 bg-gradient-to-br from-orange/5 via-transparent to-orange/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         <div className={`relative w-full h-full transition-transform duration-700 ease-out group-hover:scale-110`}>
           <Image
@@ -159,15 +159,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
         <div className={`flex gap-3 ${isCompact ? 'pt-1' : 'pt-2'}`}>
           <button
             onClick={handleAddToCart}
-            className={`flex-1 ${isCompact ? 'h-11 rounded-xl px-0.5' : 'h-14 rounded-2xl px-1'} border-2 border-gray-100 text-gray-500 font-bold text-[9px] uppercase tracking-wider hover:border-orange hover:text-orange hover:bg-orange/5 transition-all duration-300 flex items-center justify-center gap-1.5 group/btn shadow-sm hover:shadow-md`}
+            className={`flex-1 ${isCompact ? 'h-9 rounded-lg px-0.5 text-[9px]' : 'h-10 md:h-11 rounded-xl px-2 text-[10px] md:text-[11px]'} border-2 border-gray-100 text-gray-500 font-bold uppercase tracking-wider hover:border-orange hover:text-orange hover:bg-orange/5 transition-all duration-300 flex items-center justify-center group/btn shadow-sm hover:shadow-md`}
           >
-            <i className={`${isCompact ? 'text-sm' : 'text-base'} fa-solid fa-cart-shopping translate-y-[-1px] group-hover/btn:scale-110 transition-transform`}></i>
-            <span className="leading-tight text-left" style={lang === 'hi' ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {}}>
-              {t.products.addToCart.split(' ').map((word: string, i: number, arr: string[]) => (
-                <React.Fragment key={i}>
-                  {word}{i === (arr.length === 3 ? 1 : 0) ? <br /> : ' '}
-                </React.Fragment>
-              ))}
+            <span className="leading-tight text-center" style={lang === 'hi' ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {}}>
+              {t.products.addToCart}
             </span>
           </button>
           <button
@@ -180,19 +175,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
               router.push(`/client/checkout?type=order`);
             }}
             disabled={isBuyLoading}
-            className={`flex-1 ${isCompact ? 'h-11 rounded-xl px-0.5' : 'h-14 rounded-2xl px-1'} bg-orange text-white font-black text-[9px] uppercase tracking-widest shadow-lg shadow-orange/20 hover:shadow-orange/40 hover:bg-orange/90 transition-all duration-300 flex items-center justify-center gap-1.5`}
+            className={`flex-1 ${isCompact ? 'h-9 rounded-lg px-0.5 text-[9px]' : 'h-10 md:h-11 rounded-xl px-2 text-[10px] md:text-[11px]'} bg-orange text-white font-black uppercase tracking-widest shadow-lg shadow-orange/20 hover:shadow-orange/40 hover:bg-orange/90 transition-all duration-300 flex items-center justify-center`}
           >
             {isBuyLoading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             ) : (
               <>
-                <i className={`${isCompact ? 'text-base' : 'text-lg'} fa-solid fa-bolt translate-y-[-1px]`}></i>
-                <span className="leading-tight text-left" style={lang === 'hi' ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {}}>
-                  {t.products.buyNow.split(' ').map((word: string, i: number, arr: string[]) => (
-                    <React.Fragment key={i}>
-                      {word}{i === 0 ? <br /> : ' '}
-                    </React.Fragment>
-                  ))}
+                <span className="leading-tight text-center" style={lang === 'hi' ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {}}>
+                  {t.products.buyNow}
                 </span>
               </>
             )}

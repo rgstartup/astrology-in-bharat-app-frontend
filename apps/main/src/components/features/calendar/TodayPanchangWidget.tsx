@@ -12,7 +12,7 @@ interface TodayPanchangWidgetProps {
 export default function TodayPanchangWidget({ selectedDate, panchang, isLoading, lang }: TodayPanchangWidgetProps) {
   if (isLoading) {
     return (
-      <div className="h-96 flex items-center justify-center bg-[#fefaf6] rounded-2xl border border-[#f3d3a3] shadow-sm">
+      <div className="h-96 flex items-center justify-center bg-[#fefaf6] rounded-2xl border-2 border-[#ff6b00] shadow-sm">
         <Loading size="md" text="Calculating Panchang..." />
       </div>
     );
@@ -37,7 +37,7 @@ export default function TodayPanchangWidget({ selectedDate, panchang, isLoading,
   ];
 
   return (
-    <div className="bg-[#fefaf6] rounded-2xl p-6 border border-[#f3d3a3] shadow-sm relative h-full flex flex-col justify-between">
+    <div className="bg-[#fefaf6] rounded-2xl p-6 border-2 border-[#ff6b00] shadow-sm hover:shadow-lg hover:shadow-[#ff6b00]/10 transition-shadow relative h-full flex flex-col justify-between">
       <div>
         <div className="flex justify-between items-center border-b border-[#f3d3a3] pb-4 mb-4">
           <div className="flex items-center gap-3">

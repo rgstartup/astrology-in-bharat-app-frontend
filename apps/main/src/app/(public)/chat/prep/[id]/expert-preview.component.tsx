@@ -38,7 +38,7 @@ const ExpertPreview = ({
   return (
     <div className="order-1 lg:order-2 lg:col-span-5 relative">
       <div className="sticky top-28">
-        <div className="p-2 bg-[#1A1A1A] rounded-[3.5rem] shadow-[0_40px_100px_rgba(0,0,0,0.08)] relative overflow-hidden">
+        <div className="p-2 bg-white border border-[#F0E0D0] rounded-[3.5rem] shadow-[0_4px_25px_rgba(0,0,0,0.05)] relative overflow-hidden">
           {/* Expert Image Section */}
           <div className="relative h-[380px] rounded-[3rem] overflow-hidden group">
             <Image
@@ -118,18 +118,18 @@ const ExpertPreview = ({
           <div className="p-6 space-y-5">
             {/* Option to toggle who is asking */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-[#242424] rounded-2xl border border-[#333333]">
+              <div className="flex items-center justify-between p-4 bg-[#FFF8F3] rounded-2xl border border-[#F5E0CC]">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                  <span className="text-[10px] font-black text-orange/80 uppercase tracking-widest">
                     Consulting for
                   </span>
-                  <span className="text-sm font-bold text-gray-100">
+                  <span className="text-sm font-bold text-gray-900">
                     {askSomeoneElse ? "Myself" : "Someone Else"}
                   </span>
                 </div>
                 <button
                   onClick={() => setAskSomeoneElse(!askSomeoneElse)}
-                  className="px-4 py-2 text-[10px] font-black text-orange uppercase tracking-widest hover:bg-orange/5 rounded-xl transition-colors"
+                  className="px-4 py-2 text-[10px] font-black text-orange uppercase tracking-widest hover:bg-orange/10 rounded-xl transition-colors"
                 >
                   Change
                 </button>
@@ -137,10 +137,10 @@ const ExpertPreview = ({
 
               {/* Someone Else Form */}
               {!askSomeoneElse && (
-                <div className="p-6 rounded-[2rem] bg-orange/5 border border-orange/10 space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="p-6 rounded-[2rem] bg-white border-2 border-orange/20 shadow-sm space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
                   <div className="grid grid-cols-1 gap-4">
                     <div>
-                      <label className="text-[9px] font-black text-orange/60 uppercase tracking-widest ml-1 mb-1.5 block">
+                      <label className="text-[9px] font-black text-orange/80 uppercase tracking-widest ml-1 mb-1.5 block">
                         Full Name
                       </label>
                       <input
@@ -153,12 +153,12 @@ const ExpertPreview = ({
                             name: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-3 bg-[#1A1A1A] rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-100 shadow-sm"
+                        className="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-orange outline-none text-sm font-bold text-gray-900 shadow-sm transition-colors"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-[9px] font-black text-orange/60 uppercase tracking-widest ml-1 mb-1.5 block">
+                        <label className="text-[9px] font-black text-orange/80 uppercase tracking-widest ml-1 mb-1.5 block">
                           Gender
                         </label>
                         <select
@@ -169,7 +169,7 @@ const ExpertPreview = ({
                               gender: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 bg-[#1A1A1A] rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-100 shadow-sm appearance-none"
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-orange outline-none text-sm font-bold text-gray-900 shadow-sm appearance-none transition-colors"
                         >
                           <option value="">Select</option>
                           <option value="male">Male</option>
@@ -177,7 +177,7 @@ const ExpertPreview = ({
                         </select>
                       </div>
                       <div>
-                        <label className="text-[9px] font-black text-orange/60 uppercase tracking-widest ml-1 mb-1.5 block">
+                        <label className="text-[9px] font-black text-orange/80 uppercase tracking-widest ml-1 mb-1.5 block">
                           Birth Date
                         </label>
                         <input
@@ -189,13 +189,13 @@ const ExpertPreview = ({
                               dob: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 bg-[#1A1A1A] rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-100 shadow-sm"
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-orange outline-none text-sm font-bold text-gray-900 shadow-sm transition-colors"
                         />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-[9px] font-black text-orange/60 uppercase tracking-widest ml-1 mb-1.5 block">
+                        <label className="text-[9px] font-black text-orange/80 uppercase tracking-widest ml-1 mb-1.5 block">
                           Birth Time
                         </label>
                         <input
@@ -207,11 +207,11 @@ const ExpertPreview = ({
                               tob: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 bg-[#1A1A1A] rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-100 shadow-sm"
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-orange outline-none text-sm font-bold text-gray-900 shadow-sm transition-colors"
                         />
                       </div>
                       <div>
-                        <label className="text-[9px] font-black text-orange/60 uppercase tracking-widest ml-1 mb-1.5 block">
+                        <label className="text-[9px] font-black text-orange/80 uppercase tracking-widest ml-1 mb-1.5 block">
                           Birth Place
                         </label>
                         <input
@@ -224,7 +224,7 @@ const ExpertPreview = ({
                               pob: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 bg-[#1A1A1A] rounded-xl border border-orange/10 focus:border-orange/30 outline-none text-sm font-bold text-gray-100 shadow-sm"
+                          className="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-orange outline-none text-sm font-bold text-gray-900 shadow-sm transition-colors"
                         />
                       </div>
                     </div>
@@ -236,14 +236,14 @@ const ExpertPreview = ({
             {/* Big CTA and Balance Check */}
             <div className="pt-6 space-y-4">
               {isAuthenticated && (
-                  <div className="flex items-center justify-between px-6 py-4 bg-[#242424] rounded-2xl border border-[#333333]">
+                  <div className="flex items-center justify-between px-6 py-4 bg-[#FFF8F3] rounded-2xl border border-[#F5E0CC]">
                       <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center border border-green-200">
                               <LucideIcons.Wallet className="w-4 h-4 text-green-600" />
                           </div>
-                          <span className="text-sm font-bold text-gray-500">Your Balance</span>
+                          <span className="text-sm font-bold text-gray-600">Your Balance</span>
                       </div>
-                      <span className="text-xl font-black text-gray-100">₹{userBalance.toFixed(2)}</span>
+                      <span className="text-xl font-black text-gray-900">₹{userBalance.toFixed(2)}</span>
                   </div>
               )}
 

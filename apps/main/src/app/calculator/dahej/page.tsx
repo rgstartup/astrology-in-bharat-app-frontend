@@ -51,7 +51,7 @@ const ResultPanel = ({ result }: { result: any }) => {
   ];
 
   return (
-    <div className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-full">
+    <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-full">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
@@ -141,15 +141,13 @@ const DahejCalculatorPage = () => {
   const selectCls = "w-full border border-[#E8D5C0] rounded-xl px-4 py-3 pr-10 text-sm text-[#333] bg-white focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 transition appearance-none cursor-pointer";
 
   return (
-    <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen bg-[#FDF6F0] overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
 
       {/* Breadcrumb */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 py-4">
-        <p className="text-sm text-[#888]">
-          <span>Home</span>
-          <span className="mx-2">›</span>
-          <span className="text-[#F26500] font-semibold">Calculators</span>
-          <span className="mx-2">›</span>
+        <p className="text-sm text-[#888] flex items-center">
+          <Link href="/" className="hover:text-[#F26500] transition-colors">Home</Link><span className="mx-2">›</span>
+          <Link href="/calculator" className="text-[#F26500] font-semibold hover:underline">Calculators</Link><span className="mx-2">›</span>
           <span className="text-[#444]">Dahej Calculator</span>
         </p>
       </div>
@@ -159,16 +157,13 @@ const DahejCalculatorPage = () => {
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
 
           {/* ── Left: Form ── */}
-          <form onSubmit={calculate} className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5">
+          <form onSubmit={calculate} className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5">
 
             {/* Header */}
             <div className="flex items-center gap-3 mb-1">
-              <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
-                <i className="fa-solid fa-calculator text-[#F26500] text-lg" />
-              </div>
               <div>
-                <h1 className="text-xl font-black text-[#1A1A1A]">Dahej Calculator</h1>
-                <p className="text-xs text-[#888]">Calculate expected dahej estimation</p>
+                <h1 className="text-xl md:text-2xl font-black text-[#1A1A1A] leading-tight">Dahej Calculator</h1>
+                <p className="text-xs md:text-sm text-[#888] mt-1">Calculate expected dahej estimation</p>
               </div>
             </div>
 
@@ -251,7 +246,7 @@ const DahejCalculatorPage = () => {
         {/* ── Awareness Section ── */}
         <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {AWARENESS.map((a) => (
-            <div key={a.title} className="flex flex-col items-center gap-3 text-center p-6 bg-white rounded-2xl border border-[#F0E0D0] shadow-sm hover:shadow-md transition-all hover:-translate-y-1 group">
+            <div key={a.title} className="flex flex-col items-center gap-3 text-center p-6 bg-white rounded-2xl border-2 border-[#F26500] shadow-sm hover:shadow-md transition-all hover:-translate-y-1 group">
               <div className="w-14 h-14 rounded-full bg-[#FFF0E6] flex items-center justify-center group-hover:scale-110 transition-transform">
                 <i className={`${a.icon} text-[#F26500] text-xl`} />
               </div>

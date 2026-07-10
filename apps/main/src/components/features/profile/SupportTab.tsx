@@ -36,7 +36,7 @@ const SupportTab: React.FC<SupportTabProps> = ({ supportSettings }) => {
         {/* Quick Contact Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Email Support */}
-          <div className="group bg-gray-50 hover:bg-white rounded-3xl p-6 md:p-8 text-center border border-transparent hover:border-gray-100 hover:shadow-xl hover:shadow-gray-200/40 transition-all duration-300">
+          <div className="group bg-white rounded-3xl p-6 md:p-8 text-center border border-orange shadow-sm hover:shadow-xl hover:shadow-orange/20 transition-all duration-300">
             <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-6 text-orange group-hover:scale-110 transition-transform duration-500">
               <i className="fa-solid fa-envelope text-2xl md:text-3xl"></i>
             </div>
@@ -57,7 +57,7 @@ const SupportTab: React.FC<SupportTabProps> = ({ supportSettings }) => {
           </div>
 
           {/* WhatsApp Support */}
-          <div className="group bg-green-50/30 hover:bg-white rounded-3xl p-6 md:p-8 text-center border border-transparent hover:border-emerald-100 hover:shadow-xl hover:shadow-emerald-200/20 transition-all duration-300">
+          <div className="group bg-white rounded-3xl p-6 md:p-8 text-center border border-orange shadow-sm hover:shadow-xl hover:shadow-orange/20 transition-all duration-300">
             <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-6 text-emerald-500 group-hover:scale-110 transition-transform duration-500">
               <i className="fa-brands fa-whatsapp text-2xl md:text-3xl"></i>
             </div>
@@ -80,7 +80,7 @@ const SupportTab: React.FC<SupportTabProps> = ({ supportSettings }) => {
           </div>
 
           {/* Phone Support */}
-          <div className="group bg-blue-50/30 hover:bg-white rounded-3xl p-6 md:p-8 text-center border border-transparent hover:border-blue-100 hover:shadow-xl hover:shadow-blue-200/20 transition-all duration-300">
+          <div className="group bg-white rounded-3xl p-6 md:p-8 text-center border border-orange shadow-sm hover:shadow-xl hover:shadow-orange/20 transition-all duration-300">
             <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-6 text-blue-600 group-hover:scale-110 transition-transform duration-500">
               <i className="fa-solid fa-phone text-2xl md:text-3xl"></i>
             </div>

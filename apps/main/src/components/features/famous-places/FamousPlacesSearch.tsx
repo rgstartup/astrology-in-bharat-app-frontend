@@ -86,7 +86,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
       <div className="max-w-[1300px] mx-auto px-4 md:px-8">
 
         {/* ── Single White Card Box ── */}
-        <div className="bg-white rounded-2xl shadow-sm border border-[#E8D5C0] px-6 py-6">
+        <div className="bg-white rounded-2xl shadow-sm border-2 border-[#ff6b00] hover:shadow-lg hover:shadow-[#ff6b00]/10 transition-shadow px-6 py-6">
             <form onSubmit={handleSubmit}>
 
               {/* Row 1: Title + Use My Location */}

@@ -54,7 +54,7 @@ const ResultPanel = ({ result, name1, name2 }: { result: string; name1: string; 
   const cfg   = resultConfig[result]!;
 
   return (
-    <div className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-full">
+    <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-full">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
@@ -123,9 +123,9 @@ const FlamesCalculatorPage = () => {
 
       {/* Breadcrumb */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 py-4">
-        <p className="text-sm text-[#888]">
-          <span>Home</span><span className="mx-2">›</span>
-          <span className="text-[#F26500] font-semibold">Calculators</span><span className="mx-2">›</span>
+        <p className="text-sm text-[#888] flex items-center">
+          <Link href="/" className="hover:text-[#F26500] transition-colors">Home</Link><span className="mx-2">›</span>
+          <Link href="/calculator" className="text-[#F26500] font-semibold hover:underline">Calculators</Link><span className="mx-2">›</span>
           <span className="text-[#444]">Flames Calculator</span>
         </p>
       </div>
@@ -135,13 +135,10 @@ const FlamesCalculatorPage = () => {
         <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
 
           {/* ── Left: Form ── */}
-          <form onSubmit={handleSubmit} className="bg-white border border-[#F0E0D0] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-fit">
+          <form onSubmit={handleSubmit} className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5 h-fit">
 
             {/* Header */}
             <div className="flex items-center gap-3 mb-1">
-              <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
-                <i className="fa-solid fa-fire text-[#F26500] text-lg" />
-              </div>
               <div>
                 <h1 className="text-xl font-black text-[#1A1A1A]">Flames Calculator</h1>
                 <p className="text-xs text-[#555] font-medium">Find your relationship prediction using FLAMES</p>
@@ -209,7 +206,7 @@ const FlamesCalculatorPage = () => {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
             {FLAMES_DATA.map((f) => (
-              <div key={f.letter} className="bg-white border border-[#F0E0D0] rounded-2xl p-4 flex flex-col items-center gap-2 text-center">
+              <div key={f.letter} className="bg-white border-2 border-[#F26500] rounded-2xl p-4 flex flex-col items-center gap-2 text-center">
                 <span className="text-3xl font-black text-[#F26500]">{f.letter}</span>
                 <span className="text-sm font-black text-[#1A1A1A]">{f.label}</span>
                 <span className="text-xs text-[#777]">{f.desc}</span>

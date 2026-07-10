@@ -4,7 +4,7 @@ export default function OnlinePujaSeoContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 pb-12">
       <section className="bg-white rounded-3xl p-6 md:p-10 border border-[#F0E0D0] shadow-[0_4px_15px_0_rgba(0,0,0,0.03)] mt-2">
-        <h2 className="text-xl font-extrabold text-[#1A1A1A] mb-5 flex items-center gap-3 border-b-2 border-[#FF5500] inline-flex pb-2">The Power of E-Puja & Remote Rituals
+        <h2 className="text-[17px] sm:text-lg font-bold text-[#1A1A1A] mb-5 flex items-center gap-3 border-b-2 border-[#FF5500] inline-flex pb-2">The Power of E-Puja & Remote Rituals
         </h2>
         
         <p className="text-gray-700 text-[13.5px] leading-relaxed mb-6">
@@ -20,7 +20,7 @@ export default function OnlinePujaSeoContent() {
         </div>
 
         <div className="mb-10">
-          <h3 className="text-[18px] font-extrabold text-[#1A1A1A] mb-5">Most Powerful Pujas for Life's Challenges
+          <h3 className="text-[16px] sm:text-[17px] font-bold text-[#1A1A1A] mb-5">Most Powerful Pujas for Life's Challenges
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-[#FAF8F5] border border-[#EAE2D6] p-6 rounded-2xl hover:shadow-md transition-shadow">
@@ -49,7 +49,7 @@ export default function OnlinePujaSeoContent() {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-[18px] font-extrabold text-[#1A1A1A] mb-5">Frequently Asked Questions
+          <h3 className="text-[16px] sm:text-[17px] font-bold text-[#1A1A1A] mb-5">Frequently Asked Questions
           </h3>
           
           <div className="space-y-6">

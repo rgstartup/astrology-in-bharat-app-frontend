@@ -4,9 +4,9 @@ export default function PujaDetailSeoContent({ pujaName }: { pujaName: string })
   const safeName = pujaName || "This Vedic Puja";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 pb-12 mt-8">
+    <div className="max-w-7xl mx-auto px-4 pb-12 mt-2">
       <section className="bg-[#FFFDF9] rounded-3xl p-6 md:p-10 border border-[#F0E0D0] shadow-[0_4px_15px_0_rgba(0,0,0,0.03)]">
-        <h2 className="text-2xl font-black text-[#1A1A1A] mb-6 flex items-center gap-3 border-b-2 border-[#FF5500] inline-flex pb-2">The Spiritual Significance of {safeName}
+        <h2 className="text-2xl font-bold md:font-black text-[#1A1A1A] mb-6 flex items-center gap-3 border-b-2 border-[#FF5500] inline-flex pb-2">The Spiritual Significance of {safeName}
         </h2>
         
         <p className="text-slate-600 text-[15px] leading-relaxed mb-8">
@@ -22,7 +22,7 @@ export default function PujaDetailSeoContent({ pujaName }: { pujaName: string })
         </div>
 
         <div className="mb-10">
-          <h3 className="text-xl font-black text-[#1A1A1A] mb-6">Core Benefits of this Ritual
+          <h3 className="text-xl font-bold md:font-black text-[#1A1A1A] mb-6">Core Benefits of this Ritual
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-[#FAF8F5] border border-[#EAE2D6] p-6 rounded-2xl hover:shadow-md transition-shadow">
@@ -55,7 +55,7 @@ export default function PujaDetailSeoContent({ pujaName }: { pujaName: string })
         </div>
 
         <div className="mb-6">
-          <h3 className="text-xl font-black text-[#1A1A1A] mb-6">Frequently Asked Questions
+          <h3 className="text-xl font-bold md:font-black text-[#1A1A1A] mb-6">Frequently Asked Questions
           </h3>
           
           <div className="space-y-6">

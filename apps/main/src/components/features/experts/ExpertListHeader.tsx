@@ -75,7 +75,7 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
     return (
         <>
             {/* Title & Mobile Buttons Row */}
-            <div className="flex justify-between items-center mb-6 lg:mb-10 text-white" style={{ '--heading-border-color': 'rgba(255,255,255,0.2)' } as any}>
+            <div className="flex justify-between items-center mb-3 lg:mb-6 text-white" style={{ '--heading-border-color': 'rgba(255,255,255,0.2)' } as any}>
                 <h2 className="section-heading-premium m-0" style={lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {}}>
                     <span>{title}</span>
                 </h2>
@@ -102,7 +102,7 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
                 </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row items-center gap-6 mb-8 text-white">
+            <div className="flex flex-col lg:flex-row items-center gap-4 mb-4 text-white">
             {/* Search Box */}
             <div className="w-full lg:w-5/12">
                 <div className="flex w-full shadow-lg h-[50px] rounded-full overflow-hidden">

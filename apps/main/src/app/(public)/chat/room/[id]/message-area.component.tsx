@@ -83,21 +83,17 @@ export default function MessageArea({
                                 <div className="flex-shrink-0 mt-1">
                                     <div className={`w-8 h-8 rounded-full border-2 ${isUser ? 'border-[#fd6410]/30' : 'border-black/5'} overflow-hidden shadow-sm flex items-center justify-center bg-[#2A2A2A]`}>
                                         {isUser ? (
-                                            <Avatar
-                                                src={user?.avatar || user?.profile_picture}
-                                                alt={user?.name || "User"}
-                                                size="sm"
-                                                fallback="/images/default-avatar.svg"
-                                                className="border-gray-800"
-                                            />
+                                            (user?.avatar || user?.profile_picture) ? (
+                                                <img src={user.avatar || user.profile_picture} alt={user?.name || "User"} className="w-full h-full object-cover" onError={(e) => { (e.target as any).style.display = 'none'; }} />
+                                            ) : (
+                                                <LucideIcons.User className="w-4 h-4 text-gray-500" />
+                                            )
                                         ) : (
-                                            <Avatar
-                                                src={expertData?.image}
-                                                alt={expertData?.name || "Expert"}
-                                                size="sm"
-                                                fallback="/images/dummy-expert.jpg"
-                                                className="border-gray-800"
-                                            />
+                                            expertData?.image ? (
+                                                <img src={expertData.image} alt={expertData?.name || "Expert"} className="w-full h-full object-cover" onError={(e) => { (e.target as any).style.display = 'none'; }} />
+                                            ) : (
+                                                <LucideIcons.User className="w-4 h-4 text-gray-500" />
+                                            )
                                         )}
                                     </div>
                                 </div>
@@ -110,7 +106,7 @@ export default function MessageArea({
                                             ? 'bg-[#fd6410] text-white rounded-tr-none' 
                                             : isDarkMode 
                                                 ? 'bg-[#1A1A1A]/10 text-white rounded-tl-none' 
-                                                : 'bg-[#1A1A1A] text-gray-200 border border-black/5 rounded-tl-none font-medium'
+                                                : 'bg-[#fd6410] text-white border-none rounded-tl-none font-medium'
                                 }`}`}>
                                     {isAdmin && (
                                         <div className="flex items-center justify-center gap-2 mb-1 text-[10px] font-black uppercase tracking-tighter">
@@ -121,14 +117,14 @@ export default function MessageArea({
                                         <div className="bg-gradient-to-br from-[#FFD700] via-[#FFEA00] to-[#FFD700] p-0.5 rounded-2xl shadow-lg border border-black/10 w-full min-w-[240px]">
                                             <div className="bg-yellow-400/20 backdrop-blur-sm rounded-xl p-4 border border-white/20 relative overflow-hidden">
                                                 <div className="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
-                                                    <LucideIcons.User className="w-16 h-16 text-white" />
+                                                    <LucideIcons.User className="w-16 h-16 text-yellow-900" />
                                                 </div>
-                                                <div className="flex items-center gap-2 mb-4 border-b border-black/10 pb-3 relative z-10">
-                                                    <div className="w-8 h-8 bg-black/10 rounded-full flex items-center justify-center">
-                                                        <LucideIcons.User className="w-4 h-4 text-white" />
+                                                <div className="flex items-center gap-2 mb-4 border-b border-yellow-900/10 pb-3 relative z-10">
+                                                    <div className="w-8 h-8 bg-yellow-900/10 rounded-full flex items-center justify-center">
+                                                        <LucideIcons.User className="w-4 h-4 text-yellow-900" />
                                                     </div>
                                                     <div>
-                                                        <h3 className="text-white font-black text-xs uppercase tracking-widest">Birth Details</h3>
+                                                        <h3 className="text-yellow-900 font-black text-xs uppercase tracking-widest">Birth Details</h3>
                                                     </div>
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-4 relative z-10">
@@ -156,24 +152,24 @@ export default function MessageArea({
                                                             return (
                                                                 <>
                                                                     <div className="space-y-1">
-                                                                        <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">Name</span>
-                                                                        <p className="text-sm font-black text-white truncate">{data.name || "N/A"}</p>
+                                                                        <span className="text-[9px] font-black text-yellow-900/50 uppercase tracking-widest">Name</span>
+                                                                        <p className="text-sm font-black text-yellow-900 truncate">{data.name || "N/A"}</p>
                                                                     </div>
                                                                     <div className="space-y-1">
-                                                                        <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">Gender</span>
-                                                                        <p className="text-sm font-black text-white capitalize">{data.gender || "N/A"}</p>
+                                                                        <span className="text-[9px] font-black text-yellow-900/50 uppercase tracking-widest">Gender</span>
+                                                                        <p className="text-sm font-black text-yellow-900 capitalize">{data.gender || "N/A"}</p>
                                                                     </div>
                                                                     <div className="space-y-1">
-                                                                        <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">DOB</span>
-                                                                        <p className="text-sm font-black text-white">{formatDate(data.dob || data.dateOfBirth)}</p>
+                                                                        <span className="text-[9px] font-black text-yellow-900/50 uppercase tracking-widest">DOB</span>
+                                                                        <p className="text-sm font-black text-yellow-900">{formatDate(data.dob || data.dateOfBirth)}</p>
                                                                     </div>
                                                                     <div className="space-y-1">
-                                                                        <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">Time</span>
-                                                                        <p className="text-sm font-black text-white">{data.tob || data.timeOfBirth || "N/A"}</p>
+                                                                        <span className="text-[9px] font-black text-yellow-900/50 uppercase tracking-widest">Time</span>
+                                                                        <p className="text-sm font-black text-yellow-900">{data.tob || data.timeOfBirth || "N/A"}</p>
                                                                     </div>
                                                                     <div className="space-y-1 col-span-2">
-                                                                        <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">Place</span>
-                                                                        <p className="text-sm font-black text-white truncate">{data.pob || data.placeOfBirth || "N/A"}</p>
+                                                                        <span className="text-[9px] font-black text-yellow-900/50 uppercase tracking-widest">Place</span>
+                                                                        <p className="text-sm font-black text-yellow-900 truncate">{data.pob || data.placeOfBirth || "N/A"}</p>
                                                                     </div>
                                                                 </>
                                                             );

@@ -60,7 +60,7 @@ const HelpSupportPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 relative z-20">
           
           {/* Email */}
-          <div className="bg-white rounded-[2rem] p-8 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 hover:-translate-y-1 hover:bg-gray-50 transition-all">
+          <div className="bg-white rounded-[2rem] p-8 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-orange hover:-translate-y-1 hover:shadow-xl hover:shadow-orange/20 transition-all">
             <div className="w-16 h-16 rounded-full bg-orange/10 text-orange flex items-center justify-center mx-auto mb-6">
               <i className="fa-solid fa-envelope-open-text text-2xl"></i>
             </div>
@@ -73,7 +73,7 @@ const HelpSupportPage = () => {
           </div>
 
           {/* WhatsApp */}
-          <div className="bg-white rounded-[2rem] p-8 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 hover:-translate-y-1 hover:bg-gray-50 transition-all">
+          <div className="bg-white rounded-[2rem] p-8 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-orange hover:-translate-y-1 hover:shadow-xl hover:shadow-orange/20 transition-all">
             <div className="w-16 h-16 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center mx-auto mb-6">
               <i className="fa-brands fa-whatsapp text-3xl"></i>
             </div>
@@ -86,7 +86,7 @@ const HelpSupportPage = () => {
           </div>
 
           {/* Call */}
-          <div className="bg-white rounded-[2rem] p-8 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 hover:-translate-y-1 hover:bg-gray-50 transition-all">
+          <div className="bg-white rounded-[2rem] p-8 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-orange hover:-translate-y-1 hover:shadow-xl hover:shadow-orange/20 transition-all">
             <div className="w-16 h-16 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mx-auto mb-6">
               <i className="fa-solid fa-phone-volume text-2xl"></i>
             </div>
@@ -99,7 +99,7 @@ const HelpSupportPage = () => {
           </div>
 
           {/* FAQ */}
-          <div className="bg-white rounded-[2rem] p-8 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 hover:-translate-y-1 hover:bg-gray-50 transition-all">
+          <div className="bg-white rounded-[2rem] p-8 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-orange hover:-translate-y-1 hover:shadow-xl hover:shadow-orange/20 transition-all">
             <div className="w-16 h-16 rounded-full bg-amber-600/10 text-amber-600 flex items-center justify-center mx-auto mb-6">
               <i className="fa-solid fa-circle-question text-3xl"></i>
             </div>

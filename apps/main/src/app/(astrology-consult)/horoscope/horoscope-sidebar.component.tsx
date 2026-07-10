@@ -76,21 +76,21 @@ const HoroscopeSidebar = () => {
             <i className="fa-regular fa-calendar text-[#F26500] mt-1"></i>
             <div>
               <p className="text-[13px] font-bold text-[#3D1A0B]">Date</p>
-              <p className="text-[13px] text-gray-600">{formattedDate || "18 May 2024, Saturday"}</p>
+              <p className="text-[13px] text-gray-800">{formattedDate || "18 May 2024, Saturday"}</p>
             </div>
           </div>
           <div className="flex gap-3">
             <i className="fa-regular fa-clock text-[#F26500] mt-1"></i>
             <div>
               <p className="text-[13px] font-bold text-[#3D1A0B]">Tithi</p>
-              <p className="text-[13px] text-gray-600">{panchang?.tithi?.details?.[0]?.name || panchang?.tithi?.name || "Shukla Paksha, Dashami"}</p>
+              <p className="text-[13px] text-gray-800">{panchang?.tithi?.details?.[0]?.name || panchang?.tithi?.name || "Shukla Paksha, Dashami"}</p>
             </div>
           </div>
           <div className="flex gap-3">
             <i className="fa-regular fa-star text-[#F26500] mt-1"></i>
             <div>
               <p className="text-[13px] font-bold text-[#3D1A0B]">Nakshatra</p>
-              <p className="text-[13px] text-gray-600">{panchang?.nakshatra?.details?.[0]?.name || panchang?.nakshatra?.name || "Rohini"}</p>
+              <p className="text-[13px] text-gray-800">{panchang?.nakshatra?.details?.[0]?.name || panchang?.nakshatra?.name || "Rohini"}</p>
             </div>
           </div>
           
@@ -98,12 +98,12 @@ const HoroscopeSidebar = () => {
             <div className="flex flex-col items-center">
               <i className="fa-solid fa-cloud-sun text-[#F26500] text-lg mb-1"></i>
               <p className="text-[12px] font-bold text-[#3D1A0B]">Sunrise</p>
-              <p className="text-[11px] text-gray-500">{formatTime(panchang?.sunrise) || "05:33 AM"}</p>
+              <p className="text-[11px] text-gray-700">{formatTime(panchang?.sunrise) || "05:33 AM"}</p>
             </div>
             <div className="flex flex-col items-center">
               <i className="fa-solid fa-moon text-[#F26500] text-lg mb-1"></i>
               <p className="text-[12px] font-bold text-[#3D1A0B]">Sunset</p>
-              <p className="text-[11px] text-gray-500">{formatTime(panchang?.sunset) || "07:05 PM"}</p>
+              <p className="text-[11px] text-gray-700">{formatTime(panchang?.sunset) || "07:05 PM"}</p>
             </div>
           </div>
         </div>
@@ -119,7 +119,7 @@ const HoroscopeSidebar = () => {
             <div key={idx} className="flex items-center gap-3">
               <i className="fa-solid fa-dharmachakra text-[#F26500] text-[10px]"></i>
               <div className="flex-1 text-[13px] font-bold text-[#3D1A0B]">{planet.name}</div>
-              <div className="text-[13px] text-gray-600">{planet.sign}</div>
+              <div className="text-[13px] text-gray-800">{planet.sign}</div>
             </div>
           ))}
         </div>

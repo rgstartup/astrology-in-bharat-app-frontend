@@ -18,7 +18,7 @@ const ZodiacGrid: React.FC<ZodiacGridProps> = ({ onSelectSign, selectedSignId, s
           <i className="fa-solid fa-sun text-[#F26500] text-[20px] sm:text-[24px]"></i>
           Select Your Zodiac Sign
         </h2>
-        <p className="text-[14px] text-gray-500 ml-8">
+        <p className="text-[14px] text-gray-700 ml-8">
           Click on your sign to view your {activeTab.toLowerCase()}
         </p>
       </div>
@@ -43,12 +43,12 @@ const ZodiacGrid: React.FC<ZodiacGridProps> = ({ onSelectSign, selectedSignId, s
                 </div>
                 <div className="flex flex-col">
                   <h3 className="font-bold text-[#3D1A0B] group-hover:text-white transition-colors text-[16px]">{sign.title}</h3>
-                  <p className="text-[12px] text-gray-500 group-hover:text-white/80 transition-colors">{sign.date}</p>
+                  <p className="text-[12px] text-gray-700 group-hover:text-white/80 transition-colors">{sign.date}</p>
                 </div>
               </div>
 
               {/* Preview text */}
-              <p className="text-[13px] text-gray-600 group-hover:text-white/90 transition-colors leading-relaxed flex-1">
+              <p className="text-[13px] text-gray-800 group-hover:text-white/90 transition-colors leading-relaxed flex-1">
                 {activeTab === "Daily Horoscope" 
                   ? (signPreviews[sign.title] || "Discover what the stars have in store for you today.")
                   : `Select your sign to get detailed insights for your ${activeTab.toLowerCase()}.`

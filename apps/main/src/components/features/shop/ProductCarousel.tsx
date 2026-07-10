@@ -67,7 +67,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products }) => {
 
     return (
         <div
-            className="w-full relative px-2 md:px-12"
+            className="w-full relative px-6 md:px-12"
             onMouseEnter={() => {
                 if (swiperInstance) {
                     swiperInstance.autoplay.stop();
@@ -95,21 +95,30 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products }) => {
                     prevEl: '.product-prev',
                 }}
                 breakpoints={{
+                    480: {
+                        slidesPerView: 2,
+                        spaceBetween: 16,
+                    },
                     640: {
                         slidesPerView: 2,
+                        spaceBetween: 24,
                     },
                     992: {
                         slidesPerView: 3,
+                        spaceBetween: 24,
                     },
                     1200: {
                         slidesPerView: 4,
+                        spaceBetween: 24,
                     },
                 }}
                 className="product-swiper py-5 structure-swiper"
             >
                 {displayProducts.map((product) => (
                     <SwiperSlideComponent key={product.id || (product as any)._id} className="h-auto">
-                        <ProductCard product={product} />
+                        <div className="max-w-[300px] mx-auto w-full h-full sm:max-w-none">
+                            <ProductCard product={product} />
+                        </div>
                     </SwiperSlideComponent>
                 ))}
             </SwiperComponent>

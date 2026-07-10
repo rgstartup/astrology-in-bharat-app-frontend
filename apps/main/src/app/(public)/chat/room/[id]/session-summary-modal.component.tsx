@@ -43,7 +43,7 @@ export default function SessionSummaryModal({
 
     return (
         <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${isDarkMode ? 'bg-[#0a0505]/95' : 'bg-black/60'} backdrop-blur-xl animate-in fade-in duration-500`}>
-            <div className={`${isDarkMode ? 'bg-[#1a0c0c]' : 'bg-[#1A1A1A]'} w-full max-w-md my-auto max-h-[90vh] rounded-[32px] overflow-hidden border ${isDarkMode ? 'border-white/10' : 'border-[#fd6410]/20'} shadow-[0_0_50px_rgba(253,100,16,0.15)] animate-in zoom-in-95 duration-300 relative flex flex-col`}>
+            <div className={`${isDarkMode ? 'bg-[#1a0c0c]' : 'bg-white'} w-full max-w-md my-auto max-h-[90vh] rounded-[32px] overflow-hidden border ${isDarkMode ? 'border-white/10' : 'border-[#fd6410]/20'} shadow-[0_0_50px_rgba(253,100,16,0.15)] animate-in zoom-in-95 duration-300 relative flex flex-col`}>
                 <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-1">
                     <div className="flex flex-col items-center text-center w-full">
                     <h2 className={`text-2xl font-black mb-1 ${isDarkMode ? 'text-white' : 'text-[#2A0A0A]'} tracking-tight uppercase`}>
@@ -71,7 +71,7 @@ export default function SessionSummaryModal({
                     )}
 
                     {sessionSummary?.status !== 'terminated' && (
-                        <div className={`w-full ${isDarkMode ? 'bg-[#1A1A1A]/5' : 'bg-[#242424]'} rounded-2xl p-5 mb-6 space-y-3 flex-shrink-0`}>
+                        <div className={`w-full ${isDarkMode ? 'bg-[#1A1A1A]/5' : 'bg-gray-50'} rounded-2xl p-5 mb-6 space-y-3 flex-shrink-0`}>
                             <div className="flex justify-between items-center text-sm">
                                 <span className="opacity-50 font-bold uppercase tracking-tighter">Total Duration</span>
                                 <span className="font-black">
@@ -108,7 +108,7 @@ export default function SessionSummaryModal({
                     {/* Review Section - Show only if NOT expired and NOT terminated */}
                     {sessionSummary?.status !== 'expired' && sessionSummary?.status !== 'terminated' && (
                         <div className="w-full mb-6">
-                            <h3 className={`text-sm font-bold uppercase tracking-widest mb-4 ${isDarkMode ? 'text-white' : 'text-gray-200'}`}>Rate your Experience</h3>
+                            <h3 className={`text-sm font-bold uppercase tracking-widest mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Rate your Experience</h3>
                             <div className="flex justify-center gap-2 mb-4">
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <button
@@ -129,7 +129,7 @@ export default function SessionSummaryModal({
                                 placeholder="Sharing your experience helps others..."
                                 className={`w-full p-4 rounded-xl text-sm mb-4 resize-none outline-none border transition-all focs:ring-2 focus:ring-[#fd6410] ${isDarkMode
                                     ? 'bg-[#1A1A1A]/5 border-white/10 text-white placeholder:text-gray-500'
-                                    : 'bg-[#242424] border-gray-800 text-gray-200'
+                                    : 'bg-white border-gray-200 text-gray-800 placeholder-gray-400'
                                     }`}
                                 rows={2}
                             />

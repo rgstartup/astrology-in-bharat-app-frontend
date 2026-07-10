@@ -210,14 +210,14 @@ function CallPrepContent() {
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm">
+                            <div className="p-6 rounded-3xl bg-white border-2 border-orange shadow-sm hover:shadow-lg transition-shadow">
                                 <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center mb-4">
                                     {type === 'video' ? <Video className="w-6 h-6 text-orange" /> : <Phone className="w-6 h-6 text-orange" />}
                                 </div>
                                 <h3 className="font-bold text-gray-900">{type === 'video' ? 'HD Video' : 'Crystal Clear Audio'}</h3>
                                 <p className="text-xs text-gray-500 mt-1">High-quality connection for seamless talk.</p>
                             </div>
-                            <div className="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm">
+                            <div className="p-6 rounded-3xl bg-white border-2 border-orange shadow-sm hover:shadow-lg transition-shadow">
                                 <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
                                     <ShieldCheck className="w-6 h-6 text-blue-500" />
                                 </div>
@@ -226,7 +226,7 @@ function CallPrepContent() {
                             </div>
                         </div>
 
-                        <div className="p-8 rounded-[2.5rem] bg-white text-gray-900 shadow-sm border border-gray-100">
+                        <div className="p-8 rounded-[2.5rem] bg-white text-gray-900 shadow-sm border-2 border-orange hover:shadow-lg transition-shadow">
                             <h3 className="text-lg font-bold mb-6 flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-xl bg-orange flex items-center justify-center">
                                     <User className="w-5 h-5 text-white" />
@@ -250,41 +250,46 @@ function CallPrepContent() {
                     </div>
 
                     <div className="lg:col-span-5">
-                        <div className="bg-white p-3 rounded-[3.5rem] shadow-xl">
+                        <div className="bg-white p-3 rounded-[3.5rem] shadow-xl border-2 border-orange">
                             <div className="relative h-[400px] rounded-[3rem] overflow-hidden">
                                 <Image src={expert.image} alt={expert.name} fill className="object-cover" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
 
                                 {/* Availability Badge */}
-                                <div className={`absolute top-6 left-6 px-4 py-2 backdrop-blur-md rounded-full border shadow-sm flex items-center gap-2 ${expert.is_available ? 'bg-orange border-white/20' : 'bg-[#1A1A1A] border-gray-800'}`}>
-                                    <div className={`w-2 h-2 rounded-full ${expert.is_available ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]' : 'bg-gray-400'}`}></div>
-                                    <span className={`${expert.is_available ? 'text-white' : 'text-gray-400'} text-[10px] font-black uppercase tracking-widest`}>
+                                <div className={`absolute top-6 left-6 px-4 py-2 backdrop-blur-md rounded-full border shadow-sm flex items-center gap-2 ${expert.is_available ? 'bg-white/95 border-orange/30' : 'bg-white/95 border-gray-200'}`}>
+                                    <div className={`w-2 h-2 rounded-full ${expert.is_available ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.4)]' : 'bg-gray-400'}`}></div>
+                                    <span className={`${expert.is_available ? 'text-orange' : 'text-gray-500'} text-[10px] font-black uppercase tracking-widest`}>
                                         {expert.is_available ? 'Available Now' : 'Offline'}
                                     </span>
                                 </div>
 
-                                <div className="absolute top-6 right-6 px-4 py-2 bg-orange rounded-full text-white font-black text-xs">
+                                <div className="absolute top-6 right-6 px-4 py-2 bg-white/95 backdrop-blur-md border border-orange/30 rounded-full text-orange font-black text-xs shadow-sm">
                                     ₹{callPrice} / MIN
                                 </div>
-                                <div className="absolute bottom-10 left-10 text-white">
-                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Expert Expert</p>
-                                    <h2 className="text-2xl font-black">{expert.name}</h2>
-                                    <div className="flex items-center gap-2 mt-2 opacity-80 font-bold text-sm">
-                                        <MapPin className="w-4 h-4" />
-                                        <span>{expert.expertise} • {expert.experience} yrs</span>
+                                <div className="absolute bottom-6 left-6 right-6 p-5 bg-black/40 backdrop-blur-md border border-white/20 rounded-[2rem] text-white shadow-xl flex items-center justify-between">
+                                    <div>
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-white/70">Expert</p>
+                                        <h2 className="text-3xl font-black mb-1">{expert.name}</h2>
+                                    </div>
+                                    <div className="flex flex-col items-end gap-1 mt-1 opacity-90 font-bold text-sm text-right">
+                                        <div className="flex items-center gap-1">
+                                            <LucideIcons.Briefcase className="w-4 h-4" />
+                                            <span>{expert.experience} yrs</span>
+                                        </div>
+                                        <span className="text-xs opacity-70">{expert.expertise}</span>
                                     </div>
                                 </div>
                             </div>
                             <div className="p-8 pt-10 space-y-4">
                                 {isAuthenticated && (
-                                    <div className="flex items-center justify-between px-6 py-4 bg-[#242424] rounded-2xl border border-[#333333]">
+                                    <div className="flex items-center justify-between px-6 py-4 bg-white rounded-2xl border-2 border-orange shadow-sm">
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                                                 <LucideIcons.Wallet className="w-4 h-4 text-green-600" />
                                             </div>
-                                            <span className="text-sm font-bold text-gray-500">Your Balance</span>
+                                            <span className="text-sm font-bold text-gray-600">Your Balance</span>
                                         </div>
-                                        <span className="text-xl font-black text-gray-100">₹{userBalance.toFixed(2)}</span>
+                                        <span className="text-xl font-black text-gray-900">₹{userBalance.toFixed(2)}</span>
                                     </div>
                                 )}
 
@@ -325,7 +330,7 @@ function CallPrepContent() {
 
             {showSecurityModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-                    <div className="bg-[#1A1A1A] w-full max-w-lg rounded-[2rem] overflow-hidden shadow-2xl flex flex-col">
+                    <div className="bg-white w-full max-w-lg rounded-[2rem] overflow-hidden shadow-2xl flex flex-col border-2 border-orange">
                         <div className="p-6 bg-gradient-to-r from-orange to-orange-500 text-white">
                             <div className="flex items-center gap-3">
                                 <ShieldCheck className="w-8 h-8" />
@@ -336,17 +341,17 @@ function CallPrepContent() {
                             </div>
                         </div>
                         <div className="p-8 space-y-4">
-                            <p className="text-sm text-gray-400 leading-relaxed font-bold">
+                            <p className="text-sm text-gray-700 leading-relaxed font-bold">
                                 1. Do not share your phone number or email address.<br />
                                 2. Avoid making payments outside our website.<br />
                                 3. If the expert asks for personal contact, report it immediately.
                             </p>
-                            <label className="flex items-center gap-4 p-4 bg-orange-50 rounded-2xl border-2 border-orange-100 cursor-pointer">
+                            <label className="flex items-center gap-4 p-4 bg-orange-50 rounded-2xl border-2 border-orange cursor-pointer hover:bg-orange-100 transition-colors">
                                 <input type="checkbox" id="agreeTerms" className="w-5 h-5 accent-orange" />
-                                <span className="text-xs font-bold text-gray-200">I agree to follow the safety guidelines.</span>
+                                <span className="text-sm font-bold text-gray-900">I agree to follow the safety guidelines.</span>
                             </label>
                             <div className="flex gap-4 pt-4">
-                                <button onClick={() => setShowSecurityModal(false)} className="flex-1 py-4 rounded-2xl border-2 border-[#333333] font-bold text-gray-400">Cancel</button>
+                                <button onClick={() => setShowSecurityModal(false)} className="flex-1 py-4 rounded-2xl border-2 border-gray-200 font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
                                 <button onClick={() => {
                                     const checkbox = document.getElementById('agreeTerms') as HTMLInputElement;
                                     if (!checkbox?.checked) {
@@ -354,7 +359,7 @@ function CallPrepContent() {
                                         return;
                                     }
                                     proceedToCall();
-                                }} className="flex-1 py-4 rounded-2xl bg-orange text-white font-black shadow-lg">Continue</button>
+                                }} className="flex-1 py-4 rounded-2xl bg-orange text-white font-black shadow-lg hover:shadow-orange/30 hover:-translate-y-1 transition-all">Continue</button>
                             </div>
                         </div>
                     </div>

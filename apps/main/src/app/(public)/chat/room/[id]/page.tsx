@@ -29,7 +29,7 @@ function ChatRoomContent() {
     const sessionId = searchParams.get('sessionId');
 
     const { user, isAuthenticated, refreshBalance } = useAuthStore();
-    const [isDarkMode, setIsDarkMode] = useState(true);
+    const [isDarkMode, setIsDarkMode] = useState(false);
     const [timeLeft, setTimeLeft] = useState<number | null>(null);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [showModal, setShowModal] = useState(false);

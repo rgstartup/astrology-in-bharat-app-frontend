@@ -562,7 +562,7 @@ const PujaDetailPage = () => {
             </div>
 
             {/* You May Also Like (Full Width Bottom) */}
-            <div className="max-w-7xl mx-auto px-4 pb-12 mt-8 border-t border-[#F0E0D0] pt-8">
+            <div className="max-w-7xl mx-auto px-4 pb-4 mt-8 border-t border-[#F0E0D0] pt-8">
                 <h2 className="text-2xl font-black text-[#1A1A1A] mb-6">You May Also Like</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
                     {relatedLoading ? (

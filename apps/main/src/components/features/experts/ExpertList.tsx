@@ -121,7 +121,7 @@ const ExpertList: React.FC<ExpertListProps> = ({
 
   return (
     <section
-      className="py-[50px] relative overflow-hidden"
+      className="pt-6 pb-10 relative overflow-hidden"
       style={{
         backgroundColor: "#301118",
         backgroundImage: "url(/images/bg-dark.png)",
@@ -193,7 +193,7 @@ const ExpertList: React.FC<ExpertListProps> = ({
         )}
 
         {layout === "slider" && (
-          <div className="view-all mt-4">
+          <div className="view-all mt-4 md:mt-6">
             <Link
               href="/our-experts"
               className="no-underline bg-orange hover:opacity-90 text-white px-6 py-3 rounded-full font-bold shadow-lg transition-all mx-auto flex items-center justify-center gap-2 w-fit"
