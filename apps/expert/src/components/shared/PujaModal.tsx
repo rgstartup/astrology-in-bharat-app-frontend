@@ -61,8 +61,8 @@ export const PujaModal = ({ mode, puja, onClose, onSaved }: PujaModalProps) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error('Image size should be less than 2MB');
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size should be less than 5MB');
         return;
       }
       const reader = new FileReader();
@@ -200,11 +200,10 @@ export const PujaModal = ({ mode, puja, onClose, onSaved }: PujaModalProps) => {
         </div>
 
         <form onSubmit={handleSave} className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-          {/* Image Upload */}
           <div className="space-y-2">
             <label className="block text-sm font-bold text-gray-700">Puja Image</label>
             <div className="flex items-center gap-4">
-              <div className="relative w-24 h-24 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden bg-gray-50">
+              <div className="relative w-32 h-[72px] rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden bg-gray-50">
                 {imagePreview ? (
                   <img src={imagePreview} alt="Puja preview" className="w-full h-full object-cover" />
                 ) : (
@@ -216,7 +215,7 @@ export const PujaModal = ({ mode, puja, onClose, onSaved }: PujaModalProps) => {
                   type="file"
                   id="puja-image"
                   className="hidden"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp"
                   onChange={handleImageChange}
                 />
                 <label
@@ -226,7 +225,10 @@ export const PujaModal = ({ mode, puja, onClose, onSaved }: PujaModalProps) => {
                   <Upload className="w-4 h-4" />
                   {imagePreview ? 'Change Image' : 'Upload Image'}
                 </label>
-                <p className="text-[10px] text-gray-500 mt-2">Recommended: Square image, max 2MB (JPEG, PNG)</p>
+                <div className="mt-2 p-2 bg-orange-50 border border-orange-100 rounded-xl">
+                  <p className="text-[11px] text-orange-700 font-bold">📐 Required: 16:9 ratio (e.g. 1280×720, 1920×1080)</p>
+                  <p className="text-[10px] text-gray-500 mt-0.5">Min size: 1280×720px • Max file size: 5MB • JPEG / PNG / WebP</p>
+                </div>
               </div>
             </div>
           </div>

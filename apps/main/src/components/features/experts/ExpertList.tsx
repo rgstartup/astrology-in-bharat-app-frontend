@@ -121,6 +121,7 @@ const ExpertList: React.FC<ExpertListProps> = ({
 
   return (
     <section
+      id="our-experts"
       className="pt-6 pb-10 relative overflow-hidden"
       style={{
         backgroundColor: "#301118",

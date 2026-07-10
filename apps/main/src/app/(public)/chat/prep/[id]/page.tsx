@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import * as LucideIcons from "lucide-react";
 import { api as http } from "@/lib/api";
 import { getClientProfile } from "@/libs/api-profile";
@@ -22,6 +22,7 @@ const { ChevronLeft } = LucideIcons as any;
 export default function ConsultationPrep() {
   const params = useParams();
   const router = useRouter();
+  const pathname = usePathname();
   const id = params.id as string;
 
   const [expert, setExpert] = useState<Expert | null>(null);
@@ -147,7 +148,16 @@ export default function ConsultationPrep() {
 
   const handleStartConsultation = async () => {
     if (!isAuthenticated) {
-      toast.error("Please login to start consultation");
+      toast.error(
+        <span>
+          Please login to start consultation.{" "}
+          <span className="underline font-black">Login now →</span>
+        </span>,
+        {
+          onClick: () => router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname)}`),
+          style: { cursor: "pointer" },
+        }
+      );
       return;
     }
 

@@ -28,9 +28,9 @@ const AstrologyProduct = () => {
   const productList = products || [];
 
   return (
-    <section className="!bg-[#edeef1] py-6 md:py-10">
+    <section id="astrology-products" className="!bg-[#edeef1] py-6 md:py-10">
       <div className="max-w-[1320px] mx-auto px-0 md:px-8 lg:px-16">
-        <div className="md:bg-white py-4 md:p-6 md:rounded-[3px] md:shadow-[0_4px_9px_0_rgba(0,0,0,0.08)]">
+        <div className="py-4 md:py-6">
           <ProductSection products={productList} isLoading={isLoading} />
           {/* <!-- View All Button --> */}
           <div className="mt-4 flex justify-center">

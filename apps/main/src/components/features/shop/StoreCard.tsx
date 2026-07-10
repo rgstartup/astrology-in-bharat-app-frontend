@@ -18,7 +18,7 @@ import { merchantSocket } from "@/lib/socket";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { toast } from "react-toastify";
 import { useLanguageStore } from "@repo/store";
 import { homeTranslations } from "@/lib/translations/home";
@@ -37,6 +37,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
 
   const [isOnline, setIsOnline] = useState(store.isOnline ?? false);
   const router = useRouter();
+  const pathname = usePathname();
   const { isAuthenticated } = useAuthStore();
   const { isMerchantInWishlist } = useWishlistStore();
   const { toggleLike } = useWishlist();
@@ -48,11 +49,16 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      toast.error(t.toastWishlist, {
-        onClick: () => router.push("/sign-in"),
-        autoClose: 3000,
-        style: { cursor: 'pointer', ...fontStyle }
-      });
+      toast.error(
+        <span>
+          Please login to like this store.{" "}
+          <span className="underline font-black">Login now →</span>
+        </span>,
+        {
+          onClick: () => router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname === '/' ? '/#astrology-store' : pathname)}`),
+          style: { cursor: "pointer", ...fontStyle },
+        }
+      );
       return;
     }
 

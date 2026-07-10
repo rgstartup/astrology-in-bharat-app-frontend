@@ -4,7 +4,7 @@ import NextLink from "next/link";
 import Image from "next/image";
 import React, { useState, useRef } from "react";
 import { Button } from "@repo/ui";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-toastify";
@@ -47,6 +47,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   const { isAuthenticated } = useAuthStore();
   const { toggleLike } = useWishlist();
   const router = useRouter();
+  const pathname = usePathname();
 
   // Local state for optimistic updates
   const [currentLikes, setCurrentLikes] = useState(total_likes);
@@ -106,11 +107,16 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      toast.error("Please login first to use wishlist", {
-        onClick: () => router.push("/sign-in"),
-        autoClose: 3000,
-        style: { cursor: "pointer" },
-      });
+      toast.error(
+        <span>
+          Please login to like this expert.{" "}
+          <span className="underline font-black">Login now →</span>
+        </span>,
+        {
+          onClick: () => router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname === '/' ? '/#our-experts' : pathname)}`),
+          style: { cursor: "pointer" },
+        }
+      );
       return;
     }
 

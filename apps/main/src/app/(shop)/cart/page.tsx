@@ -9,6 +9,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { api } from "@/lib/api";
 import { useLanguageStore } from "@repo/store";
 import { homeTranslations } from "@/lib/translations/home";
+import { Loading } from "@repo/ui";
 
 const CartPage: React.FC = () => {
   const router = useRouter();
@@ -47,28 +48,14 @@ const CartPage: React.FC = () => {
   }, [isAuthenticated, loading, router]);
 
   if (loading || (!isAuthenticated && typeof window !== 'undefined')) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-orange/20 border-t-orange rounded-full animate-spin"></div>
-          <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">{t.cart.verifyingSession}</p>
-        </div>
-      </div>
-    );
+    return <Loading fullScreen />;
   }
 
   // Combined Loading state
   const isDataLoading = cartLoading && cartItems.length === 0;
 
   if (isDataLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-orange/20 border-t-orange rounded-full animate-spin"></div>
-          <p className="text-gray-400 font-black uppercase tracking-widest text-xs">{t.cart.loadingCart}</p>
-        </div>
-      </div>
-    );
+    return <Loading fullScreen />;
   }
 
   const handleQuantityChange = async (id: string, delta: number) => {
@@ -88,20 +75,16 @@ const CartPage: React.FC = () => {
   const grandTotal = subtotal + shipping + tax;
 
   return (
-    <div className="bg-gray-50/50 min-h-screen py-12 md:py-24">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="bg-gray-50/50 min-h-screen py-6 md:py-10 overflow-hidden">
+      <div className="max-w-[1320px] mx-auto px-2 sm:px-4 md:px-8 lg:px-16">
         {/* Title */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-row items-center justify-between gap-4 mb-8 md:mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange/10 text-orange rounded-full text-[10px] font-black uppercase tracking-widest mb-4">
-              <i className="fa-solid fa-shopping-bag text-[10px]"></i>
-              {t.cart.checkoutSecurely}
-            </div>
-            <h1 className="text-3xl md:text-5xl font-black text-gray-900 leading-none">
+            <h1 className="text-xl md:text-4xl font-extrabold text-gray-900 leading-none">
               {t.cart.shoppingBagTitle}
             </h1>
           </div>
-          <div className="text-gray-400 font-bold text-sm tracking-wide bg-white px-6 py-3 rounded-2xl shadow-sm border border-gray-100">
+          <div className="text-white font-bold text-xs md:text-sm tracking-wide bg-orange px-4 py-2 md:px-6 md:py-3 rounded-xl md:rounded-2xl shadow-premium border border-orange/20 whitespace-nowrap">
             {cartItems.length} {t.cart.itemsInCart}
           </div>
         </div>
@@ -124,18 +107,17 @@ const CartPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {/* Cart Items */}
             <div className="lg:col-span-8 space-y-6">
-              <div className="bg-white rounded-[2rem] md:rounded-[3rem] shadow-premium border border-gray-100 p-4 sm:p-6 md:p-10 divide-y divide-gray-100">
+              <div className="bg-white rounded-[2rem] md:rounded-[3rem] shadow-premium border-[3px] border-orange p-4 sm:p-6 md:p-10 divide-y divide-gray-100">
                 {cartItems.map((item: any) => {
                   const imageUrl = getProductImageUrl(item.product);
 
                   return (
                     <div
                       key={item.productId || item.product?.id}
-                      className="flex flex-col md:flex-row items-center gap-8 py-8 first:pt-0 last:pb-0 group"
+                      className="flex flex-row items-center gap-4 py-5 first:pt-0 last:pb-0 group"
                     >
-                      {/* Image & Title */}
-                      <div className="flex flex-col md:flex-row items-center gap-8 flex-grow w-full">
-                        <div className="relative w-32 h-32 shrink-0 rounded-[2rem] overflow-hidden bg-gray-50 border border-gray-100 p-4 transition-transform group-hover:scale-105 duration-500">
+                      <div className="flex flex-row items-center gap-4 md:gap-8 flex-grow w-full">
+                        <div className="relative w-11 h-11 md:w-16 md:h-16 shrink-0 rounded-xl overflow-hidden bg-gray-50 border-[3px] border-orange p-1 transition-transform group-hover:scale-105 duration-500">
                           <Image
                             src={imageUrl}
                             alt={item.product?.name || "Product"}
@@ -143,53 +125,53 @@ const CartPage: React.FC = () => {
                             className="object-contain mix-blend-multiply"
                           />
                         </div>
-                        <div className="text-center md:text-left space-y-2">
-                          <h3 className="text-xl font-black text-gray-900 leading-tight">
+                        <div className="text-left space-y-1 md:space-y-2">
+                          <h3 className="text-sm md:text-xl font-black text-gray-900 leading-tight">
                             {item.product?.name || "Product Name"}
                           </h3>
-                          <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 text-gray-400 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                          <div className="inline-flex items-center gap-1 md:gap-2 px-2 md:px-3 py-0.5 md:py-1 bg-gray-50 text-gray-400 rounded-lg text-[9px] md:text-[10px] font-black uppercase tracking-widest">
                             ₹{item.product?.sale_price || item.product?.price} {t.cart.perUnit}
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between w-full md:w-auto gap-2 sm:gap-4 md:gap-8">
+                      <div className="flex items-center gap-3 md:gap-8 shrink-0">
                         {/* Quantity Controls */}
-                        <div className="flex items-center gap-1 md:gap-2 bg-gray-50 p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-gray-100 shrink-0">
+                        <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2 bg-gray-50 p-1 md:p-1.5 rounded-xl md:rounded-2xl border-2 border-orange/60 shrink-0">
                           <button
-                            className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-lg md:rounded-xl bg-white text-gray-400 hover:text-orange transition-all active:scale-90 shadow-sm disabled:opacity-50"
+                            className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center rounded-lg md:rounded-xl bg-white text-gray-800 hover:text-orange transition-all active:scale-90 shadow-sm disabled:opacity-50"
                             onClick={() => handleQuantityChange(item.productId || item.product?.id || 0, -1)}
                             disabled={cartLoading || item.quantity <= 1}
                           >
-                            <i className="fa-solid fa-minus text-xs" />
+                            <i className="fa-solid fa-minus text-[10px] md:text-xs" />
                           </button>
                           <input
                             type="text"
                             value={item.quantity}
                             readOnly
-                            className="w-8 md:w-12 text-center font-black text-gray-900 bg-transparent border-0 outline-none text-sm md:text-base"
+                            className="w-7 h-7 md:w-12 text-center font-black text-gray-900 bg-transparent border-0 outline-none text-xs md:text-base"
                           />
                           <button
-                            className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-lg md:rounded-xl bg-white text-gray-400 hover:text-orange transition-all active:scale-90 shadow-sm disabled:opacity-50"
+                            className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center rounded-lg md:rounded-xl bg-white text-gray-800 hover:text-orange transition-all active:scale-90 shadow-sm disabled:opacity-50"
                             onClick={() => handleQuantityChange(item.productId || item.product?.id || 0, 1)}
                             disabled={cartLoading}
                           >
-                            <i className="fa-solid fa-plus text-xs" />
+                            <i className="fa-solid fa-plus text-[10px] md:text-xs" />
                           </button>
                         </div>
  
                         {/* Price */}
-                        <div className="text-base md:text-xl font-black text-gray-900 italic min-w-[60px] md:w-24 text-right shrink-0">
+                        <div className="text-sm md:text-xl font-black text-gray-900 italic min-w-[50px] md:w-24 text-right shrink-0">
                           ₹{(item.product?.sale_price || item.product?.price || 0) * item.quantity}
                         </div>
  
                         {/* Remove */}
                         <button
-                          className="w-10 h-10 md:w-12 md:h-12 flex shrink-0 items-center justify-center rounded-xl md:rounded-2xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm disabled:opacity-50"
+                          className="w-8 h-8 md:w-12 md:h-12 flex shrink-0 items-center justify-center rounded-xl md:rounded-2xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm disabled:opacity-50"
                           onClick={() => handleRemoveItem(item.productId || item.product?.id || 0)}
                           disabled={cartLoading}
                         >
-                          <i className="fa-solid fa-trash-can" />
+                          <i className="fa-solid fa-trash-can text-xs md:text-base" />
                         </button>
                       </div>
                     </div>
@@ -201,7 +183,7 @@ const CartPage: React.FC = () => {
             {/* Summary */}
             <div className="lg:col-span-4">
               <div className="sticky top-24 space-y-6">
-                <div className="bg-white rounded-[3rem] shadow-premium border border-gray-100 p-10 overflow-hidden relative">
+                <div className="bg-white rounded-[3rem] shadow-premium border-[3px] border-orange p-10 overflow-hidden relative">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-orange/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
                   <h2 className="text-2xl font-black text-gray-900 mb-8 z-10 relative">{t.cart.orderSummary}</h2>
                   
@@ -239,13 +221,13 @@ const CartPage: React.FC = () => {
         )}
 
         {/* Suggested Products */}
-        <div className="mt-32">
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 mb-8 md:mb-12">
+        <div className="mt-24 md:mt-40">
+          <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-8 md:mb-12">
             <h2 className="text-2xl md:text-3xl font-black text-gray-900 leading-none">
               {t.cart.completeJourney}
             </h2>
             <div className="hidden md:block h-1.5 flex-grow bg-gray-100 rounded-full"></div>
-            <p className="text-gray-400 font-black text-[10px] md:text-xs uppercase tracking-widest">{t.cart.personalizedRecs}</p>
+            <p className="text-gray-400 font-black text-xs uppercase tracking-widest">{t.cart.personalizedRecs}</p>
           </div>
           <ProductCarousel products={suggestedProducts} />
         </div>

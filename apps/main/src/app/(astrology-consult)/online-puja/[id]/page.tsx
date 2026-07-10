@@ -133,7 +133,19 @@ const PujaDetailPage = () => {
     };
 
     const handleBookingRequest = async () => {
-        if (!isAuthenticated) { toast.error("Please login to send puja request"); return; }
+        if (!isAuthenticated) {
+            toast.error(
+                <span>
+                    Please login to book this puja.{" "}
+                    <span className="underline font-black">Login now →</span>
+                </span>,
+                {
+                    onClick: () => router.push(`/sign-in?callbackUrl=/online-puja/${id}`),
+                    style: { cursor: "pointer" },
+                }
+            );
+            return;
+        }
         if (!askExpertForDate && (!scheduledDate || !scheduledTime)) {
             toast.error("Please select a date and time OR ask expert for date"); return;
         }
@@ -171,14 +183,25 @@ const PujaDetailPage = () => {
 
                 {/* LEFT: Hero Image */}
                 <div className="lg:col-span-8">
-                    <div className="relative rounded-3xl overflow-hidden h-[280px] sm:h-[360px] bg-[#1a0b0b]">
+                    <div className="relative rounded-3xl overflow-hidden aspect-video bg-[#1a0b0b]">
                         {puja.puja_image_url ? (
-                            <Image
-                                src={puja.puja_image_url}
-                                alt={puja.name}
-                                fill
-                                className="object-cover opacity-80"
-                            />
+                            <>
+                                {/* Blurred background to fill empty sides */}
+                                <Image
+                                    src={puja.puja_image_url}
+                                    alt=""
+                                    fill
+                                    className="object-cover blur-2xl opacity-60"
+                                    aria-hidden="true"
+                                />
+                                {/* Main image fully visible */}
+                                <Image
+                                    src={puja.puja_image_url}
+                                    alt={puja.name}
+                                    fill
+                                    className="object-contain relative z-10 transition-transform duration-500 hover:scale-105"
+                                />
+                            </>
                         ) : (
                             <div className="w-full h-full flex items-center justify-center">
                                 <Sparkles className="w-24 h-24 text-orange-500 opacity-20" />

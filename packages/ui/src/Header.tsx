@@ -716,22 +716,22 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                   ) : (
                     <div className="flex gap-1.5 sm:gap-3">
                       <a
-                        href={PATHS.SIGN_IN}
+                        href={`${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(pathname)}`}
                         className="bg-orange text-white rounded-xl sm:rounded-[14px] px-2.5 sm:px-[15px] py-1.5 sm:py-[6px] text-[10px] sm:text-sm font-semibold inline-block no-underline transition-all hover:opacity-90 active:scale-95 cursor-pointer whitespace-nowrap"
                         onClick={(e) => {
                           e.preventDefault();
-                          router.push(PATHS.SIGN_IN);
+                          router.push(`${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(pathname)}`);
                         }}
                       >
                         {t.signIn}
                       </a>
 
                       <a
-                        href={PATHS.REGISTER}
+                        href={`${PATHS.REGISTER}?callbackUrl=${encodeURIComponent(pathname)}`}
                         className="bg-orange text-white rounded-xl sm:rounded-[14px] px-2.5 sm:px-[15px] py-1.5 sm:py-[6px] text-[10px] sm:text-sm font-semibold inline-block no-underline transition-all hover:opacity-90 active:scale-95 cursor-pointer whitespace-nowrap"
                         onClick={(e) => {
                           e.preventDefault();
-                          router.push(PATHS.REGISTER);
+                          router.push(`${PATHS.REGISTER}?callbackUrl=${encodeURIComponent(pathname)}`);
                         }}
                       >
                         {t.register}

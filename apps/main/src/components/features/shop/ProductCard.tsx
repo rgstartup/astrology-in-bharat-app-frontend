@@ -5,7 +5,7 @@ import NextImage from "next/image";
 import { useAuthStore } from "@/store/useAuthStore"; // Changed import
 import { useCartStore } from "@/store/useCartStore"; // Changed import
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/hooks/useCart";
@@ -40,6 +40,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
   const { addToCart: addToCartOpt, isAdding } = useCart();
   const [isBuyLoading, setIsBuyLoading] = React.useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   const productId = String(product.id || product._id);
   const isLiked = productId ? isInWishlist(productId) : false;
@@ -50,11 +51,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      toast.error(t.products.toastWishlist, {
-        onClick: () => router.push("/sign-in"),
-        autoClose: 3000,
-        style: { cursor: 'pointer' }
-      });
+      toast.error(
+        <span>
+          Please login to like this product.{" "}
+          <span className="underline font-black">Login now →</span>
+        </span>,
+        {
+          onClick: () => router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname === '/' ? '/#astrology-products' : pathname)}`),
+          style: { cursor: "pointer" },
+        }
+      );
       return;
     }
 
@@ -70,11 +76,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      toast.error(t.products.toastBuyProducts, {
-        onClick: () => router.push("/sign-in"),
-        autoClose: 3000,
-        style: { cursor: 'pointer' }
-      });
+      toast.error(
+        <span>
+          Please login to add to cart.{" "}
+          <span className="underline font-black">Login now →</span>
+        </span>,
+        {
+          onClick: () => router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname === '/' ? '/#astrology-products' : pathname)}`),
+          style: { cursor: "pointer" },
+        }
+      );
       return;
     }
 
@@ -84,7 +95,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
   return (
     <div
       onClick={() => onView?.(product)}
-      className={`group relative bg-white rounded-[2rem] shadow-premium hover:shadow-2xl transition-all duration-500 overflow-hidden h-full flex flex-col border border-gray-100/50 cursor-pointer ${className || ""}`}
+      className={`group relative bg-white rounded-[2rem] shadow-premium hover:shadow-2xl transition-all duration-500 overflow-hidden h-full flex flex-col border-2 border-orange cursor-pointer ${className || ""}`}
     >
       {/* 🔥 Top Header: Offer Tag (Left) & Heart Icon (Right) */}
       {percentageOff > 0 && (
@@ -113,7 +124,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
       </div>
 
       {/* 🖼️ Image Area with Glow */}
-      <div className={`relative w-full ${isCompact ? 'aspect-[4/3]' : 'aspect-[4/3] sm:aspect-square'} bg-gray-50/50 flex items-center justify-center overflow-hidden shrink-0 group-hover:bg-white transition-colors duration-500`}>
+      <div className={`relative w-full ${isCompact ? 'aspect-[5/4]' : 'aspect-[5/4]'} bg-gray-50/50 flex items-center justify-center overflow-hidden shrink-0 group-hover:bg-white transition-colors duration-500`}>
         <div className="absolute inset-0 bg-gradient-to-br from-orange/5 via-transparent to-orange/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         <div className={`relative w-full h-full transition-transform duration-700 ease-out group-hover:scale-110`}>
           <Image
@@ -159,7 +170,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
         <div className={`flex gap-3 ${isCompact ? 'pt-1' : 'pt-2'}`}>
           <button
             onClick={handleAddToCart}
-            className={`flex-1 ${isCompact ? 'h-9 rounded-lg px-0.5 text-[9px]' : 'h-10 md:h-11 rounded-xl px-2 text-[10px] md:text-[11px]'} border-2 border-gray-100 text-gray-500 font-bold uppercase tracking-wider hover:border-orange hover:text-orange hover:bg-orange/5 transition-all duration-300 flex items-center justify-center group/btn shadow-sm hover:shadow-md`}
+            className={`flex-1 ${isCompact ? 'h-9 rounded-lg px-0.5 text-[9px]' : 'h-10 md:h-11 rounded-xl px-2 text-[10px] md:text-[11px]'} border-2 border-gray-100 text-gray-500 font-bold uppercase tracking-wider hover:border-orange hover:text-orange hover:bg-orange/5 transition-all duration-300 flex items-center justify-center group/btn shadow-sm hover:shadow-md cursor-pointer`}
           >
             <span className="leading-tight text-center" style={lang === 'hi' ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {}}>
               {t.products.addToCart}
@@ -169,13 +180,28 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+
+              if (!isAuthenticated) {
+                toast.error(
+                  <span>
+                    Please login to buy this product.{" "}
+                    <span className="underline font-black">Login now →</span>
+                  </span>,
+                  {
+                    onClick: () => router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname === '/' ? '/#astrology-products' : pathname)}`),
+                    style: { cursor: "pointer" },
+                  }
+                );
+                return;
+              }
+
               setIsBuyLoading(true);
               const id = product.id || product._id;
               sessionStorage.setItem('buyNowItem', JSON.stringify({ productId: id, quantity: 1 }));
               router.push(`/client/checkout?type=order`);
             }}
             disabled={isBuyLoading}
-            className={`flex-1 ${isCompact ? 'h-9 rounded-lg px-0.5 text-[9px]' : 'h-10 md:h-11 rounded-xl px-2 text-[10px] md:text-[11px]'} bg-orange text-white font-black uppercase tracking-widest shadow-lg shadow-orange/20 hover:shadow-orange/40 hover:bg-orange/90 transition-all duration-300 flex items-center justify-center`}
+            className={`flex-1 ${isCompact ? 'h-9 rounded-lg px-0.5 text-[9px]' : 'h-10 md:h-11 rounded-xl px-2 text-[10px] md:text-[11px]'} bg-orange text-white font-black uppercase tracking-widest shadow-lg shadow-orange/20 hover:shadow-orange/40 hover:bg-orange/90 transition-all duration-300 flex items-center justify-center cursor-pointer`}
           >
             {isBuyLoading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

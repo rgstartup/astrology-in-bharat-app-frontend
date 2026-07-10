@@ -91,6 +91,7 @@ const StoreSection = () => {
 
     return (
         <section
+            id="astrology-store"
             className="pt-6 pb-10 relative overflow-hidden"
             style={{
                 backgroundColor: "#301118",

@@ -97,26 +97,26 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products }) => {
                 breakpoints={{
                     480: {
                         slidesPerView: 2,
+                        spaceBetween: 12,
+                    },
+                    768: {
+                        slidesPerView: 3,
                         spaceBetween: 16,
                     },
-                    640: {
-                        slidesPerView: 2,
-                        spaceBetween: 24,
-                    },
-                    992: {
+                    1024: {
                         slidesPerView: 3,
-                        spaceBetween: 24,
+                        spaceBetween: 20,
                     },
-                    1200: {
+                    1280: {
                         slidesPerView: 4,
                         spaceBetween: 24,
                     },
                 }}
-                className="product-swiper py-5 structure-swiper"
+                className="product-swiper py-5 structure-swiper px-2 md:px-4"
             >
                 {displayProducts.map((product) => (
                     <SwiperSlideComponent key={product.id || (product as any)._id} className="h-auto">
-                        <div className="max-w-[300px] mx-auto w-full h-full sm:max-w-none">
+                        <div className="mx-auto w-full h-full">
                             <ProductCard product={product} />
                         </div>
                     </SwiperSlideComponent>

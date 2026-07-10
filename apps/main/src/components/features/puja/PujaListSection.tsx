@@ -142,6 +142,7 @@ const PujaListSection = () => {
 
     return (
         <section
+            id="sacred-pujas"
             className="pt-6 pb-10 relative overflow-hidden"
             style={{
                 backgroundColor: "#301118",
