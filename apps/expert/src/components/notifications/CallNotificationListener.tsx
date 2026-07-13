@@ -22,9 +22,16 @@ export const CallNotificationListener: React.FC = () => {
     };
 
     const registerExpert = useCallback(() => {
-        if (!user) return;
+        if (!user) {
+            console.log("[CallNotification] Cannot register: user is missing");
+            return;
+        }
         const expertId = user.profileId || user.id;
-        if (!expertId) return;
+        if (!expertId) {
+            console.log("[CallNotification] Cannot register: expertId is missing");
+            return;
+        }
+        console.log("[CallNotification] Registering expert with callSocket:", expertId);
         callSocket.emit('register_expert', { expert_id: expertId });
     }, [user]);
 
@@ -32,16 +39,20 @@ export const CallNotificationListener: React.FC = () => {
         if (!isAuthenticated || !user) return;
 
         if (!callSocket.connected) {
+            console.log("[CallNotification] callSocket not connected. Connecting...");
             callSocket.connect();
         } else {
+            console.log("[CallNotification] callSocket already connected. Registering expert...");
             registerExpert();
         }
 
         const onConnect = () => {
+            console.log("[CallNotification] callSocket Connected! Registering expert...");
             registerExpert();
         };
 
         const onReconnect = (attempt: number) => {
+            console.log("[CallNotification] callSocket Reconnected! Attempt:", attempt);
             registerExpert();
         };
 
@@ -50,8 +61,12 @@ export const CallNotificationListener: React.FC = () => {
         };
 
         const handleNewCall = (data: any) => {
+            console.log("[CallNotification] Received new_call_request!", data);
             const session = data.session || data;
-            if (!session) return;
+            if (!session) {
+                console.warn("[CallNotification] No session found in new_call_request data.");
+                return;
+            }
             const callerName = session.user?.name || "A Client";
             const callType = session.type || 'audio';
             const callerAvatar = 

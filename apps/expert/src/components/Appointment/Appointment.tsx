@@ -303,7 +303,8 @@ export default function AppointmentsPage() {
       };
 
       const handleNewCallRequest = (data: any) => {
-        const { session } = data;
+      console.log("[Appointment] Received new_call_request!", data);
+      const session = data?.session || data;
 
         const newAppt: Appointment = {
           id: session.id,

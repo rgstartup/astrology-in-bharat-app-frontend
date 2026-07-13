@@ -381,15 +381,15 @@ export default function ExpertCallRoom() {
             <SummaryModal 
                 isOpen={showSummary && !!summaryData} 
                 data={(() => {
-                    if (typeof summaryData === 'object') {
+                    if (summaryData && typeof summaryData === 'object') {
                         return {
-                            totalAmount: summaryData.split?.totalCost || 0,
-                            platformFee: summaryData.split?.platformFee || 0,
-                            expertShare: summaryData.split?.expertShare || 0,
-                            terminatedBy: summaryData.terminatedBy || 'N/A'
+                            totalAmount: (summaryData as any).split?.totalCost || 0,
+                            platformFee: (summaryData as any).split?.platformFee || 0,
+                            expertShare: (summaryData as any).split?.expertShare || 0,
+                            terminatedBy: (summaryData as any).terminatedBy || 'N/A'
                         };
                     }
-                    const [totalAmount, platformFee, expertShare, terminatedBy] = (summaryData || "").split(':');
+                    const [totalAmount, platformFee, expertShare, terminatedBy] = (summaryData || "").toString().split(':');
                     return { totalAmount, platformFee, expertShare, terminatedBy };
                 })()} 
                 title="Call Session Ended"
