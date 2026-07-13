@@ -254,8 +254,8 @@ const PlaceDetailPage = () => {
 
   if (!place) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#1A1A1A] p-6">
-        <div className="text-center p-6 bg-[#1A1A1A] rounded-lg border border-slate-200 max-w-sm">
+      <div className="min-h-screen flex items-center justify-center bg-white p-6">
+        <div className="text-center p-6 bg-white rounded-lg border border-slate-200 max-w-sm">
           <h2 className="text-base font-bold text-brown mb-1">{t.detail.notFound}</h2>
           <Link
             href="/famous-places"
@@ -269,7 +269,7 @@ const PlaceDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pb-20">
+    <div className="min-h-screen bg-[#FAF8F5] pb-12">
       <div className="max-w-[1300px] mx-auto px-4 md:px-8 pt-6">
         
         {/* Breadcrumb */}
@@ -283,7 +283,7 @@ const PlaceDetailPage = () => {
         </div>
 
         {/* Main Card */}
-        <div className="bg-[#1A1A1A] rounded-[24px] p-6 shadow-sm border border-[#E8D5C0] mb-8">
+        <div className="bg-white rounded-[24px] p-6 shadow-sm border border-[#E8D5C0] mb-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             {/* Left: Images */}
@@ -307,7 +307,7 @@ const PlaceDetailPage = () => {
                 <div className="flex items-center justify-between gap-3">
                   <button 
                     onClick={() => setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1))}
-                    className="w-10 h-10 rounded-full border border-[#F26500] text-[#F26500] bg-[#1A1A1A] flex items-center justify-center hover:bg-orange-50 shrink-0 shadow-sm"
+                    className="w-10 h-10 rounded-full border border-[#F26500] text-[#F26500] bg-white flex items-center justify-center hover:bg-orange-50 shrink-0 shadow-sm"
                   >
                     <i className="fa-solid fa-chevron-left text-[14px]"></i>
                   </button>
@@ -324,7 +324,7 @@ const PlaceDetailPage = () => {
                   </div>
                   <button 
                     onClick={() => setCurrentImageIndex((prev) => (prev + 1) % images.length)}
-                    className="w-10 h-10 rounded-full border border-[#F26500] text-[#F26500] bg-[#1A1A1A] flex items-center justify-center hover:bg-orange-50 shrink-0 shadow-sm"
+                    className="w-10 h-10 rounded-full border border-[#F26500] text-[#F26500] bg-white flex items-center justify-center hover:bg-orange-50 shrink-0 shadow-sm"
                   >
                     <i className="fa-solid fa-chevron-right text-[14px]"></i>
                   </button>
@@ -342,15 +342,15 @@ const PlaceDetailPage = () => {
                 {place.title}, {place.address?.split(",")[0] || "India"}
               </h2>
               
-              <div className="flex items-center gap-2 text-white font-medium mb-4">
+              <div className="flex items-center gap-2 text-gray-600 font-medium mb-4">
                 <i className="fa-solid fa-location-dot text-[#F26500]"></i>
                 {place.address || "India"}
               </div>
               
               <div className="flex items-center gap-3 mb-6">
-                <div className="text-[15px] font-bold text-white">
+                <div className="text-[15px] font-bold text-gray-800">
                   {place.rating || "4.9"} <i className="fa-solid fa-star text-[#F26500]"></i> 
-                  <span className="text-white ml-1">({place.reviews || "24K"} Reviews)</span>
+                  <span className="text-gray-500 ml-1">({place.reviews || "24K"} Reviews)</span>
                 </div>
                 
                 <div className="w-1 h-1 rounded-full bg-gray-300"></div>
@@ -382,7 +382,7 @@ const PlaceDetailPage = () => {
                 )}
               </div>
 
-              <p className="text-white leading-relaxed mb-8 text-[15px]">
+              <p className="text-gray-600 leading-relaxed mb-8 text-[15px]">
                 {place.description || `Sri Harmandir Sahib, also known as the ${place.title}, is the most revered spiritual center. It welcomes people from all walks of life.`}
               </p>
 
@@ -418,7 +418,7 @@ const PlaceDetailPage = () => {
                 >
                   <i className="fa-solid fa-location-arrow"></i> Get Directions
                 </button>
-                <button onClick={() => handleShare('native')} className="w-full sm:flex-1 bg-[#1A1A1A] border-[2px] border-[#D95F18] text-[#D95F18] hover:bg-orange-50 font-bold py-3.5 px-4 sm:px-6 text-[15px] sm:text-base rounded-xl transition-colors flex items-center justify-center gap-2">
+                <button onClick={() => handleShare('native')} className="w-full sm:flex-1 bg-white border-[2px] border-[#D95F18] text-[#D95F18] hover:bg-orange-50 font-bold py-3.5 px-4 sm:px-6 text-[15px] sm:text-base rounded-xl transition-colors flex items-center justify-center gap-2">
                   <i className="fa-solid fa-share-nodes"></i> Share
                 </button>
               </div>
@@ -443,7 +443,7 @@ const PlaceDetailPage = () => {
               <button 
                 key={idx} 
                 onClick={() => scrollToSection(tab.id, tab.label)}
-                className={`px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 shrink-0 transition-colors ${isActive ? 'bg-[#3D1A0B] text-white border border-[#3D1A0B]' : 'bg-[#1A1A1A] border border-[#E8D5C0] hover:border-orange-300 text-gray-300'}`}
+                className={`px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 shrink-0 transition-colors ${isActive ? 'bg-[#3D1A0B] text-white border border-[#3D1A0B]' : 'bg-white border border-[#E8D5C0] hover:border-orange-300 text-gray-700'}`}
               >
                 <i className={`fa-solid ${tab.icon} text-[#F26500]`}></i> {tab.label}
               </button>
@@ -457,11 +457,11 @@ const PlaceDetailPage = () => {
           {/* Left Column */}
           <div className="lg:col-span-2 flex flex-col gap-6">
             {/* About Card */}
-            <div id="about" className="bg-[#1A1A1A] rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
+            <div id="about" className="bg-white rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
               <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-4 flex items-center gap-2">
                 <i className="fa-brands fa-pagelines text-[#F26500]"></i> About {place.title}
               </h3>
-              <div className="text-white text-[15px] leading-relaxed space-y-4 mb-6">
+              <div className="text-gray-600 text-[15px] leading-relaxed space-y-4 mb-6">
                 <p>
                   {place.description || `${place.title} is a highly revered spiritual destination located in ${place.address || "India"}. It is renowned for its stunning architecture, serene ambiance, and divine presence.`}
                 </p>
@@ -469,7 +469,7 @@ const PlaceDetailPage = () => {
                   The temple welcomes millions of devotees and tourists every year, symbolizing purity and equality. Visitors can experience peace, participate in daily rituals, and seek blessings.
                 </p>
               </div>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap justify-center sm:justify-start gap-3 mt-8">
                 {["Spiritual Center", "Open for All", "Langar Service", "Peace & Harmony"].map((pill, i) => (
                   <div key={i} className="bg-[#FFF8F0] text-[#3D1A0B] font-bold text-[13px] px-4 py-2.5 rounded-lg flex items-center gap-2 border border-[#F26500]/10">
                     <i className="fa-solid fa-dharmachakra text-[#F26500]"></i> {pill}
@@ -479,23 +479,23 @@ const PlaceDetailPage = () => {
             </div>
 
             {/* History Card */}
-            <div id="history" className="bg-[#1A1A1A] rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
+            <div id="history" className="bg-white rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
               <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-4 flex items-center gap-2">
                 <i className="fa-solid fa-book-open text-[#F26500]"></i> History
               </h3>
-              <p className="text-white text-[15px] leading-relaxed">
+              <p className="text-gray-600 text-[15px] leading-relaxed">
                 The foundation of {place.title} is deeply rooted in history and tradition. It has witnessed various historical events but continues to stand as a powerful symbol of faith, humanity, and devotion throughout the centuries.
               </p>
             </div>
 
             {/* Significance Card */}
-            <div id="significance" className="bg-[#1A1A1A] rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
+            <div id="significance" className="bg-white rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
               <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-4 flex items-center gap-2">
                 <i className="fa-solid fa-hands-praying text-[#F26500]"></i> Significance
               </h3>
               <ul className="space-y-3">
                 {getDynamicSignificance(place.title).map((sig, i) => (
-                  <li key={i} className="flex items-start gap-3 text-white text-[15px]">
+                  <li key={i} className="flex items-start gap-3 text-gray-600 text-[15px]">
                     <i className="fa-solid fa-check text-[#F26500] mt-1"></i>
                     <span>{sig}</span>
                   </li>
@@ -504,18 +504,18 @@ const PlaceDetailPage = () => {
             </div>
 
             {/* Astrology Benefits Card */}
-            <div id="astrology" className="bg-[#1A1A1A] rounded-[20px] p-6 shadow-sm border border-[#E8D5C0] relative overflow-hidden">
+            <div id="astrology" className="bg-white rounded-[20px] p-6 shadow-sm border border-[#E8D5C0] relative overflow-hidden">
               <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-4 flex items-center gap-2 relative z-10">
                 <i className="fa-regular fa-sun text-[#F26500]"></i> Astrology Benefits
               </h3>
               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between">
                 <div className="flex-1 space-y-4">
-                  <p className="text-white text-[15px]">
+                  <p className="text-gray-600 text-[15px]">
                     Visiting {place.title} is believed to bring:
                   </p>
                   <ul className="space-y-4 relative z-10">
                     {getDynamicAstrologyBenefits(place.title).map((benefit, i) => (
-                      <li key={i} className="flex items-center gap-3 text-white text-[14px]">
+                      <li key={i} className="flex items-center gap-3 text-gray-600 text-[14px]">
                         <i className="fa-regular fa-circle-dot text-[#F26500]"></i>
                         <span>{benefit}</span>
                       </li>
@@ -531,7 +531,7 @@ const PlaceDetailPage = () => {
             </div>
 
             {/* Reviews Card */}
-            <div id="reviews" className="bg-[#1A1A1A] rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
+            <div id="reviews" className="bg-white rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
                 <h3 className="text-[20px] font-bold text-[#3D1A0B] flex items-center gap-2">
                   <i className="fa-solid fa-comment-dots text-[#F26500]"></i> Reviews & Ratings
@@ -580,7 +580,7 @@ const PlaceDetailPage = () => {
           <div className="lg:col-span-1 flex flex-col gap-6">
             
             {/* Location Card */}
-            <div className="bg-[#1A1A1A] rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
+            <div className="bg-white rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
               <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-4 flex items-center gap-2">
                 <i className="fa-solid fa-map-location-dot text-[#F26500]"></i> Location
               </h3>
@@ -590,13 +590,13 @@ const PlaceDetailPage = () => {
                 rel="noopener noreferrer"
                 className="w-full h-[220px] rounded-xl overflow-hidden bg-[#FAF5EE] flex flex-col items-center justify-center relative border border-[#E8D5C0] mb-5 group hover:border-orange-300 transition-all no-underline"
               >
-                <div className="w-16 h-16 bg-[#1A1A1A] rounded-full flex items-center justify-center shadow-sm mb-3 group-hover:scale-110 group-hover:shadow-md transition-all">
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-3 group-hover:scale-110 group-hover:shadow-md transition-all">
                   <i className="fa-solid fa-map-location-dot text-3xl text-[#F26500]"></i>
                 </div>
                 <p className="text-sm font-bold text-[#3D1A0B] group-hover:text-[#F26500] transition-colors m-0">Click to open Interactive Map</p>
                 <p className="text-[11px] text-gray-400 mt-1 font-medium">Opens in a new tab</p>
               </a>
-              <div className="flex items-start gap-3 text-white text-[14px] font-medium mb-6">
+              <div className="flex items-start gap-3 text-gray-600 text-[14px] font-medium mb-6">
                 <i className="fa-solid fa-location-dot text-[#F26500] mt-1"></i>
                 <p className="leading-relaxed">{place.title}, {place.address || "India"}</p>
               </div>
@@ -604,20 +604,20 @@ const PlaceDetailPage = () => {
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.title + " " + (place.address || ""))}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center bg-[#1A1A1A] border-[2px] border-[#F26500] hover:bg-orange-50 text-[#F26500] font-bold py-3.5 rounded-xl transition-colors"
+                className="w-full flex items-center justify-center bg-white border-[2px] border-[#F26500] hover:bg-orange-50 text-[#F26500] font-bold py-3.5 rounded-xl transition-colors"
               >
                 View on Google Maps
               </a>
             </div>
 
             {/* Temple Highlights Card */}
-            <div className="bg-[#1A1A1A] rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
+            <div className="bg-white rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
               <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-5 flex items-center gap-2">
                 <i className="fa-solid fa-building-columns text-[#F26500]"></i> Temple Highlights
               </h3>
               <ul className="space-y-4">
                 {getDynamicHighlights(place.title).map((highlight, i) => (
-                  <li key={i} className="flex items-center gap-3 text-white text-[14px] font-medium">
+                  <li key={i} className="flex items-center gap-3 text-gray-600 text-[14px] font-medium">
                     <i className="fa-regular fa-circle-dot text-[#F26500]"></i>
                     <span>{highlight}</span>
                   </li>
@@ -626,21 +626,21 @@ const PlaceDetailPage = () => {
             </div>
 
             {/* Share this Temple Card */}
-            <div className="bg-[#1A1A1A] rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
+            <div className="bg-white rounded-[20px] p-6 shadow-sm border border-[#E8D5C0]">
               <h3 className="text-[20px] font-bold text-[#3D1A0B] mb-5 flex items-center gap-2">
                 <i className="fa-solid fa-share-nodes text-[#F26500]"></i> Share this Temple
               </h3>
               <div className="flex items-center justify-between gap-2">
-                <button onClick={() => handleShare('facebook')} className="w-12 h-12 rounded-full border border-[#333333] shadow-sm flex items-center justify-center hover:shadow-md transition-shadow bg-[#1A1A1A] text-[#1877F2]">
+                <button onClick={() => handleShare('facebook')} className="w-12 h-12 rounded-full border border-gray-200 shadow-sm flex items-center justify-center hover:shadow-md transition-shadow bg-white text-[#1877F2]">
                   <i className="fa-brands fa-facebook-f text-xl"></i>
                 </button>
-                <button onClick={() => handleShare('whatsapp')} className="w-12 h-12 rounded-full border border-[#333333] shadow-sm flex items-center justify-center hover:shadow-md transition-shadow bg-[#1A1A1A] text-[#25D366]">
+                <button onClick={() => handleShare('whatsapp')} className="w-12 h-12 rounded-full border border-gray-200 shadow-sm flex items-center justify-center hover:shadow-md transition-shadow bg-white text-[#25D366]">
                   <i className="fa-brands fa-whatsapp text-xl"></i>
                 </button>
-                <button onClick={() => handleShare('twitter')} className="w-12 h-12 rounded-full border border-[#333333] shadow-sm flex items-center justify-center hover:shadow-md transition-shadow bg-[#1A1A1A] text-[#1DA1F2]">
+                <button onClick={() => handleShare('twitter')} className="w-12 h-12 rounded-full border border-gray-200 shadow-sm flex items-center justify-center hover:shadow-md transition-shadow bg-white text-[#1DA1F2]">
                   <i className="fa-brands fa-twitter text-xl"></i>
                 </button>
-                <button onClick={() => handleShare('email')} className="w-12 h-12 rounded-full border border-[#333333] shadow-sm flex items-center justify-center hover:shadow-md transition-shadow bg-[#1A1A1A] text-[#EA4335]">
+                <button onClick={() => handleShare('email')} className="w-12 h-12 rounded-full border border-gray-200 shadow-sm flex items-center justify-center hover:shadow-md transition-shadow bg-white text-[#EA4335]">
                   <i className="fa-solid fa-envelope text-xl"></i>
                 </button>
               </div>
@@ -652,7 +652,7 @@ const PlaceDetailPage = () => {
 
         {/* Bottom CTA Banner */}
         <GuidanceCTA 
-          className="mt-12 mb-8"
+          className="mt-12 mb-0"
           subtitle="Personalized Guidance"
           title="Want to know more about this temple?"
           description="Talk to our Astrology Experts and get personalized guidance and temple recommendations."

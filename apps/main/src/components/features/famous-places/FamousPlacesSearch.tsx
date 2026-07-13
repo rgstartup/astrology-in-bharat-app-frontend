@@ -1,30 +1,124 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
+import { fetchStates, fetchDistricts, State, District } from "@/libs/api-locations";
 
 interface FamousPlacesSearchProps {
   onSearch: (query: string, location?: string) => void;
   isSearching: boolean;
 }
 
-const STATES = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
-  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
-  "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
-  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
-  "Delhi", "Jammu & Kashmir",
-];
+
 
 const RADIUS_OPTIONS = ["Within 5 km", "Within 10 km", "Within 25 km", "Within 50 km", "Within 100 km"];
 
+const CustomSelect = ({ value, onChange, options, placeholder }: { value: string, onChange: (val: string) => void, options: string[], placeholder: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setIsOpen(false);
+        setSearch("");
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen]);
+
+  const filteredOptions = options.filter(opt => opt.toLowerCase().includes(search.toLowerCase()));
+
+  return (
+    <div className="relative w-full" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full text-left bg-[#FAF5EE] border border-[#E8D5C0] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all font-medium pr-8 truncate flex items-center justify-between"
+      >
+        <span className={value ? "text-gray-800" : "text-gray-500"}>{value || placeholder}</span>
+        <i className={`fa-solid fa-chevron-down text-[10px] transition-transform ${isOpen ? "rotate-180 text-orange-400" : "text-gray-400"}`} />
+      </button>
+      
+      {isOpen && (
+        <div data-lenis-prevent="true" className="absolute top-full mt-1 w-full max-h-64 flex flex-col bg-white border border-[#E8D5C0] rounded-lg shadow-xl z-[100] py-1">
+          <div className="px-3 py-2 border-b border-gray-100">
+            <input 
+              ref={inputRef}
+              type="text" 
+              placeholder={`Search...`}
+              className="w-full bg-gray-50 border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:border-orange-300 transition-colors"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+          <div className="overflow-y-auto custom-scrollbar flex-1 pb-1">
+            <div 
+              onClick={() => { onChange(""); setIsOpen(false); setSearch(""); }}
+              className={`px-4 py-2 text-sm cursor-pointer hover:bg-orange-50 transition-colors ${!value ? "bg-orange-50 font-bold text-[#D35400]" : "text-gray-700"}`}
+            >
+              {placeholder}
+            </div>
+            {filteredOptions.length === 0 ? (
+              <div className="px-4 py-3 text-sm text-gray-400 text-center">No results found</div>
+            ) : (
+              filteredOptions.map((opt: string) => (
+                <div
+                  key={opt}
+                  onClick={() => { onChange(opt); setIsOpen(false); setSearch(""); }}
+                  className={`px-4 py-2 text-sm cursor-pointer hover:bg-orange-50 transition-colors ${value === opt ? "bg-orange-50 font-bold text-[#D35400]" : "text-gray-700"}`}
+                >
+                  {opt}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSearching }) => {
   const [query, setQuery] = useState("");
+  
+  // Selected values
   const [state, setState] = useState("");
   const [district, setDistrict] = useState("");
   const [city, setCity] = useState("");
   const [radius, setRadius] = useState("");
+
+  // Data from API
+  const [statesList, setStatesList] = useState<State[]>([]);
+  const [districtsList, setDistrictsList] = useState<District[]>([]);
+
+  // 1. Fetch States on Mount
+  useEffect(() => {
+    fetchStates().then(res => setStatesList(res));
+  }, []);
+
+  // 2. Fetch Districts when State changes
+  useEffect(() => {
+    if (!state) {
+      setDistrictsList([]);
+      setDistrict(""); // reset district
+      return;
+    }
+    const selectedState = statesList.find(s => s.name === state);
+    if (selectedState) {
+      fetchDistricts(selectedState.id).then(res => setDistrictsList(res));
+    }
+  }, [state, statesList]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,28 +221,23 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
             {/* Row 3: Dropdowns + Search Button */}
             <div className="flex flex-wrap gap-2">
               {/* Select State */}
-              <div className="relative flex-1 min-w-[130px]">
-                <select
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  className="w-full appearance-none bg-[#FAF5EE] border border-[#E8D5C0] rounded-lg px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all font-medium pr-8 cursor-pointer"
-                >
-                  <option value="">Select State</option>
-                  {STATES.map((s) => <option key={s} value={s}>{s}</option>)}
-                </select>
-                <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] pointer-events-none" />
+              <div className="flex-1 min-w-[130px]">
+                <CustomSelect 
+                  value={state} 
+                  onChange={setState} 
+                  options={statesList.map(s => s.name)} 
+                  placeholder="Select State" 
+                />
               </div>
 
               {/* Select District */}
-              <div className="relative flex-1 min-w-[130px]">
-                <select
-                  value={district}
-                  onChange={(e) => setDistrict(e.target.value)}
-                  className="w-full appearance-none bg-[#FAF5EE] border border-[#E8D5C0] rounded-lg px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all font-medium pr-8 cursor-pointer"
-                >
-                  <option value="">Select District</option>
-                </select>
-                <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] pointer-events-none" />
+              <div className="flex-1 min-w-[130px]">
+                <CustomSelect 
+                  value={district} 
+                  onChange={setDistrict} 
+                  options={districtsList.map(d => d.name)} 
+                  placeholder="Select District" 
+                />
               </div>
 
               {/* Select City/Area */}
@@ -163,16 +252,13 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
               </div>
 
               {/* Within Radius */}
-              <div className="relative flex-1 min-w-[130px]">
-                <select
-                  value={radius}
-                  onChange={(e) => setRadius(e.target.value)}
-                  className="w-full appearance-none bg-[#FAF5EE] border border-[#E8D5C0] rounded-lg px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all font-medium pr-8 cursor-pointer"
-                >
-                  <option value="">Within Radius</option>
-                  {RADIUS_OPTIONS.map((r) => <option key={r} value={r}>{r}</option>)}
-                </select>
-                <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] pointer-events-none" />
+              <div className="flex-1 min-w-[130px]">
+                <CustomSelect 
+                  value={radius} 
+                  onChange={setRadius} 
+                  options={RADIUS_OPTIONS} 
+                  placeholder="Within Radius" 
+                />
               </div>
 
               {/* Search Button */}

@@ -18,6 +18,30 @@ interface TopExpert {
     specialization: string;
 }
 
+const DUMMY_TOP_EXPERTS: TopExpert[] = [
+    {
+        id: "dummy-exp-1",
+        user: { name: "Acharya Vivek", avatar: "/images/dummy-expert.jpg" },
+        is_online: true,
+        rating: 4.9,
+        specialization: "Vedic Astrology, Numerology"
+    },
+    {
+        id: "dummy-exp-2",
+        user: { name: "Pandit Sharma", avatar: "/images/dummy-expert.jpg" },
+        is_online: true,
+        rating: 4.8,
+        specialization: "Vastu Shastra, Kundli"
+    },
+    {
+        id: "dummy-exp-3",
+        user: { name: "Astrologer Ravi", avatar: "/images/dummy-expert.jpg" },
+        is_online: false,
+        rating: 4.7,
+        specialization: "Tarot Reading, Palmistry"
+    }
+];
+
 const TopExpertsSection: React.FC = () => {
     const [topExperts, setTopExperts] = useState<TopExpert[]>([]);
     const [expertsLoading, setExpertsLoading] = useState(false);
@@ -28,9 +52,10 @@ const TopExpertsSection: React.FC = () => {
             const [res, error] = await http.get<TopExpert[]>('/expert/top-rated?limit=3');
             
             if (error) {
-                setTopExperts([]);
+                console.warn("⚠️ Failed to fetch top experts, using dummy data.", error);
+                setTopExperts(DUMMY_TOP_EXPERTS);
             } else {
-                setTopExperts(Array.isArray(res) ? res : []);
+                setTopExperts(res?.length > 0 ? res : DUMMY_TOP_EXPERTS);
             }
             setExpertsLoading(false);
         };

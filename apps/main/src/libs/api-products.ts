@@ -20,7 +20,7 @@ export const getProducts = async (): Promise<Product[]> => {
         const [data, error] = await api.get("/products", {} as any);
 
         if (error) {
-            console.error("Failed to fetch products:", error);
+            console.warn("⚠️ Failed to fetch products:", error);
             return [];
         }
 

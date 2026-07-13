@@ -35,7 +35,7 @@ if (isBrowser) {
     socket.on("connect", () => { });
 
     socket.on("connect_error", (err) => {
-        console.error("[Socket] ❌ Main App Connection Error:", getErrorMessage(err));
+        console.warn("[Socket] ⚠️ Main App Connection Error:", getErrorMessage(err));
     });
 
     chatSocket.on("connect", () => {
@@ -47,6 +47,6 @@ if (isBrowser) {
     });
 
     chatSocket.on("connect_error", (err) => {
-        console.error("[ChatSocket] ❌ Connection Error:", getErrorMessage(err));
+        console.warn("[ChatSocket] ⚠️ Connection Error:", getErrorMessage(err));
     });
 }

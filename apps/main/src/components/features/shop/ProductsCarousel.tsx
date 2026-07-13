@@ -23,7 +23,7 @@ const ProductsCarousel = () => {
       try {
         const [data, err] = await api.get<any>(`/products`);
         if (err || !data) {
-          console.error("Error fetching products for carousel:", err);
+          console.warn("⚠️ Error fetching products for carousel:", err);
         } else {
           const list = Array.isArray(data) ? data : (data.data || []);
           setProductList(list);

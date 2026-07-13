@@ -59,7 +59,7 @@ const Testimonial = () => {
           setReviews(dummyReviews);
         }
       } catch (error) {
-        console.error("Failed to fetch testimonials:", error);
+        console.warn("⚠️ Failed to fetch testimonials:", error);
         setReviews(dummyReviews);
       } finally {
         setLoading(false);

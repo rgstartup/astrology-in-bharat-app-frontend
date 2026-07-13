@@ -68,7 +68,7 @@ export async function fetchPlaces(
 
     return places;
   } catch (error) {
-    console.error("Error fetching places:", error);
+    console.warn("⚠️ Error fetching places:", error);
     return [];
   }
 }

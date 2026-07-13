@@ -24,6 +24,41 @@ import FamousPlacesSeoContent from "./famous-places-seo.component";
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+const DUMMY_PLACES: Place[] = [
+  {
+    title: "Kashi Vishwanath Temple",
+    slug: "kashi-vishwanath",
+    address: "Varanasi, Uttar Pradesh",
+    rating: 4.9,
+    thumbnailUrl: "/images/kashi.jpg",
+    description: "One of the most famous Hindu temples dedicated to Lord Shiva."
+  } as any,
+  {
+    title: "Mata Vaishno Devi",
+    slug: "vaishno-devi",
+    address: "Katra, Jammu and Kashmir",
+    rating: 4.8,
+    thumbnailUrl: "/images/famous-temples-banner.png",
+    description: "A manifestation of the Hindu Mother Goddess."
+  } as any,
+  {
+    title: "Golden Temple",
+    slug: "golden-temple",
+    address: "Amritsar, Punjab",
+    rating: 4.9,
+    thumbnailUrl: "/images/temple-categories-banner.png",
+    description: "The preeminent spiritual site of Sikhism."
+  } as any,
+  {
+    title: "Tirupati Balaji",
+    slug: "tirupati-balaji",
+    address: "Tirumala, Andhra Pradesh",
+    rating: 4.8,
+    thumbnailUrl: "/images/online-puja-banner.png",
+    description: "Dedicated to Lord Venkateswara, a form of Vishnu."
+  } as any
+];
+
 const FamousPlacesPage = () => {
   // ── Data state ──────────────────────────────────────────────────────────────
   const [temples, setTemples] = useState<Place[]>([]);
@@ -52,10 +87,12 @@ const FamousPlacesPage = () => {
           fetchPlaces(DEFAULT_QUERIES.temples.q, DEFAULT_QUERIES.temples.location),
           fetchPlaces(DEFAULT_QUERIES.pilgrimages.q, DEFAULT_QUERIES.pilgrimages.location),
         ]);
-        setTemples(t);
-        setPilgrimages(p);
+        setTemples(t?.length > 0 ? t : DUMMY_PLACES);
+        setPilgrimages(p?.length > 0 ? p : DUMMY_PLACES);
       } catch (err) {
-        console.error("Failed to fetch places:", err);
+        console.warn("⚠️ Failed to fetch places:", err);
+        setTemples(DUMMY_PLACES);
+        setPilgrimages(DUMMY_PLACES);
       } finally {
         setLoading(false);
       }
@@ -69,9 +106,10 @@ const FamousPlacesPage = () => {
     setIsSearching(true);
     try {
       const results = await fetchPlaces(query, location || "India");
-      setSearchResults(results);
+      setSearchResults(results?.length > 0 ? results : DUMMY_PLACES);
     } catch (err) {
-      console.error("Search failed:", err);
+      console.warn("⚠️ Search failed:", err);
+      setSearchResults(DUMMY_PLACES);
     } finally {
       setIsSearching(false);
     }
@@ -82,9 +120,10 @@ const FamousPlacesPage = () => {
     setIsCategoryLoading(true);
     try {
       const results = await fetchPlaces(cat.query, "India");
-      setCategoryResults(results);
+      setCategoryResults(results?.length > 0 ? results : DUMMY_PLACES);
     } catch (err) {
-      console.error("Category search failed:", err);
+      console.warn("⚠️ Category search failed:", err);
+      setCategoryResults(DUMMY_PLACES);
     } finally {
       setIsCategoryLoading(false);
     }

@@ -90,10 +90,17 @@ export const getExperts = async (
     };
   } catch (error: any) {
     const errMsg = getErrorMessage(error);
-    console.error(`❌ [API Experts] Fetch error:`, errMsg);
     const isNetworkError =
       errMsg.includes("fetch failed") ||
-      errMsg.includes("Network Error");
+      errMsg.includes("Network Error") ||
+      errMsg.includes("ECONNREFUSED");
+      
+    if (!isNetworkError) {
+      console.error(`❌ [API Experts] Fetch error:`, errMsg);
+    } else {
+      console.warn(`⚠️ [API Experts] Backend unreachable, falling back to empty state.`);
+    }
+
     return {
       success: false,
       data: [],

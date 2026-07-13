@@ -98,10 +98,10 @@ const PujaListSection = () => {
             const [res, error] = await http.get<ExpertPuja[]>(API_ROUTES.EXPERT.GET_ALL_PUJAS) as any;
             
             if (error) {
-                console.error("Failed to fetch pujas:", error);
-                setPujas([]);
+                console.warn("⚠️ Failed to fetch pujas, loading dummy data.", error);
+                setPujas(DUMMY_PUJAS);
             } else {
-                setPujas(res || []);
+                setPujas(res?.length > 0 ? res : DUMMY_PUJAS);
             }
             setLoading(false);
         };

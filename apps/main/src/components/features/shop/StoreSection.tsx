@@ -86,8 +86,8 @@ const StoreSection = () => {
         limit: 10
     });
 
-    // Only show real stores from API - dummy stores cause backend UUID errors
-    const displayStores = stores;
+    // Use dummy stores if API returns empty (backend down or no stores)
+    const displayStores = stores?.length > 0 ? stores : DUMMY_STORES;
 
     return (
         <section
