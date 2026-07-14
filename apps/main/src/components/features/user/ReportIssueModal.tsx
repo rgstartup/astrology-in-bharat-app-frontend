@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 import { api as http } from "@/lib/api";
@@ -28,8 +28,26 @@ export default function ReportIssueModal({
     const [category, setCategory] = useState("");
     const [loading, setLoading] = useState(false);
     const [submittingWithChat, setSubmittingWithChat] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { user: currentUser } = useAuthStore();
     const [mounted, setMounted] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        if (isDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isDropdownOpen]);
 
     useEffect(() => {
         setMounted(true);
@@ -38,11 +56,17 @@ export default function ReportIssueModal({
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = "hidden";
+            document.documentElement.classList.add("lenis-stopped");
+            window.dispatchEvent(new Event('pause-lenis'));
         } else {
             document.body.style.overflow = "unset";
+            document.documentElement.classList.remove("lenis-stopped");
+            window.dispatchEvent(new Event('resume-lenis'));
         }
         return () => {
             document.body.style.overflow = "unset";
+            document.documentElement.classList.remove("lenis-stopped");
+            window.dispatchEvent(new Event('resume-lenis'));
         };
     }, [isOpen]);
 
@@ -107,7 +131,7 @@ export default function ReportIssueModal({
                     expertName: "System",
                     expertAvatar: `https://api.dicebear.com/7.x/initials/svg?seed=System`,
                     status: itemDetails.status,
-                    date: itemDetails.createdAt || itemDetails.created_at,
+                    date: itemDetails.date || itemDetails.createdAt || itemDetails.created_at,
                 }),
                 ...(type === "consultation" && {
                     sessionId: itemDetails.id,
@@ -159,10 +183,10 @@ export default function ReportIssueModal({
         toast.success("Issue reported successfully!");
 
         if (isChat && newDispute?.id) {
-            const orderId = itemDetails.orderId || itemDetails.id;
+            const orderId = itemDetails.orderId || String(itemDetails.id).slice(0,8).toUpperCase();
             const amount = itemDetails.price || itemDetails.totalAmount || itemDetails.total_amount || itemDetails.totalCost || itemDetails.total_cost || itemDetails.amount || 0;
-            const date = (itemDetails.createdAt || itemDetails.created_at || itemDetails.scheduled_date)
-                ? new Date(itemDetails.createdAt || itemDetails.created_at || itemDetails.scheduled_date).toLocaleDateString("en-IN")
+            const date = (itemDetails.date || itemDetails.createdAt || itemDetails.created_at || itemDetails.scheduled_date)
+                ? new Date(itemDetails.date || itemDetails.createdAt || itemDetails.created_at || itemDetails.scheduled_date).toLocaleDateString("en-IN")
                 : "N/A";
 
             const summaryMessage = `📋 ISSUE SUMMARY 📋\n\n` +
@@ -189,9 +213,11 @@ export default function ReportIssueModal({
 
     return createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div 
+                className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col overflow-hidden"
+            >
                 {/* Header */}
-                <div className="sticky top-0 bg-linear-to-r from-orange-500 to-red-500 text-white p-6 rounded-t-3xl">
+                <div className="bg-linear-to-r from-orange-500 to-red-500 text-white p-6 shrink-0">
                     <div className="flex justify-between items-center">
                         <div>
                             <h2 className="text-2xl font-bold">Report an Issue</h2>
@@ -209,7 +235,11 @@ export default function ReportIssueModal({
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div 
+                    className={`p-6 transition-all duration-300 overflow-y-auto overscroll-contain flex-1 ${isDropdownOpen ? 'pb-48' : ''}`}
+                    onWheel={(e) => e.stopPropagation()}
+                    onTouchMove={(e) => e.stopPropagation()}
+                >
                     {/* Item Details Card */}
                     <div className="bg-linear-to-br from-orange-50 to-red-50 rounded-2xl p-5 mb-6 border border-orange-200">
                         <h3 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
@@ -222,7 +252,7 @@ export default function ReportIssueModal({
                                     <div>
                                         <span className="text-gray-600">Order ID:</span>
                                         <p className="font-bold text-gray-800">
-                                            #{itemDetails.orderId || itemDetails.id}
+                                            #{itemDetails.orderId || String(itemDetails.id).split('-')[0].toUpperCase()}
                                         </p>
                                     </div>
                                     <div>
@@ -231,6 +261,7 @@ export default function ReportIssueModal({
                                             ₹{itemDetails.totalAmount || itemDetails.total_amount || itemDetails.amount || 0}
                                         </p>
                                     </div>
+
                                     <div>
                                         <span className="text-gray-600">Status:</span>
                                         <p className="font-bold text-gray-800 capitalize">
@@ -240,8 +271,8 @@ export default function ReportIssueModal({
                                     <div>
                                         <span className="text-gray-600">Date:</span>
                                         <p className="font-bold text-gray-800">
-                                            {(itemDetails.createdAt || itemDetails.created_at)
-                                                ? new Date(itemDetails.createdAt || itemDetails.created_at).toLocaleDateString("en-IN")
+                                            {(itemDetails.date || itemDetails.createdAt || itemDetails.created_at)
+                                                ? new Date(itemDetails.date || itemDetails.createdAt || itemDetails.created_at).toLocaleDateString("en-IN")
                                                 : "N/A"}
                                         </p>
                                     </div>
@@ -250,7 +281,7 @@ export default function ReportIssueModal({
                                 <>
                                     <div>
                                         <span className="text-gray-600">Session ID:</span>
-                                        <p className="font-bold text-gray-800">#{itemDetails.id}</p>
+                                        <p className="font-bold text-gray-800">#{itemDetails.orderId || String(itemDetails.id).split('-')[0].toUpperCase()}</p>
                                     </div>
                                     <div>
                                         <span className="text-gray-600">Expert:</span>
@@ -267,8 +298,8 @@ export default function ReportIssueModal({
                                     <div>
                                         <span className="text-gray-600">Date:</span>
                                         <p className="font-bold text-gray-800">
-                                            {(itemDetails.createdAt || itemDetails.created_at)
-                                                ? new Date(itemDetails.createdAt || itemDetails.created_at).toLocaleDateString("en-IN")
+                                            {(itemDetails.date || itemDetails.createdAt || itemDetails.created_at)
+                                                ? new Date(itemDetails.date || itemDetails.createdAt || itemDetails.created_at).toLocaleDateString("en-IN")
                                                 : "N/A"}
                                         </p>
                                     </div>
@@ -277,7 +308,7 @@ export default function ReportIssueModal({
                                 <>
                                     <div>
                                         <span className="text-gray-600">Booking ID:</span>
-                                        <p className="font-bold text-gray-800">#{itemDetails.id}</p>
+                                        <p className="font-bold text-gray-800">#{itemDetails.orderId || String(itemDetails.id).split('-')[0].toUpperCase()}</p>
                                     </div>
                                     <div>
                                         <span className="text-gray-600">Ritual:</span>
@@ -315,18 +346,47 @@ export default function ReportIssueModal({
                         <label className="block text-sm font-bold text-gray-700 mb-2">
                             Issue Category <span className="text-red-500">*</span>
                         </label>
-                        <select
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition-all"
-                        >
-                            <option value="">Select a category</option>
-                            {categories.map((cat) => (
-                                <option key={cat} value={cat}>
-                                    {cat}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="relative" ref={dropdownRef}>
+                            <div
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className={`w-full px-4 py-3 border-2 ${isDropdownOpen ? 'border-orange-500' : 'border-gray-200'} rounded-xl transition-all cursor-pointer flex justify-between items-center bg-white`}
+                            >
+                                <span className={category ? "text-gray-900 font-medium" : "text-gray-500"}>
+                                    {category || "Select a category"}
+                                </span>
+                                <i className={`fa-solid fa-chevron-down text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}></i>
+                            </div>
+
+                            {isDropdownOpen && (
+                                <div 
+                                    className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-xl z-50 max-h-56 overflow-y-auto overscroll-contain"
+                                    onWheel={(e) => e.stopPropagation()}
+                                    onTouchMove={(e) => e.stopPropagation()}
+                                >
+                                        <div
+                                            onClick={() => {
+                                                setCategory("");
+                                                setIsDropdownOpen(false);
+                                            }}
+                                            className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 text-gray-500"
+                                        >
+                                            Select a category
+                                        </div>
+                                        {categories.map((cat) => (
+                                            <div
+                                                key={cat}
+                                                onClick={() => {
+                                                    setCategory(cat);
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                                className={`px-4 py-3 hover:bg-orange-50 cursor-pointer transition-colors border-b border-gray-100 last:border-0 ${category === cat ? 'bg-orange-50/50 text-orange-600 font-medium' : 'text-gray-700'}`}
+                                            >
+                                                {cat}
+                                            </div>
+                                        ))}
+                                    </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* Issue Description */}

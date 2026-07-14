@@ -49,6 +49,14 @@ const OrderSummary = ({
   handleQuantityChange,
   availableCoupons = [],
 }: Props) => {
+  const validCoupons = availableCoupons.filter((c: any) => {
+    const coupon = c.coupon || c;
+    const expiry = coupon.expiryDate || coupon.expiry_date || c.expiryDate || c.expiry_date;
+    const isExpired = expiry ? new Date(expiry) < new Date() : false;
+    const isUsed = c.is_used || c.isUsed || false;
+    return !isExpired && !isUsed && coupon && coupon.code;
+  });
+
   return (
     <div className="w-full lg:w-[420px] shrink-0 space-y-6">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
@@ -196,13 +204,12 @@ const OrderSummary = ({
               </div>
             )}
 
-            {availableCoupons && availableCoupons.length > 0 && !appliedCoupon && (
+            {validCoupons.length > 0 && !appliedCoupon && (
               <div className="mt-4">
                 <p className="text-xs text-gray-500 mb-2">Available Coupons</p>
                 <div className="flex flex-wrap gap-2">
-                  {availableCoupons.map((c: any, index: number) => {
+                  {validCoupons.map((c: any, index: number) => {
                     const coupon = c.coupon || c;
-                    if (!coupon || !coupon.code) return null;
                     return (
                       <button
                         key={coupon.id || index}

@@ -51,7 +51,8 @@ const HeroComponent = () => {
             </div>
             
             <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-10 text-center md:text-left max-w-md mx-auto md:mx-0 drop-shadow-md">
-              Ancient wisdom to guide your future together.
+              Ancient wisdom to guide your future together.<br />
+              <span className="block mt-1">Discover the cosmic harmony of your relationship.</span>
             </p>
 
             {/* Features Grid - EXACTLY like Famous Temples */}

@@ -41,6 +41,7 @@ const FamousPlacesHero = () => (
       
       <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-10 text-center md:text-left max-w-md mx-auto md:mx-0 drop-shadow-md">
         Search any place in India and discover famous temples, their history, timings and spiritual significance.
+        43,9:         Search any place in India and discover famous temples, their history, timings and spiritual significance.
       </p>
 
       {/* Features Grid */}

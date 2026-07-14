@@ -79,52 +79,59 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
                 userCoupon.expiryDate ||
                 userCoupon.expiry_date;
               const d_isUsed = userCoupon.is_used || userCoupon.isUsed || false;
+              const isExpired = d_expiry ? new Date(d_expiry) < new Date() : false;
+              
+              let statusText = t.active;
+              let statusBgClass = "bg-orange text-white shadow-lg";
+              let cardBgClass = "bg-orange-50/50 border-orange-200 hover:bg-white hover:shadow-xl hover:shadow-orange/5";
+              
+              if (d_isUsed) {
+                  statusText = t.used;
+                  statusBgClass = "bg-gray-400 text-white";
+                  cardBgClass = "bg-gray-50 border-gray-200 grayscale-[0.5]";
+              } else if (isExpired) {
+                  statusText = "EXPIRED";
+                  statusBgClass = "bg-red-500 text-white shadow-lg";
+                  cardBgClass = "bg-red-50/50 border-red-200 grayscale-[0.3]";
+              }
 
               return (
                 <div
                   key={userCoupon.id || idx}
-                  className={`group relative border-2 border-dashed rounded-3xl p-6 transition-all duration-300 ${
-                    d_isUsed
-                      ? "bg-gray-50 border-gray-200 grayscale-[0.5]"
-                      : "bg-orange-50/50 border-orange-200 hover:bg-white hover:shadow-xl hover:shadow-orange/5"
-                  }`}
+                  className={`group relative border-2 border-dashed rounded-3xl p-6 transition-all duration-300 ${cardBgClass}`}
                 >
                   <div
-                    className={`absolute top-0 right-0 py-1.5 px-4 rounded-bl-2xl text-[10px] font-black uppercase tracking-wider ${
-                      d_isUsed
-                        ? "bg-gray-400 text-white"
-                        : "bg-orange text-white shadow-lg"
-                    }`}
+                    className={`absolute top-0 right-0 py-1.5 px-4 rounded-bl-2xl text-[10px] font-black uppercase tracking-wider ${statusBgClass}`}
                     style={fontStyle}
                   >
-                    {d_isUsed ? t.used : t.active}
+                    {statusText}
                   </div>
 
                   <div className="flex items-start gap-4 mb-6">
                     <div
                       className={`w-14 h-14 flex items-center justify-center rounded-2xl shadow-sm transition-transform duration-500 group-hover:scale-110 ${
-                        d_isUsed ? "bg-gray-100" : "bg-white border border-white"
+                        (d_isUsed || isExpired) ? "bg-gray-100" : "bg-white border border-white"
                       }`}
                     >
                       <i
                         className={`fa-solid ${
                           d_type === "percentage" ? "fa-percent" : "fa-gift"
                         } text-2xl ${
-                          d_isUsed ? "text-gray-300" : "text-orange"
+                          (d_isUsed || isExpired) ? "text-gray-300" : "text-orange"
                         }`}
                       ></i>
                     </div>
                     <div>
                       <h6
                         className={`font-black text-xl mb-1 tracking-tight ${
-                          d_isUsed ? "text-gray-400" : "text-gray-900"
+                          (d_isUsed || isExpired) ? "text-gray-400" : "text-gray-900"
                         }`}
                       >
                         {coupon.code}
                       </h6>
                       <p
                         className={`font-bold text-sm tracking-wide m-0 ${
-                          d_isUsed ? "text-gray-400/70" : "text-orange"
+                          (d_isUsed || isExpired) ? "text-gray-400/70" : "text-orange"
                         }`}
                         style={fontStyle}
                       >
@@ -149,14 +156,14 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
                   </div>
 
                   <button
-                    disabled={d_isUsed}
+                    disabled={d_isUsed || isExpired}
                     className={`w-full py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all transition-all duration-300 flex items-center justify-center gap-3 shadow-sm border-0 ${
-                      d_isUsed
+                      (d_isUsed || isExpired)
                         ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                         : "bg-white text-orange hover:bg-orange hover:text-white hover:shadow-lg hover:shadow-orange/20"
                     }`}
                     onClick={() => {
-                      if (!d_isUsed) {
+                      if (!d_isUsed && !isExpired) {
                         navigator.clipboard.writeText(coupon.code);
                         toast.success(t.copied);
                       }
@@ -164,7 +171,7 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
                   >
                    <i className="fa-regular fa-copy text-lg"></i>
                     <span style={fontStyle}>
-                      {d_isUsed ? t.alreadyRedeemed : t.copyCode}
+                      {d_isUsed ? t.alreadyRedeemed : isExpired ? "EXPIRED" : t.copyCode}
                     </span>
                   </button>
                 </div>

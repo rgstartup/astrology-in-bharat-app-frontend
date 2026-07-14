@@ -113,9 +113,11 @@ const ExpertList: React.FC<ExpertListProps> = ({
     t,
   );
 
-  const displayExperts = !loading && experts.length > 0 && experts.length < 4 
+  const isFiltered = searchQuery.trim() !== "" || selectedSpecialization !== "" || hasActiveFilters;
+
+  const displayExperts = !loading && !isFiltered && experts.length > 0 && experts.length < 4 
       ? [...experts, ...DUMMY_EXPERTS.slice(0, 4 - experts.length)]
-      : !loading && experts.length === 0 
+      : !loading && !isFiltered && experts.length === 0 
           ? DUMMY_EXPERTS 
           : experts;
 

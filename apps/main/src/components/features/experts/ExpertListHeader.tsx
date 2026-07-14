@@ -102,10 +102,10 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
                 </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row items-center gap-4 mb-4 text-white">
+            <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6 mb-4 text-white w-full">
             {/* Search Box */}
-            <div className="w-full lg:w-5/12">
-                <div className="flex w-full shadow-lg h-[50px] rounded-full overflow-hidden">
+            <div className="w-full lg:w-[30%] shrink-0">
+                <div className="flex w-full shadow-lg h-[50px] rounded-full overflow-hidden bg-white">
                     <input
                         type="text"
                         className="flex-1 px-4 md:px-6 border-0 outline-none text-sm md:text-base bg-white text-black h-full min-w-0"
@@ -120,7 +120,7 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
             </div>
 
             {/* Desktop Filter & Reset & Sort */}
-            <div className="hidden lg:flex w-full lg:w-3/12 items-center justify-end gap-3 md:gap-6">
+            <div className="hidden lg:flex shrink-0 items-center gap-3">
                 <button
                     type="button"
                     className="flex items-center gap-2 bg-orange text-white px-4 md:px-5 py-2 rounded-full font-medium hover:opacity-90 transition-all relative whitespace-nowrap text-sm md:text-base shadow-md"
@@ -152,7 +152,7 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
             </div>
 
             {/* Specialization Scrollable Slider */}
-            <div className="w-full lg:w-[43.33%] flex items-center gap-2 relative">
+            <div className="w-full lg:flex-1 min-w-0 flex items-center gap-2 relative">
                 <button
                     onClick={goLeft}
                     className="text-orange hover:scale-110 transition-transform p-1 shrink-0 hidden md:block"

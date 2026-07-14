@@ -1,5 +1,6 @@
 "use client";
 import React, { Suspense } from "react";
+import Link from "next/link";
 import OrderSummary from "./order-summary.component";
 import PaymentMethod from "./payment-method.component";
 import { useCheckout } from "./useCheckout";
@@ -64,9 +65,9 @@ const CheckoutContent = () => {
           
           <div className="flex items-center gap-4">
             <span className="text-white text-sm font-medium"><i className="fa-solid fa-headset mr-2"></i> Need Help?</span>
-            <button className="px-6 py-2.5 rounded-full border border-orange/30 text-orange font-bold text-sm hover:bg-orange hover:text-white transition-colors">
+            <Link href="/contact-us" className="px-6 py-2.5 rounded-full border border-orange/30 text-orange font-bold text-sm hover:bg-orange hover:text-white transition-colors">
               <i className="fa-solid fa-comment-dots mr-2"></i> Chat With Us
-            </button>
+            </Link>
           </div>
         </div>
       </section>

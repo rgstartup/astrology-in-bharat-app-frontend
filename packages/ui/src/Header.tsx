@@ -878,37 +878,39 @@ const Header: React.FC<HeaderProps> = ({ authState, userData, logoutHandler, bal
                             <i className="fa-solid fa-chevron-down text-xs opacity-60" />
                           </a>
                           {/* Dropdown — visible on group hover */}
-                          <ul
-                            data-lenis-prevent
-                            className="absolute top-full left-0 bg-brown shadow-xl rounded-xl border border-brown py-3 z-[1001] min-w-[280px] list-none invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 max-h-[450px] overflow-y-auto overflow-x-hidden overscroll-contain [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-brown [&::-webkit-scrollbar-thumb]:bg-orange [&::-webkit-scrollbar-thumb]:rounded-full"
-                          >
-                            {[
-                              { label: t.dropHoroscope, href: PATHS.HOROSCOPE },
-                              { label: t.dropLoveCalc, href: PATHS.LOVE_CALCULATOR },
-                              { label: t.dropDahejCalc, href: PATHS.DAHEJ_CALCULATOR },
-                              { label: t.dropFlamesCalc, href: PATHS.FLAMES_CALCULATOR },
-                              { label: t.dropLoveCompat, href: PATHS.LOVE_COMPATIBILITY_CALCULATOR },
-                              { label: t.dropMarriageAge, href: PATHS.MARRIAGE_AGE_CALCULATOR },
-                              { label: t.dropSoulmateInitials, href: PATHS.SOULMATE_NAME_INITALS_CALCULATOR },
-                              { label: t.dropLuckyNumber, href: PATHS.LUCKY_NUMBER_CALCULATOR },
-                              { label: t.dropLifePath, href: PATHS.LIFE_PATH_CALCULATOR },
-                              { label: t.dropNameNumerology, href: PATHS.NAME_NUMEROLOGY_CALCULATOR },
-                              { label: t.dropZodiacCompat, href: PATHS.ZODIAC_SIGN_CALCULATOR },
-                              { label: t.dropNakshatra, href: PATHS.NAKSHATRA_FINDER },
-                              { label: t.dropLoyalPartner, href: PATHS.LOYAL_PARTNER_CALCULATOR },
-                              { label: t.dropBreakup, href: PATHS.BREAKUP_PATCHUP_CALCULATOR },
-                              { label: t.dropOnlinePuja, href: PATHS.ONLINE_PUJA },
-                            ].map((item) => (
-                              <li key={item.href}>
-                                <Link
-                                  href={item.href}
-                                  className="block px-6 py-2.5 text-sm text-white/90 no-underline hover:text-orange transition-all border-b border-white/5 last:border-0 hover:translate-x-1"
-                                >
-                                  {item.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
+                          <div className="absolute top-full left-0 bg-brown shadow-xl rounded-xl border border-brown z-[1001] min-w-[280px] invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden">
+                            <ul
+                              data-lenis-prevent
+                              className="list-none py-3 max-h-[450px] overflow-y-auto overflow-x-hidden overscroll-contain [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-brown [&::-webkit-scrollbar-thumb]:bg-orange [&::-webkit-scrollbar-thumb]:rounded-full"
+                            >
+                              {[
+                                { label: t.dropHoroscope, href: PATHS.HOROSCOPE },
+                                { label: t.dropLoveCalc, href: PATHS.LOVE_CALCULATOR },
+                                { label: t.dropDahejCalc, href: PATHS.DAHEJ_CALCULATOR },
+                                { label: t.dropFlamesCalc, href: PATHS.FLAMES_CALCULATOR },
+                                { label: t.dropLoveCompat, href: PATHS.LOVE_COMPATIBILITY_CALCULATOR },
+                                { label: t.dropMarriageAge, href: PATHS.MARRIAGE_AGE_CALCULATOR },
+                                { label: t.dropSoulmateInitials, href: PATHS.SOULMATE_NAME_INITALS_CALCULATOR },
+                                { label: t.dropLuckyNumber, href: PATHS.LUCKY_NUMBER_CALCULATOR },
+                                { label: t.dropLifePath, href: PATHS.LIFE_PATH_CALCULATOR },
+                                { label: t.dropNameNumerology, href: PATHS.NAME_NUMEROLOGY_CALCULATOR },
+                                { label: t.dropZodiacCompat, href: PATHS.ZODIAC_SIGN_CALCULATOR },
+                                { label: t.dropNakshatra, href: PATHS.NAKSHATRA_FINDER },
+                                { label: t.dropLoyalPartner, href: PATHS.LOYAL_PARTNER_CALCULATOR },
+                                { label: t.dropBreakup, href: PATHS.BREAKUP_PATCHUP_CALCULATOR },
+                                { label: t.dropOnlinePuja, href: PATHS.ONLINE_PUJA },
+                              ].map((item) => (
+                                <li key={item.href}>
+                                  <Link
+                                    href={item.href}
+                                    className="block px-6 py-2.5 text-sm text-white/90 no-underline hover:text-orange transition-all border-b border-white/5 last:border-0 hover:translate-x-1"
+                                  >
+                                    {item.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </>
                       )}
                     </li>

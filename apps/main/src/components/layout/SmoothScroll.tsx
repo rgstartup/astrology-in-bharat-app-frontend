@@ -29,8 +29,17 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
 
         requestAnimationFrame(raf);
 
+        // Listen for custom events to pause/resume lenis
+        const handlePause = () => lenis.stop();
+        const handleResume = () => lenis.start();
+        
+        window.addEventListener('pause-lenis', handlePause);
+        window.addEventListener('resume-lenis', handleResume);
+
         // Cleanup on unmount
         return () => {
+            window.removeEventListener('pause-lenis', handlePause);
+            window.removeEventListener('resume-lenis', handleResume);
             lenis.destroy();
         };
     }, []);
