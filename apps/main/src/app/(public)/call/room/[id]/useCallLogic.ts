@@ -19,6 +19,7 @@ export const useCallLogic = (): any => {
   const [isCameraOff, setIsCameraOff] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [sessionData, setSessionData] = useState<CallSession | null>(null);
+  const sessionDataRef = useRef<CallSession | null>(null);
   const [callType, setCallType] = useState<"audio" | "video">("audio");
 
   const [showRatingModal, setShowRatingModal] = useState(false);
@@ -60,7 +61,7 @@ export const useCallLogic = (): any => {
     const socket = socketRef.current!;
     const onConnect = () => {
       console.log("🟢 [Socket] Connected to call room", sessionId);
-      socket.emit("join_call_room", { sessionId: parseInt(sessionId) });
+      socket.emit("join_call_room", { sessionId });
     };
 
     if (socket.connected) onConnect();
@@ -78,6 +79,7 @@ export const useCallLogic = (): any => {
       if (!session) return;
 
       setSessionData(session);
+      sessionDataRef.current = session;
       setCallType(session.type);
 
       // 1. Transition to accepted/active
@@ -123,6 +125,7 @@ export const useCallLogic = (): any => {
       const roomName = tokenData?.roomName || data?.roomName;
       const sessionPayload = tokenData?.session || data?.session;
       setSessionData(sessionPayload);
+      sessionDataRef.current = sessionPayload;
       setCallType(sessionPayload?.type || "audio");
 
       try {
@@ -138,8 +141,16 @@ export const useCallLogic = (): any => {
 
     socket.on("call_accepted", handleCallAccepted);
     socket.on("call_ended", (data?: any) => {
-      console.log("📡 [Socket] call_ended received", data);
-      if (data?.reason) setEndReason(data);
+      console.log("☎ [Socket] call_ended received", data);
+      
+      if (data && !data.reason) {
+          // If data is a full session object, update sessionData for the summary modal
+          setSessionData(data);
+      } else if (data?.reason) {
+          // If it's a forced termination with a reason
+          setEndReason(data);
+      }
+      
       if (!cancelledRef.current) handleCallEnded();
     });
 
@@ -198,8 +209,10 @@ export const useCallLogic = (): any => {
     const { Device } = await import("@twilio/voice-sdk");
     const device = new Device(token, { logLevel: 1, codecPreferences: ["opus", "pcmu"] as any });
     deviceRef.current = device;
-    device.on("disconnect", handleCallEnded);
-    device.on("error", (err) => { toast.error(`Call error: ${getErrorMessage(err)}`); handleCallEnded(); });
+    device.on("disconnect", (call: any) => {
+      console.log("Twilio device disconnected");
+    });
+    device.on("error", (err) => { toast.error(`Call error: ${getErrorMessage(err)}`); });
     await device.register();
     const call = await device.connect({ params: { sessionId } });
     callRef.current = call;
@@ -210,7 +223,9 @@ export const useCallLogic = (): any => {
       setStatus("connected"); 
       startTimer(); 
     });
-    call.on("disconnect", handleCallEnded);
+    call.on("disconnect", (call: any) => {
+      console.log("Twilio call disconnected");
+    });
   };
 
   const initVideoCall = async (token: string, roomName: string) => {
@@ -254,7 +269,10 @@ export const useCallLogic = (): any => {
     checkAndStartTimer();
     room.on("participantDisconnected", (p) => {
       console.log("Participant disconnected:", p.identity);
-      handleCallEnded();
+      if (remoteVideoRef.current) {
+        remoteVideoRef.current.innerHTML = "";
+      }
+      toast.warning("Expert disconnected. Waiting for them to rejoin...");
     });
     room.on("reconnecting", (error) => {
       if (error.code === 53001) {
@@ -265,7 +283,7 @@ export const useCallLogic = (): any => {
       if (error) {
         toast.error("Call disconnected due to network issues.");
       }
-      handleCallEnded();
+      console.log("Room disconnected");
     });
   };
 
@@ -289,7 +307,13 @@ export const useCallLogic = (): any => {
 
   const startTimer = () => {
     if (timerRef.current) return;
-    timerRef.current = setInterval(() => setCallDuration((prev) => prev + 1), 1000);
+    const start_time = sessionDataRef.current?.start_time;
+    const startMs = start_time ? new Date(start_time).getTime() : Date.now();
+    
+    setCallDuration(Math.floor((Date.now() - startMs) / 1000));
+    timerRef.current = setInterval(() => {
+        setCallDuration(Math.floor((Date.now() - startMs) / 1000));
+    }, 1000);
   };
 
   const handleCallEnded = () => {
@@ -307,7 +331,7 @@ export const useCallLogic = (): any => {
     
     // Explicitly call end API without try-catch
     const [_, endError] = await http.post<any>(`/call/end`, { 
-      sessionId: parseInt(sessionId),
+      sessionId,
       endedBy: 'USER',
       reason: 'User clicked end button'
     });
@@ -315,7 +339,7 @@ export const useCallLogic = (): any => {
       console.error("Failed to end call via API:", endError);
     }
     
-    socketRef.current?.emit("end_call", { sessionId: parseInt(sessionId) });
+    socketRef.current?.emit("end_call", { sessionId });
     handleCallEnded();
   };
 
@@ -398,7 +422,7 @@ export const useCallLogic = (): any => {
     const expertIdVal = expertData?.id || (sessionData as any).expertId;
     
     const [res, error] = await http.post<any>("/reviews", { 
-      sessionId: parseInt(sessionId), 
+      sessionId, 
       expert_id: expertIdVal, 
       rating: reviewRating, 
       comment: reviewComment.trim() 
@@ -424,7 +448,7 @@ export const useCallLogic = (): any => {
   return {
     status, isMuted, isCameraOff, callDuration, sessionData, callType,
     showRatingModal, setShowRatingModal, reviewRating, setReviewRating,
-    reviewComment, setReviewComment, reviewSubmitting, reviewSubmitted,
+    reviewComment, setReviewComment, reviewSubmitting, reviewSubmitted, setReviewSubmitted,
     localVideoRef, remoteVideoRef, handleEndCall, toggleMute, toggleCamera, toggleSpeaker,
     handleSubmitReview, isSpeakerOn,
     showFreeEndPrompt, setShowFreeEndPrompt, freeLimitData, continuationTimer, endReason,
