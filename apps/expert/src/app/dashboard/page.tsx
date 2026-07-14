@@ -136,10 +136,10 @@ const Page = () => {
     <main className="space-y-8 w-full max-w-full overflow-hidden">
       <div className="flex items-center justify-between min-w-0">
         <div className="min-w-0 flex-1">
-          <h2 className="text-2xl font-bold text-gray-900 truncate sm:whitespace-normal">
+          <h2 className="text-2xl font-bold text-gray-900">
             Welcome back, {user?.name || "Expert"}!
           </h2>
-          <p className="text-gray-500 truncate sm:whitespace-normal">
+          <p className="text-gray-500 mt-1">
             Here's what's happening with your consultations today.
           </p>
         </div>
@@ -264,7 +264,7 @@ const Page = () => {
             onViewAllClick={() => setIsModalOpen(true)}
           />
           {!loading && reviews.length > 0 && user?.profileId && (
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-orange-500">
               <ReviewsList
                 expertId={user.profileId}
                 initialReviews={reviews}

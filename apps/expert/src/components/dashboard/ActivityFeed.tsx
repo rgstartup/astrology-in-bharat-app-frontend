@@ -26,7 +26,7 @@ export const RecentActivity: React.FC = () => {
         const recent5 = sessions.slice(0, 5).map(session => {
           const date = new Date(session.created_at || session.createdAt || Date.now());
           return {
-            name: session.user?.name || "Client",
+            name: session.user?.name || session.client?.user?.name || session.client?.name || "Client",
             action: "consultation",
             time: format(date, 'h:mm a'),
             relativeTime: formatDistanceToNow(date, { addSuffix: true })
@@ -44,7 +44,7 @@ export const RecentActivity: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 h-full">
+    <div className="bg-white rounded-2xl p-6 shadow-sm border border-orange-500 h-full">
       <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
         <Clock className="w-5 h-5 text-[#fd6410]" />
         Recent Activity

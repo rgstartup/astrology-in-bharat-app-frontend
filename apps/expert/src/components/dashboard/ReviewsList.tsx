@@ -71,10 +71,10 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
             <div className="overflow-y-auto pr-2 custom-scrollbar-yellow" style={{ maxHeight: '300px' }}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {reviews.map((review) => (
-                    <div key={review.id} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div key={review.id} className="bg-white p-4 rounded-xl border border-orange-500 shadow-sm hover:shadow-md transition-shadow duration-200">
                         <div className="flex justify-between items-start mb-2">
                             <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden border border-gray-100 flex-shrink-0">
+                                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden border border-orange-500 flex-shrink-0">
                                     {(review.user?.avatar || review.client?.avatar || review.client?.profile_picture || review.client?.user?.avatar) ? (
                                         <img
                                             src={review.user?.avatar || review.client?.avatar || review.client?.profile_picture || review.client?.user?.avatar}

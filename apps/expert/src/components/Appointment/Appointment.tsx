@@ -132,8 +132,8 @@ export default function AppointmentsPage() {
 
         return {
           id: session.id,
-          name: session.user?.name || "Client",
-          avatar: session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.user?.profilePicture || session.user_image || session.user_avatar || session.image,
+          name: session.user?.name || session.client?.user?.name || session.client?.name || "Client",
+          avatar: session.client?.profile_picture || session.client?.avatar || session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.client?.user?.profile_picture || session.client?.user?.avatar || session.user_image || session.user_avatar || session.image,
           service: isPuja ? (session.puja?.name || "Puja Service") : (isCall ? `${callTypeLabel} Call` : "Chat Consultation"),
           date: isPuja ? (session.scheduled_date || session.created_at || new Date().toISOString()) : (session.created_at || session.createdAt || new Date().toISOString()),
           status: currentStatus,
@@ -148,7 +148,7 @@ export default function AppointmentsPage() {
           durationMins: isPuja ? 0 : (() => {
             let parsedD = Number(session.duration_mins ?? session.durationMins ?? session.duration ?? ((session.duration_seconds || 0) / 60));
             
-            // if duration is invalid or 0, fallback to timestamp difference
+            let finalDuration = 0;
             if (!parsedD || isNaN(parsedD) || parsedD === 0) {
               if (currentStatus === 'completed' || currentStatus === 'expired') {
                 const sTemp = session.activated_at || session.activatedAt || session.start_time;
@@ -158,12 +158,14 @@ export default function AppointmentsPage() {
                 
                 if (start > 0 && end > 0 && !isNaN(start) && !isNaN(end)) {
                   const diff = Math.ceil((end - start) / (1000 * 60));
-                  return isNaN(diff) ? 0 : diff;
+                  finalDuration = isNaN(diff) ? 0 : diff;
                 }
               }
-              return 0; // if timestamps also fail, strictly return 0 not NaN
+            } else {
+              finalDuration = Math.ceil(parsedD);
             }
-            return Math.ceil(parsedD);
+
+            return finalDuration;
           })(),
           review: sessionReview ? {
             rating: Number(sessionReview.rating) || 0,
@@ -237,8 +239,8 @@ export default function AppointmentsPage() {
       const handleNewPujaRequest = (session: any) => {
         const newAppt: Appointment = {
           id: session.id,
-          name: session.user?.name || "Client",
-          avatar: session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.user?.profilePicture || session.user_image || session.user_avatar || session.image,
+          name: session.user?.name || session.client?.user?.name || session.client?.name || "Client",
+          avatar: session.client?.profile_picture || session.client?.avatar || session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.client?.user?.profile_picture || session.client?.user?.avatar || session.user_image || session.user_avatar || session.image,
           service: session.puja?.name || "Puja Service",
           date: session.scheduled_date || session.created_at || new Date().toISOString(),
           status: "pending",
@@ -275,8 +277,8 @@ export default function AppointmentsPage() {
 
         const newAppt: Appointment = {
           id: session.id,
-          name: session.user?.name || "Client",
-          avatar: session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.user?.profilePicture || session.user_image || session.user_avatar || session.image,
+          name: session.user?.name || session.client?.user?.name || session.client?.name || "Client",
+          avatar: session.client?.profile_picture || session.client?.avatar || session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.client?.user?.profile_picture || session.client?.user?.avatar || session.user_image || session.user_avatar || session.image,
           service: "Chat Consultation",
           date: session.created_at || session.createdAt || new Date().toISOString(),
           status: "pending",
@@ -308,8 +310,8 @@ export default function AppointmentsPage() {
 
         const newAppt: Appointment = {
           id: session.id,
-          name: session.user?.name || "Client",
-          avatar: session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.user?.profilePicture || session.user_image || session.user_avatar || session.image,
+          name: session.user?.name || session.client?.user?.name || session.client?.name || "Client",
+          avatar: session.client?.profile_picture || session.client?.avatar || session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.client?.user?.profile_picture || session.client?.user?.avatar || session.user_image || session.user_avatar || session.image,
           service: session.type === 'video' ? "Video Call" : "Voice Call",
           date: session.created_at || session.createdAt || new Date().toISOString(),
           status: "pending",

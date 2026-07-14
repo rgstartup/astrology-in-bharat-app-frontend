@@ -51,6 +51,7 @@ interface SidebarMenuItemProps {
   pathname: string;
   openSubmenu: string | null;
   onToggleSubmenu: (label: string) => void;
+  onNavigate: () => void;
 }
 
 const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
@@ -58,6 +59,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   pathname,
   openSubmenu,
   onToggleSubmenu,
+  onNavigate,
 }) => {
   const isSubmenuOpen = openSubmenu === item.label;
   const isActiveLink = pathname === item.href;
@@ -65,7 +67,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   if (item.onClick) {
     return (
       <button
-        onClick={item.onClick}
+        onClick={() => { item.onClick?.(); onNavigate(); }}
         className="flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-white hover:!bg-[#fd6410] mt-auto"
       >
         <item.icon className="w-5 h-5 shrink-0" />
@@ -78,6 +80,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
     return (
       <Link
         href={item.href}
+        onClick={onNavigate}
         className={cn(
           "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
           isActiveLink
@@ -125,7 +128,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
               return (
                 <button
                   key={subItem.label}
-                  onClick={subItem.onClick}
+                  onClick={() => { subItem.onClick?.(); onNavigate(); }}
                   className="block w-full text-left px-3 py-2 rounded-lg text-sm text-white hover:!bg-[#fd6410] transition-all duration-200"
                 >
                   {subItem.label}
@@ -136,6 +139,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
               <Link
                 key={subItem.label}
                 href={subItem.href}
+                onClick={onNavigate}
                 className={cn(
                   "block px-3 py-2 rounded-lg text-sm text-white hover:!bg-[#fd6410] transition-all duration-200",
                   isSubmenuActive && "bg-[#fd6410] text-white font-medium"
@@ -243,6 +247,9 @@ export const Sidebar: React.FC<SidebarProps> = memo(
                   pathname={pathname}
                   openSubmenu={openSubmenu}
                   onToggleSubmenu={handleToggleSubmenu}
+                  onNavigate={() => {
+                    if (isOpen) toggleSidebar();
+                  }}
                 />
               </div>
             ))}

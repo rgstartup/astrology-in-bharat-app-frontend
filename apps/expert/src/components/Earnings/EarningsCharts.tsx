@@ -120,8 +120,8 @@ export default function EarningsCharts({
                                 data={pieData}
                                 cx="50%"
                                 cy="50%"
-                                innerRadius={60}
-                                outerRadius={80}
+                                innerRadius={75}
+                                outerRadius={95}
                                 paddingAngle={5}
                                 dataKey="amount"
                             >
@@ -134,10 +134,10 @@ export default function EarningsCharts({
                     </ResponsiveContainer>
 
                     {/* Center Overlay for Pie Chart */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                        <span className="text-xs text-gray-400 uppercase font-bold tracking-wider">Total</span>
-                        <span className="text-xl font-bold text-gray-900">
-                            ₹{pieData.reduce((acc, curr) => acc + (curr.amount || 0), 0).toLocaleString('en-IN')}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center mt-1">
+                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">Total</span>
+                        <span className="text-base font-extrabold text-gray-900 truncate w-full px-2" title={`₹${pieData.reduce((acc, curr) => acc + (curr.amount || 0), 0).toLocaleString('en-IN')}`}>
+                            ₹{pieData.reduce((acc, curr) => acc + (curr.amount || 0), 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                         </span>
                     </div>
                 </div>

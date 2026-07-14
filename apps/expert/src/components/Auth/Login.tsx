@@ -97,7 +97,7 @@ const LoginPage: React.FC = () => {
       const response = await fetch(`${CLIENT_API_URL}/public/stats/expert-hub`);
       const json = await response.json();
       if (json.success && json.data) {
-        const experts = json.data.totalExperts ?? 0;
+        const experts = json.data.total_experts ?? json.data.totalExperts ?? 0;
         const services = json.data.totalServices ?? 0;
         
         setStats({

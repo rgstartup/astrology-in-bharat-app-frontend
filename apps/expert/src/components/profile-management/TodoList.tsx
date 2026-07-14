@@ -65,13 +65,12 @@ export default function TodoList({
                             placeholder="Add a new task..."
                             className="flex-1 h-11 px-4 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-sm"
                         />
-                        <Button
+                        <button
                             onClick={handleAdd}
-                            variant="primary"
-                            className="h-11 w-11 p-0 flex items-center justify-center shrink-0 rounded-xl shadow-md hover:shadow-lg transition-all"
+                            className="h-11 w-11 flex items-center justify-center shrink-0 rounded-xl shadow-md hover:shadow-lg transition-all bg-[#fd6410] text-white hover:bg-[#e55a0e] border-0 cursor-pointer"
                         >
-                            <Plus className="w-5 h-5" />
-                        </Button>
+                            <Plus size={24} strokeWidth={2.5} />
+                        </button>
                     </div>
 
                     {/* Todo List */}

@@ -117,7 +117,7 @@ export const ManageConsultations: React.FC = () => {
   const allServices = [...standardServices, ...customServices];
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+    <div className="bg-white rounded-2xl p-6 shadow-sm border border-orange-500">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
@@ -128,7 +128,7 @@ export const ManageConsultations: React.FC = () => {
         </div>
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-sm font-semibold shadow-sm transition-all active:scale-95"
+          className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-sm font-semibold shadow-sm transition-all active:scale-95 shrink-0"
         >
           <Plus className="w-4 h-4" />
           Add Service
@@ -148,7 +148,7 @@ export const ManageConsultations: React.FC = () => {
               className={`relative border rounded-xl p-4 flex flex-col gap-3 hover:shadow-md transition-shadow ${
                 svc.isCustom
                   ? "border-yellow-200 bg-yellow-50/30"
-                  : "border-gray-100 bg-white"
+                  : "border-orange-500 bg-white"
               }`}
             >
               {/* Icon + Name */}

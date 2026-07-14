@@ -40,7 +40,7 @@ export function StatsCards({ stats, columns = 4 }: StatsCardsProps) {
                 return (
                     <div
                         key={`${index}-${stat.tooltipValue}`}
-                        className="group group/card bg-white rounded-xl border border-gray-200 p-4 sm:p-6 shadow-sm hover:shadow-2xl hover:border-[#FF6B00] hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                        className="group group/card bg-white rounded-xl border border-orange-500 p-4 sm:p-6 shadow-sm hover:shadow-2xl hover:border-[#FF6B00] hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer relative overflow-hidden"
                         title={String(stat.tooltipValue || stat.value)}
                     >
                         {/* Hover Background */}

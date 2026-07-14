@@ -98,7 +98,7 @@ export const UpcomingAppointments: React.FC = () => {
           .slice(0, 20) // Show top 20 recent sessions
           .map((s: any) => ({
             id: s.id,
-            name: s.user?.name || "Client",
+            name: s.user?.name || s.client?.user?.name || s.client?.name || "Client",
             service: (s.type || s.session_type || (s.puja_name ? 'Puja' : 'Consultation')).toString().replace('_', ' '),
             date: s.created_at || s.createdAt || new Date().toISOString(),
             status: s.status || "pending",
@@ -124,7 +124,7 @@ export const UpcomingAppointments: React.FC = () => {
   );
 
   return (
-    <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 overflow-hidden">
+    <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-orange-500 overflow-hidden">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-2">

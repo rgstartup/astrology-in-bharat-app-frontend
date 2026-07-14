@@ -128,16 +128,16 @@ export default function EarningsPage() {
           <p className="text-gray-500 mt-1">Detailed breakdown of your earnings and service performance</p>
         </div>
 
-        <div className="flex items-center gap-3 mt-4 md:mt-0 shrink-0 flex-wrap">
-          <div className="relative group" ref={dropdownRef}>
+        <div className="flex items-center gap-2 sm:gap-3 mt-4 md:mt-0 shrink-0 flex-nowrap w-full sm:w-auto">
+          <div className="relative group flex-1 sm:flex-none" ref={dropdownRef}>
             <Button
               variant="outline"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="justify-center whitespace-nowrap bg-white border-gray-200 hover:border-orange-400 text-gray-700 shadow-sm rounded-xl px-4 py-2 font-semibold text-sm cursor-pointer transition-all"
+              className="w-full justify-center whitespace-nowrap bg-white border-gray-200 hover:border-orange-400 text-gray-700 shadow-sm rounded-xl px-2 sm:px-4 py-2 font-semibold text-xs sm:text-sm cursor-pointer transition-all"
             >
-              <CalendarIcon className="w-4 h-4 text-orange-500 shrink-0 mr-1.5" />
-              <span>{timeRangeLabels[timeRange]}</span>
-              <ChevronDown className="w-4 h-4 text-gray-400 shrink-0 ml-1.5" />
+              <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 shrink-0 mr-1 sm:mr-1.5" />
+              <span className="truncate">{timeRangeLabels[timeRange]}</span>
+              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 shrink-0 ml-1 sm:ml-1.5" />
             </Button>
 
             <div className={`absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 z-50 transition-all ${isDropdownOpen ? 'opacity-100 visible' : 'invisible opacity-0 md:group-hover:opacity-100 md:group-hover:visible'}`}>
@@ -166,10 +166,10 @@ export default function EarningsPage() {
             disabled={isExporting}
             loading={isExporting}
             variant="primary"
-            className="justify-center whitespace-nowrap shadow-md rounded-xl px-5 py-2 text-sm font-semibold cursor-pointer transition-all"
+            className="flex-1 sm:flex-none w-full justify-center whitespace-nowrap shadow-md rounded-xl px-2 sm:px-5 py-2 text-xs sm:text-sm font-semibold cursor-pointer transition-all"
           >
-            <Download className={`w-4 h-4 shrink-0 mr-1.5 ${isExporting ? 'animate-bounce' : ''}`} />
-            <span>{isExporting ? 'Exporting...' : 'Export PDF'}</span>
+            <Download className={`w-3 h-3 sm:w-4 sm:h-4 shrink-0 mr-1 sm:mr-1.5 ${isExporting ? 'animate-bounce' : ''}`} />
+            <span className="truncate">{isExporting ? 'Exporting...' : 'Export PDF'}</span>
           </Button>
         </div>
       </header>

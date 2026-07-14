@@ -31,20 +31,20 @@ export const ConsultationRatings: React.FC<ConsultationRatingsProps> = ({
     }
 
     return (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-black">
-            <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-semibold flex items-center gap-2">
-                    <div className="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center mr-1">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-orange-500 text-black">
+            <div className="flex justify-between items-start gap-4 mb-4">
+                <h3 className="text-xl font-semibold flex items-center gap-2 flex-1 min-w-0">
+                    <div className="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center mr-1 shrink-0">
                         <Star className="w-5 h-5 text-white" />
                     </div>
-                    Consultation Ratings
+                    <span className="break-words leading-tight">Consultation Ratings</span>
                 </h3>
                 {onViewAllClick && (
                     <Button
                         onClick={onViewAllClick}
                         variant="ghost"
                         size="sm"
-                        className="text-orange-600 font-medium hover:underline hover:bg-transparent"
+                        className="text-orange-600 font-medium hover:underline hover:bg-transparent whitespace-nowrap shrink-0"
                     >
                         View All
                     </Button>

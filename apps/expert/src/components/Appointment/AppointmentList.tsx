@@ -288,261 +288,247 @@ export default function AppointmentList({
     onReschedule,
     onUpdate,
 }: AppointmentListProps) {
-    // Utility function for classnames
     const cn = (...classes: (string | undefined | null | boolean)[]) =>
         classes.filter(Boolean).join(" ");
 
-    const statusColors: Record<Appointment["status"], string> = {
-        confirmed: "bg-green-100 text-green-600",
-        pending: "bg-orange-100 text-orange-600 border-orange-200",
-        active: "bg-blue-100 text-blue-600 border-blue-200",
-        completed: "bg-gray-100 text-gray-600 border-gray-200",
-        cancelled: "bg-red-100 text-red-600 border-red-200",
-        expired: "bg-orange-100 text-orange-600 border-orange-200",
-        on_hold: "bg-purple-100 text-purple-600 border-purple-200",
-        rejected: "bg-red-50 text-red-400 border-red-100",
-        accepted: "bg-emerald-100 text-emerald-600 border-emerald-200",
+    if (appointments.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
+                <div className="w-20 h-20 rounded-full bg-orange-50 flex items-center justify-center mb-4">
+                    <Clock className="w-9 h-9 text-orange-300" />
+                </div>
+                <p className="text-gray-400 text-sm font-medium">No appointments found</p>
+            </div>
+        );
+    }
+
+    const getStatusStyle = (status: string, terminatedBy?: string) => {
+        if (terminatedBy === 'admin') return { label: 'Terminated', bg: 'bg-red-100', text: 'text-red-600', dot: 'bg-red-500' };
+        const map: Record<string, any> = {
+            pending:   { label: 'Waiting',   bg: 'bg-amber-100',   text: 'text-amber-700',  dot: 'bg-amber-500' },
+            active:    { label: 'Live Now', bg: 'bg-green-100',  text: 'text-green-700',  dot: 'bg-green-500 animate-pulse' },
+            completed: { label: 'Completed', bg: 'bg-blue-50',     text: 'text-blue-600',   dot: 'bg-blue-400' },
+            expired:   { label: 'Expired',   bg: 'bg-gray-100',    text: 'text-gray-500',   dot: 'bg-gray-400' },
+            cancelled: { label: 'Cancelled', bg: 'bg-red-50',      text: 'text-red-500',    dot: 'bg-red-400' },
+            rejected:  { label: 'Rejected',  bg: 'bg-red-50',      text: 'text-red-400',    dot: 'bg-red-300' },
+            accepted:  { label: 'Accepted',  bg: 'bg-emerald-100', text: 'text-emerald-700',dot: 'bg-emerald-500' },
+            confirmed: { label: 'Confirmed', bg: 'bg-green-100',   text: 'text-green-700',  dot: 'bg-green-500' },
+            on_hold:   { label: 'On Hold',   bg: 'bg-purple-100',  text: 'text-purple-600', dot: 'bg-purple-500' },
+        };
+        return map[status] || { label: status, bg: 'bg-gray-100', text: 'text-gray-500', dot: 'bg-gray-400' };
+    };
+
+    const getServiceIcon = (service: string) => {
+        if (service.toLowerCase().includes('chat')) return <MessageSquare className="w-4 h-4" />;
+        if (service.toLowerCase().includes('video')) return <Video className="w-4 h-4" />;
+        if (service.toLowerCase().includes('voice') || service.toLowerCase().includes('call')) return <RefreshCw className="w-4 h-4" />;
+        return <Star className="w-4 h-4" />;
     };
 
     return (
-        <section aria-labelledby="appointment-list-heading" className="space-y-4">
-            <h2 id="appointment-list-heading" className="sr-only">
-                Appointment List
-            </h2>
+        <section className="space-y-4">
+            {/* Desktop Table View (Hidden on mobile) */}
+            <div className="hidden lg:block bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden">
+                <table className="w-full text-left border-collapse">
+                    <thead>
+                        <tr className="bg-gray-50/50 text-gray-500 text-xs uppercase tracking-wider font-bold">
+                            <th className="px-6 py-4 font-bold border-b border-gray-100">Client</th>
+                            <th className="px-6 py-4 font-bold border-b border-gray-100">Service Details</th>
+                            <th className="px-6 py-4 font-bold border-b border-gray-100 text-right">Status & Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {appointments.map((appt) => {
+                            const st = getStatusStyle(appt.status, appt.terminatedBy);
+                            const isPending = appt.status === 'pending';
+                            const isActive = appt.status === 'active';
+                            const isCompleted = appt.status === 'completed';
 
-            {/* Desktop Table Style Cards */}
-            <div className="hidden sm:block bg-white rounded-2xl shadow-lg border border-gray-100 divide-y divide-gray-100">
-                {appointments.map((appt) => (
-                    <div
-                        key={appt.id}
-                        className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
-                    >
-                        {/* Left Section: Client Info & Details */}
-                        <div className="flex items-start lg:items-center gap-5 flex-1 min-w-0">
-                            {/* Avatar */}
-                            <div className="shrink-0 w-12 h-12 rounded-full bg-orange-600 text-white flex items-center justify-center font-bold text-2xl ring-2 ring-orange-500 overflow-hidden shadow-sm">
-                                {appt.avatar ? (
-                                    <img
-                                        src={appt.avatar || "/images/dummy-expert.jpg"}
-                                        alt={appt.name}
-                                        className="w-full h-full object-cover"
-                                        onError={(e) => {
-                                            // Fallback if image fails to load
-                                            (e.currentTarget as any).src = "/images/dummy-expert.jpg";
-                                        }}
-                                    />
-                                ) : (
-                                    appt.name.charAt(0)
-                                )}
-                            </div>
-
-                            {/* Text Content */}
-                            <div className="flex-1 min-w-0">
-                                <h3 className="text-xl md:text-xl font-bold text-gray-900 truncate">
-                                    {appt.name}
-                                </h3>
-                                <p className="text-sm font-medium text-gray-600 truncate">
-                                    {appt.service}
-                                </p>
-                                <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
-                                    <Clock className="w-4 h-4 text-gray-400" />
-                                    <span>
-                                        {format(new Date(appt.date), "dd MMM yyyy 'at' hh:mm a")}
-                                    </span>
-                                </div>
-                                <div className="flex flex-wrap items-center gap-2 mt-3">
-                                    <span
-                                        className={cn(
-                                            "inline-block px-3 py-1 text-xs rounded-full font-medium shadow-sm capitalize border border-current",
-                                            appt.terminatedBy === 'admin' ? "bg-red-100 text-red-600 border-red-200" : statusColors[appt.status]
-                                        )}
-                                    >
-                                        {appt.terminatedBy === 'admin' ? '🛑 Terminated by Admin' : (appt.status === 'pending' ? '⏳ Waiting for you' : appt.status === 'active' ? '🟢 Live Now' : appt.status)}
-                                    </span>
-                                    {appt.status === 'pending' && appt.expiresAt && (
-                                        <CountdownTimer expiresAt={appt.expiresAt} />
-                                    )}
-                                    {appt.isFree && (
-                                        <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest border border-green-200 animate-pulse">
-                                            🎁 Free Consultation ({appt.freeMinutes}m)
-                                        </span>
-                                    )}
-                                    <span className="text-xs bg-purple-100 text-purple-600 px-3 py-1 rounded-full font-medium">
-                                        {appt.type === "new" ? "🆕 New Client" : "Follow-up"}
-                                    </span>
-                                    {appt.reminder && (
-                                        <span className="text-xs bg-blue-100 text-blue-600 px-3 py-1 rounded-full font-medium border border-blue-200">
-                                            🔔 Reminder Sent
-                                        </span>
-                                    )}
-                                </div>
-                                {appt.pujaId && (
-                                    <div className="mt-3 flex flex-wrap gap-2">
-                                        <span className="bg-orange-50 text-orange-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase border border-orange-200 flex items-center gap-1.5 shadow-sm transition-all hover:shadow-md">
-                                            <LucideVideo className="w-3.5 h-3.5" />
-                                            {appt.pujaMode === 'online' ? 'Online Ritual' : (appt.pujaMode === 'home_visit_with' ? 'Home Visit (With Samagri)' : 'Home Visit (Basic)')}
-                                        </span>
-                                        <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase border border-emerald-200 flex items-center gap-1 shadow-sm transition-all hover:shadow-md">
-                                            ₹{appt.price}
-                                        </span>
-                                    </div>
-                                )}
-                                {appt.userMessage && (
-                                    <div className="mt-4 p-4 bg-orange-50/70 rounded-2xl border border-orange-100 italic text-[13px] text-gray-700 relative group overflow-hidden shadow-sm transition-all hover:shadow-md">
-                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-orange-400 group-hover:w-1.5 transition-all"></div>
-                                        <LucideMessageSquare className="w-4 h-4 text-orange-400 mb-2 opacity-50" />
-                                        " {appt.userMessage} "
-                                    </div>
-                                )}
-                                {appt.expertMessage && (
-                                    <div className="mt-2 p-4 bg-blue-50/70 rounded-2xl border border-blue-100 italic text-[13px] text-blue-700 relative group overflow-hidden shadow-sm transition-all hover:shadow-md">
-                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-400 group-hover:w-1.5 transition-all"></div>
-                                        <span className="text-[10px] font-black uppercase tracking-wider mb-2 block opacity-60">Expert Response</span>
-                                        " {appt.expertMessage} "
-                                    </div>
-                                )}
-                                {appt.askExpertForDate && appt.status === 'pending' && (
-                                    <div className="mt-3 p-3 bg-orange-50 rounded-xl border border-dashed border-orange-300 flex items-center gap-3">
-                                        <div className="shrink-0 w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center animate-bounce">
-                                            <LucideClock className="w-4 h-4 text-orange-600" />
-                                        </div>
-                                        <p className="text-[11px] font-black text-orange-800 uppercase tracking-wider leading-tight">
-                                            User is requesting you to <br/> propose a date & time
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Right Section: Actions */}
-                        <div className="shrink-0 flex flex-col sm:flex-row gap-3 w-full lg:w-auto mt-4 lg:mt-0">
-                            {appt.pujaId ? (
-                                <PujaActions appt={appt} onUpdate={onUpdate} />
-                            ) : (
-                                <StandardActions appt={appt} onUpdate={onUpdate} onReschedule={onReschedule} />
-                            )}
-                            {(appt.status === 'completed' || appt.status === 'expired') && (
-                                <div className="flex flex-col items-end gap-2">
-                                    <div className="flex items-center gap-4 bg-gray-50 px-5 py-3 rounded-xl border border-dashed border-gray-300">
-                                        <div className="flex flex-col items-end">
-                                            <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">Status</span>
-                                            <span className="text-sm font-bold text-gray-700">
-                                                {appt.terminatedBy === 'admin' ? '🛑 TERMINATED BY ADMIN' : (appt.status === 'completed' ? '✅ COMPLETED' : '⌛ EXPIRED')}
-                                            </span>
-                                        </div>
-                                        {appt.status === 'completed' && appt.durationMins !== undefined && (
-                                            <>
-                                                <div className="w-px h-8 bg-gray-200"></div>
-                                                <div className="flex flex-col items-end">
-                                                    <span className="text-[10px] font-black opacity-40 uppercase tracking-widest">Duration</span>
-                                                    <span className="text-sm font-bold text-gray-700 flex items-center gap-1">
-                                                        <Clock className="w-3 h-3 text-[#fd6410]" /> {appt.durationMins} min
-                                                    </span>
+                            return (
+                                <tr key={appt.id} className="hover:bg-gray-50/50 transition-colors group">
+                                    {/* Client Column */}
+                                    <td className="px-6 py-5 align-top">
+                                        <div className="flex items-center gap-4">
+                                            <div className="relative shrink-0">
+                                                <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-sm ring-1 ring-gray-900/5">
+                                                    {appt.avatar ? (
+                                                        <img src={appt.avatar} alt={appt.name} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as any).src = "/images/dummy-expert.jpg"; }} />
+                                                    ) : (
+                                                        <div className="w-full h-full bg-gradient-to-br from-[#fd6410] to-orange-400 flex items-center justify-center text-white font-bold text-lg">
+                                                            {appt.name.charAt(0).toUpperCase()}
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            </>
-                                        )}
-                                    </div>
-
-                                    {appt.review && appt.review.rating > 0 && (
-                                        <div className="flex items-center gap-1.5 bg-orange-50 px-3 py-1.5 rounded-lg border border-orange-100">
-                                            <div className="flex items-center gap-0.5">
-                                                {[1, 2, 3, 4, 5].map((s) => (
-                                                    <Star
-                                                        key={s}
-                                                        className={`w-3 h-3 ${s <= (appt.review?.rating || 0) ? "text-yellow-500 fill-yellow-500" : "text-gray-200"}`}
-                                                    />
-                                                ))}
                                             </div>
-                                            <span className="text-[10px] font-bold text-orange-700">{appt.review.rating}/5</span>
+                                            <div>
+                                                <div className="flex items-center gap-2">
+                                                    <p className="font-bold text-gray-900 text-base">{appt.name}</p>
+                                                    {appt.type === "new" && (
+                                                        <span className="bg-blue-100 text-blue-700 text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full">New</span>
+                                                    )}
+                                                </div>
+                                                {appt.isFree && (
+                                                    <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">
+                                                        ?? Free ({appt.freeMinutes}m)
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                ))}
+                                    </td>
+
+                                    {/* Service Details Column */}
+                                    <td className="px-6 py-5 align-top">
+                                        <div className="flex flex-col gap-1.5">
+                                            <div className="flex items-center gap-2 text-[#fd6410] font-semibold text-sm">
+                                                {getServiceIcon(appt.service)}
+                                                {appt.service}
+                                            </div>
+                                            <div className="flex items-center gap-1.5 text-gray-500 text-xs">
+                                                <Clock className="w-3.5 h-3.5 opacity-70" />
+                                                {format(new Date(appt.date), "dd MMM yyyy, hh:mm a")}
+                                            </div>
+                                            
+                                            {/* Extra details (Puja / Messages) */}
+                                            {appt.pujaId && (
+                                                <div className="flex gap-2 mt-2">
+                                                    <span className="text-[10px] font-semibold text-orange-700 bg-orange-50 border border-orange-100 px-2 py-1 rounded-md flex items-center gap-1">
+                                                        <LucideVideo className="w-3 h-3" />
+                                                        {appt.pujaMode === 'online' ? 'Online Ritual' : 'Home Visit'}
+                                                    </span>
+                                                    {appt.price && (
+                                                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-md">
+                                                            ?{appt.price}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
+                                            {appt.userMessage && (
+                                                <div className="mt-2 text-xs text-gray-500 italic border-l-2 border-orange-200 pl-2">
+                                                    "{appt.userMessage}"
+                                                </div>
+                                            )}
+                                        </div>
+                                    </td>
+
+                                    {/* Status & Actions Column */}
+                                    <td className="px-6 py-5 align-top text-right">
+                                        <div className="flex flex-col items-end gap-3">
+                                            {/* Status Badge */}
+                                            <div className="flex items-center justify-end gap-3">
+                                                {isPending && appt.expiresAt && (
+                                                    <div className="scale-90 origin-right"><CountdownTimer expiresAt={appt.expiresAt} /></div>
+                                                )}
+                                                <span className={cn("inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold", st.bg, st.text)}>
+                                                    <span className={cn("w-1.5 h-1.5 rounded-full", st.dot)} />
+                                                    {st.label}
+                                                </span>
+                                            </div>
+
+                                            {/* Duration & Rating (If Completed) */}
+                                            {isCompleted && (
+                                                <div className="flex items-center gap-3">
+                                                    {appt.durationMins !== undefined && appt.durationMins > 0 && (
+                                                        <span className="flex items-center gap-1 text-gray-600 font-semibold text-xs bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">
+                                                            <Clock className="w-3 h-3" />
+                                                            {appt.durationMins} min
+                                                        </span>
+                                                    )}
+                                                    {appt.review && appt.review.rating > 0 && (
+                                                        <span className="flex items-center gap-1 text-xs font-bold text-yellow-700 bg-yellow-50 border border-yellow-100 px-2 py-1 rounded-lg">
+                                                            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                                                            {appt.review.rating}/5
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {/* Actions */}
+                                            {!(isCompleted || appt.status === 'expired' || appt.status === 'cancelled' || appt.status === 'rejected') && (
+                                                <div className="mt-1">
+                                                    {appt.pujaId ? (
+                                                        <PujaActions appt={appt} onUpdate={onUpdate} />
+                                                    ) : (
+                                                        <StandardActions appt={appt} onUpdate={onUpdate} onReschedule={onReschedule} />
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
             </div>
 
-            {/* Mobile Cards */}
-            <div className="space-y-4 sm:hidden">
-                {appointments.map((appt) => (
-                    <div
-                        key={appt.id}
-                        className="bg-white p-5 rounded-2xl shadow-lg border border-gray-100 space-y-3 hover:shadow-xl transition-all"
-                    >
-                        <div>
-                            <div className="flex justify-between items-start">
-                                <h3 className="font-semibold text-gray-900">{appt.name}</h3>
-                                <div className="flex flex-col items-end gap-1">
-                                    {appt.status === 'pending' && appt.expiresAt && (
-                                        <CountdownTimer expiresAt={appt.expiresAt} />
-                                    )}
-                                    {appt.isFree && (
-                                        <span className="bg-green-50 text-green-600 px-2 py-0.5 rounded-[4px] text-[8px] font-black uppercase tracking-widest border border-green-100">
-                                            Free ({appt.freeMinutes}m)
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                            <p className="text-sm text-gray-600">{appt.service}</p>
-                            <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
-                                <Clock className="w-4 h-4" />
-                                <span>
-                                    {format(new Date(appt.date), "dd MMM yyyy, hh:mm a")}
-                                </span>
-                            </div>
-                        </div>
+            {/* Mobile Stacked View (Visible only on mobile/tablet) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
+                {appointments.map((appt) => {
+                    const st = getStatusStyle(appt.status, appt.terminatedBy);
+                    const isPending = appt.status === 'pending';
+                    const isActive = appt.status === 'active';
+                    const isCompleted = appt.status === 'completed';
 
-                        <div className="flex flex-wrap gap-2">
-                            <span
-                                className={cn(
-                                    "px-3 py-1 text-xs rounded-full font-medium shadow-sm",
-                                    appt.terminatedBy === 'admin' ? "bg-red-100 text-red-600 border-red-200" : statusColors[appt.status]
-                                )}
-                            >
-                                {appt.terminatedBy === 'admin' ? 'Terminated by Admin' : appt.status}
-                            </span>
-                            <span className="text-xs text-gray-500">
-                                {appt.type === "new" ? "🆕 New" : "🔄 Follow-up"}
-                            </span>
-                            {appt.reminder && (
-                                <span className="text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-medium border border-blue-200">
-                                    🔔 Reminder Sent
-                                </span>
-                            )}
-                        </div>
-
-                        {/* Actions stacked */}
-                        <div className="flex flex-col gap-2">
-                            {appt.pujaId ? (
-                                <PujaActions appt={appt} onUpdate={onUpdate} />
-                            ) : (
-                                <StandardActions appt={appt} onUpdate={onUpdate} onReschedule={onReschedule} />
-                            )}
-                            {(appt.status === 'completed' || appt.status === 'expired') && (
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center text-xs font-bold bg-gray-50 px-4 py-3 rounded-xl border border-dashed border-gray-200">
-                                        <span className="opacity-60">{appt.terminatedBy === 'admin' ? '🛑 TERMINATED BY ADMIN' : (appt.status === 'completed' ? '✅ COMPLETED' : '⌛ EXPIRED')}</span>
-                                        {appt.status === 'completed' && appt.durationMins !== undefined && (
-                                            <span className="text-[#fd6410]">{appt.durationMins} MINS</span>
+                    return (
+                        <div key={appt.id} className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-4 relative overflow-hidden">
+                            {/* Accent Line */}
+                            <div className={cn("absolute top-0 left-0 right-0 h-1", st.dot.replace(' rounded-full', '').replace(' animate-pulse', ''))} />
+                            
+                            {/* Header: Avatar & Name */}
+                            <div className="flex justify-between items-start pt-1">
+                                <div className="flex gap-3 items-center">
+                                    <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-sm">
+                                        {appt.avatar ? (
+                                            <img src={appt.avatar} alt={appt.name} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as any).src = "/images/dummy-expert.jpg"; }} />
+                                        ) : (
+                                            <div className="w-full h-full bg-gradient-to-br from-[#fd6410] to-orange-400 flex items-center justify-center text-white font-bold text-lg">
+                                                {appt.name.charAt(0).toUpperCase()}
+                                            </div>
                                         )}
                                     </div>
-                                    {appt.review && appt.review.rating > 0 && (
-                                        <div className="flex items-center justify-center gap-1 bg-orange-50/50 py-1.5 rounded-lg">
-                                            {[1, 2, 3, 4, 5].map((s) => (
-                                                <Star
-                                                    key={s}
-                                                    className={`w-2.5 h-2.5 ${s <= (appt.review?.rating || 0) ? "text-yellow-500 fill-yellow-500" : "text-gray-200"}`}
-                                                />
-                                            ))}
-                                            <span className="text-[10px] font-bold text-orange-700 ml-1">{appt.review.rating}/5</span>
-                                        </div>
+                                    <div>
+                                        <h3 className="font-bold text-gray-900 text-lg">{appt.name}</h3>
+                                        <span className={cn("inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded text-[10px] font-bold", st.bg, st.text)}>
+                                            <span className={cn("w-1.5 h-1.5 rounded-full", st.dot)} />
+                                            {st.label}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Details */}
+                            <div className="bg-gray-50 rounded-2xl p-4 flex flex-col gap-2">
+                                <div className="flex items-center gap-2 text-[#fd6410] font-bold text-sm">
+                                    {getServiceIcon(appt.service)}
+                                    {appt.service}
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="flex items-center gap-1.5 text-gray-500 text-xs font-medium">
+                                        <Clock className="w-3.5 h-3.5 opacity-70" />
+                                        {format(new Date(appt.date), "dd MMM, hh:mm a")}
+                                    </span>
+                                    {isCompleted && appt.durationMins !== undefined && appt.durationMins > 0 && (
+                                        <span className="font-bold text-gray-700 text-xs">{appt.durationMins} min</span>
+                                    )}
+                                </div>
+                                {isPending && appt.expiresAt && (
+                                    <div className="mt-1"><CountdownTimer expiresAt={appt.expiresAt} /></div>
+                                )}
+                            </div>
+
+                            {/* Actions */}
+                            {!(isCompleted || appt.status === 'expired' || appt.status === 'cancelled' || appt.status === 'rejected') && (
+                                <div className="mt-auto pt-2 border-t border-gray-100">
+                                    {appt.pujaId ? (
+                                        <PujaActions appt={appt} onUpdate={onUpdate} />
+                                    ) : (
+                                        <StandardActions appt={appt} onUpdate={onUpdate} onReschedule={onReschedule} />
                                     )}
                                 </div>
                             )}
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </section>
     );
