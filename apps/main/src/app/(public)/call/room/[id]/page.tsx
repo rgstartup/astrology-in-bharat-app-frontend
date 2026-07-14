@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import * as LucideIcons from "lucide-react";
 import { useCallLogic } from "./useCallLogic";
 import FreeEndPromptModal from "./free-end-prompt-modal.component";
+import SessionSummaryModal from "../../../chat/room/[id]/session-summary-modal.component";
 
 const { PhoneOff, Mic, MicOff, Video, VideoOff, Volume2, User, Loader2, Star, X, Clock } = LucideIcons as any;
 
@@ -15,7 +16,7 @@ export default function CallRoomPage() {
   const {
     status, isMuted, isCameraOff, callDuration, sessionData, callType,
     showRatingModal, setShowRatingModal, reviewRating, setReviewRating,
-    reviewComment, setReviewComment, reviewSubmitting, reviewSubmitted,
+    reviewComment, setReviewComment, reviewSubmitting, reviewSubmitted, setReviewSubmitted,
     localVideoRef, remoteVideoRef, handleEndCall, toggleMute, toggleCamera,
     handleSubmitReview, toggleSpeaker, isSpeakerOn,
     showFreeEndPrompt, freeLimitData, continuationTimer, endReason, socket
@@ -48,9 +49,17 @@ export default function CallRoomPage() {
           {status === "connected" && <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />}
           <span className={`text-xs font-black uppercase tracking-[0.2em] ${status === 'connected' ? 'text-primary' : 'text-white/60'}`}>
             {status === "connected" ? (
-              <span className="flex items-center gap-2">
-                <Clock className="w-3 h-3" />
-                {statusLabel[status]}
+              <span className="flex items-center gap-4">
+                <span className="flex items-center gap-1.5 border-r border-white/20 pr-4">
+                  <span className="text-[9px] text-white/50">ELAPSED</span>
+                  <Clock className="w-3 h-3" />
+                  {statusLabel[status]}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="text-[9px] text-white/50">{sessionData?.is_free ? 'FREE TIME' : 'TIME LEFT'}</span>
+                  <Clock className="w-3 h-3 text-primary" />
+                  <span className="text-primary">{formatDuration(Math.max(0, (sessionData?.max_duration_seconds || 300) - callDuration))}</span>
+                </span>
               </span>
             ) : statusLabel[status]}
           </span>
@@ -221,60 +230,21 @@ export default function CallRoomPage() {
         🔒 256-Bit Encrypted Session
       </div>
 
-      {showRatingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-          <div className="w-full max-w-md bg-white border-2 border-orange rounded-[2rem] p-8 flex flex-col gap-6 animate-in zoom-in-95 duration-300 shadow-2xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">
-                  {endReason ? `Call Ended: ${endReason.message}` : "Call Ended"}
-                </p>
-                <h2 className="text-xl font-black text-gray-900">
-                  {endReason?.reason === 'insufficient_balance' ? "Low Balance" : "Rate your Experience"}
-                </h2>
-              </div>
-              <button onClick={() => { setShowRatingModal(false); router.push("/"); }} className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all">
-                <X className="w-4 h-4 text-gray-500" />
-              </button>
-            </div>
-
-            {sessionData?.expert?.user?.name && (
-              <p className="text-sm text-gray-600 -mt-3 font-bold">
-                Your consultation with <span className="text-orange font-black">{sessionData.expert.user.name}</span>
-              </p>
-            )}
-
-            <div className="flex justify-center gap-3">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button key={star} onClick={() => setReviewRating(star)} className="transition-all hover:scale-110 active:scale-95">
-                  <Star className={`w-10 h-10 transition-colors ${star <= reviewRating ? "fill-yellow-400 text-yellow-400" : "text-gray-200 fill-transparent"}`} />
-                </button>
-              ))}
-            </div>
-
-            <textarea
-              value={reviewComment}
-              onChange={(e) => setReviewComment(e.target.value)}
-              placeholder="Share your experience (optional)..."
-              rows={3}
-              className="w-full bg-orange-50 border border-orange-100 rounded-2xl px-4 py-3 text-gray-900 text-sm placeholder:text-gray-400 outline-none focus:border-orange focus:ring-1 focus:ring-orange transition-all font-medium"
-            />
-
-            <div className="flex gap-3">
-              <button onClick={() => { setShowRatingModal(false); router.push("/"); }} className="flex-1 py-3 rounded-xl border-2 border-gray-200 text-gray-500 hover:bg-gray-50 text-xs font-bold uppercase tracking-widest transition-all">
-                Skip
-              </button>
-              <button
-                onClick={handleSubmitReview}
-                disabled={reviewSubmitting || reviewSubmitted || reviewRating === 0}
-                className="flex-1 py-3 rounded-xl bg-orange text-white font-black text-sm uppercase tracking-widest disabled:opacity-50 hover:shadow-lg hover:-translate-y-1 transition-all"
-              >
-                {reviewSubmitted ? "✅ Submitted!" : reviewSubmitting ? "Submitting..." : "Submit Review"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <SessionSummaryModal
+          showModal={showRatingModal}
+          isDarkMode={false}
+          sessionSummary={endReason || sessionData}
+          freeMinutes={sessionData?.free_minutes || 0}
+          reviewRating={reviewRating}
+          setReviewRating={setReviewRating}
+          reviewComment={reviewComment}
+          setReviewComment={setReviewComment}
+          reviewSubmitted={reviewSubmitted}
+          setReviewSubmitted={setReviewSubmitted}
+          sessionId={sessionData?.id || null}
+          expertData={sessionData?.expert}
+          router={router}
+      />
 
       <FreeEndPromptModal
         showFreeEndPrompt={showFreeEndPrompt}

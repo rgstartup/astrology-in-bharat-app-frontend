@@ -23,6 +23,7 @@ export default function ExpertVideoCallPage() {
     const [isCameraOff, setIsCameraOff] = useState(false);
     const [callDuration, setCallDuration] = useState(0);
     const [sessionData, setSessionData] = useState<any>(null);
+    const sessionDataRef = useRef<any>(null);
     const [showSummary, setShowSummary] = useState(false);
     const [summaryData, setSummaryData] = useState<any>(null);
     const [hasRemoteTrack, setHasRemoteTrack] = useState(false);
@@ -38,7 +39,7 @@ export default function ExpertVideoCallPage() {
         hasConnectedRef.current = true;
 
         const acceptAndConnect = async () => {
-            const [data, error] = await api.post<any>('/call/accept', { sessionId: parseInt(sessionId) });
+            const [data, error] = await api.post<any>('/call/accept', { sessionId });
             
             if (error) {
                 console.error('[ExpertVideo] ❌ Error:', error);
@@ -48,7 +49,8 @@ export default function ExpertVideoCallPage() {
             }
 
             setSessionData(data?.session);
-            callSocket.emit('join_call_room', { sessionId: parseInt(sessionId) });
+            sessionDataRef.current = data?.session;
+            callSocket.emit('join_call_room', { sessionId });
 
             setStatus('connecting');
             await initVideoRoom(data?.token, data?.roomName);
@@ -135,12 +137,18 @@ export default function ExpertVideoCallPage() {
         });
 
         room.on('participantDisconnected', (participant: any) => {
-            handleCallEnded();
+            if (remoteVideoRef.current) {
+                remoteVideoRef.current.innerHTML = '';
+            }
+            toast.warning("Client disconnected. Waiting for them to rejoin...");
+            setHasRemoteTrack(false);
         });
 
         room.on('disconnected', (room: any, error: any) => {
             localTracksRef.current.forEach((t: any) => t.stop?.());
-            handleCallEnded();
+            if (error) {
+                console.error('[ExpertVideo] Room disconnected with error:', error);
+            }
         });
     };
 
@@ -163,7 +171,13 @@ export default function ExpertVideoCallPage() {
 
     const startTimer = () => {
         if (timerRef.current) return;
-        timerRef.current = setInterval(() => setCallDuration(d => d + 1), 1000);
+        const start_time = sessionDataRef.current?.start_time;
+        const startMs = start_time ? new Date(start_time).getTime() : Date.now();
+        
+        setCallDuration(Math.floor((Date.now() - startMs) / 1000));
+        timerRef.current = setInterval(() => {
+            setCallDuration(Math.floor((Date.now() - startMs) / 1000));
+        }, 1000);
     };
 
     const handleCallEnded = (data?: any) => {
@@ -189,14 +203,14 @@ export default function ExpertVideoCallPage() {
 
     const handleEndCall = async () => {
         const [data, error] = await api.post<any>(`/call/end`, { 
-            sessionId: parseInt(sessionId),
+            sessionId,
             endedBy: 'EXPERT',
             reason: 'Expert clicked end button'
         });
         if (error) {
             console.error('[ExpertVideo] Failed to end call on backend', getErrorMessage(error));
         }
-        callSocket.emit('end_call', { sessionId: parseInt(sessionId) });
+        callSocket.emit('end_call', { sessionId });
         handleCallEnded(data);
     };
 
@@ -228,13 +242,31 @@ export default function ExpertVideoCallPage() {
             <div className="flex items-center justify-between px-6 py-4 bg-black/40 backdrop-blur-md border-b border-white/5 z-10">
                 <div>
                     <p className="text-[10px] text-white/30 font-black uppercase tracking-widest">Video Call</p>
-                    <h1 className="text-lg font-black">{sessionData?.user?.name || 'Client'}</h1>
+                    <h1 className="text-lg font-black">{sessionData?.client?.user?.name || sessionData?.user?.name || 'Client'}</h1>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-6">
                     {(status === 'accepting' || status === 'connecting') && (
                         <span className="text-xs font-bold text-white/40 uppercase tracking-widest animate-pulse">
                             {status === 'accepting' ? 'Accepting...' : 'Connecting...'}
                         </span>
+                    )}
+                    {status === 'connected' && (
+                        <div className="flex items-center gap-4 bg-black/30 px-4 py-2 rounded-full border border-white/10">
+                            <div className="flex items-center gap-2 border-r border-white/20 pr-4">
+                                <Clock className="w-4 h-4 text-white/50" />
+                                <div className="flex flex-col">
+                                    <span className="text-[8px] text-white/50 font-black uppercase tracking-widest">Elapsed</span>
+                                    <span className="text-sm font-black">{formatDuration(callDuration)}</span>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4 text-primary" />
+                                <div className="flex flex-col">
+                                    <span className="text-[8px] text-primary/70 font-black uppercase tracking-widest">{sessionData?.is_free ? 'Free Time' : 'Time Left'}</span>
+                                    <span className="text-sm font-black text-primary">{formatDuration(Math.max(0, (sessionData?.max_duration_seconds || 300) - callDuration))}</span>
+                                </div>
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>
@@ -252,7 +284,7 @@ export default function ExpertVideoCallPage() {
                     <div ref={remoteVideoRef as any} className="w-full h-full" />
                     <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10 z-50">
                         <span className="text-white text-xs font-bold">
-                            {sessionData?.user?.name || 'Client'}
+                            {sessionData?.client?.user?.name || sessionData?.user?.name || 'Client'}
                         </span>
                     </div>
                 </div>
@@ -310,7 +342,7 @@ export default function ExpertVideoCallPage() {
             <SummaryModal 
                 isOpen={showSummary && !!summaryData} 
                 data={(() => {
-                    if (typeof summaryData === 'object') {
+                    if (summaryData && typeof summaryData === 'object') {
                         return {
                             totalAmount: summaryData.split?.totalCost || 0,
                             platformFee: summaryData.split?.platformFee || 0,

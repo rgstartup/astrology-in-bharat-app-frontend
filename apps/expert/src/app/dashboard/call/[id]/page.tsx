@@ -23,6 +23,7 @@ export default function ExpertCallRoom() {
     const [isMuted, setIsMuted] = useState(false);
     const [callDuration, setCallDuration] = useState(0);
     const [sessionData, setSessionData] = useState<any>(null);
+    const sessionDataRef = useRef<any>(null);
     const [showSummary, setShowSummary] = useState(false);
     const [summaryData, setSummaryData] = useState<any>(null);
     const [errorInfo, setErrorInfo] = useState<string | null>(null);
@@ -90,7 +91,7 @@ export default function ExpertCallRoom() {
             let data: any, error: any;
             try {
                 [data, error] = await api.post<any>('/call/accept', {
-                    sessionId: parseInt(sessionId),
+                    sessionId,
                 });
             } catch (apiEx: any) {
                 const msg = getErrorMessage(apiEx) || 'API call threw exception';
@@ -118,10 +119,11 @@ export default function ExpertCallRoom() {
             }
 
             setSessionData(data.session);
+            sessionDataRef.current = data.session;
             addLog('✅ Session data set. Joining socket room...');
 
             // Step 2: Join socket room so user gets notified
-            callSocket.emit('join_call_room', { sessionId: parseInt(sessionId) });
+            callSocket.emit('join_call_room', { sessionId });
             addLog('📡 Socket room joined. Initializing Twilio device...');
 
             // Step 3: Init Twilio Device
@@ -177,7 +179,6 @@ export default function ExpertCallRoom() {
 
         device.on('disconnect', (call: any) => {
             addLog('📴 Device disconnected');
-            handleCallEnded();
         });
 
         device.on('error', (err: any) => {
@@ -185,7 +186,6 @@ export default function ExpertCallRoom() {
             addLog('❌ Device error: ' + msg);
             setError('Twilio Device error: ' + msg);
             toast.error(`Call error: ${getErrorMessage(err)}`);
-            handleCallEnded();
         });
 
         addLog('📡 Registering device...');
@@ -215,7 +215,13 @@ export default function ExpertCallRoom() {
 
     const startTimer = () => {
         if (timerRef.current) return;
-        timerRef.current = setInterval(() => setCallDuration(d => d + 1), 1000);
+        const start_time = sessionDataRef.current?.start_time;
+        const startMs = start_time ? new Date(start_time).getTime() : Date.now();
+        
+        setCallDuration(Math.floor((Date.now() - startMs) / 1000));
+        timerRef.current = setInterval(() => {
+            setCallDuration(Math.floor((Date.now() - startMs) / 1000));
+        }, 1000);
     };
 
     const handleCallEnded = (data?: any) => {
@@ -244,7 +250,7 @@ export default function ExpertCallRoom() {
 
     const handleEndCall = async () => {
         const [data, error] = await api.post<any>(`/call/end`, { 
-            sessionId: parseInt(sessionId),
+            sessionId,
             endedBy: 'EXPERT',
             reason: 'Expert clicked end button'
         });
@@ -252,7 +258,7 @@ export default function ExpertCallRoom() {
             console.error('[ExpertCallRoom] Failed to end call on backend', getErrorMessage(error));
         }
         deviceRef.current?.disconnectAll?.();
-        callSocket.emit('end_call', { sessionId: parseInt(sessionId) });
+        callSocket.emit('end_call', { sessionId });
         handleCallEnded(data);
     };
 
@@ -316,12 +322,12 @@ export default function ExpertCallRoom() {
                 {/* Caller Info */}
                 <div className="flex flex-col items-center gap-3">
                     <div className="w-24 h-24 rounded-full bg-neutral-800 border-4 border-primary/20 flex items-center justify-center overflow-hidden">
-                        {sessionData?.user?.avatar
-                            ? <img src={sessionData.user.avatar} alt="Client" className="w-full h-full object-cover" />
+                        {(sessionData?.client?.user?.avatar || sessionData?.user?.avatar || sessionData?.user?.image || sessionData?.client?.profile_picture)
+                            ? <img src={sessionData?.client?.user?.avatar || sessionData?.user?.avatar || sessionData?.user?.image || sessionData?.client?.profile_picture} alt="Client" className="w-full h-full object-cover" />
                             : <User className="w-10 h-10 text-neutral-600" />
                         }
                     </div>
-                    <h2 className="text-3xl font-black">{sessionData?.user?.name || 'Client User'}</h2>
+                    <h2 className="text-3xl font-black">{sessionData?.client?.user?.name || sessionData?.user?.name || 'Client User'}</h2>
                     <div className="flex items-center gap-2 text-primary text-xs font-black uppercase tracking-widest">
                         {status === 'connecting' && <span className="animate-pulse">Connecting...</span>}
                         {status === 'connected' && (
@@ -335,11 +341,16 @@ export default function ExpertCallRoom() {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
+                <div className="grid grid-cols-3 gap-4 w-full max-w-md">
                     <div className="bg-white/5 border border-white/10 rounded-[2rem] p-4 flex flex-col items-center gap-1">
-                        <Clock className="w-4 h-4 text-primary" />
-                        <span className="text-[9px] text-white/30 font-black uppercase tracking-widest">Duration</span>
+                        <Clock className="w-4 h-4 text-white/50" />
+                        <span className="text-[9px] text-white/30 font-black uppercase tracking-widest">Elapsed</span>
                         <span className="text-lg font-black">{formatDuration(callDuration)}</span>
+                    </div>
+                    <div className="bg-primary/10 border border-primary/20 rounded-[2rem] p-4 flex flex-col items-center gap-1">
+                        <Clock className="w-4 h-4 text-primary" />
+                        <span className="text-[9px] text-primary/70 font-black uppercase tracking-widest">{sessionData?.is_free ? 'Free Time' : 'Time Left'}</span>
+                        <span className="text-lg font-black text-primary">{formatDuration(Math.max(0, (sessionData?.max_duration_seconds || 300) - callDuration))}</span>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-[2rem] p-4 flex flex-col items-center gap-1">
                         <Volume2 className="w-4 h-4 text-green-400" />

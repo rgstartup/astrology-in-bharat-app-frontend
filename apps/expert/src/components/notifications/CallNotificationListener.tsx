@@ -67,9 +67,11 @@ export const CallNotificationListener: React.FC = () => {
                 console.warn("[CallNotification] No session found in new_call_request data.");
                 return;
             }
-            const callerName = session.user?.name || "A Client";
+            const callerName = session.client?.user?.name || session.user?.name || "A Client";
             const callType = session.type || 'audio';
             const callerAvatar = 
+                session.client?.profile_picture ||
+                session.client?.user?.avatar ||
                 session.user?.avatar || 
                 session.user?.image || 
                 session.user?.profile_client?.profile_picture || 
@@ -124,7 +126,7 @@ export const CallNotificationListener: React.FC = () => {
                 </div>),
                 {
                     containerId: "notification",
-                    position: "top-center",
+                    position: "bottom-center",
                     autoClose: false,
                     closeOnClick: false,
                     draggable: false,
