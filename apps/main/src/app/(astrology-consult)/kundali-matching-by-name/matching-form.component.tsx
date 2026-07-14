@@ -24,7 +24,6 @@ const MatchingForm = ({
   const t = (matchingTranslations[lang as keyof typeof matchingTranslations] || matchingTranslations.en).form;
   const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
   
-  const [matchingType, setMatchingType] = useState("ashtakoot");
 
   return (
     <section className="pb-2 pt-2 bg-transparent">
@@ -173,55 +172,8 @@ const MatchingForm = ({
             </div>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            
-            <div className="flex-1">
-              <h4 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-                Matching Type <span className="text-gray-400 font-normal text-xs bg-gray-100 w-4 h-4 rounded-full flex items-center justify-center">i</span>
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
-                <div 
-                  className={`flex items-center justify-center text-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all ${matchingType === 'ashtakoot' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'}`}
-                  onClick={() => setMatchingType('ashtakoot')}
-                >
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${matchingType === 'ashtakoot' ? 'border-orange-500' : 'border-gray-300'}`}>
-                    {matchingType === 'ashtakoot' && <div className="w-2 h-2 rounded-full bg-orange-500" />}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800">Ashtakoot Milan</p>
-                    <p className="text-[10px] text-slate-500">36 Gun Milan</p>
-                  </div>
-                </div>
-
-                <div 
-                  className={`flex items-center justify-center text-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all ${matchingType === 'panch' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'}`}
-                  onClick={() => setMatchingType('panch')}
-                >
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${matchingType === 'panch' ? 'border-orange-500' : 'border-gray-300'}`}>
-                    {matchingType === 'panch' && <div className="w-2 h-2 rounded-full bg-orange-500" />}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800">Panch Milan</p>
-                    <p className="text-[10px] text-slate-500">5 Gun Milan</p>
-                  </div>
-                </div>
-
-                <div 
-                  className={`flex items-center justify-center text-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all ${matchingType === 'basic' ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-gray-300'}`}
-                  onClick={() => setMatchingType('basic')}
-                >
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${matchingType === 'basic' ? 'border-orange-500' : 'border-gray-300'}`}>
-                    {matchingType === 'basic' && <div className="w-2 h-2 rounded-full bg-orange-500" />}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800">Basic Milan</p>
-                    <p className="text-[10px] text-slate-500">Quick Match</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center lg:w-[48%] shrink-0">
+          <div className="mt-8 pt-6 border-t border-gray-100 flex justify-center">
+            <div className="flex flex-col items-center w-full max-w-md shrink-0">
               {error && <p className="text-xs text-red-500 mb-2 font-medium">{error}</p>}
               <button
                 disabled={loading}

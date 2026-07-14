@@ -72,7 +72,7 @@ export const TodaysSpecialSidebar = () => (
     
     <div className="flex items-start gap-4">
       <div className="w-[60px] h-[60px] rounded-full overflow-hidden flex-shrink-0 relative shadow-sm border border-[#E8D5C0]">
-        <Image src="/images/ekadashi-special.png" alt="Ekadashi" fill className="object-cover" />
+        <Image src="/images/ekadashi-special.jpg" alt="Ekadashi" fill className="object-cover" />
       </div>
       <div>
         <p className="text-[13px] font-bold text-[#D35400] mb-1">Ekadashi Special</p>

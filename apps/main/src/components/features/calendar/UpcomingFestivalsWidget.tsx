@@ -3,7 +3,7 @@ import React from 'react';
 const upcomingFestivals = [
   { name: 'Raksha Bandhan', date: '09 August 2025, Saturday', icon: 'fa-ribbon', color: 'text-pink-500', bg: 'bg-pink-100' },
   { name: 'Janmashtami', date: '16 August 2025, Saturday', icon: 'fa-child-reaching', color: 'text-purple-500', bg: 'bg-purple-100' },
-  { name: 'Ganesh Chaturthi', date: '27 August 2025, Wednesday', icon: 'fa-elephant', color: 'text-orange-600', bg: 'bg-orange-100' },
+  { name: 'Ganesh Chaturthi', date: '27 August 2025, Wednesday', icon: 'fa-hands-praying', color: 'text-orange-600', bg: 'bg-orange-100' },
   { name: 'Navratri Starts', date: '22 September 2025, Monday', icon: 'fa-om', color: 'text-red-500', bg: 'bg-red-100' },
 ];
 

@@ -125,13 +125,13 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
               console.log(`DEBUG: Order #${order.id || idx} full data:`, order);
               return (
               <div
-                key={order.trackingId || order.id || idx}
+                key={order.tracking_id || order.trackingId || order.id || idx}
                 className="group border-y sm:border border-gray-100 sm:rounded-3xl overflow-hidden sm:shadow-sm hover:shadow-md transition-all duration-300 bg-white -mx-4 sm:mx-0"
               >
                 {/* Order Summary Header */}
                 <div
                   className="bg-gray-50/50 p-4 sm:p-6 flex flex-wrap gap-6 items-center justify-between border-b border-gray-100 cursor-pointer hover:bg-gray-100/30 transition-colors"
-                  onClick={() => toggleOrder(order.trackingId || order.id)}
+                  onClick={() => toggleOrder(order.tracking_id || order.trackingId || order.id)}
                 >
                   <div className="flex flex-wrap gap-8 items-center">
                     <div>
@@ -142,7 +142,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                         {t.orderId}
                       </span>
                       <span className="font-bold text-gray-900" style={fontStyle}>
-                        #{order.trackingId || order.orderId || order.id}
+                        {order.tracking_id || order.trackingId || order.orderId || order.id}
                       </span>
                     </div>
                     <div>
@@ -213,7 +213,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                     </span>
                     <button
                       className={`w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 shadow-sm transition-transform duration-300 ${
-                        expandedOrders[order.trackingId || order.id] ? "rotate-180" : ""
+                        expandedOrders[order.tracking_id || order.trackingId || order.id] ? "rotate-180" : ""
                       }`}
                     >
                       <i className="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
@@ -222,7 +222,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                 </div>
 
                 {/* Expanded Details */}
-                {expandedOrders[order.trackingId || order.id] && (
+                {expandedOrders[order.tracking_id || order.trackingId || order.id] && (
                   <div className="p-6 md:p-8 animate-in fade-in slide-in-from-top-4 duration-300">
                     {/* Specialized View for Puja/Services */}
                     {order.type === 'puja' ? (
@@ -353,17 +353,17 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                           </button>
                         )}
 
-                        {orderDisputes[order.trackingId || order.id] ? (
+                        {orderDisputes[order.tracking_id || order.trackingId || order.id] ? (
                           <button
-                            onClick={() => onViewChat(orderDisputes[order.trackingId || order.id])}
+                            onClick={() => onViewChat(orderDisputes[order.tracking_id || order.trackingId || order.id])}
                             className="flex-1 md:flex-none relative px-6 py-2 bg-orange text-white font-bold text-xs rounded-xl hover:bg-orange/90 transition-all shadow-md flex items-center justify-center gap-2"
                             style={fontStyle}
                           >
                             <i className="fa-solid fa-comments"></i>
                             {t.reportIssueDiscussion}
-                            {orderDisputes[order.trackingId || order.id].unreadCount > 0 && (
+                            {orderDisputes[order.tracking_id || order.trackingId || order.id].unreadCount > 0 && (
                               <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-sm">
-                                {orderDisputes[order.trackingId || order.id].unreadCount}
+                                {orderDisputes[order.tracking_id || order.trackingId || order.id].unreadCount}
                               </span>
                             )}
                           </button>

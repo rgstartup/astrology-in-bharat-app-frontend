@@ -7,7 +7,7 @@ const mockFestivals = [
   { name: 'Nag Panchami', date: '25 July', icon: 'fa-staff-snake', color: 'text-green-600' },
   { name: 'Raksha Bandhan', date: '09 Aug', icon: 'fa-ribbon', color: 'text-pink-500' },
   { name: 'Janmashtami', date: '16 Aug', icon: 'fa-child-reaching', color: 'text-purple-500' },
-  { name: 'Ganesh Chaturthi', date: '27 Aug', icon: 'fa-elephant', color: 'text-orange-600' },
+  { name: 'Ganesh Chaturthi', date: '27 Aug', icon: 'fa-hands-praying', color: 'text-orange-600' },
 ];
 
 export default function FestivalCarouselWidget({ lang }: { lang: string }) {

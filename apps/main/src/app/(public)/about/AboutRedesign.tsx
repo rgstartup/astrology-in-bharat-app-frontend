@@ -154,36 +154,63 @@ export default function AboutRedesign({ children }: { children: React.ReactNode 
   }, []);
   return (
     <main className="bg-[#fffaf5] text-[#2f1119] overflow-x-hidden w-full max-w-[100vw]">
-      <section className="mx-auto max-w-[1180px] px-4 pb-8 pt-4 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-[1320px] px-4 pb-8 pt-4 sm:px-6 lg:px-12">
 
         <div className="flex flex-col items-center w-full max-w-full">
-          <div className="relative w-full max-w-full overflow-hidden rounded-[24px] md:rounded-[36px] border border-[#ffd8c0] shadow-[0_18px_45px_rgba(105,47,16,0.12)] mb-8">
-            <Image
-              src="/images/about-banner-full.png"
-              alt="About Astrology in Bharat"
-              width={1200}
-              height={500}
-              priority
-              className="w-full max-w-full h-auto object-cover"
-            />
+          <div className="relative w-full rounded-xl md:rounded-3xl lg:rounded-[24px] overflow-hidden bg-[#2d0f0c] shadow-xl flex flex-col md:flex-row items-stretch border border-[#ffb286]/20 mb-8">
             
-            {/* Absolute Buttons over Image */}
-            <div className="absolute bottom-2 left-4 md:bottom-8 md:left-12 lg:bottom-10 lg:left-16 flex flex-row gap-2 sm:gap-3">
-              <Link
-                href="/our-experts"
-                className="inline-flex h-7 sm:h-12 lg:h-14 items-center justify-center gap-1 sm:gap-3 rounded-lg sm:rounded-xl bg-[#ff5c00] px-3 sm:px-6 lg:px-9 text-[9px] sm:text-sm font-extrabold text-white no-underline shadow-[0_4px_12px_rgba(255,92,0,0.22)] sm:shadow-[0_12px_24px_rgba(255,92,0,0.22)] transition hover:-translate-y-0.5 hover:bg-[#e95300]"
-              >
-                <MessageSquare className="h-3 w-3 sm:h-5 sm:w-5" />
-                Talk to Expert
-              </Link>
-              <Link
-                href="/our-experts"
-                className="inline-flex h-7 sm:h-12 lg:h-14 items-center justify-center gap-1 sm:gap-3 rounded-lg sm:rounded-xl border border-[#ff8b4d] bg-white px-3 sm:px-6 lg:px-9 text-[9px] sm:text-sm font-extrabold text-[#ff5c00] no-underline transition hover:-translate-y-0.5 hover:bg-[#fff3eb]"
-              >
-                Explore Services
-                <ArrowRight className="h-3 w-3 sm:h-5 sm:w-5" />
-              </Link>
+            {/* Image Section (Top on mobile, Right on desktop) */}
+            <div className="w-full md:w-[55%] h-[240px] md:h-auto md:min-h-[240px] lg:min-h-[260px] relative order-1 md:order-2 bg-[#2d0f0c]">
+              {/* Soft fade overlay to blend with left background exactly like Famous Temples */}
+              <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#2d0f0c] from-0% via-[#2d0f0c]/80 via-10% md:via-15% to-transparent to-25% md:to-40% z-10" />
+              <Image
+                src="/images/about-bg-clean.jpg"
+                alt="About Astrology in Bharat"
+                fill
+                priority
+                className="object-cover object-center brightness-[0.85]"
+              />
             </div>
+
+            {/* Content Section (Bottom on mobile, Left on desktop) */}
+            <div className="w-full md:w-[50%] p-5 md:p-6 lg:p-8 z-20 order-2 md:order-1 flex flex-col justify-center relative -mt-10 md:mt-0">
+              
+              <h1 className="text-3xl md:text-4xl lg:text-[44px] font-serif font-bold text-white mb-1 text-center md:text-left drop-shadow-md leading-tight">
+                About
+              </h1>
+              
+              <div className="flex flex-col items-center md:items-start mb-3">
+                <h2 className="text-[#ffb286] text-xl md:text-2xl lg:text-[22px] font-serif mb-2 text-center md:text-left drop-shadow-md">
+                  Astrology In Bharat
+                </h2>
+                {/* Decorative divider */}
+                <div className="w-32 h-[1px] bg-gradient-to-r from-[#ffb286]/80 via-[#ffb286]/30 to-transparent hidden md:block mb-1"></div>
+                <div className="w-32 h-[1px] bg-gradient-to-r from-transparent via-[#ffb286]/80 to-transparent md:hidden mb-1"></div>
+              </div>
+              
+              <p className="text-gray-300 text-sm md:text-[15px] leading-relaxed mb-6 text-center md:text-left max-w-md mx-auto md:mx-0 drop-shadow-md">
+                Discover the profound power of authentic Vedic astrology. We connect you with India's most trusted experts to provide accurate predictions, personalized remedies, and spiritual guidance for a brighter, more fulfilling future.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-row justify-center md:justify-start gap-3 mt-auto">
+                <Link
+                  href="/our-experts"
+                  className="inline-flex h-10 md:h-12 items-center justify-center gap-2 rounded-xl bg-[#ff5c00] px-4 md:px-6 text-[11px] md:text-xs font-extrabold text-white no-underline shadow-[0_8px_16px_rgba(255,92,0,0.22)] transition hover:-translate-y-0.5 hover:bg-[#e95300]"
+                >
+                  <MessageSquare className="h-4 w-4 hidden sm:block" />
+                  Talk to Expert
+                </Link>
+                <Link
+                  href="/our-experts"
+                  className="inline-flex h-10 md:h-12 items-center justify-center gap-2 rounded-xl border border-[#ffb286]/40 bg-white/5 px-4 md:px-6 text-[11px] md:text-xs font-extrabold text-[#ffb286] no-underline transition hover:-translate-y-0.5 hover:bg-white/10 backdrop-blur-sm"
+                >
+                  Explore Services
+                  <ArrowRight className="h-4 w-4 hidden sm:block" />
+                </Link>
+              </div>
+            </div>
+            
           </div>
         </div>
 
@@ -221,21 +248,18 @@ export default function AboutRedesign({ children }: { children: React.ReactNode 
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1180px] items-center gap-12 px-4 py-8 sm:px-6 lg:grid-cols-[0.82fr_1fr] lg:px-8">
+      <section className="mx-auto grid max-w-[1180px] items-start gap-12 px-4 py-8 sm:px-6 lg:grid-cols-[0.82fr_1fr] lg:px-8">
         <div className="overflow-hidden rounded-[24px] border border-[#ffc9aa] bg-white shadow-[0_14px_34px_rgba(105,47,16,0.09)]">
           <Image
-            src="/images/famous-temples-banner.png"
-            alt="Temple and astrology story"
+            src="/images/about-story-banner.png"
+            alt="Our astrology story"
             width={1200}
             height={720}
-            className="h-[310px] w-full object-cover object-[72%_center] lg:h-[390px]"
+            className="w-full h-auto max-h-[390px] object-contain bg-[#3a130a]"
           />
         </div>
 
-        <div>
-          <div className="mb-2 text-[12px] font-extrabold uppercase tracking-[0.12em] text-[#ff5c00]">
-            Our Story
-          </div>
+        <div className="pt-2">
           <h2 className="mb-5 font-serif text-4xl font-bold text-[#32131b]">
             Our Story
           </h2>

@@ -42,18 +42,50 @@ const HelpSupportPage = () => {
 
   return (
     <div className="min-h-screen bg-[#fffaf5] pb-20 pt-6 overflow-hidden font-sans">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-6 lg:px-12">
         
         {/* --- Hero Banner --- */}
-        <div className="mb-12 relative w-full flex justify-center">
-           <Image 
-              src="/images/image.png" 
-              alt="Help and Support Center" 
-              width={1200} 
-              height={400} 
-              className="w-full h-auto object-contain"
-              priority
-           />
+        <div className="relative w-full rounded-xl md:rounded-3xl lg:rounded-[24px] overflow-hidden bg-[#2d0f0c] shadow-xl flex flex-col md:flex-row items-stretch border border-[#ffb286]/20 mb-8">
+            
+            {/* Image Section (Top on mobile, Right on desktop) */}
+            <div className="w-full md:w-[55%] h-[240px] md:h-auto md:min-h-[340px] lg:min-h-[360px] relative order-1 md:order-2 bg-[#2d0f0c]">
+              {/* Soft fade overlay to blend with left background exactly like Famous Temples */}
+              <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#2d0f0c] from-0% via-[#2d0f0c]/80 via-10% md:via-15% to-transparent to-25% md:to-40% z-10" />
+              <Image
+                src="/images/contact-bg-clean.jpg"
+                alt="Help and Support Center"
+                fill
+                priority
+                className="object-cover object-center brightness-[0.85]"
+              />
+            </div>
+
+            {/* Content Section (Bottom on mobile, Left on desktop) */}
+            <div className="w-full md:w-[50%] p-6 md:p-10 lg:p-12 z-20 order-2 md:order-1 flex flex-col justify-center relative -mt-10 md:mt-0">
+              
+              <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 bg-white/10 text-[#ffb286] border border-[#ffb286]/30 rounded-full w-fit mx-auto md:mx-0 backdrop-blur-sm shadow-sm">
+                <i className="fa-solid fa-headset text-[10px]"></i>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Help & Support Center</span>
+              </div>
+
+              <h1 className="text-3xl md:text-4xl lg:text-[44px] font-serif font-bold text-white mb-1 text-center md:text-left drop-shadow-md leading-tight">
+                Need Help?
+              </h1>
+              
+              <div className="flex flex-col items-center md:items-start mb-3">
+                <h2 className="text-[#ffb286] text-xl md:text-2xl lg:text-[22px] font-serif mb-2 text-center md:text-left drop-shadow-md">
+                  We're Here For You!
+                </h2>
+                {/* Decorative divider */}
+                <div className="w-32 h-[1px] bg-gradient-to-r from-[#ffb286]/80 via-[#ffb286]/30 to-transparent hidden md:block mb-1"></div>
+                <div className="w-32 h-[1px] bg-gradient-to-r from-transparent via-[#ffb286]/80 to-transparent md:hidden mb-1"></div>
+              </div>
+              
+              <p className="text-gray-300 text-sm md:text-[15px] leading-relaxed mb-0 text-center md:text-left max-w-md mx-auto md:mx-0 drop-shadow-md">
+                Our support team is available 24x7 to assist you with any queries or concerns.
+              </p>
+            </div>
+            
         </div>
 
         {/* --- 4 Contact Cards Grid --- */}

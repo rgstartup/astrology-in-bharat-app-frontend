@@ -100,7 +100,7 @@ const OnlinePujaPage = () => {
 
             {/* Filters Section */}
             <div className="max-w-7xl mx-auto px-4 mb-10 z-30 relative">
-                <div className="bg-white rounded-2xl border border-[#FF5500] shadow-sm overflow-hidden">
+                <div className="bg-white rounded-2xl border border-[#FF5500] shadow-sm">
                     
                     {/* Row 1 on mobile: Mode Toggle */}
                     <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 md:border-b-0 md:border-r md:w-auto">

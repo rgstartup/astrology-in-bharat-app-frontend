@@ -29,7 +29,7 @@ export default function AuspiciousMuhuratWidget({ panchang, lang }: AuspiciousMu
     },
     { 
       name: lang === 'hi' ? 'विवाह मुहूर्त' : 'Marriage Muhurat', 
-      icon: 'fa-rings-wedding', 
+      icon: 'fa-ring', 
       start: marriage.start, 
       end: marriage.end,
       bg: 'bg-pink-50',
