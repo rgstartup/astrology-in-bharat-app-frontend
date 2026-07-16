@@ -60,7 +60,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${outfit.variable} antialiased bg-white`}>
+      <body className={`${inter.variable} ${outfit.variable} antialiased bg-white overflow-x-hidden`}>
         <ReactQueryProvider>
           <AuthInitializer initialUser={initialUser}>
             <DashboardShell>

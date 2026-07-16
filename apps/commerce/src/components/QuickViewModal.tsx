@@ -130,7 +130,7 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
         </div>
 
         {/* Right: Details */}
-        <div className="w-full md:w-[55%] p-6 md:p-10 md:pl-4 flex flex-col overflow-y-auto">
+        <div className="w-full md:w-[55%] p-6 md:p-10 md:pl-4 flex flex-col overflow-y-auto overflow-x-hidden">
           
           <div className="flex items-center gap-3 mb-4">
             <span className="text-[#fd6410] text-[10px] font-black uppercase tracking-[0.2em]">
@@ -142,7 +142,7 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
             </span>
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-black text-[#1a1c29] uppercase leading-[1.1] tracking-tight mb-4">
+          <h2 className="text-3xl md:text-4xl font-black text-[#1a1c29] uppercase leading-[1.1] tracking-tight mb-4 break-words">
             {product.name}
           </h2>
 
@@ -174,7 +174,7 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
                 </span>
               )}
             </div>
-            <div className="mt-4 flex items-center gap-3 bg-gray-50/50 p-2.5 rounded-2xl w-max">
+            <div className="mt-4 flex flex-wrap sm:flex-nowrap items-center gap-3 bg-gray-50/50 p-2.5 rounded-2xl w-full sm:w-max max-w-full">
               <div className="flex -space-x-2">
                 <div className="w-6 h-6 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-[8px] font-bold">JD</div>
                 <div className="w-6 h-6 rounded-full bg-green-100 border-2 border-white flex items-center justify-center text-[8px] font-bold">AK</div>
@@ -199,7 +199,7 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
           </div>
 
           {/* Guarantees */}
-          <div className="grid grid-cols-2 gap-4 mt-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-auto">
             <div className="bg-white p-4 rounded-2xl flex items-center gap-3 shadow-sm border border-gray-100">
               <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center text-[#fd6410] shrink-0">
                 <ShieldCheck className="w-5 h-5" />

@@ -157,6 +157,8 @@ export const useCheckout = () => {
     state: "",
     country: "India",
     zip_code: "",
+    phone: "",
+    alternate_phone: "",
   });
 
   const [loadingProfile, setLoadingProfile] = useState(false);
@@ -165,17 +167,23 @@ export const useCheckout = () => {
     const fetchProfileAddress = async () => {
       setLoadingProfile(true);
       const [profile, error] = await getClientProfile();
-      if (!error && profile && profile.addresses && profile.addresses.length > 0) {
-        const defaultAddr = profile.addresses[0];
-        setAddress({
-          line1: defaultAddr.line1 || "",
-          line2: defaultAddr.line2 || "",
-          city: defaultAddr.city || "",
-          state: defaultAddr.state || "",
-          country: defaultAddr.country || "India",
-          zip_code:
-            defaultAddr.zip_code || defaultAddr.zipCode || "",
-        });
+      if (!error && profile) {
+        if (profile.addresses && profile.addresses.length > 0) {
+          const defaultAddr = profile.addresses[0];
+          setAddress({
+            line1: defaultAddr.line1 || "",
+            line2: defaultAddr.line2 || "",
+            city: defaultAddr.city || "",
+            state: defaultAddr.state || "",
+            country: defaultAddr.country || "India",
+            zip_code:
+              defaultAddr.zip_code || defaultAddr.zipCode || "",
+            phone: defaultAddr.phone || profile.phone || "",
+            alternate_phone: defaultAddr.alternate_phone || "",
+          });
+        } else {
+          setAddress(prev => ({ ...prev, phone: profile.phone || "", alternate_phone: "" }));
+        }
       } else if (error) {
         console.error("Failed to load profile for address:", error);
       }
@@ -196,7 +204,8 @@ export const useCheckout = () => {
         !address.line1 ||
         !address.city ||
         !address.state ||
-        !address.zip_code
+        !address.zip_code ||
+        !address.phone
       ) {
         toast.error("Please fill in all required shipping address fields");
         return;

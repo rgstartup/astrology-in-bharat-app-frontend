@@ -80,7 +80,7 @@ const mapToProfile = (data: any, authUser: any): Profile & { exists: boolean } =
  */
 const SECTION_WHITELISTS: Record<string, string[]> = {
     personal: ['name', 'gender', 'bio', 'specialization', 'experience_in_years', 'languages', 'date_of_birth', 'phone_number', 'addresses', 'avatar'],
-    pricing: ['price', 'chat_price', 'call_price', 'video_call_price', 'report_price', 'horoscope_price'],
+    pricing: ['price', 'chat_price', 'call_price', 'video_call_price', 'report_price', 'horoscope_price', 'specialization'],
     status: ['is_available'],
     portfolio: ['gallery', 'videos', 'video'],
     experience: ['detailed_experience'],

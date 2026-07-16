@@ -40,7 +40,7 @@ export function StatsCards({ stats, columns = 4 }: StatsCardsProps) {
                 return (
                     <div
                         key={`${index}-${stat.tooltipValue}`}
-                        className="group group/card bg-white rounded-xl border border-orange-500 p-4 sm:p-6 shadow-sm hover:shadow-2xl hover:border-[#FF6B00] hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                        className="group group/card bg-white rounded-xl border-2 border-orange-600 p-4 sm:p-6 shadow-sm hover:shadow-2xl hover:border-[#FF6B00] hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer relative overflow-hidden"
                         title={String(stat.tooltipValue || stat.value)}
                     >
                         {/* Hover Background */}
@@ -49,25 +49,25 @@ export function StatsCards({ stats, columns = 4 }: StatsCardsProps) {
                         {/* CONTENT */}
                         <div className="relative z-10 flex items-start gap-3">
                             {/* LEFT TEXT */}
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-600 mb-1 truncate">
+                            <div className="flex-1 min-w-0 pr-2">
+                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 leading-tight">
                                     {stat.title}
                                 </p>
 
                                 <h3
-                                    className={`text-xl sm:text-2xl lg:text-3xl font-bold ${stat.valueColor || "text-gray-900"} mb-1 break-all group-hover:scale-110 group-hover/card:scale-110 transition-transform origin-left`}
+                                    className={`text-xl sm:text-2xl lg:text-[1.65rem] font-bold ${stat.valueColor || "text-gray-900"} mb-1 truncate group-hover:scale-105 group-hover/card:scale-105 transition-transform origin-left`}
                                     title={String(stat.tooltipValue || stat.value)}
                                 >
                                     {stat.value}
                                 </h3>
                                 {stat.trend && (
-                                    <div className="flex items-center flex-wrap gap-1">
+                                <div className="flex items-center whitespace-nowrap gap-1">
                                         {stat.trend.isPositive ? (
-                                            <ArrowUp className={cn("w-4 h-4 group-hover:scale-125 group-hover/card:scale-125 transition-transform", stat.trend.color || "text-green-600")} />
+                                            <ArrowUp className={cn("w-4 h-4 flex-shrink-0 group-hover:scale-125 group-hover/card:scale-125 transition-transform", stat.trend.color || "text-green-600")} />
                                         ) : (
-                                            <ArrowDown className={cn("w-4 h-4 group-hover:scale-125 group-hover/card:scale-125 transition-transform", stat.trend.color || "text-red-600")} />
+                                            <ArrowDown className={cn("w-4 h-4 flex-shrink-0 group-hover:scale-125 group-hover/card:scale-125 transition-transform", stat.trend.color || "text-red-600")} />
                                         )}
-                                        <span className={cn("text-sm font-semibold", stat.trend.color || (stat.trend.isPositive ? "text-green-600" : "text-red-600"))}>
+                                        <span className={cn("text-[10px] font-bold tracking-tighter truncate", stat.trend.color || (stat.trend.isPositive ? "text-green-600" : "text-red-600"))}>
                                             {stat.trend.value}
                                         </span>
                                         {stat.trend.period && (

@@ -168,11 +168,11 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="space-y-4">
                                             <div>
-                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Account Holder</p>
+                                                <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">Account Holder</p>
                                                 <h5 className="text-lg font-black text-gray-900">{acc.account_holder}</h5>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Account / IFSC</p>
+                                                <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">Account / IFSC</p>
                                                 <div className="flex items-center gap-3 font-bold text-gray-600">
                                                     <span>•••• {acc.account_number.slice(-4)}</span>
                                                     <span className="w-1 h-4 bg-gray-200 rounded-full" />
@@ -183,7 +183,7 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
 
                                         <div className="space-y-4">
                                             <div>
-                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Bank Name</p>
+                                                <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">Bank Name</p>
                                                 <h5 className="text-lg font-black text-gray-900">{acc.bank_name}</h5>
                                             </div>
                                             
@@ -215,7 +215,7 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
                                     setEditingId(null);
                                     setIsEditing(true);
                                 }}
-                                className="w-full py-8 border-2 border-dashed border-orange-100 rounded-[2rem] flex flex-col items-center justify-center gap-2 text-[#fd6410] hover:bg-orange-50/50 hover:border-orange-300 transition-all group"
+                                className="w-full py-8 border-2 border-[#fd6410]/30 rounded-[2rem] flex flex-col items-center justify-center gap-2 text-[#fd6410] hover:bg-orange-50/50 hover:border-[#fd6410] transition-all group"
                             >
                                 <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center group-hover:scale-110 transition-transform">
                                     <Plus className="w-5 h-5" />
@@ -232,7 +232,7 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
 
 const InputGroup = ({ label, value, onChange, placeholder, uppercase }: any) => (
     <div className="space-y-2">
-        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">{label}</label>
+        <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">{label}</label>
         <input
             type="text"
             value={value}

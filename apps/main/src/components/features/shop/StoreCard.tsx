@@ -155,7 +155,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         </div>
 
         {/* Shop Name & Location Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6">
            <div className="flex items-center gap-2 mb-1">
               <h2 className="text-white group-hover:text-orange-400 transition-colors duration-300 font-bold text-xl drop-shadow-md truncate">{store.name}</h2>
            </div>

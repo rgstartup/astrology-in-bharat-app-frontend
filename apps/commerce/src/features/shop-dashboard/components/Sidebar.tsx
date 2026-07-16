@@ -89,6 +89,11 @@ export const Sidebar: React.FC<SidebarProps> = memo(({ isOpen, toggleSidebar }) 
                 <Link
                   key={item.name}
                   href={item.href}
+                  onClick={() => {
+                    if (window.innerWidth < 1024 && isOpen) {
+                      toggleSidebar();
+                    }
+                  }}
                   className={cn(
                     "group flex items-center px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300",
                     isActive 

@@ -143,10 +143,12 @@ export default function ProductListing() {
       {/* Header Section */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Product Inventory</h2>
-          <div className="flex items-center text-gray-500 text-sm mt-1">
+          <h2 className="text-3xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
+             Product Inventory
+          </h2>
+          <div className="text-gray-700 text-sm mt-1.5 flex items-center">
              {isLoading ? (
-               <Loader2 className="w-4 h-4 animate-spin text-[#fd6410] mr-2" />
+               <Skeleton className="h-4 w-6 rounded mr-1" />
              ) : (
                <span className="font-bold text-[#fd6410]">{data?.total || 0}</span>
              )}
@@ -166,29 +168,29 @@ export default function ProductListing() {
       <div className="space-y-4">
         {/* Bulk Action Bar (Floating) */}
         {selectedIds.length > 0 && (
-          <div className="bg-gray-900 text-white rounded-2xl p-4 flex items-center justify-between shadow-2xl animate-in slide-in-from-top-4 duration-300 ring-4 ring-gray-900/10">
-             <div className="flex items-center space-x-4 pl-2">
-                <div className="w-8 h-8 bg-[#fd6410] rounded-full flex items-center justify-center shadow-inner">
+          <div className="bg-gray-900 text-white rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xl animate-in slide-in-from-top-4 duration-300 ring-4 ring-gray-900/10">
+             <div className="flex items-center space-x-4 pl-0 md:pl-2 w-full md:w-auto">
+                <div className="w-8 h-8 bg-[#fd6410] rounded-full flex items-center justify-center shadow-inner shrink-0">
                    <Check className="w-4 h-4" />
                 </div>
-                <span className="font-bold text-sm tracking-tight">{selectedIds.length} Products Selected</span>
+                <span className="font-bold text-sm tracking-tight whitespace-nowrap">{selectedIds.length} Products Selected</span>
              </div>
-             <div className="flex items-center space-x-3 pr-2">
+             <div className="flex flex-wrap items-center gap-2 md:gap-3 pr-0 md:pr-2 w-full md:w-auto">
                 <button 
                   onClick={() => bulkStatusMutation.mutate({ ids: selectedIds, status: 'active' })}
                   disabled={bulkStatusMutation.isPending}
-                  className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition-all flex items-center gap-2 disabled:opacity-50"
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition-all flex items-center gap-2 disabled:opacity-50 whitespace-nowrap"
                 >
                    <CheckCircle2 className="w-3.5 h-3.5" /> Mark Active
                 </button>
                 <button 
                   onClick={() => bulkStatusMutation.mutate({ ids: selectedIds, status: 'out_of_stock' })}
                   disabled={bulkStatusMutation.isPending}
-                  className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition-all flex items-center gap-2 disabled:opacity-50"
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition-all flex items-center gap-2 disabled:opacity-50 whitespace-nowrap"
                 >
                    <XCircle className="w-3.5 h-3.5" /> Out of Stock
                 </button>
-                <div className="w-[1px] h-6 bg-white/10" />
+                <div className="hidden md:block w-[1px] h-6 bg-white/10" />
                 <button 
                   onClick={() => {
                     if (window.confirm("Are you sure you want to delete these products?")) {
@@ -196,7 +198,7 @@ export default function ProductListing() {
                     }
                   }}
                   disabled={deleteMutation.isPending}
-                  className="px-4 py-2 bg-rose-500 hover:bg-rose-600 rounded-xl text-xs font-bold transition-all flex items-center gap-2 disabled:opacity-50"
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-xl text-xs font-bold transition-all flex items-center gap-2 disabled:opacity-50 whitespace-nowrap"
                 >
                    <Trash2 className="w-3.5 h-3.5" /> Delete Selected
                 </button>
@@ -206,16 +208,16 @@ export default function ProductListing() {
 
         <div className="flex flex-col xl:flex-row gap-6 items-start xl:items-center justify-between">
           {/* Tabs */}
-          <div className="flex p-1.5 bg-white border border-gray-100 rounded-2xl shadow-sm space-x-1">
+          <div className="flex p-1.5 bg-white border border-[#fd6410] rounded-2xl shadow-sm space-x-1 overflow-x-auto max-w-full scrollbar-none">
             {tabs.map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={cn(
-                  "px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 uppercase tracking-widest text-[10px]",
+                  "px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 uppercase tracking-widest text-[10px] whitespace-nowrap shrink-0 focus:outline-none focus:ring-2 focus:ring-[#fd6410]/50",
                   activeTab === tab 
                     ? "bg-[#fd6410] text-white shadow-md" 
-                    : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+                    : "text-slate-600 hover:text-gray-900 hover:bg-gray-50"
                 )}
               >
                 {tab}
@@ -230,7 +232,7 @@ export default function ProductListing() {
               <input 
                 type="text" 
                 placeholder="Search products..."
-                className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/10 focus:border-[#fd6410] transition-all shadow-sm"
+                className="w-full pl-11 pr-4 py-3.5 bg-white border border-[#fd6410] rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/50 focus:border-[#fd6410] transition-all shadow-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -245,9 +247,9 @@ export default function ProductListing() {
       </div>
 
       {/* Product Table */}
-      <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl overflow-hidden overflow-x-auto ring-1 ring-gray-200/50">
-        <table className="w-full text-left border-collapse">
-          <thead className="bg-gray-50/50 border-b border-gray-100 text-[10px] uppercase font-black text-gray-400 tracking-[0.2em]">
+      <div className="overflow-x-auto pb-10">
+        <table className="w-full text-left border-separate border-spacing-y-4">
+          <thead className="text-[10px] uppercase font-black text-slate-700 tracking-[0.2em]">
             <tr>
               <th className="pl-8 pr-4 py-5 w-10">
                 <button 
@@ -274,7 +276,7 @@ export default function ProductListing() {
               <th className="px-8 py-5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="bg-transparent">
             {isLoading ? (
               [...Array(8)].map((_, i) => (
                 <tr key={i}>
@@ -305,25 +307,22 @@ export default function ProductListing() {
               return (
                 <tr 
                    key={p.id} 
-                   className={cn(
-                     "group transition-all duration-300",
-                     isSelected ? "bg-orange-50/50" : "hover:bg-gray-50/50"
-                   )}
+                   className="group transition-all duration-300"
                 >
-                  <td className="pl-8 pr-4 py-6">
+                  <td className={cn("pl-8 pr-4 py-5 rounded-l-[2rem] border-y border-l transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
                     <button 
                       onClick={() => toggleSelect(p.id)}
                       className={cn(
                         "w-5 h-5 rounded-md border-2 transition-all flex items-center justify-center",
                         isSelected 
                           ? "bg-[#fd6410] border-[#fd6410] text-white" 
-                          : "border-gray-200 hover:border-gray-300"
+                          : "border-gray-200 hover:border-gray-300 group-hover:border-orange-300"
                       )}
                     >
                       {isSelected && <Check className="w-3.5 h-3.5 stroke-[4]" />}
                     </button>
                   </td>
-                  <td className="px-4 py-6">
+                  <td className={cn("px-4 py-5 border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
                     <div className="flex items-center space-x-4">
                       <div className="w-14 h-14 bg-white rounded-2xl border border-gray-100 overflow-hidden flex-shrink-0 shadow-sm relative">
                         {p.imageUrl ? (
@@ -336,17 +335,17 @@ export default function ProductListing() {
                       </div>
                       <div>
                         <h4 className="text-sm font-bold text-gray-900 group-hover:text-[#fd6410] transition-colors">{p.name}</h4>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">ID: {String(p.id).substring(0, 8)}</p>
+                        <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest mt-1">ID: {p.short_id || String(p.id).slice(-8)}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-6">
-                     <span className="py-1.5 px-3 bg-gray-50 rounded-lg text-[10px] font-black uppercase tracking-widest text-gray-500 border border-gray-100">
+                  <td className={cn("px-6 py-5 border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
+                     <span className="inline-block whitespace-nowrap py-1.5 px-3 bg-gray-50 rounded-lg text-[10px] font-black uppercase tracking-widest text-gray-500 border border-gray-100">
                        {p.category}
                      </span>
                   </td>
-                  <td className="px-6 py-6 font-bold text-sm text-gray-900 tracking-tight">{formatPrice(p.price)}</td>
-                  <td className="px-6 py-6">
+                  <td className={cn("px-6 py-5 font-bold text-sm text-gray-900 tracking-tight border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>{formatPrice(p.price)}</td>
+                  <td className={cn("px-6 py-5 border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
                     <div className="flex flex-col">
                        <span className="font-bold text-xs text-gray-700">{p.stock} units</span>
                        <div className="w-16 h-1.5 bg-gray-100 rounded-full mt-1.5 overflow-hidden">
@@ -357,12 +356,12 @@ export default function ProductListing() {
                        </div>
                     </div>
                   </td>
-                  <td className="px-6 py-6">
-                    <span className={cn("px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ring-2 ring-offset-0 transition-all", getStatusBadge(p.status))}>
+                  <td className={cn("px-6 py-5 border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
+                    <span className={cn("inline-block whitespace-nowrap px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ring-2 ring-offset-0 transition-all", getStatusBadge(p.status))}>
                       {getFrontendStatus(p.status)}
                     </span>
                   </td>
-                  <td className="px-8 py-6 text-right">
+                  <td className={cn("px-8 py-5 text-right rounded-r-[2rem] border-y border-r transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
                     <div className="flex items-center justify-end space-x-1 transition-all duration-300">
                       <button 
                         onClick={() => setQuickViewProduct(p)}

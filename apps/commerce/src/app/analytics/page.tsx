@@ -30,49 +30,55 @@ export default function AnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h2 className="text-4xl font-black text-gray-900 tracking-tight flex items-center gap-4">
+          <h2 className="text-3xl font-bold text-gray-900 tracking-tight flex items-center gap-4">
             <BarChart3 className="w-10 h-10 text-[#fd6410]" />
             Business Insights
           </h2>
-          <p className="text-gray-500 font-bold mt-2 text-lg">In-depth analysis of your shop performance and inventory.</p>
+          <p className="text-gray-700 text-sm mt-1.5 flex items-center">In-depth analysis of your shop performance and inventory.</p>
         </div>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm flex items-center gap-6"
+          className="bg-white p-6 rounded-2xl border border-[#fd6410] shadow-sm flex flex-col justify-between"
         >
-          <div className="w-16 h-16 rounded-3xl bg-orange-50 flex items-center justify-center">
-            <TrendingUp className="w-8 h-8 text-[#fd6410]" />
-          </div>
-          <div>
-            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Top Product</p>
-            <h4 className="text-xl font-black text-gray-900 mt-1">{analytics?.topProducts?.[0]?.name || "N/A"}</h4>
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Top Product</p>
+              <h4 className="text-2xl font-bold text-gray-900 mt-2">{analytics?.topProducts?.[0]?.name || "N/A"}</h4>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
+              <TrendingUp className="w-5 h-5 text-[#fd6410]" />
+            </div>
           </div>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm flex items-center gap-6"
+          className="bg-white p-6 rounded-2xl border border-[#fd6410] shadow-sm flex flex-col justify-between"
         >
-          <div className="w-16 h-16 rounded-3xl bg-blue-50 flex items-center justify-center">
-            <Package className="w-8 h-8 text-blue-500" />
-          </div>
-          <div>
-            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Active Inventory</p>
-            <h4 className="text-xl font-black text-gray-900 mt-1">{analytics?.stockLevels?.length || 0} Products</h4>
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Active Inventory</p>
+              <h4 className="text-2xl font-bold text-gray-900 mt-2">{analytics?.stockLevels?.length || 0} Products</h4>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center shrink-0">
+              <Package className="w-5 h-5 text-purple-600" />
+            </div>
           </div>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="bg-white p-8 rounded-[2.5rem] border border-red-50 shadow-sm flex items-center gap-6"
+          className="bg-white p-6 rounded-2xl border border-[#fd6410] shadow-sm flex flex-col justify-between"
         >
-          <div className="w-16 h-16 rounded-3xl bg-red-50 flex items-center justify-center">
-            <AlertTriangle className="w-8 h-8 text-red-500" />
-          </div>
-          <div>
-            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Stock Alerts</p>
-            <h4 className="text-xl font-black text-gray-900 mt-1">{lowStockCount + outOfStockCount} Urgent</h4>
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Stock Alerts</p>
+              <h4 className="text-2xl font-bold text-gray-900 mt-2">{lowStockCount + outOfStockCount} Urgent</h4>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center shrink-0">
+              <AlertTriangle className="w-5 h-5 text-red-500" />
+            </div>
           </div>
         </motion.div>
       </div>

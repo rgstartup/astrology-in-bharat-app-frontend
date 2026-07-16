@@ -109,18 +109,19 @@ export default function DashboardHome() {
           <div className="absolute -right-10 -top-10 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute right-0 bottom-0 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" />
           
-          <div className="relative z-10 flex flex-col h-full justify-between gap-12">
+          <div className="relative z-10 flex flex-col md:flex-row h-full justify-between gap-12">
+              <div className="flex flex-col h-full justify-between gap-12 flex-1">
               {/* Top Section: Welcome & Name */}
               <div className="space-y-4">
                   <div className="flex items-center gap-2">
                     <p className="text-white text-[10px] font-black uppercase tracking-[0.2em] opacity-90">Welcome back 🙏</p>
                   </div>
                   <h2 className="text-5xl font-black text-white tracking-tight leading-none">
-                      {(user as any)?.shopName ?? "Arti devi"}
+                      {profileData?.profile?.shopName || (user as any)?.shopName || (user as any)?.name || "Merchant"}
                   </h2>
                   <div className="inline-flex items-center px-4 py-1.5 bg-black/40 backdrop-blur-md rounded-lg border border-white/10">
                       <span className="text-[10px] font-bold text-gray-300 tracking-wider">
-                          ID: <span className="text-white">{(user as any)?.uid || "AIB-AGT-817806"}</span>
+                          ID: <span className="text-white">{profileData?.profile?.merchant_id || (user as any)?.merchantId || (user as any)?.id || "N/A"}</span>
                       </span>
                   </div>
               </div>
@@ -150,9 +151,27 @@ export default function DashboardHome() {
                       <p className="text-3xl font-black tracking-tight text-white">
                           {statsData?.totalProducts?.value ?? 0}
                       </p>
-                  </div>
               </div>
           </div>
+      </div>
+
+      {/* Right Section: Large Growth Rate (Desktop Only) */}
+          <div className="hidden lg:flex flex-col justify-center items-end text-right lg:border-l lg:border-white/10 lg:pl-16">
+              <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-white/10 rounded-xl">
+                      <TrendingUp className="w-6 h-6 text-[#ffcda2]" />
+                  </div>
+                  <span className="text-sm font-black uppercase tracking-widest text-white/90">Growth Rate</span>
+              </div>
+              <p className="text-[5rem] xl:text-[6rem] leading-none font-black tracking-tighter text-white drop-shadow-2xl">
+                  {perfData?.growthRate || "+18.2%"}
+              </p>
+              <p className="text-xs text-[#ffcda2] font-bold uppercase tracking-[0.2em] mt-4 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_10px_#4ade80] animate-pulse" />
+                  Vs Last Month
+              </p>
+          </div>
+      </div>
       </div>
 
       {/* KYC Status Banner (Only if pending) */}
@@ -218,21 +237,25 @@ export default function DashboardHome() {
       {/* Two Column Layout for Actions & Orders */}
       <div className="grid lg:grid-cols-12 gap-8">
           {/* Recent Orders - 8 Cols */}
-          <div className="lg:col-span-8 space-y-6">
+          <div className="lg:col-span-8 space-y-6 min-w-0">
               <div className="flex items-center justify-between">
                   <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
                       <ShoppingBag className="w-5 h-5 text-[#fd6410]" /> Recent Orders
                   </h3>
-                  <Link href="/orders" className="text-[10px] font-black text-[#fd6410] uppercase tracking-widest hover:underline">View All</Link>
+                  <Link href="/orders" className="px-5 py-2 bg-[#fd6410] text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#ea580c] transition-all shadow-md active:scale-95 hover:shadow-lg">View All</Link>
               </div>
               <RecentOrders orders={ordersData || []} isLoading={ordersLoading} />
           </div>
 
           {/* Quick Actions & Charts - 4 Cols */}
-          <div className="lg:col-span-4 space-y-8">
-              {/* Quick Actions */}
-              <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm space-y-6">
-                  <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">Quick Actions</h3>
+          <div className="lg:col-span-4 space-y-6">
+              <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5 text-[#fd6410]" /> Quick Actions
+                  </h3>
+              </div>
+              {/* Quick Actions Card */}
+              <div className="bg-white rounded-[2rem] p-5 sm:p-8 border-2 border-orange-600 shadow-sm space-y-6">
                   <div className="grid gap-3">
                       {[
                           { label: "Add New Product", icon: Package, href: "/products/add", color: "bg-orange-50 text-[#fd6410]" },
@@ -254,8 +277,8 @@ export default function DashboardHome() {
                   </div>
               </div>
 
-              {/* Mini Performance Summary */}
-              <div className="bg-gray-900 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-2xl">
+              {/* Mini Performance Summary (Mobile Only) */}
+              <div className="lg:hidden bg-gray-900 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-2xl mt-6">
                   <div className="absolute -right-10 -top-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl" />
                   <div className="relative z-10 space-y-6">
                       <div className="flex items-center gap-3">
@@ -275,13 +298,14 @@ export default function DashboardHome() {
                       </Link>
                   </div>
               </div>
+
           </div>
       </div>
 
       {/* Main Performance Chart */}
       <section className="animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-300">
-        <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm">
-            <div className="flex items-center justify-between mb-8">
+        <div className="bg-white p-5 sm:p-8 rounded-[2.5rem] border-2 border-orange-600 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4 mb-8">
                 <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest">Revenue Analytics</h3>
                 <div className="px-4 py-2 bg-gray-50 rounded-xl text-[10px] font-black text-gray-400 uppercase tracking-widest border border-gray-100">Last 30 Days</div>
             </div>

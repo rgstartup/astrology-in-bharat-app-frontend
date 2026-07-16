@@ -128,6 +128,9 @@ export default function AdminPujaShopsPage() {
                     <p className="text-[10px] font-mono text-purple-600 mt-0.5 font-bold">
                         {l.phone || l.agent_id || l.agent_code || l.agentCode || l.agent?.agent_id || "—"}
                     </p>
+                    <p className="text-[10px] text-gray-500 mt-0.5 truncate max-w-[150px]" title={l.user?.email || l.email}>
+                        {l.user?.email || l.email || "—"}
+                    </p>
                 </div>
             ),
         },

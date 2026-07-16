@@ -115,11 +115,11 @@ const Testimonial = () => {
                   640: { slidesPerView: 2, spaceBetween: 24 },
                   1024: { slidesPerView: 3, spaceBetween: 30 },
                 }}
-                className="!pb-10"
+                className="!pb-10 !pt-4"
               >
                 {reviews.map((testi, index) => (
                   <SwiperSlide key={testi.id || index} className="h-auto">
-                    <div className="bg-white rounded-[18px] p-6 transition-all duration-300 border border-orange/30 shadow-[0_10px_25px_rgba(0,0,0,0.05)] hover:shadow-lg hover:border-orange/60 hover:-translate-y-1.5 flex flex-col h-full mx-1 mt-1">
+                    <div className="group bg-white rounded-[18px] p-6 transition-all duration-300 border border-orange/30 shadow-[0_10px_25px_rgba(0,0,0,0.05)] hover:shadow-lg hover:border-orange hover:bg-orange hover:-translate-y-1.5 flex flex-col h-full mx-1 mt-1">
                       <div className="flex items-center mb-4">
                         {testi.user?.avatar ? (
                           <Image
@@ -136,27 +136,28 @@ const Testimonial = () => {
                           </div>
                         )}
                         <div className="ml-4">
-                          <h5 className="text-lg font-bold text-[#32131a] m-0">
+                          <h5 className="text-lg font-bold text-[#32131a] group-hover:text-white transition-colors duration-300 m-0">
                             {testi.user?.name}
                           </h5>
-                          <span className="text-sm text-gray-500 font-medium">
+                          <span className="text-sm text-gray-500 group-hover:text-white/80 transition-colors duration-300 font-medium">
                             Verified User
                           </span>
                         </div>
                       </div>
-                      <div className="text-orange text-2xl mb-2 tracking-[2px]">
+                      <div className="text-orange group-hover:text-white transition-colors duration-300 text-2xl mb-2 tracking-[2px]">
                         {"★".repeat(testi.rating)}
                       </div>
                       {testi.tags && testi.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mb-3">
-                          {testi.tags.map((tag: string) => (
-                            <span key={tag} className="px-2 py-0.5 bg-orange-50 text-orange-600 text-[10px] font-bold rounded-full uppercase tracking-tighter">
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {testi.tags.map((tag: string, i: number) => (
+                            <span key={i} className="px-3 py-1 bg-orange/5 group-hover:bg-white/20 text-orange group-hover:text-white text-[10px] font-bold rounded-full border border-orange/20 group-hover:border-white/30 transition-colors duration-300 uppercase tracking-wider">
                               {tag}
                             </span>
                           ))}
                         </div>
                       )}
-                      <p className="text-base text-[#311219] leading-relaxed flex-grow italic">
+                      
+                      <p className="text-gray-600 group-hover:text-white/90 transition-colors duration-300 text-[15px] leading-relaxed italic mb-4 flex-grow">
                         "{testi.comment || testi.text}"
                       </p>
                     </div>

@@ -208,7 +208,7 @@ export default function MerchantProfilePage() {
           <div className="flex items-center space-x-2 text-[10px] font-black text-[#fd6410] uppercase tracking-[0.2em]">
             <span>Merchant Central</span>
             <ChevronRight className="w-3 h-3" />
-            <span className="text-gray-400">Merchant Profile</span>
+            <span className="text-gray-600 font-bold">Merchant Profile</span>
           </div>
           <h1 className="text-4xl font-black text-gray-900 tracking-tight flex items-center gap-3">
             Profile & Verification
@@ -224,20 +224,20 @@ export default function MerchantProfilePage() {
               </div>
             )}
           </h1>
-          <p className="text-gray-500 text-sm font-medium max-w-2xl">
+          <p className="text-gray-700 text-sm font-bold max-w-2xl mt-2">
             Submit your business documents to unlock professional seller tools and enable payouts.
             All documents are stored securely and encrypted.
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full md:w-auto mt-4 md:mt-0">
           {!isEditing ? (
             <button
               onClick={() => setIsEditing(true)}
-              className="relative group overflow-hidden bg-[#301118] text-white px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-maroon-900/20"
+              className="relative group overflow-hidden bg-transparent border-2 border-[#fd6410] text-[#fd6410] w-full md:w-auto px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-sm hover:shadow-lg hover:shadow-orange-500/20"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 -z-10" />
-              <div className="flex items-center justify-center gap-3">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#fd6410] to-orange-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 -z-10" />
+              <div className="flex items-center justify-center gap-3 group-hover:text-white transition-colors duration-300">
                 <FileText className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                 <span>Edit Profile</span>
               </div>
@@ -246,23 +246,21 @@ export default function MerchantProfilePage() {
             <>
               <button
                 onClick={handleCancel}
-                className="px-6 py-4 text-sm font-black text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-colors"
+                className="w-full md:w-auto px-6 py-3.5 bg-gray-100 rounded-xl text-xs font-black text-gray-600 uppercase tracking-widest hover:bg-gray-200 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={updateProfileMutation.isPending}
-                className="relative group overflow-hidden bg-[#fd6410] text-white px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all hover:scale-105 active:scale-95 disabled:opacity-50 shadow-2xl shadow-orange-900/20"
+                className="w-full md:w-auto relative group overflow-hidden bg-[#fd6410] text-white px-8 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 disabled:opacity-50 shadow-lg shadow-orange-900/20"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 -z-10" />
-                <div className="flex items-center justify-center gap-3">
-                  {updateProfileMutation.isPending ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <ShieldCheck className="w-5 h-5 group-hover:animate-bounce" />
+                <div className="flex items-center justify-center gap-2">
+                  {updateProfileMutation.isPending && (
+                    <Loader2 className="w-4 h-4 animate-spin" />
                   )}
-                  <span>{updateProfileMutation.isPending ? "Saving..." : "Save Changes"}</span>
+                  <span className="whitespace-nowrap">{updateProfileMutation.isPending ? "Saving..." : "Save Changes"}</span>
                 </div>
               </button>
             </>
@@ -281,10 +279,8 @@ export default function MerchantProfilePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className={cn(
-          "p-8 rounded-[2.5rem] border-2 transition-all duration-500 overflow-hidden relative group",
-          isVerified 
-            ? "bg-green-50/50 border-green-100 shadow-sm" 
-            : "bg-amber-50/50 border-amber-100 shadow-sm"
+          "p-8 rounded-[2.5rem] border-2 border-[#fd6410]/40 hover:border-[#fd6410] shadow-sm transition-all duration-500 overflow-hidden relative group",
+          isVerified ? "bg-green-50/50" : "bg-amber-50/50"
         )}
       >
         {/* Background micro-animation */}
@@ -365,9 +361,9 @@ export default function MerchantProfilePage() {
                   className={cn("w-5 h-5 accent-[#fd6410]", !isEditing ? "cursor-not-allowed opacity-50" : "cursor-pointer")}
                   disabled={!isEditing}
                 />
-                <label htmlFor="gstExempt" className="text-xs font-bold text-gray-700 cursor-pointer select-none">
+                <label htmlFor="gstExempt" className="text-xs font-bold text-gray-800 cursor-pointer select-none">
                   I don't have a GSTIN / My business is GST exempt 
-                  <span className="block text-[10px] text-gray-400 font-medium normal-case">(Only applicable for specific categories/turnovers)</span>
+                  <span className="block text-[10px] text-gray-600 font-bold normal-case mt-0.5">(Only applicable for specific categories/turnovers)</span>
                 </label>
               </div>
 
@@ -542,7 +538,7 @@ function SectionContainer({ title, icon: Icon, children, delay }: any) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="bg-white rounded-[2.5rem] border border-gray-100 p-8 shadow-sm space-y-8"
+      className="bg-white rounded-[2.5rem] border-2 border-[#fd6410] p-8 shadow-sm space-y-8"
     >
       <div className="flex items-center gap-3">
         <div className="p-2.5 bg-orange-50 rounded-xl">
@@ -559,13 +555,13 @@ function InputField({ label, name, value, onChange, placeholder, type = "text", 
   return (
     <div className="space-y-2 group">
       <div className="flex items-center justify-between pl-1">
-        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">{label}</label>
-        {hint && <span className="text-[9px] text-gray-300 font-bold uppercase">{hint}</span>}
+        <label className="text-xs font-black text-gray-700 uppercase tracking-widest">{label}</label>
+        {hint && <span className="text-[9px] text-gray-500 font-bold uppercase">{hint}</span>}
       </div>
       <div className="relative">
         {Icon && (
           <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
-            <div className="w-10 h-10 flex items-center justify-center text-gray-300 group-focus-within:text-orange-500 transition-colors">
+            <div className="w-10 h-10 flex items-center justify-center text-orange-400 group-focus-within:text-[#fd6410] transition-colors">
               <Icon className="w-4 h-4" />
             </div>
           </div>
@@ -578,9 +574,9 @@ function InputField({ label, name, value, onChange, placeholder, type = "text", 
           placeholder={placeholder}
           disabled={disabled}
           className={cn(
-            "w-full pr-5 py-4 bg-gray-50/50 border border-gray-100 rounded-[1.5rem] text-sm font-bold focus:outline-none focus:ring-4 focus:ring-orange-500/5 focus:border-orange-500/50 transition-all",
+            "w-full pr-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm",
             Icon ? "pl-11" : "pl-5",
-            disabled && "opacity-60 cursor-not-allowed bg-gray-100"
+            disabled && "opacity-60 cursor-not-allowed bg-gray-50 border-gray-200"
           )}
         />
       </div>
@@ -593,14 +589,14 @@ function FileUploadCard({ label, onFileChange, preview, onRemove, file, disabled
   const isPdf = preview && (preview.startsWith('data:application/pdf') || preview.match(/\.pdf$/i));
 
   return (
-    <div className={cn("space-y-2", disabled && "opacity-50 grayscale cursor-not-allowed")}>
-      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">{label}</label>
+    <div className={cn("space-y-2", disabled && "opacity-70 cursor-not-allowed")}>
+      <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">{label}</label>
       <div className="relative group aspect-square">
         <div className={cn(
           "w-full h-full rounded-3xl border-2 border-dashed flex flex-col items-center justify-center text-center p-4 transition-all duration-500 overflow-hidden",
           preview
-            ? "border-orange-500/20 bg-orange-50/5"
-            : "border-gray-100 hover:border-orange-500/40 hover:bg-orange-50/10"
+            ? "border-[#fd6410] bg-orange-50/20"
+            : "border-[#fd6410] hover:bg-orange-50/20"
         )}>
           {preview ? (
             <AnimatePresence mode="wait">
@@ -639,11 +635,11 @@ function FileUploadCard({ label, onFileChange, preview, onRemove, file, disabled
             </AnimatePresence>
           ) : (
             <>
-              <div className="p-4 bg-gray-50 rounded-2xl group-hover:scale-110 transition-transform duration-500 text-gray-300 group-hover:text-orange-500 group-hover:bg-orange-50">
+              <div className="p-4 bg-orange-50/50 rounded-2xl group-hover:scale-110 transition-transform duration-500 text-orange-400 group-hover:text-[#fd6410] group-hover:bg-orange-100/50">
                 <UploadCloud className="w-8 h-8" />
               </div>
-              <p className="mt-3 text-[10px] font-black uppercase text-gray-400 tracking-widest leading-none">Choose File</p>
-              <span className="mt-1 text-[8px] font-bold text-gray-300 uppercase">Max 5MB (PDF/JPG)</span>
+              <p className="mt-3 text-[10px] font-black uppercase text-gray-800 tracking-widest leading-none">Choose File</p>
+              <span className="mt-1 text-[8px] font-bold text-gray-600 uppercase">Max 5MB (PDF/JPG)</span>
             </>
           )}
         </div>

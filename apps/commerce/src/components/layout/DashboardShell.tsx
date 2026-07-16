@@ -114,7 +114,7 @@ export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <div className="flex bg-gray-50 min-h-screen overflow-hidden text-gray-900 font-outfit">
+        <div className="flex bg-gray-50 h-screen w-full overflow-hidden text-gray-900 font-outfit">
             {/* Sidebar (Responsive) */}
             <Sidebar 
                 isOpen={isSidebarOpen} 
@@ -122,7 +122,7 @@ export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
             />
 
             {/* Main Content Area */}
-            <div className="flex-1 lg:ml-64 flex flex-col h-screen w-full overflow-hidden">
+            <div className="flex-1 lg:ml-64 flex flex-col h-screen min-w-0 overflow-hidden">
                 {/* Top Navigation Bar */}
                 <header className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 sticky top-0 z-40 shadow-sm shrink-0">
                     <div className="flex items-center justify-between gap-3">

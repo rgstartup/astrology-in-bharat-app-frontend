@@ -3,13 +3,36 @@ import { ApiResponse } from '@/types/dashboard';
 
 export interface Order {
   id: string;
+  short_id?: string;
   orderId?: string;
   orderNumber?: string;
   customerName: string;
+  customerImage?: string;
   amount: number;
   status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
   date: string;
   itemsCount: number;
+  productName?: string;
+  items?: {
+    id: string;
+    short_id?: string;
+    productId: string;
+    shortProductId?: string;
+    name: string;
+    quantity: number;
+    price: number;
+    image: string | null;
+    status: string;
+  }[];
+  shippingAddress?: {
+    fullName: string;
+    phone: string;
+    addressLine1: string;
+    addressLine2?: string;
+    city: string;
+    state: string;
+    pincode: string;
+  };
 }
 
 export interface OrderStats {

@@ -2,6 +2,13 @@
 @config "../../tailwind.config.js";
 @source "../../../../packages/ui/src";
 
+@layer base {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+}
+
 :root {
   /* Brand Colors */
   --primary: #FF6B00; /* Bhagwa */
@@ -88,11 +95,32 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+  /* Thin orange scrollbar utility */
+  .scrollbar-thin-orange::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+  .scrollbar-thin-orange::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin-orange::-webkit-scrollbar-thumb {
+    background: #fd6410;
+    border-radius: 9999px;
+  }
+  .scrollbar-thin-orange {
+    scrollbar-width: thin;
+    scrollbar-color: #fd6410 transparent;
+  }
 }
 
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar:horizontal {
+  display: none;
 }
 
 ::-webkit-scrollbar-track {
@@ -100,10 +128,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #fed7aa; /* orange-200 */
+  background: #fd6410; /* primary orange */
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #fdba74; /* orange-300 */
+  background: #e55a0f; /* darker primary orange */
 }

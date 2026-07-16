@@ -74,9 +74,9 @@ export function SalesChart({ data, isLoading }: SalesChartProps) {
     <motion.div
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="bg-white p-10 rounded-[3rem] shadow-2xl shadow-gray-200/50 border border-gray-100 flex flex-col h-[450px]"
+      className="bg-white p-5 sm:p-8 md:p-10 rounded-[3rem] shadow-2xl shadow-gray-200/50 border-2 border-orange-600 flex flex-col h-[450px]"
     >
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex flex-col sm:flex-row sm:items-center items-start justify-between gap-6 mb-10">
         <div>
           <h3 className="text-2xl font-black text-gray-900 tracking-tight">Earning Analytics</h3>
           <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">Last 7 days performance</p>

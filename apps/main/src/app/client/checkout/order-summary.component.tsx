@@ -340,6 +340,30 @@ const OrderSummary = ({
                 />
               </div>
               <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-gray-500">Phone Number*</label>
+                <input
+                  type="text"
+                  name="phone"
+                  className="w-full px-4 py-2.5 rounded-lg bg-gray-50 border border-gray-200 focus:border-orange focus:ring-1 focus:ring-orange transition-all outline-none text-sm text-gray-900"
+                  placeholder="10-digit mobile number"
+                  value={address.phone}
+                  onChange={handleAddressChange}
+                  maxLength={10}
+                />
+              </div>
+              <div className="space-y-1.5 col-span-2 sm:col-span-1">
+                <label className="text-xs font-semibold text-gray-500">Alternate Phone (Optional)</label>
+                <input
+                  type="text"
+                  name="alternate_phone"
+                  className="w-full px-4 py-2.5 rounded-lg bg-gray-50 border border-gray-200 focus:border-orange focus:ring-1 focus:ring-orange transition-all outline-none text-sm text-gray-900"
+                  placeholder="Alternate mobile number"
+                  value={address.alternate_phone || ""}
+                  onChange={handleAddressChange}
+                  maxLength={10}
+                />
+              </div>
+              <div className="space-y-1.5 col-span-2 sm:col-span-1">
                 <label className="text-xs font-semibold text-gray-500">Country</label>
                 <input
                   type="text"

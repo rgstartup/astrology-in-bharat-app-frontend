@@ -15,7 +15,11 @@ import {
   AlertCircle,
   Loader2,
   ShieldCheck,
-  X
+  X,
+  ChevronDown,
+  ChevronUp,
+  Image as ImageIcon,
+  Phone
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { cn } from "@/lib/utils/cn";
@@ -34,7 +38,16 @@ export default function OrdersPage() {
   const [otpValue, setOtpValue] = useState("");
   const [verifyingOrderId, setVerifyingOrderId] = useState<string | null>(null);
   const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(null);
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   
+  const toggleRow = (orderId: string) => {
+    setExpandedRows(prev => {
+      const next = new Set(prev);
+      if (next.has(orderId)) next.delete(orderId);
+      else next.add(orderId);
+      return next;
+    });
+  };
   const queryClient = useQueryClient();
 
   // Queries
@@ -249,30 +262,32 @@ export default function OrdersPage() {
 
       {/* Logic Tabs & Search */}
       <div className="flex flex-col xl:flex-row gap-6 items-start xl:items-center justify-between">
-          <div className="flex p-1.5 bg-white border border-gray-100 rounded-2xl shadow-sm space-x-1 overflow-x-auto max-w-full">
-            {tabs.map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={cn(
-                  "px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 uppercase tracking-widest text-[10px] whitespace-nowrap",
-                  activeTab === tab 
-                    ? "bg-[#fd6410] text-white shadow-md" 
-                    : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
-                )}
-              >
-                {tab}
-              </button>
-            ))}
+          <div className="bg-white border-2 border-orange-600 rounded-2xl shadow-sm p-1.5 overflow-hidden max-w-full">
+            <div className="flex space-x-1 overflow-x-auto max-w-full scrollbar-thin-orange pb-1">
+              {tabs.map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={cn(
+                    "px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 uppercase tracking-widest text-[10px] whitespace-nowrap",
+                    activeTab === tab 
+                      ? "bg-[#fd6410] text-white shadow-md" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  )}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto text">
             <div className="relative flex-1 sm:w-80 group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[#fd6410] transition-colors" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600 group-focus-within:text-[#fd6410] transition-colors" />
               <input 
                 type="text" 
                 placeholder="Search by Order ID or Name..."
-                className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-sm focus:outline-none shadow-sm"
+                className="w-full pl-11 pr-4 py-3.5 bg-white border-2 border-orange-600 rounded-2xl text-sm text-gray-800 placeholder:text-gray-500 font-medium focus:outline-none focus:ring-0 shadow-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -280,25 +295,24 @@ export default function OrdersPage() {
           </div>
       </div>
 
-      {/* Orders Table */}
-      <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl overflow-hidden overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead className="bg-gray-50/50 border-b border-gray-100 text-[10px] uppercase font-black text-gray-400 tracking-[0.2em]">
-            <tr>
-              <th className="pl-8 pr-4 py-5">Order ID</th>
-              <th className="px-4 py-5">Customer</th>
-              <th className="px-6 py-5">Date</th>
-              <th className="px-6 py-5">Total</th>
-              <th className="px-6 py-5">Status</th>
-              <th className="px-8 py-5 text-right">Update Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-50">
+      {/* Orders List */}
+      <div className="space-y-4">
+        {/* Header */}
+        <div className="hidden lg:grid grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1.2fr] gap-4 px-8 py-5 bg-white rounded-3xl border border-gray-100 shadow-sm text-[10px] uppercase font-black text-gray-900 tracking-[0.2em]">
+          <div>Order ID</div>
+          <div>Customer</div>
+          <div>Date</div>
+          <div>Total</div>
+          <div>Status</div>
+          <div className="text-right">Update Status</div>
+        </div>
+        
+        <div className="space-y-4">
             {isLoading ? (
               [...Array(8)].map((_, i) => (
-                <tr key={i}>
-                  <td className="pl-8 pr-4 py-6"><Skeleton className="h-4 w-20" /></td>
-                  <td className="px-4 py-6">
+                <div key={i} className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 px-8 grid grid-cols-1 lg:grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1.2fr] gap-4 items-center">
+                  <div><Skeleton className="h-4 w-20" /></div>
+                  <div>
                     <div className="flex items-center space-x-3">
                       <Skeleton className="w-10 h-10 rounded-full" />
                       <div className="space-y-2">
@@ -306,58 +320,78 @@ export default function OrdersPage() {
                         <Skeleton className="h-3 w-12" />
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-6"><Skeleton className="h-4 w-32" /></td>
-                  <td className="px-6 py-6"><Skeleton className="h-4 w-16" /></td>
-                  <td className="px-6 py-6"><Skeleton className="h-6 w-24 rounded-full" /></td>
-                  <td className="px-8 py-6 text-right"><Skeleton className="h-8 w-24 rounded-xl ml-auto" /></td>
-                </tr>
+                  </div>
+                  <div><Skeleton className="h-4 w-32" /></div>
+                  <div><Skeleton className="h-4 w-16" /></div>
+                  <div><Skeleton className="h-6 w-24 rounded-full" /></div>
+                  <div className="lg:text-right"><Skeleton className="h-8 w-24 rounded-xl lg:ml-auto" /></div>
+                </div>
               ))
             ) : orders.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="py-32 text-center">
-                  <div className="flex flex-col items-center justify-center space-y-4 opacity-40">
-                    <ShoppingBag className="w-16 h-16 text-gray-300" />
-                    <div className="space-y-1">
-                      <p className="text-xl font-bold text-gray-900">No Orders Yet</p>
-                      <p className="text-sm font-medium text-gray-500">When customers buy your products, they will appear here.</p>
+              <div className="py-32 text-center bg-white rounded-3xl border border-gray-100 shadow-sm">
+                <div className="flex flex-col items-center justify-center space-y-4 opacity-40">
+                  <ShoppingBag className="w-16 h-16 text-gray-300" />
+                  <div className="space-y-1">
+                    <p className="text-xl font-bold text-gray-900">No Orders Yet</p>
+                    <p className="text-sm font-medium text-gray-500">When customers buy your products, they will appear here.</p>
+                  </div>
+                </div>
+              </div>
+            ) : orders.map((order) => (
+              <div key={order.id} className="bg-white rounded-3xl border border-orange-200 shadow-sm hover:shadow-md hover:border-orange transition-all duration-300 overflow-hidden group">
+              <div 
+                className="grid grid-cols-2 lg:grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1.2fr] gap-4 lg:gap-4 items-center px-6 py-6 lg:px-8 cursor-pointer relative"
+                onClick={() => toggleRow(order.id)}
+              >
+                <div className="col-span-2 lg:col-span-1">
+                  <div className="flex items-center gap-3">
+                    <button className="text-gray-400 hover:text-orange-500 transition-colors">
+                      {expandedRows.has(order.id) ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </button>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1 block lg:hidden">Order ID</span>
+                      <span className="text-sm font-bold text-gray-900 tracking-tight uppercase block">{(order as any).tracking_id || (order as any).trackingId || order.orderNumber || order.short_id || String(order.id).slice(-8)}</span>
+                      {order.productName && <span className="text-[11px] font-semibold text-gray-700 mt-1 block truncate max-w-[180px]">{order.productName}</span>}
                     </div>
                   </div>
-                </td>
-              </tr>
-            ) : orders.map((order) => (
-              <tr key={order.id} className="hover:bg-gray-50/80 group transition-all duration-300 hover:scale-[1.002] active:scale-[0.998] cursor-default">
-                <td className="pl-8 pr-4 py-6">
-                  <span className="text-sm font-bold text-gray-900 tracking-tight uppercase">{order.orderNumber || order.id.substring(0, 8)}</span>
-                </td>
-                <td className="px-4 py-6">
+                </div>
+                <div className="col-span-2 lg:col-span-1">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                       <User className="w-5 h-5 text-[#fd6410]" />
-                    </div>
+                    {order.customerImage ? (
+                      <img src={order.customerImage} alt={order.customerName} className="w-10 h-10 rounded-full object-cover border border-orange-200" />
+                    ) : (
+                      <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                         <User className="w-5 h-5 text-[#fd6410]" />
+                      </div>
+                    )}
                     <div>
                       <h4 className="text-sm font-bold text-gray-900">{order.customerName}</h4>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{order.itemsCount} Items</p>
+                      <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{order.itemsCount} Items</p>
                     </div>
                   </div>
-                </td>
-                <td className="px-6 py-6">
-                  <div className="flex items-center gap-2 text-gray-600 text-sm">
-                    <Calendar className="w-4 h-4 text-gray-400" />
+                </div>
+                <div className="col-span-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1 block lg:hidden">Date</span>
+                  <div className="flex items-center gap-2 text-gray-800 text-sm font-bold">
+                    <Calendar className="w-4 h-4 text-gray-500" />
                     {formatDate(order.date)}
                   </div>
-                </td>
-                <td className="px-6 py-6 font-black text-sm text-gray-900">{formatPrice(order.amount)}</td>
-                <td className="px-6 py-6">
+                </div>
+                <div className="col-span-1 text-right lg:text-left">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1 block lg:hidden">Total</span>
+                  <div className="font-black text-sm text-gray-900">{formatPrice(order.amount)}</div>
+                </div>
+                <div className="col-span-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1 block lg:hidden">Status</span>
                   <span className={cn("px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border flex items-center gap-2 w-max", getStatusStyle(order.status))}>
                     {getStatusIcon(order.status)}
                     {order.status}
                   </span>
-                </td>
-                <td className="px-8 py-6 text-right">
-                  <div className="flex items-center justify-end gap-2">
+                </div>
+                <div className="col-span-1 flex justify-end lg:block mt-0 lg:mt-0">
+                  <div className="flex items-center justify-end w-full lg:w-auto" onClick={(e) => e.stopPropagation()}>
                     <select 
-                       className="text-[10px] font-bold uppercase tracking-widest bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer"
+                       className="text-[10px] font-bold uppercase tracking-widest bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer w-full lg:w-auto"
                        value={order.status.toLowerCase()}
                        onChange={(e) => handleStatusChange(order.orderId || order.id, e.target.value)}
                        disabled={updateStatusMutation.isPending || verifyOtpMutation.isPending}
@@ -369,28 +403,79 @@ export default function OrdersPage() {
                        <option value="cancelled">Cancelled</option>
                     </select>
                   </div>
-                </td>
-              </tr>
+                </div>
+              </div>
+              {expandedRows.has(order.id) && order.items && order.items.length > 0 && (
+                <div className="border-t border-orange-100 bg-orange-50/30">
+                  <div className="py-6 px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 shadow-inner">
+                    <div className="lg:col-span-2 space-y-3">
+                      <h5 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Order Items</h5>
+                      {order.items.map((item: any, idx: number) => (
+                        <div key={idx} className="flex items-center gap-4 bg-white p-3 rounded-xl border border-orange-100 shadow-sm">
+                          {item.image ? (
+                            <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded-lg border border-gray-100" />
+                          ) : (
+                            <div className="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center border border-gray-100 text-gray-300">
+                              <ImageIcon className="w-5 h-5" />
+                            </div>
+                          )}
+                          <div className="flex-1">
+                            <p className="text-sm font-bold text-gray-900">{item.name}</p>
+                            <p className="text-[10px] uppercase tracking-widest text-gray-400 font-medium">PID: {item.shortProductId || String(item.productId).slice(-8)}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs font-bold text-gray-700">{item.quantity} x {formatPrice(item.price)}</p>
+                            <p className="text-sm font-black text-[#fd6410]">{formatPrice(item.quantity * item.price)}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="space-y-3 h-full">
+                      <div className="bg-white rounded-[1.5rem] border border-[#fd6410] shadow-sm flex flex-col overflow-hidden h-full">
+                         <div className="bg-orange-50/50 p-4 border-b border-orange-100 flex items-center gap-3">
+                           <Truck className="w-5 h-5 text-[#fd6410]" />
+                           <span className="text-[11px] font-black uppercase tracking-widest text-[#fd6410]">Shipping Address</span>
+                         </div>
+                         <div className="p-5 flex-1 flex flex-col">
+                           {order.shippingAddress ? (
+                             <div className="space-y-1 text-sm text-gray-500 font-medium">
+                               <p className="font-black text-gray-900 mb-3 text-[17px]">{order.shippingAddress.fullName || (order.shippingAddress as any).full_name || order.customerName}</p>
+                               <p>{order.shippingAddress.addressLine1 || (order.shippingAddress as any).line1}</p>
+                               {(order.shippingAddress.addressLine2 || (order.shippingAddress as any).line2) && <p>{order.shippingAddress.addressLine2 || (order.shippingAddress as any).line2}</p>}
+                               <p>{order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode || (order.shippingAddress as any).zip_code || (order.shippingAddress as any).zipCode}</p>
+                               <div className="pt-4 border-t border-orange-200/60 mt-4 space-y-2">
+                                 <div className="flex items-center gap-2">
+                                   <Phone className="w-3.5 h-3.5 text-gray-400" />
+                                   <span className="text-gray-600">{order.shippingAddress.phone}</span>
+                                 </div>
+                                 {((order.shippingAddress as any).alternatePhone || (order.shippingAddress as any).alternate_phone) && (
+                                   <div className="flex items-center gap-2">
+                                     <Phone className="w-3.5 h-3.5 text-gray-400" />
+                                     <span className="text-gray-600">{(order.shippingAddress as any).alternatePhone || (order.shippingAddress as any).alternate_phone}</span>
+                                     <span className="text-[9px] text-gray-400 font-bold uppercase">(Alt)</span>
+                                   </div>
+                                 )}
+                               </div>
+                             </div>
+                           ) : (
+                             <div className="text-sm text-gray-400 italic text-center py-6 flex-1 flex flex-col items-center justify-center gap-2">
+                               <Truck className="w-8 h-8 text-gray-200" />
+                               <span>Shipping details not provided</span>
+                             </div>
+                           )}
+                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
       </div>
 
-      {/* Helper Footer */}
-      <div className="flex items-center justify-between p-6 bg-orange-50/50 rounded-3xl border border-orange-100">
-         <div className="flex items-center gap-4">
-            <div className="p-3 bg-white rounded-2xl shadow-sm text-orange-500">
-               <AlertCircle className="w-6 h-6" />
-            </div>
-            <div>
-               <h4 className="text-sm font-bold text-gray-900">Need help with fulfillment?</h4>
-               <p className="text-xs text-gray-500 mt-0.5">Check out the shipping guide or contact support for courier integration.</p>
-            </div>
-         </div>
-         <button className="px-6 py-3 bg-white text-gray-900 font-bold text-xs uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all">
-            Open Guide
-         </button>
-      </div>
+
 
       {/* OTP Verification Modal */}
       {otpModalOpen && (

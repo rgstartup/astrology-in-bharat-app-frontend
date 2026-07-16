@@ -30,12 +30,16 @@ export default function ClientLayout({
     console.log("🌊 [Main App] ClientLayout mounted - WebSocket active:", merchantSocket.id || "Connecting...");
   }, []);
 
-  // Show review modal after 10s on homepage for logged-in users (every visit)
+  // Show review modal after 10s on homepage for logged-in users (only once)
   useEffect(() => {
     if (!mounted || !isAuthenticated || !isHomePage) return;
 
+    const hasSeenModal = localStorage.getItem("platform_review_shown");
+    if (hasSeenModal) return;
+
     const timer = setTimeout(() => {
       setShowReviewModal(true);
+      localStorage.setItem("platform_review_shown", "true");
     }, 10000);
 
     return () => clearTimeout(timer);

@@ -134,11 +134,11 @@ export default function AddProductPage() {
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Create New Product</h1>
           <p className="text-gray-500 text-sm italic">Add details about your divine product to attract more customers.</p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-4 md:mt-0 w-full md:w-auto">
           <button 
             onClick={handleSaveDraft}
             disabled={createMutation.isPending}
-            className="px-6 py-3 border border-gray-200 rounded-2xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all active:scale-95 disabled:opacity-50"
+            className="w-full sm:w-auto px-6 py-3.5 border border-gray-200 rounded-2xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all active:scale-95 disabled:opacity-50"
           >
             {createMutation.isPending && createMutation.variables === "draft" ? <Loader2 className="w-4 h-4 animate-spin inline mr-2" /> : null}
             Save as Draft
@@ -146,7 +146,7 @@ export default function AddProductPage() {
           <button 
             onClick={handlePublish}
             disabled={createMutation.isPending}
-            className="flex items-center justify-center space-x-2 bg-[#fd6410] text-white px-8 py-3.5 rounded-2xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-900/20 active:scale-95 group disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-[#fd6410] text-white px-8 py-3.5 rounded-2xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-900/20 active:scale-95 group disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {createMutation.isPending && createMutation.variables === "active" ? (
               <Loader2 className="w-5 h-5 animate-spin" />

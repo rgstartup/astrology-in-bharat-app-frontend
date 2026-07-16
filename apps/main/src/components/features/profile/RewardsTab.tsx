@@ -106,7 +106,6 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
                   >
                     {statusText}
                   </div>
-
                   <div className="flex items-start gap-4 mb-6">
                     <div
                       className={`w-14 h-14 flex items-center justify-center rounded-2xl shadow-sm transition-transform duration-500 group-hover:scale-110 ${

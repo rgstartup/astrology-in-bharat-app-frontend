@@ -5,6 +5,8 @@ import { PATHS } from "@repo/routes";
 import { getProductImageUrl } from "@/utils/image-utils";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
+import { cancelMyOrder } from "@/libs/api-profile";
+import { toast } from "react-toastify";
 import ReviewModal from "../../ui/modals/ReviewModal";
 import Skeleton from "@/components/ui/Skeleton";
 
@@ -52,6 +54,42 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
     const { lang } = useLanguageStore();
     const t = (profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en).orders;
     const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
+
+    const [cancellingOrderId, setCancellingOrderId] = React.useState<string | null>(null);
+    const [cancelModalOpen, setCancelModalOpen] = React.useState(false);
+    const [cancelOrderId, setCancelOrderId] = React.useState<string | null>(null);
+    const [cancelReason, setCancelReason] = React.useState("");
+
+    const initiateCancelOrder = (orderId: string) => {
+      setCancelOrderId(orderId);
+      setCancelReason("");
+      setCancelModalOpen(true);
+    };
+
+    const confirmCancelOrder = async () => {
+      if (!cancelOrderId || !cancelReason.trim()) {
+        toast.error("Please provide a reason for cancellation");
+        return;
+      }
+      
+      setCancellingOrderId(cancelOrderId);
+      setCancelModalOpen(false);
+      
+      const [res, err] = await cancelMyOrder(cancelOrderId, cancelReason);
+      setCancellingOrderId(null);
+      setCancelOrderId(null);
+      setCancelReason("");
+      
+      if (err) {
+        toast.error(err.message || "Failed to cancel order");
+        return;
+      }
+      
+      toast.success("Order cancelled successfully");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    };
 
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden">
@@ -126,17 +164,17 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
               return (
               <div
                 key={order.tracking_id || order.trackingId || order.id || idx}
-                className="group border-y sm:border border-gray-100 sm:rounded-3xl overflow-hidden sm:shadow-sm hover:shadow-md transition-all duration-300 bg-white -mx-4 sm:mx-0"
+                className="group border-y sm:border border-orange-200 sm:rounded-3xl overflow-hidden sm:shadow-sm hover:shadow-md hover:border-orange transition-all duration-300 bg-white -mx-4 sm:mx-0"
               >
                 {/* Order Summary Header */}
                 <div
                   className="bg-gray-50/50 p-4 sm:p-6 flex flex-wrap gap-6 items-center justify-between border-b border-gray-100 cursor-pointer hover:bg-gray-100/30 transition-colors"
                   onClick={() => toggleOrder(order.tracking_id || order.trackingId || order.id)}
                 >
-                  <div className="flex flex-wrap gap-8 items-center">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-8 items-center flex-1">
                     <div>
                       <span
-                        className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1"
+                        className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1"
                         style={fontStyle}
                       >
                         {t.orderId}
@@ -147,7 +185,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                     </div>
                     <div>
                       <span
-                        className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1"
+                        className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1"
                         style={fontStyle}
                       >
                         {t.date}
@@ -169,7 +207,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                     </div>
                     <div>
                       <span
-                        className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1"
+                        className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1"
                         style={fontStyle}
                       >
                         {t.totalAmount}
@@ -181,36 +219,6 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                   </div>
 
                   <div className="flex flex-wrap items-center gap-4 ml-auto">
-                    {(() => {
-                        const otp = order.deliveryOtp || order.delivery_otp || order.deliveryOTP || order.otp;
-                        if (otp && order.status?.toLowerCase() !== 'delivered' && order.status?.toLowerCase() !== 'cancelled') {
-                            return (
-                                <div className="flex items-center gap-2 px-3 py-1 bg-orange/10 border border-orange/20 rounded-lg">
-                                  <i className="fa-solid fa-shield-halved text-orange text-[10px]"></i>
-                                  <span className="text-[10px] font-black text-orange tracking-widest leading-none">
-                                     OTP: {otp}
-                                  </span>
-                                </div>
-                            );
-                        }
-                        return null;
-                    })()}
-
-                    <span
-                      className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${
-                        order.status?.toLowerCase() === "delivered" ||
-                        order.status?.toLowerCase() === "paid" ||
-                        order.status?.toLowerCase() === "success"
-                          ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                          : order.status?.toLowerCase() === "cancelled" ||
-                              order.status?.toLowerCase() === "failed"
-                            ? "bg-red-50 text-red-600 border-red-100"
-                            : "bg-blue-50 text-blue-600 border-blue-100"
-                      }`}
-                      style={fontStyle}
-                    >
-                      {t.statusMap?.[order.status?.toLowerCase() as keyof typeof t.statusMap] || order.status || t.pending}
-                    </span>
                     <button
                       className={`w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 shadow-sm transition-transform duration-300 ${
                         expandedOrders[order.tracking_id || order.trackingId || order.id] ? "rotate-180" : ""
@@ -249,91 +257,184 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {/* Delivery OTP Section (New) */}
-                            {(order.deliveryOtp || order.delivery_otp || order.deliveryOTP) && 
-                             order.status?.toLowerCase() !== 'delivered' && 
-                             order.status?.toLowerCase() !== 'cancelled' && (
-                                <div className="bg-orange-50 border border-orange-100 p-6 rounded-[2rem] flex flex-col items-center justify-center gap-3 mb-6 shadow-sm relative overflow-hidden">
-                                    <div className="flex items-center gap-2 text-orange-600 font-black uppercase tracking-[0.2em] text-[10px]">
-                                        <i className="fa-solid fa-shield-halved"></i>
-                                        <span>Secure Delivery Verification</span>
-                                    </div>
-                                    <div className="flex flex-col items-center">
-                                        <span className="text-3xl md:text-4xl font-black text-slate-900 tracking-[0.3em] font-mono">
-                                            {order.deliveryOtp || order.delivery_otp || order.deliveryOTP}
-                                        </span>
-                                        <p className="text-[10px] text-orange-500 font-bold mt-2 uppercase tracking-widest text-center">Share this OTP only with the delivery person</p>
-                                    </div>
-                                    <div className="absolute top-2 right-4 opacity-5 pointer-events-none">
-                                        <i className="fa-solid fa-truck-fast text-6xl"></i>
-                                    </div>
+                            {/* OTPs are now shown per-merchant below */}
+
+                            {/* Amazon-style: Group items by merchant */}
+                        {(() => {
+                          const groups = order.merchant_groups;
+                          // If merchant_groups available, render grouped
+                          if (groups && groups.length > 0) {
+                            return groups.map((group: any, gIdx: number) => (
+                              <div key={group.merchant_id || gIdx} className="mb-4">
+                                {/* Merchant Header */}
+                                <div className="flex items-center gap-2 mb-3 px-2">
+                                  <div className="w-6 h-6 rounded-full bg-orange/10 flex items-center justify-center shrink-0">
+                                    <i className="fa-solid fa-store text-orange text-[9px]"></i>
+                                  </div>
+                                  <span className="text-[11px] font-black text-slate-700 uppercase tracking-[0.15em] truncate">
+                                    {group.merchant_name || 'Shop'}
+                                  </span>
+                                  <div className="flex-1 h-px bg-gray-100 ml-2"></div>
+                                  
+                                  {/* Item Status */}
+                                  <span
+                                    className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border shrink-0 ${
+                                      group.status?.toLowerCase() === "delivered" ||
+                                      group.status?.toLowerCase() === "paid" ||
+                                      group.status?.toLowerCase() === "success"
+                                        ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                                        : group.status?.toLowerCase() === "cancelled" ||
+                                            group.status?.toLowerCase() === "failed"
+                                          ? "bg-red-50 text-red-600 border-red-100"
+                                          : "bg-blue-50 text-blue-600 border-blue-100"
+                                    }`}
+                                  >
+                                    {t.statusMap?.[group.status?.toLowerCase() as keyof typeof t.statusMap] || group.status || t.pending}
+                                  </span>
                                 </div>
-                            )}
 
-                            {(order.items || order.OrderItems || []).filter(Boolean).map(
-                                (item: any, itemIdx: number) => {
-                                const product = item.product || item.Product;
-                                const productImg =
-                                    getProductImageUrl(product) !== FALLBACK_IMG
-                                    ? getProductImageUrl(product)
-                                    : getProductImageUrl(item);
-
-                                return (
-                                    <div
-                                    key={item.id || itemIdx}
-                                    className="flex items-center gap-6 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100"
-                                    >
-                                    <div className="w-16 h-16 rounded-2xl border border-gray-100 overflow-hidden bg-white shadow-sm shrink-0">
-                                        <Image
-                                        src={productImg}
-                                        alt={product?.name || t.productName}
-                                        width={64}
-                                        height={64}
-                                        className="object-cover w-full h-full"
-                                        onError={(e) => {
-                                            (e.target as any).src = FALLBACK_IMG;
-                                        }}
-                                        />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex justify-between items-start gap-4 mb-1">
-                                        <h6 className="font-bold text-gray-900 m-0 truncate">
-                                            {product?.name || t.productName}
-                                        </h6>
-                                        <span className="font-bold text-gray-900 text-lg">
-                                            ₹{item.price || 0}
-                                        </span>
+                                {/* Delivery OTP Section for this Merchant */}
+                                {group.delivery_otp && 
+                                 group.status?.toLowerCase() !== 'delivered' && 
+                                 group.status?.toLowerCase() !== 'cancelled' && (
+                                    <div className="bg-orange-50 border border-orange-100 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 mb-4 shadow-sm mx-2">
+                                        <div className="flex items-center gap-2 text-orange-600 font-black uppercase tracking-[0.15em] text-[9px]">
+                                            <i className="fa-solid fa-shield-halved"></i>
+                                            <span>Secure Delivery OTP</span>
                                         </div>
-                                        <div className="flex justify-between items-center">
-                                        <span
-                                            className="text-gray-400 text-xs font-medium"
-                                            style={fontStyle}
-                                        >
-                                            {t.qty}: {item.quantity || 1}
+                                        <span className="text-2xl font-black text-slate-900 tracking-[0.25em] font-mono">
+                                            {group.delivery_otp}
                                         </span>
-                                        {order.status?.toLowerCase() ===
-                                            "delivered" && (
-                                            <button
-                                                onClick={() => onOpenReviewModal(order.merchantId || order.Merchant?.id || order.merchant?.id, order.id)}
+                                    </div>
+                                )}
+
+                                {/* Cancellation Reason Section */}
+                                {group.cancellation_reason && group.status?.toLowerCase() === 'cancelled' && (
+                                    <div className="bg-red-50 border border-red-100 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 mb-4 shadow-sm mx-2">
+                                        <div className="flex items-center gap-2 text-red-600 font-black uppercase tracking-[0.15em] text-[9px]">
+                                            <i className="fa-solid fa-circle-xmark"></i>
+                                            <span>Cancellation Reason</span>
+                                        </div>
+                                        <span className="text-xs font-bold text-red-900 text-center max-w-sm">
+                                            {group.cancellation_reason}
+                                        </span>
+                                    </div>
+                                )}
+
+                                {/* Items of this merchant */}
+                                <div className="space-y-2 pl-2">
+                                  {group.items.map((item: any, itemIdx: number) => {
+                                    const productImg = item.image && item.image !== '' ? item.image : FALLBACK_IMG;
+                                    return (
+                                      <div
+                                        key={item.id || itemIdx}
+                                        className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50/50 border border-orange-200 hover:border-orange transition-colors"
+                                      >
+                                        <div className="w-14 h-14 rounded-xl border border-gray-100 overflow-hidden bg-white shadow-sm shrink-0">
+                                          <Image
+                                            src={productImg}
+                                            alt={item.name || t.productName}
+                                            width={56}
+                                            height={56}
+                                            className="object-cover w-full h-full"
+                                            onError={(e) => { (e.target as any).src = FALLBACK_IMG; }}
+                                          />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                          <div className="flex justify-between items-start gap-4 mb-1">
+                                            <h6 className="font-bold text-gray-900 m-0 truncate text-sm">
+                                              {item.name || t.productName}
+                                            </h6>
+                                            <span className="font-bold text-gray-900">₹{item.price || 0}</span>
+                                          </div>
+                                          <div className="flex justify-between items-center">
+                                            <span className="text-slate-500 text-xs font-medium" style={fontStyle}>
+                                              {t.qty}: {item.quantity || 1}
+                                            </span>
+                                            {order.status?.toLowerCase() === "delivered" && (
+                                              <button
+                                                onClick={() => onOpenReviewModal(order.merchantId || group.merchant_id, order.id)}
                                                 className="text-orange font-black text-xs no-underline hover:underline bg-transparent border-0 p-0 cursor-pointer"
                                                 style={fontStyle}
-                                            >
+                                              >
                                                 {t.writeReview}
-                                            </button>
-                                        )}
+                                              </button>
+                                            )}
+                                          </div>
                                         </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ));
+                          }
+
+                          // Fallback: flat item list (old behavior)
+                          return (order.items || order.OrderItems || []).filter(Boolean).map(
+                            (item: any, itemIdx: number) => {
+                              const product = item.product || item.Product;
+                      const productImg =
+                                getProductImageUrl(product) !== FALLBACK_IMG
+                                ? getProductImageUrl(product)
+                                : getProductImageUrl(item);
+                              return (
+                                <div
+                                  key={item.id || itemIdx}
+                                  className="flex items-center gap-6 p-4 rounded-2xl bg-gray-50/50 border border-orange-200 transition-colors"
+                                >
+                                  <div className="w-16 h-16 rounded-2xl border border-gray-100 overflow-hidden bg-white shadow-sm shrink-0">
+                                    <Image
+                                      src={productImg}
+                                      alt={product?.name || t.productName}
+                                      width={64}
+                                      height={64}
+                                      className="object-cover w-full h-full"
+                                      onError={(e) => { (e.target as any).src = FALLBACK_IMG; }}
+                                    />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex justify-between items-start gap-4 mb-1">
+                                      <h6 className="font-bold text-gray-900 m-0 truncate">
+                                        {product?.name || t.productName}
+                                      </h6>
+                                      <span className="font-bold text-gray-900 text-lg">₹{item.price || 0}</span>
                                     </div>
-                                    </div>
-                                );
-                                }
-                            )}
-                        </div>
+                                    <div className="flex justify-between items-center mt-2">
+                                        <span className="text-slate-500 text-xs font-medium" style={fontStyle}>
+                                          {t.qty}: {item.quantity || 1}
+                                        </span>
+                                        {order.status?.toLowerCase() === "delivered" && (
+                                          <button
+                                            onClick={() => onOpenReviewModal(order.merchantId || order.Merchant?.id || order.merchant?.id, order.id)}
+                                            className="text-orange font-black text-xs no-underline hover:underline bg-transparent border-0 p-0 cursor-pointer"
+                                            style={fontStyle}
+                                          >
+                                            {t.writeReview}
+                                          </button>
+                                        )}
+                                      </div>
+                                      
+                                      {/* Cancellation Reason */}
+                                      {item.cancellation_reason && order.status?.toLowerCase() === 'cancelled' && (
+                                          <div className="mt-3 p-3 bg-red-50 border border-red-100 rounded-xl">
+                                              <p className="m-0 text-[10px] font-black uppercase text-red-600 mb-1">Cancellation Reason</p>
+                                              <p className="m-0 text-xs text-red-900 font-medium">{item.cancellation_reason}</p>
+                                          </div>
+                                      )}
+                                  </div>
+                                </div>
+                              );
+                            }
+                          );
+                        })()}
+                    </div>
                     )}
 
                     {/* Order Footer Actions */}
                     <div className="mt-8 flex flex-col md:flex-row gap-6 justify-between items-start md:items-center py-6 border-t border-gray-100">
                       {(order.shippingAddress || order.shipping_address) && (
-                        <div className="flex items-center gap-3 text-gray-400 text-xs font-medium">
+                        <div className="flex items-center gap-3 text-slate-500 text-xs font-medium">
                           <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center">
                             <i className="fa-solid fa-location-dot"></i>
                           </div>
@@ -344,12 +445,14 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                         </div>
                       )}
                       <div className="flex gap-3 w-full md:w-auto">
-                        {order.status?.toLowerCase() === "pending" && (
+                        {order.is_cancelable && (
                           <button
-                            className="flex-1 md:flex-none px-6 py-2 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100 transition-colors"
+                            onClick={() => initiateCancelOrder(order.id)}
+                            disabled={cancellingOrderId === order.id}
+                            className="flex-1 md:flex-none px-6 py-2 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100 transition-colors disabled:opacity-50"
                             style={fontStyle}
                           >
-                            {t.cancelOrder}
+                            {cancellingOrderId === order.id ? "Cancelling..." : t.cancelOrder}
                           </button>
                         )}
 
@@ -382,21 +485,24 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
 
                     {/* Detailed Shipping & Summary */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-                      <div className="bg-gray-50/50 p-6 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
-                        <h6
-                          className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-6 flex items-center"
-                          style={fontStyle}
-                        >
-                          <i className="fa-solid fa-truck-fast mr-2 text-orange/60"></i>
-                          {t.shippingAddress}
-                        </h6>
-                        {(order.shippingAddress || order.shipping_address) ? (
+                      <div className="bg-white rounded-3xl border border-orange shadow-sm relative overflow-hidden group flex flex-col">
+                        <div className="bg-orange-50 px-6 py-4 border-b border-orange/20">
+                          <h6
+                            className="flex items-center text-[10px] font-bold uppercase tracking-[0.15em] text-orange m-0"
+                            style={fontStyle}
+                          >
+                            <i className="fa-solid fa-truck-fast mr-2 text-lg"></i>
+                            {t.shippingAddress}
+                          </h6>
+                        </div>
+                        <div className="p-6 pt-5 flex-1">
+                          {(order.shippingAddress || order.shipping_address) ? (
                           <div className="relative z-10">
                             <p className="font-bold text-gray-900 mb-2">
                               {(order.shippingAddress || order.shipping_address)
                                 .full_name || userName}
                             </p>
-                            <div className="space-y-1 text-sm text-gray-500 font-medium">
+                            <div className="space-y-1 text-sm text-slate-600 font-medium">
                               <p className="m-0">
                                 {(order.shippingAddress || order.shipping_address)
                                   .line1}
@@ -418,33 +524,43 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                   (order.shippingAddress || order.shipping_address)
                                     .zipCode}
                               </p>
-                              <div className="pt-3 mt-3 border-t border-gray-200/50 flex items-center">
-                                <i className="fa-solid fa-phone text-[10px] mr-2 text-gray-300"></i>
-                                { (order.shippingAddress || order.shipping_address).phone || userPhone}
+                              <div className="pt-3 mt-3 border-t border-orange/40 flex flex-col gap-2">
+                                <div className="flex items-center">
+                                  <i className="fa-solid fa-phone text-[10px] mr-2 text-gray-300"></i>
+                                  { (order.shippingAddress || order.shipping_address).phone || userPhone}
+                                </div>
+                                {(order.shippingAddress || order.shipping_address).alternate_phone && (
+                                  <div className="flex items-center">
+                                    <i className="fa-solid fa-phone text-[10px] mr-2 text-gray-300"></i>
+                                    { (order.shippingAddress || order.shipping_address).alternate_phone }
+                                    <span className="ml-2 text-[9px] text-gray-400 font-bold uppercase">(Alt)</span>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
                         ) : (
                           <p
-                            className="text-sm text-gray-400 italic m-0"
+                            className="text-sm text-slate-500 italic m-0"
                             style={fontStyle}
                           >
                             {t.noShippingAddress}
                           </p>
                         )}
-                        <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-orange/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700"></div>
+                        </div>
+                        <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-orange/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700 pointer-events-none"></div>
                       </div>
 
                       <div className="bg-gray-900 p-6 rounded-3xl shadow-xl relative overflow-hidden">
                         <h6
-                          className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 mb-6"
+                          className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-6"
                           style={fontStyle}
                         >
                           {t.orderSummary}
                         </h6>
                         <div className="space-y-4 relative z-10">
                           <div className="flex justify-between items-center text-sm">
-                            <span className="text-gray-400" style={fontStyle}>
+                            <span className="text-gray-300" style={fontStyle}>
                               {t.subtotal}
                             </span>
                             <span className="text-white font-bold tracking-tight">
@@ -452,7 +568,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                             </span>
                           </div>
                           <div className="flex justify-between items-center text-sm">
-                            <span className="text-gray-400" style={fontStyle}>
+                            <span className="text-gray-300" style={fontStyle}>
                               {t.shipping}
                             </span>
                             <span
@@ -474,7 +590,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                 ₹{order.amount || order.totalAmount || order.total_amount || 0}
                               </span>
                               <span
-                                className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-2 block"
+                                className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-2 block"
                                 style={fontStyle}
                               >
                                 {t.paidVia}
@@ -534,6 +650,65 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
         onClose={onCloseReviewModal}
         onSubmit={onReviewSubmit}
       />
+
+      {/* Cancel Order Modal */}
+      {cancelModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-red-50/30">
+              <h3 className="text-lg font-black text-gray-900 m-0 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                  <i className="fa-solid fa-triangle-exclamation text-red-600 text-sm"></i>
+                </div>
+                Cancel Order
+              </h3>
+              <button 
+                onClick={() => setCancelModalOpen(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 transition-colors border-0 bg-transparent cursor-pointer"
+              >
+                <i className="fa-solid fa-xmark text-lg"></i>
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <p className="text-sm text-gray-600 mb-4" style={fontStyle}>
+                Are you sure you want to cancel this order? Please provide a reason for cancellation below. This action cannot be undone.
+              </p>
+              
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  Cancellation Reason <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                  placeholder="e.g. Ordered by mistake, found a better price elsewhere..."
+                  className="w-full border border-gray-200 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange bg-gray-50/50 resize-none transition-all"
+                  rows={4}
+                  style={fontStyle}
+                ></textarea>
+              </div>
+            </div>
+
+            <div className="px-6 py-5 bg-gray-50 flex justify-end gap-3 border-t border-gray-100">
+              <button
+                onClick={() => setCancelModalOpen(false)}
+                className="px-6 py-2.5 rounded-xl text-sm font-bold text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                Keep Order
+              </button>
+              <button
+                onClick={confirmCancelOrder}
+                disabled={!cancelReason.trim()}
+                className="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm shadow-red-600/20"
+              >
+                Cancel Order
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

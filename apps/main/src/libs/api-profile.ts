@@ -54,6 +54,10 @@ export const getMyOrders = async (params?: { limit?: number, offset?: number }):
     return await api.get('/orders/my-orders', { params } as any) as any;
 };
 
+export const cancelMyOrder = async (orderId: string, reason: string): Promise<[any | null, ApiError | null]> => {
+    return await api.patch(`/orders/${orderId}/cancel`, { cancellation_reason: reason }) as any;
+};
+
 export const getWalletTransactions = async (params?: { purpose?: string, limit?: number, offset?: number }): Promise<[any | null, ApiError | null]> => {
     return await api.get('/wallet/transactions', { params } as any) as any;
 };

@@ -8,6 +8,8 @@ export interface AddressDto {
     zip_code?: string;
     is_primary?: boolean;
     tag?: string;
+    phone?: string;
+    alternate_phone?: string;
 }
 
 export interface ClientProfileData {

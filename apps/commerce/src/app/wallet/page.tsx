@@ -39,8 +39,7 @@ export default function WalletPage() {
     const loading = statsLoading || profileLoading;
 
     return (
-        <div className="min-h-screen bg-transparent p-4 md:p-10 lg:p-12 animate-in fade-in duration-1000">
-            <div className="max-w-7xl mx-auto space-y-8 pb-20">
+        <main className="space-y-8 pb-20 animate-in fade-in duration-700">
                 {/* Header */}
                 <div className="space-y-1">
                     <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Wallet</h1>
@@ -114,7 +113,6 @@ export default function WalletPage() {
 
                 {/* Transaction Table */}
                 <TransactionTable transactions={transactions} isLoading={txLoading} />
-            </div>
-        </div>
+        </main>
     );
 }

@@ -231,54 +231,16 @@ export default function PersonalInfo({
                                 {/* Specialization Field */}
                                 <div className="sm:col-span-2">
                                     <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
-                                        Specializations
+                                        Specializations (comma separated)
                                     </label>
-                                    <div className="flex gap-2">
-                                        <input
-                                            type="text"
-                                            value={newSpec}
-                                            onChange={(e) => setNewSpec(e.target.value)}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    e.preventDefault();
-                                                    handleAddSpec();
-                                                }
-                                            }}
-                                            placeholder="Add specialization (e.g. Vedic, Tarot)"
-                                            className="flex-1 p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange/50 outline-none text-sm text-black"
-                                        />
-                                        <Button
-                                            type="button"
-                                            onClick={handleAddSpec}
-                                            variant="primary"
-                                            className="p-2.5 rounded-lg h-auto"
-                                        >
-                                            <Plus className="w-5 h-5" />
-                                        </Button>
-                                    </div>
-                                    {/* Chips Display */}
-                                    <div className="flex flex-wrap gap-2 mt-3">
-                                        {tempSpecs.map((spec, index) => (
-                                            <div
-                                                key={index}
-                                                className="flex items-center gap-1 bg-orange-50 text-orange-800 px-3 py-1 rounded-full text-xs font-medium border border-orange-100"
-                                            >
-                                                <span>{spec}</span>
-                                                <Button
-                                                    type="button"
-                                                    onClick={() => handleRemoveSpec(spec)}
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="p-1 h-auto text-orange-800 hover:text-red-500"
-                                                >
-                                                    <X className="w-3 h-3" />
-                                                </Button>
-                                            </div>
-                                        ))}
-                                        {tempSpecs.length === 0 && (
-                                            <span className="text-xs text-gray-400 italic">No specializations added.</span>
-                                        )}
-                                    </div>
+                                    <input
+                                        type="text"
+                                        name="specialization"
+                                        value={tempProfile.specialization || ""}
+                                        onChange={onChange}
+                                        placeholder="e.g. Vedic Astrology, Tarot Reading"
+                                        className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange/50 outline-none text-sm text-black"
+                                    />
                                 </div>
                             </div>
 

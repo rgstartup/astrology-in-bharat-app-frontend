@@ -139,11 +139,11 @@ export const useProfileBaseLogic = () => {
                 updateUser({ avatar: imageUrl, profile_picture: imageUrl });
 
                 try {
-                    await updateClientProfile({ profile_picture: imageUrl, avatar: imageUrl } as any);
+                    await updateClientProfile({ profile_picture: imageUrl } as any);
                 } catch (err: any) {
                     const status = err?.status;
                     if (status === 404) {
-                        await createClientProfile({ profile_picture: imageUrl, avatar: imageUrl } as any);
+                        await createClientProfile({ profile_picture: imageUrl } as any);
                     } else {
                         throw err;
                     }

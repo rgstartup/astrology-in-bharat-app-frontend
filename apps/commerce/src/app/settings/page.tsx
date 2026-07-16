@@ -91,8 +91,14 @@ export default function ShopProfileSettings() {
     closeTime: "",
     latitude: "",
     longitude: "",
-    trustScore: ""
+    trustScore: "",
+    description: ""
   });
+  const [featuresInput, setFeaturesInput] = useState("");
+  const [features, setFeatures] = useState<string[]>([]);
+  const [existingGallery, setExistingGallery] = useState<string[]>([]);
+  const [selectedGalleryFiles, setSelectedGalleryFiles] = useState<File[]>([]);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
   // Sync profile data to form on load
   useEffect(() => {
@@ -108,8 +114,11 @@ export default function ShopProfileSettings() {
         closeTime: profile.operationalHours?.split(" - ")[1] || "08:30 PM",
         latitude: profile.latitude || "",
         longitude: profile.longitude || "",
-        trustScore: profile.trustScore || ""
+        trustScore: profile.trustScore || "",
+        description: profile.description || ""
       });
+      setFeatures(Array.isArray(profile.features) ? profile.features : []);
+      setExistingGallery(Array.isArray(profile.gallery) ? profile.gallery : []);
       if (profile.image) setShopImagePreview(profile.image);
       if (profile.video) setShopVideoPreview(profile.video);
     }
@@ -164,6 +173,38 @@ export default function ShopProfileSettings() {
     }
   };
 
+  const handleAddFeature = () => {
+    const trimmed = featuresInput.trim();
+    if (trimmed && !features.includes(trimmed)) {
+      setFeatures(prev => [...prev, trimmed]);
+    }
+    setFeaturesInput("");
+  };
+
+  const handleRemoveFeature = (f: string) => {
+    setFeatures(prev => prev.filter(x => x !== f));
+  };
+
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      setSelectedGalleryFiles(prev => [...prev, ...files]);
+      const newPreviews = files.map(f => URL.createObjectURL(f));
+      setGalleryPreviews(prev => [...prev, ...newPreviews]);
+    }
+    // reset input so same file can be selected again if needed
+    e.target.value = '';
+  };
+
+  const handleRemoveExistingGalleryImage = (url: string) => {
+    setExistingGallery(prev => prev.filter(x => x !== url));
+  };
+
+  const handleRemoveNewGalleryImage = (index: number) => {
+    setSelectedGalleryFiles(prev => prev.filter((_, i) => i !== index));
+    setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSave = async () => {
     const data = new FormData();
     data.append('name', formData.storeName);
@@ -176,9 +217,15 @@ export default function ShopProfileSettings() {
     data.append('latitude', formData.latitude);
     data.append('longitude', formData.longitude);
     data.append('trustScore', formData.trustScore);
+    data.append('description', formData.description);
+    data.append('features', JSON.stringify(features));
+    data.append('gallery', JSON.stringify(existingGallery));
     
     if (selectedImage) data.append('image', selectedImage);
     if (selectedVideo) data.append('video', selectedVideo);
+    selectedGalleryFiles.forEach(file => {
+      data.append('gallery', file);
+    });
 
     const res = await updateProfileMutation.mutateAsync(data);
     if (res) {
@@ -200,8 +247,13 @@ export default function ShopProfileSettings() {
         closeTime: profile.operationalHours?.split(" - ")[1] || "08:30 PM",
         latitude: profile.latitude || "",
         longitude: profile.longitude || "",
-        trustScore: profile.trustScore || ""
+        trustScore: profile.trustScore || "",
+        description: profile.description || ""
       });
+      setFeatures(Array.isArray(profile.features) ? profile.features : []);
+      setExistingGallery(Array.isArray(profile.gallery) ? profile.gallery : []);
+      setSelectedGalleryFiles([]);
+      setGalleryPreviews([]);
       if (profile.image) setShopImagePreview(profile.image);
       if (profile.video) setShopVideoPreview(profile.video);
       setSelectedImage(null);
@@ -281,7 +333,7 @@ export default function ShopProfileSettings() {
         <div className="lg:col-span-12 xl:col-span-8 space-y-8">
           
           {/* Main Info Card */}
-          <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-8">
+          <div className="bg-white p-8 rounded-[2.5rem] border-2 border-[#fd6410] shadow-sm space-y-8">
             <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
               <UserIcon className="w-4 h-4 text-[#fd6410]" />
               Branding & Media
@@ -290,15 +342,15 @@ export default function ShopProfileSettings() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Image Upload */}
               <div className="space-y-4">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Shop Photo</label>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Shop Photo</label>
                 <div className="relative group w-full h-48">
-                  <div className="w-full h-full rounded-[2rem] bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition-all group-hover:border-[#fd6410]/50">
+                  <div className="w-full h-full rounded-[2rem] bg-orange-50/20 border-2 border-dashed border-[#fd6410] flex items-center justify-center overflow-hidden transition-all group-hover:border-[#fd6410]/50">
                     {shopImagePreview ? (
                       <img src={shopImagePreview} alt="Shop Preview" className="w-full h-full object-cover" />
                     ) : (
                       <div className="text-center p-4">
-                        <Store className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Add Main Photo</span>
+                        <Store className="w-10 h-10 text-orange-400 mx-auto mb-2" />
+                        <span className="text-[10px] font-black text-gray-800 uppercase tracking-wider block">Add Main Photo</span>
                       </div>
                     )}
                   </div>
@@ -313,15 +365,15 @@ export default function ShopProfileSettings() {
 
               {/* Video Upload */}
               <div className="space-y-4">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Store Video</label>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Store Video</label>
                 <div className="relative group w-full h-48">
-                  <div className="w-full h-full rounded-[2rem] bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition-all group-hover:border-[#fd6410]/50">
+                  <div className="w-full h-full rounded-[2rem] bg-orange-50/20 border-2 border-dashed border-[#fd6410] flex items-center justify-center overflow-hidden transition-all group-hover:border-[#fd6410]/50">
                     {shopVideoPreview ? (
                       <video src={shopVideoPreview} className="w-full h-full object-cover" autoPlay muted loop />
                     ) : (
                       <div className="text-center p-4">
-                        <Video className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Add Shop Tour Video</span>
+                        <Video className="w-10 h-10 text-orange-400 mx-auto mb-2" />
+                        <span className="text-[10px] font-black text-gray-800 uppercase tracking-wider block">Add Shop Tour Video</span>
                       </div>
                     )}
                   </div>
@@ -338,10 +390,10 @@ export default function ShopProfileSettings() {
             {/* Basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Store Name</label>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Store Name</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                     <Store className="w-4 h-4 text-gray-300 group-focus-within:text-[#fd6410] transition-colors" />
+                     <Store className="w-4 h-4 text-orange-400 group-focus-within:text-[#fd6410] transition-colors" />
                   </div>
                   <input 
                     name="storeName"
@@ -349,16 +401,16 @@ export default function ShopProfileSettings() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     type="text" 
-                    className="w-full pl-11 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
+                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Manager Name</label>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Manager Name</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                     <UserIcon className="w-4 h-4 text-gray-300 group-focus-within:text-[#fd6410] transition-colors" />
+                     <UserIcon className="w-4 h-4 text-orange-400 group-focus-within:text-[#fd6410] transition-colors" />
                   </div>
                   <input 
                     name="managerName"
@@ -366,16 +418,16 @@ export default function ShopProfileSettings() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     type="text" 
-                    className="w-full pl-11 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
+                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Mobile Number</label>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Mobile Number</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                     <Phone className="w-4 h-4 text-gray-300 group-focus-within:text-[#fd6410] transition-colors" />
+                     <Phone className="w-4 h-4 text-orange-400 group-focus-within:text-[#fd6410] transition-colors" />
                   </div>
                   <input 
                     name="phone"
@@ -383,12 +435,12 @@ export default function ShopProfileSettings() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     type="tel" 
-                    className="w-full pl-11 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
+                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
 
-              <div className="space-y-4 md:col-span-2 p-6 bg-orange-50/50 rounded-3xl border border-orange-100/50">
+              <div className="space-y-4 md:col-span-2 p-6 bg-orange-50/50 rounded-3xl border-2 border-[#fd6410]">
                 <div className="flex items-center gap-2 mb-2">
                    <Clock className="w-4 h-4 text-[#fd6410]" />
                    <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest leading-none">Operational Schedule</h4>
@@ -396,7 +448,7 @@ export default function ShopProfileSettings() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Opening Time</label>
+                    <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Opening Time</label>
                     <div className="relative group">
                       <input 
                         name="openTime"
@@ -405,13 +457,13 @@ export default function ShopProfileSettings() {
                         onChange={handleInputChange}
                         disabled={!isEditing}
                         type="text" 
-                        className="w-full px-5 py-4 bg-white border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all disabled:bg-gray-50 disabled:text-gray-500"
+                        className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:bg-gray-50 disabled:text-gray-500"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Closing Time</label>
+                    <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Closing Time</label>
                     <div className="relative group">
                       <input 
                         name="closeTime"
@@ -420,7 +472,7 @@ export default function ShopProfileSettings() {
                         onChange={handleInputChange}
                         disabled={!isEditing}
                         type="text" 
-                        className="w-full px-5 py-4 bg-white border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all disabled:bg-gray-50 disabled:text-gray-500"
+                        className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:bg-gray-50 disabled:text-gray-500"
                       />
                     </div>
                   </div>
@@ -428,10 +480,10 @@ export default function ShopProfileSettings() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Trust Score (%)</label>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Trust Score (%)</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                     <ShieldCheck className="w-4 h-4 text-gray-300 group-focus-within:text-[#fd6410] transition-colors" />
+                     <ShieldCheck className="w-4 h-4 text-orange-400 group-focus-within:text-[#fd6410] transition-colors" />
                   </div>
                   <input 
                     name="trustScore"
@@ -440,15 +492,150 @@ export default function ShopProfileSettings() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     type="text" 
-                    className="w-full pl-11 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
+                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
             </div>
           </div>
 
+          {/* About & Specializations Card */}
+          <div className="bg-white p-8 rounded-[2.5rem] border-2 border-[#fd6410] shadow-sm space-y-6">
+            <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+              <ShoppingBag className="w-4 h-4 text-[#fd6410]" />
+              About Your Shop
+            </h3>
+
+            {/* Description */}
+            <div className="space-y-2">
+              <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Shop Description</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+                rows={4}
+                placeholder="Describe your shop — what makes it special, your story, and what customers can expect..."
+                className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all resize-none disabled:text-gray-500 disabled:cursor-not-allowed"
+              />
+            </div>
+
+            {/* Features / Specializations */}
+            <div className="space-y-3">
+              <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Specializations / Features</label>
+              <p className="text-[11px] font-bold text-gray-600 pl-1">Add tags like "Rudraksha", "Gemstones", "Vastu", etc.</p>
+              
+              {/* Tags Display */}
+              <div className="flex flex-wrap gap-2 min-h-[40px]">
+                {features.map((f, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-orange-50 border border-orange-200 text-orange-700 rounded-2xl text-xs font-bold"
+                  >
+                    {f}
+                    {isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFeature(f)}
+                        className="text-orange-400 hover:text-red-500 transition-colors ml-1 font-black leading-none"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </span>
+                ))}
+                {features.length === 0 && (
+                  <span className="text-xs text-gray-300 italic">No specializations added yet</span>
+                )}
+              </div>
+
+              {/* Add Tag Input */}
+              {isEditing && (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={featuresInput}
+                    onChange={e => setFeaturesInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddFeature(); }}}
+                    placeholder="Type a specialization and press Enter or Add"
+                    className="flex-1 px-5 py-3 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddFeature}
+                    className="px-5 py-3 bg-[#fd6410] text-white rounded-[1.5rem] text-sm font-bold hover:bg-orange-600 transition-all active:scale-95"
+                  >
+                    + Add
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Gallery Card */}
+          <div className="bg-white p-8 rounded-[2.5rem] border-2 border-[#fd6410] shadow-sm space-y-6">
+            <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+              <Camera className="w-4 h-4 text-[#fd6410]" />
+              Shop Gallery
+            </h3>
+            <p className="text-[11px] font-bold text-gray-600 pl-1">Add pictures of your products, shop interior, or certificates to build trust.</p>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {/* Existing Gallery Images */}
+              {existingGallery.map((url, i) => (
+                <div key={`existing-${i}`} className="relative group w-full aspect-square rounded-[1.5rem] overflow-hidden border border-gray-100">
+                  <img src={url} alt="Gallery" className="w-full h-full object-cover" />
+                  {isEditing && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveExistingGalleryImage(url)}
+                      className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 shadow-lg scale-90 group-hover:scale-100"
+                    >
+                      <span className="font-black text-sm leading-none block px-1">×</span>
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              {/* Newly Selected Previews */}
+              {galleryPreviews.map((url, i) => (
+                <div key={`new-${i}`} className="relative group w-full aspect-square rounded-[1.5rem] overflow-hidden border-2 border-orange-200">
+                  <img src={url} alt="New Gallery" className="w-full h-full object-cover opacity-80" />
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <Loader2 className="w-5 h-5 text-white animate-spin drop-shadow-md" />
+                  </div>
+                  {isEditing && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveNewGalleryImage(i)}
+                      className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 shadow-lg scale-90 group-hover:scale-100 pointer-events-auto"
+                    >
+                      <span className="font-black text-sm leading-none block px-1">×</span>
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              {/* Add New Button */}
+              {isEditing && (
+                <label className="w-full aspect-square rounded-[1.5rem] bg-orange-50/20 border-2 border-dashed border-[#fd6410] flex flex-col items-center justify-center cursor-pointer hover:border-[#fd6410]/50 hover:bg-orange-50/50 transition-all group">
+                  <Camera className="w-6 h-6 text-orange-400 group-hover:text-[#fd6410] mb-2 transition-colors" />
+                  <span className="text-[10px] font-bold text-gray-400 group-hover:text-[#fd6410] uppercase tracking-wider">Add Photo</span>
+                  <input type="file" multiple accept="image/*" className="hidden" onChange={handleGalleryChange} />
+                </label>
+              )}
+
+              {/* Empty State */}
+              {!isEditing && existingGallery.length === 0 && (
+                <div className="col-span-full py-8 text-center bg-gray-50 rounded-[1.5rem] border border-gray-100 border-dashed">
+                  <p className="text-sm font-bold text-gray-600">No gallery images added yet</p>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Location Card */}
-          <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-8">
+          <div className="bg-white p-8 rounded-[2.5rem] border-2 border-[#fd6410] shadow-sm space-y-8">
             <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
               <MapPin className="w-4 h-4 text-[#fd6410]" />
               Store Location
@@ -456,38 +643,38 @@ export default function ShopProfileSettings() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2 md:col-span-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Full Address</label>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Full Address</label>
                 <textarea 
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   rows={3} 
-                  className="w-full px-5 py-4 bg-gray-50/50 border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all resize-none disabled:text-gray-500 disabled:cursor-not-allowed"
+                  className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all resize-none disabled:text-gray-500 disabled:cursor-not-allowed"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">City</label>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">City</label>
                 <input 
                   name="city"
                   value={formData.city}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   type="text" 
-                  className="w-full px-5 py-4 bg-gray-50/50 border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
+                  className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Pincode</label>
+                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Pincode</label>
                 <input 
                   name="pincode"
                   value={formData.pincode}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   type="text" 
-                  className="w-full px-5 py-4 bg-gray-50/50 border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
+                  className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
                 />
               </div>
 
@@ -524,7 +711,7 @@ export default function ShopProfileSettings() {
                       onChange={handleInputChange}
                       disabled={!isEditing}
                       type="text" 
-                      className="w-full px-5 py-4 bg-white border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all font-mono disabled:bg-gray-50 disabled:text-gray-500"
+                      className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:bg-gray-50 disabled:text-gray-500"
                     />
                   </div>
 
@@ -537,7 +724,7 @@ export default function ShopProfileSettings() {
                       onChange={handleInputChange}
                       disabled={!isEditing}
                       type="text" 
-                      className="w-full px-5 py-4 bg-white border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all font-mono disabled:bg-gray-50 disabled:text-gray-500"
+                      className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:bg-gray-50 disabled:text-gray-500"
                     />
                   </div>
                 </div>
@@ -552,7 +739,7 @@ export default function ShopProfileSettings() {
         {/* Right Column: Live Shop Preview (Sticky) */}
         <div className="lg:col-span-12 xl:col-span-4 self-start sticky top-24 space-y-6">
            <div className="flex items-center justify-between px-4 mb-2">
-              <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+              <h3 className="text-[10px] font-black text-gray-700 uppercase tracking-[0.2em] flex items-center gap-2">
                 <Eye className="w-3 h-3" /> Live Shop Preview
               </h3>
               <div className="flex items-center space-x-1.5 py-1 px-3 bg-green-50 rounded-full border border-green-100">
@@ -562,7 +749,7 @@ export default function ShopProfileSettings() {
            </div>
 
            {/* Preview Mock Frame */}
-           <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl overflow-hidden group">
+           <div className="bg-white rounded-[2.5rem] border-2 border-[#fd6410] shadow-xl overflow-hidden group">
              {/* Main Shop Header Image */}
              <div className="relative h-48 bg-gray-50 overflow-hidden">
                 {shopImagePreview ? (
@@ -591,7 +778,7 @@ export default function ShopProfileSettings() {
                 {/* Store Intro */}
                 <div className="space-y-4">
                    <div className="flex items-center justify-between">
-                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">About Store</span>
+                     <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">About Store</span>
                      <div className="flex flex-col items-end">
                         <div className="flex items-center text-rose-500">
                            <ShieldCheck className="w-4 h-4" />
@@ -604,12 +791,12 @@ export default function ShopProfileSettings() {
                      </div>
                    </div>
                    
-                   <div className="flex items-start space-x-3 text-sm text-gray-600">
+                   <div className="flex items-start space-x-3 text-sm font-bold text-gray-900">
                       <MapPin className="w-4 h-4 text-[#fd6410] shrink-0 mt-0.5" />
                       <p className="line-clamp-2 text-xs leading-relaxed">{formData.address || "Shop Address"}{formData.pincode ? `, ${formData.pincode}` : ""}</p>
                    </div>
                    
-                   <div className="flex items-center space-x-3 text-xs text-gray-600">
+                   <div className="flex items-center space-x-3 text-xs font-bold text-gray-900">
                       <Phone className="w-4 h-4 text-[#fd6410] shrink-0" />
                       <p className="font-mono">{formData.phone || "+91 XXXXXXXXXX"}</p>
                    </div>
@@ -630,8 +817,8 @@ export default function ShopProfileSettings() {
                 {/* Mock Products Grid */}
                  <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Popular Products</span>
-                      <ShoppingBag className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Popular Products</span>
+                      <ShoppingBag className="w-3.5 h-3.5 text-[#fd6410]" />
                     </div>
                     {isProductsLoading ? (
                       <div className="grid grid-cols-2 gap-2">
@@ -662,19 +849,16 @@ export default function ShopProfileSettings() {
                         ))}
                       </div>
                     ) : (
-                      <div className="h-20 bg-gray-50 rounded-xl flex items-center justify-center border border-dashed border-gray-200">
+                      <div className="h-20 bg-gray-50 rounded-xl flex items-center justify-center border border-dashed border-[#fd6410]">
                         <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">No Products Found</span>
                       </div>
                     )}
                  </div>
 
-                <button className="w-full py-3 bg-gray-900 text-white text-[10px] font-black rounded-xl uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-black transition-all">
-                  Visit Full Store <ExternalLink className="w-3 h-3" />
-                </button>
              </div>
            </div>
 
-           <div className="p-6 bg-orange-50 rounded-[2rem] border border-orange-100 space-y-2">
+           <div className="p-6 bg-orange-50 rounded-[2rem] border-2 border-[#fd6410] space-y-2">
               <p className="text-[10px] text-orange-900 font-bold uppercase tracking-widest">Developer Note</p>
               <p className="text-[11px] text-orange-800/70 leading-relaxed italic">"The changes you make on the left will reflect here instantly. This is exactly how your customer sees your shop."</p>
            </div>
