@@ -290,8 +290,7 @@ export const useCallLogic = (): any => {
   useEffect(() => {
     if (status === "connected" && sessionData?.max_duration_seconds) {
       if (callDuration >= sessionData.max_duration_seconds && !sessionData.is_free) {
-        toast.error("Low balance. Consultation ended.");
-        handleEndCall();
+        toast.error("Low balance. Waiting for backend termination.");
       }
     }
   }, [callDuration, sessionData, status]);
@@ -300,8 +299,6 @@ export const useCallLogic = (): any => {
     if (showFreeEndPrompt && continuationTimer > 0) {
       const timer = setInterval(() => setContinuationTimer(prev => prev - 1), 1000);
       return () => clearInterval(timer);
-    } else if (showFreeEndPrompt && continuationTimer === 0) {
-      handleEndCall();
     }
   }, [showFreeEndPrompt, continuationTimer]);
 

@@ -211,12 +211,10 @@ function ChatRoomContent() {
     }, [sessionStatus, startedAt, expiresAt]);
 
     useEffect(() => {
-        console.log(`[ChatRoom] Auto-terminate check: status=${sessionStatus}, timeLeft=${timeLeft}, expiresAt=${expiresAt}, isFree=${isFree}`);
         if (sessionStatus === 'active' && timeLeft === 0 && expiresAt && !isFree) {
-            console.log("[ChatRoom] ❌ Balance exhausted, auto-terminating chat.", {
+            console.log("[ChatRoom] Balance exhausted, waiting for backend termination.", {
                 sessionStatus, timeLeft, expiresAt, isFree
             });
-            handleEndChat(true);
         }
     }, [timeLeft, sessionStatus, expiresAt, isFree]);
 
@@ -226,8 +224,6 @@ function ChatRoomContent() {
                 setContinuationTimer(prev => prev - 1);
             }, 1000);
             return () => clearInterval(timer);
-        } else if (showFreeEndPrompt && continuationTimer === 0) {
-            handleEndChat();
         }
     }, [showFreeEndPrompt, continuationTimer]);
 
