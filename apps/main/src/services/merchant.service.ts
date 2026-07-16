@@ -47,10 +47,20 @@ export const merchantService = {
      */
     getMerchantProducts: async (id: string, page = 1, limit = 20) => {
         const [data, error] = await api.get<any>(`/products?merchantId=${id}&page=${page}&limit=${limit}`) as any;
-        // console.log('Raw Store products API Response:', data);
-        // Extract array from various possible keys
-        const products = data?.data?.products || data?.products || data?.data || data;
-        return [Array.isArray(products) ? products : [], error];
+        // Handle all possible backend response formats:
+        // { success: true, data: [...] } OR { data: [...] } OR { products: [...] } OR [...]
+        let products: any[] = [];
+        const raw = data as any;
+        if (Array.isArray(raw)) {
+            products = raw;
+        } else if (raw?.data && Array.isArray(raw.data)) {
+            products = raw.data;
+        } else if (raw?.data?.products && Array.isArray(raw.data.products)) {
+            products = raw.data.products;
+        } else if (raw?.products && Array.isArray(raw.products)) {
+            products = raw.products;
+        }
+        return [products, error];
     },
 
     /**

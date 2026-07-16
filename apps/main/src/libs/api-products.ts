@@ -25,13 +25,24 @@ export const getProducts = async (): Promise<Product[]> => {
         }
 
         const raw: any = data;
+
+        // Handle all possible backend response formats:
+        // 1. { success: true, data: [...] }      <- find-all-products use case
+        // 2. { data: [...] }                     <- generic
+        // 3. [...]                               <- plain array
+        let productArray: any[] = [];
+
         if (Array.isArray(raw)) {
-            return raw.map(normalizeProduct);
+            productArray = raw;
         } else if (raw?.data && Array.isArray(raw.data)) {
-            return raw.data.map(normalizeProduct);
+            productArray = raw.data;
+        } else if (raw?.products && Array.isArray(raw.products)) {
+            productArray = raw.products;
+        } else if (raw?.data?.data && Array.isArray(raw.data.data)) {
+            productArray = raw.data.data;
         }
 
-        return [];
+        return productArray.map(normalizeProduct);
     } catch (error) {
         console.error("Backend not reachable:", error);
         return [];
