@@ -66,7 +66,7 @@ export default function Header({
                         <div>
                             <h1 className="font-bold text-[11px] md:text-sm leading-none text-white flex items-center gap-1.5">
                                 {expertData.name}
-                                {isFree && <span className="bg-[#1A1A1A] text-[#fd6410] px-1.5 py-0.5 rounded text-[7px] font-black uppercase tracking-tighter shadow-sm animate-bounce">Free</span>}
+                                {isFree && <span className="bg-[#1A1A1A] text-[#fd6410] px-2 py-1 rounded-md text-[10px] md:text-xs font-black uppercase tracking-widest shadow-md animate-bounce border border-[#fd6410]/20">Free</span>}
                             </h1>
                             <p className="text-[8px] text-white/80 mt-0.5">
                                 {sessionStatus === 'active' ? 'Live Session' : sessionStatus === 'completed' ? 'Session Ended' : 'Waiting'}

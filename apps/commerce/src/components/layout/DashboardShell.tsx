@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Sidebar } from "@/features/shop-dashboard/components/Sidebar";
 import { Menu } from "lucide-react";
 import { SearchInput, Avatar, NotificationBell } from "@repo/ui";
@@ -16,15 +16,16 @@ import { toast } from "react-toastify";
 
 export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
-    const { user } = useAuthStore();
+    const router = useRouter();
+    const { user, loading, isAuthenticated } = useAuthStore();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     
     const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"];
     const isAuthPage = pathname === "/" || authRoutes.some(route => pathname?.startsWith(route));
 
-    // Fetch real profile data - only if NOT on an auth page
+    // Fetch real profile data - only if NOT on an auth page and IS authenticated
     const { data: profileData, isLoading: isProfileLoading } = useMerchantProfile({ 
-        enabled: !isAuthPage 
+        enabled: !isAuthPage && isAuthenticated 
     });
     const updateOnlineStatus = useUpdateOnlineStatus();
     
@@ -103,6 +104,25 @@ export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
             };
         }
     }, [user?.id, fetchNotifications, fetchUnreadCount]);
+
+    // Route Protection Logic
+    React.useEffect(() => {
+        if (!loading && !isAuthenticated && !isAuthPage) {
+            router.push("/login");
+        }
+    }, [loading, isAuthenticated, isAuthPage, router]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center font-outfit">
+                <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        );
+    }
+
+    if (!isAuthenticated && !isAuthPage) {
+        return null;
+    }
 
     // If it's an auth page, just render the content without sidebar/header
     if (isAuthPage) {
