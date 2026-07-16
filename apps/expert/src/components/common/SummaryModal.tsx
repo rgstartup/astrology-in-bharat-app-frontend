@@ -36,14 +36,10 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({ isOpen, onClose, tit
             <div className="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
                 <div className="overflow-y-auto custom-scrollbar">
                     {/* Header Section (Premium Orange) */}
-                    <div className="bg-gradient-to-br from-[#fd6410] to-[#ff8c4a] p-8 md:p-10 text-center relative overflow-hidden">
+                    <div className="bg-gradient-to-br from-[#fd6410] to-[#ff8c4a] p-6 md:p-6 text-center relative overflow-hidden">
                         {/* Abstract design elements */}
                         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
                         <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-12 -mb-12 blur-xl" />
-                        
-                        <div className="w-16 h-16 md:w-20 md:h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/30 backdrop-blur-sm shadow-xl relative z-10">
-                            <LucideIcons.CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-white" />
-                        </div>
                         
                         <h3 className="text-2xl md:text-3xl font-black text-white relative z-10 leading-tight">{title}</h3>
                         <p className="text-white/80 font-bold text-[10px] mt-2 uppercase tracking-[0.3em] relative z-10">Earning Summary</p>
