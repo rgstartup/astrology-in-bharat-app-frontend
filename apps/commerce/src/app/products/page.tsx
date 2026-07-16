@@ -238,10 +238,7 @@ export default function ProductListing() {
               />
             </div>
             
-            <button className="flex items-center justify-center space-x-2 px-6 py-3.5 bg-white border border-gray-100 rounded-2xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm">
-              <Filter className="w-4 h-4" />
-              <span>Advanced Filter</span>
-            </button>
+
           </div>
         </div>
       </div>
