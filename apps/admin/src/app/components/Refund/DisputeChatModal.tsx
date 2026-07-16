@@ -205,6 +205,43 @@ export function DisputeChatModal({ isOpen, onClose, dispute, onStatusUpdate }: D
                             </div>
                         </div>
 
+                        {dispute.orderDetails && (
+                            <>
+                                <h3 className="font-bold text-gray-900 mb-4 uppercase text-xs tracking-wider border-t pt-4">Order Details</h3>
+                                <div className="space-y-4 mb-8 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                                    <div>
+                                        <span className="text-[10px] text-gray-500 block uppercase font-bold tracking-wider">Product Name</span>
+                                        <p className="font-semibold text-gray-900 text-sm line-clamp-2" title={dispute.orderDetails.productName}>{dispute.orderDetails.productName || 'Unknown Product'}</p>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <span className="text-[10px] text-gray-500 block uppercase font-bold tracking-wider">Status</span>
+                                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                                                dispute.orderDetails.status === 'DELIVERED' ? 'bg-emerald-100 text-emerald-800' :
+                                                dispute.orderDetails.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
+                                                'bg-blue-100 text-blue-800'
+                                            }`}>
+                                                {dispute.orderDetails.status || 'PENDING'}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] text-gray-500 block uppercase font-bold tracking-wider">Shop Name</span>
+                                            <p className="font-semibold text-gray-900 text-sm line-clamp-1" title={dispute.orderDetails.merchantName}>{dispute.orderDetails.merchantName}</p>
+                                        </div>
+                                    </div>
+                                    {dispute.orderDetails.deliveryDate && (
+                                        <div>
+                                            <span className="text-[10px] text-gray-500 block uppercase font-bold tracking-wider">Updated / Delivered At</span>
+                                            <p className="text-sm text-gray-700">{new Date(dispute.orderDetails.deliveryDate).toLocaleString()}</p>
+                                        </div>
+                                    )}
+                                    <div className="pt-2 border-t border-gray-50 border-dashed">
+                                        <span className="text-[9px] text-gray-400 block font-mono break-all">ID: {dispute.orderDetails.productId || 'N/A'}</span>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
                         <h3 className="font-bold text-gray-900 mb-4 uppercase text-xs tracking-wider">Update Status</h3>
                         <div className="space-y-3">
                             <button 

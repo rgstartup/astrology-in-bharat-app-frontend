@@ -53,6 +53,23 @@ export default function RefundManagementPage() {
         else if (d.status === "closed") status = "rejected";
         else if (d.status === "pending" || d.status === "open") status = "pending";
 
+        let orderDetails = null;
+        if (type === 'order' && d.order?.items) {
+          // If dispute has specific item_id, find it, otherwise just take the first item
+          const item = d.item_id ? d.order.items.find((i: any) => i.id === d.item_id) : d.order.items[0];
+          if (item) {
+            orderDetails = {
+              itemId: item.id,
+              status: item.status || d.order.status,
+              productId: item.product?.id,
+              productName: item.product?.name,
+              merchantName: item.product?.merchant?.user?.name || "Unknown Shop",
+              deliveryDate: item.status === 'DELIVERED' ? (item.updated_at || d.order.updated_at) : null,
+              cancellationReason: item.cancellation_reason
+            };
+          }
+        }
+
         return {
           id: d.id.toString(),
           realId: d.id,
@@ -83,7 +100,8 @@ export default function RefundManagementPage() {
           status: status,
           priority: d.priority || "medium",
           requestedAt: new Date(d.createdAt || Date.now()),
-          attachments: d.attachments || []
+          attachments: d.attachments || [],
+          orderDetails
         };
       });
 
