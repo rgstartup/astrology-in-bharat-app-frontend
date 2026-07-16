@@ -332,7 +332,7 @@ export default function ProductListing() {
                       </div>
                       <div>
                         <h4 className="text-sm font-bold text-gray-900 group-hover:text-[#fd6410] transition-colors">{p.name}</h4>
-                        <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest mt-1">ID: {p.short_id || String(p.id).slice(-8)}</p>
+                        <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest mt-1">ID: {(p as any).short_id || String(p.id).slice(-8)}</p>
                       </div>
                     </div>
                   </td>
