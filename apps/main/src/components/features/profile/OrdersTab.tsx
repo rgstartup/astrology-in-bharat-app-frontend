@@ -558,29 +558,68 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                         >
                           {t.orderSummary}
                         </h6>
-                        <div className="space-y-4 relative z-10">
+                        <div className="space-y-3 relative z-10">
+                          {/* Subtotal */}
                           <div className="flex justify-between items-center text-sm">
                             <span className="text-gray-300" style={fontStyle}>
                               {t.subtotal}
                             </span>
                             <span className="text-white font-bold tracking-tight">
-                              ₹{(order.amount || order.totalAmount || order.total_amount || 0) - (order.shipping_charge || order.shippingCharge || 0)}
+                              ₹{(
+                                (order.amount || order.total_amount || 0)
+                                - (order.shipping_charge || 0)
+                                - (order.platform_fee || 0)
+                                + (order.discount_amount || 0)
+                              ).toFixed(0)}
                             </span>
                           </div>
+
+                          {/* Platform Fee */}
+                          {(order.platform_fee || 0) > 0 && (
+                            <div className="flex justify-between items-center text-sm">
+                              <span className="text-gray-300" style={fontStyle}>
+                                Platform Fee
+                              </span>
+                              <span className="text-white font-bold">
+                                ₹{order.platform_fee}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Shipping */}
                           <div className="flex justify-between items-center text-sm">
                             <span className="text-gray-300" style={fontStyle}>
                               {t.shipping}
                             </span>
                             <span
-                              className={`${(order.shipping_charge || order.shippingCharge) > 0 ? 'text-white' : 'text-emerald-400'} font-black uppercase tracking-widest text-[12px] md:text-[10px]`}
+                              className={`${(order.shipping_charge || 0) > 0 ? 'text-white' : 'text-emerald-400'} font-black uppercase tracking-widest text-[12px]`}
                               style={fontStyle}
                             >
-                              {(order.shipping_charge || order.shippingCharge) > 0 
-                                ? `₹${order.shipping_charge || order.shippingCharge}` 
+                              {(order.shipping_charge || 0) > 0
+                                ? `₹${order.shipping_charge}`
                                 : t.free}
                             </span>
                           </div>
-                          <div className="pt-6 border-t border-white/5 flex justify-between items-end">
+
+                          {/* Discount */}
+                          {(order.discount_amount || 0) > 0 && (
+                            <div className="flex justify-between items-center text-sm">
+                              <span className="text-gray-300 flex items-center gap-1" style={fontStyle}>
+                                Discount
+                                {order.coupon_code && (
+                                  <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded-md font-black uppercase">
+                                    {order.coupon_code}
+                                  </span>
+                                )}
+                              </span>
+                              <span className="text-emerald-400 font-black">
+                                - ₹{order.discount_amount}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Total */}
+                          <div className="pt-4 border-t border-white/10 flex justify-between items-end">
                             <span
                               className="text-white font-bold"
                               style={fontStyle}
