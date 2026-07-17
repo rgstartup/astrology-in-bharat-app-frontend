@@ -4,15 +4,17 @@ import { useLanguageStore } from "@repo/store";
 import { matchingTranslations } from "@/lib/translations/calculators/matching";
 import { Sun, Flower2, Sparkles, ClipboardCheck } from "lucide-react";
 
-const features = [
-  { icon: Flower2, text: "As per Vedic Astrology" },
-  { icon: Sparkles, text: "36 Gun Milan System" },
-  { icon: ClipboardCheck, text: "Detailed Analysis" },
-];
+const featureIcons = [Flower2, Sparkles, ClipboardCheck];
 
 const HeroComponent = () => {
   const { lang } = useLanguageStore();
+  const t = (matchingTranslations[lang as keyof typeof matchingTranslations] || matchingTranslations.en);
   const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
+  const features = [
+    { icon: Flower2, text: lang === 'hi' ? 'वैदिक ज्योतिष के अनुसार' : 'As per Vedic Astrology' },
+    { icon: Sparkles, text: lang === 'hi' ? '36 गुण मिलान प्रणाली' : '36 Gun Milan System' },
+    { icon: ClipboardCheck, text: lang === 'hi' ? 'विस्तृत विश्लेषण' : 'Detailed Analysis' },
+  ];
 
   return (
     <section className="relative overflow-hidden bg-[#fff8f2] pt-4 pb-4 md:pt-5 md:pb-6">
@@ -38,12 +40,12 @@ const HeroComponent = () => {
           <div className="w-full md:w-[50%] p-6 md:p-10 lg:p-12 z-20 order-2 md:order-1 flex flex-col justify-center relative -mt-10 md:mt-0">
             
             <h1 className="text-3xl md:text-4xl lg:text-[44px] font-serif font-bold text-white mb-1 text-center md:text-left drop-shadow-md leading-tight" style={fontStyle}>
-              Kundli Matching
+              {lang === 'hi' ? 'कुंडली मिलान' : 'Kundli Matching'}
             </h1>
             
             <div className="flex flex-col items-center md:items-start mb-4">
               <h2 className="text-[#ffb286] text-xl md:text-2xl lg:text-[22px] font-serif mb-3 text-center md:text-left drop-shadow-md">
-                Find Your Cosmic Compatibility
+                {lang === 'hi' ? 'अपनी ब्रह्मांडीय अनुकूलता खोजें' : 'Find Your Cosmic Compatibility'}
               </h2>
               {/* Decorative divider */}
               <div className="w-32 h-[1px] bg-gradient-to-r from-[#ffb286]/80 via-[#ffb286]/30 to-transparent hidden md:block mb-1"></div>
@@ -51,8 +53,8 @@ const HeroComponent = () => {
             </div>
             
             <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-10 text-center md:text-left max-w-md mx-auto md:mx-0 drop-shadow-md">
-              Ancient wisdom to guide your future together.<br />
-              <span className="block mt-1">Discover the cosmic harmony of your relationship.</span>
+              {lang === 'hi' ? 'अपने भविष्य को एक साथ मार्गदर्शन देने के लिए प्राचीन ज्ञान।' : 'Ancient wisdom to guide your future together.'}<br />
+              <span className="block mt-1">{lang === 'hi' ? 'अपने रिश्ते की ब्रह्मांडीय सद्भावना खोजें।' : 'Discover the cosmic harmony of your relationship.'}</span>
             </p>
 
             {/* Features Grid - EXACTLY like Famous Temples */}

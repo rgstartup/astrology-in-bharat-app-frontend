@@ -38,6 +38,8 @@ interface Product {
   description?: string;
   original_price?: number;
   created_at?: string;
+  is_shipping_chargeable?: boolean;
+  shipping_charge?: number;
 }
 
 export default function ProductListing() {
@@ -269,6 +271,7 @@ export default function ProductListing() {
                  </div>
               </th>
               <th className="px-6 py-5">Stock</th>
+              <th className="px-6 py-5">Shipping</th>
               <th className="px-6 py-5">Status</th>
               <th className="px-8 py-5 text-right">Actions</th>
             </tr>
@@ -288,6 +291,7 @@ export default function ProductListing() {
                     </div>
                   </td>
                   <td className="px-6 py-6"><Skeleton className="h-6 w-20 rounded-lg" /></td>
+                  <td className="px-6 py-6"><Skeleton className="h-4 w-16" /></td>
                   <td className="px-6 py-6"><Skeleton className="h-4 w-16" /></td>
                   <td className="px-6 py-6">
                     <div className="space-y-1.5">
@@ -341,7 +345,9 @@ export default function ProductListing() {
                        {p.category}
                      </span>
                   </td>
-                  <td className={cn("px-6 py-5 font-bold text-sm text-gray-900 tracking-tight border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>{formatPrice(p.price)}</td>
+                  <td className={cn("px-6 py-5 font-bold text-sm text-gray-900 tracking-tight border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
+                    {formatPrice(p.price)}
+                  </td>
                   <td className={cn("px-6 py-5 border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
                     <div className="flex flex-col">
                        <span className="font-bold text-xs text-gray-700">{p.stock} units</span>
@@ -352,6 +358,17 @@ export default function ProductListing() {
                           />
                        </div>
                     </div>
+                  </td>
+                  <td className={cn("px-6 py-5 border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
+                     {p.is_shipping_chargeable && Number(p.shipping_charge) > 0 ? (
+                       <span className="inline-flex items-center gap-1 whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 border border-blue-100">
+                         ₹{Number(p.shipping_charge).toFixed(0)}
+                       </span>
+                     ) : (
+                       <span className="inline-flex items-center whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-black bg-green-50 text-green-700 border border-green-100">
+                         FREE
+                       </span>
+                     )}
                   </td>
                   <td className={cn("px-6 py-5 border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
                     <span className={cn("inline-block whitespace-nowrap px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ring-2 ring-offset-0 transition-all", getStatusBadge(p.status))}>

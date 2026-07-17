@@ -154,12 +154,27 @@ export async function initiateRegistrationAction(email: string): Promise<AuthAct
 // COMPLETE REGISTRATION
 // ─────────────────────────────────────────────────────────
 export async function completeRegistrationAction(payload: any): Promise<AuthActionResponse> {
+  console.log('[DEBUG][ServerAction] completeRegistrationAction called with payload:', JSON.stringify({
+    email: payload.email,
+    token: payload.token ? payload.token.substring(0, 30) + '...' : 'MISSING TOKEN',
+    name: payload.name,
+    phone: payload.phone,
+    gender: payload.gender,
+    maritalStatus: payload.maritalStatus,
+    occupation: payload.occupation,
+    birthDetails: payload.birthDetails,
+  }, null, 2));
+
   const [data, error] = await api.post<AuthResponse>(
     '/auth/email/register/complete',
     payload,
   ) as any;
 
+  console.log('[DEBUG][ServerAction] Response from backend - error:', error ? JSON.stringify(error) : 'none');
+  console.log('[DEBUG][ServerAction] Response from backend - data:', data ? JSON.stringify({ hasAccessToken: !!data.accessToken, hasRefreshToken: !!data.refreshToken, user: data.user }) : 'none');
+
   if (error) {
+    console.error('[DEBUG][ServerAction] Returning error:', getErrorMessage(error));
     return { error: getErrorMessage(error) };
   }
 

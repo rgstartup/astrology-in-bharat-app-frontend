@@ -20,7 +20,7 @@ const securityHeaders = [
       "img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com https://content.jdmagicbox.com",
       `connect-src 'self' https://api.prokerala.com https://checkout.razorpay.com https://*.twilio.com wss: ws: wss://*.twilio.com https://astrology-in-bharat-services.onrender.com wss://astrology-in-bharat-services.onrender.com http://localhost:6543 http://127.0.0.1:6543 ws://localhost:6543`,
       "frame-src https://api.razorpay.com https://checkout.razorpay.com",
-      "media-src 'self' blob: https://*.twilio.com",
+      "media-src 'self' blob: https://*.twilio.com https://res.cloudinary.com https://*.cloudinary.com",
     ].join("; "),
   },
 ];

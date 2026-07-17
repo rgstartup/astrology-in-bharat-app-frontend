@@ -24,6 +24,8 @@ type Props = {
   total: number;
   handleQuantityChange?: (qty: number) => void;
   availableCoupons?: any[];
+  platformFee?: number;
+  shippingCharge?: number;
 };
 
 const OrderSummary = ({
@@ -48,6 +50,8 @@ const OrderSummary = ({
   total,
   handleQuantityChange,
   availableCoupons = [],
+  platformFee = 50,
+  shippingCharge = 0,
 }: Props) => {
   const validCoupons = availableCoupons.filter((c: any) => {
     const coupon = c.coupon || c;
@@ -234,12 +238,26 @@ const OrderSummary = ({
             <h6 className="text-sm font-bold text-gray-900 mb-2">Price Breakdown</h6>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">{isOrder ? "Items Total" : "Consultation Fees"}</span>
-              <span className="text-sm font-medium text-gray-900">₹ {total + discountAmount - 50}</span>
+              <span className="text-sm font-medium text-gray-900">₹ {total + discountAmount - (isOrder ? platformFee + shippingCharge : 0)}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Platform Charges</span>
-              <span className="text-sm font-medium text-gray-900">₹ 50</span>
-            </div>
+            {isOrder && (
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Platform Charges</span>
+                <span className="text-sm font-medium text-gray-900">₹ {platformFee}</span>
+              </div>
+            )}
+            {isOrder && shippingCharge > 0 && (
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Shipping</span>
+                <span className="text-sm font-medium text-gray-900">₹ {shippingCharge}</span>
+              </div>
+            )}
+            {isOrder && shippingCharge === 0 && (
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Shipping</span>
+                <span className="text-sm font-medium text-emerald-500 uppercase tracking-widest text-xs">Free</span>
+              </div>
+            )}
             {discountAmount > 0 && (
               <div className="flex justify-between items-center text-green-600 font-medium">
                 <span className="text-sm">Coupon Discount ({appliedCoupon?.code || couponCode})</span>

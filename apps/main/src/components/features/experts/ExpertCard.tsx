@@ -3,7 +3,7 @@
 import NextLink from "next/link";
 import Image from "next/image";
 import React, { useState, useRef } from "react";
-import { Button } from "@repo/ui";
+import { Button, CloseButton } from "@repo/ui";
 import { useRouter, usePathname } from "next/navigation";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -12,6 +12,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { ExpertCardProps } from "@/lib/types";
 import { useLanguageStore } from "@repo/store";
 import { homeTranslations } from "../../../lib/translations/home";
+import { getYoutubeId, getYoutubeEmbedUrl } from "@/utils/video-utils";
 
 const ExpertCard: React.FC<ExpertCardProps> = ({
   expertData,
@@ -292,16 +293,17 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
 
           {/* DETAILS */}
           {/* Name */}
-          <div className="px-4 pt-2 pb-1 text-[18px] font-semibold text-[#301118] truncate" title={name}>
+          <div className="px-4 pt-2 pb-1 text-[18px] font-semibold text-[#301118] truncate text-center" title={name}>
             {name}
           </div>
 
           {/* Expertise Tags — wrap properly */}
-          <div className="px-3 mt-1 mb-1 flex flex-wrap justify-center gap-1" style={{ minHeight: '28px' }}>
+          <div className="px-3 mt-1 mb-1 flex flex-wrap justify-center items-center gap-1" style={{ minHeight: '28px' }}>
             {allServices.slice(0, 3).map((service, index) => (
               <span
                 key={index}
-                className="inline-block bg-orange text-white text-[10px] font-semibold px-2 py-0.5 rounded-full truncate max-w-[95%] sm:max-w-full"
+                className="inline-block bg-orange text-white text-[10px] font-semibold px-2 py-0.5 rounded-full text-center"
+                style={{ maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                 title={service}
               >
                 {service}
@@ -396,28 +398,43 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
               <h5 className="font-bold text-gray-900 text-lg m-0">
                 {t.expertCard.videoModalTitle.replace('{name}', name)}
               </h5>
-              <button
+              <CloseButton
                 onClick={(e) => {
                   e.stopPropagation();
                   setShow(false);
                 }}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition text-gray-600 text-lg font-bold"
-              >
-                ✕
-              </button>
+              />
             </div>
             {/* Body */}
             {/* Body */}
             <div className="p-4">
               {video ? (
-                <video
-                  src={video}
-                  width="100%"
-                  height="500"
-                  controls
-                  autoPlay
-                  className="bg-black rounded-xl w-full max-h-[60vh] shadow-inner"
-                />
+                (() => {
+                  const ytId = getYoutubeId(video);
+                  if (ytId) {
+                    const embedUrl = getYoutubeEmbedUrl(video);
+                    return (
+                      <iframe
+                        src={`${embedUrl}?autoplay=1`}
+                        width="100%"
+                        height="500"
+                        className="bg-black rounded-xl w-full max-h-[60vh] shadow-inner"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
+                    );
+                  }
+                  return (
+                    <video
+                      src={video}
+                      width="100%"
+                      height="500"
+                      controls
+                      autoPlay
+                      className="bg-black rounded-xl w-full max-h-[60vh] shadow-inner"
+                    />
+                  );
+                })()
               ) : (
                 <div className="h-[350px] flex flex-col items-center justify-center bg-gradient-to-b from-orange-50/50 to-orange-100/30 rounded-2xl border-2 border-dashed border-orange-200 m-2">
                   <div className="w-20 h-20 bg-white shadow-sm rounded-full flex items-center justify-center mb-5 relative group">

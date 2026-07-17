@@ -38,8 +38,8 @@ const MatchingForm = ({
                 <FaUser />
               </div>
               <div>
-                <h2 className="text-[17px] font-bold text-slate-800">Enter Birth Details</h2>
-                <p className="text-[12px] font-medium text-slate-500">Enter accurate birth details for both partners to get the best results.</p>
+                <h2 className="text-[17px] font-bold text-slate-800">{t.labels.name ? (lang === 'hi' ? 'जन्म विवरण दर्ज करें' : 'Enter Birth Details') : 'Enter Birth Details'}</h2>
+                <p className="text-[12px] font-medium text-slate-500">{lang === 'hi' ? 'सर्वोत्तम परिणामों के लिए दोनों भागीदारों का सटीक जन्म विवरण दर्ज करें।' : 'Enter accurate birth details for both partners to get the best results.'}</p>
               </div>
             </div>
           </div>
@@ -58,7 +58,7 @@ const MatchingForm = ({
                 <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center shrink-0">
                   <FaUser className="text-sm" />
                 </div>
-                <h3 className="font-semibold text-slate-800 text-[14px] sm:text-base whitespace-nowrap sm:whitespace-normal tracking-tight sm:tracking-normal" style={fontStyle}>Person 1 (You / Male)</h3>
+                <h3 className="font-semibold text-slate-800 text-[14px] sm:text-base whitespace-nowrap sm:whitespace-normal tracking-tight sm:tracking-normal" style={fontStyle}>{t.boyTitle}</h3>
               </div>
               
               <div className="p-6 space-y-5">
@@ -103,7 +103,7 @@ const MatchingForm = ({
                 </div>
                 <div className="flex items-center gap-2 pt-1">
                   <input type="checkbox" id="boy-unknown-time" className="rounded text-blue-500 focus:ring-blue-500 border-gray-300" />
-                  <label htmlFor="boy-unknown-time" className="text-sm text-slate-500 cursor-pointer">I don't know the exact time</label>
+                  <label htmlFor="boy-unknown-time" className="text-sm text-slate-500 cursor-pointer">{lang === 'hi' ? 'मुझे सटीक समय नहीं पता' : "I don't know the exact time"}</label>
                 </div>
               </div>
             </div>
@@ -114,7 +114,7 @@ const MatchingForm = ({
                 <div className="w-8 h-8 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center shrink-0">
                   <FaUser className="text-sm" />
                 </div>
-                <h3 className="font-semibold text-slate-800 text-[14px] sm:text-base whitespace-nowrap sm:whitespace-normal tracking-tight sm:tracking-normal" style={fontStyle}>Person 2 (Partner / Female)</h3>
+                <h3 className="font-semibold text-slate-800 text-[14px] sm:text-base whitespace-nowrap sm:whitespace-normal tracking-tight sm:tracking-normal" style={fontStyle}>{t.girlTitle}</h3>
               </div>
               
               <div className="p-6 space-y-5">
@@ -159,7 +159,7 @@ const MatchingForm = ({
                 </div>
                 <div className="flex items-center gap-2 pt-1">
                   <input type="checkbox" id="girl-unknown-time" className="rounded text-pink-500 focus:ring-pink-500 border-gray-300" />
-                  <label htmlFor="girl-unknown-time" className="text-sm text-slate-500 cursor-pointer">I don't know the exact time</label>
+                  <label htmlFor="girl-unknown-time" className="text-sm text-slate-500 cursor-pointer">{lang === 'hi' ? 'मुझे सटीक समय नहीं पता' : "I don't know the exact time"}</label>
                 </div>
               </div>
             </div>
@@ -167,7 +167,7 @@ const MatchingForm = ({
             {/* Mobile Swap Button */}
             <div className="md:hidden flex justify-center mt-2">
               <button onClick={handleSwap} className="flex items-center gap-2 px-4 py-2 rounded-full border border-orange-200 text-orange-500 text-sm font-medium">
-                <HiOutlineSwitchHorizontal /> Swap Details
+                <HiOutlineSwitchHorizontal /> {lang === 'hi' ? 'विवरण बदलें' : 'Swap Details'}
               </button>
             </div>
           </div>
@@ -181,10 +181,10 @@ const MatchingForm = ({
                 className="w-full bg-[#f95700] hover:bg-[#e04f00] text-white rounded-xl py-4 px-6 font-semibold text-[15px] transition-colors flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(249,87,0,0.25)]"
               >
                 {loading ? <FaSpinner className="animate-spin" /> : <HiOutlineSwitchHorizontal className="text-xl rotate-45" />}
-                Match Kundlis
+                {lang === 'hi' ? 'कुंडली मिलाएं' : 'Match Kundlis'}
               </button>
               <p className="text-[11px] text-green-600 mt-2 flex items-center justify-center gap-1.5 font-medium w-full">
-                <BsCheckCircleFill className="text-[10px]" /> Your information is 100% secure & private
+                <BsCheckCircleFill className="text-[10px]" /> {lang === 'hi' ? 'आपकी जानकारी 100% सुरक्षित और निजी है' : 'Your information is 100% secure & private'}
               </p>
             </div>
           </div>

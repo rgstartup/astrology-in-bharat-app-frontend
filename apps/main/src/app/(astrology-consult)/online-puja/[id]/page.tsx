@@ -16,6 +16,7 @@ import LoginModal from "@/components/features/auth/LoginModal";
 import PujaDetailSeoContent from "./puja-detail-seo.component";
 import { Loading } from "@repo/ui";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useLanguageStore } from "@repo/store";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@repo/lib";
 import Link from "next/link";
@@ -36,6 +37,51 @@ const PujaDetailPage = () => {
     const [relatedPujas, setRelatedPujas] = useState<ExpertPuja[]>([]);
     const [relatedLoading, setRelatedLoading] = useState(true);
     const { isAuthenticated } = useAuthStore();
+    const { lang } = useLanguageStore();
+
+    const t = {
+        en: {
+            bookTitle: "Book Your Puja", bookSub: "Send request to our expert pandit", 
+            step1: "1. Select Puja Mode", onlineTitle: "Online / Video Call", onlineSub: "Participate from the comfort of your home",
+            homeBasicTitle: "Home Visit (Basic)", homeBasicSub: "Pandit ji will come to your home (Without Samagri)",
+            homePremiumTitle: "Home Visit (Premium)", homePremiumSub: "Pandit ji will come with Full Samagri Kit",
+            step2: "2. Select Date & Time", askExpert: "Ask the expert for date and time", orChoose: "OR Choose your preferred date & time",
+            selDate: "Select Date", selTime: "Select Time",
+            step3: "3. Add a Message", optional: "(Optional)", msgPlaceholder: "Enter any special request or family details...",
+            priceSummary: "Price Summary", securePrice: "Secure Price", 
+            pujaPrice: "Puja Price", taxes: "Taxes & Charges", total: "Total (All Taxes Inc.)",
+            sendReq: "Send Booking Request", processing: "Processing...",
+            notCharged: "You will not be charged at this stage. Your request will be sent to the pandit for confirmation.",
+            secureBooking: "Secure\nBooking", verifiedPandits: "Verified\nPandits", authentic: "100%\nAuthentic"
+        },
+        hi: {
+            bookTitle: "अपनी पूजा बुक करें", bookSub: "हमारे विशेषज्ञ पंडित को अनुरोध भेजें", 
+            step1: "1. पूजा मोड चुनें", onlineTitle: "ऑनलाइन / वीडियो कॉल", onlineSub: "अपने घर के आराम से भाग लें",
+            homeBasicTitle: "घर पर आएं (बेसिक)", homeBasicSub: "पंडित जी आपके घर आएंगे (बिना सामग्री के)",
+            homePremiumTitle: "घर पर आएं (प्रीमियम)", homePremiumSub: "पंडित जी पूरी सामग्री किट के साथ आएंगे",
+            step2: "2. दिनांक और समय चुनें", askExpert: "तारीख और समय के लिए विशेषज्ञ से पूछें", orChoose: "या अपनी पसंदीदा तारीख और समय चुनें",
+            selDate: "तारीख चुनें", selTime: "समय चुनें",
+            step3: "3. एक संदेश जोड़ें", optional: "(वैकल्पिक)", msgPlaceholder: "कोई विशेष अनुरोध या पारिवारिक विवरण दर्ज करें...",
+            priceSummary: "मूल्य सारांश", securePrice: "सुरक्षित मूल्य", 
+            pujaPrice: "पूजा मूल्य", taxes: "कर और शुल्क", total: "कुल (सभी कर सहित)",
+            sendReq: "बुकिंग अनुरोध भेजें", processing: "प्रसंस्करण...",
+            notCharged: "इस स्तर पर आपसे कोई शुल्क नहीं लिया जाएगा। आपका अनुरोध पुष्टि के लिए पंडित को भेजा जाएगा।",
+            secureBooking: "सुरक्षित\nबुकिंग", verifiedPandits: "सत्यापित\nपंडित", authentic: "100%\nप्रामाणिक"
+        }
+    }[lang] || {
+            bookTitle: "Book Your Puja", bookSub: "Send request to our expert pandit", 
+            step1: "1. Select Puja Mode", onlineTitle: "Online / Video Call", onlineSub: "Participate from the comfort of your home",
+            homeBasicTitle: "Home Visit (Basic)", homeBasicSub: "Pandit ji will come to your home (Without Samagri)",
+            homePremiumTitle: "Home Visit (Premium)", homePremiumSub: "Pandit ji will come with Full Samagri Kit",
+            step2: "2. Select Date & Time", askExpert: "Ask the expert for date and time", orChoose: "OR Choose your preferred date & time",
+            selDate: "Select Date", selTime: "Select Time",
+            step3: "3. Add a Message", optional: "(Optional)", msgPlaceholder: "Enter any special request or family details...",
+            priceSummary: "Price Summary", securePrice: "Secure Price", 
+            pujaPrice: "Puja Price", taxes: "Taxes & Charges", total: "Total (All Taxes Inc.)",
+            sendReq: "Send Booking Request", processing: "Processing...",
+            notCharged: "You will not be charged at this stage. Your request will be sent to the pandit for confirmation.",
+            secureBooking: "Secure\nBooking", verifiedPandits: "Verified\nPandits", authentic: "100%\nAuthentic"
+    };
 
     useEffect(() => {
         const fetchPujaDetails = async () => {
@@ -426,14 +472,14 @@ const PujaDetailPage = () => {
                     <div className="bg-[#FFFDF9] rounded-3xl border border-[#F0E0D0] shadow-lg overflow-hidden">
                         {/* Header */}
                         <div className="px-6 py-5 border-b border-[#F0E0D0]">
-                            <h3 className="text-lg font-black text-[#1A1A1A]">Book Your Puja</h3>
-                            <p className="text-gray-500 text-sm font-medium mt-0.5">Send request to our expert pandit</p>
+                            <h3 className="text-lg font-black text-[#1A1A1A]">{t.bookTitle}</h3>
+                            <p className="text-gray-500 text-sm font-medium mt-0.5">{t.bookSub}</p>
                         </div>
 
                         <div className="p-5 space-y-5">
                             {/* Mode Selection */}
                             <div>
-                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">1. Select Puja Mode</p>
+                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">{t.step1}</p>
                                 <div className="space-y-2">
                                     {puja.is_online && (
                                         <button
@@ -447,8 +493,8 @@ const PujaDetailPage = () => {
                                                 <Video className="w-5 h-5" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className={`text-sm font-black ${selectedMode === 'online' ? 'text-[#FF5500]' : 'text-[#3D1A0B]'}`}>Online / Video Call</p>
-                                                <p className="text-xs text-gray-500 leading-tight">Participate from the comfort of your home</p>
+                                                <p className={`text-sm font-black ${selectedMode === 'online' ? 'text-[#FF5500]' : 'text-[#3D1A0B]'}`}>{t.onlineTitle}</p>
+                                                <p className="text-xs text-gray-500 leading-tight">{t.onlineSub}</p>
                                             </div>
                                         </button>
                                     )}
@@ -465,8 +511,8 @@ const PujaDetailPage = () => {
                                                     <MapPin className="w-5 h-5" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className={`text-sm font-black ${selectedMode === 'home_visit_without' ? 'text-[#FF5500]' : 'text-[#3D1A0B]'}`}>Home Visit (Basic)</p>
-                                                    <p className="text-xs text-gray-500 leading-tight">Pandit ji will come to your home (Without Samagri)</p>
+                                                    <p className={`text-sm font-black ${selectedMode === 'home_visit_without' ? 'text-[#FF5500]' : 'text-[#3D1A0B]'}`}>{t.homeBasicTitle}</p>
+                                                    <p className="text-xs text-gray-500 leading-tight">{t.homeBasicSub}</p>
                                                 </div>
                                             </button>
                                             <button
@@ -480,8 +526,8 @@ const PujaDetailPage = () => {
                                                     <Package className="w-5 h-5" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className={`text-sm font-black ${selectedMode === 'home_visit_with' ? 'text-[#FF5500]' : 'text-[#3D1A0B]'}`}>Home Visit (Premium)</p>
-                                                    <p className="text-xs text-gray-500 leading-tight">Pandit ji will come with Full Samagri Kit</p>
+                                                    <p className={`text-sm font-black ${selectedMode === 'home_visit_with' ? 'text-[#FF5500]' : 'text-[#3D1A0B]'}`}>{t.homePremiumTitle}</p>
+                                                    <p className="text-xs text-gray-500 leading-tight">{t.homePremiumSub}</p>
                                                 </div>
                                             </button>
                                         </>
@@ -491,7 +537,7 @@ const PujaDetailPage = () => {
 
                             {/* Date & Time */}
                             <div className="border-t border-[#E8D5C0] pt-4">
-                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">2. Select Date & Time</p>
+                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">{t.step2}</p>
                                 <label className="flex items-center gap-2 mb-3 cursor-pointer">
                                     <input
                                         type="checkbox"
@@ -499,19 +545,19 @@ const PujaDetailPage = () => {
                                         onChange={(e) => setAskExpertForDate(e.target.checked)}
                                         className="w-4 h-4 accent-[#FF5500]"
                                     />
-                                    <span className="text-sm font-bold text-slate-600">Ask the expert for date and time</span>
+                                    <span className="text-sm font-bold text-slate-600">{t.askExpert}</span>
                                     <Info className="w-3.5 h-3.5 text-slate-500" />
                                 </label>
                                 {!askExpertForDate && (
                                     <div className="space-y-2">
-                                        <p className="text-xs text-gray-500 font-bold uppercase">OR Choose your preferred date & time</p>
+                                        <p className="text-xs text-gray-500 font-bold uppercase">{t.orChoose}</p>
                                         <div className="relative">
-                                            <input type="text" placeholder="Select Date" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => !e.target.value && (e.target.type = 'text')} value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} min={new Date().toISOString().split('T')[0]}
+                                            <input type="text" placeholder={t.selDate} onFocus={(e) => e.target.type = 'date'} onBlur={(e) => !e.target.value && (e.target.type = 'text')} value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} min={new Date().toISOString().split('T')[0]}
                                                 className="w-full px-4 pr-10 py-3 border border-[#E8D5C0] rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-slate-600" />
                                             <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                                         </div>
                                         <div className="relative">
-                                            <input type="text" placeholder="Select Time" onFocus={(e) => e.target.type = 'time'} onBlur={(e) => !e.target.value && (e.target.type = 'text')} value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)}
+                                            <input type="text" placeholder={t.selTime} onFocus={(e) => e.target.type = 'time'} onBlur={(e) => !e.target.value && (e.target.type = 'text')} value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)}
                                                 className="w-full px-4 pr-10 py-3 border border-[#E8D5C0] rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-slate-600" />
                                             <Clock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                                         </div>
@@ -521,9 +567,9 @@ const PujaDetailPage = () => {
 
                             {/* Message */}
                             <div className="border-t border-[#E8D5C0] pt-4">
-                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">3. Add a Message <span className="text-slate-500 normal-case font-medium">(Optional)</span></p>
+                                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">{t.step3} <span className="text-slate-500 normal-case font-medium">{t.optional}</span></p>
                                 <textarea
-                                    placeholder="Enter any special request or family details..."
+                                    placeholder={t.msgPlaceholder}
                                     value={userMessage}
                                     onChange={(e) => setUserMessage(e.target.value)}
                                     rows={3}
@@ -536,23 +582,23 @@ const PujaDetailPage = () => {
                             {/* Price Summary */}
                             <div className="border-t border-[#E8D5C0] pt-4">
                                 <div className="flex items-center justify-between mb-3">
-                                    <p className="text-base font-black text-slate-600">Price Summary</p>
+                                    <p className="text-base font-black text-slate-600">{t.priceSummary}</p>
                                     <div className="flex items-center gap-1 text-emerald-500 text-xs font-black">
-                                        <ShieldCheck className="w-3.5 h-3.5" /> Secure Price
+                                        <ShieldCheck className="w-3.5 h-3.5" /> {t.securePrice}
                                     </div>
                                 </div>
                                 <div className="space-y-2 mb-4">
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500 font-medium">Puja Price (Online)</span>
+                                        <span className="text-gray-500 font-medium">{t.pujaPrice} {selectedMode === 'online' ? (lang === 'hi' ? '(ऑनलाइन)' : '(Online)') : (lang === 'hi' ? '(घर पर)' : '(Home Visit)')}</span>
                                         <span className="font-black text-[#1A1A1A]">₹ {getCurrentCost()}</span>
                                     </div>
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500 font-medium">Taxes & Charges</span>
+                                        <span className="text-gray-500 font-medium">{t.taxes}</span>
                                         <span className="font-black text-emerald-500">₹ 0</span>
                                     </div>
                                     <div className="h-px bg-[#F0E0D0]" />
                                     <div className="flex justify-between">
-                                        <span className="text-base font-black text-[#1A1A1A]">Total (All Taxes Inc.)</span>
+                                        <span className="text-base font-black text-[#1A1A1A]">{t.total}</span>
                                         <span className="text-lg font-black text-[#FF5500]">₹ {getCurrentCost()}</span>
                                     </div>
                                 </div>
@@ -562,16 +608,16 @@ const PujaDetailPage = () => {
                                     disabled={isBooking}
                                     className="w-full py-4 bg-[#FF5500] hover:bg-[#E64D00] text-white font-black rounded-2xl flex items-center justify-center gap-2 text-[13px] sm:text-base whitespace-nowrap shadow-lg shadow-orange-200 active:scale-[0.98] transition-all disabled:opacity-50"
                                 >
-                                    {isBooking ? <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</> : <><Send className="w-4 h-4 sm:w-5 sm:h-5" /> Send Booking Request</>}
+                                    {isBooking ? <><Loader2 className="w-5 h-5 animate-spin" /> {t.processing}</> : <><Send className="w-4 h-4 sm:w-5 sm:h-5" /> {t.sendReq}</>}
                                 </button>
 
                                 <p className="mt-3 text-xs text-center text-gray-500 flex items-start justify-center gap-1.5">
                                     <Info className="w-4 h-4 shrink-0 mt-0.5" />
-                                    You will not be charged at this stage. Your request will be sent to the pandit for confirmation.
+                                    {t.notCharged}
                                 </p>
 
                                 <div className="flex items-center justify-around pt-4 border-t border-[#E8D5C0] mt-3">
-                                    {[{ icon: "🔒", label: "Secure\nBooking" }, { icon: "✅", label: "Verified\nPandits" }, { icon: "💯", label: "100%\nAuthentic" }].map((b, i) => (
+                                    {[{ icon: "🔒", label: t.secureBooking }, { icon: "✅", label: t.verifiedPandits }, { icon: "💯", label: t.authentic }].map((b, i) => (
                                         <div key={i} className="flex flex-col items-center gap-1.5">
                                             <span className="text-2xl">{b.icon}</span>
                                             <p className="text-[11px] text-gray-500 font-bold text-center whitespace-pre-line leading-tight">{b.label}</p>

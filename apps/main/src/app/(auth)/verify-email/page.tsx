@@ -56,30 +56,31 @@ const VerifyEmailContent: React.FC = () => {
                         login(result.user);
                     }
 
+                    let currentCountdown = 3;
                     const countdownInterval = setInterval(() => {
-                        setCountdown((prev) => {
-                            if (prev <= 1) { 
-                                clearInterval(countdownInterval); 
-                                
-                                // Role-based Redirection
-                                const roles = result.user?.roles || [];
-                                const isExpert = roles.some((r: unknown) => 
-                                    ["expert", "expert", "Expert", "Expert", "EXPERT"].includes(String(r))
-                                );
+                        currentCountdown -= 1;
+                        if (currentCountdown <= 0) {
+                            clearInterval(countdownInterval);
+                            setCountdown(0);
+                            
+                            // Role-based Redirection
+                            const roles = result.user?.roles || [];
+                            const isExpert = roles.some((r: unknown) => 
+                                ["expert", "expert", "Expert", "Expert", "EXPERT"].includes(String(r))
+                            );
 
-                                if (!result.user?.name) {
-                                    // User needs to complete profile (Step 3)
-                                    router.push(`/register?token=${token}`);
-                                } else if (isExpert) {
-                                    const dashboardUrl = process.env.NEXT_PUBLIC_EXPERT_DASHBOARD_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3003' : window.location.origin.replace('www.', 'expert.'));
-                                    window.location.href = `${dashboardUrl}/dashboard`;
-                                } else {
-                                    router.push('/client/profile'); 
-                                }
-                                return 0; 
+                            if (!result.user?.name) {
+                                // User needs to complete profile (Step 3)
+                                router.push(`/register?token=${token}`);
+                            } else if (isExpert) {
+                                const dashboardUrl = process.env.NEXT_PUBLIC_EXPERT_DASHBOARD_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3003' : window.location.origin.replace('www.', 'expert.'));
+                                window.location.href = `${dashboardUrl}/dashboard`;
+                            } else {
+                                router.push('/client/profile'); 
                             }
-                            return prev - 1;
-                        });
+                        } else {
+                            setCountdown(currentCountdown);
+                        }
                     }, 1000);
                 }
                 setIsLoading(false);

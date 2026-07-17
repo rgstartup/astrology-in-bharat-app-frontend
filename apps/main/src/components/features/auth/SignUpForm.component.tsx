@@ -162,16 +162,22 @@ export const SignUpForm: React.FC = () => {
             };
         }
 
+        console.log("[DEBUG][SignUpForm] Submitting payload to completeRegistrationAction:", JSON.stringify(payload, null, 2));
+        console.log("[DEBUG][SignUpForm] verifiedToken:", verifiedToken);
+        console.log("[DEBUG][SignUpForm] urlToken:", urlToken);
+
         try {
             const result = await completeRegistrationAction(payload);
+            console.log("[DEBUG][SignUpForm] Result from completeRegistrationAction:", JSON.stringify(result, null, 2));
             if (result.error) {
                 toast.error(result.error);
             } else if (result.success) {
-                // User requested removing the success toast as the UI redirection is enough
-                // toast.success("Profile completed successfully!");
-                router.push("/client/profile");
+                // Use window.location.href instead of router.push to force a full page
+                // reload so that the newly set HttpOnly cookies are sent with the request.
+                window.location.href = "/client/profile";
             }
-        } catch {
+        } catch (err: any) {
+            console.error("[DEBUG][SignUpForm] Exception in completeRegistrationAction:", err);
             toast.error(t.signUp.errors.unexpected);
         } finally {
             setIsLoading(false);

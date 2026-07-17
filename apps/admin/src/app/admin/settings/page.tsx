@@ -28,6 +28,15 @@ interface SupportSettings {
     whatsapp: string;
 }
 
+interface CommissionSettings {
+    PLATFORM_FEE: string;
+    COMMISION_FROM_ASTROLOGER: string;
+    COMMISION_FROM_CLIENT: string;
+    COMMISION_FROM_PUJA_SHOP: string;
+    GST_PERCENTAGE: string;
+    COMMISION_FOR_BUYER_AGENT: string;
+}
+
 const SettingsPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -42,6 +51,22 @@ const SettingsPage: React.FC = () => {
         phone: "",
         whatsapp: "",
     });
+    const [commissions, setCommissions] = useState<CommissionSettings>({
+        PLATFORM_FEE: "50",
+        COMMISION_FROM_ASTROLOGER: "3",
+        COMMISION_FROM_CLIENT: "3",
+        COMMISION_FROM_PUJA_SHOP: "3",
+        GST_PERCENTAGE: "18",
+        COMMISION_FOR_BUYER_AGENT: "3",
+    });
+    const [originalCommissions, setOriginalCommissions] = useState<CommissionSettings>({
+        PLATFORM_FEE: "50",
+        COMMISION_FROM_ASTROLOGER: "3",
+        COMMISION_FROM_CLIENT: "3",
+        COMMISION_FROM_PUJA_SHOP: "3",
+        GST_PERCENTAGE: "18",
+        COMMISION_FOR_BUYER_AGENT: "3",
+    });
 
     useEffect(() => {
         loadSettings();
@@ -50,18 +75,29 @@ const SettingsPage: React.FC = () => {
     const loadSettings = async () => {
         setLoading(true);
         try {
-            const [data, error] = await api.get<SupportSettings>(`/admin/settings/support`);
+            const [supportData, supportError] = await api.get<SupportSettings>(`/admin/settings/support`);
+            const [commissionData, commissionError] = await api.get<CommissionSettings>(`/admin/settings/commissions`);
 
-            if (!error && data) {
+            if (!supportError && supportData) {
                 const loadedSettings = {
-                    email: data.email || "support@astrologyinbharat.com",
-                    phone: data.phone || "+91 62394 08910",
-                    whatsapp: data.whatsapp || "+91 62394 08910",
+                    email: supportData.email || "support@astrologyinbharat.com",
+                    phone: supportData.phone || "+91 62394 08910",
+                    whatsapp: supportData.whatsapp || "+91 62394 08910",
                 };
                 setSettings(loadedSettings);
                 setOriginalSettings(loadedSettings);
-            } else {
-                toast.error(getErrorMessage(error) || "Cloud synchronization failed");
+            }
+            if (!commissionError && commissionData) {
+                const loadedCommissions = {
+                    PLATFORM_FEE: commissionData.PLATFORM_FEE || "50",
+                    COMMISION_FROM_ASTROLOGER: commissionData.COMMISION_FROM_ASTROLOGER || "3",
+                    COMMISION_FROM_CLIENT: commissionData.COMMISION_FROM_CLIENT || "3",
+                    COMMISION_FROM_PUJA_SHOP: commissionData.COMMISION_FROM_PUJA_SHOP || "3",
+                    GST_PERCENTAGE: commissionData.GST_PERCENTAGE || "18",
+                    COMMISION_FOR_BUYER_AGENT: commissionData.COMMISION_FOR_BUYER_AGENT || "3",
+                };
+                setCommissions(loadedCommissions);
+                setOriginalCommissions(loadedCommissions);
             }
         } catch (error) {
             console.error("Failed to load settings:", error);
@@ -75,6 +111,10 @@ const SettingsPage: React.FC = () => {
         setSettings((prev) => ({ ...prev, [field]: value }));
     };
 
+    const handleCommissionChange = (field: keyof CommissionSettings, value: string) => {
+        setCommissions((prev) => ({ ...prev, [field]: value }));
+    };
+
     const handleSave = async () => {
         if (!settings.email.includes("@")) {
             toast.error("Invalid email format");
@@ -83,14 +123,16 @@ const SettingsPage: React.FC = () => {
 
         setSaving(true);
         try {
-            const [_, error] = await api.post("/admin/settings/support", settings);
+            const [_, supportError] = await api.post("/admin/settings/support", settings);
+            const [__, commissionError] = await api.post("/admin/settings/commissions", commissions);
 
-            if (!error) {
+            if (!supportError && !commissionError) {
                 toast.success("Synchronized successfully");
                 setOriginalSettings(settings);
+                setOriginalCommissions(commissions);
                 setIsEditing(false);
             } else {
-                toast.error(getErrorMessage(error) || "Cloud synchronization failed");
+                toast.error("Cloud synchronization failed for some settings");
             }
         } catch (error) {
             toast.error(getErrorMessage(error) || "An error occurred");
@@ -99,7 +141,7 @@ const SettingsPage: React.FC = () => {
         }
     };
 
-    const isChanged = JSON.stringify(settings) !== JSON.stringify(originalSettings);
+    const isChanged = JSON.stringify(settings) !== JSON.stringify(originalSettings) || JSON.stringify(commissions) !== JSON.stringify(originalCommissions);
 
     if (loading) {
         return (
@@ -272,8 +314,53 @@ const SettingsPage: React.FC = () => {
                                 </div>
                             )}
                         </div>
-                    </div>
+                </div>
 
+                    {/* Commissions Block */}
+                    <div className={`p-8 rounded-[32px] border-2 transition-all duration-500 overflow-hidden ${isEditing ? 'border-purple-500 bg-white shadow-3xl shadow-purple-100' : 'border-gray-50 bg-white shadow-xl shadow-gray-200/20'}`}>
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className={`p-3.5 rounded-xl ${isEditing ? 'bg-purple-500 text-white' : 'bg-purple-50 text-purple-500'}`}>
+                                <Settings className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-black text-gray-900 leading-none mb-1.5">Platform & Commissions</h3>
+                                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest opacity-60">Revenue Settings</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {[
+                                { key: 'PLATFORM_FEE', label: 'Platform Fee (Products)', type: 'currency' },
+                                { key: 'COMMISION_FROM_ASTROLOGER', label: 'Astrologer Commission', type: 'percent' },
+                                { key: 'COMMISION_FROM_CLIENT', label: 'Client Commission', type: 'percent' },
+                                { key: 'COMMISION_FROM_PUJA_SHOP', label: 'Puja Shop Commission', type: 'percent' },
+                                { key: 'GST_PERCENTAGE', label: 'GST Percentage', type: 'percent' },
+                                { key: 'COMMISION_FOR_BUYER_AGENT', label: 'Buyer Agent Commission', type: 'percent' },
+                            ].map((item, idx) => (
+                                <div key={idx} className="space-y-2">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">{item.label}</label>
+                                    {isEditing ? (
+                                        <div className="relative">
+                                            {item.type === 'currency' && <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">₹</span>}
+                                            <input
+                                                type="number"
+                                                value={commissions[item.key as keyof CommissionSettings]}
+                                                onChange={(e) => handleCommissionChange(item.key as keyof CommissionSettings, e.target.value)}
+                                                className={`w-full ${item.type === 'currency' ? 'pl-8' : 'px-4'} py-3 bg-purple-50/50 border border-purple-100 focus:border-purple-500 focus:bg-white rounded-xl text-sm font-black text-purple-950 outline-none`}
+                                            />
+                                            {item.type === 'percent' && <span className="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">%</span>}
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-purple-50 transition-colors" onClick={() => setIsEditing(true)}>
+                                            <span className="text-sm font-black text-gray-900">
+                                                {item.type === 'currency' ? `₹ ${commissions[item.key as keyof CommissionSettings]}` : `${commissions[item.key as keyof CommissionSettings]} %`}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
                 {/* Sidebar Space - More compact */}

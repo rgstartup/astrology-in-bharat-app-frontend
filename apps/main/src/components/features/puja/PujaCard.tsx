@@ -168,13 +168,13 @@ export const PujaCard: React.FC<PujaCardProps> = ({ puja }) => {
                 {/* Footer: Price + Action */}
                 <div className="mt-auto flex items-end justify-between pt-1">
                     <div className="flex flex-col">
-                        <span className="text-[12px] text-gray-500 mb-0.5" style={fontStyle}>Starting from</span>
+                        <span className="text-[12px] text-gray-500 mb-0.5" style={fontStyle}>{lang === 'hi' ? 'शुरुआती कीमत' : 'Starting from'}</span>
                         <div className="flex items-baseline gap-1">
                             <span className="text-[22px] font-bold text-[#FF5500]">₹ {getMinCost(puja).toLocaleString('en-IN')}</span>
                         </div>
                     </div>
                     <div className="border border-[#FF5500] text-[#FF5500] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#FFF5F0] transition-colors" style={fontStyle}>
-                        Ritual Details
+                        {t.ritualDetails}
                     </div>
                 </div>
             </div>

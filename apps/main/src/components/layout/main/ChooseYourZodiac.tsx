@@ -12,6 +12,21 @@ import {
 
 const Link = NextLink as any;
 
+const ZODIAC_HI_MAP: Record<string, { title: string, date: string }> = {
+  "Aries": { title: "मेष", date: "21 मार्च - 19 अप्रैल" },
+  "Taurus": { title: "वृषभ", date: "20 अप्रैल - 20 मई" },
+  "Gemini": { title: "मिथुन", date: "21 मई - 20 जून" },
+  "Cancer": { title: "कर्क", date: "21 जून - 22 जुलाई" },
+  "Leo": { title: "सिंह", date: "23 जुलाई - 22 अगस्त" },
+  "Virgo": { title: "कन्या", date: "23 अगस्त - 22 सितंबर" },
+  "Libra": { title: "तुला", date: "23 सितंबर - 22 अक्टूबर" },
+  "Scorpio": { title: "वृश्चिक", date: "23 अक्टूबर - 21 नवंबर" },
+  "Sagittarius": { title: "धनु", date: "22 नवंबर - 21 दिसंबर" },
+  "Capricorn": { title: "मकर", date: "22 दिसंबर - 19 जनवरी" },
+  "Aquarius": { title: "कुंभ", date: "20 जनवरी - 18 फरवरी" },
+  "Pisces": { title: "मीन", date: "19 फरवरी - 20 मार्च" }
+};
+
 interface ChooseYourZodiacProps {
   selectedSignId?: number;
   selectedSignIds?: number[];
@@ -60,7 +75,10 @@ const ChooseYourZodiac: React.FC<ChooseYourZodiacProps> = ({ selectedSignId, sel
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 lg:gap-5">
           {ZodiacSignsData.map((sign) => {
-            const isSelected = selectedSignId === sign.id || (selectedSignIds && selectedSignIds.includes(sign.id));
+            const isSelected = selectedSignId === sign.id || (selectedSignIds && selectedSignIds.includes(sign.id as number));
+            const hiData = ZODIAC_HI_MAP[sign.title];
+            const displayTitle = lang === 'hi' && hiData ? hiData.title : sign.title;
+            const displayDate = lang === 'hi' && hiData ? hiData.date : sign.date;
             
             const cardContent = (
               <div
@@ -79,14 +97,14 @@ const ChooseYourZodiac: React.FC<ChooseYourZodiacProps> = ({ selectedSignId, sel
                 </div>
                 <div className="text-center space-y-0.5">
                   <h3 className={`text-[14px] font-bold transition-colors ${isSelected ? "text-white" : "text-black"}`}>
-                    {sign.title}
+                    {displayTitle}
                   </h3>
                   <p className={`text-[12px] transition-colors ${isSelected ? "text-white/90" : "text-black"}`}>
                     ({sign.title})
                   </p>
                 </div>
                 <p className={`text-[10px] font-medium mt-2 text-center transition-colors ${isSelected ? "text-white/80" : "text-black"}`}>
-                  {sign.date}
+                  {displayDate}
                 </p>
               </div>
             );

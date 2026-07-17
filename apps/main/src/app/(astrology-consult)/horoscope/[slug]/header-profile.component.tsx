@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { useLanguageStore } from "@repo/store";
 
 interface HeaderProfileProps {
   signData: {
@@ -12,6 +13,30 @@ interface HeaderProfileProps {
 }
 
 export default function ZodiacHeaderProfile({ signData, formattedDate, luckyStats }: HeaderProfileProps) {
+  const { lang } = useLanguageStore();
+
+  const tx = {
+    en: { today: "Today's Horoscope", number: "Lucky Number", color: "Lucky Color", time: "Lucky Time" },
+    hi: { today: "आज का राशिफल", number: "शुभ अंक", color: "शुभ रंग", time: "शुभ समय" }
+  }[lang] || { today: "Today's Horoscope", number: "Lucky Number", color: "Lucky Color", time: "Lucky Time" };
+
+  const ZODIAC_HI_MAP: Record<string, { title: string, date: string }> = {
+    "Aries": { title: "मेष", date: "21 मार्च - 19 अप्रैल" },
+    "Taurus": { title: "वृषभ", date: "20 अप्रैल - 20 मई" },
+    "Gemini": { title: "मिथुन", date: "21 मई - 20 जून" },
+    "Cancer": { title: "कर्क", date: "21 जून - 22 जुलाई" },
+    "Leo": { title: "सिंह", date: "23 जुलाई - 22 अगस्त" },
+    "Virgo": { title: "कन्या", date: "23 अगस्त - 22 सितंबर" },
+    "Libra": { title: "तुला", date: "23 सितंबर - 22 अक्टूबर" },
+    "Scorpio": { title: "वृश्चिक", date: "23 अक्टूबर - 21 नवंबर" },
+    "Sagittarius": { title: "धनु", date: "22 नवंबर - 21 दिसंबर" },
+    "Capricorn": { title: "मकर", date: "22 दिसंबर - 19 जनवरी" },
+    "Aquarius": { title: "कुंभ", date: "20 जनवरी - 18 फरवरी" },
+    "Pisces": { title: "मीन", date: "19 फरवरी - 20 मार्च" }
+  };
+
+  const displayTitle = lang === 'hi' && ZODIAC_HI_MAP[signData.title] ? ZODIAC_HI_MAP[signData.title].title : signData.title;
+  const displayDate = lang === 'hi' && ZODIAC_HI_MAP[signData.title] ? ZODIAC_HI_MAP[signData.title].date : signData.date;
   const getVibrantColor = (name: string, originalHex: string) => {
     if (!name) return originalHex;
     const vibrantColors: Record<string, string> = {
@@ -65,14 +90,14 @@ export default function ZodiacHeaderProfile({ signData, formattedDate, luckyStat
         {/* Zodiac Details */}
         <div className="flex flex-col justify-center h-full">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#3D1A0B] mb-2 capitalize">
-            {signData.title}
+            {displayTitle}
           </h1>
           <p className="text-slate-500 font-medium mb-4 text-sm md:text-base">
-            {signData.date}
+            {displayDate}
           </p>
           <div className="inline-flex justify-center md:justify-start">
             <span className="bg-[#FFF1E8] text-[#F26500] px-4 py-1.5 rounded-lg text-sm font-bold tracking-wide">
-              Today's Horoscope
+              {tx.today}
             </span>
           </div>
           <p className="text-slate-600 mt-4 font-medium text-sm">
@@ -92,7 +117,7 @@ export default function ZodiacHeaderProfile({ signData, formattedDate, luckyStat
                 <i className="fa-solid fa-dice-five"></i>
               </div>
               <div>
-                <p className="text-[13px] text-slate-500 font-bold mb-0.5">Lucky Number</p>
+                <p className="text-[13px] text-slate-500 font-bold mb-0.5">{tx.number}</p>
                 <p className="text-base font-black text-[#3D1A0B]">{luckyStats.lucky_number}</p>
               </div>
             </div>
@@ -103,7 +128,7 @@ export default function ZodiacHeaderProfile({ signData, formattedDate, luckyStat
                 <div className="w-6 h-6 rounded-full shadow-inner border border-black/10" style={{ backgroundColor: getVibrantColor(luckyStats.lucky_color.name, luckyStats.lucky_color.hex) }}></div>
               </div>
               <div>
-                <p className="text-[13px] text-slate-500 font-bold mb-0.5">Lucky Color</p>
+                <p className="text-[13px] text-slate-500 font-bold mb-0.5">{tx.color}</p>
                 <p className="text-base font-black text-[#3D1A0B]">{luckyStats.lucky_color.name}</p>
               </div>
             </div>
@@ -114,7 +139,7 @@ export default function ZodiacHeaderProfile({ signData, formattedDate, luckyStat
                 <i className="fa-regular fa-clock"></i>
               </div>
               <div>
-                <p className="text-[13px] text-slate-500 font-bold mb-0.5">Lucky Time</p>
+                <p className="text-[13px] text-slate-500 font-bold mb-0.5">{tx.time}</p>
                 <p className="text-base font-black text-[#3D1A0B]">{luckyStats.lucky_time}</p>
               </div>
             </div>

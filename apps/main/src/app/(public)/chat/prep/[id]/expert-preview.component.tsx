@@ -5,6 +5,66 @@ import NextImage from "next/image";
 import * as LucideIcons from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Expert } from "@/lib/types";
+import { useLanguageStore } from "@repo/store";
+
+const epT = {
+  en: {
+    expertise: "Expertise",
+    experience: "Experience",
+    years: "+ Years",
+    verifiedExpert: "Verified Astro Expert • Bharat",
+    consultingFor: "Consulting for",
+    myself: "Myself",
+    someoneElse: "Someone Else",
+    change: "Change",
+    fullName: "Full Name",
+    enterName: "Enter Name",
+    gender: "Gender",
+    select: "Select",
+    male: "Male",
+    female: "Female",
+    birthDate: "Birth Date",
+    birthTime: "Birth Time",
+    birthPlace: "Birth Place",
+    cityCountry: "City, Country",
+    yourBalance: "Your Balance",
+    lowBalance: "Low Balance",
+    lowBalanceDesc: "You need at least ₹{price} for 5 mins.",
+    rechargeNow: "RECHARGE NOW",
+    connecting: "CONNECTING...",
+    startConsultation: "START CONSULTATION",
+    availableNow: "Available Now",
+    offline: "Offline",
+  },
+  hi: {
+    expertise: "विशेषज्ञता",
+    experience: "अनुभव",
+    years: "+ वर्ष",
+    verifiedExpert: "सत्यापित ज्योतिषी • भारत",
+    consultingFor: "किसके लिए परामर्श",
+    myself: "स्वयं के लिए",
+    someoneElse: "किसी और के लिए",
+    change: "बदलें",
+    fullName: "पूरा नाम",
+    enterName: "नाम दर्ज करें",
+    gender: "लिंग",
+    select: "चुनें",
+    male: "पुरुष",
+    female: "महिला",
+    birthDate: "जन्म तिथि",
+    birthTime: "जन्म समय",
+    birthPlace: "जन्म स्थान",
+    cityCountry: "शहर, देश",
+    yourBalance: "आपका बैलेंस",
+    lowBalance: "कम बैलेंस",
+    lowBalanceDesc: "5 मिनट के लिए कम से कम ₹{price} चाहिए।",
+    rechargeNow: "अभी रिचार्ज करें",
+    connecting: "कनेक्ट हो रहा है...",
+    startConsultation: "परामर्श शुरू करें",
+    availableNow: "अभी उपलब्ध",
+    offline: "ऑफलाइन",
+  },
+};
 
 const Image = NextImage as any;
 const { MessageSquare, MapPin, Sparkles, ArrowRight } = LucideIcons as any;
@@ -33,6 +93,8 @@ const ExpertPreview = ({
   isAuthenticated = false,
 }: Props) => {
   const router = useRouter();
+  const { lang } = useLanguageStore();
+  const tx = epT[lang] || epT.en;
   const chatPrice = expert?.chat_price || expert?.price || 0;
 
   return (
@@ -69,7 +131,7 @@ const ExpertPreview = ({
                   expert?.is_available ? "text-white" : "text-gray-400"
                 } text-[10px] font-black uppercase tracking-widest`}
               >
-                {expert?.is_available ? "Available Now" : "Offline"}
+                {expert?.is_available ? tx.availableNow : tx.offline}
               </span>
             </div>
 
@@ -86,7 +148,7 @@ const ExpertPreview = ({
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex flex-col flex-1 min-w-0">
                     <span className="text-white/60 text-[9px] font-black uppercase tracking-widest mb-1">
-                      Expertise
+                      {tx.expertise}
                     </span>
                     <span className="text-white font-bold text-sm line-clamp-1 truncate" title={expert?.expertise}>
                       {expert?.expertise || "Astrology, Vastu, Palmistry"}
@@ -95,10 +157,10 @@ const ExpertPreview = ({
                   <div className="w-[1px] h-8 bg-[#1A1A1A]/20 flex-shrink-0"></div>
                   <div className="flex flex-col flex-shrink-0">
                     <span className="text-white/60 text-[9px] font-black uppercase tracking-widest mb-1 text-right">
-                      Experience
+                      {tx.experience}
                     </span>
                     <span className="text-white font-bold text-right text-sm">
-                      {expert?.experience}+ Years
+                      {expert?.experience}{tx.years}
                     </span>
                   </div>
                 </div>
@@ -108,7 +170,7 @@ const ExpertPreview = ({
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-orange" />
                   <span className="text-white/80 text-xs font-medium">
-                    Verified Astro Expert • Bharat
+                    {tx.verifiedExpert}
                   </span>
                 </div>
               </div>
@@ -121,17 +183,17 @@ const ExpertPreview = ({
               <div className="flex items-center justify-between p-4 bg-[#FFF8F3] rounded-2xl border border-[#F5E0CC]">
                 <div className="flex flex-col">
                   <span className="text-[10px] font-black text-orange/80 uppercase tracking-widest">
-                    Consulting for
+                    {tx.consultingFor}
                   </span>
                   <span className="text-sm font-bold text-gray-900">
-                    {askSomeoneElse ? "Myself" : "Someone Else"}
+                    {askSomeoneElse ? tx.myself : tx.someoneElse}
                   </span>
                 </div>
                 <button
                   onClick={() => setAskSomeoneElse(!askSomeoneElse)}
                   className="px-4 py-2 text-[10px] font-black text-orange uppercase tracking-widest hover:bg-orange/10 rounded-xl transition-colors"
                 >
-                  Change
+                  {tx.change}
                 </button>
               </div>
 
@@ -141,11 +203,11 @@ const ExpertPreview = ({
                   <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label className="text-[9px] font-black text-orange/80 uppercase tracking-widest ml-1 mb-1.5 block">
-                        Full Name
+                        {tx.fullName}
                       </label>
                       <input
                         type="text"
-                        placeholder="Enter Name"
+                        placeholder={tx.enterName}
                         value={someoneElseData.name}
                         onChange={(e) =>
                           setSomeoneElseData({
@@ -159,7 +221,7 @@ const ExpertPreview = ({
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-[9px] font-black text-orange/80 uppercase tracking-widest ml-1 mb-1.5 block">
-                          Gender
+                          {tx.gender}
                         </label>
                         <select
                           value={someoneElseData.gender}
@@ -171,14 +233,14 @@ const ExpertPreview = ({
                           }
                           className="w-full px-4 py-3 bg-white rounded-xl border border-gray-200 focus:border-orange outline-none text-sm font-bold text-gray-900 shadow-sm appearance-none transition-colors"
                         >
-                          <option value="">Select</option>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
+                          <option value="">{tx.select}</option>
+                          <option value="male">{tx.male}</option>
+                          <option value="female">{tx.female}</option>
                         </select>
                       </div>
                       <div>
                         <label className="text-[9px] font-black text-orange/80 uppercase tracking-widest ml-1 mb-1.5 block">
-                          Birth Date
+                          {tx.birthDate}
                         </label>
                         <input
                           type="date"
@@ -196,7 +258,7 @@ const ExpertPreview = ({
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-[9px] font-black text-orange/80 uppercase tracking-widest ml-1 mb-1.5 block">
-                          Birth Time
+                          {tx.birthTime}
                         </label>
                         <input
                           type="time"
@@ -212,11 +274,11 @@ const ExpertPreview = ({
                       </div>
                       <div>
                         <label className="text-[9px] font-black text-orange/80 uppercase tracking-widest ml-1 mb-1.5 block">
-                          Birth Place
+                          {tx.birthPlace}
                         </label>
                         <input
                           type="text"
-                          placeholder="City, Country"
+                          placeholder={tx.cityCountry}
                           value={someoneElseData.pob}
                           onChange={(e) =>
                             setSomeoneElseData({
@@ -241,7 +303,7 @@ const ExpertPreview = ({
                           <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center border border-green-200">
                               <LucideIcons.Wallet className="w-4 h-4 text-green-600" />
                           </div>
-                          <span className="text-sm font-bold text-gray-600">Your Balance</span>
+                          <span className="text-sm font-bold text-gray-600">{tx.yourBalance}</span>
                       </div>
                       <span className="text-xl font-black text-gray-900">₹{userBalance.toFixed(2)}</span>
                   </div>
@@ -254,8 +316,8 @@ const ExpertPreview = ({
                               <LucideIcons.AlertCircle className="w-6 h-6 text-red-500" />
                           </div>
                           <div>
-                              <h4 className="font-bold text-red-900 leading-none mb-1">Low Balance</h4>
-                              <p className="text-xs text-red-600 font-medium">You need at least ₹{chatPrice * 5} for 5 mins.</p>
+                              <h4 className="font-bold text-red-900 leading-none mb-1">{tx.lowBalance}</h4>
+                              <p className="text-xs text-red-600 font-medium">{tx.lowBalanceDesc.replace('{price}', String(chatPrice * 5))}</p>
                           </div>
                       </div>
                       <button
@@ -263,7 +325,7 @@ const ExpertPreview = ({
                           className="w-full py-4 bg-red-500 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-red-600 transition-all flex items-center justify-center gap-2"
                       >
                           <LucideIcons.CreditCard className="w-5 h-5" />
-                          <span>RECHARGE NOW</span>
+                          <span>{tx.rechargeNow}</span>
                       </button>
                   </div>
               ) : (
@@ -284,7 +346,7 @@ const ExpertPreview = ({
                     
                     <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-yellow-300 relative z-10 group-hover:scale-125 transition-transform duration-300" fill="currentColor" />
                     <span className="tracking-wide relative z-10">
-                      {actionLoading ? "CONNECTING..." : "START CONSULTATION"}
+                      {actionLoading ? tx.connecting : tx.startConsultation}
                     </span>
                     <ArrowRight className="w-5 h-5 text-white/70 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
                   </button>

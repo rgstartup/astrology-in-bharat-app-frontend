@@ -92,6 +92,38 @@ export default function ZodiacDetailsPage() {
     if (slug) fetchData();
   }, [slug, lang]);
 
+  const tx = {
+    en: {
+      notFound: "Not Found",
+      notFoundDesc: "\"The destiny of this sign is still being written by the stars.\"",
+      backToHoroscopes: "Back to Horoscopes",
+      failedToLoad: "Failed to load horoscope data.",
+      ctaSubtitle: "Personalized Guidance",
+      ctaTitle: "Get More Personalized Predictions",
+      ctaDesc: "Talk to our expert astrologers for in-depth guidance based on your birth chart.",
+      ctaBtn: "Talk to Expert"
+    },
+    hi: {
+      notFound: "नहीं मिला",
+      notFoundDesc: "\"इस राशि का भाग्य अभी भी सितारों द्वारा लिखा जा रहा है।\"",
+      backToHoroscopes: "राशिफल पर वापस जाएं",
+      failedToLoad: "राशिफल डेटा लोड करने में विफल।",
+      ctaSubtitle: "व्यक्तिगत मार्गदर्शन",
+      ctaTitle: "अधिक व्यक्तिगत भविष्यवाणियां प्राप्त करें",
+      ctaDesc: "अपनी जन्म कुंडली के आधार पर गहन मार्गदर्शन के लिए हमारे विशेषज्ञ ज्योतिषियों से बात करें।",
+      ctaBtn: "विशेषज्ञ से बात करें"
+    }
+  }[lang] || {
+    notFound: "Not Found",
+    notFoundDesc: "\"The destiny of this sign is still being written by the stars.\"",
+    backToHoroscopes: "Back to Horoscopes",
+    failedToLoad: "Failed to load horoscope data.",
+    ctaSubtitle: "Personalized Guidance",
+    ctaTitle: "Get More Personalized Predictions",
+    ctaDesc: "Talk to our expert astrologers for in-depth guidance based on your birth chart.",
+    ctaBtn: "Talk to Expert"
+  };
+
   if (!signData) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FDF6F0] p-6">
@@ -100,16 +132,16 @@ export default function ZodiacDetailsPage() {
             🔮
           </div>
           <h2 className="text-4xl font-black text-slate-900 leading-tight mb-4 tracking-tight">
-            Zodiac Sign <span className="text-orange-500 italic underline underline-offset-8 decoration-orange-500/20">Not Found</span>
+            Zodiac Sign <span className="text-orange-500 italic underline underline-offset-8 decoration-orange-500/20">{tx.notFound}</span>
           </h2>
           <p className="text-slate-500 mb-10 text-lg font-medium italic">
-            &quot;The destiny of this sign is still being written by the stars.&quot;
+            {tx.notFoundDesc}
           </p>
           <button
             onClick={() => router.push('/horoscope')}
             className="inline-flex items-center gap-3 bg-slate-950 text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] no-underline transition-all hover:bg-orange-600 hover:-translate-y-1 shadow-2xl"
           >
-            Back to Horoscopes
+            {tx.backToHoroscopes}
             <FaArrowRight size={10} />
           </button>
         </div>
@@ -139,7 +171,7 @@ export default function ZodiacDetailsPage() {
                 <div className="w-12 h-12 border-4 border-[#E8D5C0] border-t-[#F26500] rounded-full animate-spin"></div>
               </div>
             ) : error ? (
-              <div className="py-20 text-center text-red-500">Failed to load horoscope data.</div>
+              <div className="py-20 text-center text-red-500">{tx.failedToLoad}</div>
             ) : (
               <>
                 <PredictionList horoscope={horoscope} />
@@ -149,10 +181,10 @@ export default function ZodiacDetailsPage() {
                 {/* Talk to Expert Banner */}
                 <GuidanceCTA 
                   className="mt-8"
-                  subtitle="Personalized Guidance"
-                  title="Get More Personalized Predictions"
-                  description="Talk to our expert astrologers for in-depth guidance based on your birth chart."
-                  buttonText="Talk to Expert"
+                  subtitle={tx.ctaSubtitle}
+                  title={tx.ctaTitle}
+                  description={tx.ctaDesc}
+                  buttonText={tx.ctaBtn}
                   buttonIcon="fa-solid fa-headset"
                 />
 

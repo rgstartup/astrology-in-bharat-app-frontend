@@ -25,6 +25,7 @@ const CartPage: React.FC = () => {
   } = useCartStore();
 
   const [suggestedProducts, setSuggestedProducts] = React.useState<any[]>([]);
+  const [platformFee, setPlatformFee] = React.useState(0);
 
   React.useEffect(() => {
     // Clear any stale single-purchase data when moving to the cart
@@ -43,8 +44,16 @@ const CartPage: React.FC = () => {
           setSuggestedProducts(products);
         }
       };
+
+      const fetchPlatformFee = async () => {
+        const [res, err] = await api.get<any>("/settings/platform-fee");
+        if (!err && res) {
+          setPlatformFee(Number(res.platform_fee) || 0);
+        }
+      };
   
       fetchProducts();
+      fetchPlatformFee();
   }, [isAuthenticated, loading, router]);
 
   if (loading || (!isAuthenticated && typeof window !== 'undefined')) {
@@ -70,9 +79,26 @@ const CartPage: React.FC = () => {
   };
 
   const subtotal = cartTotal;
-  const shipping = 0;
-  const tax = subtotal * 0.1;
-  const grandTotal = subtotal + shipping + tax;
+  let shipping = 0;
+
+  // Calculate shipping per merchant
+  const merchantShippingMap = new Map<string, number>();
+  cartItems.forEach((item: any) => {
+    if (item.product?.is_shipping_chargeable) {
+      const merchantId = item.product?.merchant_id || 'platform';
+      const currentMax = merchantShippingMap.get(merchantId) || 0;
+      const charge = Number(item.product?.shipping_charge) || 0;
+      if (charge > currentMax) {
+        merchantShippingMap.set(merchantId, charge);
+      }
+    }
+  });
+
+  merchantShippingMap.forEach((charge) => {
+    shipping += charge;
+  });
+
+  const grandTotal = subtotal + shipping + platformFee;
 
   return (
     <div className="bg-gray-50/50 min-h-screen py-6 md:py-10 overflow-hidden">
@@ -197,8 +223,8 @@ const CartPage: React.FC = () => {
                       <span className="text-emerald-500 uppercase text-xs font-black tracking-widest">{shipping === 0 ? t.cart.shippingFree : `₹${shipping}`}</span>
                     </div>
                     <div className="flex justify-between items-center text-gray-500 font-bold">
-                      <span className="text-sm">{t.cart.estimatedTax}</span>
-                      <span className="text-gray-900">₹{tax.toFixed(0)}</span>
+                      <span className="text-sm">Platform Charges</span>
+                      <span className="text-gray-900">₹{platformFee}</span>
                     </div>
                     <div className="h-px w-full bg-gray-100 my-4"></div>
                     <div className="flex justify-between items-center pt-2">

@@ -3,6 +3,7 @@
 import React from "react";
 import { Place } from "@/libs/serp-api";
 import PlaceCard from "./PlaceCard";
+import { useLanguageStore } from "@repo/store";
 
 interface PlacesSectionProps {
   title: React.ReactNode;
@@ -40,6 +41,11 @@ const PlacesSection: React.FC<PlacesSectionProps> = ({
   initialCount = 6,
   headerIcon,
 }) => {
+  const { lang } = useLanguageStore();
+  const tx = {
+    en: { sortPopular: "Sort By: Popular", sortNearest: "Sort By: Nearest", sortRating: "Sort By: Rating", showLess: "Show Less", viewMore: "View More Temples", noResults: "No results found" },
+    hi: { sortPopular: "लोकप्रियता अनुसार", sortNearest: "नजदीक अनुसार", sortRating: "रेटिंग अनुसार", showLess: "कम दिखाएं", viewMore: "और मंदिर देखें", noResults: "कोई परिणाम नहीं मिला" },
+  }[lang] || { en: {} } as any;
   const visible = showAll ? places : places.slice(0, initialCount);
   const hasMore = places.length > initialCount;
 
@@ -62,9 +68,9 @@ const PlacesSection: React.FC<PlacesSectionProps> = ({
         {/* Sort Dropdown */}
         <div className="relative flex-shrink-0">
           <select className="appearance-none bg-white border border-[#E8D5C0] rounded-lg px-4 py-2 text-sm text-gray-600 font-medium pr-8 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all cursor-pointer">
-            <option>Sort By: Popular</option>
-            <option>Sort By: Nearest</option>
-            <option>Sort By: Rating</option>
+            <option>{tx.sortPopular}</option>
+            <option>{tx.sortNearest}</option>
+            <option>{tx.sortRating}</option>
           </select>
           <i className="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none"></i>
         </div>
@@ -89,7 +95,7 @@ const PlacesSection: React.FC<PlacesSectionProps> = ({
                 onClick={onToggleShowAll}
                 className="border border-orange-300 text-orange-500 font-bold text-[13px] px-8 py-2.5 rounded-lg hover:bg-orange-50 transition-colors flex items-center gap-2"
               >
-                {showAll ? "Show Less" : "View More Temples"}
+                {showAll ? tx.showLess : tx.viewMore}
                 <i className={`fa-solid fa-arrow-${showAll ? "up" : "right"} text-[11px]`} />
               </button>
             </div>
@@ -98,7 +104,7 @@ const PlacesSection: React.FC<PlacesSectionProps> = ({
       ) : (
         <div className="text-center py-14 bg-[#FAF5EE] rounded-2xl border border-dashed border-[#E8D5C0]">
           <i className={`fa-solid ${emptyIcon} text-orange-200 text-4xl mb-3 block`} />
-          <p className="text-gray-400 font-medium text-sm">No results found</p>
+          <p className="text-gray-400 font-medium text-sm">{tx.noResults}</p>
         </div>
       )}
     </section>

@@ -20,7 +20,9 @@ export const uploadDocument = async (file: File): Promise<[any | null, ApiError 
     const formData = new FormData();
     formData.append('file', file);
 
-    const [res, error] = await api.post('/expert/upload-file', formData);
+    // Bypass Next.js proxy for file uploads to avoid proxy timeouts (30s limit on Vercel/Next)
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543/api/v1';
+    const [res, error] = await api.post(`${backendUrl}/expert/upload-file`, formData);
     if (error) return [null, error];
     const data = (res as any)?.data ?? res;
     return [data, null];

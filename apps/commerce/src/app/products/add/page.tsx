@@ -28,6 +28,8 @@ export default function AddProductPage() {
   const [rightImage, setRightImage] = useState<string>("");
   const [additionalImages, setAdditionalImages] = useState<string[]>([]);
   const [isFeatured, setIsFeatured] = useState(false);
+  const [isShippingChargeable, setIsShippingChargeable] = useState(false);
+  const [shippingCharge, setShippingCharge] = useState("");
 
   // Mutation to create product
   const createMutation = useMutation({
@@ -42,7 +44,9 @@ export default function AddProductPage() {
         // Combine images
         gallery: [frontImage, backImage, leftImage, rightImage, ...additionalImages].filter(Boolean),
         imageUrl: frontImage || backImage || leftImage || rightImage || additionalImages[0] || "",
-        status
+        status,
+        is_shipping_chargeable: isShippingChargeable,
+        shipping_charge: Number(shippingCharge) || 0
       };
 
       const [data, error] = await productService.createProduct(payload);
@@ -237,18 +241,60 @@ export default function AddProductPage() {
               <div className="space-y-2 lg:col-span-1">
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Current Stock *</label>
                 <div className="relative group">
-                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                     <Package className="w-4 h-4" />
-                   </div>
-                   <input 
-                     type="number" 
-                     value={stock}
-                     onChange={(e) => setStock(e.target.value)}
-                     placeholder="15" 
-                     className="w-full pl-10 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-[1.5rem] text-sm focus:outline-none focus:ring-2 focus:ring-[#fd6410]/20 focus:border-[#fd6410] transition-all" 
-                   />
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Package className="h-4 w-4 text-gray-400 group-focus-within:text-[#fd6410] transition-colors" />
+                  </div>
+                  <input
+                    type="number"
+                    value={stock}
+                    onChange={(e) => setStock(e.target.value)}
+                    className="block w-full pl-11 pr-4 py-3.5 border-2 border-gray-100 rounded-2xl bg-gray-50/50 text-gray-900 text-sm focus:bg-white focus:border-[#fd6410] focus:ring-0 transition-all font-medium"
+                    placeholder="e.g. 50"
+                  />
                 </div>
               </div>
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-gray-100">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-sm font-black text-gray-900 uppercase tracking-wider flex items-center">
+                    <Package className="w-4 h-4 mr-2 text-[#fd6410]" /> Shipping Settings
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1">Configure shipping options for this product.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsShippingChargeable(!isShippingChargeable)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    isShippingChargeable ? "bg-[#fd6410]" : "bg-gray-200"
+                  }`}
+                >
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    isShippingChargeable ? "translate-x-6" : "translate-x-1"
+                  }`} />
+                </button>
+              </div>
+
+              {isShippingChargeable && (
+                <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                    Shipping Charge (₹)
+                  </label>
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <IndianRupee className="h-4 w-4 text-gray-400 group-focus-within:text-[#fd6410] transition-colors" />
+                    </div>
+                    <input
+                      type="number"
+                      value={shippingCharge}
+                      onChange={(e) => setShippingCharge(e.target.value)}
+                      className="block w-full pl-11 pr-4 py-3.5 border-2 border-gray-100 rounded-2xl bg-gray-50/50 text-gray-900 text-sm focus:bg-white focus:border-[#fd6410] focus:ring-0 transition-all font-medium"
+                      placeholder="e.g. 50"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </section>
         </div>

@@ -7,6 +7,8 @@ import { Expert } from "@/lib/types";
 import { renderStars } from "./renderStars";
 import { Loading } from "@repo/ui";
 
+import { getYoutubeId } from "@/utils/video-utils";
+
 const Image = NextImage as any;
 
 interface ExpertContentSectionProps {
@@ -81,7 +83,7 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
           )}
 
           {activeTab === 'experience' && (
-            <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[200px] overflow-y-auto pr-1">
+            <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[200px] overflow-y-auto pr-1" data-lenis-prevent="true">
               {expert.detailed_experience && expert.detailed_experience.length > 0 ? (
                 expert.detailed_experience.map((exp, index) => (
                   <div key={index} className="bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm">
@@ -106,7 +108,7 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
           )}
 
           {activeTab === 'reviews' && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[400px] overflow-y-auto pr-1">
+            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[400px] overflow-y-auto pr-1" data-lenis-prevent="true">
               {loadingReviews ? (
                 <div className="flex flex-col items-center justify-center py-10">
                   <Loading size="md" text="Loading authentic reviews..." />
@@ -164,7 +166,7 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
           )}
 
           {activeTab === 'gallery' && (
-            <div className="grid grid-cols-3 gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[360px] overflow-y-auto pr-1">
+            <div className="grid grid-cols-3 gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[360px] overflow-y-auto pr-1" data-lenis-prevent="true">
               {expert.gallery && expert.gallery.length > 0 ? (
                 expert.gallery.map((img, index) => (
                   <div
@@ -185,7 +187,7 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
           )}
 
           {activeTab === 'videos' && (
-            <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[320px] overflow-y-auto pr-1">
+            <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[320px] overflow-y-auto pr-1" data-lenis-prevent="true">
               {expert.videos && expert.videos.length > 0 ? (
                 expert.videos.map((vid, index) => (
                   <div
@@ -193,10 +195,25 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
                     onClick={() => onVideoClick(vid)}
                     className="relative aspect-video rounded-xl overflow-hidden border border-gray-200 group cursor-pointer bg-black shadow-sm hover:shadow-md transition-all"
                   >
-                    <video
-                      src={vid}
-                      className="w-full h-full object-cover opacity-90 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none"
-                    />
+                    {(() => {
+                      const ytId = getYoutubeId(vid);
+                      const isShort = vid.includes('shorts/');
+                      if (ytId) {
+                        return (
+                          <img
+                            src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
+                            alt="Video Thumbnail"
+                            className={`w-full h-full object-cover opacity-90 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none ${isShort ? 'scale-[1.35]' : ''}`}
+                          />
+                        );
+                      }
+                      return (
+                        <video
+                          src={vid}
+                          className="w-full h-full object-cover opacity-90 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none"
+                        />
+                      );
+                    })()}
                     <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="w-14 h-14 rounded-full bg-orange flex items-center justify-center text-white shadow-xl scale-75 group-hover:scale-100 transition-transform duration-300">
                         <i className="fa-solid fa-play text-lg ml-1"></i>
@@ -205,7 +222,7 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
                   </div>
                 ))
               ) : (
-                <p className="col-span-2 text-sm text-gray-500 italic text-center py-4">No videos available.</p>
+                <p className="col-span-2 text-sm text-gray-500 italic text-center py-4 break-inside-avoid w-full">No videos available.</p>
               )}
             </div>
           )}

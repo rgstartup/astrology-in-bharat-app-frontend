@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguageStore } from "@repo/store";
 
 const TABS = [
   { id: 'overview', label: 'Overview', icon: 'fa-regular fa-compass' },
@@ -12,7 +13,20 @@ const TABS = [
   { id: 'remedies', label: 'Remedies', icon: 'fa-solid fa-hands-praying' }
 ];
 
+const TABS_HI: Record<string, string> = {
+  'overview': 'अवलोकन',
+  'love': 'प्रेम',
+  'career': 'करियर',
+  'money': 'धन',
+  'health': 'स्वास्थ्य',
+  'education': 'शिक्षा',
+  'family': 'परिवार',
+  'travel': 'यात्रा',
+  'remedies': 'उपाय'
+};
+
 export default function HoroscopeTabs({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (t: string) => void }) {
+  const { lang } = useLanguageStore();
   return (
     <div className="w-full mt-6">
       <div className="bg-[#FFFDF9] border border-[#F0E6DD] rounded-2xl p-2 flex items-center gap-1 overflow-x-auto hide-scrollbar shadow-sm">
@@ -30,7 +44,7 @@ export default function HoroscopeTabs({ activeTab, setActiveTab }: { activeTab: 
                 }`}
               >
                 <i className={`${tab.icon} text-[#F26500]`}></i>
-                {tab.label}
+                {lang === 'hi' ? TABS_HI[tab.id] : tab.label}
               </button>
             );
           })}

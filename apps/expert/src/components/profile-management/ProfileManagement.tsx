@@ -37,6 +37,7 @@ const ProfileManagement = () => {
     const [editMode, setEditMode] = useState<string | null>(null);
     const [tempProfile, setTempProfile] = useState<Profile | null>(null);
     const [isSaving, setIsSaving] = useState(false);
+    const [loadingText, setLoadingText] = useState("Please wait...");
     const [pendingProfilePicFile, setPendingProfilePicFile] = useState<File | null>(null);
     const [activeTab, setActiveTab] = useState("about-expert");
 
@@ -105,6 +106,7 @@ const ProfileManagement = () => {
 
     const handleSave = async (section: string, updatedData?: Partial<Profile>) => {
         if (!tempProfile) return;
+        setLoadingText("Please wait, saving your changes...");
         setIsSaving(true);
         
         try {
@@ -141,9 +143,12 @@ const ProfileManagement = () => {
 
     // File Handlers
     const handleUploadDoc = async (file: File, category?: 'aadhar' | 'pan' | 'other', side?: 'front' | 'back') => {
+        setLoadingText("Please wait, uploading document...");
+        setIsSaving(true);
         const [data, error] = await uploadDocument(file);
         if (error) { 
             toast.error(getErrorMessage(error) || "Upload failed"); 
+            setIsSaving(false);
             return; 
         }
         
@@ -298,27 +303,42 @@ const ProfileManagement = () => {
                         tempIntroVideo={tempProfile.video || ""}
                         isEditingIntro={editMode === "video"}
                         onEditIntro={() => handleEditClick("video")}
-                        onSaveIntro={() => handleSave("video")}
+                        onSaveIntro={() => handleSave("portfolio")}
                         onCancelIntro={handleCancel}
                         onIntroVideoChange={handleChange}
                         onUploadIntroVideo={async (f) => {
+                            setLoadingText("Please wait, uploading your video...");
+                            setIsSaving(true);
                             const [d, e] = await uploadDocument(f);
-                            if (!e) handleSave("video", { video: d.fileUrl || d.url });
-                            else toast.error(getErrorMessage(e) || "Video upload failed");
+                            if (!e) await handleSave("portfolio", { video: d.fileUrl || d.url });
+                            else {
+                                toast.error(getErrorMessage(e) || "Video upload failed");
+                                setIsSaving(false);
+                            }
                         }}
-                        onRemoveIntro={() => handleSave("video", { video: "" })}
+                        onRemoveIntro={() => handleSave("portfolio", { video: "" })}
                         onAddImage={async (f) => {
+                            setLoadingText("Please wait, uploading image...");
+                            setIsSaving(true);
                             const [d, e] = await uploadDocument(f);
-                            if (!e) handleSave("portfolio", { gallery: [...fetchedProfile.gallery, d.fileUrl || d.url] });
-                            else toast.error(getErrorMessage(e) || "Image upload failed");
+                            if (!e) await handleSave("portfolio", { gallery: [...fetchedProfile.gallery, d.fileUrl || d.url] });
+                            else {
+                                toast.error(getErrorMessage(e) || "Image upload failed");
+                                setIsSaving(false);
+                            }
                         }}
                         onRemoveImage={(idx) => handleSave("portfolio", { gallery: fetchedProfile.gallery.filter((_, i) => i !== idx) })}
                         onAddVideo={(url) => handleSave("portfolio", { videos: [...fetchedProfile.videos, url] })}
                         onRemoveVideo={(idx) => handleSave("portfolio", { videos: fetchedProfile.videos.filter((_, i) => i !== idx) })}
                         onUploadVideoFile={async (f) => {
+                            setLoadingText("Please wait, uploading your video...");
+                            setIsSaving(true);
                             const [d, e] = await uploadDocument(f);
-                            if (!e) handleSave("portfolio", { videos: [...fetchedProfile.videos, d.fileUrl || d.url] });
-                            else toast.error(getErrorMessage(e) || "Video upload failed");
+                            if (!e) await handleSave("portfolio", { videos: [...fetchedProfile.videos, d.fileUrl || d.url] });
+                            else {
+                                toast.error(getErrorMessage(e) || "Video upload failed");
+                                setIsSaving(false);
+                            }
                         }}
                         isActive={activeTab === "portfolio-media"}
                     />
@@ -337,9 +357,14 @@ const ProfileManagement = () => {
                         onDeleteDocument={(id) => handleSave("documents", { documents: fetchedProfile.documents?.filter(d => d.id !== id) })}
                         certificates={fetchedProfile.certificates || []}
                         onUploadCertificate={async (f) => {
+                            setLoadingText("Please wait, uploading certificate...");
+                            setIsSaving(true);
                             const [d, e] = await uploadDocument(f);
-                            if (!e) handleSave("certificates", { certificates: [...(fetchedProfile.certificates || []), d.fileUrl || d.url] });
-                            else toast.error(getErrorMessage(e) || "Certificate upload failed");
+                            if (!e) await handleSave("certificates", { certificates: [...(fetchedProfile.certificates || []), d.fileUrl || d.url] });
+                            else {
+                                toast.error(getErrorMessage(e) || "Certificate upload failed");
+                                setIsSaving(false);
+                            }
                         }}
                         activeSection={activeTab}
                     />

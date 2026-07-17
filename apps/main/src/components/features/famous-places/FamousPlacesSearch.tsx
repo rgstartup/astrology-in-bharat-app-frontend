@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 import { fetchStates, fetchDistricts, State, District } from "@/libs/api-locations";
+import { useLanguageStore } from "@repo/store";
 
 interface FamousPlacesSearchProps {
   onSearch: (query: string, location?: string) => void;
@@ -11,7 +12,8 @@ interface FamousPlacesSearchProps {
 
 
 
-const RADIUS_OPTIONS = ["Within 5 km", "Within 10 km", "Within 25 km", "Within 50 km", "Within 100 km"];
+const RADIUS_OPTIONS_EN = ["Within 5 km", "Within 10 km", "Within 25 km", "Within 50 km", "Within 100 km"];
+const RADIUS_OPTIONS_HI = ["5 किमी के भीतर", "10 किमी के भीतर", "25 किमी के भीतर", "50 किमी के भीतर", "100 किमी के भीतर"];
 
 const CustomSelect = ({ value, onChange, options, placeholder }: { value: string, onChange: (val: string) => void, options: string[], placeholder: string }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -91,6 +93,38 @@ const CustomSelect = ({ value, onChange, options, placeholder }: { value: string
 
 const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSearching }) => {
   const [query, setQuery] = useState("");
+  const { lang } = useLanguageStore();
+
+  const tx = {
+    en: {
+      searchTitle: "Search Temples",
+      searchSubtitle: "Find temples by State, District, City or Area",
+      useMyLocation: "Use My Location",
+      placeholder: "Enter your area name, city or temple name...",
+      selectState: "Select State",
+      selectDistrict: "Select District",
+      selectCity: "Select City / Area",
+      withinRadius: "Within Radius",
+      search: "Search",
+      toastWarning: "Please enter a search term or select a location before searching.",
+      noResults: "No results found",
+    },
+    hi: {
+      searchTitle: "मंदिर खोजें",
+      searchSubtitle: "राज्य, जिला, शहर या क्षेत्र द्वारा मंदिर खोजें",
+      useMyLocation: "मेरी लोकेशन उपयोग करें",
+      placeholder: "अपने क्षेत्र का नाम, शहर या मंदिर का नाम दर्ज करें...",
+      selectState: "राज्य चुनें",
+      selectDistrict: "जिला चुनें",
+      selectCity: "शहर / क्षेत्र चुनें",
+      withinRadius: "दायरे के भीतर",
+      search: "खोजें",
+      toastWarning: "खोज से पहले कृपया एक खोज शब्द दर्ज करें या एक स्थान चुनें।",
+      noResults: "कोई परिणाम नहीं मिला",
+    },
+  }[lang] || { en: {} } as any;
+
+  const RADIUS_OPTIONS = lang === 'hi' ? RADIUS_OPTIONS_HI : RADIUS_OPTIONS_EN;
   
   // Selected values
   const [state, setState] = useState("");
@@ -124,7 +158,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
     e.preventDefault();
     
     if (!query.trim() && !state && !district && !city) {
-      toast.warning("Please enter a search term or select a location before searching.");
+      toast.warning(tx.toastWarning);
       return;
     }
 
@@ -190,8 +224,8 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
                     <i className="fa-solid fa-magnifying-glass text-white text-lg" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-[#3D1A0B] leading-tight">Search Temples</h2>
-                    <p className="text-[13px] text-gray-500 font-medium">Find temples by State, District, City or Area</p>
+                    <h2 className="text-xl font-bold text-[#3D1A0B] leading-tight">{tx.searchTitle}</h2>
+                    <p className="text-[13px] text-gray-500 font-medium">{tx.searchSubtitle}</p>
                   </div>
                 </div>
                 
@@ -200,7 +234,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
                   onClick={handleUseMyLocation}
                   className="hidden sm:flex items-center gap-2 border border-[#E8D5C0] text-[#D35400] px-4 py-2 rounded-lg text-sm font-bold hover:bg-orange-50 transition-colors"
                 >
-                  <i className="fa-solid fa-crosshairs"></i> Use My Location
+                  <i className="fa-solid fa-crosshairs"></i> {tx.useMyLocation}
                 </button>
               </div>
 
@@ -210,7 +244,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Enter your area name, city or temple name..."
+                placeholder={tx.placeholder}
                 className="w-full bg-[#FAF5EE] border border-[#E8D5C0] rounded-lg px-4 py-3 pr-12 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all font-medium"
               />
               <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
@@ -226,7 +260,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
                   value={state} 
                   onChange={setState} 
                   options={statesList.map(s => s.name)} 
-                  placeholder="Select State" 
+                  placeholder={tx.selectState} 
                 />
               </div>
 
@@ -236,7 +270,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
                   value={district} 
                   onChange={setDistrict} 
                   options={districtsList.map(d => d.name)} 
-                  placeholder="Select District" 
+                  placeholder={tx.selectDistrict} 
                 />
               </div>
 
@@ -246,7 +280,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
                   type="text"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  placeholder="Select City / Area"
+                  placeholder={tx.selectCity}
                   className="w-full bg-[#FAF5EE] border border-[#E8D5C0] rounded-lg px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all font-medium"
                 />
               </div>
@@ -257,7 +291,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
                   value={radius} 
                   onChange={setRadius} 
                   options={RADIUS_OPTIONS} 
-                  placeholder="Within Radius" 
+                  placeholder={tx.withinRadius} 
                 />
               </div>
 
@@ -268,7 +302,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
                 className="bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white font-bold px-7 py-2.5 rounded-xl flex items-center gap-2 transition-colors text-sm flex-shrink-0 shadow-sm"
               >
                 <i className={`fa-solid ${isSearching ? "fa-spinner fa-spin" : "fa-magnifying-glass"}`} />
-                Search
+                {tx.search}
               </button>
             </div>
 

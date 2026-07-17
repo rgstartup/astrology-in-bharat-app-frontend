@@ -37,6 +37,8 @@ const CheckoutContent = () => {
     setUseSplitPayment,
     walletAmountToUse,
     setWalletAmountToUse,
+    platformFee,
+    shippingCharge,
   } = useCheckout();
 
   return (
@@ -94,12 +96,14 @@ const CheckoutContent = () => {
                 setCouponCode={setCouponCode}
                 appliedCoupon={appliedCoupon}
                 isApplying={isApplying}
-                availableCoupons={availableCoupons}
                 handleApplyCoupon={handleApplyCoupon}
                 handleRemoveCoupon={handleRemoveCoupon}
                 discountAmount={discountAmount}
                 total={total}
                 handleQuantityChange={handleQuantityChange}
+                availableCoupons={availableCoupons}
+                platformFee={platformFee}
+                shippingCharge={shippingCharge}
               />
             </div>
 

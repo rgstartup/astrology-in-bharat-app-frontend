@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 
 import { ExpertSortModalProps } from "@/lib/types";
 import { useLanguageStore } from "@repo/store";
+import { CloseButton } from "@repo/ui";
 import { homeTranslations } from "../../../lib/translations/home";
 
 const ExpertSortModal: React.FC<ExpertSortModalProps> = ({
@@ -48,12 +49,7 @@ const ExpertSortModal: React.FC<ExpertSortModalProps> = ({
                         <i className="fa-solid fa-sort text-orange"></i>
                         {t.expertSection.sortByTitle}
                     </h5>
-                    <button
-                        onClick={onHide}
-                        className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-colors"
-                    >
-                        <i className="fa-solid fa-xmark text-sm"></i>
-                    </button>
+                    <CloseButton onClick={onHide} />
                 </div>
 
                 {/* Body */}
@@ -88,7 +84,7 @@ const ExpertSortModal: React.FC<ExpertSortModalProps> = ({
                 <div className="p-4 bg-gray-50/50 border-t border-gray-100">
                     <button
                         onClick={applySort}
-                        className="w-full py-4 bg-black text-white font-bold rounded-2xl shadow-lg hover:opacity-90 active:scale-[0.98] transition-all"
+                        className="w-full py-4 bg-orange text-white font-bold rounded-2xl shadow-lg hover:opacity-90 active:scale-[0.98] transition-all"
                     >
                         {t.expertSection.applyBtns.applySort}
                     </button>

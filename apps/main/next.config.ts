@@ -50,8 +50,8 @@ const securityHeaders = [
       // Frames: Razorpay checkout iframe and YouTube embeds
       "frame-src https://api.razorpay.com https://checkout.razorpay.com https://www.youtube.com https://www.youtube-nocookie.com",
 
-      // Media - Twilio video/audio
-      "media-src 'self' blob: https://*.twilio.com",
+      // Media - Twilio video/audio & Cloudinary uploaded videos
+      "media-src 'self' blob: https://*.twilio.com https://res.cloudinary.com https://*.cloudinary.com",
     ].join("; "),
   },
 ];

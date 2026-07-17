@@ -69,8 +69,16 @@ export default function PortfolioGallery({
 
     const handleVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file && onUploadVideoFile) {
-            onUploadVideoFile(file);
+        if (file) {
+            // Check file size (50MB limit)
+            if (file.size > 50 * 1024 * 1024) {
+                toast.error("Video file is too large! Maximum allowed size is 50MB.");
+                if (e.target) e.target.value = "";
+                return;
+            }
+            if (onUploadVideoFile) {
+                onUploadVideoFile(file);
+            }
         }
         if (e.target) e.target.value = "";
     };
@@ -78,6 +86,13 @@ export default function PortfolioGallery({
     const handleIntroVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        // Check file size (50MB limit)
+        if (file.size > 50 * 1024 * 1024) {
+            toast.error("Video file is too large! Maximum allowed size is 50MB.");
+            if (e.target) e.target.value = "";
+            return;
+        }
 
         // Validation for Video Duration
         const videoElement = document.createElement('video');
@@ -88,13 +103,13 @@ export default function PortfolioGallery({
             const duration = videoElement.duration;
 
             if (duration < 30) {
-                toast.error("Intro video 30 seconds se chota nahi hona chahiye! (Kam se kam 30 sec ka video banaye)");
+                toast.error("Intro video cannot be shorter than 30 seconds! (Minimum 30 seconds required)");
                 if (e.target) e.target.value = "";
                 return;
             }
 
             if (duration > 90) {
-                toast.error("Intro video 90 seconds se bada nahi hona chahiye! (Max 90 sec ka video allowed hai)");
+                toast.error("Intro video cannot be longer than 90 seconds! (Maximum 90 seconds allowed)");
                 if (e.target) e.target.value = "";
                 return;
             }
@@ -113,9 +128,10 @@ export default function PortfolioGallery({
     };
 
     const getYoutubeId = (url: string) => {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
         const match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : null;
+        return (match && match[2] && match[2].length === 11) ? match[2] : null;
     };
 
     const introVideoId = getYoutubeId(introVideo);

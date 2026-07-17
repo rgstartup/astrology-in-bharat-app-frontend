@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { useLanguageStore } from "@repo/store";
 
 // Reusable 5-star rating component
 const StarRating = ({ rating }: { rating: number }) => {
@@ -17,6 +18,7 @@ const StarRating = ({ rating }: { rating: number }) => {
 
 export default function PredictionList({ horoscope }: { horoscope: any }) {
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const { lang } = useLanguageStore();
 
   if (!horoscope || !horoscope.predictions) return null;
 
@@ -63,15 +65,14 @@ export default function PredictionList({ horoscope }: { horoscope: any }) {
       <div className="flex items-center justify-between mb-8">
         <h3 className="text-[22px] md:text-2xl font-bold text-[#3D1A0B] flex items-center gap-3">
           <i className="fa-solid fa-sun text-[#F26500]"></i> 
-          Today's Overview 
+          {lang === 'hi' ? "आज का अवलोकन" : "Today's Overview"}
           <span className="text-[#E8D5C0] ml-2">←</span>
         </h3>
       </div>
 
       {/* Main Overview Paragraph */}
       <p className="text-slate-600 text-[15px] md:text-base leading-relaxed mb-8">
-        The day brings a mix of opportunities and challenges. Your confidence will be your greatest asset. 
-        Stay focused on your goals and avoid distractions. Positive changes are on the way.
+        {lang === 'hi' ? "यह दिन अवसरों और चुनौतियों का मिश्रण लेकर आता है। आपका आत्मविश्वास आपकी सबसे बड़ी संपत्ति होगी। अपने लक्ष्यों पर केंद्रित रहें और ध्यान भंग होने से बचें। सकारात्मक बदलाव आने वाले हैं।" : "The day brings a mix of opportunities and challenges. Your confidence will be your greatest asset. Stay focused on your goals and avoid distractions. Positive changes are on the way."}
       </p>
 
       {/* Cards List as continuous rows with dividers */}
@@ -97,7 +98,9 @@ export default function PredictionList({ horoscope }: { horoscope: any }) {
                   
                   {/* Middle Content */}
                   <div className="flex-1">
-                    <h4 className="font-bold text-[#3D1A0B] text-base md:text-[17px] mb-1">{p.type}</h4>
+                    <h4 className="font-bold text-[#3D1A0B] text-base md:text-[17px] mb-1">
+                      {lang === 'hi' ? ({ 'Love': 'प्रेम', 'Career': 'करियर', 'Money': 'धन', 'Health': 'स्वास्थ्य', 'Education': 'शिक्षा' }[p.type as string] || p.type) : p.type}
+                    </h4>
                     {/* One line snippet if collapsed, hidden if expanded so it doesn't duplicate */}
                     {!isExpanded && (
                       <p className="text-slate-600 text-[14.5px] md:text-[15px] line-clamp-1 pr-4 leading-relaxed">

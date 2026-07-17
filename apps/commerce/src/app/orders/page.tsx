@@ -379,7 +379,12 @@ export default function OrdersPage() {
                 </div>
                 <div className="col-span-1 text-right lg:text-left">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1 block lg:hidden">Total</span>
-                  <div className="font-black text-sm text-gray-900">{formatPrice(order.amount)}</div>
+                  <div className="font-black text-sm text-gray-900">
+                    {formatPrice(order.amount)}
+                    {(order as any).shippingCharge > 0 && (
+                      <span className="text-[11px] text-gray-500 font-bold ml-1.5">+ {formatPrice((order as any).shippingCharge)} <span className="font-medium text-gray-400">Shipping</span></span>
+                    )}
+                  </div>
                 </div>
                 <div className="col-span-1">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1 block lg:hidden">Status</span>

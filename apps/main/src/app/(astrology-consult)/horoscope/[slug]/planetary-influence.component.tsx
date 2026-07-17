@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguageStore } from "@repo/store";
 
 const PLANETS = [
   { name: 'Sun', sign: 'Taurus', status: 'Positive', color: 'text-emerald-500', icon: 'bg-yellow-400' },
@@ -11,6 +12,25 @@ const PLANETS = [
 ];
 
 export default function PlanetaryInfluence() {
+  const { lang } = useLanguageStore();
+  const txTitle = lang === 'hi' ? "दैनिक ग्रह प्रभाव" : "Daily Planetary Influence";
+  
+  const getPlanetName = (name: string) => {
+    if (lang !== 'hi') return name;
+    const m: Record<string, string> = { 'Sun': 'सूर्य', 'Moon': 'चंद्र', 'Mars': 'मंगल', 'Mercury': 'बुध', 'Jupiter': 'गुरु', 'Venus': 'शुक्र', 'Saturn': 'शनि' };
+    return m[name] || name;
+  };
+  const getSignName = (sign: string) => {
+    if (lang !== 'hi') return sign;
+    const m: Record<string, string> = { 'Taurus': 'वृषभ', 'Libra': 'तुला', 'Pisces': 'मीन', 'Gemini': 'मिथुन', 'Aries': 'मेष', 'Aquarius': 'कुंभ' };
+    return m[sign] || sign;
+  };
+  const getStatusName = (status: string) => {
+    if (lang !== 'hi') return status;
+    const m: Record<string, string> = { 'Positive': 'सकारात्मक', 'Neutral': 'तटस्थ', 'Very Positive': 'बहुत सकारात्मक' };
+    return m[status] || status;
+  };
+
   return (
     <div 
       className="mt-8 rounded-3xl px-6 pb-4 pt-5 md:px-8 md:pb-5 md:pt-6 border border-[#F0E6DD] shadow-sm relative overflow-hidden bg-[#FFFDF9]"
@@ -25,7 +45,7 @@ export default function PlanetaryInfluence() {
       {/* Title */}
       <h3 className="text-xl font-bold text-[#3D1A0B] mb-6 flex items-center gap-3">
         <i className="fa-solid fa-sun text-[#F26500]"></i> 
-        Daily Planetary Influence 
+        {txTitle}
         <span className="text-[#E8D5C0] ml-2">←</span>
       </h3>
 
@@ -38,11 +58,11 @@ export default function PlanetaryInfluence() {
               {/* Icon & Name Row */}
               <div className="flex items-center gap-2 mb-1">
                 <div className={`w-5 h-5 rounded-full ${planet.icon} shadow-inner`}></div>
-                <h4 className="font-bold text-[#3D1A0B] text-[15px]">{planet.name}</h4>
+                <h4 className="font-bold text-[#3D1A0B] text-[15px]">{getPlanetName(planet.name)}</h4>
               </div>
               
-              <p className="text-slate-500 text-[12px] mb-1.5">In {planet.sign}</p>
-              <span className={`text-[11px] font-bold ${planet.color}`}>{planet.status}</span>
+              <p className="text-slate-500 text-[12px] mb-1.5">{lang === 'hi' ? `${getSignName(planet.sign)} में` : `In ${planet.sign}`}</p>
+              <span className={`text-[11px] font-bold ${planet.color}`}>{getStatusName(planet.status)}</span>
             </div>
           ))}
         </div>

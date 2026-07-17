@@ -12,6 +12,8 @@ interface PlaceCardProps {
 
 const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
   const [realImage, setRealImage] = useState<string | null>(null);
+  const { lang } = useLanguageStore();
+  const t = famousPlacesTranslations[lang as keyof typeof famousPlacesTranslations] || famousPlacesTranslations.en;
   const NO_IMAGE_URL = "/images/temple-placeholder.png";
 
   useEffect(() => {
@@ -81,7 +83,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
 
             {/* View Details Button */}
             <button className="border border-orange-300 text-orange-500 text-xs font-bold px-3 py-1.5 rounded hover:bg-orange-50 transition-colors flex items-center gap-1.5">
-              View Details
+              {t.card.viewDetails}
               <i className="fa-solid fa-arrow-right text-[10px]"></i>
             </button>
           </div>

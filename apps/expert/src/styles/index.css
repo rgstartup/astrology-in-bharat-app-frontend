@@ -1,8 +1,7 @@
 @import "tailwindcss";
-@source "../app/**/*.{ts,tsx}";
-@source "../components/**/*.{ts,tsx}";
-@source "../../../../packages/ui/src/**/*.tsx";
-@source "../../../../packages/ui/src/**/*.ts";
+@source "../app";
+@source "../components";
+@source "../../../../packages/ui/src";
 
 @theme {
   --color-orange: #FF6B00;

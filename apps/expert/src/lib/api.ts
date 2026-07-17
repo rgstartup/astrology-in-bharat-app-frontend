@@ -43,7 +43,7 @@ const baseApi = createSafeFetchInstance({
   headers: {
     // Content-Type: 'application/json' removed to allow FormData requests
   },
-  timeoutMs: 10_000,
+  timeoutMs: 300_000,
 });
 
 /**

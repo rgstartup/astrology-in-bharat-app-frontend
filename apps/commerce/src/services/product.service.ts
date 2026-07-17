@@ -10,7 +10,8 @@ export const productService = {
   getProducts: async (params?: Record<string, string>) => {
     const query = params ? '?' + new URLSearchParams(params).toString() : '';
     const [response, error] = await api.get<any>(`/merchant/products${query}`);
-    return [response?.data || { products: [], total: 0 }, error];
+    // Backend returns { success: true, data: { products, total } }
+    return [response?.data?.data || response?.data || { products: [], total: 0 }, error];
   },
 
   /**
@@ -18,7 +19,8 @@ export const productService = {
    */
   getProduct: async (id: string) => {
     const [response, error] = await api.get<any>(`/merchant/products/${id}`);
-    return [response?.data || null, error];
+    // Backend returns { success: true, data: product }
+    return [response?.data?.data || response?.data || null, error];
   },
 
   /**

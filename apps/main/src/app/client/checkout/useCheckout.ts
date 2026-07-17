@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { api as http } from "@/lib/api";
@@ -26,9 +26,20 @@ export const useCheckout = () => {
   const [isApplying, setIsApplying] = useState(false);
   const [discountAmount, setDiscountAmount] = useState(0);
   const [availableCoupons, setAvailableCoupons] = useState<any[]>([]);
-  // Split Payment
   const [useSplitPayment, setUseSplitPayment] = useState(false);
   const [walletAmountToUse, setWalletAmountToUse] = useState(0);
+
+  const [platformFee, setPlatformFee] = useState(50);
+
+  useEffect(() => {
+    const fetchPlatformFee = async () => {
+      const [res, err] = await http.get<any>("/settings/platform-fee");
+      if (!err && res) {
+        setPlatformFee(Number(res.platform_fee) || 0);
+      }
+    };
+    fetchPlatformFee();
+  }, []);
 
   const [buyNowInfo, setBuyNowInfo] = useState<{
     productId: string;
@@ -89,7 +100,34 @@ export const useCheckout = () => {
       : cartTotal
     : parseInt(searchParams.get("total") || "300");
 
-  const total = Math.max(0, baseTotal - discountAmount);
+  const shippingCharge = useMemo(() => {
+    if (!isOrder) return 0;
+    if (buyNowInfo && directProduct) {
+      return directProduct.is_shipping_chargeable ? Number(directProduct.shipping_charge) || 0 : 0;
+    }
+    
+    // Calculate shipping per merchant for cart
+    let shipping = 0;
+    const merchantShippingMap = new Map<string, number>();
+    cartItems.forEach((item: any) => {
+      if (item.product?.is_shipping_chargeable) {
+        const merchantId = item.product?.merchant_id || 'platform';
+        const currentMax = merchantShippingMap.get(merchantId) || 0;
+        const charge = Number(item.product?.shipping_charge) || 0;
+        if (charge > currentMax) {
+          merchantShippingMap.set(merchantId, charge);
+        }
+      }
+    });
+
+    merchantShippingMap.forEach((charge) => {
+      shipping += charge;
+    });
+
+    return shipping;
+  }, [isOrder, buyNowInfo, directProduct, cartItems]);
+
+  const total = Math.max(0, baseTotal - discountAmount) + (isOrder ? platformFee + shippingCharge : 0);
 
   useEffect(() => {
     if (isOrder && buyNowInfo?.productId) {
@@ -572,5 +610,7 @@ export const useCheckout = () => {
     setUseSplitPayment,
     walletAmountToUse,
     setWalletAmountToUse,
+    platformFee,
+    shippingCharge,
   };
 };

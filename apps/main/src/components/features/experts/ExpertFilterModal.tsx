@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 
 import { ExpertFilterModalProps } from "@/lib/types";
 import { useLanguageStore } from "@repo/store";
+import { CloseButton } from "@repo/ui";
 import { homeTranslations } from "../../../lib/translations/home";
 
 const ExpertFilterModal: React.FC<ExpertFilterModalProps> = ({
@@ -38,12 +39,7 @@ const ExpertFilterModal: React.FC<ExpertFilterModalProps> = ({
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                     <h5 className="text-xl font-bold text-gray-900">{t.expertSection.filterTitle}</h5>
-                    <button
-                        onClick={onHide}
-                        className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-colors"
-                    >
-                        <i className="fa-solid fa-xmark text-sm"></i>
-                    </button>
+                    <CloseButton onClick={onHide} />
                 </div>
 
                 {/* Body */}
