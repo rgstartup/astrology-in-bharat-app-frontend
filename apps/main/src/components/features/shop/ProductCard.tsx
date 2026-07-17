@@ -97,15 +97,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
       onClick={() => onView?.(product)}
       className={`group relative bg-white rounded-[2rem] shadow-premium hover:shadow-2xl transition-all duration-500 overflow-hidden h-full flex flex-col border-2 border-orange cursor-pointer ${className || ""}`}
     >
-      {/* 🔥 Top Header: Offer Tag (Left) & Heart Icon (Right) */}
-      {percentageOff > 0 && (
-        <div className="absolute top-4 left-4 z-10 animate-in fade-in slide-in-from-left-4 duration-500">
-          <div className="bg-orange text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-lg shadow-orange/20 flex items-center gap-1.5 uppercase tracking-wider" style={lang === 'hi' ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {}}>
-            <i className="fa-solid fa-fire text-[10px]"></i>
-            {lang === 'hi' ? `${percentageOff}% ${t.products.off}` : `${percentageOff}% ${t.products.off}`}
-          </div>
-        </div>
-      )}
+      {/* 🔥 Heart Icon (Left) */}
 
       <div className="absolute top-4 left-4 z-10 flex flex-col items-center gap-1">
         <button
@@ -155,14 +147,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className, is
         </div>
 
         {/* 💰 Price Section */}
-        <div className="flex items-baseline gap-3 mt-auto">
-          <span className={`${isCompact ? 'text-xl' : 'text-2xl'} font-black text-gray-900`}>
-            ₹{price}
-          </span>
-          {originalPrice > price && (
-            <span className="text-sm font-bold text-gray-300 line-through">
-              ₹{originalPrice}
+        <div className="flex items-center gap-3 mt-auto">
+          <div className="flex items-baseline gap-2">
+            <span className={`${isCompact ? 'text-xl' : 'text-2xl'} font-black text-gray-900`}>
+              ₹{price}
             </span>
+            {originalPrice > price && (
+              <span className="text-sm font-bold text-gray-300 line-through">
+                ₹{originalPrice}
+              </span>
+            )}
+          </div>
+          {percentageOff > 0 && (
+            <div className="bg-orange/10 text-orange border border-orange/20 text-[9px] md:text-[10px] font-black px-2 py-1 rounded-lg flex items-center gap-1 uppercase tracking-wider">
+              <i className="fa-solid fa-fire text-[8px] md:text-[10px]"></i>
+              {lang === 'hi' ? `${percentageOff}% ${t.products.off}` : `${percentageOff}% ${t.products.off}`}
+            </div>
           )}
         </div>
 

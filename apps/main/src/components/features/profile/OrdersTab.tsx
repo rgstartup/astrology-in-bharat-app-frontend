@@ -564,7 +564,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                               {t.subtotal}
                             </span>
                             <span className="text-white font-bold tracking-tight">
-                              ₹{order.amount || order.totalAmount || order.total_amount || 0}
+                              ₹{(order.amount || order.totalAmount || order.total_amount || 0) - (order.shipping_charge || order.shippingCharge || 0)}
                             </span>
                           </div>
                           <div className="flex justify-between items-center text-sm">
@@ -572,10 +572,12 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                               {t.shipping}
                             </span>
                             <span
-                              className="text-emerald-400 font-black uppercase tracking-widest text-[10px]"
+                              className={`${(order.shipping_charge || order.shippingCharge) > 0 ? 'text-white' : 'text-emerald-400'} font-black uppercase tracking-widest text-[12px] md:text-[10px]`}
                               style={fontStyle}
                             >
-                              {t.free}
+                              {(order.shipping_charge || order.shippingCharge) > 0 
+                                ? `₹${order.shipping_charge || order.shippingCharge}` 
+                                : t.free}
                             </span>
                           </div>
                           <div className="pt-6 border-t border-white/5 flex justify-between items-end">
