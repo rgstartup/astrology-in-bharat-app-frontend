@@ -23,7 +23,7 @@ interface DisputeChatModalProps {
     isOpen: boolean;
     onClose: () => void;
     dispute: any;
-    onStatusUpdate: (status: string) => void;
+    onStatusUpdate: (status: string, notes?: string) => void;
 }
 
 export function DisputeChatModal({ isOpen, onClose, dispute, onStatusUpdate }: DisputeChatModalProps) {
@@ -148,14 +148,27 @@ export function DisputeChatModal({ isOpen, onClose, dispute, onStatusUpdate }: D
     };
 
     const handleUpdateStatus = async (status: string) => {
+        let reason = '';
+        if (status === 'refunded') {
+            const promptResult = window.prompt("Please enter the reason for deducting money from the merchant's wallet (e.g. 'Product damaged'):");
+            if (!promptResult) {
+                toast.error("Refund cancelled. Reason is required.");
+                return;
+            }
+            reason = promptResult;
+        }
+
         setIsProcessing(true);
         try {
-            await onStatusUpdate(status);
+            await onStatusUpdate(status, reason);
             
             // Notify user in chat about the status change
             let statusText = status === "refunded" ? "approved and marked as refunded" : status === "rejected" ? "rejected" : "marked as pending";
+            let msg = `SYSTEM NOTE: Admin has ${statusText} this request.`;
+            if (reason) msg += ` Reason: ${reason}`;
+
             await sendDisputeMessage(dispute.realId, { 
-                message: `SYSTEM NOTE: Admin has ${statusText} this request.`,
+                message: msg,
             });
             
             toast.success(`User notified about status change to ${status}`);

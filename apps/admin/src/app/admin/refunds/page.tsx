@@ -171,7 +171,7 @@ export default function RefundManagementPage() {
   }, [refunds, activeFilter]);
 
   // Handlers
-  const handleUpdateStatus = async (id: string, status: string) => {
+  const handleUpdateStatus = async (id: string, status: string, notes?: string) => {
     // Map UI status back to backend status
     let backendStatus = "pending";
     if (status === "refunded") backendStatus = "resolved";
@@ -181,7 +181,7 @@ export default function RefundManagementPage() {
     // Map backend status to UI status
     const uiStatus = status === "refunded" ? "approved" : status === "rejected" ? "rejected" : "pending";
 
-    const [res, error] = await updateDisputeStatus(id, { status: backendStatus });
+    const [res, error] = await updateDisputeStatus(id, { status: backendStatus, notes });
     if (error) {
       toast.error(getErrorMessage(error) || `Failed to update status to ${status}`);
       return;
@@ -263,7 +263,7 @@ export default function RefundManagementPage() {
           isOpen={isChatOpen}
           onClose={() => setIsChatOpen(false)}
           dispute={selectedRefund}
-          onStatusUpdate={(status) => handleUpdateStatus(selectedRefund.realId, status)}
+          onStatusUpdate={(status, notes) => handleUpdateStatus(selectedRefund.realId, status, notes)}
         />
       )}
     </main>
