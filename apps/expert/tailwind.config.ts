@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import colors from "tailwindcss/colors";
 
 const config: Config = {
   content: [
@@ -9,7 +10,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        orange: "#FF6B00",
+        orange: {
+          ...colors.orange,
+          DEFAULT: "#FF6B00",
+        },
         secondary: "#301118",
         "secondary-dark": "#1A0E05",
         brand: {
