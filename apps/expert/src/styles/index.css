@@ -6,6 +6,16 @@
 
 @theme {
   --color-orange: #FF6B00;
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
+  --color-orange-300: #fdba74;
+  --color-orange-400: #fb923c;
+  --color-orange-500: #f97316;
+  --color-orange-600: #FF6B00; /* Made orange-600 brand color since it is heavily used */
+  --color-orange-700: #c2410c;
+  --color-orange-800: #9a3412;
+  --color-orange-900: #7c2d12;
   --color-secondary: #301118;
   --color-secondary-dark: #1A0E05;
   --color-yellow-600: #FF6B00; /* Standardized to Brand Orange */
