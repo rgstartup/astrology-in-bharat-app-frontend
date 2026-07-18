@@ -200,7 +200,7 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {/* Name */}
                                     <div className="sm:col-span-2">
-                                        <label className={labelCls}>Full Name *</label>
+                                        <label className={labelCls}>Full Name<span className="text-red-500 ml-0.5">*</span></label>
                                         <div className="relative">
                                             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                             <input required placeholder="e.g. Ramesh Kumar"
@@ -213,7 +213,7 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
 
                                     {/* Email */}
                                     <div>
-                                        <label className={labelCls}>Email Address *</label>
+                                        <label className={labelCls}>Email Address<span className="text-red-500 ml-0.5">*</span></label>
                                         <div className="relative">
                                             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                             <input
@@ -229,7 +229,7 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
 
                                     {/* Password */}
                                     <div>
-                                        <label className={labelCls}>Login Password *</label>
+                                        <label className={labelCls}>Login Password<span className="text-red-500 ml-0.5">*</span></label>
                                         <div className="relative">
                                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                             <input

@@ -77,7 +77,13 @@ type Props = {
   setSomeoneElseData: (val: any) => void;
   handleStartConsultation: () => void;
   actionLoading: boolean;
-  userBalance?: number;
+  eligibility?: {
+    isEligibleForFree: boolean;
+    freeMinutes: number;
+    hasBalance: boolean;
+    minBalanceRequired: number;
+    currentBalance: number;
+  } | null;
   isAuthenticated?: boolean;
 };
 
@@ -89,13 +95,14 @@ const ExpertPreview = ({
   setSomeoneElseData,
   handleStartConsultation,
   actionLoading,
-  userBalance = 0,
+  eligibility = null,
   isAuthenticated = false,
 }: Props) => {
   const router = useRouter();
   const { lang } = useLanguageStore();
   const tx = epT[lang] || epT.en;
-  const chatPrice = expert?.chat_price || expert?.price || 0;
+  // Show low balance warning only when backend says user has no balance AND is not free eligible
+  const showLowBalance = isAuthenticated && eligibility !== null && !eligibility.isEligibleForFree && !eligibility.hasBalance;
 
   return (
     <div className="order-1 lg:order-2 lg:col-span-5 relative">
@@ -297,7 +304,7 @@ const ExpertPreview = ({
 
             {/* Big CTA and Balance Check */}
             <div className="pt-6 space-y-4">
-              {isAuthenticated && (
+              {isAuthenticated && eligibility !== null && (
                   <div className="flex items-center justify-between px-6 py-4 bg-[#FFF8F3] rounded-2xl border border-[#F5E0CC]">
                       <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center border border-green-200">
@@ -305,11 +312,11 @@ const ExpertPreview = ({
                           </div>
                           <span className="text-sm font-bold text-gray-600">{tx.yourBalance}</span>
                       </div>
-                      <span className="text-xl font-black text-gray-900">₹{userBalance.toFixed(2)}</span>
+                      <span className="text-xl font-black text-gray-900">₹{eligibility.currentBalance.toFixed(2)}</span>
                   </div>
               )}
 
-              {isAuthenticated && userBalance < chatPrice * 5 ? (
+              {showLowBalance ? (
                   <div className="p-6 bg-red-50 rounded-3xl border border-red-100">
                       <div className="flex items-start gap-4 mb-4">
                           <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
@@ -317,7 +324,7 @@ const ExpertPreview = ({
                           </div>
                           <div>
                               <h4 className="font-bold text-red-900 leading-none mb-1">{tx.lowBalance}</h4>
-                              <p className="text-xs text-red-600 font-medium">{tx.lowBalanceDesc.replace('{price}', String(chatPrice * 5))}</p>
+                              <p className="text-xs text-red-600 font-medium">{tx.lowBalanceDesc.replace('{price}', String(eligibility!.minBalanceRequired))}</p>
                           </div>
                       </div>
                       <button

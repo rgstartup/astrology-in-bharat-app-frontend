@@ -33,6 +33,13 @@ export default function ConsultationPrep() {
   const [showOfflinePopup, setShowOfflinePopup] = useState(false);
   const [existingChatDetails, setExistingChatDetails] = useState<{sessionId: string, expertId: string} | null>(null);
   const [clientProfile, setClientProfile] = useState<any>(null);
+  const [eligibility, setEligibility] = useState<{
+    isEligibleForFree: boolean;
+    freeMinutes: number;
+    hasBalance: boolean;
+    minBalanceRequired: number;
+    currentBalance: number;
+  } | null>(null);
   const [someoneElseData, setSomeoneElseData] = useState({
     name: "",
     gender: "",
@@ -40,7 +47,7 @@ export default function ConsultationPrep() {
     tob: "",
     pob: "",
   });
-  const { isAuthenticated, balance: userBalance, refreshBalance } = useAuthStore();
+  const { isAuthenticated, refreshBalance } = useAuthStore();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -144,6 +151,17 @@ export default function ConsultationPrep() {
       }
     };
     fetchProfile();
+
+    // Fetch eligibility from backend (business logic stays in backend)
+    const fetchEligibility = async () => {
+      if (isAuthenticated && id && !id.startsWith('dummy-')) {
+        const [res, err] = await http.get<any>(`/chat/eligibility?expert_id=${id}`);
+        if (!err && res) {
+          setEligibility(res);
+        }
+      }
+    };
+    fetchEligibility();
   }, [id, isAuthenticated]);
 
   const handleStartConsultation = async () => {
@@ -267,7 +285,7 @@ export default function ConsultationPrep() {
             setSomeoneElseData={setSomeoneElseData}
             handleStartConsultation={handleStartConsultation}
             actionLoading={actionLoading}
-            userBalance={userBalance}
+            eligibility={eligibility}
             isAuthenticated={isAuthenticated}
           />
         </div>

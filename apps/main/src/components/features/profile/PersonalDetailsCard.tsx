@@ -229,7 +229,7 @@ const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
               ) : (
                 <div className="flex items-center gap-3">
                   <p
-                    className="font-bold text-gray-900 m-0 capitalize"
+                    className={`font-bold text-gray-900 m-0 ${field.key === "email" ? "" : "capitalize"}`}
                     style={lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {}}
                   >
                     {field.isSelect 

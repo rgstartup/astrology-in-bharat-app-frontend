@@ -177,7 +177,7 @@ export default function AddProductPage() {
 
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Product Title *</label>
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Product Title<span className="text-red-500 ml-0.5">*</span></label>
                 <input 
                   type="text" 
                   value={name}
@@ -189,7 +189,7 @@ export default function AddProductPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Category *</label>
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Category<span className="text-red-500 ml-0.5">*</span></label>
                 <select 
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
@@ -225,7 +225,7 @@ export default function AddProductPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="space-y-2 lg:col-span-1">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Base Price *</label>
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Base Price<span className="text-red-500 ml-0.5">*</span></label>
                 <div className="relative group">
                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 font-bold">₹</div>
                    <input 
@@ -239,7 +239,7 @@ export default function AddProductPage() {
               </div>
               
               <div className="space-y-2 lg:col-span-1">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Current Stock *</label>
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Current Stock<span className="text-red-500 ml-0.5">*</span></label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <Package className="h-4 w-4 text-gray-400 group-focus-within:text-[#fd6410] transition-colors" />

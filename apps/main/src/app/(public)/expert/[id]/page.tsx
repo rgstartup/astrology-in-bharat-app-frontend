@@ -123,6 +123,9 @@ export default async function Page({
         ? expertData.languages.join(", ")
         : "Hindi, English",
       price: expertData.price,
+      chat_price: expertData.chat_price,
+      call_price: expertData.call_price,
+      video_call_price: expertData.video_call_price,
       video: expertData.video,
       ratings: expertData.ratings,
       bio: expertData.bio,

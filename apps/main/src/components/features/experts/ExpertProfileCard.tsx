@@ -25,7 +25,7 @@ const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
 }) => {
   return (
     <div className="w-full lg:w-[320px] xl:w-[360px] max-w-sm mx-auto lg:mx-0 shrink-0">
-      <div className="bg-gradient-to-b from-[#fff7f0] to-white rounded-[32px] overflow-hidden shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)] border border-slate-100 transition-all duration-300 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.15)] hover:border-orange/30 hover:-translate-y-1 group">
+      <div className="bg-gradient-to-b from-[#fff7f0] to-white rounded-[32px] overflow-hidden shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)] border border-[#daa23e] transition-all duration-300 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.15)] hover:-translate-y-1 group">
         <div className="relative pt-6 pb-2 flex flex-col items-center">
           <div className="absolute top-4 left-6">
             <div className="bg-orange/10 text-orange px-3 py-1 rounded-full flex items-center gap-1 border border-orange/20">
@@ -99,11 +99,15 @@ const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
               <i className="fa-solid fa-heart text-[#ff4d4d] text-[12px]"></i>
             </div>
           </div>
-          <div className="h-8 w-px bg-slate-200"></div>
-          <div className="text-center">
-            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Price</p>
-            <p className="text-sm font-semibold text-emerald-600">₹{expert.price}/min</p>
-          </div>
+          {expert.price > 0 ? (
+            <>
+              <div className="h-8 w-px bg-slate-200"></div>
+              <div className="text-center">
+                <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Price</p>
+                <p className="text-sm font-semibold text-emerald-600">₹{expert.price}/min</p>
+              </div>
+            </>
+          ) : null}
         </div>
 
         <div className="px-8 py-4 space-y-2">
@@ -121,25 +125,34 @@ const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={onCallClick}
-              className="flex items-center justify-center gap-1.5 bg-green-50 text-green-700 border border-green-200 py-2 rounded-lg font-semibold active:scale-95 transition-all hover:bg-green-100 shadow-sm text-xs"
+              className="flex flex-col items-center justify-center gap-0.5 bg-green-50 text-green-700 border border-green-200 py-2.5 rounded-lg font-semibold active:scale-95 transition-all hover:bg-green-100 shadow-sm"
             >
-              <i className="fa-solid fa-phone text-[12px]"></i>
-              Call
+              <div className="flex items-center gap-1 text-xs">
+                <i className="fa-solid fa-phone text-[11px]" />
+                Call
+              </div>
+              {(() => { const p = expert.call_price && expert.call_price > 0 ? expert.call_price : expert.price > 0 ? expert.price : 0; return p > 0 ? <span className="text-[10px] font-bold opacity-80">₹{p}/min</span> : null; })()}
             </button>
             <button
               onClick={onVideoCallClick}
-              className="flex items-center justify-center gap-1.5 bg-orange/10 text-orange border border-orange/20 py-2 rounded-lg font-semibold active:scale-95 transition-all hover:bg-orange/20 shadow-sm text-xs"
+              className="flex flex-col items-center justify-center gap-0.5 bg-orange/10 text-orange border border-orange/20 py-2.5 rounded-lg font-semibold active:scale-95 transition-all hover:bg-orange/20 shadow-sm"
             >
-              <i className="fa-solid fa-video text-[12px]"></i>
-              Video Call
+              <div className="flex items-center gap-1 text-xs">
+                <i className="fa-solid fa-video text-[11px]" />
+                Video Call
+              </div>
+              {(() => { const p = expert.video_call_price && expert.video_call_price > 0 ? expert.video_call_price : expert.price > 0 ? expert.price * 2 : 0; return p > 0 ? <span className="text-[10px] font-bold opacity-80">₹{p}/min</span> : null; })()}
             </button>
           </div>
           <button
             onClick={onChatClick}
-            className="w-full mt-3 flex items-center justify-center gap-1.5 bg-orange text-white border border-orange py-2 rounded-lg font-semibold active:scale-95 transition-all hover:bg-orange-hover shadow-sm text-xs"
+            className="w-full mt-3 flex flex-col items-center justify-center gap-0.5 bg-orange text-white border border-orange py-2.5 rounded-lg font-semibold active:scale-95 transition-all hover:bg-orange-hover shadow-sm"
           >
-            <i className="fa-solid fa-comments text-[14px]"></i>
-            Chat Now
+            <div className="flex items-center gap-1.5 text-xs">
+              <i className="fa-solid fa-comments text-[13px]" />
+              Chat Now
+            </div>
+            {(() => { const p = expert.chat_price && expert.chat_price > 0 ? expert.chat_price : expert.price > 0 ? expert.price : 0; return p > 0 ? <span className="text-[10px] font-bold opacity-90">₹{p}/min</span> : null; })()}
           </button>
         </div>
       </div>
