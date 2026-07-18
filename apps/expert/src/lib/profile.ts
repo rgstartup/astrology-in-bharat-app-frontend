@@ -27,6 +27,39 @@ export const uploadDocument = async (file: File): Promise<[any | null, ApiError 
     return [data, null];
 };
 
+/**
+ * Upload large files (videos) via a dedicated server-side API route
+ * that bypasses Vercel/Next.js 4MB body limit and handles auth cookies server-side
+ */
+export const uploadVideo = async (file: File): Promise<[any | null, ApiError | null]> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        // Use our server-side proxy route: /api/upload-file
+        // This route reads httpOnly cookies on the server and forwards auth
+        const res = await fetch('/api/upload-file', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include', // send cookies
+        });
+
+        const json = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+            const { ApiError } = await import('./api');
+            return [null, new ApiError(res.status, json?.message || 'Upload failed')];
+        }
+
+        const data = json?.data ?? json;
+        return [data, null];
+    } catch (err: any) {
+        const { ApiError } = await import('./api');
+        return [null, new ApiError(0, err?.message || 'Network error during upload')];
+    }
+};
+
+
 // Segmented Updates
 export const updatePersonalInfo = async (data: any): Promise<[any | null, ApiError | null]> => {
     return api.patch<any>('/expert/personal-info', data);

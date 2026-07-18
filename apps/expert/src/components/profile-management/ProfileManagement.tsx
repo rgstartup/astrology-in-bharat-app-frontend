@@ -19,7 +19,7 @@ import {
 } from "@/types/profile";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProfile, constructProfilePayload } from "@/hooks/useProfile";
-import { uploadDocument } from "@/lib/profile";
+import { uploadDocument, uploadVideo } from "@/lib/profile";
 import { ProfileSkeleton } from "../dashboard/DashboardSkeletons";
 import { Loading } from "@repo/ui";
 
@@ -309,7 +309,7 @@ const ProfileManagement = () => {
                         onUploadIntroVideo={async (f) => {
                             setLoadingText("Please wait, uploading your video...");
                             setIsSaving(true);
-                            const [d, e] = await uploadDocument(f);
+                            const [d, e] = await uploadVideo(f);
                             if (!e) await handleSave("portfolio", { video: d.fileUrl || d.url });
                             else {
                                 toast.error(getErrorMessage(e) || "Video upload failed");
@@ -333,7 +333,7 @@ const ProfileManagement = () => {
                         onUploadVideoFile={async (f) => {
                             setLoadingText("Please wait, uploading your video...");
                             setIsSaving(true);
-                            const [d, e] = await uploadDocument(f);
+                            const [d, e] = await uploadVideo(f);
                             if (!e) await handleSave("portfolio", { videos: [...fetchedProfile.videos, d.fileUrl || d.url] });
                             else {
                                 toast.error(getErrorMessage(e) || "Video upload failed");

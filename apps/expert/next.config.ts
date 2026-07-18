@@ -29,6 +29,12 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Allow large file uploads (videos up to 50MB)
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '50mb',
+    },
+  },
   transpilePackages: ["@repo/ui", "@repo/routes", "@repo/safe-fetch"],
   images: {
     remotePatterns: [
