@@ -79,7 +79,7 @@ const CreateCoupon = ({ onClose, onSuccess, initialData }: Props) => {
           <div className="grid grid-cols-2 gap-6">
             {/* Coupon Code */}
             <div className="col-span-2 space-y-2">
-              <label className="text-sm font-bold text-gray-700">Coupon Code *</label>
+              <label className="text-sm font-bold text-gray-700">Coupon Code<span className="text-red-500 ml-0.5">*</span></label>
               <input
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all font-mono uppercase tracking-widest"
                 placeholder="e.g. DIWALI2026"
@@ -104,7 +104,7 @@ const CreateCoupon = ({ onClose, onSuccess, initialData }: Props) => {
 
             {/* Value */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700">Discount Value *</label>
+              <label className="text-sm font-bold text-gray-700">Discount Value<span className="text-red-500 ml-0.5">*</span></label>
               <div className="relative">
                 <input
                   type="number"

@@ -78,7 +78,7 @@ export default function DetailedExperience({ experiences, onAdd, onRemove }: Det
                     <h3 className="text-sm font-bold text-orange-800 uppercase tracking-wide mb-4">Add New Experience</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                         <div>
-                            <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Title / Role *</label>
+                            <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Title / Role<span className="text-red-500 ml-0.5">*</span></label>
                             <div className="relative">
                                 <input
                                     type="text"
@@ -92,7 +92,7 @@ export default function DetailedExperience({ experiences, onAdd, onRemove }: Det
                             </div>
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Years of Experience *</label>
+                            <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Years of Experience<span className="text-red-500 ml-0.5">*</span></label>
                             <div className="relative">
                                 <input
                                     type="text"
