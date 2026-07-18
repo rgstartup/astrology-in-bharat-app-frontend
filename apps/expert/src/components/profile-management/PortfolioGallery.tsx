@@ -72,7 +72,8 @@ export default function PortfolioGallery({
         if (file) {
             // Check file size (50MB limit)
             if (file.size > 50 * 1024 * 1024) {
-                toast.error("Video file is too large! Maximum allowed size is 50MB.");
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+                toast.error(`❌ Video too large! Your file is ${sizeMB}MB. Maximum allowed size is 50MB.`);
                 if (e.target) e.target.value = "";
                 return;
             }
@@ -89,7 +90,8 @@ export default function PortfolioGallery({
 
         // Check file size (50MB limit)
         if (file.size > 50 * 1024 * 1024) {
-            toast.error("Video file is too large! Maximum allowed size is 50MB.");
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+            toast.error(`❌ Video too large! Your file is ${sizeMB}MB. Maximum allowed size is 50MB.`);
             if (e.target) e.target.value = "";
             return;
         }

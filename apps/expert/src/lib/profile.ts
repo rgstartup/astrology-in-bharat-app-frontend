@@ -27,37 +27,61 @@ export const uploadDocument = async (file: File): Promise<[any | null, ApiError 
     return [data, null];
 };
 
+/** Max video file size: 50MB */
+export const MAX_VIDEO_SIZE_MB = 50;
+export const MAX_VIDEO_SIZE_BYTES = MAX_VIDEO_SIZE_MB * 1024 * 1024;
+
 /**
- * Upload large files (videos) via a dedicated server-side API route
- * that bypasses Vercel/Next.js 4MB body limit and handles auth cookies server-side
+ * Upload large files (videos) DIRECTLY to backend - bypasses Vercel 4.5MB serverless limit.
+ * Steps:
+ *  1. Client-side size check (50MB max) with clear error
+ *  2. Fetch access token from server-side route (reads httpOnly cookie)
+ *  3. Upload FormData directly to backend URL with Bearer token
  */
 export const uploadVideo = async (file: File): Promise<[any | null, ApiError | null]> => {
-    const formData = new FormData();
-    formData.append('file', file);
+    // 1. Client-side size check
+    if (file.size > MAX_VIDEO_SIZE_BYTES) {
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+        return [null, new ApiError(413, `File too large (${sizeMB}MB). Maximum allowed size is ${MAX_VIDEO_SIZE_MB}MB.`)];
+    }
 
     try {
-        // Use our server-side proxy route: /api/upload-file
-        // This route reads httpOnly cookies on the server and forwards auth
-        const res = await fetch('/api/upload-file', {
+        // 2. Get auth token from server-side (reads httpOnly cookie)
+        const tokenRes = await fetch('/api/get-upload-token', { credentials: 'include' });
+        if (!tokenRes.ok) {
+            return [null, new ApiError(401, 'Session expired. Please login again.')];
+        }
+        const { token } = await tokenRes.json();
+
+        // 3. Upload DIRECTLY to backend - completely bypasses Vercel
+        const backendUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543/api/v1')
+            .replace(/\/+$/, '');
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const res = await fetch(`${backendUrl}/expert/upload-file`, {
             method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
             body: formData,
-            credentials: 'include', // send cookies
         });
 
         const json = await res.json().catch(() => ({}));
 
         if (!res.ok) {
-            const { ApiError } = await import('./api');
-            return [null, new ApiError(res.status, json?.message || 'Upload failed')];
+            const msg = json?.message || (res.status === 413 ? `File too large. Max ${MAX_VIDEO_SIZE_MB}MB allowed.` : 'Upload failed');
+            return [null, new ApiError(res.status, msg)];
         }
 
         const data = json?.data ?? json;
         return [data, null];
     } catch (err: any) {
-        const { ApiError } = await import('./api');
         return [null, new ApiError(0, err?.message || 'Network error during upload')];
     }
 };
+
 
 
 // Segmented Updates
