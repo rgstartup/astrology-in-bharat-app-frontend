@@ -80,37 +80,42 @@ const ResultPanel = ({ result }: { result: any }) => {
       {/* Detailed Analysis */}
       <div className="mt-4">
         <h3 className="text-sm font-bold text-[#1A1A1A] mb-3">Detailed Analysis</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {/* Card 1 */}
-          <div className="border border-[#F0E0D0] rounded-xl p-4 flex flex-col items-center text-center gap-1.5 shadow-sm">
-            <i className={`${icons.calendar} text-[#F26500] text-xl mb-1`} />
-            <span className="text-xs md:text-sm text-[#666] font-semibold">Early Marriage</span>
-            <span className="text-lg md:text-xl font-black text-[#1A1A1A]">{result.startAge - 2} - {result.startAge}</span>
-            <span className="text-xs text-[#888]">Years</span>
+        <div className="grid grid-cols-2 gap-3">
+          {/* Card 1 - Early Marriage */}
+          <div className="border-2 border-[#F26500] rounded-2xl p-4 flex flex-col items-center text-center gap-2 bg-white shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center mb-1">
+              <i className={`${icons.calendar} text-[#F26500] text-xl`} />
+            </div>
+            <span className="text-sm font-bold text-[#1A1A1A]">Early Marriage</span>
+            <span className="text-xs text-[#888]">{result.startAge - 2} - {result.startAge} Years</span>
           </div>
-          {/* Card 2 (Highlighted) */}
-          <div className="border-2 border-[#F26500] bg-[#FFF8F3] rounded-xl p-4 flex flex-col items-center text-center gap-1.5 shadow-md">
-            <i className={`${icons.heart} text-[#F26500] text-xl mb-1`} />
-            <span className="text-xs md:text-sm text-[#666] font-semibold">Ideal Marriage</span>
-            <span className="text-lg md:text-xl font-black text-[#1A1A1A]">{result.startAge} - {result.endAge}</span>
-            <span className="text-xs text-[#888]">Years</span>
+          {/* Card 2 - Ideal Marriage */}
+          <div className="border-2 border-[#F26500] rounded-2xl p-4 flex flex-col items-center text-center gap-2 bg-[#FFF8F3] shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#FFE0C8] flex items-center justify-center mb-1">
+              <i className={`${icons.heart} text-[#F26500] text-xl`} />
+            </div>
+            <span className="text-sm font-bold text-[#1A1A1A]">Ideal Marriage</span>
+            <span className="text-xs text-[#888]">{result.startAge} - {result.endAge} Years</span>
           </div>
-          {/* Card 3 */}
-          <div className="border border-[#F0E0D0] rounded-xl p-4 flex flex-col items-center text-center gap-1.5 shadow-sm">
-            <i className={`${icons.star} text-[#F26500] text-xl mb-1`} />
-            <span className="text-xs md:text-sm text-[#666] font-semibold">Late Marriage</span>
-            <span className="text-lg md:text-xl font-black text-[#1A1A1A]">{result.endAge} - {result.endAge + 3}</span>
-            <span className="text-xs text-[#888]">Years</span>
+          {/* Card 3 - Late Marriage */}
+          <div className="border-2 border-[#F26500] rounded-2xl p-4 flex flex-col items-center text-center gap-2 bg-white shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center mb-1">
+              <i className={`${icons.star} text-[#F26500] text-xl`} />
+            </div>
+            <span className="text-sm font-bold text-[#1A1A1A]">Late Marriage</span>
+            <span className="text-xs text-[#888]">{result.endAge} - {result.endAge + 3} Years</span>
           </div>
-          {/* Card 4 */}
-          <div className="border border-[#F0E0D0] rounded-xl p-4 flex flex-col items-center text-center gap-1.5 shadow-sm">
-            <i className={`${icons.chart} text-[#F26500] text-xl mb-1`} />
-            <span className="text-xs md:text-sm text-[#666] font-semibold">Marriage Strength</span>
-            <span className="text-lg md:text-xl font-black text-[#1A1A1A]">{result.strength}%</span>
-            <span className="text-xs text-[#888]">{result.strengthLabel}</span>
+          {/* Card 4 - Marriage Strength */}
+          <div className="border-2 border-[#F26500] rounded-2xl p-4 flex flex-col items-center text-center gap-2 bg-white shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center mb-1">
+              <i className={`${icons.chart} text-[#F26500] text-xl`} />
+            </div>
+            <span className="text-sm font-bold text-[#1A1A1A]">Marriage Strength</span>
+            <span className="text-xs text-[#888]">{result.strength}% · {result.strengthLabel}</span>
           </div>
         </div>
       </div>
+
 
       {/* Info Note */}
       <div className="bg-[#F0F7FF] border border-[#DCEBFE] text-[#2C62B0] rounded-xl p-4 flex gap-3 text-xs mt-2">

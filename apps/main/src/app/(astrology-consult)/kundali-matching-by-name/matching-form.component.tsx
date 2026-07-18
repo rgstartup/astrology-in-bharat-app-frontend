@@ -101,10 +101,6 @@ const MatchingForm = ({
                     inputClassName="w-full rounded-xl border border-gray-100/70 bg-white shadow-sm px-4 py-2.5 pr-10 text-sm font-medium text-slate-900 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-500"
                   />
                 </div>
-                <div className="flex items-center gap-2 pt-1">
-                  <input type="checkbox" id="boy-unknown-time" className="rounded text-blue-500 focus:ring-blue-500 border-gray-300" />
-                  <label htmlFor="boy-unknown-time" className="text-sm text-slate-500 cursor-pointer">{lang === 'hi' ? 'मुझे सटीक समय नहीं पता' : "I don't know the exact time"}</label>
-                </div>
               </div>
             </div>
 
@@ -156,10 +152,6 @@ const MatchingForm = ({
                     onSelect={(val) => handleLocationSelect("girl", val)}
                     inputClassName="w-full rounded-xl border border-gray-100/70 bg-white shadow-sm px-4 py-2.5 pr-10 text-sm font-medium text-slate-900 outline-none focus:border-pink-300 focus:ring-2 focus:ring-pink-100 transition-all placeholder:text-slate-500"
                   />
-                </div>
-                <div className="flex items-center gap-2 pt-1">
-                  <input type="checkbox" id="girl-unknown-time" className="rounded text-pink-500 focus:ring-pink-500 border-gray-300" />
-                  <label htmlFor="girl-unknown-time" className="text-sm text-slate-500 cursor-pointer">{lang === 'hi' ? 'मुझे सटीक समय नहीं पता' : "I don't know the exact time"}</label>
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, FormEvent } from "react";
+import React, { useState, useCallback, FormEvent, useRef } from "react";
 import NextImage from "next/image";
 import NextLink from "next/link";
 import { toast } from "react-toastify";
@@ -36,15 +36,18 @@ export const SignUpForm: React.FC = () => {
     };
 
     const [step, setStep] = useState<1 | 2 | 3>(urlToken ? 3 : 1);
-    
+
     // Step 1
     const [email, setEmail] = useState(extractEmailFromToken(urlToken));
-    
+
     // Step 2
     const [showVerification, setShowVerification] = useState(false);
-    const [verifiedToken, setVerifiedToken] = useState(urlToken || ""); // We get this after verifying OTP or from URL
-    
-    // Step 3
+    const [verifiedToken, setVerifiedToken] = useState(urlToken || "");
+
+    // Step 3 - Profile Pic
+    const [profilePic, setProfilePic] = useState<File | null>(null);
+    const [profilePicPreview, setProfilePicPreview] = useState<string | null>(null);
+
     const [formData, setFormData] = useState({
         password: "",
         confirmPassword: "",
@@ -68,7 +71,7 @@ export const SignUpForm: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    
+
     const { lang } = useLanguageStore();
     const t = authTranslations[lang as keyof typeof authTranslations] || authTranslations.en;
 
@@ -83,13 +86,21 @@ export const SignUpForm: React.FC = () => {
         []
     );
 
+    const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error("Profile picture must be under 5MB.");
+            return;
+        }
+        setProfilePic(file);
+        setProfilePicPreview(URL.createObjectURL(file));
+    };
+
     const handleGoogleLogin = () => {
         const redirectUri = `${window.location.origin}/client/profile`;
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
         const googleLoginUrl = `${baseUrl.replace(/\/+$/, "")}/auth/google/login?role=client&redirect_uri=${encodeURIComponent(redirectUri)}`;
-        console.log("[DEBUG] NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
-        console.log("[DEBUG] redirectUri:", redirectUri);
-        console.log("[DEBUG] Redirecting to:", googleLoginUrl);
         window.location.href = googleLoginUrl;
     };
 
@@ -99,7 +110,6 @@ export const SignUpForm: React.FC = () => {
             toast.error(t.signUp.errors.allFields || "Please enter your email");
             return;
         }
-
         setIsLoading(true);
         try {
             const result = await initiateRegistrationAction(email);
@@ -117,7 +127,7 @@ export const SignUpForm: React.FC = () => {
 
     const handleStep3Submit = async (e: FormEvent) => {
         e.preventDefault();
-        
+
         if (formData.password.length < 6) {
             toast.error(t.signUp.errors.passLength);
             return;
@@ -134,9 +144,29 @@ export const SignUpForm: React.FC = () => {
 
         setIsLoading(true);
 
+        // Upload profile picture first if selected
+        let profilePicUrl = "";
+        if (profilePic) {
+            try {
+                const fd = new FormData();
+                fd.append("file", profilePic);
+                const uploadRes = await fetch("/api/v1/client/upload-file", {
+                    method: "POST",
+                    body: fd,
+                    credentials: "include",
+                });
+                if (uploadRes.ok) {
+                    const uploadData = await uploadRes.json();
+                    profilePicUrl = uploadData?.data?.fileUrl || uploadData?.data?.url || uploadData?.fileUrl || uploadData?.url || "";
+                }
+            } catch {
+                // Non-blocking - profile pic upload failure won't stop registration
+            }
+        }
+
         const payload: any = {
             email,
-            token: verifiedToken || "temp-token", // Needs actual token from verification step
+            token: verifiedToken || "temp-token",
             password: formData.password,
             name: formData.name,
             phone: formData.phone,
@@ -144,11 +174,12 @@ export const SignUpForm: React.FC = () => {
             maritalStatus: formData.maritalStatus,
             occupation: formData.occupation,
             aboutMe: formData.aboutMe,
+            ...(profilePicUrl && { avatar: profilePicUrl }),
             birthDetails: {
                 dateOfBirth: formData.dateOfBirth,
                 timeOfBirth: formData.timeOfBirth,
                 birthPlace: formData.birthPlace,
-            }
+            },
         };
 
         if (formData.addressLine1 || formData.city || formData.country) {
@@ -162,27 +193,22 @@ export const SignUpForm: React.FC = () => {
             };
         }
 
-        console.log("[DEBUG][SignUpForm] Submitting payload to completeRegistrationAction:", JSON.stringify(payload, null, 2));
-        console.log("[DEBUG][SignUpForm] verifiedToken:", verifiedToken);
-        console.log("[DEBUG][SignUpForm] urlToken:", urlToken);
-
         try {
             const result = await completeRegistrationAction(payload);
-            console.log("[DEBUG][SignUpForm] Result from completeRegistrationAction:", JSON.stringify(result, null, 2));
             if (result.error) {
                 toast.error(result.error);
             } else if (result.success) {
-                // Use window.location.href instead of router.push to force a full page
-                // reload so that the newly set HttpOnly cookies are sent with the request.
                 window.location.href = "/client/profile";
             }
         } catch (err: any) {
-            console.error("[DEBUG][SignUpForm] Exception in completeRegistrationAction:", err);
             toast.error(t.signUp.errors.unexpected);
         } finally {
             setIsLoading(false);
         }
     };
+
+    // Red asterisk for required fields
+    const Req = () => <span className="text-red-500 ml-0.5">*</span>;
 
     return (
         <>
@@ -217,6 +243,7 @@ export const SignUpForm: React.FC = () => {
                 </p>
             </div>
 
+            {/* ── STEP 1: Email ── */}
             {step === 1 && (
                 <>
                 <div className="mb-6">
@@ -225,13 +252,7 @@ export const SignUpForm: React.FC = () => {
                         className="flex items-center justify-center gap-3 w-full border-2 border-gray-100 rounded-2xl py-3 px-6 hover:bg-gray-50 hover:border-gray-200 transition-all cursor-pointer shadow-sm group"
                         onClick={handleGoogleLogin}
                     >
-                        <Image
-                            src="/images/google-color-svgrepo-com.svg"
-                            alt="Google"
-                            height={20}
-                            width={20}
-                            className="group-hover:scale-110 transition-transform"
-                        />
+                        <Image src="/images/google-color-svgrepo-com.svg" alt="Google" height={20} width={20} className="group-hover:scale-110 transition-transform" />
                         <span className="font-bold text-gray-800 text-sm">{t.signUp.google}</span>
                     </button>
                 </div>
@@ -246,7 +267,7 @@ export const SignUpForm: React.FC = () => {
                 <form onSubmit={handleStep1Submit} className="space-y-4">
                     <div>
                         <label htmlFor="email" className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">
-                            {t.signUp.emailLabel}
+                            {t.signUp.emailLabel}<Req />
                         </label>
                         <input
                             type="email"
@@ -270,14 +291,62 @@ export const SignUpForm: React.FC = () => {
                 </>
             )}
 
+            {/* ── STEP 3: Complete Profile ── */}
             {step === 3 && (
                 <form onSubmit={handleStep3Submit} className="space-y-6">
-                    {/* Account Info */}
+
+                    {/* Profile Picture */}
+                    <div>
+                        <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">
+                            Profile Picture <span className="text-gray-400 text-[10px] font-medium normal-case tracking-normal">(Optional)</span>
+                        </h3>
+                        <div className="flex items-center gap-5">
+                            {/* Circle preview */}
+                            <div className="relative flex-shrink-0">
+                                <div className="w-20 h-20 rounded-full border-2 border-dashed border-orange flex items-center justify-center overflow-hidden bg-orange/5">
+                                    {profilePicPreview ? (
+                                        <img src={profilePicPreview} alt="Preview" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <i className="fa-solid fa-user text-3xl text-orange/30" />
+                                    )}
+                                </div>
+                                {profilePicPreview && (
+                                    <button
+                                        type="button"
+                                        onClick={() => { setProfilePicPreview(null); setProfilePic(null); }}
+                                        className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] hover:bg-red-600 transition-colors"
+                                    >
+                                        <i className="fa-solid fa-xmark" />
+                                    </button>
+                                )}
+                            </div>
+                            {/* Upload button */}
+                            <div className="flex-1">
+                                <label
+                                    htmlFor="profilePicInput"
+                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-orange text-orange text-xs font-black uppercase tracking-wider cursor-pointer hover:bg-orange hover:text-white transition-all duration-200"
+                                >
+                                    <i className="fa-solid fa-camera" />
+                                    {profilePicPreview ? "Change Photo" : "Upload Photo"}
+                                </label>
+                                <input
+                                    id="profilePicInput"
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleProfilePicChange}
+                                />
+                                <p className="text-[10px] text-gray-400 mt-2 font-medium">JPG, PNG · Max 5MB</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Account Setup */}
                     <div>
                         <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Account Setup</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Password</label>
+                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Password<Req /></label>
                                 <div className="relative">
                                     <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                                     <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700" onClick={() => setShowPassword(!showPassword)}>
@@ -286,7 +355,7 @@ export const SignUpForm: React.FC = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Confirm Password</label>
+                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Confirm Password<Req /></label>
                                 <div className="relative">
                                     <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                                     <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
@@ -302,15 +371,15 @@ export const SignUpForm: React.FC = () => {
                         <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Personal Details</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Full Name</label>
+                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Full Name<Req /></label>
                                 <input type="text" name="name" value={formData.name} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Phone Number</label>
+                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Phone Number<Req /></label>
                                 <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required maxLength={10} className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Gender</label>
+                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Gender<Req /></label>
                                 <select name="gender" value={formData.gender} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm bg-white">
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -337,23 +406,25 @@ export const SignUpForm: React.FC = () => {
                         <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Astro Birth Details</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Date of Birth</label>
+                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Date of Birth<Req /></label>
                                 <input type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Time of Birth</label>
+                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Time of Birth<Req /></label>
                                 <input type="time" name="timeOfBirth" value={formData.timeOfBirth} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Birth Place</label>
+                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Birth Place<Req /></label>
                                 <input type="text" name="birthPlace" value={formData.birthPlace} onChange={handleInputChange} required placeholder="City, Country" className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                         </div>
                     </div>
 
+                    <p className="text-[10px] text-gray-400 font-medium"><span className="text-red-500">*</span> Required fields</p>
+
                     <button
                         type="submit"
-                        className="w-full py-3.5 rounded-2xl bg-orange text-white text-base font-black shadow-[0_8px_20px_rgba(255,107,0,0.2)] hover:shadow-[0_12px_25px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:cursor-pointer mt-6"
+                        className="w-full py-3.5 rounded-2xl bg-orange text-white text-base font-black shadow-[0_8px_20px_rgba(255,107,0,0.2)] hover:shadow-[0_12px_25px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:cursor-pointer mt-2"
                         disabled={isLoading}
                     >
                         {isLoading ? "Saving Profile..." : "Complete Registration"}
@@ -362,8 +433,7 @@ export const SignUpForm: React.FC = () => {
             )}
 
         </div>
-        
-        {/* Verification Popup handles its own API calls usually, we just listen to success */}
+
         <VerificationPopup
             isOpen={showVerification}
             email={email}
