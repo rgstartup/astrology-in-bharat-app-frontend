@@ -1,10 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ExpertDetailsClient from "@/components/features/experts/ExpertDetailsClient";
 import { notFound } from "next/navigation";
 import { Product } from "@/lib/types";
 import { api } from "@/lib/api";
 import { getErrorMessage } from "@repo/lib";
 import ExpertSeoContent from "./expert-seo-content.component";
+import ProductSection from "@/components/features/shop/ProductSection";
+import { PujaCard } from "@/components/features/puja/PujaCard";
+import { Loading } from "@repo/ui";
 
 const normalizeProduct = (raw: any): Product => {
   return {
@@ -19,6 +22,51 @@ const normalizeProduct = (raw: any): Product => {
   };
 };
 
+async function AsyncPujas({ expertId, expertName }: { expertId: string; expertName: string }) {
+  try {
+    const pujaData = await api.get<any>('/expert/pujas/all', { cache: "no-store" });
+    if (!Array.isArray(pujaData)) return null;
+    const expertPujas = pujaData.filter((p: any) => p.expert_id === expertId);
+    if (expertPujas.length === 0) return null;
+    return (
+      <section className="py-12 bg-gray-50 border-t border-gray-200">
+        <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
+          <div className="mb-8">
+            <h2 className="text-3xl font-black text-gray-900 mb-2">Pujas by {expertName}</h2>
+            <p className="text-gray-500 font-medium">Book a personalized puja with this expert astrologer.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {expertPujas.map((puja) => (
+              <PujaCard key={puja.id} puja={puja} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  } catch {
+    return null;
+  }
+}
+
+async function AsyncProducts() {
+  try {
+    const pData = await api.get<any>(`/products`, { cache: "no-store" });
+    if (!pData) return null;
+    const rawList = Array.isArray(pData) ? pData : (Array.isArray(pData?.data) ? pData.data : []);
+    const products = rawList.map(normalizeProduct).filter((p: Product) => p.name);
+    if (products.length === 0) return null;
+    return (
+      <section className="py-12 bg-white">
+        <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
+          <ProductSection products={products} />
+        </div>
+      </section>
+    );
+  } catch {
+    return null;
+  }
+}
+
 export default async function Page({
   params,
 }: {
@@ -31,40 +79,30 @@ export default async function Page({
   }
 
   try {
-    // Fetch expert details + products
-    // If it's a dummy expert, mock the expert response to avoid backend UUID validation errors
-    let results;
-    if (id.startsWith("dummy-")) {
-      results = [
-        [
-          {
-            data: {
-              id: id,
-              userId: "dummy-user",
-              user: { name: "Expert " + id.replace('dummy-', ''), avatar: "/images/dummy-expert.jpg" },
-              specialization: "Vedic, Numerology",
-              experience_in_years: 5,
-              languages: ["English", "Hindi"],
-              price: 51,
-              rating: 5,
-              is_available: true,
-              bio: "This is a dummy expert profile used for placeholder layouts.",
-            }
-          }, 
-          null
-        ],
-        await api.get<any>(`/products`, { cache: "no-store" }),
-        [[], null]
-      ];
-    } else {
-      results = await Promise.all([
-        api.get<any>(`/expert/details/${id}`, { cache: "no-store" }),
-        api.get<any>(`/products`, { cache: "no-store" }),
-        api.get<any>('/expert/pujas/all', { cache: "no-store" }),
-      ]);
-    }
+    // 1. Fetch ONLY expert details initially to unblock page load
+    let data: any, astroError: any;
     
-    const [[data, astroError], [pData, productsError], [pujaData, pujaError]] = results;
+    if (id.startsWith("dummy-")) {
+      data = {
+        data: {
+          id: id,
+          userId: "dummy-user",
+          user: { name: "Expert " + id.replace('dummy-', ''), avatar: "/images/dummy-expert.jpg" },
+          specialization: "Vedic, Numerology",
+          experience_in_years: 5,
+          languages: ["English", "Hindi"],
+          price: 51,
+          rating: 5,
+          is_available: true,
+          bio: "This is a dummy expert profile used for placeholder layouts.",
+        }
+      };
+      astroError = null;
+    } else {
+      const result = await api.get<any>(`/expert/details/${id}`, { cache: "no-store" });
+      data = result[0];
+      astroError = result[1];
+    }
 
     if (astroError) {
       if (astroError.status === 404 || astroError.status === 400) return notFound();
@@ -95,22 +133,20 @@ export default async function Page({
       is_available: expertData.is_available,
     };
 
-    // Normalize products (empty array if fetch failed)
-    let products: Product[] = [];
-    if (!productsError && pData) {
-      const rawList = Array.isArray(pData) ? pData : (Array.isArray(pData?.data) ? pData.data : []);
-      products = rawList.map(normalizeProduct).filter((p: Product) => p.name);
-    }
-
-    // Process expert pujas
-    let expertPujas: any[] = [];
-    if (!pujaError && Array.isArray(pujaData)) {
-      expertPujas = pujaData.filter((p: any) => p.expert_id === expert.id);
-    }
-
     return (
       <>
-        <ExpertDetailsClient expert={expert} products={products} expertPujas={expertPujas} />
+        {/* Render primary expert info immediately */}
+        <ExpertDetailsClient expert={expert} />
+        
+        {/* Background-load heavy resources */}
+        <Suspense fallback={<div className="py-20 flex justify-center"><Loading size="md" text="Loading Pujas..." /></div>}>
+          {id.startsWith("dummy-") ? null : <AsyncPujas expertId={expert.id} expertName={expert.name} />}
+        </Suspense>
+
+        <Suspense fallback={<div className="py-20 flex justify-center"><Loading size="md" text="Loading Products..." /></div>}>
+          {id.startsWith("dummy-") ? null : <AsyncProducts />}
+        </Suspense>
+        
         <ExpertSeoContent expertName={expert.name} />
       </>
     );

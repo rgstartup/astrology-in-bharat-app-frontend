@@ -33,7 +33,7 @@ export const authTranslations = {
             alreadyAccount: "Already Account?",
             signIn: "Sign In",
             google: "Continue with Google",
-            orDetails: "OR REGISTER WITH DETAILS",
+            orDetails: "OR REGISTER WITdfgbH DETAILS",
             fullNameLabel: "Full Name *",
             fullNamePlaceholder: "Enter Your Full Name",
             emailLabel: "Email Address *",
