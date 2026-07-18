@@ -196,8 +196,9 @@ function ExpertChatRoomContent() {
     // Auto-end if time runs out
     useEffect(() => {
         if (sessionStatus === 'active' && timeLeft === 0 && expiresAt) {
-            console.log("[ExpertChat] 💸 Time expired, auto-ending session.");
-            handleEndChat(true);
+            console.log("[ExpertChat] 💸 Time expired, waiting for backend to handle grace period.");
+            // We NO LONGER force end the chat here. The backend has a 30-second grace period logic.
+            // handleEndChat(true); 
         }
     }, [timeLeft, sessionStatus, expiresAt]);
 

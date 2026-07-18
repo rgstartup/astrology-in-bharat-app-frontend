@@ -306,7 +306,7 @@ const OrderSummary = ({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2 space-y-1.5">
-                <label className="text-xs font-semibold text-gray-500">Address Line 1*</label>
+                <label className="text-xs font-semibold text-gray-500">Address Line 1<span className="text-red-500 ml-0.5">*</span></label>
                 <input
                   type="text"
                   name="line1"
@@ -328,7 +328,7 @@ const OrderSummary = ({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-gray-500">City*</label>
+                <label className="text-xs font-semibold text-gray-500">City<span className="text-red-500 ml-0.5">*</span></label>
                 <input
                   type="text"
                   name="city"
@@ -338,7 +338,7 @@ const OrderSummary = ({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-gray-500">State*</label>
+                <label className="text-xs font-semibold text-gray-500">State<span className="text-red-500 ml-0.5">*</span></label>
                 <input
                   type="text"
                   name="state"
@@ -348,7 +348,7 @@ const OrderSummary = ({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-gray-500">Pincode*</label>
+                <label className="text-xs font-semibold text-gray-500">Pincode<span className="text-red-500 ml-0.5">*</span></label>
                 <input
                   type="text"
                   name="zip_code"
@@ -358,7 +358,7 @@ const OrderSummary = ({
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-gray-500">Phone Number*</label>
+                <label className="text-xs font-semibold text-gray-500">Phone Number<span className="text-red-500 ml-0.5">*</span></label>
                 <input
                   type="text"
                   name="phone"
