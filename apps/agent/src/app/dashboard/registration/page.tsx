@@ -53,11 +53,11 @@ const TABS: TabConfig[] = [
 // ── Shared UI Components ─────────────────────────────────────────────────────
 
 const INPUT_CLS =
-    "w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 backdrop-blur-sm text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all duration-200 placeholder:text-gray-400 shadow-sm";
+    "w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 backdrop-blur-sm text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all duration-200 placeholder:text-gray-1000 shadow-sm";
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
     return (
-        <label className="block text-[11px] font-black text-gray-500 uppercase tracking-[0.15em] mb-1.5 ml-1">
+        <label className="block text-[11px] font-black text-gray-1000 uppercase tracking-[0.15em] mb-1.5 ml-1">
             {children}
         </label>
     );
@@ -71,7 +71,7 @@ function SuccessModal({ registeredUser, onClose }: { registeredUser: any; onClos
     const content = (
         <div className="fixed inset-0 bg-[#301118]/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
             <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md p-8 relative animate-in zoom-in-95 duration-300 border border-white/20">
-                <button onClick={onClose} className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400">
+                <button onClick={onClose} className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-1000">
                     <X className="w-5 h-5" />
                 </button>
 
@@ -80,7 +80,7 @@ function SuccessModal({ registeredUser, onClose }: { registeredUser: any; onClos
                         <CheckCircle className="w-10 h-10 text-green-500" />
                     </div>
                     <h3 className="text-2xl font-black text-gray-900 leading-tight">Registration<br />Successful!</h3>
-                    <p className="text-sm text-gray-500 mt-2 font-medium">
+                    <p className="text-sm text-gray-1000 mt-2 font-medium">
                         <span className="font-bold text-gray-900">{registeredUser.name}</span> is now a verified 
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-orange/10 text-brand-orange ml-1.5 capitalize">
                             {roleString}
@@ -90,11 +90,11 @@ function SuccessModal({ registeredUser, onClose }: { registeredUser: any; onClos
 
                 <div className="bg-gray-50 rounded-2xl p-5 mb-6 border border-gray-100 space-y-3">
                     <div className="flex justify-between items-center border-b border-gray-200/50 pb-2">
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Login Email</span>
+                        <span className="text-[10px] font-black text-gray-1000 uppercase tracking-widest">Login Email</span>
                         <span className="text-xs font-bold text-gray-800">{registeredUser.email}</span>
                     </div>
                     <div className="flex justify-between items-center pt-1">
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Platform Role</span>
+                        <span className="text-[10px] font-black text-gray-1000 uppercase tracking-widest">Platform Role</span>
                         <span className="text-xs font-bold text-gray-800 capitalize">{roleString}</span>
                     </div>
                 </div>
@@ -126,7 +126,7 @@ function ListingSuccessModal({ name, type, onClose }: { name: string; type: stri
     const content = (
         <div className="fixed inset-0 bg-[#301118]/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
             <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md p-8 relative animate-in zoom-in-95 duration-300 border border-white/20 text-center">
-                <button onClick={onClose} className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400">
+                <button onClick={onClose} className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-1000">
                     <X className="w-5 h-5" />
                 </button>
                 
@@ -135,12 +135,12 @@ function ListingSuccessModal({ name, type, onClose }: { name: string; type: stri
                 </div>
                 
                 <h3 className="text-2xl font-black text-gray-900 leading-tight">Listing<br />Submitted!</h3>
-                <p className="text-sm text-gray-500 mt-2 font-medium px-4">
+                <p className="text-sm text-gray-1000 mt-2 font-medium px-4">
                     <span className="font-bold text-gray-900">{name}</span> has been added as a 
                     <span className="text-brand-orange font-bold"> {type === "puja_shop" ? "Puja Shop" : "Mandir"}</span>.
                 </p>
                 
-                <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 my-8 text-sm text-gray-600 font-medium">
+                <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 my-8 text-sm text-gray-1000 font-medium">
                     Our team will verify the details within 24-48 hours.
                 </div>
 
@@ -298,7 +298,7 @@ function MandirForm() {
                         <div>
                             <FieldLabel>Location</FieldLabel>
                             <div className="relative">
-                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-1000" />
                                 <input
                                     type="text"
                                     placeholder="City, State"
@@ -312,7 +312,7 @@ function MandirForm() {
                         <div>
                             <FieldLabel>Main Deity</FieldLabel>
                             <div className="relative">
-                                <Flame className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <Flame className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-1000" />
                                 <input
                                     type="text"
                                     placeholder="e.g. Lord Shiva"
@@ -397,7 +397,7 @@ export default function RegisterUserPage() {
     const currentTab = TABS.find((t) => t.id === activeTab)!;
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             
             {/* Header Section */}
             <div className="text-center sm:text-left">
@@ -406,7 +406,7 @@ export default function RegisterUserPage() {
                     <span className="text-[10px] font-black uppercase tracking-widest">Agent Portal</span>
                 </div>
                 <h2 className="text-3xl font-black text-gray-900 tracking-tight">Onboarding <span className="text-brand-orange">Hub</span></h2>
-                <p className="text-sm text-gray-500 mt-1.5 font-medium">
+                <p className="text-sm text-gray-1000 mt-1.5 font-medium">
                     Expand the network by adding verified Experts, Mandirs, or Puja Shops.
                 </p>
             </div>
@@ -421,29 +421,31 @@ export default function RegisterUserPage() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={cn(
-                                "relative group flex items-start gap-4 p-5 rounded-[2rem] border-2 transition-all duration-300 text-left",
+                                "relative group flex items-start gap-4 p-5 rounded-[2rem] border-2 transition-all duration-300 text-left overflow-hidden",
                                 isActive 
-                                    ? "bg-white border-brand-orange shadow-xl shadow-brand-orange/10 -translate-y-1" 
-                                    : "bg-white/50 border-transparent hover:border-gray-200 backdrop-blur-sm"
+                                    ? "bg-white border-[#F25E0A] shadow-xl shadow-orange-200/50 -translate-y-1" 
+                                    : "bg-gray-50/50 border-[#F25E0A] hover:bg-white hover:shadow-xl hover:shadow-orange-200/50 hover:-translate-y-1"
                             )}
                         >
                             <div className={cn(
-                                "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300",
-                                isActive ? "bg-brand-orange text-white shadow-lg shadow-brand-orange/30" : "bg-gray-100 text-gray-400 group-hover:bg-gray-200"
+                                "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110",
+                                isActive ? "bg-brand-orange text-white shadow-lg shadow-brand-orange/30" : "bg-white shadow-sm text-gray-1000 group-hover:text-brand-orange"
                             )}>
                                 <Icon className="w-6 h-6" />
                             </div>
                             <div className="flex-1">
-                                <p className={cn("text-xs font-black uppercase tracking-widest leading-none", isActive ? "text-brand-orange" : "text-gray-400")}>
+                                <p className={cn("text-xs font-black uppercase tracking-widest leading-none", isActive ? "text-brand-orange" : "text-gray-1000")}>
                                     {tab.label}
                                 </p>
-                                <p className={cn("text-sm font-bold mt-1", isActive ? "text-gray-900" : "text-gray-500")}>
+                                <p className={cn("text-sm font-bold mt-1", isActive ? "text-gray-900" : "text-gray-1000")}>
                                     {tab.description}
                                 </p>
                             </div>
-                            {isActive && (
-                                <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-8 h-1 bg-brand-orange rounded-full" />
-                            )}
+                            
+                            <div className={cn(
+                                "absolute bottom-0 left-0 h-1.5 w-full bg-[#F25E0A] transform transition-transform duration-500 origin-center",
+                                isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                            )} />
                         </button>
                     );
                 })}
@@ -454,7 +456,7 @@ export default function RegisterUserPage() {
                 {/* Decorative Elements */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-brand-orange to-primary-hover rounded-[2.5rem] blur opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-500" />
                 
-                <div className="relative bg-white/70 backdrop-blur-xl border border-white rounded-[2.5rem] shadow-sm overflow-hidden min-h-[400px]">
+                <div className="relative bg-white/70 backdrop-blur-xl border-2 border-[#F25E0A] rounded-[2.5rem] shadow-sm overflow-hidden min-h-[400px]">
                     {/* Inner Header */}
                     <div className="px-8 pt-8 pb-2 flex items-center justify-between">
                         <div>
@@ -463,7 +465,7 @@ export default function RegisterUserPage() {
                                  currentTab.label === "Mandir" ? "Mandir Listing" : "Puja Shop Onboarding"}
                                 <ChevronRight className="w-5 h-5 text-gray-300" />
                             </h3>
-                            <p className="text-xs text-gray-500 mt-1 font-medium">{currentTab.infoText}</p>
+                            <p className="text-xs text-gray-1000 mt-1 font-medium">{currentTab.infoText}</p>
                         </div>
                         <div className="hidden sm:flex w-12 h-12 bg-gray-50 rounded-2xl items-center justify-center text-gray-300 border border-gray-100">
                             <currentTab.icon className="w-6 h-6" />
@@ -479,7 +481,7 @@ export default function RegisterUserPage() {
             </div>
 
             {/* Footer Tip */}
-            <p className="text-center text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] px-8">
+            <p className="text-center text-[10px] text-gray-1000 font-bold uppercase tracking-[0.2em] px-8">
                 All data is securely processed according to platform guidelines
             </p>
         </div>

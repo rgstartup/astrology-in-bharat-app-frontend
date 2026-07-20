@@ -6,18 +6,21 @@ import { api } from "@/lib/api";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 
+let cachedNotifications: any = null;
+
 export default function NotificationsPage() {
-    const [notifications, setNotifications] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [totalCount, setTotalCount] = useState(0);
+    const [notifications, setNotifications] = useState<any[]>(cachedNotifications?.data || []);
+    const [loading, setLoading] = useState(!cachedNotifications);
+    const [totalCount, setTotalCount] = useState(cachedNotifications?.total || 0);
 
     const fetchNotifications = useCallback(async () => {
-        setLoading(true);
+        if (!cachedNotifications) setLoading(true);
         try {
             const [res, error] = await api.get<any>("/notifications", { params: { limit: 50 } });
             if (!error && res) {
                 setNotifications(res.data || []);
                 setTotalCount(res.meta?.totalCount || 0);
+                cachedNotifications = { data: res.data || [], total: res.meta?.totalCount || 0 };
             }
         } catch (err) {
             console.error("Failed to fetch notifications", err);
@@ -55,7 +58,7 @@ export default function NotificationsPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-black text-gray-900 tracking-tight">Notifications</h1>
-                    <p className="text-gray-500 mt-1 font-medium">Manage your alerts and system updates</p>
+                    <p className="text-gray-1000 mt-1 font-medium">Manage your alerts and system updates</p>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -71,11 +74,11 @@ export default function NotificationsPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-200/50 overflow-hidden">
+            <div className="bg-white rounded-[2rem] border-2 border-[#F25E0A] shadow-xl shadow-orange-500/10 overflow-hidden">
                 {loading ? (
                     <div className="p-20 flex flex-col items-center justify-center gap-4">
-                        <Loader2 className="w-10 h-10 text-primary-hover animate-spin" />
-                        <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Loading Notifications...</p>
+                        <Loader2 className="w-10 h-10 text-[#F25E0A] animate-spin" />
+                        <p className="text-gray-1000 font-bold uppercase tracking-widest text-xs">Loading Notifications...</p>
                     </div>
                 ) : notifications.length === 0 ? (
                     <div className="p-20 flex flex-col items-center justify-center text-center">
@@ -83,7 +86,7 @@ export default function NotificationsPage() {
                             <BellOff className="w-10 h-10 text-gray-300" />
                         </div>
                         <h3 className="text-xl font-black text-gray-900">All caught up!</h3>
-                        <p className="text-gray-500 mt-2 max-w-xs mx-auto">You don't have any notifications at the moment.</p>
+                        <p className="text-gray-1000 mt-2 max-w-xs mx-auto">You don't have any notifications at the moment.</p>
                         <Link 
                             href="/dashboard"
                             className="mt-8 inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-2xl hover:bg-primary-hover transition-all shadow-lg shadow-orange-200"
@@ -106,7 +109,7 @@ export default function NotificationsPage() {
                                 <div className="flex gap-6">
                                     <div className={cn(
                                         "shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110",
-                                        !n.is_read ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-400"
+                                        !n.is_read ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-1000"
                                     )}>
                                         <Bell className="w-6 h-6" />
                                     </div>
@@ -115,7 +118,7 @@ export default function NotificationsPage() {
                                         <div className="flex items-center justify-between gap-4 mb-2">
                                             <h4 className={cn(
                                                 "text-lg font-bold truncate",
-                                                !n.is_read ? "text-gray-900" : "text-gray-500"
+                                                !n.is_read ? "text-gray-900" : "text-gray-1000"
                                             )}>
                                                 {n.title}
                                             </h4>
@@ -123,9 +126,9 @@ export default function NotificationsPage() {
                                                 <span className="shrink-0 px-2 py-0.5 bg-blue-500 text-white text-[10px] font-black rounded-full uppercase tracking-widest">New</span>
                                             )}
                                         </div>
-                                        <p className="text-gray-600 leading-relaxed mb-4">{n.message}</p>
+                                        <p className="text-gray-1000 leading-relaxed mb-4">{n.message}</p>
                                         <div className="flex items-center gap-4">
-                                            <span className="text-xs font-bold text-gray-400">
+                                            <span className="text-xs font-bold text-gray-1000">
                                                 {new Date(n.created_at).toLocaleString('en-IN', {
                                                     day: '2-digit',
                                                     month: 'short',
@@ -155,7 +158,7 @@ export default function NotificationsPage() {
             </div>
             
             <div className="text-center pb-10">
-                <p className="text-sm text-gray-400 font-medium">Showing {notifications.length} of {totalCount} notifications</p>
+                <p className="text-sm text-gray-1000 font-medium">Showing {notifications.length} of {totalCount} notifications</p>
             </div>
         </div>
     );

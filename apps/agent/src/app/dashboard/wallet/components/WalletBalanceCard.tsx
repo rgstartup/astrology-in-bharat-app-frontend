@@ -20,7 +20,7 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({ balance, o
                         <Wallet className="w-10 h-10 text-[#F25E0A]" />
                     </div>
                     <div className="space-y-2">
-                        <p className="text-[12px] font-black text-gray-400 uppercase tracking-[0.4em]">Current Liquidity</p>
+                        <p className="text-[12px] font-black text-gray-1000 uppercase tracking-[0.4em]">Current Liquidity</p>
                         <h1 className="text-7xl font-black text-gray-900 tracking-tighter flex items-start gap-2">
                             <span className="text-3xl text-[#F25E0A] mt-2">₹</span>
                             {balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
@@ -44,7 +44,7 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({ balance, o
                     </Button>
                     <div className="flex items-center gap-3 px-5 py-2.5 bg-gray-50 rounded-2xl border border-gray-100">
                         <ShieldCheck className="w-4 h-4 text-[#F25E0A]" />
-                        <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Bank Verified Account</span>
+                        <span className="text-[10px] font-black text-gray-1000 uppercase tracking-widest">Bank Verified Account</span>
                     </div>
                 </div>
             </div>
@@ -53,11 +53,11 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({ balance, o
             <div className="bg-gray-50/50 border-t border-gray-100 px-14 py-6 flex flex-wrap gap-10">
                 <div className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full bg-[#F25E0A]" />
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Min. Payout: ₹500</span>
+                    <span className="text-[10px] font-black text-gray-1000 uppercase tracking-widest">Min. Payout: ₹500</span>
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full bg-green-500" />
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">T+1 Settlement Cycle</span>
+                    <span className="text-[10px] font-black text-gray-1000 uppercase tracking-widest">T+1 Settlement Cycle</span>
                 </div>
             </div>
         </div>

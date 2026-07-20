@@ -31,7 +31,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ agent }) => {
                     <div className="relative">
                         <div className="ring-[16px] ring-white rounded-[3rem] shadow-2xl overflow-hidden bg-white">
                             <Avatar
-                                src={agent?.user?.avatar ?? null}
+                                src={agent?.avatar ?? agent?.user?.avatar ?? null}
                                 alt={agent?.user?.name ?? "Agent"}
                                 size="xl"
                                 className="!w-48 !h-48 object-cover"
@@ -50,7 +50,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ agent }) => {
                         >
                             Edit Account
                         </Button>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Last login: Today at 10:30 AM</p>
+                        <p className="text-[10px] font-bold text-gray-1000 uppercase tracking-widest">Last login: Today at 10:30 AM</p>
                     </div>
                 </div>
                 

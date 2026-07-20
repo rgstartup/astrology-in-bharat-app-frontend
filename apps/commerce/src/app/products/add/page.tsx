@@ -113,7 +113,7 @@ export default function AddProductPage() {
 
   const handlePublish = () => {
     if (!name || !price || !category) {
-      alert("Please fill in the required fields: Title, Category, and Price.");
+      toast.error("Please fill in the required fields: Title, Category, and Price.");
       return;
     }
     createMutation.mutate("active");
@@ -121,7 +121,7 @@ export default function AddProductPage() {
 
   const handleSaveDraft = () => {
     if (!name) {
-      alert("Title is required even for drafts.");
+      toast.error("Title is required even for drafts.");
       return;
     }
     createMutation.mutate("draft");

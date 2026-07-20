@@ -32,6 +32,7 @@ const mapToProfile = (data: any, authUser: any): Profile & { exists: boolean } =
         email: data?.user?.email || data?.email || authUser?.email || "",
         gender: data?.gender || authUser?.gender || Gender.OTHER,
         bio: data?.bio || authUser?.bio || "",
+        about: data?.about || authUser?.about || "",
         specialization: data?.specialization || authUser?.specialization || "",
         experience_in_years: data?.experience_in_years || authUser?.experience_in_years || 0,
         languages: typeof data?.languages === 'string' 
@@ -79,7 +80,7 @@ const mapToProfile = (data: any, authUser: any): Profile & { exists: boolean } =
  * Whitelisted fields for each segmented API endpoint to prevent 400 Bad Request.
  */
 const SECTION_WHITELISTS: Record<string, string[]> = {
-    personal: ['name', 'gender', 'bio', 'specialization', 'experience_in_years', 'languages', 'date_of_birth', 'phone_number', 'addresses', 'avatar'],
+    personal: ['name', 'gender', 'bio', 'about', 'specialization', 'experience_in_years', 'languages', 'date_of_birth', 'phone_number', 'addresses', 'avatar'],
     pricing: ['price', 'chat_price', 'call_price', 'video_call_price', 'report_price', 'horoscope_price', 'specialization'],
     status: ['is_available'],
     portfolio: ['gallery', 'videos', 'video'],
@@ -131,6 +132,7 @@ export const constructProfilePayload = (profile: Profile) => {
         gender: profile.gender,
         specialization: profile.specialization,
         bio: profile.bio,
+        about: profile.about,
         experience_in_years: Number(profile.experience_in_years),
         languages: Array.isArray(profile.languages) ? profile.languages : [],
         price: Number(profile.price),

@@ -11,18 +11,19 @@ import { getErrorMessage } from "@repo/lib/utils/error";
 
 export default function ProfilePage() {
     const { agent, setAgent } = useAgentAuthStore() as any;
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(!agent);
     const [isEditingBank, setIsEditingBank] = useState(false);
     const [saving, setSaving] = useState(false);
     
     const [formData, setFormData] = useState({
-        bank_name: "",
-        account_number: "",
-        ifsc_code: "",
-        account_holder: "",
+        bank_name: agent?.bank_name || "",
+        account_number: agent?.account_number || "",
+        ifsc_code: agent?.ifsc_code || "",
+        account_holder: agent?.account_holder || "",
     });
 
     const fetchProfile = async () => {
+        if (!agent) setLoading(true);
         try {
             const [data, error] = await getAgentProfile();
             if (error) {
@@ -76,7 +77,7 @@ export default function ProfilePage() {
     };
 
     const INFO = useMemo(() => [
-        { label: "Agent ID", value: agent?.id ?? "—", icon: BadgeCheck, color: "text-primary-hover" },
+        { label: "Agent ID", value: agent?.uid ?? agent?.id ?? "—", icon: BadgeCheck, color: "text-primary-hover" },
         { label: "Email", value: agent?.user?.email ?? agent?.email ?? "—", icon: Mail, color: "text-blue-600" },
         { label: "Phone", value: agent?.phone ?? agent?.user?.phone ?? "—", icon: Phone, color: "text-green-600" },
         { label: "Status", value: agent?.status ?? "Active", icon: User, color: "text-purple-600" },
@@ -91,7 +92,7 @@ export default function ProfilePage() {
     if (loading) return <ProfileSkeleton />;
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Profile Header */}
             <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden">
                 <div className="h-32 bg-gradient-to-r from-primary via-primary-hover to-primary" />
@@ -99,7 +100,7 @@ export default function ProfilePage() {
                     <div className="flex items-end justify-between mb-6">
                         <div className="ring-8 ring-white rounded-full shadow-2xl overflow-hidden bg-white">
                             <Avatar
-                                src={agent?.user?.avatar ?? null}
+                                src={agent?.avatar ?? agent?.user?.avatar ?? null}
                                 alt={agent?.user?.name ?? "Agent"}
                                 size="xl"
                                 className="!w-24 !h-24 object-cover"
@@ -120,18 +121,21 @@ export default function ProfilePage() {
                         <div className="flex items-center gap-2">
                             <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full">Field Agent</span>
                             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Verified Partner</span>
+                            <span className="text-[10px] font-bold text-gray-1000 uppercase tracking-widest">Verified Partner</span>
                         </div>
                     </div>
 
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {INFO.map(({ label, value, icon: Icon, color }) => (
-                            <div key={label} className="group p-5 rounded-3xl bg-gray-50/50 border border-gray-100 hover:bg-white hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
+                            <div key={label} className="group p-5 rounded-3xl bg-gray-50/50 hover:bg-white hover:shadow-xl hover:shadow-orange-200/50 transition-all duration-300 relative overflow-hidden border-2 border-[#F25E0A] hover:border-[#F25E0A]">
                                 <div className={`w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 ${color}`}>
                                     <Icon className="w-5 h-5" />
                                 </div>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{label}</p>
+                                <p className="text-[10px] font-black text-gray-1000 uppercase tracking-widest mb-1">{label}</p>
                                 <p className="text-sm font-bold text-gray-800 break-all">{value}</p>
+                                
+                                {/* Orange Bottom Bar - Shows only on hover */}
+                                <div className="absolute bottom-0 left-0 h-1.5 w-full bg-[#F25E0A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center" />
                             </div>
                         ))}
                     </div>
@@ -157,7 +161,7 @@ export default function ProfilePage() {
                     <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden h-full">
                         <div className="p-8 border-b border-gray-50 bg-gray-50/30">
                             <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Earnings Structure</h3>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Commission Percentages</p>
+                            <p className="text-[10px] font-bold text-gray-1000 uppercase tracking-widest">Commission Percentages</p>
                         </div>
                         <div className="p-8 space-y-4">
                             {COMMISSION_RATES.map(({ label, rate, className }) => (

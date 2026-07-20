@@ -207,7 +207,7 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
                                             </div>
                                             <div>
                                                 <p className="text-[10px] font-bold text-[#800000] uppercase tracking-widest mb-1">Account / IFSC</p>
-                                                <div className="flex items-center gap-3 font-bold text-gray-600">
+                                                <div className="flex items-center gap-3 font-bold text-gray-1000">
                                                     <span>•••• {acc.account_number.slice(-4)}</span>
                                                     <span className="w-1 h-4 bg-gray-300 rounded-full" />
                                                     <span className="text-[#F25E0A]">{acc.ifsc_code}</span>
@@ -280,7 +280,7 @@ const InputGroup = ({ label, value, onChange, placeholder, uppercase }: any) => 
 
 const DisplayGroup = ({ label, value, icon: Icon }: any) => (
     <div className="group p-6 rounded-2xl bg-gray-50/50 border-2 border-transparent hover:border-orange-100 hover:bg-white transition-all duration-500">
-        <div className="flex items-center gap-3 text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] mb-3">
+        <div className="flex items-center gap-3 text-[9px] font-black text-gray-1000 uppercase tracking-[0.3em] mb-3">
             <Icon className="w-3.5 h-3.5 text-[#F25E0A]/40 group-hover:text-[#F25E0A] transition-colors" />
             {label}
         </div>

@@ -92,6 +92,7 @@ export default function ShopProfileSettings() {
     latitude: "",
     longitude: "",
     trustScore: "",
+    establishedSince: "",
     description: ""
   });
   const [featuresInput, setFeaturesInput] = useState("");
@@ -115,6 +116,7 @@ export default function ShopProfileSettings() {
         latitude: profile.latitude || "",
         longitude: profile.longitude || "",
         trustScore: profile.trustScore || "",
+        establishedSince: profile.establishedSince || "",
         description: profile.description || ""
       });
       setFeatures(Array.isArray(profile.features) ? profile.features : []);
@@ -217,6 +219,7 @@ export default function ShopProfileSettings() {
     data.append('latitude', formData.latitude);
     data.append('longitude', formData.longitude);
     data.append('trustScore', formData.trustScore);
+    data.append('establishedSince', formData.establishedSince);
     data.append('description', formData.description);
     data.append('features', JSON.stringify(features));
     data.append('gallery', JSON.stringify(existingGallery));
@@ -248,6 +251,7 @@ export default function ShopProfileSettings() {
         latitude: profile.latitude || "",
         longitude: profile.longitude || "",
         trustScore: profile.trustScore || "",
+        establishedSince: profile.establishedSince || "",
         description: profile.description || ""
       });
       setFeatures(Array.isArray(profile.features) ? profile.features : []);
@@ -436,6 +440,23 @@ export default function ShopProfileSettings() {
                     disabled={!isEditing}
                     type="tel" 
                     className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Established Year</label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                     <Store className="w-4 h-4 text-orange-400 group-focus-within:text-[#fd6410] transition-colors" />
+                  </div>
+                  <input 
+                    name="establishedSince"
+                    value={formData.establishedSince}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    type="text" 
+                    placeholder="e.g. 1995"
+                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -800,6 +821,13 @@ export default function ShopProfileSettings() {
                       <Phone className="w-4 h-4 text-[#fd6410] shrink-0" />
                       <p className="font-mono">{formData.phone || "+91 XXXXXXXXXX"}</p>
                    </div>
+                   
+                   {formData.establishedSince && (
+                     <div className="flex items-center space-x-3 text-xs font-bold text-gray-900">
+                        <Store className="w-4 h-4 text-[#fd6410] shrink-0" />
+                        <p>Est. {formData.establishedSince}</p>
+                     </div>
+                   )}
                 </div>
 
                 {/* Video/Media Integration */}

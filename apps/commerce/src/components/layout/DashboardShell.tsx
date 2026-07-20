@@ -41,7 +41,20 @@ export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
 
     const isOnline = localOnlineStatus ?? !!(profileData?.profile?.isOnline);
     
+    // Check if merchant is approved/active by admin
+    const merchantStatus = profileData?.profile?.status;
+    const isApproved = merchantStatus === 'active';
+
     const handleToggle = () => {
+        if (!isApproved) {
+            toast.warning(
+                merchantStatus === 'pending_verification'
+                    ? '⏳ Aapka account abhi admin approval ka wait kar raha hai. Approved hone ke baad hi Online ho sakte hain.'
+                    : '🚫 Aapka account suspended hai. Online hone ke liye admin se contact karein.',
+                { autoClose: 5000 }
+            );
+            return;
+        }
         const newStatus = !isOnline;
         setLocalOnlineStatus(newStatus);
         updateOnlineStatus.mutate(newStatus, {
@@ -170,19 +183,30 @@ export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
                                 />
                             </div>
 
-                            <div className="flex items-center space-x-2">
-                                <span className="text-sm font-medium text-gray-700 hidden sm:inline">
-                                    {isOnline ? "Online" : "Offline"}
+                            <div className="flex items-center space-x-2 relative group">
+                                <span className={`text-sm font-medium hidden sm:inline ${isApproved ? 'text-gray-700' : 'text-yellow-600'}`}>
+                                    {!isApproved ? '⏳ Pending' : isOnline ? "Online" : "Offline"}
                                 </span>
                                 <button
                                     onClick={handleToggle}
                                     disabled={updateOnlineStatus.isPending || isProfileLoading}
+                                    title={!isApproved ? 'Admin approval ke baad hi Online ho sakte hain' : ''}
                                     className={`relative inline-flex items-center h-6 rounded-full w-11 transition-all duration-500 ease-in-out ${
-                                        isOnline ? "bg-green-500 shadow-lg shadow-green-200" : "bg-red-500 shadow-lg shadow-red-200"
-                                    } ${(updateOnlineStatus.isPending || isProfileLoading) ? "opacity-50 cursor-not-allowed" : ""}`}
+                                        !isApproved
+                                            ? 'bg-gray-300 cursor-not-allowed'
+                                            : isOnline
+                                                ? 'bg-green-500 shadow-lg shadow-green-200'
+                                                : 'bg-red-500 shadow-lg shadow-red-200'
+                                    } ${(updateOnlineStatus.isPending || isProfileLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
-                                    <span className={`inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full shadow-md ${isOnline ? "translate-x-6" : "translate-x-1"}`} />
+                                    <span className={`inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full shadow-md ${isOnline && isApproved ? 'translate-x-6' : 'translate-x-1'}`} />
                                 </button>
+                                {/* Tooltip for non-approved merchants */}
+                                {!isApproved && (
+                                    <div className="absolute right-0 top-8 hidden group-hover:block z-50 bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs rounded-lg px-3 py-2 w-56 shadow-lg">
+                                        ⏳ Admin approval ka wait karein. Approved hone ke baad Online ho sakte hain.
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex items-center space-x-2">

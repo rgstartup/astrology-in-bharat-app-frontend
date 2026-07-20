@@ -44,7 +44,7 @@ function AgentLoginForm() {
         <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
             <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold text-gray-800">Agent Login</h2>
-                <p className="mt-2 text-gray-500">Please enter your details to sign in.</p>
+                <p className="mt-2 text-gray-1000">Please enter your details to sign in.</p>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
@@ -56,7 +56,7 @@ function AgentLoginForm() {
                     </label>
                     <div className="mt-1 relative rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <User className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            <User className="h-5 w-5 text-gray-1000" aria-hidden="true" />
                         </div>
                         <input
                             id="agent-email"
@@ -79,7 +79,7 @@ function AgentLoginForm() {
                     </label>
                     <div className="mt-1 relative rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            <Lock className="h-5 w-5 text-gray-1000" aria-hidden="true" />
                         </div>
                         <input
                             id="agent-password"
@@ -95,7 +95,7 @@ function AgentLoginForm() {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 hover:text-gray-800"
+                            className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-1000 hover:text-gray-800"
                         >
                             {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                         </button>
@@ -140,11 +140,6 @@ function AgentLoginForm() {
                 </div>
             </form>
 
-            {/* Demo hint */}
-            <p className="text-center text-xs text-gray-400 mt-6">
-                Demo: <span className="text-primary font-bold">agent@example.com</span> /{" "}
-                <span className="text-primary font-bold">secure_password</span>
-            </p>
         </div>
     );
 }

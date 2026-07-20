@@ -89,6 +89,7 @@ export interface Profile {
     gender: Gender;
     specialization: string;
     bio?: string;
+    about?: string;
     experience_in_years: number;
     date_of_birth?: string;
     languages: string[];

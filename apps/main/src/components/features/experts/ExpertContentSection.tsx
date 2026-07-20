@@ -175,14 +175,14 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
 }) => {
   const tabs: { key: typeof activeTab; label: string }[] = [
     { key: 'about', label: 'About' },
-    { key: 'experience', label: 'Experience' },
+    { key: 'experience', label: 'Bio' },
     { key: 'reviews', label: 'Reviews' },
     { key: 'gallery', label: 'Gallery' },
     { key: 'videos', label: 'Videos' },
   ];
 
   // Track which tabs have been visited for lazy loading
-  const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set(['about']));
+  const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set(['about', 'experience']));
 
   const handleTabChange = useCallback((tab: typeof activeTab) => {
     setActiveTab(tab);
@@ -218,45 +218,26 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
         <div className="min-h-[160px] mb-8">
 
           {/* ── About ── */}
-          <div className={activeTab === 'about' ? 'block' : 'hidden'}>
+          <div className={activeTab === 'about' || !activeTab ? 'block' : 'hidden'}>
             <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed animate-in fade-in slide-in-from-bottom-2 duration-300">
-              {expert.bio ? (
-                <p className="whitespace-pre-line">{expert.bio}</p>
+              {expert.about ? (
+                <p className="whitespace-pre-line">{expert.about}</p>
               ) : (
-                <p>
-                  <span className="font-bold text-gray-900">{expert.name}</span> is a distinguished expert with profound knowledge in{" "}
-                  <span className="font-semibold text-orange">{expert.expertise}</span>.
-                  With over {expert.experience} years of dedicated practice, they have guided countless individuals towards clarity and success.
-                </p>
+                <p className="text-sm italic text-gray-400">No custom about section added yet.</p>
               )}
             </div>
           </div>
 
-          {/* ── Experience ── */}
+          {/* ── Experience (Now Bio) ── */}
           <div className={activeTab === 'experience' ? 'block' : 'hidden'}>
             {!visitedTabs.has('experience') ? (
               <ExperienceSkeleton />
             ) : (
-              <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300 max-h-[200px] overflow-y-auto pr-1" data-lenis-prevent="true">
-                {expert.detailed_experience && expert.detailed_experience.length > 0 ? (
-                  expert.detailed_experience.map((exp, index) => (
-                    <div key={index} className="bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm">
-                      <div className="flex gap-3">
-                        <div className="mt-1.5 w-2 h-2 rounded-full bg-orange shrink-0" />
-                        <div>
-                          <h5 className="text-sm font-bold text-gray-900">{exp.title || exp.role || "Expert"}</h5>
-                          <p className="text-xs text-gray-500 font-medium">
-                            <span className="text-gray-700 font-semibold">Experience:</span>{" "}
-                            {exp.organization || exp.company || "Independent"}
-                            {exp.duration ? ` • ${exp.duration}` : ""}
-                          </p>
-                          {exp.description && <p className="text-sm text-gray-600 mt-2 leading-relaxed">{exp.description}</p>}
-                        </div>
-                      </div>
-                    </div>
-                  ))
+              <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed animate-in fade-in slide-in-from-bottom-2 duration-300">
+                {expert.bio ? (
+                  <p className="whitespace-pre-line">{expert.bio}</p>
                 ) : (
-                  <p className="text-sm text-gray-500 italic">No specific experience details added.</p>
+                  <p className="text-sm italic text-gray-400">No bio details added yet.</p>
                 )}
               </div>
             )}

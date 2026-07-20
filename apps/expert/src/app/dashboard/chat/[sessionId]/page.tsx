@@ -446,16 +446,19 @@ function ExpertChatRoomContent() {
                     </div>
                 )}
 
-                {messages.map((msg) => {
+                {messages.map((msg: any, index: number) => {
                     const mSenderType = msg.senderType || (msg as any).sender_type;
-                    const isAdmin = mSenderType === "admin";
                     const isExpert = mSenderType === "expert";
+                    const isAdmin = mSenderType === "admin";
+                    const hasAttachment = Boolean(msg.attachmentUrl || msg.attachment_url || msg.imageUrl || msg.mediaUrl);
+                    const isOnlyAttachment = hasAttachment && (!msg.content || msg.content.trim() === '' || msg.content.trim().toLowerCase() === 'sent an image');
+                    const isIntroCard = msg.content?.startsWith('[INTRO_CARD]');
+                    const isPaddingReduced = isIntroCard || isOnlyAttachment;
 
                     return (
-                        <div key={msg.id} className={`flex items-start gap-3 ${isExpert ? "flex-row-reverse" : "flex-row"} ${isAdmin ? "justify-center w-full" : ""}`}>
-                            {/* Avatar */}
+                        <div key={msg.id} className={`flex gap-3 md:gap-4 ${isExpert ? "flex-row-reverse" : "flex-row"} items-start ${isAdmin ? "justify-center w-full" : ""}`}>
                             {!isAdmin && (
-                                <div className="flex-shrink-0 flex items-center justify-center">
+                                <div className="flex-shrink-0 mt-1">
                                     {isExpert ? (
                                         <Avatar
                                             src={user?.profilePic || user?.avatar}
@@ -483,7 +486,7 @@ function ExpertChatRoomContent() {
                                         {isExpert ? "You (Expert)" : (clientName || "Client")}
                                     </span>
                                 )}
-                                <div className={`px-4 py-3 rounded-2xl shadow-sm ${isExpert
+                                <div className={`${isPaddingReduced ? 'p-1' : 'px-4 py-3'} rounded-2xl shadow-sm ${isExpert
                                     ? "bg-orange-600 text-white rounded-tr-none"
                                     : isAdmin
                                         ? "bg-red-50 text-red-600 border-2 border-red-200 rounded-xl text-center w-full shadow-red-100"
@@ -553,8 +556,8 @@ function ExpertChatRoomContent() {
                                     ) : (
                                         <>
                                             {/* Attachment Display */}
-                                            {(msg.attachmentUrl || msg.attachment_url || msg.imageUrl || msg.mediaUrl) && (
-                                                <div className="mb-2">
+                                            {hasAttachment && (
+                                                <div className={`${!isOnlyAttachment ? 'mb-2' : ''}`}>
                                                     {(
                                                         msg.attachmentType?.toLowerCase() === "image" ||
                                                         msg.attachment_type?.toLowerCase() === "image" ||
@@ -586,7 +589,9 @@ function ExpertChatRoomContent() {
                                                     )}
                                                 </div>
                                             )}
-                                            <p className={`text-sm leading-relaxed ${isAdmin ? "font-black" : ""}`}>{msg.content}</p>
+                                            {!isOnlyAttachment && (
+                                                <p className={`text-sm leading-relaxed ${isAdmin ? "font-black" : ""}`}>{msg.content}</p>
+                                            )}
                                         </>
                                     )}
                                     <p className={`text-[9px] mt-1 opacity-60 font-bold ${isExpert ? "text-white" : isAdmin ? "text-red-400" : "text-gray-400"}`}>

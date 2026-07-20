@@ -30,7 +30,7 @@ const TABS: Tab[] = [
         id: "all",
         label: "All",
         icon: LayoutList,
-        color: "text-gray-600",
+        color: "text-gray-1000",
         activeBg: "bg-primary",
         activeText: "text-white",
         badgeBg: "bg-gray-100 text-gray-700",
@@ -183,34 +183,34 @@ function ListingCard({ item }: { item: ReferredUser }) {
             <div className="space-y-2">
                 {/* Email (users only) */}
                 {item.email && (
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <Mail className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
+                    <div className="flex items-center gap-2 text-xs text-gray-1000">
+                        <Mail className="w-3.5 h-3.5 flex-shrink-0 text-gray-1000" />
                         <span className="truncate">{item.email}</span>
                     </div>
                 )}
                 {/* Phone */}
                 {item.phone && (
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <Phone className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
+                    <div className="flex items-center gap-2 text-xs text-gray-1000">
+                        <Phone className="w-3.5 h-3.5 flex-shrink-0 text-gray-1000" />
                         <span>{item.phone}</span>
                     </div>
                 )}
                 {/* Location (mandir / puja_shop) */}
                 {isPlace && item.location && (
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
+                    <div className="flex items-center gap-2 text-xs text-gray-1000">
+                        <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-gray-1000" />
                         <span className="truncate">{item.location}</span>
                     </div>
                 )}
                 {/* Deity (mandir / puja_shop) */}
                 {isPlace && item.deity && (
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <Flame className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
+                    <div className="flex items-center gap-2 text-xs text-gray-1000">
+                        <Flame className="w-3.5 h-3.5 flex-shrink-0 text-gray-1000" />
                         <span className="truncate">{item.deity}</span>
                     </div>
                 )}
                 {/* Date */}
-                <div className="flex items-center gap-2 text-xs text-gray-400">
+                <div className="flex items-center gap-2 text-xs text-gray-1000">
                     <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
                     <span>{isPlace ? "Submitted" : "Joined"} {joined}</span>
                 </div>
@@ -221,7 +221,7 @@ function ListingCard({ item }: { item: ReferredUser }) {
                         {/* Expert Earnings (Gross Revenue) */}
                         {item.type === 'expert' && (
                             <div className="flex items-center justify-between">
-                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">
+                                <span className="text-[10px] font-black text-gray-1000 uppercase tracking-wider">
                                     Expert Earnings
                                 </span>
                                 <span className="text-xs font-bold text-gray-700">
@@ -253,10 +253,10 @@ function EmptyState({ search, onClear }: { search: string; onClear: () => void }
     return (
         <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mb-4">
-                <UserX className="w-8 h-8 text-gray-400" />
+                <UserX className="w-8 h-8 text-gray-1000" />
             </div>
             <p className="font-black text-gray-700 mb-1">No listings found</p>
-            <p className="text-sm text-gray-400 mb-4">
+            <p className="text-sm text-gray-1000 mb-4">
                 {search ? `No results for "${search}"` : "You haven't registered anyone yet."}
             </p>
             {search && (
@@ -271,16 +271,17 @@ function EmptyState({ search, onClear }: { search: string; onClear: () => void }
     );
 }
 
-// ── Main Page ────────────────────────────────────────────────────────────────
+let cachedListingsData: any = null;
+
 export default function ListingsPage() {
-    const [activeTab, setActiveTab] = useState<TabId>("all");
-    const [search, setSearch] = useState("");
-    const [debouncedSearch, setDebouncedSearch] = useState("");
-    const [data, setData] = useState<ReferredUser[]>([]);
-    const [total, setTotal] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<TabId>(cachedListingsData?.activeTab || "all");
+    const [search, setSearch] = useState(cachedListingsData?.search || "");
+    const [debouncedSearch, setDebouncedSearch] = useState(cachedListingsData?.search || "");
+    const [data, setData] = useState<ReferredUser[]>(cachedListingsData?.data || []);
+    const [total, setTotal] = useState(cachedListingsData?.total || 0);
+    const [loading, setLoading] = useState(!cachedListingsData);
     const [refreshKey, setRefreshKey] = useState(0);
-    const [statsData, setStatsData] = useState<any>(null);
+    const [statsData, setStatsData] = useState<any>(cachedListingsData?.statsData || null);
 
     // Debounce search
     useEffect(() => {
@@ -292,7 +293,9 @@ export default function ListingsPage() {
 
     // Fetch listings
     const fetchData = useCallback(async () => {
-        setLoading(true);
+        if (!cachedListingsData || activeTab !== cachedListingsData?.activeTab || debouncedSearch !== cachedListingsData?.search) {
+            setLoading(true);
+        }
         const params: { type?: 'expert' | 'client' | 'mandir' | 'puja_shop'; search?: string } = {};
         if (activeTab !== "all") {
             params.type = activeTab;
@@ -308,14 +311,29 @@ export default function ListingsPage() {
         } else {
             setData(res?.data ?? []);
             setTotal(res?.total ?? 0);
+
+            cachedListingsData = {
+                activeTab,
+                search: debouncedSearch,
+                data: res?.data ?? [],
+                total: res?.total ?? 0,
+                statsData: statsData
+            };
         }
         setLoading(false);
-    }, [activeTab, debouncedSearch, refreshKey]);
+    }, [activeTab, debouncedSearch, refreshKey, statsData]);
 
     useEffect(() => {
         const fetchStats = async () => {
             const [stats, error] = await getAgentDashboardStats();
-            if (!error) setStatsData(stats);
+            if (!error) {
+                setStatsData(stats);
+                if (cachedListingsData) {
+                    cachedListingsData.statsData = stats;
+                } else {
+                    cachedListingsData = { statsData: stats };
+                }
+            }
         };
         fetchStats();
     }, [refreshKey]); // Fetch stats only once or when manual refresh is triggered
@@ -382,13 +400,13 @@ export default function ListingsPage() {
             <div className="flex items-start justify-between gap-4">
                 <div>
                     <h2 className="text-xl font-black text-gray-900">Listings</h2>
-                    <p className="text-sm text-gray-500 mt-0.5">
+                    <p className="text-sm text-gray-1000 mt-0.5">
                         All registrations made by you
                     </p>
                 </div>
                 <button
                     onClick={() => setRefreshKey((k) => k + 1)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 hover:text-primary transition-colors text-xs font-bold shadow-sm"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white text-gray-1000 hover:bg-gray-50 hover:text-primary transition-colors text-xs font-bold shadow-sm"
                     title="Refresh listings"
                 >
                     <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
@@ -417,7 +435,7 @@ export default function ListingsPage() {
                                 ${
                                     isActive
                                         ? `${tab.activeBg} ${tab.activeText} border-transparent shadow-md scale-[1.03]`
-                                        : "bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                                        : "bg-white text-gray-1000 border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                                 }
                             `}
                         >
@@ -441,7 +459,7 @@ export default function ListingsPage() {
 
             {/* Search bar */}
             <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-1000 pointer-events-none" />
                 <input
                     id="listings-search"
                     type="text"
@@ -453,7 +471,7 @@ export default function ListingsPage() {
                 {search && (
                     <button
                         onClick={() => setSearch("")}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-1000 hover:text-gray-1000 transition-colors"
                     >
                         <X className="w-4 h-4" />
                     </button>

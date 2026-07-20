@@ -137,7 +137,7 @@ export const NotificationCenter = () => {
                         {loading ? (
                             <div className="p-8 flex flex-col items-center justify-center gap-2">
                                 <Loader2 className="w-6 h-6 text-primary-hover animate-spin" />
-                                <p className="text-xs text-gray-400 font-medium">Fetching updates...</p>
+                                <p className="text-xs text-gray-1000 font-medium">Fetching updates...</p>
                             </div>
                         ) : notifications.length === 0 ? (
                             <div className="p-10 flex flex-col items-center justify-center text-center">
@@ -145,7 +145,7 @@ export const NotificationCenter = () => {
                                     <BellOff className="w-6 h-6 text-gray-300" />
                                 </div>
                                 <p className="text-sm font-bold text-gray-900">No new notifications</p>
-                                <p className="text-xs text-gray-400 mt-1">We'll let you know when something happens.</p>
+                                <p className="text-xs text-gray-1000 mt-1">We'll let you know when something happens.</p>
                             </div>
                         ) : (
                             <div className="divide-y divide-gray-50">
@@ -161,8 +161,8 @@ export const NotificationCenter = () => {
                                         <div className="flex justify-between items-start gap-3">
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-sm font-bold text-gray-900 truncate">{n.title}</p>
-                                                <p className="text-xs text-gray-500 mt-1 leading-relaxed line-clamp-2">{n.message}</p>
-                                                <span className="text-[10px] text-gray-400 mt-2 block font-medium">
+                                                <p className="text-xs text-gray-1000 mt-1 leading-relaxed line-clamp-2">{n.message}</p>
+                                                <span className="text-[10px] text-gray-1000 mt-2 block font-medium">
                                                     {new Date(n.created_at).toLocaleString()}
                                                 </span>
                                             </div>
