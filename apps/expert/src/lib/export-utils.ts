@@ -1,4 +1,4 @@
-import { toJpeg } from 'html-to-image';
+import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
 /**
@@ -14,20 +14,15 @@ export const exportElementToPDF = async (elementId: string, fileName: string = '
   }
 
   try {
-
-    // Capture the element as a high-quality JPEG
-    // html-to-image is much better with modern CSS (oklab, tailwind v4, etc.)
-    const dataUrl = await toJpeg(element, {
-      quality: 0.95,
-      pixelRatio: 2, // Equivalent to scale in html2canvas
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
       backgroundColor: '#f9fafb',
-      style: {
-        borderRadius: '0', // Optional: flatten corners for PDF
-        padding: '24px'
-      }
+      logging: false,
     });
 
-    // Calculate PDF dimensions
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+
     const pdf = new jsPDF({
       orientation: 'p',
       unit: 'mm',
@@ -35,23 +30,10 @@ export const exportElementToPDF = async (elementId: string, fileName: string = '
       compress: true
     });
 
-    // Image sizing to fit A4
     const pdfWidth = pdf.internal.pageSize.getWidth();
-    // Assuming we want to maintain aspect ratio and fit to width
-    const img = new Image();
-    img.src = dataUrl;
-    
-    // Wait for image to load to get dimensions
-    await new Promise((resolve) => {
-        img.onload = resolve;
-    });
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-    const pdfHeight = (img.height * pdfWidth) / img.width;
-
-    // Add image to PDF
     pdf.addImage(dataUrl, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
-    
-    // Save the PDF
     pdf.save(fileName);
     return true;
   } catch (error) {
