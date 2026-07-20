@@ -41,6 +41,7 @@ export interface ExpertProfile {
     horoscope_price?: number;
     total_likes?: number;
     bio?: string;
+    about?: string;
     detailed_experience?: any[];
     gallery?: string[];
     videos?: string[];
@@ -68,6 +69,7 @@ export interface Expert {
     is_online?: boolean;
     total_likes?: number;
     bio?: string;
+    about?: string;
     detailed_experience?: any[];
     gallery?: string[];
     videos?: string[];

@@ -299,26 +299,50 @@ export default function PortfolioGallery({
                                 </div>
                             )}
 
-                            <ul className="space-y-3">
-                                {videos.map((vid, i) => (
-                                    <li key={i} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-100">
-                                        <div className="flex items-center gap-3 overflow-hidden">
-                                            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                                                <LinkIcon className="w-4 h-4 text-red-600" />
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                {videos.map((vid, i) => {
+                                    const vidId = getYoutubeId(vid);
+                                    const embedUrl = vidId ? `https://www.youtube.com/embed/${vidId}` : vid;
+                                    return (
+                                        <div key={i} className="space-y-3">
+                                            <div className="relative rounded-xl overflow-hidden bg-black aspect-video border border-gray-200 shadow-inner">
+                                                {vidId ? (
+                                                    <iframe
+                                                        className="w-full h-full"
+                                                        src={embedUrl}
+                                                        title={`Video ${i + 1}`}
+                                                        frameBorder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowFullScreen
+                                                    />
+                                                ) : (
+                                                    <video
+                                                        src={vid}
+                                                        className="w-full h-full object-contain"
+                                                        controls
+                                                    />
+                                                )}
                                             </div>
-                                            <span className="text-sm text-gray-600 truncate flex-1" title={vid}>{vid}</span>
+                                            <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                                <div className="flex items-center gap-2 overflow-hidden flex-1">
+                                                    <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+                                                        <LinkIcon className="w-4 h-4 text-red-500" />
+                                                    </div>
+                                                    <span className="text-xs text-gray-500 truncate" title={vid}>{vid}</span>
+                                                </div>
+                                                <Button
+                                                    onClick={() => onRemoveVideo(i)}
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="text-gray-400 hover:text-red-500 transition-colors p-1 flex-shrink-0 ml-2"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </Button>
+                                            </div>
                                         </div>
-                                        <Button
-                                            onClick={() => onRemoveVideo(i)}
-                                            variant="ghost"
-                                            size="sm"
-                                            className="text-gray-400 hover:text-red-500 transition-colors p-1"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                    </li>
-                                ))}
-                            </ul>
+                                    );
+                                })}
+                            </div>
 
                             {videos.length === 0 && !isAddingVideo && (
                                 <div className="text-center py-6">

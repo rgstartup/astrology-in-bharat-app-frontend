@@ -72,11 +72,13 @@ export default function MessageArea({
                     </div>
                 </div>
 
-                {messages.map((msg: ChatMessage) => {
+                {messages.map((msg: any, index: number) => {
                     const mSenderType = msg.senderType || (msg as any).sender_type;
                     const isUser = mSenderType === "user";
                     const isAdmin = mSenderType === "admin";
-
+                    const hasAttachment = Boolean(msg.attachmentUrl || (msg as any).attachment_url);
+                    const isOnlyAttachment = hasAttachment && (!msg.content || msg.content.trim() === '' || msg.content.trim().toLowerCase() === 'sent an image');
+                    
                     return (
                         <div key={msg.id} className={`flex gap-3 md:gap-4 ${isUser ? "flex-row-reverse" : "flex-row"} items-start ${isAdmin ? "justify-center w-full" : ""}`}>
                             {!isAdmin && (
@@ -99,7 +101,7 @@ export default function MessageArea({
                                 </div>
                             )}
                             <div className={`flex flex-col gap-1.5 max-w-[75%] md:max-w-[70%] ${isAdmin ? "items-center w-full" : ""}`}>
-                                <div className={`${msg.content.startsWith('[INTRO_CARD]') ? '' : `px-4 py-3 rounded-2xl shadow-sm text-sm leading-relaxed ${
+                                <div className={`${msg.content.startsWith('[INTRO_CARD]') ? '' : `${isOnlyAttachment ? 'p-1' : 'px-4 py-3'} rounded-2xl shadow-sm text-sm leading-relaxed ${
                                     isAdmin 
                                         ? "bg-red-50 text-red-600 border-2 border-red-200 rounded-xl text-center w-full shadow-red-100" 
                                         : isUser 
@@ -182,8 +184,8 @@ export default function MessageArea({
                                         </div>
                                     ) : (
                                         <>
-                                            {(msg.attachmentUrl || (msg as any).attachment_url) && (
-                                                <div className="mb-2 max-w-sm rounded-xl overflow-hidden border border-black/5 shadow-sm">
+                                            {hasAttachment && (
+                                                <div className={`max-w-sm rounded-xl overflow-hidden border border-black/5 shadow-sm ${!isOnlyAttachment ? 'mb-2' : ''}`}>
                                                     {(msg.attachmentType === 'image' || (msg as any).attachment_type === 'image' || 
                                                       (msg.attachmentUrl || (msg as any).attachment_url)?.match(/\.(jpg|jpeg|png|gif|webp)$|images/i)
                                                     ) ? (
@@ -210,7 +212,9 @@ export default function MessageArea({
                                                     )}
                                                 </div>
                                             )}
-                                            <p className={`text-sm leading-relaxed ${isAdmin ? "font-black" : ""}`}>{msg.content}</p>
+                                            {!isOnlyAttachment && (
+                                                <p className={`text-sm leading-relaxed ${isAdmin ? "font-black" : ""}`}>{msg.content}</p>
+                                            )}
                                         </>
                                     )}
                                 </div>

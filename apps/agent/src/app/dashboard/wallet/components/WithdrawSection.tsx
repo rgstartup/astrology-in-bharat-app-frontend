@@ -9,9 +9,9 @@ interface WithdrawSectionProps {
     agent: any;
 }
 
-export const WithdrawSection: React.FC<WithdrawSectionProps> = ({ 
-    balance, 
-    onWithdraw, 
+export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
+    balance,
+    onWithdraw,
     loading,
     agent
 }) => {
@@ -63,9 +63,9 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
 
 
     return (
-        <div className="group bg-white p-10 rounded-[1.5rem] border border-gray-100 shadow-sm space-y-8 relative transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] hover:-translate-y-1">
+        <div className="group bg-white p-6 md:p-10 rounded-[1.5rem] shadow-sm space-y-8 relative transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] hover:-translate-y-1 border-2 border-[#F25E0A]">
             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50/50 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-orange-100/50 transition-colors duration-700" />
-            
+
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-orange-50 rounded-xl group-hover:rotate-[360deg] transition-transform duration-1000">
                     <Landmark className="w-6 h-6 text-[#F25E0A]" />
@@ -76,12 +76,12 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row items-end gap-6 relative z-10">
+            <form onSubmit={handleSubmit} className="flex flex-col items-stretch gap-6 relative z-10 md:flex-row md:items-end">
                 <div className="w-full lg:w-1/3 space-y-2.5">
                     <label className="text-[10px] font-black text-[#F25E0A] uppercase tracking-widest ml-1">Amount to Withdraw</label>
                     <div className="relative">
                         <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold">₹</span>
-                        <input 
+                        <input
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
@@ -90,7 +90,7 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                             required
                         />
                     </div>
-                    <p className="text-[10px] text-gray-300 font-medium ml-1 flex items-center gap-1">
+                    <p className="text-[10px] text-gray-600 font-medium ml-1 flex items-center gap-1">
                         <Info className="w-3 h-3" /> Min. withdrawal ₹500
                     </p>
                 </div>
@@ -104,7 +104,7 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                         </div>
                     ) : (
                         <div className="relative">
-                            <button 
+                            <button
                                 type="button"
                                 onClick={() => setShowBankList(!showBankList)}
                                 className="w-full flex items-center justify-between gap-3 p-5 bg-emerald-50/50 border border-emerald-100 rounded-2xl text-emerald-700 hover:bg-emerald-50 transition-all group/bank"
@@ -170,12 +170,12 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                         disabled={loading || !amount || parseFloat(amount) < 500 || parseFloat(amount) > balance || !hasBankDetails}
                         className="rounded-[1.5rem] bg-[#F25E0A] hover:bg-[#d45209] text-white font-black uppercase tracking-widest text-[12px] px-10 py-5 h-auto transition-all duration-300 shadow-lg shadow-orange-500/20 disabled:opacity-50 disabled:grayscale active:scale-95 border-none"
                     >
-                        {loading ? "Processing..." : "Withdraw Now"}
+                        {loading ? "Processing..." : "Withdraw"}
                     </Button>
 
                     <div className="flex items-center gap-2.5 px-5 py-3.5 bg-emerald-50 rounded-xl border border-emerald-100 text-emerald-600">
                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Secure Payout</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest">Payout</span>
                     </div>
                 </div>
             </form>

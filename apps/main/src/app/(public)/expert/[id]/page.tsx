@@ -129,6 +129,7 @@ export default async function Page({
       video: expertData.video,
       ratings: expertData.ratings,
       bio: expertData.bio,
+      about: expertData.about,
       detailed_experience: expertData.detailed_experience,
       gallery: expertData.gallery,
       videos: expertData.videos,

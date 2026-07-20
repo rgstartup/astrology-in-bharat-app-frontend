@@ -397,7 +397,7 @@ export default function RegisterUserPage() {
     const currentTab = TABS.find((t) => t.id === activeTab)!;
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             
             {/* Header Section */}
             <div className="text-center sm:text-left">
@@ -421,15 +421,15 @@ export default function RegisterUserPage() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={cn(
-                                "relative group flex items-start gap-4 p-5 rounded-[2rem] border-2 transition-all duration-300 text-left",
+                                "relative group flex items-start gap-4 p-5 rounded-[2rem] border-2 transition-all duration-300 text-left overflow-hidden",
                                 isActive 
-                                    ? "bg-white border-brand-orange shadow-xl shadow-brand-orange/10 -translate-y-1" 
-                                    : "bg-white/50 border-transparent hover:border-gray-200 backdrop-blur-sm"
+                                    ? "bg-white border-[#F25E0A] shadow-xl shadow-orange-200/50 -translate-y-1" 
+                                    : "bg-gray-50/50 border-[#F25E0A] hover:bg-white hover:shadow-xl hover:shadow-orange-200/50 hover:-translate-y-1"
                             )}
                         >
                             <div className={cn(
-                                "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300",
-                                isActive ? "bg-brand-orange text-white shadow-lg shadow-brand-orange/30" : "bg-gray-100 text-gray-400 group-hover:bg-gray-200"
+                                "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110",
+                                isActive ? "bg-brand-orange text-white shadow-lg shadow-brand-orange/30" : "bg-white shadow-sm text-gray-400 group-hover:text-brand-orange"
                             )}>
                                 <Icon className="w-6 h-6" />
                             </div>
@@ -441,9 +441,11 @@ export default function RegisterUserPage() {
                                     {tab.description}
                                 </p>
                             </div>
-                            {isActive && (
-                                <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-8 h-1 bg-brand-orange rounded-full" />
-                            )}
+                            
+                            <div className={cn(
+                                "absolute bottom-0 left-0 h-1.5 w-full bg-[#F25E0A] transform transition-transform duration-500 origin-center",
+                                isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                            )} />
                         </button>
                     );
                 })}
@@ -454,7 +456,7 @@ export default function RegisterUserPage() {
                 {/* Decorative Elements */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-brand-orange to-primary-hover rounded-[2.5rem] blur opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-500" />
                 
-                <div className="relative bg-white/70 backdrop-blur-xl border border-white rounded-[2.5rem] shadow-sm overflow-hidden min-h-[400px]">
+                <div className="relative bg-white/70 backdrop-blur-xl border-2 border-[#F25E0A] rounded-[2.5rem] shadow-sm overflow-hidden min-h-[400px]">
                     {/* Inner Header */}
                     <div className="px-8 pt-8 pb-2 flex items-center justify-between">
                         <div>

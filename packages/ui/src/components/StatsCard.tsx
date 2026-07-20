@@ -40,7 +40,7 @@ export function StatsCards({ stats, columns = 4 }: StatsCardsProps) {
                 return (
                     <div
                         key={`${index}-${stat.tooltipValue}`}
-                        className="group group/card bg-white rounded-xl border-2 border-orange-600 p-4 sm:p-6 shadow-sm hover:shadow-2xl hover:border-[#FF6B00] hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                        className="group group/card bg-white rounded-xl border-2 border-[#F25E0A] p-4 sm:p-6 shadow-sm hover:shadow-2xl hover:scale-105 hover:-translate-y-2 transition-all duration-300 cursor-pointer relative overflow-hidden"
                         title={String(stat.tooltipValue || stat.value)}
                     >
                         {/* Hover Background */}
@@ -88,7 +88,7 @@ export function StatsCards({ stats, columns = 4 }: StatsCardsProps) {
                         </div>
 
                         {/* Bottom Accent */}
-                        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 opacity-0 scale-x-0 group-hover:opacity-100 group-hover/card:opacity-100 group-hover:scale-x-100 group-hover/card:scale-x-100 transition-all duration-300 origin-left rounded-b-xl" />
+                        <div className="absolute bottom-0 left-0 h-1.5 w-full bg-[#F25E0A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center" />
 
                         {/* Corner Glow */}
                         <div className="absolute -top-10 -right-10 w-20 h-20 bg-orange-400/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 group-hover/card:opacity-100 transition-opacity duration-500" />

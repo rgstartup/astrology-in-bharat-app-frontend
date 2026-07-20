@@ -46,17 +46,20 @@ const STATUS_COLOR: Record<string, string> = {
 
 const MIN_PAYOUT = 100;
 
+let cachedPayoutData: any = null;
+
 export default function PayoutPage() {
-    const [balance, setBalance] = useState<number>(0);
-    const [totalEarned, setTotalEarned] = useState<number>(0);
-    const [withdrawals, setWithdrawals] = useState<PayoutRequest[]>([]);
-    const [profile, setProfile] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    const [balance, setBalance] = useState<number>(cachedPayoutData?.balance || 0);
+    const [totalEarned, setTotalEarned] = useState<number>(cachedPayoutData?.totalEarned || 0);
+    const [withdrawals, setWithdrawals] = useState<PayoutRequest[]>(cachedPayoutData?.withdrawals || []);
+    const [profile, setProfile] = useState<any>(cachedPayoutData?.profile || null);
+    const [loading, setLoading] = useState(!cachedPayoutData);
     const [submitting, setSubmitting] = useState(false);
     const [settling, setSettling] = useState(false);
     const [amount, setAmount] = useState<string>("");
 
     const fetchData = async () => {
+        if (!cachedPayoutData) setLoading(true);
         try {
             const [
                 [balData, balErr],
@@ -77,6 +80,13 @@ export default function PayoutPage() {
             if (wdData) setWithdrawals(wdData);
             if (profData) setProfile(profData);
             if (statsData) setTotalEarned(Number(statsData.commissionEarned || 0));
+            
+            cachedPayoutData = {
+                balance: Number(balData?.balance || 0),
+                totalEarned: Number(statsData?.commissionEarned || 0),
+                withdrawals: wdData || [],
+                profile: profData || null
+            };
         } catch (error) {
             console.error("Error fetching payout data:", error);
         } finally {
@@ -193,6 +203,13 @@ export default function PayoutPage() {
                 };
                 setWithdrawals(prev => [newWithdrawal, ...prev]);
                 setAmount("");
+                
+                cachedPayoutData = {
+                    balance: balance - amt,
+                    totalEarned: totalEarned,
+                    withdrawals: [newWithdrawal, ...withdrawals],
+                    profile: profile
+                };
             }
         } catch (error) {
             toast.error(getErrorMessage(error) || "An error occurred");

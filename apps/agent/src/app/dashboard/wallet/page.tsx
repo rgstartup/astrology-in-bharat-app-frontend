@@ -12,18 +12,21 @@ import { StatCard } from "./components/StatCard";
 import { WithdrawSection } from "./components/WithdrawSection";
 import { TransactionTable } from "./components/TransactionTable";
 
+let cachedWalletData: any = null;
+
 export default function WalletPage() {
-    const [loading, setLoading] = useState(true);
-    const [balance, setBalance] = useState(0);
-    const [totalWithdrawn, setTotalWithdrawn] = useState(0);
-    const [processing, setProcessing] = useState(0);
-    const [pendingPayout, setPendingPayout] = useState(0);
-    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(!cachedWalletData);
+    const [balance, setBalance] = useState(cachedWalletData?.balance || 0);
+    const [totalWithdrawn, setTotalWithdrawn] = useState(cachedWalletData?.totalWithdrawn || 0);
+    const [processing, setProcessing] = useState(cachedWalletData?.processing || 0);
+    const [pendingPayout, setPendingPayout] = useState(cachedWalletData?.pendingPayout || 0);
+    const [transactions, setTransactions] = useState<any[]>(cachedWalletData?.transactions || []);
 
     const [requestLoading, setRequestLoading] = useState(false);
     const { agent } = useAgentAuthStore() as any;
 
-    const fetchData = async () => {
+    const fetchData = async (isMounted: boolean) => {
+        if (!cachedWalletData) setLoading(true);
         try {
             const [balanceRes, balanceErr] = await getAgentWalletBalance();
             const [txRes, txErr] = await getAgentWithdrawals();
@@ -53,17 +56,32 @@ export default function WalletPage() {
 
 
                 setTransactions(formattedTxs);
+                
+                cachedWalletData = {
+                    balance: balanceRes?.balance || 0,
+                    totalWithdrawn: statsRes?.totalWithdrawn || 0,
+                    processing: statsRes?.processingWithdrawals || 0,
+                    pendingPayout: statsRes?.pendingPayout || 0,
+                    transactions: formattedTxs
+                };
             }
+            if (!isMounted) return;
         } catch (error) {
-            console.error("Failed to fetch wallet data", getErrorMessage(error));
-            toast.error(getErrorMessage(error) || "Failed to load wallet details");
+            if (!isMounted) return;
+            const msg = getErrorMessage(error).toLowerCase();
+            if (!msg.includes("abort") && !msg.includes("cancel")) {
+                console.error("Failed to fetch wallet data", getErrorMessage(error));
+                toast.error(getErrorMessage(error) || "Failed to load wallet details");
+            }
         } finally {
-            setLoading(false);
+            if (isMounted) setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchData();
+        let isMounted = true;
+        fetchData(isMounted);
+        return () => { isMounted = false; };
     }, []);
 
     const handleWithdrawalRequest = async (amount: number, bankAccountId?: string) => {
@@ -98,16 +116,13 @@ export default function WalletPage() {
     };
 
     if (loading) return (
-        <div className="min-h-screen bg-transparent p-4 md:p-10 lg:p-12">
-            <div className="max-w-7xl mx-auto">
-                <WalletSkeleton />
-            </div>
+        <div className="min-h-screen bg-transparent">
+            <WalletSkeleton />
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-transparent p-4 md:p-10 lg:p-12 animate-in fade-in duration-1000">
-            <div className="max-w-7xl mx-auto space-y-8 pb-20">
+        <div className="w-full space-y-6 pb-10 animate-in fade-in duration-1000">
                 {/* Header */}
                 <div className="space-y-1">
                     <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Wallet</h1>
@@ -115,7 +130,7 @@ export default function WalletPage() {
                 </div>
 
                 {/* Top Stat Triplets */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <StatCard 
                         label="Available Balance" 
                         value={balance} 
@@ -165,7 +180,6 @@ export default function WalletPage() {
 
                 {/* Transaction Table */}
                 <TransactionTable transactions={transactions} />
-            </div>
         </div>
     );
 }

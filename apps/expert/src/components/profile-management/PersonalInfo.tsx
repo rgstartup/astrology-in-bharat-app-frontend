@@ -321,6 +321,16 @@ export default function PersonalInfo({
                                     </div>
                                 )}
                             </div>
+                            <div>
+                                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">About</label>
+                                <textarea
+                                    name="about"
+                                    value={tempProfile.about || ""}
+                                    onChange={onChange}
+                                    placeholder="Write a custom about section..."
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange/50 outline-none text-sm min-h-[120px] text-black"
+                                />
+                            </div>
 
                             <div>
                                 <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Bio</label>
@@ -429,6 +439,12 @@ export default function PersonalInfo({
                                         </div>
                                     </div>
                                 )}
+                            </div>
+                            <div>
+                                <p className="text-gray-500 text-sm mb-1">About</p>
+                                <p className="text-gray-700 leading-relaxed text-sm">
+                                    {profile.about || "No custom about section added yet."}
+                                </p>
                             </div>
                             <div>
                                 <p className="text-gray-500 text-sm mb-1">Bio</p>

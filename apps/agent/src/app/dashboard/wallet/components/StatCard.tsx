@@ -26,19 +26,19 @@ export const StatCard: React.FC<StatCardProps> = ({
     };
 
     return (
-        <div className={`group bg-white rounded-[1.5rem] border border-gray-100 shadow-sm flex flex-col transition-all duration-500 hover:-translate-y-2 overflow-hidden ${shadowColors[subColor] || ''}`}>
-            <div className="p-6 flex items-start justify-between flex-grow">
+        <div className={`group bg-white rounded-[1.5rem] shadow-sm flex flex-col transition-all duration-500 hover:-translate-y-2 overflow-hidden border-2 border-[#F25E0A] ${shadowColors[subColor] || ''}`}>
+            <div className="p-4 md:p-6 flex items-start justify-between flex-grow">
                 <div className="space-y-1">
-                    <p className="text-xs font-medium text-gray-400 tracking-tight transition-colors group-hover:text-gray-600">{label}</p>
-                    <h3 className="text-3xl font-black text-gray-900 tracking-tighter transition-transform duration-500 group-hover:scale-105 origin-left">
+                    <p className="text-[10px] md:text-xs font-medium text-gray-400 tracking-tight transition-colors group-hover:text-gray-600">{label}</p>
+                    <h3 className="text-xl md:text-3xl font-black text-gray-900 tracking-tighter transition-transform duration-500 group-hover:scale-105 origin-left">
                         ₹{value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                     </h3>
-                    <p className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 transition-all duration-500 ${subColor}`}>
-                        <span className="text-lg group-hover:translate-y-[-2px]">↑</span> {sub} <span className="text-gray-300 font-normal ml-1">Current</span>
+                    <p className={`text-[9px] md:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 transition-all duration-500 ${subColor}`}>
+                        <span className="text-base md:text-lg group-hover:translate-y-[-2px]">↑</span> {sub} <span className="text-gray-300 font-normal ml-1 hidden md:inline">Current</span>
                     </p>
                 </div>
-                <div className={`w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center ${iconColor} transition-all duration-500 group-hover:rotate-[15deg] group-hover:scale-110 shadow-sm`}>
-                    <Icon className="w-6 h-6" />
+                <div className={`w-9 h-9 md:w-12 md:h-12 rounded-xl ${iconBg} flex items-center justify-center ${iconColor} transition-all duration-500 group-hover:rotate-[15deg] group-hover:scale-110 shadow-sm shrink-0`}>
+                    <Icon className="w-4 h-4 md:w-6 md:h-6" />
                 </div>
             </div>
             

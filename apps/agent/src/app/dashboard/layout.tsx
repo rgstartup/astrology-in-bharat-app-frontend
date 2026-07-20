@@ -58,7 +58,8 @@ const SidebarMenuItem: React.FC<{
     pathname: string;
     openSubmenu: string | null;
     onToggleSubmenu: (label: string) => void;
-}> = ({ item, pathname, openSubmenu, onToggleSubmenu }) => {
+    onClose: () => void;
+}> = ({ item, pathname, openSubmenu, onToggleSubmenu, onClose }) => {
     const isSubmenuOpen = openSubmenu === item.label;
     const isActiveLink = pathname === item.href;
     const { logout } = useAgentAuthStore();
@@ -69,6 +70,7 @@ const SidebarMenuItem: React.FC<{
         return (
             <button
                 onClick={async () => {
+                    onClose();
                     // 1. Clear HttpOnly cookies server-side
                     const { agentLogoutAction } = await import("@/actions/auth");
                     await agentLogoutAction();
@@ -94,6 +96,7 @@ const SidebarMenuItem: React.FC<{
         return (
             <Link
                 href={item.href}
+                onClick={onClose}
                 className={cn(
                     "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200",
                     isActiveLink
@@ -240,6 +243,7 @@ const Sidebar: React.FC<{ isOpen: boolean; toggleSidebar: () => void }> = memo(
                                     pathname={pathname}
                                     openSubmenu={openSubmenu}
                                     onToggleSubmenu={handleToggleSubmenu}
+                                    onClose={toggleSidebar}
                                 />
                             </div>
                         ))}
@@ -284,7 +288,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
             {/* Main Content */}
-            <div className="flex-1 lg:ml-64">
+            <div className="flex-1 lg:ml-64 min-w-0 overflow-x-hidden">
                 {/* Header — same as admin */}
                 <header className="bg-white/40 backdrop-blur-xl px-6 py-4 border-b border-white/20 sticky top-0 z-30 shadow-sm">
                     <div className="flex items-center justify-between">

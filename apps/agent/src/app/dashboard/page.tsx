@@ -31,25 +31,37 @@ const SUMMARY = {
     ],
 };
 
+let cachedDashboardStats: any = null;
+
 export default function AgentDashboardHome() {
     const { agent } = useAgentAuthStore();
-    const [statsData, setStatsData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    const [statsData, setStatsData] = useState<any>(cachedDashboardStats);
+    const [loading, setLoading] = useState(!cachedDashboardStats);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        let isMounted = true;
         setMounted(true);
         const fetchDashboardData = async () => {
+            if (!cachedDashboardStats) setLoading(true);
             const [data, error] = await getAgentDashboardStats();
             
+            if (!isMounted) return;
+            
             if (error) {
-                console.error("Failed to fetch agent dashboard stats", getErrorMessage(error));
+                const msg = getErrorMessage(error).toLowerCase();
+                if (!msg.includes("abort") && !msg.includes("cancel") && !msg.includes("timeout")) {
+                    console.error("Failed to fetch agent dashboard stats", getErrorMessage(error));
+                }
             } else {
+                cachedDashboardStats = data;
                 setStatsData(data);
             }
             setLoading(false);
         };
         fetchDashboardData();
+        
+        return () => { isMounted = false; };
     }, []);
 
     const stats: StatConfig[] = useMemo(() => [
@@ -121,7 +133,7 @@ export default function AgentDashboardHome() {
             
 
             {/* Commission Structure Section */}
-            <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-8 relative overflow-hidden group">
+            <div className="bg-white rounded-[2rem] border-2 border-[#F25E0A] shadow-sm p-8 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-primary/10 transition-colors duration-700" />
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
@@ -133,7 +145,7 @@ export default function AgentDashboardHome() {
                             { label: "Expert", value: statsData?.commission_rates?.expert || 3, icon: Star, color: "text-yellow-600", bg: "bg-yellow-50" },
                             { label: "Puja Shop", value: statsData?.commission_rates?.shop || 13, icon: ShoppingBag, color: "text-purple-600", bg: "bg-purple-50" },
                         ].map((rate) => (
-                            <div key={rate.label} className="bg-gray-50/50 rounded-2xl p-4 border border-gray-100 hover:border-primary/20 hover:-translate-y-2 hover:scale-[1.05] transition-all duration-500 group/rate relative overflow-hidden">
+                            <div key={rate.label} className="bg-white rounded-2xl p-4 border-2 border-[#F25E0A] shadow-sm hover:shadow-xl hover:-translate-y-2 hover:scale-[1.05] transition-all duration-500 group/rate relative overflow-hidden">
                                 <div className="flex items-center gap-2 mb-2">
                                     <div className={`p-1.5 ${rate.bg} rounded-lg`}>
                                         <rate.icon className={`w-3 h-3 ${rate.color}`} />
@@ -146,7 +158,7 @@ export default function AgentDashboardHome() {
                                 </div>
                                 
                                 {/* Hover Orange Line */}
-                                <div className="absolute bottom-0 left-0 w-0 h-1 bg-[#F25E0A] transition-all duration-500 group-hover/rate:w-full" />
+                                <div className="absolute bottom-0 left-0 h-1.5 w-full bg-[#F25E0A] transform scale-x-0 group-hover/rate:scale-x-100 transition-transform duration-500 origin-center" />
                             </div>
                         ))}
                     </div>
@@ -157,7 +169,7 @@ export default function AgentDashboardHome() {
             <div className="grid lg:grid-cols-2 gap-6">
 
                 {/* Quick Actions */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                <div className="bg-white rounded-2xl shadow-sm border-2 border-[#F25E0A] p-6">
                     <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-5">Quick Actions</h3>
                     <div className="space-y-3">
                         {[
@@ -176,7 +188,7 @@ export default function AgentDashboardHome() {
                 </div>
 
                 {/* Recent Activity */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                <div className="bg-white rounded-2xl shadow-sm border-2 border-[#F25E0A] p-6">
                     <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-5">Recent Activity</h3>
                     <div className="space-y-4">
                         {(statsData?.recent_activity || []).length > 0 ? (

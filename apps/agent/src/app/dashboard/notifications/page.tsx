@@ -6,18 +6,21 @@ import { api } from "@/lib/api";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 
+let cachedNotifications: any = null;
+
 export default function NotificationsPage() {
-    const [notifications, setNotifications] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [totalCount, setTotalCount] = useState(0);
+    const [notifications, setNotifications] = useState<any[]>(cachedNotifications?.data || []);
+    const [loading, setLoading] = useState(!cachedNotifications);
+    const [totalCount, setTotalCount] = useState(cachedNotifications?.total || 0);
 
     const fetchNotifications = useCallback(async () => {
-        setLoading(true);
+        if (!cachedNotifications) setLoading(true);
         try {
             const [res, error] = await api.get<any>("/notifications", { params: { limit: 50 } });
             if (!error && res) {
                 setNotifications(res.data || []);
                 setTotalCount(res.meta?.totalCount || 0);
+                cachedNotifications = { data: res.data || [], total: res.meta?.totalCount || 0 };
             }
         } catch (err) {
             console.error("Failed to fetch notifications", err);

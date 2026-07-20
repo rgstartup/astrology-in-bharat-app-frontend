@@ -18,14 +18,14 @@ interface TransactionTableProps {
 
 export const TransactionTable: React.FC<TransactionTableProps> = ({ transactions }) => {
     return (
-        <div className="bg-white rounded-[1.5rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+        <div className="bg-white rounded-[1.5rem] border-2 border-[#F25E0A] shadow-sm overflow-hidden flex flex-col">
             <div className="p-8 border-b border-gray-50 space-y-1">
                 <h3 className="text-xl font-black text-gray-900 tracking-tight">Transaction History</h3>
                 <p className="text-sm font-medium text-gray-400">Detailed log of all credits and withdrawals</p>
             </div>
 
-            <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse table-fixed min-w-[900px]">
+            <div className="overflow-x-auto w-full">
+                <table className="w-full text-left border-collapse table-fixed min-w-[700px]">
                     <thead>
                         <tr className="bg-gray-50/50 border-b border-gray-100">
                             <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest w-[30%]">Transaction Info</th>

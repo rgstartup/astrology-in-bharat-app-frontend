@@ -5,6 +5,7 @@ import {
     User, Phone, Mail, Handshake, MapPin, CreditCard, FileText, Upload, Camera, Settings, Save, Loader2
 } from "lucide-react";
 import { getCommissionSettings, updateCommissionSettings } from "@/services/admin.service";
+import { fetchStates, fetchDistricts, State, District } from "@/lib/api-locations";
 
 import { DataTable } from "@/app/components/admin/DataTable";
 import { StatsCards, Loading, Button } from "@repo/ui";
@@ -73,7 +74,7 @@ const LISTING_COLUMNS = [
 // ── Add Agent Modal ───────────────────────────────────────────
 const EMPTY_FORM = {
     name: "", email: "", phone: "", password: "",
-    address: "", city: "", state: "",
+    address: "", district: "", state: "",
     aadhaar_no: "", pan_no: "",
     aadhaar_doc: null as File | null,
     pan_doc: null as File | null,
@@ -89,11 +90,38 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
+    // Location data
+    const [statesList, setStatesList] = useState<State[]>([]);
+    const [districtsList, setDistrictsList] = useState<District[]>([]);
+    const [loadingDistricts, setLoadingDistricts] = useState(false);
+
+    // Fetch states on mount
+    useEffect(() => {
+        fetchStates().then(res => setStatesList(res));
+    }, []);
+
+    // Fetch districts when state changes
+    useEffect(() => {
+        if (!form.state) {
+            setDistrictsList([]);
+            setForm(f => ({ ...f, district: "" }));
+            return;
+        }
+        const selectedState = statesList.find(s => s.name === form.state);
+        if (selectedState) {
+            setLoadingDistricts(true);
+            fetchDistricts(selectedState.id)
+                .then(res => setDistrictsList(res))
+                .finally(() => setLoadingDistricts(false));
+        }
+    }, [form.state, statesList]);
+
     // Reset state when modal opens
     useEffect(() => {
         if (isOpen) {
             setForm(EMPTY_FORM);
             setShowPassword(false);
+            setDistrictsList([]);
         }
     }, [isOpen]);
 
@@ -120,7 +148,7 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
             formData.append("phone", form.phone);
             formData.append("password", form.password);
             formData.append("address", form.address);
-            formData.append("city", form.city);
+            formData.append("district", form.district);
             formData.append("state", form.state);
             formData.append("aadhaar_no", form.aadhaar_no);
             formData.append("pan_no", form.pan_no);
@@ -172,7 +200,7 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
 
                 {/* ── Scrollable body ── */}
                 <div className="overflow-y-auto flex-1 px-6 py-6 space-y-6">
-                    <form id="add-agent-form" onSubmit={handleSubmit}>
+                    <form id="add-agent-form" onSubmit={handleSubmit} autoComplete="off">
                         <div className="space-y-6">
 
                             {/* ── Section 1: Basic Details ── */}
@@ -223,6 +251,7 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
                                                 value={form.email}
                                                 onChange={set("email")}
                                                 className={inputCls}
+                                                autoComplete="off"
                                             />
                                         </div>
                                     </div>
@@ -239,6 +268,7 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
                                                 value={form.password}
                                                 onChange={set("password")}
                                                 className={inputCls}
+                                                autoComplete="new-password"
                                             />
                                             <button
                                                 type="button"
@@ -280,13 +310,24 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
                                         </div>
                                     </div>
 
-                                    {/* City */}
+                                    {/* District */}
                                     <div>
-                                        <label className={labelCls}>City</label>
+                                        <label className={labelCls}>District</label>
                                         <div className="relative">
                                             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                            <input placeholder="e.g. Varanasi" value={form.city}
-                                                onChange={set("city")} className={inputCls} />
+                                            <select
+                                                value={form.district}
+                                                onChange={set("district")}
+                                                disabled={!form.state || loadingDistricts}
+                                                className={inputCls + " appearance-none" + (!form.state ? " opacity-50 cursor-not-allowed" : "")}
+                                            >
+                                                <option value="">
+                                                    {loadingDistricts ? "Loading..." : !form.state ? "Select State first" : "Select District"}
+                                                </option>
+                                                {districtsList.map(d => (
+                                                    <option key={d.id} value={d.name}>{d.name}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                     </div>
 

@@ -10,9 +10,9 @@ interface WithdrawSectionProps {
     merchantProfile: any;
 }
 
-export const WithdrawSection: React.FC<WithdrawSectionProps> = ({ 
-    balance, 
-    onWithdraw, 
+export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
+    balance,
+    onWithdraw,
     loading,
     merchantProfile
 }) => {
@@ -57,7 +57,7 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
     return (
         <div className="group bg-white p-10 rounded-[1.5rem] border-2 border-orange-600 shadow-sm space-y-8 relative transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] hover:-translate-y-1">
             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50/50 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-orange-100/50 transition-colors duration-700" />
-            
+
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-orange-50 rounded-xl group-hover:rotate-[360deg] transition-transform duration-1000">
                     <Landmark className="w-6 h-6 text-[#fd6410]" />
@@ -73,7 +73,7 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                     <label className="text-[10px] font-black text-[#fd6410] uppercase tracking-widest ml-1">Amount to Withdraw</label>
                     <div className="relative">
                         <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold">₹</span>
-                        <input 
+                        <input
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
@@ -96,7 +96,7 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                         </div>
                     ) : (
                         <div className="relative">
-                            <button 
+                            <button
                                 type="button"
                                 onClick={() => setShowBankList(!showBankList)}
                                 className="w-full flex items-center justify-between gap-3 px-5 h-16 bg-emerald-50/50 border border-emerald-100 rounded-2xl text-emerald-700 hover:bg-emerald-50 transition-all group/bank"

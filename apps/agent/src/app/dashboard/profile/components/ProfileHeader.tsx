@@ -31,7 +31,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ agent }) => {
                     <div className="relative">
                         <div className="ring-[16px] ring-white rounded-[3rem] shadow-2xl overflow-hidden bg-white">
                             <Avatar
-                                src={agent?.user?.avatar ?? null}
+                                src={agent?.avatar ?? agent?.user?.avatar ?? null}
                                 alt={agent?.user?.name ?? "Agent"}
                                 size="xl"
                                 className="!w-48 !h-48 object-cover"

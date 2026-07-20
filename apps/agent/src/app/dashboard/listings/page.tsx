@@ -271,16 +271,17 @@ function EmptyState({ search, onClear }: { search: string; onClear: () => void }
     );
 }
 
-// ── Main Page ────────────────────────────────────────────────────────────────
+let cachedListingsData: any = null;
+
 export default function ListingsPage() {
-    const [activeTab, setActiveTab] = useState<TabId>("all");
-    const [search, setSearch] = useState("");
-    const [debouncedSearch, setDebouncedSearch] = useState("");
-    const [data, setData] = useState<ReferredUser[]>([]);
-    const [total, setTotal] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<TabId>(cachedListingsData?.activeTab || "all");
+    const [search, setSearch] = useState(cachedListingsData?.search || "");
+    const [debouncedSearch, setDebouncedSearch] = useState(cachedListingsData?.search || "");
+    const [data, setData] = useState<ReferredUser[]>(cachedListingsData?.data || []);
+    const [total, setTotal] = useState(cachedListingsData?.total || 0);
+    const [loading, setLoading] = useState(!cachedListingsData);
     const [refreshKey, setRefreshKey] = useState(0);
-    const [statsData, setStatsData] = useState<any>(null);
+    const [statsData, setStatsData] = useState<any>(cachedListingsData?.statsData || null);
 
     // Debounce search
     useEffect(() => {
@@ -292,7 +293,9 @@ export default function ListingsPage() {
 
     // Fetch listings
     const fetchData = useCallback(async () => {
-        setLoading(true);
+        if (!cachedListingsData || activeTab !== cachedListingsData?.activeTab || debouncedSearch !== cachedListingsData?.search) {
+            setLoading(true);
+        }
         const params: { type?: 'expert' | 'client' | 'mandir' | 'puja_shop'; search?: string } = {};
         if (activeTab !== "all") {
             params.type = activeTab;
@@ -308,14 +311,29 @@ export default function ListingsPage() {
         } else {
             setData(res?.data ?? []);
             setTotal(res?.total ?? 0);
+
+            cachedListingsData = {
+                activeTab,
+                search: debouncedSearch,
+                data: res?.data ?? [],
+                total: res?.total ?? 0,
+                statsData: statsData
+            };
         }
         setLoading(false);
-    }, [activeTab, debouncedSearch, refreshKey]);
+    }, [activeTab, debouncedSearch, refreshKey, statsData]);
 
     useEffect(() => {
         const fetchStats = async () => {
             const [stats, error] = await getAgentDashboardStats();
-            if (!error) setStatsData(stats);
+            if (!error) {
+                setStatsData(stats);
+                if (cachedListingsData) {
+                    cachedListingsData.statsData = stats;
+                } else {
+                    cachedListingsData = { statsData: stats };
+                }
+            }
         };
         fetchStats();
     }, [refreshKey]); // Fetch stats only once or when manual refresh is triggered
