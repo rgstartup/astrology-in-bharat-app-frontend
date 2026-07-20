@@ -5,12 +5,29 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { 
-  ArrowLeft, Upload, X, Plus, Tag, IndianRupee, Package, FileText, Save, Image as ImageIcon, Loader2
+  ArrowLeft, X, Plus, Tag, IndianRupee, Package, FileText, Save, Image as ImageIcon, Loader2, GripVertical
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { productService } from "@/services/product.service";
 import { getErrorMessage } from "@repo/lib";
 import { toast } from "react-toastify";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -24,14 +41,26 @@ export default function EditProductPage() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
-  const [frontImage, setFrontImage] = useState<string>("");
-  const [backImage, setBackImage] = useState<string>("");
-  const [leftImage, setLeftImage] = useState<string>("");
-  const [rightImage, setRightImage] = useState<string>("");
-  const [additionalImages, setAdditionalImages] = useState<string[]>([]);
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [isFeatured, setIsFeatured] = useState(false);
   const [isShippingChargeable, setIsShippingChargeable] = useState(false);
   const [shippingCharge, setShippingCharge] = useState("");
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setGalleryImages((items) => {
+        const oldIndex = items.findIndex((_, i) => `img-${i}` === active.id);
+        const newIndex = items.findIndex((_, i) => `img-${i}` === over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
 
   // Fetch product data
   const { data: product, isLoading: isFetching } = useQuery({
@@ -56,30 +85,23 @@ export default function EditProductPage() {
       setShippingCharge(product.shipping_charge ? String(product.shipping_charge) : "");
       
       const gallery = Array.isArray(product.gallery) ? product.gallery : [];
-      const imgUrl = product.imageUrl || gallery[0] || "";
-      
-      setFrontImage(imgUrl);
-      if (gallery.length > 1) {
-         setBackImage(gallery[1] || "");
-         setLeftImage(gallery[2] || "");
-         setRightImage(gallery[3] || "");
-         setAdditionalImages(gallery.slice(4));
-      }
+      const imgUrl = product.imageUrl || "";
+      const allImages = [...new Set([imgUrl, ...gallery].filter(Boolean))];
+      setGalleryImages(allImages);
     }
   }, [product]);
 
   // Mutation to update product
   const updateMutation = useMutation({
     mutationFn: async (status: 'active' | 'draft') => {
-      const gallery = [frontImage, backImage, leftImage, rightImage, ...additionalImages].filter(Boolean);
       const payload = {
         name,
         category,
         description,
         price: Number(price),
         stock: Number(stock),
-        imageUrl: frontImage || backImage || leftImage || rightImage || additionalImages[0] || "",
-        gallery,
+        imageUrl: galleryImages[0] || "",
+        gallery: galleryImages,
         status,
         is_shipping_chargeable: isShippingChargeable,
         shipping_charge: Number(shippingCharge) || 0
@@ -94,7 +116,7 @@ export default function EditProductPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['merchant-products'] });
       queryClient.invalidateQueries({ queryKey: ['merchant-product', productId] });
-      alert("Product updated successfully!");
+      toast.success("Product updated successfully!");
       router.push("/products");
     },
     onError: (err: any) => {
@@ -102,55 +124,25 @@ export default function EditProductPage() {
     }
   });
 
-  const handleSingleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, setter: (val: string) => void) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setter(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleAdditionalImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) {
-      Array.from(files).forEach(file => {
-        const reader = new FileReader();
-        reader.onloadend = () => setAdditionalImages(prev => [...prev, reader.result as string]);
-        reader.readAsDataURL(file);
-      });
-    }
+    if (!files) return;
+    Array.from(files).forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setGalleryImages(prev => [...prev, reader.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
-  const removeAdditionalImage = (index: number) => {
-    setAdditionalImages(prev => prev.filter((_, i) => i !== index));
+  const removeImage = (index: number) => {
+    setGalleryImages(prev => prev.filter((_, i) => i !== index));
   };
-
-  const renderImageBox = (label: string, image: string, setter: (val: string) => void) => (
-    <div className="relative group h-24 rounded-2xl overflow-hidden border-2 border-dashed border-gray-100 bg-gray-50/50 hover:border-[#fd6410]/30 transition-all flex flex-col items-center justify-center">
-      {image ? (
-        <>
-          <img src={image} alt={label} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-          <button 
-             onClick={(e) => { e.preventDefault(); setter(""); }}
-             className="absolute top-1.5 right-1.5 p-1.5 bg-black/50 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 z-10"
-          >
-             <X className="w-3 h-3" />
-          </button>
-        </>
-      ) : (
-        <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
-           <Plus className="w-6 h-6 text-gray-300 group-hover:text-[#fd6410] transition-colors" />
-           <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1 text-center leading-tight">{label}</span>
-           <input type="file" className="hidden" onChange={(e) => handleSingleImageUpload(e, setter)} accept="image/*" />
-        </label>
-      )}
-    </div>
-  );
 
   const handleUpdate = () => {
     if (!name || !price || !category) {
-      alert("Please fill in the required fields: Title, Category, and Price.");
+      toast.error("Please fill in the required fields: Title, Category, and Price.");
       return;
     }
     updateMutation.mutate("active");
@@ -158,7 +150,7 @@ export default function EditProductPage() {
 
   const handleSaveDraft = () => {
     if (!name) {
-      alert("Title is required even for drafts.");
+      toast.error("Title is required even for drafts.");
       return;
     }
     updateMutation.mutate("draft");
@@ -365,41 +357,75 @@ export default function EditProductPage() {
         {/* Right Column: Media Upload (4/12) */}
         <div className="lg:col-span-4 space-y-8">
            <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6">
-              <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
-                <ImageIcon className="w-4 h-4 text-[#fd6410]" />
-                Media Gallery
-              </h3>
-
-              <div className="space-y-4">
-                 <div className="grid grid-cols-2 gap-3">
-                    {renderImageBox("Front", frontImage, setFrontImage)}
-                    {renderImageBox("Back", backImage, setBackImage)}
-                    {renderImageBox("Left Side", leftImage, setLeftImage)}
-                    {renderImageBox("Right Side", rightImage, setRightImage)}
-                 </div>
-                 
-                 <div className="pt-4 border-t border-gray-100">
-                    <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Additional Images</h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      {additionalImages.map((img, idx) => (
-                        <div key={idx} className="relative group h-24 rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-in zoom-in-50 duration-300">
-                           <img src={img} alt="Additional" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                           <button 
-                              onClick={() => removeAdditionalImage(idx)}
-                              className="absolute top-1.5 right-1.5 p-1.5 bg-black/50 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500"
-                           >
-                              <X className="w-3 h-3" />
-                           </button>
-                        </div>
-                      ))}
-                      <label className="h-24 rounded-2xl border-2 border-dashed border-gray-100 bg-gray-50/50 flex flex-col items-center justify-center cursor-pointer hover:border-[#fd6410]/30 transition-all group">
-                         <Plus className="w-6 h-6 text-gray-300 group-hover:text-[#fd6410] transition-colors" />
-                         <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Add More</span>
-                         <input type="file" className="hidden" multiple onChange={handleAdditionalImageUpload} accept="image/*" />
-                      </label>
-                    </div>
-                 </div>
+              <div className="flex items-center justify-between">
+                <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4 text-[#fd6410]" />
+                  Media Gallery
+                </h3>
+                {galleryImages.length > 0 && (
+                  <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full flex items-center gap-1">
+                    <GripVertical className="w-3 h-3" /> Drag to reorder
+                  </span>
+                )}
               </div>
+
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={galleryImages.map((_, i) => `img-${i}`)} strategy={rectSortingStrategy}>
+                  <div className="space-y-4">
+                    {/* Fixed 4 Slots Grid */}
+                     <div className="grid grid-cols-2 gap-3">
+                        {[0, 1, 2, 3].map((index) => {
+                          const labels = ["Front", "Back", "Left Side", "Right Side"];
+                          const label = labels[index];
+                          const img = galleryImages[index];
+
+                          if (img) {
+                            return (
+                              <SortableImageItem
+                                key={`img-${index}-${img.slice(-10)}`}
+                                id={`img-${index}`}
+                                src={img}
+                                label={label}
+                                onRemove={() => removeImage(index)}
+                              />
+                            );
+                          } else {
+                            return (
+                              <label key={`placeholder-${index}`} className="relative group h-24 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50/50 flex flex-col items-center justify-center cursor-pointer hover:border-[#fd6410]/40 transition-all overflow-hidden">
+                                <Plus className="w-6 h-6 text-gray-300 group-hover:text-[#fd6410] transition-colors" />
+                                <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1 text-center leading-tight z-10 relative">{label}</span>
+                                <input type="file" className="hidden" onChange={handleImageUpload} accept="image/*" multiple />
+                              </label>
+                            );
+                          }
+                        })}
+                     </div>
+                     
+                     {/* Additional Images */}
+                     <div className="pt-4 border-t border-gray-100">
+                        <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Additional Images</h4>
+                        <div className="grid grid-cols-2 gap-3">
+                          {galleryImages.slice(4).map((img, sliceIdx) => {
+                            const index = sliceIdx + 4;
+                            return (
+                              <SortableImageItem
+                                key={`img-${index}-${img.slice(-10)}`}
+                                id={`img-${index}`}
+                                src={img}
+                                onRemove={() => removeImage(index)}
+                              />
+                            );
+                          })}
+                          <label className="h-24 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50/50 flex flex-col items-center justify-center cursor-pointer hover:border-[#fd6410]/40 transition-all group overflow-hidden">
+                             <Plus className="w-6 h-6 text-gray-300 group-hover:text-[#fd6410] transition-colors" />
+                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1 relative z-10">Add More</span>
+                             <input type="file" className="hidden" multiple onChange={handleImageUpload} accept="image/*" />
+                          </label>
+                        </div>
+                     </div>
+                  </div>
+                </SortableContext>
+              </DndContext>
            </div>
 
            {/* Tags & Visibility */}
@@ -423,6 +449,41 @@ export default function EditProductPage() {
            </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function SortableImageItem({ id, src, label, onRemove }: any) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 1,
+    opacity: isDragging ? 0.9 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`relative group h-24 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm bg-white cursor-grab active:cursor-grabbing ${isDragging ? 'shadow-xl ring-2 ring-[#fd6410] scale-105' : ''}`}
+      {...attributes}
+      {...listeners}
+    >
+      <img src={src} alt={label || "Image"} className="w-full h-full object-cover" />
+      {label && (
+        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-2 pt-6 pointer-events-none">
+          <p className="text-[9px] font-black text-white text-center uppercase tracking-widest drop-shadow-md">{label}</p>
+        </div>
+      )}
+      <button 
+         onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemove(); }}
+         onPointerDown={(e) => e.stopPropagation()}
+         className="absolute top-1.5 right-1.5 p-1.5 bg-black/50 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 z-10 cursor-pointer"
+      >
+         <X className="w-3 h-3" />
+      </button>
     </div>
   );
 }

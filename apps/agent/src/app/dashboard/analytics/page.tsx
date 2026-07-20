@@ -201,10 +201,10 @@ export default function AnalyticsPage() {
     const networkCompositionData = React.useMemo(() => {
         if (!stats) return DEFAULT_CHART_DATA;
         return [
-            { name: "Expert", value: stats.expertsCount || 0, color: "#F25E0A" },
-            { name: "Mandir", value: stats.mandirsCount || 0, color: "#800000" },
-            { name: "User", value: stats.clientsCount || 0, color: "#FFB800" },
-            { name: "Merchant", value: stats.pujaShopsCount || 0, color: "#4B5563" },
+            { name: "Expert", value: stats.experts_count || 0, color: "#F25E0A" },
+            { name: "Mandir", value: stats.mandirs_count || 0, color: "#800000" },
+            { name: "User", value: stats.clients_count || 0, color: "#FFB800" },
+            { name: "Merchant", value: stats.puja_shops_count || 0, color: "#4B5563" },
         ];
     }, [stats]);
 
@@ -214,7 +214,7 @@ export default function AnalyticsPage() {
             {/* Header with Actions */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight uppercase">Performance Analytics</h1>
+                    <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">Performance Analytics</h1>
                     <p className="text-xs md:text-sm font-medium text-gray-1000 mt-1 md:mt-0">Real-time insights and growth metrics for your agent network.</p>
                 </div>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 relative w-full md:w-auto mt-4 md:mt-0">
@@ -262,9 +262,9 @@ export default function AnalyticsPage() {
             {/* Top Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                    { label: "Total Revenue", value: stats ? `₹${(stats.totalEarned || 0).toLocaleString("en-IN")}` : "₹0", trend: "+12.5%", icon: TrendingUp, color: "text-emerald-500", bg: "bg-emerald-50" },
-                    { label: "Total Registration", value: stats?.totalUsers || "0", trend: "+8.2%", icon: Users, color: "text-blue-500", bg: "bg-blue-50" },
-                    { label: "Success Rate", value: stats?.successRate || "94.2%", trend: "+2.1%", icon: Target, color: "text-orange-500", bg: "bg-orange-50" },
+                    { label: "Total Revenue", value: stats ? `₹${(stats.total_earned || 0).toLocaleString("en-IN")}` : "₹0", trend: "+12.5%", icon: TrendingUp, color: "text-emerald-500", bg: "bg-emerald-50" },
+                    { label: "Total Registration", value: stats?.total_users || "0", trend: "+8.2%", icon: Users, color: "text-blue-500", bg: "bg-blue-50" },
+                    { label: "Success Rate", value: stats?.success_rate || "94.2%", trend: "+2.1%", icon: Target, color: "text-orange-500", bg: "bg-orange-50" },
                     { label: "Agent Rank", value: stats?.rank || "#14", trend: "Top 5%", icon: Award, color: "text-purple-500", bg: "bg-purple-50" },
                 ].map((card, i) => (
                     <div key={i} className="group bg-white rounded-[1.5rem] shadow-sm flex flex-col transition-all duration-500 hover:-translate-y-2 overflow-hidden border-2 border-[#F25E0A]">
@@ -304,7 +304,7 @@ export default function AnalyticsPage() {
                     </div>
                     <div className="h-[300px] w-full relative z-10">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={stats?.revenueGrowth || []}>
+                            <AreaChart data={stats?.revenue_growth || []}>
                                 <defs>
                                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#F25E0A" stopOpacity={0.3} />
@@ -390,7 +390,7 @@ export default function AnalyticsPage() {
                     </div>
                     <div className="h-[300px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={stats?.registrationActivity || []}>
+                            <BarChart data={stats?.registration_activity || []}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
                                 <XAxis
                                     dataKey="day"

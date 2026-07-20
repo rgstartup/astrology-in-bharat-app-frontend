@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ShieldCheck,
   FileText,
@@ -29,8 +29,11 @@ export default function MerchantProfilePage() {
   const profile = profileData?.profile;
   const updateProfileMutation = useUpdateProfile();
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingIdentity, setIsEditingIdentity] = useState(false);
+  const [isEditingDocs, setIsEditingDocs] = useState(false);
   const [isEditingBank, setIsEditingBank] = useState(false);
+  const [savingIdentity, setSavingIdentity] = useState(false);
+  const [savingDocs, setSavingDocs] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -123,17 +126,20 @@ export default function MerchantProfilePage() {
     setPreviews(prev => ({ ...prev, [type]: null }));
   };
 
-  const handleCancel = () => {
+  const handleCancelIdentity = () => {
     if (profile) {
-      setFormData({
+      setFormData(prev => ({
+        ...prev,
         gstin: profile.gstin || "",
         pan: profile.pan || "",
-        bankName: profile.bankName || "",
-        accountHolder: profile.accountHolder || "",
-        accountNumber: profile.accountNumber || "",
-        ifsc: profile.ifsc || "",
-      });
+      }));
       if (profile.isGstExempt) setIsGstExempt(true);
+    }
+    setIsEditingIdentity(false);
+  };
+
+  const handleCancelDocs = () => {
+    if (profile) {
       setPreviews({
         gstCertificate: profile.gstCertificate || null,
         panFront: profile.panFront || null,
@@ -141,45 +147,48 @@ export default function MerchantProfilePage() {
         aadharFront: profile.aadharFront || null,
         aadharBack: profile.aadharBack || null,
       });
+      setFiles({ gstCertificate: null, panFront: null, panBack: null, aadharFront: null, aadharBack: null });
     }
-    setIsEditing(false);
+    setIsEditingDocs(false);
   };
 
-  const handleSave = async () => {
-    // 1. Validation Logic
+  const handleSaveIdentity = async () => {
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-    const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
-
     if (formData.pan && !panRegex.test(formData.pan)) {
       toast.error("Invalid PAN format (e.g. ABCDE1234F)");
       return;
     }
-
-    if (formData.ifsc && !ifscRegex.test(formData.ifsc)) {
-      toast.error("Invalid IFSC format (e.g. HDFC0001234)");
-      return;
-    }
-
-    // Mandatory Check
-    if (!isGstExempt && !formData.gstin && !files.gstCertificate && !previews.gstCertificate) {
+    if (!isGstExempt && !formData.gstin) {
       toast.error("Please provide GSTIN or mark as GST Exempt");
       return;
     }
-
     const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => data.append(key, value));
+    data.append('gstin', formData.gstin);
+    data.append('pan', formData.pan);
     data.append('isGstExempt', String(isGstExempt));
-    
+    setSavingIdentity(true);
+    updateProfileMutation.mutate(data, {
+      onSuccess: () => { setIsEditingIdentity(false); setSavingIdentity(false); },
+      onError: () => { setSavingIdentity(false); }
+    });
+  };
+
+  const handleSaveDocs = async () => {
+    const hasAnyDoc = files.gstCertificate || files.panFront || files.panBack || files.aadharFront || files.aadharBack;
+    if (!hasAnyDoc) {
+      toast.error("Please upload at least one document");
+      return;
+    }
+    const data = new FormData();
     if (files.gstCertificate) data.append('gstCertificate', files.gstCertificate);
     if (files.panFront) data.append('panFront', files.panFront);
     if (files.panBack) data.append('panBack', files.panBack);
     if (files.aadharFront) data.append('aadharFront', files.aadharFront);
     if (files.aadharBack) data.append('aadharBack', files.aadharBack);
-
+    setSavingDocs(true);
     updateProfileMutation.mutate(data, {
-      onSuccess: () => {
-        setIsEditing(false);
-      }
+      onSuccess: () => { setIsEditingDocs(false); setSavingDocs(false); },
+      onError: () => { setSavingDocs(false); }
     });
   };
 
@@ -228,43 +237,6 @@ export default function MerchantProfilePage() {
             Submit your business documents to unlock professional seller tools and enable payouts.
             All documents are stored securely and encrypted.
           </p>
-        </div>
-
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 w-full md:w-auto mt-4 md:mt-0">
-          {!isEditing ? (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="relative group overflow-hidden bg-transparent border-2 border-[#fd6410] text-[#fd6410] w-full md:w-auto px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-sm hover:shadow-lg hover:shadow-orange-500/20"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#fd6410] to-orange-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 -z-10" />
-              <div className="flex items-center justify-center gap-3 group-hover:text-white transition-colors duration-300">
-                <FileText className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                <span>Edit Profile</span>
-              </div>
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={handleCancel}
-                className="w-full md:w-auto px-6 py-3.5 bg-gray-100 rounded-xl text-xs font-black text-gray-600 uppercase tracking-widest hover:bg-gray-200 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={updateProfileMutation.isPending}
-                className="w-full md:w-auto relative group overflow-hidden bg-[#fd6410] text-white px-8 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95 disabled:opacity-50 shadow-lg shadow-orange-900/20"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 -z-10" />
-                <div className="flex items-center justify-center gap-2">
-                  {updateProfileMutation.isPending && (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  )}
-                  <span className="whitespace-nowrap">{updateProfileMutation.isPending ? "Saving..." : "Save Changes"}</span>
-                </div>
-              </button>
-            </>
-          )}
         </div>
       </motion.div>
       
@@ -350,7 +322,16 @@ export default function MerchantProfilePage() {
         <div className="lg:col-span-12 xl:col-span-8 space-y-8">
 
           {/* Section 1: Business Identity */}
-          <SectionContainer title="Business Identity" icon={Building2} delay={0.1}>
+          <SectionContainer
+            title="Business Identity"
+            icon={Building2}
+            delay={0.1}
+            isEditing={isEditingIdentity}
+            saving={savingIdentity}
+            onEdit={() => setIsEditingIdentity(true)}
+            onCancel={handleCancelIdentity}
+            onSave={handleSaveIdentity}
+          >
             <div className="space-y-6">
               <div className="flex items-center space-x-3 p-4 bg-orange-50/50 rounded-2xl border border-orange-100/50">
                 <input 
@@ -358,8 +339,8 @@ export default function MerchantProfilePage() {
                   id="gstExempt" 
                   checked={isGstExempt}
                   onChange={(e) => setIsGstExempt(e.target.checked)}
-                  className={cn("w-5 h-5 accent-[#fd6410]", !isEditing ? "cursor-not-allowed opacity-50" : "cursor-pointer")}
-                  disabled={!isEditing}
+                  className={cn("w-5 h-5 accent-[#fd6410]", !isEditingIdentity ? "cursor-not-allowed opacity-50" : "cursor-pointer")}
+                  disabled={!isEditingIdentity}
                 />
                 <label htmlFor="gstExempt" className="text-xs font-bold text-gray-800 cursor-pointer select-none">
                   I don't have a GSTIN / My business is GST exempt 
@@ -376,7 +357,7 @@ export default function MerchantProfilePage() {
                   placeholder="22AAAAA0000A1Z5"
                   icon={FileText}
                   hint={isGstExempt ? "Optional" : "15-digit alphanumeric code"}
-                  disabled={!isEditing || isGstExempt}
+                  disabled={!isEditingIdentity || isGstExempt}
                 />
                 <InputField
                   label="PAN Number"
@@ -386,7 +367,7 @@ export default function MerchantProfilePage() {
                   placeholder="ABCDE1234F"
                   icon={CreditCard}
                   hint="10-digit alphanumeric code"
-                  disabled={!isEditing}
+                  disabled={!isEditingIdentity}
                 />
               </div>
             </div>
@@ -402,16 +383,25 @@ export default function MerchantProfilePage() {
           />
 
           {/* Section 3: Document Verification */}
-          <SectionContainer title="Document Verification Files" icon={UploadCloud} delay={0.3}>
+          <SectionContainer
+            title="Document Verification Files"
+            icon={UploadCloud}
+            delay={0.3}
+            isEditing={isEditingDocs}
+            saving={savingDocs}
+            onEdit={() => setIsEditingDocs(true)}
+            onCancel={handleCancelDocs}
+            onSave={handleSaveDocs}
+          >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className={cn("transition-opacity duration-500", (isGstExempt || !isEditing) && "opacity-40 grayscale pointer-events-none")}>
+              <div className={cn("transition-opacity duration-500", (isGstExempt || !isEditingDocs) && "opacity-40 grayscale pointer-events-none")}>
                 <FileUploadCard 
                   label={isGstExempt ? "GST (Not Required)" : "GST Certificate"} 
                   onFileChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFileChange(e, 'gstCertificate')}
                   preview={previews.gstCertificate}
                   onRemove={() => removeFile('gstCertificate')}
                   file={files.gstCertificate}
-                  disabled={!isEditing || isGstExempt}
+                  disabled={!isEditingDocs || isGstExempt}
                 />
               </div>
               <FileUploadCard
@@ -420,7 +410,7 @@ export default function MerchantProfilePage() {
                 preview={previews.panFront}
                 onRemove={() => removeFile('panFront')}
                 file={files.panFront}
-                disabled={!isEditing}
+                disabled={!isEditingDocs}
               />
               <FileUploadCard 
                 label="PAN (Back)" 
@@ -428,7 +418,7 @@ export default function MerchantProfilePage() {
                 preview={previews.panBack}
                 onRemove={() => removeFile('panBack')}
                 file={files.panBack}
-                disabled={!isEditing}
+                disabled={!isEditingDocs}
               />
               <FileUploadCard 
                 label="Aadhar (Front)" 
@@ -436,7 +426,7 @@ export default function MerchantProfilePage() {
                 preview={previews.aadharFront}
                 onRemove={() => removeFile('aadharFront')}
                 file={files.aadharFront}
-                disabled={!isEditing}
+                disabled={!isEditingDocs}
               />
               <FileUploadCard 
                 label="Aadhar (Back)" 
@@ -444,7 +434,7 @@ export default function MerchantProfilePage() {
                 preview={previews.aadharBack}
                 onRemove={() => removeFile('aadharBack')}
                 file={files.aadharBack}
-                disabled={!isEditing}
+                disabled={!isEditingDocs}
               />
             </div>
           </SectionContainer>
@@ -532,7 +522,7 @@ export default function MerchantProfilePage() {
 
 // Sub-components
 
-function SectionContainer({ title, icon: Icon, children, delay }: any) {
+function SectionContainer({ title, icon: Icon, children, delay, isEditing, saving, onEdit, onCancel, onSave }: any) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -540,11 +530,43 @@ function SectionContainer({ title, icon: Icon, children, delay }: any) {
       transition={{ delay }}
       className="bg-white rounded-[2.5rem] border-2 border-[#fd6410] p-8 shadow-sm space-y-8"
     >
-      <div className="flex items-center gap-3">
-        <div className="p-2.5 bg-orange-50 rounded-xl">
-          <Icon className="w-5 h-5 text-[#fd6410]" />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-orange-50 rounded-xl">
+            <Icon className="w-5 h-5 text-[#fd6410]" />
+          </div>
+          <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em]">{title}</h3>
         </div>
-        <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em]">{title}</h3>
+        {/* Per-section Edit / Cancel / Save buttons */}
+        {onEdit && (
+          <div className="flex items-center gap-2">
+            {!isEditing ? (
+              <button
+                onClick={onEdit}
+                className="flex items-center gap-1.5 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-[#fd6410] border-2 border-[#fd6410] rounded-xl hover:bg-orange-50 transition-colors"
+              >
+                <FileText className="w-3.5 h-3.5" /> Edit
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={onCancel}
+                  className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-gray-500 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={onSave}
+                  disabled={saving}
+                  className="flex items-center gap-1.5 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white bg-[#fd6410] rounded-xl hover:bg-orange-600 transition-colors disabled:opacity-50"
+                >
+                  {saving && <Loader2 className="w-3 h-3 animate-spin" />}
+                  {saving ? 'Saving...' : 'Save'}
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </div>
       {children}
     </motion.div>
@@ -585,8 +607,9 @@ function InputField({ label, name, value, onChange, placeholder, type = "text", 
 }
 
 function FileUploadCard({ label, onFileChange, preview, onRemove, file, disabled }: any) {
-  const isImage = preview && (preview.startsWith('data:image') || preview.match(/\.(jpeg|jpg|png|webp)$/i));
-  const isPdf = preview && (preview.startsWith('data:application/pdf') || preview.match(/\.pdf$/i));
+  const isString = typeof preview === 'string';
+  const isImage = isString && (preview.startsWith('data:image') || preview.match(/\.(jpeg|jpg|png|webp)$/i));
+  const isPdf = isString && (preview.startsWith('data:application/pdf') || preview.match(/\.pdf$/i));
 
   return (
     <div className={cn("space-y-2", disabled && "opacity-70 cursor-not-allowed")}>

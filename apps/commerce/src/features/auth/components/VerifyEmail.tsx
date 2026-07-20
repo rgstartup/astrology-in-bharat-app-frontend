@@ -54,8 +54,8 @@ export default function VerifyEmail() {
 
         if (accessToken) {
           // For merchants, fully registered means they have set a password and shop name
-          // user.name alone is not reliable as it may be auto-populated from email
-          const isFullyRegistered = !!(user?.name && user?.is_password_set !== false && user?.merchant);
+          // Agent-created merchants will have a name and 'merchant' role already.
+          const isFullyRegistered = !!(user?.name && user?.roles?.includes('merchant'));
 
           if (isFullyRegistered) {
             // Set browser cookies for future SSR requests
@@ -67,17 +67,21 @@ export default function VerifyEmail() {
             setStatus("success");
             setMessage("Email verified successfully! Redirecting you to your dashboard...");
 
-            // Start redirect countdown
+            // Start redirect countdown — router.replace must be OUTSIDE setState
             const timer = setInterval(() => {
               setCountdown((prev) => {
                 if (prev <= 1) {
                   clearInterval(timer);
-                  router.replace("/dashboard");
                   return 0;
                 }
                 return prev - 1;
               });
             }, 1000);
+
+            // Redirect after 5 seconds separately
+            setTimeout(() => {
+              router.replace("/dashboard");
+            }, 5000);
           } else {
             // New merchant — redirect to Complete Profile (Step 3)
             router.replace(`/register?token=${token}`);

@@ -1,6 +1,7 @@
 import React from "react";
 import { Landmark, BadgeCheck, Save, X, ChevronUp, ChevronDown, Pencil, Trash2, Plus } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { toast } from "react-toastify";
 
 interface BankAccount {
     id: string;
@@ -71,7 +72,7 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
     const handleFormSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (formData.account_number !== confirmAcc) {
-            alert("Account numbers do not match!");
+            toast.error("Account numbers do not match!");
             return;
         }
 

@@ -9,10 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^3.3.4",
     "@repo/eslint-config": "workspace:*",
-    "@repo/safe-fetch": "workspace:*",
     "@repo/lib": "workspace:*",
+    "@repo/safe-fetch": "workspace:*",
     "@repo/styles": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",

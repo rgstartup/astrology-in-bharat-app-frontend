@@ -1,5 +1,5 @@
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:6543/api/v1";
 
 // Clean the URL to get the base (without /api/v1)
 export const CLIENT_API_URL = API_URL;
