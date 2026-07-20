@@ -94,8 +94,8 @@ export default function WalletPage() {
             } else {
 
                 toast.success("Withdrawal request submitted successfully!");
-                setBalance(prev => prev - amount);
-                setPendingPayout(prev => prev + amount);
+                setBalance((prev: number) => prev - amount);
+                setPendingPayout((prev: number) => prev + amount);
                 const newTx = {
                     id: Date.now().toString(),
                     amount: amount,
@@ -106,7 +106,7 @@ export default function WalletPage() {
                     remark: "",
                     transactionNo: "REQ" + Date.now().toString().slice(-6)
                 };
-                setTransactions(prev => [newTx, ...prev] as any);
+                setTransactions((prev: any[]) => [newTx, ...prev] as any);
             }
         } catch (error) {
             toast.error(getErrorMessage(error) || "An error occurred during request");
