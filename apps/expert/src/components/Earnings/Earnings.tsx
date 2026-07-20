@@ -133,7 +133,7 @@ export default function EarningsPage() {
             <Button
               variant="outline"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-full justify-center whitespace-nowrap bg-white border-gray-200 hover:border-orange-400 text-gray-700 shadow-sm rounded-xl px-2 sm:px-4 py-2 font-semibold text-xs sm:text-sm cursor-pointer transition-all"
+              className="w-full sm:w-auto justify-center whitespace-nowrap bg-white border-gray-200 hover:border-orange-400 text-gray-700 shadow-sm rounded-xl px-2 sm:px-4 py-2 font-semibold text-xs sm:text-sm cursor-pointer transition-all"
             >
               <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 shrink-0 mr-1 sm:mr-1.5" />
               <span className="truncate">{timeRangeLabels[timeRange]}</span>
@@ -166,7 +166,7 @@ export default function EarningsPage() {
             disabled={isExporting}
             loading={isExporting}
             variant="primary"
-            className="flex-1 sm:flex-none w-full justify-center whitespace-nowrap shadow-md rounded-xl px-2 sm:px-5 py-2 text-xs sm:text-sm font-semibold cursor-pointer transition-all"
+            className="flex-1 sm:flex-none w-full sm:w-auto justify-center whitespace-nowrap shadow-md rounded-xl px-2 sm:px-5 py-2 text-xs sm:text-sm font-semibold cursor-pointer transition-all"
           >
             <Download className={`w-3 h-3 sm:w-4 sm:h-4 shrink-0 mr-1 sm:mr-1.5 ${isExporting ? 'animate-bounce' : ''}`} />
             <span className="truncate">{isExporting ? 'Exporting...' : 'Export PDF'}</span>
