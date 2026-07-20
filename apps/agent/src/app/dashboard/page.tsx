@@ -138,7 +138,7 @@ export default function AgentDashboardHome() {
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
                         <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-1">Commission Structure</h3>
-                        <p className="text-xs font-medium text-gray-400">Your current earnings percentage for each referral type.</p>
+                        <p className="text-xs font-medium text-gray-1000">Your current earnings percentage for each referral type.</p>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 flex-1 max-w-2xl">
                         {[
@@ -150,11 +150,11 @@ export default function AgentDashboardHome() {
                                     <div className={`p-1.5 ${rate.bg} rounded-lg`}>
                                         <rate.icon className={`w-3 h-3 ${rate.color}`} />
                                     </div>
-                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-tight">{rate.label}</span>
+                                    <span className="text-[10px] font-black text-gray-1000 uppercase tracking-tight">{rate.label}</span>
                                 </div>
                                 <div className="flex items-baseline gap-1">
                                     <span className="text-xl font-black text-gray-900">{rate.value}%</span>
-                                    <span className="text-[9px] font-bold text-gray-400 uppercase">Comm.</span>
+                                    <span className="text-[9px] font-bold text-gray-1000 uppercase">Comm.</span>
                                 </div>
                                 
                                 {/* Hover Orange Line */}
@@ -206,14 +206,14 @@ export default function AgentDashboardHome() {
                                         <p className="text-sm font-medium text-gray-800 leading-snug">
                                             {item.text || `${item.action}: ${item.name}`}
                                         </p>
-                                        <p className="text-xs text-gray-400 mt-0.5">
+                                        <p className="text-xs text-gray-1000 mt-0.5">
                                             {item.time || new Date(item.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
                                         </p>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <p className="text-sm text-gray-400 text-center py-4">No recent activity</p>
+                            <p className="text-sm text-gray-1000 text-center py-4">No recent activity</p>
                         )}
                     </div>
                 </div>

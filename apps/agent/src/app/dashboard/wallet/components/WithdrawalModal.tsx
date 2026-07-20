@@ -47,7 +47,7 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
                         </div>
                         <button 
                             onClick={onClose}
-                            className="p-3 hover:bg-gray-50 rounded-2xl transition-colors text-gray-400 hover:text-gray-900"
+                            className="p-3 hover:bg-gray-50 rounded-2xl transition-colors text-gray-1000 hover:text-gray-900"
                         >
                             <X className="w-6 h-6" />
                         </button>
@@ -56,8 +56,8 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
                     <form onSubmit={handleSubmit} className="space-y-8">
                         <div className="space-y-4">
                             <div className="flex items-center justify-between px-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em]">Withdrawal Amount</label>
-                                <span className="text-[10px] font-bold text-gray-400">Available: ₹{balance.toLocaleString()}</span>
+                                <label className="text-[10px] font-black text-gray-1000 uppercase tracking-[0.4em]">Withdrawal Amount</label>
+                                <span className="text-[10px] font-bold text-gray-1000">Available: ₹{balance.toLocaleString()}</span>
                             </div>
                             <div className="relative group">
                                 <span className="absolute left-8 top-1/2 -translate-y-1/2 text-3xl font-black text-gray-300 group-focus-within:text-[#F25E0A] transition-colors">₹</span>
@@ -91,7 +91,7 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
                         <div className="p-8 bg-orange-50/50 rounded-[2rem] border border-orange-100/50 space-y-4">
                             <div className="flex items-start gap-4">
                                 <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-                                <p className="text-[11px] text-gray-600 font-bold leading-relaxed">
+                                <p className="text-[11px] text-gray-1000 font-bold leading-relaxed">
                                     Funds will be deposited to your <span className="text-gray-900">Registered Bank Account</span> within 24-48 working hours.
                                 </p>
                             </div>

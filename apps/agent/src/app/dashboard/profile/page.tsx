@@ -121,7 +121,7 @@ export default function ProfilePage() {
                         <div className="flex items-center gap-2">
                             <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full">Field Agent</span>
                             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Verified Partner</span>
+                            <span className="text-[10px] font-bold text-gray-1000 uppercase tracking-widest">Verified Partner</span>
                         </div>
                     </div>
 
@@ -131,7 +131,7 @@ export default function ProfilePage() {
                                 <div className={`w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 ${color}`}>
                                     <Icon className="w-5 h-5" />
                                 </div>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{label}</p>
+                                <p className="text-[10px] font-black text-gray-1000 uppercase tracking-widest mb-1">{label}</p>
                                 <p className="text-sm font-bold text-gray-800 break-all">{value}</p>
                                 
                                 {/* Orange Bottom Bar - Shows only on hover */}
@@ -161,7 +161,7 @@ export default function ProfilePage() {
                     <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden h-full">
                         <div className="p-8 border-b border-gray-50 bg-gray-50/30">
                             <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Earnings Structure</h3>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Commission Percentages</p>
+                            <p className="text-[10px] font-bold text-gray-1000 uppercase tracking-widest">Commission Percentages</p>
                         </div>
                         <div className="p-8 space-y-4">
                             {COMMISSION_RATES.map(({ label, rate, className }) => (

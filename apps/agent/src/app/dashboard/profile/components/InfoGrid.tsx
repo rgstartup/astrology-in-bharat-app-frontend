@@ -44,7 +44,7 @@ export const InfoGrid: React.FC<InfoGridProps> = ({ agent }) => {
                         <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center group-hover:bg-[#F25E0A]/10 group-hover:rotate-12 transition-all duration-500">
                             <Icon className={`w-5 h-5 ${color} transition-transform duration-500 group-hover:scale-110`} />
                         </div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] group-hover:text-gray-600 transition-colors">{label}</p>
+                        <p className="text-[10px] font-black text-gray-1000 uppercase tracking-[0.3em] group-hover:text-gray-1000 transition-colors">{label}</p>
                     </div>
                     <p className="text-[17px] font-black text-gray-900 break-all leading-tight tracking-tight group-hover:scale-[1.02] origin-left transition-transform duration-500">{value}</p>
                 </div>

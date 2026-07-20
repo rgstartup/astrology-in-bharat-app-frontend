@@ -50,7 +50,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ agent }) => {
                         >
                             Edit Account
                         </Button>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Last login: Today at 10:30 AM</p>
+                        <p className="text-[10px] font-bold text-gray-1000 uppercase tracking-widest">Last login: Today at 10:30 AM</p>
                     </div>
                 </div>
                 

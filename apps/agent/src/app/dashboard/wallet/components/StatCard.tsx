@@ -29,7 +29,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         <div className={`group bg-white rounded-[1.5rem] shadow-sm flex flex-col transition-all duration-500 hover:-translate-y-2 overflow-hidden border-2 border-[#F25E0A] ${shadowColors[subColor] || ''}`}>
             <div className="p-4 md:p-6 flex items-start justify-between flex-grow">
                 <div className="space-y-1">
-                    <p className="text-[10px] md:text-xs font-medium text-gray-400 tracking-tight transition-colors group-hover:text-gray-600">{label}</p>
+                    <p className="text-[10px] md:text-xs font-medium text-gray-1000 tracking-tight transition-colors group-hover:text-gray-1000">{label}</p>
                     <h3 className="text-xl md:text-3xl font-black text-gray-900 tracking-tighter transition-transform duration-500 group-hover:scale-105 origin-left">
                         ₹{value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                     </h3>

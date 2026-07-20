@@ -21,18 +21,18 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({ transactions
         <div className="bg-white rounded-[1.5rem] border-2 border-[#F25E0A] shadow-sm overflow-hidden flex flex-col">
             <div className="p-8 border-b border-gray-50 space-y-1">
                 <h3 className="text-xl font-black text-gray-900 tracking-tight">Transaction History</h3>
-                <p className="text-sm font-medium text-gray-400">Detailed log of all credits and withdrawals</p>
+                <p className="text-sm font-medium text-gray-1000">Detailed log of all credits and withdrawals</p>
             </div>
 
             <div className="overflow-x-auto w-full">
                 <table className="w-full text-left border-collapse table-fixed min-w-[700px]">
                     <thead>
                         <tr className="bg-gray-50/50 border-b border-gray-100">
-                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest w-[30%]">Transaction Info</th>
-                            <th className="px-4 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest w-[15%] text-center">Type</th>
-                            <th className="px-4 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest w-[20%] text-center">Amount</th>
-                            <th className="px-4 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest w-[15%] text-center">Status</th>
-                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest w-[20%] text-right">Date</th>
+                            <th className="px-8 py-5 text-[10px] font-black text-gray-1000 uppercase tracking-widest w-[30%]">Transaction Info</th>
+                            <th className="px-4 py-5 text-[10px] font-black text-gray-1000 uppercase tracking-widest w-[15%] text-center">Type</th>
+                            <th className="px-4 py-5 text-[10px] font-black text-gray-1000 uppercase tracking-widest w-[20%] text-center">Amount</th>
+                            <th className="px-4 py-5 text-[10px] font-black text-gray-1000 uppercase tracking-widest w-[15%] text-center">Status</th>
+                            <th className="px-8 py-5 text-[10px] font-black text-gray-1000 uppercase tracking-widest w-[20%] text-right">Date</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-50">
@@ -54,7 +54,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({ transactions
                                             </div>
                                             <div className="flex flex-col min-w-0">
                                                 <span className="text-[14px] font-bold text-gray-900 truncate group-hover:text-black transition-colors">{tx.info}</span>
-                                                <span className="text-[11px] text-gray-400 font-medium truncate">{tx.transactionNo || `#${tx.id}`}</span>
+                                                <span className="text-[11px] text-gray-1000 font-medium truncate">{tx.transactionNo || `#${tx.id}`}</span>
                                             </div>
                                         </div>
                                         {tx.remark && (
@@ -84,14 +84,14 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({ transactions
                                     </td>
                                     <td className="px-8 py-6 text-right">
                                         <div className="flex flex-col items-end">
-                                            <span className="text-[13px] font-bold text-gray-600">
+                                            <span className="text-[13px] font-bold text-gray-1000">
                                                 {new Date(tx.createdAt).toLocaleDateString('en-IN', { 
                                                     day: '2-digit', 
                                                     month: 'short', 
                                                     year: 'numeric' 
                                                 })}
                                             </span>
-                                            <span className="text-[11px] text-gray-400 font-mono font-medium">
+                                            <span className="text-[11px] text-gray-1000 font-mono font-medium">
                                                 {new Date(tx.createdAt).toLocaleTimeString('en-IN', { 
                                                     hour: '2-digit', 
                                                     minute: '2-digit',

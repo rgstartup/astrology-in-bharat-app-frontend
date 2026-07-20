@@ -20,10 +20,10 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transact
             <div className="p-10 border-b border-gray-50 flex items-center justify-between bg-gray-50/30">
                 <div className="space-y-1">
                     <h3 className="text-[15px] font-black text-gray-900 uppercase tracking-[0.2em]">Settlement Ledger</h3>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Recent Financial Activity</p>
+                    <p className="text-[10px] font-bold text-gray-1000 uppercase tracking-widest">Recent Financial Activity</p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <span className="px-5 py-2 bg-white rounded-xl border border-gray-200 text-[10px] font-black text-gray-500 uppercase tracking-widest">All Types</span>
+                    <span className="px-5 py-2 bg-white rounded-xl border border-gray-200 text-[10px] font-black text-gray-1000 uppercase tracking-widest">All Types</span>
                 </div>
             </div>
 
@@ -50,7 +50,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transact
                                             <p className="text-[13px] font-black text-gray-900 uppercase tracking-tight">
                                                 {tx.type === 'earning' ? 'Commission Settlement' : 'Withdrawal Request'}
                                             </p>
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.1em]">
+                                            <p className="text-[10px] font-bold text-gray-1000 uppercase tracking-[0.1em]">
                                                 {new Date(tx.createdAt).toLocaleDateString('en-IN', { 
                                                     day: '2-digit', 
                                                     month: 'short', 

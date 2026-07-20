@@ -67,12 +67,12 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50/50 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-orange-100/50 transition-colors duration-700" />
 
             <div className="flex items-center gap-4">
-                <div className="p-3 bg-orange-50 rounded-xl group-hover:rotate-[360deg] transition-transform duration-1000">
+                <div className="p-3 bg-orange-50 rounded-xl group-hover:rotate-[360deg] transition-transform duration-500">
                     <Landmark className="w-6 h-6 text-[#F25E0A]" />
                 </div>
                 <div>
-                    <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase">Withdraw Funds</h3>
-                    <p className="text-sm font-medium text-gray-400">Transfer your earnings directly to your registered bank account.</p>
+                    <h3 className="text-xl font-black text-gray-1000 tracking-tight uppercase">Withdraw Funds</h3>
+                    <p className="text-sm font-medium text-gray-1000">Transfer your earnings directly to your registered bank account.</p>
                 </div>
             </div>
 
@@ -80,7 +80,7 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                 <div className="w-full lg:w-1/3 space-y-2.5">
                     <label className="text-[10px] font-black text-[#F25E0A] uppercase tracking-widest ml-1">Amount to Withdraw</label>
                     <div className="relative">
-                        <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold">₹</span>
+                        <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-1000 font-bold">₹</span>
                         <input
                             type="number"
                             value={amount}
@@ -90,7 +90,7 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                             required
                         />
                     </div>
-                    <p className="text-[10px] text-gray-600 font-medium ml-1 flex items-center gap-1">
+                    <p className="text-[10px] text-gray-1000 font-medium ml-1 flex items-center gap-1">
                         <Info className="w-3 h-3" /> Min. withdrawal ₹500
                     </p>
                 </div>
@@ -137,7 +137,7 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                                                 className={`w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-all border-b border-gray-50 last:border-0 ${selectedBank?.id === acc.id ? 'bg-emerald-50/30' : ''}`}
                                             >
                                                 <div className="flex items-center gap-3 text-left">
-                                                    <Landmark className={`w-4 h-4 ${selectedBank?.id === acc.id ? 'text-emerald-500' : 'text-gray-400'}`} />
+                                                    <Landmark className={`w-4 h-4 ${selectedBank?.id === acc.id ? 'text-emerald-500' : 'text-gray-1000'}`} />
                                                     <div>
                                                         <div className="flex items-center gap-2">
                                                             <p className="text-[11px] font-black uppercase text-gray-800">{acc.bank_name}</p>
@@ -147,7 +147,7 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                                                                 </span>
                                                             )}
                                                         </div>
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase">•••• {acc.account_number.slice(-4)}</p>
+                                                        <p className="text-[9px] font-bold text-gray-1000 uppercase">•••• {acc.account_number.slice(-4)}</p>
                                                     </div>
                                                 </div>
                                                 {selectedBank?.id === acc.id && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
@@ -155,7 +155,7 @@ export const WithdrawSection: React.FC<WithdrawSectionProps> = ({
                                         ))
                                     ) : (
                                         <div className="p-4 text-center">
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase">Primary Account Only</p>
+                                            <p className="text-[10px] font-bold text-gray-1000 uppercase">Primary Account Only</p>
                                         </div>
                                     )}
                                 </div>

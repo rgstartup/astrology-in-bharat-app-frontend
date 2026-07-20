@@ -146,13 +146,13 @@ export default function AnalyticsPage() {
         return (
             <div className="absolute top-full right-0 mt-4 bg-white border border-gray-100 shadow-2xl rounded-2xl p-6 z-[100] w-[320px] animate-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between mb-6">
-                    <button onClick={() => setCurrentMonth(new Date(year, month - 1))} className="p-2 hover:bg-gray-50 rounded-lg transition-colors text-gray-400">&lt;</button>
+                    <button onClick={() => setCurrentMonth(new Date(year, month - 1))} className="p-2 hover:bg-gray-50 rounded-lg transition-colors text-gray-1000">&lt;</button>
                     <h4 className="text-sm font-black text-gray-900 uppercase tracking-widest">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</h4>
-                    <button onClick={() => setCurrentMonth(new Date(year, month + 1))} className="p-2 hover:bg-gray-50 rounded-lg transition-colors text-gray-400">&gt;</button>
+                    <button onClick={() => setCurrentMonth(new Date(year, month + 1))} className="p-2 hover:bg-gray-50 rounded-lg transition-colors text-gray-1000">&gt;</button>
                 </div>
                 <div className="grid grid-cols-7 gap-1 mb-2">
                     {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
-                        <div key={d} className="text-[10px] font-black text-gray-400 text-center uppercase py-2">{d}</div>
+                        <div key={d} className="text-[10px] font-black text-gray-1000 text-center uppercase py-2">{d}</div>
                     ))}
                 </div>
                 <div className="grid grid-cols-7 gap-1">
@@ -182,7 +182,7 @@ export default function AnalyticsPage() {
                 <div className="mt-6 flex gap-2">
                     <button 
                         onClick={() => { setDateRange({ start: "", end: "" }); setTimeRange("30d"); setShowCalendar(false); }}
-                        className="flex-1 py-2 text-[10px] font-black uppercase text-gray-400 hover:text-gray-600 transition-colors"
+                        className="flex-1 py-2 text-[10px] font-black uppercase text-gray-1000 hover:text-gray-1000 transition-colors"
                     >
                         Reset
                     </button>
@@ -215,7 +215,7 @@ export default function AnalyticsPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight uppercase">Performance Analytics</h1>
-                    <p className="text-xs md:text-sm font-medium text-gray-500 mt-1 md:mt-0">Real-time insights and growth metrics for your agent network.</p>
+                    <p className="text-xs md:text-sm font-medium text-gray-1000 mt-1 md:mt-0">Real-time insights and growth metrics for your agent network.</p>
                 </div>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 relative w-full md:w-auto mt-4 md:mt-0">
                     <div className="relative group w-full sm:w-auto">
@@ -227,7 +227,7 @@ export default function AnalyticsPage() {
                                 if (val === "custom") setShowCalendar(true);
                                 else { setDateRange({ start: "", end: "" }); setShowCalendar(false); }
                             }}
-                            className="appearance-none w-full sm:min-w-[180px] flex items-center gap-2 pl-10 pr-10 py-3 sm:py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-black text-gray-600 hover:bg-gray-50 transition-all uppercase tracking-widest shadow-sm cursor-pointer outline-none focus:ring-2 focus:ring-[#F25E0A]/20"
+                            className="appearance-none w-full sm:min-w-[180px] flex items-center gap-2 pl-10 pr-10 py-3 sm:py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-black text-gray-1000 hover:bg-gray-50 transition-all uppercase tracking-widest shadow-sm cursor-pointer outline-none focus:ring-2 focus:ring-[#F25E0A]/20"
                         >
                             <option value="7d">Last 7 Days</option>
                             <option value="30d">Last 30 Days</option>
@@ -235,8 +235,8 @@ export default function AnalyticsPage() {
                             <option value="1y">Last 1 Year</option>
                             <option value="custom">{dateRange.start && dateRange.end ? `${dateRange.start} - ${dateRange.end}` : 'Custom Range'}</option>
                         </select>
-                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                        <Filter className="absolute right-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
+                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-1000" />
+                        <Filter className="absolute right-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-1000 pointer-events-none" />
                     </div>
 
                     {showCalendar && renderCalendar()}
@@ -270,7 +270,7 @@ export default function AnalyticsPage() {
                     <div key={i} className="group bg-white rounded-[1.5rem] shadow-sm flex flex-col transition-all duration-500 hover:-translate-y-2 overflow-hidden border-2 border-[#F25E0A]">
                         <div className="p-4 md:p-6 flex items-start justify-between flex-grow">
                             <div className="space-y-1">
-                                <p className="text-[10px] md:text-xs font-medium text-gray-400 tracking-tight transition-colors group-hover:text-gray-600">{card.label}</p>
+                                <p className="text-[10px] md:text-xs font-medium text-gray-1000 tracking-tight transition-colors group-hover:text-gray-1000">{card.label}</p>
                                 <h3 className="text-xl md:text-3xl font-black text-gray-900 tracking-tighter transition-transform duration-500 group-hover:scale-105 origin-left">
                                     {card.value}
                                 </h3>
@@ -295,7 +295,7 @@ export default function AnalyticsPage() {
                     <div className="flex items-center justify-between relative z-10">
                         <div>
                             <h3 className="text-lg font-black text-gray-900 tracking-tight uppercase group-hover/chart:text-[#F25E0A] transition-colors">Revenue Growth</h3>
-                            <p className="text-xs font-bold text-gray-400">Monthly earnings trend from referrals.</p>
+                            <p className="text-xs font-bold text-gray-1000">Monthly earnings trend from referrals.</p>
                         </div>
                         <div className="flex items-center gap-1 text-emerald-500">
                             <ArrowUpRight className="w-4 h-4" />
@@ -345,7 +345,7 @@ export default function AnalyticsPage() {
                 <div className="bg-white p-8 rounded-[2rem] border-2 border-[#F25E0A] shadow-sm space-y-6 hover:shadow-[0_40px_80px_-20px_rgba(128,0,0,0.06)] hover:-translate-y-1 transition-all duration-700 group/pie">
                     <div>
                         <h3 className="text-lg font-black text-gray-900 tracking-tight uppercase group-hover/pie:text-[#800000] transition-colors">Network Composition</h3>
-                        <p className="text-xs font-bold text-gray-400">Distribution of all registered entities in your network.</p>
+                        <p className="text-xs font-bold text-gray-1000">Distribution of all registered entities in your network.</p>
                     </div>
                     <div className="h-[300px] w-full flex items-center justify-center">
                         <ResponsiveContainer width="100%" height="100%">
@@ -370,7 +370,7 @@ export default function AnalyticsPage() {
                                 <Legend
                                     verticalAlign="bottom"
                                     height={36}
-                                    formatter={(value) => <span className="text-[10px] font-black uppercase text-gray-500 tracking-wider ml-2">{value}</span>}
+                                    formatter={(value) => <span className="text-[10px] font-black uppercase text-gray-1000 tracking-wider ml-2">{value}</span>}
                                 />
                             </PieChart>
                         </ResponsiveContainer>
@@ -382,7 +382,7 @@ export default function AnalyticsPage() {
                     <div className="flex items-center justify-between">
                         <div>
                             <h3 className="text-lg font-black text-gray-900 tracking-tight uppercase group-hover/bar:text-gray-800 transition-colors">Registration Activity</h3>
-                            <p className="text-xs font-bold text-gray-400">Daily registration volume for the current week.</p>
+                            <p className="text-xs font-bold text-gray-1000">Daily registration volume for the current week.</p>
                         </div>
                         <div className="px-3 py-1.5 bg-orange-50 rounded-lg group-hover/bar:bg-orange-100 transition-colors">
                             <span className="text-[10px] font-black text-[#F25E0A] tracking-widest uppercase">Weekly Goal: 150</span>
@@ -428,18 +428,18 @@ export default function AnalyticsPage() {
                 <div className="p-8 border-b border-gray-50 flex items-center justify-between">
                     <div>
                         <h3 className="text-lg font-black text-gray-900 tracking-tight uppercase">Recent Activity</h3>
-                        <p className="text-xs font-bold text-gray-400">Latest registrations and listings in your network for the selected period.</p>
+                        <p className="text-xs font-bold text-gray-1000">Latest registrations and listings in your network for the selected period.</p>
                     </div>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
                             <tr className="bg-gray-50/50">
-                                <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Name</th>
-                                <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Type</th>
-                                <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Action</th>
-                                <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Date</th>
-                                <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                <th className="px-8 py-4 text-[10px] font-black text-gray-1000 uppercase tracking-widest">Name</th>
+                                <th className="px-8 py-4 text-[10px] font-black text-gray-1000 uppercase tracking-widest">Type</th>
+                                <th className="px-8 py-4 text-[10px] font-black text-gray-1000 uppercase tracking-widest">Action</th>
+                                <th className="px-8 py-4 text-[10px] font-black text-gray-1000 uppercase tracking-widest">Date</th>
+                                <th className="px-8 py-4 text-[10px] font-black text-gray-1000 uppercase tracking-widest">Status</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
@@ -455,13 +455,13 @@ export default function AnalyticsPage() {
                                             </div>
                                         </td>
                                         <td className="px-8 py-4">
-                                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest bg-gray-100 px-2 py-1 rounded-md">{activity.type}</span>
+                                            <span className="text-[10px] font-black text-gray-1000 uppercase tracking-widest bg-gray-100 px-2 py-1 rounded-md">{activity.type}</span>
                                         </td>
                                         <td className="px-8 py-4">
-                                            <span className="text-xs font-bold text-gray-600">{activity.action}</span>
+                                            <span className="text-xs font-bold text-gray-1000">{activity.action}</span>
                                         </td>
                                         <td className="px-8 py-4">
-                                            <span className="text-xs font-bold text-gray-400">{new Date(activity.date).toLocaleDateString()}</span>
+                                            <span className="text-xs font-bold text-gray-1000">{new Date(activity.date).toLocaleDateString()}</span>
                                         </td>
                                         <td className="px-8 py-4">
                                             <div className="flex items-center gap-1.5">
@@ -478,7 +478,7 @@ export default function AnalyticsPage() {
                                             <div className="p-4 bg-gray-50 rounded-full">
                                                 <Calendar className="w-8 h-8 text-gray-300" />
                                             </div>
-                                            <p className="text-sm font-black text-gray-400 uppercase tracking-widest">No activity found in this period</p>
+                                            <p className="text-sm font-black text-gray-1000 uppercase tracking-widest">No activity found in this period</p>
                                         </div>
                                     </td>
                                 </tr>

@@ -269,21 +269,21 @@ export default function PayoutPage() {
                                 <ArrowUpCircle className="w-5 h-5 text-primary" />
                                 Initiate Payout
                             </h3>
-                            <p className="text-gray-400 text-[10px] mt-1 font-bold uppercase tracking-tight">Withdraw to Bank Account</p>
+                            <p className="text-gray-1000 text-[10px] mt-1 font-bold uppercase tracking-tight">Withdraw to Bank Account</p>
                         </div>
                         
                         <div className="p-8">
                             <form onSubmit={handleRequestPayout} className="space-y-6">
                                 <div>
                                     <div className="flex justify-between items-center mb-2">
-                                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                        <label className="block text-[10px] font-black text-gray-1000 uppercase tracking-widest">
                                             Amount
                                         </label>
                                         <span className="text-[10px] font-bold text-primary">Available: ₹{balance.toFixed(2)}</span>
                                     </div>
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                            <span className="text-gray-400 font-black">₹</span>
+                                            <span className="text-gray-1000 font-black">₹</span>
                                         </div>
                                         <input
                                             type="number"
@@ -303,7 +303,7 @@ export default function PayoutPage() {
                                             </button>
                                         </div>
                                     </div>
-                                    <p className="mt-3 text-[10px] text-gray-400 flex items-center gap-1.5 font-bold uppercase tracking-tight">
+                                    <p className="mt-3 text-[10px] text-gray-1000 flex items-center gap-1.5 font-bold uppercase tracking-tight">
                                         <AlertCircle className="w-3.3 h-3.3" />
                                         Processed within 24-48 hours
                                     </p>
@@ -317,9 +317,9 @@ export default function PayoutPage() {
                                     {profile?.bank_name ? (
                                         <div className="space-y-1.5 relative z-10">
                                             <p className="text-sm font-black text-gray-900">{profile.bank_name}</p>
-                                            <p className="text-xs text-gray-500 font-bold tracking-wider">A/C: {profile.account_number.replace(/.(?=.{4})/g, '*')}</p>
+                                            <p className="text-xs text-gray-1000 font-bold tracking-wider">A/C: {profile.account_number.replace(/.(?=.{4})/g, '*')}</p>
                                             <div className="flex items-center gap-2">
-                                                <span className="text-[10px] bg-white px-2 py-0.5 rounded-md border border-gray-100 text-gray-400 font-black uppercase tracking-widest">{profile.ifsc_code}</span>
+                                                <span className="text-[10px] bg-white px-2 py-0.5 rounded-md border border-gray-100 text-gray-1000 font-black uppercase tracking-widest">{profile.ifsc_code}</span>
                                                 <span className="text-[10px] text-emerald-600 font-black uppercase tracking-widest">Verified</span>
                                             </div>
                                         </div>
@@ -364,7 +364,7 @@ export default function PayoutPage() {
                             </h3>
                             <div className="flex gap-2">
                                 {["all", "pending", "completed"].map(f => (
-                                    <span key={f} className="text-[9px] font-black uppercase tracking-widest text-gray-400 hover:text-primary cursor-pointer transition-colors px-2 py-1 rounded-md bg-white border border-gray-100">{f}</span>
+                                    <span key={f} className="text-[9px] font-black uppercase tracking-widest text-gray-1000 hover:text-primary cursor-pointer transition-colors px-2 py-1 rounded-md bg-white border border-gray-100">{f}</span>
                                 ))}
                             </div>
                         </div>
@@ -375,7 +375,7 @@ export default function PayoutPage() {
                                     <IndianRupee className="w-12 h-12 text-gray-200" />
                                 </div>
                                 <h3 className="text-xl font-black text-gray-900">No History Yet</h3>
-                                <p className="text-gray-400 text-xs max-w-xs mx-auto mt-2 font-medium">
+                                <p className="text-gray-1000 text-xs max-w-xs mx-auto mt-2 font-medium">
                                     Your future payout requests will appear here with detailed status tracking.
                                 </p>
                             </div>
@@ -385,7 +385,7 @@ export default function PayoutPage() {
                                     <thead>
                                         <tr className="bg-gray-50/30">
                                             {["Transaction Date", "Payout Amount", "Status"].map((h) => (
-                                                <th key={h} className="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">{h}</th>
+                                                <th key={h} className="px-8 py-5 text-left text-[10px] font-black text-gray-1000 uppercase tracking-widest border-b border-gray-50">{h}</th>
                                             ))}
                                         </tr>
                                     </thead>
@@ -405,7 +405,7 @@ export default function PayoutPage() {
                                                                     year: "numeric"
                                                                 })}
                                                             </p>
-                                                            <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-0.5">
+                                                            <p className="text-[10px] text-gray-1000 font-black uppercase tracking-widest mt-0.5">
                                                                 {new Date(w.created_at).toLocaleTimeString("en-IN", {
                                                                     hour: '2-digit',
                                                                     minute: '2-digit',
@@ -420,7 +420,7 @@ export default function PayoutPage() {
                                                         <span className="text-lg font-black text-gray-900">
                                                             ₹{Number(w.amount).toLocaleString("en-IN")}
                                                         </span>
-                                                        <span className="text-[9px] text-gray-400 font-bold uppercase tracking-tight mt-0.5">
+                                                        <span className="text-[9px] text-gray-1000 font-bold uppercase tracking-tight mt-0.5">
                                                             TO: {w.merchant_bank_name || 'REGISTER_ACC'} ({w.merchant_account_number?.slice(-4).padStart(8, '•')})
                                                         </span>
                                                     </div>
@@ -434,7 +434,7 @@ export default function PayoutPage() {
                                                             {w.status}
                                                         </span>
                                                         {w.remark && (
-                                                            <p className="text-[10px] text-gray-400 font-bold italic max-w-[180px] leading-tight" title={w.remark}>
+                                                            <p className="text-[10px] text-gray-1000 font-bold italic max-w-[180px] leading-tight" title={w.remark}>
                                                                 {w.remark}
                                                             </p>
                                                         )}

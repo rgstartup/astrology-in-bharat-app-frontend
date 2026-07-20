@@ -26,9 +26,8 @@ import {
     Wallet,
     BarChart3,
     Award,
-    Bell
-
-
+    Bell,
+    MoreVertical
 } from "lucide-react";
 
 // ── Menu config ─────────────────────────────────────────────
@@ -179,59 +178,20 @@ const Sidebar: React.FC<{ isOpen: boolean; toggleSidebar: () => void }> = memo(
                     )}
                     aria-label="Sidebar navigation"
                 >
-                    {/* Premium Logo Section */}
-                    <div
-                        className="relative flex flex-col p-6 flex-shrink-0 border-b border-white/10 overflow-hidden"
-                        style={{
-                            backgroundImage: "url('/images/back-image.webp')",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                        }}
-                    >
-                        {/* Subtle Dark Overlay for better text contrast */}
-                        <div className="absolute inset-0 bg-black/20 pointer-events-none" />
-
-                        <div className="relative z-10 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                {/* Larger flipped Baba Ji with premium glow */}
-                                <div className="relative">
-                                    <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full animate-pulse" />
-                                    <img
-                                        src="/images/Expert.png"
-                                        alt="AstrologyInBharat"
-                                        className="w-16 h-16 object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
-                                        style={{ transform: "scaleX(-1)" }}
-                                    />
-                                </div>
-
-                                <div className="flex flex-col">
-                                    <div className="leading-none mb-1">
-                                        <h2 className="text-white text-lg font-black tracking-tighter drop-shadow-md">
-                                            ASTROLOGY
-                                        </h2>
-                                        <p className="text-white/90 text-[11px] font-bold tracking-[0.2em] -mt-1 drop-shadow-sm uppercase">
-                                            IN BHARAT
-                                        </p>
-                                    </div>
-
-                                    {/* Sleek Pill Badge */}
-                                    <div className="mt-1 flex">
-                                        <span className="bg-gradient-to-r from-orange-600 to-yellow-500 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg border border-white/20 uppercase tracking-widest flex items-center gap-1">
-                                            <div className="w-1 h-1 bg-white rounded-full animate-ping" />
-                                            Agent
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button
-                                onClick={toggleSidebar}
-                                className="lg:hidden p-2 hover:bg-white/10 rounded-full transition-all text-white"
-                                aria-label="Close sidebar"
-                            >
-                                <X className="w-6 h-6" />
-                            </button>
-                        </div>
+                    {/* Logo Section */}
+                    <div className="flex items-center justify-between p-6 bg-white border-b border-orange-100 shrink-0 sticky top-0 z-20">
+                        <img
+                            src="/images/web-logo.png"
+                            alt="Logo"
+                            className="w-full h-auto object-contain pr-2"
+                        />
+                        <button
+                            onClick={toggleSidebar}
+                            className="lg:hidden p-1 hover:bg-yellow-700 rounded transition-colors duration-200 text-gray-800"
+                            aria-label="Close sidebar"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
                     </div>
 
                     {/* Navigation — Scrollable */}
@@ -257,11 +217,11 @@ Sidebar.displayName = "Sidebar";
 
 // ── Main Layout ──────────────────────────────────────────────
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-    const { agent } = useAgentAuthStore();
+    const { agent, setAgent, logout } = useAgentAuthStore();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
-
-    const { setAgent } = useAgentAuthStore();
 
     useEffect(() => {
         setMounted(true);
@@ -288,7 +248,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
             {/* Main Content */}
-            <div className="flex-1 lg:ml-64 min-w-0 overflow-x-hidden">
+            <div className="flex-1 lg:ml-64 min-w-0">
                 {/* Header — same as admin */}
                 <header className="bg-white/40 backdrop-blur-xl px-6 py-4 border-b border-white/20 sticky top-0 z-30 shadow-sm">
                     <div className="flex items-center justify-between">
@@ -309,19 +269,66 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             <div className="flex items-center gap-3">
                                 <div className="text-right hidden sm:block">
                                 <p className="text-sm font-bold text-gray-800">{mounted ? (agent?.name ?? "Agent") : "Agent"}</p>
-                                <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest flex items-center gap-1 justify-end">
+                                <p className="text-[10px] text-gray-1000 uppercase font-black tracking-widest flex items-center gap-1 justify-end">
                                     <Award className="w-3 h-3 text-primary-hover" />
 
                                     {mounted ? (agent?.uid || "Field Agent") : "Field Agent"}
                                 </p>
                             </div>
                             {/* @repo/ui Avatar component */}
-                            <Avatar
-                                src={mounted ? (agent?.avatar ?? null) : null}
-                                alt={mounted ? (agent?.name ?? "Agent") : "Agent"}
-                                size="md"
-                                className="cursor-pointer hover:ring-2 hover:ring-primary-hover transition-all border-2 border-primary/10"
-                            />
+                            <div onClick={() => mounted && agent?.avatar && setIsImageModalOpen(true)}>
+                                <Avatar
+                                    src={mounted ? (agent?.avatar ?? null) : null}
+                                    alt={mounted ? (agent?.name ?? "Agent") : "Agent"}
+                                    size="md"
+                                    className="cursor-pointer hover:ring-2 hover:ring-primary-hover transition-all border-2 border-primary/10"
+                                />
+                            </div>
+
+                            {/* 3-Dot Menu */}
+                            <div className="relative">
+                                <button 
+                                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                                    className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
+                                    aria-label="Profile options"
+                                >
+                                    <MoreVertical className="w-5 h-5" />
+                                </button>
+
+                                {isProfileDropdownOpen && (
+                                    <>
+                                        <div 
+                                            className="fixed inset-0 z-40" 
+                                            onClick={() => setIsProfileDropdownOpen(false)} 
+                                        />
+                                        <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2">
+                                            <Link 
+                                                href="/dashboard/profile"
+                                                onClick={() => setIsProfileDropdownOpen(false)}
+                                                className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-primary-hover transition-colors"
+                                            >
+                                                <User className="w-4 h-4" />
+                                                My Profile
+                                            </Link>
+                                            <div className="h-px bg-gray-100" />
+                                            <button 
+                                                onClick={async () => {
+                                                    setIsProfileDropdownOpen(false);
+                                                    const { agentLogoutAction } = await import("@/actions/auth");
+                                                    await agentLogoutAction();
+                                                    logout();
+                                                    toast.success("Signed out successfully");
+                                                    window.location.href = "/";
+                                                }}
+                                                className="flex items-center gap-3 w-full px-4 py-3 text-left text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
+                                            >
+                                                <LogOut className="w-4 h-4" />
+                                                Signout
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -330,6 +337,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {/* Page content */}
                 <main className="p-6">{children}</main>
             </div>
+
+            {/* Image Profile Modal */}
+            {isImageModalOpen && mounted && agent?.avatar && (
+                <div 
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+                    onClick={() => setIsImageModalOpen(false)}
+                >
+                    <div 
+                        className="relative max-w-2xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl bg-white border-4 border-orange-500/30"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button 
+                            onClick={() => setIsImageModalOpen(false)}
+                            className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full transition-colors z-10"
+                            aria-label="Close"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                        <img 
+                            src={agent.avatar} 
+                            alt={agent.name ?? "Profile"}
+                            className="w-full h-full object-contain max-h-[85vh] min-w-[300px] min-h-[300px] bg-gray-100"
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -126,7 +126,7 @@ export default function WalletPage() {
                 {/* Header */}
                 <div className="space-y-1">
                     <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Wallet</h1>
-                    <p className="text-sm font-medium text-gray-500">Manage your balance and schedule payouts to your bank account.</p>
+                    <p className="text-sm font-medium text-gray-1000">Manage your balance and schedule payouts to your bank account.</p>
                 </div>
 
                 {/* Top Stat Triplets */}
