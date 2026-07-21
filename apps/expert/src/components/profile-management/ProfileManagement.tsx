@@ -177,10 +177,10 @@ const ProfileManagement = () => {
 
     return (
         <div className="p-4 sm:p-6 md:p-8 bg-gray-50 min-h-screen">
-            {/* Embedded styles to hide scrollbars */}
+            {/* Embedded styles to hide scr  ollbars */}
             <style>{`
                 .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
+                    display: none;   
                 }
                 .scrollbar-hide {
                     -ms-overflow-style: none;

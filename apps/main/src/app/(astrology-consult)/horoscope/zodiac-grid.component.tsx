@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { ZodiacSignsData } from "@/components/features/services/zodiac";
+import { useLanguageStore, horoscopeTranslations } from "@repo/store";
 
 interface ZodiacGridProps {
   onSelectSign: (sign: any) => void;
@@ -9,17 +10,26 @@ interface ZodiacGridProps {
   activeTab?: string;
 }
 
-const ZodiacGrid: React.FC<ZodiacGridProps> = ({ onSelectSign, selectedSignId, signPreviews = {}, activeTab = "Daily Horoscope" }) => {
+const ZodiacGrid: React.FC<ZodiacGridProps> = ({ onSelectSign, selectedSignId, signPreviews = {}, activeTab = "daily" }) => {
+  const { lang } = useLanguageStore();
+  const t = horoscopeTranslations[lang];
+
+  // Helper to get translated tab name (default to 'daily' if not matching)
+  const tabName = activeTab === "daily" ? t.tabs.daily :
+                  activeTab === "weekly" ? t.tabs.weekly :
+                  activeTab === "monthly" ? t.tabs.monthly :
+                  activeTab === "yearly" ? t.tabs.yearly : t.tabs.daily;
+
   return (
     <div className="flex flex-col">
       {/* Header */}
       <div className="mb-6 flex flex-col gap-1">
         <h2 className="text-[18px] sm:text-[22px] font-serif font-bold text-[#3D1A0B] flex items-center gap-2 whitespace-nowrap">
           <i className="fa-solid fa-sun text-[#F26500] text-[20px] sm:text-[24px]"></i>
-          Select Your Zodiac Sign
+          {t.zodiacGrid.selectSign}
         </h2>
         <p className="text-[14px] text-gray-700 ml-8">
-          Click on your sign to view your {activeTab.toLowerCase()}
+          {t.zodiacGrid.clickSign} {tabName}
         </p>
       </div>
 
@@ -42,22 +52,26 @@ const ZodiacGrid: React.FC<ZodiacGridProps> = ({ onSelectSign, selectedSignId, s
                   <Image src={sign.image} alt={sign.title} width={30} height={30} className="object-contain opacity-80" />
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="font-bold text-[#3D1A0B] group-hover:text-white transition-colors text-[16px]">{sign.title}</h3>
-                  <p className="text-[12px] text-gray-700 group-hover:text-white/80 transition-colors">{sign.date}</p>
+                  <h3 className="font-bold text-[#3D1A0B] group-hover:text-white transition-colors text-[16px]">
+                    {t.zodiacNames[sign.title as keyof typeof t.zodiacNames] || sign.title}
+                  </h3>
+                  <p className="text-[12px] text-gray-700 group-hover:text-white/80 transition-colors">
+                    {lang === "hi" ? sign.date.replace(/[A-Za-z]+/g, (match: string) => t.months[match as keyof typeof t.months] || match) : sign.date}
+                  </p>
                 </div>
               </div>
 
               {/* Preview text */}
               <p className="text-[13px] text-gray-800 group-hover:text-white/90 transition-colors leading-relaxed flex-1">
-                {activeTab === "Daily Horoscope" 
-                  ? (signPreviews[sign.title] || "Discover what the stars have in store for you today.")
-                  : `Select your sign to get detailed insights for your ${activeTab.toLowerCase()}.`
+                {activeTab === "daily" 
+                  ? (signPreviews[sign.title] || t.zodiacGrid.defaultPreview)
+                  : `${t.zodiacGrid.previewPrefix} ${tabName}`
                 }
               </p>
 
               {/* Link */}
               <div className="mt-4 flex justify-between items-center text-[#F26500] group-hover:text-white transition-colors font-bold text-[13px]">
-                View Horoscope
+                {t.zodiacGrid.viewHoroscope}
                 <i className="fa-solid fa-arrow-right-long transition-transform group-hover:translate-x-1"></i>
               </div>
             </div>

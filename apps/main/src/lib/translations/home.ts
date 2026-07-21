@@ -131,7 +131,10 @@ export const homeTranslations = {
                 "Family Problem Solution": "Family Problem Solution",
                 "Dispute Solution": "Dispute Solution",
                 "Childless Couple Solution": "Childless Couple Solution",
-                "Business Problem Solution": "Business Problem Solution"
+                "Business Problem Solution": "Business Problem Solution",
+                "Career Problem Solution": "Career Problem Solution",
+                "Health Problem Solution": "Health Problem Solution",
+                "Financial Problem Solution": "Financial Problem Solution"
             }
         },
         zodiac: {
@@ -140,6 +143,7 @@ export const homeTranslations = {
             title2: "Sign",
             desc: "Unlock the secrets of your future by exploring your unique zodiac personality and daily cosmic guidance.",
         },
+        chooseYourZodiacSign: "Choose Your Zodiac Sign",
         whyChooseUs: {
             title: "Why Choose Astrology in Bharat",
             subtitle: "Trusted Astrology. Accurate Guidance. Complete Privacy.",
@@ -380,6 +384,59 @@ export const homeTranslations = {
                     }
                 }
             }
+        },
+        loveCalculator: {
+            title: "Love Calculator",
+            subtitle: "Calculate your love compatibility",
+            form: {
+                yourName: "Your Name",
+                yourNamePlaceholder: "Enter your name",
+                partnerName: "Your Partner's Name",
+                partnerNamePlaceholder: "Enter partner name",
+                yourDob: "Your Birth Date",
+                partnerDob: "Your Partner's Birth Date",
+                calculateBtn: "Calculate Compatibility",
+                calculatingBtn: "Calculating..."
+            },
+            result: {
+                title: "Your Compatibility Result",
+                excellent: "Excellent Compatibility",
+                good: "Good Compatibility",
+                average: "Average Compatibility",
+                low: "Low Compatibility",
+                descExcellent: "You two are a perfect match! Your bond is deep, passionate, and full of love.",
+                descGood: "You both share a strong emotional connect and have a good understanding. Keep communication open to make your bond even stronger.",
+                descAverage: "There are some areas to work on, but with effort and understanding, you can build a great relationship.",
+                descLow: "You may face challenges, but love and patience can overcome many obstacles.",
+                metrics: {
+                    love: "Love",
+                    trust: "Trust",
+                    communication: "Communication",
+                    emotions: "Emotions"
+                },
+                detailedReport: "Detailed Report"
+            },
+            cta: {
+                title: "Want to know more about your love life?",
+                desc: "Talk to our Astrology Experts and get personalized relationship guidance."
+            }
+        },
+        guidanceCard: {
+            title: "Need Personal Guidance?",
+            desc: "Talk to our experienced astrologers and get answers to all your love & relationship questions.",
+            features: {
+                confidential: "100% Confidential",
+                instant: "Instant Connect",
+                rating: "4.9/5 Rating",
+                clients: "10K+ Happy Clients"
+            },
+            topQuestions: "Top Questions to Ask",
+            questions: [
+                "\"When is the exact time of my marriage?\"",
+                "\"Will it be a love or arranged marriage?\"",
+                "\"Are there any delays or Doshas in my chart?\""
+            ],
+            btn: "Talk to Astrologer"
         }
     },
     hi: {
@@ -514,7 +571,10 @@ export const homeTranslations = {
                 "Family Problem Solution": "पारिवारिक समस्या समाधान",
                 "Dispute Solution": "विवाद समाधान",
                 "Childless Couple Solution": "निसंतान दंपत्ति समाधान",
-                "Business Problem Solution": "व्यापार समस्या समाधान"
+                "Business Problem Solution": "व्यापार समस्या समाधान",
+                "Career Problem Solution": "करियर समस्या समाधान",
+                "Health Problem Solution": "स्वास्थ्य समस्या समाधान",
+                "Financial Problem Solution": "आर्थिक समस्या समाधान"
             }
         },
         zodiac: {
@@ -523,6 +583,7 @@ export const homeTranslations = {
             title2: "चिह्न चुनें",
             desc: "अपने अद्वितीय राशि व्यक्तित्व और दैनिक ब्रह्मांडीय मार्गदर्शन की खोज करके अपने भविष्य के रहस्यों को अनलॉक करें।",
         },
+        chooseYourZodiacSign: "अपनी राशि चुनें",
         whyChooseUs: {
             title: "एस्ट्रोलॉजी इन भारत को क्यों चुनें",
             subtitle: "विश्वसनीय ज्योतिष। सटीक मार्गदर्शन। पूर्ण गोपनीयता।",
@@ -763,6 +824,59 @@ export const homeTranslations = {
                     }
                 }
             }
+        },
+        loveCalculator: {
+            title: "प्रेम कैलकुलेटर",
+            subtitle: "अपनी प्रेम अनुकूलता की गणना करें",
+            form: {
+                yourName: "आपका नाम",
+                yourNamePlaceholder: "अपना नाम दर्ज करें",
+                partnerName: "आपके साथी का नाम",
+                partnerNamePlaceholder: "साथी का नाम दर्ज करें",
+                yourDob: "आपकी जन्म तिथि",
+                partnerDob: "आपके साथी की जन्म तिथि",
+                calculateBtn: "अनुकूलता की गणना करें",
+                calculatingBtn: "गणना की जा रही है..."
+            },
+            result: {
+                title: "आपका अनुकूलता परिणाम",
+                excellent: "उत्कृष्ट अनुकूलता",
+                good: "अच्छी अनुकूलता",
+                average: "औसत अनुकूलता",
+                low: "कम अनुकूलता",
+                descExcellent: "आप दोनों एक आदर्श जोड़ी हैं! आपका बंधन गहरा, भावुक और प्यार से भरा है।",
+                descGood: "आप दोनों एक मजबूत भावनात्मक संबंध साझा करते हैं और अच्छी समझ रखते हैं। अपने बंधन को और भी मजबूत बनाने के लिए संचार खुला रखें।",
+                descAverage: "काम करने के लिए कुछ क्षेत्र हैं, लेकिन प्रयास और समझ से आप एक महान रिश्ता बना सकते हैं।",
+                descLow: "आपको चुनौतियों का सामना करना पड़ सकता है, लेकिन प्यार और धैर्य कई बाधाओं को दूर कर सकते हैं।",
+                metrics: {
+                    love: "प्रेम",
+                    trust: "विश्वास",
+                    communication: "संचार",
+                    emotions: "भावनाएँ"
+                },
+                detailedReport: "विस्तृत रिपोर्ट"
+            },
+            cta: {
+                title: "अपने प्रेम जीवन के बारे में अधिक जानना चाहते हैं?",
+                desc: "हमारे ज्योतिष विशेषज्ञों से बात करें और व्यक्तिगत संबंध मार्गदर्शन प्राप्त करें।"
+            }
+        },
+        guidanceCard: {
+            title: "व्यक्तिगत मार्गदर्शन चाहिए?",
+            desc: "हमारे अनुभवी ज्योतिषियों से बात करें और अपने सभी प्रेम और संबंध प्रश्नों के उत्तर प्राप्त करें।",
+            features: {
+                confidential: "100% गोपनीय",
+                instant: "तत्काल संपर्क",
+                rating: "4.9/5 रेटिंग",
+                clients: "10K+ खुश ग्राहक"
+            },
+            topQuestions: "पूछने के लिए शीर्ष प्रश्न",
+            questions: [
+                "\"मेरी शादी का सही समय कब है?\"",
+                "\"क्या यह प्रेम विवाह होगा या अरेंज मैरिज?\"",
+                "\"क्या मेरी कुंडली में कोई देरी या दोष है?\""
+            ],
+            btn: "ज्योतिषी से बात करें"
         }
     }
 } as const;

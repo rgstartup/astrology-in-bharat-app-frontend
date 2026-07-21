@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore, horoscopeTranslations } from "@repo/store";
 import { Target, User, Calendar, Moon } from "lucide-react";
 
 const features = [
@@ -12,6 +12,7 @@ const features = [
 
 const HeroComponent = () => {
   const { lang } = useLanguageStore();
+  const t = horoscopeTranslations[lang];
   const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   return (
@@ -38,12 +39,12 @@ const HeroComponent = () => {
           <div className="w-full md:w-[50%] p-6 md:p-10 lg:p-12 z-20 order-2 md:order-1 flex flex-col justify-center relative -mt-10 md:mt-0">
             
             <h1 className="text-3xl md:text-4xl lg:text-[44px] font-serif font-bold text-white mb-1 text-center md:text-left drop-shadow-md leading-tight" style={fontStyle}>
-              Daily Horoscope
+              {t.heroTitle1} <span className="text-[#ffb286]">{t.heroHighlight}</span> {t.heroTitle2}
             </h1>
             
             <div className="flex flex-col items-center md:items-start mb-4">
               <h2 className="text-[#ffb286] text-xl md:text-2xl lg:text-[22px] font-serif mb-3 text-center md:text-left drop-shadow-md">
-                Your Guide for Every Day
+                {lang === "hi" ? "हर दिन के लिए आपका मार्गदर्शन" : "Your Guide for Every Day"}
               </h2>
               {/* Decorative divider */}
               <div className="w-32 h-[1px] bg-gradient-to-r from-[#ffb286]/80 via-[#ffb286]/30 to-transparent hidden md:block mb-1"></div>
@@ -51,13 +52,13 @@ const HeroComponent = () => {
             </div>
             
             <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-10 text-center md:text-left max-w-md mx-auto md:mx-0 drop-shadow-md">
-              Discover what the stars have in store for you today. Get personalized insights on love, career, health and more.
+              {t.heroDesc}
             </p>
 
             {/* Features Grid - EXACTLY like Famous Temples */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-auto">
               {features.map((feat, idx) => {
-                const words = feat.text.split(' ');
+                const words = t.features[idx].split(' ');
                 const word1 = words[0];
                 const word2 = words.slice(1).join(' ');
                 return (
