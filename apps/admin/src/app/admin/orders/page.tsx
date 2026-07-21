@@ -185,29 +185,42 @@ export default function OrdersPage() {
     ];
 
     return (
-        <div className="p-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-800">Order Management</h1>
-                    <div className="flex gap-2 mt-2">
+        <div className="w-full overflow-hidden">
+            <div className="flex flex-col gap-3 mb-4 sm:mb-6">
+                {/* Row 1: Buttons (always) + Search (desktop only) */}
+                <div className="flex flex-row justify-between items-center gap-3">
+                    <div className="flex gap-3 items-center">
                         <button 
                             onClick={() => setViewMode("standard")}
-                            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${viewMode === "standard" ? "bg-primary text-white shadow-md shadow-primary/20" : "bg-white border text-gray-600 hover:bg-gray-50"}`}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${viewMode === "standard" ? "bg-primary text-white shadow-md shadow-primary/20" : "bg-white border text-gray-600 hover:bg-gray-50"}`}
                         >
-                            <ShoppingBag className="w-4 h-4" />
+                            <ShoppingBag className="w-3.5 h-3.5 flex-shrink-0" />
                             Standard View
                         </button>
+                        <div className="w-px h-5 bg-gray-300 flex-shrink-0" />
                         <button 
                             onClick={() => setViewMode("merchant")}
-                            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${viewMode === "merchant" ? "bg-primary text-white shadow-md shadow-primary/20" : "bg-white border text-gray-600 hover:bg-gray-50"}`}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${viewMode === "merchant" ? "bg-primary text-white shadow-md shadow-primary/20" : "bg-white border text-gray-600 hover:bg-gray-50"}`}
                         >
-                            <LayoutGrid className="w-4 h-4" />
+                            <LayoutGrid className="w-3.5 h-3.5 flex-shrink-0" />
                             Merchant Orders
                         </button>
                     </div>
+                    {/* Search - Desktop only (right side) */}
+                    {viewMode === "standard" && (
+                        <div className="hidden sm:block w-64 flex-shrink-0">
+                            <SearchInput
+                                value={searchQuery}
+                                onChange={setSearchQuery}
+                                placeholder="Search Order ID, Name..."
+                            />
+                        </div>
+                    )}
                 </div>
+
+                {/* Row 2: Search - Mobile only (full width below buttons) */}
                 {viewMode === "standard" && (
-                    <div className="w-full md:w-64">
+                    <div className="sm:hidden w-full">
                         <SearchInput
                             value={searchQuery}
                             onChange={setSearchQuery}
@@ -222,18 +235,20 @@ export default function OrdersPage() {
             ) : (
                 <>
                     {/* Filter Tabs */}
-                    <div className="flex overflow-x-auto pb-4 mb-4 gap-2 no-scrollbar">
+                    <div className="-mx-4 sm:mx-0">
+                    <div className="flex overflow-x-auto pb-3 mb-3 sm:mb-4 gap-2 no-scrollbar px-4 sm:px-0">
                         {tabs.map(tab => (
                             <Button
                                 key={tab.id}
                                 onClick={() => setFilterStatus(tab.id)}
                                 variant={filterStatus === tab.id ? 'primary' : 'outline'}
                                 size="sm"
-                                className="rounded-full whitespace-nowrap"
+                                className="rounded-full whitespace-nowrap text-xs"
                             >
                                 {tab.label}
                             </Button>
                         ))}
+                    </div>
                     </div>
 
                     {/* Orders Table */}
@@ -366,7 +381,7 @@ export default function OrdersPage() {
 
                                                                     <div className="mt-4">
                                                                         <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Update Status</h4>
-                                                                        <div className="flex flex-wrap gap-2">
+                                                                        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
                                                                             {['pending', 'packed', 'shipped', 'delivered'].map(s => (
                                                                                 <Button
                                                                                     key={s}
@@ -374,7 +389,7 @@ export default function OrdersPage() {
                                                                                     disabled={order.status === s}
                                                                                     size="sm"
                                                                                     variant={order.status === s ? 'primary' : 'outline'}
-                                                                                    className="capitalize"
+                                                                                    className="capitalize whitespace-nowrap flex-shrink-0"
                                                                                 >
                                                                                     {s}
                                                                                 </Button>
@@ -385,9 +400,9 @@ export default function OrdersPage() {
                                                                                 disabled={order.status === 'cancelled'}
                                                                                 size="sm"
                                                                                 variant="danger"
-                                                                                className="capitalize"
+                                                                                className="capitalize whitespace-nowrap flex-shrink-0"
                                                                             >
-                                                                                cancelled
+                                                                                Cancelled
                                                                             </Button>
                                                                         </div>
                                                                     </div>

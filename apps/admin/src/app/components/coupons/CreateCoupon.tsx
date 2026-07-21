@@ -57,11 +57,11 @@ const CreateCoupon = ({ onClose, onSuccess, initialData }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
       <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-gray-100 transform transition-all">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-8 py-5 bg-gradient-to-r from-orange to-yellow-600 text-white">
+        <div className="flex items-center justify-between px-5 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-orange to-yellow-600 text-white">
           <div>
             <h2 className="text-xl font-bold">{isEditing ? "Edit Coupon" : "Create New Coupon"}</h2>
             <p className="text-white/80 text-xs mt-0.5">{isEditing ? "Modify existing coupon details" : "Define your discount offer parameters"}</p>
@@ -75,21 +75,21 @@ const CreateCoupon = ({ onClose, onSuccess, initialData }: Props) => {
         </div>
 
         {/* Body */}
-        <div className="p-8 space-y-6 max-h-[70vh] overflow-y-auto">
-          <div className="grid grid-cols-2 gap-6">
-            {/* Coupon Code */}
-            <div className="col-span-2 space-y-2">
-              <label className="text-sm font-bold text-gray-700">Coupon Code<span className="text-red-500 ml-0.5">*</span></label>
-              <input
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all font-mono uppercase tracking-widest"
-                placeholder="e.g. DIWALI2026"
-                value={formData.code}
-                onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                disabled={isEditing} // Usually code is not editable
-              />
-            </div>
+        <div className="p-4 sm:p-8 space-y-4 max-h-[70vh] overflow-y-auto">
+          {/* Coupon Code - Full Width */}
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-gray-700">Coupon Code<span className="text-red-500 ml-0.5">*</span></label>
+            <input
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all font-mono uppercase tracking-widest"
+              placeholder="e.g. DIWALI2026"
+              value={formData.code}
+              onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
+              disabled={isEditing}
+            />
+          </div>
 
-            {/* Type Selection */}
+          {/* Discount Type + Discount Value */}
+          <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Discount Type</label>
               <select
@@ -101,8 +101,6 @@ const CreateCoupon = ({ onClose, onSuccess, initialData }: Props) => {
                 <option value="flat">Flat Amount (₹)</option>
               </select>
             </div>
-
-            {/* Value */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Discount Value<span className="text-red-500 ml-0.5">*</span></label>
               <div className="relative">
@@ -118,8 +116,10 @@ const CreateCoupon = ({ onClose, onSuccess, initialData }: Props) => {
                 </span>
               </div>
             </div>
+          </div>
 
-            {/* Min Order Value */}
+          {/* Min Order Value + Expiry Date */}
+          <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Min Order Value (₹)</label>
               <input
@@ -130,8 +130,6 @@ const CreateCoupon = ({ onClose, onSuccess, initialData }: Props) => {
                 onChange={(e) => setFormData({ ...formData, min_order_value: e.target.value })}
               />
             </div>
-
-            {/* Expiry Date */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Expiry Date</label>
               <input
@@ -145,7 +143,7 @@ const CreateCoupon = ({ onClose, onSuccess, initialData }: Props) => {
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 px-8 py-5 bg-gray-50 border-t border-gray-100">
+        <div className="flex justify-end gap-3 px-4 sm:px-8 py-4 sm:py-5 bg-gray-50 border-t border-gray-100">
           <Button
             variant="outline"
             onClick={onClose}

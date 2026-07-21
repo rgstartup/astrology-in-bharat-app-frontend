@@ -27,7 +27,7 @@ export function RefundCard({
   const expertAvatar = refund.expert.avatar?.startsWith('http') ? refund.expert.avatar : `${baseUrl}${refund.expert.avatar || ''}`;
 
   return (
-    <div className="bg-white rounded-[2rem] border border-gray-100 p-6 flex flex-col xl:flex-row gap-8 shadow-sm hover:shadow-xl transition-all duration-300 group">
+    <div className="bg-white rounded-[2rem] border border-gray-100 p-4 sm:p-6 flex flex-col xl:flex-row gap-4 sm:gap-8 shadow-sm hover:shadow-xl transition-all duration-300 group">
       
       {/* Left: Content Area */}
       <div className="flex-1 flex gap-5">
@@ -96,7 +96,7 @@ export function RefundCard({
       </div>
 
       {/* Right: Management Center */}
-      <div className="w-full xl:w-72 bg-gray-50/80 rounded-[1.5rem] p-5 flex flex-col border border-gray-200/50">
+      <div className="w-full xl:w-72 bg-gray-50/80 rounded-[1.5rem] p-4 sm:p-5 flex flex-col border border-gray-200/50">
         <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
           <ShieldCheck className="w-3 h-3" />
           Management Center

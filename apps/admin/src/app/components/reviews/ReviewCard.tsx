@@ -176,7 +176,7 @@ export function ReviewCard({ review, isLast, onUpdate }: ReviewCardProps) {
             <div className="w-full space-y-2">
               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Message to Astrologer:</p>
               <textarea
-                className="w-full text-sm p-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-1 focus:ring-orange focus:border-orange outline-none resize-none h-20 placeholder:text-gray-300"
+                className="w-full text-sm p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange/50 focus:border-orange outline-none resize-none h-20 placeholder:text-gray-400 transition-all"
                 placeholder="Type your message here..."
                 value={adminMessage}
                 onChange={(e) => setAdminMessage(e.target.value)}

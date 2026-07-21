@@ -75,7 +75,42 @@ export default function AnalyticsPage() {
   const config = useMemo(() => getAnalyticsData(), []);
 
   const dynamicStats = useMemo(() => {
-    if (!dashboardStats) return config.stats;
+    if (!dashboardStats) {
+      return [
+        {
+          title: "Total Revenue",
+          value: "...",
+          icon: IndianRupee,
+          iconColor: "text-green-600",
+          iconBgColor: "bg-green-100",
+          trend: { value: "-", isPositive: true, period: "" },
+        },
+        {
+          title: "Total Users",
+          value: "...",
+          icon: Users,
+          iconColor: "text-blue-600",
+          iconBgColor: "bg-blue-100",
+          trend: { value: "-", isPositive: true, period: "" },
+        },
+        {
+          title: "Total Experts",
+          value: "...",
+          icon: Calendar,
+          iconColor: "text-purple-600",
+          iconBgColor: "bg-purple-100",
+          trend: { value: "-", isPositive: true, period: "" },
+        },
+        {
+          title: "Consultations",
+          value: "...",
+          icon: Target,
+          iconColor: "text-orange-600",
+          iconBgColor: "bg-orange-100",
+          trend: { value: "-", isPositive: true, period: "" },
+        }
+      ];
+    }
     return [
       {
         title: "Total Revenue",
@@ -110,19 +145,22 @@ export default function AnalyticsPage() {
         trend: { value: "+15.3%", isPositive: true, period: "vs last month" },
       }
     ];
-  }, [dashboardStats, config.stats]);
+  }, [dashboardStats]);
 
   return (
-    <main className="space-y-6">
+    <main className="space-y-4 sm:space-y-6 px-4 py-4 sm:p-6">
       {/* Header with time filter */}
       <AnalyticsHeader timeFilter={timeFilter} setTimeFilter={setTimeFilter} />
 
-      {isLoading ? (
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
-        </div>
-      ) : (
-        <>
+      <div className="relative">
+        {/* Optional overlay spinner for subsequent loads, but the layout remains */}
+        {isLoading && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50 backdrop-blur-sm rounded-2xl min-h-[200px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-500"></div>
+          </div>
+        )}
+
+        <div className="space-y-6">
           {/* Stats cards - Revenue, Users, Consultations, Conversion */}
           <StatsCards stats={dynamicStats} columns={4} />
 
@@ -142,14 +180,14 @@ export default function AnalyticsPage() {
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Performing Experts</h3>
                   <div className="flex flex-col items-center justify-center py-10 text-gray-400">
-                    <p>No expert data found for this period</p>
+                    <p>{isLoading ? "Loading..." : "No expert data found for this period"}</p>
                   </div>
                 </div>
               )}
             </div>
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </main>
   );
 }

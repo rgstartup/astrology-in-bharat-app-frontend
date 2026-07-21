@@ -92,12 +92,7 @@
             "icon": "ShoppingBag",
             "permissionKey": "products"
         },
-        {
-            "label": "KYC Review",
-            "href": "/admin/kyc-review",
-            "icon": "FileText",
-            "permissionKey": "kyc_review"
-        },
+
         {
             "label": "Settings",
             "href": "/admin/settings",

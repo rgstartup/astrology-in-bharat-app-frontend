@@ -127,11 +127,11 @@ export default function AdminPayoutsPage() {
     return (
         <div className="min-h-screen bg-transparent">
             <div className="max-w-7xl mx-auto">
-                {/* Role Tabs */}
-                <div className="flex bg-gray-100 p-1 rounded-xl w-fit mb-8 border border-gray-200">
+                {/* Role Tabs - Scrollable on mobile */}
+                <div className="flex overflow-x-auto no-scrollbar bg-gray-100 p-1 rounded-xl w-full sm:w-fit mb-6 border border-gray-200">
                     <button
                         onClick={() => setUserRole('expert')}
-                        className={`px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                             userRole === 'expert'
                                 ? "bg-white text-gray-900 shadow-sm"
                                 : "text-gray-500 hover:text-gray-700"
@@ -141,7 +141,7 @@ export default function AdminPayoutsPage() {
                     </button>
                     <button
                         onClick={() => setUserRole('agent')}
-                        className={`px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                             userRole === 'agent'
                                 ? "bg-white text-gray-900 shadow-sm"
                                 : "text-gray-500 hover:text-gray-700"
@@ -151,7 +151,7 @@ export default function AdminPayoutsPage() {
                     </button>
                     <button
                         onClick={() => setUserRole('merchant')}
-                        className={`px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                             userRole === 'merchant'
                                 ? "bg-white text-gray-900 shadow-sm"
                                 : "text-gray-500 hover:text-gray-700"
@@ -162,16 +162,16 @@ export default function AdminPayoutsPage() {
                 </div>
 
                 {/* Header */}
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-                    <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+                    <h1 className="text-lg sm:text-2xl font-bold text-gray-800 mb-1">
                         {userRole === 'expert' ? 'Expert' : userRole === 'agent' ? 'Agent' : 'Merchant'} Payout Management
                     </h1>
-                    <p className="text-gray-600">Monitor {userRole} withdrawals, track success rates, and manage pending requests</p>
+                    <p className="text-sm text-gray-600">Monitor {userRole} withdrawals, track success rates, and manage pending requests</p>
                 </div>
 
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+                {/* Stats Grid - 2 cols mobile, 5 cols desktop */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-4 sm:mb-6">
                     <div className="bg-white rounded-lg shadow-sm p-5 border-t-4 border-yellow-500">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="text-xs font-medium text-gray-600">Pending</h3>
@@ -218,13 +218,14 @@ export default function AdminPayoutsPage() {
                     </div>
                 </div>
 
-                {/* Filter Tabs */}
-                <div className="flex flex-wrap gap-2 mb-6">
+                {/* Filter Tabs - Scrollable on mobile */}
+                <div className="-mx-4 sm:mx-0 mb-4 sm:mb-6">
+                <div className="flex overflow-x-auto no-scrollbar gap-2 pb-2 px-4 sm:px-0 flex-nowrap">
                     {statusTabs.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setSelectedStatus(tab.id)}
-                            className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                            className={`flex items-center px-3 sm:px-4 py-2 rounded-full text-xs font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                                 selectedStatus === tab.id
                                     ? "bg-primary text-white shadow-md ring-2 ring-primary/20"
                                     : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
@@ -235,14 +236,15 @@ export default function AdminPayoutsPage() {
                         </button>
                     ))}
                 </div>
+                </div>
 
 
 
                 {/* Payout Requests Table */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-                    <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-                        <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                            {statusTabs.find(t => t.id === selectedStatus)?.label} 
+                    <div className="p-4 sm:p-6 border-b border-gray-200 flex justify-between items-center">
+                        <h2 className="text-base sm:text-lg font-semibold text-gray-800 flex items-center">
+                            {statusTabs.find(t => t.id === selectedStatus)?.label}
                             <span className="ml-2 px-2 py-0.5 bg-gray-100 rounded text-xs text-gray-500">{payoutRequests.length}</span>
                         </h2>
                         <button 
@@ -351,8 +353,8 @@ export default function AdminPayoutsPage() {
 
             {/* Rejection Modal */}
             {showRejectModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] animate-in fade-in duration-300">
-                    <div className="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl scale-in-center overflow-hidden relative">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] animate-in fade-in duration-300 px-4">
+                    <div className="bg-white rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl scale-in-center overflow-hidden relative">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full -mr-16 -mt-16 blur-3xl opacity-50" />
                         
                         <div className="flex items-center gap-4 mb-6">
