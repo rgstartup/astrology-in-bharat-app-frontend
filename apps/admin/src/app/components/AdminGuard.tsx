@@ -19,17 +19,17 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
       console.log("AdminGuard - Current User:", user);
 
       const roles = user?.roles || [];
+      const validRoles = ['ADMIN', 'SUPER_ADMIN', 'SUB_ADMIN'];
       const isAdmin =
-        user?.role === 'admin' ||
-        user?.role === 'ADMIN' ||
+        validRoles.includes(user?.role?.toUpperCase()) ||
         roles.some((r: any) =>
-          (typeof r === 'string' ? r : r.name).toUpperCase() === "ADMIN"
+          validRoles.includes((typeof r === 'string' ? r : r.name).toUpperCase())
         );
 
       console.log("AdminGuard - Is Admin:", isAdmin, "Role:", user?.role, "Roles:", roles);
 
       if (!isAdmin) {
-        console.error("Access denied: User does not have ADMIN role");
+        console.error("Access denied: User does not have an ADMIN role");
         router.replace("/");
       }
     }

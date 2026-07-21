@@ -8,6 +8,8 @@ import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
 import LoveCalculatorSeoContent from "./love-calculator-seo.component";
+import { useLanguageStore } from "@repo/store";
+import { homeTranslations } from "@/lib/translations/home";
 
 // ── Circular Progress Ring ───────────────────────────────────────────────────
 const CircleProgress = ({ percent }: { percent: number }) => {
@@ -44,20 +46,20 @@ const MetricCard = ({ icon, label, value }: { icon: string; label: string; value
 );
 
 // ── Result Panel ─────────────────────────────────────────────────────────────
-const ResultPanel = ({ result }: { result: any }) => {
+const ResultPanel = ({ result, t }: { result: any, t: any }) => {
   const score = result?.score ?? result?.loveScore ?? result?.percentage ?? 76;
   const label =
-    score >= 80 ? "Excellent Compatibility" :
-    score >= 60 ? "Good Compatibility" :
-    score >= 40 ? "Average Compatibility" : "Low Compatibility";
+    score >= 80 ? t.result.excellent :
+    score >= 60 ? t.result.good :
+    score >= 40 ? t.result.average : t.result.low;
   const desc =
     score >= 80
-      ? "You two are a perfect match! Your bond is deep, passionate, and full of love."
+      ? t.result.descExcellent
       : score >= 60
-      ? "You both share a strong emotional connect and have a good understanding. Keep communication open to make your bond even stronger."
+      ? t.result.descGood
       : score >= 40
-      ? "There are some areas to work on, but with effort and understanding, you can build a great relationship."
-      : "You may face challenges, but love and patience can overcome many obstacles.";
+      ? t.result.descAverage
+      : t.result.descLow;
 
   const love = Math.min(100, score + 4);
   const trust = Math.max(0, score - 6);
@@ -71,7 +73,7 @@ const ResultPanel = ({ result }: { result: any }) => {
         <div className="w-10 h-10 rounded-full bg-[#FFF0E6] flex items-center justify-center">
           <i className="fa-solid fa-people-arrows text-[#F26500] text-lg" />
         </div>
-        <h2 className="text-xl font-black text-[#1A1A1A]">Your Compatibility Result</h2>
+        <h2 className="text-xl font-black text-[#1A1A1A]">{t.result.title}</h2>
       </div>
 
       {/* Circle */}
@@ -83,16 +85,16 @@ const ResultPanel = ({ result }: { result: any }) => {
 
       {/* Metric Cards */}
       <div className="flex gap-2 flex-wrap">
-        <MetricCard icon="fa-solid fa-heart" label="Love" value={love} />
-        <MetricCard icon="fa-solid fa-shield-heart" label="Trust" value={trust} />
-        <MetricCard icon="fa-solid fa-comments" label="Communication" value={communication} />
-        <MetricCard icon="fa-solid fa-face-smile-hearts" label="Emotions" value={emotions} />
+        <MetricCard icon="fa-solid fa-heart" label={t.result.metrics.love} value={love} />
+        <MetricCard icon="fa-solid fa-shield-heart" label={t.result.metrics.trust} value={trust} />
+        <MetricCard icon="fa-solid fa-comments" label={t.result.metrics.communication} value={communication} />
+        <MetricCard icon="fa-solid fa-face-smile-hearts" label={t.result.metrics.emotions} value={emotions} />
       </div>
 
       {/* Detailed Report btn */}
       <button className="w-full border border-[#F26500] text-[#F26500] rounded-2xl py-3 font-bold flex items-center justify-center gap-2 hover:bg-[#FFF5EE] transition-colors">
         <i className="fa-solid fa-chart-bar" />
-        Detailed Report
+        {t.result.detailedReport}
       </button>
     </div>
   );
@@ -100,6 +102,10 @@ const ResultPanel = ({ result }: { result: any }) => {
 
 // ── Main Page ────────────────────────────────────────────────────────────────
 const LoveCalculatorPage = () => {
+  const { lang } = useLanguageStore();
+  const tHome = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+  const t = tHome.loveCalculator;
+
   const [yourName, setYourName] = useState("");
   const [partnerName, setPartnerName] = useState("");
   const [yourDob, setYourDob] = useState("");
@@ -143,7 +149,7 @@ const LoveCalculatorPage = () => {
           <span className="mx-2">›</span>
           <span className="text-[#F26500] font-semibold">Calculators</span>
           <span className="mx-2">›</span>
-          <span className="text-[#444]">Love Calculator</span>
+          <span className="text-[#444]">{t.title}</span>
         </p>
       </div>
 
@@ -162,8 +168,8 @@ const LoveCalculatorPage = () => {
                 <i className="fa-solid fa-heart text-[#F26500] text-lg" />
               </div>
               <div>
-                <h1 className="text-xl font-black text-[#1A1A1A]">Love Calculator</h1>
-                <p className="text-xs text-[#555] font-medium">Calculate your love compatibility</p>
+                <h1 className="text-xl font-black text-[#1A1A1A]">{t.title}</h1>
+                <p className="text-xs text-[#555] font-medium">{t.subtitle}</p>
               </div>
             </div>
 
@@ -176,11 +182,11 @@ const LoveCalculatorPage = () => {
 
             {/* Your Name */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-[#333]">Your Name</label>
+              <label className="text-sm font-semibold text-[#333]">{t.form.yourName}</label>
               <div className="relative">
                   <input
                     type="text"
-                    placeholder="Enter your name"
+                    placeholder={t.form.yourNamePlaceholder}
                     value={yourName}
                     onChange={(e) => setYourName(e.target.value)}
                     className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
@@ -191,11 +197,11 @@ const LoveCalculatorPage = () => {
 
             {/* Partner Name */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-[#333]">Your Partner's Name</label>
+              <label className="text-sm font-semibold text-[#333]">{t.form.partnerName}</label>
               <div className="relative">
                   <input
                     type="text"
-                    placeholder="Enter partner name"
+                    placeholder={t.form.partnerNamePlaceholder}
                     value={partnerName}
                     onChange={(e) => setPartnerName(e.target.value)}
                     className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
@@ -206,7 +212,7 @@ const LoveCalculatorPage = () => {
 
             {/* Your DOB */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-[#333]">Your Birth Date</label>
+              <label className="text-sm font-semibold text-[#333]">{t.form.yourDob}</label>
               <div className="relative">
                   <input
                     type="date"
@@ -219,7 +225,7 @@ const LoveCalculatorPage = () => {
 
             {/* Partner DOB */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-[#333]">Your Partner's Birth Date</label>
+              <label className="text-sm font-semibold text-[#333]">{t.form.partnerDob}</label>
               <div className="relative">
                   <input
                     type="date"
@@ -241,11 +247,11 @@ const LoveCalculatorPage = () => {
               ) : (
                 <i className="fa-solid fa-heart" />
               )}
-              {loading ? "Calculating..." : "Calculate Compatibility"}
+              {loading ? t.form.calculatingBtn : t.form.calculateBtn}
             </button>
           </form>
           {/* ── Right: Result (only when available) ── */}
-          {result && <ResultPanel result={result} />}
+          {result && <ResultPanel result={result} t={t} />}
           {/* ── Right: Guidance Card ── */}
           <div className={result ? "lg:col-span-1 md:col-span-2" : "col-span-1"}>
             <PersonalGuidanceCard className="h-full" />
@@ -254,8 +260,8 @@ const LoveCalculatorPage = () => {
         {/* Bottom CTA Banner */}
         <GuidanceCTA 
           className="mt-8"
-          title="Want to know more about your love life?"
-          description="Talk to our Astrology Experts and get personalized relationship guidance."
+          title={t.cta.title}
+          description={t.cta.desc}
         />
 
       </div>

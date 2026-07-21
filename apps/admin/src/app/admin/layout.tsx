@@ -45,6 +45,7 @@ interface MenuItem {
   label: string;
   href: string;
   icon: any; // Changed to any to handle mapped components
+  permissionKey?: string | null;
   submenu?: Omit<MenuItem, "submenu">[];
 }
 
@@ -77,7 +78,7 @@ const IconMap: Record<string, React.ElementType> = {
   BadgeIndianRupee,
 };
 
-const menuItems: MenuItem[] = adminData.menuItems.map((item: any) => ({
+const allMenuItems: MenuItem[] = adminData.menuItems.map((item: any) => ({
   ...item,
   icon: IconMap[item.icon] || User,
   submenu: item.submenu?.map((sub: any) => ({
@@ -85,6 +86,31 @@ const menuItems: MenuItem[] = adminData.menuItems.map((item: any) => ({
     icon: IconMap[sub.icon] || User,
   })),
 }));
+
+// User ke role/permissions ke hisab se menu filter karo
+function filterMenuItems(items: MenuItem[], userRoles?: string[], permissions?: string[] | null): MenuItem[] {
+  const isSuperAdmin = userRoles?.some(r => ['admin', 'super_admin'].includes(r.toLowerCase()));
+
+  return items
+    .filter(item => {
+      // null permissionKey = sabko dikhao
+      if (!item.permissionKey) return true;
+      // super_admin_only = sirf SUPER_ADMIN/ADMIN ko dikhao
+      if (item.permissionKey === 'super_admin_only') return isSuperAdmin;
+      // SUPER_ADMIN ko sab dikhao
+      if (isSuperAdmin) return true;
+      // SUB_ADMIN ke liye: unki permission list mein check karo
+      return permissions?.includes(item.permissionKey) ?? false;
+    })
+    .map(item => ({
+      ...item,
+      submenu: item.submenu
+        ? filterMenuItems(item.submenu as MenuItem[], userRoles, permissions)
+        : undefined,
+    }))
+    // Empty submenus wale parent items ko hatao (agar submenu tha but sab filter ho gaya)
+    .filter(item => !item.submenu || item.submenu.length > 0 || item.href !== '#');
+}
 
 interface SidebarProps {
   isOpen: boolean;
@@ -223,6 +249,15 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
 const Sidebar: React.FC<SidebarProps> = memo(
   ({ isOpen, toggleSidebar }) => {
     const pathname = usePathname();
+    const { user } = useAuthStore();
+
+    // User ke role aur permissions ke hisab se menu filter karo
+    const menuItems = filterMenuItems(
+      allMenuItems,
+      user?.roles,
+      user?.admin_permissions,
+    );
+
     const initialOpenSubmenu = menuItems.find(
       (item) => item.submenu && item.submenu.some((sub) => sub.href === pathname)
     )?.label || null;
@@ -381,9 +416,9 @@ export default function AdminLayout({
                   </button>
                   <h1 className="text-2xl font-semibold text-gray-800">
                     {(() => {
-                      const found = menuItems.find((item) => item.href === pathname);
+                      const found = allMenuItems.find((item) => item.href === pathname);
                       if (found) return found.label;
-                      for (const item of menuItems) {
+                      for (const item of allMenuItems) {
                         if (item.submenu) {
                           const subFound = item.submenu.find((sub) => sub.href === pathname);
                           if (subFound) return subFound.label;

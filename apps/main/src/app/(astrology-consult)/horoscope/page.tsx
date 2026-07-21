@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore, horoscopeTranslations } from "@repo/store";
 import { ZodiacSignsData } from "@/components/features/services/zodiac";
 import HeroComponent from "./hero.component";
 import ZodiacGrid from "./zodiac-grid.component";
@@ -14,7 +14,8 @@ import HoroscopeSeoContent from "./horoscope-seo-content.component";
 const HoroscopeContent = () => {
   const router = useRouter();
   const { lang } = useLanguageStore();
-  const [activeTab, setActiveTab] = useState("Daily Horoscope");
+  const t = horoscopeTranslations[lang];
+  const [activeTab, setActiveTab] = useState("daily");
   const [signPreviews, setSignPreviews] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -40,10 +41,10 @@ const HoroscopeContent = () => {
   }, [lang]);
 
   const tabs = [
-    { id: "daily", label: "Daily Horoscope" },
-    { id: "weekly", label: "Weekly Horoscope" },
-    { id: "monthly", label: "Monthly Horoscope" },
-    { id: "yearly", label: "Yearly Horoscope" },
+    { id: "daily", label: t.tabs.daily },
+    { id: "weekly", label: t.tabs.weekly },
+    { id: "monthly", label: t.tabs.monthly },
+    { id: "yearly", label: t.tabs.yearly },
   ];
 
   const handleSignSelect = (sign: any) => {
@@ -60,9 +61,9 @@ const HoroscopeContent = () => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.label)}
+              onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-3.5 rounded-xl text-[14px] font-bold transition-all flex items-center gap-2 w-full md:flex-1 justify-center ${
-                activeTab === tab.label
+                activeTab === tab.id
                   ? "bg-[#2D1205] text-white shadow-md"
                   : "bg-white text-[#3D1A0B] hover:bg-gray-50 border border-[#F0E6DD]"
               }`}
@@ -89,12 +90,12 @@ const HoroscopeContent = () => {
                   <i className="fa-solid fa-dharmachakra text-[#F26500] text-[40px] sm:text-[48px]"></i>
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#3D1A0B] text-[15px] sm:text-[18px] leading-tight sm:leading-normal">Want a more accurate prediction?</h3>
-                  <p className="text-gray-800 text-[12px] sm:text-[13px] mt-0.5">Get a personalized horoscope based on your birth details.</p>
+                  <h3 className="font-bold text-[#3D1A0B] text-[15px] sm:text-[18px] leading-tight sm:leading-normal">{t.bottomCta.title}</h3>
+                  <p className="text-gray-800 text-[12px] sm:text-[13px] mt-0.5">{t.bottomCta.subtitle}</p>
                 </div>
               </div>
               <button className="bg-transparent border border-[#F26500] text-[#F26500] hover:bg-[#F26500] hover:text-white transition-colors px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm font-bold whitespace-nowrap w-full sm:w-auto">
-                Generate My Horoscope &rarr;
+                {t.bottomCta.btn}
               </button>
             </div>
           </div>
@@ -111,12 +112,12 @@ const HoroscopeContent = () => {
       <div className="max-w-[1300px] mx-auto px-4 md:px-8 mt-12">
         <div className="bg-[#2D1205] rounded-[24px] p-5 md:p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border border-[#3D1A0B]">
           <div className="relative z-10 w-full text-center md:text-left">
-            <h3 className="text-[17px] sm:text-[19px] md:text-[22px] font-serif font-bold text-[#F26500] mb-2 leading-tight md:leading-normal">Want to know which temple is best for you?</h3>
-            <p className="text-white/80 text-[13px] md:text-[14px]">Talk to our Astrology Experts and get personalized temple recommendations.</p>
+            <h3 className="text-[17px] sm:text-[19px] md:text-[22px] font-serif font-bold text-[#F26500] mb-2 leading-tight md:leading-normal">{t.bottomCta.templeTitle}</h3>
+            <p className="text-white/80 text-[13px] md:text-[14px]">{t.bottomCta.templeSubtitle}</p>
           </div>
           <div className="relative z-10">
             <Link href="/our-experts" className="bg-[#F26500] hover:bg-orange-600 transition-colors text-white text-[15px] font-bold px-6 py-3 rounded-xl flex items-center justify-center gap-2 whitespace-nowrap">
-              <i className="fa-solid fa-comments"></i> Talk to Expert
+              <i className="fa-solid fa-comments"></i> {t.bottomCta.templeBtn}
             </Link>
           </div>
           {/* Decorative */}

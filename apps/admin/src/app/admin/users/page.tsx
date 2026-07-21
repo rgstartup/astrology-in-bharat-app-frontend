@@ -148,9 +148,16 @@ export default function UsersPage() {
     }
 
     // Update data locally without refetching from backend
-    setUsers(prev => prev.map(u => 
-      u.id === confirmModal.user!.id 
-        ? { ...u, is_blocked: !confirmModal.user!.is_blocked } 
+    setUsers(prev => prev.map(u =>
+      u.id === confirmModal.user!.id
+        ? {
+          ...u,
+          is_blocked: !confirmModal.user!.is_blocked,
+          // Agar block ho raha hai: session ki info nahi hai, isliye refetch karenge
+          // Unblock ho raha hai: blocked_by clear karo
+          blocked_by_name: !confirmModal.user!.is_blocked ? null : u.blocked_by_name,
+          blocked_at: !confirmModal.user!.is_blocked ? null : u.blocked_at,
+        }
         : u
     ));
     await fetchStats(); // Refetch stats only, not the large list

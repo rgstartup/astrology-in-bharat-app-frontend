@@ -24,16 +24,6 @@ export async function adminLoginAction(formData: any) {
         return { error: getErrorMessage(error) };
     }
 
-    // Admin role check — supports both new JWT (role) and legacy (roles[])
-    const isAdmin =
-        data?.user?.role === 'admin' ||
-        data?.user?.roles?.some(
-            (r: any) => (typeof r === 'string' ? r : r.name).toLowerCase() === "admin"
-        );
-
-    if (!isAdmin) {
-        return { error: "Access denied: Not an administrator" };
-    }
 
     // Set httpOnly cookies
     const cookieStore = await cookies();

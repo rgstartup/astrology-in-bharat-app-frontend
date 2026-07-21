@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-toastify";
 import { adminLoginAction } from "@/actions/auth";
 import { getErrorMessage } from "@repo/lib/utils/error";
+import adminData from "../../../public/data/admin_data.json";
 
 export default function AdminLoginForm() {
     const router = useRouter();
@@ -31,10 +32,34 @@ export default function AdminLoginForm() {
                 setError(result.error);
                 toast.error(result.error);
             } else if (result.success) {
-                // ✅ Login through store (tokens already set as httpOnly)
                 storeLogin(result.user);
                 toast.success("Login Successful! Redirecting...");
-                router.push("/admin/dashboard");
+                
+                let redirectPath = "/admin/dashboard";
+                
+                // If it's a sub-admin and they don't have dashboard access, find their first permitted page
+                const isSubAdmin = result.user?.roles?.includes('sub_admin') || result.user?.role === 'sub_admin';
+                const perms = result.user?.admin_permissions || [];
+                
+                if (isSubAdmin && !perms.includes('dashboard') && perms.length > 0) {
+                    const firstPerm = perms[0];
+                    let foundHref = null;
+                    
+                    for (const item of adminData.menuItems) {
+                        if (item.permissionKey === firstPerm) foundHref = item.href;
+                        if (item.submenu) {
+                            for (const sub of item.submenu) {
+                                if (sub.permissionKey === firstPerm) foundHref = sub.href;
+                            }
+                        }
+                    }
+                    
+                    if (foundHref) {
+                        redirectPath = foundHref;
+                    }
+                }
+                
+                router.push(redirectPath);
             }
         } catch (err: any) {
             const msg = getErrorMessage(err) || "An unexpected error occurred.";
