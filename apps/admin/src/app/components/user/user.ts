@@ -7,6 +7,8 @@ export interface User {
   updated_at?: string;
   avatar?: string;
   is_blocked: boolean;
+  blocked_by_name?: string | null;  // Kisne block kiya (admin/sub-admin email)
+  blocked_at?: string | null;       // Kab block kiya
 
   profile_client?: {
     id: string;

@@ -3,101 +3,132 @@
         {
             "label": "Dashboard",
             "href": "/admin/dashboard",
-            "icon": "LayoutDashboard"
+            "icon": "LayoutDashboard",
+            "permissionKey": "dashboard"
         },
         {
             "label": "Management Hub",
             "href": "#",
             "icon": "Settings",
+            "permissionKey": null,
             "submenu": [
                 {
                     "label": "User Management",
                     "href": "/admin/users",
-                    "icon": "Users"
+                    "icon": "Users",
+                    "permissionKey": "user_management"
                 },
                 {
                     "label": "Expert Management",
                     "href": "/admin/experts",
-                    "icon": "UserCheck"
+                    "icon": "UserCheck",
+                    "permissionKey": "expert_management"
                 },
                 {
                     "label": "Mandir Management",
                     "href": "/admin/mandirs",
-                    "icon": "Building2"
+                    "icon": "Building2",
+                    "permissionKey": "mandir_management"
                 },
                 {
                     "label": "Shop Management",
                     "href": "/admin/puja-shops",
-                    "icon": "ShoppingBag"
+                    "icon": "ShoppingBag",
+                    "permissionKey": "shop_management"
                 },
                 {
                     "label": "Order Management",
                     "href": "/admin/orders",
-                    "icon": "Package"
+                    "icon": "Package",
+                    "permissionKey": "order_management"
                 },
                 {
                     "label": "Agent Management",
                     "href": "/admin/agents",
-                    "icon": "Handshake"
+                    "icon": "Handshake",
+                    "permissionKey": "agent_management"
                 }
             ]
         },
         {
             "label": "Coupons/Offers",
             "href": "/admin/coupons",
-            "icon": "Tag"
+            "icon": "Tag",
+            "permissionKey": "coupons_offers"
         },
         {
             "label": "Live Sessions Monitor",
             "href": "/admin/live-sessions",
-            "icon": "Tv"
+            "icon": "Tv",
+            "permissionKey": "live_sessions"
         },
         {
             "label": "Payout Requests",
             "href": "/admin/payouts",
-            "icon": "Wallet"
+            "icon": "Wallet",
+            "permissionKey": "payout_requests"
         },
         {
             "label": "Refund Management",
             "href": "/admin/refunds",
-            "icon": "RefreshCw"
+            "icon": "RefreshCw",
+            "permissionKey": "refund_management"
         },
         {
             "label": "Reviews Moderation",
             "href": "/admin/reviews",
-            "icon": "Star"
+            "icon": "Star",
+            "permissionKey": "reviews_moderation"
         },
         {
             "label": "Analytics Dashboard",
             "href": "/admin/analytics",
-            "icon": "BarChart3"
+            "icon": "BarChart3",
+            "permissionKey": "analytics_dashboard"
         },
         {
             "label": "Products",
             "href": "/admin/products",
-            "icon": "ShoppingBag"
+            "icon": "ShoppingBag",
+            "permissionKey": "products"
+        },
+        {
+            "label": "KYC Review",
+            "href": "/admin/kyc-review",
+            "icon": "FileText",
+            "permissionKey": "kyc_review"
         },
         {
             "label": "Settings",
             "href": "/admin/settings",
-            "icon": "Settings"
+            "icon": "Settings",
+            "permissionKey": "settings"
         },
         {
             "label": "Account",
             "href": "#",
             "icon": "User",
+            "permissionKey": null,
             "submenu": [
                 {
                     "label": "Profile Management",
                     "href": "/admin/profile",
-                    "icon": "User"
+                    "icon": "User",
+                    "permissionKey": null
+                },
+                {
+                    "label": "Sub-Admin Management",
+                    "href": "/admin/sub-admins",
+                    "icon": "UserCheck",
+                    "permissionKey": "super_admin_only"
                 }
             ]
         },
         {
             "label": "Signout",
             "href": "#",
-            "icon": "LogOut"
+            "icon": "LogOut",
+            "permissionKey": null
         }
     ],
     "dashboard": {

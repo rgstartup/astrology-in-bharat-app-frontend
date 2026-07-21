@@ -8,6 +8,8 @@ interface User {
     email?: string;
     role?: string;       // Single role from JWT (new format)
     roles?: string[];    // Array format (backward compat)
+    // Sub-admin ke liye: allowed pages ki list. Super admin ke liye undefined/null.
+    admin_permissions?: string[] | null;
     [key: string]: any;
 }
 

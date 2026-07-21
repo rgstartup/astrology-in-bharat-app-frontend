@@ -132,18 +132,36 @@ export const getColumns = (
       key: "is_blocked",
       label: "Admin Actions",
       render: (user: User) => (
-        <span
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleBlock?.(user);
-          }}
-          className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors hover:opacity-80 ${user.is_blocked
-            ? "bg-red-100 text-red-700"
-            : "bg-green-100 text-green-700"
-            }`}
-        >
-          {user.is_blocked ? "Unblock" : "Block"}
-        </span>
+        <div className="flex flex-col gap-1">
+          <span
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleBlock?.(user);
+            }}
+            className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors hover:opacity-80 w-fit ${user.is_blocked
+              ? "bg-red-100 text-red-700"
+              : "bg-green-100 text-green-700"
+              }`}
+          >
+            {user.is_blocked ? "Unblock" : "Block"}
+          </span>
+
+          {/* Agar user block hai to kisne aur kab block kiya show karo */}
+          {user.is_blocked && user.blocked_by_name && (
+            <div className="text-[10px] text-gray-400 leading-tight">
+              <span className="font-medium text-gray-500">By:</span> {user.blocked_by_name}
+              {user.blocked_at && (
+                <span className="block">
+                  {new Date(user.blocked_at).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       ),
     },
   ];
