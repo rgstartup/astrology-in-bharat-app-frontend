@@ -35,7 +35,6 @@ const ALL_PERMISSIONS = [
   { key: "coupons_offers", label: "Coupons / Offers", category: "Commerce" },
   { key: "products", label: "Products", category: "Commerce" },
   { key: "analytics_dashboard", label: "Analytics Dashboard", category: "Analytics" },
-  { key: "kyc_review", label: "KYC Review", category: "Compliance" },
   { key: "settings", label: "Settings", category: "System" },
 ];
 
@@ -215,7 +214,7 @@ export default function SubAdminsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
             <Shield className="w-7 h-7 text-primary" />
@@ -225,7 +224,7 @@ export default function SubAdminsPage() {
             Create sub-admins and control their page access
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex justify-between sm:justify-end gap-2 w-full sm:w-auto mt-2 sm:mt-0">
           <button
             onClick={fetchSubAdmins}
             className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
@@ -278,19 +277,38 @@ export default function SubAdminsPage() {
                         {(sa.admin_permissions ?? []).length === 0 ? (
                           <span className="text-gray-400 text-xs italic">No access</span>
                         ) : (
-                          (sa.admin_permissions ?? []).slice(0, 3).map((perm) => (
-                            <span
-                              key={perm}
-                              className="bg-primary/10 text-primary text-[11px] font-medium px-2 py-0.5 rounded-full"
-                            >
-                              {ALL_PERMISSIONS.find((p) => p.key === perm)?.label ?? perm}
-                            </span>
-                          ))
-                        )}
-                        {(sa.admin_permissions ?? []).length > 3 && (
-                          <span className="bg-gray-100 text-gray-500 text-[11px] font-medium px-2 py-0.5 rounded-full">
-                            +{(sa.admin_permissions ?? []).length - 3} more
-                          </span>
+                          <>
+                            {/* Always show first permission */}
+                            {sa.admin_permissions && sa.admin_permissions.length > 0 && (
+                              <span className="bg-primary/10 text-primary text-[11px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap">
+                                {ALL_PERMISSIONS.find((p) => p.key === sa.admin_permissions![0])?.label ?? sa.admin_permissions![0]}
+                              </span>
+                            )}
+                            
+                            {/* Show 2nd and 3rd only on sm and above */}
+                            {(sa.admin_permissions ?? []).slice(1, 3).map((perm) => (
+                              <span
+                                key={perm}
+                                className="hidden sm:inline-flex bg-primary/10 text-primary text-[11px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap"
+                              >
+                                {ALL_PERMISSIONS.find((p) => p.key === perm)?.label ?? perm}
+                              </span>
+                            ))}
+
+                            {/* Mobile "+ X more" (if > 1) */}
+                            {(sa.admin_permissions ?? []).length > 1 && (
+                              <span className="sm:hidden bg-gray-100 text-gray-500 text-[11px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap">
+                                +{(sa.admin_permissions ?? []).length - 1} more
+                              </span>
+                            )}
+
+                            {/* Desktop "+ Y more" (if > 3) */}
+                            {(sa.admin_permissions ?? []).length > 3 && (
+                              <span className="hidden sm:inline-flex bg-gray-100 text-gray-500 text-[11px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap">
+                                +{(sa.admin_permissions ?? []).length - 3} more
+                              </span>
+                            )}
+                          </>
                         )}
                       </div>
                     </td>

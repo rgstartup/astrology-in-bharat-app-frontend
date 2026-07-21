@@ -24,13 +24,14 @@ export function AnalyticsHeader({ timeFilter, setTimeFilter }: AnalyticsHeaderPr
       </div>
 
       {/* ✅ Using Button Component */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
         {timeFilters.map((filter) => (
           <Button
             key={filter.value}
             variant={timeFilter === filter.value ? "primary" : "outline"}
             size="sm"
             onClick={() => setTimeFilter(filter.value)}
+            className="whitespace-nowrap flex-shrink-0"
           >
             {filter.label}
           </Button>

@@ -33,7 +33,7 @@ export function StatsCards({ stats, columns = 4 }: StatsCardsProps) {
     if (columns === 5) gridColsClass = "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5";
 
     return (
-        <div className={`grid grid-cols-1 ${gridColsClass} gap-6`}>
+        <div className={`grid grid-cols-1 ${gridColsClass} gap-4 sm:gap-6`}>
             {stats.map((stat, index) => {
                 const Icon = stat.icon;
 

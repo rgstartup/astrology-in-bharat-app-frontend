@@ -19,59 +19,57 @@ export default function AdminProfilePage() {
     else if (roles.includes("sub_admin") || user?.role === "sub_admin") displayRole = "Sub Admin";
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-4xl mx-auto">
-                {/* Header */}
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-                    <h1 className="text-2xl font-bold text-gray-800 mb-2">Profile Management</h1>
-                    <p className="text-gray-600">View your admin account details</p>
+        <div className="w-full max-w-4xl mx-auto space-y-6">
+            {/* Header */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">Profile Management</h1>
+                <p className="text-sm sm:text-base text-gray-600">View your admin account details</p>
+            </div>
+
+            {/* Profile Card */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
+                <div className="flex items-center space-x-4 mb-6">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <UserComp className="w-8 h-8 sm:w-10 sm:h-10 text-yellow-600" />
+                    </div>
+                    <div>
+                        <h2 className="text-lg sm:text-xl font-semibold text-gray-800">{user?.name || "Administrator"}</h2>
+                        <p className="text-sm sm:text-base text-gray-600">{displayRole}</p>
+                    </div>
                 </div>
 
-                {/* Profile Card */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                    <div className="flex items-center space-x-4 mb-6">
-                        <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center">
-                            <UserComp className="w-10 h-10 text-yellow-600" />
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-semibold text-gray-800">{user?.name || "Administrator"}</h2>
-                            <p className="text-gray-600">{displayRole}</p>
+                <div className="space-y-4">
+                    {/* Email */}
+                    <div className="flex items-center space-x-3 sm:space-x-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <MailComp className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                        <div className="overflow-hidden">
+                            <p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wider mb-0.5">Email Address</p>
+                            <p className="text-sm sm:text-base font-medium text-gray-800 truncate">{user?.email || "—"}</p>
                         </div>
                     </div>
 
-                    <div className="space-y-4">
-                        {/* Email */}
-                        <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
-                            <MailComp className="w-5 h-5 text-gray-600" />
-                            <div>
-                                <p className="text-sm text-gray-600">Email Address</p>
-                                <p className="font-medium text-gray-800">{user?.email || "—"}</p>
-                            </div>
+                    {/* Role */}
+                    <div className="flex items-center space-x-3 sm:space-x-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <ShieldComp className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                        <div>
+                            <p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wider mb-0.5">Role</p>
+                            <p className="text-sm sm:text-base font-medium text-gray-800">{displayRole}</p>
                         </div>
+                    </div>
 
-                        {/* Role */}
-                        <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
-                            <ShieldComp className="w-5 h-5 text-gray-600" />
-                            <div>
-                                <p className="text-sm text-gray-600">Role</p>
-                                <p className="font-medium text-gray-800">{displayRole}</p>
-                            </div>
-                        </div>
-
-                        {/* Joined Date */}
-                        <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
-                            <CalendarComp className="w-5 h-5 text-gray-600" />
-                            <div>
-                                <p className="text-sm text-gray-600">Member Since</p>
-                                <p className="font-medium text-gray-800">
-                                    {user?.created_at
-                                        ? new Date(user.created_at).toLocaleDateString("en-US", {
-                                              month: "long",
-                                              year: "numeric",
-                                          })
-                                        : "Account created recently"}
-                                </p>
-                            </div>
+                    {/* Joined Date */}
+                    <div className="flex items-center space-x-3 sm:space-x-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <CalendarComp className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                        <div>
+                            <p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wider mb-0.5">Member Since</p>
+                            <p className="text-sm sm:text-base font-medium text-gray-800">
+                                {user?.created_at
+                                    ? new Date(user.created_at).toLocaleDateString("en-US", {
+                                          month: "long",
+                                          year: "numeric",
+                                      })
+                                    : "Account created recently"}
+                            </p>
                         </div>
                     </div>
                 </div>

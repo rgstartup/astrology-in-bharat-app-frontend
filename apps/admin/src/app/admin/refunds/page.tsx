@@ -202,18 +202,20 @@ export default function RefundManagementPage() {
   return (
     <main className="space-y-6 px-4 py-4 sm:p-6">
       {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-3xl font-bold text-gray-900">Refund & Complaint Management</h1>
-          <p className="text-gray-600 mt-1">Manage user issues from consultations, orders, and pujas</p>
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900">Refund &amp; Complaint Management</h1>
+          <p className="text-sm text-gray-600 mt-1">Manage user issues from consultations, orders, and pujas</p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Button variant="secondary" icon={Download} onClick={() => window.print()}>
-            Export Page
+        <div className="grid grid-cols-2 sm:flex sm:items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+          <Button variant="secondary" onClick={() => window.print()} size="sm" className="w-full sm:w-auto justify-center whitespace-nowrap">
+            <span className="hidden sm:inline">Export Page</span>
+            <span className="sm:hidden">Export</span>
           </Button>
-          <Button variant="primary" onClick={fetchRefunds} icon={RefreshCw}>
-            Refresh Data
+          <Button variant="primary" onClick={fetchRefunds} size="sm" className="w-full sm:w-auto justify-center whitespace-nowrap">
+            <span className="hidden sm:inline">Refresh Data</span>
+            <span className="sm:hidden">Refresh</span>
           </Button>
         </div>
       </div>

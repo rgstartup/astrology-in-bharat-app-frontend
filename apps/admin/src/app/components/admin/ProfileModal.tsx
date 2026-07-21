@@ -126,39 +126,41 @@ export function ProfileModal({
 
   return (
     <div className="fixed inset-0 z-[100] overflow-y-auto animate-in fade-in duration-200 font-outfit">
-      <div className="flex items-center justify-center min-h-screen px-4 py-8">
+      <div className="flex items-center justify-center min-h-screen px-3 sm:px-4 py-6 sm:py-8">
         {/* Backdrop */}
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
         {/* Modal */}
-        <div className="relative bg-[#FCFBFA] rounded-[3rem] shadow-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto animate-in zoom-in-95 duration-300 border border-white">
+        <div className="relative bg-[#FCFBFA] rounded-[1.5rem] sm:rounded-[3rem] shadow-2xl max-w-5xl w-full max-h-[92vh] overflow-hidden animate-in zoom-in-95 duration-300 border border-white flex flex-col">
 
-          <button onClick={onClose} className="absolute top-8 right-8 z-10 text-gray-400 hover:text-gray-900 bg-white shadow-sm p-3 rounded-full transition-all">
-            <XComp className="w-6 h-6" />
+          <button onClick={onClose} className="absolute top-4 right-4 sm:top-8 sm:right-8 z-10 text-gray-400 hover:text-gray-900 bg-white shadow-sm p-2 sm:p-3 rounded-full transition-all">
+            <XComp className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
+          {/* Scrollable Content */}
+          <div className="overflow-y-auto flex-1">
           {/* Header Section */}
-          <div className="p-10 pb-0 flex flex-col lg:flex-row items-center lg:items-end gap-8 mb-10">
-            <div className="relative group">
+          <div className="p-5 sm:p-10 pb-0 flex flex-col lg:flex-row items-center lg:items-end gap-4 sm:gap-8 mb-5 sm:mb-10">
+            <div className="relative group flex-shrink-0">
               <div className="absolute -inset-2 bg-gradient-to-tr from-amber-500 to-orange-300 rounded-full blur opacity-20 group-hover:opacity-40 transition animate-pulse" />
               {avatar ? (
-                <img src={avatar} className="relative w-40 h-40 rounded-full object-cover border-[8px] border-white shadow-2xl" alt={name} />
+                <img src={avatar} className="relative w-24 h-24 sm:w-40 sm:h-40 rounded-full object-cover border-[5px] sm:border-[8px] border-white shadow-2xl" alt={name} />
               ) : (
-                <div className="relative w-40 h-40 rounded-full border-[8px] border-white shadow-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-400 font-bold text-5xl">
+                <div className="relative w-24 h-24 sm:w-40 sm:h-40 rounded-full border-[5px] sm:border-[8px] border-white shadow-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-400 font-bold text-3xl sm:text-5xl">
                   {name ? name.charAt(0).toUpperCase() : "U"}
                 </div>
               )}
-              <div className="absolute bottom-2 right-2 w-10 h-10 bg-emerald-500 rounded-full border-4 border-white flex items-center justify-center text-white">
-                <CheckCircle2Comp className="w-5 h-5" />
+              <div className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 w-7 h-7 sm:w-10 sm:h-10 bg-emerald-500 rounded-full border-2 sm:border-4 border-white flex items-center justify-center text-white">
+                <CheckCircle2Comp className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </div>
 
-            <div className="flex-1 pb-4 text-center lg:text-left">
-              <h3 className="text-4xl font-black text-gray-900 tracking-tight mb-2">{name}</h3>
-              <p className="text-orange-600 font-black uppercase text-sm tracking-[0.3em] mb-4">{subtitle || "Expert"}</p>
-              <div className="flex items-center justify-center lg:justify-start flex-wrap gap-3">
+            <div className="flex-1 pb-4 text-center lg:text-left w-full min-w-0 overflow-hidden">
+              <h3 className="text-xl sm:text-4xl font-black text-gray-900 tracking-tight mb-2 break-all sm:break-words">{name}</h3>
+              <p className="text-orange-600 font-black uppercase text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.3em] mb-3 sm:mb-4 break-words">{subtitle || "Expert"}</p>
+              <div className="flex items-center justify-center lg:justify-start flex-wrap gap-2 sm:gap-3">
                 {badges?.map((badge, idx) => (
-                  <span key={idx} className={`px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm border border-black/5 ${badge.color}`}>
+                  <span key={idx} className={`px-3 sm:px-5 py-1 sm:py-2 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest shadow-sm border border-black/5 ${badge.color}`}>
                     {badge.label}
                   </span>
                 ))}
@@ -166,26 +168,26 @@ export function ProfileModal({
             </div>
           </div>
 
-          <div className="px-10 pb-10 space-y-12">
+          <div className="px-4 sm:px-10 pb-5 sm:pb-10 space-y-6 sm:space-y-12">
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
               {stats?.map((stat, idx) => {
                 const Icon = stat.icon as any;
                 return (
-                  <div key={idx} className={`${stat.bgColor} p-6 rounded-[2rem] border border-white shadow-sm hover:shadow-md transition-all group relative overflow-hidden`}>
+                  <div key={idx} className={`${stat.bgColor} p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-white shadow-sm hover:shadow-md transition-all group relative overflow-hidden`}>
                     <div className="absolute -right-4 -top-4 opacity-5 group-hover:scale-125 transition-transform duration-700">
-                      <Icon className="w-24 h-24" />
+                      <Icon className="w-16 h-16 sm:w-24 sm:h-24" />
                     </div>
-                    <Icon className={`w-6 h-6 ${stat.iconColor} mb-4 relative z-10`} />
-                    <p className="text-2xl font-black text-gray-900 leading-none mb-1 relative z-10">{stat.value}</p>
-                    <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest relative z-10">{stat.label}</p>
+                    <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.iconColor} mb-2 sm:mb-4 relative z-10`} />
+                    <p className="text-xl sm:text-2xl font-black text-gray-900 leading-none mb-1 relative z-10">{stat.value}</p>
+                    <p className="text-[9px] sm:text-[10px] font-black text-gray-500 uppercase tracking-widest relative z-10">{stat.label}</p>
                   </div>
                 );
               })}
             </div>
 
             {/* Profile Completion Checklist - Full Width */}
-            <div className="bg-white rounded-[2.5rem] p-10 shadow-xl shadow-gray-200/50 border border-gray-100">
+            <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 shadow-xl shadow-gray-200/50 border border-gray-100">
               <div className="flex items-center justify-between mb-8">
                 <h4 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] leading-none">Profile Completion Status</h4>
                 <span className="text-xs font-black text-orange-600 bg-orange-50 px-4 py-2 rounded-full uppercase tracking-tighter">
@@ -279,7 +281,7 @@ export function ProfileModal({
 
             {/* Purchase History Section */}
             {purchases && purchases.length > 0 && (
-              <div className="bg-white rounded-[2.5rem] p-10 shadow-xl shadow-gray-200/50 border border-gray-100">
+              <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 shadow-xl shadow-gray-200/50 border border-gray-100">
                 <div className="flex items-center justify-between mb-8">
                   <h4 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] leading-none">Purchase History (Things Bought)</h4>
                   <span className="text-xs font-black text-purple-600 bg-purple-50 px-4 py-2 rounded-full uppercase tracking-tighter">
@@ -319,7 +321,7 @@ export function ProfileModal({
             )}
 
             {/* Footer Actions */}
-            <div className="flex gap-4 pt-10 border-t border-gray-100">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 sm:pt-10 border-t border-gray-100">
               {actions ? (
                 actions.map((action, idx) => (
                   <Button
@@ -361,6 +363,7 @@ export function ProfileModal({
               )}
             </div>
           </div>
+          </div>{/* end scrollable content */}
         </div>
       </div>
 

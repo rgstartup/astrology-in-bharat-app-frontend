@@ -12,7 +12,7 @@ import {
  */
 const normalizeAgent = (raw: any): Agent => {
     if (!raw) return raw;
-    
+
     let addressVal = "";
     let cityVal = "";
     let stateVal = "";
@@ -56,7 +56,7 @@ export const getAgents = async (params?: {
         }
     });
     if (error) throw error;
-    
+
     return {
         data: (data?.data || []).map(normalizeAgent),
         total: data?.total || 0

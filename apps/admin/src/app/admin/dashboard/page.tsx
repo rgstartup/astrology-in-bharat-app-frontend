@@ -110,12 +110,12 @@ export default function DashboardPage() {
       {/* Stats cards - Consultations, Experts, Users, and Earnings */}
       <StatsCards stats={stats} columns={4} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
         {/* Recent Activity Feed (4 columns) */}
         <section className="lg:col-span-4" aria-labelledby="recent-activity-heading">
           <article className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             {/* Activity header */}
-            <header className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200">
               <h2 id="recent-activity-heading" className="text-lg font-semibold text-gray-900">
                 Recent Activity
               </h2>
@@ -132,7 +132,7 @@ export default function DashboardPage() {
               {activities.map((activity: any) => (
                 <li
                   key={activity.id}
-                  className="flex items-center space-x-4 px-6 py-4 hover:bg-gray-50 transition-colors"
+                  className="flex items-center space-x-3 sm:space-x-4 px-4 sm:px-6 py-4 hover:bg-gray-50 transition-colors"
                 >
                   {/* Avatar */}
                   <div

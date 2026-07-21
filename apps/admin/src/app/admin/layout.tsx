@@ -122,6 +122,7 @@ interface SidebarMenuItemProps {
   pathname: string;
   openSubmenu: string | null;
   onToggleSubmenu: (label: string) => void;
+  closeSidebar?: () => void;
 }
 
 const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
@@ -129,6 +130,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   pathname,
   openSubmenu,
   onToggleSubmenu,
+  closeSidebar,
 }) => {
   const isSubmenuOpen = openSubmenu === item.label;
   const isActiveLink = pathname === item.href;
@@ -141,6 +143,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
       return (
         <button
           onClick={() => {
+            if (closeSidebar) closeSidebar();
             logout();
             toast.success("Signed out successfully");
             router.push("/");
@@ -161,6 +164,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
     return (
       <Link
         href={item.href}
+        onClick={() => closeSidebar && closeSidebar()}
         className={cn(
           "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200",
           isActiveLink
@@ -211,6 +215,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
                 <button
                   key={subItem.label}
                   onClick={() => {
+                    if (closeSidebar) closeSidebar();
                     logout();
                     toast.success("Signed out successfully");
                     router.push("/");
@@ -229,6 +234,7 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
               <Link
                 key={subItem.label}
                 href={subItem.href}
+                onClick={() => closeSidebar && closeSidebar()}
                 className={cn(
                   "block px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-primary-hover hover:text-white transition-colors duration-200",
                   isSubmenuActive && "bg-primary-hover text-white font-medium"
@@ -246,8 +252,14 @@ const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   );
 };
 
+interface SidebarProps {
+  isOpen: boolean;
+  toggleSidebar: () => void;
+  closeSidebar?: () => void;
+}
+
 const Sidebar: React.FC<SidebarProps> = memo(
-  ({ isOpen, toggleSidebar }) => {
+  ({ isOpen, toggleSidebar, closeSidebar }) => {
     const pathname = usePathname();
     const { user } = useAuthStore();
 
@@ -353,6 +365,7 @@ const Sidebar: React.FC<SidebarProps> = memo(
                   pathname={pathname}
                   openSubmenu={openSubmenu}
                   onToggleSubmenu={handleToggleSubmenu}
+                  closeSidebar={closeSidebar}
                 />
               </div>
             ))}
@@ -379,6 +392,10 @@ export default function AdminLayout({
     setSidebarOpen((prev) => !prev);
   }, []);
 
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
   // ✅ FIX: Check if it's an admin route (including login/register which shouldn't show sidebar)
   const isAdminRoute = pathname?.startsWith("/admin");
   const isLoginOrRegister = pathname === "/admin/login" || pathname === "/admin/register" || pathname === "/admin";
@@ -397,16 +414,16 @@ export default function AdminLayout({
       >
         {/* Sidebar Component - Only show when needed */}
         {shouldShowSidebar && (
-          <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+          <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} closeSidebar={closeSidebar} />
         )}
 
         {/* Main Content */}
         <div className={cn("flex-1 min-w-0", shouldShowSidebar && "lg:ml-64")}>
           {/* Top Header - Only show when sidebar is visible */}
           {shouldShowSidebar && (
-            <header className="bg-white px-6 py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+            <header className="bg-white px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200 sticky top-0 z-30 shadow-sm">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3 sm:space-x-4">
                   <button
                     onClick={toggleSidebar}
                     className="lg:hidden text-gray-800 hover:bg-gray-100 p-2 rounded-lg transition-colors"
@@ -414,7 +431,7 @@ export default function AdminLayout({
                   >
                     <Menu className="w-6 h-6" />
                   </button>
-                  <h1 className="text-2xl font-semibold text-gray-800">
+                  <h1 className="text-lg sm:text-2xl font-semibold text-gray-800 truncate max-w-[150px] sm:max-w-none">
                     {(() => {
                       const found = allMenuItems.find((item) => item.href === pathname);
                       if (found) return found.label;
@@ -448,7 +465,7 @@ export default function AdminLayout({
           )}
 
           {/* Main Content */}
-          <main className={cn(shouldShowSidebar && "p-6")}>{children}</main>
+          <main className={cn(shouldShowSidebar && "p-4 sm:p-6")}>{children}</main>
         </div>
       </div>
     </AdminGuard>

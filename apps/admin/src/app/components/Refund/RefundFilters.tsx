@@ -24,13 +24,13 @@ export function RefundFilters({
   onFilterChange
 }: RefundFiltersProps) {
   return (
-    <div className="bg-white rounded-xl border p-4">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Left side - Filter buttons */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-2 mr-2">
+    <div className="bg-white rounded-xl border p-3 sm:p-4">
+      <div className="flex flex-col gap-3">
+        {/* Filter buttons - scrollable on mobile */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          <div className="flex items-center gap-2 mr-1 flex-shrink-0">
             <FilterComp className="w-4 h-4 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">Filter by:</span>
+            <span className="text-xs sm:text-sm font-medium text-gray-700 whitespace-nowrap">Filter:</span>
           </div>
 
           {filters.map((filter) => (
@@ -39,14 +39,15 @@ export function RefundFilters({
               onClick={() => onFilterChange(filter.key)}
               variant={activeFilter === filter.key ? "primary" : "secondary"}
               size="sm"
+              className="whitespace-nowrap flex-shrink-0 text-xs"
             >
               {filter.label}
             </Button>
           ))}
         </div>
 
-        {/* Right side - Date range and export */}
-        <div className="flex items-center gap-3">
+        {/* Date + Export - hidden on mobile */}
+        <div className="hidden sm:flex items-center gap-3">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-lg">
             <CalendarComp className="w-4 h-4 text-gray-500" />
             <select className="bg-transparent text-sm outline-none">
