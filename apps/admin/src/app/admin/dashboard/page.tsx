@@ -136,10 +136,21 @@ export default function DashboardPage() {
                 >
                   {/* Avatar */}
                   <div
-                    className={`${activity.color} w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-lg flex-shrink-0`}
+                    className={`${activity.color || 'bg-gray-200'} w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-lg flex-shrink-0 overflow-hidden`}
                     aria-hidden="true"
                   >
-                    {activity.avatar}
+                    {activity.profile_picture || activity.profile_pic || activity.image || activity.avatar_url || (activity.avatar && activity.avatar.length > 5) ? (
+                      <img 
+                        src={activity.profile_picture || activity.profile_pic || activity.image || activity.avatar_url || activity.avatar} 
+                        alt={activity.name} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      activity.avatar || activity.name?.charAt(0) || 'U'
+                    )}
                   </div>
 
                   {/* Activity details */}
