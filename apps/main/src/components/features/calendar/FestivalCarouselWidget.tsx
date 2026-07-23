@@ -1,16 +1,14 @@
 import React, { useRef } from 'react';
+import { format } from 'date-fns';
+import { FestivalItem } from '@/libs/api-calendar';
+import Link from 'next/link';
 
-// Using mock data based on the design for visual completeness
-const mockFestivals = [
-  { name: 'Guru Purnima', date: '10 July', icon: 'fa-om', color: 'text-orange-500' },
-  { name: 'Sawan Somvar', date: '14 July', icon: 'fa-hands-praying', color: 'text-blue-500' },
-  { name: 'Nag Panchami', date: '25 July', icon: 'fa-staff-snake', color: 'text-green-600' },
-  { name: 'Raksha Bandhan', date: '09 Aug', icon: 'fa-ribbon', color: 'text-pink-500' },
-  { name: 'Janmashtami', date: '16 Aug', icon: 'fa-child-reaching', color: 'text-purple-500' },
-  { name: 'Ganesh Chaturthi', date: '27 Aug', icon: 'fa-hands-praying', color: 'text-orange-600' },
-];
+interface Props {
+  lang: string;
+  festivals?: FestivalItem[];
+}
 
-export default function FestivalCarouselWidget({ lang }: { lang: string }) {
+export default function FestivalCarouselWidget({ lang, festivals = [] }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -23,6 +21,30 @@ export default function FestivalCarouselWidget({ lang }: { lang: string }) {
       }
     }
   };
+
+  const getStyle = (idx: number) => {
+    const styles = [
+      { icon: 'fa-om', color: 'text-orange-500' },
+      { icon: 'fa-hands-praying', color: 'text-blue-500' },
+      { icon: 'fa-staff-snake', color: 'text-green-600' },
+      { icon: 'fa-ribbon', color: 'text-pink-500' },
+      { icon: 'fa-child-reaching', color: 'text-purple-500' },
+      { icon: 'fa-bell', color: 'text-red-500' },
+    ];
+    return styles[idx % styles.length];
+  };
+
+  // Filter out minor observances to keep the carousel clean
+  const displayFestivals = festivals
+    .filter(f => {
+      const name = f.name.toLowerCase();
+      // Exclude common fasting days and parana times unless you want them
+      return !name.includes('parana') && 
+             !name.includes('pradosh') &&
+             !name.includes('sankashti') &&
+             !name.includes('vinayaka chaturthi');
+    })
+    .slice(0, 30); // Limit to a reasonable number if still too many
 
   return (
     <div className="w-full mt-8 mb-8">
@@ -49,20 +71,44 @@ export default function FestivalCarouselWidget({ lang }: { lang: string }) {
           className="flex gap-4 overflow-x-auto pb-4 pt-2 scrollbar-hide snap-x w-full"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {mockFestivals.map((fest, idx) => (
-            <div key={idx} className="group min-w-[180px] lg:min-w-0 lg:flex-1 bg-[#fffaf5] rounded-xl border-2 border-[#ff6b00] p-4 shadow-sm snap-start flex flex-col items-center justify-center text-center hover:shadow-md hover:-translate-y-1 hover:shadow-[#ff6b00]/20 transition-all duration-300 cursor-pointer">
-              <div className={`text-4xl mb-3 drop-shadow-sm ${fest.color}`}>
-                <i className={`fa-solid ${fest.icon}`}></i>
+          {festivals.length === 0 ? (
+            // Skeleton Loading State
+            Array.from({ length: 6 }).map((_, idx) => (
+              <div key={`skel-${idx}`} className="min-w-[160px] md:min-w-[180px] flex-shrink-0 bg-[#fffaf5] rounded-xl border-2 border-orange-100 p-4 shadow-sm flex flex-col items-center justify-center animate-pulse">
+                <div className="w-12 h-12 bg-orange-200 rounded-full mb-3"></div>
+                <div className="w-24 h-4 bg-orange-200 rounded mb-4"></div>
+                <div className="w-16 h-3 bg-gray-200 rounded mb-4"></div>
+                <div className="w-20 h-3 bg-orange-100 rounded"></div>
               </div>
-              <h4 className="text-[#5b2a26] font-bold text-sm mb-1 leading-tight h-10 flex items-center justify-center">{fest.name}</h4>
-              <div className="text-xs text-gray-500 font-semibold mb-3 flex items-center gap-1">
-                <i className="fa-regular fa-calendar"></i> {fest.date}
-              </div>
-              <div className="text-[#c85a17] text-xs font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
-                View Details <i className="fa-solid fa-arrow-right text-[10px]"></i>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            displayFestivals.map((fest, idx) => {
+              const style = getStyle(idx);
+            const formattedDate = format(new Date(fest.date), 'dd MMM');
+            // Remove brackets and extra spaces for URL slug
+            const slug = fest.name.split('(')[0].trim().replace(/\s+/g, '-').toLowerCase();
+            
+            return (
+              <Link
+                key={idx} 
+                href={`/hindu-calendar/festivals/${slug}`}
+                className="group min-w-[160px] md:min-w-[180px] flex-shrink-0 bg-[#fffaf5] rounded-xl border-2 border-[#ff6b00] p-4 shadow-sm snap-start flex flex-col items-center justify-center text-center hover:shadow-md hover:-translate-y-1 hover:shadow-[#ff6b00]/20 transition-all duration-300 cursor-pointer block no-underline" 
+                title={fest.description}
+              >
+                <div className={`text-4xl mb-3 drop-shadow-sm ${style.color}`}>
+                  <i className={`fa-solid ${style.icon}`}></i>
+                </div>
+                <h4 className="text-[#5b2a26] font-bold text-sm mb-1 leading-tight h-10 flex items-center justify-center">{fest.name}</h4>
+                <div className="text-xs text-gray-500 font-semibold mb-3 flex items-center gap-1">
+                  <i className="fa-regular fa-calendar"></i> {formattedDate}
+                </div>
+                <div className="text-[#c85a17] text-xs font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                  View Details <i className="fa-solid fa-arrow-right text-[10px]"></i>
+                </div>
+              </Link>
+            );
+          })
+        )}
         </div>
 
         <button 

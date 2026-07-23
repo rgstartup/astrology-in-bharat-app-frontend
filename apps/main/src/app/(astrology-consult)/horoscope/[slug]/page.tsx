@@ -57,21 +57,15 @@ export default function ZodiacDetailsPage() {
       
       const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
       const [data, fetchError] = await api.get<any>(`/astrology/horoscope-daily?sign=${slug}&lang=${lang}`);
-      const [luckyData, luckyError] = await api.get<any>(`/astrology/lucky-stats?sign=${slug}&date=${today}`);
+      
+      // Fetch panchang mock data for consistent lucky stats with calendar
+      const [panchangData, panchangError] = await api.get<any>(`/calendar/panchang/daily?date=${today}&lat=28.6139&lon=77.2090&lang=${lang}`);
       
       if (fetchError) {
           console.error("Error fetching data:", fetchError);
           setError(true);
       } else if (data && data.data) {
-          if (data.data.datetime) {
-            setFormattedDate(
-              new Date(data.data.datetime).toLocaleDateString(lang === "hi" ? "hi-IN" : "en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })
-            );
-          }
+          // Don't overwrite formatted date with API datetime, it returns mock Jan 1 2025 data
           
           if (data.data.daily_predictions) {
             setHoroscope(data.data.daily_predictions[0]);
@@ -82,8 +76,20 @@ export default function ZodiacDetailsPage() {
           setError(true);
       }
       
-      if (!luckyError && luckyData?.data) {
-        setLuckyStats(luckyData.data);
+      const panchangRaw = panchangData?.data || panchangData;
+      
+      if (!panchangError && panchangRaw?.dailyHoroscope) {
+        const signDaily = panchangRaw.dailyHoroscope.find((h: any) => h.sign.toLowerCase() === slug.toLowerCase());
+        if (signDaily) {
+          setLuckyStats({
+            lucky_number: signDaily.number,
+            lucky_color: {
+              name: signDaily.color,
+              hex: '' // Handled by getVibrantColor fallback
+            },
+            lucky_time: "09:00 AM - 11:00 AM" // Keep mock time
+          });
+        }
       }
       
       setLoading(false);

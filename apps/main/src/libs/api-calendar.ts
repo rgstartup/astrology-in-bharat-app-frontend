@@ -96,3 +96,23 @@ export const getYearlyFestivals = async (
     return { success: false, data: [], error: 'failed_to_fetch' };
   }
 };
+
+export const getFestivalDetails = async (
+  name: string,
+  lang: string = 'hi'
+): Promise<{ success: boolean; data: any; error?: string }> => {
+  try {
+    const query = new URLSearchParams({ name, lang });
+    const [result, error] = await api.get<any>(`/calendar/festival-details?${query.toString()}`, { cache: 'no-store' } as any);
+
+    if (error) {
+      console.warn(`[API Calendar] Fetch festival details warning:`, getErrorMessage(error));
+      return { success: false, data: null, error: 'failed_to_fetch' };
+    }
+
+    return { success: true, data: result.data || result || null };
+  } catch (error: any) {
+    console.error(`[API Calendar] Fetch festival details error:`, error);
+    return { success: false, data: null, error: 'failed_to_fetch' };
+  }
+};

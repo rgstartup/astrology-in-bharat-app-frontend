@@ -11,8 +11,10 @@ import {
 import {
   getMonthlyCalendar,
   getDailyPanchang,
+  getYearlyFestivals,
   CalendarDay,
   PanchangData,
+  FestivalItem,
 } from "@/libs/api-calendar";
 import { useLanguageStore } from "@repo/store";
 
@@ -36,6 +38,7 @@ export default function HinduCalendarPage() {
 
   const [daysData, setDaysData] = useState<CalendarDay[]>([]);
   const [panchangData, setPanchangData] = useState<any | null>(null);
+  const [yearlyFestivals, setYearlyFestivals] = useState<FestivalItem[]>([]);
 
   const [loadingMonth, setLoadingMonth] = useState(false);
   const [loadingDaily, setLoadingDaily] = useState(false);
@@ -79,6 +82,18 @@ export default function HinduCalendarPage() {
     };
     fetchDaily();
   }, [selectedDate, lang]);
+
+  // Fetch Yearly Festivals Data
+  useEffect(() => {
+    const fetchFestivals = async () => {
+      const year = currentMonthDate.getFullYear();
+      const res = await getYearlyFestivals(year, lang);
+      if (res.success) {
+        setYearlyFestivals(res.data);
+      }
+    };
+    fetchFestivals();
+  }, [currentMonthDate.getFullYear(), lang]);
 
   const handlePrevMonth = () =>
     setCurrentMonthDate((prev) => subMonths(prev, 1));
@@ -127,7 +142,7 @@ export default function HinduCalendarPage() {
         </div>
 
         {/* Festival Carousel */}
-        <FestivalCarouselWidget lang={lang} />
+        <FestivalCarouselWidget lang={lang} festivals={yearlyFestivals} />
 
         {/* Second Row: Muhurat + Moon + Upcoming */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 items-stretch">
@@ -138,7 +153,7 @@ export default function HinduCalendarPage() {
             <MoonPhaseWidget panchang={panchangData} lang={lang} />
           </div>
           <div className="lg:col-span-4 xl:col-span-3">
-            <UpcomingFestivalsWidget lang={lang} />
+            <UpcomingFestivalsWidget lang={lang} festivals={yearlyFestivals} />
           </div>
         </div>
 
