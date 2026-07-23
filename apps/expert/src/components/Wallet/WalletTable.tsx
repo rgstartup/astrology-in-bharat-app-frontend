@@ -34,25 +34,25 @@ export const WalletTable: React.FC<TransactionTableProps> = ({ transactions }) =
         <div className="bg-white rounded-none sm:rounded-[1.5rem] border-none sm:border-solid border-gray-100 shadow-none sm:shadow-sm overflow-hidden flex flex-col">
             <div className="p-6 sm:p-8 border-b border-gray-50 space-y-1">
                 <h3 className="text-xl font-black text-gray-900 tracking-tight">Transaction History</h3>
-                <p className="text-sm font-medium text-gray-400">Detailed log of all credits and withdrawals</p>
+                <p className="text-sm font-medium text-gray-700">Detailed log of all credits and withdrawals</p>
             </div>
 
             <div className="overflow-x-auto">
                 <table className="w-full min-w-[700px] text-left">
                     <thead>
                         <tr className="bg-gray-50/50 border-b border-gray-50">
-                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Transaction Info</th>
-                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Type</th>
-                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Amount</th>
-                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Status</th>
-                            <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Date</th>
+                            <th className="px-8 py-5 text-[10px] font-black text-gray-700 uppercase tracking-widest">Transaction Info</th>
+                            <th className="px-8 py-5 text-[10px] font-black text-gray-700 uppercase tracking-widest">Type</th>
+                            <th className="px-8 py-5 text-[10px] font-black text-gray-700 uppercase tracking-widest text-center">Amount</th>
+                            <th className="px-8 py-5 text-[10px] font-black text-gray-700 uppercase tracking-widest text-center">Status</th>
+                            <th className="px-8 py-5 text-[10px] font-black text-gray-700 uppercase tracking-widest text-right">Date</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-50">
                         {transactions.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className="p-20 text-center opacity-40">
-                                    <p className="text-[12px] font-black uppercase tracking-[0.3em]">No transactions recorded yet</p>
+                                <td colSpan={5} className="p-20 text-center">
+                                    <p className="text-[12px] font-bold text-gray-700">No transactions recorded yet</p>
                                 </td>
                             </tr>
                         ) : (
@@ -100,7 +100,7 @@ export const WalletTable: React.FC<TransactionTableProps> = ({ transactions }) =
                                         <StatusBadge status={tx.status} />
                                     </td>
                                     <td className="px-8 py-6 text-right">
-                                        <span className="text-[12px] font-bold text-gray-500">
+                                        <span className="text-[12px] font-bold text-gray-700">
                                             {tx.createdAt && !isNaN(new Date(tx.createdAt).getTime()) ? 
                                                 new Date(tx.createdAt).toLocaleDateString('en-IN', { 
                                                     day: '2-digit', 

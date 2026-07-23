@@ -83,7 +83,7 @@ export default function ExpertiseAvailability({
                     {isEditing ? (
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Specialization</label>
+                                <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Specialization</label>
                                 <input
                                     type="text"
                                     name="specialization"
@@ -97,7 +97,7 @@ export default function ExpertiseAvailability({
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Chat Price (per minute)</label>
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Chat Price (per minute)</label>
                                     <div className="relative">
                                         <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                         <input
@@ -111,7 +111,7 @@ export default function ExpertiseAvailability({
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Audio Call Price (per minute)</label>
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Audio Call Price (per minute)</label>
                                     <div className="relative">
                                         <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                         <input
@@ -125,7 +125,7 @@ export default function ExpertiseAvailability({
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Video Call Price (per minute)</label>
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Video Call Price (per minute)</label>
                                     <div className="relative">
                                         <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                         <input
@@ -139,7 +139,7 @@ export default function ExpertiseAvailability({
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Report/Horoscope Price</label>
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Report/Horoscope Price</label>
                                     <div className="relative">
                                         <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                         <input
@@ -155,10 +155,10 @@ export default function ExpertiseAvailability({
                             </div>
 
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Languages</label>
+                                <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Languages</label>
                                 <div className="flex flex-wrap gap-2 mb-2">
                                     {tempProfile.languages.map((lang, i) => (
-                                        <span key={i} className="flex items-center bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-sm border border-gray-200">
+                                        <span key={i} className="flex items-center bg-gray-100 text-gray-900 px-2 py-1 rounded-md text-sm border border-gray-200">
                                             {lang}
                                             <Button
                                                 onClick={() => removeLanguage(lang)}
@@ -212,25 +212,25 @@ export default function ExpertiseAvailability({
                         <div className="space-y-6">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Experience</p>
-                                    <p className="text-sm font-semibold text-gray-700">{profile.experience_in_years} Years</p>
+                                    <p className="text-xs font-medium text-gray-900 mb-1">Experience</p>
+                                    <p className="text-sm font-semibold text-gray-900">{profile.experience_in_years} Years</p>
                                 </div>
                                 <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Chat Price</p>
-                                    <p className="text-sm font-semibold text-gray-700">₹{profile.chat_price}/min</p>
+                                    <p className="text-xs font-medium text-gray-900 mb-1">Chat Price</p>
+                                    <p className="text-sm font-semibold text-gray-900">₹{profile.chat_price}/min</p>
                                 </div>
                                 <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Audio Price</p>
-                                    <p className="text-sm font-semibold text-gray-700">₹{profile.call_price}/min</p>
+                                    <p className="text-xs font-medium text-gray-900 mb-1">Audio Price</p>
+                                    <p className="text-sm font-semibold text-gray-900">₹{profile.call_price}/min</p>
                                 </div>
                                 <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Video Price</p>
-                                    <p className="text-sm font-semibold text-gray-700">₹{profile.video_call_price}/min</p>
+                                    <p className="text-xs font-medium text-gray-900 mb-1">Video Price</p>
+                                    <p className="text-sm font-semibold text-gray-900">₹{profile.video_call_price}/min</p>
                                 </div>
                             </div>
 
                             <div>
-                                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-2">Languages</p>
+                                <p className="text-xs font-medium text-gray-900 mb-2">Languages</p>
                                 <div className="flex flex-wrap gap-2">
                                     {profile.languages.length > 0 ? (
                                         profile.languages.map((lang, i) => (
@@ -242,7 +242,7 @@ export default function ExpertiseAvailability({
                                             </span>
                                         ))
                                     ) : (
-                                        <p className="text-xs text-gray-400 italic">No languages added</p>
+                                        <p className="text-xs text-gray-900">No languages added</p>
                                     )}
                                 </div>
                             </div>
@@ -250,7 +250,7 @@ export default function ExpertiseAvailability({
                             <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
                                 <div className="flex items-center text-sm">
                                     <Clock className={`w-4 h-4 mr-2 ${profile.is_available ? 'text-green-500' : 'text-gray-400'}`} />
-                                    <span className={profile.is_available ? 'text-green-600 font-medium' : 'text-gray-500 font-medium'}>
+                                    <span className={profile.is_available ? 'text-green-600 font-medium' : 'text-gray-900 font-medium'}>
                                         {profile.is_available ? 'Available Now' : 'Currently Away'}
                                     </span>
                                 </div>

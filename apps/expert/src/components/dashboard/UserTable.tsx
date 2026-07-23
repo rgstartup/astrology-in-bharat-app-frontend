@@ -135,7 +135,7 @@ export const UpcomingAppointments: React.FC = () => {
           </span>
         </div>
         <div className="relative w-full sm:w-auto">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 w-4 h-4" />
           <input
             type="text"
             placeholder="Search..."
@@ -165,8 +165,8 @@ export const UpcomingAppointments: React.FC = () => {
                 filtered.map((appt) => (
                   <tr key={appt.id} className="hover:bg-gray-50">
                     <td className="py-3 px-4 font-medium text-gray-900">{appt.name}</td>
-                    <td className="py-3 px-4 text-gray-500 capitalize">{appt.service}</td>
-                    <td className="py-3 px-4 text-gray-600 whitespace-nowrap">
+                    <td className="py-3 px-4 text-gray-900 capitalize">{appt.service}</td>
+                    <td className="py-3 px-4 text-gray-800 whitespace-nowrap">
                       {format(new Date(appt.date), "dd MMM yyyy, hh:mm a")}
                     </td>
                     <td className="py-3 px-4">
@@ -185,7 +185,7 @@ export const UpcomingAppointments: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="py-8 text-center text-gray-400 text-sm">
+                  <td colSpan={4} className="py-8 text-center text-gray-700 text-sm">
                     {searchTerm ? "No appointments match your search." : "No appointments found."}
                   </td>
                 </tr>

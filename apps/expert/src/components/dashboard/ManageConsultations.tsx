@@ -122,7 +122,7 @@ export const ManageConsultations: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">Manage Services</h3>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <p className="text-xs text-gray-700 mt-0.5">
             Chat · Call · Video · Custom
           </p>
         </div>
@@ -163,7 +163,7 @@ export const ManageConsultations: React.FC = () => {
                     {svc.name}
                   </p>
                   {svc.description && (
-                    <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">
+                    <p className="text-xs text-gray-700 mt-0.5 line-clamp-1">
                       {svc.description}
                     </p>
                   )}
@@ -175,7 +175,7 @@ export const ManageConsultations: React.FC = () => {
                 <span className="text-xl font-black text-yellow-700">
                   ₹{svc.price}
                 </span>
-                <span className="text-xs text-gray-400 font-medium">{svc.unit}</span>
+                <span className="text-xs text-gray-700 font-medium">{svc.unit}</span>
               </div>
 
               {/* Actions */}
@@ -184,7 +184,7 @@ export const ManageConsultations: React.FC = () => {
                   className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${
                     svc.price > 0
                       ? "bg-green-100 text-green-700"
-                      : "bg-gray-100 text-gray-500"
+                      : "bg-gray-100 text-gray-700"
                   }`}
                 >
                   {svc.price > 0 ? "Active" : "Not Set"}
@@ -227,8 +227,8 @@ export const ManageConsultations: React.FC = () => {
               onClick={openAdd}
               className="border-2 border-dashed border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-yellow-300 hover:bg-yellow-50/30 transition-colors col-span-full sm:col-span-1 min-h-[100px]"
             >
-              <Plus className="w-5 h-5 text-gray-300" />
-              <p className="text-xs text-gray-400 font-medium text-center">
+              <Plus className="w-5 h-5 text-gray-500" />
+              <p className="text-xs text-gray-700 font-medium text-center">
                 Add a custom service
               </p>
             </div>

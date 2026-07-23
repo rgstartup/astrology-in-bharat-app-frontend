@@ -52,7 +52,7 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
     if (reviews.length === 0) {
         return (
             <div className="p-8 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                <p className="text-gray-500">No reviews yet.</p>
+                <p className="text-gray-700">No reviews yet.</p>
             </div>
         );
     }
@@ -62,7 +62,7 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
             <div className="flex items-center justify-between mb-2 sticky top-0 bg-white z-10 pb-2 border-b border-gray-50 -mt-2 pt-2">
                 <h4 className="font-semibold text-gray-900">Recent Reviews</h4>
                 {total > 0 && (
-                    <span className="text-xs text-gray-400 font-medium">
+                    <span className="text-xs text-gray-700 font-medium">
                         Showing {reviews.length} of {total}
                     </span>
                 )}
@@ -101,11 +101,11 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
                                     </div>
                                 </div>
                             </div>
-                            <span className="text-[10px] text-gray-400">
+                            <span className="text-[10px] text-gray-700 font-medium">
                                 {new Date(review.created_at || Date.now()).toLocaleDateString()}
                             </span>
                         </div>
-                        <p className="text-sm text-gray-600 line-clamp-2 italic">
+                        <p className="text-sm text-gray-800 line-clamp-2 italic font-medium">
                             "{review.comment || "No comment provided."}"
                         </p>
                     </div>
@@ -118,7 +118,7 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
                     <button
                         onClick={handleLoadMore}
                         disabled={loadingMore}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl border border-gray-300 bg-white text-sm font-semibold text-gray-800 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
                     >
                         {loadingMore ? "Loading..." : (
                             <>

@@ -18,7 +18,7 @@ export default function TopInsights({ topUsers, topServices }: TopInsightsProps)
                             {/* @ts-ignore */}
                             <Users className="w-5 h-5 text-amber-600" /> Top Contributors
                         </h2>
-                        <p className="text-xs text-gray-400 font-medium">Clients who trust you the most</p>
+                        <p className="text-xs text-gray-700 font-medium">Clients who trust you the most</p>
                     </div>
                 </div>
 
@@ -31,12 +31,12 @@ export default function TopInsights({ topUsers, topServices }: TopInsightsProps)
                                         {user.name.charAt(0)}
                                     </div>
                                     <div className="absolute -top-1 -left-1 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-50">
-                                        <span className="text-[10px] font-black text-gray-400">#{idx + 1}</span>
+                                        <span className="text-[10px] font-black text-gray-700">#{idx + 1}</span>
                                     </div>
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-bold text-gray-800">{user.name}</h3>
-                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{user.sessions} Total Sessions</p>
+                                    <p className="text-[10px] text-gray-700 font-bold uppercase tracking-wider">{user.sessions} Total Sessions</p>
                                 </div>
                             </div>
                             <div className="text-right">
@@ -59,7 +59,7 @@ export default function TopInsights({ topUsers, topServices }: TopInsightsProps)
                             {/* @ts-ignore */}
                             <Target className="w-5 h-5 text-purple-600" /> Best Performing Services
                         </h2>
-                        <p className="text-xs text-gray-400 font-medium">Most popular and profitable services</p>
+                        <p className="text-xs text-gray-700 font-medium">Most popular and profitable services</p>
                     </div>
                 </div>
 
@@ -84,7 +84,7 @@ export default function TopInsights({ topUsers, topServices }: TopInsightsProps)
                                         }}
                                     />
                                 </div>
-                                <p className="text-[10px] font-bold text-gray-400 whitespace-nowrap uppercase tracking-tighter">
+                                <p className="text-[10px] font-bold text-gray-700 whitespace-nowrap uppercase tracking-tighter">
                                     {service.usageCount} Bookings
                                 </p>
                             </div>

@@ -35,39 +35,39 @@ export default function WithdrawMoney({ availableBalance, bankAccounts, onWithdr
                 </div>
                 <div>
                     <h3 className="text-xl font-black text-gray-900 tracking-tight">Withdraw Funds</h3>
-                    <p className="text-sm font-medium text-gray-400">Transfer your earnings directly to your registered bank account.</p>
+                    <p className="text-sm font-medium text-gray-700">Transfer your earnings directly to your registered bank account.</p>
                 </div>
             </div>
 
             <form onSubmit={handleWithdraw} className="flex flex-col lg:flex-row items-start gap-4 sm:gap-6">
                 {/* Amount Column */}
-                <div className="w-full lg:w-[28%] flex flex-col justify-start">
-                    <label className="text-[10px] font-black text-orange uppercase tracking-widest ml-1 mb-2">Amount to Withdraw</label>
+                <div className="w-full lg:flex-1 flex flex-col justify-start">
+                    <label className="text-xs font-semibold text-gray-900 mb-2">Amount to Withdraw</label>
                     <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">₹</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 font-bold">₹</span>
                         <input 
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="Enter Amount"
-                            className="w-full pl-9 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl text-[14px] font-bold outline-none focus:border-orange/20 focus:bg-white transition-all"
+                            className="w-full pl-9 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl text-[14px] font-bold outline-none placeholder:text-gray-500 focus:border-orange/20 focus:bg-white transition-all text-black"
                             required
                         />
                     </div>
-                    <p className="text-[10px] text-gray-400 font-medium ml-1 mt-2 flex items-center gap-1">
+                    <p className="text-[10px] text-gray-700 font-medium ml-1 mt-2 flex items-center gap-1">
                         {/* @ts-ignore */}
-                        <Info className="w-3 h-3" /> Min. withdrawal ₹500
+                        <Info className="w-3 h-3 text-orange" /> Min. withdrawal ₹500
                     </p>
                 </div>
 
                 {/* Bank Account Column */}
-                <div className="w-full lg:w-[32%] flex flex-col justify-start">
-                    <label className="text-[10px] font-black text-orange uppercase tracking-widest ml-1 mb-2">Select Bank Account</label>
+                <div className="w-full lg:flex-1 flex flex-col justify-start">
+                    <label className="text-xs font-semibold text-gray-900 mb-2">Select Bank Account</label>
                     {bankAccounts.length === 0 ? (
                         <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-500">
                             {/* @ts-ignore */}
                             <AlertCircle className="w-4 h-4 shrink-0" />
-                            <p className="text-[11px] font-black uppercase tracking-tight italic m-0">Add a bank account first</p>
+                            <p className="text-xs font-semibold m-0">Add a bank account first</p>
                         </div>
                     ) : (
                         <select
@@ -85,7 +85,7 @@ export default function WithdrawMoney({ availableBalance, bankAccounts, onWithdr
                 </div>
 
                 {/* Buttons Column */}
-                <div className="flex flex-wrap xl:flex-nowrap items-center gap-3 w-full lg:w-auto shrink-0 mt-2 lg:mt-[22px]">
+                <div className="w-full lg:w-auto shrink-0 mt-2 lg:mt-[28px]">
                     <Button
                         type="submit"
                         disabled={isLoading || !amount || bankAccounts.length === 0 || parseFloat(amount) < 500 || parseFloat(amount) > availableBalance}
@@ -93,12 +93,6 @@ export default function WithdrawMoney({ availableBalance, bankAccounts, onWithdr
                     >
                         {isLoading ? "Processing..." : "Withdraw Now"}
                     </Button>
-
-                    <div className="whitespace-nowrap flex-1 sm:flex-none w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-3.5 bg-emerald-50 rounded-xl border border-emerald-100 text-emerald-600">
-                        {/* @ts-ignore */}
-                        <ShieldCheck className="w-4 h-4 shrink-0" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-center mt-0.5">Secure Payout System</span>
-                    </div>
                 </div>
             </form>
         </div>

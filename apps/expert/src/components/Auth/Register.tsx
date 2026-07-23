@@ -20,11 +20,7 @@ const API_URL = CLIENT_API_URL;
 const BrandingSection = () => (
   <div className="relative hidden lg:block h-full min-h-[600px]">
     <div className="absolute inset-0 bg-orange-600/90 flex flex-col items-center justify-center text-white p-12 text-center">
-      <motion.div 
-        animate={{ y: [-10, 10, -10] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="relative w-64 h-64 mb-8 drop-shadow-2xl"
-      >
+      <div className="relative w-64 h-64 mb-8 drop-shadow-2xl">
         <Image
           src="/images/Expert.png"
           alt="Expert Community"
@@ -33,7 +29,7 @@ const BrandingSection = () => (
           className="object-contain -scale-x-100"
           priority
         />
-      </motion.div>
+      </div>
       <h1 className="text-4xl font-black mb-6 tracking-tight leading-tight">
         Join Our <br /> Expert Community
       </h1>

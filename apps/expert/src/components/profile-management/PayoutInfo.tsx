@@ -144,13 +144,13 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                     {editingAccountId ? (
                         <div className="space-y-4">
                             <div className="flex items-center justify-between mb-2">
-                                <h3 className="text-sm font-black text-[#800000] uppercase tracking-tighter">
+                                <h3 className="text-base font-bold text-gray-900">
                                     {editingAccountId === 'new' ? 'Add New Bank Account' : 'Edit Bank Account'}
                                 </h3>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div className="sm:col-span-2 group">
-                                    <label className="block text-[10px] font-bold text-[#800000] uppercase tracking-widest mb-1.5 ml-1">Account Holder Name</label>
+                                    <label className="block text-xs font-medium text-gray-900 mb-1">Account Holder Name</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <i className="fa-solid fa-user text-orange-500/50 text-xs"></i>
@@ -162,12 +162,12 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={formData.account_holder_name || ""}
                                             onChange={(e) => handleFieldChange('account_holder_name', e.target.value)}
                                             placeholder="Full Name as per Bank Records"
-                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm text-gray-800 bg-white transition-all font-medium"
+                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
                                         />
                                     </div>
                                 </div>
                                 <div className="sm:col-span-2 group">
-                                    <label className="block text-[10px] font-bold text-[#800000] uppercase tracking-widest mb-1.5 ml-1">Bank Name</label>
+                                    <label className="block text-xs font-medium text-gray-900 mb-1">Bank Name</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <i className="fa-solid fa-building-columns text-orange-500/50 text-xs"></i>
@@ -179,12 +179,12 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={formData.bank_name || ""}
                                             onChange={(e) => handleFieldChange('bank_name', e.target.value)}
                                             placeholder="e.g. State Bank of India, HDFC, etc."
-                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm text-gray-800 bg-white transition-all font-medium"
+                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
                                         />
                                     </div>
                                 </div>
                                 <div className="group">
-                                    <label className="block text-[10px] font-bold text-[#800000] uppercase tracking-widest mb-1.5 ml-1">Account Number</label>
+                                    <label className="block text-xs font-medium text-gray-900 mb-1">Account Number</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <i className="fa-solid fa-hashtag text-orange-500/50 text-xs"></i>
@@ -196,12 +196,12 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={formData.account_number || ""}
                                             onChange={(e) => handleFieldChange('account_number', e.target.value)}
                                             placeholder="Enter Bank Account Number"
-                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm text-gray-800 bg-white transition-all font-medium"
+                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
                                         />
                                     </div>
                                 </div>
                                 <div className="group">
-                                    <label className="block text-[10px] font-bold text-[#800000] uppercase tracking-widest mb-1.5 ml-1">Confirm Account Number</label>
+                                    <label className="block text-xs font-medium text-gray-900 mb-1">Confirm Account Number</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <i className="fa-solid fa-check-double text-orange-500/50 text-xs"></i>
@@ -213,7 +213,7 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={confirmAccNo}
                                             onChange={(e) => setConfirmAccNo(e.target.value)}
                                             placeholder="Re-enter Account Number"
-                                            className={`w-full pl-9 pr-3 py-2.5 border-2 rounded-xl focus:ring-4 outline-none text-sm text-gray-800 bg-white transition-all font-medium ${confirmAccNo && confirmAccNo !== formData.account_number ? 'border-red-200 focus:border-red-500 focus:ring-red-500/10' : 'border-orange-50 focus:border-orange-500 focus:ring-orange-500/10'}`}
+                                            className={`w-full pl-9 pr-3 py-2.5 border-2 rounded-xl focus:ring-4 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium ${confirmAccNo && confirmAccNo !== formData.account_number ? 'border-red-200 focus:border-red-500 focus:ring-red-500/10' : 'border-orange-50 focus:border-orange-500 focus:ring-orange-500/10'}`}
                                         />
                                     </div>
                                     {confirmAccNo && confirmAccNo !== formData.account_number && (
@@ -221,7 +221,7 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                     )}
                                 </div>
                                 <div className="group">
-                                    <label className="block text-[10px] font-bold text-[#800000] uppercase tracking-widest mb-1.5 ml-1">IFSC Code</label>
+                                    <label className="block text-xs font-medium text-gray-900 mb-1">IFSC Code</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <i className="fa-solid fa-code text-orange-500/50 text-xs"></i>
@@ -233,12 +233,12 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={formData.ifsc_code || ""}
                                             onChange={(e) => handleFieldChange('ifsc_code', e.target.value.toUpperCase())}
                                             placeholder="IFSC (e.g. SBIN0001234)"
-                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm font-bold uppercase text-gray-800 bg-white transition-all ml-0"
+                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 font-bold uppercase text-gray-800 bg-white transition-all ml-0"
                                         />
                                     </div>
                                 </div>
                                 <div className="group">
-                                    <label className="block text-[10px] font-bold text-[#800000] uppercase tracking-widest mb-1.5 ml-1">UPI ID (Optional)</label>
+                                    <label className="block text-xs font-medium text-gray-900 mb-1">UPI ID (Optional)</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <i className="fa-solid fa-qrcode text-orange-500/50 text-xs"></i>
@@ -248,7 +248,7 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={formData.upi_id || ""}
                                             onChange={(e) => handleFieldChange('upi_id', e.target.value)}
                                             placeholder="Optional UPI (name@upi)"
-                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm text-gray-800 bg-white transition-all font-medium"
+                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
                                         />
                                     </div>
                                 </div>
@@ -297,17 +297,17 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
 
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 relative z-10">
                                                 <div className="space-y-1">
-                                                    <p className="text-[9px] font-extrabold text-[#800000] uppercase tracking-widest">Account Holder</p>
+                                                    <p className="text-xs font-medium text-gray-900">Account Holder</p>
                                                     <p className="text-sm font-bold text-gray-800">{acc.account_holder_name || 'N/A'}</p>
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <p className="text-[9px] font-extrabold text-[#800000] uppercase tracking-widest">Bank Name</p>
+                                                    <p className="text-xs font-medium text-gray-900">Bank Name</p>
                                                     <p className="text-sm font-bold text-gray-800">{acc.bank_name || 'N/A'}</p>
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <p className="text-[9px] font-extrabold text-[#800000] uppercase tracking-widest">Account / IFSC</p>
-                                                    <p className="text-xs font-mono font-bold text-gray-700">
-                                                        •••• {acc.account_number.slice(-4)} | <span className="text-orange-700">{acc.ifsc_code}</span>
+                                                    <p className="text-xs font-medium text-gray-900">Account / IFSC</p>
+                                                    <p className="text-xs font-mono font-bold text-gray-900">
+                                                        •••• {acc.account_number.slice(-4)} | <span className="text-gray-800">{acc.ifsc_code}</span>
                                                     </p>
                                                 </div>
 

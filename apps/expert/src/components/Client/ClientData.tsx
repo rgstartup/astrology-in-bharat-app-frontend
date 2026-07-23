@@ -242,11 +242,11 @@ export default function ClientsPage() {
                       {/* Collapsed Strip */}
                       <div className={`p-4 sm:p-5 flex justify-between items-center flex-wrap gap-4 ${isExpanded ? 'bg-gray-50/50 border-b border-gray-100' : 'bg-white'}`}>
                         <div className="flex flex-col w-[45%] sm:w-auto sm:min-w-[100px]">
-                          <span className="text-gray-500 text-[11px] font-bold uppercase tracking-wider mb-1">Session ID</span>
+                          <span className="text-gray-900 text-[11px] font-bold uppercase tracking-wider mb-1">Session ID</span>
                           <span className="font-extrabold text-gray-800">{session?.displayId || `#${session?.id || client.id}`}</span>
                         </div>
                         <div className="flex flex-col w-[45%] sm:w-auto sm:min-w-[100px]">
-                          <span className="text-gray-500 text-[11px] font-bold uppercase tracking-wider mb-1">Date</span>
+                          <span className="text-gray-900 text-[11px] font-bold uppercase tracking-wider mb-1">Date</span>
                           <span className="font-bold text-gray-800">
                             {new Date(session?.startTime || session?.created_at || session?.createdAt || Date.now()).toLocaleDateString('en-IN', {
                               day: 'numeric',
@@ -256,11 +256,11 @@ export default function ClientsPage() {
                           </span>
                         </div>
                         <div className="flex flex-col w-[45%] sm:w-auto sm:min-w-[100px]">
-                          <span className="text-gray-500 text-[11px] font-bold uppercase tracking-wider mb-1">Earnings</span>
+                          <span className="text-gray-900 text-[11px] font-bold uppercase tracking-wider mb-1">Earnings</span>
                           <span className="font-extrabold text-[#fd6410]">₹{client.payment}</span>
                         </div>
                         <div className="flex flex-col w-[45%] sm:w-auto sm:min-w-[100px]">
-                          <span className="text-gray-500 text-[11px] font-bold uppercase tracking-wider mb-1">Type</span>
+                          <span className="text-gray-900 text-[11px] font-bold uppercase tracking-wider mb-1">Type</span>
                           <span className="font-bold text-gray-800 flex items-center gap-2">
                              {(session?.type === 'AUDIO_CALL' || session?.session_type === 'audio') ? (
                                <><LucideIcons.Phone size={14} className="text-blue-500" /> Audio</>
@@ -290,7 +290,7 @@ export default function ClientsPage() {
                             }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm hover:bg-gray-50 transition-colors focus:outline-none cursor-pointer hover:cursor-pointer"
                           >
-                            <LucideIcons.ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+                            <LucideIcons.ChevronDown className={`w-4 h-4 text-gray-700 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
                           </button>
                         </div>
                       </div>
@@ -328,22 +328,22 @@ export default function ClientsPage() {
                               
                               <div>
                                 <h5 className="text-xl font-black text-gray-900 leading-none mb-1.5">{client.name}</h5>
-                                <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Verified Client</p>
+                                <p className="text-sm font-bold text-gray-700 uppercase tracking-widest">Verified Client</p>
                               </div>
                             </div>
 
                             <div className="flex flex-col sm:items-end w-full sm:w-auto">
-                              <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Your Net Earning</span>
+                              <span className="text-[10px] font-black text-gray-700 uppercase tracking-[0.2em] mb-1">Your Net Earning</span>
                               <div className="flex items-baseline gap-2">
                                 <span className="text-3xl font-black text-[#fd6410]">₹{client.payment}</span>
                                 {session?.rate && (
-                                  <span className="text-xs font-bold text-gray-400">(@ ₹{session.rate}/min)</span>
+                                  <span className="text-xs font-bold text-gray-700">(@ ₹{session.rate}/min)</span>
                                 )}
                               </div>
                               {client.terminatedBy && (
                                 <div className="mt-2 flex items-center gap-1.5 px-3 py-1 bg-gray-50 rounded-full border border-gray-100">
-                                  <LucideIcons.Power size={10} className="text-gray-400" />
-                                  <span className="text-[9px] font-bold text-gray-500 uppercase tracking-tight">
+                                  <LucideIcons.Power size={10} className="text-gray-600" />
+                                  <span className="text-[9px] font-bold text-gray-700 uppercase tracking-tight">
                                     Cut by: {client.terminatedBy === 'EXPERT' ? 'You' : 'Client'}
                                   </span>
                                 </div>
@@ -360,7 +360,7 @@ export default function ClientsPage() {
                                   {(session?.type || session?.session_type || "").toLowerCase().includes('chat') ? <MessageSquare size={20} /> : <Phone size={20} />}
                                 </div>
                                 <div className="flex flex-col">
-                                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Consultation</span>
+                                  <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Consultation</span>
                                   <span className="text-sm font-black text-gray-700 capitalize">
                                     {(session?.type || session?.session_type || "Session")} • {session.durationString || "0s"}
                                   </span>
@@ -372,7 +372,7 @@ export default function ClientsPage() {
                                   <Star size={20} className="fill-current" />
                                 </div>
                                 <div className="flex flex-col">
-                                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Client Rating</span>
+                                  <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Client Rating</span>
                                   <span className="text-sm font-black text-gray-700">
                                     {client.rating > 0 ? `${client.rating} Stars` : 'N/A Rating'}
                                   </span>
@@ -383,7 +383,7 @@ export default function ClientsPage() {
                           {/* Row 3: Fare Breakdown Section (Upgraded) */}
                           <div className="mb-8 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-3">
                             <div className="bg-gray-50/50 rounded-2xl p-3 border border-gray-100 flex flex-col">
-                              <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                              <span className="text-[9px] font-black text-gray-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                                 <IndianRupee size={10} /> User Paid
                               </span>
                               <span className="text-base font-black text-gray-700">₹{Number(session.total_cost || session.totalCost || 0).toFixed(2)}</span>
@@ -403,23 +403,21 @@ export default function ClientsPage() {
                                 gstAmt = pFee - platformShare;
                                 pFee = platformShare;
                               }
-
                               const pPercentage = total > 0 ? Math.round((pFee / total) * 100) : 0;
-
                               return (
                                 <>
                                   <div className="bg-rose-50/30 rounded-2xl p-3 border border-rose-100/50 flex flex-col">
-                                    <span className="text-[9px] font-black text-rose-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                                    <span className="text-[9px] font-black text-rose-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                                       <LucideIcons.Percent size={10} /> Platform Fee ({pPercentage}%)
                                     </span>
-                                    <span className="text-base font-black text-rose-500">-₹{pFee.toFixed(2)}</span>
+                                    <span className="text-base font-black text-rose-600">-₹{pFee.toFixed(2)}</span>
                                   </div>
 
                                   <div className="bg-rose-50/30 rounded-2xl p-3 border border-rose-100/50 flex flex-col">
-                                    <span className="text-[9px] font-black text-rose-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                                    <span className="text-[9px] font-black text-rose-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                                       <LucideIcons.ShieldAlert size={10} /> GST (18%)
                                     </span>
-                                    <span className="text-base font-black text-rose-500">-₹{gstAmt.toFixed(2)}</span>
+                                    <span className="text-base font-black text-rose-600">-₹{gstAmt.toFixed(2)}</span>
                                   </div>
                                 </>
                               );
@@ -427,18 +425,18 @@ export default function ClientsPage() {
 
                             {Number(session.agent_commission || session.agentCommission || 0) > 0 && (
                             <div className="bg-blue-50/30 rounded-2xl p-3 border border-blue-100/50 flex flex-col">
-                              <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                              <span className="text-[9px] font-black text-blue-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                                 <LucideIcons.Users size={10} /> Agent Share
                               </span>
-                              <span className="text-base font-black text-blue-500">-₹{Number(session.agent_commission || session.agentCommission || 0).toFixed(2)}</span>
+                              <span className="text-base font-black text-blue-600">-₹{Number(session.agent_commission || session.agentCommission || 0).toFixed(2)}</span>
                             </div>
                             )}
 
                             <div className="bg-emerald-50/50 rounded-2xl p-3 border border-emerald-100 flex flex-col">
-                              <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                              <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest mb-1 flex items-center gap-1.5">
                                 <LucideIcons.Wallet size={10} /> Net Payout
                               </span>
-                              <span className="text-base font-black text-emerald-700">₹{Number(session.expert_earning || session.expertShare || client.payment).toFixed(2)}</span>
+                              <span className="text-base font-black text-emerald-800">₹{Number(session.expert_earning || session.expertShare || client.payment).toFixed(2)}</span>
                             </div>
                           </div>
 

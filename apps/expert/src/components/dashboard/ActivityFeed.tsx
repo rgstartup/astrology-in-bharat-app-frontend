@@ -65,7 +65,7 @@ export const RecentActivity: React.FC = () => {
                 <p className="text-sm text-gray-900 leading-tight">
                   <span className="font-bold text-[#fd6410]">{activity.time}</span> consult to <span className="font-semibold text-gray-900">{activity.name}</span>
                 </p>
-                <p className="text-[10px] font-medium text-gray-400 mt-1 flex items-center gap-1 uppercase tracking-wider">
+                <p className="text-[10px] font-medium text-gray-700 mt-1 flex items-center gap-1">
                   {activity.relativeTime}
                 </p>
               </div>
@@ -73,7 +73,7 @@ export const RecentActivity: React.FC = () => {
           ))
         ) : (
           <div className="text-center py-8">
-            <p className="text-sm text-gray-500">No recent activity found.</p>
+            <p className="text-sm text-gray-700">No recent activity found.</p>
           </div>
         )}
       </div>

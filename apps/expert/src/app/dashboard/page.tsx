@@ -139,7 +139,7 @@ const Page = () => {
           <h2 className="text-2xl font-bold text-gray-900">
             Welcome back, {user?.name || "Expert"}!
           </h2>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-700 mt-1">
             Here's what's happening with your consultations today.
           </p>
         </div>

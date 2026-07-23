@@ -52,7 +52,7 @@ export const ConsultationRatings: React.FC<ConsultationRatingsProps> = ({
             </div>
 
             {/* Descriptive Content */}
-            <p className="mb-6 text-sm opacity-90 leading-relaxed text-gray-600">
+            <p className="mb-6 text-sm opacity-100 leading-relaxed text-gray-800">
                 Your consultation ratings reflect the quality and satisfaction experienced by your clients.
                 Maintaining high ratings helps build trust and credibility on the platform.
             </p>
@@ -71,7 +71,7 @@ export const ConsultationRatings: React.FC<ConsultationRatingsProps> = ({
                             />
                         ))}
                     </div>
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-gray-700 mt-2">
                         Based on <strong>{totalRatings.toLocaleString()}</strong> consultations
                     </p>
                 </div>
@@ -94,7 +94,7 @@ export const ConsultationRatings: React.FC<ConsultationRatingsProps> = ({
                                             style={{ width: `${widthPercent}%` }}
                                         />
                                     </div>
-                                    <div className="w-12 text-sm text-gray-500 text-right tabular-nums">
+                                    <div className="w-12 text-sm text-gray-800 text-right tabular-nums font-medium">
                                         {count}
                                     </div>
                                 </div>

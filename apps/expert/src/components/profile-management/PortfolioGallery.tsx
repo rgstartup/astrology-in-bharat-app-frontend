@@ -167,7 +167,7 @@ export default function PortfolioGallery({
                             onClick={() => setActiveTab('images')}
                             className={`flex items-center px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer hover:cursor-pointer ${activeTab === 'images'
                                 ? 'border-orange text-orange'
-                                : 'border-transparent text-gray-500 hover:text-gray-700'
+                                : 'border-transparent text-gray-800 hover:text-gray-950'
                                 }`}
                         >
                             <ImageIcon className="w-4 h-4 mr-2" /> Gallery ({images.length})
@@ -176,7 +176,7 @@ export default function PortfolioGallery({
                             onClick={() => setActiveTab('videos')}
                             className={`flex items-center px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer hover:cursor-pointer ${activeTab === 'videos'
                                 ? 'border-orange text-orange'
-                                : 'border-transparent text-gray-500 hover:text-gray-700'
+                                : 'border-transparent text-gray-800 hover:text-gray-950'
                                 }`}
                         >
                             <Video className="w-4 h-4 mr-2" /> Videos ({videos.length})
@@ -185,7 +185,7 @@ export default function PortfolioGallery({
                             onClick={() => setActiveTab('intro-video')}
                             className={`flex items-center px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer hover:cursor-pointer ${activeTab === 'intro-video'
                                 ? 'border-orange text-orange'
-                                : 'border-transparent text-gray-500 hover:text-gray-700'
+                                : 'border-transparent text-gray-800 hover:text-gray-950'
                                 }`}
                         >
                             <Play className="w-4 h-4 mr-2" /> Intro Video
@@ -213,9 +213,17 @@ export default function PortfolioGallery({
                                 />
                             </div>
                             {images.length === 0 ? (
-                                <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-                                    <Upload className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                                    <p className="text-sm text-gray-500">No images added to gallery yet.</p>
+                                <div
+                                    className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-orange-400 transition-colors cursor-pointer bg-gray-50 hover:bg-orange-50/30"
+                                    onClick={() => fileInputRef.current?.click()}
+                                >
+                                    <div className="flex flex-col items-center justify-center space-y-2">
+                                        <div className="p-2.5 bg-white rounded-full shadow-sm">
+                                            <Upload className="w-5 h-5 text-orange-600" />
+                                        </div>
+                                        <p className="text-xs font-semibold text-gray-900">Upload Image</p>
+                                        <p className="text-[10px] text-gray-500">Click to browse and add photos to your gallery</p>
+                                    </div>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
@@ -345,8 +353,34 @@ export default function PortfolioGallery({
                             </div>
 
                             {videos.length === 0 && !isAddingVideo && (
-                                <div className="text-center py-6">
-                                    <p className="text-sm text-gray-400">No videos added yet.</p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {/* Upload Video File Card */}
+                                    <div
+                                        className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-orange-400 transition-colors cursor-pointer bg-gray-50 hover:bg-orange-50/30"
+                                        onClick={() => videoInputRef.current?.click()}
+                                    >
+                                        <div className="flex flex-col items-center justify-center space-y-2">
+                                            <div className="p-2.5 bg-white rounded-full shadow-sm">
+                                                <Upload className="w-5 h-5 text-orange-600" />
+                                            </div>
+                                            <p className="text-xs font-semibold text-gray-900">Upload Video File</p>
+                                            <p className="text-[10px] text-gray-500">Upload a video file (Max 50MB)</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Add Video Link Card */}
+                                    <div
+                                        className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-orange-400 transition-colors cursor-pointer bg-gray-50 hover:bg-orange-50/30"
+                                        onClick={() => setIsAddingVideo(true)}
+                                    >
+                                        <div className="flex flex-col items-center justify-center space-y-2">
+                                            <div className="p-2.5 bg-white rounded-full shadow-sm">
+                                                <LinkIcon className="w-5 h-5 text-orange-600" />
+                                            </div>
+                                            <p className="text-xs font-semibold text-gray-900">Add Video Link</p>
+                                            <p className="text-[10px] text-gray-500">Paste YouTube, Vimeo, or direct link</p>
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -466,19 +500,17 @@ export default function PortfolioGallery({
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="text-center py-10 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 px-6">
-                                            <Video className="w-10 h-10 mx-auto text-gray-300 mb-3" />
-                                            <h3 className="text-sm font-semibold text-gray-900 mb-1">Add Intro Video</h3>
-                                            <p className="text-xs text-gray-500 mb-4">Introduce yourself to users through a short video message.</p>
-                                            <Button
-                                                onClick={onEditIntro}
-                                                variant="outline"
-                                                size="sm"
-                                                className="inline-flex items-center gap-2 rounded-full"
-                                            >
-                                                <Plus className="w-4 h-4" />
-                                                Add Now
-                                            </Button>
+                                        <div
+                                            className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-orange-400 transition-colors cursor-pointer bg-gray-50 hover:bg-orange-50/30"
+                                            onClick={onEditIntro}
+                                        >
+                                            <div className="flex flex-col items-center justify-center space-y-2">
+                                                <div className="p-2.5 bg-white rounded-full shadow-sm">
+                                                    <Video className="w-5 h-5 text-orange-600" />
+                                                </div>
+                                                <p className="text-xs font-semibold text-gray-900">Add Intro Video</p>
+                                                <p className="text-[10px] text-gray-500">Introduce yourself to users through a short video message (30s - 90s)</p>
+                                            </div>
                                         </div>
                                     )}
                                 </div>

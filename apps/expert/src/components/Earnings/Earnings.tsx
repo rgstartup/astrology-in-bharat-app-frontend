@@ -125,7 +125,7 @@ export default function EarningsPage() {
       <header className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Revenue & Analytics</h1>
-          <p className="text-gray-500 mt-1">Detailed breakdown of your earnings and service performance</p>
+          <p className="text-gray-700 mt-1">Detailed breakdown of your earnings and service performance</p>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 mt-4 md:mt-0 flex-wrap justify-end">
