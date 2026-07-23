@@ -478,47 +478,60 @@ export default function VerificationAndDocuments({
                 {isCertExpanded && (
                     <div className="p-4 sm:p-6 pt-0 animate-in fade-in slide-in-from-top-2 duration-300">
                         {certificates.length === 0 ? (
-                            <p className="text-sm text-gray-500 mb-4 text-center">No certificates added.</p>
+                            <div
+                                className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-orange-400 transition-colors cursor-pointer bg-gray-50 hover:bg-orange-50/30"
+                                onClick={() => certificateInputRef.current?.click()}
+                            >
+                                <div className="flex flex-col items-center justify-center space-y-2">
+                                    <div className="p-2.5 bg-white rounded-full shadow-sm">
+                                        <Upload className="w-5 h-5 text-orange-600" />
+                                    </div>
+                                    <p className="text-xs font-semibold text-gray-900">Upload Certificate</p>
+                                    <p className="text-[10px] text-gray-500">Click to browse and upload your expert certificates (PDF, JPG, PNG)</p>
+                                </div>
+                            </div>
                         ) : (
-                            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                                {certificates.map((cert, i) => (
-                                    <li
-                                        key={i}
-                                        onClick={() => {
-                                            const name = cert.split('/').pop()?.split('?')[0] || `Certificate-${i + 1}`;
-                                            setViewDoc({
-                                                id: i,
-                                                name: name,
-                                                url: cert,
-                                                type: name.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? "image/jpeg" : "application/pdf"
-                                            });
-                                        }}
-                                        className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-orange-200 hover:border-orange-300 hover:bg-orange-50/30 transition-all cursor-pointer group"
-                                    >
-                                        <div className="flex items-center space-x-3 overflow-hidden">
-                                            <div className="p-2 bg-white rounded-lg shadow-sm">
-                                                {/* @ts-ignore */}
-                                                <FileText className="w-4 h-4 text-orange-600" />
+                            <>
+                                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                                    {certificates.map((cert, i) => (
+                                        <li
+                                            key={i}
+                                            onClick={() => {
+                                                const name = cert.split('/').pop()?.split('?')[0] || `Certificate-${i + 1}`;
+                                                setViewDoc({
+                                                    id: i,
+                                                    name: name,
+                                                    url: cert,
+                                                    type: name.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? "image/jpeg" : "application/pdf"
+                                                });
+                                            }}
+                                            className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-orange-200 hover:border-orange-300 hover:bg-orange-50/30 transition-all cursor-pointer group"
+                                        >
+                                            <div className="flex items-center space-x-3 overflow-hidden">
+                                                <div className="p-2 bg-white rounded-lg shadow-sm">
+                                                    {/* @ts-ignore */}
+                                                    <FileText className="w-4 h-4 text-orange-600" />
+                                                </div>
+                                                <span className="text-xs sm:text-sm font-medium text-gray-700 truncate group-hover:text-orange-700">
+                                                    {cert.split('/').pop()?.split('?')[0] || "Certificate"}
+                                                </span>
                                             </div>
-                                            <span className="text-xs sm:text-sm font-medium text-gray-700 truncate group-hover:text-orange-700">
-                                                {cert.split('/').pop()?.split('?')[0] || "Certificate"}
-                                            </span>
-                                        </div>
-                                        {/* @ts-ignore */}
-                                        <ChevronRight size={16} className="text-gray-400 group-hover:text-orange-600 group-hover:translate-x-0.5 transition-all" />
-                                    </li>
-                                ))}
-                            </ul>
+                                            {/* @ts-ignore */}
+                                            <ChevronRight size={16} className="text-gray-400 group-hover:text-orange-600 group-hover:translate-x-0.5 transition-all" />
+                                        </li>
+                                    ))}
+                                </ul>
+                                <Button
+                                    onClick={() => certificateInputRef.current?.click()}
+                                    variant="outline"
+                                    fullWidth
+                                    className="flex items-center justify-center gap-2"
+                                >
+                                    <Upload className="w-4 h-4" />
+                                    <span>Upload New Certificate</span>
+                                </Button>
+                            </>
                         )}
-                        <Button
-                            onClick={() => certificateInputRef.current?.click()}
-                            variant="outline"
-                            fullWidth
-                            className="flex items-center justify-center gap-2"
-                        >
-                            <Upload className="w-4 h-4" />
-                            <span>Upload New Certificate</span>
-                        </Button>
                         <input
                             type="file"
                             ref={certificateInputRef}

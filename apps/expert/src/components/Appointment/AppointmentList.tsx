@@ -331,7 +331,7 @@ export default function AppointmentList({
             <div className="hidden lg:block bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden">
                 <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="bg-gray-50/50 text-gray-500 text-xs uppercase tracking-wider font-bold">
+                        <tr className="bg-gray-50/50 text-gray-900 text-xs font-bold">
                             <th className="px-6 py-4 font-bold border-b border-gray-100">Client</th>
                             <th className="px-6 py-4 font-bold border-b border-gray-100">Service Details</th>
                             <th className="px-6 py-4 font-bold border-b border-gray-100 text-right">Status & Actions</th>
@@ -383,7 +383,7 @@ export default function AppointmentList({
                                                 {getServiceIcon(appt.service)}
                                                 {appt.service}
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-gray-500 text-xs">
+                                            <div className="flex items-center gap-1.5 text-gray-700 text-xs">
                                                 <Clock className="w-3.5 h-3.5 opacity-70" />
                                                 {format(new Date(appt.date), "dd MMM yyyy, hh:mm a")}
                                             </div>

@@ -50,7 +50,7 @@ export function StatsCards({ stats, columns = 4 }: StatsCardsProps) {
                         <div className="relative z-10 flex items-start gap-3">
                             {/* LEFT TEXT */}
                             <div className="flex-1 min-w-0 pr-2">
-                                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 leading-tight">
+                                <p className="text-xs sm:text-sm font-medium text-gray-900 mb-1 leading-tight">
                                     {stat.title}
                                 </p>
 
@@ -71,7 +71,7 @@ export function StatsCards({ stats, columns = 4 }: StatsCardsProps) {
                                             {stat.trend.value}
                                         </span>
                                         {stat.trend.period && (
-                                            <span className="text-sm text-gray-500">
+                                            <span className="text-sm text-gray-700">
                                                 {stat.trend.period}
                                             </span>
                                         )}

@@ -86,7 +86,7 @@ const ServiceCard = ({ service, onEdit, onDelete }: { service: any, onEdit: (s: 
     <h2 className="text-xl font-bold text-gray-900 mb-2">{service.name}</h2>
 
     {/* Description */}
-    <p className="text-gray-600 text-sm mb-4 leading-relaxed min-h-[40px]">
+    <p className="text-gray-900 text-sm mb-4 leading-relaxed min-h-[40px]">
       {service.description}
     </p>
 
@@ -96,7 +96,7 @@ const ServiceCard = ({ service, onEdit, onDelete }: { service: any, onEdit: (s: 
         <span className="text-2xl font-black text-orange-700">
           ₹{service.price}
         </span>
-        <span className="text-gray-500 text-sm font-medium">{service.unit}</span>
+        <span className="text-gray-900 text-sm font-medium">{service.unit}</span>
       </div>
     </div>
 
@@ -261,7 +261,7 @@ const ServicePricingPage = () => {
         <h1 className="text-3xl sm:text-4xl font-extrabold text-orange-700 tracking-tight">
           Services &amp; Pricing
         </h1>
-        <p className="text-gray-600 mt-3 text-sm sm:text-lg">
+        <p className="text-gray-800 mt-3 text-sm sm:text-lg">
           Manage your services, set attractive pricing, and create offers for your clients.
         </p>
         <button
@@ -273,9 +273,8 @@ const ServicePricingPage = () => {
         </button>
       </div>
 
-      {/* Consultation Services Section */}
       <div className="max-w-6xl mx-auto mb-10">
-        <h2 className="text-xl font-black text-gray-800 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
           <MessageSquare className="w-5 h-5 text-orange-600" />
           Consultation Services
         </h2>
@@ -294,10 +293,10 @@ const ServicePricingPage = () => {
               <Sparkles className="w-6 h-6 text-orange-600" />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-black text-gray-800 tracking-tight">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                 Puja Services
               </h2>
-              <p className="text-sm text-gray-500 font-medium mt-0.5">Manage your sacred ritual offerings</p>
+              <p className="text-sm text-gray-900 font-medium mt-0.5">Manage your sacred ritual offerings</p>
             </div>
           </div>
           <div className="flex flex-nowrap items-center gap-2 sm:gap-3 w-full sm:w-auto mt-2 sm:mt-0">
@@ -312,7 +311,7 @@ const ServicePricingPage = () => {
               
               {/* Dropdown Menu */}
               <div className={`absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-64 bg-white border border-gray-100 rounded-2xl shadow-xl transition-all z-50 max-h-80 overflow-y-auto py-2 ${isDropdownOpen ? 'opacity-100 visible' : 'opacity-0 invisible md:group-hover/dropdown:opacity-100 md:group-hover/dropdown:visible'}`}>
-                <div className="px-4 py-2 text-[10px] font-black uppercase text-gray-400 border-b border-gray-50 mb-1">
+                <div className="px-4 py-2 text-[10px] font-black uppercase text-gray-700 border-b border-gray-50 mb-1">
                   Common Rituals
                 </div>
                 {SUGGESTED_PUJAS.map((p) => (
@@ -342,8 +341,8 @@ const ServicePricingPage = () => {
              <div className="bg-orange-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Sparkles className="w-8 h-8 text-orange-400" />
              </div>
-             <h3 className="text-lg font-bold text-gray-700 mb-1">No Puja Services Added</h3>
-             <p className="text-gray-500 text-sm max-w-xs mx-auto">Click the button above to add your first ritual service.</p>
+             <h3 className="text-lg font-bold text-gray-900 mb-1">No Puja Services Added</h3>
+             <p className="text-gray-700 text-sm max-w-xs mx-auto">Click the button above to add your first ritual service.</p>
           </div>
         ) : (
           <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -377,7 +376,7 @@ const ServicePricingPage = () => {
 
                 <div className="p-6 pb-0">
                   <h3 className="text-lg font-bold text-gray-900 mb-2 truncate">{puja.name}</h3>
-                  <p className="text-gray-500 text-xs line-clamp-2 leading-relaxed h-[36px] mb-4">
+                  <p className="text-gray-900 text-xs line-clamp-2 leading-relaxed h-[36px] mb-4">
                     {puja.description}
                   </p>
                 </div>
@@ -385,18 +384,18 @@ const ServicePricingPage = () => {
                 <div className="px-6 space-y-3 mb-6">
                   {puja.is_online && (
                     <div className="flex justify-between items-center p-2.5 bg-blue-50/50 rounded-xl border border-blue-100/50">
-                      <span className="text-[10px] font-bold text-blue-700 uppercase">Online Session</span>
+                      <span className="text-xs font-semibold text-blue-700">Online Session</span>
                       <span className="text-sm font-black text-blue-800">₹{puja.online_cost}</span>
                     </div>
                   )}
                   {puja.is_home_visit && (
                     <div className="space-y-2">
                       <div className="flex justify-between items-center p-2.5 bg-green-50/50 rounded-xl border border-green-100/50">
-                        <span className="text-[10px] font-bold text-green-700 uppercase">Home Visit (Basic)</span>
+                        <span className="text-xs font-semibold text-green-700">Home Visit (Basic)</span>
                         <span className="text-sm font-black text-green-800">₹{puja.home_visit_without_samagri_cost}</span>
                       </div>
                       <div className="flex justify-between items-center p-2.5 bg-orange-50/50 rounded-xl border border-orange-100/50">
-                        <span className="text-[10px] font-bold text-orange-700 uppercase">With Samagri</span>
+                        <span className="text-xs font-semibold text-orange-700">With Samagri</span>
                         <span className="text-sm font-black text-orange-800">₹{puja.home_visit_with_samagri_cost}</span>
                       </div>
                     </div>
@@ -406,7 +405,7 @@ const ServicePricingPage = () => {
                 <div className="p-6 pt-0 mt-auto flex gap-2">
                   <button
                     onClick={() => openPujaEdit(puja)}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gray-900 text-white text-xs font-bold rounded-2xl hover:bg-gray-800 transition-all active:scale-95 cursor-pointer hover:cursor-pointer"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-2xl transition-all active:scale-95 cursor-pointer hover:cursor-pointer"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
                     Manage
@@ -427,7 +426,7 @@ const ServicePricingPage = () => {
       {/* Custom Services Section */}
       {services.some(s => s.isCustom) && (
         <div className="max-w-6xl mx-auto mb-10">
-          <h2 className="text-xl font-black text-gray-800 uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
             <Plus className="w-5 h-5 text-orange-600" />
             Custom Services
           </h2>

@@ -59,13 +59,13 @@ export default function EarningsCharts({
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h2 className="text-lg font-bold text-gray-900">Income Trends</h2>
-                        <p className="text-sm text-gray-500">Earnings over the last 6 months</p>
+                        <p className="text-sm text-gray-700">Earnings over the last 6 months</p>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="flex items-center gap-1 text-xs font-medium text-gray-500">
+                        <span className="flex items-center gap-1 text-xs font-medium text-gray-700">
                             <span className="w-2 h-2 rounded-full bg-amber-500" /> Actual
                         </span>
-                        <span className="flex items-center gap-1 text-xs font-medium text-gray-500">
+                        <span className="flex items-center gap-1 text-xs font-medium text-gray-700">
                             <span className="w-2 h-2 rounded-full border border-dashed border-gray-400" /> Projected
                         </span>
                     </div>
@@ -85,13 +85,13 @@ export default function EarningsCharts({
                                 dataKey="label"
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                                tick={{ fill: '#374151', fontSize: 12 }}
                                 dy={10}
                             />
                             <YAxis
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                                tick={{ fill: '#374151', fontSize: 12 }}
                                 tickFormatter={(value) => `₹${value >= 1000 ? (value / 1000) + 'k' : value}`}
                             />
                             <Tooltip content={<CustomTooltip />} />
@@ -111,7 +111,7 @@ export default function EarningsCharts({
             {/* Revenue Breakdown Pie Chart */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col">
                 <h2 className="text-lg font-bold text-gray-900 mb-1">Revenue Breakdown</h2>
-                <p className="text-sm text-gray-500 mb-6">By consultation category</p>
+                <p className="text-sm text-gray-700 mb-6">By consultation category</p>
 
                 <div className="flex-1 min-h-[250px] relative flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
@@ -135,7 +135,7 @@ export default function EarningsCharts({
 
                     {/* Center Overlay for Pie Chart */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center mt-1">
-                        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">Total</span>
+                        <span className="text-[10px] text-gray-700 uppercase font-bold tracking-wider mb-0.5">Total</span>
                         <span className="text-base font-extrabold text-gray-900 truncate w-full px-2" title={`₹${pieData.reduce((acc, curr) => acc + (curr.amount || 0), 0).toLocaleString('en-IN')}`}>
                             ₹{pieData.reduce((acc, curr) => acc + (curr.amount || 0), 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                         </span>
@@ -148,7 +148,7 @@ export default function EarningsCharts({
                         <div key={idx} className="flex items-center justify-between text-sm">
                             <div className="flex items-center gap-2">
                                 <span className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                                <span className="text-gray-600">{item.category}</span>
+                                <span className="text-gray-800">{item.category}</span>
                             </div>
                             <span className="font-bold text-gray-900">{item.percentage}%</span>
                         </div>

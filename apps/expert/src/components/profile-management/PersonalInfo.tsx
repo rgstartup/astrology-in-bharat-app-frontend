@@ -108,9 +108,9 @@ export default function PersonalInfo({
                     <div className="flex items-center justify-between gap-2">
                         <h2 className="text-lg sm:text-2xl font-bold text-gray-800 truncate min-w-0">{profile.name}</h2>
                         {/* @ts-ignore */}
-                        <div className="shrink-0">{isExpanded ? <ChevronUp className="w-5 h-5 text-gray-500" /> : <ChevronDown className="w-5 h-5 text-gray-500" />}</div>
+                        <div className="shrink-0">{isExpanded ? <ChevronUp className="w-5 h-5 text-gray-900" /> : <ChevronDown className="w-5 h-5 text-gray-900" />}</div>
                     </div>
-                    <p className="text-sm text-gray-500 mb-2 truncate">{profile.email}</p>
+                    <p className="text-sm text-gray-900 mb-2 truncate">{profile.email}</p>
                     <div className="flex flex-wrap items-center gap-1.5 mt-1">
                         <span className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full ${profile.is_available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                             {profile.is_available ? 'Available' : 'Unavailable'}
@@ -152,7 +152,7 @@ export default function PersonalInfo({
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {/* Full Name Field */}
                                 <div className="sm:col-span-2">
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Full Name</label>
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Full Name</label>
                                     <input
                                         type="text"
                                         name="name"
@@ -163,7 +163,7 @@ export default function PersonalInfo({
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Gender</label>
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Gender</label>
                                     <select
                                         name="gender"
                                         value={tempProfile.gender!}
@@ -176,7 +176,7 @@ export default function PersonalInfo({
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Date of Birth</label>
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Date of Birth</label>
                                     <input
                                         type="date"
                                         name="date_of_birth"
@@ -188,7 +188,7 @@ export default function PersonalInfo({
                                 </div>
                                 {/* Mobile Number Field */}
                                 <div className="sm:col-span-2">
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Mobile Number</label>
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Mobile Number</label>
                                     <input
                                         type="tel"
                                         name="phoneNumber"
@@ -201,7 +201,7 @@ export default function PersonalInfo({
 
                                 {/* Languages Field */}
                                 <div className="sm:col-span-2">
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Languages (comma separated)</label>
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Languages (comma separated)</label>
                                     <input
                                         type="text"
                                         name="languages"
@@ -214,7 +214,7 @@ export default function PersonalInfo({
 
                                 {/* Experience Field */}
                                 <div className="sm:col-span-1">
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">
                                         Experience (Years)
                                     </label>
                                     <input
@@ -230,7 +230,7 @@ export default function PersonalInfo({
 
                                 {/* Specialization Field */}
                                 <div className="sm:col-span-2">
-                                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">
                                         Specializations (comma separated)
                                     </label>
                                     <input
@@ -251,20 +251,20 @@ export default function PersonalInfo({
                                     variant="ghost"
                                     className="flex items-center justify-between w-full mb-3 group p-0 hover:bg-transparent"
                                 >
-                                    <h4 className="text-sm font-semibold text-gray-700 group-hover:text-orange transition-colors">Address</h4>
+                                    <h4 className="text-sm font-semibold text-gray-900 group-hover:text-orange transition-colors">Address</h4>
                                     {showAddress ? (
                                         /* @ts-ignore */
-                                        <ChevronUp className="w-5 h-5 text-gray-500 group-hover:text-orange transition-colors" />
+                                        <ChevronUp className="w-5 h-5 text-gray-900 group-hover:text-orange transition-colors" />
                                     ) : (
                                         /* @ts-ignore */
-                                        <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-orange transition-colors" />
+                                        <ChevronDown className="w-5 h-5 text-gray-900 group-hover:text-orange transition-colors" />
                                     )}
                                 </Button>
 
                                 {showAddress && (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">House/Office No</label>
+                                            <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">House/Office No</label>
                                             <input
                                                 type="text"
                                                 name="houseNo"
@@ -275,7 +275,7 @@ export default function PersonalInfo({
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">District</label>
+                                            <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">District</label>
                                             <input
                                                 type="text"
                                                 name="district"
@@ -286,7 +286,7 @@ export default function PersonalInfo({
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">State</label>
+                                            <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">State</label>
                                             <input
                                                 type="text"
                                                 name="state"
@@ -297,7 +297,7 @@ export default function PersonalInfo({
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Country</label>
+                                            <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Country</label>
                                             <input
                                                 type="text"
                                                 name="country"
@@ -308,7 +308,7 @@ export default function PersonalInfo({
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Pincode</label>
+                                            <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Pincode</label>
                                             <input
                                                 type="text"
                                                 name="pincode"
@@ -322,7 +322,7 @@ export default function PersonalInfo({
                                 )}
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">About</label>
+                                <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">About</label>
                                 <textarea
                                     name="about"
                                     value={tempProfile.about || ""}
@@ -333,7 +333,7 @@ export default function PersonalInfo({
                             </div>
 
                             <div>
-                                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Bio</label>
+                                <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Bio</label>
                                 <textarea
                                     name="bio"
                                     value={tempProfile.bio}
@@ -365,29 +365,29 @@ export default function PersonalInfo({
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                                 <div>
-                                    <p className="text-gray-500">Gender</p>
+                                    <p className="text-gray-900">Gender</p>
                                     <p className="font-medium capitalize text-black">{profile.gender}</p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-500">Date of Birth</p>
+                                    <p className="text-gray-900">Date of Birth</p>
                                     <p className="font-medium text-black">{profile.date_of_birth ? new Date(profile.date_of_birth).toLocaleDateString() : "Not specified"}</p>
                                 </div>
                                 <div className="sm:col-span-2">
-                                    <p className="text-gray-500">Mobile Number</p>
+                                    <p className="text-gray-900">Mobile Number</p>
                                     <p className="font-medium text-black">{profile.phoneNumber || "Not added"}</p>
                                 </div>
                                 <div className="sm:col-span-2">
-                                    <p className="text-gray-500">Languages</p>
+                                    <p className="text-gray-900">Languages</p>
                                     <p className="font-medium text-black">
                                         {profile.languages && profile.languages.length > 0 ? profile.languages.join(', ') : "Not added"}
                                     </p>
                                 </div>
                                 <div className="sm:col-span-1">
-                                    <p className="text-gray-500">Experience</p>
+                                    <p className="text-gray-900">Experience</p>
                                     <p className="font-medium text-black">{profile.experience_in_years ? `${profile.experience_in_years} Years` : "Not added"}</p>
                                 </div>
                                 <div className="sm:col-span-2">
-                                    <p className="text-gray-500">Specializations</p>
+                                    <p className="text-gray-900">Specializations</p>
                                     <div className="flex flex-wrap gap-2 mt-1">
                                         {specs.length > 0 ? specs.map((spec, i) => (
                                             <span key={i} className="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-1 rounded-full">
@@ -405,50 +405,50 @@ export default function PersonalInfo({
                                     variant="ghost"
                                     className="flex items-center justify-between w-full mb-3 group p-0 hover:bg-transparent"
                                 >
-                                    <h4 className="text-sm font-semibold text-gray-700 group-hover:text-orange transition-colors">Address</h4>
+                                    <h4 className="text-sm font-semibold text-gray-900 group-hover:text-orange transition-colors">Address</h4>
                                     {showAddress ? (
                                         /* @ts-ignore */
-                                        <ChevronUp className="w-5 h-5 text-gray-500 group-hover:text-orange transition-colors" />
+                                        <ChevronUp className="w-5 h-5 text-gray-900 group-hover:text-orange transition-colors" />
                                     ) : (
                                         /* @ts-ignore */
-                                        <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-orange transition-colors" />
+                                        <ChevronDown className="w-5 h-5 text-gray-900 group-hover:text-orange transition-colors" />
                                     )}
                                 </Button>
 
                                 {showAddress && (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm animate-in fade-in slide-in-from-top-2 duration-300">
                                         <div>
-                                            <p className="text-gray-500">House/Office No</p>
+                                            <p className="text-gray-900">House/Office No</p>
                                             <p className="font-medium text-black">{profile.houseNo || "Not added"}</p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500">District</p>
+                                            <p className="text-gray-900">District</p>
                                             <p className="font-medium text-black">{profile.district || "Not added"}</p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500">State</p>
+                                            <p className="text-gray-900">State</p>
                                             <p className="font-medium text-black">{profile.state || "Not added"}</p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500">Country</p>
+                                            <p className="text-gray-900">Country</p>
                                             <p className="font-medium text-black">{profile.country || "Not added"}</p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500">Pincode</p>
+                                            <p className="text-gray-900">Pincode</p>
                                             <p className="font-medium text-black">{profile.pincode || "Not added"}</p>
                                         </div>
                                     </div>
                                 )}
                             </div>
                             <div>
-                                <p className="text-gray-500 text-sm mb-1">About</p>
-                                <p className="text-gray-700 leading-relaxed text-sm">
+                                <p className="text-gray-900 text-sm mb-1">About</p>
+                                <p className="text-gray-900 leading-relaxed text-sm">
                                     {profile.about || "No custom about section added yet."}
                                 </p>
                             </div>
                             <div>
-                                <p className="text-gray-500 text-sm mb-1">Bio</p>
-                                <p className="text-gray-700 leading-relaxed text-sm">
+                                <p className="text-gray-900 text-sm mb-1">Bio</p>
+                                <p className="text-gray-900 leading-relaxed text-sm">
                                     {profile.bio || "No bio added yet."}
                                 </p>
                             </div>

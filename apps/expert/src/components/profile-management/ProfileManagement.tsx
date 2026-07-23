@@ -177,25 +177,32 @@ const ProfileManagement = () => {
 
     return (
         <div className="p-4 sm:p-6 md:p-8 bg-gray-50 min-h-screen">
-            {/* Embedded styles to hide scr  ollbars */}
+            {/* Embedded styles for custom scrollbar */}
             <style>{`
-                .scrollbar-hide::-webkit-scrollbar {
-                    display: none;   
+                .custom-scrollbar::-webkit-scrollbar {
+                    height: 5px;   
                 }
-                .scrollbar-hide {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: rgba(0, 0, 0, 0.05);
+                    border-radius: 9999px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.15);
+                    border-radius: 9999px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.3);
                 }
             `}</style>
 
             <div className="mb-6 sm:mb-8">
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Profile Management</h1>
-                <p className="text-gray-600 text-sm sm:text-base">Manage your personal info, expertise, availability, and payout details.</p>
+                <p className="text-gray-800 text-sm sm:text-base">Manage your personal info, expertise, availability, and payout details.</p>
             </div>
 
             {/* Stepper / Dynamic Navigation Bar */}
-            <div className="sticky top-[64px] sm:top-[72px] z-30 bg-gray-50/90 backdrop-blur-md border-b border-gray-200/80 -mx-4 px-4 sm:-mx-6 sm:px-6 md:-mx-8 md:px-8 mb-6 py-2 transition-all duration-300">
-                <div className="max-w-7xl mx-auto overflow-x-auto scrollbar-hide py-2 flex items-center space-x-3 md:space-x-4 whitespace-nowrap scroll-smooth">
+            <div className="sticky top-[64px] sm:top-[72px] z-30 w-full bg-gray-50/90 backdrop-blur-md border-b border-gray-200/80 -mx-4 px-4 sm:-mx-6 sm:px-6 md:-mx-8 md:px-8 mb-6 py-1 transition-all duration-300">
+                <div className="w-full max-w-7xl mx-auto overflow-x-auto custom-scrollbar py-3 px-4 sm:px-6 flex items-center space-x-3 md:space-x-4 whitespace-nowrap scroll-smooth">
                     {navigationItems.map((item, index) => {
                         const Icon = item.icon;
                         const isActive = activeTab === item.id;
@@ -211,17 +218,17 @@ const ProfileManagement = () => {
                                             window.scrollTo({ top: y, behavior: 'smooth' });
                                         }
                                     }}
-                                    className={`flex items-center space-x-2 pb-2 border-b-2 transition-all duration-300 outline-none shrink-0 cursor-pointer hover:cursor-pointer ${
+                                    className={`flex items-center space-x-2 pb-3 border-b-2 transition-all duration-300 outline-none shrink-0 cursor-pointer hover:cursor-pointer ${
                                         isActive
                                             ? "border-orange-500 text-orange-600 font-bold"
-                                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200"
+                                            : "border-transparent text-gray-700 hover:text-gray-900 hover:border-gray-300"
                                     }`}
                                 >
                                     <div
                                         className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                                             isActive
                                                 ? "bg-orange-500 text-white scale-110 shadow-md shadow-orange-500/20"
-                                                : "bg-gray-100 text-gray-400"
+                                                : "bg-gray-200 text-gray-600"
                                         }`}
                                     >
                                         <Icon className="w-4 h-4" />
@@ -229,7 +236,7 @@ const ProfileManagement = () => {
                                     <span className="text-xs sm:text-sm font-semibold tracking-wide">{item.label}</span>
                                 </button>
                                 {index < navigationItems.length - 1 && (
-                                    <ChevronRight className="w-4 h-4 text-gray-300 shrink-0" />
+                                    <ChevronRight className="w-4 h-4 text-gray-300 shrink-0 mb-3" />
                                 )}
                             </React.Fragment>
                         );
