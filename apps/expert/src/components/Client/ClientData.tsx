@@ -447,13 +447,13 @@ export default function ClientsPage() {
                               : "bg-gray-50/50 border-gray-100 border-dashed"
                             }`}>
                             <div className={`p-2 rounded-2xl ${
-                              client.review && client.review !== "No review yet" ? "bg-[#fd6410] text-white" : "bg-gray-200 text-gray-400"
+                              client.review && client.review !== "No review yet" ? "bg-[#fd6410] text-white" : "bg-gray-200 text-gray-600"
                             }`}>
                               <MessageSquare size={16} />
                             </div>
                             <div className="flex-1">
-                              <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">Detailed Feedback</p>
-                              <p className="text-sm text-gray-700 leading-relaxed m-0 font-medium">
+                              <p className="text-xs font-bold text-gray-800 mb-2">Detailed Feedback</p>
+                              <p className="text-sm text-gray-900 leading-relaxed m-0 font-medium">
                                 {client.review && client.review !== "No review yet"
                                   ? `"${client.review}"`
                                   : "The client hasn't provided a written review for this session."}

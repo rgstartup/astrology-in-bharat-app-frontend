@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Calendar, DollarSign, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Calendar, IndianRupee, Clock } from "lucide-react";
 import type { User } from "@/app/components/user/user";
 
 export const getUserProfileModalProps = (user: User) => ({
@@ -19,12 +19,12 @@ export const getUserProfileModalProps = (user: User) => ({
       value: user.created_at ? new Date(user.created_at).toLocaleDateString() : "N/A",
     },
     {
-      icon: DollarSign,
+      icon: IndianRupee,
       label: "Consultation Spending",
       value: `₹${user.total_spent?.toLocaleString() || 0}`,
     },
     {
-      icon: DollarSign,
+      icon: IndianRupee,
       label: "Wallet Balance",
       value: `₹${user.wallet_balance?.toLocaleString() || 0}`,
     },

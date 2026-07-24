@@ -85,7 +85,7 @@ export const getColumns = (
             )}
           <div>
             <p className="text-sm font-semibold text-gray-900">{user.name || "N/A"}</p>
-            <p className="text-xs text-gray-500">{user.email}</p>
+            <p className="text-xs font-medium text-gray-700">{user.email}</p>
           </div>
         </div>
         );
@@ -96,9 +96,9 @@ export const getColumns = (
       label: "Contact",
       render: (user: User) => (
         <div>
-          <p className="text-sm text-gray-600">{user.email}</p>
+          <p className="text-sm font-medium text-gray-900">{user.email}</p>
           {(user.phone || user.profile_client?.phone_number) && (
-            <p className="text-xs text-gray-500">{user.phone || user.profile_client?.phone_number}</p>
+            <p className="text-xs font-medium text-gray-700">{user.phone || user.profile_client?.phone_number}</p>
           )}
         </div>
       ),
@@ -107,7 +107,7 @@ export const getColumns = (
       key: "joinDate",
       label: "Join Date",
       render: (user: User) => (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm font-medium text-gray-900">
           {user.created_at ? new Date(user.created_at).toLocaleDateString() : "-"}
         </span>
       ),
@@ -148,8 +148,8 @@ export const getColumns = (
 
           {/* Agar user block hai to kisne aur kab block kiya show karo */}
           {user.is_blocked && user.blocked_by_name && (
-            <div className="text-[10px] text-gray-400 leading-tight">
-              <span className="font-medium text-gray-500">By:</span> {user.blocked_by_name}
+            <div className="text-[10px] text-gray-600 leading-tight">
+              <span className="font-bold text-gray-800">By:</span> {user.blocked_by_name}
               {user.blocked_at && (
                 <span className="block">
                   {new Date(user.blocked_at).toLocaleDateString("en-IN", {

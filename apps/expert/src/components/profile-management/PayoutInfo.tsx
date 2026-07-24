@@ -152,9 +152,6 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                 <div className="sm:col-span-2 group">
                                     <label className="block text-xs font-medium text-gray-900 mb-1">Account Holder Name</label>
                                     <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i className="fa-solid fa-user text-orange-500/50 text-xs"></i>
-                                        </div>
                                         <input
                                             type="text"
                                             name={`holder_${Math.random().toString(36).substring(7)}`}
@@ -162,16 +159,13 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={formData.account_holder_name || ""}
                                             onChange={(e) => handleFieldChange('account_holder_name', e.target.value)}
                                             placeholder="Full Name as per Bank Records"
-                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
+                                            className="w-full pl-4 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
                                         />
                                     </div>
                                 </div>
                                 <div className="sm:col-span-2 group">
                                     <label className="block text-xs font-medium text-gray-900 mb-1">Bank Name</label>
                                     <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i className="fa-solid fa-building-columns text-orange-500/50 text-xs"></i>
-                                        </div>
                                         <input
                                             type="text"
                                             name={`bank_${Math.random().toString(36).substring(7)}`}
@@ -179,16 +173,13 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={formData.bank_name || ""}
                                             onChange={(e) => handleFieldChange('bank_name', e.target.value)}
                                             placeholder="e.g. State Bank of India, HDFC, etc."
-                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
+                                            className="w-full pl-4 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
                                         />
                                     </div>
                                 </div>
                                 <div className="group">
                                     <label className="block text-xs font-medium text-gray-900 mb-1">Account Number</label>
                                     <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i className="fa-solid fa-hashtag text-orange-500/50 text-xs"></i>
-                                        </div>
                                         <input
                                             type="password"
                                             name={`acc_no_${Math.random().toString(36).substring(7)}`}
@@ -196,16 +187,13 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={formData.account_number || ""}
                                             onChange={(e) => handleFieldChange('account_number', e.target.value)}
                                             placeholder="Enter Bank Account Number"
-                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
+                                            className="w-full pl-4 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
                                         />
                                     </div>
                                 </div>
                                 <div className="group">
                                     <label className="block text-xs font-medium text-gray-900 mb-1">Confirm Account Number</label>
                                     <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i className="fa-solid fa-check-double text-orange-500/50 text-xs"></i>
-                                        </div>
                                         <input
                                             type="text"
                                             name={`confirm_acc_no_${Math.random().toString(36).substring(7)}`}
@@ -213,7 +201,7 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={confirmAccNo}
                                             onChange={(e) => setConfirmAccNo(e.target.value)}
                                             placeholder="Re-enter Account Number"
-                                            className={`w-full pl-9 pr-3 py-2.5 border-2 rounded-xl focus:ring-4 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium ${confirmAccNo && confirmAccNo !== formData.account_number ? 'border-red-200 focus:border-red-500 focus:ring-red-500/10' : 'border-orange-50 focus:border-orange-500 focus:ring-orange-500/10'}`}
+                                            className={`w-full pl-4 pr-3 py-2.5 border-2 rounded-xl focus:ring-4 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium ${confirmAccNo && confirmAccNo !== formData.account_number ? 'border-red-200 focus:border-red-500 focus:ring-red-500/10' : 'border-orange-50 focus:border-orange-500 focus:ring-orange-500/10'}`}
                                         />
                                     </div>
                                     {confirmAccNo && confirmAccNo !== formData.account_number && (
@@ -223,9 +211,6 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                 <div className="group">
                                     <label className="block text-xs font-medium text-gray-900 mb-1">IFSC Code</label>
                                     <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i className="fa-solid fa-code text-orange-500/50 text-xs"></i>
-                                        </div>
                                         <input
                                             type="text"
                                             name={`ifsc_${Math.random().toString(36).substring(7)}`}
@@ -233,22 +218,19 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                             value={formData.ifsc_code || ""}
                                             onChange={(e) => handleFieldChange('ifsc_code', e.target.value.toUpperCase())}
                                             placeholder="IFSC (e.g. SBIN0001234)"
-                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 font-bold uppercase text-gray-800 bg-white transition-all ml-0"
+                                            className="w-full pl-4 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 font-bold uppercase text-gray-800 bg-white transition-all ml-0"
                                         />
                                     </div>
                                 </div>
                                 <div className="group">
                                     <label className="block text-xs font-medium text-gray-900 mb-1">UPI ID (Optional)</label>
                                     <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i className="fa-solid fa-qrcode text-orange-500/50 text-xs"></i>
-                                        </div>
                                         <input
                                             type="text"
                                             value={formData.upi_id || ""}
                                             onChange={(e) => handleFieldChange('upi_id', e.target.value)}
                                             placeholder="Optional UPI (name@upi)"
-                                            className="w-full pl-9 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
+                                            className="w-full pl-4 pr-3 py-2.5 border-2 border-orange-50 rounded-xl focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-sm placeholder:text-gray-500 text-gray-800 bg-white transition-all font-medium"
                                         />
                                     </div>
                                 </div>
@@ -289,9 +271,9 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                     {accounts.map((acc) => (
                                         <div key={acc.id} className="relative overflow-hidden bg-white/40 backdrop-blur-md p-5 rounded-3xl border border-white shadow-inner group transition-all duration-300 hover:bg-white/60">
                                             {acc.is_primary && (
-                                                <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[8px] font-black px-3 py-1 rounded-bl-xl uppercase tracking-tighter flex items-center gap-1">
+                                                <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[12px] font-medium tracking-wide pl-3 pr-6 py-1.5 rounded-bl-xl flex items-center gap-1">
                                                     {/* @ts-ignore */}
-                                                    <CheckCircle2 className="w-2.5 h-2.5" /> Primary
+                                                    <CheckCircle2 className="w-3 h-3" /> Primary
                                                 </div>
                                             )}
 
@@ -317,7 +299,7 @@ export default function PayoutInfo({ isActive }: { isActive?: boolean }) {
                                                             onClick={() => handleSetPrimary(acc.id)}
                                                             variant="ghost"
                                                             size="sm"
-                                                            className="text-emerald-600 hover:bg-emerald-50 text-[9px]"
+                                                            className="text-emerald-600 hover:bg-emerald-50 text-[11px] font-bold uppercase tracking-wider whitespace-nowrap"
                                                         >
                                                             Set Primary
                                                         </Button>

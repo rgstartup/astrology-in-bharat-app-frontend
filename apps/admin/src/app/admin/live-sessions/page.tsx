@@ -294,9 +294,9 @@ export default function LiveSessionsPage() {
           ))
         ) : (
           <div className="col-span-full py-20 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-            <ActivityIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-500">No Active Sessions Found</h3>
-            <p className="text-gray-400">There are currently no sessions matching your filters.</p>
+            <ActivityIcon className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+            <h3 className="text-lg font-bold text-gray-700">No Active Sessions Found</h3>
+            <p className="font-medium text-gray-600">There are currently no sessions matching your filters.</p>
           </div>
         )}
       </div>

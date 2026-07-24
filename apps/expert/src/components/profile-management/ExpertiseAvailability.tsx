@@ -1,5 +1,5 @@
 import React from "react";
-import { User, Clock, Edit3, Save, Plus, X, DollarSign, Briefcase, ChevronDown, ChevronUp } from "lucide-react";
+import { User, Clock, Edit3, Save, Plus, X, IndianRupee, Briefcase, ChevronDown, ChevronUp } from "lucide-react";
 import { Profile } from "@/types/profile";
 import Button from "../ui/Button";
 
@@ -99,7 +99,7 @@ export default function ExpertiseAvailability({
                                 <div>
                                     <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Chat Price (per minute)</label>
                                     <div className="relative">
-                                        <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                         <input
                                             type="number"
                                             name="chat_price"
@@ -113,7 +113,7 @@ export default function ExpertiseAvailability({
                                 <div>
                                     <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Audio Call Price (per minute)</label>
                                     <div className="relative">
-                                        <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                         <input
                                             type="number"
                                             name="call_price"
@@ -127,7 +127,7 @@ export default function ExpertiseAvailability({
                                 <div>
                                     <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Video Call Price (per minute)</label>
                                     <div className="relative">
-                                        <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                         <input
                                             type="number"
                                             name="video_call_price"
@@ -141,7 +141,7 @@ export default function ExpertiseAvailability({
                                 <div>
                                     <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Report/Horoscope Price</label>
                                     <div className="relative">
-                                        <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                         <input
                                             type="number"
                                             name="price"

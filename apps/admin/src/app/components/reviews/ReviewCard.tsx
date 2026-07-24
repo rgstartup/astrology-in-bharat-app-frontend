@@ -99,7 +99,7 @@ export function ReviewCard({ review, isLast, onUpdate }: ReviewCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <h3 className="font-semibold text-gray-800">{review.user}</h3>
-              <span className="text-gray-500 text-sm">reviewed</span>
+              <span className="text-gray-700 font-medium text-sm">reviewed</span>
               <span className="font-medium text-orange">
                 {review.review_type === 'platform' ? 'Astrology in Bharat' : (review.expert || 'Unknown')}
               </span>
@@ -126,13 +126,13 @@ export function ReviewCard({ review, isLast, onUpdate }: ReviewCardProps) {
             <p className="text-gray-700 mb-2 leading-relaxed">{review.comment}</p>
 
             {/* Date & Session */}
-            <div className="flex items-center gap-4 text-sm text-gray-500">
+            <div className="flex items-center gap-4 text-sm font-medium text-gray-700">
               <div className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4" />
                 <time dateTime={typeof review.date === 'string' ? review.date : ''}>{formattedDate}</time>
               </div>
               {review.sessionId && (
-                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 rounded text-gray-600 font-medium">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 rounded text-gray-800 font-bold">
                   <Hash className="w-3.5 h-3.5" />
                   <span>Session {review.sessionId}</span>
                 </div>
@@ -142,7 +142,7 @@ export function ReviewCard({ review, isLast, onUpdate }: ReviewCardProps) {
             {review.tags && review.tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {review.tags.map((tag: string) => (
-                  <span key={tag} className="px-2.5 py-1 bg-gray-50 text-gray-500 text-[10px] font-bold rounded-lg border border-gray-100">
+                  <span key={tag} className="px-2.5 py-1 bg-gray-50 text-gray-700 text-[10px] font-bold rounded-lg border border-gray-200">
                     #{tag}
                   </span>
                 ))}
@@ -174,7 +174,7 @@ export function ReviewCard({ review, isLast, onUpdate }: ReviewCardProps) {
 
           {review.review_type !== 'platform' && (
             <div className="w-full space-y-2">
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Message to Astrologer:</p>
+              <p className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Message to Astrologer:</p>
               <textarea
                 className="w-full text-sm p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange/50 focus:border-orange outline-none resize-none h-20 placeholder:text-gray-400 transition-all"
                 placeholder="Type your message here..."

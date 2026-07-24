@@ -98,10 +98,7 @@ const NotificationPage = () => {
 
                                 {groupedNotifications.earlier.length > 0 && (
                                     <section>
-                                        <div className="flex items-center gap-4 mb-6">
-                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Earlier</span>
-                                            <div className="h-px flex-1 bg-gray-100/50"></div>
-                                        </div>
+
                                         <div className="space-y-4">
                                             <AnimatePresence mode='popLayout'>
                                                 {groupedNotifications.earlier.map((n) => (

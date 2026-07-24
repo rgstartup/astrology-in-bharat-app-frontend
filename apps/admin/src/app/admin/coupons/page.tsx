@@ -156,7 +156,7 @@ export default function CouponsPage() {
       <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-xl sm:text-3xl font-bold text-gray-800 tracking-tight">Coupons & Offers</h1>
-          <p className="text-sm sm:text-base text-gray-500 mt-1">Manage platform-wide and private discount codes</p>
+          <p className="text-sm sm:text-base font-medium text-gray-700 mt-1">Manage platform-wide and private discount codes</p>
         </div>
         <Button variant="primary" size="md" icon={Plus} onClick={() => setShowCreateCoupon(true)}>
           Create Coupon
@@ -184,7 +184,7 @@ export default function CouponsPage() {
               onClick={() => setStatusFilter(value)}
               className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${statusFilter === value
                 ? "bg-orange text-white shadow-md"
-                : "bg-gray-50 text-gray-500 hover:bg-gray-100"
+                : "bg-gray-50 text-gray-700 hover:text-gray-900 hover:bg-gray-200/50"
                 }`}
             >
               {label}
@@ -196,15 +196,15 @@ export default function CouponsPage() {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
           <LoaderIcon className="animate-spin text-orange" size={40} />
-          <p className="text-gray-400 font-medium">Loading coupons...</p>
+          <p className="font-medium text-gray-600">Loading coupons...</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {filteredCoupons.length === 0 ? (
             <div className="col-span-2 text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-              <TagIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg font-bold">No coupons found</p>
-              <p className="text-gray-400 text-sm mt-1">Try a different search term or create a new one</p>
+              <TagIcon className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+              <p className="text-gray-700 text-lg font-bold">No coupons found</p>
+              <p className="text-gray-600 font-medium text-sm mt-1">Try a different search term or create a new one</p>
             </div>
           ) : (
             filteredCoupons.map((coupon) => (

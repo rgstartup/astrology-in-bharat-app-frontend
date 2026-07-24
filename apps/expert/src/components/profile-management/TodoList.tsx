@@ -76,7 +76,7 @@ export default function TodoList({
                     {/* Todo List */}
                     <div className="space-y-2 max-h-64 overflow-y-auto custom-scrollbar-yellow">
                         {todos.length === 0 ? (
-                            <p className="text-center text-gray-400 py-8 text-sm">
+                            <p className="text-center text-gray-700 font-medium py-8 text-base">
                                 No tasks yet. Add one above!
                             </p>
                         ) : (

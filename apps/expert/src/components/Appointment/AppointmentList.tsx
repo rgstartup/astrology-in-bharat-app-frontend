@@ -88,7 +88,7 @@ function PujaActions({ appt, onUpdate }: { appt: Appointment, onUpdate?: () => v
         setShowDateForm(false);
     };
 
-    if (appt.status === 'accepted') return <span className="text-emerald-600 font-bold px-4 py-2 bg-emerald-50 rounded-xl border border-emerald-100 flex items-center gap-2 shadow-sm animate-in fade-in transition-all"><Check className="w-4 h-4"/> It is accepted</span>;
+    if (appt.status === 'accepted') return null;
     if (appt.status === 'confirmed') return <span className="text-orange-600 font-bold px-4 py-2 bg-orange-50 rounded-xl border border-orange-100 flex items-center gap-2 shadow-sm"><Star className="w-4 h-4 fill-orange-600"/> Confirmed & Paid</span>;
     if (appt.status === 'rejected') return <span className="text-red-400 font-bold px-4 py-2 bg-red-50 rounded-xl border border-red-100 flex items-center gap-2 shadow-sm animate-in fade-in transition-all"><Ban className="w-4 h-4"/> You rejected this</span>;
     if (appt.status === 'on_hold') return (
@@ -214,7 +214,7 @@ function StandardActions({ appt, onUpdate, onReschedule }: { appt: Appointment, 
         setIsUpdating(false);
     };
 
-    if (appt.status === 'accepted') return <span className="text-emerald-600 font-bold px-4 py-2 bg-emerald-50 rounded-xl border border-emerald-100 flex items-center gap-2 shadow-sm animate-in fade-in transition-all"><Check className="w-4 h-4"/> It is accepted</span>;
+    if (appt.status === 'accepted') return null;
     if (appt.status === 'rejected' || appt.status === 'cancelled') return <span className="text-red-400 font-bold px-4 py-2 bg-red-50 rounded-xl border border-red-100 flex items-center gap-2 shadow-sm animate-in fade-in transition-all"><Ban className="w-4 h-4"/> You rejected this</span>;
     if (appt.status === 'on_hold') return <span className="text-orange-600 font-bold px-4 py-2 bg-orange-50 rounded-xl border border-orange-100 flex items-center gap-2 shadow-sm animate-in fade-in transition-all"><RefreshCw className="w-4 h-4 animate-spin-slow"/> Rescheduled</span>;
 
@@ -350,7 +350,7 @@ export default function AppointmentList({
                                     <td className="px-6 py-5 align-top">
                                         <div className="flex items-center gap-4">
                                             <div className="relative shrink-0">
-                                                <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-sm ring-1 ring-gray-900/5">
+                                                <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm ring-1 ring-gray-900/5">
                                                     {appt.avatar ? (
                                                         <img src={appt.avatar} alt={appt.name} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as any).src = "/images/dummy-expert.jpg"; }} />
                                                     ) : (
@@ -368,8 +368,8 @@ export default function AppointmentList({
                                                     )}
                                                 </div>
                                                 {appt.isFree && (
-                                                    <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">
-                                                        ?? Free ({appt.freeMinutes}m)
+                                                    <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">
+                                                        <span className="text-[12px]">🎁</span> Free ({appt.freeMinutes}m)
                                                     </span>
                                                 )}
                                             </div>
@@ -383,8 +383,8 @@ export default function AppointmentList({
                                                 {getServiceIcon(appt.service)}
                                                 {appt.service}
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-gray-700 text-xs">
-                                                <Clock className="w-3.5 h-3.5 opacity-70" />
+                                            <div className="flex items-center gap-1.5 text-gray-900 font-medium text-[13px]">
+                                                <Clock className="w-3.5 h-3.5 text-gray-700" />
                                                 {format(new Date(appt.date), "dd MMM yyyy, hh:mm a")}
                                             </div>
                                             
@@ -471,13 +471,12 @@ export default function AppointmentList({
 
                     return (
                         <div key={appt.id} className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-4 relative overflow-hidden">
-                            {/* Accent Line */}
-                            <div className={cn("absolute top-0 left-0 right-0 h-1", st.dot.replace(' rounded-full', '').replace(' animate-pulse', ''))} />
+
                             
                             {/* Header: Avatar & Name */}
                             <div className="flex justify-between items-start pt-1">
                                 <div className="flex gap-3 items-center">
-                                    <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-sm">
+                                    <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm">
                                         {appt.avatar ? (
                                             <img src={appt.avatar} alt={appt.name} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as any).src = "/images/dummy-expert.jpg"; }} />
                                         ) : (
@@ -503,8 +502,8 @@ export default function AppointmentList({
                                     {appt.service}
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="flex items-center gap-1.5 text-gray-500 text-xs font-medium">
-                                        <Clock className="w-3.5 h-3.5 opacity-70" />
+                                    <span className="flex items-center gap-1.5 text-gray-900 text-[13px] font-medium">
+                                        <Clock className="w-3.5 h-3.5 text-gray-700" />
                                         {format(new Date(appt.date), "dd MMM, hh:mm a")}
                                     </span>
                                     {isCompleted && appt.durationMins !== undefined && appt.durationMins > 0 && (

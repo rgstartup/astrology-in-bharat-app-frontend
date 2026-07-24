@@ -140,7 +140,7 @@ export default function ReviewsPage() {
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Reviews Moderation</h1>
-          <p className="text-gray-600 mt-1">Manage and moderate user reviews</p>
+          <p className="font-medium text-gray-700 mt-1">Manage and moderate user reviews</p>
         </div>
         <SearchInput
           value={searchQuery}
@@ -168,8 +168,8 @@ export default function ReviewsPage() {
               reviewType === value
                 ? value === "platform"
                   ? "bg-brand-orange text-white shadow-md shadow-orange-100/50"
-                  : "bg-gray-800 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  : "bg-orange text-white shadow-md"
+                : "bg-gray-100 font-bold text-gray-700 hover:bg-gray-200 hover:text-gray-900"
             }`}
           >
             {label}
@@ -196,15 +196,15 @@ export default function ReviewsPage() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
         <div className="p-6 space-y-4">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+            <div className="flex flex-col items-center justify-center py-12 text-gray-700 font-medium">
               <Loader2 className="w-10 h-10 animate-spin mb-4" />
               <p>Loading reviews...</p>
             </div>
           ) : reviews.length === 0 ? (
             <div className="text-center py-12">
-              <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg font-medium">No reviews found</p>
-              <p className="text-gray-400 text-sm mt-1">
+              <MessageSquare className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+              <p className="text-gray-700 text-lg font-bold">No reviews found</p>
+              <p className="text-gray-600 font-medium text-sm mt-1">
                 Try adjusting your filters or search query
               </p>
             </div>

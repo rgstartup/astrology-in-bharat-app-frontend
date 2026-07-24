@@ -172,9 +172,9 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
 
     if (!isOpen) return null;
 
-    const inputCls = "w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all placeholder-gray-400";
-    const labelCls = "block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5";
-    const sectionCls = "text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2 pb-2 border-b border-gray-100";
+    const inputCls = "w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all placeholder-gray-600";
+    const labelCls = "block text-xs font-bold text-gray-700 mb-1.5";
+    const sectionCls = "text-xs font-bold text-gray-700 mb-4 flex items-center gap-2 pb-2 border-b border-gray-100";
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -222,7 +222,7 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
                                             <input type="file" accept="image/*" className="hidden" onChange={setFile("profile_pic")} />
                                         </label>
                                     </div>
-                                    <p className="text-[10px] text-gray-400 font-bold mt-2 uppercase tracking-wide">Profile Photo</p>
+                                    <p className="text-xs text-gray-700 font-bold mt-2">Profile Photo</p>
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -338,7 +338,7 @@ function AddAgentModal({ isOpen, onClose, onSuccess }: {
                                             <MapPin className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
                                             <textarea placeholder="House no., Street, Area..." value={form.address}
                                                 onChange={set("address")} rows={2}
-                                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all placeholder-gray-400 resize-none" />
+                                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-all placeholder-gray-600 resize-none" />
                                         </div>
                                     </div>
                                 </div>
@@ -579,7 +579,7 @@ export default function AgentsPage() {
             <div className="flex items-center gap-1 mb-6 bg-gray-100 rounded-xl p-1 w-fit">
                 {(["agents", "listings"] as TabType[]).map((t) => (
                     <button key={t} onClick={() => setTab(t)}
-                        className={`px-5 py-2 rounded-lg text-sm font-bold capitalize transition-all ${tab === t ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                        className={`px-5 py-2 rounded-lg text-sm font-bold capitalize transition-all ${tab === t ? "bg-white text-gray-900 shadow-sm" : "text-gray-700 hover:text-gray-900"
                             }`}>
                         {t === "agents" ? "👤 Agent and Commission" : "📋 Agent Listings"}
                     </button>
@@ -629,18 +629,18 @@ export default function AgentsPage() {
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mt-12">
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
+                                <div className="p-2 bg-orange-100 rounded-lg text-orange-600">
                                     <Settings size={20} />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-bold text-gray-900">Commission Configuration</h3>
-                                    <p className="text-sm text-gray-500">Manage global agent commission percentages</p>
+                                    <p className="text-sm text-gray-700">Manage global agent commission percentages</p>
                                 </div>
                             </div>
                             <Button
                                 onClick={handleSaveSettings}
                                 disabled={isSavingSettings || isFetchingSettings}
-                                className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-2"
+                                className="bg-orange-600 hover:bg-orange-700 text-white flex items-center gap-2"
                             >
                                 {isSavingSettings ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
                                 {isSavingSettings ? "Saving..." : "Save Changes"}
@@ -649,58 +649,58 @@ export default function AgentsPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
                             <div className="space-y-2 w-full">
-                                <label className="text-sm font-semibold text-gray-700">Agent Commission (for Expert) (%)</label>
+                                <label className="text-sm font-bold text-gray-900">Agent Commission (for Expert) (%)</label>
                                 <div className="relative">
                                     <input
                                         type="number"
                                         value={settings.COMMISION_FROM_ASTROLOGER}
                                         onChange={(e) => setSettings(prev => ({ ...prev, COMMISION_FROM_ASTROLOGER: e.target.value }))}
-                                        className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all font-bold text-gray-800"
+                                        className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all font-bold text-gray-900"
                                         placeholder="3"
                                     />
-                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">%</span>
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">%</span>
                                 </div>
                             </div>
 
                             <div className="space-y-2 w-full">
-                                <label className="text-sm font-semibold text-gray-700">Platform Fee (%)</label>
+                                <label className="text-sm font-bold text-gray-900">Platform Fee (%)</label>
                                 <div className="relative">
                                     <input
                                         type="number"
                                         value={settings.COMMISION_FROM_CLIENT}
                                         onChange={(e) => setSettings(prev => ({ ...prev, COMMISION_FROM_CLIENT: e.target.value }))}
-                                        className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all font-bold text-gray-800"
+                                        className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all font-bold text-gray-900"
                                         placeholder="3"
                                     />
-                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">%</span>
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">%</span>
                                 </div>
                             </div>
 
                             <div className="space-y-2 w-full">
-                                <label className="text-sm font-semibold text-gray-700">Agent Commission (Puja Shop) (%)</label>
+                                <label className="text-sm font-bold text-gray-900">Agent Commission (Puja Shop) (%)</label>
                                 <div className="relative">
                                     <input
                                         type="number"
                                         value={settings.COMMISION_FROM_PUJA_SHOP}
                                         onChange={(e) => setSettings(prev => ({ ...prev, COMMISION_FROM_PUJA_SHOP: e.target.value }))}
-                                        className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all font-bold text-gray-800"
+                                        className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all font-bold text-gray-900"
                                         placeholder="3"
                                     />
-                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">%</span>
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">%</span>
                                 </div>
                             </div>
 
                             <div className="space-y-2 w-full">
-                                <label className="text-sm font-semibold text-gray-700">GST (%)</label>
+                                <label className="text-sm font-bold text-gray-900">GST (%)</label>
                                 <div className="relative">
                                     <input
                                         type="number"
                                         value={settings.GST_PERCENTAGE}
                                         onChange={(e) => setSettings(prev => ({ ...prev, GST_PERCENTAGE: e.target.value }))}
-                                        className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all font-bold text-gray-800"
+                                        className="w-full pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all font-bold text-gray-900"
                                         placeholder="18"
                                     />
-                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">%</span>
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">%</span>
                                 </div>
                             </div>
                         </div>

@@ -116,7 +116,7 @@ export const getColumns = (
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold text-gray-900 truncate">{expert.name || "N/A"}</p>
-            <p className="text-xs text-gray-500 truncate" title={typeof specialization === 'string' ? specialization : ''}>
+            <p className="text-xs font-medium text-gray-700 truncate" title={typeof specialization === 'string' ? specialization : ''}>
               {specialization}
             </p>
           </div>
@@ -129,9 +129,9 @@ export const getColumns = (
     label: "Contact",
     render: (expert: Expert) => (
       <div>
-        <p className="text-sm text-gray-600">{expert.email}</p>
+        <p className="text-sm font-medium text-gray-900">{expert.email}</p>
         {(expert.phone_number || expert.profile_expert?.phone_number) && (
-          <p className="text-xs text-gray-500">{expert.phone_number || expert.profile_expert?.phone_number}</p>
+          <p className="text-xs font-medium text-gray-700">{expert.phone_number || expert.profile_expert?.phone_number}</p>
         )}
       </div>
     ),

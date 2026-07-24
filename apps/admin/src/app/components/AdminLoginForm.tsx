@@ -74,19 +74,19 @@ export default function AdminLoginForm() {
         <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
             <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold text-gray-800">Admin Login</h2>
-                <p className="mt-2 text-gray-500">
+                <p className="mt-2 text-gray-700 font-medium">
                     Please enter your details to sign in.
                 </p>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="email" className="block text-sm font-bold text-gray-800">
                         Email Address
                     </label>
                     <div className="mt-1 relative rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <User className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            <User className="h-5 w-5 text-gray-500" aria-hidden="true" />
                         </div>
                         <input
                             id="email"
@@ -96,19 +96,19 @@ export default function AdminLoginForm() {
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 font-medium text-gray-800 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                             placeholder="admin@astrologyinbharat.com"
                         />
                     </div>
                 </div>
 
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="password" className="block text-sm font-bold text-gray-800">
                         Password
                     </label>
                     <div className="mt-1 relative rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            <Lock className="h-5 w-5 text-gray-500" aria-hidden="true" />
                         </div>
                         <input
                             id="password"
@@ -118,7 +118,7 @@ export default function AdminLoginForm() {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 font-medium text-gray-800 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                             placeholder="********"
                         />
                         <button

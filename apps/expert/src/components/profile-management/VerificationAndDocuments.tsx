@@ -487,7 +487,7 @@ export default function VerificationAndDocuments({
                                         <Upload className="w-5 h-5 text-orange-600" />
                                     </div>
                                     <p className="text-xs font-semibold text-gray-900">Upload Certificate</p>
-                                    <p className="text-[10px] text-gray-500">Click to browse and upload your expert certificates (PDF, JPG, PNG)</p>
+                                    <p className="text-xs text-gray-700 font-medium mt-1">Click to browse and upload your expert certificates (PDF, JPG, PNG)</p>
                                 </div>
                             </div>
                         ) : (

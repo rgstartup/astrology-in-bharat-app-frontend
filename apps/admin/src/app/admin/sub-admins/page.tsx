@@ -220,7 +220,7 @@ export default function SubAdminsPage() {
             <Shield className="w-7 h-7 text-primary" />
             Sub-Admin Management
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm font-medium text-gray-700 mt-1">
             Create sub-admins and control their page access
           </p>
         </div>
@@ -259,10 +259,10 @@ export default function SubAdminsPage() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
-                  <th className="text-left px-6 py-4 font-semibold text-gray-600">Name / Email</th>
-                  <th className="text-left px-6 py-4 font-semibold text-gray-600">Pages Access</th>
-                  <th className="text-left px-6 py-4 font-semibold text-gray-600">Created At</th>
-                  <th className="text-right px-6 py-4 font-semibold text-gray-600">Actions</th>
+                  <th className="text-left px-6 py-4 font-bold text-gray-800">Name / Email</th>
+                  <th className="text-left px-6 py-4 font-bold text-gray-800">Pages Access</th>
+                  <th className="text-left px-6 py-4 font-bold text-gray-800">Created At</th>
+                  <th className="text-right px-6 py-4 font-bold text-gray-800">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -270,12 +270,12 @@ export default function SubAdminsPage() {
                   <tr key={sa.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
                       <p className="font-semibold text-gray-800">{sa.name || "—"}</p>
-                      <p className="text-gray-400 text-xs mt-0.5">{sa.email}</p>
+                      <p className="font-medium text-gray-600 text-xs mt-0.5">{sa.email}</p>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-wrap gap-1">
                         {(sa.admin_permissions ?? []).length === 0 ? (
-                          <span className="text-gray-400 text-xs italic">No access</span>
+                          <span className="text-gray-600 font-medium text-xs italic">No access</span>
                         ) : (
                           <>
                             {/* Always show first permission */}
@@ -297,14 +297,14 @@ export default function SubAdminsPage() {
 
                             {/* Mobile "+ X more" (if > 1) */}
                             {(sa.admin_permissions ?? []).length > 1 && (
-                              <span className="sm:hidden bg-gray-100 text-gray-500 text-[11px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap">
+                              <span className="sm:hidden bg-gray-100 text-gray-700 text-[11px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
                                 +{(sa.admin_permissions ?? []).length - 1} more
                               </span>
                             )}
 
                             {/* Desktop "+ Y more" (if > 3) */}
                             {(sa.admin_permissions ?? []).length > 3 && (
-                              <span className="hidden sm:inline-flex bg-gray-100 text-gray-500 text-[11px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap">
+                              <span className="hidden sm:inline-flex bg-gray-100 text-gray-700 text-[11px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
                                 +{(sa.admin_permissions ?? []).length - 3} more
                               </span>
                             )}
@@ -312,7 +312,7 @@ export default function SubAdminsPage() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-gray-500 text-xs">
+                    <td className="px-6 py-4 text-gray-700 font-medium text-xs">
                       {new Date(sa.created_at).toLocaleDateString("en-IN", {
                         day: "numeric",
                         month: "short",
@@ -366,7 +366,7 @@ export default function SubAdminsPage() {
                  <h3 className="text-lg font-bold text-gray-800">
                    {drawer.mode === "create" ? "Create New Sub-Admin" : "Edit Sub-Admin"}
                  </h3>
-                 <p className="text-xs text-gray-400 mt-0.5">
+                 <p className="text-xs font-medium text-gray-600 mt-0.5">
                    {drawer.mode === "create"
                      ? "Fill details and grant page access"
                      : `Update settings for ${drawer.target?.email}`}
@@ -406,14 +406,14 @@ export default function SubAdminsPage() {
                     placeholder="subadmin@example.com"
                     required={drawer.mode === "create"}
                     disabled={drawer.mode === "edit"}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all disabled:bg-gray-50 disabled:text-gray-400"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all disabled:bg-gray-50 disabled:text-gray-600 disabled:font-medium"
                   />
                 </div>
 
                 {/* Password */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                    Password{drawer.mode === "edit" && <span className="text-gray-400 font-normal"> (Leave blank to keep unchanged)</span>}
+                    Password{drawer.mode === "edit" && <span className="text-gray-600 font-medium"> (Leave blank to keep unchanged)</span>}
                   </label>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
@@ -472,7 +472,7 @@ export default function SubAdminsPage() {
                   <div className="space-y-4">
                     {CATEGORIES.map((category) => (
                       <div key={category}>
-                        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                        <p className="text-[11px] font-black text-gray-700 uppercase tracking-widest mb-2">
                           {category}
                         </p>
                         <div className="space-y-2">

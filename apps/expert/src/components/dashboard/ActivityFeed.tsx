@@ -11,6 +11,7 @@ interface Activity {
   action: string;
   time: string;
   relativeTime: string;
+  avatar?: string;
 }
 
 export const RecentActivity: React.FC = () => {
@@ -29,7 +30,8 @@ export const RecentActivity: React.FC = () => {
             name: session.user?.name || session.client?.user?.name || session.client?.name || "Client",
             action: "consultation",
             time: format(date, 'h:mm a'),
-            relativeTime: formatDistanceToNow(date, { addSuffix: true })
+            relativeTime: formatDistanceToNow(date, { addSuffix: true }),
+            avatar: session.client?.profile_picture || session.client?.avatar || session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.client?.user?.profile_picture || session.client?.user?.avatar || session.user_image || session.user_avatar || session.image || undefined
           };
         });
         setActivities(recent5);
@@ -58,8 +60,12 @@ export const RecentActivity: React.FC = () => {
               key={index}
               className="flex items-start space-x-4 p-3 rounded-xl hover:bg-orange-50/50 transition border border-transparent hover:border-orange-100"
             >
-              <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center shrink-0">
-                <User className="w-5 h-5 text-[#fd6410]" />
+              <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center shrink-0 overflow-hidden">
+                {activity.avatar ? (
+                  <img src={activity.avatar} alt={activity.name} className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-5 h-5 text-[#fd6410]" />
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-gray-900 leading-tight">
