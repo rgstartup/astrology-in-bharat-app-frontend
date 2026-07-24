@@ -34,7 +34,7 @@ export const WalletTable: React.FC<TransactionTableProps> = ({ transactions }) =
         <div className="bg-white rounded-none sm:rounded-[1.5rem] border-none sm:border-solid border-gray-100 shadow-none sm:shadow-sm overflow-hidden flex flex-col">
             <div className="p-6 sm:p-8 border-b border-gray-50 space-y-1">
                 <h3 className="text-xl font-black text-gray-900 tracking-tight">Transaction History</h3>
-                <p className="text-sm font-medium text-gray-700">Detailed log of all credits and withdrawals</p>
+                <p className="text-sm font-medium text-gray-900">Detailed log of all credits and withdrawals</p>
             </div>
 
             <div className="overflow-x-auto">
@@ -75,7 +75,7 @@ export const WalletTable: React.FC<TransactionTableProps> = ({ transactions }) =
                                                             Note: {tx.remark}
                                                         </span>
                                                     )}
-                                                    <span className="text-[9px] text-gray-500 font-bold px-2 py-0.5 bg-gray-50 rounded border border-gray-200 uppercase tracking-widest">
+                                                    <span className="text-[9px] text-gray-800 font-bold px-2 py-0.5 bg-gray-50 rounded border border-gray-200 uppercase tracking-widest">
                                                         #{formatTxId(tx.transactionNo)}
                                                     </span>
                                                 </div>
@@ -83,8 +83,8 @@ export const WalletTable: React.FC<TransactionTableProps> = ({ transactions }) =
                                         </div>
                                     </td>
                                     <td className="px-8 py-6">
-                                        <span className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest border border-current ${
-                                            tx.type === 'credit' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
+                                        <span className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
+                                            tx.type === 'credit' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                                         }`}>
                                             {tx.type === 'credit' ? 'Credit' : 'Debit'}
                                         </span>
@@ -122,20 +122,20 @@ export const WalletTable: React.FC<TransactionTableProps> = ({ transactions }) =
 
 const StatusBadge = ({ status }: { status: string }) => {
     const config: any = {
-        'PENDING': { color: 'text-amber-600', bg: 'bg-amber-50', icon: Clock },
-        'PROCESSING': { color: 'text-blue-600', bg: 'bg-blue-50', icon: Clock },
-        'SUCCESS': { color: 'text-green-600', bg: 'bg-green-50', icon: CheckCircle2 },
-        'COMPLETED': { color: 'text-green-600', bg: 'bg-green-50', icon: CheckCircle2 },
-        'REJECTED': { color: 'text-red-600', bg: 'bg-red-50', icon: XCircle },
-        'FAILED': { color: 'text-red-600', bg: 'bg-red-50', icon: XCircle },
+        'PENDING': { color: 'text-amber-700', bg: 'bg-amber-100', icon: Clock },
+        'PROCESSING': { color: 'text-blue-700', bg: 'bg-blue-100', icon: Clock },
+        'SUCCESS': { color: 'text-green-700', bg: 'bg-green-100', icon: CheckCircle2 },
+        'COMPLETED': { color: 'text-green-700', bg: 'bg-green-100', icon: CheckCircle2 },
+        'REJECTED': { color: 'text-red-700', bg: 'bg-red-100', icon: XCircle },
+        'FAILED': { color: 'text-red-700', bg: 'bg-red-100', icon: XCircle },
     };
 
     const { color, bg, icon: Icon } = config[status.toUpperCase()] || config['PENDING'];
 
     return (
-        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${bg} ${color} border border-current opacity-80`}>
-            <Icon className="w-2.5 h-2.5" />
-            <span className="text-[8px] font-black uppercase tracking-widest">{status}</span>
+        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${bg} ${color}`}>
+            <Icon className="w-3 h-3" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">{status}</span>
         </div>
     );
 };

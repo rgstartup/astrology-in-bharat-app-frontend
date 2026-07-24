@@ -82,7 +82,7 @@ export function CouponCard(props: any) {
               </button>
             )}
           </div>
-          <p className="text-gray-700 text-sm">{description || "No description provided"}</p>
+          <p className="text-gray-800 font-medium text-sm">{description || "No description provided"}</p>
         </div>
         <span
           className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusBadge(_status)}`}
@@ -94,7 +94,7 @@ export function CouponCard(props: any) {
       {/* Discount Info */}
       <div className="grid grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
         <div>
-          <p className="text-xs text-gray-600 mb-1">Discount</p>
+          <p className="text-xs font-medium text-gray-700 mb-1">Discount</p>
           <p className="font-bold text-lg text-orange">
             {_type === "percentage"
               ? `${_value}%`
@@ -102,15 +102,15 @@ export function CouponCard(props: any) {
           </p>
         </div>
         <div>
-          <p className="text-xs text-gray-600 mb-1">Max Discount</p>
+          <p className="text-xs font-medium text-gray-700 mb-1">Max Discount</p>
           <p className="font-bold text-lg text-gray-800">₹{maxDiscount}</p>
         </div>
         <div>
-          <p className="text-xs text-gray-600 mb-1">Min Order</p>
+          <p className="text-xs font-medium text-gray-700 mb-1">Min Order</p>
           <p className="font-semibold text-gray-700">₹{_minOrder}</p>
         </div>
         <div>
-          <p className="text-xs text-gray-600 mb-1">Usage</p>
+          <p className="text-xs font-medium text-gray-700 mb-1">Usage</p>
           <p className="font-semibold text-gray-700">
             {_used} / {_limit || "∞"}
           </p>
@@ -120,7 +120,7 @@ export function CouponCard(props: any) {
       {/* Progress Bar */}
       {_limit > 0 && (
         <div className="mb-4">
-          <div className="flex justify-between text-xs text-gray-600 mb-1">
+          <div className="flex justify-between text-xs font-medium text-gray-700 mb-1">
             <span>Redemption Progress</span>
             <span>{usagePercentage}%</span>
           </div>
@@ -134,7 +134,7 @@ export function CouponCard(props: any) {
       )}
 
       {/* Validity */}
-      <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+      <div className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-4">
         <Clock className="w-4 h-4" />
         <span>
           Expires: {_expiry ? new Date(_expiry).toLocaleDateString() : "No expiry"}

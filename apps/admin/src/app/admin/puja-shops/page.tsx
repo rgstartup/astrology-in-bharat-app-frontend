@@ -105,7 +105,7 @@ export default function AdminPujaShopsPage() {
             render: (l: any) => (
                 <div>
                     <p className="text-sm font-semibold text-gray-900">{l.shopName || l.name || l.listing_name || "Untitled"}</p>
-                    <p className="text-xs text-gray-500">{l.city || l.location || l.listing_location || "—"}</p>
+                    <p className="text-xs font-medium text-gray-700 mt-0.5">{l.city || l.location || l.listing_location || "—"}</p>
                 </div>
             ),
         },
@@ -114,7 +114,7 @@ export default function AdminPujaShopsPage() {
             label: "Items Sold",
             render: (l: any) => {
                 const count = l.total_orders ?? l.totalOrders ?? l.totalSales ?? l.total_sales ?? l.items ?? 0;
-                return <p className="text-xs text-gray-600 font-bold">{count}</p>;
+                return <p className="text-sm text-gray-900 font-bold">{count}</p>;
             },
         },
         {
@@ -128,7 +128,7 @@ export default function AdminPujaShopsPage() {
                     <p className="text-[10px] font-mono text-purple-600 mt-0.5 font-bold">
                         {l.phone || l.agent_id || l.agent_code || l.agentCode || l.agent?.agent_id || "—"}
                     </p>
-                    <p className="text-[10px] text-gray-500 mt-0.5 truncate max-w-[150px]" title={l.user?.email || l.email}>
+                    <p className="text-[10px] font-medium text-gray-700 mt-1 truncate max-w-[150px]" title={l.user?.email || l.email}>
                         {l.user?.email || l.email || "—"}
                     </p>
                 </div>
@@ -250,13 +250,13 @@ export default function AdminPujaShopsPage() {
                         <div className="flex bg-gray-100/80 backdrop-blur-sm p-1 rounded-2xl border border-gray-200/50">
                             <button 
                                 onClick={() => setViewMode('agent')}
-                                className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${viewMode === 'agent' ? 'bg-white shadow-md text-purple-600' : 'text-gray-500 hover:text-gray-700'}`}
+                                className={`px-6 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${viewMode === 'agent' ? 'bg-orange text-white shadow-md' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200/50'}`}
                             >
                                 By Agent
                             </button>
                             <button 
                                 onClick={() => setViewMode('self')}
-                                className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${viewMode === 'self' ? 'bg-white shadow-md text-purple-600' : 'text-gray-500 hover:text-gray-700'}`}
+                                className={`px-6 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${viewMode === 'self' ? 'bg-orange text-white shadow-md' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200/50'}`}
                             >
                                 By Self
                             </button>

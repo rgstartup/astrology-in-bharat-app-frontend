@@ -147,7 +147,7 @@ const LoginPage: React.FC = () => {
         <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-white min-h-fit">
           <div className="mb-10 flex items-start sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-4xl font-black text-gray-900 tracking-tight">Login</h2>
+              <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Login</h2>
             </div>
             <Link href="/register" className="shrink-0">
               <Button

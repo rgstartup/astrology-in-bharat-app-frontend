@@ -28,7 +28,7 @@ const buildServices = (profile: Profile | null) => [
     price: profile?.chat_price ?? 0,
     unit: "/ min",
     description: "Quick answers through chat with expert experts.",
-    offer: "10% off first session",
+    offer: "",
     icon: MessageSquare,
     iconBg: "bg-blue-50",
     iconColor: "text-blue-500",
@@ -40,7 +40,7 @@ const buildServices = (profile: Profile | null) => [
     price: profile?.call_price ?? 0,
     unit: "/ min",
     description: "Direct voice consultation with our experts.",
-    offer: "15% off first session",
+    offer: "",
     icon: Phone,
     iconBg: "bg-green-50",
     iconColor: "text-green-500",
@@ -52,7 +52,7 @@ const buildServices = (profile: Profile | null) => [
     price: profile?.video_call_price ?? 0,
     unit: "/ min",
     description: "Face-to-face video consultation for detailed guidance.",
-    offer: "25% off weekends",
+    offer: "",
     icon: Video,
     iconBg: "bg-purple-50",
     iconColor: "text-purple-500",
@@ -257,16 +257,18 @@ const ServicePricingPage = () => {
   return (
     <div className="p-4 sm:p-8 min-h-screen">
       {/* Header */}
-      <div className="max-w-3xl mx-auto text-center mb-12 flex flex-col items-center">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-orange-700 tracking-tight">
-          Services &amp; Pricing
-        </h1>
-        <p className="text-gray-800 mt-3 text-sm sm:text-lg">
-          Manage your services, set attractive pricing, and create offers for your clients.
-        </p>
+      <div className="max-w-6xl mx-auto mb-12 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div className="flex flex-col text-left">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-orange-700 tracking-tight">
+            Services &amp; Pricing
+          </h1>
+          <p className="text-gray-800 mt-2 text-sm sm:text-lg">
+            Manage your services, set attractive pricing, and create offers for your clients.
+          </p>
+        </div>
         <button
           onClick={openAdd}
-          className="mt-6 flex items-center gap-2 px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-full shadow-lg transition-all active:scale-95 cursor-pointer hover:cursor-pointer"
+          className="flex items-center gap-2 px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-full shadow-lg transition-all active:scale-95 cursor-pointer hover:cursor-pointer whitespace-nowrap shrink-0"
         >
           <Plus className="w-4 h-4" />
           Add Custom Service

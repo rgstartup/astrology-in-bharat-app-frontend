@@ -295,65 +295,25 @@ const Sidebar: React.FC<SidebarProps> = memo(
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed left-0 top-0 h-full w-64 flex flex-col bg-primary text-white transition-transform duration-300 ease-in-out z-50 shadow-xl shadow-gray-400",
+            "fixed left-0 top-0 h-full w-64 flex flex-col bg-[#301118] text-white transition-transform duration-300 ease-in-out z-50 shadow-xl shadow-gray-400",
             isOpen ? "translate-x-0" : "-translate-x-full",
             "lg:translate-x-0"
           )}
           aria-label="Sidebar navigation"
         >
-          {/* Premium Logo Section */}
-          <div
-            className="relative flex flex-col p-6 flex-shrink-0 border-b border-white/10 overflow-hidden"
-            style={{
-              backgroundImage: "url('/images/back-image.webp')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            {/* Subtle Dark Overlay for better text contrast */}
-            <div className="absolute inset-0 bg-black/20 pointer-events-none" />
-
-            <div className="relative z-10 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                {/* Larger flipped Baba Ji with premium glow */}
-                <div className="relative">
-                  <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full animate-pulse" />
-                  <img
-                    src="/images/Expert.png"
-                    alt="AstrologyInBharat"
-                    className="w-16 h-16 object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
-                    style={{ transform: "scaleX(-1)" }}
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <div className="leading-none mb-1">
-                    <h2 className="text-white text-lg font-black tracking-tighter drop-shadow-md">
-                      ASTROLOGY
-                    </h2>
-                    <p className="text-white/90 text-[11px] font-bold tracking-[0.2em] -mt-1 drop-shadow-sm uppercase">
-                      IN BHARAT
-                    </p>
-                  </div>
-
-                  {/* Sleek Pill Badge (Admin specific color) */}
-                  <div className="mt-1 flex">
-                    <span className="bg-gradient-to-r from-red-600 to-orange-600 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg border border-white/20 uppercase tracking-widest flex items-center gap-1">
-                      <div className="w-1 h-1 bg-white rounded-full animate-ping" />
-                      Admin
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <button
-                onClick={toggleSidebar}
-                className="lg:hidden p-2 hover:bg-white/10 rounded-full transition-all text-white"
-                aria-label="Close sidebar"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
+          <div className="flex items-center justify-between p-6 bg-white border-b border-orange-100 shrink-0 sticky top-0 z-20">
+            <img
+              src="/images/web-logo.png"
+              alt="Logo"
+              className="w-full h-auto object-contain max-w-[200px]"
+            />
+            <button
+              onClick={toggleSidebar}
+              className="lg:hidden p-1 hover:bg-gray-100 rounded transition-colors duration-200 text-gray-800"
+              aria-label="Close sidebar"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Navigation Menu - Scrollable */}

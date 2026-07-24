@@ -70,6 +70,7 @@ const TableRow = memo(function TableRow<T extends { id: string | string }>({
             variant="outline"
             onClick={handleViewDetails}
             aria-label={`View details for item ${item.id}`}
+            className="text-gray-900 font-semibold border-gray-300 hover:bg-gray-50"
           >
             View Details
           </Button>
@@ -266,13 +267,13 @@ export function DataTable<T extends { id: string | string }>({
                 {columns.map((column, index) => (
                   <th
                     key={index}
-                    className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap bg-gray-50 bg-clip-padding"
+                    className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase whitespace-nowrap bg-gray-50 bg-clip-padding"
                   >
                     {column.label}
                   </th>
                 ))}
                 {onViewDetails && (
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap bg-gray-50 bg-clip-padding">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase whitespace-nowrap bg-gray-50 bg-clip-padding">
                     Actions
                   </th>
                 )}
@@ -318,7 +319,7 @@ export function DataTable<T extends { id: string | string }>({
           <footer className="px-6 py-4 border-t border-gray-200 bg-gray-50">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               {/* Results info */}
-              <p className="text-sm text-gray-700" role="status" aria-live="polite">
+              <p className="text-sm font-medium text-gray-900" role="status" aria-live="polite">
                 Showing{" "}
                 <span className="font-medium">
                   {manualPagination ? (totalItems === 0 ? 0 : paginationData.startIndex + 1) : (filteredData.length === 0 ? 0 : paginationData.startIndex + 1)}

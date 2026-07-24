@@ -16,7 +16,7 @@ export function SessionHeader({ onRefresh, isRefreshing }: SessionHeaderProps) {
         <h1 className="text-xl sm:text-3xl font-bold text-gray-900">
           Live Sessions Monitor
         </h1>
-        <p className="text-sm sm:text-base text-gray-600 mt-1">
+        <p className="text-sm sm:text-base font-medium text-gray-700 mt-1">
           Monitor and manage ongoing user-expert sessions in real-time
         </p>
       </div>

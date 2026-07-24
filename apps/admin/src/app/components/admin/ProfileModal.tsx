@@ -157,7 +157,7 @@ export function ProfileModal({
 
             <div className="flex-1 pb-4 text-center lg:text-left w-full min-w-0 overflow-hidden">
               <h3 className="text-xl sm:text-4xl font-black text-gray-900 tracking-tight mb-2 break-all sm:break-words">{name}</h3>
-              <p className="text-orange-600 font-black uppercase text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.3em] mb-3 sm:mb-4 break-words">{subtitle || "Expert"}</p>
+              <p className="text-orange-600 font-bold text-sm mb-3 sm:mb-4 break-words">{subtitle || "Expert"}</p>
               <div className="flex items-center justify-center lg:justify-start flex-wrap gap-2 sm:gap-3">
                 {badges?.map((badge, idx) => (
                   <span key={idx} className={`px-3 sm:px-5 py-1 sm:py-2 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest shadow-sm border border-black/5 ${badge.color}`}>
@@ -170,21 +170,45 @@ export function ProfileModal({
 
           <div className="px-4 sm:px-10 pb-5 sm:pb-10 space-y-6 sm:space-y-12">
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
-              {stats?.map((stat, idx) => {
-                const Icon = stat.icon as any;
-                return (
-                  <div key={idx} className={`${stat.bgColor} p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-white shadow-sm hover:shadow-md transition-all group relative overflow-hidden`}>
-                    <div className="absolute -right-4 -top-4 opacity-5 group-hover:scale-125 transition-transform duration-700">
-                      <Icon className="w-16 h-16 sm:w-24 sm:h-24" />
+            {stats && stats.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+                {stats.map((stat, idx) => {
+                  const Icon = stat.icon as any;
+                  return (
+                    <div key={idx} className={`${stat.bgColor} p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border border-white shadow-sm hover:shadow-md transition-all group relative overflow-hidden`}>
+                      <div className="absolute -right-4 -top-4 opacity-5 group-hover:scale-125 transition-transform duration-700">
+                        <Icon className="w-16 h-16 sm:w-24 sm:h-24" />
+                      </div>
+                      <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.iconColor} mb-2 sm:mb-4 relative z-10`} />
+                      <p className="text-xl sm:text-2xl font-black text-gray-900 leading-none mb-1 relative z-10">{stat.value}</p>
+                      <p className="text-[9px] sm:text-[10px] font-black text-gray-500 uppercase tracking-widest relative z-10">{stat.label}</p>
                     </div>
-                    <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.iconColor} mb-2 sm:mb-4 relative z-10`} />
-                    <p className="text-xl sm:text-2xl font-black text-gray-900 leading-none mb-1 relative z-10">{stat.value}</p>
-                    <p className="text-[9px] sm:text-[10px] font-black text-gray-500 uppercase tracking-widest relative z-10">{stat.label}</p>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Details */}
+            {details && details.length > 0 && (
+              <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 shadow-xl shadow-gray-200/50 border border-gray-100">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {details.map((detail, idx) => {
+                    const Icon = detail.icon as any;
+                    return (
+                      <div key={idx} className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:border-orange-100 transition-all">
+                        <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500 shrink-0">
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold text-gray-700 mb-0.5">{detail.label}</p>
+                          <p className="text-sm font-semibold text-gray-900 break-all">{detail.value}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Profile Completion Checklist - Full Width */}
             <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-10 shadow-xl shadow-gray-200/50 border border-gray-100">
@@ -202,7 +226,7 @@ export function ProfileModal({
                       onClick={() => toggleItem(item.label)}
                     >
                       <div className="flex items-center gap-3">
-                        <span className={`text-sm font-bold transition-colors ${item.isComplete ? 'text-gray-900' : 'text-gray-400'}`}>
+                        <span className={`text-sm font-bold transition-colors ${item.isComplete ? 'text-gray-900' : 'text-gray-700'}`}>
                           {item.label}
                         </span>
                         {expandedItems[item.label] ? (
@@ -217,7 +241,7 @@ export function ProfileModal({
                           <CheckCircleComp className="w-4 h-4" />
                         </div>
                       ) : (
-                        <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-300">
+                        <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-500 border border-gray-200">
                           <CircleComp className="w-4 h-4" />
                         </div>
                       )}

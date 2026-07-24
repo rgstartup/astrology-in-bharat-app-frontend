@@ -288,14 +288,14 @@ export default function OrdersPage() {
                                                     <td className="px-6 py-4 text-sm font-medium text-gray-900">
                                                         #{String(order.id)}
                                                     </td>
-                                                    <td className="px-6 py-4 text-sm text-gray-500">
+                                                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
                                                         {new Date((order as any).created_at || order.createdAt).toLocaleDateString('en-IN', {
                                                             day: 'numeric', month: 'short', year: 'numeric'
                                                         })}
                                                     </td>
-                                                    <td className="px-6 py-4 text-sm text-gray-700">
+                                                    <td className="px-6 py-4 text-sm text-gray-900">
                                                         <div className="font-medium">{order.user?.name || "Guest"}</div>
-                                                        <div className="text-xs text-gray-400">{order.user?.email}</div>
+                                                        <div className="text-xs font-medium text-gray-700">{order.user?.email}</div>
                                                     </td>
                                                     <td className="px-6 py-4 text-sm font-bold text-gray-900">
                                                         ₹{(order as any).total_amount || order.totalAmount}
@@ -310,7 +310,7 @@ export default function OrdersPage() {
                                                         <div className="flex items-center gap-2">
                                                             <button
                                                                 onClick={() => setExpandedOrderId(expandedOrderId === order.id ? null : order.id)}
-                                                                className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                                                                className="p-2 text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
                                                                 title="View Details"
                                                             >
                                                                 {expandedOrderId === order.id ? <ChevronUpIcon size={18} /> : <EyeIcon size={18} />}
@@ -351,16 +351,16 @@ export default function OrdersPage() {
                                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-white rounded-lg border border-gray-100 shadow-sm animate-in fade-in slide-in-from-top-2">
                                                                 {/* Items */}
                                                                 <div>
-                                                                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Order Items</h4>
+                                                                    <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">Order Items</h4>
                                                                     <div className="space-y-3">
                                                                         {order.items?.map((item, idx) => (
                                                                             <div key={idx} className="flex items-start gap-3">
-                                                                                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+                                                                                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600">
                                                                                     <PackageIcon size={20} />
                                                                                 </div>
                                                                                 <div>
                                                                                     <p className="text-sm font-medium text-gray-900">{item.product?.name || "Product"}</p>
-                                                                                    <p className="text-xs text-gray-500">Qty: {item.quantity} × ₹{item.price}</p>
+                                                                                    <p className="text-xs font-medium text-gray-700">Qty: {item.quantity} × ₹{item.price}</p>
                                                                                 </div>
                                                                                 <div className="ml-auto font-medium text-sm">
                                                                                     ₹{item.quantity * item.price}
@@ -372,15 +372,15 @@ export default function OrdersPage() {
 
                                                                 {/* Shipping Address */}
                                                                 <div>
-                                                                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Shipping Details</h4>
-                                                                    <div className="p-3 bg-gray-50 rounded-lg border border-gray-100 text-sm text-gray-600">
+                                                                    <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">Shipping Details</h4>
+                                                                    <div className="p-3 bg-gray-50 rounded-lg border border-gray-100 text-sm font-medium text-gray-800">
                                                                         <p className="font-medium text-gray-900 mb-1">{order.user?.name}</p>
                                                                         <p>{((order as any).shipping_address || (order as any).shippingAddress)?.line1}</p>
                                                                         <p>{((order as any).shipping_address || (order as any).shippingAddress)?.city}, {((order as any).shipping_address || (order as any).shippingAddress)?.state} - {((order as any).shipping_address || (order as any).shippingAddress)?.zipCode}</p>
                                                                     </div>
 
                                                                     <div className="mt-4">
-                                                                        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Update Status</h4>
+                                                                        <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Update Status</h4>
                                                                         <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
                                                                             {['pending', 'packed', 'shipped', 'delivered'].map(s => (
                                                                                 <Button

@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Wallet, TrendingUp, TrendingDown, DollarSign, Calendar, AlertCircle, Loader2 } from "lucide-react";
+import { Wallet, TrendingUp, TrendingDown, IndianRupee, Calendar, AlertCircle, Loader2 } from "lucide-react";
 import { getWithdrawals, updateWithdrawalStatus, getWithdrawalStats } from "@/services/admin.service";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@repo/lib/utils/error";
+import { StatsCards } from "@repo/ui";
 
 export default function AdminPayoutsPage() {
     const [payoutRequests, setPayoutRequests] = useState<any[]>([]);
@@ -24,7 +25,7 @@ export default function AdminPayoutsPage() {
     const fetchPayouts = async (statusParam?: string) => {
         setLoading(true);
         const statusToFetch = statusParam !== undefined ? statusParam : selectedStatus;
-        
+
         try {
             const [[payoutsData, payoutsError], [statsData, statsError]] = await Promise.all([
                 getWithdrawals({ status: statusToFetch, role: userRole }),
@@ -46,7 +47,7 @@ export default function AdminPayoutsPage() {
             setPayoutRequests(data);
 
 
-            
+
             if (statsData) {
                 const s = statsData as any;
                 setStats({
@@ -77,7 +78,7 @@ export default function AdminPayoutsPage() {
     const handleAction = async (id: string, status: 'approved' | 'rejected', remark?: string) => {
         setProcessingId(id);
         const [_, error] = await updateWithdrawalStatus(id, { status, remark });
-        
+
         if (error) {
             console.error(`Failed to ${status} withdrawal:`, getErrorMessage(error));
             toast.error(getErrorMessage(error) || `Failed to ${status} withdrawal`);
@@ -116,12 +117,12 @@ export default function AdminPayoutsPage() {
     };
 
     const statusTabs = [
-        { id: 'pending', label: 'Pending', icon: <Calendar className="w-4 h-4 mr-2" /> },
-        { id: 'processing', label: 'Processing', icon: <Loader2 className="w-4 h-4 mr-2" /> },
-        { id: 'success', label: 'Paid/Success', icon: <TrendingUp className="w-4 h-4 mr-2" /> },
-        { id: 'rejected', label: 'Rejected', icon: <TrendingDown className="w-4 h-4 mr-2" /> },
-        { id: 'failed', label: 'Failed', icon: <AlertCircle className="w-4 h-4 mr-2" /> },
-        { id: 'all', label: 'All Requests', icon: <Wallet className="w-4 h-4 mr-2" /> },
+        { id: 'pending', label: 'Pending', icon: <Calendar className="w-3.5 h-3.5 flex-shrink-0" /> },
+        { id: 'processing', label: 'Processing', icon: <Loader2 className="w-3.5 h-3.5 flex-shrink-0" /> },
+        { id: 'success', label: 'Paid/Success', icon: <TrendingUp className="w-3.5 h-3.5 flex-shrink-0" /> },
+        { id: 'rejected', label: 'Rejected', icon: <TrendingDown className="w-3.5 h-3.5 flex-shrink-0" /> },
+        { id: 'failed', label: 'Failed', icon: <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" /> },
+        { id: 'all', label: 'All Requests', icon: <Wallet className="w-3.5 h-3.5 flex-shrink-0" /> },
     ];
 
     return (
@@ -131,31 +132,28 @@ export default function AdminPayoutsPage() {
                 <div className="flex overflow-x-auto no-scrollbar bg-gray-100 p-1 rounded-xl w-full sm:w-fit mb-6 border border-gray-200">
                     <button
                         onClick={() => setUserRole('expert')}
-                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
-                            userRole === 'expert'
+                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${userRole === 'expert'
                                 ? "bg-white text-gray-900 shadow-sm"
                                 : "text-gray-500 hover:text-gray-700"
-                        }`}
+                            }`}
                     >
                         Expert Payouts
                     </button>
                     <button
                         onClick={() => setUserRole('agent')}
-                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
-                            userRole === 'agent'
+                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${userRole === 'agent'
                                 ? "bg-white text-gray-900 shadow-sm"
                                 : "text-gray-500 hover:text-gray-700"
-                        }`}
+                            }`}
                     >
                         Agent Payouts
                     </button>
                     <button
                         onClick={() => setUserRole('merchant')}
-                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
-                            userRole === 'merchant'
+                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${userRole === 'merchant'
                                 ? "bg-white text-gray-900 shadow-sm"
                                 : "text-gray-500 hover:text-gray-700"
-                        }`}
+                            }`}
                     >
                         Merchant Payouts
                     </button>
@@ -166,76 +164,76 @@ export default function AdminPayoutsPage() {
                     <h1 className="text-lg sm:text-2xl font-bold text-gray-800 mb-1">
                         {userRole === 'expert' ? 'Expert' : userRole === 'agent' ? 'Agent' : 'Merchant'} Payout Management
                     </h1>
-                    <p className="text-sm text-gray-600">Monitor {userRole} withdrawals, track success rates, and manage pending requests</p>
+                    <p className="text-sm font-medium text-gray-700">Monitor {userRole} withdrawals, track success rates, and manage pending requests</p>
                 </div>
 
 
-                {/* Stats Grid - 2 cols mobile, 5 cols desktop */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                    <div className="bg-white rounded-lg shadow-sm p-5 border-t-4 border-yellow-500">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xs font-medium text-gray-600">Pending</h3>
-                            <Wallet className="w-4 h-4 text-yellow-600" />
-                        </div>
-                        <p className="text-xl font-bold text-gray-800">{stats.totalPending}</p>
-                        <p className="text-[10px] text-gray-500 mt-1">Awaiting Admin</p>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow-sm p-5 border-t-4 border-blue-400">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xs font-medium text-gray-600">Approved</h3>
-                            <Loader2 className="w-4 h-4 text-blue-500" />
-                        </div>
-                        <p className="text-xl font-bold text-gray-800">{stats.totalProcessing}</p>
-                        <p className="text-[10px] text-gray-500 mt-1">Processing In Razorpay</p>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow-sm p-5 border-t-4 border-green-500">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xs font-medium text-gray-600">Paid</h3>
-                            <TrendingUp className="w-4 h-4 text-green-600" />
-                        </div>
-                        <p className="text-xl font-bold text-gray-800">{stats.totalSuccess}</p>
-                        <p className="text-[10px] text-gray-500 mt-1">Successfully Transferred</p>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow-sm p-5 border-t-4 border-red-500">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xs font-medium text-gray-600">Rejected/Failed</h3>
-                            <TrendingDown className="w-4 h-4 text-red-600" />
-                        </div>
-                        <p className="text-xl font-bold text-gray-800">{stats.totalRejected}</p>
-                        <p className="text-[10px] text-gray-500 mt-1">Declined or Error</p>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow-sm p-5 border-t-4 border-emerald-600 bg-emerald-50/30">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xs font-medium text-gray-600">Total Paid Vol</h3>
-                            <DollarSign className="w-4 h-4 text-emerald-600" />
-                        </div>
-                        <p className="text-xl font-bold text-emerald-600">₹{stats.totalAmountSuccess.toLocaleString()}</p>
-                        <p className="text-[10px] text-gray-500 mt-1">Confirmed Outflow</p>
-                    </div>
+                {/* Stats Grid */}
+                <div className="mb-6">
+                    <StatsCards
+                        columns={5}
+                        stats={[
+                            {
+                                title: "Pending",
+                                value: stats.totalPending.toString(),
+                                icon: Wallet,
+                                iconColor: "text-yellow-600",
+                                iconBgColor: "bg-yellow-50",
+                                trend: { value: "Awaiting Admin", isPositive: true, period: "" }
+                            },
+                            {
+                                title: "Approved",
+                                value: stats.totalProcessing.toString(),
+                                icon: Loader2,
+                                iconColor: "text-blue-600",
+                                iconBgColor: "bg-blue-50",
+                                trend: { value: "Processing In Razorpay", isPositive: true, period: "" }
+                            },
+                            {
+                                title: "Paid",
+                                value: stats.totalSuccess.toString(),
+                                icon: TrendingUp,
+                                iconColor: "text-green-600",
+                                iconBgColor: "bg-green-50",
+                                trend: { value: "Successfully Transferred", isPositive: true, period: "" }
+                            },
+                            {
+                                title: "Rejected/Failed",
+                                value: stats.totalRejected.toString(),
+                                icon: TrendingDown,
+                                iconColor: "text-red-600",
+                                iconBgColor: "bg-red-50",
+                                trend: { value: "Declined or Error", isPositive: false, period: "" }
+                            },
+                            {
+                                title: "Total Paid Vol",
+                                value: `₹${stats.totalAmountSuccess.toLocaleString()}`,
+                                icon: IndianRupee,
+                                iconColor: "text-emerald-600",
+                                iconBgColor: "bg-emerald-50",
+                                trend: { value: "Confirmed Outflow", isPositive: true, period: "" }
+                            },
+                        ]}
+                    />
                 </div>
 
                 {/* Filter Tabs - Scrollable on mobile */}
-                <div className="-mx-4 sm:mx-0 mb-4 sm:mb-6">
-                <div className="flex overflow-x-auto no-scrollbar gap-2 pb-2 px-4 sm:px-0 flex-nowrap">
-                    {statusTabs.map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setSelectedStatus(tab.id)}
-                            className={`flex items-center px-3 sm:px-4 py-2 rounded-full text-xs font-medium transition-all whitespace-nowrap flex-shrink-0 ${
-                                selectedStatus === tab.id
-                                    ? "bg-primary text-white shadow-md ring-2 ring-primary/20"
-                                    : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
-                            }`}
-                        >
-                            {tab.icon}
-                            {tab.label}
-                        </button>
-                    ))}
-                </div>
+                <div className="-mx-4 sm:mx-0 mb-4 sm:mb-6 mt-6 pt-2">
+                    <div className="flex overflow-x-auto no-scrollbar gap-2 pb-2 px-4 sm:px-0 flex-nowrap">
+                        {statusTabs.map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setSelectedStatus(tab.id)}
+                                className={`inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap flex-shrink-0 ${selectedStatus === tab.id
+                                        ? "bg-orange text-white shadow-md"
+                                        : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+                                    }`}
+                            >
+                                {tab.icon}
+                                <span>{tab.label}</span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
 
@@ -245,9 +243,9 @@ export default function AdminPayoutsPage() {
                     <div className="p-4 sm:p-6 border-b border-gray-200 flex justify-between items-center">
                         <h2 className="text-base sm:text-lg font-semibold text-gray-800 flex items-center">
                             {statusTabs.find(t => t.id === selectedStatus)?.label}
-                            <span className="ml-2 px-2 py-0.5 bg-gray-100 rounded text-xs text-gray-500">{payoutRequests.length}</span>
+                            <span className="ml-2 px-2 py-0.5 bg-gray-100 rounded text-xs font-bold text-gray-700">{payoutRequests.length}</span>
                         </h2>
-                        <button 
+                        <button
                             onClick={() => fetchPayouts()}
                             className="text-xs text-primary font-medium hover:underline flex items-center"
                         >
@@ -273,13 +271,13 @@ export default function AdminPayoutsPage() {
                             <table className="w-full">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{userRole === 'expert' ? 'Expert' : userRole === 'agent' ? 'Agent' : 'Merchant'}</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">{userRole === 'expert' ? 'Expert' : userRole === 'agent' ? 'Agent' : 'Merchant'}</th>
 
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bank Details</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status & Remark</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Amount</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Bank Details</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status & Remark</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date</th>
+                                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
@@ -288,7 +286,7 @@ export default function AdminPayoutsPage() {
                                         <tr key={request.id} className="hover:bg-gray-50/50 transition-colors">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="text-sm font-semibold text-gray-900 leading-none">{request.userName}</div>
-                                                <div className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-wider">{request.withdrawal_no || request.withdrawalNo || `#${request.id}`}</div>
+                                                <div className="text-[10px] text-gray-600 mt-1 uppercase font-bold tracking-wider">{request.withdrawal_no || request.withdrawalNo || `#${request.id}`}</div>
                                             </td>
 
                                             <td className="px-6 py-4 whitespace-nowrap">
@@ -296,7 +294,7 @@ export default function AdminPayoutsPage() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 {request.bankAccount ? (
-                                                    <div className="text-[11px] text-gray-600 leading-relaxed">
+                                                    <div className="text-[11px] text-gray-700 leading-relaxed font-medium">
                                                         <p className="font-bold text-gray-800">{request.bankAccount.bankName}</p>
                                                         <p>A/C: {request.bankAccount.accountNumber}</p>
                                                         <p>IFSC: {request.bankAccount.ifsc}</p>
@@ -316,8 +314,8 @@ export default function AdminPayoutsPage() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-500">{new Date(request.date).toLocaleDateString()}</div>
-                                                <div className="text-[10px] text-gray-400 font-mono italic">{new Date(request.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                                <div className="text-sm font-medium text-gray-800">{new Date(request.date).toLocaleDateString()}</div>
+                                                <div className="text-[10px] text-gray-600 font-mono italic">{new Date(request.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 {request.status.toLowerCase() === 'pending' ? (
@@ -339,7 +337,7 @@ export default function AdminPayoutsPage() {
 
                                                     </div>
                                                 ) : (
-                                                    <span className="text-[10px] text-gray-400 font-medium italic">No actions</span>
+                                                    <span className="text-[10px] text-gray-600 font-bold italic">No actions</span>
                                                 )}
                                             </td>
                                         </tr>
@@ -356,7 +354,7 @@ export default function AdminPayoutsPage() {
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] animate-in fade-in duration-300 px-4">
                     <div className="bg-white rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl scale-in-center overflow-hidden relative">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full -mr-16 -mt-16 blur-3xl opacity-50" />
-                        
+
                         <div className="flex items-center gap-4 mb-6">
                             <div className="p-3 bg-red-100 rounded-2xl">
                                 <AlertCircle className="w-6 h-6 text-red-600" />
@@ -369,7 +367,7 @@ export default function AdminPayoutsPage() {
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">
+                                <label className="block text-[10px] font-black text-gray-600 uppercase tracking-widest mb-2 px-1">
                                     Reason for Rejection
                                 </label>
                                 <textarea
@@ -384,7 +382,7 @@ export default function AdminPayoutsPage() {
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => setShowRejectModal(false)}
-                                    className="flex-1 py-4 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-colors"
+                                    className="flex-1 py-4 text-xs font-black uppercase tracking-widest text-gray-600 hover:text-gray-800 transition-colors"
                                 >
                                     Cancel
                                 </button>
