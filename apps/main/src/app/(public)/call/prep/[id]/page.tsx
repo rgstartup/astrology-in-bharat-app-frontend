@@ -309,7 +309,7 @@ function CallPrepContent() {
                                             className="w-full py-3.5 sm:py-4 md:py-5 bg-red-500 text-white rounded-2xl md:rounded-3xl font-black text-base sm:text-lg md:text-xl shadow-lg hover:bg-red-600 hover:-translate-y-1 transition-all flex items-center justify-center gap-2 sm:gap-3 md:gap-4 active:scale-95"
                                         >
                                             <LucideIcons.CreditCard className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
-                                            <span className="truncate">RECHARGE NOW</span>
+                                            <span className="truncate">Recharge Now</span>
                                         </button>
                                     </div>
                                 ) : (
@@ -319,7 +319,7 @@ function CallPrepContent() {
                                         className="w-full py-3.5 sm:py-4 md:py-5 bg-orange text-white rounded-2xl md:rounded-3xl font-black text-base sm:text-lg md:text-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-2 sm:gap-3 md:gap-4 active:scale-95 disabled:opacity-70"
                                     >
                                         {type === 'video' ? <Video className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" /> : <Phone className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />}
-                                        <span className="truncate">{actionLoading ? "STARTING..." : `START ${type.toUpperCase()} CALL`}</span>
+                                        <span className="truncate">{actionLoading ? "Starting..." : `Start ${type === 'video' ? 'Video' : 'Audio'} Call`}</span>
                                     </button>
                                 )}
                             </div>
@@ -375,7 +375,7 @@ function CallPrepContent() {
                 description={
                     <>
                         Right now{" "}
-                        <span className="font-bold text-gray-100">{expert?.name}</span>{" "}
+                        <span className="font-bold text-gray-900">{expert?.name}</span>{" "}
                         is offline. <br />
                         Please try again later when the expert is available.
                     </>
