@@ -144,11 +144,11 @@ export const registerUserByAgent = async (payload: RegisterUserPayload): Promise
         roles: [userType], // 'expert', 'client', or 'merchant'
     };
     const [res, error] = await api.post<RegisterUserResponse>(API_ROUTES.AGENTS.REGISTER_USER, body as Record<string, any>) as any;
-    
+
     if (error) {
         error.message = getErrorMessage(error);
     }
-    
+
     return [res, error];
 };
 
