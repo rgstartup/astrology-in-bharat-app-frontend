@@ -16,12 +16,26 @@
   --bs-link-color: var(--primary) !important;
   --bs-link-hover-color: var(--primary-hover) !important;
   --bs-border-radius: 0.5rem !important;
+
+  /* Override Tailwind Font Variables for Immediate Effect */
+  --font-poppins: "Inter", sans-serif !important;
+  --font-outfit: "Outfit", sans-serif !important;
+  --font-sans: "Inter", sans-serif !important;
+  --font-display: "Outfit", sans-serif !important;
 }
 
 /* Global Styles */
 body {
   background-color: var(--bg-light);
   color: #1A1A1A;
+  font-family: "Inter", sans-serif !important;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6,
+  .font-display {
+    font-family: "Outfit", sans-serif !important;
+  }
 }
 
 .bg-primary {

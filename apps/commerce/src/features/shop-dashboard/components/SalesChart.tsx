@@ -78,13 +78,13 @@ export function SalesChart({ data, isLoading }: SalesChartProps) {
     >
       <div className="flex flex-col sm:flex-row sm:items-center items-start justify-between gap-6 mb-10">
         <div>
-          <h3 className="text-2xl font-black text-gray-900 tracking-tight">Earning Analytics</h3>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">Last 7 days performance</p>
+          <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Earning Analytics</h3>
+          <p className="text-sm font-semibold text-gray-500 mt-2">Last 7 days performance</p>
         </div>
         <div className="flex items-center gap-6 bg-gray-50 px-6 py-3 rounded-2xl border border-gray-100">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-[#fd6410]" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-gray-600">Daily Revenue</span>
+            <span className="text-xs font-semibold text-gray-600">Daily Revenue</span>
           </div>
         </div>
       </div>

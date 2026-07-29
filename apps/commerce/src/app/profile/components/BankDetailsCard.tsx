@@ -118,8 +118,8 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
                         <Landmark className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-black tracking-tight uppercase">Payout & Bank Info</h3>
-                        <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest">Manage withdrawal destinations</p>
+                        <h3 className="text-lg font-bold tracking-tight">Payout & Bank Info</h3>
+                        <p className="text-sm font-medium text-white/90 mt-1">Manage withdrawal destinations</p>
                     </div>
                 </div>
 
@@ -134,7 +134,7 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
                 <div className="p-8 space-y-6">
                     {isEditing ? (
                         <div className="space-y-8 animate-in zoom-in-95 duration-300">
-                            <h4 className="text-[13px] font-black text-gray-900 uppercase tracking-wider">
+                            <h4 className="text-base font-bold text-gray-900">
                                 {editingId ? "Update Bank Account" : "Add New Bank Account"}
                             </h4>
                             
@@ -144,13 +144,13 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
                                     <InputGroup label="Bank Name" value={formData.bank_name} onChange={(val: string) => setFormData({...formData, bank_name: val})} placeholder="e.g. HDFC Bank" />
                                     <InputGroup label="Account Number" value={formData.account_number} onChange={(val: string) => setFormData({...formData, account_number: val})} placeholder="Account Number" />
                                     <InputGroup label="Confirm Account Number" value={confirmAcc} onChange={setConfirmAcc} placeholder="Confirm Account Number" />
-                                    <InputGroup label="IFSC Code" value={formData.ifsc_code} onChange={(val: string) => setFormData({...formData, ifsc_code: val.toUpperCase()})} placeholder="IFSC Code" uppercase />
+                                    <InputGroup label="IFSC Code" value={formData.ifsc_code} onChange={(val: string) => setFormData({...formData, ifsc_code: val.toUpperCase()})} placeholder="IFSC Code"  />
                                     <InputGroup label="UPI ID (Optional)" value={formData.upi_id} onChange={(val: string) => setFormData({...formData, upi_id: val})} placeholder="e.g. user@okaxis" />
                                 </div>
                                 
                                 <div className="flex items-center justify-end gap-4 pt-6">
-                                    <button type="button" onClick={() => {setIsEditing(false); setEditingId(null);}} className="px-6 py-3 bg-gray-50 text-gray-400 rounded-xl font-black uppercase text-[10px] tracking-widest hover:text-gray-600 transition-all">Cancel</button>
-                                    <button type="submit" disabled={saving} className="bg-[#fd6410] text-white px-8 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-orange-100 transition-all active:scale-95">
+                                    <button type="button" onClick={() => {setIsEditing(false); setEditingId(null);}} className="px-6 py-3 bg-gray-50 text-gray-400 rounded-xl font-bold text-[10px] hover:text-gray-600 transition-all">Cancel</button>
+                                    <button type="submit" disabled={saving} className="bg-[#fd6410] text-white px-8 py-3 rounded-xl font-bold text-[10px] shadow-lg shadow-orange-100 transition-all active:scale-95">
                                         {saving ? "Saving..." : editingId ? "Update Account" : "Add Account"}
                                     </button>
                                 </div>
@@ -161,19 +161,19 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
                             {accounts.map((acc) => (
                                 <div key={acc.id} className="relative group p-6 rounded-[2rem] border-2 border-orange-50 bg-gray-50/30 hover:bg-white hover:border-orange-200 transition-all duration-500">
                                     {acc.is_primary && (
-                                        <div className="absolute top-6 right-6 px-3 py-1 bg-green-500 text-white text-[10px] font-black uppercase tracking-widest rounded-lg flex items-center gap-2 shadow-lg shadow-green-100">
-                                            <BadgeCheck className="w-3 h-3" /> PRIMARY
+                                        <div className="absolute top-6 right-6 px-4 py-1.5 bg-green-500 text-white text-base font-medium rounded-xl flex items-center gap-2 shadow-lg shadow-green-100">
+                                            <BadgeCheck className="w-5 h-5" /> Primary
                                         </div>
                                     )}
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="space-y-4">
                                             <div>
-                                                <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">Account Holder</p>
-                                                <h5 className="text-lg font-black text-gray-900">{acc.account_holder}</h5>
+                                                <p className="text-sm font-semibold text-gray-600 mb-1">Account Holder</p>
+                                                <h5 className="text-lg font-bold text-gray-900">{acc.account_holder}</h5>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">Account / IFSC</p>
+                                                <p className="text-sm font-semibold text-gray-600 mb-1">Account / IFSC</p>
                                                 <div className="flex items-center gap-3 font-bold text-gray-600">
                                                     <span>•••• {acc.account_number.slice(-4)}</span>
                                                     <span className="w-1 h-4 bg-gray-200 rounded-full" />
@@ -184,15 +184,15 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
 
                                         <div className="space-y-4">
                                             <div>
-                                                <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">Bank Name</p>
-                                                <h5 className="text-lg font-black text-gray-900">{acc.bank_name}</h5>
+                                                <p className="text-sm font-semibold text-gray-600 mb-1">Bank Name</p>
+                                                <h5 className="text-lg font-bold text-gray-900">{acc.bank_name}</h5>
                                             </div>
                                             
                                             <div className="flex items-center justify-end gap-4 pt-2">
                                                 {!acc.is_primary && (
                                                     <button 
                                                         onClick={() => handleSetPrimary(acc.id)}
-                                                        className="text-[10px] font-black text-green-600 uppercase tracking-widest hover:underline"
+                                                        className="text-sm font-bold text-green-600 hover:underline"
                                                     >
                                                         Set Primary
                                                     </button>
@@ -221,7 +221,7 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
                                 <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center group-hover:scale-110 transition-transform">
                                     <Plus className="w-5 h-5" />
                                 </div>
-                                <span className="text-[11px] font-black uppercase tracking-widest">Add Another Bank Account</span>
+                                <span className="text-[11px] font-bold">Add Another Bank Account</span>
                             </button>
                         </div>
                     )}
@@ -233,13 +233,13 @@ export const BankDetailsCard: React.FC<BankDetailsCardProps> = ({
 
 const InputGroup = ({ label, value, onChange, placeholder, uppercase }: any) => (
     <div className="space-y-2">
-        <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-widest ml-1">{label}</label>
+        <label className="block text-[10px] font-bold text-gray-700 ml-1">{label}</label>
         <input
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
-            className={`w-full px-5 py-3.5 bg-gray-50 border border-gray-100 focus:border-orange-300 rounded-2xl text-sm font-bold text-gray-800 transition-all outline-none ${uppercase ? 'uppercase' : ''}`}
+            className={`w-full px-5 py-3.5 bg-gray-50 border border-gray-100 focus:border-orange-300 rounded-2xl text-sm font-bold text-gray-800 transition-all outline-none ${uppercase ? 'uppercase tracking-wider' : ''}`}
             required={label !== "UPI ID (Optional)"}
         />
     </div>

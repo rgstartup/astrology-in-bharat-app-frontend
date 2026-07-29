@@ -33,7 +33,7 @@ export default function WalletPage() {
         icon: tx.icon,
         info: tx.info,
         remark: tx.remark,
-        transactionNo: tx.id
+        transactionNo: tx.short_id || tx.id
     })) || [];
 
     const loading = statsLoading || profileLoading;
@@ -42,7 +42,7 @@ export default function WalletPage() {
         <main className="space-y-8 pb-20 animate-in fade-in duration-700">
                 {/* Header */}
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Wallet</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My Wallet</h1>
                     <p className="text-sm font-medium text-gray-500">Manage your shop earnings, track payouts, and withdraw funds.</p>
                 </div>
 
@@ -57,7 +57,7 @@ export default function WalletPage() {
                                 iconColor: "text-green-600",
                                 iconBgColor: "bg-green-50",
                                 trend: {
-                                    value: "READY TO WITHDRAW",
+                                    value: "Ready to withdraw",
                                     isPositive: true,
                                     color: "text-green-600"
                                 }
@@ -69,7 +69,7 @@ export default function WalletPage() {
                                 iconColor: "text-gray-900",
                                 iconBgColor: "bg-gray-100",
                                 trend: {
-                                    value: "IN BANK ACCOUNT",
+                                    value: "In bank account",
                                     isPositive: true,
                                     color: "text-gray-900"
                                 }
@@ -81,7 +81,7 @@ export default function WalletPage() {
                                 iconColor: "text-orange-500",
                                 iconBgColor: "bg-orange-50",
                                 trend: {
-                                    value: "AWAITING ADMIN",
+                                    value: "Awaiting admin",
                                     isPositive: true,
                                     color: "text-orange-500"
                                 }
@@ -93,7 +93,7 @@ export default function WalletPage() {
                                 iconColor: "text-blue-600",
                                 iconBgColor: "bg-blue-50",
                                 trend: {
-                                    value: "TRANSFER IN PROGRESS",
+                                    value: "Transfer in progress",
                                     isPositive: true,
                                     color: "text-blue-600"
                                 }

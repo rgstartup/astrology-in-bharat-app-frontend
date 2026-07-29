@@ -47,7 +47,7 @@ const CustomSelect = ({ value, onChange, options, placeholder }: { value: string
         onClick={() => setIsOpen(!isOpen)}
         className="w-full text-left bg-[#FAF5EE] border border-[#E8D5C0] rounded-lg px-4 py-2.5 text-sm outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all font-medium pr-8 truncate flex items-center justify-between"
       >
-        <span className={value ? "text-gray-800" : "text-gray-500"}>{value || placeholder}</span>
+        <span className={value ? "text-gray-800" : "text-gray-700"}>{value || placeholder}</span>
         <i className={`fa-solid fa-chevron-down text-[10px] transition-transform ${isOpen ? "rotate-180 text-orange-400" : "text-gray-400"}`} />
       </button>
       
@@ -225,7 +225,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-[#3D1A0B] leading-tight">{tx.searchTitle}</h2>
-                    <p className="text-[13px] text-gray-500 font-medium">{tx.searchSubtitle}</p>
+                    <p className="text-[13px] text-gray-700 font-medium">{tx.searchSubtitle}</p>
                   </div>
                 </div>
                 
@@ -245,7 +245,7 @@ const FamousPlacesSearch: React.FC<FamousPlacesSearchProps> = ({ onSearch, isSea
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={tx.placeholder}
-                className="w-full bg-[#FAF5EE] border border-[#E8D5C0] rounded-lg px-4 py-3 pr-12 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all font-medium"
+                className="w-full bg-[#FAF5EE] border border-[#E8D5C0] rounded-lg px-4 py-3 pr-12 text-sm text-gray-700 placeholder:text-gray-600 outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 transition-all font-medium"
               />
               <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
                 <i className="fa-solid fa-magnifying-glass text-sm" />

@@ -165,17 +165,17 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
                         {t.sidebar.accountMenu}
                     </small>
                 </div>
-                <div className="p-2 space-y-1">
+                <div className="px-4 pb-6 space-y-2">
                     {menuItems.map((item, index) => {
                         const isActive = activeTab === item.id;
                         return (
                             <button
                                 key={index}
                                 type="button"
-                                className={`w-full text-left border-0 rounded-xl flex items-center px-4 py-3 transition-all duration-200 group cursor-pointer hover:cursor-pointer ${
+                                className={`w-full text-left border-0 rounded-lg flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 group cursor-pointer hover:cursor-pointer ${
                                     isActive
-                                        ? 'bg-orange text-white shadow-gold font-bold'
-                                        : 'bg-transparent text-white/80 hover:bg-white/10 hover:text-white'
+                                        ? 'bg-[#fd6410] text-white shadow-lg'
+                                        : 'bg-transparent text-white hover:bg-[#fd6410] hover:text-white'
                                 }`}
                                 onClick={() => {
                                     setActiveTab(item.id);
@@ -183,7 +183,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
                                 }}
                             >
                                 <i className={`${item.icon} w-5 mr-3 text-lg transition-transform group-hover:scale-110`}></i>
-                                <span className="text-sm">{item.label}</span>
+                                <span className="">{item.label}</span>
                             </button>
                         );
                     })}

@@ -37,7 +37,7 @@ const NotificationPage = () => {
     if (!isMounted) return null;
 
     return (
-        <div className="min-h-screen bg-white sm:bg-[#FFF9F4] pb-12 font-poppins">
+        <div className="min-h-screen bg-white sm:bg-[#FFF9F4] pb-12 font-sans">
             <div className="container mx-auto p-0 sm:px-4 sm:py-8 max-w-5xl">
                 <div className="bg-white border-0 shadow-none sm:shadow-premium rounded-none sm:rounded-[32px] overflow-hidden mb-6">
                     <div className="px-4 sm:px-8 py-5 sm:py-7 bg-white border-b border-gray-100 flex flex-row justify-between items-center gap-4 sticky top-0 z-10 sm:shadow-sm">

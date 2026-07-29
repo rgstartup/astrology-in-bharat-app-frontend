@@ -26,19 +26,19 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({ transactions
     return (
         <div className="bg-white rounded-[1.5rem] border-2 border-orange-600 shadow-sm overflow-hidden flex flex-col">
             <div className="p-8 border-b border-gray-50 space-y-1">
-                <h3 className="text-xl font-black text-gray-900 tracking-tight">Transaction History</h3>
-                <p className="text-sm font-medium text-gray-600">Detailed log of all credits and withdrawals</p>
+                <h3 className="text-xl font-bold text-gray-900 tracking-tight">Transaction History</h3>
+                <p className="text-sm font-medium text-gray-700">Detailed log of all credits and withdrawals</p>
             </div>
 
             <div className="overflow-x-auto scrollbar-none">
                 <table className="w-full text-left border-collapse table-fixed min-w-[700px]">
                     <thead>
                         <tr className="bg-gray-50/50 border-b border-gray-100">
-                            <th className="px-8 py-5 text-[10px] font-black text-gray-900 uppercase tracking-widest w-[30%]">Transaction Info</th>
-                            <th className="px-4 py-5 text-[10px] font-black text-gray-900 uppercase tracking-widest w-[15%] text-center">Type</th>
-                            <th className="px-4 py-5 text-[10px] font-black text-gray-900 uppercase tracking-widest w-[20%] text-center">Amount</th>
-                            <th className="px-4 py-5 text-[10px] font-black text-gray-900 uppercase tracking-widest w-[15%] text-center">Status</th>
-                            <th className="px-8 py-5 text-[10px] font-black text-gray-900 uppercase tracking-widest w-[20%] text-right">Date</th>
+                            <th className="px-8 py-5 text-sm font-bold text-gray-700 w-[30%]">Transaction Info</th>
+                            <th className="px-4 py-5 text-sm font-bold text-gray-700 w-[15%] text-center">Type</th>
+                            <th className="px-4 py-5 text-sm font-bold text-gray-700 w-[20%] text-center">Amount</th>
+                            <th className="px-4 py-5 text-sm font-bold text-gray-700 w-[15%] text-center">Status</th>
+                            <th className="px-8 py-5 text-sm font-bold text-gray-700 w-[20%] text-right">Date</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-50">
@@ -55,7 +55,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({ transactions
                         ) : transactions.length === 0 ? (
                             <tr>
                                 <td colSpan={5} className="p-20 text-center opacity-40">
-                                    <p className="text-[12px] font-black uppercase tracking-[0.3em]">No transactions recorded yet</p>
+                                    <p className="text-sm font-semibold text-gray-500">No transactions recorded yet</p>
                                 </td>
                             </tr>
                         ) : (
@@ -84,7 +84,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({ transactions
                                     </td>
                                     <td className="px-4 py-6 text-center">
                                         <span className={cn(
-                                            "inline-block px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border border-current shadow-sm",
+                                            "inline-block px-3 py-1 rounded-lg text-xs font-semibold border border-current shadow-sm",
                                             tx.color === 'green' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
                                         )}>
                                             {tx.typeLabel}
@@ -92,7 +92,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({ transactions
                                     </td>
                                     <td className="px-4 py-6 text-center">
                                         <span className={cn(
-                                            "text-[16px] font-black tracking-tight",
+                                            "text-base font-bold tracking-tight",
                                             tx.color === 'green' ? 'text-green-600' : 'text-gray-900'
                                         )}>
                                             {tx.amountLabel}
@@ -145,7 +145,7 @@ const StatusBadge = ({ status }: { status: string }) => {
     return (
         <div className={cn("inline-flex items-center gap-2 px-3 py-1 rounded-full border border-current opacity-80", bg, color)}>
             <Icon className="w-2.5 h-2.5" />
-            <span className="text-[8px] font-black uppercase tracking-widest">{status}</span>
+            <span className="text-[10px] font-bold">{status}</span>
         </div>
     );
 };

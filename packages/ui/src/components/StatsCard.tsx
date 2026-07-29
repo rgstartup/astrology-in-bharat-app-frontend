@@ -81,7 +81,7 @@ export function StatsCards({ stats, columns = 4 }: StatsCardsProps) {
 
                             {/* ICON */}
                             <div
-                                className={`${stat.iconBgColor} p-2 sm:p-3 rounded-lg flex items-center justify-center flex-shrink-0 max-w-[44px] max-h-[44px] group-hover:scale-125 group-hover/card:scale-125 group-hover:rotate-12 group-hover/card:rotate-12 transition-all duration-300 shadow-sm group-hover:shadow-md group-hover/card:shadow-md`}
+                                className={`${stat.iconBgColor} p-2 sm:p-3 rounded-lg flex items-center justify-center flex-shrink-0 max-w-[44px] max-h-[44px] group-hover:scale-110 group-hover/card:scale-110 group-hover:rotate-[360deg] group-hover/card:rotate-[360deg] transition-all duration-700 shadow-sm group-hover:shadow-md group-hover/card:shadow-md`}
                             >
                                 <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.iconColor}`} />
                             </div>

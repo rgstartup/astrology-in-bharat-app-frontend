@@ -73,13 +73,17 @@ export default function EarningsPage() {
   }, [timeRange, startDate, endDate]);
 
   const handleExport = async () => {
+    if (!data) return;
     setIsExporting(true);
     try {
       // Small delay to ensure any transient UI states are settled
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      const fileName = `Earnings_Report_${timeRangeLabels[timeRange].replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-      await exportElementToPDF('earnings-report', fileName);
+      const dateRangeStr = timeRangeLabels[timeRange];
+      const fileName = `Earnings_Report_${dateRangeStr.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      const { exportDataToPDF } = await import('@/lib/export-utils');
+      await exportDataToPDF(data, dateRangeStr, fileName);
       
       toast.success("PDF Downloaded Successfully!");
     } catch (error) {
@@ -180,26 +184,30 @@ export default function EarningsPage() {
         className={`max-w-7xl mx-auto space-y-8 transition-all duration-300 ${loading ? "opacity-60 blur-[0.5px]" : "opacity-100"} bg-gray-50/50 p-4 rounded-3xl`}
       >
         {/* Stats Section */}
-        {loading && !data ? (
-          <StatsSkeleton />
-        ) : (
-          data && data.stats && <EarningsStats stats={data.stats} />
-        )}
+        <div className="pdf-export-section">
+          {loading && !data ? (
+            <StatsSkeleton />
+          ) : (
+            data && data.stats && <EarningsStats stats={data.stats} />
+          )}
+        </div>
 
         {/* Charts Section */}
-        {loading && !data ? (
-          <ChartSkeleton />
-        ) : (
-          data && (
-            <EarningsCharts
-              incomeTrends={data.incomeTrends}
-              revenueBreakdown={data.revenueBreakdown}
-            />
-          )
-        )}
+        <div className="pdf-export-section">
+          {loading && !data ? (
+            <ChartSkeleton />
+          ) : (
+            data && (
+              <EarningsCharts
+                incomeTrends={data.incomeTrends}
+                revenueBreakdown={data.revenueBreakdown}
+              />
+            )
+          )}
+        </div>
 
         {/* Top Insights Section */}
-        <div className="pb-12">
+        <div className="pdf-export-section pb-12">
           {loading && !data ? (
             <InsightsSkeleton />
           ) : (

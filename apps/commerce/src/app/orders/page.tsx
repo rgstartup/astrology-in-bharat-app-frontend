@@ -215,7 +215,7 @@ export default function OrdersPage() {
           </h2>
           <p className="text-gray-500 text-sm mt-1">Track and fulfillment customer orders from here.</p>
         </div>
-        <button className="flex items-center justify-center space-x-2 bg-gray-900 text-white px-6 py-3 rounded-2xl font-bold hover:bg-gray-800 transition-all shadow-lg active:scale-95">
+        <button className="flex items-center justify-center space-x-2 bg-[#fd6410] text-white px-6 py-3 rounded-2xl font-bold hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 active:scale-95">
           <Download className="w-4 h-4" />
           <span>Export Orders</span>
         </button>
@@ -269,7 +269,7 @@ export default function OrdersPage() {
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={cn(
-                    "px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 uppercase tracking-widest text-[10px] whitespace-nowrap",
+                    "px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap",
                     activeTab === tab 
                       ? "bg-[#fd6410] text-white shadow-md" 
                       : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
@@ -298,7 +298,7 @@ export default function OrdersPage() {
       {/* Orders List */}
       <div className="space-y-4">
         {/* Header */}
-        <div className="hidden lg:grid grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1.2fr] gap-4 px-8 py-5 bg-white rounded-3xl border border-gray-100 shadow-sm text-[10px] uppercase font-black text-gray-900 tracking-[0.2em]">
+        <div className="hidden lg:grid grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1.2fr] gap-4 px-8 py-5 bg-white rounded-3xl border border-gray-100 shadow-sm text-sm font-bold text-gray-700">
           <div>Order ID</div>
           <div>Customer</div>
           <div>Date</div>
@@ -349,8 +349,8 @@ export default function OrdersPage() {
                       {expandedRows.has(order.id) ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </button>
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1 block lg:hidden">Order ID</span>
-                      <span className="text-sm font-bold text-gray-900 tracking-tight uppercase block">{(order as any).tracking_id || (order as any).trackingId || order.orderNumber || order.short_id || String(order.id).slice(-8)}</span>
+                      <span className="text-xs font-semibold text-slate-600 mb-1 block lg:hidden">Order ID</span>
+                      <span className="text-sm font-bold text-gray-900 tracking-tight block">{(order as any).tracking_id || (order as any).trackingId || order.orderNumber || order.short_id || String(order.id).slice(-8)}</span>
                       {order.productName && <span className="text-[11px] font-semibold text-gray-700 mt-1 block truncate max-w-[180px]">{order.productName}</span>}
                     </div>
                   </div>
@@ -366,20 +366,20 @@ export default function OrdersPage() {
                     )}
                     <div>
                       <h4 className="text-sm font-bold text-gray-900">{order.customerName}</h4>
-                      <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{order.itemsCount} Items</p>
+                      <p className="text-xs text-gray-500 font-medium">{order.itemsCount} Items</p>
                     </div>
                   </div>
                 </div>
                 <div className="col-span-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1 block lg:hidden">Date</span>
+                  <span className="text-xs font-semibold text-slate-600 mb-1 block lg:hidden">Date</span>
                   <div className="flex items-center gap-2 text-gray-800 text-sm font-bold">
                     <Calendar className="w-4 h-4 text-gray-500" />
                     {formatDate(order.date)}
                   </div>
                 </div>
                 <div className="col-span-1 text-right lg:text-left">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1 block lg:hidden">Total</span>
-                  <div className="font-black text-sm text-gray-900">
+                  <span className="text-xs font-semibold text-slate-600 mb-1 block lg:hidden">Total</span>
+                  <div className="font-bold text-sm text-gray-900">
                     {formatPrice(order.amount)}
                     {(order as any).shippingCharge > 0 && (
                       <span className="text-[11px] text-gray-500 font-bold ml-1.5">+ {formatPrice((order as any).shippingCharge)} <span className="font-medium text-gray-400">Shipping</span></span>
@@ -387,8 +387,8 @@ export default function OrdersPage() {
                   </div>
                 </div>
                 <div className="col-span-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1 block lg:hidden">Status</span>
-                  <span className={cn("px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border flex items-center gap-2 w-max", getStatusStyle(order.status))}>
+                  <span className="text-xs font-semibold text-slate-600 mb-1 block lg:hidden">Status</span>
+                  <span className={cn("px-4 py-1.5 rounded-full text-xs font-bold capitalize border flex items-center gap-2 w-max", getStatusStyle(order.status))}>
                     {getStatusIcon(order.status)}
                     {order.status}
                   </span>
@@ -396,7 +396,7 @@ export default function OrdersPage() {
                 <div className="col-span-1 flex justify-end lg:block mt-0 lg:mt-0">
                   <div className="flex items-center justify-end w-full lg:w-auto" onClick={(e) => e.stopPropagation()}>
                     <select 
-                       className="text-[10px] font-bold uppercase tracking-widest bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer w-full lg:w-auto"
+                       className="text-xs font-bold capitalize bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer w-full lg:w-auto"
                        value={order.status.toLowerCase()}
                        onChange={(e) => handleStatusChange(order.orderId || order.id, e.target.value)}
                        disabled={updateStatusMutation.isPending || verifyOtpMutation.isPending}
@@ -414,7 +414,7 @@ export default function OrdersPage() {
                 <div className="border-t border-orange-100 bg-orange-50/30">
                   <div className="py-6 px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 shadow-inner">
                     <div className="lg:col-span-2 space-y-3">
-                      <h5 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Order Items</h5>
+                      <h5 className="text-sm font-bold text-gray-700 mb-2">Order Items</h5>
                       {order.items.map((item: any, idx: number) => (
                         <div key={idx} className="flex items-center gap-4 bg-white p-3 rounded-xl border border-orange-100 shadow-sm">
                           {item.image ? (
@@ -426,11 +426,11 @@ export default function OrdersPage() {
                           )}
                           <div className="flex-1">
                             <p className="text-sm font-bold text-gray-900">{item.name}</p>
-                            <p className="text-[10px] uppercase tracking-widest text-gray-400 font-medium">PID: {item.shortProductId || String(item.productId).slice(-8)}</p>
+                            <p className="text-xs text-gray-500 font-medium">PID: {item.shortProductId || String(item.productId).slice(-8)}</p>
                           </div>
                           <div className="text-right">
                             <p className="text-xs font-bold text-gray-700">{item.quantity} x {formatPrice(item.price)}</p>
-                            <p className="text-sm font-black text-[#fd6410]">{formatPrice(item.quantity * item.price)}</p>
+                            <p className="text-sm font-bold text-[#fd6410]">{formatPrice(item.quantity * item.price)}</p>
                           </div>
                         </div>
                       ))}
@@ -440,25 +440,25 @@ export default function OrdersPage() {
                       <div className="bg-white rounded-[1.5rem] border border-[#fd6410] shadow-sm flex flex-col overflow-hidden h-full">
                          <div className="bg-orange-50/50 p-4 border-b border-orange-100 flex items-center gap-3">
                            <Truck className="w-5 h-5 text-[#fd6410]" />
-                           <span className="text-[11px] font-black uppercase tracking-widest text-[#fd6410]">Shipping Address</span>
+                           <span className="text-sm font-bold text-[#fd6410]">Shipping Address</span>
                          </div>
                          <div className="p-5 flex-1 flex flex-col">
                            {order.shippingAddress ? (
-                             <div className="space-y-1 text-sm text-gray-500 font-medium">
-                               <p className="font-black text-gray-900 mb-3 text-[17px]">{order.shippingAddress.fullName || (order.shippingAddress as any).full_name || order.customerName}</p>
+                             <div className="space-y-1 text-sm text-gray-700 font-medium">
+                               <p className="font-bold text-gray-900 mb-3 text-base">{order.shippingAddress.fullName || (order.shippingAddress as any).full_name || order.customerName}</p>
                                <p>{order.shippingAddress.addressLine1 || (order.shippingAddress as any).line1}</p>
                                {(order.shippingAddress.addressLine2 || (order.shippingAddress as any).line2) && <p>{order.shippingAddress.addressLine2 || (order.shippingAddress as any).line2}</p>}
                                <p>{order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode || (order.shippingAddress as any).zip_code || (order.shippingAddress as any).zipCode}</p>
                                <div className="pt-4 border-t border-orange-200/60 mt-4 space-y-2">
                                  <div className="flex items-center gap-2">
-                                   <Phone className="w-3.5 h-3.5 text-gray-400" />
-                                   <span className="text-gray-600">{order.shippingAddress.phone}</span>
+                                   <Phone className="w-3.5 h-3.5 text-gray-600" />
+                                   <span className="text-gray-800 font-bold">{order.shippingAddress.phone}</span>
                                  </div>
                                  {((order.shippingAddress as any).alternatePhone || (order.shippingAddress as any).alternate_phone) && (
                                    <div className="flex items-center gap-2">
-                                     <Phone className="w-3.5 h-3.5 text-gray-400" />
-                                     <span className="text-gray-600">{(order.shippingAddress as any).alternatePhone || (order.shippingAddress as any).alternate_phone}</span>
-                                     <span className="text-[9px] text-gray-400 font-bold uppercase">(Alt)</span>
+                                     <Phone className="w-3.5 h-3.5 text-gray-600" />
+                                     <span className="text-gray-800 font-bold">{(order.shippingAddress as any).alternatePhone || (order.shippingAddress as any).alternate_phone}</span>
+                                     <span className="text-[9px] text-gray-400 font-bold">(Alt)</span>
                                    </div>
                                  )}
                                </div>
@@ -504,7 +504,7 @@ export default function OrdersPage() {
               </div>
 
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-black text-gray-900 mb-2">Verify Delivery</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Verify Delivery</h3>
                 <p className="text-gray-500 text-sm">Please enter the 6-digit OTP provided by the customer to complete the delivery.</p>
               </div>
 
@@ -514,14 +514,14 @@ export default function OrdersPage() {
                     type="text" 
                     maxLength={6}
                     placeholder="Enter 6-digit OTP"
-                    className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-center text-2xl font-black tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-[#fd6410] transition-all"
+                    className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-center text-2xl font-bold tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-[#fd6410] transition-all"
                     value={otpValue}
                     onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
                     disabled={verifyOtpMutation.isPending}
                   />
                   {!otpValue && (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <span className="text-gray-300 text-sm font-bold uppercase tracking-widest">000000</span>
+                      <span className="text-gray-300 text-sm font-bold">000000</span>
                     </div>
                   )}
                 </div>
@@ -563,7 +563,7 @@ export default function OrdersPage() {
             </div>
 
             <div className="bg-orange-50 p-4 text-center">
-              <p className="text-[10px] font-black text-orange-600 uppercase tracking-widest flex items-center justify-center gap-2">
+              <p className="text-[10px] font-bold text-orange-600 flex items-center justify-center gap-2">
                  <AlertCircle className="w-3 h-3" />
                  Payment will be released after verification
               </p>
@@ -584,7 +584,7 @@ export default function OrdersPage() {
               </div>
 
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-black text-gray-900 mb-2">Cancel Order</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Cancel Order</h3>
                 <p className="text-gray-500 text-sm">Please provide a reason for cancelling this order. This will be sent to the customer.</p>
               </div>
 

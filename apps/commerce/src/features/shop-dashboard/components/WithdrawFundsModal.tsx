@@ -80,8 +80,8 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
                   <Wallet className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight">Withdraw Funds</h2>
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Paisa Nikaalein</p>
+                  <h2 className="text-xl font-bold text-gray-900 tracking-tight">Withdraw Funds</h2>
+                  <p className="text-[10px] font-bold text-gray-400">Paisa Nikaalein</p>
                 </div>
               </div>
               <button
@@ -98,26 +98,26 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
               <div className="bg-gray-900 rounded-3xl p-6 text-white relative overflow-hidden">
                 <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl" />
                 <div className="relative z-10">
-                  <p className="text-white/50 text-[10px] uppercase font-black tracking-widest">Available Balance</p>
-                  <p className="text-3xl font-black mt-1">₹{availableBalance.toLocaleString('en-IN')}</p>
+                  <p className="text-white/50 text-[10px] font-bold">Available Balance</p>
+                  <p className="text-3xl font-bold mt-1">₹{availableBalance.toLocaleString('en-IN')}</p>
                 </div>
               </div>
 
               {/* Amount Input */}
               <div className="space-y-3">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">
+                <label className="text-[10px] font-bold text-gray-400 pl-1">
                   Withdrawal Amount (Min ₹500)
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#fd6410] transition-colors">
-                    <span className="font-black text-lg">₹</span>
+                    <span className="font-bold text-lg">₹</span>
                   </div>
                   <input
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="Enter amount"
-                    className="w-full pl-10 pr-5 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-lg font-black focus:outline-none focus:ring-4 focus:ring-orange-500/5 focus:border-orange-500/50 transition-all"
+                    className="w-full pl-10 pr-5 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-lg font-bold focus:outline-none focus:ring-4 focus:ring-orange-500/5 focus:border-orange-500/50 transition-all"
                   />
                 </div>
                 {amount && Number(amount) < minAmount && (
@@ -136,7 +136,7 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
               <div className="bg-orange-50/50 border border-orange-100 rounded-3xl p-5 space-y-3">
                  <div className="flex items-center gap-2 text-[#fd6410]">
                     <Building2 className="w-4 h-4" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Payout Destination</span>
+                    <span className="text-[10px] font-bold">Payout Destination</span>
                  </div>
                  
                  {isProfileLoading ? (
@@ -148,11 +148,11 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
                     <>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest">Bank Name</p>
+                            <p className="text-[9px] text-gray-400 font-bold">Bank Name</p>
                             <p className="text-xs font-bold text-gray-900 truncate">{profile?.bankName || "Not Set"}</p>
                         </div>
                         <div>
-                            <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest">Account Number</p>
+                            <p className="text-[9px] text-gray-400 font-bold">Account Number</p>
                             <p className="text-xs font-bold text-gray-900 truncate">{profile?.accountNumber || "Not Set"}</p>
                         </div>
                     </div>
@@ -162,7 +162,7 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
                             <Link 
                                 href="/profile" 
                                 onClick={onClose}
-                                className="text-[9px] font-black uppercase tracking-widest text-[#fd6410] hover:underline flex items-center gap-1"
+                                className="text-[9px] font-bold text-[#fd6410] hover:underline flex items-center gap-1"
                             >
                                 Set Now <ArrowRight className="w-2.5 h-2.5" />
                             </Link>
@@ -177,13 +177,13 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
             <div className="p-8 bg-gray-50 border-t border-gray-100 flex flex-col gap-4">
                <div className="flex items-center gap-2 text-gray-400 px-2">
                   <Lock className="w-3 h-3" />
-                  <span className="text-[9px] font-bold uppercase tracking-widest leading-none">Secure payout processing</span>
+                  <span className="text-[9px] font-bold leading-none">Secure payout processing</span>
                </div>
                <button
                   onClick={handleSubmit}
                   disabled={!isAmountValid || requestWithdrawal.isPending || !profile?.bankName}
                   className={cn(
-                    "w-full py-5 rounded-2xl flex items-center justify-center gap-3 font-black text-sm uppercase tracking-widest transition-all shadow-xl active:scale-[0.98]",
+                    "w-full py-5 rounded-2xl flex items-center justify-center gap-3 font-bold text-sm  transition-all shadow-xl active:scale-[0.98]",
                     isAmountValid && profile?.bankName
                         ? "bg-[#301118] text-white shadow-maroon-900/20 hover:bg-[#4a1a25] hover:-translate-y-0.5"
                         : "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"

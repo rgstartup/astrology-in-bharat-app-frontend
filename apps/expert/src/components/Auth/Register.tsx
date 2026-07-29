@@ -174,7 +174,7 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#FFF9F4] items-center justify-center p-4 sm:p-6 lg:p-10 font-poppins">
+    <div className="flex min-h-screen bg-[#FFF9F4] items-center justify-center p-4 sm:p-6 lg:p-10 font-sans">
       <Head>
         <title>Expert Sign Up | Astrology in Bharat</title>
       </Head>

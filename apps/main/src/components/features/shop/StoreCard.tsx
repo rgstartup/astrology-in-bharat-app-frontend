@@ -171,7 +171,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         {/* Store Intro */}
         <div className="space-y-4">
            <div className="flex items-center justify-between">
-             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none" style={fontStyle}>
+             <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none" style={fontStyle}>
                {t.about}
              </span>
              <div className="flex items-center gap-3">
@@ -212,7 +212,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         {/* Popular Products */}
         <div className="space-y-3">
            <div className="flex items-center justify-between">
-             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none" style={fontStyle}>
+             <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none" style={fontStyle}>
                {t.popularProducts}
              </span>
              <div className="w-3.5 h-3.5 bg-gray-100 rounded-sm flex items-center justify-center">
@@ -263,7 +263,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         {/* Action Button */}
         <div className="mt-auto">
           <div 
-            className="w-full py-3.5 bg-orange-600 text-white text-[10px] font-black rounded-2xl uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-orange-700 transition-all shadow-lg shadow-orange-900/10 active:scale-95 text-center"
+            className="w-full py-3 bg-orange-600 text-white text-xs font-bold rounded-2xl tracking-[0.1em] flex items-center justify-center gap-2 hover:bg-orange-700 transition-all shadow-lg shadow-orange-900/10 active:scale-95 text-center"
             style={fontStyle}
           >
             {t.btnVisit} <ExternalLink className="w-3.5 h-3.5" />

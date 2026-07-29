@@ -117,7 +117,7 @@ const QuotesLoaderStyles: React.FC = () => {
       .quote-text::after { bottom: -40px; right: -10px; }
 
       .quote-author {
-        font-family: var(--font-poppins), sans-serif;
+        font-family: var(--font-sans), sans-serif;
         font-size: 1.25rem;
         background: linear-gradient(135deg, #7b3ff2 0%, #9333ea 100%);
         -webkit-background-clip: text;
@@ -154,7 +154,7 @@ const QuotesLoaderStyles: React.FC = () => {
         color: #ffffff;
         font-size: 1.3rem;
         font-weight: 600;
-        font-family: var(--font-poppins), sans-serif;
+        font-family: var(--font-sans), sans-serif;
         animation: textPulseSmooth 2s ease-in-out infinite;
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
       }

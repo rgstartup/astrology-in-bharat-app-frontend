@@ -167,7 +167,7 @@ export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
                             >
                                 <Menu className="w-5 h-5" />
                             </button>
-                            <h1 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 tracking-tight truncate max-w-[120px] sm:max-w-none uppercase">
+                            <h1 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 tracking-tight truncate max-w-[120px] sm:max-w-none">
                                 {pathname === '/dashboard' ? 'Overview' : pathname?.split('/').pop()?.replace('-', ' ')}
                             </h1>
                         </div>
@@ -191,13 +191,7 @@ export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
                                     onClick={handleToggle}
                                     disabled={updateOnlineStatus.isPending || isProfileLoading}
                                     title={!isApproved ? 'Admin approval ke baad hi Online ho sakte hain' : ''}
-                                    className={`relative inline-flex items-center h-6 rounded-full w-11 transition-all duration-500 ease-in-out ${
-                                        !isApproved
-                                            ? 'bg-gray-300 cursor-not-allowed'
-                                            : isOnline
-                                                ? 'bg-green-500 shadow-lg shadow-green-200'
-                                                : 'bg-red-500 shadow-lg shadow-red-200'
-                                    } ${(updateOnlineStatus.isPending || isProfileLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`relative inline-flex items-center h-6 rounded-full w-11 transition-all duration-500 ease-in-out ${ !isApproved ? 'bg-gray-300 cursor-not-allowed' : isOnline ? 'bg-green-500 shadow-lg shadow-green-200' : 'bg-red-500 shadow-lg shadow-red-200' } ${(updateOnlineStatus.isPending || isProfileLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
                                     <span className={`inline-block w-4 h-4 transform transition-transform duration-300 bg-white rounded-full shadow-md ${isOnline && isApproved ? 'translate-x-6' : 'translate-x-1'}`} />
                                 </button>
@@ -220,7 +214,7 @@ export const DashboardShell = ({ children }: { children: React.ReactNode }) => {
                                         <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                                             <div className="p-4">
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest">Notifications</h3>
+                                                    <h3 className="text-sm font-bold text-gray-900">Notifications</h3>
                                                 </div>
                                                 <ul className="space-y-3 max-h-64 overflow-y-auto no-scrollbar">
                                                     {notifications.map((n) => (

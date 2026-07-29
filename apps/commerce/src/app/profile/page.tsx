@@ -214,12 +214,12 @@ export default function MerchantProfilePage() {
         className="flex flex-col md:flex-row md:items-center justify-between gap-6"
       >
         <div className="space-y-1">
-          <div className="flex items-center space-x-2 text-[10px] font-black text-[#fd6410] uppercase tracking-[0.2em]">
+          <div className="flex items-center space-x-2 text-sm font-semibold text-[#fd6410]">
             <span>Merchant Central</span>
             <ChevronRight className="w-3 h-3" />
             <span className="text-gray-600 font-bold">Merchant Profile</span>
           </div>
-          <h1 className="text-4xl font-black text-gray-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-4xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
             Profile & Verification
             {isProfileLoading ? (
                <Skeleton className="h-8 w-32 rounded-full" />
@@ -278,7 +278,7 @@ export default function MerchantProfilePage() {
           
           <div className="space-y-2 flex-1">
             <h3 className={cn(
-              "text-xl font-black uppercase tracking-tight",
+              "text-xl font-bold tracking-tight",
               isVerified ? "text-green-900" : "text-amber-900"
             )}>
               {isVerified ? "Shop Verified & Active" : "Shop Verification Pending"}
@@ -295,7 +295,7 @@ export default function MerchantProfilePage() {
             {!isVerified && (
               <div className="pt-2 flex flex-wrap gap-2">
                 {["Reviewing GST & Pan Details", "Compliance Check", "Bank Verification"].map((tag) => (
-                  <span key={tag} className="text-[9px] font-black uppercase tracking-widest text-amber-600/70 bg-amber-100/50 px-3 py-1.5 rounded-xl border border-amber-200/50">
+                  <span key={tag} className="text-xs font-semibold capitalize text-amber-600/70 bg-amber-100/50 px-3 py-1.5 rounded-xl border border-amber-200/50">
                     {tag}
                   </span>
                 ))}
@@ -394,7 +394,7 @@ export default function MerchantProfilePage() {
             onSave={handleSaveDocs}
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className={cn("transition-opacity duration-500", (isGstExempt || !isEditingDocs) && "opacity-40 grayscale pointer-events-none")}>
+              <div className={cn("transition-opacity duration-500", isGstExempt && "opacity-40 grayscale pointer-events-none")}>
                 <FileUploadCard 
                   label={isGstExempt ? "GST (Not Required)" : "GST Certificate"} 
                   onFileChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFileChange(e, 'gstCertificate')}
@@ -457,7 +457,7 @@ export default function MerchantProfilePage() {
                 <div className="p-3 bg-white/10 rounded-2xl">
                   <Lock className="w-5 h-5 text-orange-400" />
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-widest">Privacy First</h3>
+                <h3 className="text-lg font-bold">Privacy First</h3>
               </div>
 
               <p className="text-white/60 text-xs leading-relaxed font-medium">
@@ -472,7 +472,7 @@ export default function MerchantProfilePage() {
               </div>
 
               <div className="pt-6 border-t border-white/10">
-                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-orange-400 mb-2">
+                <div className="flex items-center justify-between text-sm font-semibold text-orange-400 mb-2">
                   <span>Verification Progress</span>
                   <span>{isVerified ? "100%" : "65%"}</span>
                 </div>
@@ -496,7 +496,7 @@ export default function MerchantProfilePage() {
           >
             <div className="flex items-center gap-2 text-[#fd6410]">
               <Info className="w-4 h-4" />
-              <h4 className="text-xs font-black uppercase tracking-widest">Why verify?</h4>
+              <h4 className="text-sm font-semibold">Why verify?</h4>
             </div>
             <ul className="space-y-3">
               {[
@@ -535,7 +535,7 @@ function SectionContainer({ title, icon: Icon, children, delay, isEditing, savin
           <div className="p-2.5 bg-orange-50 rounded-xl">
             <Icon className="w-5 h-5 text-[#fd6410]" />
           </div>
-          <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em]">{title}</h3>
+          <h3 className="text-lg font-bold text-gray-900">{title}</h3>
         </div>
         {/* Per-section Edit / Cancel / Save buttons */}
         {onEdit && (
@@ -543,7 +543,7 @@ function SectionContainer({ title, icon: Icon, children, delay, isEditing, savin
             {!isEditing ? (
               <button
                 onClick={onEdit}
-                className="flex items-center gap-1.5 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-[#fd6410] border-2 border-[#fd6410] rounded-xl hover:bg-orange-50 transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-[#fd6410] border-2 border-[#fd6410] rounded-xl hover:bg-orange-50 transition-colors"
               >
                 <FileText className="w-3.5 h-3.5" /> Edit
               </button>
@@ -551,14 +551,14 @@ function SectionContainer({ title, icon: Icon, children, delay, isEditing, savin
               <>
                 <button
                   onClick={onCancel}
-                  className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-gray-500 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                  className="px-4 py-2 text-xs font-semibold text-gray-500 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={onSave}
                   disabled={saving}
-                  className="flex items-center gap-1.5 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white bg-[#fd6410] rounded-xl hover:bg-orange-600 transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-[#fd6410] rounded-xl hover:bg-orange-600 transition-colors disabled:opacity-50"
                 >
                   {saving && <Loader2 className="w-3 h-3 animate-spin" />}
                   {saving ? 'Saving...' : 'Save'}
@@ -577,8 +577,8 @@ function InputField({ label, name, value, onChange, placeholder, type = "text", 
   return (
     <div className="space-y-2 group">
       <div className="flex items-center justify-between pl-1">
-        <label className="text-xs font-black text-gray-700 uppercase tracking-widest">{label}</label>
-        {hint && <span className="text-[9px] text-gray-500 font-bold uppercase">{hint}</span>}
+        <label className="text-sm font-semibold text-gray-700">{label}</label>
+        {hint && <span className="text-xs text-gray-500 font-medium">{hint}</span>}
       </div>
       <div className="relative">
         {Icon && (
@@ -596,7 +596,7 @@ function InputField({ label, name, value, onChange, placeholder, type = "text", 
           placeholder={placeholder}
           disabled={disabled}
           className={cn(
-            "w-full pr-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm",
+            "w-full pr-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all shadow-sm",
             Icon ? "pl-11" : "pl-5",
             disabled && "opacity-60 cursor-not-allowed bg-gray-50 border-gray-200"
           )}
@@ -613,7 +613,7 @@ function FileUploadCard({ label, onFileChange, preview, onRemove, file, disabled
 
   return (
     <div className={cn("space-y-2", disabled && "opacity-70 cursor-not-allowed")}>
-      <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">{label}</label>
+      <label className="text-sm font-semibold text-gray-700 pl-1">{label}</label>
       <div className="relative group aspect-square">
         <div className={cn(
           "w-full h-full rounded-3xl border-2 border-dashed flex flex-col items-center justify-center text-center p-4 transition-all duration-500 overflow-hidden",
@@ -634,12 +634,12 @@ function FileUploadCard({ label, onFileChange, preview, onRemove, file, disabled
                 ) : isPdf ? (
                   <div className="w-full h-full flex flex-col items-center justify-center bg-orange-100 rounded-2xl">
                     <FileText className="w-12 h-12 text-orange-600 mb-2" />
-                    <span className="text-[10px] font-black text-orange-800 uppercase px-4 truncate w-full text-center">PDF Loaded</span>
+                    <span className="text-[10px] font-bold text-orange-800 px-4 truncate w-full text-center">PDF Loaded</span>
                   </div>
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 rounded-2xl">
                     <FileText className="w-12 h-12 text-gray-400 mb-2" />
-                    <span className="text-[10px] font-bold text-gray-500 uppercase px-4 truncate w-full">Document Ready</span>
+                    <span className="text-[10px] font-bold text-gray-500 px-4 truncate w-full">Document Ready</span>
                   </div>
                 )}
 
@@ -661,8 +661,8 @@ function FileUploadCard({ label, onFileChange, preview, onRemove, file, disabled
               <div className="p-4 bg-orange-50/50 rounded-2xl group-hover:scale-110 transition-transform duration-500 text-orange-400 group-hover:text-[#fd6410] group-hover:bg-orange-100/50">
                 <UploadCloud className="w-8 h-8" />
               </div>
-              <p className="mt-3 text-[10px] font-black uppercase text-gray-800 tracking-widest leading-none">Choose File</p>
-              <span className="mt-1 text-[8px] font-bold text-gray-600 uppercase">Max 5MB (PDF/JPG)</span>
+              <p className="mt-3 text-sm font-semibold text-gray-800 leading-none">Choose File</p>
+              <span className="mt-1 text-xs font-medium text-gray-600">Max 5MB (PDF/JPG)</span>
             </>
           )}
         </div>
@@ -683,7 +683,7 @@ function VerificationStep({ step, title, done }: any) {
   return (
     <div className="flex items-center gap-4">
       <div className={cn(
-        "w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black transition-all duration-500",
+        "w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all duration-500",
         done ? "bg-orange-500 text-white" : "bg-white/10 text-white/30"
       )}>
         {done ? <CheckCircle2 className="w-3.5 h-3.5" /> : step}

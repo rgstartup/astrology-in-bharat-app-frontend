@@ -26,7 +26,8 @@ const config: Config = {
         "astro-bg": "#fcfbf5",
       },
       fontFamily: {
-        poppins: ["Poppins", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
+        display: ["Outfit", "sans-serif"],
       },
       keyframes: {
         shimmer: {

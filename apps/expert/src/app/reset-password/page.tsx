@@ -90,7 +90,7 @@ const ResetPasswordContent: React.FC = () => {
   if (!token) return null;
 
   return (
-    <div className="flex min-h-screen bg-[#FFF9F4] items-center justify-center p-4 sm:p-6 font-poppins">
+    <div className="flex min-h-screen bg-[#FFF9F4] items-center justify-center p-4 sm:p-6 font-sans">
       <Head>
         <title>Reset Password | Astrology in Bharat</title>
       </Head>

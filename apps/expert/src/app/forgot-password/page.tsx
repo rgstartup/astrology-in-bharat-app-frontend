@@ -72,7 +72,7 @@ const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#FFF9F4] items-center justify-center p-4 sm:p-6 font-poppins">
+    <div className="flex min-h-screen bg-[#FFF9F4] items-center justify-center p-4 sm:p-6 font-sans">
       <Head>
         <title>Forgot Password | Astrology in Bharat</title>
       </Head>

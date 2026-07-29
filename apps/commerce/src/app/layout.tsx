@@ -1,5 +1,4 @@
 import React from "react";
-import { Inter, Outfit } from "next/font/google";
 import { cookies } from "next/headers";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,8 +9,7 @@ import { AuthInitializer } from "@/components/layout/AuthInitializer";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+
 
 export const metadata = {
   title: "Merchant Hub | Astrology in Bharat",
@@ -60,7 +58,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${outfit.variable} antialiased bg-white overflow-x-hidden`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+      </head>
+      <body className={`font-sans antialiased bg-white overflow-x-hidden`}>
         <ReactQueryProvider>
           <AuthInitializer initialUser={initialUser}>
             <DashboardShell>

@@ -107,7 +107,7 @@ const SignInForm: React.FC = () => {
     <div className="w-full max-w-[480px] mx-auto lg:ml-auto lg:mr-0 bg-white rounded-3xl shadow-[0_10px_50px_rgba(0,0,0,0.06)] border border-gray-100 p-6 md:p-10 my-0">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-gray-50">
         <div>
-          <h6 className="text-gray-800 text-[10px] uppercase tracking-[0.15em] mb-0.5">
+          <h6 className="text-sm font-semibold text-gray-800 mb-0.5">
             {t.signIn.welcome}
           </h6>
           <span className="text-xl font-black text-orange block">
@@ -115,7 +115,7 @@ const SignInForm: React.FC = () => {
           </span>
         </div>
         <div className="text-left sm:text-right">
-          <h6 className="text-gray-800 text-[10px] uppercase tracking-[0.15em] mb-0.5">
+          <h6 className="text-sm font-semibold text-gray-800 mb-0.5">
             {t.signIn.noAccount}
           </h6>
           <Link href="/register" className="text-base font-bold text-[#4A1D1F] hover:text-orange transition-all">
@@ -150,12 +150,12 @@ const SignInForm: React.FC = () => {
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-50"></div>
         </div>
-        <span className="relative px-3 text-[10px] font-black text-gray-700 bg-white uppercase tracking-[0.2em]">{t.signIn.orEmail}</span>
+        <span className="relative px-3 text-xs font-semibold text-gray-500 bg-white">{t.signIn.orEmail}</span>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">
+          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5">
             {t.signIn.emailLabel}
           </label>
           <input
@@ -171,7 +171,7 @@ const SignInForm: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">
+          <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1.5">
             {t.signIn.passwordLabel}
           </label>
           <div className="relative">

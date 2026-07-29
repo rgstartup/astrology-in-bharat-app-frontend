@@ -69,11 +69,11 @@ export function RevenueChart({ data }: { data: any[] }) {
       <div className="flex flex-row justify-between items-start mb-8 relative z-10">
         <div>
           <h3 className="text-xl font-bold text-gray-900 tracking-tight">Revenue Timeline</h3>
-          <p className="text-xs font-bold text-gray-600 uppercase tracking-[0.2em] mt-2">Last 30 Days Growth</p>
+          <p className="text-sm font-semibold text-gray-500 mt-2">Last 30 Days Growth</p>
         </div>
         <div className="text-right">
-          <p className="text-3xl font-black text-[#fd6410] tracking-tight">₹{totalRevenue.toLocaleString()}</p>
-          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Total Revenue</p>
+          <p className="text-3xl font-bold text-[#fd6410] tracking-tight">₹{totalRevenue.toLocaleString()}</p>
+          <p className="text-xs font-semibold text-gray-500 mt-1">Total Revenue</p>
         </div>
       </div>
       <div className="flex-1 w-full relative min-h-[250px] z-10">
@@ -100,7 +100,7 @@ export function RevenueChart({ data }: { data: any[] }) {
   );
 }
 
-import { Legend } from "recharts";
+import { Legend, Label } from "recharts";
 
 // 2. Product Share (Pie Chart)
 export function ProductShareChart({ data }: { data: any[] }) {
@@ -122,20 +122,20 @@ export function ProductShareChart({ data }: { data: any[] }) {
       
       <div className="mb-8 relative z-10">
         <h3 className="text-xl font-bold text-gray-900 tracking-tight">Sales Distribution</h3>
-        <p className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mt-2">By Product Category</p>
+        <p className="text-sm font-semibold text-gray-500 mt-2">By Product Category</p>
       </div>
       <div className="flex-1 w-full relative z-10">
         {/* Center Text Over the Donut Hole */}
         <div 
-          className="absolute flex flex-col items-center justify-center pointer-events-none"
+          className="absolute flex flex-col items-center justify-center pointer-events-none z-50"
           style={{ 
             top: isMobile ? '40%' : '50%', 
             left: isMobile ? '50%' : '40%', 
             transform: 'translate(-50%, -50%)' 
           }}
         >
-          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.2em]">Total</span>
-          <span className="text-3xl font-black text-gray-900 leading-none mt-1">{totalSales}</span>
+          <span className="text-xs font-bold text-gray-500">Total</span>
+          <span className="text-3xl font-bold text-gray-900 leading-none mt-1">{totalSales}</span>
         </div>
 
         <ResponsiveContainer width="100%" height={isMobile ? 350 : "100%"}>
@@ -166,7 +166,7 @@ export function ProductShareChart({ data }: { data: any[] }) {
               verticalAlign={isMobile ? "bottom" : "middle"} 
               iconType="circle"
               iconSize={10}
-              formatter={(value) => <span className="text-[11px] font-bold uppercase text-gray-700 tracking-wider ml-2">{value}</span>}
+              formatter={(value) => <span className="text-xs font-bold text-gray-700 ml-2">{value}</span>}
             />
           </PieChart>
         </ResponsiveContainer>
@@ -189,7 +189,7 @@ export function StockChart({ data }: { data: any[] }) {
     <div className="bg-white p-6 md:p-10 rounded-[3rem] border border-gray-100 shadow-2xl shadow-gray-200/40 min-h-[500px] flex flex-col">
       <div className="mb-8 md:mb-10">
         <h3 className="text-xl font-bold text-gray-900 tracking-tight">Catalog Inventory Health</h3>
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">Real-time stock monitoring</p>
+        <p className="text-sm font-semibold text-gray-500 mt-2">Real-time stock monitoring</p>
       </div>
       <div className="flex-1 w-full relative">
         <ResponsiveContainer width="100%" height={Math.max(400, chartData.length * 40)}>

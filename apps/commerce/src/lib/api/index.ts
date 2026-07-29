@@ -8,9 +8,7 @@ import { createSafeFetchInstance, ApiError } from '@repo/safe-fetch';
  * - Silent Refresh: Automatically handles 401s by calling /auth/refresh
  */
 const IS_SERVER = typeof window === 'undefined';
-const API_BASE = IS_SERVER 
-  ? (process.env.NEXT_PUBLIC_API_URL || 'https://astrology-in-bharat-services.onrender.com/api/v1') 
-  : '/api/v1';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543/api/v1';
 
 const baseApi = createSafeFetchInstance({
   baseUrl: API_BASE,

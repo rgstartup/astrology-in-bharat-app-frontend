@@ -137,7 +137,7 @@ export default function ProductViewPage() {
           className="flex items-center space-x-2 text-gray-500 hover:text-[#fd6410] transition-colors group px-4 py-2 bg-white border border-gray-100 rounded-xl shadow-sm"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-sm font-bold uppercase tracking-widest text-[10px]">Back to Catalog</span>
+          <span className="text-sm font-bold text-[10px]">Back to Catalog</span>
         </Link>
 
         <div className="flex items-center gap-3">
@@ -166,13 +166,13 @@ export default function ProductViewPage() {
              ) : (
                <div className="w-full h-full bg-gradient-to-br from-gray-50 to-orange-50/50 flex flex-col items-center justify-center text-gray-200">
                   <Package className="w-20 h-20" />
-                  <span className="text-xs font-black uppercase tracking-widest mt-4">No Image Available</span>
+                  <span className="text-xs font-bold mt-4">No Image Available</span>
                </div>
              )}
              
              <div className="absolute top-6 right-6">
                 <span className={cn(
-                  "px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] border shadow-lg backdrop-blur-md",
+                  "px-5 py-2 rounded-2xl text-[10px] font-bold  border shadow-lg backdrop-blur-md",
                   getStatusBadge(product.status)
                 )}>
                   {product.status?.replace('_', ' ') || 'N/A'}
@@ -199,7 +199,7 @@ export default function ProductViewPage() {
 
            <div className="grid grid-cols-2 gap-4">
               <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-1">
-                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Inventory Status</p>
+                 <p className="text-[10px] font-bold text-gray-400">Inventory Status</p>
                  <div className="flex items-center gap-2 mt-1">
                     {product.stock > 0 ? (
                       <>
@@ -215,7 +215,7 @@ export default function ProductViewPage() {
                  </div>
               </div>
               <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-1">
-                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pricing Model</p>
+                 <p className="text-[10px] font-bold text-gray-400">Pricing Model</p>
                  <div className="flex items-center gap-2 mt-1">
                     <IndianRupee className="w-4 h-4 text-[#fd6410]" />
                     <span className="font-bold text-gray-900">Standard Rate</span>
@@ -228,16 +228,16 @@ export default function ProductViewPage() {
         <div className="lg:col-span-7 space-y-10">
            <div className="space-y-6">
               <div className="space-y-2">
-                 <span className="px-4 py-1.5 bg-orange-50 text-[#fd6410] rounded-full text-[10px] font-black uppercase tracking-widest border border-orange-100">
+                 <span className="px-4 py-1.5 bg-orange-50 text-[#fd6410] rounded-full text-[10px] font-bold border border-orange-100">
                    {product.category}
                  </span>
-                 <h1 className="text-5xl font-black text-gray-900 tracking-tighter leading-tight italic decoration-[#fd6410] underline decoration-8 underline-offset-8">
+                 <h1 className="text-5xl font-bold text-gray-900 tracking-tighter leading-tight italic decoration-[#fd6410] underline decoration-8 underline-offset-8">
                     {product.name}
                  </h1>
               </div>
 
               <div className="flex items-baseline gap-4">
-                 <span className="text-5xl font-black text-[#fd6410] tracking-tighter">
+                 <span className="text-5xl font-bold text-[#fd6410] tracking-tighter">
                     {formatPrice(product.price)}
                  </span>
                  {product.original_price && product.original_price > product.price && (
@@ -255,7 +255,7 @@ export default function ProductViewPage() {
                     <Calendar className="w-6 h-6" />
                  </div>
                  <div>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Added Date</p>
+                    <p className="text-[10px] font-bold text-gray-400">Added Date</p>
                     <p className="font-bold text-gray-900 mt-1 italic">
                        {new Date(product.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
@@ -268,7 +268,7 @@ export default function ProductViewPage() {
                  <div className="p-2 bg-purple-50 rounded-xl">
                     <Layers className="w-5 h-5 text-purple-600" />
                  </div>
-                 <h3 className="text-xl font-black text-gray-900 tracking-tight italic uppercase">Product Intelligence</h3>
+                 <h3 className="text-xl font-bold text-gray-900 tracking-tight italic">Product Intelligence</h3>
               </div>
               
               <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6 relative overflow-hidden">
@@ -276,17 +276,17 @@ export default function ProductViewPage() {
                     <Package className="w-32 h-32" />
                  </div>
                  <div className="relative">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Description</p>
+                    <p className="text-[10px] font-bold text-gray-400 mb-4">Description</p>
                     <p className="text-gray-600 leading-relaxed font-medium italic">
                        {product.description || "No detailed description provided for this product. Add one to help customers understand the spiritual and physical benefits better."}
                     </p>
                  </div>
                  
                  <div className="pt-6 border-t border-gray-50 flex flex-wrap gap-4">
-                    <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-4 py-2 rounded-xl">
+                    <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 bg-gray-50 px-4 py-2 rounded-xl">
                        <Clock className="w-3.5 h-3.5" /> Fast Processing
                     </div>
-                    <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-4 py-2 rounded-xl">
+                    <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 bg-gray-50 px-4 py-2 rounded-xl">
                        <CheckCircle2 className="w-3.5 h-3.5" /> Quality Checked
                     </div>
                  </div>

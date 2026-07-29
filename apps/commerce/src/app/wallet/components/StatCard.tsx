@@ -54,10 +54,10 @@ export const StatCard: React.FC<StatCardProps> = ({
             <div className="p-6 flex items-start justify-between flex-grow">
                 <div className="space-y-1">
                     <p className="text-xs font-medium text-gray-400 tracking-tight transition-colors group-hover:text-gray-600">{label}</p>
-                    <h3 className="text-3xl font-black text-gray-900 tracking-tighter transition-transform duration-500 group-hover:scale-105 origin-left">
+                    <h3 className="text-3xl font-bold text-gray-900 tracking-tight transition-transform duration-500 group-hover:scale-105 origin-left">
                         ₹{value.toLocaleString('en-IN', { minimumFractionDigits: 0 })}
                     </h3>
-                    <p className={cn("text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 transition-all duration-500", subColor)}>
+                    <p className={cn("text-xs font-medium flex items-center gap-1 transition-all duration-500", subColor)}>
                         <span className="text-lg group-hover:translate-y-[-2px]">↑</span> {sub}
                     </p>
                 </div>

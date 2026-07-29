@@ -119,25 +119,22 @@ export default function VerifyEmail() {
             {status === "success" && <CheckCircle2 className="w-10 h-10 text-green-500" />}
             {status === "error" && <XCircle className="w-10 h-10 text-red-500" />}
           </div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Verify Email</h1>
+          <h1 className="text-3xl font-bold text-slate-800 tracking-tight">Verify Email</h1>
         </div>
 
-        <div className={`p-6 rounded-2xl mb-8 ${status === "loading" ? "bg-slate-50 text-slate-600" :
-            status === "success" ? "bg-green-50 text-green-700 border border-green-100" :
-              "bg-red-50 text-red-700 border border-red-100"
-          }`}>
+        <div className={`p-6 rounded-2xl mb-8 ${status === "loading" ? "bg-slate-50 text-slate-600" : status === "success" ? "bg-green-50 text-green-700 border border-green-100" : "bg-red-50 text-red-700 border border-red-100" }`}>
           <p className="font-semibold text-lg leading-relaxed">{message}</p>
           {status === "success" && countdown > 0 && (
             <div className="mt-4 flex flex-col items-center">
-              <span className="text-xs uppercase tracking-widest font-black text-green-600/50">Redirecting in</span>
-              <div className="text-4xl font-black mt-1 text-green-600">{countdown}</div>
+              <span className="text-xs font-bold text-green-600/50">Redirecting in</span>
+              <div className="text-4xl font-bold mt-1 text-green-600">{countdown}</div>
             </div>
           )}
         </div>
 
         {status === "error" && (
           <div className="space-y-4">
-            <Link href="/login" className="flex items-center justify-center gap-2 w-full bg-orange-600 text-white rounded-xl py-4 font-black shadow-lg shadow-orange-200 hover:bg-orange-700 transition-all hover:scale-[1.02] active:scale-[0.98]">
+            <Link href="/login" className="flex items-center justify-center gap-2 w-full bg-orange-600 text-white rounded-xl py-4 font-bold shadow-lg shadow-orange-200 hover:bg-orange-700 transition-all hover:scale-[1.02] active:scale-[0.98]">
               <span>Return to Login</span>
               <ArrowRight className="w-5 h-5" />
             </Link>
@@ -148,7 +145,7 @@ export default function VerifyEmail() {
         )}
 
         {status === "success" && countdown === 0 && (
-          <Link href="/dashboard" className="flex items-center justify-center gap-2 w-full bg-green-600 text-white rounded-xl py-4 font-black shadow-lg shadow-green-200 hover:bg-green-700 transition-all hover:scale-[1.02] active:scale-[0.98]">
+          <Link href="/dashboard" className="flex items-center justify-center gap-2 w-full bg-green-600 text-white rounded-xl py-4 font-bold shadow-lg shadow-green-200 hover:bg-green-700 transition-all hover:scale-[1.02] active:scale-[0.98]">
             <span>Go to Dashboard</span>
             <ArrowRight className="w-5 h-5" />
           </Link>
@@ -158,7 +155,7 @@ export default function VerifyEmail() {
       {/* Footer Branding */}
       <div className="mt-8 flex flex-col items-center opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
         <img src="/images/web-logo.png" alt="Astrology in Bharat" className="h-10 mb-2" />
-        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Premium Merchant Hub</p>
+        <p className="text-xs font-bold text-slate-400">Premium Merchant Hub</p>
       </div>
     </div>
   );

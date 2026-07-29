@@ -61,7 +61,7 @@ export const ReviewsOverview: React.FC<ReviewsOverviewProps> = ({ data, isLoadin
   return (
     <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 h-full hover:shadow-lg transition-all duration-500">
       <div className="flex items-center justify-between mb-10">
-        <h3 className="text-xl font-black text-gray-900 flex items-center gap-3">
+        <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
           <div className="p-2 bg-yellow-50 rounded-xl">
             <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
           </div>
@@ -69,28 +69,28 @@ export const ReviewsOverview: React.FC<ReviewsOverviewProps> = ({ data, isLoadin
         </h3>
         <div className="bg-green-50 px-3 py-1 rounded-full flex items-center gap-1.5">
           <TrendingUp className="w-3.5 h-3.5 text-green-600" />
-          <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">Live</span>
+          <span className="text-[10px] font-bold text-green-600">Live</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="text-center md:text-left space-y-2">
           <div className="relative inline-block">
-            <span className="text-6xl font-black text-gray-900 tracking-tighter">{avgRating.toFixed(1)}</span>
-            <span className="absolute -top-1 -right-8 text-lg font-black text-[#fd6410]">/ 5</span>
+            <span className="text-6xl font-bold text-gray-900 tracking-tighter">{avgRating.toFixed(1)}</span>
+            <span className="absolute -top-1 -right-8 text-lg font-bold text-[#fd6410]">/ 5</span>
           </div>
           <div className="flex items-center justify-center md:justify-start gap-1 mb-2">
             {[1, 2, 3, 4, 5].map((s) => (
               <Star key={s} className={`w-5 h-5 ${s <= Math.round(avgRating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200 fill-gray-200'}`} />
             ))}
           </div>
-          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest italic">Based on {totalReviews} reviews</p>
+          <p className="text-sm font-bold text-gray-400 italic">Based on {totalReviews} reviews</p>
         </div>
 
         <div className="space-y-3">
           {distribution.map((r, index) => (
             <div key={r.stars} className="flex items-center gap-3 group">
-              <span className="text-xs font-black text-gray-400 w-3">{r.stars}</span>
+              <span className="text-xs font-bold text-gray-400 w-3">{r.stars}</span>
               <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden relative">
                 <motion.div
                   initial={{ width: 0 }}
@@ -114,7 +114,7 @@ export const ReviewsOverview: React.FC<ReviewsOverviewProps> = ({ data, isLoadin
             <div>
               <p className="text-xs font-bold text-gray-800 leading-relaxed italic">"{data.latestReview.text}"</p>
               <div className="flex items-center gap-2 mt-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#fd6410]">Review by {data.latestReview.userName}</span>
+                <span className="text-[10px] font-bold text-[#fd6410]">Review by {data.latestReview.userName}</span>
                 <div className="h-1 w-1 bg-gray-300 rounded-full" />
                 <span className="text-[10px] font-bold text-gray-400">Live</span>
               </div>
@@ -125,7 +125,7 @@ export const ReviewsOverview: React.FC<ReviewsOverviewProps> = ({ data, isLoadin
         <div className="mt-10 pt-8 border-t border-gray-50">
           <div className="bg-orange-50/30 p-5 rounded-2xl border border-dashed border-orange-200 flex items-center justify-center gap-3">
              <MessageSquare className="w-5 h-5 text-orange-200" />
-             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-300">No reviews yet for your shop</p>
+             <p className="text-[10px] font-bold text-orange-300">No reviews yet for your shop</p>
           </div>
         </div>
       )}
