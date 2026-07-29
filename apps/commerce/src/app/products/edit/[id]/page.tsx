@@ -187,7 +187,7 @@ export default function EditProductPage() {
       {/* Back & Title */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-8">
         <div className="space-y-1">
-          <Link href="/products" className="flex items-center text-xs font-black text-gray-400 uppercase tracking-widest hover:text-[#fd6410] transition-colors mb-2 group">
+          <Link href="/products" className="flex items-center text-xs font-bold text-gray-400 hover:text-[#fd6410] transition-colors mb-2 group">
             <ArrowLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" /> Back to Inventory
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Edit Product</h1>
@@ -225,14 +225,14 @@ export default function EditProductPage() {
           <section className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-8 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-24 h-24 bg-orange-50/50 rounded-full blur-2xl -mr-12 -mt-12 transition-opacity group-hover:opacity-100 opacity-0" />
             
-            <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+            <h3 className="text-[10px] font-bold text-gray-900 px-2 flex items-center gap-2">
               <FileText className="w-4 h-4 text-[#fd6410]" />
               General Information
             </h3>
 
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Product Title <span className="text-red-500 ml-0.5">*</span></label>
+                <label className="text-xs font-bold text-gray-400 pl-1">Product Title <span className="text-red-500 ml-0.5">*</span></label>
                 <input 
                   type="text" 
                   value={name}
@@ -244,7 +244,7 @@ export default function EditProductPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Category <span className="text-red-500 ml-0.5">*</span></label>
+                <label className="text-xs font-bold text-gray-400 pl-1">Category <span className="text-red-500 ml-0.5">*</span></label>
                 <select 
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
@@ -259,7 +259,7 @@ export default function EditProductPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Description</label>
+                <label className="text-xs font-bold text-gray-400 pl-1">Description</label>
                 <textarea 
                   rows={5} 
                   value={description}
@@ -273,14 +273,14 @@ export default function EditProductPage() {
 
           {/* Pricing & Stock Information */}
           <section className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-8">
-            <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+            <h3 className="text-[10px] font-bold text-gray-900 px-2 flex items-center gap-2">
               <IndianRupee className="w-4 h-4 text-[#fd6410]" />
               Pricing & Inventory
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="space-y-2 lg:col-span-1">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Base Price <span className="text-red-500 ml-0.5">*</span></label>
+                <label className="text-xs font-bold text-gray-400 pl-1">Base Price <span className="text-red-500 ml-0.5">*</span></label>
                 <div className="relative group">
                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 font-bold">₹</div>
                    <input 
@@ -294,7 +294,7 @@ export default function EditProductPage() {
               </div>
               
               <div className="space-y-2 lg:col-span-1">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Current Stock <span className="text-red-500 ml-0.5">*</span></label>
+                <label className="text-xs font-bold text-gray-400 pl-1">Current Stock <span className="text-red-500 ml-0.5">*</span></label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <Package className="h-4 w-4 text-gray-400 group-focus-within:text-[#fd6410] transition-colors" />
@@ -313,7 +313,7 @@ export default function EditProductPage() {
             <div className="mt-8 pt-8 border-t border-gray-100">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="text-sm font-black text-gray-900 uppercase tracking-wider flex items-center">
+                  <h3 className="text-sm font-bold text-gray-900 flex items-center">
                     <Package className="w-4 h-4 mr-2 text-[#fd6410]" /> Shipping Settings
                   </h3>
                   <p className="text-xs text-gray-500 mt-1">Configure shipping options for this product.</p>
@@ -321,19 +321,15 @@ export default function EditProductPage() {
                 <button
                   type="button"
                   onClick={() => setIsShippingChargeable(!isShippingChargeable)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    isShippingChargeable ? "bg-[#fd6410]" : "bg-gray-200"
-                  }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${ isShippingChargeable ? "bg-[#fd6410]" : "bg-gray-200" }`}
                 >
-                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    isShippingChargeable ? "translate-x-6" : "translate-x-1"
-                  }`} />
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${ isShippingChargeable ? "translate-x-6" : "translate-x-1" }`} />
                 </button>
               </div>
 
               {isShippingChargeable && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                  <label className="block text-[10px] font-bold text-gray-400 mb-2 ml-1">
                     Shipping Charge (₹)
                   </label>
                   <div className="relative group">
@@ -358,12 +354,12 @@ export default function EditProductPage() {
         <div className="lg:col-span-4 space-y-8">
            <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+                <h3 className="text-[10px] font-bold text-gray-900 px-2 flex items-center gap-2">
                   <ImageIcon className="w-4 h-4 text-[#fd6410]" />
                   Media Gallery
                 </h3>
                 {galleryImages.length > 0 && (
-                  <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full flex items-center gap-1">
+                  <span className="text-[9px] font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-full flex items-center gap-1">
                     <GripVertical className="w-3 h-3" /> Drag to reorder
                   </span>
                 )}
@@ -393,7 +389,7 @@ export default function EditProductPage() {
                             return (
                               <label key={`placeholder-${index}`} className="relative group h-24 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50/50 flex flex-col items-center justify-center cursor-pointer hover:border-[#fd6410]/40 transition-all overflow-hidden">
                                 <Plus className="w-6 h-6 text-gray-300 group-hover:text-[#fd6410] transition-colors" />
-                                <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1 text-center leading-tight z-10 relative">{label}</span>
+                                <span className="text-[9px] font-bold text-gray-400 mt-1 text-center leading-tight z-10 relative">{label}</span>
                                 <input type="file" className="hidden" onChange={handleImageUpload} accept="image/*" multiple />
                               </label>
                             );
@@ -403,7 +399,7 @@ export default function EditProductPage() {
                      
                      {/* Additional Images */}
                      <div className="pt-4 border-t border-gray-100">
-                        <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Additional Images</h4>
+                        <h4 className="text-[10px] font-bold text-gray-500 mb-3">Additional Images</h4>
                         <div className="grid grid-cols-2 gap-3">
                           {galleryImages.slice(4).map((img, sliceIdx) => {
                             const index = sliceIdx + 4;
@@ -418,7 +414,7 @@ export default function EditProductPage() {
                           })}
                           <label className="h-24 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50/50 flex flex-col items-center justify-center cursor-pointer hover:border-[#fd6410]/40 transition-all group overflow-hidden">
                              <Plus className="w-6 h-6 text-gray-300 group-hover:text-[#fd6410] transition-colors" />
-                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1 relative z-10">Add More</span>
+                             <span className="text-[9px] font-bold text-gray-400 mt-1 relative z-10">Add More</span>
                              <input type="file" className="hidden" multiple onChange={handleImageUpload} accept="image/*" />
                           </label>
                         </div>
@@ -430,12 +426,12 @@ export default function EditProductPage() {
 
            {/* Tags & Visibility */}
            <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-6">
-              <h3 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+              <h3 className="text-[10px] font-bold text-gray-900 px-2 flex items-center gap-2">
                 <Tag className="w-4 h-4 text-[#fd6410]" />
                 Store Visibility
               </h3>
               <div className="flex items-center justify-between py-4 px-5 bg-gray-50/50 rounded-2xl border border-gray-100 group">
-                <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">Mark as Featured</span>
+                <span className="text-xs font-bold text-gray-600">Mark as Featured</span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input 
                     type="checkbox" 
@@ -474,7 +470,7 @@ function SortableImageItem({ id, src, label, onRemove }: any) {
       <img src={src} alt={label || "Image"} className="w-full h-full object-cover" />
       {label && (
         <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-2 pt-6 pointer-events-none">
-          <p className="text-[9px] font-black text-white text-center uppercase tracking-widest drop-shadow-md">{label}</p>
+          <p className="text-[9px] font-bold text-white text-center drop-shadow-md">{label}</p>
         </div>
       )}
       <button 

@@ -56,10 +56,15 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
   const [rescheduleMessage, setRescheduleMessage] = useState("");
 
   const handleAction = async (id: string, status: string, extra: any = {}) => {
-    setIsProcessing(id);
-    await onUpdateStatus(id, status, extra);
-    setIsProcessing(null);
-    setShowRescheduleForm(null);
+    try {
+      setIsProcessing(id);
+      await onUpdateStatus(id, status, extra);
+    } catch (error) {
+      console.error("Action failed", error);
+    } finally {
+      setIsProcessing(null);
+      setShowRescheduleForm(null);
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -283,10 +288,14 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
                    <button
                     disabled={isProcessing === booking.id}
                     onClick={() => handleAction(booking.id, 'confirmed')}
-                    className="w-full sm:w-auto px-6 py-3 md:px-10 md:py-4 bg-orange-600 text-white font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-orange-700 shadow-xl shadow-orange-100 transition-all flex items-center justify-center gap-3"
+                    className={`w-full sm:w-auto px-6 py-3 md:px-10 md:py-4 bg-orange-600 text-white font-black uppercase text-xs tracking-widest rounded-2xl shadow-xl shadow-orange-100 transition-all flex items-center justify-center gap-3 ${isProcessing === booking.id ? 'opacity-70 cursor-wait' : 'hover:bg-orange-700 cursor-pointer active:scale-95'}`}
                     style={fontStyle}
                   >
-                    <i className="fa-solid fa-shield-halved text-lg"></i>
+                    {isProcessing === booking.id ? (
+                       <i className="fa-solid fa-spinner fa-spin text-lg"></i>
+                    ) : (
+                       <i className="fa-solid fa-shield-halved text-lg"></i>
+                    )}
                     {t.pujas.btnPayNow}
                   </button>
                 )}

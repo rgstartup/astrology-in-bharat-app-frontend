@@ -216,7 +216,7 @@ export default function ProductListing() {
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={cn(
-                  "px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 uppercase tracking-widest text-[10px] whitespace-nowrap shrink-0 focus:outline-none focus:ring-2 focus:ring-[#fd6410]/50",
+                  "px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 capitalize whitespace-nowrap shrink-0 focus:outline-none focus:ring-2 focus:ring-[#fd6410]/50",
                   activeTab === tab 
                     ? "bg-[#fd6410] text-white shadow-md" 
                     : "text-slate-600 hover:text-gray-900 hover:bg-gray-50"
@@ -248,7 +248,7 @@ export default function ProductListing() {
       {/* Product Table */}
       <div className="overflow-x-auto pb-10">
         <table className="w-full text-left border-separate border-spacing-y-4">
-          <thead className="text-[10px] uppercase font-black text-slate-700 tracking-[0.2em]">
+          <thead className="text-sm font-semibold text-slate-700 capitalize">
             <tr>
               <th className="pl-8 pr-4 py-5 w-10">
                 <button 
@@ -336,12 +336,12 @@ export default function ProductListing() {
                       </div>
                       <div>
                         <h4 className="text-sm font-bold text-gray-900 group-hover:text-[#fd6410] transition-colors">{p.name}</h4>
-                        <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest mt-1">ID: {(p as any).short_id || String(p.id).slice(-8)}</p>
+                        <p className="text-xs text-slate-500 font-medium mt-1">ID: {(p as any).short_id || String(p.id).slice(-8)}</p>
                       </div>
                     </div>
                   </td>
                   <td className={cn("px-6 py-5 border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
-                     <span className="inline-block whitespace-nowrap py-1.5 px-3 bg-gray-50 rounded-lg text-[10px] font-black uppercase tracking-widest text-gray-500 border border-gray-100">
+                     <span className="inline-block whitespace-nowrap py-1.5 px-3 bg-gray-50 rounded-lg text-xs font-semibold text-gray-600 border border-gray-100 capitalize">
                        {p.category}
                      </span>
                   </td>
@@ -361,17 +361,17 @@ export default function ProductListing() {
                   </td>
                   <td className={cn("px-6 py-5 border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
                      {p.is_shipping_chargeable && Number(p.shipping_charge) > 0 ? (
-                       <span className="inline-flex items-center gap-1 whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 border border-blue-100">
+                       <span className="inline-flex items-center gap-1 whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-100">
                          ₹{Number(p.shipping_charge).toFixed(0)}
                        </span>
                      ) : (
-                       <span className="inline-flex items-center whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-black bg-green-50 text-green-700 border border-green-100">
+                       <span className="inline-flex items-center whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-bold bg-green-50 text-green-700 border border-green-100">
                          FREE
                        </span>
                      )}
                   </td>
                   <td className={cn("px-6 py-5 border-y transition-all duration-300", isSelected ? "bg-orange-50/50 border-[#fd6410]/50" : "bg-white border-orange-200/60 group-hover:border-[#fd6410]/50 shadow-sm group-hover:shadow-md")}>
-                    <span className={cn("inline-block whitespace-nowrap px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ring-2 ring-offset-0 transition-all", getStatusBadge(p.status))}>
+                    <span className={cn("inline-block whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold capitalize border ring-2 ring-offset-0 transition-all", getStatusBadge(p.status))}>
                       {getFrontendStatus(p.status)}
                     </span>
                   </td>
@@ -418,11 +418,11 @@ export default function ProductListing() {
                  <XCircle className="w-4 h-4 text-rose-400" />
               </div>
            </div>
-           <h3 className="text-xl font-bold text-gray-900 uppercase tracking-widest">No matching products</h3>
+           <h3 className="text-xl font-bold text-gray-900">No matching products</h3>
            <p className="text-gray-500 text-sm max-w-xs mt-3 italic leading-relaxed">No results found for your search or filters. Try adjusting your criteria or add a new product.</p>
            <button 
               onClick={() => {setSearchTerm(""); setActiveTab("All");}}
-              className="mt-8 text-xs font-black text-[#fd6410] uppercase tracking-[0.2em] hover:opacity-70 transition-opacity flex items-center gap-2"
+              className="mt-8 text-sm font-semibold text-[#fd6410] hover:opacity-70 transition-opacity flex items-center gap-2"
             >
               Clear all filters <ChevronRight className="w-3 h-3" />
             </button>

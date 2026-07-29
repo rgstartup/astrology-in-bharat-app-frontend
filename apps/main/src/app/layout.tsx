@@ -1,5 +1,4 @@
 import "./globals.css";
-import { Poppins, Outfit } from "next/font/google";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -16,19 +15,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import { getErrorMessage } from "@repo/lib";
 
-// Google Fonts setup
-const outfit = Outfit({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-outfit",
-});
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-poppins",
-  weight: ["400", "700"],
-});
 
 export const metadata: Metadata = {
   title: "Astrology in Bharat",
@@ -72,9 +59,13 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en" className={`${outfit.variable} ${poppins.variable}`} data-scroll-behavior="smooth">
-
-      <body className="min-h-screen bg-white text-black" suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+      </head>
+      <body className="min-h-screen bg-white text-black font-sans" suppressHydrationWarning>
         <QueryProvider>
           <AuthInitializer initialUser={user} hasToken={!!token}>
             <CartInitializer>

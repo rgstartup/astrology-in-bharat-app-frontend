@@ -33,11 +33,7 @@ const BrandingSection = ({ stats }: { stats: { totalMerchants: string; totalProd
         className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"
       />
 
-      <motion.div 
-        animate={{ y: [-10, 10, -10] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="relative w-72 h-72 mb-4 drop-shadow-2xl"
-      >
+      <div className="relative w-72 h-72 mb-4 drop-shadow-2xl">
         <Image
           src="/images/logo.png"
           alt="Merchant Community"
@@ -45,13 +41,13 @@ const BrandingSection = ({ stats }: { stats: { totalMerchants: string; totalProd
           className="object-contain -scale-x-100"
           priority
         />
-      </motion.div>
+      </div>
 
       <motion.h1 
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-4xl font-black mb-4 tracking-tight"
+        className="text-4xl font-bold mb-4 tracking-tight"
       >
         Merchant Hub
       </motion.h1>
@@ -69,17 +65,17 @@ const BrandingSection = ({ stats }: { stats: { totalMerchants: string; totalProd
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.5 }}
-        className="mt-8 grid grid-cols-2 gap-4 w-full max-w-xs"
+        className="mt-6 grid grid-cols-2 gap-3 w-full max-w-[220px]"
       >
-        <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/10 hover:bg-white/30 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 transition-all duration-300 cursor-default group">
-          <TrendingUp className="w-5 h-5 mb-2 opacity-60 group-hover:opacity-100 transition-opacity" />
-          <p className="text-2xl font-black italic tracking-tighter">{stats.totalProductsSold}</p>
-          <p className="text-[10px] uppercase font-bold tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">Product Sold</p>
+        <div className="bg-white/10 backdrop-blur-sm p-3 py-2.5 rounded-xl border border-white/10 hover:bg-white/30 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 transition-all duration-300 cursor-default group">
+          <TrendingUp className="w-4 h-4 mb-1 opacity-60 group-hover:opacity-100 transition-opacity" />
+          <p className="text-xl font-bold italic tracking-tighter">{stats.totalProductsSold}</p>
+          <p className="text-[9px] font-bold opacity-60 group-hover:opacity-100 transition-opacity">Product Sold</p>
         </div>
-        <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/10 hover:bg-white/30 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 transition-all duration-300 cursor-default group">
-          <Users className="w-5 h-5 mb-2 opacity-60 group-hover:opacity-100 transition-opacity" />
-          <p className="text-2xl font-black italic tracking-tighter">{stats.totalMerchants}</p>
-          <p className="text-[10px] uppercase font-bold tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">Merchants</p>
+        <div className="bg-white/10 backdrop-blur-sm p-3 py-2.5 rounded-xl border border-white/10 hover:bg-white/30 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 transition-all duration-300 cursor-default group">
+          <Users className="w-4 h-4 mb-1 opacity-60 group-hover:opacity-100 transition-opacity" />
+          <p className="text-xl font-bold italic tracking-tighter">{stats.totalMerchants}</p>
+          <p className="text-[9px] font-bold opacity-60 group-hover:opacity-100 transition-opacity">Merchants</p>
         </div>
       </motion.div>
     </div>
@@ -178,15 +174,25 @@ const LoginPage: React.FC = () => {
         <BrandingSection stats={stats} />
 
         {/* Form Section */}
-        <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-white overflow-y-auto no-scrollbar">
+        <div className="relative p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-white overflow-y-auto no-scrollbar">
+          
+          {/* Top Right Corner Link */}
+          <div className="absolute top-8 right-8 sm:top-12 sm:right-12 lg:top-16 lg:right-16 text-right z-10">
+            <p className="text-[10px] sm:text-xs text-gray-400 font-bold tracking-tight">
+              <Link href="/register" className="text-[#fd6410] hover:text-orange-700 transition-all underline decoration-[#fd6410]/30 underline-offset-4 decoration-2">
+                Create Account
+              </Link>
+            </p>
+          </div>
+
           <motion.div 
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
             className="mb-10 text-center lg:text-left"
           >
-            <h2 className="text-4xl font-black text-gray-900 tracking-tight">Merchant Login</h2>
-            <p className="mt-2 text-gray-500 font-medium italic underline decoration-[#fd6410]/20 underline-offset-4">Your store, your rules.</p>
+            <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Login</h2>
+            <p className="mt-2 text-gray-700 font-medium italic underline decoration-[#fd6410]/20 underline-offset-4">Your store, your rules.</p>
           </motion.div>
 
           <AnimatePresence>
@@ -206,8 +212,8 @@ const LoginPage: React.FC = () => {
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
             {/* Email Field */}
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">
-                Merchant Email
+              <label htmlFor="email" className="block text-sm font-bold text-gray-700 ml-1">
+                Email
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -217,20 +223,20 @@ const LoginPage: React.FC = () => {
                   {...register("email")}
                   id="email"
                   type="email"
-                  className={`block w-full pl-12 pr-4 py-4 bg-gray-50/50 border transition-all duration-300 ${errors.email ? 'border-rose-300 ring-4 ring-rose-500/5' : 'border-gray-200 group-focus-within:border-[#fd6410] group-focus-within:ring-4 group-focus-within:ring-orange-500/10'} rounded-2xl text-gray-900 text-sm outline-none font-medium`}
+                  className={`block w-full pl-12 pr-4 py-4 bg-gray-50/50 border transition-all duration-300 ${errors.email ? 'border-rose-300 ring-4 ring-rose-500/5' : 'border-gray-200 group-focus-within:border-[#fd6410] group-focus-within:ring-4 group-focus-within:ring-orange-500/10'} rounded-2xl text-gray-900 placeholder-gray-500 text-sm outline-none font-medium`}
                   placeholder="shop@example.com"
                 />
               </div>
-              {errors.email && <p className="text-[10px] font-bold text-rose-500 ml-1 uppercase transition-all duration-300">{errors.email.message}</p>}
+              {errors.email && <p className="text-[10px] font-bold text-rose-500 ml-1 transition-all duration-300">{errors.email.message}</p>}
             </div>
 
             {/* Password Field */}
             <div className="space-y-2">
               <div className="flex items-center justify-between ml-1">
-                <label htmlFor="password" className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
-                  Secure Password
+                <label htmlFor="password" className="block text-sm font-bold text-gray-700">
+                  Password
                 </label>
-                <Link href="/forgot-password" className="text-[10px] font-bold uppercase tracking-widest text-[#fd6410] hover:text-orange-700 transition-colors">
+                <Link href="/forgot-password" className="text-[10px] font-bold text-[#fd6410] hover:text-orange-700 transition-colors">
                   Forgot?
                 </Link>
               </div>
@@ -242,7 +248,7 @@ const LoginPage: React.FC = () => {
                   {...register("password")}
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  className={`block w-full pl-12 pr-12 py-4 bg-gray-50/50 border transition-all duration-300 ${errors.password ? 'border-rose-300 ring-4 ring-rose-500/5' : 'border-gray-200 group-focus-within:border-[#fd6410] group-focus-within:ring-4 group-focus-within:ring-orange-500/10'} rounded-2xl text-gray-900 text-sm outline-none font-medium`}
+                  className={`block w-full pl-12 pr-12 py-4 bg-gray-50/50 border transition-all duration-300 ${errors.password ? 'border-rose-300 ring-4 ring-rose-500/5' : 'border-gray-200 group-focus-within:border-[#fd6410] group-focus-within:ring-4 group-focus-within:ring-orange-500/10'} rounded-2xl text-gray-900 placeholder-gray-500 text-sm outline-none font-medium`}
                   placeholder="••••••••"
                 />
                 <button
@@ -253,16 +259,16 @@ const LoginPage: React.FC = () => {
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
-              {errors.password && <p className="text-[10px] font-bold text-rose-500 ml-1 uppercase transition-all duration-300">{errors.password.message}</p>}
+              {errors.password && <p className="text-[10px] font-bold text-rose-500 ml-1 transition-all duration-300">{errors.password.message}</p>}
             </div>
 
             <div className="pt-4 space-y-4">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#fd6410] hover:bg-orange-600 active:scale-95 disabled:opacity-70 text-white py-4.5 rounded-2xl shadow-xl shadow-orange-500/20 font-black text-sm uppercase tracking-widest flex items-center justify-center gap-2 group transition-all duration-300"
+                className="w-full bg-[#fd6410] hover:bg-orange-600 active:scale-95 disabled:opacity-70 text-white py-4.5 rounded-2xl shadow-xl shadow-orange-500/20 font-bold text-sm flex items-center justify-center gap-2 group transition-all duration-300"
               >
-                {loading ? "Authenticating..." : "Sign In to Dashboard"}
+                {loading ? "Authenticating..." : "Login"}
                 {!loading && <LogIn className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
               </button>
 
@@ -270,13 +276,13 @@ const LoginPage: React.FC = () => {
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-100"></div>
                 </div>
-                <span className="relative px-4 bg-white text-[10px] font-black uppercase tracking-widest text-gray-400">Or continue with</span>
+                <span className="relative px-4 bg-white text-[10px] font-bold text-gray-700">Or continue with</span>
               </div>
 
               <button
                 type="button"
                 onClick={handleGoogleLogin}
-                className="w-full flex items-center justify-center gap-3 py-4 border-2 border-gray-100 rounded-2xl hover:border-orange-100 hover:bg-orange-50/30 transition-all font-black text-[10px] uppercase tracking-[0.2em] text-gray-500"
+                className="w-full flex items-center justify-center gap-3 py-4 border-2 border-gray-100 rounded-2xl hover:border-orange-100 hover:bg-orange-50/30 transition-all font-semibold text-sm text-gray-700"
               >
                 <div className="w-5 h-5 relative">
                    <Image
@@ -286,18 +292,11 @@ const LoginPage: React.FC = () => {
                     className="object-contain"
                   />
                 </div>
-                Google Account
+                Continue with Google
               </button>
             </div>
 
-            <div className="text-center mt-10">
-              <p className="text-xs text-gray-400 font-bold uppercase tracking-tight">
-                Don't have a shop?{" "}
-                <Link href="/register" className="text-[#fd6410] hover:text-orange-700 transition-all underline decoration-[#fd6410]/30 underline-offset-4 decoration-2">
-                  Create Merchant Account
-                </Link>
-              </p>
-            </div>
+            {/* The sign up link was moved to the top right corner */}
           </form>
         </div>
       </div>

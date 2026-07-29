@@ -79,12 +79,12 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             ) : (
-              <div className="text-gray-400 font-bold uppercase tracking-widest text-xs">No Image</div>
+              <div className="text-gray-400 font-bold text-xs">No Image</div>
             )}
 
             {/* Discount Badge */}
             {discount > 0 && (
-              <div className="absolute top-5 left-5 bg-[#fd6410] text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+              <div className="absolute top-5 left-5 bg-[#fd6410] text-white px-4 py-1.5 rounded-full text-[10px] font-bold shadow-lg">
                 Save {discount}%
               </div>
             )}
@@ -133,16 +133,16 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
         <div className="w-full md:w-[55%] p-6 md:p-10 md:pl-4 flex flex-col overflow-y-auto overflow-x-hidden">
           
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-[#fd6410] text-[10px] font-black uppercase tracking-[0.2em]">
+            <span className="text-[#fd6410] text-[10px] font-bold">
               {product.category}
             </span>
-            <span className="px-3 py-1 bg-green-100/50 text-green-700 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1">
+            <span className="px-3 py-1 bg-green-100/50 text-green-700 rounded-full text-[9px] font-bold flex items-center gap-1">
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
               {product.stock > 0 ? "In Stock" : "Out of Stock"}
             </span>
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-black text-[#1a1c29] uppercase leading-[1.1] tracking-tight mb-4 break-words">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#1a1c29] leading-[1.1] tracking-tight mb-4 break-words">
             {product.name}
           </h2>
 
@@ -153,19 +153,19 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
               <span className="font-bold text-sm text-gray-900">4.8 <span className="text-gray-400 font-medium">/ 5.0</span></span>
             </div>
             <div className="w-px h-4 bg-gray-300" />
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+            <span className="text-xs font-bold text-gray-400">
               42 Customer Reviews
             </span>
           </div>
 
           {/* Price Box */}
           <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100 mb-8 relative group hover:border-[#fd6410]/30 transition-colors">
-            <div className="absolute top-4 right-4 px-3 py-1 bg-orange-50 text-[#fd6410] rounded-full text-[9px] font-black uppercase tracking-widest">
+            <div className="absolute top-4 right-4 px-3 py-1 bg-orange-50 text-[#fd6410] rounded-full text-[9px] font-bold">
               Limited Slot
             </div>
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Price Overview</p>
+            <p className="text-[10px] font-bold text-gray-400 mb-2">Price Overview</p>
             <div className="flex items-end gap-3">
-              <span className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter">
+              <span className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tighter">
                 {formatPrice(product.price)}
               </span>
               {product.original_price && product.original_price > product.price && (
@@ -180,7 +180,7 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
                 <div className="w-6 h-6 rounded-full bg-green-100 border-2 border-white flex items-center justify-center text-[8px] font-bold">AK</div>
                 <div className="w-6 h-6 rounded-full bg-purple-100 border-2 border-white flex items-center justify-center text-[8px] font-bold">SP</div>
               </div>
-              <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+              <span className="text-[10px] font-bold text-gray-500">
                 +12 Order Today
               </span>
             </div>
@@ -188,7 +188,7 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
 
           {/* Description */}
           <div className="mb-8">
-            <h3 className="flex items-center gap-2 text-[11px] font-black text-gray-900 uppercase tracking-[0.2em] mb-3">
+            <h3 className="flex items-center gap-2 text-[11px] font-bold text-gray-900 mb-3">
               <div className="w-1 h-3 bg-[#fd6410] rounded-full" />
               About This Item
               <Info className="w-3.5 h-3.5 text-gray-400" />
@@ -205,8 +205,8 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-gray-900 uppercase tracking-widest">AIB Certified</p>
-                <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">100% Authentic</p>
+                <p className="text-[10px] font-bold text-gray-900">AIB Certified</p>
+                <p className="text-[8px] font-bold text-gray-400 mt-0.5">100% Authentic</p>
               </div>
             </div>
             <div className="bg-white p-4 rounded-2xl flex items-center gap-3 shadow-sm border border-gray-100">
@@ -214,15 +214,15 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
                 <Truck className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Free Delivery</p>
-                <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Across Bharat</p>
+                <p className="text-[10px] font-bold text-gray-900">Free Delivery</p>
+                <p className="text-[8px] font-bold text-gray-400 mt-0.5">Across Bharat</p>
               </div>
             </div>
           </div>
 
           {/* Quantity Footer */}
           <div className="mt-8 pt-6 border-t border-gray-200/50 flex items-center justify-between">
-            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            <span className="text-[10px] font-bold text-gray-400">
               Quantity Selection
             </span>
             <div className="flex items-center bg-white rounded-2xl shadow-sm border border-gray-100 p-1">

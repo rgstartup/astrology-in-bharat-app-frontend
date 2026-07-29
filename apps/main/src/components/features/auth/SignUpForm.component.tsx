@@ -215,7 +215,7 @@ export const SignUpForm: React.FC = () => {
         <div className={`w-full ${step === 3 ? 'max-w-[800px]' : 'max-w-[500px]'} mx-auto lg:ml-auto lg:mr-0 bg-white rounded-3xl shadow-[0_10px_50px_rgba(0,0,0,0.06)] border border-gray-100 p-6 md:p-10 my-0 transition-all duration-300`}>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-gray-50">
                 <div>
-                    <h6 className="text-gray-800 text-[10px] uppercase tracking-[0.15em] mb-0.5">
+                    <h6 className="text-sm font-semibold text-gray-800 mb-0.5">
                         {t.signUp.welcome}
                     </h6>
                     <span className="text-xl font-black text-orange block">
@@ -224,7 +224,7 @@ export const SignUpForm: React.FC = () => {
                 </div>
                 {step === 1 && (
                     <div className="text-left sm:text-right">
-                        <h6 className="text-gray-800 text-[10px] uppercase tracking-[0.15em] mb-0.5">
+                        <h6 className="text-sm font-semibold text-gray-800 mb-0.5">
                             {t.signUp.alreadyAccount}
                         </h6>
                         <Link href="/sign-in" className="text-base font-bold text-[#4A1D1F] hover:text-orange transition-all">
@@ -261,12 +261,12 @@ export const SignUpForm: React.FC = () => {
                     <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-50"></div>
                     </div>
-                    <span className="relative px-3 text-[10px] font-black text-gray-700 bg-white uppercase tracking-[0.2em]">{t.signUp.orDetails}</span>
+                    <span className="relative px-3 text-xs font-semibold text-gray-500 bg-white">{t.signUp.orDetails}</span>
                 </div>
 
                 <form onSubmit={handleStep1Submit} className="space-y-4">
                     <div>
-                        <label htmlFor="email" className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">
+                        <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5">
                             {t.signUp.emailLabel}<Req />
                         </label>
                         <input
@@ -297,7 +297,7 @@ export const SignUpForm: React.FC = () => {
 
                     {/* Profile Picture */}
                     <div>
-                        <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">
+                        <h3 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">
                             Profile Picture <span className="text-gray-400 text-[10px] font-medium normal-case tracking-normal">(Optional)</span>
                         </h3>
                         <div className="flex items-center gap-5">
@@ -324,7 +324,7 @@ export const SignUpForm: React.FC = () => {
                             <div className="flex-1">
                                 <label
                                     htmlFor="profilePicInput"
-                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-orange text-orange text-xs font-black uppercase tracking-wider cursor-pointer hover:bg-orange hover:text-white transition-all duration-200"
+                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-orange text-orange text-sm font-semibold cursor-pointer hover:bg-orange hover:text-white transition-all duration-200"
                                 >
                                     <i className="fa-solid fa-camera" />
                                     {profilePicPreview ? "Change Photo" : "Upload Photo"}
@@ -343,10 +343,10 @@ export const SignUpForm: React.FC = () => {
 
                     {/* Account Setup */}
                     <div>
-                        <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Account Setup</h3>
+                        <h3 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Account Setup</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Password<Req /></label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Password<Req /></label>
                                 <div className="relative">
                                     <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                                     <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700" onClick={() => setShowPassword(!showPassword)}>
@@ -355,7 +355,7 @@ export const SignUpForm: React.FC = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Confirm Password<Req /></label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Confirm Password<Req /></label>
                                 <div className="relative">
                                     <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                                     <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
@@ -368,18 +368,18 @@ export const SignUpForm: React.FC = () => {
 
                     {/* Personal Details */}
                     <div>
-                        <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Personal Details</h3>
+                        <h3 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Personal Details</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Full Name<Req /></label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Full Name<Req /></label>
                                 <input type="text" name="name" value={formData.name} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Phone Number<Req /></label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number<Req /></label>
                                 <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required maxLength={10} className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Gender<Req /></label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Gender<Req /></label>
                                 <select name="gender" value={formData.gender} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm bg-white">
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -387,34 +387,34 @@ export const SignUpForm: React.FC = () => {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Marital Status</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Marital Status</label>
                                 <input type="text" name="maritalStatus" value={formData.maritalStatus} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Occupation</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Occupation</label>
                                 <input type="text" name="occupation" value={formData.occupation} onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                         </div>
                         <div className="mt-4">
-                            <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">About Me</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1.5">About Me</label>
                             <textarea name="aboutMe" value={formData.aboutMe} onChange={handleInputChange} rows={3} className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm"></textarea>
                         </div>
                     </div>
 
                     {/* Astro Birth Details */}
                     <div>
-                        <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Astro Birth Details</h3>
+                        <h3 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Astro Birth Details</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Date of Birth<Req /></label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Date of Birth<Req /></label>
                                 <input type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Time of Birth<Req /></label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Time of Birth<Req /></label>
                                 <input type="time" name="timeOfBirth" value={formData.timeOfBirth} onChange={handleInputChange} required className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                             <div>
-                                <label className="block text-[11px] font-black text-black mb-1.5 uppercase tracking-wider">Birth Place<Req /></label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Birth Place<Req /></label>
                                 <input type="text" name="birthPlace" value={formData.birthPlace} onChange={handleInputChange} required placeholder="City, Country" className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange outline-none text-sm" />
                             </div>
                         </div>

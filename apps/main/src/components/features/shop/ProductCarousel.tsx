@@ -3,7 +3,7 @@
 import React from "react";
 import NextImage from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
+import { Autoplay, Navigation, Mousewheel } from "swiper/modules";
 import { ProductCard } from "./ProductCard";
 
 import "swiper/css";
@@ -81,10 +81,14 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products }) => {
         >
             <SwiperComponent
                 onSwiper={setSwiperInstance}
-                modules={[Autoplay, Navigation]}
+                modules={[Autoplay, Navigation, Mousewheel]}
                 spaceBetween={24}
                 slidesPerView={1}
                 speed={800}
+                mousewheel={{
+                    forceToAxis: false,
+                    releaseOnEdges: true,
+                }}
                 autoplay={{
                     delay: 3000,
                     disableOnInteraction: false,

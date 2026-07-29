@@ -330,22 +330,8 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
 
         </div>
 
-        {!isAvailable && (
-          <div className="flex flex-wrap gap-3 mb-5 animate-in fade-in duration-500">
-            <button className="flex-1 min-w-[140px] px-6 py-3 bg-orange text-white rounded-xl hover:bg-orange-hover transition-colors font-semibold text-sm shadow-orange/20 shadow-lg active:scale-95 flex items-center justify-center gap-2">
-              <i className="fa-regular fa-bell" /> Notify Me
-            </button>
-            <button className="flex-1 min-w-[140px] px-6 py-3 border border-orange text-orange rounded-xl hover:bg-orange/5 transition-colors font-semibold text-sm flex items-center justify-center gap-2 active:scale-95">
-              <i className="fa-regular fa-envelope" /> Message
-            </button>
-          </div>
-        )}
-        {!isAvailable && (
-          <p className="text-[11px] text-orange flex items-center gap-2 py-2.5 px-4 bg-orange/5 rounded-xl border border-orange/20 animate-in fade-in duration-500">
-            <i className="fa-solid fa-circle-info" />
-            Get an email alert instantly when the expert comes online.
-          </p>
-        )}
+
+
       </div>
     </div>
   );

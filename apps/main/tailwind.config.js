@@ -31,9 +31,11 @@ module.exports = {
         "bg-light": "var(--bg-light)",
       },
       fontFamily: {
-        sans: ["var(--font-poppins)", "sans-serif"],
-        display: ["var(--font-outfit)", "serif"],
+        sans: ["Inter", "sans-serif"],
+        display: ["Outfit", "sans-serif"],
         body: ["Inter", "sans-serif"],
+        outfit: ["Outfit", "sans-serif"],
+        poppins: ["Inter", "sans-serif"],
       },
       borderRadius: {
         'none': '0',

@@ -11,7 +11,7 @@ import { PujaCard } from "./PujaCard";
 import { useLanguageStore } from "@repo/store";
 import { pujaTranslations, pujaContent } from "@/lib/translations/puja";
 import { Swiper as SwiperComp, SwiperSlide as SwiperSlideComp } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+import { Navigation, Autoplay, Mousewheel } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { PujaSkeletonCard } from "./PujaSkeletonCard";
@@ -227,10 +227,14 @@ const PujaListSection = () => {
                 ) : (
                     <div className="relative puja-swiper-wrapper mt-4 md:px-12 mb-0 z-10">
                       <Swiper
-                        modules={[Navigation, Autoplay]}
+                        modules={[Navigation, Autoplay, Mousewheel]}
                         speed={800}
                         spaceBetween={20}
                         slidesPerView={1}
+                        mousewheel={{
+                          forceToAxis: false,
+                          releaseOnEdges: true,
+                        }}
                         navigation={{
                           nextEl: ".puja-next",
                           prevEl: ".puja-prev",

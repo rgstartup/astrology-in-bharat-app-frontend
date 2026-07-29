@@ -48,11 +48,11 @@ const ProductSection: React.FC<ProductSectionProps> = ({ products, isLoading = f
             <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4 lg:mb-6 gap-4 lg:gap-8 px-4 md:px-0">
                 <div className="w-full md:w-auto">
                     <div className="w-full">
-                        <h2 className="section-heading-premium uppercase mb-0">
+                        <h2 className="section-heading-premium mb-0">
                             <span>{t.products.title}</span>
                         </h2>
                     </div>
-                    <p className="text-slate-500 font-medium text-sm mt-2 max-w-xl">
+                    <p className="text-slate-700 font-medium text-sm mt-2 max-w-xl">
                         {t.products.subtitle}
                     </p>
                 </div>

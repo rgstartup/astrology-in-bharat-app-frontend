@@ -104,33 +104,33 @@ export default function DashboardHome() {
     <main className="space-y-8 pb-20 animate-in fade-in duration-700">
       
       {/* Exact Reference Match: Dark Premium Welcome Banner */}
-      <div className="relative overflow-hidden rounded-[2rem] p-8 md:p-10 bg-gradient-to-r from-[#110502] via-[#2a0e06] to-[#fd6410] text-white shadow-2xl">
+      <div className="relative overflow-hidden rounded-[2rem] p-6 md:p-8 bg-gradient-to-r from-[#110502] via-[#2a0e06] to-[#fd6410] text-white shadow-2xl">
           {/* Subtle Circle Gradient on Right */}
           <div className="absolute -right-10 -top-10 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute right-0 bottom-0 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" />
           
-          <div className="relative z-10 flex flex-col md:flex-row h-full justify-between gap-12">
-              <div className="flex flex-col h-full justify-between gap-12 flex-1">
+          <div className="relative z-10 flex flex-col md:flex-row h-full justify-between gap-8">
+              <div className="flex flex-col h-full justify-between gap-6 flex-1">
               {/* Top Section: Welcome & Name */}
-              <div className="space-y-4">
+              <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <p className="text-white text-[10px] font-black uppercase tracking-[0.2em] opacity-90">Welcome back 🙏</p>
+                    <p className="text-white/80 text-sm font-medium">Welcome back 🙏</p>
                   </div>
-                  <h2 className="text-5xl font-black text-white tracking-tight leading-none">
+                  <h2 className="text-4xl font-bold text-white tracking-tight leading-none">
                       {profileData?.profile?.shopName || (user as any)?.shopName || (user as any)?.name || "Merchant"}
                   </h2>
                   <div className="inline-flex items-center px-4 py-1.5 bg-black/40 backdrop-blur-md rounded-lg border border-white/10">
-                      <span className="text-[10px] font-bold text-gray-300 tracking-wider">
+                      <span className="text-xs font-medium text-gray-300">
                           ID: <span className="text-white">{profileData?.profile?.merchant_id || (user as any)?.merchantId || (user as any)?.id || "N/A"}</span>
                       </span>
                   </div>
               </div>
 
               {/* Bottom Section: Integrated Stats with Separators */}
-              <div className="flex flex-wrap items-center gap-x-12 gap-y-6 pt-6">
+              <div className="flex flex-wrap items-center gap-x-12 gap-y-4 pt-2">
                   <div className="space-y-1">
-                      <p className="text-white/70 text-[10px] font-black uppercase tracking-widest">Total Earned</p>
-                      <p className="text-3xl font-black tracking-tight text-white">
+                      <p className="text-white/70 text-sm font-medium">Total Earned</p>
+                      <p className="text-3xl font-bold tracking-tight text-white">
                           ₹{Number(statsData?.totalEarnings?.value ?? 0).toLocaleString("en-IN")}
                       </p>
                   </div>
@@ -138,8 +138,8 @@ export default function DashboardHome() {
                   <div className="hidden md:block w-px h-10 bg-white/20" />
                   
                   <div className="space-y-1">
-                      <p className="text-white/70 text-[10px] font-black uppercase tracking-widest">Wallet Balance</p>
-                      <p className="text-3xl font-black tracking-tight text-white">
+                      <p className="text-white/70 text-sm font-medium">Wallet Balance</p>
+                      <p className="text-3xl font-bold tracking-tight text-white">
                           ₹{Number(statsData?.totalEarnings?.value ?? 0).toLocaleString("en-IN")}
                       </p>
                   </div>
@@ -147,8 +147,8 @@ export default function DashboardHome() {
                   <div className="hidden md:block w-px h-10 bg-white/20" />
                   
                   <div className="space-y-1">
-                      <p className="text-white/70 text-[10px] font-black uppercase tracking-widest">Total Listings</p>
-                      <p className="text-3xl font-black tracking-tight text-white">
+                      <p className="text-white/70 text-sm font-medium">Total Listings</p>
+                      <p className="text-3xl font-bold tracking-tight text-white">
                           {statsData?.totalProducts?.value ?? 0}
                       </p>
               </div>
@@ -161,12 +161,12 @@ export default function DashboardHome() {
                   <div className="p-3 bg-white/10 rounded-xl">
                       <TrendingUp className="w-6 h-6 text-[#ffcda2]" />
                   </div>
-                  <span className="text-sm font-black uppercase tracking-widest text-white/90">Growth Rate</span>
+                  <span className="text-sm font-medium text-white/90">Growth Rate</span>
               </div>
-              <p className="text-[5rem] xl:text-[6rem] leading-none font-black tracking-tighter text-white drop-shadow-2xl">
+              <p className="text-[4rem] xl:text-[5rem] leading-none font-bold tracking-tight text-white drop-shadow-xl">
                   {perfData?.growthRate || "+18.2%"}
               </p>
-              <p className="text-xs text-[#ffcda2] font-bold uppercase tracking-[0.2em] mt-4 flex items-center gap-2">
+              <p className="text-sm text-[#ffcda2] font-medium mt-4 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_10px_#4ade80] animate-pulse" />
                   Vs Last Month
               </p>
@@ -186,8 +186,8 @@ export default function DashboardHome() {
               <AlertTriangle className="w-6 h-6 animate-pulse" />
             </div>
             <div className="flex-1">
-              <h4 className="text-sm font-black text-amber-900 uppercase tracking-tight">Shop Verification Pending</h4>
-              <p className="text-xs font-bold text-amber-700/70 italic">
+              <h4 className="text-sm font-semibold text-amber-900">Shop Verification Pending</h4>
+              <p className="text-sm font-medium text-amber-700/80">
                 Our team is reviewing your documents. This usually takes 24-48 hours.
               </p>
             </div>
@@ -239,10 +239,10 @@ export default function DashboardHome() {
           {/* Recent Orders - 8 Cols */}
           <div className="lg:col-span-8 space-y-6 min-w-0">
               <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                       <ShoppingBag className="w-5 h-5 text-[#fd6410]" /> Recent Orders
                   </h3>
-                  <Link href="/orders" className="px-5 py-2 bg-[#fd6410] text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#ea580c] transition-all shadow-md active:scale-95 hover:shadow-lg">View All</Link>
+                  <Link href="/orders" className="px-5 py-2 bg-[#fd6410] text-white rounded-xl text-xs font-semibold hover:bg-[#ea580c] transition-all shadow-md active:scale-95 hover:shadow-lg">View All</Link>
               </div>
               <RecentOrders orders={ordersData || []} isLoading={ordersLoading} />
           </div>
@@ -250,7 +250,7 @@ export default function DashboardHome() {
           {/* Quick Actions & Charts - 4 Cols */}
           <div className="lg:col-span-4 space-y-6">
               <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                       <TrendingUp className="w-5 h-5 text-[#fd6410]" /> Quick Actions
                   </h3>
               </div>
@@ -285,15 +285,15 @@ export default function DashboardHome() {
                           <div className="p-2 bg-white/10 rounded-lg">
                               <TrendingUp className="w-5 h-5 text-orange-400" />
                           </div>
-                          <span className="text-xs font-black uppercase tracking-widest">Growth Rate</span>
+                          <span className="text-xs font-bold">Growth Rate</span>
                       </div>
                       <div>
-                          <p className="text-3xl font-black tracking-tighter">
+                          <p className="text-3xl font-bold tracking-tighter">
                               {perfData?.growthRate || "+18.2%"}
                           </p>
-                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1 italic">Vs Last Month</p>
+                          <p className="text-[10px] text-gray-400 font-bold mt-1 italic">Vs Last Month</p>
                       </div>
-                      <Link href="/analytics" className="block text-center py-3 rounded-xl bg-white/10 hover:bg-white/20 transition-all text-[10px] font-black uppercase tracking-widest border border-white/5">
+                      <Link href="/analytics" className="block text-center py-3 rounded-xl bg-white/10 hover:bg-white/20 transition-all text-[10px] font-bold border border-white/5">
                           View Deep Analytics
                       </Link>
                   </div>
@@ -306,8 +306,8 @@ export default function DashboardHome() {
       <section className="animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-300">
         <div className="bg-white p-5 sm:p-8 rounded-[2.5rem] border-2 border-orange-600 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4 mb-8">
-                <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest">Revenue Analytics</h3>
-                <div className="px-4 py-2 bg-gray-50 rounded-xl text-[10px] font-black text-gray-400 uppercase tracking-widest border border-gray-100">Last 30 Days</div>
+                <h3 className="text-lg font-bold text-gray-900">Revenue Analytics</h3>
+                <div className="px-4 py-2 bg-gray-50 rounded-xl text-xs font-semibold text-gray-500 border border-gray-100">Last 30 Days</div>
             </div>
             <SalesChart data={perfData?.salesData} isLoading={perfLoading} />
         </div>

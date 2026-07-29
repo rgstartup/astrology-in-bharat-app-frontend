@@ -30,9 +30,9 @@ const epT = {
     yourBalance: "Your Balance",
     lowBalance: "Low Balance",
     lowBalanceDesc: "You need at least ₹{price} for 5 mins.",
-    rechargeNow: "RECHARGE NOW",
-    connecting: "CONNECTING...",
-    startConsultation: "START CONSULTATION",
+    rechargeNow: "Recharge Now",
+    connecting: "Connecting...",
+    startConsultation: "Start Consultation",
     availableNow: "Available Now",
     offline: "Offline",
   },
@@ -189,7 +189,7 @@ const ExpertPreview = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-[#FFF8F3] rounded-2xl border border-[#F5E0CC]">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-orange/80 uppercase tracking-widest">
+                  <span className="text-xs font-bold text-orange/80">
                     {tx.consultingFor}
                   </span>
                   <span className="text-sm font-bold text-gray-900">
@@ -198,7 +198,7 @@ const ExpertPreview = ({
                 </div>
                 <button
                   onClick={() => setAskSomeoneElse(!askSomeoneElse)}
-                  className="px-4 py-2 text-[10px] font-black text-orange uppercase tracking-widest hover:bg-orange/10 rounded-xl transition-colors"
+                  className="px-4 py-2 text-xs font-bold text-orange hover:bg-orange/10 rounded-xl transition-colors cursor-pointer"
                 >
                   {tx.change}
                 </button>

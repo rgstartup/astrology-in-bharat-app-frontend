@@ -146,7 +146,7 @@ export const PujaCard: React.FC<PujaCardProps> = ({ puja }) => {
                         )}
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-[13px] font-medium text-gray-600 mb-0.5" style={fontStyle}>
+                        <span className="text-[13px] font-medium text-gray-700 mb-0.5" style={fontStyle}>
                             {puja.expert?.user?.name || t.verifiedPandit}
                         </span>
                         <div className="flex items-center gap-1">
@@ -154,21 +154,21 @@ export const PujaCard: React.FC<PujaCardProps> = ({ puja }) => {
                             <Star className="w-3.5 h-3.5 fill-[#F59E0B] text-[#F59E0B]" />
                             <Star className="w-3.5 h-3.5 fill-[#F59E0B] text-[#F59E0B]" />
                             <span className="text-[13px] font-bold text-gray-800 ml-1">
-                                {puja.expert?.rating || "4.8"} <span className="text-gray-500 font-normal ml-0.5">({Math.floor(Math.random() * 200) + 50})</span>
+                                {puja.expert?.rating || "4.8"} <span className="text-gray-700 font-normal ml-0.5">({Math.floor(Math.random() * 200) + 50})</span>
                             </span>
                         </div>
                     </div>
                 </div>
 
                 {/* Description */}
-                <p className="text-[13px] text-gray-600 line-clamp-2 leading-relaxed mb-4" style={fontStyle}>
+                <p className="text-[13px] text-gray-700 line-clamp-2 leading-relaxed mb-4" style={fontStyle}>
                     {localizedDescription}
                 </p>
 
                 {/* Footer: Price + Action */}
                 <div className="mt-auto flex items-end justify-between pt-1">
                     <div className="flex flex-col">
-                        <span className="text-[12px] text-gray-500 mb-0.5" style={fontStyle}>{lang === 'hi' ? 'शुरुआती कीमत' : 'Starting from'}</span>
+                        <span className="text-[12px] text-gray-700 mb-0.5" style={fontStyle}>{lang === 'hi' ? 'शुरुआती कीमत' : 'Starting from'}</span>
                         <div className="flex items-baseline gap-1">
                             <span className="text-[22px] font-bold text-[#FF5500]">₹ {getMinCost(puja).toLocaleString('en-IN')}</span>
                         </div>

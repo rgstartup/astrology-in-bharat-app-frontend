@@ -79,9 +79,6 @@ export const Sidebar: React.FC<SidebarProps> = memo(({ isOpen, toggleSidebar }) 
 
         {/* Navigation Menu */}
         <div className="px-4 py-8 overflow-y-auto flex-1 no-scrollbar">
-          <p className="text-[10px] text-white/30 font-black uppercase tracking-[0.2em] px-4 mb-6">
-            Merchant Menu
-          </p>
           <nav className="space-y-2">
             {menuItems.map((item) => {
               const isActive = pathname === item.href;
@@ -95,14 +92,14 @@ export const Sidebar: React.FC<SidebarProps> = memo(({ isOpen, toggleSidebar }) 
                     }
                   }}
                   className={cn(
-                    "group flex items-center px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300",
+                    "flex items-center space-x-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
                     isActive 
-                      ? "bg-[#fd6410] text-white shadow-lg shadow-orange-900/40" 
-                      : "text-white/80 hover:bg-[#fd6410] hover:text-white hover:shadow-lg hover:shadow-orange-900/40"
+                      ? "bg-[#fd6410] text-white shadow-lg" 
+                      : "text-white hover:bg-[#fd6410] hover:text-white"
                   )}
                 >
-                  <div className="flex items-center space-x-4">
-                    <item.icon className={cn("w-5 h-5 shrink-0", isActive ? "text-white" : "text-white/70 group-hover:text-white")} />
+                  <div className="flex items-center space-x-3">
+                    <item.icon className={cn("w-5 h-5 shrink-0", isActive ? "text-white" : "text-white")} />
                     <span>{item.name}</span>
                   </div>
                 </Link>
@@ -118,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = memo(({ isOpen, toggleSidebar }) 
                     await useAuthStore.getState().logout();
                     window.location.href = "/login";
                 }}
-                className="w-full flex items-center space-x-4 px-4 py-3 text-sm font-semibold text-rose-400 hover:text-rose-300 hover:bg-white/5 rounded-xl mt-2 transition-colors"
+                className="w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-white/5 rounded-lg mt-2 transition-colors"
             >
               <LogOut className="w-5 h-5 shrink-0" />
               <span>Logout</span>

@@ -33,7 +33,7 @@ const VerificationPopup = ({ isOpen, email, onClose }: { isOpen: boolean; email:
           <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mb-6 ring-8 ring-orange-50/50">
             <Mail className="w-10 h-10 text-[#fd6410]" />
           </div>
-          <h3 className="text-2xl font-black text-gray-900 tracking-tight mb-3">Check Your Inbox!</h3>
+          <h3 className="text-2xl font-bold text-gray-900 tracking-tight mb-3">Check Your Inbox!</h3>
           <p className="text-gray-500 font-medium leading-relaxed mb-8">
             We've sent a magic link to <br/>
             <span className="font-bold text-gray-900 bg-gray-50 px-3 py-1 rounded-lg mt-2 inline-block border border-gray-100">
@@ -45,12 +45,12 @@ const VerificationPopup = ({ isOpen, email, onClose }: { isOpen: boolean; email:
             onClick={() => window.open(`https://${email.split('@')[1]}`, '_blank')}
             variant="primary"
             fullWidth
-            className="bg-[#fd6410] hover:bg-orange-600 py-4 rounded-2xl shadow-lg shadow-orange-500/20 font-black text-sm uppercase tracking-widest"
+            className="bg-[#fd6410] hover:bg-orange-600 py-4 rounded-2xl shadow-lg shadow-orange-500/20 font-bold text-sm"
           >
             Open Mail App
           </Button>
 
-          <p className="mt-6 text-xs font-bold text-gray-400 tracking-wider">
+          <p className="mt-6 text-xs font-bold text-gray-400">
             Didn't receive it? <button className="text-[#fd6410] hover:underline" onClick={onClose}>Try again</button>
           </p>
         </div>
@@ -67,11 +67,7 @@ const BrandingSection = () => (
       {/* Decorative Circles */}
       <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 10, repeat: Infinity }} className="absolute top-20 right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl" />
       
-      <motion.div 
-        animate={{ y: [-10, 10, -10] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="relative w-64 h-64 mb-4 drop-shadow-2xl"
-      >
+      <div className="relative w-72 h-72 mb-4 drop-shadow-2xl">
         <Image
           src="/images/logo.png"
           alt="Merchant Community"
@@ -79,13 +75,13 @@ const BrandingSection = () => (
           className="object-contain -scale-x-100"
           priority
         />
-      </motion.div>
+      </div>
 
       <motion.h1 
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-4xl font-black mb-4 tracking-tight"
+        className="text-4xl font-bold mb-4 tracking-tight"
       >
         Join our Network
       </motion.h1>
@@ -99,7 +95,7 @@ const BrandingSection = () => (
                 <ShieldCheck className="w-5 h-5" />
              </div>
              <div>
-                <p className="text-sm font-bold uppercase tracking-widest text-white/50">Secure Platform</p>
+                <p className="text-sm font-bold text-white/50">Secure Platform</p>
                 <p className="text-xs font-medium text-white/80">Safe & Trusted Merchant Hub</p>
              </div>
           </div>
@@ -108,7 +104,7 @@ const BrandingSection = () => (
                 <ShoppingBag className="w-5 h-5" />
              </div>
              <div>
-                <p className="text-sm font-bold uppercase tracking-widest text-white/50">Global Reach</p>
+                <p className="text-sm font-bold text-white/50">Global Reach</p>
                 <p className="text-xs font-medium text-white/80">Sell to millions of seekers</p>
              </div>
           </div>
@@ -234,10 +230,10 @@ const RegisterPage: React.FC = () => {
         {/* Form Section */}
         <div className={`p-8 sm:p-12 lg:p-16 flex flex-col ${step === 1 ? 'justify-center' : 'justify-start'} bg-white overflow-y-auto custom-scrollbar no-scrollbar`}>
           <div className="mb-10 text-center lg:text-left">
-            <h2 className="text-4xl font-black text-gray-900 tracking-tight">
+            <h2 className="text-4xl font-bold text-gray-900 tracking-tight">
               {step === 1 ? "Merchant Sign Up" : "Complete Profile"}
             </h2>
-            <p className="mt-2 text-gray-500 font-medium italic underline decoration-[#fd6410]/20 underline-offset-4">
+            <p className="mt-2 text-gray-700 font-medium italic underline decoration-[#fd6410]/20 underline-offset-4">
               {step === 1 ? "Create your digital storefront today." : "Let's setup your shop details."}
             </p>
           </div>
@@ -246,8 +242,8 @@ const RegisterPage: React.FC = () => {
               <>
               <form onSubmit={handleStep1Submit} className="space-y-6">
                 <div className="space-y-2">
-                  <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-1">
-                    Merchant Email
+                  <label htmlFor="email" className="block text-sm font-bold text-gray-700 ml-1">
+                    Email
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -259,7 +255,7 @@ const RegisterPage: React.FC = () => {
                       id="email"
                       type="email"
                       required
-                      className="block w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200 group-focus-within:border-[#fd6410] group-focus-within:ring-4 group-focus-within:ring-orange-500/10 rounded-2xl text-gray-900 text-sm outline-none font-medium transition-all duration-300"
+                      className="block w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200 group-focus-within:border-[#fd6410] group-focus-within:ring-4 group-focus-within:ring-orange-500/10 rounded-2xl text-gray-900 placeholder-gray-500 text-sm outline-none font-medium transition-all duration-300"
                       placeholder="shop@example.com"
                     />
                   </div>
@@ -270,7 +266,7 @@ const RegisterPage: React.FC = () => {
                   loading={isLoading}
                   fullWidth
                   variant="primary"
-                  className="bg-[#fd6410] hover:bg-orange-600 py-4.5 rounded-2xl shadow-xl shadow-orange-500/20 transform active:scale-95 transition-all font-black text-sm uppercase tracking-widest mt-6"
+                  className="bg-[#fd6410] hover:bg-orange-600 py-4.5 rounded-2xl shadow-xl shadow-orange-500/20 transform active:scale-95 transition-all font-bold text-sm mt-6"
                 >
                   {isLoading ? "Sending Link..." : "Continue with Email"}
                 </Button>
@@ -280,13 +276,13 @@ const RegisterPage: React.FC = () => {
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-100"></div>
                 </div>
-                <span className="relative px-4 bg-white text-[10px] font-black uppercase tracking-widest text-gray-400">Or continue with</span>
+                <span className="relative px-4 bg-white text-[10px] font-bold text-gray-700">Or continue with</span>
               </div>
 
               <button
                 type="button"
                 onClick={handleGoogleLogin}
-                className="w-full flex items-center justify-center gap-3 py-4 border-2 border-gray-100 rounded-2xl hover:border-orange-100 hover:bg-orange-50/30 transition-all font-black text-[10px] uppercase tracking-[0.2em] text-gray-500"
+                className="w-full flex items-center justify-center gap-3 py-4 border-2 border-gray-100 rounded-2xl hover:border-orange-100 hover:bg-orange-50/30 transition-all font-semibold text-sm text-gray-700"
               >
                 <div className="w-5 h-5 relative">
                    <Image
@@ -296,11 +292,11 @@ const RegisterPage: React.FC = () => {
                     className="object-contain"
                   />
                 </div>
-                Google Account
+                Continue with Google
               </button>
 
               <div className="text-center mt-10">
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-tight">
+                <p className="text-xs text-gray-400 font-bold tracking-tight">
                   Already have a shop?{" "}
                   <Link href="/login" className="text-[#fd6410] hover:text-orange-700 transition-all underline decoration-[#fd6410]/30 underline-offset-4 decoration-2">
                     Sign In
@@ -315,12 +311,12 @@ const RegisterPage: React.FC = () => {
                   <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6">
                       <Mail className="w-10 h-10 text-orange-500" />
                   </div>
-                  <h3 className="text-2xl font-black text-gray-900 mb-2">Check Your Email</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Check Your Email</h3>
                   <p className="text-gray-500">We sent a verification link to<br/><strong className="text-gray-900">{email}</strong></p>
                   <Button
                       onClick={() => setStep(1)}
                       variant="outline"
-                      className="mt-8 uppercase tracking-widest text-xs font-bold"
+                      className="mt-8 text-xs font-bold"
                   >
                       Wrong Email?
                   </Button>
@@ -331,10 +327,10 @@ const RegisterPage: React.FC = () => {
               <form onSubmit={handleStep3Submit} className="space-y-6">
                   {/* Account Info */}
                   <div>
-                      <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Account Setup</h3>
+                      <h3 className="text-sm font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Account Setup</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                              <label className="block text-[11px] font-black text-gray-400 mb-1.5 uppercase tracking-wider">Password</label>
+                              <label className="block text-[11px] font-bold text-gray-400 mb-1.5">Password</label>
                               <div className="relative group">
                                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                     <Lock className="h-4 w-4 text-gray-300 group-focus-within:text-[#fd6410] transition-colors" />
@@ -346,7 +342,7 @@ const RegisterPage: React.FC = () => {
                               </div>
                           </div>
                           <div>
-                              <label className="block text-[11px] font-black text-gray-400 mb-1.5 uppercase tracking-wider">Confirm Password</label>
+                              <label className="block text-[11px] font-bold text-gray-400 mb-1.5">Confirm Password</label>
                               <div className="relative group">
                                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                     <ShieldCheck className="h-4 w-4 text-gray-300 group-focus-within:text-[#fd6410] transition-colors" />
@@ -362,10 +358,10 @@ const RegisterPage: React.FC = () => {
 
                   {/* Shop Details */}
                   <div>
-                      <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Shop Details</h3>
+                      <h3 className="text-sm font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Shop Details</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                              <label className="block text-[11px] font-black text-gray-400 mb-1.5 uppercase tracking-wider">Shop Name</label>
+                              <label className="block text-[11px] font-bold text-gray-400 mb-1.5">Shop Name</label>
                               <div className="relative group">
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                   <Store className="h-4 w-4 text-gray-300 group-focus-within:text-[#fd6410] transition-colors" />
@@ -374,7 +370,7 @@ const RegisterPage: React.FC = () => {
                               </div>
                           </div>
                           <div>
-                              <label className="block text-[11px] font-black text-gray-400 mb-1.5 uppercase tracking-wider">Phone Number</label>
+                              <label className="block text-[11px] font-bold text-gray-400 mb-1.5">Phone Number</label>
                               <div className="relative group">
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                   <Phone className="h-4 w-4 text-gray-300 group-focus-within:text-[#fd6410] transition-colors" />
@@ -390,7 +386,7 @@ const RegisterPage: React.FC = () => {
                       loading={isLoading}
                       fullWidth
                       variant="primary"
-                      className="bg-[#fd6410] hover:bg-orange-600 py-4.5 rounded-2xl shadow-xl shadow-orange-500/20 transform active:scale-95 transition-all font-black text-sm uppercase tracking-widest mt-6"
+                      className="bg-[#fd6410] hover:bg-orange-600 py-4.5 rounded-2xl shadow-xl shadow-orange-500/20 transform active:scale-95 transition-all font-bold text-sm mt-6"
                   >
                       {isLoading ? "Saving Profile..." : "Complete Registration"}
                   </Button>

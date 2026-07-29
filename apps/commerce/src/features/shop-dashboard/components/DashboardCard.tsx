@@ -62,7 +62,7 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
         {trend && (
           <div className="flex flex-col items-end">
             <span className={cn(
-              "text-[10px] font-black px-3 py-1.5 rounded-xl flex items-center gap-1 shadow-sm border transition-transform duration-500 group-hover:scale-110",
+              "text-[10px] font-bold px-3 py-1.5 rounded-xl flex items-center gap-1 shadow-sm border transition-transform duration-500 group-hover:scale-110",
               trend.startsWith('+') ? "text-green-600 bg-green-50 border-green-100" : "text-blue-600 bg-blue-50 border-blue-100"
             )}>
                <ArrowUpRight className="w-3.5 h-3.5" /> {trend}
@@ -73,10 +73,10 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
 
       {/* Bottom Section: Title & Value */}
       <div className="relative z-10 space-y-1">
-        <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.25em] mb-2 group-hover:text-gray-600 transition-colors">
+        <p className="text-gray-400 text-[10px] font-bold mb-2 group-hover:text-gray-600 transition-colors">
           {title}
         </p>
-        <h4 className="text-4xl font-black text-gray-900 tracking-tighter group-hover:text-[#fd6410] group-hover:scale-105 transition-all duration-300 origin-left">
+        <h4 className="text-4xl font-bold text-gray-900 tracking-tighter group-hover:text-[#fd6410] group-hover:scale-105 transition-all duration-300 origin-left">
           {value}
         </h4>
       </div>

@@ -12,6 +12,10 @@ module.exports = {
         primary: "#FF6B00",
         secondary: "#301118",
       },
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        display: ["Outfit", "sans-serif"],
+      },
     },
   },
   plugins: [],

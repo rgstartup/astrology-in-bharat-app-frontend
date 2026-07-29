@@ -41,13 +41,13 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities = [], isL
   return (
     <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 h-full hover:shadow-md transition-shadow duration-300">
       <div className="flex items-center justify-between mb-8">
-        <h3 className="text-xl font-black text-gray-900 flex items-center gap-3">
+        <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
           <div className="p-2 bg-orange-50 rounded-xl">
             <Clock className="w-5 h-5 text-[#fd6410]" />
           </div>
           Live Activity
         </h3>
-        <button className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-[#fd6410] transition-colors">
+        <button className="text-[10px] font-bold text-gray-400 hover:text-[#fd6410] transition-colors">
           View All
         </button>
       </div>
@@ -71,7 +71,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities = [], isL
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-sm font-black text-gray-900 truncate tracking-tight">{activity.title}</p>
+                    <p className="text-sm font-bold text-gray-900 truncate tracking-tight">{activity.title}</p>
                     <span className="text-[10px] font-bold text-[#fd6410] bg-orange-100 px-2 py-0.5 rounded-full shrink-0 group-hover:bg-[#fd6410] group-hover:text-white transition-colors">
                       {new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
@@ -85,7 +85,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities = [], isL
           })
         ) : (
           <div className="text-center py-10">
-            <p className="text-sm font-black text-gray-300 uppercase tracking-widest italic">No activity yet</p>
+            <p className="text-sm font-bold text-gray-300 italic">No activity yet</p>
           </div>
         )}
       </div>

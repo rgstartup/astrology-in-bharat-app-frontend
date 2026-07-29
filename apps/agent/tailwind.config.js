@@ -7,7 +7,11 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
+                sans: ["Inter", "sans-serif"],
+                display: ["Outfit", "sans-serif"],
+                body: ["Inter", "sans-serif"],
                 outfit: ["Outfit", "sans-serif"],
+                poppins: ["Inter", "sans-serif"],
             },
             colors: {
                 // ── Same as admin-dashboard ──────────────────────────

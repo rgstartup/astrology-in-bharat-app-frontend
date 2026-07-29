@@ -50,8 +50,8 @@ export const RecentOrders: React.FC<RecentOrdersProps> = ({ orders = [], isLoadi
             <ShoppingBag className="w-5 h-5 text-purple-500" />
           </div>
           <div>
-            <h3 className="text-xl font-black text-gray-900 tracking-tight">Recent Orders</h3>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Manage your latest sales</p>
+            <h3 className="text-xl font-bold text-gray-900 tracking-tight">Recent Orders</h3>
+            <p className="text-sm font-medium text-gray-400 mt-0.5">Manage your latest sales</p>
           </div>
         </div>
         <div className="relative w-full sm:w-auto overflow-hidden group">
@@ -70,11 +70,11 @@ export const RecentOrders: React.FC<RecentOrdersProps> = ({ orders = [], isLoadi
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-gray-900">Order ID</th>
-              <th className="text-left py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-gray-900">Customer</th>
-              <th className="text-left py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-gray-900">Date</th>
-              <th className="text-left py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-gray-900">Amount</th>
-              <th className="text-center py-4 px-4 text-[10px] font-black uppercase tracking-[0.2em] text-gray-900">Status</th>
+              <th className="text-left py-4 px-4 text-sm font-semibold text-gray-900">Order ID</th>
+              <th className="text-left py-4 px-4 text-sm font-semibold text-gray-900">Customer</th>
+              <th className="text-left py-4 px-4 text-sm font-semibold text-gray-900">Date</th>
+              <th className="text-left py-4 px-4 text-sm font-semibold text-gray-900">Amount</th>
+              <th className="text-center py-4 px-4 text-sm font-semibold text-gray-900">Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
@@ -83,7 +83,7 @@ export const RecentOrders: React.FC<RecentOrdersProps> = ({ orders = [], isLoadi
             ) : filtered.length > 0 ? (
               filtered.map((order: any) => (
                 <tr key={order.id} className="hover:bg-orange-50/30 transition-colors group">
-                  <td className="py-5 px-4 font-black text-[#fd6410] tracking-tighter italic">#{order.orderNumber || order.short_id || String(order.id).slice(-8)}</td>
+                  <td className="py-5 px-4 font-bold text-[#fd6410] tracking-tighter italic">#{order.orderNumber || order.short_id || String(order.id).slice(-8)}</td>
                   <td className="py-5 px-4">
                     <div className="flex flex-col">
                       <span className="font-bold text-gray-900">{order.customerName || `User #${order.user_id}`}</span>
@@ -92,9 +92,9 @@ export const RecentOrders: React.FC<RecentOrdersProps> = ({ orders = [], isLoadi
                   <td className="py-5 px-4 text-gray-500 text-[11px] font-bold italic">
                     {new Date(order.date || order.created_at || "").toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </td>
-                  <td className="py-5 px-4 font-black text-gray-900 tracking-tight">₹{parseFloat((order.amount || order.total_amount || 0).toString()).toLocaleString('en-IN')}</td>
+                  <td className="py-5 px-4 font-bold text-gray-900 tracking-tight">₹{parseFloat((order.amount || order.total_amount || 0).toString()).toLocaleString('en-IN')}</td>
                   <td className="py-5 px-4 text-center">
-                    <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest ${(STATUS_STYLES as any)[order.status] || STATUS_STYLES.pending}`}>
+                    <span className={`px-4 py-1.5 rounded-full text-xs font-semibold capitalize ${(STATUS_STYLES as any)[order.status] || STATUS_STYLES.pending}`}>
                       {order.status}
                     </span>
                   </td>
@@ -107,7 +107,7 @@ export const RecentOrders: React.FC<RecentOrdersProps> = ({ orders = [], isLoadi
                     <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center">
                       <ShoppingBag className="w-8 h-8 text-gray-200" />
                     </div>
-                    <p className="text-sm font-black text-gray-300 uppercase tracking-widest italic">No orders found</p>
+                    <p className="text-sm font-bold text-gray-300 italic">No orders found</p>
                   </div>
                 </td>
               </tr>

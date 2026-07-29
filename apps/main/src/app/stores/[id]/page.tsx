@@ -63,7 +63,7 @@ const StoreDetailsPage = () => {
   const router = useRouter();
   const id = params?.id as string;
   const [activeTab, setActiveTab] = useState<
-    "about" | "collection" | "reviews" | "gallery"
+    "about" | "collection" | "reviews" | "gallery" | "video"
   >("collection");
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -379,7 +379,7 @@ const StoreDetailsPage = () => {
 
               {/* Tabs Navigation */}
               <div className="sticky top-[110px] z-40 bg-white py-3 md:py-6 mb-6 md:mb-10 border-b border-[#F0E0D0] overflow-x-auto no-scrollbar flex items-center gap-4 md:gap-10">
-                {(["about", "collection", "reviews", "gallery"] as const).map(
+                {(["about", "collection", "reviews", "gallery", "video"] as const).map(
                   (tab) => (
                     <button
                       key={tab}
@@ -393,7 +393,9 @@ const StoreDetailsPage = () => {
                           ? t.tabs.products
                           : tab === "reviews"
                             ? t.tabs.reviews
-                            : t.tabs.gallery}
+                            : tab === "gallery"
+                              ? t.tabs.gallery
+                              : "Video"}
                       {activeTab === tab && (
                         <div className="absolute -bottom-1 left-0 right-0 h-1 bg-orange rounded-full"></div>
                       )}
@@ -630,6 +632,31 @@ const StoreDetailsPage = () => {
                             style={fontStyle}
                           >
                             {t.emptyStates.noGallery}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "video" && (
+                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="max-w-xl mx-auto rounded-[2rem] overflow-hidden border-4 border-white shadow-xl bg-black flex items-center justify-center min-h-[300px]">
+                      {shop.video ? (
+                        <video 
+                          src={shop.video} 
+                          controls 
+                          className="w-full max-h-[450px] object-contain"
+                          poster={shop.image}
+                        />
+                      ) : (
+                        <div className="py-20 text-center space-y-4 w-full bg-white border border-orange/5 min-h-[300px] flex flex-col items-center justify-center rounded-[2rem]">
+                          <Video className="w-12 h-12 text-gray-200 mx-auto" />
+                          <p
+                            className="text-slate-500 font-bold uppercase tracking-widest text-[10px]"
+                            style={fontStyle}
+                          >
+                            No Video Available
                           </p>
                         </div>
                       )}

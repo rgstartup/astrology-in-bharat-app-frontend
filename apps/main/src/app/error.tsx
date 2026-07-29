@@ -16,7 +16,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex min-h-[calc(90vh-100px)] items-center justify-center bg-[#fafafa] px-4 font-poppins">
+    <div className="flex min-h-[calc(90vh-100px)] items-center justify-center bg-[#fafafa] px-4 font-sans">
       <div className="w-full max-w-3/5  rounded-2xl border border-gray-200 bg-white px-8 py-16 text-center shadow-sm">
         {/* Icon */}
         <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-orange-50">

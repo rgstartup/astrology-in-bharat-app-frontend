@@ -101,7 +101,7 @@ const VerifyEmailContent = () => {
   }, [token, router, login]);
 
   return (
-    <div className="flex min-h-screen bg-[#FFF9F4] items-center justify-center p-4 sm:p-6 font-poppins">
+    <div className="flex min-h-screen bg-[#FFF9F4] items-center justify-center p-4 sm:p-6 font-sans">
       <Head>
         <title>Verify Email | Astrology in Bharat</title>
       </Head>

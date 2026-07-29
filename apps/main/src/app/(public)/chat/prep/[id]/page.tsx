@@ -309,7 +309,7 @@ export default function ConsultationPrep() {
         description={
           <>
             Right now{" "}
-            <span className="font-bold text-gray-100">{expert?.name}</span>{" "}
+            <span className="font-bold text-gray-900">{expert?.name}</span>{" "}
             is offline. <br />
             Please try again later when the expert is available.
           </>

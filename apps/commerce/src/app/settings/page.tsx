@@ -279,7 +279,7 @@ export default function ShopProfileSettings() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-8">
         <div>
-          <div className="flex items-center space-x-2 text-xs font-black text-[#fd6410] uppercase tracking-widest mb-1">
+          <div className="flex items-center space-x-2 text-sm font-semibold text-[#fd6410] mb-1">
             <span>Settings</span>
             <ChevronRight className="w-3 h-3" />
             <span>Shop Profile</span>
@@ -338,7 +338,7 @@ export default function ShopProfileSettings() {
           
           {/* Main Info Card */}
           <div className="bg-white p-8 rounded-[2.5rem] border-2 border-[#fd6410] shadow-sm space-y-8">
-            <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-gray-900 px-2 flex items-center gap-2">
               <UserIcon className="w-4 h-4 text-[#fd6410]" />
               Branding & Media
             </h3>
@@ -346,7 +346,7 @@ export default function ShopProfileSettings() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Image Upload */}
               <div className="space-y-4">
-                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Shop Photo</label>
+                <label className="text-sm font-semibold text-gray-700 pl-1">Shop Photo</label>
                 <div className="relative group w-full h-48">
                   <div className="w-full h-full rounded-[2rem] bg-orange-50/20 border-2 border-dashed border-[#fd6410] flex items-center justify-center overflow-hidden transition-all group-hover:border-[#fd6410]/50">
                     {shopImagePreview ? (
@@ -354,7 +354,7 @@ export default function ShopProfileSettings() {
                     ) : (
                       <div className="text-center p-4">
                         <Store className="w-10 h-10 text-orange-400 mx-auto mb-2" />
-                        <span className="text-[10px] font-black text-gray-800 uppercase tracking-wider block">Add Main Photo</span>
+                        <span className="text-sm font-semibold text-gray-800 block">Add Main Photo</span>
                       </div>
                     )}
                   </div>
@@ -369,7 +369,7 @@ export default function ShopProfileSettings() {
 
               {/* Video Upload */}
               <div className="space-y-4">
-                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Store Video</label>
+                <label className="text-sm font-semibold text-gray-700 pl-1">Store Video</label>
                 <div className="relative group w-full h-48">
                   <div className="w-full h-full rounded-[2rem] bg-orange-50/20 border-2 border-dashed border-[#fd6410] flex items-center justify-center overflow-hidden transition-all group-hover:border-[#fd6410]/50">
                     {shopVideoPreview ? (
@@ -377,7 +377,7 @@ export default function ShopProfileSettings() {
                     ) : (
                       <div className="text-center p-4">
                         <Video className="w-10 h-10 text-orange-400 mx-auto mb-2" />
-                        <span className="text-[10px] font-black text-gray-800 uppercase tracking-wider block">Add Shop Tour Video</span>
+                        <span className="text-sm font-semibold text-gray-800 block">Add Shop Tour Video</span>
                       </div>
                     )}
                   </div>
@@ -394,7 +394,7 @@ export default function ShopProfileSettings() {
             {/* Basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
               <div className="space-y-2">
-                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Store Name</label>
+                <label className="text-sm font-semibold text-gray-700 pl-1">Store Name</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                      <Store className="w-4 h-4 text-orange-400 group-focus-within:text-[#fd6410] transition-colors" />
@@ -405,13 +405,13 @@ export default function ShopProfileSettings() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     type="text" 
-                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
+                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Manager Name</label>
+                <label className="text-sm font-semibold text-gray-700 pl-1">Manager Name</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                      <UserIcon className="w-4 h-4 text-orange-400 group-focus-within:text-[#fd6410] transition-colors" />
@@ -422,13 +422,13 @@ export default function ShopProfileSettings() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     type="text" 
-                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
+                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Mobile Number</label>
+                <label className="text-sm font-semibold text-gray-700 pl-1">Mobile Number</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                      <Phone className="w-4 h-4 text-orange-400 group-focus-within:text-[#fd6410] transition-colors" />
@@ -439,12 +439,12 @@ export default function ShopProfileSettings() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     type="tel" 
-                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
+                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Established Year</label>
+                <label className="text-sm font-semibold text-gray-700 pl-1">Established Year</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                      <Store className="w-4 h-4 text-orange-400 group-focus-within:text-[#fd6410] transition-colors" />
@@ -456,7 +456,7 @@ export default function ShopProfileSettings() {
                     disabled={!isEditing}
                     type="text" 
                     placeholder="e.g. 1995"
-                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
+                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -464,12 +464,12 @@ export default function ShopProfileSettings() {
               <div className="space-y-4 md:col-span-2 p-6 bg-orange-50/50 rounded-3xl border-2 border-[#fd6410]">
                 <div className="flex items-center gap-2 mb-2">
                    <Clock className="w-4 h-4 text-[#fd6410]" />
-                   <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest leading-none">Operational Schedule</h4>
+                   <h4 className="text-base font-semibold text-gray-900 leading-none">Operational Schedule</h4>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Opening Time</label>
+                    <label className="text-sm font-semibold text-gray-700 pl-1">Opening Time</label>
                     <div className="relative group">
                       <input 
                         name="openTime"
@@ -478,13 +478,13 @@ export default function ShopProfileSettings() {
                         onChange={handleInputChange}
                         disabled={!isEditing}
                         type="text" 
-                        className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:bg-gray-50 disabled:text-gray-500"
+                        className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:bg-gray-50 disabled:text-gray-500"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Closing Time</label>
+                    <label className="text-sm font-semibold text-gray-700 pl-1">Closing Time</label>
                     <div className="relative group">
                       <input 
                         name="closeTime"
@@ -493,7 +493,7 @@ export default function ShopProfileSettings() {
                         onChange={handleInputChange}
                         disabled={!isEditing}
                         type="text" 
-                        className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:bg-gray-50 disabled:text-gray-500"
+                        className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:bg-gray-50 disabled:text-gray-500"
                       />
                     </div>
                   </div>
@@ -501,7 +501,7 @@ export default function ShopProfileSettings() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Trust Score (%)</label>
+                <label className="text-sm font-semibold text-gray-700 pl-1">Trust Score (%)</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                      <ShieldCheck className="w-4 h-4 text-orange-400 group-focus-within:text-[#fd6410] transition-colors" />
@@ -513,7 +513,7 @@ export default function ShopProfileSettings() {
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     type="text" 
-                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
+                    className="w-full pl-11 pr-4 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -522,14 +522,14 @@ export default function ShopProfileSettings() {
 
           {/* About & Specializations Card */}
           <div className="bg-white p-8 rounded-[2.5rem] border-2 border-[#fd6410] shadow-sm space-y-6">
-            <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-gray-900 px-2 flex items-center gap-2">
               <ShoppingBag className="w-4 h-4 text-[#fd6410]" />
               About Your Shop
             </h3>
 
             {/* Description */}
             <div className="space-y-2">
-              <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Shop Description</label>
+              <label className="text-sm font-semibold text-gray-700 pl-1">Shop Description</label>
               <textarea
                 name="description"
                 value={formData.description}
@@ -537,13 +537,13 @@ export default function ShopProfileSettings() {
                 disabled={!isEditing}
                 rows={4}
                 placeholder="Describe your shop — what makes it special, your story, and what customers can expect..."
-                className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all resize-none disabled:text-gray-500 disabled:cursor-not-allowed"
+                className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all resize-none disabled:text-gray-500 disabled:cursor-not-allowed"
               />
             </div>
 
             {/* Features / Specializations */}
             <div className="space-y-3">
-              <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Specializations / Features</label>
+              <label className="text-sm font-semibold text-gray-700 pl-1">Specializations / Features</label>
               <p className="text-[11px] font-bold text-gray-600 pl-1">Add tags like "Rudraksha", "Gemstones", "Vastu", etc.</p>
               
               {/* Tags Display */}
@@ -558,7 +558,7 @@ export default function ShopProfileSettings() {
                       <button
                         type="button"
                         onClick={() => handleRemoveFeature(f)}
-                        className="text-orange-400 hover:text-red-500 transition-colors ml-1 font-black leading-none"
+                        className="text-orange-400 hover:text-red-500 transition-colors ml-1 font-bold leading-none"
                       >
                         ×
                       </button>
@@ -579,7 +579,7 @@ export default function ShopProfileSettings() {
                     onChange={e => setFeaturesInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddFeature(); }}}
                     placeholder="Type a specialization and press Enter or Add"
-                    className="flex-1 px-5 py-3 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all"
+                    className="flex-1 px-5 py-3 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all"
                   />
                   <button
                     type="button"
@@ -595,7 +595,7 @@ export default function ShopProfileSettings() {
 
           {/* Gallery Card */}
           <div className="bg-white p-8 rounded-[2.5rem] border-2 border-[#fd6410] shadow-sm space-y-6">
-            <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-gray-900 px-2 flex items-center gap-2">
               <Camera className="w-4 h-4 text-[#fd6410]" />
               Shop Gallery
             </h3>
@@ -612,7 +612,7 @@ export default function ShopProfileSettings() {
                       onClick={() => handleRemoveExistingGalleryImage(url)}
                       className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 shadow-lg scale-90 group-hover:scale-100"
                     >
-                      <span className="font-black text-sm leading-none block px-1">×</span>
+                      <span className="font-bold text-sm leading-none block px-1">×</span>
                     </button>
                   )}
                 </div>
@@ -631,7 +631,7 @@ export default function ShopProfileSettings() {
                       onClick={() => handleRemoveNewGalleryImage(i)}
                       className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 shadow-lg scale-90 group-hover:scale-100 pointer-events-auto"
                     >
-                      <span className="font-black text-sm leading-none block px-1">×</span>
+                      <span className="font-bold text-sm leading-none block px-1">×</span>
                     </button>
                   )}
                 </div>
@@ -641,7 +641,7 @@ export default function ShopProfileSettings() {
               {isEditing && (
                 <label className="w-full aspect-square rounded-[1.5rem] bg-orange-50/20 border-2 border-dashed border-[#fd6410] flex flex-col items-center justify-center cursor-pointer hover:border-[#fd6410]/50 hover:bg-orange-50/50 transition-all group">
                   <Camera className="w-6 h-6 text-orange-400 group-hover:text-[#fd6410] mb-2 transition-colors" />
-                  <span className="text-[10px] font-bold text-gray-400 group-hover:text-[#fd6410] uppercase tracking-wider">Add Photo</span>
+                  <span className="text-sm font-medium text-gray-400 group-hover:text-[#fd6410]">Add Photo</span>
                   <input type="file" multiple accept="image/*" className="hidden" onChange={handleGalleryChange} />
                 </label>
               )}
@@ -657,51 +657,51 @@ export default function ShopProfileSettings() {
 
           {/* Location Card */}
           <div className="bg-white p-8 rounded-[2.5rem] border-2 border-[#fd6410] shadow-sm space-y-8">
-            <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em] px-2 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-gray-900 px-2 flex items-center gap-2">
               <MapPin className="w-4 h-4 text-[#fd6410]" />
               Store Location
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2 md:col-span-2">
-                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Full Address</label>
+                <label className="text-sm font-semibold text-gray-700 pl-1">Full Address</label>
                 <textarea 
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   rows={3} 
-                  className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all resize-none disabled:text-gray-500 disabled:cursor-not-allowed"
+                  className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all resize-none disabled:text-gray-500 disabled:cursor-not-allowed"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">City</label>
+                <label className="text-sm font-semibold text-gray-700 pl-1">City</label>
                 <input 
                   name="city"
                   value={formData.city}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   type="text" 
-                  className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
+                  className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all disabled:text-gray-500 disabled:cursor-not-allowed"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-black text-gray-700 uppercase tracking-widest pl-1">Pincode</label>
+                <label className="text-sm font-semibold text-gray-700 pl-1">Pincode</label>
                 <input 
                   name="pincode"
                   value={formData.pincode}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   type="text" 
-                  className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
+                  className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:text-gray-500 disabled:cursor-not-allowed"
                 />
               </div>
 
               <div className="space-y-4 pt-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-black text-[#fd6410] uppercase tracking-widest pl-1 flex items-center">
+                  <label className="text-sm font-semibold text-[#fd6410] pl-1 flex items-center">
                     <Navigation className="w-3 h-3 mr-1" />
                     GPS Coordinates
                   </label>
@@ -724,7 +724,7 @@ export default function ShopProfileSettings() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Latitude</label>
+                    <label className="text-sm font-semibold text-gray-500 pl-1">Latitude</label>
                     <input 
                       name="latitude"
                       placeholder="e.g. 28.6139"
@@ -732,12 +732,12 @@ export default function ShopProfileSettings() {
                       onChange={handleInputChange}
                       disabled={!isEditing}
                       type="text" 
-                      className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:bg-gray-50 disabled:text-gray-500"
+                      className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:bg-gray-50 disabled:text-gray-500"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Longitude</label>
+                    <label className="text-sm font-semibold text-gray-500 pl-1">Longitude</label>
                     <input 
                       name="longitude"
                       placeholder="e.g. 77.2090"
@@ -745,7 +745,7 @@ export default function ShopProfileSettings() {
                       onChange={handleInputChange}
                       disabled={!isEditing}
                       type="text" 
-                      className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-black text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:bg-gray-50 disabled:text-gray-500"
+                      className="w-full px-5 py-4 bg-white border-2 border-[#fd6410] rounded-[1.5rem] text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-orange-500/20 transition-all font-mono disabled:bg-gray-50 disabled:text-gray-500"
                     />
                   </div>
                 </div>
@@ -760,12 +760,12 @@ export default function ShopProfileSettings() {
         {/* Right Column: Live Shop Preview (Sticky) */}
         <div className="lg:col-span-12 xl:col-span-4 self-start sticky top-24 space-y-6">
            <div className="flex items-center justify-between px-4 mb-2">
-              <h3 className="text-[10px] font-black text-gray-700 uppercase tracking-[0.2em] flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
                 <Eye className="w-3 h-3" /> Live Shop Preview
               </h3>
               <div className="flex items-center space-x-1.5 py-1 px-3 bg-green-50 rounded-full border border-green-100">
                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                <span className="text-[9px] font-bold text-green-600 uppercase tracking-widest">Connected</span>
+                <span className="text-xs font-semibold text-green-600">Connected</span>
               </div>
            </div>
 
@@ -782,7 +782,7 @@ export default function ShopProfileSettings() {
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-bottom p-6 flex-col justify-end">
                    <h2 className="text-white font-bold text-xl drop-shadow-md truncate">{formData.storeName || "Shop Name"}</h2>
-                   <div className="flex items-center text-orange-200 text-[10px] font-bold uppercase tracking-widest mt-1">
+                   <div className="flex items-center text-orange-200 text-xs font-semibold mt-1">
                       <MapPin className="w-3 h-3 mr-1" />
                       {formData.city || "City"}
                    </div>
@@ -799,15 +799,15 @@ export default function ShopProfileSettings() {
                 {/* Store Intro */}
                 <div className="space-y-4">
                    <div className="flex items-center justify-between">
-                     <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">About Store</span>
+                     <span className="text-sm font-semibold text-gray-700">About Store</span>
                      <div className="flex flex-col items-end">
                         <div className="flex items-center text-rose-500">
                            <ShieldCheck className="w-4 h-4" />
-                           <span className="text-[9px] font-bold ml-1 uppercase">Trusted • {formData.trustScore || "99.8"}%</span>
+                           <span className="text-xs font-semibold ml-1">Trusted • {formData.trustScore || "99.8"}%</span>
                         </div>
                         <div className="flex items-center text-slate-400 mt-1">
                            <Clock className="w-3 h-3" />
-                           <span className="text-[8px] font-bold ml-1 uppercase">{formData.openTime} - {formData.closeTime}</span>
+                           <span className="text-xs font-semibold ml-1">{formData.openTime} - {formData.closeTime}</span>
                         </div>
                      </div>
                    </div>
@@ -845,7 +845,7 @@ export default function ShopProfileSettings() {
                 {/* Mock Products Grid */}
                  <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Popular Products</span>
+                      <span className="text-sm font-semibold text-gray-700">Popular Products</span>
                       <ShoppingBag className="w-3.5 h-3.5 text-[#fd6410]" />
                     </div>
                     {isProductsLoading ? (
@@ -878,7 +878,7 @@ export default function ShopProfileSettings() {
                       </div>
                     ) : (
                       <div className="h-20 bg-gray-50 rounded-xl flex items-center justify-center border border-dashed border-[#fd6410]">
-                        <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">No Products Found</span>
+                        <span className="text-sm font-semibold text-gray-400">No Products Found</span>
                       </div>
                     )}
                  </div>
@@ -887,7 +887,7 @@ export default function ShopProfileSettings() {
            </div>
 
            <div className="p-6 bg-orange-50 rounded-[2rem] border-2 border-[#fd6410] space-y-2">
-              <p className="text-[10px] text-orange-900 font-bold uppercase tracking-widest">Developer Note</p>
+              <p className="text-sm font-semibold text-orange-900">Developer Note</p>
               <p className="text-[11px] text-orange-800/70 leading-relaxed italic">"The changes you make on the left will reflect here instantly. This is exactly how your customer sees your shop."</p>
            </div>
         </div>

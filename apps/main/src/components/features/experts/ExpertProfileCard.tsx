@@ -67,18 +67,18 @@ const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
 
           <div className="mt-2 text-center px-6">
             <h2 className="text-xl font-bold text-[#1A2B47]">{expert.name}</h2>
-            <p className="text-sm text-slate-500 mt-1">{expert.expertise}</p>
+            <p className="text-sm text-slate-700 mt-1">{expert.expertise}</p>
           </div>
         </div>
 
         <div className="mx-6 p-3 bg-white/80 backdrop-blur-sm rounded-2xl flex justify-around items-center border border-slate-100 shadow-sm">
           <div className="text-center">
-            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Experience</p>
+            <p className="text-xs font-semibold text-slate-700">Experience</p>
             <p className="text-sm font-semibold text-[#1A2B47]">{expert.experience} Years</p>
           </div>
           <div className="h-8 w-px bg-slate-200"></div>
           <div className="text-center">
-            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Rating</p>
+            <p className="text-xs font-semibold text-slate-700">Rating</p>
             <div className="flex items-center justify-center gap-1">
               <span className="text-sm font-semibold text-[#1A2B47]">{expert.ratings}</span>
               <i className="fa-solid fa-star text-orange text-[12px]"></i>
@@ -86,7 +86,7 @@ const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
           </div>
           <div className="h-8 w-px bg-slate-200"></div>
           <div className="text-center">
-            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Likes</p>
+            <p className="text-xs font-semibold text-slate-700">Likes</p>
             <div className="flex items-center justify-center gap-1">
               <span className="text-sm font-semibold text-[#1A2B47]">
                 {((count: number) => {
@@ -103,7 +103,7 @@ const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
             <>
               <div className="h-8 w-px bg-slate-200"></div>
               <div className="text-center">
-                <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Price</p>
+                <p className="text-xs font-semibold text-slate-700">Price</p>
                 <p className="text-sm font-semibold text-emerald-600">₹{expert.price}/min</p>
               </div>
             </>
@@ -113,11 +113,11 @@ const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
         <div className="px-8 py-4 space-y-2">
           <div className="flex items-center gap-3">
             <i className="fa-solid fa-language text-slate-400 text-[18px] w-5 text-center"></i>
-            <p className="text-sm text-slate-600"><span className="font-bold text-gray-900">Languages:</span> {expert.language}</p>
+            <p className="text-sm text-slate-700"><span className="font-bold text-gray-900">Languages:</span> {expert.language}</p>
           </div>
           <div className="flex items-center gap-3">
             <i className="fa-solid fa-brain text-slate-400 text-[18px] w-5 text-center"></i>
-            <p className="text-sm text-slate-600"><span className="font-bold text-gray-900">Expertise:</span> {expert.expertise}</p>
+            <p className="text-sm text-slate-700"><span className="font-bold text-gray-900">Expertise:</span> {expert.expertise}</p>
           </div>
         </div>
 

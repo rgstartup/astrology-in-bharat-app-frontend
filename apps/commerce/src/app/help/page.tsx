@@ -79,10 +79,10 @@ export default function HelpCenterPage() {
         <div className="w-20 h-20 bg-orange-100 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 text-[#fd6410] shadow-lg shadow-orange-900/10">
           <Headset className="w-10 h-10" />
         </div>
-        <h1 className="text-5xl font-black text-gray-900 tracking-tighter italic">
-          Help & <span className="text-[#fd6410] underline decoration-8 underline-offset-8">Support</span>
+        <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
+          Help & <span className="text-[#fd6410]">Support</span>
         </h1>
-        <p className="text-gray-500 font-bold uppercase tracking-[0.2em] text-xs">
+        <p className="text-gray-500 font-medium text-sm mt-2">
           We're here to help you with any questions or concerns regarding your shop
         </p>
       </div>
@@ -103,14 +103,14 @@ export default function HelpCenterPage() {
                 <div className={cn("inline-flex items-center justify-center p-6 rounded-3xl mb-8 group-hover:scale-110 transition-transform duration-500", card.color)}>
                   <card.icon className="w-10 h-10" />
                 </div>
-                <h3 className="text-xl font-black text-gray-900 italic tracking-tight mb-2 uppercase">{card.title}</h3>
-                <p className="text-sm font-bold text-gray-400 mb-8 tracking-tighter break-all px-2 uppercase">{card.value}</p>
+                <h3 className="text-xl font-bold text-gray-900 tracking-tight mb-2">{card.title}</h3>
+                <p className="text-sm font-medium text-gray-500 mb-8 break-all px-2">{card.value}</p>
                 <a 
                   href={card.href}
                   target={card.title === "WhatsApp" ? "_blank" : undefined}
                   rel={card.title === "WhatsApp" ? "noopener noreferrer" : undefined}
                   className={cn(
-                    "inline-flex items-center gap-2 px-8 py-3.5 bg-gray-50 text-gray-900 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all border border-gray-100",
+                    "inline-flex items-center gap-2 px-8 py-3.5 bg-gray-50 text-gray-900 rounded-2xl font-semibold text-sm transition-all border border-gray-100",
                     card.btnClass
                   )}
                 >
@@ -131,11 +131,11 @@ export default function HelpCenterPage() {
             <div className="relative z-10">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
                 <div>
-                  <h2 className="text-3xl font-black italic tracking-tighter mb-2">Additional Resources</h2>
-                  <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">Check out our policies and guidelines</p>
+                  <h2 className="text-2xl font-bold tracking-tight mb-2">Additional Resources</h2>
+                  <p className="text-white/60 text-sm font-medium">Check out our policies and guidelines</p>
                 </div>
                 <div className="h-[1px] md:h-12 w-12 md:w-[1px] bg-white/10" />
-                <p className="max-w-md text-sm text-white/60 font-medium italic leading-relaxed">
+                <p className="max-w-md text-sm text-white/60 font-medium leading-relaxed">
                   Transparency is our priority. Feel free to review our documentation to understand how we protect your shop and data.
                 </p>
               </div>
@@ -151,7 +151,7 @@ export default function HelpCenterPage() {
                       <div className="w-10 h-10 bg-[#fd6410]/20 rounded-xl flex items-center justify-center text-[#fd6410]">
                         <link.icon className="w-5 h-5" />
                       </div>
-                      <span className="font-bold text-xs uppercase tracking-widest">{link.label}</span>
+                      <span className="font-semibold text-sm">{link.label}</span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white group-hover:translate-x-1 transition-all" />
                   </a>

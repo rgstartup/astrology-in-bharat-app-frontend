@@ -18,7 +18,7 @@ const EducationalContent = () => {
             <h3 className="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
               <span className="text-orange-500">✦</span> What This Means?
             </h3>
-            <p className="text-sm text-slate-600 leading-relaxed">
+            <p className="text-sm text-slate-700 leading-relaxed">
               Your score is above <strong className="text-slate-800">18</strong> which is considered a <strong className="text-slate-800">good match</strong>. Higher the score, stronger will be your bond.
             </p>
           </div>
@@ -31,7 +31,7 @@ const EducationalContent = () => {
               </div>
               <div>
                 <h4 className="text-sm font-bold text-slate-800 mb-1">Communication</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">You both understand each other well.</p>
+                <p className="text-xs text-slate-700 leading-relaxed">You both understand each other well.</p>
               </div>
             </div>
 
@@ -41,7 +41,7 @@ const EducationalContent = () => {
               </div>
               <div>
                 <h4 className="text-sm font-bold text-slate-800 mb-1">Emotional Bond</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">Strong emotional connection indicated.</p>
+                <p className="text-xs text-slate-700 leading-relaxed">Strong emotional connection indicated.</p>
               </div>
             </div>
 
@@ -51,7 +51,7 @@ const EducationalContent = () => {
               </div>
               <div>
                 <h4 className="text-sm font-bold text-slate-800 mb-1">Future Prospects</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">Positive signs for a happy married life.</p>
+                <p className="text-xs text-slate-700 leading-relaxed">Positive signs for a happy married life.</p>
               </div>
             </div>
           </div>
@@ -66,8 +66,8 @@ const EducationalContent = () => {
               <FaLock />
             </div>
             <div>
-              <h4 className="text-[11px] font-bold text-slate-800 uppercase tracking-wider">100% Secure & Private</h4>
-              <p className="text-[10px] text-slate-500">Your data is encrypted</p>
+              <h4 className="text-sm font-semibold text-slate-800">100% Secure & Private</h4>
+              <p className="text-xs text-slate-700">Your data is encrypted</p>
             </div>
           </div>
 
@@ -76,8 +76,8 @@ const EducationalContent = () => {
               <FaCertificate />
             </div>
             <div>
-              <h4 className="text-[11px] font-bold text-slate-800 uppercase tracking-wider">Verified Astrology</h4>
-              <p className="text-[10px] text-slate-500">As per Vedic Scriptures</p>
+              <h4 className="text-sm font-semibold text-slate-800">Verified Astrology</h4>
+              <p className="text-xs text-slate-700">As per Vedic Scriptures</p>
             </div>
           </div>
 
@@ -86,8 +86,8 @@ const EducationalContent = () => {
               <FaUsers />
             </div>
             <div>
-              <h4 className="text-[11px] font-bold text-slate-800 uppercase tracking-wider">Trusted by 1M+</h4>
-              <p className="text-[10px] text-slate-500">Happy customers</p>
+              <h4 className="text-sm font-semibold text-slate-800">Trusted by 1M+</h4>
+              <p className="text-xs text-slate-700">Happy customers</p>
             </div>
           </div>
 
@@ -96,8 +96,8 @@ const EducationalContent = () => {
               <FaCheckCircle />
             </div>
             <div>
-              <h4 className="text-[11px] font-bold text-slate-800 uppercase tracking-wider">Accurate Matching</h4>
-              <p className="text-[10px] text-slate-500">36 Point Analysis</p>
+              <h4 className="text-sm font-semibold text-slate-800">Accurate Matching</h4>
+              <p className="text-xs text-slate-700">36 Point Analysis</p>
             </div>
           </div>
 

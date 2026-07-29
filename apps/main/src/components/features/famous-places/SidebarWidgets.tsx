@@ -37,7 +37,7 @@ export const WhyVisitSidebar = () => {
             </div>
             <div>
               <p className="text-xs font-bold text-gray-900">{title}</p>
-              <p className="text-[11px] text-gray-400 leading-relaxed">{desc}</p>
+              <p className="text-[11px] text-gray-700 leading-relaxed">{desc}</p>
             </div>
           </div>
         ))}
@@ -134,7 +134,7 @@ export const TodaysSpecialSidebar = () => {
         </div>
         <div>
           <p className="text-[13px] font-bold text-[#D35400] mb-1">{tx.title}</p>
-          <p className="text-[11px] font-medium text-gray-500 leading-relaxed pr-2">{tx.desc}</p>
+          <p className="text-[11px] font-medium text-gray-700 leading-relaxed pr-2">{tx.desc}</p>
           <button className="mt-2 text-[11px] font-bold text-[#F26500] flex items-center gap-1.5 hover:opacity-80 transition-opacity">
             {tx.btn} <i className="fa-solid fa-arrow-right text-[10px]" />
           </button>
