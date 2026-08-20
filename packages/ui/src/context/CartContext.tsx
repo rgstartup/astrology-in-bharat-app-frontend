@@ -1,10 +1,10 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { safeFetch } from "@repo/safe-fetch";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@repo/store";
 import { getErrorMessage } from "@repo/lib";
+import { SafeFetchInstance } from "@repo/safe-fetch";
 
 // Define Types
 export interface CartItem {
@@ -43,9 +43,7 @@ const CartContext = createContext<CartContextType>({
     refreshCart: async () => { },
 });
 
-import { api } from "@repo/lib";
-
-export const CartProvider = ({ children }: { children: React.ReactNode }) => {
+export const CartProvider = ({ children, api }: { children: React.ReactNode, api: SafeFetchInstance }) => {
     const { isAuthenticated } = useAuthStore();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);

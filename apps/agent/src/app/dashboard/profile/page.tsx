@@ -14,7 +14,7 @@ export default function ProfilePage() {
     const [loading, setLoading] = useState(!agent);
     const [isEditingBank, setIsEditingBank] = useState(false);
     const [saving, setSaving] = useState(false);
-    
+
     const [formData, setFormData] = useState({
         bank_name: agent?.bank_name || "",
         account_number: agent?.account_number || "",
@@ -55,7 +55,7 @@ export default function ProfilePage() {
         setSaving(true);
         try {
             // Check if we have bulk bank accounts data from the new UI
-            const dataToSave = e?.target?.bank_accounts 
+            const dataToSave = e?.target?.bank_accounts
                 ? { ...formData, bank_accounts: e.target.bank_accounts }
                 : formData;
 
@@ -115,7 +115,7 @@ export default function ProfilePage() {
                             Account Settings
                         </Button>
                     </div>
-                    
+
                     <div className="space-y-1">
                         <h2 className="text-3xl font-black text-gray-900 tracking-tight">{agent?.user?.name ?? "Agent"}</h2>
                         <div className="flex items-center gap-2">
@@ -133,7 +133,7 @@ export default function ProfilePage() {
                                 </div>
                                 <p className="text-[10px] font-black text-gray-1000 uppercase tracking-widest mb-1">{label}</p>
                                 <p className="text-sm font-bold text-gray-800 break-all">{value}</p>
-                                
+
                                 {/* Orange Bottom Bar - Shows only on hover */}
                                 <div className="absolute bottom-0 left-0 h-1.5 w-full bg-[#F25E0A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center" />
                             </div>
@@ -175,7 +175,7 @@ export default function ProfilePage() {
                                     <span className="text-2xl font-black">{rate}</span>
                                 </div>
                             ))}
-                            
+
                             <div className="mt-8 p-6 bg-blue-50/50 rounded-2xl border border-blue-100/50">
                                 <p className="text-[10px] text-blue-700 font-bold leading-relaxed">
                                     ℹ️ Commissions are credited to your wallet in real-time as soon as the session or order is completed.

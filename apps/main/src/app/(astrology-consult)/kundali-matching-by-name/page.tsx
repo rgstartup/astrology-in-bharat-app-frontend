@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 import HeroComponent from "./hero.component";
 import MatchingForm from "./matching-form.component";
 import ResultComponent from "./result.component";
@@ -19,7 +19,10 @@ const KundaliMatchingByNamePage = () => {
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
   const { lang } = useLanguageStore();
-  const t = (matchingTranslations[lang as keyof typeof matchingTranslations] || matchingTranslations.en).form;
+  const t = (
+    matchingTranslations[lang as keyof typeof matchingTranslations] ||
+    matchingTranslations.en
+  ).form;
 
   const [boyDetails, setBoyDetails] = useState<ConsultPersonDetails>({
     name: "",
@@ -40,7 +43,8 @@ const KundaliMatchingByNamePage = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [matchingResult, setMatchingResult] = useState<AdvancedMatchResults | null>(null);
+  const [matchingResult, setMatchingResult] =
+    useState<AdvancedMatchResults | null>(null);
   const [error, setError] = useState<string | null>(null);
   const resultsRef = React.useRef<HTMLDivElement>(null);
 
@@ -102,7 +106,7 @@ const KundaliMatchingByNamePage = () => {
       toast.error("Please login to generate your Kundli matching report", {
         onClick: () => router.push("/sign-in"),
         autoClose: 3000,
-        style: { cursor: 'pointer' }
+        style: { cursor: "pointer" },
       });
       return;
     }
@@ -126,7 +130,7 @@ const KundaliMatchingByNamePage = () => {
 
       const [rawData, fetchErr] = await api.post<any>(
         `/astrology/kundli-reports`,
-        payload
+        payload,
       );
 
       if (fetchErr) {
@@ -179,7 +183,7 @@ const KundaliMatchingByNamePage = () => {
 
         <EducationalContent />
       </div>
-      
+
       <KundaliMatchingSeoContent />
     </main>
   );

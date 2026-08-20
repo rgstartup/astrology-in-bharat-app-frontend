@@ -6,7 +6,7 @@ import ProductCarousel from "@/components/features/shop/ProductCarousel";
 import { useCartStore } from "@/store/useCartStore";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 import { useLanguageStore } from "@repo/store";
 import { homeTranslations } from "@/lib/translations/home";
 import { Loading } from "@repo/ui";
@@ -14,14 +14,16 @@ import { Loading } from "@repo/ui";
 const CartPage: React.FC = () => {
   const router = useRouter();
   const { lang } = useLanguageStore();
-  const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+  const t =
+    homeTranslations[lang as keyof typeof homeTranslations] ||
+    homeTranslations.en;
   const { isAuthenticated, loading } = useAuthStore();
   const {
     cartItems,
     updateQuantity,
     removeFromCart,
     cartTotal,
-    isLoading: cartLoading
+    isLoading: cartLoading,
   } = useCartStore();
 
   const [suggestedProducts, setSuggestedProducts] = React.useState<any[]>([]);
@@ -37,26 +39,26 @@ const CartPage: React.FC = () => {
     }
 
     const fetchProducts = async () => {
-        const [data, fetchError] = await api.get<any>(`/products`);
-        
-        if (!fetchError && data) {
-          const products = Array.isArray(data) ? data : data.data || [];
-          setSuggestedProducts(products);
-        }
-      };
+      const [data, fetchError] = await api.get<any>(`/products`);
 
-      const fetchPlatformFee = async () => {
-        const [res, err] = await api.get<any>("/settings/platform-fee");
-        if (!err && res) {
-          setPlatformFee(Number(res.platform_fee) || 0);
-        }
-      };
-  
-      fetchProducts();
-      fetchPlatformFee();
+      if (!fetchError && data) {
+        const products = Array.isArray(data) ? data : data.data || [];
+        setSuggestedProducts(products);
+      }
+    };
+
+    const fetchPlatformFee = async () => {
+      const [res, err] = await api.get<any>("/settings/platform-fee");
+      if (!err && res) {
+        setPlatformFee(Number(res.platform_fee) || 0);
+      }
+    };
+
+    fetchProducts();
+    fetchPlatformFee();
   }, [isAuthenticated, loading, router]);
 
-  if (loading || (!isAuthenticated && typeof window !== 'undefined')) {
+  if (loading || (!isAuthenticated && typeof window !== "undefined")) {
     return <Loading fullScreen />;
   }
 
@@ -85,7 +87,7 @@ const CartPage: React.FC = () => {
   const merchantShippingMap = new Map<string, number>();
   cartItems.forEach((item: any) => {
     if (item.product?.is_shipping_chargeable) {
-      const merchantId = item.product?.merchant_id || 'platform';
+      const merchantId = item.product?.merchant_id || "platform";
       const currentMax = merchantShippingMap.get(merchantId) || 0;
       const charge = Number(item.product?.shipping_charge) || 0;
       if (charge > currentMax) {
@@ -120,9 +122,13 @@ const CartPage: React.FC = () => {
             <div className="w-24 h-24 bg-orange/5 rounded-[2rem] flex items-center justify-center mx-auto mb-8 text-orange">
               <i className="fa-solid fa-cart-shopping-slash text-4xl"></i>
             </div>
-            <h2 className="text-2xl font-black text-gray-900 mb-4">{t.cart.emptyBagTitle}</h2>
-            <p className="text-gray-500 font-bold mb-10 max-w-xs mx-auto">{t.cart.emptyBagDesc}</p>
-            <button 
+            <h2 className="text-2xl font-black text-gray-900 mb-4">
+              {t.cart.emptyBagTitle}
+            </h2>
+            <p className="text-gray-500 font-bold mb-10 max-w-xs mx-auto">
+              {t.cart.emptyBagDesc}
+            </p>
+            <button
               onClick={() => router.push("/product")}
               className="px-10 py-4 bg-orange text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-premium hover:shadow-2xl hover:bg-orange/90 transition-all font-bold"
             >
@@ -156,7 +162,8 @@ const CartPage: React.FC = () => {
                             {item.product?.name || "Product Name"}
                           </h3>
                           <div className="inline-flex items-center gap-1 md:gap-2 px-2 md:px-3 py-0.5 md:py-1 bg-gray-50 text-gray-400 rounded-lg text-[9px] md:text-[10px] font-black uppercase tracking-widest">
-                            ₹{item.product?.sale_price || item.product?.price} {t.cart.perUnit}
+                            ₹{item.product?.sale_price || item.product?.price}{" "}
+                            {t.cart.perUnit}
                           </div>
                         </div>
                       </div>
@@ -166,7 +173,12 @@ const CartPage: React.FC = () => {
                         <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2 bg-gray-50 p-1 md:p-1.5 rounded-xl md:rounded-2xl border-2 border-orange/60 shrink-0">
                           <button
                             className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center rounded-lg md:rounded-xl bg-white text-gray-800 hover:text-orange transition-all active:scale-90 shadow-sm disabled:opacity-50"
-                            onClick={() => handleQuantityChange(item.productId || item.product?.id || 0, -1)}
+                            onClick={() =>
+                              handleQuantityChange(
+                                item.productId || item.product?.id || 0,
+                                -1,
+                              )
+                            }
                             disabled={cartLoading || item.quantity <= 1}
                           >
                             <i className="fa-solid fa-minus text-[10px] md:text-xs" />
@@ -179,22 +191,34 @@ const CartPage: React.FC = () => {
                           />
                           <button
                             className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center rounded-lg md:rounded-xl bg-white text-gray-800 hover:text-orange transition-all active:scale-90 shadow-sm disabled:opacity-50"
-                            onClick={() => handleQuantityChange(item.productId || item.product?.id || 0, 1)}
+                            onClick={() =>
+                              handleQuantityChange(
+                                item.productId || item.product?.id || 0,
+                                1,
+                              )
+                            }
                             disabled={cartLoading}
                           >
                             <i className="fa-solid fa-plus text-[10px] md:text-xs" />
                           </button>
                         </div>
- 
+
                         {/* Price */}
                         <div className="text-sm md:text-xl font-black text-gray-900 italic min-w-[50px] md:w-24 text-right shrink-0">
-                          ₹{(item.product?.sale_price || item.product?.price || 0) * item.quantity}
+                          ₹
+                          {(item.product?.sale_price ||
+                            item.product?.price ||
+                            0) * item.quantity}
                         </div>
- 
+
                         {/* Remove */}
                         <button
                           className="w-8 h-8 md:w-12 md:h-12 flex shrink-0 items-center justify-center rounded-xl md:rounded-2xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm disabled:opacity-50"
-                          onClick={() => handleRemoveItem(item.productId || item.product?.id || 0)}
+                          onClick={() =>
+                            handleRemoveItem(
+                              item.productId || item.product?.id || 0,
+                            )
+                          }
                           disabled={cartLoading}
                         >
                           <i className="fa-solid fa-trash-can text-xs md:text-base" />
@@ -211,8 +235,10 @@ const CartPage: React.FC = () => {
               <div className="sticky top-24 space-y-6">
                 <div className="bg-white rounded-[3rem] shadow-premium border-[3px] border-orange p-10 overflow-hidden relative">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-orange/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
-                  <h2 className="text-2xl font-black text-gray-900 mb-8 z-10 relative">{t.cart.orderSummary}</h2>
-                  
+                  <h2 className="text-2xl font-black text-gray-900 mb-8 z-10 relative">
+                    {t.cart.orderSummary}
+                  </h2>
+
                   <div className="space-y-4 mb-8 z-10 relative">
                     <div className="flex justify-between items-center text-gray-500 font-bold">
                       <span className="text-sm">{t.cart.subtotal}</span>
@@ -220,7 +246,9 @@ const CartPage: React.FC = () => {
                     </div>
                     <div className="flex justify-between items-center text-gray-500 font-bold">
                       <span className="text-sm">{t.cart.shipping}</span>
-                      <span className="text-emerald-500 uppercase text-xs font-black tracking-widest">{shipping === 0 ? t.cart.shippingFree : `₹${shipping}`}</span>
+                      <span className="text-emerald-500 uppercase text-xs font-black tracking-widest">
+                        {shipping === 0 ? t.cart.shippingFree : `₹${shipping}`}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center text-gray-500 font-bold">
                       <span className="text-sm">Platform Charges</span>
@@ -228,8 +256,12 @@ const CartPage: React.FC = () => {
                     </div>
                     <div className="h-px w-full bg-gray-100 my-4"></div>
                     <div className="flex justify-between items-center pt-2">
-                      <span className="text-lg font-black text-gray-900">{t.cart.total}</span>
-                      <span className="text-3xl font-black text-orange italic">₹{grandTotal.toFixed(0)}</span>
+                      <span className="text-lg font-black text-gray-900">
+                        {t.cart.total}
+                      </span>
+                      <span className="text-3xl font-black text-orange italic">
+                        ₹{grandTotal.toFixed(0)}
+                      </span>
                     </div>
                   </div>
 
@@ -253,7 +285,9 @@ const CartPage: React.FC = () => {
               {t.cart.completeJourney}
             </h2>
             <div className="hidden md:block h-1.5 flex-grow bg-gray-100 rounded-full"></div>
-            <p className="text-gray-400 font-black text-xs uppercase tracking-widest">{t.cart.personalizedRecs}</p>
+            <p className="text-gray-400 font-black text-xs uppercase tracking-widest">
+              {t.cart.personalizedRecs}
+            </p>
           </div>
           <ProductCarousel products={suggestedProducts} />
         </div>

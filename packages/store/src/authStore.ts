@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { api } from "@repo/lib";
 import { toast } from "react-toastify";
+import { SafeFetchInstance } from "@repo/safe-fetch";
 
 export interface ClientUser {
     id: string;
@@ -23,10 +23,10 @@ interface AuthState {
     isAuthenticated: boolean;
 
     // Actions
-    login: (userData?: ClientUser) => void;
-    logout: (redirectUrl?: string) => Promise<void>;
-    refreshAuth: () => Promise<void>;
-    refreshBalance: () => Promise<void>;
+    login: (api: SafeFetchInstance, userData?: ClientUser) => void;
+    logout: (api: SafeFetchInstance, redirectUrl?: string) => Promise<void>;
+    refreshAuth: (api: SafeFetchInstance) => Promise<void>;
+    refreshBalance: (api: SafeFetchInstance) => Promise<void>;
     updateUser: (data: Partial<ClientUser>) => void;
 }
 
@@ -38,19 +38,19 @@ export const useAuthStore = create<AuthState>()(
             loading: true,
             isAuthenticated: false,
 
-            login: (userData?: ClientUser) => {
+            login: (api: SafeFetchInstance, userData?: ClientUser) => {
                 if (userData) {
                     set({ user: userData, isAuthenticated: true, loading: false });
                 } else {
                     set({ isAuthenticated: true, loading: false });
                 }
-                get().refreshBalance();
-                if (!userData) {
-                    get().refreshAuth();
-                }
+                get().refreshBalance(api);
+                // if (!userData) {
+                //     get().refreshAuth();
+                // }
             },
 
-            logout: async (redirectUrl?: string) => {
+            logout: async (api: SafeFetchInstance, redirectUrl?: string) => {
                 set({
                     user: null,
                     isAuthenticated: false,
@@ -82,7 +82,7 @@ export const useAuthStore = create<AuthState>()(
                 }
             },
 
-            refreshBalance: async () => {
+            refreshBalance: async (api: SafeFetchInstance) => {
                 const [res, error] = await api.get<any>('/wallet/balance');
                 if (error) return;
 
@@ -101,7 +101,7 @@ export const useAuthStore = create<AuthState>()(
                 set({ balance: parsed });
             },
 
-            refreshAuth: async () => {
+            refreshAuth: async (api: SafeFetchInstance) => {
                 if (!get().isAuthenticated) {
                     set({ loading: true });
                 }
@@ -154,7 +154,7 @@ export const useAuthStore = create<AuthState>()(
                         isAuthenticated: true,
                         loading: false
                     });
-                    get().refreshBalance();
+                    get().refreshBalance(api);
                 } else {
                     set({ isAuthenticated: false, user: null, loading: false });
                 }

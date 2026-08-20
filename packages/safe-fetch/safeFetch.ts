@@ -1,7 +1,8 @@
 import parseBody from "./body-parser";
 import anySignal from "./any-signal";
+import { ApiError } from "./error";
 
-export interface SafeFetchInit extends Omit<RequestInit, 'body'> {
+export interface SafeFetchInit extends Omit<RequestInit, "body"> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: any;
   timeoutMs?: number;
@@ -19,20 +20,6 @@ export interface SafeFetchInstanceConfig {
   onRequest?: (url: string, init: RequestInit) => void | Promise<void>;
   onResponse?: <T>(data: T, res: Response) => void | Promise<void>;
   onError?: (error: ApiError) => void | Promise<void>;
-}
-
-// Custom error class to capture API errors with status, message, body, and headers
-export class ApiError extends Error {
-  constructor(
-    public status: number,
-    message: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public body?: any,
-    public headers?: Headers,
-  ) {
-    super(message);
-    this.name = "ApiError";
-  }
 }
 
 // Result type: either data of type T or an ApiError
@@ -144,9 +131,12 @@ async function executeFetch<T>(
     const data = await parseBody(res);
 
     if (!res.ok) {
-      const message = (data && typeof data === 'object' && 'message' in data) 
-        ? (Array.isArray(data.message) ? data.message[0] : data.message) 
-        : res.statusText;
+      const message =
+        data && typeof data === "object" && "message" in data
+          ? Array.isArray(data.message)
+            ? data.message[0]
+            : data.message
+          : res.statusText;
       const error = new ApiError(res.status, message, data, res.headers);
       if (instanceConfig.onError) await instanceConfig.onError(error);
       return [null, error];
@@ -157,7 +147,7 @@ async function executeFetch<T>(
     }
 
     return [data as T, null];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     const error =
       err.name === "AbortError"

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 import { ExpertGridSkeleton, SkeletonCard } from "../../features/experts/SkeletonCard";
 import ExpertCard from "@/components/features/experts/ExpertCard";
 

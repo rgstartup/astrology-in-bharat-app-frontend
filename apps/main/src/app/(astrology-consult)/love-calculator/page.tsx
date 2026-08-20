@@ -1,10 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 import { toast } from "react-toastify";
-import { getErrorMessage } from "@repo/lib/utils/error";
-import Link from "next/link";
-import Image from "next/image";
+import { getErrorMessage } from "@repo/lib";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
 import LoveCalculatorSeoContent from "./love-calculator-seo.component";
@@ -19,10 +17,21 @@ const CircleProgress = ({ percent }: { percent: number }) => {
   return (
     <div className="relative inline-flex items-center justify-center">
       <svg width="180" height="180" className="-rotate-90">
-        <circle cx="90" cy="90" r={r} fill="none" stroke="#F5E8DC" strokeWidth="12" />
         <circle
-          cx="90" cy="90" r={r} fill="none"
-          stroke="#F26500" strokeWidth="12"
+          cx="90"
+          cy="90"
+          r={r}
+          fill="none"
+          stroke="#F5E8DC"
+          strokeWidth="12"
+        />
+        <circle
+          cx="90"
+          cy="90"
+          r={r}
+          fill="none"
+          stroke="#F26500"
+          strokeWidth="12"
           strokeLinecap="round"
           strokeDasharray={circ}
           strokeDashoffset={offset}
@@ -37,7 +46,15 @@ const CircleProgress = ({ percent }: { percent: number }) => {
 };
 
 // ── Metric Card ──────────────────────────────────────────────────────────────
-const MetricCard = ({ icon, label, value }: { icon: string; label: string; value: number }) => (
+const MetricCard = ({
+  icon,
+  label,
+  value,
+}: {
+  icon: string;
+  label: string;
+  value: number;
+}) => (
   <div className="flex flex-col items-center gap-1 bg-white border border-[#F0E0D0] rounded-2xl px-4 py-3 flex-1 min-w-[70px]">
     <i className={`${icon} text-[#F26500] text-lg`} />
     <span className="text-xs text-[#888] font-semibold">{label}</span>
@@ -46,20 +63,24 @@ const MetricCard = ({ icon, label, value }: { icon: string; label: string; value
 );
 
 // ── Result Panel ─────────────────────────────────────────────────────────────
-const ResultPanel = ({ result, t }: { result: any, t: any }) => {
+const ResultPanel = ({ result, t }: { result: any; t: any }) => {
   const score = result?.score ?? result?.loveScore ?? result?.percentage ?? 76;
   const label =
-    score >= 80 ? t.result.excellent :
-    score >= 60 ? t.result.good :
-    score >= 40 ? t.result.average : t.result.low;
+    score >= 80
+      ? t.result.excellent
+      : score >= 60
+        ? t.result.good
+        : score >= 40
+          ? t.result.average
+          : t.result.low;
   const desc =
     score >= 80
       ? t.result.descExcellent
       : score >= 60
-      ? t.result.descGood
-      : score >= 40
-      ? t.result.descAverage
-      : t.result.descLow;
+        ? t.result.descGood
+        : score >= 40
+          ? t.result.descAverage
+          : t.result.descLow;
 
   const love = Math.min(100, score + 4);
   const trust = Math.max(0, score - 6);
@@ -85,10 +106,26 @@ const ResultPanel = ({ result, t }: { result: any, t: any }) => {
 
       {/* Metric Cards */}
       <div className="flex gap-2 flex-wrap">
-        <MetricCard icon="fa-solid fa-heart" label={t.result.metrics.love} value={love} />
-        <MetricCard icon="fa-solid fa-shield-heart" label={t.result.metrics.trust} value={trust} />
-        <MetricCard icon="fa-solid fa-comments" label={t.result.metrics.communication} value={communication} />
-        <MetricCard icon="fa-solid fa-face-smile-hearts" label={t.result.metrics.emotions} value={emotions} />
+        <MetricCard
+          icon="fa-solid fa-heart"
+          label={t.result.metrics.love}
+          value={love}
+        />
+        <MetricCard
+          icon="fa-solid fa-shield-heart"
+          label={t.result.metrics.trust}
+          value={trust}
+        />
+        <MetricCard
+          icon="fa-solid fa-comments"
+          label={t.result.metrics.communication}
+          value={communication}
+        />
+        <MetricCard
+          icon="fa-solid fa-face-smile-hearts"
+          label={t.result.metrics.emotions}
+          value={emotions}
+        />
       </div>
 
       {/* Detailed Report btn */}
@@ -103,7 +140,9 @@ const ResultPanel = ({ result, t }: { result: any, t: any }) => {
 // ── Main Page ────────────────────────────────────────────────────────────────
 const LoveCalculatorPage = () => {
   const { lang } = useLanguageStore();
-  const tHome = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+  const tHome =
+    homeTranslations[lang as keyof typeof homeTranslations] ||
+    homeTranslations.en;
   const t = tHome.loveCalculator;
 
   const [yourName, setYourName] = useState("");
@@ -140,8 +179,10 @@ const LoveCalculatorPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDF6F0]" style={{ fontFamily: "'Inter', sans-serif" }}>
-
+    <div
+      className="min-h-screen bg-[#FDF6F0]"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
       {/* Breadcrumb */}
       <div className="max-w-6xl mx-auto px-4 py-4">
         <p className="text-sm text-[#888]">
@@ -155,8 +196,9 @@ const LoveCalculatorPage = () => {
 
       {/* Main Card Section */}
       <div className="max-w-6xl mx-auto px-4 pb-4">
-      <div className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}>
-
+        <div
+          className={`grid gap-6 ${result ? "lg:grid-cols-3 md:grid-cols-2" : "md:grid-cols-2 max-w-5xl"} mx-auto`}
+        >
           {/* ── Left: Form ── */}
           <form
             onSubmit={handleSubmit}
@@ -182,58 +224,66 @@ const LoveCalculatorPage = () => {
 
             {/* Your Name */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-[#333]">{t.form.yourName}</label>
+              <label className="text-sm font-semibold text-[#333]">
+                {t.form.yourName}
+              </label>
               <div className="relative">
-                  <input
-                    type="text"
-                    placeholder={t.form.yourNamePlaceholder}
-                    value={yourName}
-                    onChange={(e) => setYourName(e.target.value)}
-                    className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
-                  />
-                  <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm" />
-                </div>
+                <input
+                  type="text"
+                  placeholder={t.form.yourNamePlaceholder}
+                  value={yourName}
+                  onChange={(e) => setYourName(e.target.value)}
+                  className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
+                />
+                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm" />
+              </div>
             </div>
 
             {/* Partner Name */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-[#333]">{t.form.partnerName}</label>
+              <label className="text-sm font-semibold text-[#333]">
+                {t.form.partnerName}
+              </label>
               <div className="relative">
-                  <input
-                    type="text"
-                    placeholder={t.form.partnerNamePlaceholder}
-                    value={partnerName}
-                    onChange={(e) => setPartnerName(e.target.value)}
-                    className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
-                  />
-                  <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm" />
-                </div>
+                <input
+                  type="text"
+                  placeholder={t.form.partnerNamePlaceholder}
+                  value={partnerName}
+                  onChange={(e) => setPartnerName(e.target.value)}
+                  className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 pr-10 text-sm text-[#111] font-medium placeholder-[#777] focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition"
+                />
+                <i className="fa-regular fa-user absolute right-3 top-1/2 -translate-y-1/2 text-[#888] text-sm" />
+              </div>
             </div>
 
             {/* Your DOB */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-[#333]">{t.form.yourDob}</label>
+              <label className="text-sm font-semibold text-[#333]">
+                {t.form.yourDob}
+              </label>
               <div className="relative">
-                  <input
-                    type="date"
-                    value={yourDob}
-                    onChange={(e) => setYourDob(e.target.value)}
-                    className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 text-sm text-[#111] font-medium focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
-                  />
-                </div>
+                <input
+                  type="date"
+                  value={yourDob}
+                  onChange={(e) => setYourDob(e.target.value)}
+                  className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 text-sm text-[#111] font-medium focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
+                />
+              </div>
             </div>
 
             {/* Partner DOB */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-[#333]">{t.form.partnerDob}</label>
+              <label className="text-sm font-semibold text-[#333]">
+                {t.form.partnerDob}
+              </label>
               <div className="relative">
-                  <input
-                    type="date"
-                    value={partnerDob}
-                    onChange={(e) => setPartnerDob(e.target.value)}
-                    className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 text-sm text-[#111] font-medium focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
-                  />
-                </div>
+                <input
+                  type="date"
+                  value={partnerDob}
+                  onChange={(e) => setPartnerDob(e.target.value)}
+                  className="w-full border border-[#D0BBA0] rounded-xl px-4 py-3 text-sm text-[#111] font-medium focus:outline-none focus:border-[#F26500] focus:ring-2 focus:ring-[#F26500]/20 bg-white transition [color-scheme:light]"
+                />
+              </div>
             </div>
 
             {/* Submit */}
@@ -253,30 +303,24 @@ const LoveCalculatorPage = () => {
           {/* ── Right: Result (only when available) ── */}
           {result && <ResultPanel result={result} t={t} />}
           {/* ── Right: Guidance Card ── */}
-          <div className={result ? "lg:col-span-1 md:col-span-2" : "col-span-1"}>
+          <div
+            className={result ? "lg:col-span-1 md:col-span-2" : "col-span-1"}
+          >
             <PersonalGuidanceCard className="h-full" />
           </div>
         </div>
         {/* Bottom CTA Banner */}
-        <GuidanceCTA 
+        <GuidanceCTA
           className="mt-8"
           title={t.cta.title}
           description={t.cta.desc}
         />
-
       </div>
 
       {/* ── SEO Section ── */}
       <LoveCalculatorSeoContent />
-
     </div>
   );
 };
 
 export default LoveCalculatorPage;
-
-
-
-
-
-

@@ -16,7 +16,6 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/lib": "workspace:*",
     "@repo/safe-fetch": "workspace:*",
-    "@repo/styles": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.90.21",

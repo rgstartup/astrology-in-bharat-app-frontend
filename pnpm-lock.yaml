@@ -196,9 +196,6 @@ importers:
       '@repo/safe-fetch':
         specifier: workspace:*
         version: link:../../packages/safe-fetch
-      '@repo/styles':
-        specifier: workspace:*
-        version: link:../../packages/styles
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -429,9 +426,6 @@ importers:
       '@repo/store':
         specifier: workspace:*
         version: link:../../packages/store
-      '@repo/styles':
-        specifier: workspace:*
-        version: link:../../packages/styles
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -583,6 +577,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      jwt-decode:
+        specifier: ^4.0.0
+        version: 4.0.0
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.4.1

@@ -1,3 +1,3 @@
 export * from "./utils/cn";
-export * from "./utils/error";
-export { api } from "./api";
+export { getErrorMessage } from "./utils/error";
+export { decodeToken } from "./utils/jwt-decode";

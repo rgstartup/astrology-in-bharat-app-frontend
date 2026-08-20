@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { loginAction, setExpiredAccessTokenAction, setExpiredRefreshTokenAction } from "@/actions/auth";
 import { useAuthStore } from "@/store/useAuthStore";
-import { API_ROUTES as API_CONFIG } from "@/lib/api-routes";
+import { API_ROUTES as API_CONFIG } from "@/actions";
 import { useLanguageStore } from "@repo/store";
 import { authTranslations } from "@/lib/translations/auth";
 import { Loading } from "@repo/ui";

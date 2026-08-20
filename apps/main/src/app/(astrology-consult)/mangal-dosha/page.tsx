@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 
 import HeroSection from "./hero.component";
 import InputForm from "./input-form.component";

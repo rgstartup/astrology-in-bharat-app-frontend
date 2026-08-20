@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
-import { api as http } from "@/lib/api";
+import { api as http } from "@/actions";
 import { getErrorMessage } from "@repo/lib";
 
 interface ReportIssueModalProps {

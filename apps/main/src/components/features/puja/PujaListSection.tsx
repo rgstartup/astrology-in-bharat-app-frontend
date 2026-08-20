@@ -3,9 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import NextLink from "next/link";
 const Link = NextLink as any;
-import { Loader2, Search, ChevronDown } from "lucide-react";
-import { api as http } from "@/lib/api";
-import { API_ROUTES } from "@/lib/api-routes";
+import { api as http, API_ROUTES } from "@/actions";
 import { ExpertPuja } from "@/lib/types/puja";
 import { PujaCard } from "./PujaCard";
 import { useLanguageStore } from "@repo/store";
@@ -15,6 +13,7 @@ import { Navigation, Autoplay, Mousewheel } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { PujaSkeletonCard } from "./PujaSkeletonCard";
+import { ChevronDown, Search } from "lucide-react";
 
 const Swiper = SwiperComp as any;
 const SwiperSlide = SwiperSlideComp as any;
@@ -84,7 +83,7 @@ const PujaListSection = () => {
     const t = pujaTranslations[lang as "en" | "hi"] || pujaTranslations.en;
     const content = (pujaContent[lang as "en" | "hi"] || pujaContent.en) as any;
     const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
-    
+
     const [pujas, setPujas] = useState<ExpertPuja[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
@@ -96,7 +95,7 @@ const PujaListSection = () => {
         const fetchPujasItems = async () => {
             setLoading(true);
             const [res, error] = await http.get<ExpertPuja[]>(API_ROUTES.EXPERT.GET_ALL_PUJAS) as any;
-            
+
             if (error) {
                 console.warn("⚠️ Failed to fetch pujas, loading dummy data.", error);
                 setPujas(DUMMY_PUJAS);
@@ -127,9 +126,9 @@ const PujaListSection = () => {
     const uniquePujaNames = [t.filters.allPujas, ...Array.from(new Set(pujas.map(p => p.name)))];
 
     const filteredPujas = pujas.filter(puja => {
-        const matchesSearch = puja.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                             (puja.expert?.user?.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-                             (puja.districts?.some(d => d.toLowerCase().includes(searchQuery.toLowerCase())));
+        const matchesSearch = puja.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (puja.expert?.user?.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (puja.districts?.some(d => d.toLowerCase().includes(searchQuery.toLowerCase())));
         const matchesDropdown = selectedPujaName === t.filters.allPujas || puja.name === selectedPujaName;
         return matchesSearch && matchesDropdown;
     });
@@ -166,7 +165,7 @@ const PujaListSection = () => {
                         {/* Search Bar */}
                         <div className="relative w-full sm:w-64 md:w-72">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-orange-500" />
-                            <input 
+                            <input
                                 type="text"
                                 placeholder={t.filters.searchPlaceholder}
                                 value={searchQuery}
@@ -178,7 +177,7 @@ const PujaListSection = () => {
 
                         {/* Puja Category Dropdown */}
                         <div className="relative w-full sm:w-48 md:w-56" ref={dropdownRef}>
-                            <button 
+                            <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                 className="w-full flex items-center justify-between px-4 py-2.5 bg-black/40 border border-[#d95a00] rounded-xl focus:ring-2 focus:ring-[#d95a00]/30 hover:border-[#ff6b00] outline-none text-sm font-bold text-white transition-all"
                                 style={fontStyle}
@@ -186,7 +185,7 @@ const PujaListSection = () => {
                                 <span className="truncate pr-2">{selectedPujaName === t.filters.allPujas ? t.filters.allPujas : (content[selectedPujaName] || selectedPujaName)}</span>
                                 <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${isDropdownOpen ? 'rotate-180 text-orange-500' : ''}`} />
                             </button>
-                            
+
                             {isDropdownOpen && (
                                 <div className="absolute top-[calc(100%+8px)] right-0 w-full md:w-64 bg-[#301118] border border-white/10 rounded-xl shadow-2xl py-2 max-h-60 overflow-y-auto animate-in fade-in z-50">
                                     {uniquePujaNames.map((name) => (
@@ -226,40 +225,40 @@ const PujaListSection = () => {
                     </div>
                 ) : (
                     <div className="relative puja-swiper-wrapper mt-4 md:px-12 mb-0 z-10">
-                      <Swiper
-                        modules={[Navigation, Autoplay, Mousewheel]}
-                        speed={800}
-                        spaceBetween={20}
-                        slidesPerView={1}
-                        mousewheel={{
-                          forceToAxis: false,
-                          releaseOnEdges: true,
-                        }}
-                        navigation={{
-                          nextEl: ".puja-next",
-                          prevEl: ".puja-prev",
-                        }}
-                        breakpoints={{
-                          480: { slidesPerView: 1.2, spaceBetween: 15 },
-                          640: { slidesPerView: 2, spaceBetween: 20 },
-                          992: { slidesPerView: 3, spaceBetween: 20 },
-                          1200: { slidesPerView: 3, spaceBetween: 24 },
-                        }}
-                        className="py-4 !pb-2"
-                      >
-                        {displayPujas.map((puja) => (
-                           <SwiperSlide key={puja.id} className="h-auto">
-                               <PujaCard puja={puja} />
-                           </SwiperSlide>
-                        ))}
-                      </Swiper>
-                      
-                      <button className="puja-prev absolute top-1/2 -translate-y-1/2 left-0 w-10 h-10 hidden md:flex items-center justify-center text-orange-600 bg-white shadow-lg rounded-full hover:scale-110 transition cursor-pointer z-10 p-0 border-0">
-                        <i className="fa-solid fa-chevron-left fa-lg"></i>
-                      </button>
-                      <button className="puja-next absolute top-1/2 -translate-y-1/2 right-0 w-10 h-10 hidden md:flex items-center justify-center text-orange-600 bg-white shadow-lg rounded-full hover:scale-110 transition cursor-pointer z-10 p-0 border-0">
-                        <i className="fa-solid fa-chevron-right fa-lg"></i>
-                      </button>
+                        <Swiper
+                            modules={[Navigation, Autoplay, Mousewheel]}
+                            speed={800}
+                            spaceBetween={20}
+                            slidesPerView={1}
+                            mousewheel={{
+                                forceToAxis: false,
+                                releaseOnEdges: true,
+                            }}
+                            navigation={{
+                                nextEl: ".puja-next",
+                                prevEl: ".puja-prev",
+                            }}
+                            breakpoints={{
+                                480: { slidesPerView: 1.2, spaceBetween: 15 },
+                                640: { slidesPerView: 2, spaceBetween: 20 },
+                                992: { slidesPerView: 3, spaceBetween: 20 },
+                                1200: { slidesPerView: 3, spaceBetween: 24 },
+                            }}
+                            className="py-4 !pb-2"
+                        >
+                            {displayPujas.map((puja) => (
+                                <SwiperSlide key={puja.id} className="h-auto">
+                                    <PujaCard puja={puja} />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+
+                        <button className="puja-prev absolute top-1/2 -translate-y-1/2 left-0 w-10 h-10 hidden md:flex items-center justify-center text-orange-600 bg-white shadow-lg rounded-full hover:scale-110 transition cursor-pointer z-10 p-0 border-0">
+                            <i className="fa-solid fa-chevron-left fa-lg"></i>
+                        </button>
+                        <button className="puja-next absolute top-1/2 -translate-y-1/2 right-0 w-10 h-10 hidden md:flex items-center justify-center text-orange-600 bg-white shadow-lg rounded-full hover:scale-110 transition cursor-pointer z-10 p-0 border-0">
+                            <i className="fa-solid fa-chevron-right fa-lg"></i>
+                        </button>
                     </div>
                 )}
 

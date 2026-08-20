@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { io, Socket } from "socket.io-client";
 import { toast } from "react-toastify";
-import { api as http } from "@/lib/api";
+import { api } from "@/actions";
 import { CallStatus, CallSession } from "@/lib/types";
 import { getErrorMessage } from "@repo/lib";
 
@@ -30,7 +30,10 @@ export const useCallLogic = (): any => {
   const [showFreeEndPrompt, setShowFreeEndPrompt] = useState(false);
   const [freeLimitData, setFreeLimitData] = useState<any>(null);
   const [continuationTimer, setContinuationTimer] = useState(30);
-  const [endReason, setEndReason] = useState<{ reason: string; message: string } | null>(null);
+  const [endReason, setEndReason] = useState<{
+    reason: string;
+    message: string;
+  } | null>(null);
 
   const socketRef = useRef<Socket | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -45,10 +48,13 @@ export const useCallLogic = (): any => {
 
   useEffect(() => {
     cancelledRef.current = false;
-    
-    const finalSocketUrl = typeof window !== "undefined" 
-      ? (window.location.origin.includes("localhost") ? "http://localhost:6543" : window.location.origin)
-      : SOCKET_URL;
+
+    const finalSocketUrl =
+      typeof window !== "undefined"
+        ? window.location.origin.includes("localhost")
+          ? "http://localhost:6543"
+          : window.location.origin
+        : SOCKET_URL;
 
     if (!hasSetupRef.current) {
       hasSetupRef.current = true;
@@ -69,7 +75,7 @@ export const useCallLogic = (): any => {
 
     let pollTimer: NodeJS.Timeout | null = null;
     const checkSessionStatus = async () => {
-      const [res, err] = await http.get<any>(`/call/session/${sessionId}`);
+      const [res, err] = await api.get<any>(`/call/session/${sessionId}`);
       if (err) {
         console.error("Failed to fetch session", err);
         return;
@@ -86,9 +92,13 @@ export const useCallLogic = (): any => {
       if (!hasAcceptedRef.current && session.status === "active") {
         console.log("🔄 [Poll] Session active, connecting...");
         handleCallAccepted(session);
-      } 
+      }
       // 2. Transition to ended
-      else if (session.status === "completed" || session.status === "cancelled" || session.status === "rejected") {
+      else if (
+        session.status === "completed" ||
+        session.status === "cancelled" ||
+        session.status === "rejected"
+      ) {
         console.log("🔄 [Poll] Session ended on server, cleaning up...");
         if (pollTimer) {
           clearInterval(pollTimer);
@@ -110,8 +120,10 @@ export const useCallLogic = (): any => {
       hasAcceptedRef.current = true;
       setStatus("connecting");
 
-      const [tokenResponse, tokenError] = await http.get<any>(`/call/token/${sessionId}`);
-      
+      const [tokenResponse, tokenError] = await api.get<any>(
+        `/call/token/${sessionId}`,
+      );
+
       if (tokenError) {
         if (!cancelledRef.current) {
           toast.error("Could not connect call.");
@@ -129,7 +141,8 @@ export const useCallLogic = (): any => {
       setCallType(sessionPayload?.type || "audio");
 
       try {
-        if (sessionPayload?.type === "video") await initVideoCall(myToken, roomName);
+        if (sessionPayload?.type === "video")
+          await initVideoCall(myToken, roomName);
         else await initAudioCall(myToken);
       } catch (err) {
         if (!cancelledRef.current) {
@@ -142,15 +155,15 @@ export const useCallLogic = (): any => {
     socket.on("call_accepted", handleCallAccepted);
     socket.on("call_ended", (data?: any) => {
       console.log("☎ [Socket] call_ended received", data);
-      
+
       if (data && !data.reason) {
-          // If data is a full session object, update sessionData for the summary modal
-          setSessionData(data);
+        // If data is a full session object, update sessionData for the summary modal
+        setSessionData(data);
       } else if (data?.reason) {
-          // If it's a forced termination with a reason
-          setEndReason(data);
+        // If it's a forced termination with a reason
+        setEndReason(data);
       }
-      
+
       if (!cancelledRef.current) handleCallEnded();
     });
 
@@ -179,7 +192,10 @@ export const useCallLogic = (): any => {
     if (localTracksRef.current.length > 0) return;
     try {
       const TwilioVideo = await import("twilio-video");
-      const tracks = await TwilioVideo.createLocalTracks({ audio: true, video: { width: 640 } });
+      const tracks = await TwilioVideo.createLocalTracks({
+        audio: true,
+        video: { width: 640 },
+      });
       localTracksRef.current = tracks;
       attachLocalVideo();
     } catch (err) {
@@ -191,7 +207,8 @@ export const useCallLogic = (): any => {
     const videoTrack = localTracksRef.current.find((t) => t.kind === "video");
     if (videoTrack && localVideoRef.current) {
       const el = videoTrack.attach();
-      el.style.cssText = "width:100%; height:100%; object-fit:cover; transform:scaleX(-1);";
+      el.style.cssText =
+        "width:100%; height:100%; object-fit:cover; transform:scaleX(-1);";
       localVideoRef.current.innerHTML = "";
       localVideoRef.current.appendChild(el);
     }
@@ -207,21 +224,26 @@ export const useCallLogic = (): any => {
 
   const initAudioCall = async (token: string) => {
     const { Device } = await import("@twilio/voice-sdk");
-    const device = new Device(token, { logLevel: 1, codecPreferences: ["opus", "pcmu"] as any });
+    const device = new Device(token, {
+      logLevel: 1,
+      codecPreferences: ["opus", "pcmu"] as any,
+    });
     deviceRef.current = device;
     device.on("disconnect", (call: any) => {
       console.log("Twilio device disconnected");
     });
-    device.on("error", (err) => { toast.error(`Call error: ${getErrorMessage(err)}`); });
+    device.on("error", (err) => {
+      toast.error(`Call error: ${getErrorMessage(err)}`);
+    });
     await device.register();
     const call = await device.connect({ params: { sessionId } });
     callRef.current = call;
-    
-    // For audio (Conference), we might get 'accept' when connected to Twilio. 
+
+    // For audio (Conference), we might get 'accept' when connected to Twilio.
     // Ideally we'd wait for expert, but 'accept' is the best indicator for Voice SDK.
-    call.on("accept", () => { 
-      setStatus("connected"); 
-      startTimer(); 
+    call.on("accept", () => {
+      setStatus("connected");
+      startTimer();
     });
     call.on("disconnect", (call: any) => {
       console.log("Twilio call disconnected");
@@ -232,10 +254,16 @@ export const useCallLogic = (): any => {
     const TwilioVideo = await import("twilio-video");
     let localTracks = localTracksRef.current;
     if (localTracks.length === 0) {
-      localTracks = await TwilioVideo.createLocalTracks({ audio: true, video: { width: 640 } });
+      localTracks = await TwilioVideo.createLocalTracks({
+        audio: true,
+        video: { width: 640 },
+      });
       localTracksRef.current = localTracks;
     }
-    const room = await TwilioVideo.connect(token, { name: roomName, tracks: localTracks });
+    const room = await TwilioVideo.connect(token, {
+      name: roomName,
+      tracks: localTracks,
+    });
     callRef.current = room;
 
     const checkAndStartTimer = () => {
@@ -257,7 +285,10 @@ export const useCallLogic = (): any => {
     };
 
     room.participants.forEach((p) => {
-      p.tracks.forEach((pub: any) => pub.isSubscribed && pub.track && attachRemoteTrack(pub.track));
+      p.tracks.forEach(
+        (pub: any) =>
+          pub.isSubscribed && pub.track && attachRemoteTrack(pub.track),
+      );
       p.on("trackSubscribed", attachRemoteTrack);
     });
 
@@ -289,7 +320,10 @@ export const useCallLogic = (): any => {
 
   useEffect(() => {
     if (status === "connected" && sessionData?.max_duration_seconds) {
-      if (callDuration >= sessionData.max_duration_seconds && !sessionData.is_free) {
+      if (
+        callDuration >= sessionData.max_duration_seconds &&
+        !sessionData.is_free
+      ) {
         toast.error("Low balance. Waiting for backend termination.");
       }
     }
@@ -297,7 +331,10 @@ export const useCallLogic = (): any => {
 
   useEffect(() => {
     if (showFreeEndPrompt && continuationTimer > 0) {
-      const timer = setInterval(() => setContinuationTimer(prev => prev - 1), 1000);
+      const timer = setInterval(
+        () => setContinuationTimer((prev) => prev - 1),
+        1000,
+      );
       return () => clearInterval(timer);
     }
   }, [showFreeEndPrompt, continuationTimer]);
@@ -306,10 +343,10 @@ export const useCallLogic = (): any => {
     if (timerRef.current) return;
     const start_time = sessionDataRef.current?.start_time;
     const startMs = start_time ? new Date(start_time).getTime() : Date.now();
-    
+
     setCallDuration(Math.floor((Date.now() - startMs) / 1000));
     timerRef.current = setInterval(() => {
-        setCallDuration(Math.floor((Date.now() - startMs) / 1000));
+      setCallDuration(Math.floor((Date.now() - startMs) / 1000));
     }, 1000);
   };
 
@@ -325,17 +362,17 @@ export const useCallLogic = (): any => {
   const handleEndCall = async () => {
     deviceRef.current?.disconnectAll?.();
     if (callRef.current?.disconnect) callRef.current.disconnect();
-    
+
     // Explicitly call end API without try-catch
-    const [_, endError] = await http.post<any>(`/call/end`, { 
+    const [_, endError] = await api.post<any>(`/call/end`, {
       sessionId,
-      endedBy: 'USER',
-      reason: 'User clicked end button'
+      endedBy: "USER",
+      reason: "User clicked end button",
     });
     if (endError) {
       console.error("Failed to end call via API:", endError);
     }
-    
+
     socketRef.current?.emit("end_call", { sessionId });
     handleCallEnded();
   };
@@ -386,16 +423,20 @@ export const useCallLogic = (): any => {
       }
 
       const availableDevices = await device.audio.getAvailableOutputDevices();
-      const speakerDevice = Array.from(availableDevices.values()).find((d: any) => 
-        d.label.toLowerCase().includes('speaker') || d.label.toLowerCase().includes('output')
+      const speakerDevice = Array.from(availableDevices.values()).find(
+        (d: any) =>
+          d.label.toLowerCase().includes("speaker") ||
+          d.label.toLowerCase().includes("output"),
       );
 
       if (speakerDevice) {
         if (!isSpeakerOn) {
-          await device.audio.speakerDevices.set([(speakerDevice as any).deviceId]);
+          await device.audio.speakerDevices.set([
+            (speakerDevice as any).deviceId,
+          ]);
           toast.success("Speaker ON");
         } else {
-          await device.audio.speakerDevices.set(['default']);
+          await device.audio.speakerDevices.set(["default"]);
           toast.success("Speaker OFF");
         }
         setIsSpeakerOn(!isSpeakerOn);
@@ -412,22 +453,25 @@ export const useCallLogic = (): any => {
   };
 
   const handleSubmitReview = async () => {
-    if (reviewRating === 0) { toast.warning("Please select a rating"); return; }
+    if (reviewRating === 0) {
+      toast.warning("Please select a rating");
+      return;
+    }
     setReviewSubmitting(true);
-    
+
     const expertData = (sessionData as any)?.expert;
     const expertIdVal = expertData?.id || (sessionData as any).expertId;
-    
-    const [res, error] = await http.post<any>("/reviews", { 
-      sessionId, 
-      expert_id: expertIdVal, 
-      rating: reviewRating, 
-      comment: reviewComment.trim() 
+
+    const [res, error] = await api.post<any>("/reviews", {
+      sessionId,
+      expert_id: expertIdVal,
+      rating: reviewRating,
+      comment: reviewComment.trim(),
     });
 
     if (error) {
       const errMsg = getErrorMessage(error);
-      if (errMsg.toLowerCase().includes('already reviewed')) {
+      if (errMsg.toLowerCase().includes("already reviewed")) {
         setReviewSubmitted(true);
         toast.success("Thank you! 💖");
         setTimeout(() => router.push("/"), 1500);
@@ -443,12 +487,34 @@ export const useCallLogic = (): any => {
   };
 
   return {
-    status, isMuted, isCameraOff, callDuration, sessionData, callType,
-    showRatingModal, setShowRatingModal, reviewRating, setReviewRating,
-    reviewComment, setReviewComment, reviewSubmitting, reviewSubmitted, setReviewSubmitted,
-    localVideoRef, remoteVideoRef, handleEndCall, toggleMute, toggleCamera, toggleSpeaker,
-    handleSubmitReview, isSpeakerOn,
-    showFreeEndPrompt, setShowFreeEndPrompt, freeLimitData, continuationTimer, endReason,
-    socket: socketRef.current
+    status,
+    isMuted,
+    isCameraOff,
+    callDuration,
+    sessionData,
+    callType,
+    showRatingModal,
+    setShowRatingModal,
+    reviewRating,
+    setReviewRating,
+    reviewComment,
+    setReviewComment,
+    reviewSubmitting,
+    reviewSubmitted,
+    setReviewSubmitted,
+    localVideoRef,
+    remoteVideoRef,
+    handleEndCall,
+    toggleMute,
+    toggleCamera,
+    toggleSpeaker,
+    handleSubmitReview,
+    isSpeakerOn,
+    showFreeEndPrompt,
+    setShowFreeEndPrompt,
+    freeLimitData,
+    continuationTimer,
+    endReason,
+    socket: socketRef.current,
   };
 };

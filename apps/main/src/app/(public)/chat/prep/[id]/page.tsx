@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter, usePathname } from "next/navigation";
 import * as LucideIcons from "lucide-react";
-import { api as http } from "@/lib/api";
+import { api } from "@/actions";
 import { getClientProfile } from "@/libs/api-profile";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -31,7 +31,10 @@ export default function ConsultationPrep() {
   const [askSomeoneElse, setAskSomeoneElse] = useState(true);
   const [showSecurityModal, setShowSecurityModal] = useState(false);
   const [showOfflinePopup, setShowOfflinePopup] = useState(false);
-  const [existingChatDetails, setExistingChatDetails] = useState<{sessionId: string, expertId: string} | null>(null);
+  const [existingChatDetails, setExistingChatDetails] = useState<{
+    sessionId: string;
+    expertId: string;
+  } | null>(null);
   const [clientProfile, setClientProfile] = useState<any>(null);
   const [eligibility, setEligibility] = useState<{
     isEligibleForFree: boolean;
@@ -110,9 +113,7 @@ export default function ConsultationPrep() {
         return;
       }
 
-      const [res, fetchError] = await http.get<any>(
-        `/expert/details/${id}`,
-      );
+      const [res, fetchError] = await api.get<any>(`/expert/details/${id}`);
 
       if (fetchError) {
         console.error("Failed to fetch expert for prep:", fetchError);
@@ -154,8 +155,10 @@ export default function ConsultationPrep() {
 
     // Fetch eligibility from backend (business logic stays in backend)
     const fetchEligibility = async () => {
-      if (isAuthenticated && id && !id.startsWith('dummy-')) {
-        const [res, err] = await http.get<any>(`/chat/eligibility?expert_id=${id}`);
+      if (isAuthenticated && id && !id.startsWith("dummy-")) {
+        const [res, err] = await api.get<any>(
+          `/chat/eligibility?expert_id=${id}`,
+        );
         if (!err && res) {
           setEligibility(res);
         }
@@ -172,9 +175,10 @@ export default function ConsultationPrep() {
           <span className="underline font-black">Login now →</span>
         </span>,
         {
-          onClick: () => router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname)}`),
+          onClick: () =>
+            router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname)}`),
           style: { cursor: "pointer" },
-        }
+        },
       );
       return;
     }
@@ -195,7 +199,7 @@ export default function ConsultationPrep() {
     }
     setActionLoading(true);
 
-    const [response, error] = await http.post<any>("/chat/initiate", {
+    const [response, error] = await api.post<any>("/chat/initiate", {
       expert_id: id,
       metadata: !askSomeoneElse ? someoneElseData : null,
     });
@@ -206,7 +210,10 @@ export default function ConsultationPrep() {
       const existingExpertId = (error as any).data?.existingExpertId;
 
       if (existingSessionId && existingExpertId) {
-        setExistingChatDetails({ sessionId: existingSessionId, expertId: existingExpertId });
+        setExistingChatDetails({
+          sessionId: existingSessionId,
+          expertId: existingExpertId,
+        });
       } else {
         toast.error(getErrorMessage(error) || "Failed to start consultation");
       }
@@ -234,8 +241,7 @@ export default function ConsultationPrep() {
           Expert Not Found
         </h2>
         <p className="text-gray-500 max-w-sm mb-8">
-          The expert you are looking for might be unavailable or does not
-          exist.
+          The expert you are looking for might be unavailable or does not exist.
         </p>
         <button
           onClick={() => router.push("/")}
@@ -270,8 +276,6 @@ export default function ConsultationPrep() {
                 }
                 `}
       </style>
-
-
 
       <main className="max-w-6xl mx-auto px-4 pt-10 md:pt-16 pb-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
@@ -309,8 +313,8 @@ export default function ConsultationPrep() {
         description={
           <>
             Right now{" "}
-            <span className="font-bold text-gray-900">{expert?.name}</span>{" "}
-            is offline. <br />
+            <span className="font-bold text-gray-900">{expert?.name}</span> is
+            offline. <br />
             Please try again later when the expert is available.
           </>
         }
@@ -323,15 +327,19 @@ export default function ConsultationPrep() {
         buttonText="Go to existing chat"
         onConfirm={() => {
           if (existingChatDetails) {
-            router.push(`/chat/room/${existingChatDetails.expertId}?sessionId=${existingChatDetails.sessionId}`);
+            router.push(
+              `/chat/room/${existingChatDetails.expertId}?sessionId=${existingChatDetails.sessionId}`,
+            );
           }
         }}
         icon={<LucideIcons.MessageCircle className="w-10 h-10 text-orange" />}
         description={
           <>
-            You already have an active or pending chat request with another expert.
+            You already have an active or pending chat request with another
+            expert.
             <br />
-            Please go to that chat to continue or cancel it before starting a new one.
+            Please go to that chat to continue or cancel it before starting a
+            new one.
           </>
         }
       />

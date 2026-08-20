@@ -1,5 +1,4 @@
-import { api } from "../lib/api";
-import { API_ROUTES } from "../lib/api-routes";
+import { api, API_ROUTES } from "@/actions";
 import { ApiError } from "@repo/safe-fetch";
 
 export const HoroscopeService = {

@@ -7,7 +7,7 @@ import {
   SwiperSlide as SwiperSlideComp,
 } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 import { ProductCard } from "./ProductCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 

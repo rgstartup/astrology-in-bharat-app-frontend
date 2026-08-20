@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { api as http } from "@/lib/api";
+import { api as http } from "@/actions";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@repo/lib";
 import { CloseButton } from "@repo/ui";

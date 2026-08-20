@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { api as http } from "../../../lib/api";
+import { api as http } from "@/actions";
 import { useLanguageStore } from "@repo/store";
 import { homeTranslations } from "../../../lib/translations/home";
 import { Swiper, SwiperSlide } from 'swiper/react';

@@ -1,5 +1,5 @@
 import { Product } from "@/lib/types";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 
 
 const normalizeProduct = (raw: any): Product => {

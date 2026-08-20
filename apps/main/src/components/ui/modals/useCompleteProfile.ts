@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 import { getErrorMessage } from "@repo/lib";
 
 export interface AddressDto {

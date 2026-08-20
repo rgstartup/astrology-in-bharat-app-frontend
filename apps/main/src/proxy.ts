@@ -1,100 +1,100 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import safeFetch from '@repo/safe-fetch';
+import { NextRequest } from 'next/server';
+import { decodeToken } from '@repo/lib';
+import { api } from './actions';
+import { setAccessToken, setRefreshToken } from './actions/cookie';
 
-// Simple JWT parser for proxy
-function parseJwt(token: string) {
-    try {
-        const base64Url = token.split('.')[1];
-        if (!base64Url) return null;
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(
-            atob(base64)
-                .split('')
-                .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-                .join('')
-        );
-        return JSON.parse(jsonPayload);
-    } catch (e) {
-        return null;
-    }
-}
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
+
+const PROTECTED_ROUTES = ['/client'];
+const isProtectedRoute = (pathname: string) => PROTECTED_ROUTES.some(prefix => pathname.startsWith(prefix));
+
+const AUTH_ROUTES = ["/sign-in", "/register"];
+const isAuthRoute = (pathname: string) => AUTH_ROUTES.includes(pathname);
+
+async function refreshSession(refreshToken: string, request: NextRequest, pathname: string) {
+    const [data, error] = await api.post<{ accessToken: string, refreshToken: string }>(`${API_BASE_URL}/auth/refresh`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Cookie": `refreshToken=${refreshToken}`
+        },
+    });
+
+    if (error || !data?.accessToken || !data.refreshToken) {
+        return redirectToLogin(request, pathname);
+    }
+
+    const newAccessToken = data?.accessToken;
+    const newRefreshToken = data?.refreshToken;
+
+    const response = NextResponse.next();
+    setAccessToken(response.cookies, newAccessToken);
+    setRefreshToken(response.cookies, newRefreshToken);
+
+    return response;
+}
+
+const redirectToLogin = (request: NextRequest, pathname: string): NextResponse => {
+    const url = new URL('/sign-in', request.url);
+    url.searchParams.set('callbackUrl', pathname);
+    return NextResponse.redirect(url);
+}
+
+const redirectToClientProfile = (request: NextRequest): NextResponse => {
+    const url = new URL('/client/profile', request.url);
+    return NextResponse.redirect(url);
+}
+
+
+const checkTokenAboutToExpire = (accessToken: string) => {
+    const payload = decodeToken(accessToken);
+
+    if (!payload || !payload.exp) return false;
+
+    const expiryTime = payload.exp * 1000;
+    const currentTime = Date.now();
+    const fiveMinutesInMs = 5 * 60 * 1000;
+
+    return expiryTime - currentTime < fiveMinutesInMs;
+}
 
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // 0. Protected Routes Check
-    const protectedPrefixes = ['/client'];
-    const isProtectedRoute = protectedPrefixes.some(prefix => pathname.startsWith(prefix));
+    const isPathProtected = isProtectedRoute(pathname);
+    const isPathAuth = isAuthRoute(pathname);
 
     // 1. Get tokens from cookies
-    let accessToken = request.cookies.get('accessToken')?.value;
+    const accessToken = request.cookies.get('accessToken')?.value;
     const refreshToken = request.cookies.get('refreshToken')?.value;
 
-    let shouldRefresh = false;
+    const bothTokens = accessToken && refreshToken;
 
-    // 2. Expiry Check (5-minute rule)
-    if (accessToken) {
-        const payload = parseJwt(accessToken);
-        if (payload && payload.exp) {
-            const expiryTime = payload.exp * 1000;
-            const currentTime = Date.now();
-            const fiveMinutesInMs = 5 * 60 * 1000;
-
-            if (expiryTime - currentTime < fiveMinutesInMs) {
-                shouldRefresh = true;
-            }
-        }
-    } else if (refreshToken) {
-        shouldRefresh = true;
+    if (!bothTokens && isPathProtected) {
+        return redirectToLogin(request, pathname);
     }
 
-    // 3. Logic for Refreshing Token
-    if (shouldRefresh && refreshToken) {
-        const [data, error] = await safeFetch<any>(`${API_BASE_URL}/auth/refresh`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Cookie": `refreshToken=${refreshToken}`
-            },
-        });
+    const onlyRefreshToken = !accessToken && refreshToken;
+    if (onlyRefreshToken && isPathProtected) {
+        return refreshSession(refreshToken, request, pathname);
+    }
 
-        if (data && !error) {
-            accessToken = data.accessToken;
-
-            const nextResponse = NextResponse.next();
-            if (accessToken) {
-                nextResponse.cookies.set('accessToken', accessToken, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production',
-                    sameSite: 'lax', // Use lax for main site to allow redirects from payment gateways
-                    path: '/',
-                    maxAge: 60 * 60 * 24 * 7,
-                });
-            }
-            return nextResponse;
-        } else if (error) {
-            console.error("[Main Proxy] refresh error:", error);
+    if (bothTokens && isPathProtected) {
+        const tokenAboutToExpire = checkTokenAboutToExpire(accessToken);
+        if (tokenAboutToExpire) {
+            return refreshSession(refreshToken, request, pathname);
         }
     }
 
-    // 4. Redirect to sign-in if still no accessToken on protected route
-    if (isProtectedRoute && !accessToken) {
-        const url = new URL('/sign-in', request.url);
-        url.searchParams.set('callbackUrl', pathname);
-        return NextResponse.redirect(url);
-    }
-
-    // 5. Redirect to profile if logged in and trying to access sign-in/register
-    const isAuthPage = pathname === '/sign-in' || pathname === '/register';
-    if (isAuthPage && accessToken) {
-        return NextResponse.redirect(new URL('/client/profile', request.url));
+    if (isPathAuth && accessToken) {
+        return redirectToClientProfile(request);
     }
 
     return NextResponse.next();
 }
+
 
 // Matcher configuration for proxy
 export const config = {

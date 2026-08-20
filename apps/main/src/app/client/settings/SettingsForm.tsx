@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { api as http } from "@/lib/api";
+import { api as http } from "@/actions";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export interface AddressData {

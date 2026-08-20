@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 import { useLanguageStore, horoscopeTranslations } from "@repo/store";
 import { ZodiacSignsData } from "@/components/features/services/zodiac";
 import HeroComponent from "./hero.component";
@@ -23,17 +23,24 @@ const HoroscopeContent = () => {
     const fetchAllSigns = async () => {
       const signs = ZodiacSignsData.map((s) => s.title.toLowerCase());
       const previews: Record<string, string> = {};
-      
+
       await Promise.all(
         signs.map(async (sign) => {
-          const [res, err] = await api.get<any>(`/astrology/horoscope-daily?sign=${sign}&lang=${lang}`);
+          const [res, err] = await api.get<any>(
+            `/astrology/horoscope-daily?sign=${sign}&lang=${lang}`,
+          );
           if (!err && res?.data?.predictions) {
-            const overview = res.data.predictions.find((p: any) => p.type === 'love')?.description || res.data.predictions[0]?.description;
+            const overview =
+              res.data.predictions.find((p: any) => p.type === "love")
+                ?.description || res.data.predictions[0]?.description;
             if (overview) {
-              previews[sign.charAt(0).toUpperCase() + sign.slice(1)] = overview.length > 80 ? overview.substring(0, 80) + '...' : overview;
+              previews[sign.charAt(0).toUpperCase() + sign.slice(1)] =
+                overview.length > 80
+                  ? overview.substring(0, 80) + "..."
+                  : overview;
             }
           }
-        })
+        }),
       );
       setSignPreviews(previews);
     };
@@ -68,7 +75,9 @@ const HoroscopeContent = () => {
                   : "bg-white text-[#3D1A0B] hover:bg-gray-50 border border-[#F0E6DD]"
               }`}
             >
-              <i className={`fa-regular fa-calendar text-[#F26500] text-lg`}></i>
+              <i
+                className={`fa-regular fa-calendar text-[#F26500] text-lg`}
+              ></i>
               {tab.label}
             </button>
           ))}
@@ -78,11 +87,14 @@ const HoroscopeContent = () => {
       {/* Main Content Grid */}
       <div className="max-w-[1300px] mx-auto px-4 md:px-8 mt-8">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          
           {/* Left Column (Zodiac Grid) */}
           <div className="flex-1 w-full">
-            <ZodiacGrid onSelectSign={handleSignSelect} signPreviews={signPreviews} activeTab={activeTab} />
-            
+            <ZodiacGrid
+              onSelectSign={handleSignSelect}
+              signPreviews={signPreviews}
+              activeTab={activeTab}
+            />
+
             {/* Bottom CTA (Generate My Horoscope) */}
             <div className="bg-[#FFF8F0] border border-[#E8D5C0] rounded-xl p-4 sm:p-6 mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3 sm:gap-4">
@@ -90,8 +102,12 @@ const HoroscopeContent = () => {
                   <i className="fa-solid fa-dharmachakra text-[#F26500] text-[40px] sm:text-[48px]"></i>
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#3D1A0B] text-[15px] sm:text-[18px] leading-tight sm:leading-normal">{t.bottomCta.title}</h3>
-                  <p className="text-gray-800 text-[12px] sm:text-[13px] mt-0.5">{t.bottomCta.subtitle}</p>
+                  <h3 className="font-bold text-[#3D1A0B] text-[15px] sm:text-[18px] leading-tight sm:leading-normal">
+                    {t.bottomCta.title}
+                  </h3>
+                  <p className="text-gray-800 text-[12px] sm:text-[13px] mt-0.5">
+                    {t.bottomCta.subtitle}
+                  </p>
                 </div>
               </div>
               <button className="bg-transparent border border-[#F26500] text-[#F26500] hover:bg-[#F26500] hover:text-white transition-colors px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm font-bold whitespace-nowrap w-full sm:w-auto">
@@ -104,7 +120,6 @@ const HoroscopeContent = () => {
           <div className="w-full lg:w-[350px] shrink-0">
             <HoroscopeSidebar />
           </div>
-
         </div>
       </div>
 
@@ -112,11 +127,18 @@ const HoroscopeContent = () => {
       <div className="max-w-[1300px] mx-auto px-4 md:px-8 mt-12">
         <div className="bg-[#2D1205] rounded-[24px] p-5 md:p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border border-[#3D1A0B]">
           <div className="relative z-10 w-full text-center md:text-left">
-            <h3 className="text-[17px] sm:text-[19px] md:text-[22px] font-serif font-bold text-[#F26500] mb-2 leading-tight md:leading-normal">{t.bottomCta.templeTitle}</h3>
-            <p className="text-white/80 text-[13px] md:text-[14px]">{t.bottomCta.templeSubtitle}</p>
+            <h3 className="text-[17px] sm:text-[19px] md:text-[22px] font-serif font-bold text-[#F26500] mb-2 leading-tight md:leading-normal">
+              {t.bottomCta.templeTitle}
+            </h3>
+            <p className="text-white/80 text-[13px] md:text-[14px]">
+              {t.bottomCta.templeSubtitle}
+            </p>
           </div>
           <div className="relative z-10">
-            <Link href="/our-experts" className="bg-[#F26500] hover:bg-orange-600 transition-colors text-white text-[15px] font-bold px-6 py-3 rounded-xl flex items-center justify-center gap-2 whitespace-nowrap">
+            <Link
+              href="/our-experts"
+              className="bg-[#F26500] hover:bg-orange-600 transition-colors text-white text-[15px] font-bold px-6 py-3 rounded-xl flex items-center justify-center gap-2 whitespace-nowrap"
+            >
               <i className="fa-solid fa-comments"></i> {t.bottomCta.templeBtn}
             </Link>
           </div>
@@ -129,14 +151,19 @@ const HoroscopeContent = () => {
 
       {/* SEO/Content Section */}
       <HoroscopeSeoContent />
-
     </div>
   );
 };
 
 const HoroscopePage = () => {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
       <HoroscopeContent />
     </Suspense>
   );

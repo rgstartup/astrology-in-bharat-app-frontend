@@ -5,24 +5,24 @@
       "@/*": [
         "./src/*"
       ],
-      "@repo/ui": [
-        "../../packages/ui/src/index.ts"
-      ],
-      "@repo/ui/*": [
-        "../../packages/ui/src/*"
-      ],
-      "@repo/lib": [
-        "../../packages/lib/src/index.ts"
-      ],
-      "@repo/lib/*": [
-        "../../packages/lib/src/*"
-      ],
-      "@packages/*": [
-        "../../packages/*"
-      ],
-      "@repo/safe-fetch": [
-        "../../packages/safe-fetch/index.ts"
-      ]
+      // "@repo/ui": [
+      //   "../../packages/ui/src/index.ts"
+      // ],
+      // "@repo/ui/*": [
+      //   "../../packages/ui/src/*"
+      // ],
+      // "@repo/lib": [
+      //   "../../packages/lib/src/index.ts"
+      // ],
+      // "@repo/lib/*": [
+      //   "../../packages/lib/src/*"
+      // ],
+      // "@packages/*": [
+      //   "../../packages/*"
+      // ],
+      // "@repo/safe-fetch": [
+      //   "../../packages/safe-fetch/index.ts"
+      // ]
     },
     "plugins": [
       {

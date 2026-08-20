@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 import { socket } from "@/libs/socket";
 import { ExpertProfile, ClientExpertProfile } from "@/lib/types";
 

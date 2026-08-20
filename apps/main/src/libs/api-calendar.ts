@@ -1,4 +1,4 @@
-import { api } from '@/lib/api';
+import { api } from "@/actions";
 import { getErrorMessage } from '@repo/lib';
 
 export interface CalendarDay {
