@@ -1,19 +1,15 @@
 "use client";
 
 import React, { useState, useCallback, FormEvent } from "react";
-import NextImage from "next/image";
-import NextLink from "next/link";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { loginAction, setExpiredAccessTokenAction, setExpiredRefreshTokenAction } from "@/actions/auth";
+import { loginAction } from "@/actions/auth";
 import { useAuthStore } from "@/store/useAuthStore";
-import { API_ROUTES as API_CONFIG } from "@/actions";
 import { useLanguageStore } from "@repo/store";
 import { authTranslations } from "@/lib/translations/auth";
 import { Loading } from "@repo/ui";
-
-const Image = NextImage as any;
-const Link = NextLink as any;
+import GoogleLoginButton from "./GoogleLoginButton.component";
 
 const SignInForm: React.FC = () => {
   const router = useRouter();
@@ -22,17 +18,9 @@ const SignInForm: React.FC = () => {
   const { lang } = useLanguageStore();
   const callbackUrl = searchParams.get("callbackUrl") || "/client/profile";
 
-  const t = authTranslations[lang as keyof typeof authTranslations] || authTranslations.en;
-
-  React.useEffect(() => {
-    const errorParam = searchParams.get("error");
-    if (errorParam) {
-      const message = errorParam === "google_auth_failed" ? t.signIn.errors.googleFailed : decodeURIComponent(errorParam);
-      toast.error(message);
-      // Clean up URL
-      router.replace(window.location.pathname);
-    }
-  }, [searchParams, router]);
+  const t =
+    authTranslations[lang as keyof typeof authTranslations] ||
+    authTranslations.en;
 
   const [formData, setFormData] = useState({
     email: "",
@@ -64,7 +52,10 @@ const SignInForm: React.FC = () => {
 
     try {
       // Use Server Action
-      const result = await loginAction({ ...formData, requiredRole: "client" } as any);
+      const result = await loginAction({
+        ...formData,
+        requiredRole: "client",
+      } as any);
 
       if (result.error) {
         toast.error(result.error);
@@ -75,7 +66,7 @@ const SignInForm: React.FC = () => {
 
         // User requested removing the success toast as the UI change (profile pic) is enough
         // toast.success(t.signIn.success);
-        
+
         // Redirect to callback URL or profile page
         router.push(callbackUrl);
       }
@@ -84,23 +75,6 @@ const SignInForm: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleGoogleLogin = () => {
-    // Redirect to backend Google OAuth — browser handles cookie automatically
-    const safeCallback = (!callbackUrl || callbackUrl === "undefined") ? "/client/profile" : callbackUrl;
-    const redirectUri = new URL(
-      safeCallback,
-      globalThis.window.location.origin,
-    ).toString();
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
-    const googleLoginUrl = `${baseUrl.replace(/\/+$/, "")}/auth/google/login?role=client&redirect_uri=${encodeURIComponent(redirectUri)}`;
-    
-    console.log("[DEBUG] NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
-    console.log("[DEBUG] redirectUri:", redirectUri);
-    console.log("[DEBUG] Redirecting to:", googleLoginUrl);
-    
-    globalThis.window.location.href = googleLoginUrl;
   };
 
   return (
@@ -118,44 +92,43 @@ const SignInForm: React.FC = () => {
           <h6 className="text-sm font-semibold text-gray-800 mb-0.5">
             {t.signIn.noAccount}
           </h6>
-          <Link href="/register" className="text-base font-bold text-[#4A1D1F] hover:text-orange transition-all">
+          <Link
+            href="/register"
+            className="text-base font-bold text-[#4A1D1F] hover:text-orange transition-all"
+          >
             {t.signIn.signUp}
           </Link>
         </div>
       </div>
 
       <div className="mb-6">
-        <h2 className="text-[26px] md:text-3xl font-black text-[#301118]">{t.signIn.title}</h2>
-        <p className="text-gray-800 text-xs md:text-sm mt-1 font-medium">{t.signIn.subtitle}</p>
+        <h2 className="text-[26px] md:text-3xl font-black text-[#301118]">
+          {t.signIn.title}
+        </h2>
+        <p className="text-gray-800 text-xs md:text-sm mt-1 font-medium">
+          {t.signIn.subtitle}
+        </p>
       </div>
 
       <div className="mb-6">
-        <button
-          type="button"
-          className="flex items-center justify-center gap-3 w-full border-2 border-gray-100 rounded-2xl py-3 px-6 hover:bg-gray-50 hover:border-gray-200 transition-all cursor-pointer shadow-sm group"
-          onClick={handleGoogleLogin}
-        >
-          <Image
-            src="/images/google-color-svgrepo-com.svg"
-            alt="Google"
-            height={20}
-            width={20}
-            className="group-hover:scale-110 transition-transform"
-          />
-          <span className="font-bold text-gray-600 text-sm">{t.signIn.google}</span>
-        </button>
+        <GoogleLoginButton callbackUrl={callbackUrl} />
       </div>
 
       <div className="relative mb-6 text-center">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-50"></div>
         </div>
-        <span className="relative px-3 text-xs font-semibold text-gray-500 bg-white">{t.signIn.orEmail}</span>
+        <span className="relative px-3 text-xs font-semibold text-gray-500 bg-white">
+          {t.signIn.orEmail}
+        </span>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5">
+          <label
+            htmlFor="email"
+            className="block text-sm font-semibold text-gray-700 mb-1.5"
+          >
             {t.signIn.emailLabel}
           </label>
           <input
@@ -171,7 +144,10 @@ const SignInForm: React.FC = () => {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1.5">
+          <label
+            htmlFor="password"
+            className="block text-sm font-semibold text-gray-700 mb-1.5"
+          >
             {t.signIn.passwordLabel}
           </label>
           <div className="relative">
@@ -190,7 +166,9 @@ const SignInForm: React.FC = () => {
               className="absolute right-4 top-1/2 -translate-y-1/2 border-0 bg-transparent text-gray-300 hover:text-orange transition-colors"
               onClick={() => setShowPassword(!showPassword)}
             >
-              <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} text-base`}></i>
+              <i
+                className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} text-base`}
+              ></i>
             </button>
           </div>
         </div>

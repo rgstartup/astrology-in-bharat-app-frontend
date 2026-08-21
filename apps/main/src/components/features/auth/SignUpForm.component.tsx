@@ -9,6 +9,7 @@ import { useLanguageStore } from "@repo/store";
 import { authTranslations } from "@/lib/translations/auth";
 import { VerificationPopup, Loading } from "@repo/ui";
 import { useSearchParams, useRouter } from "next/navigation";
+import GoogleLoginButton from "./GoogleLoginButton.component";
 
 const Image = NextImage as any;
 const Link = NextLink as any;
@@ -97,12 +98,6 @@ export const SignUpForm: React.FC = () => {
         setProfilePicPreview(URL.createObjectURL(file));
     };
 
-    const handleGoogleLogin = () => {
-        const redirectUri = `${window.location.origin}/client/profile`;
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
-        const googleLoginUrl = `${baseUrl.replace(/\/+$/, "")}/auth/google/login?role=client&redirect_uri=${encodeURIComponent(redirectUri)}`;
-        window.location.href = googleLoginUrl;
-    };
 
     const handleStep1Submit = async (e: FormEvent) => {
         e.preventDefault();
@@ -247,14 +242,7 @@ export const SignUpForm: React.FC = () => {
             {step === 1 && (
                 <>
                 <div className="mb-6">
-                    <button
-                        type="button"
-                        className="flex items-center justify-center gap-3 w-full border-2 border-gray-100 rounded-2xl py-3 px-6 hover:bg-gray-50 hover:border-gray-200 transition-all cursor-pointer shadow-sm group"
-                        onClick={handleGoogleLogin}
-                    >
-                        <Image src="/images/google-color-svgrepo-com.svg" alt="Google" height={20} width={20} className="group-hover:scale-110 transition-transform" />
-                        <span className="font-bold text-gray-800 text-sm">{t.signUp.google}</span>
-                    </button>
+                    <GoogleLoginButton text={t.signUp.google} />
                 </div>
 
                 <div className="relative mb-6 text-center">
