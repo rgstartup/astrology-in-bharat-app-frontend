@@ -4,8 +4,7 @@ import { decodeToken } from "@repo/lib";
 import { api } from "./actions";
 import { setAccessToken, setRefreshToken } from "./actions/cookie";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const PROTECTED_ROUTES = ["/client"];
 const isProtectedRoute = (pathname: string) =>
