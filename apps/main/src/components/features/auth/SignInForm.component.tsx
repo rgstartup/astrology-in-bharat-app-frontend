@@ -10,6 +10,7 @@ import { useLanguageStore } from "@repo/store";
 import { authTranslations } from "@/lib/translations/auth";
 import { Loading } from "@repo/ui";
 import GoogleLoginButton from "./GoogleLoginButton.component";
+import { api } from "@/actions";
 
 const SignInForm: React.FC = () => {
   const router = useRouter();
@@ -40,7 +41,7 @@ const SignInForm: React.FC = () => {
     [],
   );
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
@@ -54,15 +55,14 @@ const SignInForm: React.FC = () => {
       // Use Server Action
       const result = await loginAction({
         ...formData,
-        requiredRole: "client",
-      } as any);
+      });
 
       if (result.error) {
         toast.error(result.error);
       } else if (result.success) {
         // Cookie already set as HttpOnly by the Server Action
         // Just update the Zustand UI state — NO token passed to client
-        login(result.user);
+        login(api, result.user);
 
         // User requested removing the success toast as the UI change (profile pic) is enough
         // toast.success(t.signIn.success);
@@ -76,6 +76,10 @@ const SignInForm: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return <Loading fullScreen />
+  }
 
   return (
     <div className="w-full max-w-[480px] mx-auto lg:ml-auto lg:mr-0 bg-white rounded-3xl shadow-[0_10px_50px_rgba(0,0,0,0.06)] border border-gray-100 p-6 md:p-10 my-0">
@@ -190,8 +194,6 @@ const SignInForm: React.FC = () => {
           {isLoading ? t.signIn.signingIn : t.signIn.submit}
         </button>
       </form>
-
-      {isLoading && <Loading fullScreen />}
     </div>
   );
 };

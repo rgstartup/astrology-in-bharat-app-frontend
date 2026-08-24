@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { useLanguageStore } from "@repo/store";
 import { authTranslations } from "@/lib/translations/auth";
+import { API_ROUTES } from "@/actions";
 
 export interface UseGoogleLoginOptions {
   callbackUrl?: string;
@@ -13,9 +14,10 @@ export interface UseGoogleLoginOptions {
 }
 
 export function useGoogleLogin(options: UseGoogleLoginOptions = {}) {
-  const { callbackUrl: customCallbackUrl, role = "client", onError } = options;
+  const { callbackUrl: customCallbackUrl, onError } = options;
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { lang } = useLanguageStore();
 
   const t =
@@ -32,13 +34,12 @@ export function useGoogleLogin(options: UseGoogleLoginOptions = {}) {
         errorParam === "google_auth_failed"
           ? t.signIn.errors.googleFailed
           : decodeURIComponent(errorParam);
-      if (onError) {
-        onError(message);
-      } else {
-        toast.error(message);
-      }
+
+      const showErrorMessage = onError ?? toast.error;
+
+      showErrorMessage(message);
       // Clean up URL
-      router.replace(window.location.pathname);
+      router.replace(pathname);
     }
   }, [searchParams, router, t, onError]);
 
@@ -48,26 +49,11 @@ export function useGoogleLogin(options: UseGoogleLoginOptions = {}) {
         ? "/client/profile"
         : callbackUrl;
 
-    const redirectUri = new URL(
-      safeCallback,
-      typeof window !== "undefined"
-        ? window.location.origin
-        : "http://localhost:3000",
-    ).toString();
-
-    const baseUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
-    const googleLoginUrl = `${baseUrl}/auth/google/login?role=${encodeURIComponent(role)}&redirect_uri=${encodeURIComponent(redirectUri)}`;
-
-    console.log(
-      "[DEBUG] NEXT_PUBLIC_API_URL:",
-      process.env.NEXT_PUBLIC_API_URL,
-    );
-    console.log("[DEBUG] redirectUri:", redirectUri);
-    console.log("[DEBUG] Redirecting to:", googleLoginUrl);
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+    const googleLoginUrl = `${baseUrl}${API_ROUTES.AUTH.CLIENT.GOOGLE_LOGIN}?redirect_uri=${encodeURIComponent(redirectUri)}`;
 
     router.push(googleLoginUrl);
-  }, [callbackUrl, role]);
+  }, [callbackUrl]);
 
   return {
     handleGoogleLogin,

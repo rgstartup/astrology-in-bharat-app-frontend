@@ -39,11 +39,11 @@ export default async function RootLayout({
         Authorization: `Bearer ${token}`,
         Cookie: `accessToken=${token}`
       }) as any;
-      
+
       if (!authError && res) {
         const raw = res?.data ?? res;
         user = raw?.user || (raw?.id ? raw : null);
-        
+
         if (user) {
           // Unify the profile picture field so that Header has consistent data on SSR
           user.profile_picture = raw?.profile_picture || user.profile_picture || raw?.avatar || user.avatar;
@@ -67,15 +67,15 @@ export default async function RootLayout({
       </head>
       <body className="min-h-screen bg-white text-black font-sans" suppressHydrationWarning>
         <QueryProvider>
-          <AuthInitializer initialUser={user} hasToken={!!token}>
-            <CartInitializer>
-              <WishlistInitializer>
-                <SmoothScroll>
-                  <ClientLayout>{children}</ClientLayout>
-                </SmoothScroll>
-              </WishlistInitializer>
-            </CartInitializer>
-          </AuthInitializer>
+          {/* <AuthInitializer initialUser={user} hasToken={!!token}> */}
+          <CartInitializer>
+            <WishlistInitializer>
+              <SmoothScroll>
+                <ClientLayout>{children}</ClientLayout>
+              </SmoothScroll>
+            </WishlistInitializer>
+          </CartInitializer>
+          {/* </AuthInitializer> */}
         </QueryProvider>
       </body>
     </html>

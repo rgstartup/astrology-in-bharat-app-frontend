@@ -20,7 +20,7 @@ export async function loginAction(
   formData: LoginFormData,
 ): Promise<AuthActionResponse> {
   const [data, error] = await api.post<AuthResponse>(
-    API_ROUTES.AUTH.LOGIN,
+    API_ROUTES.AUTH.CLIENT.LOGIN,
     formData,
   );
 
@@ -84,9 +84,9 @@ export async function registerAction(
 export async function initiateRegistrationAction(
   email: string,
 ): Promise<AuthActionResponse> {
-  const [data, error] = (await api.post<any>("/auth/email/register/initiate", {
+  const [data, error] = await api.post<{ message: string }>("/auth/client/email/register/initiate", {
     email,
-  })) as any;
+  });
 
   if (error) {
     return { error: getErrorMessage(error) };
@@ -94,7 +94,7 @@ export async function initiateRegistrationAction(
 
   return {
     success: true,
-    message: data?.message || "Verification email sent.",
+    message: data?.message,
   };
 }
 
@@ -137,10 +137,10 @@ export async function completeRegistrationAction(
     "[DEBUG][ServerAction] Response from backend - data:",
     data
       ? JSON.stringify({
-          hasAccessToken: !!data.accessToken,
-          hasRefreshToken: !!data.refreshToken,
-          user: data.user,
-        })
+        hasAccessToken: !!data.accessToken,
+        hasRefreshToken: !!data.refreshToken,
+        user: data.user,
+      })
       : "none",
   );
 
