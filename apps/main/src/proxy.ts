@@ -4,8 +4,6 @@ import { decodeToken } from "@repo/lib";
 import { api } from "./actions";
 import { setAccessToken, setRefreshToken } from "./actions/cookie";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
 const PROTECTED_ROUTES = ["/client"];
 const isProtectedRoute = (pathname: string) =>
   PROTECTED_ROUTES.some((prefix) => pathname.startsWith(prefix));
@@ -17,17 +15,18 @@ async function refreshSession(
   refreshToken: string,
   request: NextRequest,
   pathname: string,
+  redirect = false,
 ) {
-  const [data, error] = await api.post<{
-    accessToken: string;
-    refreshToken: string;
-  }>(`${API_BASE_URL}/auth/refresh`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: `refreshToken=${refreshToken}`,
-    },
-  });
+  const [data, error] = await api
+    .extend({
+      headers: {
+        Cookie: `refreshToken=${refreshToken}`,
+      },
+    })
+    .post<{
+      accessToken: string;
+      refreshToken: string;
+    }>(`/auth/refresh`);
 
   if (error || !data?.accessToken || !data.refreshToken) {
     return redirectToLogin(request, pathname);
@@ -36,7 +35,7 @@ async function refreshSession(
   const newAccessToken = data?.accessToken;
   const newRefreshToken = data?.refreshToken;
 
-  const response = NextResponse.next();
+  const response = redirect ? redirectToCallback(request) : NextResponse.next();
   setAccessToken(response.cookies, newAccessToken);
   setRefreshToken(response.cookies, newRefreshToken);
 
@@ -52,8 +51,16 @@ const redirectToLogin = (
   return NextResponse.redirect(url);
 };
 
-const redirectToClientProfile = (request: NextRequest): NextResponse => {
-  const url = new URL("/client/profile", request.url);
+const redirectToCallback = (request: NextRequest): NextResponse => {
+  let redirectRoute = "/client/profile";
+  const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
+
+  if (callbackUrl && callbackUrl !== "/") {
+    redirectRoute = callbackUrl;
+  }
+
+  const url = new URL(redirectRoute, request.url);
+
   return NextResponse.redirect(url);
 };
 
@@ -81,30 +88,31 @@ export async function proxy(request: NextRequest) {
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
-  const bothTokens = accessToken && refreshToken;
+  if (isPathProtected) {
+    if (accessToken) {
+      const tokenAboutToExpire = checkTokenAboutToExpire(accessToken);
 
-  if (!bothTokens && isPathProtected) {
-    console.log("no tokens");
+      if (!tokenAboutToExpire) return NextResponse.next();
+
+      if (!refreshToken) return redirectToLogin(request, pathname);
+      return refreshSession(refreshToken, request, pathname);
+    }
+
+    if (refreshToken) {
+      return refreshSession(refreshToken, request, pathname);
+    }
 
     return redirectToLogin(request, pathname);
   }
 
-  const onlyRefreshToken = !accessToken && refreshToken;
-  if (onlyRefreshToken && isPathProtected) {
-    console.log("only refresh token");
-    return refreshSession(refreshToken, request, pathname);
-  }
-
-  if (bothTokens && isPathProtected) {
-    const tokenAboutToExpire = checkTokenAboutToExpire(accessToken);
-    if (tokenAboutToExpire) {
-      console.log("token about to expire");
-      return refreshSession(refreshToken, request, pathname);
+  if (isPathAuth) {
+    if (accessToken) {
+      return redirectToCallback(request);
     }
-  }
 
-  if (isPathAuth && accessToken) {
-    return redirectToClientProfile(request);
+    if (refreshToken) {
+      return refreshSession(refreshToken, request, pathname, true);
+    }
   }
 
   return NextResponse.next();
