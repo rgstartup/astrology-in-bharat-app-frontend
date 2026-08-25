@@ -6,9 +6,6 @@ import NextImage from "next/image";
 import { PATHS } from "@repo/routes";
 import { useCart } from "../context/CartContext";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
-
 // i18n & State
 import {
   useLanguageStore,
@@ -22,6 +19,16 @@ import {
 } from "../utils/socket";
 import { api } from "../utils/api";
 import { CloseButton } from "../components/CloseButton";
+import SubHeaderSlider from "./sub-header-slider";
+import LanguageSwitcherDropdown from "./language-switcher.button";
+import { formatCompactNumber } from "../utils/currency";
+import BalanceIndicator from "./balance-indicator.button";
+import ProfileImagePreviewModal from "./profile-image-preview.modal";
+import AskExpertCTA from "./ask-expert.cta";
+import AuthCTA from "./auth.cta";
+import CompanyLogo from "./company-logo";
+import HamburgerButton from "./mobile/Hamburger.button";
+import MobileSubMenu from "./mobile/sub-menu";
 
 // Swiper styles are imported in the root layout.tsx to avoid resolution issues in the shared package.
 const SERVICES_DATA_KEYS = [
@@ -93,7 +100,6 @@ const Header: React.FC<HeaderProps> = ({
   const [unreadCount, setUnreadCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showMobileSubMenu, setShowMobileSubMenu] = useState(false);
-  const [showFullBalance, setShowFullBalance] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
 
   // Use the shared auth store
@@ -102,7 +108,6 @@ const Header: React.FC<HeaderProps> = ({
     isAuthenticated: contextIsAuthenticated,
     loading: contextLoading,
     logout: contextLogout,
-    balance: contextBalance,
     refreshAuth,
     refreshBalance,
   } = useAuthStore();
@@ -111,7 +116,7 @@ const Header: React.FC<HeaderProps> = ({
   const cartCount = propCartCount ?? contextCartCount;
 
   // Language management
-  const { lang, setLang } = useLanguageStore();
+  const { lang } = useLanguageStore();
   const t =
     headerTranslations[lang as keyof typeof headerTranslations] ||
     headerTranslations.en;
@@ -119,7 +124,6 @@ const Header: React.FC<HeaderProps> = ({
   // Prioritize props if available, otherwise use context
   const isAuthenticated = authState ?? contextIsAuthenticated;
   const user = userData ?? contextUser;
-  const currentBalance = balance ?? contextBalance;
 
   const legacyUploadsOrigin =
     process.env.NEXT_PUBLIC_ADMIN_UPLOADS_ORIGIN || "http://localhost:3001";
@@ -423,83 +427,11 @@ const Header: React.FC<HeaderProps> = ({
             <div className="ml-auto w-full md:w-auto">
               <div className="flex justify-between md:justify-end items-center gap-1.5 sm:gap-3 md:gap-5 w-full">
                 {/* Language Switcher Dropdown */}
-                <div className="language-dropdown-container relative">
-                  <button
-                    onClick={() =>
-                      setShowLanguageDropdown(!showLanguageDropdown)
-                    }
-                    className="flex items-center gap-1 sm:gap-1.5 focus:outline-none bg-white/10 hover:bg-white/20 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all border border-white/20 select-none"
-                  >
-                    <i className="fa-solid fa-globe text-[10px] sm:text-sm" />
-                    <span className="text-[10px] sm:text-sm font-semibold">
-                      {lang === "hi" ? "हिंदी" : "EN"}
-                    </span>
-                    <i
-                      className={`fa-solid fa-chevron-down text-[8px] sm:text-[10px] transition-transform ${showLanguageDropdown ? "rotate-180" : ""}`}
-                    />
-                  </button>
-
-                  {showLanguageDropdown && (
-                    <div className="absolute top-[120%] left-0 md:left-auto md:right-0 bg-white rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.15)] overflow-hidden w-[120px] text-gray-800 z-[1002] border border-gray-100 flex flex-col">
-                      <button
-                        onClick={() => {
-                          setLang("en");
-                          setShowLanguageDropdown(false);
-                        }}
-                        className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-orange-50 hover:text-orange ${lang === "en" ? "font-bold bg-orange-50/50 text-orange" : "font-medium"}`}
-                      >
-                        English
-                      </button>
-                      <hr className="m-0 border-gray-100" />
-                      <button
-                        onClick={() => {
-                          setLang("hi");
-                          setShowLanguageDropdown(false);
-                        }}
-                        className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-orange-50 hover:text-orange ${lang === "hi" ? "font-bold bg-orange-50/50 text-orange" : "font-medium"}`}
-                      >
-                        हिंदी
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {isAuthenticated && (
-                  <div
-                    onMouseEnter={() => setShowFullBalance(true)}
-                    onMouseLeave={() => setShowFullBalance(false)}
-                    className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 rounded-xl transition-all hover:scale-105 active:scale-95 cursor-help whitespace-nowrap bg-orange hover:opacity-90 shadow-lg relative overflow-hidden"
-                    style={{
-                      minWidth: "75px",
-                      justifyContent: "center",
-                      border: "1px solid rgba(255, 255, 255, 0.1)",
-                    }}
-                  >
-                    {/* Subtle gloss effect */}
-                    <div
-                      className="absolute top-0 left-0 w-full h-1/2 bg-white/10"
-                      style={{ pointerEvents: "none" }}
-                    />
-
-                    <i
-                      className="fa-solid fa-coins text-white text-xs"
-                      style={{
-                        filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.3))",
-                      }}
-                    />
-                    <span
-                      className="text-white font-black text-sm tracking-tight"
-                      style={{ textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
-                    >
-                      ₹
-                      {showFullBalance
-                        ? currentBalance?.toLocaleString()
-                        : currentBalance >= 1000
-                          ? `${(currentBalance / 1000).toFixed(currentBalance % 1000 === 0 ? 0 : 1)} k`
-                          : currentBalance}
-                    </span>
-                  </div>
-                )}
+                <LanguageSwitcherDropdown
+                  showLanguageDropDown={showLanguageDropdown}
+                  setShowLanguageDropDown={setShowLanguageDropdown}
+                />
+                <BalanceIndicator />
 
                 <div className="flex gap-1.5 sm:gap-3 md:gap-4 items-center">
                   {isAuthenticated ? (
@@ -639,8 +571,8 @@ const Header: React.FC<HeaderProps> = ({
                                     >
                                       {notif.createdAt
                                         ? new Date(
-                                          notif.createdAt,
-                                        ).toLocaleString()
+                                            notif.createdAt,
+                                          ).toLocaleString()
                                         : t.justNow}
                                     </p>
                                   </div>
@@ -868,12 +800,12 @@ const Header: React.FC<HeaderProps> = ({
                   ) : (
                     <div className="flex gap-1.5 sm:gap-3">
                       <a
-                        href={`${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(pathname)}`}
+                        href={`${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(pathname === "/" ? "/client/profile" : pathname)}`}
                         className="bg-orange text-white rounded-xl sm:rounded-[14px] px-2.5 sm:px-[15px] py-1.5 sm:py-[6px] text-[10px] sm:text-sm font-semibold inline-block no-underline transition-all hover:opacity-90 active:scale-95 cursor-pointer whitespace-nowrap"
                         onClick={(e) => {
                           e.preventDefault();
                           router.push(
-                            `${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(pathname)}`,
+                            `${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(pathname === "/" ? "/client/profile" : pathname)}`,
                           );
                         }}
                       >
@@ -911,68 +843,42 @@ const Header: React.FC<HeaderProps> = ({
             <div className="flex-1">
               <nav className="flex items-center">
                 {/* Logo */}
-                <Link
-                  className="flex-shrink-0 mr-2 sm:mr-4 w-[160px] sm:w-[210px] lg:w-[240px] flex items-center"
-                  href="/"
-                >
-                  <NextImage
-                    src="/images/web-logo.png"
-                    alt="logo"
-                    width={240}
-                    height={80}
-                    loading="eager"
-                    priority
-                    quality={100}
-                    unoptimized
-                    style={{ width: "100%", height: "auto", maxHeight: "65px" }}
-                    className="object-contain"
-                  />
-                </Link>
+                <CompanyLogo />
 
                 {/* Hamburger — mobile only */}
-                <button
-                  className="ml-auto lg:hidden flex flex-col items-center justify-center gap-1.5 w-10 h-10 border-2 border-orange/50 bg-[#FAE8D6] hover:border-orange hover:bg-[#F2D9C1] transition-all"
-                  type="button"
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  aria-label="Toggle navigation"
-                >
-                  <span
-                    className={`block w-5 h-0.5 bg-gray-700 transition-all ${isMenuOpen ? "rotate-45 translate-y-[8px] bg-orange" : ""}`}
-                  />
-                  <span
-                    className={`block w-5 h-0.5 bg-gray-700 transition-all ${isMenuOpen ? "opacity-0" : ""}`}
-                  />
-                  <span
-                    className={`block w-5 h-0.5 bg-gray-700 transition-all ${isMenuOpen ? "-rotate-45 -translate-y-[8px] bg-orange" : ""}`}
-                  />
-                </button>
+                <HamburgerButton
+                  isMenuOpen={isMenuOpen}
+                  setIsMenuOpen={setIsMenuOpen}
+                />
 
                 {/* Nav links */}
                 <div
                   data-lenis-prevent
-                  className={`lg:flex lg:items-center lg:justify-center lg:flex-1 ${isMenuOpen
-                    ? "block absolute left-0 right-0 bg-brown w-full shadow-2xl border-t border-white/10 z-[1000] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-                    : "hidden"
-                    }`}
+                  className={`lg:flex lg:items-center lg:justify-center lg:flex-1 ${
+                    isMenuOpen
+                      ? "block absolute left-0 right-0 bg-brown w-full shadow-2xl border-t border-white/10 z-[1000] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                      : "hidden"
+                  }`}
                   style={
                     isMenuOpen
                       ? {
-                        top: "100%",
-                        maxHeight: "calc(100vh - 70px)",
-                        overflowY: "auto",
-                        overscrollBehavior: "contain",
-                      }
+                          top: "100%",
+                          maxHeight: "calc(100vh - 70px)",
+                          overflowY: "auto",
+                          overscrollBehavior: "contain",
+                        }
                       : {}
                   }
                 >
                   <ul
-                    className={`flex items-center gap-2 xl:gap-8 translate-y-2 ${isMenuOpen
-                      ? "flex-col items-start w-full py-2 px-3 gap-0"
-                      : "flex-row mx-auto"
-                      }`}
+                    className={`flex items-center gap-2 xl:gap-8 translate-y-2 ${
+                      isMenuOpen
+                        ? "flex-col items-start w-full py-2 px-3 gap-0"
+                        : "flex-row mx-auto"
+                    }`}
                   >
                     {/* Home */}
-                    <li
+                    {/* <li
                       className={
                         isMenuOpen ? "w-full border-b border-white/5" : ""
                       }
@@ -984,7 +890,7 @@ const Header: React.FC<HeaderProps> = ({
                       >
                         {t.navHome}
                       </Link>
-                    </li>
+                    </li> */}
 
                     {/* Daily Horoscope */}
                     <li
@@ -1020,95 +926,11 @@ const Header: React.FC<HeaderProps> = ({
                               style={{ fontSize: "12px" }}
                             />
                           </button>
-                          {showMobileSubMenu && (
-                            <ul
-                              className="list-none pl-3 pb-2"
-                              style={{
-                                borderLeft:
-                                  "3px solid var(--primary-color, #e67e22)",
-                              }}
-                            >
-                              {[
-                                {
-                                  label: t.dropHoroscope,
-                                  href: PATHS.HOROSCOPE,
-                                },
-                                {
-                                  label: t.dropLoveCalc,
-                                  href: PATHS.LOVE_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropDahejCalc,
-                                  href: PATHS.DAHEJ_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropFlamesCalc,
-                                  href: PATHS.FLAMES_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropLoveCompat,
-                                  href: PATHS.LOVE_COMPATIBILITY_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropMarriageAge,
-                                  href: PATHS.MARRIAGE_AGE_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropSoulmateInitials,
-                                  href: PATHS.SOULMATE_NAME_INITALS_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropLuckyNumber,
-                                  href: PATHS.LUCKY_NUMBER_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropLifePath,
-                                  href: PATHS.LIFE_PATH_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropNameNumerology,
-                                  href: PATHS.NAME_NUMEROLOGY_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropZodiacCompat,
-                                  href: PATHS.ZODIAC_SIGN_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropNakshatra,
-                                  href: PATHS.NAKSHATRA_FINDER,
-                                },
-                                {
-                                  label: t.dropLoyalPartner,
-                                  href: PATHS.LOYAL_PARTNER_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropBreakup,
-                                  href: PATHS.BREAKUP_PATCHUP_CALCULATOR,
-                                },
-                                {
-                                  label: t.dropOnlinePuja,
-                                  href: PATHS.ONLINE_PUJA,
-                                },
-                              ].map((item) => (
-                                <li
-                                  key={item.href}
-                                  className="py-2.5 border-b border-white/5 last:border-0 ml-4"
-                                >
-                                  <Link
-                                    href={item.href}
-                                    className="no-underline text-white/70 hover:text-orange transition-all"
-                                    style={{ fontSize: "14px" }}
-                                    onClick={() => {
-                                      setIsMenuOpen(false);
-                                      setShowMobileSubMenu(false);
-                                    }}
-                                  >
-                                    {item.label}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
+                          <MobileSubMenu
+                            setIsMenuOpen={setIsMenuOpen}
+                            setShowMobileSubMenu={setShowMobileSubMenu}
+                            showMobileSubMenu={showMobileSubMenu}
+                          />
                         </>
                       ) : (
                         <>
@@ -1269,26 +1091,7 @@ const Header: React.FC<HeaderProps> = ({
                           </button>
                         </>
                       ) : (
-                        <div className="flex gap-2 px-3 py-2">
-                          <button
-                            onClick={() => {
-                              setIsMenuOpen(false);
-                              router.push(PATHS.SIGN_IN);
-                            }}
-                            className="flex-1 bg-orange text-white py-2 rounded-xl font-bold border-0"
-                          >
-                            {t.signIn || "Sign In"}
-                          </button>
-                          <button
-                            onClick={() => {
-                              setIsMenuOpen(false);
-                              router.push(PATHS.REGISTER);
-                            }}
-                            className="flex-1 bg-white/10 border border-white/20 text-white py-2 rounded-xl font-bold"
-                          >
-                            {t.register || "Register"}
-                          </button>
-                        </div>
+                        <AuthCTA setIsMenuOpen={setIsMenuOpen} />
                       )}
                     </li>
                   </ul>
@@ -1297,209 +1100,19 @@ const Header: React.FC<HeaderProps> = ({
             </div>
 
             {/* Ask Expert CTA */}
-            <div className="flex-shrink-0 hidden md:block">
-              <Link
-                href="/our-experts"
-                className="btn-ask-expert bg-orange text-white transition-all hover:scale-105 active:scale-95"
-                style={{
-                  padding: "10px 20px",
-                  borderRadius: "25px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  textDecoration: "none",
-                  fontWeight: "bold",
-                  fontSize: "14px",
-                  boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <NextImage
-                  src="/images/chat.svg"
-                  className="chat-icon filter-white"
-                  alt="chat"
-                  width={20}
-                  height={20}
-                  style={{ width: "auto", filter: "brightness(0) invert(1)" }}
-                />
-                {t.askExpert}
-              </Link>
-            </div>
+            <AskExpertCTA />
           </div>
         </div>
       </header>
 
-      <header className="bg-orange shadow-[0_4px_15px_rgba(0,0,0,0.1)] z-10 relative">
-        <div className="max-w-[1320px] mx-auto px-2 lg:px-4 py-[5px]">
-          <div className="flex items-center gap-2">
-            <div className="custom-swiper-prev flex-shrink-0 w-8 h-8 bg-white rounded-full flex items-center justify-center text-[#ce4c04] cursor-pointer transition-all duration-300 shadow-md hover:bg-[#301118] hover:text-white hover:scale-110">
-              <i className="fa-solid fa-chevron-left text-xs" />
-            </div>
-
-            <div className="flex-1 overflow-hidden">
-              {!isClient ? (
-                /* Static fallback for SSR to prevent layout shift */
-                <div className="flex items-center gap-[10px] sm:gap-[25px] overflow-hidden">
-                  {SERVICES_DATA_KEYS.slice(0, 5).map((service) => (
-                    <div
-                      key={service.id}
-                      className="flex-1 min-w-[45%] sm:min-w-0"
-                      style={{ flexBasis: "20%" }}
-                    >
-                      <div className="flex justify-center w-full p-[2px] sm:p-[5px]">
-                        <div className="flex items-center justify-center bg-[#301118] border border-[#fd9d69] px-2 sm:px-3 py-1.5 sm:py-[10px] rounded-lg sm:rounded-xl text-[10px] sm:text-sm font-semibold text-white w-full h-[40px] sm:h-[52px] opacity-80">
-                          <NextImage
-                            src={`/${service.icon}`}
-                            className="w-[20px] sm:w-[30px] mr-1 flex-shrink-0"
-                            alt={(t as any)[service.key] || service.key}
-                            width={40}
-                            height={40}
-                          />
-                          <span className="whitespace-nowrap overflow-hidden text-ellipsis tracking-[0.3px]">
-                            {(t as any)[service.key] || service.key}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                /* Full Swiper for Client */
-                <Swiper
-                  modules={[Navigation, Autoplay]}
-                  navigation={{
-                    prevEl: ".custom-swiper-prev",
-                    nextEl: ".custom-swiper-next",
-                  }}
-                  spaceBetween={10}
-                  slidesPerView={2}
-                  grabCursor={true}
-                  loop={SERVICES_DATA_KEYS.length > 5}
-                  autoplay={{
-                    delay: 3000,
-                    disableOnInteraction: false,
-                  }}
-                  breakpoints={{
-                    640: { slidesPerView: 3, spaceBetween: 15 },
-                    768: { slidesPerView: 4, spaceBetween: 20 },
-                    1024: { slidesPerView: 5, spaceBetween: 25 },
-                  }}
-                  className="w-full relative"
-                >
-                  {SERVICES_DATA_KEYS.map((service) => (
-                    <SwiperSlide key={service.id}>
-                      <div className="flex justify-center w-full p-[2px] sm:p-[5px]">
-                        <a
-                          href={service.href}
-                          onClick={(e) => {
-                            if (
-                              service.isInternal &&
-                              (service.href as any) !== "#"
-                            ) {
-                              e.preventDefault();
-                              router.push(service.href);
-                            }
-                          }}
-                          className="flex items-center justify-center bg-[#301118] border border-[#fd9d69] px-2 sm:px-3 py-1.5 sm:py-[10px] rounded-lg sm:rounded-xl text-white w-full h-[40px] sm:h-[52px] transition-all duration-300 hover:bg-[#4a1923] hover:border-white hover:-translate-y-0.5 hover:shadow-lg no-underline cursor-pointer"
-                        >
-                          <NextImage
-                            src={`/${service.icon}`}
-                            className="w-[20px] sm:w-[30px] mr-1 flex-shrink-0"
-                            alt={(t as any)[service.key] || service.key}
-                            width={40}
-                            height={40}
-                          />
-                          <span className="whitespace-nowrap overflow-hidden text-ellipsis tracking-[0.3px] text-[10px] sm:text-sm font-bold sm:font-semibold">
-                            {(t as any)[service.key] || service.key}
-                          </span>
-                        </a>
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              )}
-            </div >
-
-            <div className="custom-swiper-next flex-shrink-0 w-8 h-8 bg-white rounded-full flex items-center justify-center text-[#ce4c04] cursor-pointer transition-all duration-300 shadow-md hover:bg-[#301118] hover:text-white hover:scale-110">
-              <i className="fa-solid fa-chevron-right text-xs" />
-            </div>
-          </div >
-        </div >
-      </header >
+      {/* <SubHeaderSlider /> */}
 
       {/* Profile Image Preview Modal */}
-      {
-        showImageModal && (
-          <div
-            onClick={() => setShowImageModal(false)}
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100vw",
-              height: "100vh",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 100000,
-              backgroundColor: "rgba(0, 0, 0, 0.75)",
-              backdropFilter: "blur(3px)",
-              padding: "20px",
-            }}
-          >
-            <div
-              className="bg-white rounded-4 shadow-lg"
-              style={{
-                position: "relative",
-                padding: "10px",
-                maxWidth: "min(500px, 95vw)",
-                maxHeight: "95vh",
-                animation: "zoomIn 0.3s ease-out",
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <CloseButton
-                onClick={() => setShowImageModal(false)}
-                style={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "10px",
-                  zIndex: 10,
-                }}
-              />
-              <div
-                className="overflow-hidden rounded-3 d-flex align-items-center justify-content-center"
-                style={{
-                  maxWidth: "90vw",
-                  maxHeight: "80vh",
-                  backgroundColor: "#f8f9fa",
-                }}
-              >
-                <img
-                  src={avatarSrc}
-                  alt="Profile Preview"
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "80vh",
-                    objectFit: "contain",
-                    display: "block",
-                  }}
-                />
-              </div>
-            </div>
-            <style>{`
-            @keyframes zoomIn {
-              from { opacity: 0; transform: scale(0.9); }
-              to { opacity: 1; transform: scale(1); }
-            }
-            .close-modal-btn:hover {
-              transform: rotate(90deg) scale(1.1);
-              background-color: #301118 !important;
-            }
-          `}</style>
-          </div>
-        )
-      }
+      <ProfileImagePreviewModal
+        showImageModal={showImageModal}
+        setShowImageModal={setShowImageModal}
+        avatarSrc={avatarSrc}
+      />
     </>
   );
 };
