@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import {
     getClientProfile,
     createClientProfile,
@@ -148,11 +148,11 @@ export const useProfileBaseLogic = () => {
                         throw err;
                     }
                 }
-                
+
                 // Update the user store directly so Header updates instantly
                 updateUser({ profile_picture: imageUrl, avatar: imageUrl });
                 await refreshAuth();
-                
+
                 setSuccessMessage("Profile picture updated successfully!");
                 setTimeout(() => setSuccessMessage(""), 3000);
             } else {
@@ -308,12 +308,12 @@ export const useProfileBaseLogic = () => {
                 ...payload,
                 addresses: payload.addresses ? normalizeAddressesForUI(payload.addresses) : prev.addresses,
             }));
-            
+
             // Instantly update global user store if personal details changed
             if (section === "personal" && payload.full_name) {
                 updateUser({ name: payload.full_name });
             }
-            
+
             await refreshAuth();
             setEditingSections((prev) => ({ ...prev, [section]: false }));
         } catch (error: any) {

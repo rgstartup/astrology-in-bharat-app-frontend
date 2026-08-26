@@ -5,7 +5,7 @@ import { getProductImageUrl } from "@/utils/image-utils";
 import ProductCarousel from "@/components/features/shop/ProductCarousel";
 import { useCartStore } from "@/store/useCartStore";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { api } from "@/actions";
 import { useLanguageStore } from "@repo/store";
 import { homeTranslations } from "@/lib/translations/home";

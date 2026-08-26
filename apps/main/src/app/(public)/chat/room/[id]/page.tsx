@@ -5,7 +5,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/actions";
 import { chatSocket } from "@/libs/socket";
 import { uploadClientDocument } from "@/libs/api-profile";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@repo/lib";
 
@@ -448,10 +448,10 @@ function ChatRoomContent() {
           style={
             !isDarkMode
               ? {
-                  backgroundImage: "url('/images/white-background.png')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }
+                backgroundImage: "url('/images/white-background.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
               : {}
           }
         >

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { loginAction } from "@/actions/auth";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { useLanguageStore } from "@repo/store";
 import { authTranslations } from "@/lib/translations/auth";
 import { Loading } from "@repo/ui";

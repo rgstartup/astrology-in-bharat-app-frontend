@@ -9,7 +9,7 @@ import { authTranslations } from "@/lib/translations/auth";
 import { FaSpinner, FaCheckCircle, FaExclamationCircle, FaEnvelopeOpenText } from "react-icons/fa";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { verifyEmailAction } from "@/actions/auth";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { getErrorMessage } from "@repo/lib";
 
 // Disable static generation for this page
@@ -49,7 +49,7 @@ const VerifyEmailContent: React.FC = () => {
                     setError(result.error);
                 } else if (result.success) {
                     setSuccessMessage(result.message || t.verifyEmail.successMessage);
-                    
+
                     // Handle automatic login only if they are fully registered
                     const isFullyRegistered = !!result.user?.name;
                     if (result.user && isFullyRegistered) {
@@ -62,10 +62,10 @@ const VerifyEmailContent: React.FC = () => {
                         if (currentCountdown <= 0) {
                             clearInterval(countdownInterval);
                             setCountdown(0);
-                            
+
                             // Role-based Redirection
                             const roles = result.user?.roles || [];
-                            const isExpert = roles.some((r: unknown) => 
+                            const isExpert = roles.some((r: unknown) =>
                                 ["expert", "expert", "Expert", "Expert", "EXPERT"].includes(String(r))
                             );
 
@@ -76,7 +76,7 @@ const VerifyEmailContent: React.FC = () => {
                                 const dashboardUrl = process.env.NEXT_PUBLIC_EXPERT_DASHBOARD_URL || (window.location.hostname === 'localhost' ? 'http://localhost:3003' : window.location.origin.replace('www.', 'expert.'));
                                 window.location.href = `${dashboardUrl}/dashboard`;
                             } else {
-                                router.push('/client/profile'); 
+                                router.push('/client/profile');
                             }
                         } else {
                             setCountdown(currentCountdown);
@@ -101,7 +101,7 @@ const VerifyEmailContent: React.FC = () => {
 
             <div className="max-w-xl w-full relative z-10">
                 <div className="bg-white rounded-[3rem] shadow-premium border border-slate-100 p-8 md:p-16 text-center space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                    
+
                     {/* Brand/Status Icon */}
                     <div className="relative inline-block">
                         <div className="absolute -inset-4 bg-orange-500/10 rounded-full blur-xl animate-pulse"></div>
@@ -122,11 +122,11 @@ const VerifyEmailContent: React.FC = () => {
 
                     <div className="space-y-4">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-50 rounded-full border border-slate-100">
-                             <HiOutlineSparkles className="text-orange text-xs" />
-                             <span className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">{t.verifyEmail.title}</span>
+                            <HiOutlineSparkles className="text-orange text-xs" />
+                            <span className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">{t.verifyEmail.title}</span>
                         </div>
                         <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-none tracking-tighter uppercase">
-                             {isLoading ? t.verifyEmail.verifying : error ? "Verification Failed" : "Email Verified"}
+                            {isLoading ? t.verifyEmail.verifying : error ? "Verification Failed" : "Email Verified"}
                         </h2>
                     </div>
 
@@ -190,10 +190,10 @@ const VerifyEmailContent: React.FC = () => {
                 </div>
 
                 <div className="text-center mt-12 opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
-                   <div className="inline-flex items-center gap-4 px-8 py-3 bg-white rounded-full border border-slate-100 shadow-sm">
-                      <FaEnvelopeOpenText className="text-orange text-xs" />
-                      <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest leading-none">Celestial Auth Protocol v2.4</span>
-                   </div>
+                    <div className="inline-flex items-center gap-4 px-8 py-3 bg-white rounded-full border border-slate-100 shadow-sm">
+                        <FaEnvelopeOpenText className="text-orange text-xs" />
+                        <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest leading-none">Celestial Auth Protocol v2.4</span>
+                    </div>
                 </div>
             </div>
 

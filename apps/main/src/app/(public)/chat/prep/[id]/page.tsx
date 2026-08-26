@@ -6,7 +6,7 @@ import * as LucideIcons from "lucide-react";
 import { api } from "@/actions";
 import { getClientProfile } from "@/libs/api-profile";
 import { toast } from "react-toastify";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { getErrorMessage } from "@repo/lib";
 import { VerificationPopup } from "@repo/ui";
 import { UserX } from "lucide-react";

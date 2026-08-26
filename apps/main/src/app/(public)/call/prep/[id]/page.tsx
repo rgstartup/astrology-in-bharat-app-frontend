@@ -6,7 +6,7 @@ import NextImage from "next/image";
 import * as LucideIcons from "lucide-react";
 import { api } from "@/actions";
 import { toast } from "react-toastify";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { getErrorMessage } from "@repo/lib";
 
 const Image = NextImage as any;
@@ -134,7 +134,7 @@ function CallPrepContent() {
       }
       throw new Error(
         getErrorMessage(err) ||
-          "Could not access microphone. Please check your hardware.",
+        "Could not access microphone. Please check your hardware.",
       );
     }
   };

@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { api as http } from "@/actions";
 import { getClientProfile, applyCoupon, getMyRewards } from "@/libs/api-profile";
 import { loadRazorpay } from "@/libs/razorpay";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { useCartStore } from "@/store/useCartStore";
 import { Product, AddressDto } from "@/lib/types";
 import { getErrorMessage } from "@repo/lib";
@@ -96,7 +96,7 @@ export const useCheckout = () => {
   const baseTotal = isOrder
     ? buyNowInfo
       ? Number(directProduct?.sale_price || directProduct?.price || 0) *
-        buyNowInfo.quantity
+      buyNowInfo.quantity
       : cartTotal
     : parseInt(searchParams.get("total") || "300");
 
@@ -105,7 +105,7 @@ export const useCheckout = () => {
     if (buyNowInfo && directProduct) {
       return directProduct.is_shipping_chargeable ? Number(directProduct.shipping_charge) || 0 : 0;
     }
-    
+
     // Calculate shipping per merchant for cart
     let shipping = 0;
     const merchantShippingMap = new Map<string, number>();
@@ -175,7 +175,7 @@ export const useCheckout = () => {
     } else {
       toast.error(
         data.message ||
-          "This coupon cannot be applied to this order. Check minimum order value or expiry.",
+        "This coupon cannot be applied to this order. Check minimum order value or expiry.",
       );
     }
     setIsApplying(false);

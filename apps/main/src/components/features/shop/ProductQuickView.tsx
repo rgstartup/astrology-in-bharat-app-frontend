@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import { 
-  X, 
-  Star, 
-  ShoppingBag, 
-  Zap, 
-  ShieldCheck, 
-  RotateCcw, 
-  Truck, 
-  CheckCircle2, 
-  Heart,
-  Share2,
-  ChevronLeft,
-  ChevronRight,
-  Info
+import {
+    X,
+    Star,
+    ShoppingBag,
+    Zap,
+    ShieldCheck,
+    RotateCcw,
+    Truck,
+    CheckCircle2,
+    Heart,
+    Share2,
+    ChevronLeft,
+    ChevronRight,
+    Info
 } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs, FreeMode } from "swiper/modules";
@@ -24,7 +24,7 @@ import "swiper/css/thumbs";
 import "swiper/css/free-mode";
 import { Product } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/hooks/useCart";
@@ -51,11 +51,11 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({ isOpen, onClose, pr
     // Real gallery images from backend with normalization
     const galleryItems = useMemo(() => {
         if (!product) return [];
-        
-        const rawItems = product.gallery && product.gallery.length > 0 
-            ? product.gallery 
+
+        const rawItems = product.gallery && product.gallery.length > 0
+            ? product.gallery
             : [product.image || product.imageUrl || (product as any).image_url || (product as any).productImage];
-            
+
         return rawItems
             .filter(Boolean)
             .map(img => normalizeImagePath(img as string));
@@ -134,16 +134,16 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({ isOpen, onClose, pr
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 lg:p-10 overflow-hidden">
             {/* Backdrop */}
-            <div 
+            <div
                 className="absolute inset-0 bg-slate-950/40 backdrop-blur-xl animate-in fade-in duration-500"
                 onClick={onClose}
             />
 
             {/* Modal Container */}
             <div className="relative w-full max-w-6xl max-h-[90vh] bg-[#FDF8F4]/80 backdrop-blur-2xl rounded-[3rem] border border-white/40 shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in zoom-in-95 fade-in duration-500">
-                
+
                 {/* ❌ Close Button */}
-                <button 
+                <button
                     onClick={onClose}
                     className="absolute top-6 right-6 z-50 w-12 h-12 rounded-2xl bg-white/80 border border-orange/10 text-slate-400 hover:bg-orange hover:text-white hover:rotate-90 transition-all duration-500 shadow-xl flex items-center justify-center group"
                 >
@@ -167,18 +167,18 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({ isOpen, onClose, pr
                         >
                             {galleryItems.map((img, index) => (
                                 <SwiperSlide key={index} className="flex items-center justify-center p-6 lg:p-12">
-                                    <img 
-                                        src={img} 
-                                        alt={product.name} 
-                                        className="max-w-full max-h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700" 
+                                    <img
+                                        src={img}
+                                        alt={product.name}
+                                        className="max-w-full max-h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700"
                                     />
                                 </SwiperSlide>
                             ))}
                         </Swiper>
-                        
+
                         {/* Discount Badge */}
                         <div className="absolute top-6 left-6 z-10 px-4 py-2 bg-orange text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl">
-                           SAVE {discount}%
+                            SAVE {discount}%
                         </div>
                     </div>
 
@@ -206,23 +206,23 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({ isOpen, onClose, pr
                 </div>
 
                 {/* 📄 Right Column: Detailed Info */}
-                <div 
+                <div
                     className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 overflow-y-auto no-scrollbar custom-scrollbar bg-gradient-to-br from-white/40 to-transparent"
                     data-lenis-prevent
                 >
                     <div className="space-y-8">
                         {/* Title & Brand */}
                         <div className="space-y-2">
-                             <div className="flex items-center gap-3">
-                                 <span className="text-[10px] font-black text-orange uppercase tracking-[0.3em] font-outfit">Spiritual Artifacts</span>
-                                 <div className="flex items-center gap-1.5 px-3 py-1 bg-green-500/10 text-green-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-green-500/10">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-black text-orange uppercase tracking-[0.3em] font-outfit">Spiritual Artifacts</span>
+                                <div className="flex items-center gap-1.5 px-3 py-1 bg-green-500/10 text-green-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-green-500/10">
                                     <CheckCircle2 className="w-3 h-3" />
                                     In Stock
-                                 </div>
-                             </div>
-                             <h2 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tighter uppercase leading-tight">{product.name}</h2>
-                             
-                             <div className="flex items-center gap-6 pt-2">
+                                </div>
+                            </div>
+                            <h2 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tighter uppercase leading-tight">{product.name}</h2>
+
+                            <div className="flex items-center gap-6 pt-2">
                                 <div className="flex items-center gap-1.5 font-black text-slate-900">
                                     <Star className="w-4 h-4 fill-orange text-orange" />
                                     <span className="text-sm tracking-tight">{(product as any).rating || 4.8}</span>
@@ -232,7 +232,7 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({ isOpen, onClose, pr
                                 <button className="text-xs font-bold text-slate-400 hover:text-orange transition-colors flex items-center gap-1.5 uppercase tracking-widest">
                                     {(product as any).reviewCount || 42} Customer Reviews
                                 </button>
-                             </div>
+                            </div>
                         </div>
 
                         {/* Price Section */}
@@ -287,14 +287,14 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({ isOpen, onClose, pr
                             <div className="flex items-center justify-between px-2">
                                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Quantity Selection</span>
                                 <div className="flex items-center bg-white border border-slate-100 rounded-full p-1 shadow-sm">
-                                    <button 
+                                    <button
                                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                         className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors"
                                     >
                                         -
                                     </button>
                                     <span className="w-12 text-center font-black text-slate-900">{quantity}</span>
-                                    <button 
+                                    <button
                                         onClick={() => setQuantity(quantity + 1)}
                                         className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors"
                                     >
@@ -306,7 +306,7 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({ isOpen, onClose, pr
                             {/* CTAs */}
                             <div className="flex flex-col gap-4">
                                 <div className="flex gap-4">
-                                    <button 
+                                    <button
                                         onClick={handleAddToCart}
                                         disabled={isAdding}
                                         className="flex-1 bg-white border-2 border-slate-100 text-slate-900 py-4.5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.2em] shadow-xl shadow-slate-200/50 hover:bg-slate-50 transition-all active:scale-95 flex items-center justify-center gap-2 group/bag leading-none relative overflow-hidden"
@@ -314,14 +314,14 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({ isOpen, onClose, pr
                                         <ShoppingBag className="w-5 h-5 group-hover/bag:scale-110 transition-transform" />
                                         {isAdding ? "Adding..." : "Add To Box"}
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={handleLike}
                                         className={`w-16 bg-white border-2 border-slate-100 flex items-center justify-center rounded-[1.5rem] transition-all shadow-xl shadow-slate-200/50 active:scale-95 group/heart ${isLiked ? 'text-red-500 border-red-50' : 'text-slate-300 hover:text-red-500 hover:border-red-100'}`}
                                     >
                                         <Heart className={`w-6 h-6 group-hover/heart:fill-red-500 ${isLiked ? 'fill-red-500' : ''} transition-all`} />
                                     </button>
                                 </div>
-                                <button 
+                                <button
                                     onClick={handleBuyNow}
                                     disabled={isBuyLoading}
                                     className="w-full bg-orange text-white py-5 rounded-[2rem] font-black text-[12px] uppercase tracking-[0.3em] shadow-2xl shadow-orange/30 hover:shadow-orange/50 hover:scale-[1.02] transition-all active:scale-95 flex items-center justify-center gap-3 leading-none"

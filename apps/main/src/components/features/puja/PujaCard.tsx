@@ -7,7 +7,7 @@ import { Heart, Sparkles, Star } from "lucide-react";
 import { ExpertPuja } from "@/lib/types/puja";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useWishlistStore } from "@/store/useWishlistStore";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { toast } from "react-toastify";
 import { useLanguageStore } from "@repo/store";
 import { pujaTranslations, pujaContent } from "@/lib/translations/puja";
@@ -17,10 +17,10 @@ const LikeButton = ({ pujaId, initialLikes, t, fontStyle }: { pujaId: string; in
     const { isAuthenticated } = useAuthStore();
     const { isPujaInWishlist } = useWishlistStore();
     const { toggleLike } = useWishlist();
-    
+
     const router = useRouter();
     const pathname = usePathname();
-    
+
     const isLiked = isPujaInWishlist(pujaId);
     const [currentLikes, setCurrentLikes] = React.useState(initialLikes);
 
@@ -31,7 +31,7 @@ const LikeButton = ({ pujaId, initialLikes, t, fontStyle }: { pujaId: string; in
     const handleLike = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         if (!isAuthenticated) {
             toast.error(
                 <span>
@@ -52,13 +52,13 @@ const LikeButton = ({ pujaId, initialLikes, t, fontStyle }: { pujaId: string; in
     };
 
     return (
-        <button 
+        <button
             type="button"
             onClick={handleLike}
             className="absolute top-2 right-2 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.15)] rounded-2xl px-2 py-1.5 min-w-[40px] flex flex-col items-center justify-center gap-0.5 transition-transform active:scale-95 hover:scale-105 z-20 cursor-pointer"
         >
-            <Heart 
-                className={`w-4 h-4 ${isLiked ? "fill-red-500 text-red-500" : "text-red-500"}`} 
+            <Heart
+                className={`w-4 h-4 ${isLiked ? "fill-red-500 text-red-500" : "text-red-500"}`}
             />
             <span className="text-[11px] font-medium text-gray-700 leading-none mt-0.5">
                 {currentLikes > 0 ? (currentLikes >= 1000 ? (currentLikes / 1000).toFixed(1).replace(/\.0$/, '') + 'k' : currentLikes) : 0}
@@ -91,27 +91,27 @@ export const PujaCard: React.FC<PujaCardProps> = ({ puja }) => {
     };
 
     return (
-        <Link 
+        <Link
             href={`/online-puja/${puja.id}`}
             className="group flex flex-col bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer no-underline h-full p-3"
         >
             {/* Puja Image Container */}
             <div className="relative h-56 bg-gray-100 overflow-hidden shrink-0 rounded-2xl mb-4">
-                 {puja.puja_image_url ? (
-                    <Image 
-                        src={puja.puja_image_url} 
-                        alt={localizedName} 
-                        fill 
+                {puja.puja_image_url ? (
+                    <Image
+                        src={puja.puja_image_url}
+                        alt={localizedName}
+                        fill
                         className="object-cover transition-transform group-hover:scale-105 duration-500"
                     />
-                 ) : (
+                ) : (
                     <div className="w-full h-full flex items-center justify-center bg-orange-50">
                         <Sparkles className="w-10 h-10 text-orange-200" />
                     </div>
-                 )}
-                 
-                 {/* Availability Badges */}
-                 <div className="absolute top-2 left-2 flex flex-col gap-1.5 z-10">
+                )}
+
+                {/* Availability Badges */}
+                <div className="absolute top-2 left-2 flex flex-col gap-1.5 z-10">
                     {puja.is_online && (
                         <span className="px-2.5 py-1 bg-[#0055FF] text-white text-[11px] font-medium rounded-md w-max" style={fontStyle}>
                             Online
@@ -122,10 +122,10 @@ export const PujaCard: React.FC<PujaCardProps> = ({ puja }) => {
                             Home Visit
                         </span>
                     )}
-                 </div>
+                </div>
 
-                 {/* Like Button */}
-                 <LikeButton pujaId={puja.id} initialLikes={Number(puja.total_likes || (puja as any).likes || (puja as any).likesCount || 0)} t={t} fontStyle={fontStyle} />
+                {/* Like Button */}
+                <LikeButton pujaId={puja.id} initialLikes={Number(puja.total_likes || (puja as any).likes || (puja as any).likesCount || 0)} t={t} fontStyle={fontStyle} />
             </div>
 
             <div className="px-2 pb-2 flex flex-col grow">

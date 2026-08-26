@@ -15,7 +15,7 @@ import {
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@repo/lib";
 import { getSupportSocket } from "@repo/ui/sockets";
-import { useAuthStore } from "@/store/useAuthStore"; // Changed import
+import { useAuthStore } from "@/store/__useAuthStore"; // Changed import
 import {
   getDisputeMessages,
   sendDisputeMessage,
@@ -350,8 +350,8 @@ export default function UserDisputeChatModal({
                           src={
                             isMe
                               ? user?.profile_picture ||
-                                user?.avatar ||
-                                `https://ui-avatars.com/api/?name=${user?.name || "U"}&background=f97316&color=fff&size=128`
+                              user?.avatar ||
+                              `https://ui-avatars.com/api/?name=${user?.name || "U"}&background=f97316&color=fff&size=128`
                               : "https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff&size=128"
                           }
                           alt={isMe ? "You" : "Admin"}
@@ -381,11 +381,11 @@ export default function UserDisputeChatModal({
                       <span className="text-[10px] text-gray-400 mt-1 px-1">
                         {(msg as any).createdAt || (msg as any).created_at
                           ? new Date(
-                              (msg as any).createdAt || (msg as any).created_at,
-                            ).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })
+                            (msg as any).createdAt || (msg as any).created_at,
+                          ).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
                           : ""}
                       </span>
                     </div>
@@ -415,8 +415,8 @@ export default function UserDisputeChatModal({
                         src={
                           isMe
                             ? user?.profile_picture ||
-                              user?.avatar ||
-                              `https://ui-avatars.com/api/?name=${user?.name || "U"}&background=f97316&color=fff&size=128`
+                            user?.avatar ||
+                            `https://ui-avatars.com/api/?name=${user?.name || "U"}&background=f97316&color=fff&size=128`
                             : "https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff&size=128"
                         }
                         alt={isMe ? "You" : "Admin"}
@@ -435,11 +435,10 @@ export default function UserDisputeChatModal({
                     className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}
                   >
                     <div
-                      className={`px-4 py-2 rounded-2xl text-sm shadow-sm ${
-                        isMe
+                      className={`px-4 py-2 rounded-2xl text-sm shadow-sm ${isMe
                           ? "bg-orange text-white rounded-br-none"
                           : "bg-white border text-gray-800 rounded-bl-none"
-                      }`}
+                        }`}
                     >
                       {msg.attachmentUrl && (
                         <div className="mb-2">
@@ -463,9 +462,9 @@ export default function UserDisputeChatModal({
                     <span className="text-[10px] text-gray-400 mt-1 px-1">
                       {msg.createdAt
                         ? new Date(msg.createdAt).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
                         : ""}
                     </span>
                   </div>

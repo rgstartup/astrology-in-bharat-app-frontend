@@ -24,7 +24,7 @@ import { api, API_ROUTES } from "@/actions";
 import { ExpertPuja } from "@/lib/types/puja";
 import { PujaCard } from "@/components/features/puja/PujaCard";
 import { useWishlistStore } from "@/store/useWishlistStore";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { useLanguageStore } from "@repo/store";
 import { pujaTranslations } from "@/lib/translations/puja";
 import Link from "next/link";

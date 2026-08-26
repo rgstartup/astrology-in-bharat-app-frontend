@@ -2,7 +2,7 @@
 
 import React from "react";
 import NextImage from "next/image";
-import { useAuthStore } from "@/store/useAuthStore"; // Changed import
+import { useAuthStore } from "@/store/__useAuthStore"; // Changed import
 import { useCartStore } from "@/store/useCartStore"; // Changed import
 import { toast } from "react-toastify";
 import { useRouter, usePathname } from "next/navigation";

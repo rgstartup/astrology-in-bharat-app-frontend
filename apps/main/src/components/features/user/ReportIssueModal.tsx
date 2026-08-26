@@ -14,7 +14,7 @@ interface ReportIssueModalProps {
     onSuccess?: (newDispute?: any) => void;
 }
 
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import UserDisputeChatModal from './UserDisputeChatModal';
 
 export default function ReportIssueModal({
@@ -43,7 +43,7 @@ export default function ReportIssueModal({
         if (isDropdownOpen) {
             document.addEventListener('mousedown', handleClickOutside);
         }
-        
+
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
@@ -102,10 +102,10 @@ export default function ReportIssueModal({
         "Other",
     ];
 
-    const categories = type === "order" 
-        ? orderCategories 
-        : type === "consultation" 
-            ? consultationCategories 
+    const categories = type === "order"
+        ? orderCategories
+        : type === "consultation"
+            ? consultationCategories
             : pujaCategories;
 
     const handleSubmit = async (isChat: boolean = false) => {
@@ -183,7 +183,7 @@ export default function ReportIssueModal({
         toast.success("Issue reported successfully!");
 
         if (isChat && newDispute?.id) {
-            const orderId = itemDetails.orderId || String(itemDetails.id).slice(0,8).toUpperCase();
+            const orderId = itemDetails.orderId || String(itemDetails.id).slice(0, 8).toUpperCase();
             const amount = itemDetails.price || itemDetails.totalAmount || itemDetails.total_amount || itemDetails.totalCost || itemDetails.total_cost || itemDetails.amount || 0;
             const date = (itemDetails.date || itemDetails.createdAt || itemDetails.created_at || itemDetails.scheduled_date)
                 ? new Date(itemDetails.date || itemDetails.createdAt || itemDetails.created_at || itemDetails.scheduled_date).toLocaleDateString("en-IN")
@@ -213,7 +213,7 @@ export default function ReportIssueModal({
 
     return createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div 
+            <div
                 className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col overflow-hidden"
             >
                 {/* Header */}
@@ -235,7 +235,7 @@ export default function ReportIssueModal({
                 </div>
 
                 {/* Content */}
-                <div 
+                <div
                     className={`p-6 transition-all duration-300 overflow-y-auto overscroll-contain flex-1 ${isDropdownOpen ? 'pb-48' : ''}`}
                     onWheel={(e) => e.stopPropagation()}
                     onTouchMove={(e) => e.stopPropagation()}
@@ -358,33 +358,33 @@ export default function ReportIssueModal({
                             </div>
 
                             {isDropdownOpen && (
-                                <div 
+                                <div
                                     className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-xl z-50 max-h-56 overflow-y-auto overscroll-contain"
                                     onWheel={(e) => e.stopPropagation()}
                                     onTouchMove={(e) => e.stopPropagation()}
                                 >
+                                    <div
+                                        onClick={() => {
+                                            setCategory("");
+                                            setIsDropdownOpen(false);
+                                        }}
+                                        className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 text-gray-500"
+                                    >
+                                        Select a category
+                                    </div>
+                                    {categories.map((cat) => (
                                         <div
+                                            key={cat}
                                             onClick={() => {
-                                                setCategory("");
+                                                setCategory(cat);
                                                 setIsDropdownOpen(false);
                                             }}
-                                            className="px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 text-gray-500"
+                                            className={`px-4 py-3 hover:bg-orange-50 cursor-pointer transition-colors border-b border-gray-100 last:border-0 ${category === cat ? 'bg-orange-50/50 text-orange-600 font-medium' : 'text-gray-700'}`}
                                         >
-                                            Select a category
+                                            {cat}
                                         </div>
-                                        {categories.map((cat) => (
-                                            <div
-                                                key={cat}
-                                                onClick={() => {
-                                                    setCategory(cat);
-                                                    setIsDropdownOpen(false);
-                                                }}
-                                                className={`px-4 py-3 hover:bg-orange-50 cursor-pointer transition-colors border-b border-gray-100 last:border-0 ${category === cat ? 'bg-orange-50/50 text-orange-600 font-medium' : 'text-gray-700'}`}
-                                            >
-                                                {cat}
-                                            </div>
-                                        ))}
-                                    </div>
+                                    ))}
+                                </div>
                             )}
                         </div>
                     </div>

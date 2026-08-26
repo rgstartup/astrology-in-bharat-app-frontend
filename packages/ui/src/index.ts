@@ -18,3 +18,4 @@ export * from "./components/profile";
 
 // Utils
 export * from "./utils/socket";
+export * from "./utils/currency";

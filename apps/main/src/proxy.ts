@@ -29,6 +29,7 @@ async function refreshSession(
     }>(`/auth/refresh`);
 
   if (error || !data?.accessToken || !data.refreshToken) {
+    request.cookies.clear();
     return redirectToLogin(request, pathname);
   }
 

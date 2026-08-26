@@ -10,7 +10,7 @@ import Reviews from "./Reviews";
 import ShopByPurpose from "./ShopByPurpose";
 import Features from "./Features";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { useCart } from "@/hooks/useCart";
 import { toast } from "react-toastify";
 
@@ -134,9 +134,9 @@ const Page = () => {
       <div className="max-w-7xl mx-auto px-4 py-12 md:py-24">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
           <Gallery images={product.images} />
-          <ProductInfo 
-            product={product} 
-            quantity={quantity} 
+          <ProductInfo
+            product={product}
+            quantity={quantity}
             setQuantity={setQuantity}
             onBuyNow={handleBuyNow}
             onAddToCart={handleAddToCartClick}

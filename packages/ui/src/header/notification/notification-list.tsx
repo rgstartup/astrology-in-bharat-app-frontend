@@ -1,5 +1,6 @@
 import { HeaderTranslations } from "@repo/store";
 import api from "../../utils/api";
+import { markNotificationAsRead } from "./notification-api";
 
 export interface Notification {
   id: string;
@@ -14,6 +15,17 @@ interface NotifcationListProps {
   notifications: Notification[];
   t: HeaderTranslations;
 }
+
+const markAsRead = async (id: string) => {
+  try {
+    const [_not, error] = await markNotificationAsRead(id);
+    if (error) throw error;
+    // fetchUnreadCount();
+    // fetchNotifications();
+  } catch (err) {
+    console.error("Failed to mark as read", err);
+  }
+};
 
 const NotificationList = (props: NotifcationListProps) => {
   if (!props.show) return null;

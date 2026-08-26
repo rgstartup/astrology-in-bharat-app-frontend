@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as LucideIcons from "lucide-react";
 import { api as http } from "@/actions";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 
 const { MessageSquare, X } = LucideIcons as any;
 
@@ -21,7 +21,7 @@ export default function FloatingChatButton() {
 
         const checkActiveSession = async () => {
             const [res, error] = await http.get<any>('/chat/sessions/active-client');
-            
+
             if (error) {
                 // Silent failure, session might not exist
                 setActiveSession(null);

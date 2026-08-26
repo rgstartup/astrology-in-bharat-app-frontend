@@ -5,6 +5,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./sockets": "./src/utils/socket.ts",
+    "./currency": "./src/utils/currency.ts",
     "./styles": "./styles/index.css",
     "./styles/*": "./styles/*",
     "./*": "./src/*.tsx"

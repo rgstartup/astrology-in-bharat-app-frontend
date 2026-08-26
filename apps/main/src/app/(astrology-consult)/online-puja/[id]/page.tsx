@@ -29,7 +29,7 @@ import Image from "next/image";
 // import LoginModal from "@/components/features/auth/LoginModal";
 import PujaDetailSeoContent from "./puja-detail-seo.component";
 import { Loading } from "@repo/ui";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { useLanguageStore } from "@repo/store";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@repo/lib";
@@ -958,68 +958,68 @@ const PujaDetailPage = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
           {relatedLoading
             ? // Skeleton Loader — 4 dummy cards
-              Array.from({ length: 4 }).map((_, i) => (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm animate-pulse"
+              >
+                <div className="h-32 bg-gradient-to-br from-[#F5E6D8] to-[#EDD5BD]" />
+                <div className="p-4 space-y-2">
+                  <div className="h-3.5 bg-gray-200 rounded-full w-4/5" />
+                  <div className="h-3 bg-[#2A2A2A] rounded-full w-2/5" />
+                  <div className="h-4 bg-orange-100 rounded-full w-3/5" />
+                </div>
+              </div>
+            ))
+            : relatedPujas.length > 0
+              ? relatedPujas.map((p) => (
                 <div
-                  key={i}
-                  className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm animate-pulse"
+                  key={p.id}
+                  onClick={() => router.push(`/online-puja/${p.id}`)}
+                  className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
                 >
-                  <div className="h-32 bg-gradient-to-br from-[#F5E6D8] to-[#EDD5BD]" />
-                  <div className="p-4 space-y-2">
-                    <div className="h-3.5 bg-gray-200 rounded-full w-4/5" />
-                    <div className="h-3 bg-[#2A2A2A] rounded-full w-2/5" />
-                    <div className="h-4 bg-orange-100 rounded-full w-3/5" />
+                  <div className="h-32 relative overflow-hidden">
+                    {p.puja_image_url ? (
+                      <Image
+                        src={p.puja_image_url}
+                        alt={p.name || "Puja"}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#FFF0E6] to-[#FFD9BF]" />
+                    )}
+                    <div className="absolute top-2 left-2 flex gap-1 flex-wrap">
+                      {p.is_online && (
+                        <span className="bg-[#FF5500] text-white text-[10px] font-black px-2 py-0.5 rounded-md">
+                          Online
+                        </span>
+                      )}
+                      {p.is_home_visit && (
+                        <span className="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md">
+                          Home Visit
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-base font-black text-[#1A1A1A] leading-tight mb-2 group-hover:text-[#FF5500] transition-colors">
+                      {p.name}
+                    </p>
+                    <p className="text-xs text-gray-500">Starting from</p>
+                    <p className="text-lg font-black text-[#FF5500]">
+                      ₹{" "}
+                      {Math.min(
+                        ...[
+                          p.online_cost,
+                          p.home_visit_without_samagri_cost,
+                          p.home_visit_with_samagri_cost,
+                        ].filter(Boolean),
+                      )}
+                    </p>
                   </div>
                 </div>
               ))
-            : relatedPujas.length > 0
-              ? relatedPujas.map((p) => (
-                  <div
-                    key={p.id}
-                    onClick={() => router.push(`/online-puja/${p.id}`)}
-                    className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
-                  >
-                    <div className="h-32 relative overflow-hidden">
-                      {p.puja_image_url ? (
-                        <Image
-                          src={p.puja_image_url}
-                          alt={p.name || "Puja"}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#FFF0E6] to-[#FFD9BF]" />
-                      )}
-                      <div className="absolute top-2 left-2 flex gap-1 flex-wrap">
-                        {p.is_online && (
-                          <span className="bg-[#FF5500] text-white text-[10px] font-black px-2 py-0.5 rounded-md">
-                            Online
-                          </span>
-                        )}
-                        {p.is_home_visit && (
-                          <span className="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md">
-                            Home Visit
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <p className="text-base font-black text-[#1A1A1A] leading-tight mb-2 group-hover:text-[#FF5500] transition-colors">
-                        {p.name}
-                      </p>
-                      <p className="text-xs text-gray-500">Starting from</p>
-                      <p className="text-lg font-black text-[#FF5500]">
-                        ₹{" "}
-                        {Math.min(
-                          ...[
-                            p.online_cost,
-                            p.home_visit_without_samagri_cost,
-                            p.home_visit_with_samagri_cost,
-                          ].filter(Boolean),
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                ))
               : null}
         </div>
       </div>

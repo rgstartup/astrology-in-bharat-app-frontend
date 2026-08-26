@@ -2,21 +2,31 @@ import { api } from "@/actions";
 import { ApiError } from "@repo/safe-fetch";
 
 export const CartService = {
-    getCart: async (): Promise<[any | null, ApiError | null]> => {
-        return await api.get("/cart", {
-            headers: { "Cache-Control": "no-cache" }
-        }) as any;
-    },
+  getCart: async () => {
+    return await api
+      .extend({
+        headers: { "Cache-Control": "no-cache" },
+      })
+      .get("/cart", {});
+  },
 
-    addToCart: async (productId: string, quantity: number): Promise<[any | null, ApiError | null]> => {
-        return await api.post("/cart/add", { productId, quantity }) as any;
-    },
+  addToCart: async (
+    productId: string,
+    quantity: number,
+  ): Promise<[any | null, ApiError | null]> => {
+    return (await api.post("/cart/add", { productId, quantity })) as any;
+  },
 
-    updateQuantity: async (productId: string, quantity: number): Promise<[any | null, ApiError | null]> => {
-        return await api.put("/cart/update", { productId, quantity }) as any;
-    },
+  updateQuantity: async (
+    productId: string,
+    quantity: number,
+  ): Promise<[any | null, ApiError | null]> => {
+    return (await api.put("/cart/update", { productId, quantity })) as any;
+  },
 
-    removeFromCart: async (productId: string): Promise<[any | null, ApiError | null]> => {
-        return await api.delete(`/cart/remove/${productId}`) as any;
-    }
+  removeFromCart: async (
+    productId: string,
+  ): Promise<[any | null, ApiError | null]> => {
+    return (await api.delete(`/cart/remove/${productId}`)) as any;
+  },
 };

@@ -10,10 +10,10 @@ import { CartInitializer } from "@/components/layout/CartInitializer"; // Change
 import { WishlistInitializer } from "@/components/layout/WishlistInitializer";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
-import { AuthService } from "@/services/auth.service";
 import QueryProvider from "@/providers/QueryProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
-import { getErrorMessage } from "@repo/lib";
+import { decodeToken, getErrorMessage } from "@repo/lib";
+import { ClientUser } from "@/store/useAuthStore";
 
 
 
@@ -30,26 +30,29 @@ export default async function RootLayout({
   // 1. Fetch user on server
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
-  let user = null;
+
+  type TClientPayload = {
+    sub: string;
+    email: string;
+  } | null;
+
+  let clientUser: ClientUser | null = null;
 
   if (token) {
     try {
       // Pass both header and cookie to support different backend auth strategies
-      const [res, authError] = await AuthService.fetchProfile({
-        Authorization: `Bearer ${token}`,
-        Cookie: `accessToken=${token}`
-      }) as any;
+      const user = decodeToken(token) as TClientPayload;
+      console.log("Server-side auth check user:", user);
 
-      if (!authError && res) {
-        const raw = res?.data ?? res;
-        user = raw?.user || (raw?.id ? raw : null);
-
-        if (user) {
-          // Unify the profile picture field so that Header has consistent data on SSR
-          user.profile_picture = raw?.profile_picture || user.profile_picture || raw?.avatar || user.avatar;
-          user.avatar = user.profile_picture;
-        }
+      if (!user || !user.sub || !user.email) {
+        throw new Error("user not found");
       }
+
+      clientUser = {
+        id: user.sub,
+        email: user.email,
+      }
+
     } catch (err: any) {
       const errorMsg = getErrorMessage(err);
       if (errorMsg !== "Unauthorized" && !errorMsg.includes("Unauthorized")) {
@@ -67,15 +70,15 @@ export default async function RootLayout({
       </head>
       <body className="min-h-screen bg-white text-black font-sans" suppressHydrationWarning>
         <QueryProvider>
-          {/* <AuthInitializer initialUser={user} hasToken={!!token}> */}
-          <CartInitializer>
-            <WishlistInitializer>
-              <SmoothScroll>
-                <ClientLayout>{children}</ClientLayout>
-              </SmoothScroll>
-            </WishlistInitializer>
-          </CartInitializer>
-          {/* </AuthInitializer> */}
+          <AuthInitializer initialUser={clientUser}>
+            <CartInitializer>
+              <WishlistInitializer>
+                <SmoothScroll>
+                  <ClientLayout>{children}</ClientLayout>
+                </SmoothScroll>
+              </WishlistInitializer>
+            </CartInitializer>
+          </AuthInitializer>
         </QueryProvider>
       </body>
     </html>

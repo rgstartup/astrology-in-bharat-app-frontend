@@ -4,7 +4,9 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import NextImage from "next/image";
 import { PATHS } from "@repo/routes";
-import { useCart } from "../context/CartContext";
+// import { useCart } from "../context/CartContext";
+// import { useCart } from "@/hooks/useCart";
+import { useCartStore } from "@/store/useCartStore";
 
 // i18n & State
 import {
@@ -13,15 +15,17 @@ import {
   headerTranslations,
 } from "@repo/store";
 
-import {
-  getNotificationSocket,
-  connectNotificationSocket,
-} from "../utils/socket";
-import { api } from "../utils/api";
-import { CloseButton } from "../components/CloseButton";
+// import {
+//   getNotificationSocket,
+//   connectNotificationSocket,
+// } from "../utils/socket";
+
+import { getNotificationSocket, connectNotificationSocket, formatCompactNumber } from "@repo/ui";
+import { api } from "@/actions";
+import { CloseButton } from "@repo/ui";
 import SubHeaderSlider from "./sub-header-slider";
 import LanguageSwitcherDropdown from "./language-switcher.button";
-import { formatCompactNumber } from "../utils/currency";
+
 import BalanceIndicator from "./balance-indicator.button";
 import ProfileImagePreviewModal from "./profile-image-preview.modal";
 import AskExpertCTA from "./ask-expert.cta";
@@ -571,8 +575,8 @@ const Header: React.FC<HeaderProps> = ({
                                     >
                                       {notif.createdAt
                                         ? new Date(
-                                            notif.createdAt,
-                                          ).toLocaleString()
+                                          notif.createdAt,
+                                        ).toLocaleString()
                                         : t.justNow}
                                     </p>
                                   </div>
@@ -854,28 +858,26 @@ const Header: React.FC<HeaderProps> = ({
                 {/* Nav links */}
                 <div
                   data-lenis-prevent
-                  className={`lg:flex lg:items-center lg:justify-center lg:flex-1 ${
-                    isMenuOpen
-                      ? "block absolute left-0 right-0 bg-brown w-full shadow-2xl border-t border-white/10 z-[1000] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-                      : "hidden"
-                  }`}
+                  className={`lg:flex lg:items-center lg:justify-center lg:flex-1 ${isMenuOpen
+                    ? "block absolute left-0 right-0 bg-brown w-full shadow-2xl border-t border-white/10 z-[1000] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                    : "hidden"
+                    }`}
                   style={
                     isMenuOpen
                       ? {
-                          top: "100%",
-                          maxHeight: "calc(100vh - 70px)",
-                          overflowY: "auto",
-                          overscrollBehavior: "contain",
-                        }
+                        top: "100%",
+                        maxHeight: "calc(100vh - 70px)",
+                        overflowY: "auto",
+                        overscrollBehavior: "contain",
+                      }
                       : {}
                   }
                 >
                   <ul
-                    className={`flex items-center gap-2 xl:gap-8 translate-y-2 ${
-                      isMenuOpen
-                        ? "flex-col items-start w-full py-2 px-3 gap-0"
-                        : "flex-row mx-auto"
-                    }`}
+                    className={`flex items-center gap-2 xl:gap-8 translate-y-2 ${isMenuOpen
+                      ? "flex-col items-start w-full py-2 px-3 gap-0"
+                      : "flex-row mx-auto"
+                      }`}
                   >
                     {/* Home */}
                     {/* <li

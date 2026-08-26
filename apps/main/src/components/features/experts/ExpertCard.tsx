@@ -6,7 +6,7 @@ import React, { useState, useRef } from "react";
 import { Button, CloseButton } from "@repo/ui";
 import { useRouter, usePathname } from "next/navigation";
 import { useWishlistStore } from "@/store/useWishlistStore";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/__useAuthStore";
 import { toast } from "react-toastify";
 import { useWishlist } from "@/hooks/useWishlist";
 import { ExpertCardProps } from "@/lib/types";
@@ -81,7 +81,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
 
     const handleStatusSync = (data: any) => {
       const expertIdFromEvent = data.expert_id || data.id || data.userId;
-      
+
       // Match with either ID type (expert profile ID or user ID)
       if (String(expertIdFromEvent) === String(id) || String(expertIdFromEvent) === String(userId)) {
         console.log(`[Presence] Expert ${name} status changed to ${data.is_available ? 'Online' : 'Offline'}`);
@@ -144,9 +144,9 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
     e.stopPropagation();
 
     if (!expertProfileId) {
-        console.error("[ExpertCard] Invalid ID:", expertData);
-        toast.error("Expert details not found. Please try again.");
-        return;
+      console.error("[ExpertCard] Invalid ID:", expertData);
+      toast.error("Expert details not found. Please try again.");
+      return;
     }
 
     // Use expert profile ID for chat
@@ -179,8 +179,8 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   return (
     <div className="w-full h-full">
       <div className={`bg-white h-full flex flex-col rounded-xl shadow-sm border border-[#daa23e] p-3 text-center transition-transform duration-300 hover:-translate-y-1.5 ${cardClassName} ${isNavigating ? 'opacity-70 pointer-events-none' : ''}`}>
-        <NextLink 
-          href={createDetailsUrl()} 
+        <NextLink
+          href={createDetailsUrl()}
           className="no-underline hover:no-underline flex flex-col flex-1 relative"
           onClick={() => {
             setIsNavigating(true);
@@ -242,18 +242,16 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             {/* 🟢 ONLINE / OFFLINE / BUSY — TOP RIGHT (OUTSIDE IMAGE) */}
             <div
               className={`absolute top-2 right-3 z-20 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2 shadow-md
-              ${
-                isBusy
+              ${isBusy
                   ? "bg-amber-100 text-amber-700"
                   : isAvailable
-                  ? "bg-green-100 text-green-700"
-                  : "bg-gray-100 text-gray-600"
-              }`}
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-600"
+                }`}
             >
               <i
-                className={`fa-solid fa-circle ${
-                  isBusy ? "text-amber-500" : isAvailable ? "text-green-500" : "text-gray-400"
-                }`}
+                className={`fa-solid fa-circle ${isBusy ? "text-amber-500" : isAvailable ? "text-green-500" : "text-gray-400"
+                  }`}
               />
               {isBusy ? "Busy" : isAvailable ? t.expertCard.online : t.expertCard.offline}
             </div>

@@ -27,6 +27,8 @@ export default function ClientLayout({
 
   useEffect(() => {
     setMounted(true);
+
+    console.log({ user });
     console.log("🌊 [Main App] ClientLayout mounted - WebSocket active:", merchantSocket.id || "Connecting...");
   }, []);
 
