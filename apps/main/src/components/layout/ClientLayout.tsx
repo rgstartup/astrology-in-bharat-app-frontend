@@ -24,12 +24,14 @@ export default function ClientLayout({
   const { isAuthenticated, user, logout, balance } = useAuthStore();
   const { cartCount } = useCartStore();
 
-
   useEffect(() => {
     setMounted(true);
 
     console.log({ user });
-    console.log("🌊 [Main App] ClientLayout mounted - WebSocket active:", merchantSocket.id || "Connecting...");
+    console.log(
+      "🌊 [Main App] ClientLayout mounted - WebSocket active:",
+      merchantSocket.id || "Connecting...",
+    );
   }, []);
 
   // Show review modal after 10s on homepage for logged-in users (only once)
@@ -59,10 +61,8 @@ export default function ClientLayout({
           cartCount={cartCount}
         />
       )}
-      <main suppressHydrationWarning className="flex-1">
-        <Suspense fallback={null}>
-          {children}
-        </Suspense>
+      <main className="flex-1">
+        <Suspense fallback={null}>{children}</Suspense>
       </main>
       {mounted && !isAdminRoute && !isChatRoom && <FloatingChatButton />}
       {mounted && showReviewModal && (
@@ -76,5 +76,3 @@ export default function ClientLayout({
     </div>
   );
 }
-
-

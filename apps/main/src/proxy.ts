@@ -15,6 +15,7 @@ async function refreshSession(
   refreshToken: string,
   request: NextRequest,
   pathname: string,
+  isProtected: boolean,
   redirect = false,
 ) {
   const [data, error] = await api
@@ -26,19 +27,22 @@ async function refreshSession(
     .post<{
       accessToken: string;
       refreshToken: string;
-    }>(`/auth/refresh`);
+    }>("/auth/client/refresh");
 
   if (error || !data?.accessToken || !data.refreshToken) {
-    request.cookies.clear();
-    return redirectToLogin(request, pathname);
+    // Don't mutate request cookies.
+    // request.cookies represents the incoming request.
+    if (isProtected) {
+      return redirectToLogin(request, pathname);
+    }
+
+    return NextResponse.next();
   }
 
-  const newAccessToken = data?.accessToken;
-  const newRefreshToken = data?.refreshToken;
-
   const response = redirect ? redirectToCallback(request) : NextResponse.next();
-  setAccessToken(response.cookies, newAccessToken);
-  setRefreshToken(response.cookies, newRefreshToken);
+
+  setAccessToken(response.cookies, data.accessToken);
+  setRefreshToken(response.cookies, data.refreshToken);
 
   return response;
 }
@@ -83,37 +87,89 @@ export async function proxy(request: NextRequest) {
   const isPathProtected = isProtectedRoute(pathname);
   const isPathAuth = isAuthRoute(pathname);
 
-  console.log({ isPathProtected, isPathAuth });
+  console.log({
+    pathname,
+    isPathProtected,
+    isPathAuth,
+  });
 
-  // 1. Get tokens from cookies
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
-  if (isPathProtected) {
-    if (accessToken) {
-      const tokenAboutToExpire = checkTokenAboutToExpire(accessToken);
-
-      if (!tokenAboutToExpire) return NextResponse.next();
-
-      if (!refreshToken) return redirectToLogin(request, pathname);
-      return refreshSession(refreshToken, request, pathname);
-    }
-
-    if (refreshToken) {
-      return refreshSession(refreshToken, request, pathname);
-    }
-
-    return redirectToLogin(request, pathname);
-  }
-
+  /*
+   * 1. Auth routes
+   *
+   * If already authenticated, don't allow /sign-in or /register.
+   */
   if (isPathAuth) {
     if (accessToken) {
       return redirectToCallback(request);
     }
 
     if (refreshToken) {
-      return refreshSession(refreshToken, request, pathname, true);
+      return refreshSession(
+        refreshToken,
+        request,
+        pathname,
+        isPathProtected,
+        true,
+      );
     }
+
+    return NextResponse.next();
+  }
+
+  /*
+   * 2. Access token exists
+   *
+   * Check whether it needs rotation.
+   */
+  if (accessToken) {
+    const tokenAboutToExpire = checkTokenAboutToExpire(accessToken);
+
+    if (!tokenAboutToExpire) {
+      return NextResponse.next();
+    }
+
+    /*
+     * Access token is about to expire.
+     * Try refresh regardless of the route.
+     */
+    if (refreshToken) {
+      return refreshSession(refreshToken, request, pathname, isPathProtected);
+    }
+
+    /*
+     * No refresh token.
+     *
+     * Protected → login
+     * Public → continue
+     */
+    if (isPathProtected) {
+      return redirectToLogin(request, pathname);
+    }
+
+    return NextResponse.next();
+  }
+
+  /*
+   * 3. No access token
+   *
+   * Try refresh if refresh token exists,
+   * regardless of whether the route is protected.
+   */
+  if (refreshToken) {
+    return refreshSession(refreshToken, request, pathname, isPathProtected);
+  }
+
+  /*
+   * 4. No tokens
+   *
+   * Protected → login
+   * Public → continue
+   */
+  if (isPathProtected) {
+    return redirectToLogin(request, pathname);
   }
 
   return NextResponse.next();
@@ -121,5 +177,7 @@ export async function proxy(request: NextRequest) {
 
 // Matcher configuration for proxy
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|images).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|images|\\.well-known).*)",
+  ],
 };

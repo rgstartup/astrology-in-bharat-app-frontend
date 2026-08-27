@@ -4,25 +4,7 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      // "@repo/ui": [
-      //   "../../packages/ui/src/index.ts"
-      // ],
-      // "@repo/ui/*": [
-      //   "../../packages/ui/src/*"
-      // ],
-      // "@repo/lib": [
-      //   "../../packages/lib/src/index.ts"
-      // ],
-      // "@repo/lib/*": [
-      //   "../../packages/lib/src/*"
-      // ],
-      // "@packages/*": [
-      //   "../../packages/*"
-      // ],
-      // "@repo/safe-fetch": [
-      //   "../../packages/safe-fetch/index.ts"
-      // ]
+      ]
     },
     "plugins": [
       {
@@ -33,13 +15,14 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "src/next-env.d.ts",
-    "next.config.ts",
     ".next/types/**/*.ts",
     "../../packages/ui/src/**/*.ts",
     "../../packages/ui/src/**/*.tsx",
     "../../packages/lib/src/**/*.ts",
-    "src/env.d.ts"
+    "next.config.ts",
+    "globals.d.ts",
+    "next-env.d.ts",
+    "env.d.ts"
   ],
   "exclude": [
     "node_modules",

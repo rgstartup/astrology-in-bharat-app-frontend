@@ -145,13 +145,13 @@ const Header: React.FC<HeaderProps> = ({
 
   const avatarSrc = normalizeImagePath(user?.profile_picture || user?.avatar);
 
-  // const unwrapResponse = (res: any) => res?.data ?? res;
-  // const normalizeNotification = (notif: any) => ({
-  //   ...notif,
-  //   id: notif?.id ?? notif?.notification_id,
-  //   isRead: notif?.isRead ?? notif?.is_read ?? false,
-  //   createdAt: notif?.createdAt ?? notif?.created_at,
-  // });
+  const unwrapResponse = (res: any) => res?.data ?? res;
+  const normalizeNotification = (notif: any) => ({
+    ...notif,
+    id: notif?.id ?? notif?.notification_id,
+    isRead: notif?.isRead ?? notif?.is_read ?? false,
+    createdAt: notif?.createdAt ?? notif?.created_at,
+  });
 
   const logout = async () => {
     if (logoutHandler) {

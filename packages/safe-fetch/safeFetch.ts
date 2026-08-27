@@ -78,7 +78,9 @@ async function executeFetch<T>(
   url: string,
   init: SafeFetchInit | undefined,
   instanceConfig: SafeFetchInstanceConfig,
+  callSiteStack?: string,
 ): Promise<Result<T>> {
+  const callSite = callSiteStack || new Error().stack;
   const {
     timeoutMs = instanceConfig.timeoutMs ?? 15000,
     controller: userController,
@@ -137,7 +139,9 @@ async function executeFetch<T>(
             ? data.message[0]
             : data.message
           : res.statusText;
-      const error = new ApiError(res.status, message, data, res.headers);
+      const error = new ApiError(res.status, message, data, res.headers, {
+        callSiteStack: callSite,
+      });
       if (instanceConfig.onError) await instanceConfig.onError(error);
       return [null, error];
     }
@@ -149,10 +153,15 @@ async function executeFetch<T>(
     return [data as T, null];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    const error =
-      err.name === "AbortError"
-        ? new ApiError(0, "Request aborted or timeout")
-        : new ApiError(0, err.message || "Network error");
+    const isAbort = err?.name === "AbortError" || err?.name === "TimeoutError";
+    const message = isAbort
+      ? "Request aborted or timeout"
+      : err?.message || "Network error";
+
+    const error = new ApiError(0, message, undefined, undefined, {
+      cause: err,
+      callSiteStack: callSite,
+    });
 
     if (instanceConfig.onError) await instanceConfig.onError(error);
     return [null, error];
@@ -178,6 +187,18 @@ function withBody(method: string, body?: unknown): Partial<SafeFetchInit> {
   };
 }
 
+function getCallSite(callerFn?: Function): string | undefined {
+  const err: { stack?: string } = {};
+  const v8 = Error as unknown as {
+    captureStackTrace?: (target: object, fn?: Function) => void;
+  };
+  if (typeof v8.captureStackTrace === "function" && callerFn) {
+    v8.captureStackTrace(err, callerFn);
+    return err.stack;
+  }
+  return new Error().stack;
+}
+
 /**
  * @desc Creates a reusable safeFetch instance with shared base URL, headers, and config —
  * similar to `axios.create()`.
@@ -194,26 +215,40 @@ function withBody(method: string, body?: unknown): Partial<SafeFetchInit> {
 export function createSafeFetchInstance(
   config: SafeFetchInstanceConfig = {},
 ): SafeFetchInstance {
-  const instance = <T>(url: string, init?: SafeFetchInit) =>
-    executeFetch<T>(url, init, config);
+  const instance = <T>(url: string, init?: SafeFetchInit) => {
+    const callSite = getCallSite(instance);
+    return executeFetch<T>(url, init, config, callSite);
+  };
 
-  instance.get = <T>(url: string, init?: SafeFetchInit) =>
-    executeFetch<T>(url, { method: "GET", ...init }, config);
+  instance.get = <T>(url: string, init?: SafeFetchInit) => {
+    const callSite = getCallSite(instance.get);
+    return executeFetch<T>(url, { method: "GET", ...init }, config, callSite);
+  };
 
-  instance.post = <T>(url: string, body?: unknown, init?: SafeFetchInit) =>
-    executeFetch<T>(url, { ...withBody("POST", body), ...init }, config);
+  instance.post = <T>(url: string, body?: unknown, init?: SafeFetchInit) => {
+    const callSite = getCallSite(instance.post);
+    return executeFetch<T>(url, { ...withBody("POST", body), ...init }, config, callSite);
+  };
 
-  instance.put = <T>(url: string, body?: unknown, init?: SafeFetchInit) =>
-    executeFetch<T>(url, { ...withBody("PUT", body), ...init }, config);
+  instance.put = <T>(url: string, body?: unknown, init?: SafeFetchInit) => {
+    const callSite = getCallSite(instance.put);
+    return executeFetch<T>(url, { ...withBody("PUT", body), ...init }, config, callSite);
+  };
 
-  instance.patch = <T>(url: string, body?: unknown, init?: SafeFetchInit) =>
-    executeFetch<T>(url, { ...withBody("PATCH", body), ...init }, config);
+  instance.patch = <T>(url: string, body?: unknown, init?: SafeFetchInit) => {
+    const callSite = getCallSite(instance.patch);
+    return executeFetch<T>(url, { ...withBody("PATCH", body), ...init }, config, callSite);
+  };
 
-  instance.delete = <T>(url: string, init?: SafeFetchInit) =>
-    executeFetch<T>(url, { method: "DELETE", ...init }, config);
+  instance.delete = <T>(url: string, init?: SafeFetchInit) => {
+    const callSite = getCallSite(instance.delete);
+    return executeFetch<T>(url, { method: "DELETE", ...init }, config, callSite);
+  };
 
-  instance.upload = <T>(url: string, body: FormData, init?: SafeFetchInit) =>
-    executeFetch<T>(url, { ...withBody("POST", body), ...init }, config);
+  instance.upload = <T>(url: string, body: FormData, init?: SafeFetchInit) => {
+    const callSite = getCallSite(instance.upload);
+    return executeFetch<T>(url, { ...withBody("POST", body), ...init }, config, callSite);
+  };
 
   /** Inherit config and override with new values — headers are merged, not replaced */
   instance.extend = (overrides: SafeFetchInstanceConfig) =>
@@ -242,5 +277,7 @@ export default async function safeFetch<T>(
   url: string,
   init?: SafeFetchInit,
 ): Promise<Result<T>> {
-  return executeFetch<T>(url, init, {});
+  const callSite = getCallSite(safeFetch);
+  return executeFetch<T>(url, init, {}, callSite);
 }
+

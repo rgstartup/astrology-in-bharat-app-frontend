@@ -1,6 +1,6 @@
 export { default as safeFetch } from "./safeFetch";
 export { createSafeFetchInstance } from "./safeFetch";
-export { ApiError, type ApiErrorBody } from "./error";
+export { ApiError, type ApiErrorBody, type ApiErrorOptions } from "./error";
 export type {
   SafeFetchInstance,
   SafeFetchInstanceConfig,

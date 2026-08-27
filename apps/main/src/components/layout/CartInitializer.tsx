@@ -1,20 +1,25 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAuthStore } from "@/store/__useAuthStore"; // Changed import
+import { useAuthStore } from "@/store/useAuthStore";
 import { useCartStore } from "@/store/useCartStore";
 
-export const CartInitializer = ({ children }: { children: React.ReactNode }) => {
-    const { isAuthenticated } = useAuthStore(); // Changed usage
-    const { fetchCart, resetCart } = useCartStore();
+export const CartInitializer = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const { isAuthenticated } = useAuthStore(); // Changed usage
+  const { fetchCart, resetCart } = useCartStore();
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            fetchCart(true);
-        } else {
-            resetCart();
-        }
-    }, [isAuthenticated, fetchCart, resetCart]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchCart(true);
+      return;
+    }
 
-    return <>{children}</>;
+    resetCart();
+  }, [isAuthenticated, fetchCart, resetCart]);
+
+  return <>{children}</>;
 };

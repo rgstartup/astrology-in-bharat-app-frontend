@@ -57,7 +57,7 @@ function CallPrepContent() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      refreshBalance();
+      refreshBalance(api);
     }
   }, [isAuthenticated, refreshBalance]);
 
@@ -73,7 +73,7 @@ function CallPrepContent() {
         setExpert({
           id: data.id,
           name: data.user?.name || "Expert",
-          image: data.user?.avatar || "/images/dummy-expert.jpg",
+          image: data.user?.avatar,
           expertise: data.specialization || "",
           experience: data.experience_in_years || 0,
           price: data.price,
@@ -134,7 +134,7 @@ function CallPrepContent() {
       }
       throw new Error(
         getErrorMessage(err) ||
-        "Could not access microphone. Please check your hardware.",
+          "Could not access microphone. Please check your hardware.",
       );
     }
   };
