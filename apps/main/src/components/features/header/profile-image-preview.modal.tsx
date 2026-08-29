@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { CloseButton } from "../components/CloseButton";
+// import { CloseButton } from "../components/CloseButton";
+import { CloseButton } from "@repo/ui";
 
 interface ProfileImagePreviewModalProps {
   showImageModal: boolean;

@@ -54,6 +54,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
 
     set({ isLoading: true });
+
     try {
       const [res, error] = await CartService.getCart();
       if (error || !res) {
@@ -91,7 +92,7 @@ export const useCartStore = create<CartState>((set, get) => ({
         style: { cursor: "pointer" },
       });
 
-      await get().fetchCart(true);
+      // await get().fetchCart(true);
     } catch (error: any) {
       console.error("Add to cart error:", error);
       toast.error(getFormattedError(error, "Failed to add to cart"));

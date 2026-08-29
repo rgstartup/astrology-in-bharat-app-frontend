@@ -41,8 +41,7 @@ export const useCart = () => {
       // Optimistically update the Zustand store
       useCartStore.setState((state) => {
         const existingItemIndex = state.cartItems.findIndex(
-          (item) =>
-            item.productId === productId || item.product?.id === productId,
+          (item) => item.product.id === productId,
         );
 
         const newItems = [...state.cartItems];

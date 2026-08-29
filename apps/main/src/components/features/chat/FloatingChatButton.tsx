@@ -4,96 +4,101 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as LucideIcons from "lucide-react";
 import { api as http } from "@/actions";
-import { useAuthStore } from "@/store/__useAuthStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const { MessageSquare, X } = LucideIcons as any;
 
 export default function FloatingChatButton() {
-    const [activeSession, setActiveSession] = useState<any>(null);
-    const [position, setPosition] = useState({ x: 24, y: 24 }); // Bottom-right offset
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-    const { isAuthenticated, user } = useAuthStore();
-    const router = useRouter();
+  const [activeSession, setActiveSession] = useState<any>(null);
+  const [position, setPosition] = useState({ x: 24, y: 24 }); // Bottom-right offset
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const { isAuthenticated } = useAuthStore();
+  const router = useRouter();
 
-    useEffect(() => {
-        if (!isAuthenticated) return;
+  useEffect(() => {
+    if (!isAuthenticated) return;
 
-        const checkActiveSession = async () => {
-            const [res, error] = await http.get<any>('/chat/sessions/active-client');
+    const checkActiveSession = async () => {
+      const [res, error] = await http.get<any>("/chat/sessions/active-client");
 
-            if (error) {
-                // Silent failure, session might not exist
-                setActiveSession(null);
-            } else {
-                const session = res?.data ?? res;
-                if (session && (session.status === 'active' || session.status === 'pending')) {
-                    setActiveSession(session);
-                } else {
-                    setActiveSession(null);
-                }
-            }
-        };
-
-        checkActiveSession();
-        const interval = setInterval(checkActiveSession, 20000); // Check every 20s
-        return () => clearInterval(interval);
-    }, [isAuthenticated]);
-
-    const handleMouseDown = (e: React.MouseEvent) => {
-        setIsDragging(true);
-        setDragStart({
-            x: e.clientX - position.x,
-            y: window.innerHeight - e.clientY - position.y
-        });
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-        if (!isDragging) return;
-
-        // Calculate new position from bottom-right
-        const newX = e.clientX - dragStart.x;
-        const newY = window.innerHeight - e.clientY - dragStart.y;
-
-        // Constrain to screen
-        const constrainedX = Math.max(20, Math.min(window.innerWidth - 80, newX));
-        const constrainedY = Math.max(20, Math.min(window.innerHeight - 80, newY));
-
-        setPosition({ x: constrainedX, y: constrainedY });
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false);
-    };
-
-    useEffect(() => {
-        if (isDragging) {
-            window.addEventListener('mousemove', handleMouseMove);
-            window.addEventListener('mouseup', handleMouseUp);
+      if (error) {
+        // Silent failure, session might not exist
+        setActiveSession(null);
+      } else {
+        const session = res?.data ?? res;
+        if (
+          session &&
+          (session.status === "active" || session.status === "pending")
+        ) {
+          setActiveSession(session);
         } else {
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseup', handleMouseUp);
+          setActiveSession(null);
         }
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, [isDragging]);
+      }
+    };
 
-    if (!activeSession) return null;
+    checkActiveSession();
+    const interval = setInterval(checkActiveSession, 20000); // Check every 20s
+    return () => clearInterval(interval);
+  }, [isAuthenticated]);
 
-    return (
-        <div
-            style={{
-                position: 'fixed',
-                bottom: `${position.y}px`,
-                right: `${position.x}px`,
-                transition: isDragging ? 'none' : 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-            }}
-            className="z-[9999] animate-in fade-in zoom-in duration-500"
-        >
-            <style>
-                {`
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - position.x,
+      y: window.innerHeight - e.clientY - position.y,
+    });
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return;
+
+    // Calculate new position from bottom-right
+    const newX = e.clientX - dragStart.x;
+    const newY = window.innerHeight - e.clientY - dragStart.y;
+
+    // Constrain to screen
+    const constrainedX = Math.max(20, Math.min(window.innerWidth - 80, newX));
+    const constrainedY = Math.max(20, Math.min(window.innerHeight - 80, newY));
+
+    setPosition({ x: constrainedX, y: constrainedY });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    } else {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging]);
+
+  if (!activeSession) return null;
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        bottom: `${position.y}px`,
+        right: `${position.x}px`,
+        transition: isDragging
+          ? "none"
+          : "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+      }}
+      className="z-[9999] animate-in fade-in zoom-in duration-500"
+    >
+      <style>
+        {`
                 @keyframes pulse-ring {
                     0% { transform: scale(.33); }
                     80%, 100% { opacity: 0; }
@@ -114,46 +119,50 @@ export default function FloatingChatButton() {
                     z-index: 1;
                 }
                 `}
-            </style>
+      </style>
 
-            <div className="relative group">
-                {/* Floating Content */}
-                <div className="absolute right-full mr-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none scale-90 group-hover:scale-100">
-                    <span className="bg-white/90 backdrop-blur-md text-[#2A0A0A] text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-2xl shadow-xl border border-primary/20">
-                        {activeSession.expert?.user?.name || "Expert"} is waiting
-                    </span>
-                    <span className="text-[9px] font-bold text-primary bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10 uppercase tracking-tighter self-end shadow-sm animate-pulse">
-                        Return to Chat
-                    </span>
-                </div>
-
-                {/* Main Action Button */}
-                <button
-                    onMouseDown={handleMouseDown}
-                    onClick={() => {
-                        if (!isDragging) {
-                            const eId = activeSession.expertId || activeSession.expert_id || activeSession.expert?.id;
-                            if (eId) {
-                                router.push(`/chat/room/${eId}?sessionId=${activeSession.id}`);
-                            } else {
-                                console.error("Could not find expertId in session:", activeSession);
-                                // Fallback to a safe redirect or show warning if needed
-                            }
-                        }
-                    }}
-                    className={`relative w-16 h-16 bg-gradient-to-tr from-primary to-primary-hover rounded-full flex items-center justify-center shadow-lg shadow-primary/40 hover:shadow-xl hover:shadow-primary/60 transition-all active:scale-90 cursor-grab active:cursor-grabbing border-4 border-white overflow-visible`}
-                >
-                    <div className="absolute inset-0 pulse-ring-active"></div>
-                    <div className="relative z-10">
-                        <MessageSquare className="w-7 h-7 text-white fill-white/20" />
-                    </div>
-
-                    {/* Tiny notification dot */}
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full z-20 animate-bounce shadow-md"></div>
-                </button>
-            </div>
+      <div className="relative group">
+        {/* Floating Content */}
+        <div className="absolute right-full mr-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none scale-90 group-hover:scale-100">
+          <span className="bg-white/90 backdrop-blur-md text-[#2A0A0A] text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-2xl shadow-xl border border-primary/20">
+            {activeSession.expert?.user?.name || "Expert"} is waiting
+          </span>
+          <span className="text-[9px] font-bold text-primary bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10 uppercase tracking-tighter self-end shadow-sm animate-pulse">
+            Return to Chat
+          </span>
         </div>
-    );
+
+        {/* Main Action Button */}
+        <button
+          onMouseDown={handleMouseDown}
+          onClick={() => {
+            if (!isDragging) {
+              const eId =
+                activeSession.expertId ||
+                activeSession.expert_id ||
+                activeSession.expert?.id;
+              if (eId) {
+                router.push(`/chat/room/${eId}?sessionId=${activeSession.id}`);
+              } else {
+                console.error(
+                  "Could not find expertId in session:",
+                  activeSession,
+                );
+                // Fallback to a safe redirect or show warning if needed
+              }
+            }
+          }}
+          className={`relative w-16 h-16 bg-gradient-to-tr from-primary to-primary-hover rounded-full flex items-center justify-center shadow-lg shadow-primary/40 hover:shadow-xl hover:shadow-primary/60 transition-all active:scale-90 cursor-grab active:cursor-grabbing border-4 border-white overflow-visible`}
+        >
+          <div className="absolute inset-0 pulse-ring-active"></div>
+          <div className="relative z-10">
+            <MessageSquare className="w-7 h-7 text-white fill-white/20" />
+          </div>
+
+          {/* Tiny notification dot */}
+          <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full z-20 animate-bounce shadow-md"></div>
+        </button>
+      </div>
+    </div>
+  );
 }
-
-

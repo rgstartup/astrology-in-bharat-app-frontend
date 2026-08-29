@@ -3,14 +3,16 @@ import { HeaderTranslations } from "@repo/store";
 import Link from "next/link";
 import React from "react";
 import NotificationList from "./notification-list";
+import { INotification } from "@/lib/types/notification.type";
 
 interface NotificationDropDownProps {
   //   loadingNotifications: boolean;
   showNotificationDropDown: boolean;
   setShowNotificationDropDown: React.Dispatch<React.SetStateAction<boolean>>;
-  notifications: Notification[];
+  notifications: INotification[];
   handleClearAll: () => void;
   t: HeaderTranslations;
+  children: React.ReactNode;
 }
 
 interface ClearAllButtonProps {
@@ -72,6 +74,8 @@ const NotificationDropDown = (props: NotificationDropDownProps) => {
             !loadingNotifications
           }
         /> */}
+
+        {props.children}
       </div>
       <div className="px-3 py-3 border-t text-center bg-gray-50">
         <Link

@@ -3,18 +3,10 @@ import { persist } from "zustand/middleware";
 import { toast } from "react-toastify";
 import { api } from "@/actions";
 import { AuthService } from "@/services/auth.service";
-
-export interface ClientUser {
-  id: string;
-  uid?: string;
-  name?: string;
-  email: string;
-  avatar?: string;
-  phone?: string;
-}
+import type { Client } from "@repo/lib";
 
 interface AuthState {
-  user: ClientUser | null;
+  user: Client | null;
   balance: number;
   loading: boolean;
   isAuthenticated: boolean;
@@ -24,7 +16,7 @@ interface AuthState {
   init: () => Promise<void>;
   logout: (redirectUrl?: string) => Promise<void>;
   refreshBalance: () => Promise<void>;
-  updateUser: (data: Partial<ClientUser>) => void;
+  updateUser: (data: Partial<Client>) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -35,18 +27,6 @@ export const useAuthStore = create<AuthState>()(
       loading: true,
       isAuthenticated: false,
       isInitialized: false,
-
-      // login: (api: SafeFetchInstance, userData?: ClientUser) => {
-      //     if (userData) {
-      //         set({ user: userData, isAuthenticated: true, loading: false });
-      //     } else {
-      //         set({ isAuthenticated: true, loading: false });
-      //     }
-      //     get().refreshBalance(api);
-      //     // if (!userData) {
-      //     //     get().refreshAuth();
-      //     // }
-      // },
 
       init: async () => {
         if (get().isInitialized) return;
@@ -183,7 +163,7 @@ export const useAuthStore = create<AuthState>()(
       //     }
       // },
 
-      updateUser: (data: Partial<ClientUser>) => {
+      updateUser: (data: Partial<Client>) => {
         const current = get().user;
         if (current) {
           set({ user: { ...current, ...data } });

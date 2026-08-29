@@ -5,8 +5,8 @@ import Link from "next/link";
 import NextImage from "next/image";
 import { PATHS } from "@repo/routes";
 // import { useCart } from "../context/CartContext";
-// import { useCart } from "@/hooks/useCart";
-import { useCartStore } from "@/store/useCartStore";
+import { useCart } from "@/hooks/useCart";
+// import { useCartStore } from "@/store/useCartStore";
 
 // i18n & State
 import {
@@ -20,9 +20,8 @@ import {
 //   connectNotificationSocket,
 // } from "../utils/socket";
 
-import { getNotificationSocket, connectNotificationSocket, formatCompactNumber } from "@repo/ui";
+import { getNotificationSocket, connectNotificationSocket } from "@repo/ui";
 import { api } from "@/actions";
-import { CloseButton } from "@repo/ui";
 import SubHeaderSlider from "./sub-header-slider";
 import LanguageSwitcherDropdown from "./language-switcher.button";
 
@@ -33,6 +32,7 @@ import AuthCTA from "./auth.cta";
 import CompanyLogo from "./company-logo";
 import HamburgerButton from "./mobile/Hamburger.button";
 import MobileSubMenu from "./mobile/sub-menu";
+import NotificationComponent from "./notification";
 
 // Swiper styles are imported in the root layout.tsx to avoid resolution issues in the shared package.
 const SERVICES_DATA_KEYS = [
@@ -74,7 +74,7 @@ const SERVICES_DATA_KEYS = [
 ];
 
 interface HeaderProps {
-  authState?: boolean;
+  // authState?: boolean;
   userData?: any;
   logoutHandler?: () => void;
   balance?: number;
@@ -82,7 +82,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({
-  authState,
+  // authState,
   userData,
   logoutHandler,
   balance,
@@ -108,9 +108,9 @@ const Header: React.FC<HeaderProps> = ({
 
   // Use the shared auth store
   const {
-    user: contextUser,
-    isAuthenticated: contextIsAuthenticated,
-    loading: contextLoading,
+    user,
+    isAuthenticated,
+    loading,
     logout: contextLogout,
     refreshAuth,
     refreshBalance,
@@ -126,8 +126,8 @@ const Header: React.FC<HeaderProps> = ({
     headerTranslations.en;
 
   // Prioritize props if available, otherwise use context
-  const isAuthenticated = authState ?? contextIsAuthenticated;
-  const user = userData ?? contextUser;
+  // const isAuthenticated = authState ?? contextIsAuthenticated;
+  // const user = userData ?? contextUser;
 
   const legacyUploadsOrigin =
     process.env.NEXT_PUBLIC_ADMIN_UPLOADS_ORIGIN || "http://localhost:3001";
@@ -176,102 +176,104 @@ const Header: React.FC<HeaderProps> = ({
     );
   }, [isAuthenticated, userData]);
 
-  // API functions for notifications
-  const fetchNotifications = useCallback(
-    async (isLoadMore = false) => {
-      try {
-        if (isLoadMore) setLoadingMoreNotifications(true);
-        else {
-          setLoadingNotifications(true);
-          setNotificationsOffset(0);
-        }
+  // // API functions for notifications
+  // const fetchNotifications = useCallback(
+  //   async (isLoadMore = false) => {
+  //     try {
+  //       if (isLoadMore) setLoadingMoreNotifications(true);
+  //       else {
+  //         setLoadingNotifications(true);
+  //         setNotificationsOffset(0);
+  //       }
 
-        const limit = 10;
-        const offset = isLoadMore ? notificationsOffset + limit : 0;
+  //       const limit = 10;
+  //       const offset = isLoadMore ? notificationsOffset + limit : 0;
 
-        const [res, error] = await api.get("/client/notifications", {
-          params: { limit, offset },
-        } as any);
-        if (error) throw error;
-        const payload = unwrapResponse(res);
-        const rawList = Array.isArray(payload) ? payload : payload?.data || [];
-        const totalCount = payload?.meta?.totalCount || 0;
+  //       const [res, error] = await api.get("/client/notifications", {
+  //         params: { limit, offset },
+  //       } as any);
+  //       if (error) throw error;
+  //       const payload = unwrapResponse(res);
+  //       const rawList = Array.isArray(payload) ? payload : payload?.data || [];
+  //       const totalCount = payload?.meta?.totalCount || 0;
 
-        const normalizedList = rawList.map(normalizeNotification);
+  //       const normalizedList = rawList.map(normalizeNotification);
 
-        if (isLoadMore) {
-          setNotifications((prev) => {
-            const existingIds = new Set(prev.map((n) => n.id));
-            const newList = normalizedList.filter(
-              (n: any) => !existingIds.has(n.id),
-            );
-            const updated = [...prev, ...newList];
-            setNotificationsHasMore(updated.length < totalCount);
-            return updated;
-          });
-          setNotificationsOffset(offset);
-        } else {
-          setNotifications(normalizedList);
-          setNotificationsHasMore(normalizedList.length < totalCount);
-          setNotificationsOffset(0);
-        }
-      } catch (err) {
-        console.error("Failed to fetch notifications", err);
-      } finally {
-        setLoadingNotifications(false);
-        setLoadingMoreNotifications(false);
-      }
-    },
-    [notificationsOffset],
-  );
+  //       if (isLoadMore) {
+  //         setNotifications((prev) => {
+  //           const existingIds = new Set(prev.map((n) => n.id));
+  //           const newList = normalizedList.filter(
+  //             (n: any) => !existingIds.has(n.id),
+  //           );
+  //           const updated = [...prev, ...newList];
+  //           setNotificationsHasMore(updated.length < totalCount);
+  //           return updated;
+  //         });
+  //         setNotificationsOffset(offset);
+  //       } else {
+  //         setNotifications(normalizedList);
+  //         setNotificationsHasMore(normalizedList.length < totalCount);
+  //         setNotificationsOffset(0);
+  //       }
+  //     } catch (err) {
+  //       console.error("Failed to fetch notifications", err);
+  //     } finally {
+  //       setLoadingNotifications(false);
+  //       setLoadingMoreNotifications(false);
+  //     }
+  //   },
+  //   [notificationsOffset],
+  // );
 
-  const fetchMoreNotifications = () => {
-    if (!loadingMoreNotifications && notificationsHasMore) {
-      fetchNotifications(true);
-    }
-  };
+  // const fetchMoreNotifications = () => {
+  //   if (!loadingMoreNotifications && notificationsHasMore) {
+  //     fetchNotifications(true);
+  //   }
+  // };
 
-  const fetchUnreadCount = useCallback(async () => {
-    try {
-      const [res, error] = await api.get("/client/notifications/unread-count");
-      if (error) throw error;
-      const payload = unwrapResponse(res);
-      const count =
-        payload?.count ?? payload?.unreadCount ?? payload?.unread_count ?? 0;
-      setUnreadCount(Number(count) || 0);
-    } catch (err) {
-      console.error("Failed to fetch unread count", err);
-    }
-  }, []);
+  // const fetchUnreadCount = useCallback(async () => {
+  //   try {
+  //     const [res, error] = await api.get<{ count: number }>(
+  //       "/client/notifications/unread-count",
+  //     );
+  //     if (error) throw error;
+  //     const payload = unwrapResponse(res);
+  //     const count =
+  //       payload?.count ?? payload?.unreadCount ?? payload?.unread_count ?? 0;
+  //     setUnreadCount(Number(count) || 0);
+  //   } catch (err) {
+  //     console.error("Failed to fetch unread count", err);
+  //   }
+  // }, []);
 
-  const markAsRead = async (id: string) => {
-    try {
-      const [_, error] = await api.patch(`client/notifications/${id}/read`);
-      if (error) throw error;
-      fetchUnreadCount();
-      fetchNotifications();
-    } catch (err) {
-      console.error("Failed to mark as read", err);
-    }
-  };
+  // const markAsRead = async (id: string) => {
+  //   try {
+  //     const [_, error] = await api.patch(`client/notifications/${id}/read`);
+  //     if (error) throw error;
+  //     fetchUnreadCount();
+  //     fetchNotifications();
+  //   } catch (err) {
+  //     console.error("Failed to mark as read", err);
+  //   }
+  // };
 
-  const handleClearAll = async () => {
-    try {
-      const [_, error] = await api.delete("/notifications/all");
-      if (error) throw error;
-      setNotifications([]);
-      setUnreadCount(0);
-    } catch (err) {
-      console.error("Failed to clear notifications in header", err);
-    }
-  };
+  // const handleClearAll = async () => {
+  //   try {
+  //     const [_, error] = await api.delete("/notifications/all");
+  //     if (error) throw error;
+  //     setNotifications([]);
+  //     setUnreadCount(0);
+  //   } catch (err) {
+  //     console.error("Failed to clear notifications in header", err);
+  //   }
+  // };
 
-  // Initial fetch
-  useEffect(() => {
-    if (isClient && isAuthenticated) {
-      fetchUnreadCount();
-    }
-  }, [isClient, isAuthenticated, fetchUnreadCount]);
+  // // Initial fetch
+  // useEffect(() => {
+  //   if (isClient && isAuthenticated) {
+  //     fetchUnreadCount();
+  //   }
+  // }, [isClient, isAuthenticated, fetchUnreadCount]);
 
   // Load notifications when dropdown opens
   useEffect(() => {
@@ -465,7 +467,7 @@ const Header: React.FC<HeaderProps> = ({
                       </Link>
 
                       {/* Notification Bell */}
-                      <div className="notification-dropdown-container relative">
+                      {/* <div className="notification-dropdown-container relative">
                         <div
                           className="cursor-pointer relative inline-flex"
                           onClick={() =>
@@ -575,8 +577,8 @@ const Header: React.FC<HeaderProps> = ({
                                     >
                                       {notif.createdAt
                                         ? new Date(
-                                          notif.createdAt,
-                                        ).toLocaleString()
+                                            notif.createdAt,
+                                          ).toLocaleString()
                                         : t.justNow}
                                     </p>
                                   </div>
@@ -627,7 +629,8 @@ const Header: React.FC<HeaderProps> = ({
                             </div>
                           </div>
                         )}
-                      </div>
+                      </div> */}
+                      <NotificationComponent />
 
                       {/* User Profile & Dropdown */}
                       <div className="profile-dropdown-container relative">
@@ -858,26 +861,28 @@ const Header: React.FC<HeaderProps> = ({
                 {/* Nav links */}
                 <div
                   data-lenis-prevent
-                  className={`lg:flex lg:items-center lg:justify-center lg:flex-1 ${isMenuOpen
-                    ? "block absolute left-0 right-0 bg-brown w-full shadow-2xl border-t border-white/10 z-[1000] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-                    : "hidden"
-                    }`}
+                  className={`lg:flex lg:items-center lg:justify-center lg:flex-1 ${
+                    isMenuOpen
+                      ? "block absolute left-0 right-0 bg-brown w-full shadow-2xl border-t border-white/10 z-[1000] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                      : "hidden"
+                  }`}
                   style={
                     isMenuOpen
                       ? {
-                        top: "100%",
-                        maxHeight: "calc(100vh - 70px)",
-                        overflowY: "auto",
-                        overscrollBehavior: "contain",
-                      }
+                          top: "100%",
+                          maxHeight: "calc(100vh - 70px)",
+                          overflowY: "auto",
+                          overscrollBehavior: "contain",
+                        }
                       : {}
                   }
                 >
                   <ul
-                    className={`flex items-center gap-2 xl:gap-8 translate-y-2 ${isMenuOpen
-                      ? "flex-col items-start w-full py-2 px-3 gap-0"
-                      : "flex-row mx-auto"
-                      }`}
+                    className={`flex items-center gap-2 xl:gap-8 translate-y-2 ${
+                      isMenuOpen
+                        ? "flex-col items-start w-full py-2 px-3 gap-0"
+                        : "flex-row mx-auto"
+                    }`}
                   >
                     {/* Home */}
                     {/* <li

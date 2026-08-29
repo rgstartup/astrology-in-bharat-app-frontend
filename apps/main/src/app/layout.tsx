@@ -1,4 +1,4 @@
-import "./globals.css";
+import "@/styles/globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,6 +13,8 @@ import { cookies } from "next/headers";
 import QueryProvider from "@/providers/QueryProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import { decodeToken, getErrorMessage } from "@repo/lib";
+import ToastProvider from "@/components/layout/ToastProvider";
+import PlatformReviewModal from "@/components/features/reviews";
 
 export const metadata: Metadata = {
   title: "Astrology in Bharat",
@@ -61,7 +63,7 @@ export default async function RootLayout({
       </head>
       <body
         className="min-h-screen bg-white text-black font-sans"
-      // suppressHydrationWarning
+        // suppressHydrationWarning
       >
         <QueryProvider>
           <AuthInitializer>
@@ -72,8 +74,10 @@ export default async function RootLayout({
                 </SmoothScroll>
               </WishlistInitializer>
             </CartInitializer>
+            <PlatformReviewModal />
           </AuthInitializer>
         </QueryProvider>
+        <ToastProvider />
       </body>
     </html>
   );

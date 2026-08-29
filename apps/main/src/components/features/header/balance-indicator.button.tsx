@@ -2,7 +2,7 @@
 
 import { useAuthStore } from "@repo/store";
 import { useState } from "react";
-import { formatCompactNumber } from "../utils/currency";
+import { formatCompactNumber } from "@repo/ui";
 
 const BalanceIndicator = () => {
   const { balance: currentBalance, isAuthenticated } = useAuthStore();

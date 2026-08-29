@@ -44,13 +44,8 @@ export function useGoogleLogin(options: UseGoogleLoginOptions = {}) {
   }, [searchParams, router, t, onError]);
 
   const handleGoogleLogin = useCallback(() => {
-    const safeCallback =
-      !callbackUrl || callbackUrl === "undefined"
-        ? "/client/profile"
-        : callbackUrl;
-
     const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-    const googleLoginUrl = `${baseUrl}${API_ROUTES.AUTH.CLIENT.GOOGLE_LOGIN}?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    const googleLoginUrl = `${baseUrl}${API_ROUTES.AUTH.CLIENT.GOOGLE_LOGIN}?redirect_uri=${encodeURIComponent(callbackUrl)}`;
 
     router.push(googleLoginUrl);
   }, [callbackUrl]);

@@ -1,31 +1,12 @@
 import { HeaderTranslations } from "@repo/store";
-import api from "../../utils/api";
-import { markNotificationAsRead } from "./notification-api";
-
-export interface Notification {
-  id: string;
-  isRead: boolean;
-  title: string;
-  message: string;
-  created_at: Date;
-}
+import { INotification } from "@/lib/types/notification.type";
 
 interface NotifcationListProps {
   show: boolean;
-  notifications: Notification[];
+  notifications: INotification[];
   t: HeaderTranslations;
+  markNotificationAsRead: (notificationId: string) => void;
 }
-
-const markAsRead = async (id: string) => {
-  try {
-    const [_not, error] = await markNotificationAsRead(id);
-    if (error) throw error;
-    // fetchUnreadCount();
-    // fetchNotifications();
-  } catch (err) {
-    console.error("Failed to mark as read", err);
-  }
-};
 
 const NotificationList = (props: NotifcationListProps) => {
   if (!props.show) return null;
@@ -35,14 +16,14 @@ const NotificationList = (props: NotifcationListProps) => {
   return notifications.map((notif, idx) => (
     <div
       key={`${notif.id}-${idx}`}
-      className={`px-3 py-3 border-b cursor-pointer transition-all ${notif.isRead ? "opacity-75" : "bg-blue-50/30"}`}
-      onClick={() => !notif.isRead && markAsRead(notif.id)}
+      className={`px-3 py-3 border-b cursor-pointer transition-all ${notif.is_read ? "opacity-75" : "bg-blue-50/30"}`}
+      onClick={() => !notif.is_read && props.markNotificationAsRead(notif.id)}
     >
       <div className="flex justify-between items-start mb-1">
         <p className="mb-0 text-gray-900 font-bold text-sm">
           {notif.title || "Notification"}
         </p>
-        {!notif.isRead && (
+        {!notif.is_read && (
           <span className="w-2 h-2 bg-blue-500 rounded-full inline-block" />
         )}
       </div>
