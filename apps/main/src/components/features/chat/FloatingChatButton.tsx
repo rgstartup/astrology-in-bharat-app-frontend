@@ -167,3 +167,5 @@ const FloatingChatButton: React.FC<{ show: boolean }> = ({ show }) => {
     </div>
   );
 }
+
+export default FloatingChatButton;
