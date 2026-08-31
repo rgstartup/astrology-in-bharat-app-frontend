@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import * as LucideIcons from "lucide-react";
+import { MessageSquare, X } from "lucide-react";
 import { api as http } from "@/actions";
 import { useAuthStore } from "@/store/useAuthStore";
 
-const { MessageSquare, X } = LucideIcons as any;
+const FloatingChatButton: React.FC<{ show: boolean }> = ({ show }) => {
 
-export default function FloatingChatButton() {
   const [activeSession, setActiveSession] = useState<any>(null);
   const [position, setPosition] = useState({ x: 24, y: 24 }); // Bottom-right offset
   const [isDragging, setIsDragging] = useState(false);
@@ -84,6 +83,8 @@ export default function FloatingChatButton() {
   }, [isDragging]);
 
   if (!activeSession) return null;
+
+  if (!show) return null;
 
   return (
     <div

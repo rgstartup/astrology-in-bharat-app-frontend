@@ -1,21 +1,17 @@
 "use client";
 
 import React from "react";
-// import { CloseButton } from "../components/CloseButton";
 import { CloseButton } from "@repo/ui";
+import { useAuth } from "@/store/useAuthStore";
 
-interface ProfileImagePreviewModalProps {
-  showImageModal: boolean;
-  setShowImageModal: React.Dispatch<React.SetStateAction<boolean>>;
-  avatarSrc: string;
-}
+const ProfileImagePreviewModal = () => {
+  const { user, showImageModal, closeImageModal } = useAuth();
 
-const ProfileImagePreviewModal = (props: ProfileImagePreviewModalProps) => {
-  if (!props.showImageModal) return null;
+  if (!showImageModal) return null;
 
   return (
     <div
-      onClick={() => props.setShowImageModal(false)}
+      onClick={closeImageModal}
       style={{
         position: "fixed",
         top: 0,
@@ -43,7 +39,7 @@ const ProfileImagePreviewModal = (props: ProfileImagePreviewModalProps) => {
         onClick={(e) => e.stopPropagation()}
       >
         <CloseButton
-          onClick={() => props.setShowImageModal(false)}
+          onClick={closeImageModal}
           style={{
             position: "absolute",
             top: "10px",
@@ -60,7 +56,7 @@ const ProfileImagePreviewModal = (props: ProfileImagePreviewModalProps) => {
           }}
         >
           <img
-            src={props.avatarSrc}
+            src={user?.avatar ?? ""}
             alt="Profile Preview"
             style={{
               maxWidth: "100%",

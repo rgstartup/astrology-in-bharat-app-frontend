@@ -6,4 +6,5 @@ export const api = createSafeFetchInstance({
   headers: {
     "Content-Type": "application/json",
   },
+  credentials: "include",
 });

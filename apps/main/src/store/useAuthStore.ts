@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { api } from "@/actions";
 import { AuthService } from "@/services/auth.service";
 import type { Client } from "@repo/lib";
+import { getProfileImageUrl } from "@/utils/image-utils";
 
 interface AuthState {
   user: Client | null;
@@ -11,12 +12,16 @@ interface AuthState {
   loading: boolean;
   isAuthenticated: boolean;
   isInitialized: boolean;
+  showImageModal: boolean;
 
   // Actions
   init: () => Promise<void>;
   logout: (redirectUrl?: string) => Promise<void>;
   refreshBalance: () => Promise<void>;
   updateUser: (data: Partial<Client>) => void;
+  closeImageModal: () => void;
+  openImageModal: () => void;
+  reset: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -27,19 +32,25 @@ export const useAuthStore = create<AuthState>()(
       loading: true,
       isAuthenticated: false,
       isInitialized: false,
+      showImageModal: false,
 
       init: async () => {
         if (get().isInitialized) return;
 
-        const [user, error] = await AuthService.fetchProfile();
+        const [client, error] = await AuthService.fetchProfile();
 
-        if (error || !user) {
+        if (error || !client) {
+          get().reset();
+
           toast.error("Failed to load user.");
           return;
         }
 
         set({
-          user,
+          user: {
+            ...client,
+            avatar: getProfileImageUrl(client.avatar, client.name),
+          },
           loading: false,
           isAuthenticated: true,
           isInitialized: true,
@@ -166,8 +177,24 @@ export const useAuthStore = create<AuthState>()(
       updateUser: (data: Partial<Client>) => {
         const current = get().user;
         if (current) {
-          set({ user: { ...current, ...data } });
+          set({ user: { ...current, ...data, avatar: getProfileImageUrl(current.avatar, current.name) } });
         }
+      },
+
+      closeImageModal: () => {
+        set({ showImageModal: false });
+      },
+
+      openImageModal: () => {
+        set({ showImageModal: true });
+      },
+
+      reset: () => {
+        set({
+          user: null,
+          isAuthenticated: false,
+          loading: false,
+        });
       },
     }),
     {
@@ -179,3 +206,5 @@ export const useAuthStore = create<AuthState>()(
     },
   ),
 );
+
+export const useAuth = useAuthStore;

@@ -16,10 +16,7 @@ export const useCart = () => {
       productId: string;
       quantity: number;
     }) => {
-      const [data, error] = (await CartService.addToCart(
-        productId,
-        quantity,
-      )) as any;
+      const [data, error] = await CartService.addToCart(productId, quantity);
       if (error) throw error;
       return data;
     },

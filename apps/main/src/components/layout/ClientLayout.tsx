@@ -32,14 +32,13 @@ export default function ClientLayout({
 
   return (
     <div className="flex flex-col min-h-screen">
-      {!isAdminRoute && !isChatRoom && (
-        <Header balance={balance} cartCount={cartCount} />
-      )}
+      <Header show={!isChatRoom} />
+
       <main className="flex-1">
         <Suspense fallback={null}>{children}</Suspense>
       </main>
-      {!isAdminRoute && !isChatRoom && <FloatingChatButton />}
-      {!isAdminRoute && !isChatRoom && <Footer />}
+      <FloatingChatButton show={!isChatRoom} />
+      {!isChatRoom && <Footer />}
     </div>
   );
 }

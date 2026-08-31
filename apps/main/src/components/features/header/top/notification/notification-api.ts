@@ -1,4 +1,4 @@
-"use server";
+// "use server";
 
 import { api } from "@/actions";
 import type { IFetchNotificationResponse } from "@/lib/types/notification.type";

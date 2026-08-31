@@ -10,6 +10,7 @@ interface INotificationState {
   setUnreadCount: (value: number) => void;
   markNotificationAsRead: (notificationId: string) => void;
   reset: () => void;
+  setLoading: (value: boolean) => void;
 }
 
 const notificationStore = create<INotificationState>((set) => ({
@@ -32,6 +33,10 @@ const notificationStore = create<INotificationState>((set) => ({
       ),
       unread_count: Math.max(0, s.unread_count - 1),
     }));
+  },
+
+  setLoading: (value: boolean) => {
+    set({ isLoading: value })
   },
 
   reset: () => {

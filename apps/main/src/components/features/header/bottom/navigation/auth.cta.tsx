@@ -40,13 +40,13 @@ const AuthCTA = (props: AuthCTAProps) => {
   const { lang } = useLanguageStore();
   const t = headerTranslations[lang] || headerTranslations.en;
 
+  const signInText = t.signIn || "Sign In";
+  const signUpText = t.register || "Register";
+
   const signInAction = () => {
     props.setIsMenuOpen(false);
     router.push(PATHS.SIGN_IN);
   };
-
-  const signInText = t.signIn || "Sign In";
-  const signUpText = t.register || "Register";
 
   const signUpAction = () => {
     props.setIsMenuOpen(false);

@@ -1,6 +1,9 @@
 "use client";
 
+import { useClickOutside } from "@/hooks/use-click-outside";
+import { useScrollClose } from "@/hooks/use-scroll-close";
 import { type Language, useLanguageStore } from "@repo/store";
+import { useRef, useState } from "react";
 
 interface LanguageButtonProps {
   changeLanguage: (language: Language) => void;
@@ -9,13 +12,7 @@ interface LanguageButtonProps {
   showLanguageDropDown: boolean;
 }
 
-interface LanguageSwitcherDropDownProps {
-  showLanguageDropDown: boolean;
-  setShowLanguageDropDown: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 const LanguageButtons = (props: LanguageButtonProps) => {
-
   if (!props.showLanguageDropDown) return null;
 
   return (
@@ -43,48 +40,24 @@ const LanguageButtons = (props: LanguageButtonProps) => {
   );
 };
 
-const LanguageSwitcherDropdown = (props: LanguageSwitcherDropDownProps) => {
+const LanguageSwitcherDropdown = () => {
   const { lang, setLang } = useLanguageStore();
 
-  const closeLanguageDropdown = () => props.setShowLanguageDropDown(false);
+  const [showLanguageDropDown, setShowLanguageDropDown] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const closeLanguageDropdown = () => setShowLanguageDropDown(false);
 
   const changeLanguage = (language: Language) => setLang(language);
 
-  //   useEffect(() => {
-  //     const handleClickOutside = (event: MouseEvent) => {
-  //       const target = event.target as HTMLElement;
-  //       // Language dropdown
-  //       if (!target.closest(".language-dropdown-container")) {
-  //         setShowLanguageDropDown(false);
-  //       }
-  //     };
-
-  //     const handleScroll = () => {
-  //       // Close desktop dropdowns on main body scroll
-  //       if (showLanguageDropDown) setShowLanguageDropDown(false);
-  //     };
-
-  //     if (showLanguageDropDown) {
-  //       document.addEventListener("mousedown", handleClickOutside);
-  //       // Only attach scroll close behavior to desktop dropdowns
-  //       if (showLanguageDropDown) {
-  //         window.addEventListener("scroll", handleScroll, { passive: true });
-  //       }
-
-  //       return () => {
-  //         document.removeEventListener("mousedown", handleClickOutside);
-  //         window.removeEventListener("scroll", handleScroll);
-  //       };
-  //     }
-  //   }, [showLanguageDropDown]);
+  useClickOutside(ref, closeLanguageDropdown, showLanguageDropDown);
+  useScrollClose(closeLanguageDropdown, showLanguageDropDown);
 
   /* Language Switcher Dropdown */
   return (
-    <div className="language-dropdown-container relative">
+    <div className="language-dropdown-container relative" ref={ref}>
       <button
-        onClick={() =>
-          props.setShowLanguageDropDown(!props.showLanguageDropDown)
-        }
+        onClick={() => setShowLanguageDropDown(!showLanguageDropDown)}
         className="flex items-center gap-1 sm:gap-1.5 focus:outline-none bg-white/10 hover:bg-white/20 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all border border-white/20 select-none"
       >
         <i className="fa-solid fa-globe text-[10px] sm:text-sm" />
@@ -92,7 +65,7 @@ const LanguageSwitcherDropdown = (props: LanguageSwitcherDropDownProps) => {
           {lang === "hi" ? "हिंदी" : "EN"}
         </span>
         <i
-          className={`fa-solid fa-chevron-down text-[8px] sm:text-[10px] transition-transform ${props.showLanguageDropDown ? "rotate-180" : ""}`}
+          className={`fa-solid fa-chevron-down text-[8px] sm:text-[10px] transition-transform ${showLanguageDropDown ? "rotate-180" : ""}`}
         />
       </button>
 
@@ -100,7 +73,7 @@ const LanguageSwitcherDropdown = (props: LanguageSwitcherDropDownProps) => {
         closeLanguageDropdown={closeLanguageDropdown}
         changeLanguage={changeLanguage}
         lang={lang}
-        showLanguageDropDown={props.showLanguageDropDown}
+        showLanguageDropDown={showLanguageDropDown}
       />
     </div>
   );

@@ -1,11 +1,11 @@
 "use client";
 
-import { useAuthStore } from "@repo/store";
+import { useAuth } from "@/store/useAuthStore";
 import { useState } from "react";
 import { formatCompactNumber } from "@repo/ui";
 
 const BalanceIndicator = () => {
-  const { balance: currentBalance, isAuthenticated } = useAuthStore();
+  const { balance: currentBalance, isAuthenticated } = useAuth();
   const [showFullBalance, setShowFullBalance] = useState(false);
 
   if (!isAuthenticated) return null;

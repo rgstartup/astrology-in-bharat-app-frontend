@@ -32,10 +32,16 @@ async function refreshSession(
   if (error || !data?.accessToken || !data.refreshToken) {
     // Don't mutate request cookies.
     // request.cookies represents the incoming request.
+
+
+    const response = NextResponse.next();
+
+    response.cookies.delete("accessToken")
+    response.cookies.delete("refreshToken")
+
     if (isProtected) {
       return redirectToLogin(request, pathname);
     }
-
     return NextResponse.next();
   }
 
@@ -87,12 +93,6 @@ export async function proxy(request: NextRequest) {
   const isPathProtected = isProtectedRoute(pathname);
   const isPathAuth = isAuthRoute(pathname);
 
-  console.log({
-    pathname,
-    isPathProtected,
-    isPathAuth,
-  });
-
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
@@ -107,6 +107,7 @@ export async function proxy(request: NextRequest) {
     }
 
     if (refreshToken) {
+
       return refreshSession(
         refreshToken,
         request,
@@ -135,7 +136,9 @@ export async function proxy(request: NextRequest) {
      * Access token is about to expire.
      * Try refresh regardless of the route.
      */
+
     if (refreshToken) {
+      console.log("refresh token initiate");
       return refreshSession(refreshToken, request, pathname, isPathProtected);
     }
 
