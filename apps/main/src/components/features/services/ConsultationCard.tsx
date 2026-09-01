@@ -1,21 +1,21 @@
 import React from "react";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
+import type HomeMessages from "../../../../messages/en/home.json";
 
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "../../../lib/translations/home";
+type ConsultationTitle = keyof typeof HomeMessages.consultant.items;
 
 interface ConsultationCardProps {
   item: {
     id: string;
     image: string;
-    title: string;
+    title: ConsultationTitle;
   };
 }
 
-const ConsultationCard: React.FC<ConsultationCardProps> = ({ item }) => {
-  const { lang } = useLanguageStore();
-  const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
-  const displayTitle = (t.consultant.items as any)[item.title] || item.title;
+const ConsultationCard = async ({ item }: ConsultationCardProps) => {
+  const t = await getTranslations("Home.consultant.items");
+  const displayTitle = t(item.title);
 
   return (
     <div className="mb-4 md:mb-5 text-center group cursor-pointer">
@@ -36,5 +36,3 @@ const ConsultationCard: React.FC<ConsultationCardProps> = ({ item }) => {
 };
 
 export default ConsultationCard;
-
-

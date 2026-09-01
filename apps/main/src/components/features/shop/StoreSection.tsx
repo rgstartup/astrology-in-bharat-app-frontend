@@ -8,8 +8,7 @@ import { Navigation, Autoplay, Mousewheel } from "swiper/modules";
 import { useAllMerchants } from "@/hooks/useAllMerchants";
 import { useMerchantCities } from "@/hooks/useMerchantCities";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "@/lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { StoreSkeletonCard } from "./StoreSkeletonCard";
 
 import "swiper/css";
@@ -61,8 +60,7 @@ const DUMMY_STORES = [
 ];
 
 const StoreSection = () => {
-    const { lang } = useLanguageStore();
-    const translationSet = (homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en) as any;
+    const { lang, t: translationSet } = useHomeTranslations();
     const t = translationSet.storeSection;
     const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 

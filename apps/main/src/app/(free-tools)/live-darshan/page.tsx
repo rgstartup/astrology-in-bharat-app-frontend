@@ -3,8 +3,8 @@
 import { api } from "@/actions";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import WhyChooseUs from "@/components/layout/main/WhyChooseUs";
-import CTA from "@/components/layout/main/CTA";
+import WhyChooseUs from "@/features/home/WhyChooseUs";
+import CTA from "@/features/home/CTA";
 import { liveDarshanTranslations } from "@/lib/live-darshan-translations";
 import { getYoutubeEmbedUrl } from "@/utils/video-utils";
 import { useLanguageStore } from "@repo/store";

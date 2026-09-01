@@ -1,9 +1,13 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
+    "allowArbitraryExtensions": true,
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@messages/*": [
+        "./messages/*"
       ]
     },
     "plugins": [

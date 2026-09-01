@@ -1,0 +1,196 @@
+{
+  "hero": {
+    "badge": "Premium Dahej Estimation",
+    "titleMain": "Dahej",
+    "titleAccent": "Calculator",
+    "paragraph": "A complete estimation including car, jewelry, and land properties. For entertainment purposes only!"
+  },
+  "form": {
+    "title": "Enter Details for {complete}",
+    "complete": "Complete Estimation",
+    "subTitle": "*This calculator is purely for entertainment and fun. All results are randomly generated.",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter full name...",
+    "profession": "Profession",
+    "professionPlaceholder": "e.g., Engineer, Doctor, Teacher",
+    "dob": "Date of Birth",
+    "salary": "Annual Salary (₹)",
+    "salaryPlaceholder": "e.g., 800000",
+    "button": "Estimate Dahej",
+    "calculating": "Calculating...",
+    "note": "Note: Results are randomly generated for entertainment"
+  },
+  "results": {
+    "badge": "Complete Estimation Results",
+    "title": "Your {package} Dahej Package",
+    "package": "Dahej Package",
+    "tierLabel": "Tier:",
+    "packageLabel": "Package",
+    "totalValue": "Total Estimated Value",
+    "age": "Age",
+    "years": "years",
+    "jobTier": "Profession Tier",
+    "includedTitle": "What's Included",
+    "includedDesc": "Your estimated dahej package includes the following premium items:",
+    "factorsTitle": "Estimation Factors",
+    "weightLabel": "Contribution Weight",
+    "remember": "Remember!",
+    "rememberDesc": "True partnerships are built on love, respect, and mutual understanding—not material possessions. This calculator is for entertainment only.",
+    "disclaimer": "⚠️ Important Disclaimer: This calculator is purely for entertainment purposes. Dowry (Dahej) is illegal in India under the Dowry Prohibition Act, 1961. We strongly discourage the practice of dowry and promote equality in partnerships.",
+    "items": {
+      "car": "Car",
+      "carDesc": "Premium vehicle for comfortable transportation",
+      "jewelryDesc": "Exclusive jewelry set for special occasions",
+      "land": "Land Property",
+      "landDesc": "Prime real estate for future development"
+    }
+  },
+  "messages": {
+    "modest": "Modest beginnings! Focus on love and partnership over material wealth.",
+    "comfortable": "Comfortable match! This union has good financial stability and growth potential.",
+    "excellent": "Excellent prospects! A life of comfort and mutual respect awaits.",
+    "royal": "Royal match! This partnership is destined for prosperity and abundance."
+  },
+  "factors": {
+    "name": "Name Influence",
+    "job": "Profession Impact",
+    "age": "Age Factor",
+    "salary": "Salary Consideration"
+  },
+  "cars": [
+    "Maruti Alto",
+    "Ford Endeavour",
+    "Tata Tiago",
+    "Maruti Swift Dzire",
+    "Hyundai Verna",
+    "Honda City",
+    "Toyota Fortuner",
+    "Hyundai i20",
+    "Mahindra Scorpio",
+    "Range Rover",
+    "Hummer H2",
+    "Mercedes Benz C-Class",
+    "BMW 3 Series",
+    "Audi A4",
+    "Maruti Baleno",
+    "Hyundai Creta",
+    "Hummer H4",
+    "Toyota Innova",
+    "Mahindra Thar",
+    "Skoda Superb"
+  ],
+  "jewelrySets": [
+    {
+      "name": "Classic Gold Set",
+      "items": [
+        "3 Gold Rings",
+        "2 Gold Chains",
+        "1 Gold Watch"
+      ]
+    },
+    {
+      "name": "Platinum Elegance",
+      "items": [
+        "2 Platinum Rings",
+        "2 Gold Chains",
+        "1 Gold Bracelet"
+      ]
+    },
+    {
+      "name": "Diamond Royalty",
+      "items": [
+        "2 Gold Chains",
+        "2 Diamond Rings",
+        "1 Gold Ring",
+        "1 Gold Kada"
+      ]
+    },
+    {
+      "name": "Traditional Set",
+      "items": [
+        "1 Heavy Gold Necklace",
+        "2 Gold Bangles",
+        "3 Gold Rings",
+        "Gold Earrings"
+      ]
+    },
+    {
+      "name": "Modern Collection",
+      "items": [
+        "1 Platinum Watch",
+        "2 Diamond Studs",
+        "Gold Chain with Pendant",
+        "2 Gold Rings"
+      ]
+    },
+    {
+      "name": "Royal Heritage",
+      "items": [
+        "Gold Crown",
+        "2 Diamond Necklaces",
+        "4 Gold Bangles",
+        "3 Gold Rings"
+      ]
+    },
+    {
+      "name": "Minimalist Set",
+      "items": [
+        "1 Gold Chain",
+        "1 Gold Ring",
+        "Gold Bracelet",
+        "Simple Earrings"
+      ]
+    },
+    {
+      "name": "Festive Collection",
+      "items": [
+        "Heavy Gold Necklace",
+        "2 Gold Armlets",
+        "3 Gold Rings",
+        "Nose Ring",
+        "Anklet"
+      ]
+    },
+    {
+      "name": "Business Executive",
+      "items": [
+        "Rolex Watch",
+        "2 Platinum Rings",
+        "Gold Chain",
+        "Cufflinks"
+      ]
+    },
+    {
+      "name": "Wedding Set",
+      "items": [
+        "Mangalsutra",
+        "2 Gold Chains",
+        "4 Gold Bangles",
+        "3 Rings",
+        "Gold Earrings"
+      ]
+    }
+  ],
+  "landProperties": [
+    "20 Marla Plot in City",
+    "300 Marla Agricultural Land",
+    "150 Bigha Farm Land",
+    "10 Acre Orchard",
+    "50 Marla Commercial Plot",
+    "2000 Sq.Yd Residential Plot",
+    "5 Acre Resort Land",
+    "100 Marla Farm House Land",
+    "75 Bigha Plantation Land",
+    "15 Acre Industrial Plot",
+    "40 Marla Villa Plot",
+    "500 Marla Farmland",
+    "25000 Bigha Garden Land",
+    "8 Acre Lake View Property",
+    "60 Marla Hill View Plot",
+    "120 Bigha Agricultural Field",
+    "35 Marla Beach Front Land",
+    "200 Acre Forest Land",
+    "80 Marla City Center Plot",
+    "250 Bigha Tea Estate"
+  ]
+}

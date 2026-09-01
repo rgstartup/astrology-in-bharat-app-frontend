@@ -2,8 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import { ExpertListHeaderProps, expertSpecializations as rawSpecializations } from "@/lib/types";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "../../../lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 
 const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
@@ -19,8 +18,7 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
     scrollTabs,
     scrollContainerRef,
 }) => {
-    const { lang } = useLanguageStore();
-    const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+    const { lang, t } = useHomeTranslations();
 
     const specializations = [
         { key: "numerology", value: "Numerology" },

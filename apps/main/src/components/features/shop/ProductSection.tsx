@@ -5,8 +5,7 @@ import ProductCarousel from "./ProductCarousel";
 import { Search, X } from "lucide-react";
 
 import { Product } from "@/lib/types";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "../../../lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 interface ProductSectionProps {
     products: Product[];
@@ -30,8 +29,7 @@ const ProductSkeleton = () => {
 };
 
 const ProductSection: React.FC<ProductSectionProps> = ({ products, isLoading = false }) => {
-    const { lang } = useLanguageStore();
-    const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+    const { t } = useHomeTranslations();
     const [searchQuery, setSearchQuery] = useState("");
 
     // Filter products based on search query

@@ -1,0 +1,14 @@
+{
+    "signIn": {
+        "title": "Sign In to Astrology Bharat",
+        "description1": "Join us and unlock personalized astrology insights just for you.",
+        "description2": "Create your free account in seconds and start your journey today!",
+        "branding": "Welcome to Astrology Bharat",
+        "noAccount": "No Account?",
+        "signUpLink": "Sign Up"
+    },
+    "signUp": {
+        "title": "Sign Up to Astrology Bharat",
+        "description": "Join us and unlock personalized astrology insights. Create your free account and start your cosmic journey today!"
+    }
+}

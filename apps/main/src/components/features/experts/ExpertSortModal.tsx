@@ -2,9 +2,8 @@
 import React, { useEffect } from "react";
 
 import { ExpertSortModalProps } from "@/lib/types";
-import { useLanguageStore } from "@repo/store";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { CloseButton } from "@repo/ui";
-import { homeTranslations } from "../../../lib/translations/home";
 
 const ExpertSortModal: React.FC<ExpertSortModalProps> = ({
     show,
@@ -13,8 +12,7 @@ const ExpertSortModal: React.FC<ExpertSortModalProps> = ({
     setSortBy,
     applySort,
 }) => {
-    const { lang } = useLanguageStore();
-    const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+    const { t } = useHomeTranslations();
 
     useEffect(() => {
         if (show) {

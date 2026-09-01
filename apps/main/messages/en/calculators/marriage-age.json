@@ -1,0 +1,28 @@
+{
+  "hero": {
+    "badge": "Entertainment Prediction",
+    "titleMain": "Marriage",
+    "titleAccent": "Age Calculator",
+    "paragraph": "Enter your name and optionally your DOB to get a fun marriage age window and best year prediction."
+  },
+  "form": {
+    "title": "Find Your",
+    "titleAccent": "Marriage Window",
+    "nameLabel": "Name (Required)",
+    "namePlaceholder": "Type your name...",
+    "dobLabel": "DOB (Optional)",
+    "dobTip": "Tip: Adding DOB gives a more personalized best year.",
+    "calculate": "Calculate Marriage Age",
+    "calculating": "Predicting..."
+  },
+  "results": {
+    "badge": "Your Prediction",
+    "title": "Marriage",
+    "titleAccent": "Window",
+    "ageWindow": "Age Window",
+    "windowLabel": "Your marriage window:",
+    "bestYearLabel": "Best year:",
+    "disclaimer": "For fun & entertainment only",
+    "dobNote": "Note: Add DOB for a more personalized best year."
+  }
+}

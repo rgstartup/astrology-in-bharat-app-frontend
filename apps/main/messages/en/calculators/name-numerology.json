@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "badge": "Pythagorean Numerology",
+    "titleMain": "Name",
+    "titleAccent": "Numerology",
+    "paragraph": "Enter your full name to reveal your Name Number and your personality vibe based on classic Pythagorean numerology."
+  },
+  "form": {
+    "title": "Find Your",
+    "titleAccent": "Name Number",
+    "label": "Full Name (Required)",
+    "placeholder": "Type your full name...",
+    "tip": "Only letters are counted. Spaces and symbols are ignored.",
+    "calculate": "Calculate Name Number",
+    "calculating": "Calculating..."
+  },
+  "results": {
+    "badge": "Your Numerology Result",
+    "title": "Name",
+    "titleAccent": "Number",
+    "vibeLabel": "Your vibe:",
+    "scoreLabel": "Total letters score:",
+    "system": "Pythagorean Numerology System",
+    "vibes": {
+      "1": "Leader",
+      "2": "Calm",
+      "3": "Creative",
+      "4": "Practical",
+      "5": "Energetic",
+      "6": "Caring",
+      "7": "Deep thinker",
+      "8": "Ambitious",
+      "9": "Helpful",
+      "11": "Visionary (Master)",
+      "22": "Master Builder",
+      "default": "Balanced"
+    }
+  }
+}

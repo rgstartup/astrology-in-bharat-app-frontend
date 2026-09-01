@@ -4,16 +4,14 @@ import NextImage from "next/image";
 import Link from "next/link";
 import { getProducts } from "../../../libs/api-products";
 import ProductSection from "./ProductSection";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "../../../lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { Product } from "@/lib/types";
 
 const Image = NextImage as any;
 const LinkComponent = Link as any;
 
 const AstrologyProduct = () => {
-  const { lang } = useLanguageStore();
-  const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+  const { t } = useHomeTranslations();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

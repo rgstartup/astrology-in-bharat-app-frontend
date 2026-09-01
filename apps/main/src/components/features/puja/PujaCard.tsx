@@ -9,8 +9,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useAuthStore } from "@/store/__useAuthStore";
 import { toast } from "react-toastify";
-import { useLanguageStore } from "@repo/store";
-import { pujaTranslations, pujaContent } from "@/lib/translations/puja";
+import { usePujaTranslations } from "@/i18n/usePujaTranslations";
 import { useRouter, usePathname } from "next/navigation";
 
 const LikeButton = ({ pujaId, initialLikes, t, fontStyle }: { pujaId: string; initialLikes: number; t: any; fontStyle: any }) => {
@@ -72,10 +71,8 @@ interface PujaCardProps {
 }
 
 export const PujaCard: React.FC<PujaCardProps> = ({ puja }) => {
-    const { lang } = useLanguageStore();
-    const translationSet = (pujaTranslations[lang as "en" | "hi"] || pujaTranslations.en) as any;
+    const { lang, translations: translationSet, content } = usePujaTranslations();
     const t = translationSet.card;
-    const content = (pujaContent[lang as "en" | "hi"] || pujaContent.en) as any;
     const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
     const localizedName = content[puja.name] || puja.name;

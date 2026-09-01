@@ -15,6 +15,8 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import { decodeToken, getErrorMessage } from "@repo/lib";
 import ToastProvider from "@/components/layout/ToastProvider";
 import PlatformReviewModal from "@/components/features/reviews";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Astrology in Bharat",
@@ -28,6 +30,7 @@ export default async function RootLayout({
 }>) {
   // 1. Fetch user on server
   const cookieStore = await cookies();
+  const locale = await getLocale();
   const token = cookieStore.get("accessToken")?.value;
 
   if (token) {
@@ -48,7 +51,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang={locale} data-scroll-behavior="smooth">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -65,18 +68,20 @@ export default async function RootLayout({
         className="min-h-screen bg-white text-black font-sans"
         // suppressHydrationWarning
       >
-        <QueryProvider>
-          <AuthInitializer>
-            <CartInitializer>
-              <WishlistInitializer>
-                <SmoothScroll>
-                  <ClientLayout>{children}</ClientLayout>
-                </SmoothScroll>
-              </WishlistInitializer>
-            </CartInitializer>
-            <PlatformReviewModal />
-          </AuthInitializer>
-        </QueryProvider>
+        <NextIntlClientProvider>
+          <QueryProvider>
+            <AuthInitializer>
+              <CartInitializer>
+                <WishlistInitializer>
+                  <SmoothScroll>
+                    <ClientLayout>{children}</ClientLayout>
+                  </SmoothScroll>
+                </WishlistInitializer>
+              </CartInitializer>
+              <PlatformReviewModal />
+            </AuthInitializer>
+          </QueryProvider>
+        </NextIntlClientProvider>
         <ToastProvider />
       </body>
     </html>

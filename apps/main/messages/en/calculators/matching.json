@@ -1,0 +1,168 @@
+{
+  "hero": {
+    "badge": "Advanced Compatibility Analysis",
+    "title1": "Detailed Kundali",
+    "titleHighlight": "Matching",
+    "description": "Get deep insights into relationship harmony with Guna Milan, Ashtakoot Analysis, and detailed Mangal Dosha verification for both partners.",
+    "features": [
+      {
+        "icon": "fa-star-shooting",
+        "text": "8-Point Ashtakoot Milan"
+      },
+      {
+        "icon": "fa-shield-halved",
+        "text": "Advanced Mangal Dosha Check"
+      },
+      {
+        "icon": "fa-wand-magic-sparkles",
+        "text": "Dosha Exceptions & Remedies"
+      },
+      {
+        "icon": "fa-comment-dots",
+        "text": "Conclusion & Expert Advice"
+      }
+    ],
+    "cta": "Check Detail Compatibility",
+    "accuracyBadge": "99.9% Accurate"
+  },
+  "form": {
+    "boyTitle": "Person 1 (You / Male)",
+    "boySubtitle": "Enter your birth details",
+    "girlTitle": "Person 2 (Partner / Female)",
+    "girlSubtitle": "Enter partner birth details",
+    "labels": {
+      "name": "Full Name",
+      "date": "Date of Birth",
+      "time": "Time of Birth",
+      "place": "Birth Place"
+    },
+    "placeholders": {
+      "boyName": "Enter full name",
+      "girlName": "Enter full name",
+      "searchPlace": "Search city or location"
+    },
+    "errorFillAll": "Please fill in all birth details for both individuals.",
+    "errorFailed": "Failed to generate report.",
+    "errorIncomplete": "Received incomplete data from the server.",
+    "btnLoading": "Analyzing Astral Alignment",
+    "btnDefault": "Generate Compatibility Report",
+    "btnConsult": "Talk to Astrologer",
+    "footerPrivacy": "100% Private & Secure Analysis",
+    "footerEncrypted": "Data Encrypted"
+  },
+  "educational": {
+    "badge": "Deep Compatibility Insights",
+    "title1": "Importance of",
+    "titleHighlight": "Matching",
+    "quote": "\"Beyond just the Guna score, our advanced system analyzes Mangal Dosha and other planetary positions to give you a complete picture of relationship compatibility.\"",
+    "features": [
+      {
+        "text": "Mental Compatibility",
+        "icon": "fa-brain-circuit"
+      },
+      {
+        "text": "Career & Financial Growth",
+        "icon": "fa-chart-network"
+      },
+      {
+        "text": "Health & Longevity",
+        "icon": "fa-heart-pulse"
+      },
+      {
+        "text": "Offspring Prospects",
+        "icon": "fa-baby-carriage"
+      }
+    ],
+    "didYouKnow": {
+      "title": "Did you know?",
+      "desc": "A score above 18 is considered good for a stable marriage, while a score above 25 is excellent. However, Mangal Dosha and Nadi Dosha are equally important factors to consider before finalizing any relationship.",
+      "trusted": "Trusted by 10k+ Couples"
+    },
+    "ashtakoot": {
+      "badge": "The Foundation of Milan",
+      "title1": "Understanding the",
+      "titleHighlight": "8 Koots",
+      "title2": "(Ashtakoot)",
+      "subtitle": "The primary markers of compatibility in Vedic Astrology",
+      "impact": "Impact",
+      "pts": "Pts",
+      "items": [
+        {
+          "title": "Varna",
+          "points": 1,
+          "desc": "Analyzes mental and ego compatibility between the couple.",
+          "icon": "fa-peace"
+        },
+        {
+          "title": "Vashya",
+          "points": 2,
+          "desc": "Measures mutual attraction and dominance in the relationship.",
+          "icon": "fa-magnet"
+        },
+        {
+          "title": "Tara",
+          "points": 3,
+          "desc": "Determines health, longevity, and well-being prospects.",
+          "icon": "fa-star-shooting"
+        },
+        {
+          "title": "Yoni",
+          "points": 4,
+          "desc": "Focuses on physical and sexual compatibility.",
+          "icon": "fa-dna"
+        },
+        {
+          "title": "Graha Maitri",
+          "points": 5,
+          "desc": "Checks psychological and emotional harmony.",
+          "icon": "fa-users-line"
+        },
+        {
+          "title": "Gana",
+          "points": 6,
+          "desc": "Assesses behavioral traits and temperament matching.",
+          "icon": "fa-masks-theater"
+        },
+        {
+          "title": "Bhakoot",
+          "points": 7,
+          "desc": "Relates to financial prosperity and progeny prospects.",
+          "icon": "fa-coins"
+        },
+        {
+          "title": "Nadi",
+          "points": 8,
+          "desc": "The most critical koot, genetic & spiritual compatibility.",
+          "icon": "fa-sparkles"
+        }
+      ]
+    }
+  },
+  "results": {
+    "headerBadge": "Comprehensive Compatibility Audit",
+    "headerTitle": "Relationship",
+    "headerHighlight": "Scorecard",
+    "groomBadge": "Groom Details",
+    "groomProfile": "Groom's Astral Profile",
+    "brideBadge": "Bride Details",
+    "brideProfile": "Bride's Astral Profile",
+    "nakshatra": "Nakshatra",
+    "rasi": "Rasi (Moon Sign)",
+    "finalScoreTitle": "Final Compatibility Score",
+    "max36": "Maximum 36",
+    "excellent": "Excellent Union",
+    "moderate": "Moderate Harmony",
+    "ashtakootTitle": "Ashtakoot Analysis",
+    "metricBreakdown": "Metric Breakdown",
+    "groomMangal": "Groom Mangal Dosha",
+    "brideMangal": "Bride Mangal Dosha",
+    "planetaryStatus": "Planetary Status",
+    "noMalefic": "No malefic planetary influence detected.",
+    "expertSynthesis": "Astro-Expert Synthesis",
+    "starsHarmony": "The stars suggest a path of harmony & growth.",
+    "summaryPlaceholder": "Personalized Compatibility Summary will appear here.",
+    "btnPrint": "Print Expert Report",
+    "btnDownload": "Download as PDF",
+    "certified": "CERTIFIED ACCURATE ANALYSIS BY ASTROLOGY IN BHARAT"
+  }
+}

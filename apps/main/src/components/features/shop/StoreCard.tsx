@@ -20,8 +20,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { useAuthStore } from "@/store/__useAuthStore";
 import { useRouter, usePathname } from "next/navigation";
 import { toast } from "react-toastify";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "@/lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 import "swiper/css";
 
@@ -30,8 +29,7 @@ interface StoreCardProps {
 }
 
 export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
-  const { lang } = useLanguageStore();
-  const translationSet = (homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en) as any;
+  const { lang, t: translationSet } = useHomeTranslations();
   const t = translationSet.storeSection.card;
   const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 

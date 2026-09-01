@@ -6,8 +6,7 @@ const Link = NextLink as any;
 import { api as http, API_ROUTES } from "@/actions";
 import { ExpertPuja } from "@/lib/types/puja";
 import { PujaCard } from "./PujaCard";
-import { useLanguageStore } from "@repo/store";
-import { pujaTranslations, pujaContent } from "@/lib/translations/puja";
+import { usePujaTranslations } from "@/i18n/usePujaTranslations";
 import { Swiper as SwiperComp, SwiperSlide as SwiperSlideComp } from "swiper/react";
 import { Navigation, Autoplay, Mousewheel } from "swiper/modules";
 import "swiper/css";
@@ -79,9 +78,8 @@ const DUMMY_PUJAS: any[] = [
 ];
 
 const PujaListSection = () => {
-    const { lang } = useLanguageStore();
-    const t = pujaTranslations[lang as "en" | "hi"] || pujaTranslations.en;
-    const content = (pujaContent[lang as "en" | "hi"] || pujaContent.en) as any;
+    const { lang, translations, content } = usePujaTranslations();
+    const t = translations as any;
     const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
     const [pujas, setPujas] = useState<ExpertPuja[]>([]);

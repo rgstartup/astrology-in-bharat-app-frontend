@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import { Search, X } from "lucide-react";
 import { ProductCard } from "./ProductCard";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "../../../lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 const SearchIcon = Search as any;
 const XIcon = X as any;
@@ -17,8 +16,7 @@ interface ProductGridProps {
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     const [searchQuery, setSearchQuery] = useState("");
-    const { lang } = useLanguageStore();
-    const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+    const { t } = useHomeTranslations();
 
     // Filter products based on search query
     const filteredProducts = products.filter((product) =>

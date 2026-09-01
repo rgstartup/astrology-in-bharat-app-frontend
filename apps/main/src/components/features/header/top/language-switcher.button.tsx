@@ -2,13 +2,15 @@
 
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
-import { type Language, useLanguageStore } from "@repo/store";
+import { isAppLocale, type AppLocale } from "@/i18n/config";
+import { useLocale } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 interface LanguageButtonProps {
-  changeLanguage: (language: Language) => void;
+  changeLanguage: (language: AppLocale) => void;
   closeLanguageDropdown: () => void;
-  lang: Language;
+  lang: AppLocale;
   showLanguageDropDown: boolean;
 }
 
@@ -41,14 +43,30 @@ const LanguageButtons = (props: LanguageButtonProps) => {
 };
 
 const LanguageSwitcherDropdown = () => {
-  const { lang, setLang } = useLanguageStore();
+  const router = useRouter();
+  const pathname = usePathname();
+  const providerLocale = useLocale() as AppLocale;
+  const pathLocale = pathname?.split("/")[1];
+  const activeLanguage = isAppLocale(pathLocale ?? "")
+    ? pathLocale
+    : providerLocale;
 
   const [showLanguageDropDown, setShowLanguageDropDown] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const closeLanguageDropdown = () => setShowLanguageDropDown(false);
 
-  const changeLanguage = (language: Language) => setLang(language);
+  const changeLanguage = async (language: AppLocale) => {
+    const response = await fetch("/api/locale", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ locale: language }),
+    });
+
+    if (!response.ok) return;
+
+    router.replace(`/${language}`);
+  };
 
   useClickOutside(ref, closeLanguageDropdown, showLanguageDropDown);
   useScrollClose(closeLanguageDropdown, showLanguageDropDown);
@@ -62,7 +80,7 @@ const LanguageSwitcherDropdown = () => {
       >
         <i className="fa-solid fa-globe text-[10px] sm:text-sm" />
         <span className="text-[10px] sm:text-sm font-semibold">
-          {lang === "hi" ? "हिंदी" : "EN"}
+          {activeLanguage === "hi" ? "हिंदी" : "EN"}
         </span>
         <i
           className={`fa-solid fa-chevron-down text-[8px] sm:text-[10px] transition-transform ${showLanguageDropDown ? "rotate-180" : ""}`}
@@ -72,7 +90,7 @@ const LanguageSwitcherDropdown = () => {
       <LanguageButtons
         closeLanguageDropdown={closeLanguageDropdown}
         changeLanguage={changeLanguage}
-        lang={lang}
+        lang={activeLanguage}
         showLanguageDropDown={showLanguageDropDown}
       />
     </div>

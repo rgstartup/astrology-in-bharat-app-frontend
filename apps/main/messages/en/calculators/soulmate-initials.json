@@ -1,0 +1,40 @@
+{
+  "hero": {
+    "badge": "Fun Soulmate Prediction",
+    "titleMain": "Soulmate",
+    "titleAccent": "Initial Finder",
+    "paragraph": "Enter your name (and optional DOB) to reveal 3 possible soulmate initials and your lucky meeting month."
+  },
+  "form": {
+    "title": "Find Your",
+    "titleAccent": "Soulmate Initials",
+    "nameLabel": "Name (Required)",
+    "namePlaceholder": "Type your name...",
+    "dobLabel": "DOB (Optional)",
+    "calculate": "Find Initials",
+    "calculating": "Calculating..."
+  },
+  "results": {
+    "badge": "Your Prediction",
+    "title": "Soulmate",
+    "titleAccent": "Initials",
+    "possibleInitials": "Possible Initials",
+    "message": "Your soulmate initials might be:",
+    "luckyMonth": "Lucky meeting month:",
+    "disclaimer": "For fun & entertainment only"
+  },
+  "months": [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
+}

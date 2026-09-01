@@ -1,3 +1,10 @@
 packages:
   - "apps/*"
   - "packages/*"
+allowBuilds:
+  '@parcel/watcher': set this to true or false
+  '@swc/core': set this to true or false
+  core-js: true
+  ngrok: true
+  sharp: true
+  unrs-resolver: true

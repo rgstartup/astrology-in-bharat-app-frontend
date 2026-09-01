@@ -10,8 +10,7 @@ import { useAuthStore } from "@/store/__useAuthStore";
 import { toast } from "react-toastify";
 import { useWishlist } from "@/hooks/useWishlist";
 import { ExpertCardProps } from "@/lib/types";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "../../../lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { getYoutubeId, getYoutubeEmbedUrl } from "@/utils/video-utils";
 import { usePreloadExpertStore } from "@/store/usePreloadExpertStore";
 
@@ -19,8 +18,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   expertData,
   cardClassName = "",
 }) => {
-  const { lang } = useLanguageStore();
-  const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+  const { t } = useHomeTranslations();
   const {
     id,
     userId,

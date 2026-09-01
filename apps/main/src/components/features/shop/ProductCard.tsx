@@ -9,8 +9,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/hooks/useCart";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "../../../lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 import { getProductImageUrl } from "@/utils/image-utils";
 import { Product } from "@/lib/types";
@@ -25,8 +24,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, className, isCompact, onView }) => {
-  const { lang } = useLanguageStore();
-  const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+  const { lang, t } = useHomeTranslations();
   const imageUrl = getProductImageUrl(product);
 
   const originalPrice = Number(product.originalPrice) || 0;

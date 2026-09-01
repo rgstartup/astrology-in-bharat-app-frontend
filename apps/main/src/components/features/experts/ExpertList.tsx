@@ -3,8 +3,7 @@
 import React from "react";
 import NextLink from "next/link";
 const Link = NextLink as any;
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "../../../lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import ExpertListHeader from "./ExpertListHeader";
 import ExpertFilterModal from "./ExpertFilterModal";
 import ExpertSortModal from "./ExpertSortModal";
@@ -78,10 +77,7 @@ const ExpertList: React.FC<ExpertListProps> = ({
   layout = "slider",
   title,
 }) => {
-  const { lang } = useLanguageStore();
-  const t =
-    homeTranslations[lang as keyof typeof homeTranslations] ||
-    homeTranslations.en;
+  const { lang, t } = useHomeTranslations();
   const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const [showFilterModal, setShowFilterModal] = React.useState(false);
