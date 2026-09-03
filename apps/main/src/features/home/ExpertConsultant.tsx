@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ConsultationCard from "@/components/features/services/ConsultationCard";
 import { getTranslations } from "next-intl/server";
-import homepageData from "./data/homepage.json";
+import homepageData from "./data/services.data.json";
 import type Home from "@messages/en/home.json";
 
 type TConsultationServiceTitle = keyof typeof Home.consultant.items;

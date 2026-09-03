@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import HeroComponent from "./hero";
-import { SignUpForm, TopExpertsSection } from "@/components/features/auth";
+import { SignUpForm, TopExpertsSection } from "@/features/auth";
 import { Suspense } from "react";
 
 export default async function RegisterPage({

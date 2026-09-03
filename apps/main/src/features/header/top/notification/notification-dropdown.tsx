@@ -1,9 +1,8 @@
 import { PATHS } from "@repo/routes";
-import { HeaderTranslations } from "@repo/store";
 import Link from "next/link";
 import React from "react";
-import NotificationList from "./notification-list";
 import { INotification } from "@/lib/types/notification.type";
+import { getTranslations } from "next-intl/server";
 
 interface NotificationDropDownProps {
   //   loadingNotifications: boolean;
@@ -11,7 +10,6 @@ interface NotificationDropDownProps {
   setShowNotificationDropDown: React.Dispatch<React.SetStateAction<boolean>>;
   notifications: INotification[];
   handleClearAll: () => void;
-  t: HeaderTranslations;
   children: React.ReactNode;
 }
 
@@ -36,21 +34,22 @@ const ClearAllButton = (props: ClearAllButtonProps) => {
   );
 };
 
-const NotificationDropDown = (props: NotificationDropDownProps) => {
+const NotificationDropDown = async (props: NotificationDropDownProps) => {
   if (!props.showNotificationDropDown) return null;
 
-  const { notifications, handleClearAll, t, setShowNotificationDropDown } =
-    props;
+  const t = await getTranslations("Header");
+
+  const { notifications, handleClearAll, setShowNotificationDropDown } = props;
 
   return (
     <div className="fixed top-[65px] left-[5vw] w-[90vw] sm:absolute sm:top-[140%] sm:left-auto sm:-right-4 md:right-0 sm:w-[320px] md:w-[380px] bg-white shadow-lg rounded-2xl overflow-hidden z-[1001] border border-[#eee]">
       <div className="px-3 py-3 border-b bg-gray-50 flex justify-between items-center">
         <p className="mb-0 font-bold text-gray-900 text-lg">
-          {t.notifications}
+          {t("notifications")}
         </p>
         <ClearAllButton
           show={notifications.length > 0}
-          text={t.clearAll}
+          text={t("clearAll")}
           handleClearAll={handleClearAll}
         />
       </div>
@@ -83,7 +82,7 @@ const NotificationDropDown = (props: NotificationDropDownProps) => {
           className="no-underline text-orange-500 font-bold text-sm hover:text-orange-600"
           onClick={() => setShowNotificationDropDown(false)}
         >
-          {t.viewAll}
+          {t("viewAll")}
         </Link>
       </div>
     </div>

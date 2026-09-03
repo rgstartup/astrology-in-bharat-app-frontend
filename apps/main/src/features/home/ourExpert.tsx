@@ -1,11 +1,12 @@
 "use client";
+
+import { api } from "@/actions";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { api } from "@/actions";
 import {
   ExpertGridSkeleton,
   SkeletonCard,
-} from "../../components/features/experts/SkeletonCard";
+} from "@/components/features/experts/SkeletonCard";
 import ExpertCard from "@/components/features/experts/ExpertCard";
 
 import { useTranslations } from "next-intl";

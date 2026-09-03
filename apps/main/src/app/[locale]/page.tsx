@@ -1,30 +1,36 @@
-import { NextIntlClientProvider } from "next-intl";
-import { notFound } from "next/navigation";
-import { isAppLocale, locales } from "@/i18n/config";
-import Homepage from "./Homepage";
+import AstrologyProduct from "@/components/features/shop/AstrologyProduct";
+import ExpertListWrapper from "@/features/home/expert-list-wrapper";
+import PujaListSection from "@/components/features/puja/PujaListSection";
+import StoreSection from "@/components/features/shop/StoreSection";
 
-export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
-}
+import ChooseYourZodiac from "../../features/home/ChooseYourZodiac";
+import WhyChooseUs from "../../features/home/WhyChooseUs";
+import Testimonial from "../../features/home/testimonial";
+import CTA from "../../features/home/CTA";
+import HeroSection from "../../features/home/HeroSection";
+import ExpertConsultant from "../../features/home/ExpertConsultant";
+import ExpertServices from "../../features/home/expert-services";
 
-export default async function LocalizedHomepage({
-  params,
+export default async function Homepage({
   searchParams,
 }: {
-  params: Promise<{ locale: string }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const [{ locale }, resolvedSearchParams] = await Promise.all([params, searchParams]);
-
-  if (!isAppLocale(locale)) notFound();
-  const messages = (await import(`../../../messages/${locale}`)).default;
+  const params = await searchParams;
 
   return (
-    <NextIntlClientProvider
-      locale={locale}
-      messages={messages}
-    >
-      <Homepage searchParams={resolvedSearchParams} />
-    </NextIntlClientProvider>
+    <>
+      <HeroSection />
+      <ExpertListWrapper searchParams={params} />
+      <ExpertServices />
+      <PujaListSection />
+      <ExpertConsultant />
+      <ChooseYourZodiac />
+      <StoreSection />
+      <AstrologyProduct />
+      <WhyChooseUs />
+      <Testimonial />
+      <CTA />
+    </>
   );
 }

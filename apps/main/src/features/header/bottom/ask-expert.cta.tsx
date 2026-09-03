@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { headerTranslations, useLanguageStore } from "@repo/store";
+import { useTranslations } from "next-intl";
 
 const AskExpertCTA = () => {
-  const { lang } = useLanguageStore();
-  const t = headerTranslations[lang] || headerTranslations.en;
+  const t = useTranslations("Header");
 
   return (
     <div className="flex-shrink-0 hidden md:block">
@@ -34,7 +33,7 @@ const AskExpertCTA = () => {
           height={20}
           style={{ width: "auto", filter: "brightness(0) invert(1)" }}
         />
-        {t.askExpert}
+        {t("askExpert")}
       </Link>
     </div>
   );

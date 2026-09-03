@@ -1,17 +1,19 @@
 import { HeaderTranslations } from "@repo/store";
 import { INotification } from "@/lib/types/notification.type";
+import { getTranslations } from "next-intl/server";
 
 interface NotifcationListProps {
   show: boolean;
   notifications: INotification[];
-  t: HeaderTranslations;
   markNotificationAsRead: (notificationId: string) => void;
 }
 
-const NotificationList = (props: NotifcationListProps) => {
+const NotificationList = async (props: NotifcationListProps) => {
   if (!props.show) return null;
 
-  const { notifications, t } = props;
+  const t = await getTranslations("Header");
+
+  const { notifications } = props;
 
   return notifications.map((notif, idx) => (
     <div
@@ -42,7 +44,7 @@ const NotificationList = (props: NotifcationListProps) => {
       >
         {notif.created_at
           ? new Date(notif.created_at).toLocaleString()
-          : t.justNow}
+          : t("justNow")}
       </p>
     </div>
   ));

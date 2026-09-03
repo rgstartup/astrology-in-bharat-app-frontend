@@ -1,4 +1,16 @@
 {
+  "whyChooseUs": {
+    "title": "Why Choose Astrology in Bharat",
+    "subtitle": "Trusted Astrology. Accurate Guidance. Complete Privacy.",
+    "reasons": [
+      "Verified & Experienced Experts",
+      "Instant Chat, Call & Video Support",
+      "100% Privacy & Confidentiality",
+      "Accurate Predictions & Effective Remedies",
+      "Personalized Astrology Consultations",
+      "Expert Guidance for Life Problems"
+    ]
+  },
   "hero": {
     "trustBadge": "India's Trusted Astrology Platform",
     "title": "Connect with Verified Experts Online",
@@ -116,7 +128,15 @@
       "Matchmaking": "Matchmaking",
       "Relationship Guidance": "Relationship Guidance",
       "Muhurat (Auspicious Timing)": "Muhurat (Auspicious Timing)",
-      "Nakshatra": "Nakshatra"
+      "Nakshatra": "Nakshatra",
+      "Tarot Reading": "Tarot Reading",
+      "Vastu Shastra": "Vastu Shastra",
+      "Palmistry": "Palmistry",
+      "Face Reading": "Face Reading",
+      "Gemstone Consultation": "Gemstone Consultation",
+      "Nadi Astrology": "Nadi Astrology",
+      "Prashna Kundli": "Prashna Kundli",
+      "Mangal Dosh Niwaran": "Mangal Dosh Niwaran"
     }
   },
   "consultant": {
@@ -143,18 +163,6 @@
     "desc": "Unlock the secrets of your future by exploring your unique zodiac personality and daily cosmic guidance."
   },
   "chooseYourZodiacSign": "Choose Your Zodiac Sign",
-  "whyChooseUs": {
-    "title": "Why Choose Astrology in Bharat",
-    "subtitle": "Trusted Astrology. Accurate Guidance. Complete Privacy.",
-    "reasons": [
-      "Verified & Experienced Experts",
-      "Instant Chat, Call & Video Support",
-      "100% Privacy & Confidentiality",
-      "Accurate Predictions & Effective Remedies",
-      "Personalized Astrology Consultations",
-      "Expert Guidance for Life Problems"
-    ]
-  },
   "testimonials": {
     "title": "What Our Users Say",
     "list": [

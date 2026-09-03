@@ -2,29 +2,29 @@ import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin({
-  experimental: {
-    createMessagesDeclaration: [
-      "./messages/en/home.json",
-      "./messages/en/auth.json",
-      "./messages/en/about.json",
-      "./messages/en/profile.json",
-      "./messages/en/puja.json",
-      "./messages/en/calculators/breakup-patchup.json",
-      "./messages/en/calculators/dahej.json",
-      "./messages/en/calculators/flames.json",
-      "./messages/en/calculators/life-path.json",
-      "./messages/en/calculators/love-calculator.json",
-      "./messages/en/calculators/love-compatibility.json",
-      "./messages/en/calculators/loyal-partner.json",
-      "./messages/en/calculators/marriage-age.json",
-      "./messages/en/calculators/matching.json",
-      "./messages/en/calculators/nakshatra-finder.json",
-      "./messages/en/calculators/name-numerology.json",
-      "./messages/en/calculators/planet.json",
-      "./messages/en/calculators/relationship-future.json",
-      "./messages/en/calculators/soulmate-initials.json",
-    ],
-  },
+  // experimental: {
+  //   createMessagesDeclaration: [
+  //     "./messages/en/home.json",
+  //     "./messages/en/auth.json",
+  //     "./messages/en/about.json",
+  //     "./messages/en/profile.json",
+  //     "./messages/en/puja.json",
+  //     "./messages/en/calculators/breakup-patchup.json",
+  //     "./messages/en/calculators/dahej.json",
+  //     "./messages/en/calculators/flames.json",
+  //     "./messages/en/calculators/life-path.json",
+  //     "./messages/en/calculators/love-calculator.json",
+  //     "./messages/en/calculators/love-compatibility.json",
+  //     "./messages/en/calculators/loyal-partner.json",
+  //     "./messages/en/calculators/marriage-age.json",
+  //     "./messages/en/calculators/matching.json",
+  //     "./messages/en/calculators/nakshatra-finder.json",
+  //     "./messages/en/calculators/name-numerology.json",
+  //     "./messages/en/calculators/planet.json",
+  //     "./messages/en/calculators/relationship-future.json",
+  //     "./messages/en/calculators/soulmate-initials.json",
+  //   ],
+  // },
   requestConfig: "./src/i18n/request.ts",
 });
 

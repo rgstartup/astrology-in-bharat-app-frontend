@@ -1,0 +1,51 @@
+{
+  "welcomeText": "ऑनलाइन भविष्यवाणियों के लिए सत्यापित ज्योतिष विशेषज्ञों से जुड़ें।",
+  "notifications": "सूचनाएं",
+  "clearAll": "सभी साफ़ करें",
+  "noNotificationsYet": "अभी कोई सूचना नहीं",
+  "noNotificationsDesc": "आपके ऑर्डर और परामर्श से संबंधित अलर्ट यहाँ दिखेंगे।",
+  "viewAll": "सभी देखें",
+  "justNow": "अभी",
+  "myProfile": "मेरी प्रोफ़ाइल",
+  "myWallet": "मेरा वॉलेट",
+  "logout": "लॉगआउट करें",
+  "signIn": "साइन इन",
+  "register": "रजिस्टर करें",
+
+  "navLinks": {
+    "Home": "होम",
+    "DailyHoroscope": "दैनिक राशिफल",
+    "AstrologyConsult": "ज्योतिष परामर्श",
+    "FamousPlaces": "प्रसिद्ध मंदिर",
+    "LiveDarshan": "लाइव दर्शन"
+  },
+
+  "dropdownItems": {
+    "Horoscope": "राशिफल",
+    "LoveCalc": "लव कैलकुलेटर",
+    "DahejCalc": "दहेज कैलकुलेटर",
+    "FlamesCalc": "फ्लेम्स कैलकुलेटर",
+    "LoveCompat": "प्रेम अनुकूलता कैलकुलेटर",
+    "MarriageAge": "विवाह आयु कैलकुलेटर",
+    "SoulmateInitials": "सोलमेट नाम कैलकुलेटर",
+    "LuckyNumber": "भाग्यशाली अंक और रंग",
+    "LifePath": "जीवन पथ कैलकुलेटर",
+    "NameNumerology": "नाम अंकशास्त्र",
+    "ZodiacCompat": "राशि अनुकूलता कैलकुलेटर",
+    "Nakshatra": "नक्षत्र खोजक",
+    "LoyalPartner": "वफादार साथी कैलकुलेटर",
+    "Breakup": "ब्रेकअप पैचअप कैलकुलेटर",
+    "OnlinePuja": "ऑनलाइन पूजा"
+  },
+
+  "askExpert": "ज्योतिषी से पूछें",
+
+  "services": {
+    "Matchmaking": "विवाह कैलकुलेटर",
+    "GunaMilan": "गुण मिलान",
+    "OnlinePuja": "ऑनलाइन पूजा",
+    "LoveMatch": "लव मैच",
+    "MatchAnalysis": "कुंडली मिलान",
+    "LiveDarshan": "लाइव दर्शन"
+  }
+}

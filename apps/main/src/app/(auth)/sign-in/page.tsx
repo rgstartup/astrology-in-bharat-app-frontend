@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { SignInForm, TopExpertsSection } from "@/components/features/auth";
+import { SignInForm, TopExpertsSection } from "@/features/auth";
 import { Suspense } from "react";
 import HeroComponent from "./hero";
 

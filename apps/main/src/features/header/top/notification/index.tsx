@@ -4,13 +4,12 @@ import NotificationCountIndicator from "./notification-indicator";
 import { useNotification } from "@/store/useNotificationStore";
 import { useCallback, useEffect, useRef, useState } from "react";
 import NotificationDropDown from "./notification-dropdown";
-import { headerTranslations, useLanguageStore } from "@repo/store";
 import {
   clearNotifications,
   getNotifications,
   getUnreadNotificationsCount,
   markNotificationAsRead as markNotificationAsReadApi,
-} from "./notification-api";
+} from "./api/notification-api";
 import NotificationSkeleton from "./notification-skeleton";
 import EmptyNotification from "./notification-empty";
 import NotificationList from "./notification-list";
@@ -34,12 +33,8 @@ const NotificationComponent = () => {
     setNotifications,
     setUnreadCount,
     markNotificationAsRead,
-    setLoading
+    setLoading,
   } = useNotification();
-  const { lang } = useLanguageStore();
-  const t =
-    headerTranslations[lang as keyof typeof headerTranslations] ||
-    headerTranslations.en;
 
   const [showNotificationDropDown, setShowNotificationDropDown] =
     useState(false);
@@ -53,12 +48,12 @@ const NotificationComponent = () => {
     } catch (err) {
       console.error("Failed to fetch notifications", err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }, [setNotifications]);
 
   const handleClearAll = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const [_, error] = await clearNotifications();
       if (error) throw error;
@@ -66,13 +61,13 @@ const NotificationComponent = () => {
     } catch (err) {
       console.error("Failed to clear notifications in header", err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }, [reset]);
 
   const markNotificationReadFn = useCallback(
     async (id: string) => {
-      setLoading
+      setLoading(true);
       try {
         const [_, error] = await markNotificationAsReadApi(id);
         if (error) throw error;
@@ -81,14 +76,14 @@ const NotificationComponent = () => {
       } catch (err) {
         console.error("Failed to mark as read", err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     },
     [markNotificationAsRead],
   );
 
   const fetchUnreadCountFn = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const [res, error] = await getUnreadNotificationsCount();
       if (error) throw error;
@@ -97,7 +92,7 @@ const NotificationComponent = () => {
     } catch (error) {
       console.error("Failed to fetch unread notifications count", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }, [setUnreadCount]);
 
@@ -174,10 +169,9 @@ const NotificationComponent = () => {
         setShowNotificationDropDown={setShowNotificationDropDown}
         handleClearAll={handleClearAll}
         notifications={notifications}
-        t={t}
       >
         <NotificationSkeleton show={isLoading} />
-        <EmptyNotification show={!isLoading && notifications.length === 0} t={t} />
+        <EmptyNotification show={!isLoading && notifications.length === 0} />
         {/*     notificationsHasMore && // notifications.length greater than 0 && //
          !loadingNotifications &&
         <LoadMoreNotification
@@ -190,7 +184,6 @@ const NotificationComponent = () => {
         <NotificationList
           notifications={notifications}
           show={!isLoading && notifications.length > 0}
-          t={t}
           markNotificationAsRead={markNotificationReadFn}
         />
       </NotificationDropDown>

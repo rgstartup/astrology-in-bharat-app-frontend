@@ -1,4 +1,4 @@
-import type messages from "@messages/en";
+import messages from "@messages/en";
 import type { AppLocale } from "./config";
 
 declare module "next-intl" {

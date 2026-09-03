@@ -1,10 +1,11 @@
 import Image from "next/image";
-import homepageData from "./data/homepage.json";
+import homepageData from "./data/services.data.json";
 import { getTranslations } from "next-intl/server";
-import type HomeMessages from "@messages/en/home.json";
+import HomeMessages from "@messages/en/home.json";
 
 const WhyChooseUs = async () => {
   const t = await getTranslations("Home");
+
   const reasons = t.raw(
     "whyChooseUs.reasons",
   ) as typeof HomeMessages.whyChooseUs.reasons;

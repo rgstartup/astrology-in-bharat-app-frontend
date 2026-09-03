@@ -1,0 +1,50 @@
+{
+  "welcomeText": "Connect with Verified Astrology Experts for Online Predictions.",
+  "notifications": "Notifications",
+  "clearAll": "Clear All",
+  "noNotificationsYet": "No Notifications Yet",
+  "noNotificationsDesc": "You'll see alerts about your orders and consultations here.",
+  "viewAll": "View All",
+  "justNow": "Just now",
+  "myProfile": "My Profile",
+  "myWallet": "My Wallet",
+  "logout": "Logout Session",
+  "signIn": "Sign In",
+  "register": "Register",
+
+  "navlinks": {
+    "Home": "Home",
+    "DailyHoroscope": "Daily Horoscope",
+    "AstrologyConsult": "Calculators",
+    "FamousPlaces": "Famous Temple",
+    "LiveDarshan": "Live Darshan"
+  },
+
+  "dropdownItems": {
+    "Horoscope": "Horoscope",
+    "LoveCalc": "Love Calculator",
+    "DahejCalc": "Dahej Calculator",
+    "FlamesCalc": "Flames Calculator",
+    "LoveCompat": "Love Compatibility Calculator",
+    "MarriageAge": "Marriage Age Calculator",
+    "SoulmateInitials": "Soulmate Name Initials Calculator",
+    "LuckyNumber": "Lucky Number & Colour Calculator",
+    "LifePath": "Life Path Calculator",
+    "NameNumerology": "Name Numerology Calculator",
+    "ZodiacCompat": "Zodiac Sign Compatibility Calculator",
+    "Nakshatra": "Nakshatra Finder",
+    "LoyalPartner": "Loyal Partner Calculator",
+    "Breakup": "Breakup Patchup Calculator",
+    "OnlinePuja": "Online Puja"
+  },
+  "askExpert": "Ask Expert",
+
+  "services": {
+    "Matchmaking": "Marriage Calculator",
+    "GunaMilan": "Guna Milan",
+    "OnlinePuja": "Online Puja",
+    "LoveMatch": "Love Match",
+    "MatchAnalysis": "Kundali Matching",
+    "LiveDarshan": "Live Darshan"
+  }
+}

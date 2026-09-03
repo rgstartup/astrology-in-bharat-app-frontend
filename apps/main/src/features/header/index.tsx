@@ -1,5 +1,3 @@
-"use client";
-
 import ProfileImagePreviewModal from "./profile-image-preview.modal";
 import BottomHeader from "./bottom";
 import TopHeader from "./top";

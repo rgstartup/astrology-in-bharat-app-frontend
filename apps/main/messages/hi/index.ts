@@ -17,6 +17,7 @@ import Puja from "./puja.json";
 import RelationshipFuture from "./calculators/relationship-future.json";
 import SoulmateInitials from "./calculators/soulmate-initials.json";
 import Home from "./home.json";
+import Header from "./header.json";
 
 export default {
   About,
@@ -39,4 +40,5 @@ export default {
   SoulmateInitials,
   PujaTranslations: Puja.pujaTranslations,
   PujaContent: Puja.pujaContent,
+  Header,
 };

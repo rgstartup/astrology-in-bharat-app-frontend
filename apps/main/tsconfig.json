@@ -2,6 +2,8 @@
   "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
     "allowArbitraryExtensions": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
     "paths": {
       "@/*": [
         "./src/*"

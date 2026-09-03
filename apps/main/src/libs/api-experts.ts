@@ -1,5 +1,5 @@
 import { api } from "@/actions";
-import { getErrorMessage } from '@repo/lib';
+import { getErrorMessage } from "@repo/lib";
 
 export interface ExpertProfile {
   id: string;
@@ -36,7 +36,7 @@ export interface FetchExpertsParams {
   maxPrice?: number;
   state?: string;
   service?: string;
-  online?: boolean;  // Changed to boolean as it's cleaner, but string is also fine if query param needs it. Stick to what backend expects (often string in query params). Kept generic.
+  online?: boolean; // Changed to boolean as it's cleaner, but string is also fine if query param needs it. Stick to what backend expects (often string in query params). Kept generic.
   rating?: number;
 }
 
@@ -49,7 +49,7 @@ export interface FetchExpertsResponse {
 }
 
 export const getExperts = async (
-  params: FetchExpertsParams
+  params: FetchExpertsParams,
 ): Promise<{
   success: boolean;
   data: ExpertProfile[];
@@ -70,18 +70,22 @@ export const getExperts = async (
     const url = `/expert/list?${queryParams.toString()}`;
 
     const [result, fetchError] = await api.get<any>(url, {
-      cache: 'no-store',
+      cache: "no-store",
     } as any);
 
     if (fetchError) {
       throw new Error(`API Error: ${getErrorMessage(fetchError)}`);
     }
 
-
-    const finalData = Array.isArray(result) ? result : (result.data || result.experts || []);
+    const finalData = Array.isArray(result)
+      ? result
+      : result.data || result.experts || [];
     if (finalData.length > 0) {
     }
-    const finalPagination = result.pagination || { total: finalData.length, hasMore: false };
+    const finalPagination = result.pagination || {
+      total: finalData.length,
+      hasMore: false,
+    };
 
     return {
       success: true,
@@ -94,11 +98,13 @@ export const getExperts = async (
       errMsg.includes("fetch failed") ||
       errMsg.includes("Network Error") ||
       errMsg.includes("ECONNREFUSED");
-      
+
     if (!isNetworkError) {
       console.error(`❌ [API Experts] Fetch error:`, errMsg);
     } else {
-      console.warn(`⚠️ [API Experts] Backend unreachable, falling back to empty state.`);
+      console.warn(
+        `⚠️ [API Experts] Backend unreachable, falling back to empty state.`,
+      );
     }
 
     return {
@@ -131,11 +137,11 @@ export interface FetchReviewsResponse {
 export const getExpertReviews = async (
   expertId: string,
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<FetchReviewsResponse> => {
   try {
     const url = `/reviews/expert/${expertId}?page=${page}&limit=${limit}`;
-    const [data, error] = await api.get<any>(url, { cache: 'no-store' } as any);
+    const [data, error] = await api.get<any>(url, { cache: "no-store" } as any);
 
     if (error) throw new Error("Failed to fetch reviews");
 
@@ -144,5 +150,3 @@ export const getExpertReviews = async (
     return { data: [], total: 0, page, limit } as any;
   }
 };
-
-

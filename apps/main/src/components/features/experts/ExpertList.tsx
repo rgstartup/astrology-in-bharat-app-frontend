@@ -25,49 +25,61 @@ interface ExpertListProps {
 
 const DUMMY_EXPERTS = [
   {
-      id: "dummy-1",
-      user: { id: "d1", name: "Astrology Ravi Rai", avatar: "/images/dummy-expert.jpg" },
-      specialization: "Vedic, Numerology",
-      experience_in_years: 5,
-      languages: ["English", "Hindi"],
-      price: 51,
-      rating: 5,
-      is_available: true,
-      isDummy: true
+    id: "dummy-1",
+    user: {
+      id: "d1",
+      name: "Astrology Ravi Rai",
+      avatar: "/images/dummy-expert.jpg",
+    },
+    specialization: "Vedic, Numerology",
+    experience_in_years: 5,
+    languages: ["English", "Hindi"],
+    price: 51,
+    rating: 5,
+    is_available: true,
+    isDummy: true,
   },
   {
-      id: "dummy-2",
-      user: { id: "d2", name: "Astrologer Shanti", avatar: "/images/dummy-expert.jpg" },
-      specialization: "Tarot, Vastu",
-      experience_in_years: 8,
-      languages: ["English", "Hindi", "Marathi"],
-      price: 101,
-      rating: 4.8,
-      is_available: false,
-      isDummy: true
+    id: "dummy-2",
+    user: {
+      id: "d2",
+      name: "Astrologer Shanti",
+      avatar: "/images/dummy-expert.jpg",
+    },
+    specialization: "Tarot, Vastu",
+    experience_in_years: 8,
+    languages: ["English", "Hindi", "Marathi"],
+    price: 101,
+    rating: 4.8,
+    is_available: false,
+    isDummy: true,
   },
   {
-      id: "dummy-3",
-      user: { id: "d3", name: "Pandit Sharma", avatar: "/images/dummy-expert.jpg" },
-      specialization: "Kundli, Palmistry",
-      experience_in_years: 12,
-      languages: ["Hindi", "Sanskrit"],
-      price: 21,
-      rating: 4.9,
-      is_available: true,
-      isDummy: true
+    id: "dummy-3",
+    user: {
+      id: "d3",
+      name: "Pandit Sharma",
+      avatar: "/images/dummy-expert.jpg",
+    },
+    specialization: "Kundli, Palmistry",
+    experience_in_years: 12,
+    languages: ["Hindi", "Sanskrit"],
+    price: 21,
+    rating: 4.9,
+    is_available: true,
+    isDummy: true,
   },
   {
-      id: "dummy-4",
-      user: { id: "d4", name: "Astro Dev", avatar: "/images/dummy-expert.jpg" },
-      specialization: "Numerology, Nadi",
-      experience_in_years: 3,
-      languages: ["English", "Gujarati"],
-      price: 51,
-      rating: 4.7,
-      is_available: true,
-      isDummy: true
-  }
+    id: "dummy-4",
+    user: { id: "d4", name: "Astro Dev", avatar: "/images/dummy-expert.jpg" },
+    specialization: "Numerology, Nadi",
+    experience_in_years: 3,
+    languages: ["English", "Gujarati"],
+    price: 51,
+    rating: 4.7,
+    is_available: true,
+    isDummy: true,
+  },
 ];
 
 const ExpertList: React.FC<ExpertListProps> = ({
@@ -78,7 +90,8 @@ const ExpertList: React.FC<ExpertListProps> = ({
   title,
 }) => {
   const { lang, t } = useHomeTranslations();
-  const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
+  const fontStyle =
+    lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const [showFilterModal, setShowFilterModal] = React.useState(false);
   const [showSortModal, setShowSortModal] = React.useState(false);
@@ -109,13 +122,17 @@ const ExpertList: React.FC<ExpertListProps> = ({
     t,
   );
 
-  const isFiltered = searchQuery.trim() !== "" || selectedSpecialization !== "" || hasActiveFilters;
+  const isFiltered =
+    searchQuery.trim() !== "" ||
+    selectedSpecialization !== "" ||
+    hasActiveFilters;
 
-  const displayExperts = !loading && !isFiltered && experts.length > 0 && experts.length < 4 
+  const displayExperts =
+    !loading && !isFiltered && experts.length > 0 && experts.length < 4
       ? [...experts, ...DUMMY_EXPERTS.slice(0, 4 - experts.length)]
-      : !loading && !isFiltered && experts.length === 0 
-          ? DUMMY_EXPERTS 
-          : experts;
+      : !loading && !isFiltered && experts.length === 0
+        ? DUMMY_EXPERTS
+        : experts;
 
   return (
     <section
@@ -167,7 +184,9 @@ const ExpertList: React.FC<ExpertListProps> = ({
             show={showSortModal}
             onHide={() => setShowSortModal(false)}
             sortBy={filterState.sortBy}
-            setSortBy={(val: string) => setFilterState({ ...filterState, sortBy: val })}
+            setSortBy={(val: string) =>
+              setFilterState({ ...filterState, sortBy: val })
+            }
             applySort={() => setShowSortModal(false)}
           />
         )}
@@ -185,8 +204,6 @@ const ExpertList: React.FC<ExpertListProps> = ({
             loading={loading}
             hasMore={hasMore}
             initialError={initialError}
-            lang={lang}
-            t={t}
             handleLoadMore={handleLoadMore}
           />
         )}
