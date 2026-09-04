@@ -3,25 +3,13 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import ExpertCard from "./expert-slider/ExpertCard";
+import ExpertCard from "./expert-slider/expert-card";
 import { SkeletonCard } from "./expert-slider/SkeletonCard";
-import { ClientExpertProfile } from "@/lib/types";
+import { useExpertListStore } from "@/store/useExpertListStore";
 
-interface ExpertSliderProps {
-  experts: ClientExpertProfile[];
-  loading: boolean;
-  initialError?: string;
-  lang: string;
-}
+const ExpertSlider = () => {
+  const { experts } = useExpertListStore();
 
-const ExpertSlider: React.FC<ExpertSliderProps> = ({
-  experts,
-  loading,
-  initialError,
-  lang,
-}) => {
   return (
     <div className="relative expert-swiper-wrapper mt-4 px-2 md:px-12">
       <Swiper

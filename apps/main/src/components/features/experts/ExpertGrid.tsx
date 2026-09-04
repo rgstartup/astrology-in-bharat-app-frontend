@@ -3,14 +3,14 @@
 import React from "react";
 import ExpertCard from "./ExpertCard";
 import { SkeletonCard } from "./SkeletonCard";
-import { ClientExpertProfile } from "@/lib/types";
+// import { ClientExpertProfile } from "@/lib/types";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { FaSpinner } from "react-icons/fa";
 import { useTranslations } from "next-intl";
-import { toast } from "react-toastify";
+import { ExpertProfile } from "@/lib/types";
 
 interface ExpertGridProps {
-  experts: ClientExpertProfile[];
+  experts: ExpertProfile[];
   loading: boolean;
   hasMore: boolean;
   initialError?: string;

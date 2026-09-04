@@ -1,23 +1,19 @@
-import React, { Suspense } from "react";
 import { api } from "@/actions";
-import LoadingSkeleton from "./loader";
 import allowedParams from "./expert-list/data/allowed-params";
-
-import ExpertDirectoryList from "./expert-list/ExpertDirectoryList";
 import { IFetchExpertsResponse } from "./expert-list/api/fetch-expert";
-import HomeExpertList from "./expert-list/HomeExpertList";
+import ExpertList from "./expert-list";
+import ExpertGrid from "./expert-list/components/ExpertGrid";
+import HomeExpertResults from "./expert-list/components/HomeExpertResults";
 
-export interface ExpertListWrapperProps {
+export interface ExpertListProps {
   searchParams: Record<string, string | string[] | undefined>;
-  layout?: "slider" | "grid";
   title?: string;
 }
 
-async function ExpertListServer({
+async function getInitialExpertListProps({
   searchParams,
-  layout,
   title,
-}: ExpertListWrapperProps) {
+}: ExpertListProps) {
   const filteredParams = Object.keys(searchParams)
     .filter((key) => allowedParams.includes(key))
     .reduce(
@@ -28,44 +24,43 @@ async function ExpertListServer({
       {} as Record<string, any>,
     );
 
+  const queryParams = {
+    limit: "20",
+    page: "1",
+    ...filteredParams,
+  };
+  const params = new URLSearchParams(queryParams).toString();
+
   const [response, error] = await api.get<IFetchExpertsResponse>(
-    `/experts/list`,
-    {
-      body: {
-        limit: 20,
-        offset: 0,
-        ...filteredParams,
-      },
-    },
+    `/expert/account/list?${params}`,
   );
-  // console.log("Server Side - Expert Data Init:", response.data);
 
   const listProps = {
-    initialExperts: response?.data,
+    initialExperts: response?.data || [],
     initialPagination: response?.pagination,
-    initialError: error,
+    initialError: error?.message,
     title,
   };
 
-  return layout === "grid" ? (
-    <ExpertDirectoryList {...listProps} />
-  ) : (
-    <HomeExpertList {...listProps} />
+  return listProps;
+}
+
+export async function ExpertSliderList(props: ExpertListProps) {
+  const listProps = await getInitialExpertListProps(props);
+
+  return (
+    <ExpertList {...listProps}>
+      <HomeExpertResults />
+    </ExpertList>
   );
 }
 
-export default function ExpertListWrapper({
-  searchParams,
-  layout,
-  title,
-}: ExpertListWrapperProps) {
+export async function ExpertGridList(props: ExpertListProps) {
+  const listProps = await getInitialExpertListProps(props);
+
   return (
-    <Suspense fallback={<LoadingSkeleton />}>
-      <ExpertListServer
-        searchParams={searchParams}
-        layout={layout}
-        title={title}
-      />
-    </Suspense>
+    <ExpertList {...listProps}>
+      <ExpertGrid />
+    </ExpertList>
   );
 }

@@ -10,28 +10,7 @@ import {
 import ExpertCard from "@/components/features/experts/ExpertCard";
 
 import { useTranslations } from "next-intl";
-
-interface ExpertProfile {
-  id: string;
-  user: {
-    id: string;
-    name: string;
-    avatar?: string;
-  };
-  specialization: string;
-  experience_in_years: number;
-  languages: string[];
-  price: number;
-  rating: number;
-  is_available: boolean;
-}
-
-interface PaginationInfo {
-  limit: number;
-  offset: number;
-  total: number;
-  hasMore: boolean;
-}
+import { IFetchExpertsResponse } from "./expert-list-wrapper/expert-list/api/fetch-expert";
 
 const DUMMY_EXPERTS = [
   {
@@ -99,7 +78,7 @@ const OurExpert = () => {
   const spec = searchParams.get("specialization");
   const [experts, setExperts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const limit = 20;
 
@@ -136,17 +115,17 @@ const OurExpert = () => {
 
   const fetchExperts = useCallback(
     async (
-      currentOffset: number,
+      currentPage: number,
       isLoadMore: boolean = false,
       isSilent: boolean = false,
     ) => {
       try {
         if (!isSilent) setLoading(true);
-        const [responseData, fetchErr] = await api.get<any>(
+        const [responseData, fetchErr] = await api.get<IFetchExpertsResponse>(
           `/expert/list?${new URLSearchParams(
             Object.entries({
               limit: String(limit),
-              offset: String(currentOffset),
+              page: String(currentPage),
               ...(debouncedSearch && { q: debouncedSearch }),
               ...(selectedSpecialization && {
                 specializations: selectedSpecialization,
@@ -166,10 +145,7 @@ const OurExpert = () => {
         );
 
         if (fetchErr || !responseData) throw fetchErr;
-        const {
-          data,
-          pagination,
-        }: { data: ExpertProfile[]; pagination: PaginationInfo } = responseData;
+        const { data, pagination } = responseData;
 
         const getImageUrl = (path?: string) => {
           if (!path) return "/images/dummy-expert.jpg";
@@ -228,9 +204,9 @@ const OurExpert = () => {
   );
 
   useEffect(() => {
-    setOffset(0);
+    setPage(1);
     setExperts([]); // Clear list to show skeletons during filter/search change
-    fetchExperts(0);
+    fetchExperts(1);
   }, [
     debouncedSearch,
     selectedSpecialization,
@@ -243,11 +219,11 @@ const OurExpert = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       // Background update to reflect status changes without a showing a loading overlay
-      fetchExperts(offset, false, true);
+      fetchExperts(page, false, true);
     }, 10000); // 10 seconds polling
 
     return () => clearInterval(interval);
-  }, [fetchExperts, offset]);
+  }, [fetchExperts, page]);
 
   useEffect(() => {
     setSelectedSpecialization(spec || "");
@@ -255,9 +231,9 @@ const OurExpert = () => {
 
   const handleLoadMore = (e: React.MouseEvent) => {
     e.preventDefault();
-    const nextOffset = offset + limit;
-    setOffset(nextOffset);
-    fetchExperts(nextOffset, true);
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchExperts(nextPage, true);
   };
 
   const scroll = (direction: string) => {

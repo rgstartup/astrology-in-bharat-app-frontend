@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { api } from "@/actions";
 import { socket } from "@/libs/socket";
-import { ExpertProfile, ClientExpertProfile } from "@/lib/types";
+import { ExpertProfile } from "@/lib/types";
 
 // const getImageUrl = (path?: string) => {
 //   if (!path) return "/images/dummy-expert.jpg";
@@ -21,7 +21,7 @@ import { ExpertProfile, ClientExpertProfile } from "@/lib/types";
 //   return `/uploads/${path}`;
 // };
 
-const mapExpert = (item: any): ClientExpertProfile => {
+const mapExpert = (item: any): ExpertProfile => {
   const id = item.id;
   const userId = item.userId || item.user?.id;
   const name = item.user?.name || "Expert";
@@ -33,13 +33,12 @@ const mapExpert = (item: any): ClientExpertProfile => {
 
   return {
     id: id,
-    userId: userId,
     image: avatar,
     ratings: rating,
     name: name,
     expertise: specialization,
     experience: experience,
-    language: Array.isArray(item.languages)
+    languages: Array.isArray(item.languages)
       ? item.languages.join(", ")
       : "Hindi",
     price: item.price || 0,
@@ -49,7 +48,6 @@ const mapExpert = (item: any): ClientExpertProfile => {
     report_price: item.report_price,
     horoscope_price: item.horoscope_price,
     video: item.video || "",
-    modalId: `home-modal-${id}`,
     is_available: isAvailable,
     total_likes: item.total_likes || 0,
     custom_services: Array.isArray(item.custom_services)
@@ -77,7 +75,7 @@ export const useExpertListLogic = (
   const searchParams = useSearchParams();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const [experts, setExperts] = useState<ClientExpertProfile[]>(() =>
+  const [experts, setExperts] = useState<ExpertProfile[]>(() =>
     initialExperts ? initialExperts.map(mapExpert) : [],
   );
   const [loading, setLoading] = useState(false);

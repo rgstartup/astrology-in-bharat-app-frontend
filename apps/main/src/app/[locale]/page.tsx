@@ -1,5 +1,5 @@
 import AstrologyProduct from "@/components/features/shop/AstrologyProduct";
-import ExpertListWrapper from "@/features/home/expert-list-wrapper";
+import { ExpertSliderList } from "@/features/home/expert-list-wrapper";
 import PujaListSection from "@/components/features/puja/PujaListSection";
 import StoreSection from "@/components/features/shop/StoreSection";
 
@@ -21,7 +21,7 @@ export default async function Homepage({
   return (
     <>
       <HeroSection />
-      <ExpertListWrapper searchParams={params} />
+      <ExpertSliderList searchParams={params} />
       <ExpertServices />
       <PujaListSection />
       <ExpertConsultant />

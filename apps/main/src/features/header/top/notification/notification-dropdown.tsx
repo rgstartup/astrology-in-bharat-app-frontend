@@ -1,8 +1,9 @@
+"use client";
+
 import { PATHS } from "@repo/routes";
 import Link from "next/link";
-import React from "react";
 import { INotification } from "@/lib/types/notification.type";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 
 interface NotificationDropDownProps {
   //   loadingNotifications: boolean;
@@ -34,10 +35,10 @@ const ClearAllButton = (props: ClearAllButtonProps) => {
   );
 };
 
-const NotificationDropDown = async (props: NotificationDropDownProps) => {
+const NotificationDropDown = (props: NotificationDropDownProps) => {
   if (!props.showNotificationDropDown) return null;
 
-  const t = await getTranslations("Header");
+  const t = useTranslations("Header");
 
   const { notifications, handleClearAll, setShowNotificationDropDown } = props;
 

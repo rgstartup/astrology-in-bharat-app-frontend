@@ -1,8 +1,7 @@
 export const dynamic = "force-dynamic";
-import React, { Suspense } from "react";
-import OurExpert from "@/features/home/ourExpert";
+import { Suspense } from "react";
 import { ExpertGridSkeleton } from "@/components/features/experts/SkeletonCard";
-import ExpertListWrapper from "@/components/features/experts/ExpertListWrapper";
+import { ExpertGridList } from "@/features/home/expert-list-wrapper";
 import OurExpertsSeoContent from "./our-experts-seo.component";
 
 function OurExpertsLoading() {
@@ -21,11 +20,13 @@ function OurExpertsLoading() {
   );
 }
 
-const page = ({ searchParams }: { searchParams: any }) => {
+const page = async ({ searchParams }: { searchParams: any }) => {
+  const params = await searchParams;
+
   return (
     <>
       <Suspense fallback={<OurExpertsLoading />}>
-        <ExpertListWrapper searchParams={searchParams} layout="grid" />
+        <ExpertGridList searchParams={params} />
       </Suspense>
       <OurExpertsSeoContent />
     </>

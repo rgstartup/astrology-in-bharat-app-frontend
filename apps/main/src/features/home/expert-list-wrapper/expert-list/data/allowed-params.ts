@@ -1,6 +1,6 @@
 export default [
   "limit",
-  "offset",
+  "page",
   "q",
   "specializations",
   "location",

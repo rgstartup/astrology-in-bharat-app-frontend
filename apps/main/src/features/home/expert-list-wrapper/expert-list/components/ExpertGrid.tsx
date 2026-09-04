@@ -1,27 +1,66 @@
 "use client";
 
-import React from "react";
-import ExpertCard from "./expert-slider/ExpertCard";
+import React, { useCallback, useEffect, useRef } from "react";
+import ExpertCard from "./expert-slider/expert-card";
 import { SkeletonCard } from "./expert-slider/SkeletonCard";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { FaSpinner } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useExpertListStore } from "@/store/useExpertListStore";
-import { toast } from "react-toastify";
+import { useDebounce } from "@/hooks/use-debounce";
+import { api } from "@/actions";
+import { IFetchExpertsResponse } from "../api/fetch-expert";
 
-interface ExpertGridProps {
-  initialError?: string;
-  handleLoadMore: () => void;
-}
-
-const ExpertGrid: React.FC<ExpertGridProps> = ({
-  initialError,
-  handleLoadMore,
-}) => {
+const ExpertGrid = () => {
   const t = useTranslations("Home");
-  const { loading, hasMore, experts } = useExpertListStore();
+  const store = useExpertListStore();
+  const debouncedSearch = useDebounce<string>(store.searchQuery);
+  const querySignature = JSON.stringify({
+    search: debouncedSearch,
+    specialization: store.selectedSpecialization,
+    filters: store.filterState,
+  });
+  const previousQuerySignature = useRef(querySignature);
 
-  if (initialError) toast.error(initialError);
+  const { buildFetchParams, setExperts, setHasMore, setLoading, setPage } =
+    store;
+
+  const fetchExperts = useCallback(
+    async (currentPage: number, append = false) => {
+      setLoading(true);
+
+      const params = buildFetchParams(currentPage, debouncedSearch);
+      const query = new URLSearchParams(params).toString();
+
+      const [responseData, fetchError] = await api
+        .get<IFetchExpertsResponse>(`/expert/account/list?${query}`)
+        .finally(() => setLoading(false));
+
+      if (fetchError || !responseData) throw fetchError;
+
+      setExperts((previous) =>
+        append ? [...previous, ...responseData.data] : responseData.data,
+      );
+      setHasMore(responseData.pagination.hasMore);
+    },
+    [buildFetchParams, debouncedSearch, setExperts, setHasMore, setLoading],
+  );
+
+  useEffect(() => {
+    if (previousQuerySignature.current === querySignature) return;
+
+    previousQuerySignature.current = querySignature;
+    setPage(1);
+    void fetchExperts(1);
+  }, [fetchExperts, querySignature, setPage]);
+
+  const handleLoadMore = () => {
+    const nextPage = store.page + 1;
+    setPage(nextPage);
+    void fetchExperts(nextPage, true);
+  };
+
+  const { loading, hasMore, experts } = store;
 
   if (loading) {
     return (

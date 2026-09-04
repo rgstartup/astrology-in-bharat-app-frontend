@@ -1,10 +1,16 @@
 "use client";
 import React from "react";
 
-import { ExpertListHeaderProps } from "@/lib/types";
-import { useSpecializationScroll } from "../hooks/useSpecializationScroll";
 import { useLocale, useTranslations } from "next-intl";
+import { useSpecializationScroll } from "../hooks/useSpecializationScroll";
 import { useExpertListStore } from "@/store/useExpertListStore";
+
+export interface ExpertListHeaderProps {
+  title?: string;
+  hasActiveFilters: boolean;
+  onOpenFilter: () => void;
+  onOpenSort: () => void;
+}
 
 const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
   title,

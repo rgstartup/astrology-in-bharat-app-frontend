@@ -1,31 +1,18 @@
 "use client";
 
 import React from "react";
-import {
-  Swiper as SwiperComp,
-  SwiperSlide as SwiperSlideComp,
-} from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import ExpertCard from "./ExpertCard";
-import { SkeletonCard } from "./SkeletonCard";
-import { ClientExpertProfile } from "@/lib/types";
 
-const Swiper = SwiperComp as any;
-const SwiperSlide = SwiperSlideComp as any;
+import ExpertCard from "./expert-card";
+import { SkeletonCard } from "./SkeletonCard";
+import type { Expert } from "@repo/lib";
 
 interface ExpertSliderProps {
-  experts: ClientExpertProfile[];
-  loading: boolean;
-  initialError?: string;
-  lang: string;
+  experts: Expert[];
 }
 
-const ExpertSlider: React.FC<ExpertSliderProps> = ({
-  experts,
-  loading,
-  initialError,
-  lang,
-}) => {
+const ExpertSlider: React.FC<ExpertSliderProps> = ({ experts }) => {
   return (
     <div className="relative expert-swiper-wrapper mt-4 px-2 md:px-12">
       <Swiper

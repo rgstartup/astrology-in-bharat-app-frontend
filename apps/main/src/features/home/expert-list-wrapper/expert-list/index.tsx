@@ -1,80 +1,67 @@
 "use client";
 
-import React, { useMemo } from "react";
-import Link from "next/link";
-import { useHomeTranslations } from "@/i18n/useHomeTranslations";
+import React, { useEffect, useMemo } from "react";
 import ExpertListHeader from "./components/ExpertListHeader";
 import ExpertFilterModal from "./components/ExpertFilterModal";
 import ExpertSortModal from "./components/ExpertSortModal";
-import ExpertSlider from "./components/ExpertSlider";
-import ExpertGrid from "./components/ExpertGrid";
 import dummyExperts from "./data/dummy-experts.json";
-// import { useExpertListLogic } from "./useExpertListLogic";
-import { useExpertListLogic } from "@/components/features/experts/useExpertListLogic";
-import { ExpertProfile } from "@/lib/types";
 import { useExpertListStore } from "@/store/useExpertListStore";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import socket from "@/lib/socket";
+import { toast } from "react-toastify";
+import { Expert } from "@repo/lib";
+
+const fallbackExperts: Expert[] = dummyExperts.map(
+  ({ user, languages, ...expert }) => ({
+    ...expert,
+    is_blocked: false,
+    name: user.name,
+    email: "",
+    avatar: user.avatar,
+    phone: "",
+    gender: "",
+    date_of_birth: "",
+    languages: languages.join(", "),
+    total_likes: 0,
+    total_reviews: 0,
+    consultation_count: 0,
+    chat_price: expert.price,
+    call_price: expert.price,
+    video_call_price: expert.price,
+    about_me: "",
+    total_earning: 0,
+    razorpay_contact_id: null,
+    agent_commission_rate: null,
+    created_at: "",
+    updated_at: "",
+  }),
+);
 
 interface ExpertListProps {
-  initialExperts: ExpertProfile[];
+  initialExperts: Expert[];
   initialPagination?: {
     total: number;
     hasMore: boolean;
   };
   initialError?: string;
-  layout?: "slider" | "grid";
   title?: string;
+  children: React.ReactNode;
 }
 
 const ExpertList: React.FC<ExpertListProps> = ({
   initialExperts,
   initialPagination,
   initialError,
-  layout = "slider",
   title,
+  children,
 }) => {
   const t = useTranslations("Home");
-  // const lang = useLocale();
-  // const fontStyle =
-  //   lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const [showFilterModal, setShowFilterModal] = React.useState(false);
   const [showSortModal, setShowSortModal] = React.useState(false);
 
-  // const {
-  //   experts,
-  //   loading,
-  //   hasMore,
-  //   searchQuery,
-  //   setSearchQuery,
-  //   selectedSpecialization,
-  //   setSelectedSpecialization,
-  //   filterState,
-  //   setFilterState,
-  //   localFilter,
-  //   setLocalFilter,
-  //   hasActiveFilters,
-  //   scrollTabs,
-  //   scrollContainerRef,
-  //   handleLoadMore,
-  //   applyFilters,
-  //   resetFilters,
-  // } = useExpertListLogic(
-  //   initialExperts,
-  //   initialPagination,
-  //   initialError,
-  //   lang,
-  //   t,
-  // );
-
-  const {
-    searchQuery,
-    selectedSpecialization,
-    filterState,
-    localFilter,
-    loading,
-    experts,
-  } = useExpertListStore();
+  const { filterState, ...store } = useExpertListStore();
+  const { setExperts, setHasMore } = store;
 
   const hasActiveFilters = useMemo(() => {
     return (
@@ -90,16 +77,60 @@ const ExpertList: React.FC<ExpertListProps> = ({
   }, [filterState]);
 
   const isFiltered =
-    searchQuery.trim() !== "" ||
-    selectedSpecialization !== "" ||
+    store.searchQuery.trim() !== "" ||
+    store.selectedSpecialization !== "" ||
     hasActiveFilters;
 
-  const displayExperts =
-    !loading && !isFiltered && experts.length > 0 && experts.length < 4
-      ? [...experts, ...dummyExperts.slice(0, 4 - experts.length)]
-      : !loading && !isFiltered && experts.length === 0
-        ? dummyExperts
-        : experts;
+  const displayExperts = useMemo(
+    () =>
+      !store.loading &&
+      !isFiltered &&
+      initialExperts.length > 0 &&
+      initialExperts.length < 4
+        ? [
+            ...initialExperts,
+            ...fallbackExperts.slice(0, 4 - initialExperts.length),
+          ]
+        : !store.loading && !isFiltered && initialExperts.length === 0
+          ? fallbackExperts
+          : initialExperts,
+    [initialExperts, isFiltered, store.loading],
+  );
+
+  useEffect(() => {
+    setExperts(displayExperts);
+    setHasMore(initialPagination?.hasMore ?? false);
+  }, [displayExperts, initialPagination?.hasMore, setExperts, setHasMore]);
+
+  useEffect(() => {
+    if (!initialError) return;
+
+    toast.error(initialError, {
+      toastId: `expert-list-${initialError}`,
+    });
+  }, [initialError]);
+
+  useEffect(() => {
+    const handleStatusUpdate = (data: any) => {
+      const expertId = data.expert_id || data.userId || data.id;
+      const isAvailable =
+        data.is_available !== undefined
+          ? data.is_available
+          : data.status === "online";
+      if (!expertId) return;
+      store.setExperts((prev) =>
+        prev.map((astro) =>
+          String(astro.id) === String(expertId)
+            ? { ...astro, is_available: isAvailable }
+            : astro,
+        ),
+      );
+    };
+    socket.on("expert_status_changed", handleStatusUpdate);
+    return () => {
+      socket.off("expert_status_changed", handleStatusUpdate);
+    };
+  }, []);
 
   return (
     <section
@@ -117,77 +148,35 @@ const ExpertList: React.FC<ExpertListProps> = ({
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
         <ExpertListHeader
           title={title || t("expertSection.title")}
-          searchQuery={searchQuery}
-          // setSearchQuery={setSearchQuery}
-          // selectedSpecialization={selectedSpecialization}
-          // setSelectedSpecialization={setSelectedSpecialization}
           hasActiveFilters={hasActiveFilters}
           onOpenFilter={() => setShowFilterModal(true)}
           onOpenSort={() => setShowSortModal(true)}
-          // resetFilters={resetFilters}
-          // scrollTabs={scrollTabs}
-          // scrollContainerRef={scrollContainerRef}
         />
 
-        {showFilterModal && (
-          <ExpertFilterModal
-            show={showFilterModal}
-            onHide={() => setShowFilterModal(false)}
-            localFilter={localFilter}
-            setLocalFilter={setLocalFilter}
-            applyFilters={() => {
-              applyFilters();
-              setShowFilterModal(false);
-            }}
-            resetFilters={() => {
-              resetFilters();
-              setShowFilterModal(false);
-            }}
-          />
-        )}
+        <ExpertFilterModal
+          show={showFilterModal}
+          onHide={() => setShowFilterModal(false)}
+          applyFilters={() => {
+            store.setFilterState(store.localFilter);
+            setShowFilterModal(false);
+          }}
+          resetFilters={() => {
+            store.resetState();
+            setShowFilterModal(false);
+          }}
+        />
 
-        {showSortModal && (
-          <ExpertSortModal
-            show={showSortModal}
-            onHide={() => setShowSortModal(false)}
-            sortBy={filterState.sortBy}
-            setSortBy={(val: string) =>
-              setFilterState({ ...filterState, sortBy: val })
-            }
-            applySort={() => setShowSortModal(false)}
-          />
-        )}
+        <ExpertSortModal
+          show={showSortModal}
+          onHide={() => setShowSortModal(false)}
+          sortBy={filterState.sortBy}
+          setSortBy={(val: string) =>
+            store.setFilterState({ ...filterState, sortBy: val })
+          }
+          applySort={() => setShowSortModal(false)}
+        />
 
-        {layout === "slider" ? (
-          <ExpertSlider
-            experts={displayExperts}
-            loading={loading}
-            initialError={initialError}
-            lang={lang}
-          />
-        ) : (
-          <ExpertGrid
-            experts={displayExperts}
-            loading={loading}
-            hasMore={hasMore}
-            initialError={initialError}
-            lang={lang}
-            t={t}
-            handleLoadMore={handleLoadMore}
-          />
-        )}
-
-        {layout === "slider" && (
-          <div className="view-all mt-4 md:mt-6">
-            <Link
-              href="/our-experts"
-              className="no-underline bg-orange hover:opacity-90 text-white px-6 py-3 rounded-full font-bold shadow-lg transition-all mx-auto flex items-center justify-center gap-2 w-fit"
-            >
-              <i className="fa-regular fa-user"></i>{" "}
-              {t("expertSection.viewAllExperts")}
-            </Link>
-          </div>
-        )}
+        {children}
       </div>
     </section>
   );
