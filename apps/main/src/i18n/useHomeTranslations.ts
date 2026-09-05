@@ -1,8 +1,7 @@
 "use client";
 
 import { useLocale, useMessages } from "next-intl";
-import { usePathname } from "next/navigation";
-import { isAppLocale, type AppLocale } from "./config";
+import type { AppLocale } from "./routing";
 
 /**
  * Transitional adapter for the homepage while its existing nested message
@@ -10,10 +9,7 @@ import { isAppLocale, type AppLocale } from "./config";
  */
 export function useHomeTranslations() {
   const messages = useMessages();
-  const pathname = usePathname();
-  const providerLocale = useLocale() as AppLocale;
-  const pathLocale = pathname.split("/")[1] ?? "";
-  const lang = isAppLocale(pathLocale) ? pathLocale : providerLocale;
+  const lang = useLocale() as AppLocale;
 
   return {
     lang,

@@ -95,6 +95,7 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
   transpilePackages: ["@repo/ui", "@repo/routes", "swiper"],
   images: {
+    qualities: [100, 75],
     remotePatterns: [
       {
         protocol: "https",

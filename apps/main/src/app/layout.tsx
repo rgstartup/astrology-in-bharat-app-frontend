@@ -9,12 +9,12 @@ import { AuthInitializer } from "@/components/layout/AuthInitializer";
 import { CartInitializer } from "@/components/layout/CartInitializer"; // Changed import
 import { WishlistInitializer } from "@/components/layout/WishlistInitializer";
 import { Metadata } from "next";
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 import QueryProvider from "@/providers/QueryProvider";
 import ExpertStatusProvider from "@/providers/ExpertStatusProvider";
 import NotificationProvider from "@/providers/NotificationProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
-import { decodeToken, getErrorMessage } from "@repo/lib";
+// import { decodeToken, getErrorMessage } from "@repo/lib";
 import ToastProvider from "@/components/layout/ToastProvider";
 import PlatformReviewModal from "@/components/features/reviews";
 import { NextIntlClientProvider } from "next-intl";
@@ -31,26 +31,26 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // 1. Fetch user on server
-  const cookieStore = await cookies();
+  // const cookieStore = await cookies();
   const locale = await getLocale();
-  const token = cookieStore.get("accessToken")?.value;
+  // const token = cookieStore.get("accessToken")?.value;
 
-  if (token) {
-    try {
-      // Pass both header and cookie to support different backend auth strategies
-      const user = decodeToken(token);
-      console.log("Server-side auth check user:", user);
+  // if (token) {
+  //   try {
+  //     // Pass both header and cookie to support different backend auth strategies
+  //     const user = decodeToken(token);
+  //     console.log("Server-side auth check user:", user);
 
-      if (!user || !user.sub || !user.email) {
-        throw new Error("user not found");
-      }
-    } catch (err: any) {
-      const errorMsg = getErrorMessage(err);
-      if (errorMsg !== "Unauthorized" && !errorMsg.includes("Unauthorized")) {
-        console.error("[RootLayout] Server-side auth check failed:", errorMsg);
-      }
-    }
-  }
+  //     if (!user || !user.sub || !user.email) {
+  //       throw new Error("user not found");
+  //     }
+  //   } catch (err: any) {
+  //     const errorMsg = getErrorMessage(err);
+  //     if (errorMsg !== "Unauthorized" && !errorMsg.includes("Unauthorized")) {
+  //       console.error("[RootLayout] Server-side auth check failed:", errorMsg);
+  //     }
+  //   }
+  // }
 
   return (
     <html lang={locale} data-scroll-behavior="smooth">

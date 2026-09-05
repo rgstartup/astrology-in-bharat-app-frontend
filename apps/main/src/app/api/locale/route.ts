@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAppLocale } from "@/i18n/config";
+import { isAppLocale } from "@/i18n/routing";
 
 export async function POST(request: NextRequest) {
   const { locale } = await request.json().catch(() => ({}));

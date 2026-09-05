@@ -2,7 +2,7 @@
 
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
-import type { AppLocale } from "@/i18n/config";
+import type { AppLocale } from "@/i18n/routing";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";

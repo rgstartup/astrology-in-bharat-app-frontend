@@ -1,5 +1,5 @@
 import messages from "@messages/en";
-import type { AppLocale } from "./config";
+import type { AppLocale } from "./routing";
 
 declare module "next-intl" {
   interface AppConfig {

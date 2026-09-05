@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useMessages } from "next-intl";
-import type { AppLocale } from "./config";
+import type { AppLocale } from "./routing";
 
 export function usePujaTranslations() {
   const messages = useMessages();

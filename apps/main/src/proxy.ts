@@ -3,7 +3,25 @@ import { NextRequest } from "next/server";
 import { decodeToken } from "@repo/lib";
 import { api } from "./actions";
 import { setAccessToken, setRefreshToken } from "./actions/cookie";
-import { defaultLocale } from "./i18n/config";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
+
+const handleI18nRouting = createMiddleware(routing);
+
+/**
+ * Auth redirects end the middleware chain before `handleI18nRouting` can
+ * return its response. Copy its locale cookie onto those redirects so locale
+ * negotiation works on the very first redirected request as well.
+ */
+function withI18nCookies(response: NextResponse, request: NextRequest) {
+  const i18nResponse = handleI18nRouting(request);
+
+  for (const cookie of i18nResponse.cookies.getAll()) {
+    response.cookies.set(cookie);
+  }
+
+  return response;
+}
 
 const PROTECTED_ROUTES = ["/client"];
 const isProtectedRoute = (pathname: string) =>
@@ -11,20 +29,6 @@ const isProtectedRoute = (pathname: string) =>
 
 const AUTH_ROUTES = ["/sign-in", "/register"];
 const isAuthRoute = (pathname: string) => AUTH_ROUTES.includes(pathname);
-
-function withDefaultLocaleCookie(response: NextResponse, request: NextRequest) {
-  if (!request.cookies.has("locale")) {
-    response.cookies.set("locale", defaultLocale, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 365,
-      path: "/",
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-    });
-  }
-
-  return response;
-}
 
 async function refreshSession(
   refreshToken: string,
@@ -50,20 +54,22 @@ async function refreshSession(
 
     const response = isProtected
       ? redirectToLogin(request, pathname)
-      : NextResponse.next();
+      : handleI18nRouting(request);
 
     response.cookies.delete("accessToken");
     response.cookies.delete("refreshToken");
 
-    return withDefaultLocaleCookie(response, request);
+    return response;
   }
 
-  const response = redirect ? redirectToCallback(request) : NextResponse.next();
+  const response = redirect
+    ? redirectToCallback(request)
+    : handleI18nRouting(request);
 
   setAccessToken(response.cookies, data.accessToken);
   setRefreshToken(response.cookies, data.refreshToken);
 
-  return withDefaultLocaleCookie(response, request);
+  return response;
 }
 
 const redirectToLogin = (
@@ -72,7 +78,7 @@ const redirectToLogin = (
 ): NextResponse => {
   const url = new URL("/sign-in", request.url);
   url.searchParams.set("callbackUrl", pathname);
-  return NextResponse.redirect(url);
+  return withI18nCookies(NextResponse.redirect(url), request);
 };
 
 const redirectToCallback = (request: NextRequest): NextResponse => {
@@ -85,7 +91,7 @@ const redirectToCallback = (request: NextRequest): NextResponse => {
 
   const url = new URL(redirectRoute, request.url);
 
-  return NextResponse.redirect(url);
+  return withI18nCookies(NextResponse.redirect(url), request);
 };
 
 const checkTokenAboutToExpire = (accessToken: string) => {
@@ -116,7 +122,8 @@ export async function proxy(request: NextRequest) {
    */
   if (isPathAuth) {
     if (accessToken) {
-      return withDefaultLocaleCookie(redirectToCallback(request), request);
+      // return withDefaultLocaleCookie(redirectToCallback(request), request);
+      return redirectToCallback(request);
     }
 
     if (refreshToken) {
@@ -129,7 +136,7 @@ export async function proxy(request: NextRequest) {
       );
     }
 
-    return withDefaultLocaleCookie(NextResponse.next(), request);
+    return handleI18nRouting(request);
   }
 
   /*
@@ -141,7 +148,7 @@ export async function proxy(request: NextRequest) {
     const tokenAboutToExpire = checkTokenAboutToExpire(accessToken);
 
     if (!tokenAboutToExpire) {
-      return withDefaultLocaleCookie(NextResponse.next(), request);
+      return handleI18nRouting(request);
     }
 
     /*
@@ -161,10 +168,16 @@ export async function proxy(request: NextRequest) {
      * Public → continue
      */
     if (isPathProtected) {
-      return withDefaultLocaleCookie(redirectToLogin(request, pathname), request);
+      // return withDefaultLocaleCookie(
+      //   redirectToLogin(request, pathname),
+      //   request,
+      // );
+
+      return redirectToLogin(request, pathname);
     }
 
-    return withDefaultLocaleCookie(NextResponse.next(), request);
+    // return withDefaultLocaleCookie(NextResponse.next(), request);
+    return handleI18nRouting(request);
   }
 
   /*
@@ -184,10 +197,12 @@ export async function proxy(request: NextRequest) {
    * Public → continue
    */
   if (isPathProtected) {
-    return withDefaultLocaleCookie(redirectToLogin(request, pathname), request);
+    // return withDefaultLocaleCookie(redirectToLogin(request, pathname), request);
+    return redirectToLogin(request, pathname);
   }
 
-  return withDefaultLocaleCookie(NextResponse.next(), request);
+  // return withDefaultLocaleCookie(NextResponse.next(), request);
+  return handleI18nRouting(request);
 }
 
 // Matcher configuration for proxy
