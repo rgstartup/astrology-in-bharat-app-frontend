@@ -16,10 +16,6 @@ import NotificationList from "./notification-list";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
 import { useAuthStore } from "@/store/useAuthStore";
-import {
-  connectNotificationSocket,
-  getNotificationSocket,
-} from "@repo/ui/sockets";
 
 const NotificationComponent = () => {
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -118,36 +114,6 @@ const NotificationComponent = () => {
     () => setShowNotificationDropDown(false),
     showNotificationDropDown && isAuthenticated,
   );
-
-  useEffect(() => {
-    if (!isAuthenticated || !user?.id) return;
-
-    console.log("🔌 Connecting to notification socket for user:", user.id);
-    // Use profile from token as per new architecture
-    connectNotificationSocket(user.id);
-    const socket = getNotificationSocket();
-
-    const handleUpdate = async (data: any) => {
-      console.log("🔔 Real-time Notification received:", data);
-      // Show success toast
-      const { toast } = await import("react-toastify");
-      toast.success(data.message || "Order Status Updated!");
-
-      setUnreadCount(useNotification.getState().unread_count + 1);
-      fetchNotificationsFn();
-    };
-
-    // Listen for backend events
-    socket.on("order_status_updated", handleUpdate);
-    socket.on("notification", handleUpdate);
-    socket.on("new_notification", handleUpdate);
-
-    return () => {
-      socket.off("order_status_updated", handleUpdate);
-      socket.off("notification", handleUpdate);
-      socket.off("new_notification", handleUpdate);
-    };
-  }, [isAuthenticated, user?.id, fetchNotificationsFn, setUnreadCount]);
 
   if (!isAuthenticated) return null;
 

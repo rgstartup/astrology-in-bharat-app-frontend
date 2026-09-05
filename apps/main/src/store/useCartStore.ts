@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { toast } from "react-toastify";
 import { CartService } from "../services/cart.service";
 import { getErrorMessage, type CartItem } from "@repo/lib";
+import { useAuthStore } from "@repo/store";
 
 // Local helper to preserve fallback behavior if needed
 const getFormattedError = (error: any, fallback: string) =>
@@ -16,7 +17,7 @@ export interface CartState {
   isLoading: boolean;
 
   // Actions
-  fetchCart: (isAuthenticated: boolean) => Promise<void>;
+  fetchCart: () => Promise<void>;
   addToCart: (
     productId: string,
     quantity: number,
@@ -47,7 +48,9 @@ export const useCartStore = create<CartState>((set, get) => ({
   cartTotal: 0,
   isLoading: false,
 
-  fetchCart: async (isAuthenticated: boolean) => {
+  fetchCart: async () => {
+    const { isAuthenticated } = useAuthStore.getState();
+
     if (!isAuthenticated) {
       set({ cartItems: [], cartCount: 0, cartTotal: 0 });
       return;
@@ -55,27 +58,22 @@ export const useCartStore = create<CartState>((set, get) => ({
 
     set({ isLoading: true });
 
-    try {
-      const [res, error] = await CartService.getCart();
-      if (error || !res) {
-        console.error("Failed to fetch cart:", error);
-        return;
-      }
-      const rawItems = res.items ? res.items : [];
-      const { count, total } = calculateTotals(rawItems);
-      set({ cartItems: rawItems, cartCount: count, cartTotal: total });
-    } catch (error) {
+    const [res, error] = await CartService.getCart().finally(() =>
+      set({ isLoading: false }),
+    );
+
+    if (error || !res) {
       console.error("Failed to fetch cart:", error);
-    } finally {
-      set({ isLoading: false });
+      return;
     }
+    const rawItems = res.items ? res.items : [];
+    const { count, total } = calculateTotals(rawItems);
+    set({ cartItems: rawItems, cartCount: count, cartTotal: total });
   },
 
-  addToCart: async (
-    productId: string,
-    quantity: number = 1,
-    isAuthenticated: boolean,
-  ) => {
+  addToCart: async (productId: string, quantity: number = 1) => {
+    const { isAuthenticated } = useAuthStore.getState();
+
     if (!isAuthenticated) {
       toast.error("Please login to add items to cart");
       return;
@@ -136,7 +134,7 @@ export const useCartStore = create<CartState>((set, get) => ({
         console.error("Update quantity error:", error);
         toast.error(getFormattedError(error, "Failed to update quantity"));
         // Revert on error
-        await fetchCart(true);
+        await fetchCart();
       } finally {
         delete debounceTimeouts[productId];
       }
@@ -164,8 +162,8 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
   },
 
-  refreshCart: async (isAuthenticated: boolean) => {
-    await get().fetchCart(isAuthenticated);
+  refreshCart: async () => {
+    await get().fetchCart();
   },
 
   resetCart: () => {

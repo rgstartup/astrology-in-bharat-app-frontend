@@ -11,6 +11,8 @@ import { WishlistInitializer } from "@/components/layout/WishlistInitializer";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import QueryProvider from "@/providers/QueryProvider";
+import ExpertStatusProvider from "@/providers/ExpertStatusProvider";
+import NotificationProvider from "@/providers/NotificationProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import { decodeToken, getErrorMessage } from "@repo/lib";
 import ToastProvider from "@/components/layout/ToastProvider";
@@ -70,16 +72,20 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider>
           <QueryProvider>
-            <AuthInitializer>
-              <CartInitializer>
-                <WishlistInitializer>
-                  <SmoothScroll>
-                    <ClientLayout>{children}</ClientLayout>
-                  </SmoothScroll>
-                </WishlistInitializer>
-              </CartInitializer>
-              <PlatformReviewModal />
-            </AuthInitializer>
+            <ExpertStatusProvider>
+              <NotificationProvider>
+                <AuthInitializer>
+                  <CartInitializer>
+                    <WishlistInitializer>
+                      <SmoothScroll>
+                        <ClientLayout>{children}</ClientLayout>
+                      </SmoothScroll>
+                    </WishlistInitializer>
+                  </CartInitializer>
+                  <PlatformReviewModal />
+                </AuthInitializer>
+              </NotificationProvider>
+            </ExpertStatusProvider>
           </QueryProvider>
         </NextIntlClientProvider>
         <ToastProvider />

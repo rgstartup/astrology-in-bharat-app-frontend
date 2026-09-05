@@ -12,7 +12,6 @@ import {
 } from "@/libs/api-profile";
 import {
   getNotificationSocket,
-  connectNotificationSocket,
 } from "@repo/ui/sockets";
 
 export const useProfileOtherLogic = (
@@ -174,7 +173,6 @@ export const useProfileOtherLogic = (
   useEffect(() => {
     if (!isAuthenticated || !user?.id) return;
 
-    connectNotificationSocket(user.profile || user.id);
     const socket = getNotificationSocket();
 
     const handleOrderUpdate = (data: any) => {
@@ -193,17 +191,10 @@ export const useProfileOtherLogic = (
     };
 
     socket.on("order_status_updated", handleOrderUpdate);
-    socket.on("notification", (data) => {
-      if (activeTab === "notifications") {
-        loadNotifications();
-      }
-    });
-
     return () => {
       socket.off("order_status_updated", handleOrderUpdate);
-      socket.off("notification");
     };
-  }, [isAuthenticated, user?.id, activeTab, loadNotifications, setOrders]);
+  }, [isAuthenticated, user?.id, setOrders]);
 
   return {
     notifications,

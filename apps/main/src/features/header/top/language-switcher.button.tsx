@@ -44,7 +44,7 @@ const LanguageButtons = (props: LanguageButtonProps) => {
 
 const LanguageSwitcherDropdown = () => {
   const router = useRouter();
-  const activeLanguage = useLocale() as AppLocale;
+  const activeLanguage = useLocale();
 
   const [showLanguageDropDown, setShowLanguageDropDown] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

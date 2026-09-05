@@ -1,22 +1,23 @@
 "use client";
 
-import { useAuth } from "@/store/useAuthStore";
-import { HeaderTranslations, headerTranslations, useLanguageStore } from "@repo/store";
 import React from "react";
+import { useAuth } from "@/store/useAuthStore";
 import LanguageSwitcherDropdown from "./language-switcher.button";
 import BalanceIndicator from "./balance-indicator.button";
 import NotificationComponent from "./notification";
 import AuthCTA from "./auth.cta";
 import UserProfileDropdown from "./user-profile-dropdown";
 import CartComponent from "./cart";
+import { useTranslations } from "next-intl";
 
 interface IAuthenticatedHeader {
-  t: HeaderTranslations;
   isAuthenticated: boolean;
 }
 
-const AuthenticatedHeaderActions: React.FC<IAuthenticatedHeader> = ({ t, isAuthenticated }) => {
-  if (!isAuthenticated) return <AuthCTA t={t} show={true} />;
+const AuthenticatedHeaderActions: React.FC<IAuthenticatedHeader> = ({
+  isAuthenticated,
+}) => {
+  if (!isAuthenticated) return <AuthCTA show={true} />;
 
   return (
     <div className="flex gap-4 items-center justify-end">
@@ -32,11 +33,10 @@ const AuthenticatedHeaderActions: React.FC<IAuthenticatedHeader> = ({ t, isAuthe
   );
 };
 
-
 const TopHeader = () => {
   const { isAuthenticated } = useAuth();
-  const { lang } = useLanguageStore();
-  const t = headerTranslations[lang];
+
+  const t = useTranslations("Header");
 
   return (
     <header
@@ -51,7 +51,7 @@ const TopHeader = () => {
           {/* Left section: Welcome Text */}
           <div className="flex-1 hidden md:block">
             <p className="m-0 text-white text-base font-medium">
-              {t.welcomeText}
+              {t("welcomeText")}
             </p>
           </div>
 
@@ -63,7 +63,7 @@ const TopHeader = () => {
               <BalanceIndicator />
 
               <div className="flex gap-1.5 sm:gap-3 md:gap-4 items-center">
-                <AuthenticatedHeaderActions isAuthenticated={isAuthenticated} t={t} />
+                <AuthenticatedHeaderActions isAuthenticated={isAuthenticated} />
               </div>
             </div>
           </div>

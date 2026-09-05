@@ -28,6 +28,7 @@ interface ExpertListStore {
   filterState: ExpertFilterState;
   localFilter: ExpertFilterState;
   setExperts: (value: StateUpdate<Expert[]>) => void;
+  updateExpertAvailability: (expertId: string | number, isAvailable: boolean) => void;
   setLoading: (loading: boolean) => void;
   setPage: (page: number) => void;
   setHasMore: (hasMore: boolean) => void;
@@ -60,6 +61,15 @@ export const useExpertListStore = create<ExpertListStore>((set, get) => ({
   setExperts: (value) =>
     set((state) => ({
       experts: typeof value === "function" ? value(state.experts) : value,
+    })),
+
+  updateExpertAvailability: (expertId, isAvailable) =>
+    set((state) => ({
+      experts: state.experts.map((expert) =>
+        String(expert.id) === String(expertId)
+          ? { ...expert, is_available: isAvailable }
+          : expert,
+      ),
     })),
 
   setLoading: (loading) => set({ loading }),

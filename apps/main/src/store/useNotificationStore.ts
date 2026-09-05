@@ -7,6 +7,7 @@ interface INotificationState {
   isLoading: boolean;
 
   setNotifications: (notifications: INotification[]) => void;
+  receiveNotification: (notification?: INotification) => void;
   setUnreadCount: (value: number) => void;
   markNotificationAsRead: (notificationId: string) => void;
   reset: () => void;
@@ -20,6 +21,26 @@ const notificationStore = create<INotificationState>((set) => ({
 
   setNotifications: (notifications: INotification[]) => {
     set({ notifications });
+  },
+
+  receiveNotification: (notification) => {
+    set((state) => {
+      if (!notification) {
+        return { unread_count: state.unread_count + 1 };
+      }
+
+      const alreadyExists = state.notifications.some(
+        (existing) => existing.id === notification.id,
+      );
+      const isUnread = !notification.is_read && !alreadyExists;
+
+      return {
+        notifications: alreadyExists
+          ? state.notifications
+          : [notification, ...state.notifications],
+        unread_count: isUnread ? state.unread_count + 1 : state.unread_count,
+      };
+    });
   },
 
   setUnreadCount: (count: number) => {

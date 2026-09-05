@@ -11,7 +11,9 @@ const CartComponent = () => {
   const { cartCount, fetchCart } = useCartStore();
 
   useEffect(() => {
-    fetchCart(isAuthenticated);
+    if (isAuthenticated) {
+      fetchCart();
+    }
   }, [isAuthenticated]);
 
   if (!isAuthenticated) return null;

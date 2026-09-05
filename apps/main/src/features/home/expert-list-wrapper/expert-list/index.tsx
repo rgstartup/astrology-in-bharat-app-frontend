@@ -7,7 +7,6 @@ import ExpertSortModal from "./components/ExpertSortModal";
 import dummyExperts from "./data/dummy-experts.json";
 import { useExpertListStore } from "@/store/useExpertListStore";
 import { useTranslations } from "next-intl";
-import socket from "@/lib/socket";
 import { toast } from "react-toastify";
 import { Expert } from "@repo/lib";
 
@@ -109,28 +108,6 @@ const ExpertList: React.FC<ExpertListProps> = ({
       toastId: `expert-list-${initialError}`,
     });
   }, [initialError]);
-
-  useEffect(() => {
-    const handleStatusUpdate = (data: any) => {
-      const expertId = data.expert_id || data.userId || data.id;
-      const isAvailable =
-        data.is_available !== undefined
-          ? data.is_available
-          : data.status === "online";
-      if (!expertId) return;
-      store.setExperts((prev) =>
-        prev.map((astro) =>
-          String(astro.id) === String(expertId)
-            ? { ...astro, is_available: isAvailable }
-            : astro,
-        ),
-      );
-    };
-    socket.on("expert_status_changed", handleStatusUpdate);
-    return () => {
-      socket.off("expert_status_changed", handleStatusUpdate);
-    };
-  }, []);
 
   return (
     <section
