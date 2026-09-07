@@ -2,8 +2,7 @@ import React from "react";
 import NextImage from "next/image";
 const Image = NextImage as any;
 
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "../../../lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 interface ServiceCardProps {
   item: {
@@ -15,8 +14,7 @@ interface ServiceCardProps {
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ item }) => {
-  const { lang } = useLanguageStore();
-  const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+  const { t } = useHomeTranslations();
   const displayTitle = (t.services.items as any)[item.title] || item.title;
 
   return (

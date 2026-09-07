@@ -1,4 +1,4 @@
-import { api as http } from "@/lib/api";
+import { api as http } from "@/actions";
 
 export interface State {
   id: string;

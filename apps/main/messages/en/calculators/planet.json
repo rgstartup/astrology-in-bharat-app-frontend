@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "titlePart1": "Planet Positions",
+    "titlePart2": "&",
+    "titlePart3": "Analysis",
+    "paragraph": "Unlock cosmic insights with accurate planetary positions. Enter your birth details below to analyze the celestial alignment."
+  },
+  "form": {
+    "title": "Birth Details",
+    "date": "Date",
+    "month": "Month",
+    "year": "Year",
+    "hour": "Hour",
+    "min": "Min",
+    "sec": "Sec",
+    "location": "Location",
+    "locationPlaceholder": "Search city...",
+    "timezone": "Timezone (GMT)",
+    "submit": "Get Results",
+    "loading": "Calculating..."
+  },
+  "results": {
+    "errorTitle": "Calculation Error",
+    "invalidLocationResponse": "Please select a valid location from the search results.",
+    "invalidApiResponse": "Invalid response from API. Please check your details and API key.",
+    "defaultApiError": "Failed to fetch planet data. Please try again later.",
+    "emptyStateTitle": "Begin Your Journey",
+    "emptyStateDesc": "Fill in your birth details and click 'Get Results' to discover the planetary alignments influencing your life.",
+    "normalized": "Normalized",
+    "fullDegree": "Full Degree",
+    "retrograde": "Retrograde",
+    "insightTitle": "Celestial Insight",
+    "insightDesc": "\"Planets are the instruments of fate. By understanding their positions, we decode the unique vibration of our life's purpose.\""
+  },
+  "planets": {
+    "Sun": "Sun",
+    "Moon": "Moon",
+    "Mars": "Mars",
+    "Mercury": "Mercury",
+    "Jupiter": "Jupiter",
+    "Venus": "Venus",
+    "Saturn": "Saturn",
+    "Rahu": "Rahu",
+    "Ketu": "Ketu",
+    "Ascendant": "Ascendant",
+    "Unknown": "Unknown"
+  },
+  "zodiacs": [
+    "Aries",
+    "Taurus",
+    "Gemini",
+    "Cancer",
+    "Leo",
+    "Virgo",
+    "Libra",
+    "Scorpio",
+    "Sagittarius",
+    "Capricorn",
+    "Aquarius",
+    "Pisces"
+  ]
+}

@@ -81,7 +81,7 @@ function SuccessModal({ registeredUser, onClose }: { registeredUser: any; onClos
                     </div>
                     <h3 className="text-2xl font-black text-gray-900 leading-tight">Registration<br />Successful!</h3>
                     <p className="text-sm text-gray-1000 mt-2 font-medium">
-                        <span className="font-bold text-gray-900">{registeredUser.name}</span> is now a verified 
+                        <span className="font-bold text-gray-900">{registeredUser.name}</span> is now a verified
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-orange/10 text-brand-orange ml-1.5 capitalize">
                             {roleString}
                         </span>
@@ -109,9 +109,9 @@ function SuccessModal({ registeredUser, onClose }: { registeredUser: any; onClos
                     </p>
                 </div>
 
-                <Button 
+                <Button
                     onClick={onClose}
-                    className="!bg-brand-orange hover:!bg-primary-hover !text-white !rounded-2xl !py-4 !text-sm !font-black !shadow-xl !shadow-brand-orange/20 transition-all hover:scale-[1.02] active:scale-[0.98]" 
+                    className="!bg-brand-orange hover:!bg-primary-hover !text-white !rounded-2xl !py-4 !text-sm !font-black !shadow-xl !shadow-brand-orange/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     fullWidth
                 >
                     Return to Dashboard
@@ -129,24 +129,24 @@ function ListingSuccessModal({ name, type, onClose }: { name: string; type: stri
                 <button onClick={onClose} className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-1000">
                     <X className="w-5 h-5" />
                 </button>
-                
+
                 <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg shadow-orange-200/50">
                     <Building2 className="w-10 h-10 text-brand-orange" />
                 </div>
-                
+
                 <h3 className="text-2xl font-black text-gray-900 leading-tight">Listing<br />Submitted!</h3>
                 <p className="text-sm text-gray-1000 mt-2 font-medium px-4">
-                    <span className="font-bold text-gray-900">{name}</span> has been added as a 
+                    <span className="font-bold text-gray-900">{name}</span> has been added as a
                     <span className="text-brand-orange font-bold"> {type === "puja_shop" ? "Puja Shop" : "Mandir"}</span>.
                 </p>
-                
+
                 <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 my-8 text-sm text-gray-1000 font-medium">
                     Our team will verify the details within 24-48 hours.
                 </div>
 
-                <Button 
+                <Button
                     onClick={onClose}
-                    className="!bg-brand-orange hover:!bg-primary-hover !text-white !rounded-2xl !py-4 !text-sm !font-black !shadow-xl !shadow-brand-orange/20 transition-all hover:scale-[1.02] active:scale-[0.98]" 
+                    className="!bg-brand-orange hover:!bg-primary-hover !text-white !rounded-2xl !py-4 !text-sm !font-black !shadow-xl !shadow-brand-orange/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     fullWidth
                 >
                     Got it, Thanks
@@ -172,7 +172,7 @@ function UserForm({ userType }: { userType: "expert" | "merchant" }) {
         }
         setSubmitting(true);
         const [res, error] = await registerUserByAgent({ ...form, userType });
-        
+
         if (error) {
             toast.error(getErrorMessage(error) || "Registration failed. Try again.");
         } else if (res) {
@@ -221,9 +221,9 @@ function UserForm({ userType }: { userType: "expert" | "merchant" }) {
                     </div>
                 </div>
 
-                <Button 
-                    type="submit" 
-                    disabled={submitting} 
+                <Button
+                    type="submit"
+                    disabled={submitting}
                     fullWidth
                     className="!bg-brand-orange hover:!bg-primary-hover !text-white !rounded-2xl !py-4 !text-sm !font-black !shadow-xl !shadow-brand-orange/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
                 >
@@ -356,9 +356,9 @@ function MandirForm() {
                     </div>
                 </div>
 
-                <Button 
-                    type="submit" 
-                    disabled={submitting} 
+                <Button
+                    type="submit"
+                    disabled={submitting}
                     fullWidth
                     className="!bg-brand-orange hover:!bg-primary-hover !text-white !rounded-2xl !py-4 !text-sm !font-black !shadow-xl !shadow-brand-orange/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
                 >
@@ -398,7 +398,7 @@ export default function RegisterUserPage() {
 
     return (
         <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            
+
             {/* Header Section */}
             <div className="text-center sm:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/10 text-brand-orange mb-3">
@@ -422,8 +422,8 @@ export default function RegisterUserPage() {
                             onClick={() => setActiveTab(tab.id)}
                             className={cn(
                                 "relative group flex items-start gap-4 p-5 rounded-[2rem] border-2 transition-all duration-300 text-left overflow-hidden",
-                                isActive 
-                                    ? "bg-white border-[#F25E0A] shadow-xl shadow-orange-200/50 -translate-y-1" 
+                                isActive
+                                    ? "bg-white border-[#F25E0A] shadow-xl shadow-orange-200/50 -translate-y-1"
                                     : "bg-gray-50/50 border-[#F25E0A] hover:bg-white hover:shadow-xl hover:shadow-orange-200/50 hover:-translate-y-1"
                             )}
                         >
@@ -441,7 +441,7 @@ export default function RegisterUserPage() {
                                     {tab.description}
                                 </p>
                             </div>
-                            
+
                             <div className={cn(
                                 "absolute bottom-0 left-0 h-1.5 w-full bg-[#F25E0A] transform transition-transform duration-500 origin-center",
                                 isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
@@ -455,14 +455,14 @@ export default function RegisterUserPage() {
             <div className="relative group">
                 {/* Decorative Elements */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-brand-orange to-primary-hover rounded-[2.5rem] blur opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-500" />
-                
+
                 <div className="relative bg-white/70 backdrop-blur-xl border-2 border-[#F25E0A] rounded-[2.5rem] shadow-sm overflow-hidden min-h-[400px]">
                     {/* Inner Header */}
                     <div className="px-8 pt-8 pb-2 flex items-center justify-between">
                         <div>
                             <h3 className="text-xl font-black text-gray-900 flex items-center gap-3">
-                                {currentTab.label === "Expert" ? "Expert Onboarding" : 
-                                 currentTab.label === "Mandir" ? "Mandir Listing" : "Puja Shop Onboarding"}
+                                {currentTab.label === "Expert" ? "Expert Onboarding" :
+                                    currentTab.label === "Mandir" ? "Mandir Listing" : "Puja Shop Onboarding"}
                                 <ChevronRight className="w-5 h-5 text-gray-300" />
                             </h3>
                             <p className="text-xs text-gray-1000 mt-1 font-medium">{currentTab.infoText}</p>

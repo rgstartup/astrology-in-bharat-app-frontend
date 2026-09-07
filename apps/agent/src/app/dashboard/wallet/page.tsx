@@ -33,7 +33,7 @@ export default function WalletPage() {
             const [statsRes, statsErr] = await getAgentDashboardStats();
 
             if (balanceRes) setBalance(balanceRes.balance || 0);
-            
+
             if (statsRes) {
                 setTotalWithdrawn(statsRes.totalWithdrawn || 0);
                 setProcessing(statsRes.processingWithdrawals || 0);
@@ -47,7 +47,7 @@ export default function WalletPage() {
                     amount: tx.amount,
                     status: tx.status,
                     createdAt: tx.created_at || tx.createdAt,
-                    type: tx.type || (Number(tx.amount) < 0 ? 'debit' : 'withdrawal'), 
+                    type: tx.type || (Number(tx.amount) < 0 ? 'debit' : 'withdrawal'),
                     info: tx.description || (tx.status === 'rejected' ? 'Withdrawal (Rejected)' : 'Withdrawal Request'),
                     remark: tx.remark,
                     transactionNo: tx.withdrawal_no || tx.transaction_no
@@ -56,7 +56,7 @@ export default function WalletPage() {
 
 
                 setTransactions(formattedTxs);
-                
+
                 cachedWalletData = {
                     balance: balanceRes?.balance || 0,
                     totalWithdrawn: statsRes?.totalWithdrawn || 0,
@@ -123,63 +123,63 @@ export default function WalletPage() {
 
     return (
         <div className="w-full space-y-6 pb-10 animate-in fade-in duration-1000">
-                {/* Header */}
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Wallet</h1>
-                    <p className="text-sm font-medium text-gray-1000">Manage your balance and schedule payouts to your bank account.</p>
-                </div>
+            {/* Header */}
+            <div className="space-y-1">
+                <h1 className="text-3xl font-black text-gray-900 tracking-tight">My Wallet</h1>
+                <p className="text-sm font-medium text-gray-1000">Manage your balance and schedule payouts to your bank account.</p>
+            </div>
 
-                {/* Top Stat Triplets */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <StatCard 
-                        label="Available Balance" 
-                        value={balance} 
-                        sub="Ready to Withdraw" 
-                        subColor="text-green-500"
-                        icon={Wallet} 
-                        iconBg="bg-green-50" 
-                        iconColor="text-green-500" 
-                    />
-                    <StatCard 
-                        label="Total Withdrawn" 
-                        value={totalWithdrawn} 
-                        sub="In Bank Account" 
-                        subColor="text-primary"
-                        icon={Landmark} 
-                        iconBg="bg-blue-50" 
-                        iconColor="text-blue-500" 
-                    />
-                    <StatCard 
-                        label="Pending Approval" 
-                        value={pendingPayout} 
-                        sub="Awaiting Admin" 
-                        subColor="text-amber-500"
-                        icon={Clock} 
-                        iconBg="bg-amber-50" 
-                        iconColor="text-amber-500" 
-                    />
-                    <StatCard 
-                        label="Processing" 
-                        value={processing} 
-                        sub="Transfer in Progress" 
-                        subColor="text-blue-500"
-                        icon={Clock} 
-                        iconBg="bg-indigo-50" 
-                        iconColor="text-indigo-500" 
-                    />
-                </div>
-
-
-                {/* Inline Withdrawal Section */}
-                <WithdrawSection 
-                    balance={balance} 
-                    onWithdraw={handleWithdrawalRequest} 
-                    loading={requestLoading}
-                    agent={agent}
+            {/* Top Stat Triplets */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <StatCard
+                    label="Available Balance"
+                    value={balance}
+                    sub="Ready to Withdraw"
+                    subColor="text-green-500"
+                    icon={Wallet}
+                    iconBg="bg-green-50"
+                    iconColor="text-green-500"
                 />
+                <StatCard
+                    label="Total Withdrawn"
+                    value={totalWithdrawn}
+                    sub="In Bank Account"
+                    subColor="text-primary"
+                    icon={Landmark}
+                    iconBg="bg-blue-50"
+                    iconColor="text-blue-500"
+                />
+                <StatCard
+                    label="Pending Approval"
+                    value={pendingPayout}
+                    sub="Awaiting Admin"
+                    subColor="text-amber-500"
+                    icon={Clock}
+                    iconBg="bg-amber-50"
+                    iconColor="text-amber-500"
+                />
+                <StatCard
+                    label="Processing"
+                    value={processing}
+                    sub="Transfer in Progress"
+                    subColor="text-blue-500"
+                    icon={Clock}
+                    iconBg="bg-indigo-50"
+                    iconColor="text-indigo-500"
+                />
+            </div>
 
-                {/* Transaction Table */}
-                <TransactionTable transactions={transactions} />
+
+            {/* Inline Withdrawal Section */}
+            <WithdrawSection
+                balance={balance}
+                onWithdraw={handleWithdrawalRequest}
+                loading={requestLoading}
+                agent={agent}
+            />
+
+            {/* Transaction Table */}
+            <TransactionTable transactions={transactions} />
         </div>
     );
 }

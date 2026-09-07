@@ -1,38 +1,28 @@
-import { api } from "../lib/api";
-import { API_ROUTES } from "../lib/api-routes";
-import { ApiError } from "@repo/safe-fetch";
+// "use server";
 
-export interface ClientUser {
-    id: string;
-    uid?: string;
-    name?: string;
-    email?: string;
-    role?: string;
-    roles?: string[];
-    avatar?: string;
-    profile_picture?: string;
-    phone?: string;
-}
+import { api, API_ROUTES } from "@/actions";
+import type { Client } from "@repo/lib";
 
 export const AuthService = {
-    logout: async (): Promise<[any | null, ApiError | null]> => {
-        return await api.post(API_ROUTES.AUTH.LOGOUT) as any;
-    },
+  logout: async () => {
+    return api.post(API_ROUTES.AUTH.LOGOUT);
+  },
 
-    fetchProfile: async (serverHeaders?: any): Promise<[any | null, ApiError | null]> => {
-        return await api.get(API_ROUTES.AUTH.ME, {
-            headers: {
-                ...serverHeaders,
-            }
-        }) as any;
-    },
+  fetchProfile: async (serverHeaders?: HeadersInit) => {
+    return api
+      .extend({
+        headers: {
+          ...serverHeaders,
+        },
+      })
+      .get<Client>(API_ROUTES.AUTH.CLIENT.ME);
+  },
 
-    fetchBalance: async (): Promise<[any | null, ApiError | null]> => {
-        return await api.get(API_ROUTES.WALLET.BALANCE) as any;
-    },
+  fetchBalance: async () => {
+    return api.get(API_ROUTES.WALLET.BALANCE);
+  },
 
-    refreshToken: async (): Promise<[any | null, ApiError | null]> => {
-        return await api.post(API_ROUTES.AUTH.REFRESH) as any;
-    }
+  refreshToken: async () => {
+    return api.post(API_ROUTES.AUTH.REFRESH);
+  },
 };
-

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLanguageStore, useAuthStore } from "@repo/store";
 import { profileTranslations } from "../../../lib/translations/profile";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 import { FaCheckCircle, FaExclamationTriangle, FaShieldAlt, FaFire, FaChevronDown, FaDownload, FaTrash } from "react-icons/fa";
 
 // ─── helpers ─────────────────────────────────────────────────────────────────

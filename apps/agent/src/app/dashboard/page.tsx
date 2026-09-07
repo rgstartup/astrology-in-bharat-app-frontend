@@ -45,9 +45,9 @@ export default function AgentDashboardHome() {
         const fetchDashboardData = async () => {
             if (!cachedDashboardStats) setLoading(true);
             const [data, error] = await getAgentDashboardStats();
-            
+
             if (!isMounted) return;
-            
+
             if (error) {
                 const msg = getErrorMessage(error).toLowerCase();
                 if (!msg.includes("abort") && !msg.includes("cancel") && !msg.includes("timeout")) {
@@ -60,7 +60,7 @@ export default function AgentDashboardHome() {
             setLoading(false);
         };
         fetchDashboardData();
-        
+
         return () => { isMounted = false; };
     }, []);
 
@@ -130,7 +130,7 @@ export default function AgentDashboardHome() {
 
             {/* @repo/ui StatsCards */}
             <StatsCards stats={stats} columns={4} />
-            
+
 
             {/* Commission Structure Section */}
             <div className="bg-white rounded-[2rem] border-2 border-[#F25E0A] shadow-sm p-8 relative overflow-hidden group">
@@ -156,7 +156,7 @@ export default function AgentDashboardHome() {
                                     <span className="text-xl font-black text-gray-900">{rate.value}%</span>
                                     <span className="text-[9px] font-bold text-gray-1000 uppercase">Comm.</span>
                                 </div>
-                                
+
                                 {/* Hover Orange Line */}
                                 <div className="absolute bottom-0 left-0 h-1.5 w-full bg-[#F25E0A] transform scale-x-0 group-hover/rate:scale-x-100 transition-transform duration-500 origin-center" />
                             </div>

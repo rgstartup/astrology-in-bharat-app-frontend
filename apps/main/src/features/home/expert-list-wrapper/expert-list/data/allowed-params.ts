@@ -1,0 +1,18 @@
+export default [
+  "limit",
+  "page",
+  "q",
+  "specializations",
+  "location",
+  "state",
+  "minRating",
+  "minExperience",
+  "languages",
+  "minPrice",
+  "maxPrice",
+  "sort",
+  "onlineOnly",
+  "service",
+  "online",
+  "rating",
+];

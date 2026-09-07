@@ -1,0 +1,61 @@
+{
+  "badge": "ॐ Spiritual Guide & Local Directory",
+  "heroTitle1": "Divine Destinations &",
+  "heroHighlight": "Famous Places",
+  "heroDesc": "Unlock the spiritual energy of Bharat. Explore sacred temples in Mohali and Chandigarh, or embark on a life-changing pilgrimage across the holiest sites in India.",
+  "verifiedSites": "Verified Sites",
+  "localInsights": "Local Insights",
+
+  "section1Title1": "Sacred Temples in",
+  "section1Highlight": "Mohali & Chandigarh",
+  "section1Desc": "Discover peace and tranquility in the finest local temples, known for their architectural beauty and spiritual significance.",
+
+  "section2Title1": "Holy Pilgrimage",
+  "section2Highlight": "Across India",
+  "section2Desc": "Explore the widely revered pilgrimage sites that define India's rich spiritual heritage and tradition.",
+  "sectionSearchPlaceholder": "Search for pilgrimages...",
+  "section1SearchPlaceholder": "Search temples in Mohali/Chandigarh...",
+
+  "noResults": "No divine results found at the moment. Please try again.",
+  "loadingText": "Exploring India's pilgrimage sites... please check back shortly.",
+  "searchPlaceholder": "Search for temples, sacred sites, or cities...",
+  "searchButton": "Search",
+  "searching": "Searching...",
+  "searchResultsTitle": "Divine",
+  "searchResultsHighlight": "Search Results",
+  "searchResultsDesc": "Displaying the most relevant sacred sites based on your search.",
+
+  "card": {
+    "reviews": "Reviews",
+    "sacredSite": "Sacred Site",
+    "viewDetails": "View Details",
+    "noAddress": "Address available on request"
+  },
+  "detail": {
+    "notFound": "Not Found",
+    "returnDirectory": "Return to Directory",
+    "directory": "Directory",
+    "verifiedSite": "Verified Sacred Site",
+    "location": "Location",
+    "visuals": "Divine Visuals",
+    "heritage": "Divine Heritage",
+    "descriptionTemplate": "Explore the profound architectural marvel and spiritual significance of {title}. Known for its historical depth, this sacred site offers a sanctuary for peace and meditation.",
+    "guidelines": [
+      "Ideal Visit: Brahma Muhurta",
+      "Media: Limited zones",
+      "Attire: Traditional preferred",
+      "Offerings: Local essentials"
+    ],
+    "planTitle": "Plan Your Visit",
+    "timings": "Darshan Timings",
+    "aarti": "Special Aarti",
+    "fee": "Entry Fee",
+    "free": "Free Darshan",
+    "directions": "Get Directions",
+    "needGuidance": "Need Guidance?",
+    "supportDesc": "Book a personalized spiritual consultation for your visit.",
+    "consultNow": "Consult Now"
+  },
+  "switchLang": "हिंदी",
+  "switchLangLabel": "Switch to Hindi"
+}

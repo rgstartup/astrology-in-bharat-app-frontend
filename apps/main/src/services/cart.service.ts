@@ -1,22 +1,24 @@
-import { api } from "../lib/api";
-import { ApiError } from "@repo/safe-fetch";
+import { api } from "@/actions";
+import type { Cart, BooleanMessage } from "@repo/lib";
 
 export const CartService = {
-    getCart: async (): Promise<[any | null, ApiError | null]> => {
-        return await api.get("/cart", {
-            headers: { "Cache-Control": "no-cache" }
-        }) as any;
-    },
+  getCart: async () => {
+    return await api
+      .extend({
+        headers: { "Cache-Control": "no-cache" },
+      })
+      .get<Cart>("/client/cart");
+  },
 
-    addToCart: async (productId: string, quantity: number): Promise<[any | null, ApiError | null]> => {
-        return await api.post("/cart/add", { productId, quantity }) as any;
-    },
+  addToCart: async (productId: string, quantity: number) => {
+    return api.post<BooleanMessage>("/client/cart", { productId, quantity });
+  },
 
-    updateQuantity: async (productId: string, quantity: number): Promise<[any | null, ApiError | null]> => {
-        return await api.put("/cart/update", { productId, quantity }) as any;
-    },
+  updateQuantity: async (productId: string, quantity: number) => {
+    return api.put<BooleanMessage>("/client/cart", { productId, quantity });
+  },
 
-    removeFromCart: async (productId: string): Promise<[any | null, ApiError | null]> => {
-        return await api.delete(`/cart/remove/${productId}`) as any;
-    }
+  removeFromCart: async (productId: string) => {
+    return api.delete<BooleanMessage>(`client/cart/${productId}`);
+  },
 };

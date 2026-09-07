@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAuthStore } from "@/store/useAuthStore"; // Changed import
+import { useAuthStore } from "@/store/__useAuthStore"; // Changed import
 import { useWishlistStore } from "../../store/useWishlistStore";
 
 export const WishlistInitializer = ({ children }: { children: React.ReactNode }) => {

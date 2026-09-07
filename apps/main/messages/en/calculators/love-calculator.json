@@ -1,0 +1,98 @@
+{
+  "hero": {
+    "badge": "Cosmic Compatibility",
+    "titleMain": "Love",
+    "titleAccent": "Calculator",
+    "paragraph": "Discover how your stars align and explore the ultimate connection between you and your partner with ancient Vedic wisdom.",
+    "simpleMatch": "Simple Match",
+    "advancedGuna": "Advanced Guna",
+    "connectionsCount": "{count} Cosmic connections calculated"
+  },
+  "form": {
+    "simpleTitle": "Find Love {percentage} Between",
+    "advancedTitle": "Enter Birth Details",
+    "percentage": "(Percentage)%",
+    "yourName": "Your Name",
+    "yourNamePlaceholder": "Type your name...",
+    "partnerName": "Partner's Name",
+    "partnerNamePlaceholder": "Type their name...",
+    "male": "Male",
+    "female": "Female",
+    "boyInfo": "Boy's Info",
+    "boySub": "Prospective Groom",
+    "girlInfo": "Girl's Info",
+    "girlSub": "Prospective Bride",
+    "fullName": "Full Name",
+    "birthPlace": "Birth Place",
+    "calculateLove": "Calculate Love %",
+    "calculating": "Calculating...",
+    "generateReport": "Generate Guna Report",
+    "analyzing": "Analyzing Charts...",
+    "errors": {
+      "bothNames": "Please enter both names",
+      "birthDetails": "Please fill in all birth details",
+      "failedScore": "Failed to calculate love score.",
+      "failedMatch": "Failed to calculate match",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "results": {
+    "badge": "Match Results",
+    "title": "Your Love Score",
+    "cosmicBond": "Cosmic Bond",
+    "vedicBadge": "Vedic Compatibility Report",
+    "gunaTitle": "Guna Milan Score",
+    "outOf36": "Out of 36",
+    "goodComp": "Good Compatibility",
+    "moderateMatch": "Moderate Match",
+    "expertAnalysis": "Expert Vedic Analysis",
+    "matchSummary": "Match Summary",
+    "processedBy": "Report processed via deep Vedic algorithms",
+    "breakdownTitle": "Ashta Koot Breakdown",
+    "accuracy": "Match Accuracy: 100% Verified",
+    "table": {
+      "component": "Component",
+      "significance": "Significance",
+      "score": "Score",
+      "interpretation": "Interpretation"
+    },
+    "interpretation": {
+      "varna": "Personality & Ego Matching",
+      "vashya": "Mutual Attraction & Power Balance",
+      "tara": "Health, Longevity & Destiny",
+      "yoni": "Physical & Emotional Intimacy",
+      "maitri": "Friendship & Psychology",
+      "gana": "Temperament & Social Affinity",
+      "bhakut": "Family Harmony & Progeny",
+      "nadi": "Biological & Genetic Sync"
+    },
+    "success": {
+      "score": "Love score calculated!",
+      "guna": "Advanced Guna Milan report generated!"
+    }
+  },
+  "educational": {
+    "badge": "Cosmic Insights",
+    "title": "Decoding Your Compatibility",
+    "desc": "Explore the layers of cosmic energy that define your relationship stability and future together.",
+    "cards": [
+      {
+        "title": "Guna Milan",
+        "desc": "The foundation of Vedic compatibility based on ancient texts like Bhrigu Samhita."
+      },
+      {
+        "title": "Venus Harmony",
+        "desc": "Position of Venus in both charts determines the level of romantic resonance."
+      },
+      {
+        "title": "Elemental Link",
+        "desc": "How your basic elements (Fire, Water, Air, Earth) interact and balance each other."
+      }
+    ]
+  },
+  "moreServices": {
+    "badge": "Recommended for you",
+    "title": "Unlock Deeper {guidance}Star Guidance",
+    "viewAll": "View All Services"
+  }
+}

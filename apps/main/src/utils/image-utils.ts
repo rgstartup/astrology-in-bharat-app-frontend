@@ -11,7 +11,7 @@ export const normalizeImagePath = (value: string): string => {
     if (!value) return value;
 
     if (value.startsWith("/uploads/")) return value;
-    
+
     // Support for Base64 data URLs
     if (value.startsWith("data:")) return value;
 
@@ -46,3 +46,11 @@ export const getProductImageUrl = (product: any): string => {
         ? normalizeImagePath(normalizedValue)
         : "/images/image-not-found.png";
 };
+
+
+export const getProfileImageUrl = (url?: string, name?: string) => {
+    if (!url) {
+        return `https://ui-avatars.com/api/?rounded=true&name=${name}`;
+    }
+    return url;
+}

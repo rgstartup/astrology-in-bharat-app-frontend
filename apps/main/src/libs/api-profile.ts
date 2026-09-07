@@ -1,4 +1,4 @@
-import { api } from "../lib/api";
+import { api } from "@/actions";
 import { ApiError } from "@repo/safe-fetch";
 import { ClientProfileData, AddressDto, SupportSettings, CreateDisputeDto } from "../lib/types";
 

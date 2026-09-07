@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '@repo/ui';
-import http from '@/lib/api';
+import { api as http } from '@/actions';
 import { getErrorMessage } from "@repo/lib";
 
 interface PhoneVerifyModalProps {

@@ -1,4 +1,32 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin({
+  // experimental: {
+  //   createMessagesDeclaration: [
+  //     "./messages/en/home.json",
+  //     "./messages/en/auth.json",
+  //     "./messages/en/about.json",
+  //     "./messages/en/profile.json",
+  //     "./messages/en/puja.json",
+  //     "./messages/en/calculators/breakup-patchup.json",
+  //     "./messages/en/calculators/dahej.json",
+  //     "./messages/en/calculators/flames.json",
+  //     "./messages/en/calculators/life-path.json",
+  //     "./messages/en/calculators/love-calculator.json",
+  //     "./messages/en/calculators/love-compatibility.json",
+  //     "./messages/en/calculators/loyal-partner.json",
+  //     "./messages/en/calculators/marriage-age.json",
+  //     "./messages/en/calculators/matching.json",
+  //     "./messages/en/calculators/nakshatra-finder.json",
+  //     "./messages/en/calculators/name-numerology.json",
+  //     "./messages/en/calculators/planet.json",
+  //     "./messages/en/calculators/relationship-future.json",
+  //     "./messages/en/calculators/soulmate-initials.json",
+  //   ],
+  // },
+  requestConfig: "./src/i18n/request.ts",
+});
 
 // ─── Security Headers ──────────────────────────────────────────────────────────
 const securityHeaders = [
@@ -45,7 +73,7 @@ const securityHeaders = [
 
       // API & WebSocket connections
       // Whitelist both production (OnRender) and local development (Localhost), plus Razorpay Sentry telemetry
-      `connect-src 'self' https://nominatim.openstreetmap.org https://checkout.razorpay.com https://lumberjack.razorpay.com https://*.sentry.io https://*.sentry-cdn.com https://www.youtube.com https://*.twilio.com wss: ws: wss://*.twilio.com https://astrology-in-bharat-services.onrender.com wss://astrology-in-bharat-services.onrender.com http://localhost:6543 http://127.0.0.1:6543 ws://localhost:6543 ${process.env.NEXT_PUBLIC_API_URL || ""} ${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/i, "").replace(/^http/, 'ws') || ""}`,
+      `connect-src 'self' https://nominatim.openstreetmap.org https://checkout.razorpay.com https://lumberjack.razorpay.com https://*.sentry.io https://*.sentry-cdn.com https://www.youtube.com https://*.twilio.com wss: ws: wss://*.twilio.com https://astrology-in-bharat-services.onrender.com wss://astrology-in-bharat-services.onrender.com http://localhost:6543 http://127.0.0.1:6543 ws://localhost:6543 ${process.env.NEXT_PUBLIC_API_URL || ""} ${process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1\/?$/i, "").replace(/^http/, "ws") || ""}`,
 
       // Frames: Razorpay checkout iframe and YouTube embeds
       "frame-src https://api.razorpay.com https://checkout.razorpay.com https://www.youtube.com https://www.youtube-nocookie.com",
@@ -58,15 +86,16 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   /* config options here */
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  // eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
+  // typescript: {
+  //   ignoreBuildErrors: true,
+  // },
   productionBrowserSourceMaps: false,
   transpilePackages: ["@repo/ui", "@repo/routes", "swiper"],
   images: {
+    qualities: [100, 75],
     remotePatterns: [
       {
         protocol: "https",
@@ -103,7 +132,9 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
-    const backendUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543').replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
+    const backendUrl =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+    // .replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
     return [
       {
         source: "/api/v1/:path*",
@@ -116,7 +147,9 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  devIndicators: false,
+  devIndicators: {
+    position: "bottom-left",
+  },
 
   async headers() {
     return [
@@ -129,6 +162,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
-
-
+export default withNextIntl(nextConfig);

@@ -1,4 +1,4 @@
-export { default as Header } from "./Header";
+export { default as Header } from "./header";
 export { default as Footer } from "./Footer";
 export { CartProvider, useCart } from "./context/CartContext";
 
@@ -18,3 +18,4 @@ export * from "./components/profile";
 
 // Utils
 export * from "./utils/socket";
+export * from "./utils/currency";

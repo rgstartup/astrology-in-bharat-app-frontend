@@ -3,14 +3,12 @@ import React from "react";
 import homepageData from "../../../../public/data/homepage.json";
 import ServiceCard from "./ServiceCard";
 import NextLink from "next/link";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "../../../lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 const Link = NextLink as any;
 
 const AstrologyServices = () => {
-  const { lang } = useLanguageStore();
-  const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+  const { t } = useHomeTranslations();
 
   return (
     <section className="!bg-[#edeef1] py-10 md:py-16">

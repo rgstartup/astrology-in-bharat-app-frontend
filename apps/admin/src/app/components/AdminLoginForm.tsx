@@ -34,17 +34,17 @@ export default function AdminLoginForm() {
             } else if (result.success) {
                 storeLogin(result.user);
                 toast.success("Login Successful! Redirecting...");
-                
+
                 let redirectPath = "/admin/dashboard";
-                
+
                 // If it's a sub-admin and they don't have dashboard access, find their first permitted page
                 const isSubAdmin = result.user?.roles?.includes('sub_admin') || result.user?.role === 'sub_admin';
                 const perms = result.user?.admin_permissions || [];
-                
+
                 if (isSubAdmin && !perms.includes('dashboard') && perms.length > 0) {
                     const firstPerm = perms[0];
                     let foundHref = null;
-                    
+
                     for (const item of adminData.menuItems) {
                         if (item.permissionKey === firstPerm) foundHref = item.href;
                         if (item.submenu) {
@@ -53,12 +53,12 @@ export default function AdminLoginForm() {
                             }
                         }
                     }
-                    
+
                     if (foundHref) {
                         redirectPath = foundHref;
                     }
                 }
-                
+
                 router.push(redirectPath);
             }
         } catch (err: any) {

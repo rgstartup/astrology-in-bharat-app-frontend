@@ -2,9 +2,8 @@
 import React, { useEffect } from "react";
 
 import { ExpertFilterModalProps } from "@/lib/types";
-import { useLanguageStore } from "@repo/store";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { CloseButton } from "@repo/ui";
-import { homeTranslations } from "../../../lib/translations/home";
 
 const ExpertFilterModal: React.FC<ExpertFilterModalProps> = ({
     show,
@@ -14,8 +13,7 @@ const ExpertFilterModal: React.FC<ExpertFilterModalProps> = ({
     applyFilters,
     resetFilters,
 }) => {
-    const { lang } = useLanguageStore();
-    const t = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+    const { t } = useHomeTranslations();
 
     useEffect(() => {
         if (show) {

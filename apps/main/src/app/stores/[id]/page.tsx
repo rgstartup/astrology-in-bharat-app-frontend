@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { listOfStores } from "@/components/features/services/storeData";
 import {
@@ -22,7 +22,7 @@ import {
   ExternalLink,
   ChevronRight,
 } from "lucide-react";
-import { merchantSocket } from "@/lib/socket";
+import { useMerchantStore } from "@/store/useMerchantStore";
 import { ProductCard } from "@/components/features/shop/ProductCard";
 import { Product } from "@/lib/types";
 import { Store } from "@/lib/types/shop";
@@ -67,8 +67,6 @@ const StoreDetailsPage = () => {
   >("collection");
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isOnline, setIsOnline] = useState(false);
-
   const {
     data: store,
     isLoading: isStoreLoading,
@@ -78,28 +76,9 @@ const StoreDetailsPage = () => {
     useMerchantProducts(id);
   const { data: storeReviews = [] } = useMerchantReviews(id);
 
-  // Initial status and socket listener
-  useEffect(() => {
-    if (store?.isOnline !== undefined) {
-      setIsOnline(store.isOnline);
-    }
-  }, [store?.isOnline]);
-
-  useEffect(() => {
-    const handleStatusChange = (data: {
-      merchant_id: string;
-      is_online: boolean;
-    }) => {
-      if (String(data.merchant_id) === String(id)) {
-        setIsOnline(data.is_online);
-      }
-    };
-
-    merchantSocket.on("merchant_status_changed", handleStatusChange);
-    return () => {
-      merchantSocket.off("merchant_status_changed", handleStatusChange);
-    };
-  }, [id]);
+  const isOnline = useMerchantStore(
+    (state) => state.merchantStatuses[String(id)] ?? store?.isOnline ?? false,
+  );
 
   if (isStoreLoading) return <StoreSkeleton />;
 
@@ -329,9 +308,14 @@ const StoreDetailsPage = () => {
               <div className="px-8 pb-8 pt-2 flex flex-col gap-4">
                 <button
                   onClick={() => {
-                    const query = encodeURIComponent(`${shop.address || ''} ${shop.city || ''}`);
+                    const query = encodeURIComponent(
+                      `${shop.address || ""} ${shop.city || ""}`,
+                    );
                     if (query.trim()) {
-                      window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+                      window.open(
+                        `https://www.google.com/maps/search/?api=1&query=${query}`,
+                        "_blank",
+                      );
                     }
                   }}
                   className="w-full flex items-center justify-center gap-3 bg-[#FDF8F4] text-orange border border-orange/10 py-4 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.2em] hover:bg-orange hover:text-white transition-all active:scale-95 leading-none"
@@ -379,29 +363,35 @@ const StoreDetailsPage = () => {
 
               {/* Tabs Navigation */}
               <div className="sticky top-[110px] z-40 bg-white py-3 md:py-6 mb-6 md:mb-10 border-b border-[#F0E0D0] overflow-x-auto no-scrollbar flex items-center gap-4 md:gap-10">
-                {(["about", "collection", "reviews", "gallery", "video"] as const).map(
-                  (tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`font-black text-sm uppercase tracking-widest pb-4 px-1 transition-all relative whitespace-nowrap ${activeTab === tab ? "text-slate-900 border-b-2 border-orange" : "text-slate-500 hover:text-orange/70"}`}
-                      style={fontStyle}
-                    >
-                      {tab === "about"
-                        ? t.tabs.about
-                        : tab === "collection"
-                          ? t.tabs.products
-                          : tab === "reviews"
-                            ? t.tabs.reviews
-                            : tab === "gallery"
-                              ? t.tabs.gallery
-                              : "Video"}
-                      {activeTab === tab && (
-                        <div className="absolute -bottom-1 left-0 right-0 h-1 bg-orange rounded-full"></div>
-                      )}
-                    </button>
-                  ),
-                )}
+                {(
+                  [
+                    "about",
+                    "collection",
+                    "reviews",
+                    "gallery",
+                    "video",
+                  ] as const
+                ).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`font-black text-sm uppercase tracking-widest pb-4 px-1 transition-all relative whitespace-nowrap ${activeTab === tab ? "text-slate-900 border-b-2 border-orange" : "text-slate-500 hover:text-orange/70"}`}
+                    style={fontStyle}
+                  >
+                    {tab === "about"
+                      ? t.tabs.about
+                      : tab === "collection"
+                        ? t.tabs.products
+                        : tab === "reviews"
+                          ? t.tabs.reviews
+                          : tab === "gallery"
+                            ? t.tabs.gallery
+                            : "Video"}
+                    {activeTab === tab && (
+                      <div className="absolute -bottom-1 left-0 right-0 h-1 bg-orange rounded-full"></div>
+                    )}
+                  </button>
+                ))}
               </div>
 
               {/* Tab Content Rendering */}
@@ -643,9 +633,9 @@ const StoreDetailsPage = () => {
                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="max-w-xl mx-auto rounded-[2rem] overflow-hidden border-4 border-white shadow-xl bg-black flex items-center justify-center min-h-[300px]">
                       {shop.video ? (
-                        <video 
-                          src={shop.video} 
-                          controls 
+                        <video
+                          src={shop.video}
+                          controls
                           className="w-full max-h-[450px] object-contain"
                           poster={shop.image}
                         />

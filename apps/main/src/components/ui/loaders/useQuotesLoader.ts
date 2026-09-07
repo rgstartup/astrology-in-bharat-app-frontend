@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 
 export interface Quote {
   id: string;

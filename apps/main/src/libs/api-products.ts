@@ -1,52 +1,45 @@
-import { Product } from "@/lib/types";
-import { api } from "@/lib/api";
+import { api } from "@/actions";
+import { PaginatedProductsResponse, ProductWithLikes } from "@repo/lib";
 
+export interface ProductQueryParams {
+  q?: string;
+  search?: string;
+  limit?: number | string;
+  page?: number | string;
+  category?: string;
+  [key: string]: any;
+}
 
-const normalizeProduct = (raw: any): Product => {
-    return {
-        id: raw?.id || raw?._id,
-        _id: raw?._id,
-        name: raw?.product_name || raw?.name || "",
-        description: raw?.short_description || raw?.description || "",
-        price: Number(raw?.price || 0),
-        originalPrice: Number(raw?.original_price || raw?.originalPrice || 0),
-        imageUrl: raw?.product_image || raw?.image_url || raw?.imageUrl || "",
-        percentageOff: Number(raw?.percentage_off || raw?.percentageOff || 0),
-    };
-};
-
-export const getProducts = async (): Promise<Product[]> => {
-    try {
-        const [data, error] = await api.get("/products", {} as any);
-
-        if (error) {
-            console.warn("⚠️ Failed to fetch products:", error);
-            return [];
+export const getProducts = async (
+  params?: ProductQueryParams,
+): Promise<ProductWithLikes[]> => {
+  try {
+    const searchParams = new URLSearchParams();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          searchParams.append(key, String(value));
         }
-
-        const raw: any = data;
-
-        // Handle all possible backend response formats:
-        // 1. { success: true, data: [...] }      <- find-all-products use case
-        // 2. { data: [...] }                     <- generic
-        // 3. [...]                               <- plain array
-        let productArray: any[] = [];
-
-        if (Array.isArray(raw)) {
-            productArray = raw;
-        } else if (raw?.data && Array.isArray(raw.data)) {
-            productArray = raw.data;
-        } else if (raw?.products && Array.isArray(raw.products)) {
-            productArray = raw.products;
-        } else if (raw?.data?.data && Array.isArray(raw.data.data)) {
-            productArray = raw.data.data;
-        }
-
-        return productArray.map(normalizeProduct);
-    } catch (error) {
-        console.error("Backend not reachable:", error);
-        return [];
+      });
+      if (params.q && !params.search) {
+        searchParams.set("search", String(params.q));
+      } else if (params.search && !params.q) {
+        searchParams.set("q", String(params.search));
+      }
     }
+
+    const queryStr = searchParams.toString();
+    const endpoint = queryStr ? `/products?${queryStr}` : "/products";
+    const [data, error] = await api.get<any>(endpoint);
+
+    if (error || !data) {
+      console.warn("⚠️ Failed to fetch products:", error);
+      return [];
+    }
+
+    return Array.isArray(data) ? data : data.data || [];
+  } catch (error) {
+    console.error("Backend not reachable:", error);
+    return [];
+  }
 };
-
-

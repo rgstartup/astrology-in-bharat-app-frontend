@@ -1,0 +1,63 @@
+{
+  "badge": "ॐ Real-time Spiritual Connection",
+  "heroTitle": "Live",
+  "heroHighlight": "Darshan",
+  "heroDesc": "Connect with the divine from anywhere in the world. Experience real-time Darshan of India's most sacred Jyotirlingas and temples.",
+  "searchPlaceholder": "Search by temple name or location (e.g., Kashi, Ujjain, Somnath)...",
+
+  "statusLive": "Live Now",
+  "startViewing": "Start Viewing",
+  "noTemplesFound": "No Temples Found",
+  "noTemplesDesc": "We couldn't find any Live Darshan matching \"{query}\".",
+
+  "modal": {
+    "liveFrom": "Live from {location}",
+    "share": "Share Darshan",
+    "bookPuja": "Book Special Puja",
+    "needGuidance": "Need Guidance?",
+    "supportDesc": "Book a personalized spiritual consultation for your visit.",
+    "consultNow": "Consult Now"
+  },
+
+  "sites": [
+    {
+      "id": 1,
+      "name": "Kashi Vishwanath",
+      "location": "Varanasi, Uttar Pradesh",
+      "description": "Experience the divine energy of Kashi Vishwanath temple live from Varanasi."
+    },
+    {
+      "id": 2,
+      "name": "Mahakaleshwar Jyotirlinga",
+      "location": "Ujjain, Madhya Pradesh",
+      "description": "Watch the Bhasma Aarti and daily rituals of Lord Mahakal live from Ujjain."
+    },
+    {
+      "id": 3,
+      "name": "Somnath Temple",
+      "location": "Prabhas Patan, Gujarat",
+      "description": "View the majestic Somnath temple situated on the shores of the Arabian Sea."
+    },
+    {
+      "id": 4,
+      "name": "Siddhivinayak Temple",
+      "location": "Mumbai, Maharashtra",
+      "description": "Live Darshan of Lord Ganesha from the famous Siddhivinayak Temple in Mumbai."
+    },
+    {
+      "id": 5,
+      "name": "Shirdi Sai Baba",
+      "location": "Shirdi, Maharashtra",
+      "description": "Experience the divine presence of Sai Baba through live Darshan from Shirdi."
+    },
+    {
+      "id": 6,
+      "name": "Iskcon Temple",
+      "location": "Vrindavan, Uttar Pradesh",
+      "description": "Live Darshan and Kirtan from the Krishna Balaram Mandir in Vrindavan."
+    }
+  ],
+
+  "switchLang": "हिंदी",
+  "switchLangLabel": "Switch to Hindi"
+}

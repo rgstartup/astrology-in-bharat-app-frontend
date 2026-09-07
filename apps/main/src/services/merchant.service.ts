@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { api } from "@/actions";
 import { Store } from "@/lib/types/shop";
 import { Product } from "@/lib/types";
 

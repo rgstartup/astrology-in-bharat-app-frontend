@@ -1,0 +1,60 @@
+{
+  "pujaTranslations": {
+    "hero": {
+      "badge": "Sacred Digital Rituals",
+      "title": "Online Puja",
+      "subtitle": "Connect with Divine Energies",
+      "description": "Experience the power of Vedic rituals from the comfort of your home. We are establishing sacred digital portals for expert-led spiritual ceremonies.",
+      "features": [
+        "Authentic Vedic Rituals",
+        "Expert Pandits",
+        "Live Streaming",
+        "Prasad Delivery"
+      ],
+      "btnBook": "Book a Puja"
+    },
+    "filters": {
+      "all": "All",
+      "online": "Online",
+      "homeVisit": "Home Visit",
+      "searchPlaceholder": "Search by puja, pandit, or district...",
+      "allPujas": "All Pujas"
+    },
+    "page": {
+      "badge": "Sacred Vedic Rituals",
+      "title": "Book",
+      "titleHighlight": "Sacred Pujas",
+      "subtitle": "Connect with highly experienced Vedic pandits for personalized rituals at your home or online.",
+      "loading": "Invoking Divine Blessings",
+      "noPujas": "No Pujas Found",
+      "noPujasHint": "Try adjusting your filters or search terms.",
+      "btnReset": "Reset All Filters",
+      "viewAll": "View All Sacred Rituals"
+    },
+    "card": {
+      "online": "Online",
+      "homeVisit": "Home visit",
+      "by": "By",
+      "verifiedPandit": "Verified Pandit",
+      "descriptionFallback": "Divine Vedic ceremony performed with full rituals and sacred mantras for spiritual prosperity.",
+      "dakshina": "Dakshina",
+      "ritualDetails": "Ritual details",
+      "toastLike": "Please login to like puja"
+    },
+    "comingSoon": {
+      "title": "Under Cosmic Alignment",
+      "reveal": "Expected Reveal: Coming Soon",
+      "description": "Our Vedic priests are preparing the sacred space for your digital spiritual journey. Authentic rituals, live streaming, and personalized blessings are arriving shortly.",
+      "btnBack": "Back to Home",
+      "btnNotify": "Notify Me"
+    }
+  },
+  "pujaContent": {
+    "Griha Pravesh Puja": "Griha Pravesh Puja",
+    "Navagraha Shanti Puja": "Navagraha Shanti Puja",
+    "Vastu Shanti Puja": "Vastu Shanti Puja",
+    "Laxmi-Kuber Puja": "Laxmi-Kuber Puja",
+    "Ganesh Puja": "Ganesh Puja",
+    "Satyanarayan Puja": "Satyanarayan Puja"
+  }
+}
