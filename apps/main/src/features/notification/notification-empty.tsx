@@ -1,4 +1,3 @@
-import { HeaderTranslations } from "@repo/store";
 import { getTranslations } from "next-intl/server";
 
 interface EmptyNotificationProps {

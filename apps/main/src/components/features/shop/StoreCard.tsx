@@ -11,18 +11,15 @@ import {
 import { Store } from "@/lib/types/shop";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import Link from "next/link";
 import { useMerchantProducts } from "@/hooks/useMerchantProducts";
 import { useMemo } from "react";
 import { useMerchantStore } from "@/store/useMerchantStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
-import { useAuthStore } from "@/store/__useAuthStore";
-import { useRouter, usePathname } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter, usePathname, Link } from "@/i18n/navigation";
 import { toast } from "react-toastify";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
-
-import "swiper/css";
 
 interface StoreCardProps {
   store: Store;

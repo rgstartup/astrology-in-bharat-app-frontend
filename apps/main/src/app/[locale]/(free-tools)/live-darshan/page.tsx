@@ -12,7 +12,7 @@ import { useMessages, useTranslations } from "next-intl";
 import Livedarshan from "@messages/en/live-darshan.json";
 
 const LiveDarshanPage = () => {
-  const { lang, toggleLang } = useLanguageStore();
+  const { lang } = useLanguageStore();
   const t = useTranslations("Livedarshan");
 
   const messages = useMessages();

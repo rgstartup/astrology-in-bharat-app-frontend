@@ -1,4 +1,3 @@
-import { HeaderTranslations } from "@repo/store";
 import { INotification } from "@/lib/types/notification.type";
 import { getTranslations } from "next-intl/server";
 

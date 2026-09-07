@@ -3,7 +3,7 @@
 import React from "react";
 import { Place } from "@/libs/serp-api";
 import PlaceCard from "./PlaceCard";
-import { useLanguageStore } from "@repo/store";
+import { useLocale } from "next-intl";
 
 interface PlacesSectionProps {
   title: React.ReactNode;
@@ -41,11 +41,27 @@ const PlacesSection: React.FC<PlacesSectionProps> = ({
   initialCount = 6,
   headerIcon,
 }) => {
-  const { lang } = useLanguageStore();
-  const tx = {
-    en: { sortPopular: "Sort By: Popular", sortNearest: "Sort By: Nearest", sortRating: "Sort By: Rating", showLess: "Show Less", viewMore: "View More Temples", noResults: "No results found" },
-    hi: { sortPopular: "लोकप्रियता अनुसार", sortNearest: "नजदीक अनुसार", sortRating: "रेटिंग अनुसार", showLess: "कम दिखाएं", viewMore: "और मंदिर देखें", noResults: "कोई परिणाम नहीं मिला" },
-  }[lang] || { en: {} } as any;
+  const lang = useLocale();
+
+  const tx =
+    {
+      en: {
+        sortPopular: "Sort By: Popular",
+        sortNearest: "Sort By: Nearest",
+        sortRating: "Sort By: Rating",
+        showLess: "Show Less",
+        viewMore: "View More Temples",
+        noResults: "No results found",
+      },
+      hi: {
+        sortPopular: "लोकप्रियता अनुसार",
+        sortNearest: "नजदीक अनुसार",
+        sortRating: "रेटिंग अनुसार",
+        showLess: "कम दिखाएं",
+        viewMore: "और मंदिर देखें",
+        noResults: "कोई परिणाम नहीं मिला",
+      },
+    }[lang] || ({ en: {} } as any);
   const visible = showAll ? places : places.slice(0, initialCount);
   const hasMore = places.length > initialCount;
 
@@ -60,8 +76,14 @@ const PlacesSection: React.FC<PlacesSectionProps> = ({
             </div>
           )}
           <div className="min-w-0">
-            <h2 className="text-[16px] sm:text-xl font-black text-[#3D1A0B] leading-tight whitespace-nowrap truncate sm:whitespace-normal sm:truncate-none">{title}</h2>
-            {subtitle && <p className="text-[12px] sm:text-sm text-gray-500 font-medium mt-0.5 break-words">{subtitle}</p>}
+            <h2 className="text-[16px] sm:text-xl font-black text-[#3D1A0B] leading-tight whitespace-nowrap truncate sm:whitespace-normal sm:truncate-none">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="text-[12px] sm:text-sm text-gray-500 font-medium mt-0.5 break-words">
+                {subtitle}
+              </p>
+            )}
           </div>
         </div>
 
@@ -79,7 +101,9 @@ const PlacesSection: React.FC<PlacesSectionProps> = ({
       {/* Content */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {[...Array(initialCount)].map((_, i) => <SkeletonCard key={`${idPrefix}-sk-${i}`} />)}
+          {[...Array(initialCount)].map((_, i) => (
+            <SkeletonCard key={`${idPrefix}-sk-${i}`} />
+          ))}
         </div>
       ) : visible.length > 0 ? (
         <>
@@ -96,14 +120,18 @@ const PlacesSection: React.FC<PlacesSectionProps> = ({
                 className="border border-orange-300 text-orange-500 font-bold text-[13px] px-8 py-2.5 rounded-lg hover:bg-orange-50 transition-colors flex items-center gap-2"
               >
                 {showAll ? tx.showLess : tx.viewMore}
-                <i className={`fa-solid fa-arrow-${showAll ? "up" : "right"} text-[11px]`} />
+                <i
+                  className={`fa-solid fa-arrow-${showAll ? "up" : "right"} text-[11px]`}
+                />
               </button>
             </div>
           )}
         </>
       ) : (
         <div className="text-center py-14 bg-[#FAF5EE] rounded-2xl border border-dashed border-[#E8D5C0]">
-          <i className={`fa-solid ${emptyIcon} text-orange-200 text-4xl mb-3 block`} />
+          <i
+            className={`fa-solid ${emptyIcon} text-orange-200 text-4xl mb-3 block`}
+          />
           <p className="text-gray-400 font-medium text-sm">{tx.noResults}</p>
         </div>
       )}

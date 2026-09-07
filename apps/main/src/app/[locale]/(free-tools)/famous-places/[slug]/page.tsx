@@ -87,7 +87,7 @@ const PlaceDetailPage = () => {
       // Fallback: Geocode using openstreetmap
       const searchQueries = [
         encodeURIComponent(place.title),
-        encodeURIComponent(place.title.split(",")[0]),
+        encodeURIComponent(place.title ?? "".split(",")[0]),
         encodeURIComponent(place.address || ""),
       ].filter(Boolean);
 

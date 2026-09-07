@@ -5,32 +5,80 @@ import { TEMPLE_CATEGORIES } from "./constants";
 import { Place } from "@/libs/serp-api";
 import Image from "next/image";
 import PlaceCard from "./PlaceCard";
-import { useLanguageStore } from "@repo/store";
+import { useLocale } from "next-intl";
 
 interface TemplateCategoriesProps {
   activeCategory: string | null;
   loading: boolean;
   results: Place[];
-  onSelect: (cat: typeof TEMPLE_CATEGORIES[number]) => void;
+  onSelect: (cat: (typeof TEMPLE_CATEGORIES)[number]) => void;
   onClear: () => void;
 }
 
 const CATEGORIES_TRANSLATED = {
   en: [
-    { label: "Shiva Temples",   icon: "fa-om",                query: "Famous Shiva Temples in India" },
-    { label: "Vishnu Temples",  icon: "fa-hands-praying",     query: "Famous Vishnu Temples in India" },
-    { label: "Shakti Peethas",  icon: "fa-fire-flame-curved", query: "Famous Shakti Peetha temples in India" },
-    { label: "Jyotirlingas",    icon: "fa-star-and-crescent", query: "12 Jyotirlinga temples in India" },
-    { label: "Famous Temples",  icon: "fa-place-of-worship",  query: "Most famous temples in India" },
-    { label: "Near Me",         icon: "fa-location-dot",      query: "Famous temples near me India" },
+    {
+      label: "Shiva Temples",
+      icon: "fa-om",
+      query: "Famous Shiva Temples in India",
+    },
+    {
+      label: "Vishnu Temples",
+      icon: "fa-hands-praying",
+      query: "Famous Vishnu Temples in India",
+    },
+    {
+      label: "Shakti Peethas",
+      icon: "fa-fire-flame-curved",
+      query: "Famous Shakti Peetha temples in India",
+    },
+    {
+      label: "Jyotirlingas",
+      icon: "fa-star-and-crescent",
+      query: "12 Jyotirlinga temples in India",
+    },
+    {
+      label: "Famous Temples",
+      icon: "fa-place-of-worship",
+      query: "Most famous temples in India",
+    },
+    {
+      label: "Near Me",
+      icon: "fa-location-dot",
+      query: "Famous temples near me India",
+    },
   ],
   hi: [
-    { label: "शिव मंदिर",       icon: "fa-om",                query: "Famous Shiva Temples in India" },
-    { label: "विष्णु मंदिर",    icon: "fa-hands-praying",     query: "Famous Vishnu Temples in India" },
-    { label: "शक्ति पीठ",       icon: "fa-fire-flame-curved", query: "Famous Shakti Peetha temples in India" },
-    { label: "ज्योतिर्लिंग",   icon: "fa-star-and-crescent", query: "12 Jyotirlinga temples in India" },
-    { label: "प्रसिद्ध मंदिर", icon: "fa-place-of-worship",  query: "Most famous temples in India" },
-    { label: "पास में",         icon: "fa-location-dot",      query: "Famous temples near me India" },
+    {
+      label: "शिव मंदिर",
+      icon: "fa-om",
+      query: "Famous Shiva Temples in India",
+    },
+    {
+      label: "विष्णु मंदिर",
+      icon: "fa-hands-praying",
+      query: "Famous Vishnu Temples in India",
+    },
+    {
+      label: "शक्ति पीठ",
+      icon: "fa-fire-flame-curved",
+      query: "Famous Shakti Peetha temples in India",
+    },
+    {
+      label: "ज्योतिर्लिंग",
+      icon: "fa-star-and-crescent",
+      query: "12 Jyotirlinga temples in India",
+    },
+    {
+      label: "प्रसिद्ध मंदिर",
+      icon: "fa-place-of-worship",
+      query: "Most famous temples in India",
+    },
+    {
+      label: "पास में",
+      icon: "fa-location-dot",
+      query: "Famous temples near me India",
+    },
   ],
 };
 
@@ -51,7 +99,7 @@ const TempleCategories: React.FC<TemplateCategoriesProps> = ({
   onSelect,
   onClear,
 }) => {
-  const { lang } = useLanguageStore();
+  const lang = useLocale();
   const categories = CATEGORIES_TRANSLATED[lang] || CATEGORIES_TRANSLATED.en;
 
   const tx = {
@@ -67,16 +115,16 @@ const TempleCategories: React.FC<TemplateCategoriesProps> = ({
       clear: "साफ़ करें",
       noResults: "इस श्रेणी के लिए कोई परिणाम नहीं मिला।",
     },
-  }[lang] || {} as any;
+  }[lang];
 
   return (
     <div className="flex flex-col w-full">
       <section className="mt-14 mb-10 w-full relative rounded-2xl overflow-hidden shadow-sm border border-orange-50">
         {/* Background Banner */}
         <div className="absolute inset-0 z-0">
-          <Image 
-            src="/images/temple-categories-banner.png" 
-            alt="Explore Temples Banner Background" 
+          <Image
+            src="/images/temple-categories-banner.png"
+            alt="Explore Temples Banner Background"
             fill
             className="object-cover object-center"
           />
@@ -92,7 +140,10 @@ const TempleCategories: React.FC<TemplateCategoriesProps> = ({
           {/* Category pills styled as circles */}
           <div className="flex flex-wrap justify-center gap-5 sm:gap-8 md:gap-14">
             {categories.map((cat) => {
-              const isActive = activeCategory === CATEGORIES_TRANSLATED.en[categories.indexOf(cat)]?.label || activeCategory === cat.label;
+              const isActive =
+                activeCategory ===
+                  CATEGORIES_TRANSLATED.en[categories.indexOf(cat)]?.label ||
+                activeCategory === cat.label;
               return (
                 <button
                   key={cat.label}
@@ -106,9 +157,13 @@ const TempleCategories: React.FC<TemplateCategoriesProps> = ({
                         : "border-orange-200 bg-white/70 hover:bg-white hover:border-orange-400 shadow-sm"
                     }`}
                   >
-                    <i className={`fa-solid ${cat.icon} text-[24px] md:text-[30px] ${isActive ? "text-orange-500" : "text-[#F26500]"}`} />
+                    <i
+                      className={`fa-solid ${cat.icon} text-[24px] md:text-[30px] ${isActive ? "text-orange-500" : "text-[#F26500]"}`}
+                    />
                   </div>
-                  <span className={`text-[12px] md:text-[14px] font-bold ${isActive ? "text-orange-600" : "text-[#3D1A0B]"}`}>
+                  <span
+                    className={`text-[12px] md:text-[14px] font-bold ${isActive ? "text-orange-600" : "text-[#3D1A0B]"}`}
+                  >
                     {cat.label}
                   </span>
                 </button>
@@ -123,7 +178,8 @@ const TempleCategories: React.FC<TemplateCategoriesProps> = ({
         <div className="w-full mb-10 animate-in fade-in slide-in-from-top-4 duration-500">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl md:text-[24px] font-black text-gray-900">
-              {activeCategory} <span className="text-orange-500">{tx.results}</span>
+              {activeCategory}{" "}
+              <span className="text-orange-500">{tx.results}</span>
             </h3>
             <button
               onClick={onClear}
@@ -135,7 +191,9 @@ const TempleCategories: React.FC<TemplateCategoriesProps> = ({
 
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
+              {[...Array(3)].map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
             </div>
           ) : results.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -145,8 +203,12 @@ const TempleCategories: React.FC<TemplateCategoriesProps> = ({
             </div>
           ) : (
             <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
-              <div className="text-gray-300 text-4xl mb-3"><i className="fa-solid fa-box-open"></i></div>
-              <p className="text-gray-500 text-base font-medium">{tx.noResults}</p>
+              <div className="text-gray-300 text-4xl mb-3">
+                <i className="fa-solid fa-box-open"></i>
+              </div>
+              <p className="text-gray-500 text-base font-medium">
+                {tx.noResults}
+              </p>
             </div>
           )}
         </div>
