@@ -1,37 +1,63 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Search, X } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
+import { useProductListStore } from "@/store/useProductListStore";
+import { useDebounce } from "@/hooks/use-debounce";
+import { getProducts } from "@/libs/api-products";
 
-const SearchIcon = Search as any;
-const XIcon = X as any;
+const SearchIcon = Search;
+const XIcon = X;
 
-import { Product } from "@/lib/types";
+const ProductGrid: React.FC = () => {
+  const { t } = useHomeTranslations();
 
-interface ProductGridProps {
-    products: Product[];
-}
+  const {
+    products,
+    isLoading,
+    searchQuery,
+    setSearchQuery,
+    setProducts,
+    setIsLoading,
+  } = useProductListStore();
 
-const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const { t } = useHomeTranslations();
+  const debouncedSearch = useDebounce(searchQuery, 400);
 
-    // Filter products based on search query
-    const filteredProducts = products.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  // Query API whenever debounced search query changes
+  useEffect(() => {
+    let isCancelled = false;
+    setIsLoading(true);
 
-    const handleClear = () => {
-        setSearchQuery("");
+    getProducts(
+      debouncedSearch.trim() ? { q: debouncedSearch.trim() } : undefined,
+    )
+      .then((data) => {
+        if (!isCancelled) {
+          setProducts(data);
+        }
+      })
+      .finally(() => {
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
     };
+  }, [debouncedSearch, setProducts, setIsLoading]);
 
-    return (
+  const handleClear = () => {
+    setSearchQuery("");
+  };
+
+  return (
     <section className="pt-8 md:pt-12 pb-12 md:pb-24 bg-white relative overflow-hidden">
       {/* Decorative Background Element */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-orange/5 rounded-full blur-[120px] translate-x-1/2 -translate-y-1/2"></div>
-      
+
       <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-8 md:mb-20">
           <div className="max-w-2xl">
@@ -43,9 +69,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
               {t.products.pageDescription}
             </p>
           </div>
-          
+
           <div className="w-full md:w-auto min-w-[320px]">
-            {/* 🔹 Local Search Input Implementation */}
+            {/* 🔹 Search Input */}
             <div className="relative group">
               <SearchIcon className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-orange transition-colors" />
               <input
@@ -68,42 +94,67 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
         </div>
 
         <div className="relative">
-          {products.length === 0 ? (
-            <div className="text-center py-24 bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-200">
-               <div className="w-20 h-20 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6 text-gray-300">
-                <i className="fa-solid fa-box-open text-3xl"></i>
-              </div>
-              <p className="text-gray-500 font-black uppercase tracking-widest text-sm">{t.products.noProductsAvailable}</p>
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-[2rem] p-6 shadow-premium h-full animate-pulse border border-gray-50 flex flex-col"
+                >
+                  <div className="mb-6 h-[220px] w-full bg-slate-100 rounded-[1.5rem]"></div>
+                  <div className="h-6 bg-slate-100 rounded-full w-3/4 mb-4"></div>
+                  <div className="h-4 bg-slate-100 rounded-full w-full mb-2"></div>
+                  <div className="h-4 bg-slate-100 rounded-full w-5/6 mb-6"></div>
+                  <div className="mt-auto space-y-4">
+                    <div className="h-6 bg-slate-100 rounded-full w-1/2"></div>
+                    <div className="h-14 bg-slate-100 rounded-2xl w-full"></div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-24 bg-orange/5 rounded-[3rem] border-2 border-dashed border-orange/20 animate-in fade-in zoom-in duration-500">
-              <div className="w-20 h-20 bg-orange/10 rounded-3xl flex items-center justify-center mx-auto mb-6 text-orange">
-                <i className="fa-solid fa-magnifying-glass text-3xl"></i>
+          ) : products.length === 0 ? (
+            searchQuery ? (
+              <div className="text-center py-24 bg-orange/5 rounded-[3rem] border-2 border-dashed border-orange/20 animate-in fade-in zoom-in duration-500">
+                <div className="w-20 h-20 bg-orange/10 rounded-3xl flex items-center justify-center mx-auto mb-6 text-orange">
+                  <i className="fa-solid fa-magnifying-glass text-3xl"></i>
+                </div>
+                <p className="text-gray-900 font-black text-xl mb-2">
+                  {t.products.noResultsFound}
+                </p>
+                <p className="text-gray-500 font-bold">
+                  {t.products.noResultsDesc.replace(
+                    '"{query}"',
+                    `"${searchQuery}"`,
+                  )}
+                </p>
+                <button
+                  onClick={handleClear}
+                  className="mt-8 px-8 py-3 bg-white border-2 border-orange/20 text-orange rounded-xl font-black text-xs uppercase tracking-widest hover:bg-orange hover:text-white transition-all shadow-sm"
+                >
+                  {t.products.clearSearch}
+                </button>
               </div>
-              <p className="text-gray-900 font-black text-xl mb-2">
-                {t.products.noResultsFound}
-              </p>
-              <p className="text-gray-500 font-bold">
-                {t.products.noResultsDesc.replace('"{query}"', `"${searchQuery}"`)}
-              </p>
-              <button 
-                onClick={handleClear}
-                className="mt-8 px-8 py-3 bg-white border-2 border-orange/20 text-orange rounded-xl font-black text-xs uppercase tracking-widest hover:bg-orange hover:text-white transition-all shadow-sm"
-              >
-                {t.products.clearSearch}
-              </button>
-            </div>
+            ) : (
+              <div className="text-center py-24 bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-200">
+                <div className="w-20 h-20 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6 text-gray-300">
+                  <i className="fa-solid fa-box-open text-3xl"></i>
+                </div>
+                <p className="text-gray-500 font-black uppercase tracking-widest text-sm">
+                  {t.products.noProductsAvailable}
+                </p>
+              </div>
+            )
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id || product._id} product={product} />
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}
         </div>
       </div>
     </section>
-    );
+  );
 };
 
 export default ProductGrid;

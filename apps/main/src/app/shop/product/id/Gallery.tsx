@@ -2,14 +2,8 @@
 
 import React from "react";
 import NextImage from "next/image";
-import { Swiper as Sw, SwiperSlide as Ss } from "swiper/react";
-const Swiper = Sw as any;
-const SwiperSlide = Ss as any;
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs, FreeMode } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
-import "swiper/css/free-mode";
 
 interface GalleryProps {
   images: string[];
@@ -76,7 +70,7 @@ const Gallery: React.FC<GalleryProps> = ({ images }) => {
           ))}
         </Swiper>
       </div>
-      
+
       <style jsx global>{`
         .thumbnail-swiper .swiper-slide-thumb-active .relative {
           border-color: #f97316 !important;

@@ -16,7 +16,7 @@ interface AuthState {
 
   // Actions
   init: () => Promise<void>;
-  logout: (redirectUrl?: string) => Promise<void>;
+  logout: (redirectUrl?: string) => Promise<string>;
   refreshBalance: () => Promise<void>;
   updateUser: (data: Partial<Client>) => void;
   closeImageModal: () => void;
@@ -58,27 +58,15 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: async (redirectUrl?: string) => {
-        set({});
-
+        get().reset();
+        set({ loading: true });
         await api.post("/auth/logout");
 
-        try {
-          // Call Next.js API route to clear HttpOnly cookies
-          await fetch("/api/auth/logout", { method: "POST" });
-        } catch {
-          // Silently fail
-        }
+        await fetch("/api/auth/logout", { method: "POST" });
 
-        // if (typeof window !== "undefined") {
-        //   // Use a more standard way for shared package
-        //   if (redirectUrl) {
-        //     window.location.href = redirectUrl;
-        //   } else if (redirectUrl !== "") {
-        //     window.location.href = "/?_logout=1";
-        //   }
-        // }
-
+        set({ loading: false });
         redirectUrl ||= "/?_logout=1";
+        return redirectUrl;
       },
 
       refreshBalance: async () => {
@@ -177,7 +165,13 @@ export const useAuthStore = create<AuthState>()(
       updateUser: (data: Partial<Client>) => {
         const current = get().user;
         if (current) {
-          set({ user: { ...current, ...data, avatar: getProfileImageUrl(current.avatar, current.name) } });
+          set({
+            user: {
+              ...current,
+              ...data,
+              avatar: getProfileImageUrl(current.avatar, current.name),
+            },
+          });
         }
       },
 

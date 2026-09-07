@@ -9,8 +9,8 @@ import FAQ from "./FAQ";
 import Reviews from "./Reviews";
 import ShopByPurpose from "./ShopByPurpose";
 import Features from "./Features";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/__useAuthStore";
+import { useRouter } from "@/i18n/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useCart } from "@/hooks/useCart";
 import { toast } from "react-toastify";
 
@@ -90,11 +90,14 @@ const Page = () => {
       toast.error("Please login first to buy products", {
         onClick: () => router.push("/sign-in"),
         autoClose: 3000,
-        style: { cursor: 'pointer' }
+        style: { cursor: "pointer" },
       });
       return;
     }
-    sessionStorage.setItem('buyNowItem', JSON.stringify({ productId: product.id, quantity }));
+    sessionStorage.setItem(
+      "buyNowItem",
+      JSON.stringify({ productId: product.id, quantity }),
+    );
     router.push(`/client/checkout?type=order`);
   };
 
@@ -103,7 +106,7 @@ const Page = () => {
       toast.error("Please login first to add products to cart", {
         onClick: () => router.push("/sign-in"),
         autoClose: 3000,
-        style: { cursor: 'pointer' }
+        style: { cursor: "pointer" },
       });
       return;
     }

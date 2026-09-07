@@ -12,6 +12,7 @@ import { Metadata } from "next";
 // import { cookies } from "next/headers";
 import QueryProvider from "@/providers/QueryProvider";
 import ExpertStatusProvider from "@/providers/ExpertStatusProvider";
+import MerchantStatusProvider from "@/providers/MerchantStatusProvider";
 import NotificationProvider from "@/providers/NotificationProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 // import { decodeToken, getErrorMessage } from "@repo/lib";
@@ -33,24 +34,6 @@ export default async function RootLayout({
   // 1. Fetch user on server
   // const cookieStore = await cookies();
   const locale = await getLocale();
-  // const token = cookieStore.get("accessToken")?.value;
-
-  // if (token) {
-  //   try {
-  //     // Pass both header and cookie to support different backend auth strategies
-  //     const user = decodeToken(token);
-  //     console.log("Server-side auth check user:", user);
-
-  //     if (!user || !user.sub || !user.email) {
-  //       throw new Error("user not found");
-  //     }
-  //   } catch (err: any) {
-  //     const errorMsg = getErrorMessage(err);
-  //     if (errorMsg !== "Unauthorized" && !errorMsg.includes("Unauthorized")) {
-  //       console.error("[RootLayout] Server-side auth check failed:", errorMsg);
-  //     }
-  //   }
-  // }
 
   return (
     <html lang={locale} data-scroll-behavior="smooth">
@@ -71,8 +54,8 @@ export default async function RootLayout({
         // suppressHydrationWarning
       >
         <NextIntlClientProvider>
-          <QueryProvider>
-            <ExpertStatusProvider>
+          <ExpertStatusProvider>
+            <MerchantStatusProvider>
               <NotificationProvider>
                 <AuthInitializer>
                   <CartInitializer>
@@ -85,8 +68,8 @@ export default async function RootLayout({
                   <PlatformReviewModal />
                 </AuthInitializer>
               </NotificationProvider>
-            </ExpertStatusProvider>
-          </QueryProvider>
+            </MerchantStatusProvider>
+          </ExpertStatusProvider>
         </NextIntlClientProvider>
         <ToastProvider />
       </body>

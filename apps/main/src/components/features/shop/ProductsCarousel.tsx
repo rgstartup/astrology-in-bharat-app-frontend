@@ -1,45 +1,42 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import "swiper/css";
-import "swiper/css/navigation";
-import {
-  Swiper as SwiperComp,
-  SwiperSlide as SwiperSlideComp,
-} from "swiper/react";
+import React, { useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import { api } from "@/actions";
+import { getProducts } from "@/libs/api-products";
 import { ProductCard } from "./ProductCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
-const Swiper = SwiperComp as any;
-const SwiperSlide = SwiperSlideComp as any;
+import { useProductListStore } from "@/store/useProductListStore";
 
 const ProductsCarousel = () => {
-  const [productList, setProductList] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { products, isLoading, setProducts, setIsLoading } =
+    useProductListStore();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const [data, err] = await api.get<any>(`/products`);
-        if (err || !data) {
-          console.warn("⚠️ Error fetching products for carousel:", err);
-        } else {
-          const list = Array.isArray(data) ? data : (data.data || []);
-          setProductList(list);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
+    if (products.length === 0) {
+      setIsLoading(true);
+      getProducts()
+        .then((data) => {
+          if (data && data.length > 0) {
+            setProducts(data);
+          }
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   }, []);
+
+  const productList = products;
+  const loading = isLoading;
 
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-2">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-white rounded-[2rem] p-6 shadow-premium border border-gray-50 h-full animate-pulse">
+          <div
+            key={i}
+            className="bg-white rounded-[2rem] p-6 shadow-premium border border-gray-50 h-full animate-pulse"
+          >
             <div className="aspect-square bg-slate-100 rounded-3xl mb-6"></div>
             <div className="h-6 bg-slate-100 rounded-full w-3/4 mb-4"></div>
             <div className="h-4 bg-slate-100 rounded-full w-full mb-6"></div>
@@ -79,17 +76,12 @@ const ProductsCarousel = () => {
         className="product-swiper-container !py-8 !px-4"
       >
         {productList.map((product) => (
-          <SwiperSlide key={product.id || product._id} className="h-auto">
+          <SwiperSlide
+            key={product.id || (product as any)?._id}
+            className="h-auto"
+          >
             <div className="h-full px-2 py-4">
-              <ProductCard product={{
-                id: product.id || product._id,
-                name: product.name,
-                description: product.description,
-                price: product.price,
-                originalPrice: product.originalPrice || product.price,
-                imageUrl: product.image || product.imageUrl || (product.images && product.images[0]),
-                percentageOff: product.percentageOff
-              }} />
+              <ProductCard product={product} />
             </div>
           </SwiperSlide>
         ))}

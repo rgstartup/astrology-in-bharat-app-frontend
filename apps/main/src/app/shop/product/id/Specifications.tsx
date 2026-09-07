@@ -2,8 +2,6 @@
 
 import React from "react";
 
-
-
 interface Detail {
   title: string;
   text: string;
@@ -18,7 +16,7 @@ const Specifications: React.FC<SpecificationsProps> = ({ details }) => {
     <section className="py-20 relative overflow-hidden">
       {/* Decorative Background */}
       <div className="absolute top-1/2 left-0 w-64 h-64 bg-orange/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2"></div>
-      
+
       <div className="relative z-10 max-w-5xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">
@@ -29,7 +27,7 @@ const Specifications: React.FC<SpecificationsProps> = ({ details }) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
           {details.map((detail, idx) => (
-            <div 
+            <div
               key={idx}
               className="group p-8 bg-gray-50 rounded-[2.5rem] border border-gray-100 transition-all duration-500 hover:bg-white hover:shadow-premium hover:-translate-y-2"
             >

@@ -1,12 +1,9 @@
 "use client";
 
 import React from "react";
-import NextImage from "next/image";
-import { Swiper as Sw, SwiperSlide as Ss } from "swiper/react";
-const Swiper = Sw as any;
-const SwiperSlide = Ss as any;
+import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import "swiper/css";
 
 interface ReviewStat {
   stars: number;
@@ -66,11 +63,13 @@ const Reviews: React.FC<ReviewsProps> = ({
             {reviewStats.map((r, idx) => (
               <div className="flex items-center gap-6" key={idx}>
                 <div className="flex items-center gap-2 w-16 shrink-0">
-                  <span className="text-sm font-black text-gray-900">{r.stars}</span>
+                  <span className="text-sm font-black text-gray-900">
+                    {r.stars}
+                  </span>
                   <i className="fa-solid fa-star text-[10px] text-orange"></i>
                 </div>
                 <div className="flex-grow h-3 bg-white rounded-full overflow-hidden border border-gray-100">
-                  <div 
+                  <div
                     className="h-full bg-orange rounded-full transition-all duration-1000"
                     style={{ width: `${(r.count / totalRatings) * 100}%` }}
                   ></div>
@@ -92,9 +91,11 @@ const Reviews: React.FC<ReviewsProps> = ({
           <h3 className="text-2xl font-black text-gray-900 mb-2 uppercase tracking-widest">
             Recent Stories
           </h3>
-          <p className="text-gray-400 font-bold">Real experiences from our global community</p>
+          <p className="text-gray-400 font-bold">
+            Real experiences from our global community
+          </p>
         </div>
-        
+
         <div className="relative group">
           <Swiper
             modules={[Navigation, Autoplay]}
@@ -144,7 +145,7 @@ const Reviews: React.FC<ReviewsProps> = ({
               <SwiperSlide key={idx}>
                 <div className="h-full p-8 md:p-10 bg-white border border-gray-100 rounded-[2.5rem] shadow-premium hover:shadow-2xl transition-all duration-500 flex flex-col items-center text-center group/card">
                   <div className="relative w-24 h-24 rounded-[2rem] overflow-hidden mb-8 border-4 border-white shadow-xl group-hover/card:scale-110 transition-transform duration-500">
-                    <NextImage
+                    <Image
                       src={review.img}
                       alt={review.name}
                       fill
@@ -162,14 +163,16 @@ const Reviews: React.FC<ReviewsProps> = ({
                       <h5 className="text-lg font-black text-gray-900 mb-1 leading-none uppercase tracking-widest">
                         {review.name}
                       </h5>
-                      <p className="text-[10px] font-black text-orange uppercase tracking-[0.2em]">Verified Customer</p>
+                      <p className="text-[10px] font-black text-orange uppercase tracking-[0.2em]">
+                        Verified Customer
+                      </p>
                     </div>
                   </div>
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
-          
+
           {/* Custom Nav for Testimonials */}
           <button className="rev-prev absolute left-0 top-[40%] -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center rounded-2xl bg-white text-gray-900 border border-gray-100 shadow-xl opacity-0 group-hover:opacity-100 -translate-x-6 group-hover:translate-x-0 transition-all duration-300 hover:bg-orange hover:text-white">
             <i className="fa-solid fa-chevron-left"></i>

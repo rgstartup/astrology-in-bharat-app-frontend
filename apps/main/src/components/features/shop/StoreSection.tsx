@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { StoreCard } from "./StoreCard";
 import {
   Store as StoreIcon,
@@ -8,64 +8,56 @@ import {
   ChevronRight,
   Search,
   ChevronDown,
-  Loader2,
 } from "lucide-react";
-import {
-  Swiper as SwiperComp,
-  SwiperSlide as SwiperSlideComp,
-} from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, Mousewheel } from "swiper/modules";
 import { useAllMerchants } from "@/hooks/useAllMerchants";
 import { useMerchantCities } from "@/hooks/useMerchantCities";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { StoreSkeletonCard } from "./StoreSkeletonCard";
+import type { Store } from "@/lib/types/shop";
+import { useMerchantStore } from "@/store/useMerchantStore";
 
-import "swiper/css";
-import "swiper/css/navigation";
-
-const Swiper = SwiperComp as any;
-const SwiperSlide = SwiperSlideComp as any;
-
-const DUMMY_STORES = [
+const DUMMY_STORES: Store[] = [
   {
     id: "dummy-store-1",
     name: "my shop",
     address: "MOHALI",
     city: "MOHALI",
-    pinCode: "160062",
-    contactNumber: "6239408982",
-    shopLogo: "/images/dummy-shop.png",
+    pincode: "160062",
+    phone: "6239408982",
+    image: "/images/dummy-shop.png",
     rating: 0,
     reviewCount: 0,
-    is_available: false,
-    products: [],
+    isOnline: false,
+    popularProducts: [],
   },
   {
     id: "dummy-store-2",
     name: "Premium Spirituals",
     address: "Delhi",
     city: "Delhi",
-    pinCode: "110001",
-    contactNumber: "9876543210",
-    shopLogo: "/images/dummy-shop.png",
+    pincode: "110001",
+    phone: "9876543210",
+    image: "/images/dummy-shop.png",
     rating: 4.5,
     reviewCount: 15,
-    is_available: true,
-    products: [],
+    isOnline: true,
+    popularProducts: [],
   },
   {
     id: "dummy-store-3",
     name: "Vedic Roots Store",
     address: "Mumbai",
     city: "Mumbai",
-    pinCode: "400001",
-    contactNumber: "9876543211",
-    shopLogo: "/images/dummy-shop.png",
+    pincode: "400001",
+    phone: "9876543211",
+    image: "/images/dummy-shop.png",
     rating: 4.8,
     reviewCount: 22,
-    is_available: true,
-    products: [],
+    isOnline: true,
+    popularProducts: [],
   },
 ];
 
@@ -97,6 +89,12 @@ const StoreSection = () => {
 
   // Use dummy stores if API returns empty (backend down or no stores)
   const displayStores = stores?.length > 0 ? stores : DUMMY_STORES;
+
+  useEffect(() => {
+    if (displayStores && displayStores.length > 0) {
+      useMerchantStore.getState().setMerchants(displayStores);
+    }
+  }, [displayStores]);
 
   return (
     <section
@@ -219,10 +217,7 @@ const StoreSection = () => {
               className="py-6 !pb-2"
             >
               {displayStores.map((store) => (
-                <SwiperSlide
-                  key={store.id || (store as any)._id}
-                  className="h-auto"
-                >
+                <SwiperSlide key={store.id} className="h-auto">
                   <StoreCard store={store} />
                 </SwiperSlide>
               ))}

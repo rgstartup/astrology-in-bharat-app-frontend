@@ -6,15 +6,15 @@ import {
   ShieldCheck,
   ExternalLink,
   Store as StoreIcon,
-  Star
+  Star,
 } from "lucide-react";
 import { Store } from "@/lib/types/shop";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import Link from "next/link";
 import { useMerchantProducts } from "@/hooks/useMerchantProducts";
-import { useMemo, useEffect, useState } from "react";
-import { merchantSocket } from "@/lib/socket";
+import { useMemo } from "react";
+import { useMerchantStore } from "@/store/useMerchantStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useAuthStore } from "@/store/__useAuthStore";
@@ -31,9 +31,13 @@ interface StoreCardProps {
 export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
   const { lang, t: translationSet } = useHomeTranslations();
   const t = translationSet.storeSection.card;
-  const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
+  const fontStyle =
+    lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
-  const [isOnline, setIsOnline] = useState(store.isOnline ?? false);
+  const isOnline = useMerchantStore(
+    (state) =>
+      state.merchantStatuses[String(store.id)] ?? store.isOnline ?? false,
+  );
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated } = useAuthStore();
@@ -53,9 +57,12 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
           <span className="underline font-black">Login now →</span>
         </span>,
         {
-          onClick: () => router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname === '/' ? '/#astrology-store' : pathname)}`),
+          onClick: () =>
+            router.push(
+              `/sign-in?callbackUrl=${encodeURIComponent(pathname === "/" ? "/#astrology-store" : pathname)}`,
+            ),
           style: { cursor: "pointer", ...fontStyle },
-        }
+        },
       );
       return;
     }
@@ -63,35 +70,16 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
     toggleLike({ id: String(store.id), type: "merchant", isLiked });
   };
 
-  // ─── Real-time Online status via WebSockets ───
-  useEffect(() => {
-    console.log(`🏠 [Card ${store.id}] Initializing socket listener...`);
-
-    const handleStatusChange = (data: { merchant_id: string; is_online: boolean }) => {
-      console.log(`🏠 [Card ${store.id}] Socket event received:`, data);
-      if (String(data.merchant_id) === String(store.id)) {
-        console.log(`✅ [Card ${store.id}] Status MATCH: updating to ${data.is_online}`);
-        setIsOnline(data.is_online);
-      }
-    };
-
-    merchantSocket.on("merchant_status_changed", handleStatusChange);
-
-    return () => {
-      console.log(`🏠 [Card ${store.id}] Cleaning up socket listener`);
-      merchantSocket.off("merchant_status_changed", handleStatusChange);
-    };
-  }, [store.id]);
-
   // Fallback: Fetch products if popularProducts is missing or empty
   // ... (displayProducts logic kept same)
-  const shouldFetch = !store.popularProducts || store.popularProducts.length === 0;
+  const shouldFetch =
+    !store.popularProducts || store.popularProducts.length === 0;
 
   const { data: fetchedProducts } = useMerchantProducts(
     // ...
     shouldFetch ? String(store.id) : undefined,
     1,
-    6
+    6,
   );
 
   const displayProducts = useMemo(() => {
@@ -115,9 +103,9 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
     >
       {/* Main Shop Header Image */}
       <div className="relative h-48 bg-gray-50 overflow-hidden">
-        {store.image ? (
+        {store.image || store.shopLogo ? (
           <img
-            src={store.image}
+            src={store.image || store.shopLogo}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             alt={store.name}
           />
@@ -131,15 +119,19 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         <div className="absolute top-4 left-4 z-10 flex flex-col items-center gap-2">
           <button
             onClick={handleLike}
-            className={`w-10 h-10 flex items-center justify-center bg-white/90 backdrop-blur-md rounded-full transition-all duration-300 shadow-lg border border-white/20 hover:scale-110 active:scale-95 ${isLiked ? 'text-red-500 shadow-red-500/20' : 'text-gray-400 hover:text-red-500'}`}
+            className={`w-10 h-10 flex items-center justify-center bg-white/90 backdrop-blur-md rounded-full transition-all duration-300 shadow-lg border border-white/20 hover:scale-110 active:scale-95 ${isLiked ? "text-red-500 shadow-red-500/20" : "text-gray-400 hover:text-red-500"}`}
           >
-            <i className={`${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-lg`}></i>
+            <i
+              className={`${isLiked ? "fa-solid" : "fa-regular"} fa-heart text-lg`}
+            ></i>
           </button>
 
           {store.likesCount !== undefined && (
             <div className="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-full border border-white/10 shadow-sm flex items-center justify-center min-w-[32px] animate-in fade-in slide-in-from-top-1 duration-500">
               <span className="text-[10px] font-black text-white leading-none">
-                {store.likesCount > 999 ? `${(store.likesCount / 1000).toFixed(1)}k` : store.likesCount}
+                {store.likesCount > 999
+                  ? `${(store.likesCount / 1000).toFixed(1)}k`
+                  : store.likesCount}
               </span>
             </div>
           )}
@@ -148,14 +140,20 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         {/* Rating Badge Overlay */}
         <div className="absolute top-4 right-4 z-10 px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-xl shadow-lg flex items-center gap-1.5 border border-white/20">
           <Star className="w-3.5 h-3.5 text-orange fill-orange" />
-          <span className="text-[12px] font-black text-slate-900 leading-none">{store.rating}</span>
-          <span className="text-[9px] font-bold text-slate-400 leading-none">({store.reviewCount})</span>
+          <span className="text-[12px] font-black text-slate-900 leading-none">
+            {store.rating}
+          </span>
+          <span className="text-[9px] font-bold text-slate-400 leading-none">
+            ({store.reviewCount})
+          </span>
         </div>
 
         {/* Shop Name & Location Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6">
           <div className="flex items-center gap-2 mb-1">
-            <h2 className="text-white group-hover:text-orange-400 transition-colors duration-300 font-bold text-xl drop-shadow-md truncate">{store.name}</h2>
+            <h2 className="text-white group-hover:text-orange-400 transition-colors duration-300 font-bold text-xl drop-shadow-md truncate">
+              {store.name}
+            </h2>
           </div>
           <div className="flex items-center text-orange-200 text-[10px] font-black uppercase tracking-widest leading-none">
             <MapPin className="w-3 h-3 mr-1 text-orange" />
@@ -169,7 +167,10 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         {/* Store Intro */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none" style={fontStyle}>
+            <span
+              className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none"
+              style={fontStyle}
+            >
               {t.about}
             </span>
             <div className="flex items-center gap-3">
@@ -179,18 +180,33 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
                   </span>
-                  <span className="text-[7px] font-black text-green-500 uppercase tracking-tighter" style={fontStyle}>{t.online}</span>
+                  <span
+                    className="text-[7px] font-black text-green-500 uppercase tracking-tighter"
+                    style={fontStyle}
+                  >
+                    {t.online}
+                  </span>
                 </div>
               ) : (
                 <div className="flex items-center gap-1 px-1.5 py-0.5 bg-gray-500/10 rounded-full border border-gray-500/20">
                   <span className="inline-flex rounded-full h-1.5 w-1.5 bg-gray-400"></span>
-                  <span className="text-[7px] font-black text-gray-400 uppercase tracking-tighter" style={fontStyle}>{t.offline}</span>
+                  <span
+                    className="text-[7px] font-black text-gray-400 uppercase tracking-tighter"
+                    style={fontStyle}
+                  >
+                    {t.offline}
+                  </span>
                 </div>
               )}
               {store.isTrusted && (
                 <div className="flex items-center text-emerald-500 bg-emerald-50 px-2 py-1 rounded-lg">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  <span className="text-[9px] font-black ml-1 uppercase tracking-tighter" style={fontStyle}>{t.verified}</span>
+                  <span
+                    className="text-[9px] font-black ml-1 uppercase tracking-tighter"
+                    style={fontStyle}
+                  >
+                    {t.verified}
+                  </span>
                 </div>
               )}
             </div>
@@ -198,19 +214,31 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
 
           <div className="flex items-start space-x-3 text-sm text-gray-600">
             <MapPin className="w-4 h-4 text-orange shrink-0 mt-0.5" />
-            <p className="line-clamp-2 text-xs font-bold leading-relaxed">{store.address}, {store.pincode}</p>
+            <p className="line-clamp-2 text-xs font-bold leading-relaxed">
+              {store.address}
+              {store.pincode || store.pinCode
+                ? `, ${store.pincode || store.pinCode}`
+                : ""}
+            </p>
           </div>
 
-          <div className="flex items-center space-x-3 text-xs text-gray-600">
-            <Phone className="w-4 h-4 text-orange shrink-0" />
-            <p className="font-mono font-bold">{store.phone}</p>
-          </div>
+          {(store.phone || store.contactNumber) && (
+            <div className="flex items-center space-x-3 text-xs text-gray-600">
+              <Phone className="w-4 h-4 text-orange shrink-0" />
+              <p className="font-mono font-bold">
+                {store.phone || store.contactNumber}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Popular Products */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none" style={fontStyle}>
+            <span
+              className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none"
+              style={fontStyle}
+            >
               {t.popularProducts}
             </span>
             <div className="w-3.5 h-3.5 bg-gray-100 rounded-sm flex items-center justify-center">
@@ -230,30 +258,29 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
               }}
               className="rounded-xl overflow-hidden pointer-events-none"
             >
-              {displayProducts.length > 0 ? (
-                displayProducts.map((img, idx) => (
-                  <SwiperSlide key={idx}>
-                    <div className="h-16 bg-gray-50 rounded-lg overflow-hidden relative border border-gray-100 shadow-sm">
-                      <img
-                        src={img}
-                        className="w-full h-full object-cover"
-                        alt="Product"
-                        onError={(e) => {
-                          // Fallback for broken images
-                          (e.target as HTMLImageElement).src = "/images/placeholder-product.png";
-                        }}
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))
-              ) : (
-                // Show skeletons while loading or if no products found
-                [1, 2, 3].map((i) => (
-                  <SwiperSlide key={i}>
-                    <div className="h-16 bg-gray-100 rounded-lg animate-pulse border border-gray-100" />
-                  </SwiperSlide>
-                ))
-              )}
+              {displayProducts.length > 0
+                ? displayProducts.map((img, idx) => (
+                    <SwiperSlide key={idx}>
+                      <div className="h-16 bg-gray-50 rounded-lg overflow-hidden relative border border-gray-100 shadow-sm">
+                        <img
+                          src={img}
+                          className="w-full h-full object-cover"
+                          alt="Product"
+                          onError={(e) => {
+                            // Fallback for broken images
+                            (e.target as HTMLImageElement).src =
+                              "/images/placeholder-product.png";
+                          }}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))
+                : // Show skeletons while loading or if no products found
+                  [1, 2, 3].map((i) => (
+                    <SwiperSlide key={i}>
+                      <div className="h-16 bg-gray-100 rounded-lg animate-pulse border border-gray-100" />
+                    </SwiperSlide>
+                  ))}
             </Swiper>
           </div>
         </div>

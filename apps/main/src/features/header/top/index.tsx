@@ -1,14 +1,16 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
+
 import { useAuth } from "@/store/useAuthStore";
+import NotificationComponent from "@/features/notification";
+import UserProfileDropdown from "@/features/profile";
+
 import LanguageSwitcherDropdown from "./language-switcher.button";
 import BalanceIndicator from "./balance-indicator.button";
-import NotificationComponent from "./notification";
 import AuthCTA from "./auth.cta";
-import UserProfileDropdown from "./user-profile-dropdown";
 import CartComponent from "./cart";
-import { useTranslations } from "next-intl";
 
 interface IAuthenticatedHeader {
   isAuthenticated: boolean;

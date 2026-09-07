@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { useAuth } from "@/store/useAuthStore";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import ProfileDropdown from "./profile-dropdown";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
@@ -12,12 +12,15 @@ import { getProfileImageUrl } from "@/utils/image-utils";
 const UserProfileDropdown = () => {
   const { user, isAuthenticated, logout, openImageModal } = useAuth();
 
+  const router = useRouter();
+
   const pathname = usePathname();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
-    await logout(pathname);
+    const redirectUrl = await logout(pathname);
+    router.push(redirectUrl);
   };
 
   useClickOutside(ref, () => setShowProfileDropdown(false));

@@ -4,11 +4,11 @@ export interface Product {
   sku: string;
   category: unknown;
   description: string;
+  short_description: string | null;
   price: number;
   original_price: number;
   image_url: string;
-  gallery: unknown;
-  short_description: string;
+  gallery: string[] | null;
   stock: number;
   merchant_id: string;
   is_shipping_chargeable: boolean;
@@ -17,4 +17,19 @@ export interface Product {
   created_at: Date;
   updated_at: Date;
   percentage_off: number;
+}
+
+export interface ProductWithLikes extends Product {
+  likes_count: number;
+}
+
+export interface PaginatedProductsResponse {
+  success: boolean;
+  data: ProductWithLikes[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+  };
 }

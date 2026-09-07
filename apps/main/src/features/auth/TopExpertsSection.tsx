@@ -1,47 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
-import { api as http } from "@/actions";
+import { api } from "@/actions";
 import Skeleton from "@/components/ui/Skeleton";
-import { socket } from "@/lib/socket";
-
-interface ExpertUser {
-  name: string;
-  avatar: string;
-}
-
-interface TopExpert {
-  id: string;
-  user: ExpertUser;
-  is_online: boolean;
-  rating: number;
-  specialization: string;
-}
-
-const DUMMY_TOP_EXPERTS: TopExpert[] = [
-  {
-    id: "dummy-exp-1",
-    user: { name: "Acharya Vivek", avatar: "/images/dummy-expert.jpg" },
-    is_online: true,
-    rating: 4.9,
-    specialization: "Vedic Astrology, Numerology",
-  },
-  {
-    id: "dummy-exp-2",
-    user: { name: "Pandit Sharma", avatar: "/images/dummy-expert.jpg" },
-    is_online: true,
-    rating: 4.8,
-    specialization: "Vastu Shastra, Kundli",
-  },
-  {
-    id: "dummy-exp-3",
-    user: { name: "Astrologer Ravi", avatar: "/images/dummy-expert.jpg" },
-    is_online: false,
-    rating: 4.7,
-    specialization: "Tarot Reading, Palmistry",
-  },
-];
+import { Expert } from "@repo/lib";
+import { useExpertListStore } from "@/store/useExpertListStore";
 
 const GreenDot = ({ isOnline }: { isOnline: boolean }) => {
   if (!isOnline) return null;
@@ -52,61 +16,27 @@ const GreenDot = ({ isOnline }: { isOnline: boolean }) => {
 };
 
 const TopExpertsSection: React.FC = () => {
-  const [topExperts, setTopExperts] = useState<TopExpert[]>([]);
-  const [expertsLoading, setExpertsLoading] = useState(false);
+  const { experts, loading, setLoading, setExperts } = useExpertListStore();
 
   useEffect(() => {
     const fetchTopExperts = async () => {
-      setExpertsLoading(true);
-      const [res, error] = await http
-        .get<TopExpert[]>("/expert/top-rated?limit=3")
-        .finally(() => setExpertsLoading(false));
+      setLoading(true);
+      const [res, error] = await api
+        .get<Expert[]>("/expert/account/top-rated?limit=3")
+        .finally(() => setLoading(false));
 
       if (error || !res) {
         console.warn(
           "⚠️ Failed to fetch top experts, using dummy data.",
           error,
         );
-        setTopExperts(DUMMY_TOP_EXPERTS);
         return;
       }
 
-      setTopExperts(res);
+      setExperts(res);
     };
 
     fetchTopExperts();
-  }, []);
-
-  // Real-time status synchronization
-  useEffect(() => {
-    const handleStatusSync = (data: any) => {
-      const userIdFromEvent = data.userId || data.id || data.expert_id;
-      const isAvailable = data.is_available ?? data.is_online;
-
-      setTopExperts((prev) =>
-        prev.map((expert) => {
-          // Check if the update matches this expert (either profile ID or user ID)
-          const isMatch =
-            String(expert.id) === String(userIdFromEvent) ||
-            ((expert.user as any)?.id &&
-              String((expert.user as any).id) === String(userIdFromEvent));
-
-          if (isMatch) {
-            console.log(
-              `[Presence] TopExpertsSection: Expert ${expert.user?.name} is now ${isAvailable ? "Online" : "Offline"}`,
-            );
-            return { ...expert, is_online: isAvailable };
-          }
-          return expert;
-        }),
-      );
-    };
-
-    socket.on("expert_status_changed", handleStatusSync);
-
-    return () => {
-      socket.off("expert_status_changed", handleStatusSync);
-    };
   }, []);
 
   return (
@@ -118,7 +48,7 @@ const TopExpertsSection: React.FC = () => {
         Top Rated Experts
       </h3>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-        {expertsLoading || topExperts.length === 0
+        {loading || experts.length === 0
           ? [1, 2, 3].map((_, idx) => (
               <div className="w-full" key={idx}>
                 <div className="bg-white rounded-3xl border-2 border-orange/50 p-4 text-center animate-pulse">
@@ -142,21 +72,21 @@ const TopExpertsSection: React.FC = () => {
                 </div>
               </div>
             ))
-          : topExperts.map((expert, idx) => (
+          : experts.map((expert, idx) => (
               <div className="group" key={`${expert.id}-${idx}`}>
                 <div className="bg-white rounded-3xl border-2 border-orange p-4 text-center hover:shadow-[0_10px_30px_rgba(255,107,0,0.15)] transition-all duration-300">
                   <div className="relative inline-block mb-3">
                     <Image
-                      src={expert.user?.avatar || "/images/dummy-expert.jpg"}
-                      alt={expert.user?.name || "Expert"}
+                      src={expert.avatar || "/images/dummy-expert.jpg"}
+                      alt={expert.name || "Expert"}
                       height={80}
                       width={80}
                       className="w-20 h-20 rounded-full object-cover border-2 border-orange/20 p-1 group-hover:scale-105 transition-transform duration-300"
                     />
-                    <GreenDot isOnline={expert.is_online} />
+                    <GreenDot isOnline={expert.is_available} />
                   </div>
                   <h6 className="font-bold text-[#301118] leading-tight mb-1 truncate px-1">
-                    {expert.user?.name || "Expert"}
+                    {expert.name || "Expert"}
                   </h6>
                   <div className="flex items-center justify-center gap-1 mb-1 bg-orange/5 rounded-full py-0.5 px-2 w-fit mx-auto">
                     <i className="fa-solid fa-star text-orange text-[10px]"></i>

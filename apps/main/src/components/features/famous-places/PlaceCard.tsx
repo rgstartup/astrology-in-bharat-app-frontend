@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { fetchPlaceImages } from "@/libs/serp-api";
 import { Place } from "@/lib/types";
-import { useLanguageStore } from "@repo/store";
-import { famousPlacesTranslations } from "../../../lib/famous-places-translations";
+import { useTranslations } from "next-intl";
 
 interface PlaceCardProps {
   place: Place;
@@ -13,9 +12,11 @@ interface PlaceCardProps {
 const FALLBACK_IMG = "/images/kashi.jpg";
 
 const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
-  const [imgSrc, setImgSrc] = useState<string>(place.thumbnailUrl || FALLBACK_IMG);
-  const { lang } = useLanguageStore();
-  const t = famousPlacesTranslations[lang as keyof typeof famousPlacesTranslations] || famousPlacesTranslations.en;
+  const [imgSrc, setImgSrc] = useState<string>(
+    place.thumbnailUrl || FALLBACK_IMG,
+  );
+
+  const t = useTranslations("Places");
 
   useEffect(() => {
     if (!place?.title) return;
@@ -36,17 +37,22 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
   }, [place.title, place.thumbnailUrl]);
 
   // Generate a deterministic fake distance for demo
-  const distance = ((place.title.length % 9) + 1) + "." + (place.title.length % 10) + " km";
+  const distance =
+    (place.title.length % 9) + 1 + "." + (place.title.length % 10) + " km";
   const rating = place.rating || "4.8";
   const ratingCount = place.ratingCount || "12k";
 
   // Simplify the address to just City, State
-  const shortAddress = place.address ? place.address.split(",").slice(0, 2).join(",").trim() : "India";
+  const shortAddress = place.address
+    ? place.address.split(",").slice(0, 2).join(",").trim()
+    : "India";
 
   return (
-    <Link href={`/famous-places/${place.slug || "details"}`} className="group no-underline text-inherit block h-full">
+    <Link
+      href={`/famous-places/${place.slug || "details"}`}
+      className="group no-underline text-inherit block h-full"
+    >
       <div className="bg-white rounded-2xl overflow-hidden border border-[#E8D5C0] shadow-sm flex flex-col h-full hover:shadow-md hover:-translate-y-1 transition-all">
-
         {/* Image Section — using <img> for reliable onError fallback with external URLs */}
         <div className="relative h-36 w-full overflow-hidden bg-slate-100">
           <img
@@ -78,18 +84,20 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
             <div className="flex items-center gap-1">
               <i className="fa-solid fa-star text-[#FFAA00] text-sm"></i>
               <span className="text-sm font-bold text-gray-700">
-                {rating} <span className="font-medium text-gray-400 text-xs">({ratingCount})</span>
+                {rating}{" "}
+                <span className="font-medium text-gray-400 text-xs">
+                  ({ratingCount})
+                </span>
               </span>
             </div>
 
             {/* View Details Button */}
             <button className="border border-orange-300 text-orange-500 text-xs font-bold px-3 py-1.5 rounded hover:bg-orange-50 transition-colors flex items-center gap-1.5">
-              {t.card.viewDetails}
+              {t("card.viewDetails")}
               <i className="fa-solid fa-arrow-right text-[10px]"></i>
             </button>
           </div>
         </div>
-
       </div>
     </Link>
   );

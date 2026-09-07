@@ -24,27 +24,31 @@ export interface ReviewsProps {
 }
 
 export interface Store {
-    id: string | number;
-    name: string;
-    address: string;
-    city: string;
-    pincode: string;
-    phone: string;
-    image: string;
-    video?: string;
-    isTrusted?: boolean;
-    popularProducts?: string[];
-    rating: number;
-    reviewCount: number;
-    description: string;
-    established: string;
-    email: string;
-    gallery: string[];
-    features: string[];
-    operationalHours?: string;
-    trustScore?: string | number;
-    likesCount?: number;
-    productsCount?: number;
-    isLiked?: boolean;
-    isOnline?: boolean;
+  id: string | number;
+  name: string;
+  address: string;
+  city: string;
+  pincode?: string;
+  pinCode?: string;
+  phone?: string;
+  contactNumber?: string;
+  image?: string;
+  shopLogo?: string;
+  video?: string;
+  isTrusted?: boolean;
+  popularProducts?: string[];
+  rating: number;
+  reviewCount: number;
+  description?: string;
+  established?: string;
+  email?: string;
+  gallery?: string[];
+  features?: string[];
+  operationalHours?: string;
+  trustScore?: string | number;
+  likesCount?: number;
+  productsCount?: number;
+  isLiked?: boolean;
+  isOnline?: boolean;
+  is_available?: boolean;
 }

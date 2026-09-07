@@ -2,10 +2,11 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Client } from "@/lib/types";
 import { PATHS } from "@repo/routes";
 import { useTranslations } from "next-intl";
+import { useAuth } from "@/store/useAuthStore";
 
 interface IProfileDropdown {
   showProfileDropdown: boolean;
@@ -17,6 +18,8 @@ interface IProfileDropdown {
 const ProfileDropdown: React.FC<IProfileDropdown> = (props) => {
   const { showProfileDropdown, setShowProfileDropdown, user, handleLogout } =
     props;
+
+  const loading = useAuth().loading;
 
   const t = useTranslations("Header");
 
@@ -125,7 +128,9 @@ const ProfileDropdown: React.FC<IProfileDropdown> = (props) => {
           >
             <i className="fa-solid fa-arrow-right-from-bracket" />
           </div>
-          <span className="font-bold">{t("logout")}</span>
+          <span className="font-bold">
+            {loading ? "logging out, please wait..." : t("logout")}
+          </span>
         </button>
       </div>
 
