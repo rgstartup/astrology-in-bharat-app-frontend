@@ -1,21 +1,24 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Client } from "@/lib/types";
 import { PATHS } from "@repo/routes";
-import { HeaderTranslations } from "@repo/store";
+import { useTranslations } from "next-intl";
 
 interface IProfileDropdown {
   showProfileDropdown: boolean;
   setShowProfileDropdown: React.Dispatch<React.SetStateAction<boolean>>;
   user: Client | null;
   handleLogout: (redirectUrl?: string) => void;
-  t: HeaderTranslations;
 }
 
 const ProfileDropdown: React.FC<IProfileDropdown> = (props) => {
-  const { showProfileDropdown, setShowProfileDropdown, user, t, handleLogout } =
+  const { showProfileDropdown, setShowProfileDropdown, user, handleLogout } =
     props;
+
+  const t = useTranslations("Header");
 
   if (!showProfileDropdown) return null;
 
@@ -88,7 +91,7 @@ const ProfileDropdown: React.FC<IProfileDropdown> = (props) => {
           >
             <i className="fa-solid fa-user-circle" />
           </div>
-          <span className="font-medium">{t.myProfile}</span>
+          <span className="font-medium">{t("myProfile")}</span>
         </Link>
 
         <Link
@@ -103,7 +106,7 @@ const ProfileDropdown: React.FC<IProfileDropdown> = (props) => {
           >
             <i className="fa-solid fa-wallet" />
           </div>
-          <span className="font-medium">{t.myWallet}</span>
+          <span className="font-medium">{t("myWallet")}</span>
         </Link>
 
         <div className="my-2 border-b opacity-50 mx-2" />
@@ -122,7 +125,7 @@ const ProfileDropdown: React.FC<IProfileDropdown> = (props) => {
           >
             <i className="fa-solid fa-arrow-right-from-bracket" />
           </div>
-          <span className="font-bold">{t.logout}</span>
+          <span className="font-bold">{t("logout")}</span>
         </button>
       </div>
 

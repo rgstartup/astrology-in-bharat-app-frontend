@@ -4,15 +4,13 @@ import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { useAuth } from "@/store/useAuthStore";
 import { usePathname } from "next/navigation";
-import { headerTranslations, useLanguageStore } from "@repo/store";
 import ProfileDropdown from "./profile-dropdown";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
+import { getProfileImageUrl } from "@/utils/image-utils";
 
 const UserProfileDropdown = () => {
   const { user, isAuthenticated, logout, openImageModal } = useAuth();
-  const { lang } = useLanguageStore();
-  const t = headerTranslations[lang];
 
   const pathname = usePathname();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -50,7 +48,7 @@ const UserProfileDropdown = () => {
           onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           <Image
-            src={user?.avatar!}
+            src={getProfileImageUrl(user?.avatar, user?.name)}
             alt="Profile"
             width={35}
             height={35}
@@ -67,7 +65,6 @@ const UserProfileDropdown = () => {
 
       <ProfileDropdown
         user={user}
-        t={t}
         handleLogout={handleLogout}
         setShowProfileDropdown={setShowProfileDropdown}
         showProfileDropdown={showProfileDropdown}

@@ -1,7 +1,7 @@
 "use client";
 
 import { PATHS } from "@repo/routes";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { INotification } from "@/lib/types/notification.type";
 import { useTranslations } from "next-intl";
 

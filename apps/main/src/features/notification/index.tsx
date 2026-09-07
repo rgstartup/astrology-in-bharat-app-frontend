@@ -20,7 +20,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 const NotificationComponent = () => {
   const notificationRef = useRef<HTMLDivElement>(null);
 
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const {
     unread_count,
     notifications,

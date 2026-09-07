@@ -1,11 +1,12 @@
 "use client";
 
+import { useLocale } from "next-intl";
+import { useRef, useState } from "react";
+
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
 import type { AppLocale } from "@/i18n/routing";
-import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRouter, usePathname } from "@/i18n/navigation";
 
 interface LanguageButtonProps {
   changeLanguage: (language: AppLocale) => void;
@@ -44,6 +45,7 @@ const LanguageButtons = (props: LanguageButtonProps) => {
 
 const LanguageSwitcherDropdown = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const activeLanguage = useLocale();
 
   const [showLanguageDropDown, setShowLanguageDropDown] = useState(false);
@@ -52,18 +54,8 @@ const LanguageSwitcherDropdown = () => {
   const closeLanguageDropdown = () => setShowLanguageDropDown(false);
 
   const changeLanguage = async (language: AppLocale) => {
-    const response = await fetch("/api/locale", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ locale: language }),
-    });
-
-    if (!response.ok) return;
-
-    // Keep the locale in the URL as well as the cookie. The URL reflects the
-    // selected language, while the cookie lets server-rendered non-localized
-    // routes use the same preference.
-    router.replace(`/${language}`);
+    router.replace(pathname, { locale: language });
+    router.refresh();
   };
 
   useClickOutside(ref, closeLanguageDropdown, showLanguageDropDown);

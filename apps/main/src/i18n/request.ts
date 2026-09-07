@@ -3,13 +3,14 @@ import { getRequestConfig } from "next-intl/server";
 
 import { routing } from "./routing";
 
-export default getRequestConfig(async ({ locale }) => {
+export default getRequestConfig(async ({ locale, requestLocale }) => {
   // `getLocale()` is used by the root layout, before `[locale]/layout.tsx`
   // can validate the URL. Never call `notFound()` here: Next.js disallows it
   // while resolving the root layout. The locale layout still rejects invalid
   // URL segments; this fallback only lets root-level rendering complete.
-  const resolvedLocale = hasLocale(routing.locales, locale)
-    ? locale
+  const requested = locale ?? (await requestLocale);
+  const resolvedLocale = hasLocale(routing.locales, requested)
+    ? requested
     : routing.defaultLocale;
 
   return {
