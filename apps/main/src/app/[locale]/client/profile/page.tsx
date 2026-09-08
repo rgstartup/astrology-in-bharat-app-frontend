@@ -17,69 +17,120 @@ import UserDisputeChatModal from "@/components/features/user/UserDisputeChatModa
 import DisputesTab from "@/components/features/profile/DisputesTab";
 import PujaBookingsTab from "@/components/features/profile/PujaBookingsTab";
 import { useProfileLogic } from "@/components/features/profile/useProfileLogic";
-import { useLanguageStore } from "@repo/store";
-import { profileTranslations } from "@/lib/translations/profile";
 import Skeleton from "@/components/ui/Skeleton";
 import { Loading } from "@repo/ui";
 
 const ProfileContent: React.FC = () => {
-  const { lang } = useLanguageStore();
-  const t = profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en;
-  const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
+  const lang = useLocale();
+  const t = useTranslations("Profile");
+  const fontStyle =
+    lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const {
-    user, authLoading, profileLoading, balance, isAuthenticated,
+    profileLoading,
+    balance,
     profileData,
-    editingSections, setEditingSections,
+    editingSections,
+    setEditingSections,
     savingSections,
-    successMessage, errorMessage,
-    imagePreview, handleImageChange,
-    handleInputChange, handleAddressChange, handleSaveSection, loadOrdersAndDisputes, loadProfile,
+    successMessage,
+    errorMessage,
+    imagePreview,
+    handleImageChange,
+    handleInputChange,
+    handleAddressChange,
+    handleSaveSection,
+    loadOrdersAndDisputes,
+    loadProfile,
 
     // Wallet
-    rechargeAmount, setRechargeAmount,
-    isProcessing, rechargeOptions,
-    walletTransactions, loadingTransactions, transactionsHasMore, loadingMoreTransactions, loadMoreTransactions,
-    walletView, setWalletView,
-    walletPurpose, setWalletPurpose,
+    rechargeAmount,
+    setRechargeAmount,
+    isProcessing,
+    rechargeOptions,
+    walletTransactions,
+    loadingTransactions,
+    transactionsHasMore,
+    loadingMoreTransactions,
+    loadMoreTransactions,
+    walletView,
+    setWalletView,
+    walletPurpose,
+    setWalletPurpose,
     handleRecharge,
 
     // History
-    consultationHistory, loadingHistory, hasMore, loadingMore, loadMoreHistory, expandedSessions, toggleSession,
-    selectedSession, chatMessages, showChatModal, setShowChatModal,
+    consultationHistory,
+    loadingHistory,
+    hasMore,
+    loadingMore,
+    loadMoreHistory,
+    expandedSessions,
+    toggleSession,
+    selectedSession,
+    chatMessages,
+    showChatModal,
+    setShowChatModal,
     handleViewChat,
 
     // Orders
-    orders, loadingOrders, ordersHasMore, loadingMoreOrders, loadMoreOrders, expandedOrders, toggleOrder,
-    orderDisputes, consultationDisputes, pujaDisputes, allDisputes, selectedDispute, setSelectedDispute, showDisputeChat, setShowDisputeChat,
+    orders,
+    loadingOrders,
+    ordersHasMore,
+    loadingMoreOrders,
+    loadMoreOrders,
+    expandedOrders,
+    toggleOrder,
+    orderDisputes,
+    consultationDisputes,
+    pujaDisputes,
+    allDisputes,
+    selectedDispute,
+    setSelectedDispute,
+    showDisputeChat,
+    setShowDisputeChat,
 
     // Notifications
-    notifications, loadingNotifications, notificationsHasMore, loadingMoreNotifications, loadMoreNotifications,
-    handleMarkAsRead, handleClearAllNotifs,
+    notifications,
+    loadingNotifications,
+    notificationsHasMore,
+    loadingMoreNotifications,
+    loadMoreNotifications,
+    handleMarkAsRead,
+    handleClearAllNotifs,
 
     // Rewards
-    rewards, loadingRewards,
+    rewards,
+    loadingRewards,
 
     // Support
     supportSettings,
 
     // Modals
-    reportModalOpen, setReportModalOpen,
-    reportItemType, setReportItemType,
-    reportItemDetails, setReportItemDetails,
+    reportModalOpen,
+    setReportModalOpen,
+    reportItemType,
+    setReportItemType,
+    reportItemDetails,
+    setReportItemDetails,
 
     // Tab
-    activeTab, setActiveTab,
+    activeTab,
+    setActiveTab,
 
     // Puja
-    pujaBookings, loadingPuja, handleUpdatePujaStatus,
+    pujaBookings,
+    loadingPuja,
+    handleUpdatePujaStatus,
 
     // Reviews
-    reviewModalOpen, setReviewModalOpen, handleOpenReviewModal, handleReviewSubmit
+    reviewModalOpen,
+    setReviewModalOpen,
+    handleOpenReviewModal,
+    handleReviewSubmit,
   } = useProfileLogic();
 
-  // Determine overall loading state for components
-  const isInitialLoading = (authLoading || profileLoading) && !profileData?.id;
+  const { loading, user, isAuthenticated } = useAuth();
 
   // Handle report success and optionally open chat
   const handleReportSuccess = (newDispute?: any) => {
@@ -90,7 +141,7 @@ const ProfileContent: React.FC = () => {
     }
   };
 
-  if (authLoading || !isAuthenticated) {
+  if (loading || !isAuthenticated) {
     return <Loading fullScreen />;
   }
 
@@ -108,7 +159,7 @@ const ProfileContent: React.FC = () => {
                 imagePreview={imagePreview}
                 handleImageChange={handleImageChange}
                 savingSections={savingSections}
-                loading={isInitialLoading}
+                loading={loading}
               />
             </div>
 
@@ -146,7 +197,7 @@ const ProfileContent: React.FC = () => {
                   handleAddressChange={handleAddressChange}
                   handleSaveSection={handleSaveSection}
                   refreshProfile={loadProfile}
-                  loading={isInitialLoading}
+                  loading={loading}
                 />
               )}
 
@@ -159,8 +210,11 @@ const ProfileContent: React.FC = () => {
                     >
                       <i className="fa-solid fa-heart"></i>
                     </div>
-                    <h5 className="text-xl font-bold text-gray-900 m-0" style={fontStyle}>
-                      {t.wishlist.title}
+                    <h5
+                      className="text-xl font-bold text-gray-900 m-0"
+                      style={fontStyle}
+                    >
+                      {t("wishlist.title")}
                     </h5>
                   </div>
                   <div className="px-6 pb-6 pt-0">
@@ -270,39 +324,44 @@ const ProfileContent: React.FC = () => {
               )}
 
               {activeTab === "pujas" && (
-                 <div className="bg-white border-0 shadow-sm rounded-2xl mb-6 overflow-hidden">
-                    <div className="bg-white px-6 pt-6 pb-2 mb-2 flex items-center">
-                      <div
-                        className="w-10 h-10 rounded-full flex items-center justify-center mr-3"
-                        style={{ backgroundColor: "#fff7ed", color: "#ea580c" }}
-                      >
-                        <i className="fa-solid fa-om"></i>
-                      </div>
-                      <h5 className="text-xl font-bold text-gray-900 m-0" style={fontStyle}>
-                        {t.sidebar.tabs.pujas}
-                      </h5>
+                <div className="bg-white border-0 shadow-sm rounded-2xl mb-6 overflow-hidden">
+                  <div className="bg-white px-6 pt-6 pb-2 mb-2 flex items-center">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center mr-3"
+                      style={{ backgroundColor: "#fff7ed", color: "#ea580c" }}
+                    >
+                      <i className="fa-solid fa-om"></i>
                     </div>
-                    <div className="px-4 sm:px-6 pb-6 pt-0">
-                      <PujaBookingsTab 
-                        loading={loadingPuja} 
-                        bookings={pujaBookings} 
-                        onUpdateStatus={handleUpdatePujaStatus} 
-                        onReportIssue={(booking) => {
-                          setReportItemType("puja");
-                          setReportItemDetails(booking);
-                          setReportModalOpen(true);
-                        }}
-                        pujaDisputes={pujaDisputes}
-                        onViewDispute={(dispute) => {
-                          setSelectedDispute(dispute);
-                          setShowDisputeChat(true);
-                        }}
-                      />
-                    </div>
+                    <h5
+                      className="text-xl font-bold text-gray-900 m-0"
+                      style={fontStyle}
+                    >
+                      {t("sidebar.tabs.pujas")}
+                    </h5>
                   </div>
+                  <div className="px-4 sm:px-6 pb-6 pt-0">
+                    <PujaBookingsTab
+                      loading={loadingPuja}
+                      bookings={pujaBookings}
+                      onUpdateStatus={handleUpdatePujaStatus}
+                      onReportIssue={(booking) => {
+                        setReportItemType("puja");
+                        setReportItemDetails(booking);
+                        setReportModalOpen(true);
+                      }}
+                      pujaDisputes={pujaDisputes}
+                      onViewDispute={(dispute) => {
+                        setSelectedDispute(dispute);
+                        setShowDisputeChat(true);
+                      }}
+                    />
+                  </div>
+                </div>
               )}
 
-              {activeTab === "support" && <SupportTab supportSettings={supportSettings} />}
+              {activeTab === "support" && (
+                <SupportTab supportSettings={supportSettings} />
+              )}
             </div>
           </div>
 
@@ -342,6 +401,8 @@ const ProfileContent: React.FC = () => {
 };
 
 import { Suspense } from "react";
+import { useAuth } from "@/store/useAuthStore";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function ProfilePage() {
   return (
@@ -368,7 +429,10 @@ export default function ProfilePage() {
               </div>
               <div className="lg:col-span-3 space-y-6">
                 {[1, 2].map((i) => (
-                  <div key={i} className="bg-white rounded-2xl p-8 shadow-premium">
+                  <div
+                    key={i}
+                    className="bg-white rounded-2xl p-8 shadow-premium"
+                  >
                     <Skeleton width={200} height={24} className="mb-6" />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       {[1, 2, 3, 4].map((j) => (
@@ -390,4 +454,3 @@ export default function ProfilePage() {
     </Suspense>
   );
 }
-

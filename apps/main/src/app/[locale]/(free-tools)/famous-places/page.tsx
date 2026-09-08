@@ -6,20 +6,20 @@ import { fetchPlaces, Place } from "@/libs/serp-api";
 import { Loading } from "@repo/ui";
 
 // ── Local components (feature-specific) ──────────────────────────────────────
-import FamousPlacesHero from "@/components/features/famous-places/FamousPlacesHero";
-import FamousPlacesSearch from "@/components/features/famous-places/FamousPlacesSearch";
-import PlacesSection from "@/components/features/famous-places/PlacesSection";
-import TempleCategories from "@/components/features/famous-places/TempleCategories";
+import FamousPlacesHero from "@/features/places/FamousPlacesHero";
+import FamousPlacesSearch from "@/features/places/FamousPlacesSearch";
+import PlacesSection from "@/features/places/PlacesSection";
+import TempleCategories from "@/features/places/TempleCategories";
 import {
   WhyVisitSidebar,
   ZodiacRecommendationSidebar,
   TodaysSpecialSidebar,
-} from "@/components/features/famous-places/SidebarWidgets";
+} from "@/features/places/SidebarWidgets";
 import {
   DEFAULT_QUERIES,
   TEMPLE_CATEGORIES,
-} from "@/components/features/famous-places/constants";
-import PlaceCard from "@/components/features/famous-places/PlaceCard";
+} from "@/features/places/constants";
+import PlaceCard from "@/features/places/PlaceCard";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
 import FamousPlacesSeoContent from "./famous-places-seo.component";
 

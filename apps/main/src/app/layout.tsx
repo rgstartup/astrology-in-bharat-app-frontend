@@ -4,22 +4,20 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import "@repo/ui/styles/index.css";
+import { Metadata } from "next";
 import ClientLayout from "@/components/layout/ClientLayout";
 import { AuthInitializer } from "@/components/layout/AuthInitializer";
 import { CartInitializer } from "@/components/layout/CartInitializer"; // Changed import
 import { WishlistInitializer } from "@/components/layout/WishlistInitializer";
-import { Metadata } from "next";
-// import { cookies } from "next/headers";
-import QueryProvider from "@/providers/QueryProvider";
 import ExpertStatusProvider from "@/providers/ExpertStatusProvider";
 import MerchantStatusProvider from "@/providers/MerchantStatusProvider";
 import NotificationProvider from "@/providers/NotificationProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
-// import { decodeToken, getErrorMessage } from "@repo/lib";
 import ToastProvider from "@/components/layout/ToastProvider";
 import PlatformReviewModal from "@/components/features/reviews";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
+import QueryProvider from "@/providers/QueryProvider";
 
 export const metadata: Metadata = {
   title: "Astrology in Bharat",
@@ -57,16 +55,18 @@ export default async function RootLayout({
           <ExpertStatusProvider>
             <MerchantStatusProvider>
               <NotificationProvider>
-                <AuthInitializer>
-                  <CartInitializer>
-                    <WishlistInitializer>
-                      <SmoothScroll>
-                        <ClientLayout>{children}</ClientLayout>
-                      </SmoothScroll>
-                    </WishlistInitializer>
-                  </CartInitializer>
-                  <PlatformReviewModal />
-                </AuthInitializer>
+                <QueryProvider>
+                  <AuthInitializer>
+                    <CartInitializer>
+                      <WishlistInitializer>
+                        <SmoothScroll>
+                          <ClientLayout>{children}</ClientLayout>
+                        </SmoothScroll>
+                      </WishlistInitializer>
+                    </CartInitializer>
+                    <PlatformReviewModal />
+                  </AuthInitializer>
+                </QueryProvider>
               </NotificationProvider>
             </MerchantStatusProvider>
           </ExpertStatusProvider>
