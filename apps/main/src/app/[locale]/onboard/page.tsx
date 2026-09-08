@@ -2,18 +2,15 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "@/i18n/navigation";
 import { OnboardContainer } from "@/features/onboard";
+import { getLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Complete Your Profile - Astrology Bharat",
   description: "Personalize your astrological journey and natal birth chart.",
 };
 
-export default async function OnboardPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
+export default async function OnboardPage() {
+  const locale = await getLocale();
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
