@@ -75,7 +75,6 @@ const reduceNumber = (n: number): NameNumber => {
 const NameNumerologyCalculator: React.FC = () => {
   const { lang, toggleLang } = useLanguageStore();
   const t = nameNumerologyTranslations[lang as "en" | "hi"] || nameNumerologyTranslations.en;
-  const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const [fullName, setFullName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -144,7 +143,7 @@ const NameNumerologyCalculator: React.FC = () => {
         canCalculate={canCalculate}
         handleCalculate={handleCalculate}
         t={t.form}
-        fontStyle={fontStyle}
+
       />
 
       {/* Result */}
@@ -160,11 +159,11 @@ const NameNumerologyCalculator: React.FC = () => {
 
                   <div className="relative z-10">
                     <div className="text-center mb-16">
-                      <span className="inline-block bg-primary/10 text-primary px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8" style={fontStyle}>
+                      <span className="inline-block bg-primary/10 text-primary px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
                         {t.results.badge}
                       </span>
 
-                      <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-6 tracking-tight" style={fontStyle}>
+                      <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-6 tracking-tight">
                         {t.results.title} <span className="text-primary">{t.results.titleAccent}</span>
                       </h2>
 
@@ -181,7 +180,7 @@ const NameNumerologyCalculator: React.FC = () => {
                             <span className="block text-7xl md:text-9xl font-black text-burgundy leading-none group-hover:scale-110 transition-transform duration-500">
                               {result.nameNumber}
                             </span>
-                            <span className="text-[12px] font-black uppercase tracking-[4px] text-primary mt-4 block" style={fontStyle}>
+                            <span className="text-[12px] font-black uppercase tracking-[4px] text-primary mt-4 block">
                               {t.results.vibeLabel} {result.vibe}
                             </span>
                           </div>
@@ -197,14 +196,14 @@ const NameNumerologyCalculator: React.FC = () => {
                             <GiSparkles size={28} />
                           </div>
 
-                          <p className="text-xl md:text-2xl font-light italic leading-relaxed text-orange-100/90 m-0" style={fontStyle}>
+                          <p className="text-xl md:text-2xl font-light italic leading-relaxed text-orange-100/90 m-0">
                             {t.results.vibeLabel}{" "}
                             <span className="font-black text-white ml-2">
                               {result.vibe}
                             </span>
                           </p>
 
-                          <p className="m-0 mt-6 text-sm text-orange-100/60 italic" style={fontStyle}>
+                          <p className="m-0 mt-6 text-sm text-orange-100/60 italic">
                             {t.results.scoreLabel}{" "}
                             <span className="font-black text-white ml-1">
                               {result.totalBeforeReduce}
@@ -212,7 +211,7 @@ const NameNumerologyCalculator: React.FC = () => {
                           </p>
 
                           <div className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10">
-                            <span className="text-[10px] font-black uppercase tracking-[4px] text-orange-100/70" style={fontStyle}>
+                            <span className="text-[10px] font-black uppercase tracking-[4px] text-orange-100/70">
                               {t.results.system}
                             </span>
                           </div>
@@ -232,6 +231,4 @@ const NameNumerologyCalculator: React.FC = () => {
 };
 
 export default NameNumerologyCalculator;
-
-
 

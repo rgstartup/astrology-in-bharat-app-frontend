@@ -80,7 +80,6 @@ const DUMMY_PUJAS: any[] = [
 const PujaListSection = () => {
     const { lang, translations, content } = usePujaTranslations();
     const t = translations as any;
-    const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
     const [pujas, setPujas] = useState<ExpertPuja[]>([]);
     const [loading, setLoading] = useState(true);
@@ -153,7 +152,7 @@ const PujaListSection = () => {
             <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
                 <div className="relative mb-4 md:mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-4 z-20">
                     <div className="text-white mb-0 md:mb-2 w-full md:w-auto" style={{ '--heading-border-color': 'rgba(255,255,255,0.2)' } as any}>
-                        <h2 className="section-heading-premium mb-0" style={fontStyle}>
+                        <h2 className="section-heading-premium mb-0">
                             <span>{t.page.title} <span className="text-orange-600">{t.page.titleHighlight}</span></span>
                         </h2>
                     </div>
@@ -169,7 +168,7 @@ const PujaListSection = () => {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-10 pr-4 py-2.5 bg-black/40 border border-[#d95a00] text-white rounded-xl focus:ring-2 focus:ring-[#d95a00]/30 hover:border-[#ff6b00] outline-none transition-all text-sm placeholder:text-gray-300"
-                                style={fontStyle}
+
                             />
                         </div>
 
@@ -178,7 +177,7 @@ const PujaListSection = () => {
                             <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                 className="w-full flex items-center justify-between px-4 py-2.5 bg-black/40 border border-[#d95a00] rounded-xl focus:ring-2 focus:ring-[#d95a00]/30 hover:border-[#ff6b00] outline-none text-sm font-bold text-white transition-all"
-                                style={fontStyle}
+
                             >
                                 <span className="truncate pr-2">{selectedPujaName === t.filters.allPujas ? t.filters.allPujas : (content[selectedPujaName] || selectedPujaName)}</span>
                                 <ChevronDown className={`w-4 h-4 shrink-0 transition-transform ${isDropdownOpen ? 'rotate-180 text-orange-500' : ''}`} />
@@ -194,7 +193,7 @@ const PujaListSection = () => {
                                                 setIsDropdownOpen(false);
                                             }}
                                             className={`w-full text-left px-4 py-2.5 text-sm hover:bg-orange-600 hover:text-white transition-colors ${selectedPujaName === name ? 'text-orange-500 bg-black/20 font-bold' : 'text-gray-400 font-medium'}`}
-                                            style={fontStyle}
+
                                         >
                                             {name === t.filters.allPujas ? t.filters.allPujas : (content[name] || name)}
                                         </button>
@@ -265,7 +264,7 @@ const PujaListSection = () => {
                         <Link
                             href="/online-puja"
                             className="no-underline bg-orange-600 hover:bg-orange-700 text-white px-8 py-3.5 rounded-full font-bold shadow-lg transition-all mx-auto flex items-center justify-center gap-2 w-fit active:scale-95 shadow-orange-900/40 hover:translate-y-[-2px]"
-                            style={fontStyle}
+
                         >
                             <i className="fa-solid fa-om text-lg"></i>
                             {t.page.viewAll}

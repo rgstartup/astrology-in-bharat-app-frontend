@@ -13,20 +13,19 @@ const MarriageAgeForm: React.FC<MarriageAgeFormProps> = ({
   canCalculate,
   handleCalculate,
   t,
-  fontStyle,
 }) => {
   return (
     <form onSubmit={handleCalculate} className="w-full space-y-6 md:space-y-8 relative z-10">
       {/* Name */}
       <div>
-        <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+        <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
           {t.nameLabel}
         </label>
         <div className="relative mt-2">
           <input
             type="text"
             required
-            style={{ borderRadius: "9999px", ...fontStyle }}
+            style={{ borderRadius: "9999px" }}
             className="w-full bg-white border-2 border-orange-500 pl-6 pr-12 py-4 text-[#301118] font-bold focus:border-orange-600 focus:ring-4 focus:ring-orange-500/20 outline-none transition-all placeholder:text-gray-400 shadow-sm text-sm"
             placeholder={t.namePlaceholder}
             value={name}
@@ -40,13 +39,13 @@ const MarriageAgeForm: React.FC<MarriageAgeFormProps> = ({
 
       {/* DOB Optional */}
       <div>
-        <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+        <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
           {t.dobLabel}
         </label>
         <div className="relative mt-2">
           <input
             type="date"
-            style={{ borderRadius: "9999px", ...fontStyle }}
+            style={{ borderRadius: "9999px" }}
             className="w-full bg-white border-2 border-orange-500 pl-6 pr-12 py-4 text-[#301118] font-bold focus:border-orange-600 focus:ring-4 focus:ring-orange-500/20 outline-none transition-all shadow-sm text-sm [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-datetime-edit-fields-wrapper]:p-0"
             value={dob}
             onChange={(e) => setDob(e.target.value)}
@@ -56,7 +55,7 @@ const MarriageAgeForm: React.FC<MarriageAgeFormProps> = ({
           </div>
         </div>
 
-        <p className="m-0 mt-3 text-xs text-gray-500 italic text-center md:text-left" style={fontStyle}>
+        <p className="m-0 mt-3 text-xs text-gray-500 italic text-center md:text-left">
           {t.dobTip}
         </p>
       </div>
@@ -74,7 +73,7 @@ const MarriageAgeForm: React.FC<MarriageAgeFormProps> = ({
           ) : (
             <TbCrystalBall size={18} className="shrink-0" />
           )}
-          <span style={fontStyle} className="text-center">
+          <span className="text-center">
             {loading ? t.calculating : t.calculate}
           </span>
           <FaArrowRight className="opacity-70 group-hover:translate-x-1 transition-transform shrink-0" />

@@ -12,7 +12,6 @@ interface DisputesTabProps {
 const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat }) => {
     const { lang } = useLanguageStore();
     const t = (profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en).disputes;
-    const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   if (loading) {
     return (
@@ -50,7 +49,6 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
       <div className="px-6 py-5 bg-white border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h5
           className="text-lg font-bold text-gray-900 mb-0 flex items-center"
-          style={fontStyle}
         >
           <span className="w-10 h-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mr-3 flex-shrink-0">
             <i className="fa-solid fa-headset"></i>
@@ -64,10 +62,10 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
             <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mb-6 border border-gray-100 shadow-inner">
               <i className="fa-solid fa-ticket text-3xl text-gray-300"></i>
             </div>
-            <h6 className="font-bold text-gray-900 text-lg mb-2" style={fontStyle}>
+            <h6 className="font-bold text-gray-900 text-lg mb-2">
               {t.noTickets}
             </h6>
-            <p className="text-gray-500 text-sm max-w-xs m-0" style={fontStyle}>
+            <p className="text-gray-500 text-sm max-w-xs m-0">
               {t.noTicketsHint}
             </p>
           </div>
@@ -79,25 +77,21 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
                   <tr className="bg-gray-50/50">
                     <th
                       className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400"
-                      style={fontStyle}
                     >
                       {t.ticketId}
                     </th>
                     <th
                       className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400"
-                      style={fontStyle}
                     >
                       {t.category}
                     </th>
                     <th
                       className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400"
-                      style={fontStyle}
                     >
                       {t.status}
                     </th>
                     <th
                       className="px-6 py-4 text-right text-[10px] font-black uppercase tracking-widest text-gray-400"
-                      style={fontStyle}
                     >
                       {t.action}
                     </th>
@@ -128,7 +122,6 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
                       <td className="px-6 py-5">
                         <span
                           className="inline-block px-3 py-1 mb-2 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700 shadow-sm"
-                          style={fontStyle}
                         >
                           {dispute.category || dispute.subject || t.defaultCategory}
                         </span>
@@ -155,7 +148,6 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
                         <button
                           onClick={() => onViewChat(dispute)}
                           className="inline-flex items-center gap-2 px-5 py-2.5 bg-orange text-white font-bold text-xs rounded-xl hover:bg-orange/90 transition-all shadow-lg shadow-orange/20"
-                          style={fontStyle}
                         >
                           <i className="fa-solid fa-comments"></i>
                           {t.viewChat}
@@ -230,5 +222,4 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
 };
 
 export default DisputesTab;
-
 

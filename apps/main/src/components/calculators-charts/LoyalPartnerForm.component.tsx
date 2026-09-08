@@ -16,7 +16,6 @@ const LoyalPartnerForm: React.FC<LoyalPartnerFormProps> = ({
   canCalculate,
   handleCalculate,
   t,
-  fontStyle,
 }) => {
   return (
     <section className="py-24 relative overflow-hidden">
@@ -27,7 +26,7 @@ const LoyalPartnerForm: React.FC<LoyalPartnerFormProps> = ({
           </div>
 
           <div className="text-center mb-10">
-            <h2 className="text-xl md:text-3xl font-black text-[#301118] mb-2 tracking-tight" style={fontStyle}>
+            <h2 className="text-xl md:text-3xl font-black text-[#301118] mb-2 tracking-tight">
               {t.title} <span className="text-primary">{t.titleAccent}</span>
             </h2>
             <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-2"></div>
@@ -38,14 +37,14 @@ const LoyalPartnerForm: React.FC<LoyalPartnerFormProps> = ({
               {/* Names */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                     {t.yourName}
                   </label>
                   <div className="relative mt-2">
                     <input
                       type="text"
                       required
-                      style={{ borderRadius: "9999px", ...fontStyle }}
+                      style={{ borderRadius: "9999px" }}
                       className="w-full bg-[#fdf2f2] border-2 border-[#301118]/5 px-6 py-4 text-[#301118] font-bold focus:border-red-500 outline-none transition-all placeholder:text-gray-300 shadow-sm text-sm"
                       placeholder={t.yourPlaceholder}
                       value={yourName}
@@ -58,14 +57,14 @@ const LoyalPartnerForm: React.FC<LoyalPartnerFormProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                     {t.partnerName}
                   </label>
                   <div className="relative mt-2">
                     <input
                       type="text"
                       required
-                      style={{ borderRadius: "9999px", ...fontStyle }}
+                      style={{ borderRadius: "9999px" }}
                       className="w-full bg-[#fdf2f2] border-2 border-[#301118]/5 px-6 py-4 text-[#301118] font-bold focus:border-red-500 outline-none transition-all placeholder:text-gray-300 shadow-sm text-sm"
                       placeholder={t.partnerPlaceholder}
                       value={partnerName}
@@ -81,14 +80,14 @@ const LoyalPartnerForm: React.FC<LoyalPartnerFormProps> = ({
               {/* DOBs (required but not used) */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                     {t.yourDob}
                   </label>
                   <div className="relative mt-2">
                     <input
                       type="date"
                       required
-                      style={{ borderRadius: "9999px", ...fontStyle }}
+                      style={{ borderRadius: "9999px" }}
                       className="w-full bg-white border-2 border-[#301118]/5 px-6 py-4 text-[#301118] font-bold focus:border-primary outline-none transition-all shadow-sm text-sm"
                       value={yourDob}
                       onChange={(e) => setYourDob(e.target.value)}
@@ -100,14 +99,14 @@ const LoyalPartnerForm: React.FC<LoyalPartnerFormProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                     {t.partnerDob}
                   </label>
                   <div className="relative mt-2">
                     <input
                       type="date"
                       required
-                      style={{ borderRadius: "9999px", ...fontStyle }}
+                      style={{ borderRadius: "9999px" }}
                       className="w-full bg-white border-2 border-[#301118]/5 px-6 py-4 text-[#301118] font-bold focus:border-primary outline-none transition-all shadow-sm text-sm"
                       value={partnerDob}
                       onChange={(e) => setPartnerDob(e.target.value)}
@@ -132,14 +131,14 @@ const LoyalPartnerForm: React.FC<LoyalPartnerFormProps> = ({
                   ) : (
                     <FaShieldAlt size={16} />
                   )}
-                  <span style={fontStyle}>
+                  <span>
                     {loading ? t.calculating : t.calculate}
                   </span>
                   <FaArrowRight className="opacity-70 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
 
-              <p className="m-0 text-center text-xs text-gray-400 italic" style={fontStyle}>
+              <p className="m-0 text-center text-xs text-gray-400 italic">
                 {t.disclaimer}
               </p>
             </div>

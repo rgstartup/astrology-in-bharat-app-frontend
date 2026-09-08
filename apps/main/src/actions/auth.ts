@@ -3,11 +3,12 @@
 import { cookies } from "next/headers";
 import { api, API_ROUTES } from "@/actions";
 import { getErrorMessage } from "@repo/lib";
-import { setAccessToken, setRefreshToken } from "./cookie";
+import { setAccessToken, setRefreshToken, clearAuthCookies } from "./cookie";
 
 import {
   LoginFormData,
   RegisterFormData,
+  VerifyOtpFormData,
   AuthResponse,
   AuthActionResponse,
 } from "@/lib/types";
@@ -33,12 +34,16 @@ export async function loginAction(
   // Set HttpOnly cookies on the server — JS on browser can NEVER read these
   const cookieStore = await cookies();
 
-  if (data?.accessToken) {
-    setAccessToken(cookieStore, data.accessToken);
+  const accessToken =
+    data?.accessToken || data?.tokens?.accessToken || (data as any)?.token;
+  const refreshToken = data?.refreshToken || data?.tokens?.refreshToken;
+
+  if (accessToken) {
+    setAccessToken(cookieStore, accessToken);
   }
 
-  if (data?.refreshToken) {
-    setRefreshToken(cookieStore, data.refreshToken);
+  if (refreshToken) {
+    setRefreshToken(cookieStore, refreshToken);
   }
 
   return { success: true, user: data?.user };
@@ -49,20 +54,63 @@ export async function loginAction(
 // ─────────────────────────────────────────────────────────
 export async function logoutAction(): Promise<AuthActionResponse> {
   const cookieStore = await cookies();
-  cookieStore.delete("accessToken");
-  cookieStore.delete("refreshToken");
+  clearAuthCookies(cookieStore as any);
   return { success: true };
 }
 
 // ─────────────────────────────────────────────────────────
-// REGISTER (OLD) — Calls backend via api (Server-Side Only)
+// REGISTER (2-Step Flow: Step 1) — Submits firstname, lastname, email, password
 // ─────────────────────────────────────────────────────────
 export async function registerAction(
   registerData: RegisterFormData,
 ): Promise<AuthActionResponse> {
+  const firstName = registerData.first_name || (registerData as any).firstname;
+  const lastName = registerData.last_name || (registerData as any).lastname;
+
+  const payload: Record<string, any> = {
+    first_name: firstName,
+    email: registerData.email,
+    password: registerData.password,
+  };
+
+  if (lastName) {
+    payload.last_name = lastName;
+  }
+
+  const [data, error] = await api.post<{ message?: string }>(
+    API_ROUTES.AUTH.CLIENT.REGISTER,
+    payload,
+  );
+
+  if (error) {
+    const errorMsg = getErrorMessage(error);
+    console.error("[DEBUG][ServerAction] registerAction error:", errorMsg);
+    return {
+      error: errorMsg,
+    };
+  }
+
+  return {
+    success: true,
+    message:
+      data?.message ||
+      "Registration initiated! Please enter the OTP sent to your email.",
+  };
+}
+
+// ─────────────────────────────────────────────────────────
+// VERIFY OTP (2-Step Flow: Step 2) — Submits email and otp only
+// Upon verification, tokens are received and set in HttpOnly cookies
+// ─────────────────────────────────────────────────────────
+export async function verifyOtpAction(
+  verifyData: VerifyOtpFormData,
+): Promise<AuthActionResponse> {
   const [data, error] = await api.post<AuthResponse>(
-    API_ROUTES.AUTH.REGISTER,
-    registerData,
+    API_ROUTES.AUTH.CLIENT.VERIFY_OTP,
+    {
+      email: verifyData.email,
+      otp: verifyData.otp,
+    },
   );
 
   if (error) {
@@ -71,30 +119,24 @@ export async function registerAction(
     };
   }
 
-  return {
-    success: true,
-    message:
-      data?.message || "Registration successful! Please verify your email.",
-  };
-}
+  const accessToken =
+    data?.accessToken || data?.tokens?.accessToken || (data as any)?.token;
+  const refreshToken = data?.refreshToken || data?.tokens?.refreshToken;
 
-// ─────────────────────────────────────────────────────────
-// INITIATE REGISTRATION
-// ─────────────────────────────────────────────────────────
-export async function initiateRegistrationAction(
-  email: string,
-): Promise<AuthActionResponse> {
-  const [data, error] = await api.post<{ message: string }>("/auth/client/email/register/initiate", {
-    email,
-  });
+  const cookieStore = await cookies();
 
-  if (error) {
-    return { error: getErrorMessage(error) };
+  if (accessToken) {
+    setAccessToken(cookieStore, accessToken);
+  }
+
+  if (refreshToken) {
+    setRefreshToken(cookieStore, refreshToken);
   }
 
   return {
     success: true,
-    message: data?.message,
+    user: data?.user,
+    message: data?.message || "OTP verified successfully!",
   };
 }
 
@@ -124,10 +166,10 @@ export async function completeRegistrationAction(
     ),
   );
 
-  const [data, error] = (await api.post<AuthResponse>(
+  const [data, error] = await api.post<AuthResponse>(
     "/auth/email/register/complete",
     payload,
-  )) as any;
+  );
 
   console.log(
     "[DEBUG][ServerAction] Response from backend - error:",
@@ -137,10 +179,10 @@ export async function completeRegistrationAction(
     "[DEBUG][ServerAction] Response from backend - data:",
     data
       ? JSON.stringify({
-        hasAccessToken: !!data.accessToken,
-        hasRefreshToken: !!data.refreshToken,
-        user: data.user,
-      })
+          hasAccessToken: !!data.accessToken,
+          hasRefreshToken: !!data.refreshToken,
+          user: data.user,
+        })
       : "none",
   );
 
@@ -154,12 +196,16 @@ export async function completeRegistrationAction(
 
   const cookieStore = await cookies();
 
-  if (data?.accessToken) {
-    setAccessToken(cookieStore, data.accessToken);
+  const accessToken =
+    data?.accessToken || data?.tokens?.accessToken || (data as any)?.token;
+  const refreshToken = data?.refreshToken || data?.tokens?.refreshToken;
+
+  if (accessToken) {
+    setAccessToken(cookieStore, accessToken);
   }
 
-  if (data?.refreshToken) {
-    setRefreshToken(cookieStore, data.refreshToken);
+  if (refreshToken) {
+    setRefreshToken(cookieStore, refreshToken);
   }
 
   return { success: true, user: data?.user };
@@ -186,12 +232,16 @@ export async function verifyEmailAction(
   const isFullyRegistered = !!data?.user?.name;
 
   if (isFullyRegistered) {
-    if (data?.accessToken) {
-      setAccessToken(cookieStore, data.accessToken);
+    const accessToken =
+      data?.accessToken || data?.tokens?.accessToken || (data as any)?.token;
+    const refreshToken = data?.refreshToken || data?.tokens?.refreshToken;
+
+    if (accessToken) {
+      setAccessToken(cookieStore, accessToken);
     }
 
-    if (data?.refreshToken) {
-      setRefreshToken(cookieStore, data.refreshToken);
+    if (refreshToken) {
+      setRefreshToken(cookieStore, refreshToken);
     }
   }
 

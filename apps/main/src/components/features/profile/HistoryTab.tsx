@@ -33,14 +33,13 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
 }) => {
     const { lang } = useLanguageStore();
     const t = (profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en).history;
-    const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden">
       <div className="px-6 py-5 bg-white border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h5
           className="text-lg font-bold text-gray-900 mb-0 flex items-center"
-          style={fontStyle}
+
         >
           <span className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mr-3 flex-shrink-0">
             <i className="fa-solid fa-clock-rotate-left"></i>
@@ -78,10 +77,10 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
             <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mb-6 border border-gray-100 shadow-inner">
               <i className="fa-solid fa-calendar-check text-3xl text-gray-300"></i>
             </div>
-            <h6 className="font-bold text-gray-900 text-lg mb-2" style={fontStyle}>
+            <h6 className="font-bold text-gray-900 text-lg mb-2">
               {t.noHistory}
             </h6>
-            <p className="text-gray-500 text-sm max-w-xs m-0" style={fontStyle}>
+            <p className="text-gray-500 text-sm max-w-xs m-0">
               {t.noHistoryHint}
             </p>
           </div>
@@ -101,7 +100,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                     <div>
                       <span
                         className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1"
-                        style={fontStyle}
+
                       >
                         {t.sessionId}
                       </span>
@@ -112,7 +111,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                     <div>
                       <span
                         className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1"
-                        style={fontStyle}
+
                       >
                         {t.date}
                       </span>
@@ -134,7 +133,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                     <div>
                       <span
                         className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1"
-                        style={fontStyle}
+
                       >
                         {t.amountPaid}
                       </span>
@@ -148,7 +147,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                     {/* Consultation Type Badge */}
                     <div className="flex items-center gap-2 px-4 py-1.5 rounded-xl bg-gray-100/80 border border-gray-200">
                       <i className={`fa-solid ${(session.type === "VIDEO_CALL" || session.session_type === "video") ? "fa-video text-purple-600" : (session.type === "AUDIO_CALL" || session.session_type === "audio") ? "fa-phone text-blue-600" : "fa-message text-blue-500"} text-[10px]`}></i>
-                      <span className="text-[10px] font-black uppercase tracking-wider text-gray-700" style={fontStyle}>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-gray-700">
                         {(session.type === "VIDEO_CALL" || session.session_type === "video") ? t.viewVideo : (session.type === "AUDIO_CALL" || session.session_type === "audio") ? t.viewCall : t.viewChat.replace(" History", "").replace(" इतिहास देखें", "")}
                       </span>
                     </div>
@@ -163,7 +162,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                               ? "bg-sky-50 text-sky-600 border-sky-100"
                               : "bg-gray-50 text-gray-600 border-gray-100"
                       }`}
-                      style={fontStyle}
+
                     >
                       {session.terminatedBy === "admin"
                         ? t.terminatedByAdmin
@@ -223,7 +222,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                             </div>
                             <span
                               className="text-[10px] font-bold uppercase tracking-widest text-gray-400"
-                              style={fontStyle}
+
                             >
                               {t.consultationFee}
                             </span>
@@ -245,7 +244,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                             </div>
                             <span
                               className="text-sm font-bold text-gray-700"
-                              style={fontStyle}
+
                             >
                               {(session.type === "VIDEO_CALL" || session.session_type === "video") ? "Video Call" : (session.type === "AUDIO_CALL" || session.session_type === "audio") ? "Audio Call" : "Chat"} • {session.durationString || "0s"}
                             </span>
@@ -257,7 +256,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                             </div>
                             <span
                               className="text-sm font-bold text-gray-700"
-                              style={fontStyle}
+
                             >
                               {session.rating > 0 ? `${session.rating} ${t.rating}` : `N/A ${t.rating}`}
                             </span>
@@ -270,7 +269,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                       <button
                         onClick={() => onViewDetails(session)}
                         className="w-full sm:w-auto rounded-full px-6 py-2.5 text-sm font-bold border-2 border-[#fd6410] text-[#fd6410] bg-white hover:bg-[#fd6410]/5 flex items-center justify-center gap-2.5 transition-all shadow-sm active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-                        style={fontStyle}
+
                         disabled={session.type !== "CHAT" && session.session_type !== "chat" && session.session_type !== undefined}
                       >
                         <i className={`fa-solid ${
@@ -291,7 +290,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                         <button
                           onClick={() => onViewDispute && onViewDispute(consultationDisputes[session.id])}
                           className="w-full sm:w-auto px-8 py-3 bg-orange text-white font-bold rounded-2xl hover:bg-orange/90 shadow-lg shadow-orange/20 transition-all flex items-center justify-center gap-3"
-                          style={fontStyle}
+
                         >
                           <i className="fa-solid fa-comments text-lg"></i>
                           {t.reportIssueDiscussion}
@@ -300,7 +299,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                       session.status === "dispute_raised" ? (
                         <div
                           className="w-full sm:w-auto px-6 py-3 bg-red-50 text-red-600 font-bold rounded-2xl border border-red-100 flex items-center justify-center gap-3"
-                          style={fontStyle}
+
                         >
                           <i className="fa-solid fa-triangle-exclamation"></i>
                           {t.issueReported}
@@ -309,7 +308,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                         <button
                           onClick={() => onReportIssue(session)}
                           className="w-full sm:w-auto px-8 py-3 bg-red-600 text-white font-bold rounded-2xl hover:bg-red-700 shadow-lg shadow-red-200 transition-all flex items-center justify-center gap-3"
-                          style={fontStyle}
+
                         >
                           <i className="fa-solid fa-circle-exclamation text-lg"></i>
                           {t.reportIssue}
@@ -328,7 +327,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                   onClick={onLoadMore}
                   disabled={loadingMore}
                   className="px-10 py-4 bg-white border-2 border-gray-100 text-gray-600 font-bold rounded-2xl hover:border-blue-200 hover:text-blue-600 hover:bg-blue-50/30 transition-all duration-300 flex items-center gap-3 shadow-sm active:scale-95 disabled:opacity-50"
-                  style={fontStyle}
+
                 >
                   {loadingMore ? (
                     <>
@@ -348,7 +347,7 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                 <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 text-gray-300">
                   <i className="fa-solid fa-check"></i>
                 </div>
-                <p className="text-gray-400 text-sm font-medium" style={fontStyle}>
+                <p className="text-gray-400 text-sm font-medium">
                   {lang === "hi" ? "आपने अपनी पूरी हिस्ट्री देख ली है" : "You've reached the end of your history"}
                 </p>
               </div>
@@ -361,5 +360,4 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
 };
 
 export default HistoryTab;
-
 

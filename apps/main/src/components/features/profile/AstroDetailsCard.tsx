@@ -32,10 +32,7 @@ const AstroDetailsCard: React.FC<AstroDetailsCardProps> = ({
       <div className="px-4 py-3 sm:px-6 sm:py-5 bg-white border-b border-gray-100 flex flex-row justify-between items-center gap-2 sm:gap-4">
         <h5
           className="text-sm sm:text-lg font-bold text-gray-900 mb-0 flex items-center leading-tight sm:leading-normal"
-          style={{
-            fontFamily:
-              lang === "hi" ? "'Noto Sans Devanagari', sans-serif" : "inherit",
-          }}
+
         >
           <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-orange/10 text-orange flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 text-sm sm:text-base">
             <i className="fa-regular fa-calendar"></i>
@@ -48,10 +45,7 @@ const AstroDetailsCard: React.FC<AstroDetailsCardProps> = ({
             size="sm"
             onClick={() => setEditing(true)}
             className="shadow-gold cursor-pointer hover:cursor-pointer !px-3 sm:!px-5 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
-            style={{
-              fontFamily:
-                lang === "hi" ? "'Noto Sans Devanagari', sans-serif" : "inherit",
-            }}
+
           >
             <i className="fa-solid fa-pen-to-square mr-2"></i>
             {t.astroDetails.edit}
@@ -64,12 +58,7 @@ const AstroDetailsCard: React.FC<AstroDetailsCardProps> = ({
               size="sm"
               onClick={() => setEditing(false)}
               className="cursor-pointer hover:cursor-pointer !px-3 sm:!px-6 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
-              style={{
-                fontFamily:
-                  lang === "hi"
-                    ? "'Noto Sans Devanagari', sans-serif"
-                    : "inherit",
-              }}
+
             >
               {t.astroDetails.cancel}
             </Button>
@@ -79,12 +68,7 @@ const AstroDetailsCard: React.FC<AstroDetailsCardProps> = ({
               loading={saving}
               onClick={handleSave}
               className="shadow-md cursor-pointer hover:cursor-pointer !px-3 sm:!px-6 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
-              style={{
-                fontFamily:
-                  lang === "hi"
-                    ? "'Noto Sans Devanagari', sans-serif"
-                    : "inherit",
-              }}
+
             >
               {t.astroDetails.save}
             </Button>
@@ -102,12 +86,7 @@ const AstroDetailsCard: React.FC<AstroDetailsCardProps> = ({
             <div key={idx}>
               <label
                 className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               >
                 {field.label}
               </label>
@@ -135,9 +114,7 @@ const AstroDetailsCard: React.FC<AstroDetailsCardProps> = ({
                     value={field.value || ""}
                     onChange={(e) => handleInputChange("place_of_birth", e.target.value)}
                     placeholder={t.astroDetails.pobPlaceholder}
-                    style={{
-                      fontFamily: lang === "hi" ? "'Noto Sans Devanagari', sans-serif" : "inherit",
-                    }}
+
                   />
                 )
               ) : (

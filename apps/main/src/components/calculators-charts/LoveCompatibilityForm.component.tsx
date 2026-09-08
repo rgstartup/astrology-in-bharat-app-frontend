@@ -14,7 +14,6 @@ const LoveCompatibilityForm: React.FC<LoveCompatibilityFormProps> = ({
   canCalculate,
   handleCalculate,
   t,
-  fontStyle,
 }) => {
   return (
     <form onSubmit={handleCalculate} className="w-full">
@@ -23,14 +22,14 @@ const LoveCompatibilityForm: React.FC<LoveCompatibilityFormProps> = ({
           {/* Male */}
           <div className="flex-1 w-full space-y-5">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+              <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                 {t.form.maleName}
               </label>
               <div className="relative">
                 <input
                   type="text"
                   required
-                  style={{ borderRadius: "9999px", ...fontStyle }}
+                  style={{ borderRadius: "9999px" }}
                   className="w-full bg-white border-2 border-orange-500 pl-5 pr-12 py-3.5 text-[#301118] font-bold focus:border-orange-600 focus:ring-4 focus:ring-orange-500/20 outline-none transition-all placeholder:text-gray-400 shadow-sm text-sm"
                   placeholder={t.form.malePlaceholder}
                   value={maleName}
@@ -59,14 +58,14 @@ const LoveCompatibilityForm: React.FC<LoveCompatibilityFormProps> = ({
           {/* Female */}
           <div className="flex-1 w-full space-y-5">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+              <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                 {t.form.femaleName}
               </label>
               <div className="relative">
                 <input
                   type="text"
                   required
-                  style={{ borderRadius: "9999px", ...fontStyle }}
+                  style={{ borderRadius: "9999px" }}
                   className="w-full bg-white border-2 border-orange-500 pl-5 pr-12 py-3.5 text-[#301118] font-bold focus:border-orange-600 focus:ring-4 focus:ring-orange-500/20 outline-none transition-all placeholder:text-gray-400 shadow-sm text-sm"
                   placeholder={t.form.femalePlaceholder}
                   value={femaleName}
@@ -92,7 +91,7 @@ const LoveCompatibilityForm: React.FC<LoveCompatibilityFormProps> = ({
             ) : (
               <TbCrystalBall size={18} className="shrink-0" />
             )}
-            <span style={fontStyle} className="text-center">
+            <span className="text-center">
               {loading ? t.form.calculating : t.form.calculateBtn}
             </span>
             <FaArrowRight className="opacity-70 group-hover:translate-x-1 transition-transform shrink-0" />

@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState, useCallback, FormEvent } from "react";
-import Link from "next/link";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "@/i18n/navigation";
 import { toast } from "react-toastify";
 
 import { Loading } from "@repo/ui";
 import { loginAction } from "@/actions/auth";
 import GoogleLoginButton from "../GoogleLoginButton.component";
 import { useTranslations } from "next-intl";
+import { stripLocale } from "@/utils/getPathnameOrDefault";
 
 const SignInForm: React.FC = () => {
   const router = useRouter();
@@ -64,7 +64,7 @@ const SignInForm: React.FC = () => {
       // toast.success(t.signIn.success);
 
       // Redirect to callback URL or profile page
-      router.push(callbackUrl);
+      router.push(stripLocale(callbackUrl));
     } catch {
       toast.error(t("signIn.errors.unexpected"));
     } finally {

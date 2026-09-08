@@ -60,7 +60,6 @@ const getBirthYearFromDob = (dob: string): number | null => {
 const MarriageAgeCalculator: React.FC = () => {
   const { lang, toggleLang } = useLanguageStore();
   const t = marriageAgeTranslations[lang as "en" | "hi"] || marriageAgeTranslations.en;
-  const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const [name, setName] = useState<string>("");
   const [dob, setDob] = useState<string>(""); // optional
@@ -137,7 +136,7 @@ const MarriageAgeCalculator: React.FC = () => {
             </div>
 
             <div className="text-center mb-10 md:mb-16 relative z-10">
-              <h2 className="text-3xl md:text-5xl font-black text-[#301118] mb-2 tracking-tight" style={fontStyle}>
+              <h2 className="text-3xl md:text-5xl font-black text-[#301118] mb-2 tracking-tight">
                 {t.form.title} <span className="text-orange-500">{t.form.titleAccent}</span>
               </h2>
               <div className="w-24 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent mx-auto mt-4"></div>
@@ -156,7 +155,7 @@ const MarriageAgeCalculator: React.FC = () => {
                   canCalculate={canCalculate}
                   handleCalculate={handleCalculate}
                   t={t.form}
-                  fontStyle={fontStyle}
+
                 />
               </div>
 
@@ -169,7 +168,7 @@ const MarriageAgeCalculator: React.FC = () => {
                     </div>
                     
                     <div className="relative z-10">
-                      <span className="inline-block bg-orange-500/20 text-orange-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[3px] mb-8" style={fontStyle}>
+                      <span className="inline-block bg-orange-500/20 text-orange-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[3px] mb-8">
                         {t.results.badge}
                       </span>
 
@@ -180,7 +179,7 @@ const MarriageAgeCalculator: React.FC = () => {
                               <span className="block text-4xl md:text-5xl font-black text-white leading-none">
                                 {result.startAge}–{result.endAge}
                               </span>
-                              <span className="text-[10px] font-bold uppercase tracking-[2px] text-orange-400 mt-2 block" style={fontStyle}>
+                              <span className="text-[10px] font-bold uppercase tracking-[2px] text-orange-400 mt-2 block">
                                 {t.results.ageWindow}
                               </span>
                             </div>
@@ -190,20 +189,20 @@ const MarriageAgeCalculator: React.FC = () => {
                          </div>
                       </div>
 
-                      <p className="text-lg md:text-xl font-light italic leading-relaxed text-orange-100/90 mb-4 m-0" style={fontStyle}>
+                      <p className="text-lg md:text-xl font-light italic leading-relaxed text-orange-100/90 mb-4 m-0">
                         {t.results.windowLabel} <span className="font-black text-white ml-2">{result.startAge}–{result.endAge}</span>
                       </p>
 
-                      <p className="text-base md:text-lg font-light italic leading-relaxed text-orange-100/70 mb-8 m-0" style={fontStyle}>
+                      <p className="text-base md:text-lg font-light italic leading-relaxed text-orange-100/70 mb-8 m-0">
                         {t.results.bestYearLabel} <span className="font-black text-white ml-2">{result.bestYear}</span>
                       </p>
 
                       <div className="mt-auto">
-                        <span className="inline-block px-5 py-2 rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-[3px] text-orange-100/50" style={fontStyle}>
+                        <span className="inline-block px-5 py-2 rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-[3px] text-orange-100/50">
                           {t.results.disclaimer}
                         </span>
                         {!result.hasDob && (
-                          <p className="m-0 mt-4 text-[10px] text-orange-100/40 italic" style={fontStyle}>
+                          <p className="m-0 mt-4 text-[10px] text-orange-100/40 italic">
                             {t.results.dobNote}
                           </p>
                         )}
@@ -221,5 +220,4 @@ const MarriageAgeCalculator: React.FC = () => {
 };
 
 export default MarriageAgeCalculator;
-
 

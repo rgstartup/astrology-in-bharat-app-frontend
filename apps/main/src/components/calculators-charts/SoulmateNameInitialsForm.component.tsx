@@ -14,7 +14,6 @@ const SoulmateNameInitialsForm: React.FC<SoulmateNameInitialsFormProps> = ({
   canCalculate,
   handleCalculate,
   t,
-  fontStyle,
 }) => {
   return (
     <section className="py-24 relative overflow-hidden">
@@ -25,7 +24,7 @@ const SoulmateNameInitialsForm: React.FC<SoulmateNameInitialsFormProps> = ({
           </div>
 
           <div className="text-center mb-10">
-            <h2 className="text-xl md:text-3xl font-black text-[#301118] mb-2 tracking-tight" style={fontStyle}>
+            <h2 className="text-xl md:text-3xl font-black text-[#301118] mb-2 tracking-tight">
               {t.title} <span className="text-primary">{t.titleAccent}</span>
             </h2>
             <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-2"></div>
@@ -35,14 +34,14 @@ const SoulmateNameInitialsForm: React.FC<SoulmateNameInitialsFormProps> = ({
             <div className="glass-card rounded-[3rem] p-6 md:p-10 shadow-[0_15px_45px_rgba(48,17,24,0.1)] border border-[#301118]/5 relative overflow-hidden bg-white space-y-6">
               {/* Name */}
               <div>
-                <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                   {t.nameLabel}
                 </label>
                 <div className="relative mt-2">
                   <input
                     type="text"
                     required
-                    style={{ borderRadius: "9999px", ...fontStyle }}
+                    style={{ borderRadius: "9999px" }}
                     className="w-full bg-[#fdf2f2] border-2 border-[#301118]/5 px-6 py-4 text-[#301118] font-bold focus:border-red-500 outline-none transition-all placeholder:text-gray-300 shadow-sm text-sm"
                     placeholder={t.namePlaceholder}
                     value={name}
@@ -56,7 +55,7 @@ const SoulmateNameInitialsForm: React.FC<SoulmateNameInitialsFormProps> = ({
 
               {/* DOB Optional */}
               <div>
-                <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                   {t.dobLabel}
                 </label>
                 <div className="relative mt-2">
@@ -86,7 +85,7 @@ const SoulmateNameInitialsForm: React.FC<SoulmateNameInitialsFormProps> = ({
                   ) : (
                     <TbCrystalBall size={18} />
                   )}
-                  <span style={fontStyle}>
+                  <span>
                     {loading ? t.calculating : t.calculate}
                   </span>
                   <FaArrowRight className="opacity-70 group-hover:translate-x-1 transition-transform" />

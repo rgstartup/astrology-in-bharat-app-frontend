@@ -42,6 +42,36 @@ body {
   }
 }
 
+/* Hindi Typography Override (Global when lang="hi") */
+html[lang="hi"] {
+  --font-poppins: "Noto Sans Devanagari", sans-serif !important;
+  --font-outfit: "Noto Sans Devanagari", sans-serif !important;
+  --font-sans: "Noto Sans Devanagari", sans-serif !important;
+  --font-display: "Noto Sans Devanagari", sans-serif !important;
+}
+
+html[lang="hi"],
+html[lang="hi"] body,
+html[lang="hi"] h1,
+html[lang="hi"] h2,
+html[lang="hi"] h3,
+html[lang="hi"] h4,
+html[lang="hi"] h5,
+html[lang="hi"] h6,
+html[lang="hi"] p,
+html[lang="hi"] span,
+html[lang="hi"] a,
+html[lang="hi"] button,
+html[lang="hi"] input,
+html[lang="hi"] select,
+html[lang="hi"] textarea,
+html[lang="hi"] label,
+html[lang="hi"] .font-display,
+html[lang="hi"] .font-sans,
+html[lang="hi"] .font-serif {
+  font-family: "Noto Sans Devanagari", sans-serif !important;
+}
+
 .bg-primary {
   background-color: var(--primary) !important;
 }

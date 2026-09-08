@@ -16,14 +16,13 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
 }) => {
     const { lang } = useLanguageStore();
     const t = (profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en).rewards;
-    const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden">
       <div className="px-6 py-5 bg-white border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h5
           className="text-lg font-bold text-gray-900 mb-0 flex items-center"
-          style={fontStyle}
+
         >
           <span className="w-10 h-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mr-3 flex-shrink-0">
             <i className="fa-solid fa-gift"></i>
@@ -53,10 +52,10 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
             <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mb-6 border border-gray-100 shadow-inner translate-y-2">
               <i className="fa-solid fa-ticket text-3xl text-gray-200"></i>
             </div>
-            <h6 className="font-bold text-gray-900 text-lg mb-2" style={fontStyle}>
+            <h6 className="font-bold text-gray-900 text-lg mb-2">
               {t.noRewards}
             </h6>
-            <p className="text-gray-500 text-sm max-w-xs m-0" style={fontStyle}>
+            <p className="text-gray-500 text-sm max-w-xs m-0">
               {t.noRewardsHint}
             </p>
           </div>
@@ -102,7 +101,7 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
                 >
                   <div
                     className={`absolute top-0 right-0 py-1.5 px-4 rounded-bl-2xl text-[10px] font-black uppercase tracking-wider ${statusBgClass}`}
-                    style={fontStyle}
+
                   >
                     {statusText}
                   </div>
@@ -132,7 +131,7 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
                         className={`font-bold text-sm tracking-wide m-0 ${
                           (d_isUsed || isExpired) ? "text-gray-400/70" : "text-orange"
                         }`}
-                        style={fontStyle}
+
                       >
                         {d_type === "percentage"
                           ? `${d_value}% ${t.off}`
@@ -142,12 +141,12 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
                   </div>
 
                   <div className="flex flex-wrap gap-4 items-center text-[10px] text-gray-500 mb-6 py-3 px-4 bg-white/50 rounded-2xl border border-white/50">
-                    <span className="flex items-center gap-1.5" style={fontStyle}>
+                    <span className="flex items-center gap-1.5">
                       <i className="fa-solid fa-circle-info text-gray-300"></i>
                       {t.minOrder}: ₹{d_minOrder}
                     </span>
                     {d_expiry && (
-                      <span className="flex items-center gap-1.5" style={fontStyle}>
+                      <span className="flex items-center gap-1.5">
                         <i className="fa-regular fa-clock text-gray-300"></i>
                         {t.exp}: {new Date(d_expiry).toLocaleDateString(lang === "hi" ? "hi-IN" : "en-IN")}
                       </span>
@@ -169,7 +168,7 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
                     }}
                   >
                    <i className="fa-regular fa-copy text-lg"></i>
-                    <span style={fontStyle}>
+                    <span>
                       {d_isUsed ? t.alreadyRedeemed : isExpired ? "EXPIRED" : t.copyCode}
                     </span>
                   </button>
@@ -184,7 +183,7 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
           <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-500 shadow-sm flex-shrink-0 z-10 transition-transform group-hover:rotate-12">
             <i className="fa-solid fa-circle-info"></i>
           </div>
-          <p className="text-blue-700 text-[11px] font-bold m-0 leading-relaxed z-10" style={fontStyle}>
+          <p className="text-blue-700 text-[11px] font-bold m-0 leading-relaxed z-10">
             {t.infoBox}
           </p>
           <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-blue-50 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700"></div>
@@ -195,5 +194,4 @@ const RewardsTab: React.FC<RewardsTabProps> = ({
 };
 
 export default RewardsTab;
-
 

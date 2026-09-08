@@ -29,7 +29,6 @@ const PLANET_META: Record<string, { color: string; icon: any }> = {
 const Planet = () => {
     const { lang, toggleLang } = useLanguageStore();
     const t = planetTranslations[lang as keyof typeof planetTranslations] || planetTranslations.en;
-    const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
     const [formData, setFormData] = useState({
         year: new Date().getFullYear(),
@@ -145,7 +144,7 @@ const Planet = () => {
                         handleSubmit={handleSubmit}
                         renderIcon={renderIcon}
                         t={t.form}
-                        fontStyle={fontStyle}
+
                     />
 
                     {/* Results Side */}
@@ -156,8 +155,8 @@ const Planet = () => {
                                     {renderIcon(Info, { size: 20 })}
                                 </div>
                                 <div>
-                                    <h3 className="text-red-800 font-bold mb-1" style={fontStyle}>{t.results.errorTitle}</h3>
-                                    <p className="text-red-600 text-sm leading-relaxed" style={fontStyle}>{error}</p>
+                                    <h3 className="text-red-800 font-bold mb-1">{t.results.errorTitle}</h3>
+                                    <p className="text-red-600 text-sm leading-relaxed">{error}</p>
                                 </div>
                             </div>
                         )}
@@ -167,8 +166,8 @@ const Planet = () => {
                                 <div className="bg-slate-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8">
                                     {renderIcon(Compass, { size: 48, className: "text-slate-300" })}
                                 </div>
-                                <h3 className="text-2xl font-bold text-slate-800 mb-3" style={fontStyle}>{t.results.emptyStateTitle}</h3>
-                                <p className="text-slate-500 max-w-md mx-auto" style={fontStyle}>
+                                <h3 className="text-2xl font-bold text-slate-800 mb-3">{t.results.emptyStateTitle}</h3>
+                                <p className="text-slate-500 max-w-md mx-auto">
                                     {t.results.emptyStateDesc}
                                 </p>
                             </div>
@@ -218,7 +217,7 @@ const Planet = () => {
                                                 {renderIcon(meta.icon, { size: 28 })}
                                             </div>
                                             {planet.isRetro === "true" && (
-                                                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 border border-rose-100 text-rose-600 rounded-full text-xs font-bold uppercase tracking-wider" style={fontStyle}>
+                                                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 border border-rose-100 text-rose-600 rounded-full text-xs font-bold uppercase tracking-wider">
                                                     {renderIcon(RotateCw, { size: 12, className: "animate-spin-slow" })}
                                                     {t.results.retrograde}
                                                 </div>
@@ -226,19 +225,19 @@ const Planet = () => {
                                         </div>
 
                                         <div className="mb-6">
-                                            <h3 className="text-xl font-black text-slate-800 mb-1" style={fontStyle}>{translatedPlanetName}</h3>
-                                            <p className="font-bold text-lg" style={{ color: meta.color, ...fontStyle }}>{signName}</p>
+                                            <h3 className="text-xl font-black text-slate-800 mb-1">{translatedPlanetName}</h3>
+                                            <p className="font-bold text-lg" style={{ color: meta.color }}>{signName}</p>
                                         </div>
 
                                         <div className="space-y-4">
                                             <div className="bg-slate-50 rounded-2xl p-4 space-y-3">
                                                 <div className="flex justify-between items-center text-sm">
-                                                    <span className="text-slate-400 font-medium tracking-wide" style={fontStyle}>{t.results.normalized}</span>
+                                                    <span className="text-slate-400 font-medium tracking-wide">{t.results.normalized}</span>
                                                     <span className="text-slate-700 font-bold">{normDegree.toFixed(2)}°</span>
                                                 </div>
                                                 <div className="h-px bg-slate-100 w-full"></div>
                                                 <div className="flex justify-between items-center text-sm">
-                                                    <span className="text-slate-400 font-medium tracking-wide" style={fontStyle}>{t.results.fullDegree}</span>
+                                                    <span className="text-slate-400 font-medium tracking-wide">{t.results.fullDegree}</span>
                                                     <span className="text-slate-700 font-bold truncate max-w-[120px] ml-2 text-right">
                                                         {fullDegree.toFixed(2)}°
                                                     </span>
@@ -258,8 +257,8 @@ const Planet = () => {
                                         {renderIcon(Star, { className: "text-primary", size: 32 })}
                                     </div>
                                     <div>
-                                        <h4 className="text-xl font-bold mb-1" style={fontStyle}>{t.results.insightTitle}</h4>
-                                        <p className="text-slate-400 italic" style={fontStyle}>
+                                        <h4 className="text-xl font-bold mb-1">{t.results.insightTitle}</h4>
+                                        <p className="text-slate-400 italic">
                                             {t.results.insightDesc}
                                         </p>
                                     </div>
@@ -285,6 +284,4 @@ const Planet = () => {
 };
 
 export default Planet;
-
-
 

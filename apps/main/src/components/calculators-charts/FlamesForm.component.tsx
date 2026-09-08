@@ -13,7 +13,6 @@ const FlamesForm: React.FC<FlamesFormProps> = ({
   canCalculate,
   handleCalculate,
   t,
-  fontStyle,
 }) => {
   return (
     <section className="py-24 relative overflow-hidden">
@@ -24,7 +23,7 @@ const FlamesForm: React.FC<FlamesFormProps> = ({
           </div>
 
           <div className="text-center mb-10">
-            <h2 className="text-xl md:text-3xl font-black text-[#301118] mb-2 tracking-tight" style={fontStyle}>
+            <h2 className="text-xl md:text-3xl font-black text-[#301118] mb-2 tracking-tight">
               {t.title} <span className="text-primary">{t.titleAccent}</span>
             </h2>
             <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-2"></div>
@@ -36,14 +35,14 @@ const FlamesForm: React.FC<FlamesFormProps> = ({
                 {/* Boy */}
                 <div className="flex-1 w-full space-y-5">
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                    <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                       {t.boyNameLabel}
                     </label>
                     <div className="relative">
                       <input
                         type="text"
                         required
-                        style={{ borderRadius: "9999px", ...fontStyle }}
+                        style={{ borderRadius: "9999px" }}
                         className="w-full bg-[#fdf2f2] border-2 border-[#301118]/5 px-6 py-4 text-[#301118] font-bold focus:border-red-500 outline-none transition-all placeholder:text-gray-300 shadow-sm text-sm"
                         placeholder={t.boyNamePlaceholder}
                         value={boyName}
@@ -75,14 +74,14 @@ const FlamesForm: React.FC<FlamesFormProps> = ({
                 {/* Girl */}
                 <div className="flex-1 w-full space-y-5">
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                    <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                       {t.girlNameLabel}
                     </label>
                     <div className="relative">
                       <input
                         type="text"
                         required
-                        style={{ borderRadius: "9999px", ...fontStyle }}
+                        style={{ borderRadius: "9999px" }}
                         className="w-full bg-[#fdf2f2] border-2 border-[#301118]/5 px-6 py-4 text-[#301118] font-bold focus:border-red-500 outline-none transition-all placeholder:text-gray-300 shadow-sm text-sm"
                         placeholder={t.girlNamePlaceholder}
                         value={girlName}
@@ -109,7 +108,7 @@ const FlamesForm: React.FC<FlamesFormProps> = ({
                   ) : (
                     <TbCrystalBall size={18} />
                   )}
-                  <span style={fontStyle}>
+                  <span>
                     {loading ? t.calculating : t.calculate}
                   </span>
                   <FaArrowRight className="opacity-70 group-hover:translate-x-1 transition-transform" />

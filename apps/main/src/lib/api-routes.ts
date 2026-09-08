@@ -1,10 +1,12 @@
 export const API_ROUTES = {
   AUTH: {
     CLIENT: {
-      LOGIN: "/auth/client/email/login",
-      REGISTER: "/auth/client/email/register",
-      GOOGLE_LOGIN: "/auth/client/google/login",
+      LOGIN: "/client/auth/email/login",
+      REGISTER: "/client/auth/email/register/initiate",
+      VERIFY_OTP: "/client/auth/email/register/complete",
+      GOOGLE_LOGIN: "/client/auth/google/login",
       ME: "/client/account",
+      PICTURE: "/client/account/picture",
     },
     LOGIN: "/auth/email/login",
     LOGOUT: "/auth/logout",

@@ -32,10 +32,7 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
       <div className="px-4 py-3 sm:px-6 sm:py-5 bg-white border-b border-gray-100 flex flex-row justify-between items-center gap-2 sm:gap-4">
         <h5
           className="text-sm sm:text-lg font-bold text-gray-900 mb-0 flex items-center leading-tight sm:leading-normal"
-          style={{
-            fontFamily:
-              lang === "hi" ? "'Noto Sans Devanagari', sans-serif" : "inherit",
-          }}
+
         >
           <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-orange/10 text-orange flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 text-sm sm:text-base">
             <i className="fa-solid fa-location-dot"></i>
@@ -48,10 +45,7 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
             size="sm"
             onClick={() => setEditing(true)}
             className="shadow-gold cursor-pointer hover:cursor-pointer !px-3 sm:!px-5 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
-            style={{
-              fontFamily:
-                lang === "hi" ? "'Noto Sans Devanagari', sans-serif" : "inherit",
-            }}
+
           >
             <i className="fa-solid fa-pen-to-square mr-2"></i>
             {t.addressDetails.edit}
@@ -64,12 +58,7 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
               size="sm"
               onClick={() => setEditing(false)}
               className="cursor-pointer hover:cursor-pointer !px-3 sm:!px-6 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
-              style={{
-                fontFamily:
-                  lang === "hi"
-                    ? "'Noto Sans Devanagari', sans-serif"
-                    : "inherit",
-              }}
+
             >
               {t.addressDetails.cancel}
             </Button>
@@ -79,12 +68,7 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
               loading={saving}
               onClick={handleSave}
               className="shadow-md cursor-pointer hover:cursor-pointer !px-3 sm:!px-6 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
-              style={{
-                fontFamily:
-                  lang === "hi"
-                    ? "'Noto Sans Devanagari', sans-serif"
-                    : "inherit",
-              }}
+
             >
               {t.addressDetails.save}
             </Button>
@@ -104,12 +88,7 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
             <div className="lg:col-span-12">
               <label
                 className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               >
                 {t.addressDetails.line1}
               </label>
@@ -118,23 +97,13 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
                 className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
                 value={profileData.addresses?.[0]?.line1 || ""}
                 onChange={(e) => handleAddressChange(0, "line1", e.target.value)}
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               />
             </div>
             <div className="lg:col-span-12">
               <label
                 className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               >
                 {t.addressDetails.line2}
               </label>
@@ -143,23 +112,13 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
                 className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
                 value={profileData.addresses?.[0]?.line2 || ""}
                 onChange={(e) => handleAddressChange(0, "line2", e.target.value)}
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               />
             </div>
             <div className="lg:col-span-6">
               <label
                 className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               >
                 {t.addressDetails.city}
               </label>
@@ -168,23 +127,13 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
                 className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
                 value={profileData.addresses?.[0]?.city || ""}
                 onChange={(e) => handleAddressChange(0, "city", e.target.value)}
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               />
             </div>
             <div className="lg:col-span-6">
               <label
                 className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               >
                 {t.addressDetails.state}
               </label>
@@ -193,23 +142,13 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
                 className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
                 value={profileData.addresses?.[0]?.state || ""}
                 onChange={(e) => handleAddressChange(0, "state", e.target.value)}
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               />
             </div>
             <div className="lg:col-span-6">
               <label
                 className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               >
                 {t.addressDetails.country}
               </label>
@@ -220,23 +159,13 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
                 onChange={(e) =>
                   handleAddressChange(0, "country", e.target.value)
                 }
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               />
             </div>
             <div className="lg:col-span-6">
               <label
                 className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               >
                 {t.addressDetails.zipCode}
               </label>
@@ -247,12 +176,7 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
                 onChange={(e) =>
                   handleAddressChange(0, "zip_code", e.target.value)
                 }
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               />
             </div>
           </div>
@@ -274,12 +198,7 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
                   )}
                   <p
                     className="text-gray-600 font-medium text-sm m-0 leading-relaxed"
-                    style={{
-                      fontFamily:
-                        lang === "hi"
-                           ? "'Noto Sans Devanagari', sans-serif"
-                          : "inherit",
-                    }}
+
                   >
                     {profileData.addresses[0]?.city},{" "}
                     {profileData.addresses[0]?.state},{" "}
@@ -291,12 +210,7 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
             ) : (
               <p
                 className="text-gray-500 italic m-0 bg-gray-50 p-6 rounded-2xl border border-dashed border-gray-200 text-center"
-                style={{
-                  fontFamily:
-                    lang === "hi"
-                      ? "'Noto Sans Devanagari', sans-serif"
-                      : "inherit",
-                }}
+
               >
                 {t.addressDetails.noAddress}
               </p>

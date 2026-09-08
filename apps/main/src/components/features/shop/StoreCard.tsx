@@ -28,8 +28,6 @@ interface StoreCardProps {
 export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
   const { lang, t: translationSet } = useHomeTranslations();
   const t = translationSet.storeSection.card;
-  const fontStyle =
-    lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const isOnline = useMerchantStore(
     (state) =>
@@ -58,7 +56,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
             router.push(
               `/sign-in?callbackUrl=${encodeURIComponent(pathname === "/" ? "/#astrology-store" : pathname)}`,
             ),
-          style: { cursor: "pointer", ...fontStyle },
+          style: { cursor: "pointer" },
         },
       );
       return;
@@ -166,7 +164,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
           <div className="flex items-center justify-between">
             <span
               className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none"
-              style={fontStyle}
+
             >
               {t.about}
             </span>
@@ -179,7 +177,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
                   </span>
                   <span
                     className="text-[7px] font-black text-green-500 uppercase tracking-tighter"
-                    style={fontStyle}
+
                   >
                     {t.online}
                   </span>
@@ -189,7 +187,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
                   <span className="inline-flex rounded-full h-1.5 w-1.5 bg-gray-400"></span>
                   <span
                     className="text-[7px] font-black text-gray-400 uppercase tracking-tighter"
-                    style={fontStyle}
+
                   >
                     {t.offline}
                   </span>
@@ -200,7 +198,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span
                     className="text-[9px] font-black ml-1 uppercase tracking-tighter"
-                    style={fontStyle}
+
                   >
                     {t.verified}
                   </span>
@@ -234,7 +232,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
           <div className="flex items-center justify-between">
             <span
               className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none"
-              style={fontStyle}
+
             >
               {t.popularProducts}
             </span>
@@ -286,7 +284,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         <div className="mt-auto">
           <div
             className="w-full py-3 bg-orange-600 text-white text-xs font-bold rounded-2xl tracking-[0.1em] flex items-center justify-center gap-2 hover:bg-orange-700 transition-all shadow-lg shadow-orange-900/10 active:scale-95 text-center"
-            style={fontStyle}
+
           >
             {t.btnVisit} <ExternalLink className="w-3.5 h-3.5" />
           </div>

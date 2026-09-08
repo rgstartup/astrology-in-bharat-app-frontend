@@ -41,7 +41,6 @@ const WalletTab: React.FC<WalletTabProps> = ({
 }) => {
     const { lang } = useLanguageStore();
     const t = (profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en).wallet;
-    const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden relative">
@@ -60,11 +59,11 @@ const WalletTab: React.FC<WalletTabProps> = ({
               <div>
                 <h5
                   className="font-bold text-white text-xl md:text-2xl tracking-tight m-0"
-                  style={fontStyle}
+
                 >
                   {t.title}
                 </h5>
-                <p className="text-gray-400 text-sm m-0" style={fontStyle}>
+                <p className="text-gray-400 text-sm m-0">
                   {t.subtitle}
                 </p>
               </div>
@@ -79,7 +78,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                   ? "bg-orange text-white shadow-lg shadow-orange/30"
                   : "text-gray-300 hover:text-white hover:bg-white/5"
               }`}
-              style={fontStyle}
+
             >
               <i className="fa-solid fa-plus-circle text-[10px] sm:text-sm"></i>
               {t.addMoney}
@@ -91,7 +90,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                   ? "bg-white text-gray-900 shadow-lg shadow-white/10"
                   : "text-gray-300 hover:text-white hover:bg-white/5"
               }`}
-              style={fontStyle}
+
             >
               <i className="fa-solid fa-list-ul text-[10px] sm:text-sm"></i>
               {t.history}
@@ -104,7 +103,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
           <div className="relative z-10 text-center">
             <p
               className="text-white/60 text-[10px] font-bold uppercase mb-3 tracking-[0.2em]"
-              style={fontStyle}
+
             >
               <i className="fa-solid fa-circle-info mr-2 opacity-50"></i>
               {t.availableBalance}
@@ -115,7 +114,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                 {walletBalance?.toLocaleString() || "0"}
               </h1>
             </div>
-            <p className="text-white/40 text-xs font-medium" style={fontStyle}>
+            <p className="text-white/40 text-xs font-medium">
               {transactions && transactions.length > 0 
                 ? `Last updated: ${new Date(transactions[0].created_at).toLocaleString('en-IN', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}` 
                 : t.lastUpdated}
@@ -140,14 +139,14 @@ const WalletTab: React.FC<WalletTabProps> = ({
                 </div>
                 <h6
                   className="font-bold text-gray-900 text-xl m-0"
-                  style={fontStyle}
+
                 >
                   {t.addMoneyTitle}
                 </h6>
               </div>
               <p
                 className="text-gray-500 text-sm ml-14 leading-relaxed max-w-2xl"
-                style={fontStyle}
+
               >
                 {t.addMoneySubtitle}
               </p>
@@ -160,7 +159,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                 <div className="bg-gray-50/80 p-6 rounded-2xl border border-gray-100 shadow-sm">
                   <label
                     className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-4 flex items-center"
-                    style={fontStyle}
+
                   >
                     <i className="fa-solid fa-pencil mr-2 text-orange/60"></i>
                     {t.customAmount}
@@ -183,7 +182,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                   </div>
                   <p
                     className="text-gray-400 text-[11px] mt-4 font-medium italic"
-                    style={fontStyle}
+
                   >
                     {t.customAmountHint}
                   </p>
@@ -194,7 +193,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
               <div className="lg:col-span-2">
                 <label
                   className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-4 flex items-center ml-1"
-                  style={fontStyle}
+
                 >
                   <i className="fa-solid fa-bolt mr-2 text-amber-500"></i>
                   {t.quickRecharge}
@@ -250,13 +249,13 @@ const WalletTab: React.FC<WalletTabProps> = ({
                   <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
                     <div
                       className="text-white text-base md:text-xl font-black tracking-tight"
-                      style={fontStyle}
+
                     >
                       {t.rechargeBtn} ₹{rechargeAmount.toLocaleString()}
                     </div>
                     <div
                       className="hidden md:block text-white/70 text-[9px] md:text-[11px] font-bold uppercase tracking-wider mt-0.5"
-                      style={fontStyle}
+
                     >
                       {t.rechargeHint}
                     </div>
@@ -276,10 +275,10 @@ const WalletTab: React.FC<WalletTabProps> = ({
                   <i className="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i>
                 </div>
                 <div>
-                  <p className="font-bold text-amber-900 m-0" style={fontStyle}>
+                  <p className="font-bold text-amber-900 m-0">
                     {t.minAmountWarning}
                   </p>
-                  <p className="text-amber-700 text-sm mt-1 m-0" style={fontStyle}>
+                  <p className="text-amber-700 text-sm mt-1 m-0">
                     {t.minAmountHint}
                   </p>
                 </div>
@@ -291,7 +290,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-6 sm:mb-8 px-2 sm:px-0">
               <h6
                 className="font-bold text-gray-900 text-xl m-0 flex items-center"
-                style={fontStyle}
+
               >
                 <div className="w-10 h-10 bg-orange/10 rounded-xl flex items-center justify-center mr-4 shadow-sm">
                   <i className="fa-solid fa-clock-rotate-left text-orange"></i>
@@ -306,7 +305,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                       ? "bg-white text-gray-900 shadow-sm border border-gray-100"
                       : "text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
                   }`}
-                  style={fontStyle}
+
                 >
                   {t.all}
                 </button>
@@ -317,7 +316,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                       ? "bg-white text-gray-900 shadow-sm border border-gray-100"
                       : "text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
                   }`}
-                  style={fontStyle}
+
                 >
                   {t.recharges}
                 </button>
@@ -331,31 +330,31 @@ const WalletTab: React.FC<WalletTabProps> = ({
                     <tr className="bg-gray-50/50 border-b border-gray-100">
                       <th
                         className="px-4 sm:px-8 py-4 sm:py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400"
-                        style={fontStyle}
+
                       >
                         {t.tableDate}
                       </th>
                       <th
                         className="px-4 sm:px-8 py-4 sm:py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400"
-                        style={fontStyle}
+
                       >
                         {t.tableDescription}
                       </th>
                       <th
                         className="px-4 sm:px-8 py-4 sm:py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400 text-center"
-                        style={fontStyle}
+
                       >
                         {t.tableType}
                       </th>
                       <th
                         className="px-4 sm:px-8 py-4 sm:py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400 text-right"
-                        style={fontStyle}
+
                       >
                         {t.tableAmount}
                       </th>
                       <th
                         className="px-4 sm:px-8 py-4 sm:py-5 text-[10px] uppercase font-bold tracking-widest text-gray-400 text-right"
-                        style={fontStyle}
+
                       >
                         {t.tableStatus}
                       </th>
@@ -377,7 +376,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                         <td colSpan={5} className="px-8 py-20 text-center">
                           <div className="flex flex-col items-center justify-center opacity-40">
                             <i className="fa-solid fa-receipt text-5xl text-gray-300 mb-4"></i>
-                            <p className="text-gray-400 font-bold" style={fontStyle}>
+                            <p className="text-gray-400 font-bold">
                               {t.noTransactions}
                             </p>
                           </div>
@@ -483,7 +482,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                     onClick={onLoadMore}
                     disabled={loadingMore}
                     className="px-6 sm:px-10 py-3.5 bg-white border border-gray-200 text-gray-600 text-sm sm:text-base font-bold rounded-2xl hover:border-orange/30 hover:text-orange hover:bg-orange-50/50 transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 shadow-sm active:scale-95 disabled:opacity-50 whitespace-nowrap"
-                    style={fontStyle}
+
                   >
                     {loadingMore ? (
                       <>
@@ -503,7 +502,7 @@ const WalletTab: React.FC<WalletTabProps> = ({
                   <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mb-2 text-gray-400">
                     <i className="fa-solid fa-check text-xs"></i>
                   </div>
-                  <p className="text-gray-400 text-xs font-medium" style={fontStyle}>
+                  <p className="text-gray-400 text-xs font-medium">
                     {lang === "hi" ? "आपने सभी लेनदेन देख लिए हैं" : "You've viewed all transactions"}
                   </p>
                 </div>
@@ -518,5 +517,4 @@ const WalletTab: React.FC<WalletTabProps> = ({
 };
 
 export default WalletTab;
-
 

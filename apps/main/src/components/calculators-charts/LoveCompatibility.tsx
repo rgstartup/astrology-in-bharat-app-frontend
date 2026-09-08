@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useMemo, useRef, useState } from "react";
-import {
-  FaHeart,
-  FaArrowRight,
-  FaStar,
-  FaBalanceScale,
-} from "react-icons/fa";
+import { FaHeart, FaArrowRight, FaStar, FaBalanceScale } from "react-icons/fa";
 
 import { GiLotus, GiSparkles } from "react-icons/gi";
 
@@ -67,11 +62,11 @@ const getMessageByLove = (love: number, t: any): string => {
 
 import { CalculatorProgressBarProps as ProgressBarProps } from "@/lib/types";
 
-const ProgressBar: React.FC<ProgressBarProps & { fontStyle?: any }> = ({ label, value, fontStyle }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({ label, value }) => {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-2">
-        <p className="m-0 text-[11px] font-black uppercase tracking-[3px] text-[#301118]/50" style={fontStyle}>
+        <p className="m-0 text-[11px] font-black uppercase tracking-[3px] text-[#301118]/50">
           {label}
         </p>
         <p className="m-0 text-[11px] font-black uppercase tracking-[3px] text-orange-500">
@@ -91,8 +86,9 @@ const ProgressBar: React.FC<ProgressBarProps & { fontStyle?: any }> = ({ label, 
 
 const LoveCompatibilityCalcultor: React.FC = () => {
   const { lang, toggleLang } = useLanguageStore();
-  const t = loveCompatibilityTranslations[lang as "en" | "hi"] || loveCompatibilityTranslations.en;
-  const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
+  const t =
+    loveCompatibilityTranslations[lang as "en" | "hi"] ||
+    loveCompatibilityTranslations.en;
 
   const [maleName, setMaleName] = useState<string>("");
   const [femaleName, setFemaleName] = useState<string>("");
@@ -137,7 +133,10 @@ const LoveCompatibilityCalcultor: React.FC = () => {
     setResult({ love, trust, romance, communication, message });
 
     setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      resultsRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }, 200);
 
     setLoading(false);
@@ -161,20 +160,20 @@ const LoveCompatibilityCalcultor: React.FC = () => {
       <section className="py-12 md:py-24 relative overflow-hidden">
         <div className="container px-4 md:px-6">
           <div className="glass-card rounded-[2rem] md:rounded-[4rem] p-6 md:p-12 lg:p-16 shadow-[0_20px_60px_rgba(48,17,24,0.12)] border-t-4 border-t-orange-500/50 relative overflow-hidden">
-            
             <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none">
               <GiLotus size={150} />
             </div>
 
             <div className="text-center mb-10 md:mb-16 relative z-10">
-              <h2 className="text-3xl md:text-5xl font-black text-[#301118] mb-2 tracking-tight" style={fontStyle}>
+              <h2 className="text-3xl md:text-5xl font-black text-[#301118] mb-2 tracking-tight">
                 {t.form.title.replace("{percentage}", t.form.percentage)}
               </h2>
               <div className="w-24 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent mx-auto mt-4"></div>
             </div>
 
-            <div className={`grid gap-12 lg:gap-16 items-center ${result ? 'lg:grid-cols-2' : 'max-w-xl mx-auto'}`}>
-              
+            <div
+              className={`grid gap-12 lg:gap-16 items-center ${result ? "lg:grid-cols-2" : "max-w-xl mx-auto"}`}
+            >
               {/* Form Side */}
               <div className="relative z-10 w-full">
                 <LoveCompatibilityForm
@@ -186,37 +185,44 @@ const LoveCompatibilityCalcultor: React.FC = () => {
                   canCalculate={canCalculate}
                   handleCalculate={handleCalculate}
                   t={t}
-                  fontStyle={fontStyle}
                 />
               </div>
 
               {/* Result Side */}
               {result && (
-                <div ref={resultsRef} className="animate-in fade-in slide-in-from-right-8 duration-700 w-full h-full flex flex-col">
+                <div
+                  ref={resultsRef}
+                  className="animate-in fade-in slide-in-from-right-8 duration-700 w-full h-full flex flex-col"
+                >
                   <div className="bg-gradient-to-br from-[#301118] to-[#1a090d] rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden border border-orange-500/20 text-center flex-1 flex flex-col justify-center">
                     <div className="absolute top-0 right-0 p-12 opacity-[0.05] pointer-events-none">
-                      <GiLotus size={200} className="text-orange-500 animate-spin-slow" />
+                      <GiLotus
+                        size={200}
+                        className="text-orange-500 animate-spin-slow"
+                      />
                     </div>
 
                     <div className="relative z-10">
-                      <span className="inline-block bg-orange-500/20 text-orange-400 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[3px] mb-8" style={fontStyle}>
+                      <span className="inline-block bg-orange-500/20 text-orange-400 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[3px] mb-8">
                         {t.results.badge}
                       </span>
 
                       <div className="flex justify-center mb-10">
-                         <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-orange-500/30 flex items-center justify-center relative bg-[#301118] group">
-                            <div className="absolute inset-0 rounded-full border-8 border-orange-500 border-t-transparent animate-spin-slow opacity-50"></div>
-                            <div className="text-center">
-                              <span className="block text-5xl md:text-7xl font-black text-white leading-none group-hover:scale-110 transition-transform duration-500">
-                                {result.love}
-                                <span className="text-2xl text-orange-500">%</span>
+                        <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-orange-500/30 flex items-center justify-center relative bg-[#301118] group">
+                          <div className="absolute inset-0 rounded-full border-8 border-orange-500 border-t-transparent animate-spin-slow opacity-50"></div>
+                          <div className="text-center">
+                            <span className="block text-5xl md:text-7xl font-black text-white leading-none group-hover:scale-110 transition-transform duration-500">
+                              {result.love}
+                              <span className="text-2xl text-orange-500">
+                                %
                               </span>
-                              <span className="text-[10px] font-bold uppercase tracking-[2px] text-orange-400 mt-2 block" style={fontStyle}>
-                                {t.results.cosmicBond}
-                              </span>
-                            </div>
-                            <FaHeart className="absolute -top-3 -right-3 text-pink-500 text-4xl animate-bounce shadow-xl" />
-                         </div>
+                            </span>
+                            <span className="text-[10px] font-bold uppercase tracking-[2px] text-orange-400 mt-2 block">
+                              {t.results.cosmicBond}
+                            </span>
+                          </div>
+                          <FaHeart className="absolute -top-3 -right-3 text-pink-500 text-4xl animate-bounce shadow-xl" />
+                        </div>
                       </div>
 
                       <div className="mb-8">
@@ -224,7 +230,7 @@ const LoveCompatibilityCalcultor: React.FC = () => {
                           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-orange-500 p-3 rounded-xl shadow-lg">
                             <GiSparkles size={20} className="text-[#301118]" />
                           </div>
-                          <p className="text-base md:text-lg font-light italic leading-relaxed text-orange-100/90 m-0 mt-2" style={fontStyle}>
+                          <p className="text-base md:text-lg font-light italic leading-relaxed text-orange-100/90 m-0 mt-2">
                             "{result.message}"
                           </p>
                         </div>
@@ -232,21 +238,30 @@ const LoveCompatibilityCalcultor: React.FC = () => {
 
                       <div className="w-full bg-white/5 rounded-3xl p-6 border border-orange-500/10 text-left">
                         <div className="flex items-center justify-between mb-6">
-                          <h4 className="text-base font-black text-white tracking-tight m-0" style={fontStyle}>
+                          <h4 className="text-base font-black text-white tracking-tight m-0">
                             {t.results.breakdownTitle}
                           </h4>
                           <div className="px-3 py-1 bg-orange-500/20 rounded-lg shadow-sm border border-orange-500/30 flex items-center gap-1.5">
                             <FaStar className="text-orange-400" size={10} />
-                            <span className="text-[10px] font-black text-orange-400 uppercase tracking-widest" style={fontStyle}>
+                            <span className="text-[10px] font-black text-orange-400 uppercase tracking-widest">
                               {t.results.premiumInsight}
                             </span>
                           </div>
                         </div>
 
                         <div className="space-y-4">
-                          <ProgressBar label={t.results.trust} value={result.trust} fontStyle={fontStyle} />
-                          <ProgressBar label={t.results.romance} value={result.romance} fontStyle={fontStyle} />
-                          <ProgressBar label={t.results.communication} value={result.communication} fontStyle={fontStyle} />
+                          <ProgressBar
+                            label={t.results.trust}
+                            value={result.trust}
+                          />
+                          <ProgressBar
+                            label={t.results.romance}
+                            value={result.romance}
+                          />
+                          <ProgressBar
+                            label={t.results.communication}
+                            value={result.communication}
+                          />
                         </div>
 
                         <div className="mt-10 flex items-start gap-4 bg-white rounded-2xl p-6 border border-orange-50 shadow-sm">
@@ -254,10 +269,10 @@ const LoveCompatibilityCalcultor: React.FC = () => {
                             <FaBalanceScale size={18} />
                           </div>
                           <div>
-                            <p className="m-0 text-sm font-black text-[#301118]" style={fontStyle}>
+                            <p className="m-0 text-sm font-black text-[#301118]">
                               {t.results.tipTitle}
                             </p>
-                            <p className="m-0 text-sm text-gray-500 italic leading-relaxed" style={fontStyle}>
+                            <p className="m-0 text-sm text-gray-500 italic leading-relaxed">
                               {t.results.tipDesc}
                             </p>
                           </div>

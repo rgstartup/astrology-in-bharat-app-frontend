@@ -241,7 +241,6 @@ const ReportsTab: React.FC = () => {
     const { lang } = useLanguageStore();
     const { user } = useAuthStore();
     const t = profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en;
-    const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
     const [reports, setReports] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -278,7 +277,7 @@ const ReportsTab: React.FC = () => {
                 <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3" style={{ backgroundColor: "#e8f5e9", color: "#43a047" }}>
                     <i className="fa-solid fa-scroll"></i>
                 </div>
-                <h5 className="text-xl font-bold text-gray-900 m-0" style={fontStyle}>{t.reports.title}</h5>
+                <h5 className="text-xl font-bold text-gray-900 m-0">{t.reports.title}</h5>
             </div>
 
             <div className="px-4 sm:px-6 pb-6 pt-0">
@@ -289,8 +288,8 @@ const ReportsTab: React.FC = () => {
                 ) : reports.length === 0 ? (
                     <div className="text-center p-8">
                         <div className="mb-4 text-gray-200"><i className="fa-solid fa-file-invoice fa-3x"></i></div>
-                        <h6 className="font-bold text-gray-800" style={fontStyle}>{t.reports.noReports}</h6>
-                        <p className="text-sm text-gray-500 mt-1" style={fontStyle}>{t.reports.noReportsHint}</p>
+                        <h6 className="font-bold text-gray-800">{t.reports.noReports}</h6>
+                        <p className="text-sm text-gray-500 mt-1">{t.reports.noReportsHint}</p>
                     </div>
                 ) : (
                     <div className="space-y-4 mt-4">

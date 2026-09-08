@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useCallback } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { API_ROUTES } from "@/actions";
 import { useTranslations } from "next-intl";
+import { stripLocale } from "@/utils/getPathnameOrDefault";
 
 export interface UseGoogleLoginOptions {
   callbackUrl?: string;
@@ -20,8 +22,9 @@ export function useGoogleLogin(options: UseGoogleLoginOptions = {}) {
 
   const t = useTranslations("Auth");
 
-  const callbackUrl =
-    customCallbackUrl || searchParams.get("callbackUrl") || "/client/profile";
+  const callbackUrl = stripLocale(
+    customCallbackUrl || searchParams.get("callbackUrl") || "/client/profile",
+  );
 
   useEffect(() => {
     const errorParam = searchParams.get("error");

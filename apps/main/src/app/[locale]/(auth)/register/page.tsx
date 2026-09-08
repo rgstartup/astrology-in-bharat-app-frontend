@@ -11,17 +11,11 @@ import HeroComponent from "./hero";
 import { SignUpForm, TopExpertsSection } from "@/features/auth";
 import { Suspense } from "react";
 
-export default async function RegisterPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+export default async function RegisterPage() {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
-  const sp = await searchParams;
-  const isCompletingProfile = !!sp.token || !!sp.verification_token;
 
-  if (token && !isCompletingProfile) {
+  if (token) {
     redirect("/client/profile");
   }
 

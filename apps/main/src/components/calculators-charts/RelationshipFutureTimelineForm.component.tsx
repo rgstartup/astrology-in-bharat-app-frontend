@@ -16,7 +16,6 @@ const RelationshipFutureTimelineForm: React.FC<RelationshipFutureTimelineFormPro
   canCalculate,
   handleCalculate,
   t,
-  fontStyle,
 }) => {
   return (
     <section className="py-24 relative overflow-hidden">
@@ -27,7 +26,7 @@ const RelationshipFutureTimelineForm: React.FC<RelationshipFutureTimelineFormPro
           </div>
 
           <div className="text-center mb-10">
-            <h2 className="text-xl md:text-3xl font-black text-[#301118] mb-2 tracking-tight" style={fontStyle}>
+            <h2 className="text-xl md:text-3xl font-black text-[#301118] mb-2 tracking-tight">
               {t.title} <span className="text-primary">{t.titleAccent}</span> {t.titleSuffix}
             </h2>
             <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-2"></div>
@@ -38,14 +37,14 @@ const RelationshipFutureTimelineForm: React.FC<RelationshipFutureTimelineFormPro
               {/* Names */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                     {t.yourName}
                   </label>
                   <div className="relative mt-2">
                     <input
                       type="text"
                       required
-                      style={{ borderRadius: "9999px", ...fontStyle }}
+                      style={{ borderRadius: "9999px" }}
                       className="w-full bg-[#fdf2f2] border-2 border-[#301118]/5 px-6 py-4 text-[#301118] font-bold focus:border-red-500 outline-none transition-all placeholder:text-gray-300 shadow-sm text-sm"
                       placeholder={t.namePlaceholder}
                       value={yourName}
@@ -58,14 +57,14 @@ const RelationshipFutureTimelineForm: React.FC<RelationshipFutureTimelineFormPro
                 </div>
 
                 <div>
-                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                  <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                     {t.partnerName}
                   </label>
                   <div className="relative mt-2">
                     <input
                       type="text"
                       required
-                      style={{ borderRadius: "9999px", ...fontStyle }}
+                      style={{ borderRadius: "9999px" }}
                       className="w-full bg-[#fdf2f2] border-2 border-[#301118]/5 px-6 py-4 text-[#301118] font-bold focus:border-red-500 outline-none transition-all placeholder:text-gray-300 shadow-sm text-sm"
                       placeholder={t.partnerPlaceholder}
                       value={partnerName}
@@ -80,7 +79,7 @@ const RelationshipFutureTimelineForm: React.FC<RelationshipFutureTimelineFormPro
 
               {/* Relationship Type */}
               <div>
-                <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+                <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
                   {t.relationshipType}
                 </label>
 
@@ -91,7 +90,6 @@ const RelationshipFutureTimelineForm: React.FC<RelationshipFutureTimelineFormPro
                       setRelationshipType(e.target.value as RelationshipType)
                     }
                     className="w-full bg-white border-2 border-[#301118]/5 rounded-3xl px-6 py-4 text-[#301118] font-black outline-none focus:border-primary transition-all shadow-sm"
-                    style={fontStyle}
                   >
                     <option value="Crush">{t.types.crush}</option>
                     <option value="Dating">{t.types.dating}</option>
@@ -113,7 +111,7 @@ const RelationshipFutureTimelineForm: React.FC<RelationshipFutureTimelineFormPro
                   ) : (
                     <TbCrystalBall size={18} />
                   )}
-                  <span style={fontStyle}>
+                  <span>
                     {loading ? t.calculating : t.calculate}
                   </span>
                   <FaArrowRight className="opacity-70 group-hover:translate-x-1 transition-transform" />

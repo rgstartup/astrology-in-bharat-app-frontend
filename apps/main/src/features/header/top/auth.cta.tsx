@@ -2,8 +2,7 @@
 
 import React from "react";
 import { PATHS } from "@repo/routes";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { getPathnameOrDefault } from "@/utils/getPathnameOrDefault";
 

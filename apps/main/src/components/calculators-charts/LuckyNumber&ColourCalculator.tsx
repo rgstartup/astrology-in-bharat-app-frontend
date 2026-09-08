@@ -44,7 +44,6 @@ const LuckyColorNumberCalculator: React.FC = () => {
   const { lang } = useLanguageStore();
   const translationSet = (homeTranslations[lang as "en" | "hi"] || homeTranslations.en) as any;
   const t = translationSet.calculators.luckyVibes;
-  const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const resultsRef = useRef<HTMLDivElement | null>(null);
 
@@ -79,7 +78,7 @@ const LuckyColorNumberCalculator: React.FC = () => {
             </div>
 
             <div className="text-center mb-10 md:mb-16 relative z-10">
-              <h2 className="text-3xl md:text-5xl font-black text-[#301118] mb-2 tracking-tight" style={fontStyle}>
+              <h2 className="text-3xl md:text-5xl font-black text-[#301118] mb-2 tracking-tight">
                 {t.form.title}
               </h2>
               <div className="w-24 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent mx-auto mt-4"></div>

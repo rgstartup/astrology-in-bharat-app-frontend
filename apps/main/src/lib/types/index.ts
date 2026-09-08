@@ -11,3 +11,4 @@ export * from "./astrology-consult";
 export * from "./darshan";
 export * from "./famous-places";
 export * from "./shop";
+export * from "./onboard";

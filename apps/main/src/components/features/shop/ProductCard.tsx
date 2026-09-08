@@ -206,11 +206,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           >
             <span
               className="leading-tight text-center"
-              style={
-                lang === "hi"
-                  ? { fontFamily: "'Noto Sans Devanagari', sans-serif" }
-                  : {}
-              }
+
             >
               {t.products.addToCart}
             </span>
@@ -254,11 +250,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <>
                 <span
                   className="leading-tight text-center"
-                  style={
-                    lang === "hi"
-                      ? { fontFamily: "'Noto Sans Devanagari', sans-serif" }
-                      : {}
-                  }
+
                 >
                   {t.products.buyNow}
                 </span>

@@ -17,7 +17,6 @@ const WishlistGrid: React.FC = () => {
     const { wishlistItems, expertWishlistItems, pujaWishlistItems, isLoading } = useWishlistStore();
     const { lang } = useLanguageStore();
     const t = profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en;
-    const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
     if (isLoading) {
         return (
@@ -48,8 +47,8 @@ const WishlistGrid: React.FC = () => {
                 <div className="bg-white w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-10 shadow-premium border border-slate-100 text-slate-200">
                     <FaHeart size={40} className="animate-pulse" />
                 </div>
-                <h5 className="text-2xl md:text-3xl font-black text-slate-950 uppercase tracking-tighter mb-4" style={fontStyle}>{t.wishlist.emptyTitle}</h5>
-                <p className="text-base md:text-lg text-slate-400 font-bold italic mb-0 max-w-sm mx-auto" style={fontStyle}>{t.wishlist.emptyDesc}</p>
+                <h5 className="text-2xl md:text-3xl font-black text-slate-950 uppercase tracking-tighter mb-4">{t.wishlist.emptyTitle}</h5>
+                <p className="text-base md:text-lg text-slate-400 font-bold italic mb-0 max-w-sm mx-auto">{t.wishlist.emptyDesc}</p>
             </div>
         );
     }
@@ -62,11 +61,11 @@ const WishlistGrid: React.FC = () => {
                         <div className="space-y-2">
                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
                               <FaGift className="text-primary text-[10px]" />
-                              <span className="text-[10px] font-black text-primary uppercase tracking-widest" style={fontStyle}>{t.wishlist.savedItems}</span>
+                              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{t.wishlist.savedItems}</span>
                            </div>
-                           <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight" style={fontStyle}>{t.wishlist.likedProducts}</h2>
+                           <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">{t.wishlist.likedProducts}</h2>
                         </div>
-                        <div className="flex items-center gap-2 text-slate-400 font-bold italic text-sm" style={fontStyle}>
+                        <div className="flex items-center gap-2 text-slate-400 font-bold italic text-sm">
                            <span className="tabular-nums">{wishlistItems.length}</span> {t.wishlist.itemsSaved}
                         </div>
                     </div>
@@ -100,11 +99,11 @@ const WishlistGrid: React.FC = () => {
                         <div className="space-y-2">
                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/10 rounded-full">
                               <FaUserAstronaut className="text-indigo-500 text-[10px]" />
-                              <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest" style={fontStyle}>{t.wishlist.favoriteExperts}</span>
+                              <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">{t.wishlist.favoriteExperts}</span>
                            </div>
-                           <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight" style={fontStyle}>{t.wishlist.likedExperts}</h2>
+                           <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">{t.wishlist.likedExperts}</h2>
                         </div>
-                        <div className="flex items-center gap-2 text-slate-400 font-bold italic text-sm" style={fontStyle}>
+                        <div className="flex items-center gap-2 text-slate-400 font-bold italic text-sm">
                            <span className="tabular-nums">{expertWishlistItems.length}</span> {t.wishlist.expertsSaved}
                         </div>
                     </div>
@@ -157,11 +156,11 @@ const WishlistGrid: React.FC = () => {
                         <div className="space-y-2">
                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-500/10 rounded-full">
                               <MdStars className="text-orange-500 text-[10px]" />
-                              <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest" style={fontStyle}>{t.wishlist.divineRituals}</span>
+                              <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest">{t.wishlist.divineRituals}</span>
                            </div>
-                           <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight" style={fontStyle}>{t.wishlist.likedPujas}</h2>
+                           <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">{t.wishlist.likedPujas}</h2>
                         </div>
-                        <div className="flex items-center gap-2 text-slate-400 font-bold italic text-sm" style={fontStyle}>
+                        <div className="flex items-center gap-2 text-slate-400 font-bold italic text-sm">
                            <span className="tabular-nums">{pujaWishlistItems.length}</span> {t.wishlist.pujasSaved}
                         </div>
                     </div>
@@ -184,7 +183,7 @@ const WishlistGrid: React.FC = () => {
             <div className="text-center pt-24 opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
                 <div className="inline-flex items-center gap-3 md:gap-6 px-6 md:px-10 py-3 md:py-5 bg-white rounded-full border border-gray-100 shadow-sm">
                     <HiOutlineSparkles className="text-orange" />
-                    <span className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]" style={fontStyle}>{t.wishlist.syncNote}</span>
+                    <span className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]">{t.wishlist.syncNote}</span>
                 </div>
             </div>
         </div>

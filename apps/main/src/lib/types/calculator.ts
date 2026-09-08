@@ -86,7 +86,6 @@ export interface BreakupPatchupFormProps {
     canCalculate: boolean;
     handleCalculate: (e: React.FormEvent) => void;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }
 
 // Life Path Calculator
@@ -105,7 +104,6 @@ export interface LifePathFormProps {
     canCalculate: boolean;
     handleCalculate: (e: React.FormEvent) => void;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }
 
 // Love Compatibility Calculator
@@ -126,7 +124,6 @@ export interface LoveCompatibilityFormProps {
     canCalculate: boolean;
     handleCalculate: (e: React.FormEvent) => void;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }
 
 // Common Calculator UI Props
@@ -202,7 +199,6 @@ export interface SoulmateNameInitialsFormProps {
     canCalculate: boolean;
     handleCalculate: (e: React.FormEvent) => void;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }
 
 // Relationship Future Timeline
@@ -233,7 +229,6 @@ export interface RelationshipFutureTimelineFormProps {
     canCalculate: boolean;
     handleCalculate: (e: React.FormEvent) => void;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }
 
 // Planet Calculator
@@ -256,7 +251,6 @@ export interface PlanetFormProps {
     handleSubmit: (e: React.FormEvent) => void;
     renderIcon: (IconComponent: any, props?: any) => React.ReactNode;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }
 
 // Name Numerology
@@ -275,7 +269,6 @@ export interface NameNumerologyFormProps {
     canCalculate: boolean;
     handleCalculate: (e: React.FormEvent) => void;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }
 
 // Nakshatra Finder
@@ -298,7 +291,6 @@ export interface NakshatraFinderFormProps {
     canCalculate: boolean;
     handleCalculate: (e: React.FormEvent) => void;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }
 
 // Marriage Age
@@ -318,7 +310,6 @@ export interface MarriageAgeFormProps {
     canCalculate: boolean;
     handleCalculate: (e: React.FormEvent) => void;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }
 
 // Lucky Vibes
@@ -368,7 +359,6 @@ export interface LoyalPartnerFormProps {
     canCalculate: boolean;
     handleCalculate: (e: React.FormEvent) => void;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }
 
 // Flames
@@ -390,5 +380,4 @@ export interface FlamesFormProps {
     canCalculate: boolean;
     handleCalculate: (e: React.FormEvent) => void;
     t?: any;
-    fontStyle?: React.CSSProperties;
 }

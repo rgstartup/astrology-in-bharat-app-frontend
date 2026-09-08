@@ -53,7 +53,6 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
 }) => {
     const { lang } = useLanguageStore();
     const t = (profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en).orders;
-    const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
     const [cancellingOrderId, setCancellingOrderId] = React.useState<string | null>(null);
     const [cancelModalOpen, setCancelModalOpen] = React.useState(false);
@@ -96,7 +95,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
       <div className="px-6 py-5 bg-white border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h5
           className="text-lg font-bold text-gray-900 mb-0 flex items-center"
-          style={fontStyle}
+
         >
           <span className="w-10 h-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mr-3 shrink-0">
             <i className="fa-solid fa-bag-shopping"></i>
@@ -134,16 +133,16 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
             <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mb-6 border border-gray-100 shadow-inner">
               <i className="fa-solid fa-box-open text-3xl text-gray-300"></i>
             </div>
-            <h6 className="font-bold text-gray-900 text-lg mb-2" style={fontStyle}>
+            <h6 className="font-bold text-gray-900 text-lg mb-2">
               {t.noOrders}
             </h6>
-            <p className="text-gray-500 text-sm mb-8 max-w-xs" style={fontStyle}>
+            <p className="text-gray-500 text-sm mb-8 max-w-xs">
               {t.noOrdersHint}
             </p>
             <NextLink
               href={PATHS.BUY_PRODUCTS}
               className="px-8 py-3 bg-orange text-white font-bold rounded-2xl shadow-lg shadow-orange/20 hover:bg-orange/90 transition-all no-underline"
-              style={fontStyle}
+
             >
               {t.shopNow}
             </NextLink>
@@ -175,22 +174,22 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                     <div>
                       <span
                         className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1"
-                        style={fontStyle}
+
                       >
                         {t.orderId}
                       </span>
-                      <span className="font-bold text-gray-900" style={fontStyle}>
+                      <span className="font-bold text-gray-900">
                         {order.tracking_id || order.trackingId || order.orderId || order.id}
                       </span>
                     </div>
                     <div>
                       <span
                         className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1"
-                        style={fontStyle}
+
                       >
                         {t.date}
                       </span>
-                      <span className="font-bold text-gray-900" style={fontStyle}>
+                      <span className="font-bold text-gray-900">
                         {(() => {
                           const dateVal = order.date || order.createdAt || order.created_at;
                           if (!dateVal) return t.na;
@@ -208,7 +207,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                     <div>
                       <span
                         className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1"
-                        style={fontStyle}
+
                       >
                         {t.totalAmount}
                       </span>
@@ -348,14 +347,14 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                             <span className="font-bold text-gray-900">₹{item.price || 0}</span>
                                           </div>
                                           <div className="flex justify-between items-center">
-                                            <span className="text-slate-500 text-xs font-medium" style={fontStyle}>
+                                            <span className="text-slate-500 text-xs font-medium">
                                               {t.qty}: {item.quantity || 1}
                                             </span>
                                             {order.status?.toLowerCase() === "delivered" && (
                                               <button
                                                 onClick={() => onOpenReviewModal(order.merchantId || group.merchant_id, order.id)}
                                                 className="text-orange font-black text-xs no-underline hover:underline bg-transparent border-0 p-0 cursor-pointer"
-                                                style={fontStyle}
+
                                               >
                                                 {t.writeReview}
                                               </button>
@@ -401,14 +400,14 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                                       <span className="font-bold text-gray-900 text-lg">₹{item.price || 0}</span>
                                     </div>
                                     <div className="flex justify-between items-center mt-2">
-                                        <span className="text-slate-500 text-xs font-medium" style={fontStyle}>
+                                        <span className="text-slate-500 text-xs font-medium">
                                           {t.qty}: {item.quantity || 1}
                                         </span>
                                         {order.status?.toLowerCase() === "delivered" && (
                                           <button
                                             onClick={() => onOpenReviewModal(order.merchantId || order.Merchant?.id || order.merchant?.id, order.id)}
                                             className="text-orange font-black text-xs no-underline hover:underline bg-transparent border-0 p-0 cursor-pointer"
-                                            style={fontStyle}
+
                                           >
                                             {t.writeReview}
                                           </button>
@@ -450,7 +449,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                             onClick={() => initiateCancelOrder(order.id)}
                             disabled={cancellingOrderId === order.id}
                             className="flex-1 md:flex-none px-6 py-2 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100 transition-colors disabled:opacity-50"
-                            style={fontStyle}
+
                           >
                             {cancellingOrderId === order.id ? "Cancelling..." : t.cancelOrder}
                           </button>
@@ -460,7 +459,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                           <button
                             onClick={() => onViewChat(orderDisputes[order.tracking_id || order.trackingId || order.id])}
                             className="flex-1 md:flex-none relative px-6 py-2 bg-orange text-white font-bold text-xs rounded-xl hover:bg-orange/90 transition-all shadow-md flex items-center justify-center gap-2"
-                            style={fontStyle}
+
                           >
                             <i className="fa-solid fa-comments"></i>
                             {t.reportIssueDiscussion}
@@ -474,7 +473,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                           <button
                             onClick={() => onReportIssue(order)}
                             className="flex-1 md:flex-none px-6 py-2 border border-red-100 text-red-500 font-bold text-xs rounded-xl hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
-                            style={fontStyle}
+
                           >
                             <i className="fa-solid fa-circle-exclamation"></i>
                             {t.reportIssue}
@@ -489,7 +488,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                         <div className="bg-orange-50 px-6 py-4 border-b border-orange/20">
                           <h6
                             className="flex items-center text-[10px] font-bold uppercase tracking-[0.15em] text-orange m-0"
-                            style={fontStyle}
+
                           >
                             <i className="fa-solid fa-truck-fast mr-2 text-lg"></i>
                             {t.shippingAddress}
@@ -542,7 +541,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                         ) : (
                           <p
                             className="text-sm text-slate-500 italic m-0"
-                            style={fontStyle}
+
                           >
                             {t.noShippingAddress}
                           </p>
@@ -554,14 +553,14 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                       <div className="bg-gray-900 p-6 rounded-3xl shadow-xl relative overflow-hidden">
                         <h6
                           className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-6"
-                          style={fontStyle}
+
                         >
                           {t.orderSummary}
                         </h6>
                         <div className="space-y-3 relative z-10">
                           {/* Subtotal */}
                           <div className="flex justify-between items-center text-sm">
-                            <span className="text-gray-300" style={fontStyle}>
+                            <span className="text-gray-300">
                               {t.subtotal}
                             </span>
                             <span className="text-white font-bold tracking-tight">
@@ -577,7 +576,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                           {/* Platform Fee */}
                           {(order.platform_fee || 0) > 0 && (
                             <div className="flex justify-between items-center text-sm">
-                              <span className="text-gray-300" style={fontStyle}>
+                              <span className="text-gray-300">
                                 Platform Fee
                               </span>
                               <span className="text-white font-bold">
@@ -588,12 +587,12 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
 
                           {/* Shipping */}
                           <div className="flex justify-between items-center text-sm">
-                            <span className="text-gray-300" style={fontStyle}>
+                            <span className="text-gray-300">
                               {t.shipping}
                             </span>
                             <span
                               className={`${(order.shipping_charge || 0) > 0 ? 'text-white' : 'text-emerald-400'} font-black uppercase tracking-widest text-[12px]`}
-                              style={fontStyle}
+
                             >
                               {(order.shipping_charge || 0) > 0
                                 ? `₹${order.shipping_charge}`
@@ -604,7 +603,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                           {/* Discount */}
                           {(order.discount_amount || 0) > 0 && (
                             <div className="flex justify-between items-center text-sm">
-                              <span className="text-gray-300 flex items-center gap-1" style={fontStyle}>
+                              <span className="text-gray-300 flex items-center gap-1">
                                 Discount
                                 {order.coupon_code && (
                                   <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded-md font-black uppercase">
@@ -622,7 +621,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                           <div className="pt-4 border-t border-white/10 flex justify-between items-end">
                             <span
                               className="text-white font-bold"
-                              style={fontStyle}
+
                             >
                               {t.total}
                             </span>
@@ -632,7 +631,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                               </span>
                               <span
                                 className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-2 block"
-                                style={fontStyle}
+
                               >
                                 {t.paidVia}
                               </span>
@@ -656,7 +655,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                   onClick={onLoadMore}
                   disabled={loadingMore}
                   className="px-10 py-4 bg-white border-2 border-gray-100 text-gray-600 font-bold rounded-2xl hover:border-orange-200 hover:text-orange hover:bg-orange-50/30 transition-all duration-300 flex items-center gap-3 shadow-sm active:scale-95 disabled:opacity-50"
-                  style={fontStyle}
+
                 >
                   {loadingMore ? (
                     <>
@@ -676,7 +675,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                 <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 text-gray-300">
                   <i className="fa-solid fa-check"></i>
                 </div>
-                <p className="text-gray-400 text-sm font-medium" style={fontStyle}>
+                <p className="text-gray-400 text-sm font-medium">
                   {lang === "hi" ? "आपने अपने सभी ऑर्डर देख लिए हैं" : "You've viewed all your orders"}
                 </p>
               </div>
@@ -712,7 +711,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
             </div>
             
             <div className="p-6">
-              <p className="text-sm text-gray-600 mb-4" style={fontStyle}>
+              <p className="text-sm text-gray-600 mb-4">
                 Are you sure you want to cancel this order? Please provide a reason for cancellation below. This action cannot be undone.
               </p>
               
@@ -726,7 +725,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                   placeholder="e.g. Ordered by mistake, found a better price elsewhere..."
                   className="w-full border border-gray-200 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange bg-gray-50/50 resize-none transition-all"
                   rows={4}
-                  style={fontStyle}
+
                 ></textarea>
               </div>
             </div>

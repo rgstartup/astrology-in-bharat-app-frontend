@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
+import { stripLocale } from "@/utils/getPathnameOrDefault";
+
 /**
  * GET /api/auth/set-tokens?accessToken=...&refreshToken=...&redirect=...
  *
@@ -26,7 +28,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Clean redirect path
-    const cleanRedirect = redirect.startsWith("/") ? redirect : `/${redirect}`;
+    const cleanRedirect = stripLocale(redirect);
     const redirectUrl = new URL(cleanRedirect, request.url);
 
     const response = NextResponse.redirect(redirectUrl);

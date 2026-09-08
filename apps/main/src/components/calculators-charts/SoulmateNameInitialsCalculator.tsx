@@ -89,7 +89,6 @@ const pickUniqueInitials = (seed: number): string[] => {
 const SoulmateInitialFinder: React.FC = () => {
   const { lang } = useLanguageStore();
   const t = soulmateInitialsTranslations[lang as "en" | "hi"] || soulmateInitialsTranslations.en;
-  const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const [name, setName] = useState<string>("");
   const [dob, setDob] = useState<string>(""); // optional
@@ -156,7 +155,7 @@ const SoulmateInitialFinder: React.FC = () => {
         canCalculate={canCalculate}
         handleCalculate={handleCalculate}
         t={t.form}
-        fontStyle={fontStyle}
+
       />
 
       {/* Results */}
@@ -172,11 +171,11 @@ const SoulmateInitialFinder: React.FC = () => {
 
                   <div className="relative z-10">
                     <div className="text-center mb-16">
-                      <span className="inline-block bg-primary/10 text-primary px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8" style={fontStyle}>
+                      <span className="inline-block bg-primary/10 text-primary px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
                         {t.results.badge}
                       </span>
 
-                      <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-6 tracking-tight" style={fontStyle}>
+                      <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-6 tracking-tight">
                         {t.results.title} <span className="text-primary">{t.results.titleAccent}</span>
                       </h2>
 
@@ -193,7 +192,7 @@ const SoulmateInitialFinder: React.FC = () => {
                             <span className="block text-4xl md:text-6xl font-black text-burgundy leading-none group-hover:scale-110 transition-transform duration-500">
                               {result.initials.join(", ")}
                             </span>
-                            <span className="text-[12px] font-black uppercase tracking-[4px] text-primary mt-4 block" style={fontStyle}>
+                            <span className="text-[12px] font-black uppercase tracking-[4px] text-primary mt-4 block">
                               {t.results.possibleInitials}
                             </span>
                           </div>
@@ -209,14 +208,14 @@ const SoulmateInitialFinder: React.FC = () => {
                             <TbCrystalBall size={28} />
                           </div>
 
-                          <p className="text-xl md:text-2xl font-light italic leading-relaxed text-orange-100/90 m-0" style={fontStyle}>
+                          <p className="text-xl md:text-2xl font-light italic leading-relaxed text-orange-100/90 m-0">
                             {t.results.message}{" "}
                             <span className="font-black text-white not-italic">
                               {result.initials.join(", ")}
                             </span>
                           </p>
 
-                          <p className="text-lg md:text-xl font-light italic leading-relaxed text-orange-100/80 mt-6 m-0" style={fontStyle}>
+                          <p className="text-lg md:text-xl font-light italic leading-relaxed text-orange-100/80 mt-6 m-0">
                             {t.results.luckyMonth}{" "}
                             <span className="font-black text-white not-italic">
                               {result.luckyMonth}
@@ -224,7 +223,7 @@ const SoulmateInitialFinder: React.FC = () => {
                           </p>
 
                           <div className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10">
-                            <span className="text-[10px] font-black uppercase tracking-[4px] text-orange-100/70" style={fontStyle}>
+                            <span className="text-[10px] font-black uppercase tracking-[4px] text-orange-100/70">
                               {t.results.disclaimer}
                             </span>
                           </div>

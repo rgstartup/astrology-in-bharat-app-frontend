@@ -64,8 +64,6 @@ const DUMMY_STORES: Store[] = [
 const StoreSection = () => {
   const { lang, t: translationSet } = useHomeTranslations();
   const t = translationSet.storeSection;
-  const fontStyle =
-    lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -117,7 +115,7 @@ const StoreSection = () => {
           >
             <h2
               className="section-heading-premium uppercase mb-0"
-              style={fontStyle}
+
             >
               <span>{t.title}</span>
             </h2>
@@ -239,7 +237,7 @@ const StoreSection = () => {
         <div className="mt-6 md:mt-8 text-center">
           <button
             className="inline-flex items-center gap-4 px-12 py-4 bg-white border-2 border-orange-500 text-orange-600 rounded-[2rem] font-bold text-sm tracking-wider hover:bg-orange-500 hover:text-white transition-all duration-500 shadow-xl shadow-orange-500/20 hover:shadow-orange-500/40"
-            style={fontStyle}
+
           >
             <StoreIcon className="w-5 h-5" />
             <span>{t.btnDiscoverAll}</span>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { clearAuthCookies } from "@/actions/cookie";
 
 /**
  * POST /api/auth/logout
@@ -11,9 +12,10 @@ import { cookies } from "next/headers";
 export async function POST() {
   const cookieStore = await cookies();
 
-  // Delete all auth cookies (standard COOKIE_NAMES from backend)
-  cookieStore.delete("accessToken");
-  cookieStore.delete("refreshToken");
+  clearAuthCookies(cookieStore as any);
+
+  const isProd = process.env.NODE_ENV === "production";
+  const secureFlag = isProd ? "; Secure" : "";
 
   return NextResponse.json(
     { success: true },
@@ -22,10 +24,11 @@ export async function POST() {
       headers: {
         // Belt + suspenders: also clear via Set-Cookie header
         "Set-Cookie": [
-          "accessToken=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict",
-          "refreshToken=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict",
+          `accessToken=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict${secureFlag}`,
+          `refreshToken=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict${secureFlag}`,
         ].join(", "),
       },
     },
   );
 }
+

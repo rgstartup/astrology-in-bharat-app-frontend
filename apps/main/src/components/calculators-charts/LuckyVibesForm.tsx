@@ -27,7 +27,6 @@ const LuckyVibesForm: React.FC<LuckyVibesFormProps> = ({
   const { lang } = useLanguageStore();
   const translationSet = (homeTranslations[lang as "en" | "hi"] || homeTranslations.en) as any;
   const t = translationSet.calculators.luckyVibes;
-  const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -47,7 +46,7 @@ const LuckyVibesForm: React.FC<LuckyVibesFormProps> = ({
       <div className="glass-card rounded-[2.5rem] p-6 md:p-10 shadow-[0_15px_40px_rgba(48,17,24,0.08)] border border-[#301118]/5 relative overflow-hidden bg-white space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+            <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
               {t.form.nameLabel}
             </label>
             <input
@@ -62,7 +61,7 @@ const LuckyVibesForm: React.FC<LuckyVibesFormProps> = ({
           </div>
 
           <div>
-            <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+            <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
               {t.form.dobLabel}
             </label>
             <div className="relative mt-2">
@@ -82,14 +81,14 @@ const LuckyVibesForm: React.FC<LuckyVibesFormProps> = ({
         </div>
 
         <div className="relative z-50" ref={dropdownRef}>
-          <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1" style={fontStyle}>
+          <label className="text-sm font-bold text-[#301118]/60 uppercase tracking-widest pl-1">
             {t.form.zodiacLabel}
           </label>
           <div className="relative mt-2">
             <button
               type="button"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              style={{ borderRadius: "9999px", ...fontStyle }}
+              style={{ borderRadius: "9999px" }}
               className="w-full bg-white border-2 border-orange-500 px-5 py-3.5 text-[#301118] font-black focus:border-orange-600 focus:ring-4 focus:ring-orange-500/20 outline-none transition-all shadow-sm text-sm flex items-center justify-between"
             >
               <span>{t.dynamic.zodiac[zodiac] || zodiac}</span>
@@ -115,7 +114,7 @@ const LuckyVibesForm: React.FC<LuckyVibesFormProps> = ({
                           setZodiac(s as ZodiacSign);
                           setIsDropdownOpen(false);
                         }}
-                        style={{ borderRadius: "9999px", ...fontStyle }}
+                        style={{ borderRadius: "9999px" }}
                         className={`w-full text-left px-4 py-2 text-sm font-bold transition-all ${
                           zodiac === s 
                             ? 'bg-orange-500 text-white shadow-md' 
@@ -131,7 +130,7 @@ const LuckyVibesForm: React.FC<LuckyVibesFormProps> = ({
             )}
           </div>
 
-          <p className="m-0 mt-3 pl-1 text-xs text-gray-500 italic" style={fontStyle}>
+          <p className="m-0 mt-3 pl-1 text-xs text-gray-500 italic">
             {t.form.elementLabel}: <span className="font-black text-orange-600">{t.dynamic.elements[elementBySign(zodiac)] || elementBySign(zodiac)}</span>
           </p>
         </div>
@@ -144,7 +143,7 @@ const LuckyVibesForm: React.FC<LuckyVibesFormProps> = ({
             className="relative group inline-flex items-center justify-center gap-2 md:gap-3 bg-orange-600 text-white w-full md:w-auto px-4 py-4 md:px-12 md:py-4 font-black uppercase tracking-[1px] md:tracking-[2px] text-[10px] sm:text-xs hover:bg-orange-700 transition-all duration-500 shadow-xl disabled:opacity-75 disabled:cursor-not-allowed disabled:hover:bg-orange-600 cursor-pointer"
           >
             {loading ? <FaSpinner className="animate-spin shrink-0" /> : <TbCrystalBall size={18} className="shrink-0" />}
-            <span style={fontStyle} className="text-center">
+            <span className="text-center">
               {loading ? t.form.btnGenerating : t.form.btnCalculate}
             </span>
             <FaArrowRight className="opacity-70 group-hover:translate-x-1 transition-transform shrink-0" />

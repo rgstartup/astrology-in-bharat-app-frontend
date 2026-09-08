@@ -42,7 +42,15 @@ export const useAuthStore = create<AuthState>()(
         if (error || !client) {
           get().reset();
 
-          toast.error("Failed to load user.");
+          if ((error as any)?.status === 401) {
+            try {
+              await fetch("/api/auth/logout", { method: "POST" });
+            } catch {
+              // ignore
+            }
+          } else {
+            toast.error("Failed to load user.");
+          }
           return;
         }
 

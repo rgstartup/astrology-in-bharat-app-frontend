@@ -21,10 +21,7 @@ import Skeleton from "@/components/ui/Skeleton";
 import { Loading } from "@repo/ui";
 
 const ProfileContent: React.FC = () => {
-  const lang = useLocale();
   const t = useTranslations("Profile");
-  const fontStyle =
-    lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const {
     profileLoading,
@@ -210,10 +207,7 @@ const ProfileContent: React.FC = () => {
                     >
                       <i className="fa-solid fa-heart"></i>
                     </div>
-                    <h5
-                      className="text-xl font-bold text-gray-900 m-0"
-                      style={fontStyle}
-                    >
+                    <h5 className="text-xl font-bold text-gray-900 m-0">
                       {t("wishlist.title")}
                     </h5>
                   </div>
@@ -332,10 +326,7 @@ const ProfileContent: React.FC = () => {
                     >
                       <i className="fa-solid fa-om"></i>
                     </div>
-                    <h5
-                      className="text-xl font-bold text-gray-900 m-0"
-                      style={fontStyle}
-                    >
+                    <h5 className="text-xl font-bold text-gray-900 m-0">
                       {t("sidebar.tabs.pujas")}
                     </h5>
                   </div>

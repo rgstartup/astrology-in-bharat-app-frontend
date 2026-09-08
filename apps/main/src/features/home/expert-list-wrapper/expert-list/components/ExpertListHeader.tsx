@@ -61,14 +61,7 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
         className="flex justify-between items-center mb-3 lg:mb-6 text-white"
         style={{ "--heading-border-color": "rgba(255,255,255,0.2)" } as any}
       >
-        <h2
-          className="section-heading-premium m-0"
-          style={
-            lang === "hi"
-              ? { fontFamily: "'Noto Sans Devanagari', sans-serif" }
-              : {}
-          }
-        >
+        <h2 className="section-heading-premium m-0">
           <span>{title}</span>
         </h2>
 

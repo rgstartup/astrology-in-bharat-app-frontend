@@ -32,8 +32,6 @@ import Link from "next/link";
 const OnlinePujaPage = () => {
   const { lang } = useLanguageStore();
   const t = pujaTranslations[lang as "en" | "hi"] || pujaTranslations.en;
-  const fontStyle =
-    lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const [pujas, setPujas] = useState<ExpertPuja[]>([]);
   const [loading, setLoading] = useState(true);
@@ -217,10 +215,7 @@ const OnlinePujaPage = () => {
       <div className="max-w-7xl mx-auto px-4 pb-4">
         {/* Header */}
         <div className="flex items-end justify-between mb-8">
-          <h2
-            className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 border-b-2 border-transparent"
-            style={fontStyle}
-          >
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 border-b-2 border-transparent">
             Popular Puja
           </h2>
           <span className="text-sm font-bold text-gray-500 mb-1">

@@ -80,7 +80,6 @@ const getFlamesLetter = (count: number): FlamesLetter => {
 const FlamesCalculator: React.FC = () => {
   const { lang } = useLanguageStore();
   const t = flamesTranslations[lang as keyof typeof flamesTranslations] || flamesTranslations.en;
-  const fontStyle = lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const [boyName, setBoyName] = useState<string>("");
   const [girlName, setGirlName] = useState<string>("");
@@ -144,7 +143,7 @@ const FlamesCalculator: React.FC = () => {
         canCalculate={canCalculate}
         handleCalculate={handleCalculate}
         t={t.form}
-        fontStyle={fontStyle}
+
       />
 
       {/* Result Section */}
@@ -160,11 +159,11 @@ const FlamesCalculator: React.FC = () => {
 
                   <div className="relative z-10">
                     <div className="text-center mb-16">
-                      <span className="inline-block bg-primary/10 text-primary px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8" style={fontStyle}>
+                      <span className="inline-block bg-primary/10 text-primary px-6 py-2 rounded-full text-[12px] font-black uppercase tracking-[3px] mb-8">
                         {t.results.badge}
                       </span>
 
-                      <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-6 tracking-tight" style={fontStyle}>
+                      <h2 className="text-4xl md:text-6xl font-black text-burgundy mb-6 tracking-tight">
                         {t.results.titlePrefix} <span className="text-primary">{result.word}</span>
                       </h2>
 
@@ -181,7 +180,7 @@ const FlamesCalculator: React.FC = () => {
                             <span className="block text-7xl md:text-9xl font-black text-burgundy leading-none group-hover:scale-110 transition-transform duration-500">
                               {result.letter}
                             </span>
-                            <span className="text-[12px] font-black uppercase tracking-[4px] text-primary mt-4 block" style={fontStyle}>
+                            <span className="text-[12px] font-black uppercase tracking-[4px] text-primary mt-4 block">
                               {t.results.possibleInitials}
                             </span>
                           </div>
@@ -197,11 +196,11 @@ const FlamesCalculator: React.FC = () => {
                             <GiSparkles size={28} />
                           </div>
 
-                          <p className="text-xl md:text-2xl font-light italic leading-relaxed text-orange-100/90 m-0" style={fontStyle}>
+                          <p className="text-xl md:text-2xl font-light italic leading-relaxed text-orange-100/90 m-0">
                             "{result.message}"
                           </p>
 
-                          <p className="text-[10px] text-orange-100/50 font-bold uppercase tracking-[3px] mt-6 m-0" style={fontStyle}>
+                          <p className="text-[10px] text-orange-100/50 font-bold uppercase tracking-[3px] mt-6 m-0">
                             {t.results.remainingCount} <span className="text-white">{result.count}</span>
                           </p>
                         </div>
@@ -219,6 +218,4 @@ const FlamesCalculator: React.FC = () => {
 };
 
 export default FlamesCalculator;
-
-
 

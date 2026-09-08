@@ -29,3 +29,20 @@ export const setRefreshToken = (
     maxAge: 60 * 60 * 24 * 7,
   });
 };
+
+export const clearAuthCookies = (cookieStore: ResponseCookies) => {
+  const isProd = process.env.NODE_ENV === "production";
+  const options = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "strict" as const,
+    path: "/",
+    maxAge: 0,
+    expires: new Date(0),
+  };
+
+  cookieStore.set("accessToken", "", options);
+  cookieStore.set("refreshToken", "", options);
+  cookieStore.delete("accessToken");
+  cookieStore.delete("refreshToken");
+};

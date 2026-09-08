@@ -56,8 +56,6 @@ const StoreDetailsPage = () => {
     lang as keyof typeof homeTranslations
   ] || homeTranslations.en) as any;
   const t = translationSet.storeDetail;
-  const fontStyle =
-    lang === "hi" ? { fontFamily: "'Noto Sans Devanagari', sans-serif" } : {};
 
   const params = useParams();
   const router = useRouter();
@@ -86,16 +84,13 @@ const StoreDetailsPage = () => {
     return (
       <div className="min-h-screen bg-[#301118] flex flex-col items-center justify-center p-6 text-center">
         <ShoppingBag className="w-20 h-20 text-orange-500/20 mb-6" />
-        <h1 className="text-3xl font-bold text-white mb-4" style={fontStyle}>
+        <h1 className="text-3xl font-bold text-white mb-4">
           {t.notFound.title}
         </h1>
-        <p className="text-slate-500 mb-8" style={fontStyle}>
-          {t.notFound.desc}
-        </p>
+        <p className="text-slate-500 mb-8">{t.notFound.desc}</p>
         <Link
           href="/"
           className="px-8 py-4 bg-orange text-white rounded-2xl font-bold uppercase tracking-widest hover:bg-orange/90 transition-all"
-          style={fontStyle}
         >
           {t.notFound.btnBack}
         </Link>
@@ -117,10 +112,7 @@ const StoreDetailsPage = () => {
                 {/* Top Badges */}
                 <div className="absolute top-6 right-8 bg-orange/10 text-orange px-4 py-1.5 rounded-full flex items-center gap-2 border border-orange/20 shadow-sm">
                   <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-                  <span
-                    className="text-[10px] font-black uppercase tracking-widest"
-                    style={fontStyle}
-                  >
+                  <span className="text-[10px] font-black uppercase tracking-widest">
                     {t.profile.verifiedSeller}
                   </span>
                 </div>
@@ -133,20 +125,14 @@ const StoreDetailsPage = () => {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
                       </span>
-                      <span
-                        className="text-[9px] font-black text-green-600 uppercase tracking-widest leading-none"
-                        style={fontStyle}
-                      >
+                      <span className="text-[9px] font-black text-green-600 uppercase tracking-widest leading-none">
                         {t.profile.online}
                       </span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-500/10 backdrop-blur-md rounded-full border border-slate-500/20">
                       <span className="inline-flex rounded-full h-2 w-2 bg-slate-400"></span>
-                      <span
-                        className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none"
-                        style={fontStyle}
-                      >
+                      <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">
                         {t.profile.offline}
                       </span>
                     </div>
@@ -171,16 +157,13 @@ const StoreDetailsPage = () => {
 
                 {/* Shop Title & Status */}
                 <div className="mt-6 text-center px-8 space-y-3">
-                  <h2
-                    className="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-tight"
-                    style={fontStyle}
-                  >
+                  <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-tight">
                     {shop.name}
                   </h2>
 
                   <div className="flex items-center justify-center gap-1.5 text-orange font-black bg-orange/5 px-3 py-1 rounded-full text-[10px] uppercase tracking-widest border border-orange/10 mx-auto w-fit">
                     <MapPin className="w-3.5 h-3.5" />
-                    <span style={fontStyle}>
+                    <span>
                       {shop.city} {t.profile.marketplace}
                     </span>
                   </div>
@@ -190,32 +173,20 @@ const StoreDetailsPage = () => {
               {/* Stats Bar */}
               <div className="mx-6 p-4 bg-white rounded-3xl flex justify-between items-center border border-slate-100 shadow-premium group-hover:border-orange/10 transition-colors">
                 <div className="text-center px-4">
-                  <p
-                    className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black mb-1"
-                    style={fontStyle}
-                  >
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black mb-1">
                     {t.profile.est}
                   </p>
-                  <p
-                    className="text-sm font-black text-slate-900"
-                    style={fontStyle}
-                  >
+                  <p className="text-sm font-black text-slate-900">
                     {shop.established || t.profile.na}
                   </p>
                 </div>
                 <div className="h-10 w-px bg-slate-100"></div>
                 <div className="text-center px-4">
-                  <p
-                    className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black mb-1"
-                    style={fontStyle}
-                  >
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black mb-1">
                     {t.profile.rating}
                   </p>
                   <div className="flex items-center justify-center gap-1">
-                    <span
-                      className="text-sm font-black text-slate-900"
-                      style={fontStyle}
-                    >
+                    <span className="text-sm font-black text-slate-900">
                       {shop.rating || "0"}
                     </span>
                     <Star className="w-3.5 h-3.5 text-orange fill-orange" />
@@ -223,17 +194,11 @@ const StoreDetailsPage = () => {
                 </div>
                 <div className="h-10 w-px bg-slate-100"></div>
                 <div className="text-center px-4">
-                  <p
-                    className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black mb-1"
-                    style={fontStyle}
-                  >
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-black mb-1">
                     {t.profile.products}
                   </p>
                   <div className="flex items-center justify-center gap-1">
-                    <span
-                      className="text-sm font-black text-slate-900"
-                      style={fontStyle}
-                    >
+                    <span className="text-sm font-black text-slate-900">
                       {shop.productsCount ||
                         (storeProducts as any[]).length ||
                         "0"}
@@ -250,16 +215,10 @@ const StoreDetailsPage = () => {
                     <ShieldCheck className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col">
-                    <span
-                      className="text-[10px] font-black text-slate-500 uppercase tracking-widest"
-                      style={fontStyle}
-                    >
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                       {t.trustInfo.scoreLabel}
                     </span>
-                    <span
-                      className="text-sm font-black text-slate-800"
-                      style={fontStyle}
-                    >
+                    <span className="text-sm font-black text-slate-800">
                       {shop.trustScore ? `${shop.trustScore}%` : "99.8%"}{" "}
                       {t.trustInfo.reliability}
                     </span>
@@ -270,16 +229,10 @@ const StoreDetailsPage = () => {
                     <Clock className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col">
-                    <span
-                      className="text-[10px] font-black text-slate-500 uppercase tracking-widest"
-                      style={fontStyle}
-                    >
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                       {t.trustInfo.hoursLabel}
                     </span>
-                    <span
-                      className="text-sm font-black text-slate-800"
-                      style={fontStyle}
-                    >
+                    <span className="text-sm font-black text-slate-800">
                       {shop.operationalHours || "10:00 AM - 08:30 PM"}
                     </span>
                   </div>
@@ -289,16 +242,10 @@ const StoreDetailsPage = () => {
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col">
-                    <span
-                      className="text-[10px] font-black text-slate-500 uppercase tracking-widest"
-                      style={fontStyle}
-                    >
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                       {t.trustInfo.addressLabel}
                     </span>
-                    <span
-                      className="text-sm font-black text-slate-800 line-clamp-1"
-                      style={fontStyle}
-                    >
+                    <span className="text-sm font-black text-slate-800 line-clamp-1">
                       {shop.address}, {shop.city}
                     </span>
                   </div>
@@ -319,7 +266,6 @@ const StoreDetailsPage = () => {
                     }
                   }}
                   className="w-full flex items-center justify-center gap-3 bg-[#FDF8F4] text-orange border border-orange/10 py-4 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.2em] hover:bg-orange hover:text-white transition-all active:scale-95 leading-none"
-                  style={fontStyle}
                 >
                   <MapPin className="w-5 h-5" />
                   {t.trustInfo.btnDirections}
@@ -335,27 +281,18 @@ const StoreDetailsPage = () => {
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-orange/10 pb-6 mb-8 gap-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <h4
-                      className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight"
-                      style={fontStyle}
-                    >
+                    <h4 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">
                       {t.merchantDossier.title}
                     </h4>
                     <BadgeCheck className="w-6 h-6 text-orange fill-orange/10" />
                   </div>
-                  <p
-                    className="text-slate-500 text-xs font-bold uppercase tracking-widest leading-none"
-                    style={fontStyle}
-                  >
+                  <p className="text-slate-500 text-xs font-bold uppercase tracking-widest leading-none">
                     {t.merchantDossier.subtitle}
                   </p>
                 </div>
                 <div className="flex items-center gap-3 bg-white/50 backdrop-blur-md px-4 py-2 rounded-2xl border border-orange/5">
                   <Heart className="w-4 h-4 text-red-500 fill-red-500" />
-                  <span
-                    className="text-sm font-black text-slate-800 tracking-tight"
-                    style={fontStyle}
-                  >
+                  <span className="text-sm font-black text-slate-800 tracking-tight">
                     {shop.likesCount || "0"} {t.profile.likes}
                   </span>
                 </div>
@@ -376,7 +313,6 @@ const StoreDetailsPage = () => {
                     key={tab}
                     onClick={() => setActiveTab(tab)}
                     className={`font-black text-sm uppercase tracking-widest pb-4 px-1 transition-all relative whitespace-nowrap ${activeTab === tab ? "text-slate-900 border-b-2 border-orange" : "text-slate-500 hover:text-orange/70"}`}
-                    style={fontStyle}
                   >
                     {tab === "about"
                       ? t.tabs.about
@@ -399,16 +335,10 @@ const StoreDetailsPage = () => {
                 {activeTab === "about" && (
                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-12">
                     <div className="space-y-6">
-                      <h3
-                        className="text-xl font-black text-slate-900 uppercase italic border-l-4 border-orange pl-6"
-                        style={fontStyle}
-                      >
+                      <h3 className="text-xl font-black text-slate-900 uppercase italic border-l-4 border-orange pl-6">
                         {t.about.vision}
                       </h3>
-                      <p
-                        className="text-gray-500 text-lg font-medium leading-relaxed italic pr-4"
-                        style={fontStyle}
-                      >
+                      <p className="text-gray-500 text-lg font-medium leading-relaxed italic pr-4">
                         "{shop.description}"
                       </p>
                     </div>
@@ -418,16 +348,10 @@ const StoreDetailsPage = () => {
                         <div className="w-12 h-12 rounded-2xl bg-orange/10 flex items-center justify-center text-orange">
                           <BadgeCheck className="w-7 h-7" />
                         </div>
-                        <h4
-                          className="text-lg font-black text-slate-900 uppercase leading-tight"
-                          style={fontStyle}
-                        >
+                        <h4 className="text-lg font-black text-slate-900 uppercase leading-tight">
                           {t.about.authenticityTitle}
                         </h4>
-                        <p
-                          className="text-xs text-slate-500 font-bold leading-relaxed"
-                          style={fontStyle}
-                        >
+                        <p className="text-xs text-slate-500 font-bold leading-relaxed">
                           {t.about.authenticityDesc.replace(
                             "{city}",
                             shop.city,
@@ -438,16 +362,10 @@ const StoreDetailsPage = () => {
                         <div className="w-12 h-12 rounded-2xl bg-orange/10 flex items-center justify-center text-orange">
                           <Mail className="w-7 h-7" />
                         </div>
-                        <h4
-                          className="text-lg font-black text-slate-900 uppercase leading-tight"
-                          style={fontStyle}
-                        >
+                        <h4 className="text-lg font-black text-slate-900 uppercase leading-tight">
                           {t.about.digitalAssistanceTitle}
                         </h4>
-                        <p
-                          className="text-xs text-slate-500 font-bold leading-relaxed"
-                          style={fontStyle}
-                        >
+                        <p className="text-xs text-slate-500 font-bold leading-relaxed">
                           {t.about.digitalAssistanceDesc.replace(
                             "{email}",
                             shop.email || "support@astrologyinbharat.com",
@@ -457,10 +375,7 @@ const StoreDetailsPage = () => {
                     </div>
 
                     <div className="space-y-6">
-                      <h3
-                        className="text-xl font-black text-slate-900 uppercase tracking-tight"
-                        style={fontStyle}
-                      >
+                      <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">
                         {t.about.specializations}
                       </h3>
                       <div className="flex flex-wrap gap-3">
@@ -470,10 +385,7 @@ const StoreDetailsPage = () => {
                             className="px-6 py-3 bg-white rounded-2xl border border-orange/10 flex items-center gap-3 shadow-sm hover:border-orange transition-colors"
                           >
                             <div className="w-2 h-2 rounded-full bg-orange"></div>
-                            <span
-                              className="text-xs font-black text-slate-700 uppercase tracking-widest"
-                              style={fontStyle}
-                            >
+                            <span className="text-xs font-black text-slate-700 uppercase tracking-widest">
                               {f}
                             </span>
                           </div>
@@ -505,7 +417,7 @@ const StoreDetailsPage = () => {
                               key={product.id || product._id}
                               product={product as any}
                               isCompact={true}
-                              onView={(p: Product) => {
+                              onView={(p: any) => {
                                 setSelectedProduct(p);
                                 setIsQuickViewOpen(true);
                               }}
@@ -515,10 +427,7 @@ const StoreDetailsPage = () => {
                           {(storeProducts as any[]).length === 0 && (
                             <div className="col-span-full py-20 text-center space-y-4">
                               <ShoppingBag className="w-12 h-12 text-gray-200 mx-auto" />
-                              <p
-                                className="text-slate-500 font-bold uppercase tracking-widest text-[10px]"
-                                style={fontStyle}
-                              >
+                              <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">
                                 {t.emptyStates.noProducts}
                               </p>
                             </div>
@@ -556,10 +465,7 @@ const StoreDetailsPage = () => {
                               <span className="text-sm font-black text-slate-900">
                                 {r.name}
                               </span>
-                              <span
-                                className="text-[10px] font-bold text-slate-500"
-                                style={fontStyle}
-                              >
+                              <span className="text-[10px] font-bold text-slate-500">
                                 {t.emptyStates.verifiedJourney}
                               </span>
                             </div>
@@ -582,10 +488,7 @@ const StoreDetailsPage = () => {
                     {storeReviews.length === 0 && (
                       <div className="py-20 text-center space-y-4">
                         <MessageSquare className="w-12 h-12 text-gray-200 mx-auto" />
-                        <p
-                          className="text-slate-500 font-bold uppercase tracking-widest text-[10px]"
-                          style={fontStyle}
-                        >
+                        <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">
                           {t.emptyStates.noReviews}
                         </p>
                       </div>
@@ -617,10 +520,7 @@ const StoreDetailsPage = () => {
                       {(shop.gallery || []).length === 0 && (
                         <div className="col-span-full py-20 text-center space-y-4">
                           <Video className="w-12 h-12 text-gray-200 mx-auto" />
-                          <p
-                            className="text-slate-500 font-bold uppercase tracking-widest text-[10px]"
-                            style={fontStyle}
-                          >
+                          <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">
                             {t.emptyStates.noGallery}
                           </p>
                         </div>
@@ -642,10 +542,7 @@ const StoreDetailsPage = () => {
                       ) : (
                         <div className="py-20 text-center space-y-4 w-full bg-white border border-orange/5 min-h-[300px] flex flex-col items-center justify-center rounded-[2rem]">
                           <Video className="w-12 h-12 text-gray-200 mx-auto" />
-                          <p
-                            className="text-slate-500 font-bold uppercase tracking-widest text-[10px]"
-                            style={fontStyle}
-                          >
+                          <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">
                             No Video Available
                           </p>
                         </div>
@@ -663,7 +560,6 @@ const StoreDetailsPage = () => {
         <Link
           href="/"
           className="px-12 py-5 bg-orange text-white rounded-[2rem] font-black uppercase tracking-[0.3em] text-[11px] hover:bg-slate-900 transition-all shadow-2xl active:scale-95 inline-block"
-          style={fontStyle}
         >
           {t.footer.btnExplore}
         </Link>
