@@ -1,2 +1,3 @@
-export { useAuthStore } from "@repo/store";
-export type { ClientUser } from "@repo/store";
+export { useAuthStore, useAuth } from "./useAuthStore";
+export type { Client as ClientUser } from "@repo/lib";
+

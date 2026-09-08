@@ -1,4 +1,4 @@
-import { useAuthStore } from "@repo/store";
+import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-toastify";
 import { api as baseApi } from "@/actions";
 
@@ -49,7 +49,7 @@ export const api = {
 
       // If refresh fails, logout and redirect to login
       const state = useAuthStore.getState();
-      state.logout(baseApi, "/sign-in?expired=1");
+      state.logout("/sign-in?expired=1");
       toast.error("Session expired. Please login again.");
     }
     return [res, err];
@@ -65,7 +65,7 @@ export const api = {
       if (success) return await baseApi.post<T>(url, body, init);
 
       const state = useAuthStore.getState();
-      state.logout(baseApi, "/sign-in?expired=1");
+      state.logout("/sign-in?expired=1");
       toast.error("Session expired. Please login again.");
     }
     return [res, err];
@@ -81,7 +81,7 @@ export const api = {
       if (success) return await baseApi.put<T>(url, body, init);
 
       const state = useAuthStore.getState();
-      state.logout(baseApi, "/sign-in?expired=1");
+      state.logout("/sign-in?expired=1");
       toast.error("Session expired. Please login again.");
     }
     return [res, err];
@@ -97,7 +97,7 @@ export const api = {
       if (success) return await baseApi.patch<T>(url, body, init);
 
       const state = useAuthStore.getState();
-      state.logout(baseApi, "/sign-in?expired=1");
+      state.logout("/sign-in?expired=1");
       toast.error("Session expired. Please login again.");
     }
     return [res, err];
@@ -113,7 +113,7 @@ export const api = {
       if (success) return await baseApi.delete<T>(url, init);
 
       const state = useAuthStore.getState();
-      state.logout(baseApi, "/sign-in?expired=1");
+      state.logout("/sign-in?expired=1");
       toast.error("Session expired. Please login again.");
     }
     return [res, err];

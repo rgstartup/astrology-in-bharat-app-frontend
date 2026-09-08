@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { useLanguageStore, useAuthStore } from "@repo/store";
+import { useLanguageStore } from "@repo/store";
+import { useAuthStore } from "@/store/useAuthStore";
 import { profileTranslations } from "../../../lib/translations/profile";
 import { api } from "@/actions";
 import { FaCheckCircle, FaExclamationTriangle, FaShieldAlt, FaFire, FaChevronDown, FaDownload, FaTrash } from "react-icons/fa";

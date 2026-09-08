@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef, FormEvent } from "react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { toast } from "react-toastify";
 import { verifyOtpAction } from "@/actions/auth";
 import { Loading } from "@repo/ui";
 import { useTranslations } from "next-intl";
 import { User } from "@/lib/types";
+import { stripLocale } from "@/utils/getPathnameOrDefault";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export interface OtpVerificationProps {
   email: string;
@@ -25,6 +27,8 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
   redirectUrl = "/client/profile",
   initialCountdown = 60,
 }) => {
+  const router = useRouter();
+  const init = useAuthStore((state) => state.init);
   const t = useTranslations("Auth");
 
   const [otpDigits, setOtpDigits] = useState<string[]>([
@@ -155,11 +159,14 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
         toast.error(result.error);
       } else if (result.success) {
         toast.success(t("signUp.success"));
+        // Fetch client profile into Zustand store now that cookies are set
+        await init(true);
+
         if (onSuccess) {
           onSuccess(result.user);
         } else {
-          // Clean page refresh to /client/profile to evaluate server cookies
-          window.location.href = redirectUrl;
+          router.refresh();
+          router.push(stripLocale(redirectUrl));
         }
       }
     } catch {

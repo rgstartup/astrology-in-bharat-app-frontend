@@ -7,7 +7,7 @@ import type { Client } from "@repo/lib";
 import { getProfileImageUrl } from "@/utils/image-utils";
 
 interface AuthState {
-  user: Client | null;
+  user: (Client & Record<string, any>) | null;
   balance: number;
   loading: boolean;
   isAuthenticated: boolean;
@@ -15,10 +15,12 @@ interface AuthState {
   showImageModal: boolean;
 
   // Actions
-  init: () => Promise<void>;
+  init: (force?: boolean) => Promise<void>;
+  login: (userData?: any) => void;
   logout: (redirectUrl?: string) => Promise<string>;
+  refreshAuth: () => Promise<void>;
   refreshBalance: () => Promise<void>;
-  updateUser: (data: Partial<Client>) => void;
+  updateUser: (data: Partial<Client> & Record<string, any>) => void;
   closeImageModal: () => void;
   openImageModal: () => void;
   reset: () => void;
@@ -34,8 +36,8 @@ export const useAuthStore = create<AuthState>()(
       isInitialized: false,
       showImageModal: false,
 
-      init: async () => {
-        if (get().isInitialized) return;
+      init: async (force: boolean = false) => {
+        if (get().isInitialized && !force) return;
 
         const [client, error] = await AuthService.fetchProfile();
 
@@ -48,8 +50,6 @@ export const useAuthStore = create<AuthState>()(
             } catch {
               // ignore
             }
-          } else {
-            toast.error("Failed to load user.");
           }
           return;
         }
@@ -65,6 +65,27 @@ export const useAuthStore = create<AuthState>()(
         });
       },
 
+      login: (userData?: Client) => {
+        if (userData) {
+          set({
+            user: {
+              ...userData,
+              avatar: getProfileImageUrl(userData.avatar, userData.name),
+            },
+            isAuthenticated: true,
+            loading: false,
+            isInitialized: true,
+          });
+        } else {
+          set({
+            isAuthenticated: true,
+            loading: false,
+            isInitialized: true,
+          });
+        }
+        get().refreshBalance();
+      },
+
       logout: async (redirectUrl?: string) => {
         get().reset();
         set({ loading: true });
@@ -75,6 +96,10 @@ export const useAuthStore = create<AuthState>()(
         set({ loading: false });
         redirectUrl ||= "/?_logout=1";
         return redirectUrl;
+      },
+
+      refreshAuth: async () => {
+        await get().init(true);
       },
 
       refreshBalance: async () => {
@@ -95,80 +120,6 @@ export const useAuthStore = create<AuthState>()(
         }
         set({ balance: parsed });
       },
-
-      // refreshAuth: async (api: SafeFetchInstance) => {
-      //     if (!get().isAuthenticated) {
-      //         set({ loading: true });
-      //     }
-
-      //     const [res, error] = await api.get<any>("/client/profile");
-      //     if (error) {
-      //         // 403 = user is authenticated but wrong role (e.g. expert accessing client profile)
-      //         // Do NOT clear auth on 403 — only clear on 401 (truly unauthenticated)
-      //         const status =
-      //             (error as any)?.status ||
-      //             (error as any)?.response?.status ||
-      //             (error as any)?.statusCode;
-      //         if (status === 403) {
-      //             console.warn(
-      //                 "[refreshAuth] 403 Forbidden — user authenticated but wrong role, keeping session.",
-      //             );
-      //             toast.error(
-      //                 "Access forbidden: You are logged in as an Expert. Please login with a User account.",
-      //             );
-      //             set({ loading: false });
-      //             return;
-      //         }
-      //         set({ isAuthenticated: false, user: null, loading: false });
-      //         return;
-      //     }
-
-      //     const raw = res?.data ?? res;
-      //     let user: ClientUser | null = null;
-
-      //     if (raw?.user?.id) {
-      //         user = {
-      //             id: raw.user.id,
-      //             uid: raw.user.uid || raw.uid,
-      //             name: raw.user.name,
-      //             email: raw.user.email,
-      //             roles: raw.user.roles || [],
-      //             profile_picture:
-      //                 raw.profile_picture ||
-      //                 raw.user?.profile_picture ||
-      //                 raw.avatar ||
-      //                 raw.user?.avatar,
-      //             avatar:
-      //                 raw.profile_picture ||
-      //                 raw.user?.profile_picture ||
-      //                 raw.avatar ||
-      //                 raw.user?.avatar,
-      //             profile: raw.profile || raw.user.profile || raw.id,
-      //         };
-      //     } else if (raw?.id) {
-      //         user = {
-      //             id: raw.id,
-      //             uid: raw.uid,
-      //             name: raw.full_name || raw.name || "User",
-      //             email: raw.email || "",
-      //             roles: raw.roles || [],
-      //             profile_picture: raw.profile_picture || raw.avatar,
-      //             avatar: raw.profile_picture || raw.avatar,
-      //             profile: raw.profile || raw.id,
-      //         };
-      //     }
-
-      //     if (user) {
-      //         set({
-      //             user: { ...(get().user || {}), ...user } as ClientUser,
-      //             isAuthenticated: true,
-      //             loading: false,
-      //         });
-      //         get().refreshBalance(api);
-      //     } else {
-      //         set({ isAuthenticated: false, user: null, loading: false });
-      //     }
-      // },
 
       updateUser: (data: Partial<Client>) => {
         const current = get().user;
@@ -196,6 +147,8 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           isAuthenticated: false,
           loading: false,
+          isInitialized: false,
+          balance: 0,
         });
       },
     }),

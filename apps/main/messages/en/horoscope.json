@@ -1,0 +1,226 @@
+{
+  "badge": "✨ Daily Vedic Predictions",
+  "heroTitle1": "Unlock Your",
+  "heroHighlight": "Destiny",
+  "heroTitle2": "Through Stars",
+  "heroDesc": "Navigate your life's journey with precision. Our daily horoscopes are crafted using ancient Vedic wisdom to guide you through love, career, and personal growth.",
+  "features": [
+    "Daily Forecast",
+    "Love Insights",
+    "Career Growth",
+    "Health Tips"
+  ],
+  "heroBtn": "Get Your Horoscope",
+
+  "zodiacSectionTitle1": "Choose Your",
+  "zodiacSectionHighlight": "Zodiac",
+  "zodiacSectionTitle2": "Sign",
+  "zodiacSectionDesc": "Unlock the secrets of your future by exploring your unique zodiac personality and daily cosmic guidance.",
+
+  "dailyLabel": "Daily",
+  "forecastLabel": "Forecast",
+  "highlyAccurate": "Highly Accurate",
+  "cosmicInsight": "Cosmic Insight",
+  "cosmicText": "Patience will be your greatest ally today. The Moon is in a complex position, so avoid making hasty decisions in property or legal matters. Wear the color white for mental peace and meditate for 10 minutes to align your energies.",
+  "colorWhite": "white",
+
+  "predictions": [
+    {
+      "label": "Love & Relations",
+      "text": "Venus aligns beautifully today, bringing warmth to your relationships. Deep conversations with loved ones will strengthen bonds. Single? A chance encounter may spark something special."
+    },
+    {
+      "label": "Career & Finance",
+      "text": "Mercury's position favors professional growth. An opportunity for advancement may present itself. Stay confident in negotiations and trust your instincts with financial decisions."
+    },
+    {
+      "label": "Health & Wellbeing",
+      "text": "Your energy levels are high today. This is an excellent time for physical activities or starting a new wellness routine. Stay hydrated and maintain balance in all things."
+    },
+    {
+      "label": "Travel & Luck",
+      "text": "Jupiter brings fortunate opportunities, especially in travel or learning. Short trips will be rewarding. Lady Luck is on your side – consider trying something new today!"
+    }
+  ],
+
+  "tabs": {
+    "daily": "Daily Horoscope",
+    "weekly": "Weekly Horoscope",
+    "monthly": "Monthly Horoscope",
+    "yearly": "Yearly Horoscope"
+  },
+  "bottomCta": {
+    "title": "Want a more accurate prediction?",
+    "subtitle": "Get a personalized horoscope based on your birth details.",
+    "btn": "Generate My Horoscope \u2192",
+    "templeTitle": "Want to know which temple is best for you?",
+    "templeSubtitle": "Talk to our Astrology Experts and get personalized temple recommendations.",
+    "templeBtn": "Talk to Expert"
+  },
+  "zodiacGrid": {
+    "selectSign": "Select Your Zodiac Sign",
+    "clickSign": "Click on your sign to view your",
+    "viewHoroscope": "View Horoscope",
+    "defaultPreview": "Discover what the stars have in store for you today.",
+    "previewPrefix": "Select your sign to get detailed insights for your"
+  },
+  "sidebar": {
+    "overview": "Today's Overview",
+    "date": "Date",
+    "tithi": "Tithi",
+    "nakshatra": "Nakshatra",
+    "sunrise": "Sunrise",
+    "sunset": "Sunset",
+    "planetaryPosition": "Planetary Position",
+    "personalizedTitle": "Get Personalized Horoscope",
+    "personalizedSubtitle": "Get detailed predictions based on your birth chart from our expert astrologers.",
+    "talkToExpert": "Talk to Expert"
+  },
+  "planets": {
+    "Sun": "Sun",
+    "Moon": "Moon",
+    "Mars": "Mars",
+    "Mercury": "Mercury",
+    "Jupiter": "Jupiter",
+    "Venus": "Venus",
+    "Saturn": "Saturn",
+    "Rahu": "Rahu",
+    "Ketu": "Ketu"
+  },
+  "zodiacNames": {
+    "Aries": "Aries",
+    "Taurus": "Taurus",
+    "Gemini": "Gemini",
+    "Cancer": "Cancer",
+    "Leo": "Leo",
+    "Virgo": "Virgo",
+    "Libra": "Libra",
+    "Scorpio": "Scorpio",
+    "Sagittarius": "Sagittarius",
+    "Capricorn": "Capricorn",
+    "Aquarius": "Aquarius",
+    "Pisces": "Pisces"
+  },
+  "months": {
+    "Jan": "Jan",
+    "Feb": "Feb",
+    "Mar": "Mar",
+    "Apr": "Apr",
+    "May": "May",
+    "Jun": "Jun",
+    "Jul": "Jul",
+    "Aug": "Aug",
+    "Sep": "Sep",
+    "Oct": "Oct",
+    "Nov": "Nov",
+    "Dec": "Dec"
+  },
+
+  "bottomCards": {
+    "luckyAspects": {
+      "title": "Lucky Aspects",
+      "p1": "Wear something red to attract positive energy.",
+      "p2": "Meditate between 11:00 AM to 1:00 PM.",
+      "p3": "Number 9 can bring you good luck today."
+    },
+    "remedyForYou": {
+      "title": "Remedy for You",
+      "p1": "Offer red flowers to Lord Hanuman.",
+      "p2": "Chant \"Om Angarakaya Namaha\" 108 times.",
+      "p3": "Donate red lentils (Masoor Dal) to the needy."
+    },
+    "thingsToAvoid": {
+      "title": "Things to Avoid",
+      "p1": "Avoid starting any major new projects today.",
+      "p2": "Do not engage in unnecessary arguments.",
+      "p3": "Avoid wearing dark colors like black or grey."
+    }
+  },
+
+  "headerProfile": {
+    "today": "Today's Horoscope",
+    "number": "Lucky Number",
+    "color": "Lucky Color",
+    "time": "Lucky Time"
+  },
+
+  "zodiacDates": {
+    "Aries": "Mar 21 - Apr 19",
+    "Taurus": "Apr 20 - May 20",
+    "Gemini": "May 21 - Jun 20",
+    "Cancer": "Jun 21 - Jul 22",
+    "Leo": "Jul 23 - Aug 22",
+    "Virgo": "Aug 23 - Sep 22",
+    "Libra": "Sep 23 - Oct 22",
+    "Scorpio": "Oct 23 - Nov 21",
+    "Sagittarius": "Nov 22 - Dec 21",
+    "Capricorn": "Dec 22 - Jan 19",
+    "Aquarius": "Jan 20 - Feb 18",
+    "Pisces": "Feb 19 - Mar 20"
+  },
+
+  "detailsPage": {
+    "zodiacSign": "Zodiac Sign",
+    "notFound": "Not Found",
+    "notFoundDesc": "\"The destiny of this sign is still being written by the stars.\"",
+    "backToHoroscopes": "Back to Horoscopes",
+    "failedToLoad": "Failed to load horoscope data.",
+    "ctaSubtitle": "Personalized Guidance",
+    "ctaTitle": "Get More Personalized Predictions",
+    "ctaDesc": "Talk to our expert astrologers for in-depth guidance based on your birth chart.",
+    "ctaBtn": "Talk to Expert"
+  },
+
+  "planetaryInfluence": {
+    "title": "Daily Planetary Influence",
+    "inSign": "In {sign}",
+    "status": {
+      "Positive": "Positive",
+      "Neutral": "Neutral",
+      "Very Positive": "Very Positive"
+    }
+  },
+
+  "zodiacSidebar": {
+    "zodiacDetails": "Zodiac Details",
+    "rulingPlanet": "Ruling Planet",
+    "mars": "Mars",
+    "element": "Element",
+    "fire": "Fire",
+    "quality": "Quality",
+    "cardinal": "Cardinal",
+    "symbol": "Symbol",
+    "ram": "The Ram",
+    "traits": "Traits",
+    "strengths": "Strengths",
+    "strengthsDesc": "Brave, Determined, Honest, Passionate",
+    "weaknesses": "Weaknesses",
+    "weaknessesDesc": "Impatient, Impulsive, Short-tempered",
+    "trendingArticles": "Trending Articles",
+    "traitsList": [
+      "Confident",
+      "Energetic",
+      "Courageous",
+      "Enthusiastic",
+      "Leader",
+      "Independent"
+    ],
+    "articles": [
+      {
+        "title": "What is Your Moon Sign and Why It Matters?",
+        "content": "Your Moon sign represents your inner self, emotions, and subconscious. It reveals how you process feelings and what you need to feel secure in life."
+      },
+      {
+        "title": "How Planetary Transits Affect Your Life?",
+        "content": "Planetary transits influence your daily life, mood, and opportunities. Understanding them helps you navigate challenges and seize the right moments."
+      },
+      {
+        "title": "Top 5 Remedies for a Better Life",
+        "content": "Discover simple astrological remedies like chanting mantras, wearing gemstones, and donating to charity to attract positivity and reduce obstacles."
+      }
+    ]
+  },
+
+  "switchLang": "हिंदी",
+  "switchLangLabel": "Switch to Hindi"
+}

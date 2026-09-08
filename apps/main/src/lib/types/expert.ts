@@ -39,6 +39,8 @@ export interface ExpertProfile {
   report_price?: number;
   horoscope_price?: number;
   total_likes?: number;
+  total_reviews?: number;
+  consultation_count?: number;
   bio?: string;
   about?: string;
   detailed_experience?: any[];

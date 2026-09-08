@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { toast } from "react-toastify";
 import { CartService } from "../services/cart.service";
 import { getErrorMessage, type CartItem } from "@repo/lib";
-import { useAuthStore } from "@repo/store";
+import { useAuthStore } from "./useAuthStore";
 
 // Local helper to preserve fallback behavior if needed
 const getFormattedError = (error: any, fallback: string) =>

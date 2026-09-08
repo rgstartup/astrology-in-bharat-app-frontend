@@ -9,6 +9,6 @@ export function usePujaTranslations() {
   return {
     lang: useLocale() as AppLocale,
     translations: messages.PujaTranslations as any,
-    content: messages.PujaContent as any,
+    content: (messages.PujaTranslations as any)?.pujaContent || {},
   };
 }

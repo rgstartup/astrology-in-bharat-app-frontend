@@ -1,4 +1,10 @@
 {
+  "breadcrumb": {
+    "home": "Home",
+    "calculators": "Calculators"
+  },
+  "title": "Love Calculator",
+  "subtitle": "Calculate your love compatibility",
   "hero": {
     "badge": "Cosmic Compatibility",
     "titleMain": "Love",
@@ -9,13 +15,19 @@
     "connectionsCount": "{count} Cosmic connections calculated"
   },
   "form": {
+    "title": "Love Calculator",
+    "subtitle": "Calculate your love compatibility",
     "simpleTitle": "Find Love {percentage} Between",
     "advancedTitle": "Enter Birth Details",
     "percentage": "(Percentage)%",
     "yourName": "Your Name",
-    "yourNamePlaceholder": "Type your name...",
-    "partnerName": "Partner's Name",
-    "partnerNamePlaceholder": "Type their name...",
+    "yourNamePlaceholder": "Enter your name",
+    "partnerName": "Your Partner's Name",
+    "partnerNamePlaceholder": "Enter partner name",
+    "yourDob": "Your Birth Date",
+    "partnerDob": "Your Partner's Birth Date",
+    "calculateBtn": "Calculate Compatibility",
+    "calculatingBtn": "Calculating...",
     "male": "Male",
     "female": "Female",
     "boyInfo": "Boy's Info",
@@ -29,12 +41,34 @@
     "generateReport": "Generate Guna Report",
     "analyzing": "Analyzing Charts...",
     "errors": {
-      "bothNames": "Please enter both names",
+      "bothNames": "Please enter both names.",
       "birthDetails": "Please fill in all birth details",
-      "failedScore": "Failed to calculate love score.",
+      "failedScore": "Failed to calculate. Try again.",
       "failedMatch": "Failed to calculate match",
       "generic": "Something went wrong. Please try again."
     }
+  },
+  "result": {
+    "title": "Your Compatibility Result",
+    "excellent": "Excellent Compatibility",
+    "good": "Good Compatibility",
+    "average": "Average Compatibility",
+    "low": "Low Compatibility",
+    "descExcellent": "You two are a perfect match! Your bond is deep, passionate, and full of love.",
+    "descGood": "You both share a strong emotional connect and have a good understanding. Keep communication open to make your bond even stronger.",
+    "descAverage": "There are some areas to work on, but with effort and understanding, you can build a great relationship.",
+    "descLow": "You may face challenges, but love and patience can overcome many obstacles.",
+    "metrics": {
+      "love": "Love",
+      "trust": "Trust",
+      "communication": "Communication",
+      "emotions": "Emotions"
+    },
+    "detailedReport": "Detailed Report"
+  },
+  "cta": {
+    "title": "Want to know more about your love life?",
+    "desc": "Talk to our Astrology Experts and get personalized relationship guidance."
   },
   "results": {
     "badge": "Match Results",
@@ -67,7 +101,7 @@
       "nadi": "Biological & Genetic Sync"
     },
     "success": {
-      "score": "Love score calculated!",
+      "score": "Compatibility calculated!",
       "guna": "Advanced Guna Milan report generated!"
     }
   },

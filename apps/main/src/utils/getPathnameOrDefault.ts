@@ -5,7 +5,7 @@ export function stripLocale(pathname?: string | null): string {
   const segments = pathname.split("/").filter(Boolean);
   if (
     segments.length > 0 &&
-    (routing.locales as readonly string[]).includes(segments[0])
+    (routing.locales as readonly string[]).includes(segments[0] as string)
   ) {
     const withoutLocale = "/" + segments.slice(1).join("/");
     return withoutLocale === "" ? "/" : withoutLocale;

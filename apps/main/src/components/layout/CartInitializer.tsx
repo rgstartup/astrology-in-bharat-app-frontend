@@ -14,7 +14,7 @@ export const CartInitializer = ({
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchCart(true);
+      fetchCart();
       return;
     }
 

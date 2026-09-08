@@ -10,11 +10,13 @@ import { loginAction } from "@/actions/auth";
 import GoogleLoginButton from "../GoogleLoginButton.component";
 import { useTranslations } from "next-intl";
 import { stripLocale } from "@/utils/getPathnameOrDefault";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const SignInForm: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/client/profile";
+  const init = useAuthStore((state) => state.init);
 
   const t = useTranslations("Auth");
 
@@ -47,7 +49,7 @@ const SignInForm: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Use Server Action
+      // Use Server Action to validate credentials and set HttpOnly cookies
       const result = await loginAction({
         ...formData,
       });
@@ -56,14 +58,12 @@ const SignInForm: React.FC = () => {
         toast.error(result.error);
         return;
       }
-      // Cookie already set as HttpOnly by the Server Action
-      // Just update the Zustand UI state — NO token passed to client
-      // login(api, result.user);
 
-      // User requested removing the success toast as the UI change (profile pic) is enough
-      // toast.success(t.signIn.success);
+      // Fetch client profile into Zustand auth store using the new session cookies
+      await init(true);
 
-      // Redirect to callback URL or profile page
+      // Refresh server components and navigate to callback URL
+      router.refresh();
       router.push(stripLocale(callbackUrl));
     } catch {
       toast.error(t("signIn.errors.unexpected"));

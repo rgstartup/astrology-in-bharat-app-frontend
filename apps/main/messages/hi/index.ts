@@ -20,6 +20,7 @@ import Home from "./home.json";
 import Header from "./header.json";
 import Livedarshan from "./live-darshan.json";
 import Places from "./places.json";
+import Horoscope from "./horoscope.json";
 
 export default {
   About,
@@ -41,8 +42,8 @@ export default {
   RelationshipFuture,
   SoulmateInitials,
   PujaTranslations: Puja.pujaTranslations,
-  PujaContent: Puja.pujaContent,
   Header,
   Livedarshan,
   Places,
+  Horoscope,
 };

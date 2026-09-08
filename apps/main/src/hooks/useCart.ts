@@ -76,7 +76,7 @@ export const useCart = () => {
     onSettled: () => {
       // Always refetch after error or success to sync with server
       queryClient.invalidateQueries({ queryKey: ["cart"] });
-      fetchCart(true);
+      fetchCart();
     },
   });
 
