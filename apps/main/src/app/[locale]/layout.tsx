@@ -66,9 +66,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                   <AuthInitializer>
                     <CartInitializer>
                       <WishlistInitializer>
-                        <SmoothScroll>
-                          <ClientLayout>{children}</ClientLayout>
-                        </SmoothScroll>
+                        <SmoothScroll>{children}</SmoothScroll>
                       </WishlistInitializer>
                     </CartInitializer>
                     <PlatformReviewModal />

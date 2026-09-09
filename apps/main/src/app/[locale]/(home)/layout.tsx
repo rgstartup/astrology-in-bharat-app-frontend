@@ -5,6 +5,7 @@ import ExpertConsultant from "@/features/home/ExpertConsultant";
 import ChooseYourZodiac from "@/features/home/ChooseYourZodiac";
 import WhyChooseUs from "@/features/home/WhyChooseUs";
 import CTA from "@/features/home/CTA";
+import ClientLayout from "@/components/layout/ClientLayout";
 
 export default function HomeLayout({
   children,
@@ -22,7 +23,7 @@ export default function HomeLayout({
   testimonials: React.ReactNode;
 }) {
   return (
-    <>
+    <ClientLayout>
       <HeroSection />
       {experts}
       <ExpertServices />
@@ -35,6 +36,6 @@ export default function HomeLayout({
       {testimonials}
       <CTA />
       {children}
-    </>
+    </ClientLayout>
   );
 }
