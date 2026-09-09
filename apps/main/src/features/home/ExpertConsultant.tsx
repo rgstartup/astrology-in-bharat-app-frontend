@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import ConsultationCard from "@/components/features/services/ConsultationCard";
 import { getTranslations } from "next-intl/server";
 import homepageData from "./data/services.data.json";

@@ -13,7 +13,7 @@ import {
     PLANET_META,
     fetchPlanetPositions,
     type PlanetPositionItem,
-} from "@/app/calculator/planet-calculator/calculate";
+} from "@/app/[locale]/(public)/(free-tools)/calculator/planet-calculator/calculate";
 
 const Planet = () => {
     const { lang, toggleLang } = useLanguageStore();

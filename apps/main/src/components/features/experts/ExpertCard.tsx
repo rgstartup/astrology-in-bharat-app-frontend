@@ -1,10 +1,9 @@
 "use client";
 
-import NextLink from "next/link";
 import Image from "next/image";
-import React, { useState, useRef } from "react";
-import { Button, CloseButton } from "@repo/ui";
-import { useRouter, usePathname } from "next/navigation";
+import React, { useState } from "react";
+import { CloseButton } from "@repo/ui";
+import { useRouter, usePathname, Link } from "@/i18n/navigation";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useAuthStore } from "@/store/__useAuthStore";
 import { toast } from "react-toastify";
@@ -21,12 +20,11 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   const { t } = useHomeTranslations();
   const {
     id,
-    userId,
     image,
     name,
     expertise,
     experience,
-    language,
+    languages,
     price,
     chat_price,
     call_price,
@@ -48,11 +46,12 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   React.useEffect(() => {
     // Reset cursor when component unmounts (e.g. after successful navigation)
     return () => {
-      document.body.style.cursor = 'default';
+      document.body.style.cursor = "default";
     };
   }, []);
+
   // Hooks
-  const { isExpertInWishlist, toggleExpertWishlist } = useWishlistStore();
+  const { isExpertInWishlist } = useWishlistStore();
   const { isAuthenticated } = useAuthStore();
   const { toggleLike } = useWishlist();
   const router = useRouter();
@@ -81,8 +80,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
       const expertIdFromEvent = data.expert_id || data.id || data.userId;
 
       // Match with either ID type (expert profile ID or user ID)
-      if (String(expertIdFromEvent) === String(id) || String(expertIdFromEvent) === String(userId)) {
-        console.log(`[Presence] Expert ${name} status changed to ${data.is_available ? 'Online' : 'Offline'}`);
+      if (String(expertIdFromEvent) === String(id)) {
+        console.log(
+          `[Presence] Expert ${name} status changed to ${data.is_available ? "Online" : "Offline"}`,
+        );
         setIsAvailable(data.is_available);
         if (!data.is_available) setIsBusy(false); // offline expert can't be busy
       }
@@ -90,7 +91,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
 
     const handleBusySync = (data: any) => {
       const expertIdFromEvent = data.expert_id || data.id;
-      if (String(expertIdFromEvent) === String(id) || String(expertIdFromEvent) === String(userId)) {
+      if (String(expertIdFromEvent) === String(id)) {
         setIsBusy(data.is_busy);
       }
     };
@@ -102,14 +103,16 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
       socket.off("expert_status_changed", handleStatusSync);
       socket.off("expert_busy_changed", handleBusySync);
     };
-  }, [id, userId, name]);
+  }, [id, name]);
 
   // For chat/consultation, we use id (expert profile ID) - safe fallback check
-  const expertProfileId = id || (expertData as any).expert_id || expertData.userId;
+  const expertProfileId = id;
 
   // For wishlist, we use the expert profile ID (it matches what backend returns in getExpertWishlist)
   const wishlistTargetId = expertProfileId;
-  const isLiked = wishlistTargetId ? isExpertInWishlist(wishlistTargetId as any) : false;
+  const isLiked = wishlistTargetId
+    ? isExpertInWishlist(wishlistTargetId as any)
+    : false;
 
   const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -122,9 +125,12 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
           <span className="underline font-black">Login now →</span>
         </span>,
         {
-          onClick: () => router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname === '/' ? '/#our-experts' : pathname)}`),
+          onClick: () =>
+            router.push(
+              `/sign-in?callbackUrl=${encodeURIComponent(pathname === "/" ? "/#our-experts" : pathname)}`,
+            ),
           style: { cursor: "pointer" },
-        }
+        },
       );
       return;
     }
@@ -166,32 +172,32 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   const createDetailsUrl = () => (id ? `/expert/${id}` : "#");
 
   // Combine expertise and custom services for display
-  const allServices = [
-    expertise,
-    ...custom_services.map(s => s.name)
-  ].filter(Boolean);
+  const allServices = [expertise, ...custom_services.map((s) => s.name)].filter(
+    Boolean,
+  );
 
   const displayServices = allServices.slice(0, 3);
   const remainingCount = allServices.length - 3;
 
   return (
     <div className="w-full h-full">
-      <div className={`bg-white h-full flex flex-col rounded-xl shadow-sm border border-[#daa23e] p-3 text-center transition-transform duration-300 hover:-translate-y-1.5 ${cardClassName} ${isNavigating ? 'opacity-70 pointer-events-none' : ''}`}>
-        <NextLink
+      <div
+        className={`bg-white h-full flex flex-col rounded-xl shadow-sm border border-[#daa23e] p-3 text-center transition-transform duration-300 hover:-translate-y-1.5 ${cardClassName} ${isNavigating ? "opacity-70 pointer-events-none" : ""}`}
+      >
+        <Link
           href={createDetailsUrl()}
           className="no-underline hover:no-underline flex flex-col flex-1 relative"
           onClick={() => {
             setIsNavigating(true);
-            document.body.style.cursor = 'wait';
+            document.body.style.cursor = "wait";
             // Preload basic expert data for instant rendering on details page
             setPreloadedExpert({
               id,
-              userId,
-              image: image || '/images/dummy-expert.jpg',
+              image: image || "/images/dummy-expert.jpg",
               name,
               expertise,
               experience,
-              language,
+              languages,
               price,
               chat_price,
               call_price,
@@ -229,7 +235,9 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
                 <span className="text-xs font-semibold text-white bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">
                   {((count: number) => {
                     if (count >= 1000) {
-                      return (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+                      return (
+                        (count / 1000).toFixed(1).replace(/\.0$/, "") + "k"
+                      );
                     }
                     return count;
                   })(currentLikes)}
@@ -240,25 +248,35 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             {/* 🟢 ONLINE / OFFLINE / BUSY — TOP RIGHT (OUTSIDE IMAGE) */}
             <div
               className={`absolute top-2 right-3 z-20 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2 shadow-md
-              ${isBusy
+              ${
+                isBusy
                   ? "bg-amber-100 text-amber-700"
                   : isAvailable
                     ? "bg-green-100 text-green-700"
                     : "bg-gray-100 text-gray-600"
-                }`}
+              }`}
             >
               <i
-                className={`fa-solid fa-circle ${isBusy ? "text-amber-500" : isAvailable ? "text-green-500" : "text-gray-400"
-                  }`}
+                className={`fa-solid fa-circle ${
+                  isBusy
+                    ? "text-amber-500"
+                    : isAvailable
+                      ? "text-green-500"
+                      : "text-gray-400"
+                }`}
               />
-              {isBusy ? "Busy" : isAvailable ? t.expertCard.online : t.expertCard.offline}
+              {isBusy
+                ? "Busy"
+                : isAvailable
+                  ? t.expertCard.online
+                  : t.expertCard.offline}
             </div>
 
             {/* PROFILE IMAGE */}
             <div className="relative w-[120px] h-[120px] mx-auto mt-1 mb-2">
               <Image
-                src={image || '/images/dummy-expert.jpg'}
-                alt={name || 'Expert Profile'}
+                src={image || "/images/dummy-expert.jpg"}
+                alt={name || "Expert Profile"}
                 fill
                 sizes="120px"
                 className="object-cover rounded-full border border-[#daa23e] shadow-sm"
@@ -295,8 +313,6 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
               >
                 <i className="fa-solid fa-circle-play" />
               </button>
-
-
             </div>
           </div>
 
@@ -308,7 +324,9 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             {Array.from({ length: 5 }).map((_, i) => {
               const starIndex = i + 1;
               if (ratings >= starIndex)
-                return <i key={i} className="fa-solid fa-star text-[#daa23e]" />;
+                return (
+                  <i key={i} className="fa-solid fa-star text-[#daa23e]" />
+                );
               if (ratings >= starIndex - 0.5)
                 return (
                   <i
@@ -329,20 +347,30 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             </span>
           </div>
 
-
           {/* DETAILS */}
           {/* Name */}
-          <div className="px-4 pt-2 pb-1 text-[18px] font-semibold text-[#301118] truncate text-center" title={name}>
+          <div
+            className="px-4 pt-2 pb-1 text-[18px] font-semibold text-[#301118] truncate text-center"
+            title={name}
+          >
             {name}
           </div>
 
           {/* Expertise Tags — wrap properly */}
-          <div className="px-3 mt-1 mb-1 flex flex-wrap justify-center items-center gap-1" style={{ minHeight: '28px' }}>
+          <div
+            className="px-3 mt-1 mb-1 flex flex-wrap justify-center items-center gap-1"
+            style={{ minHeight: "28px" }}
+          >
             {allServices.slice(0, 3).map((service, index) => (
               <span
                 key={index}
                 className="inline-block bg-orange text-white text-[10px] font-semibold px-2 py-0.5 rounded-full text-center"
-                style={{ maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                style={{
+                  maxWidth: "100%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
                 title={service}
               >
                 {service}
@@ -366,11 +394,14 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
           {/* Language */}
           <div className="px-2 my-1.5 text-[14px] text-[#1a1a1a] flex items-center justify-center gap-1.5 w-full">
             <strong>{t.expertCard.lang}</strong>
-            <span className="font-semibold bg-gray-100 px-2 py-0.5 rounded text-[12px] truncate max-w-[130px] inline-block" title={language}>
-              {language}
+            <span
+              className="font-semibold bg-gray-100 px-2 py-0.5 rounded text-[12px] truncate max-w-[130px] inline-block"
+              title={languages.join(", ")}
+            >
+              {languages.join(", ")}
             </span>
           </div>
-        </NextLink>
+        </Link>
 
         {/* ACTION BUTTONS WITH PRICES POINTER */}
         <div className="px-2 pb-3 space-y-2 mt-auto">
@@ -382,11 +413,23 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             >
               <div className="flex items-center gap-1 mb-0.5">
                 <i className="fa-regular fa-comment-dots text-[10px] sm:text-sm" />
-                <span className="text-[12px] sm:text-[14px] font-bold">{t.expertCard.chat}</span>
+                <span className="text-[12px] sm:text-[14px] font-bold">
+                  {t.expertCard.chat}
+                </span>
               </div>
               {(() => {
-                const p = chat_price && chat_price > 0 ? chat_price : (price > 0 ? price : 0);
-                return p > 0 ? <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate w-full text-center px-1">₹{p}{t.expertCard.perMin}</span> : null;
+                const p =
+                  chat_price && chat_price > 0
+                    ? chat_price
+                    : price > 0
+                      ? price
+                      : 0;
+                return p > 0 ? (
+                  <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate w-full text-center px-1">
+                    ₹{p}
+                    {t.expertCard.perMin}
+                  </span>
+                ) : null;
               })()}
             </button>
 
@@ -397,11 +440,23 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             >
               <div className="flex items-center gap-1 mb-0.5">
                 <i className="fa-solid fa-phone-volume text-[10px] sm:text-sm" />
-                <span className="text-[12px] sm:text-[14px] font-bold">{t.expertCard.call}</span>
+                <span className="text-[12px] sm:text-[14px] font-bold">
+                  {t.expertCard.call}
+                </span>
               </div>
               {(() => {
-                const p = call_price && call_price > 0 ? call_price : (price > 0 ? price : 0);
-                return p > 0 ? <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate w-full text-center px-1">₹{p}{t.expertCard.perMin}</span> : null;
+                const p =
+                  call_price && call_price > 0
+                    ? call_price
+                    : price > 0
+                      ? price
+                      : 0;
+                return p > 0 ? (
+                  <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate w-full text-center px-1">
+                    ₹{p}
+                    {t.expertCard.perMin}
+                  </span>
+                ) : null;
               })()}
             </button>
           </div>
@@ -412,94 +467,109 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             className="w-full flex items-center justify-center gap-1.5 py-2 bg-[#ff6b00] text-white rounded-xl shadow-[0_4px_10px_rgba(255,107,0,0.2)] hover:shadow-[0_6px_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 transition-all duration-300 border-0 overflow-hidden cursor-pointer"
           >
             <i className="fa-solid fa-video text-[10px] sm:text-sm shrink-0" />
-            <span className="text-[12px] sm:text-[14px] font-bold shrink-0">{t.expertCard.videoCall}</span>
+            <span className="text-[12px] sm:text-[14px] font-bold shrink-0">
+              {t.expertCard.videoCall}
+            </span>
             {(() => {
-              const p = video_call_price && video_call_price > 0 ? video_call_price : (price > 0 ? price * 2 : 0);
-              return p > 0 ? <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate">₹{p}{t.expertCard.perMin}</span> : null;
+              const p =
+                video_call_price && video_call_price > 0
+                  ? video_call_price
+                  : price > 0
+                    ? price * 2
+                    : 0;
+              return p > 0 ? (
+                <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate">
+                  ₹{p}
+                  {t.expertCard.perMin}
+                </span>
+              ) : null;
             })()}
           </button>
         </div>
       </div>
 
       {/* VIDEO MODAL — custom Tailwind */}
-      {show && typeof document !== 'undefined' && require("react-dom").createPortal(
-        <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShow(false);
-          }}
-          aria-hidden="true"
-        >
+      {show &&
+        typeof document !== "undefined" &&
+        require("react-dom").createPortal(
           <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShow(false);
+            }}
+            aria-hidden="true"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b">
-              <h5 className="font-bold text-gray-900 text-lg m-0">
-                {t.expertCard.videoModalTitle.replace('{name}', name)}
-              </h5>
-              <CloseButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShow(false);
-                }}
-              />
-            </div>
-            {/* Body */}
-            {/* Body */}
-            <div className="p-4">
-              {video ? (
-                (() => {
-                  const ytId = getYoutubeId(video);
-                  if (ytId) {
-                    const embedUrl = getYoutubeEmbedUrl(video);
+            <div
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 py-4 border-b">
+                <h5 className="font-bold text-gray-900 text-lg m-0">
+                  {t.expertCard.videoModalTitle.replace("{name}", name)}
+                </h5>
+                <CloseButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShow(false);
+                  }}
+                />
+              </div>
+              {/* Body */}
+              {/* Body */}
+              <div className="p-4">
+                {video ? (
+                  (() => {
+                    const ytId = getYoutubeId(video);
+                    if (ytId) {
+                      const embedUrl = getYoutubeEmbedUrl(video);
+                      return (
+                        <iframe
+                          src={`${embedUrl}?autoplay=1`}
+                          width="100%"
+                          height="500"
+                          className="bg-black rounded-xl w-full max-h-[60vh] shadow-inner"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        ></iframe>
+                      );
+                    }
                     return (
-                      <iframe
-                        src={`${embedUrl}?autoplay=1`}
+                      <video
+                        src={video}
                         width="100%"
                         height="500"
+                        controls
+                        autoPlay
                         className="bg-black rounded-xl w-full max-h-[60vh] shadow-inner"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      ></iframe>
+                      />
                     );
-                  }
-                  return (
-                    <video
-                      src={video}
-                      width="100%"
-                      height="500"
-                      controls
-                      autoPlay
-                      className="bg-black rounded-xl w-full max-h-[60vh] shadow-inner"
-                    />
-                  );
-                })()
-              ) : (
-                <div className="h-[350px] flex flex-col items-center justify-center bg-gradient-to-b from-orange-50/50 to-orange-100/30 rounded-2xl border-2 border-dashed border-orange-200 m-2">
-                  <div className="w-20 h-20 bg-white shadow-sm rounded-full flex items-center justify-center mb-5 relative group">
-                    <div className="absolute inset-0 bg-orange-200 rounded-full animate-ping opacity-20"></div>
-                    <i className="fa-solid fa-video-slash text-3xl text-orange-400" />
+                  })()
+                ) : (
+                  <div className="h-[350px] flex flex-col items-center justify-center bg-gradient-to-b from-orange-50/50 to-orange-100/30 rounded-2xl border-2 border-dashed border-orange-200 m-2">
+                    <div className="w-20 h-20 bg-white shadow-sm rounded-full flex items-center justify-center mb-5 relative group">
+                      <div className="absolute inset-0 bg-orange-200 rounded-full animate-ping opacity-20"></div>
+                      <i className="fa-solid fa-video-slash text-3xl text-orange-400" />
+                    </div>
+                    <h4 className="text-xl md:text-2xl font-black text-gray-800 mb-2">
+                      Intro Video Unavailable
+                    </h4>
+                    <p className="text-gray-500 font-medium text-center max-w-sm px-6 leading-relaxed">
+                      Looks like{" "}
+                      <span className="font-bold text-orange-600">{name}</span>{" "}
+                      hasn't uploaded an introductory video yet. Don't worry,
+                      you can still connect instantly via chat or call!
+                    </p>
                   </div>
-                  <h4 className="text-xl md:text-2xl font-black text-gray-800 mb-2">
-                    Intro Video Unavailable
-                  </h4>
-                  <p className="text-gray-500 font-medium text-center max-w-sm px-6 leading-relaxed">
-                    Looks like <span className="font-bold text-orange-600">{name}</span> hasn't uploaded an introductory video yet. Don't worry, you can still connect instantly via chat or call!
-                  </p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        </div>,
-        document.body
-      )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };
 
 export default ExpertCard;
-
-

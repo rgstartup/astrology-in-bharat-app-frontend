@@ -1,6 +1,6 @@
 import React from "react";
 import { ZodiacSignsData } from "@/components/features/services/homePagaData";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import {
   TbZodiacAries,
   TbZodiacTaurus,

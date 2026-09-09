@@ -5,5 +5,3 @@ export default async function Page() {
   const locale = await getLocale();
   redirect(`/${locale}`);
 }
-
-

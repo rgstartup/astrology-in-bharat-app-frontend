@@ -1,0 +1,115 @@
+{
+  "heroInfo": {
+    "preparingConnection": "Preparing Connection",
+    "talkTo": "Talk to",
+    "subtitle": "Get deep cosmic insights about your career, marriage, and future. Your session is 100% private.",
+    "liveChat": "Live Chat",
+    "liveChatDesc": "Real-time answers from verified experts.",
+    "instantAccess": "Instant Access",
+    "instantAccessDesc": "No appointments needed. Connect now.",
+    "sessionChecklist": "Session Checklist",
+    "checklistItems": [
+      "Keep your Birth Date & Time ready",
+      "Ask specific questions for clearer answers",
+      "Your session is 256-bit encrypted",
+      "Expert is live and awaiting your message"
+    ]
+  },
+  "expertPreview": {
+    "expertise": "Expertise",
+    "experience": "Experience",
+    "years": "+ Years",
+    "verifiedExpert": "Verified Astro Expert • Bharat",
+    "consultingFor": "Consulting for",
+    "myself": "Myself",
+    "someoneElse": "Someone Else",
+    "change": "Change",
+    "fullName": "Full Name",
+    "enterName": "Enter Name",
+    "gender": "Gender",
+    "select": "Select",
+    "male": "Male",
+    "female": "Female",
+    "birthDate": "Birth Date",
+    "birthTime": "Birth Time",
+    "birthPlace": "Birth Place",
+    "cityCountry": "City, Country",
+    "yourBalance": "Your Balance",
+    "lowBalance": "Low Balance",
+    "lowBalanceDesc": "You need at least ₹{price} for 5 mins.",
+    "rechargeNow": "Recharge Now",
+    "connecting": "Connecting...",
+    "startConsultation": "Start Consultation",
+    "availableNow": "Available Now",
+    "offline": "Offline"
+  },
+  "securityModal": {
+    "title": "Important Safety Guidelines",
+    "subtitle": "Please read carefully before starting",
+    "tips": [
+      {
+        "icon": "🔒",
+        "title": "Never Share OTPs or Passwords",
+        "desc": "Our experts will NEVER ask for OTPs, passwords, bank PINs, or CVV numbers. If anyone asks, report immediately."
+      },
+      {
+        "icon": "🚫",
+        "title": "Beware of External Links",
+        "desc": "Do not click on any suspicious links shared during the chat. All payments are processed securely within our platform only."
+      },
+      {
+        "icon": "💳",
+        "title": "Payment Security",
+        "desc": "Never make payments outside our official platform. All transactions are encrypted and protected by our secure payment gateway."
+      },
+      {
+        "icon": "📱",
+        "title": "Personal Information",
+        "desc": "Avoid sharing sensitive personal details like Aadhaar, PAN, or credit card numbers. Only share astrological information."
+      },
+      {
+        "icon": "📵",
+        "title": "Do Not Share Contact Details",
+        "desc": "NEVER share your mobile number, email, WhatsApp, or any social media handles with the expert. All communication must happen only on our platform."
+      },
+      {
+        "icon": "⛔",
+        "title": "No Direct Contact Outside Platform",
+        "desc": "Do NOT contact experts directly outside this platform. If you do so and face any issues, Astrology in Bharat will NOT be responsible or liable."
+      },
+      {
+        "icon": "⚠️",
+        "title": "Report Suspicious Activity",
+        "desc": "If you notice any unusual behavior or requests, immediately end the session and contact our support team."
+      },
+      {
+        "icon": "✅",
+        "title": "Verified Experts Only",
+        "desc": "All our experts are verified professionals. However, use your judgment and stay alert during consultations."
+      }
+    ],
+    "disclaimerTitle": "Important Disclaimer",
+    "disclaimerText": "By proceeding, you acknowledge that any communication or transaction outside the Astrology in Bharat platform is strictly at your own risk.",
+    "disclaimerBold": "We will NOT be held responsible or liable for any issues, fraud, or losses",
+    "disclaimerEnd": "arising from direct contact with experts outside our official platform.",
+    "agreeText": "I have read and understood all the safety guidelines and disclaimer. I agree to follow these precautions during my consultation and will not share any contact details.",
+    "cancel": "Cancel",
+    "agreeBtn": "I Agree & Continue",
+    "toastWarning": "⚠️ Please agree to the safety guidelines to continue"
+  },
+  "page": {
+    "notFoundTitle": "Expert Not Found",
+    "notFoundDesc": "The expert you are looking for might be unavailable or does not exist.",
+    "goHome": "Go to Home",
+    "toastLogin": "Please login to start consultation.",
+    "loginNow": "Login now →",
+    "toastConnecting": "Connecting to expert...",
+    "toastFailed": "Failed to start consultation",
+    "expertOfflineTitle": "Expert is Offline",
+    "expertOfflineDesc": "Right now {name} is offline. Please try again later when the expert is available.",
+    "understandBtn": "I Understand",
+    "activeChatTitle": "Active Chat Exists",
+    "activeChatDesc": "You already have an active or pending chat request with another expert. Please go to that chat to continue or cancel it before starting a new one.",
+    "goToChatBtn": "Go to existing chat"
+  }
+}

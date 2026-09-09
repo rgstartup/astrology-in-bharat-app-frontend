@@ -25,7 +25,7 @@ import {
 import {
   normalizeName,
   calculateRelationshipTimeline,
-} from "@/app/calculator/relationship-future-timeline/calculate";
+} from "@/app/[locale]/(public)/(free-tools)/calculator/relationship-future-timeline/calculate";
 
 const premiumCardStyles = `
   .glass-card {

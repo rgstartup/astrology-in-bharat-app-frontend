@@ -21,6 +21,7 @@ import Header from "./header.json";
 import Livedarshan from "./live-darshan.json";
 import Places from "./places.json";
 import Horoscope from "./horoscope.json";
+import Chat from "./chat.json";
 
 export default {
   Auth,
@@ -46,4 +47,5 @@ export default {
   Livedarshan,
   Places,
   Horoscope,
+  Chat,
 };

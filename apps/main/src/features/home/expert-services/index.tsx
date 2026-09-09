@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import homepageData from "../data/services.data.json";
 import ServiceCard from "./service-card";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import type HomeMessages from "@messages/en/home.json";
 
 type ServiceTitle = keyof typeof HomeMessages.services.items;

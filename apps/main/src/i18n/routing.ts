@@ -5,7 +5,7 @@ export const routing = defineRouting({
   defaultLocale: "en",
   // Routes in this app are not nested under app/[locale], so keep URLs stable
   // and persist the negotiated locale in the existing cookie instead.
-  localePrefix: "always",
+  localePrefix: "as-needed",
   localeCookie: {
     name: "locale",
   },

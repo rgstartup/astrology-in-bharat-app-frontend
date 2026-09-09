@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import Featured4Cards from "@/components/ui/common/Featured4Cards";
 import { getTranslations } from "next-intl/server";
 import type HomeMessages from "@messages/en/home.json";
@@ -102,6 +102,7 @@ const HeroSection = async () => {
                       sizes="(max-width: 1024px) 100vw, 42vw"
                       className="animate-[spin_30s_linear_infinite] object-contain scale-[0.85] lg:scale-100"
                       style={{ transformOrigin: "center center" }}
+                      loading="eager"
                     />
                   </div>
                   {/* Expert-img → z-index 6 */}
