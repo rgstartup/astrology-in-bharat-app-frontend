@@ -4,45 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";
-import { hashSeed, normalizeName, getJobTier, formatIndianCurrency } from "./helpers";
 import DahejSeoContent from "./dahej-seo.component";
-
-// ─── Dropdown options ────────────────────────────────────────────────────────
-const EDUCATION_OPTIONS = [
-  "High School", "Diploma", "Bachelor's Degree", "Master's Degree", "PhD / Doctorate",
-];
-const PROFESSION_OPTIONS = [
-  "Government Employee", "Software Engineer", "Doctor", "Lawyer", "Business Owner",
-  "Teacher / Professor", "Engineer", "Banker", "CA / Finance", "Other",
-];
-const INCOME_OPTIONS = [
-  "Below 2 Lakh", "2 - 5 Lakh", "5 - 10 Lakh", "10 - 15 Lakh",
-  "15 - 20 Lakh", "20 - 30 Lakh", "30 - 50 Lakh", "Above 50 Lakh",
-];
-const CITY_OPTIONS = [
-  "Delhi", "Mumbai", "Bangalore", "Hyderabad", "Chennai", "Kolkata",
-  "Pune", "Ahmedabad", "Jaipur", "Lucknow", "Chandigarh", "Bhopal",
-  "Patna", "Indore", "Nagpur", "Other",
-];
-
-// Income tier multiplier
-const incomeMultiplier: Record<string, number> = {
-  "Below 2 Lakh": 0.4, "2 - 5 Lakh": 0.6, "5 - 10 Lakh": 0.8,
-  "10 - 15 Lakh": 1.0, "15 - 20 Lakh": 1.2, "20 - 30 Lakh": 1.5,
-  "30 - 50 Lakh": 2.0, "Above 50 Lakh": 3.0,
-};
-const educationMultiplier: Record<string, number> = {
-  "High School": 0.5, "Diploma": 0.7, "Bachelor's Degree": 1.0,
-  "Master's Degree": 1.3, "PhD / Doctorate": 1.6,
-};
-const cityMultiplier: Record<string, number> = {
-  "Delhi": 1.5, "Mumbai": 1.6, "Bangalore": 1.4, "Hyderabad": 1.3,
-  "Chennai": 1.2, "Kolkata": 1.1, "Pune": 1.2, "Chandigarh": 1.3,
-  "Ahmedabad": 1.1, "Jaipur": 1.0, "Other": 0.9,
-};
+import {
+  EDUCATION_OPTIONS,
+  PROFESSION_OPTIONS,
+  INCOME_OPTIONS,
+  CITY_OPTIONS,
+  AWARENESS,
+  calculateDahejEstimate,
+  type DahejEstimateResult,
+} from "./calculate";
 
 // ─── Result Panel ────────────────────────────────────────────────────────────
-const ResultPanel = ({ result }: { result: any }) => {
+const ResultPanel = ({ result }: { result: DahejEstimateResult }) => {
   const details = [
     { icon: "fa-solid fa-graduation-cap", label: "Education", value: result.education },
     { icon: "fa-solid fa-briefcase",      label: "Profession", value: result.profession },
@@ -58,25 +32,26 @@ const ResultPanel = ({ result }: { result: any }) => {
           <i className="fa-solid fa-indian-rupee-sign text-[#F26500] text-lg" />
         </div>
         <div>
-          <h2 className="text-lg font-black text-[#1A1A1A]">Estimated Dahej Range</h2>
-          <p className="text-xs text-[#888]">This is an estimated range based on the details provided.</p>
+          <h2 className="text-xl font-black text-[#1A1A1A]">Your Result (Estimate)</h2>
+          <p className="text-xs text-[#888]">Estimated value based on profile details</p>
         </div>
       </div>
 
-      {/* Amount */}
-      <div className="bg-[#FFF8F3] border border-[#F5E0CC] rounded-2xl px-5 py-4 text-center">
-        <p className="text-2xl md:text-3xl font-black text-[#F26500]">
-          ₹ {result.minFormatted} – ₹ {result.maxFormatted}
-        </p>
+      {/* Amount Display */}
+      <div className="flex flex-col items-center py-4 bg-[#FFF8F3] rounded-2xl border border-[#F5E0CC]">
+        <span className="text-xs text-[#888] font-semibold uppercase tracking-wider mb-1">Estimated Range</span>
+        <div className="text-2xl sm:text-3xl font-black text-[#F26500] text-center">
+          ₹ {result.minFormatted} – {result.maxFormatted}
+        </div>
       </div>
 
-      {/* Detail rows */}
-      <div className="flex flex-col gap-3">
-        {details.map((d) => (
-          <div key={d.label} className="flex items-center justify-between border-b border-[#F5EEE8] pb-2 last:border-0 last:pb-0">
-            <div className="flex items-center gap-2 text-[#555]">
-              <i className={`${d.icon} text-[#F26500] text-sm w-5`} />
-              <span className="text-sm font-medium">{d.label}</span>
+      {/* Profile summary */}
+      <div className="flex flex-col gap-2.5">
+        {details.map((d, i) => (
+          <div key={i} className="flex items-center justify-between py-2 border-b border-[#F5E8DC] last:border-0 text-xs">
+            <div className="flex items-center gap-2 text-[#666]">
+              <i className={`${d.icon} text-[#F26500] w-4 text-center`} />
+              <span>{d.label}</span>
             </div>
             <span className="text-sm font-bold text-[#1A1A1A]">{d.value}</span>
           </div>
@@ -92,14 +67,6 @@ const ResultPanel = ({ result }: { result: any }) => {
   );
 };
 
-// ─── Awareness Footer ────────────────────────────────────────────────────────
-const AWARENESS = [
-  { icon: "fa-solid fa-scale-balanced", title: "Legal Awareness",   desc: "Dowry is a punishable offense under the Dowry Prohibition Act, 1961." },
-  { icon: "fa-solid fa-handshake",        title: "Respect & Equality", desc: "Support a dowry-free society and promote equal relationships." },
-  { icon: "fa-solid fa-people-group",   title: "Build Better Future", desc: "Say no to dowry and build a better tomorrow." },
-  { icon: "fa-solid fa-shield-halved",  title: "Report & Support",   desc: "Report dowry demands and help stop this social evil." },
-];
-
 // ─── Main Page ───────────────────────────────────────────────────────────────
 const DahejCalculatorPage = () => {
   const [education, setEducation] = useState("");
@@ -107,7 +74,7 @@ const DahejCalculatorPage = () => {
   const [income, setIncome] = useState("");
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<DahejEstimateResult | null>(null);
 
   const canCalculate = education && profession && income && city;
 
@@ -118,23 +85,8 @@ const DahejCalculatorPage = () => {
     setResult(null);
     await new Promise((r) => setTimeout(r, 700));
 
-    const seed = hashSeed(normalizeName(`${education}${profession}${city}`));
-    const eduMul  = educationMultiplier[education] ?? 1;
-    const incMul  = incomeMultiplier[income] ?? 1;
-    const citMul  = cityMultiplier[city] ?? 1;
-    const base    = 500000 + (seed % 500000);
-    const amount  = Math.round(base * eduMul * incMul * citMul);
-    const min     = Math.round(amount * 0.85);
-    const max     = Math.round(amount * 1.15);
-
-    setResult({
-      education,
-      profession,
-      income,
-      city,
-      minFormatted: formatIndianCurrency(min, { lakh: "Lakh", cr: "Cr" }),
-      maxFormatted: formatIndianCurrency(max, { lakh: "Lakh", cr: "Cr" }),
-    });
+    const res = calculateDahejEstimate(education, profession, income, city);
+    setResult(res);
     setLoading(false);
   };
 

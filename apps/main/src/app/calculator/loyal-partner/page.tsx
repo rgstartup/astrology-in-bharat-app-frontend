@@ -4,24 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 import LoyalPartnerSeoContent from "./loyal-partner-seo.component";
-
-const hashSeed = (str: string): number => {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-};
-
-const normalizeString = (str: string) => str.toLowerCase().trim().replace(/[^a-z0-9]/g, "");
-
-const getLoyaltyFeedback = (score: number) => {
-  if (score >= 90) return { label: "Extremely Loyal", text: "You two share an unbreakable bond built on deep trust and mutual respect.", color: "text-green-600", bg: "bg-green-50 border-green-200" };
-  if (score >= 75) return { label: "Highly Loyal", text: "A strong and faithful connection. Keep nurturing your beautiful relationship.", color: "text-blue-600", bg: "bg-blue-50 border-blue-200" };
-  if (score >= 60) return { label: "Moderate Trust", text: "There's good potential, but open communication is needed to build deeper trust.", color: "text-yellow-600", bg: "bg-yellow-50 border-yellow-200" };
-  return { label: "Needs Work", text: "Trust takes time to build. Be patient and honest with each other.", color: "text-red-500", bg: "bg-red-50 border-red-200" };
-};
+import { calculateLoyaltyScore, type LoyalPartnerResult } from "./calculate";
 
 export default function LoyalPartnerPage() {
   const [yourName, setYourName] = useState("");
@@ -29,7 +12,7 @@ export default function LoyalPartnerPage() {
   const [yourDob, setYourDob] = useState("");
   const [partnerDob, setPartnerDob] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{ score: number; feedback: ReturnType<typeof getLoyaltyFeedback> } | null>(null);
+  const [result, setResult] = useState<LoyalPartnerResult | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,14 +21,8 @@ export default function LoyalPartnerPage() {
     setResult(null);
     await new Promise((r) => setTimeout(r, 700));
 
-    const key = [normalizeString(yourName + yourDob), normalizeString(partnerName + partnerDob)].sort().join("|");
-    const seed = hashSeed(key);
-    const score = (seed % 51) + 50; // Returns 50-100
-    
-    setResult({
-      score,
-      feedback: getLoyaltyFeedback(score),
-    });
+    const res = calculateLoyaltyScore(yourName, partnerName, yourDob, partnerDob);
+    setResult(res);
     setLoading(false);
   };
 

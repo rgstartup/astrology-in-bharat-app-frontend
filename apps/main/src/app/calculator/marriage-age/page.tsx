@@ -4,6 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 import MarriageAgeSeoContent from "./marriage-age-seo.component";
+import {
+  FACTORS,
+  REASONS,
+  calculateMarriageAge,
+  type MarriageAgeResult,
+} from "./calculate";
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 const icons = {
@@ -21,37 +27,8 @@ const icons = {
   chart: "fa-solid fa-chart-simple",
 };
 
-// ── Bottom Section Data ──────────────────────────────────────────────────────
-const FACTORS = [
-  { label: "5th House", desc: "Love & Romance", icon: "fa-solid fa-arrow-trend-up" },
-  { label: "7th House", desc: "Marriage & Partner", icon: "fa-regular fa-heart" },
-  { label: "Venus Position", desc: "Love & Relationship", icon: "fa-solid fa-venus" },
-  { label: "Jupiter Position", desc: "Wisdom & Blessings", icon: "fa-solid fa-jedi" }, // fallback icon
-  { label: "Planetary Dasha", desc: "Timing & Periods", icon: "fa-solid fa-stopwatch" },
-  { label: "Kundli Analysis", desc: "Overall Matching", icon: "fa-solid fa-dharmachakra" },
-];
-
-const REASONS = [
-  "Planetary positions and strengths",
-  "Dasha and transit periods",
-  "Your karma and past life influence",
-  "Cultural and family background",
-  "Manglik and other astrological Doshas",
-  "Navamsha (D9) chart alignment"
-];
-
-// ── Hash Helper ──────────────────────────────────────────────────────────────
-function hashSeed(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
 // ── Result Panel ─────────────────────────────────────────────────────────────
-const ResultPanel = ({ result }: { result: any }) => {
+const ResultPanel = ({ result }: { result: MarriageAgeResult }) => {
   return (
     <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-6 h-full animate-in fade-in slide-in-from-bottom-4 duration-500 relative overflow-hidden">
       {/* Header */}
@@ -89,40 +66,22 @@ const ResultPanel = ({ result }: { result: any }) => {
             <span className="text-sm font-bold text-[#1A1A1A]">Early Marriage</span>
             <span className="text-xs text-[#888]">{result.startAge - 2} - {result.startAge} Years</span>
           </div>
-          {/* Card 2 - Ideal Marriage */}
-          <div className="border-2 border-[#F26500] rounded-2xl p-4 flex flex-col items-center text-center gap-2 bg-[#FFF8F3] shadow-sm">
-            <div className="w-12 h-12 rounded-full bg-[#FFE0C8] flex items-center justify-center mb-1">
-              <i className={`${icons.heart} text-[#F26500] text-xl`} />
-            </div>
-            <span className="text-sm font-bold text-[#1A1A1A]">Ideal Marriage</span>
-            <span className="text-xs text-[#888]">{result.startAge} - {result.endAge} Years</span>
-          </div>
-          {/* Card 3 - Late Marriage */}
-          <div className="border-2 border-[#F26500] rounded-2xl p-4 flex flex-col items-center text-center gap-2 bg-white shadow-sm">
-            <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center mb-1">
-              <i className={`${icons.star} text-[#F26500] text-xl`} />
-            </div>
-            <span className="text-sm font-bold text-[#1A1A1A]">Late Marriage</span>
-            <span className="text-xs text-[#888]">{result.endAge} - {result.endAge + 3} Years</span>
-          </div>
-          {/* Card 4 - Marriage Strength */}
+          {/* Card 2 - Strength */}
           <div className="border-2 border-[#F26500] rounded-2xl p-4 flex flex-col items-center text-center gap-2 bg-white shadow-sm">
             <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center mb-1">
               <i className={`${icons.chart} text-[#F26500] text-xl`} />
             </div>
             <span className="text-sm font-bold text-[#1A1A1A]">Marriage Strength</span>
-            <span className="text-xs text-[#888]">{result.strength}% · {result.strengthLabel}</span>
+            <span className="text-xs text-[#888]">{result.strengthLabel} ({result.strength}%)</span>
           </div>
         </div>
       </div>
 
-
-      {/* Info Note */}
-      <div className="bg-[#F0F7FF] border border-[#DCEBFE] text-[#2C62B0] rounded-xl p-4 flex gap-3 text-xs mt-2">
-        <i className={`${icons.info} mt-0.5 shrink-0 text-[#4485E9]`} />
-        <p className="leading-relaxed">
-          This calculation is based on your birth details and planetary positions. 
-          For more accurate prediction, consult our astrologers.
+      {/* Info Alert Box */}
+      <div className="bg-[#FFF8F3] border border-[#F5E0CC] rounded-2xl p-4 flex gap-3 items-start mt-auto">
+        <i className={`${icons.info} text-[#F26500] mt-0.5`} />
+        <p className="text-xs text-[#777] leading-relaxed m-0">
+          This result is based on Vedic astrological planetary calculations. For a precise and personalized dasha timeline, consult with our expert astrologers.
         </p>
       </div>
     </div>
@@ -137,7 +96,7 @@ const MarriageAgeCalculatorPage = () => {
   const [place, setPlace] = useState("");
   const [gender, setGender] = useState("male");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<MarriageAgeResult | null>(null);
 
   const canCalculate = name.trim() && dob && place.trim();
 
@@ -149,20 +108,8 @@ const MarriageAgeCalculatorPage = () => {
 
     await new Promise((r) => setTimeout(r, 700));
 
-    const seedStr = (name + dob + time + place + gender).toLowerCase().replace(/\s+/g, "");
-    const seed = hashSeed(seedStr);
-    
-    const baseAge = 24 + (seed % 6); // 24 to 29
-    const strength = 75 + (seed % 20); // 75 to 94
-
-    setResult({
-      startAge: baseAge,
-      endAge: baseAge + 3,
-      periodMessage: "Highly Favourable Period",
-      strength,
-      strengthLabel: strength >= 85 ? "Strong" : "Good",
-    });
-
+    const res = calculateMarriageAge(name, dob, time, place, gender);
+    setResult(res);
     setLoading(false);
   };
 

@@ -2,29 +2,18 @@
 
 import React, { useState } from "react";
 import {
-    Sun, Moon, Zap, MessageCircle, Globe, Compass, Clock, Calendar, MapPin,
-    RotateCw, Skull, Ghost, Star, Info, Loader2
+    Clock, Calendar, RotateCw, Info, Loader2, Compass, Star
 } from "lucide-react";
 import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
 import PlanetForm from "./PlanetForm.component";
 import { useLanguageStore } from "@repo/store";
 import { planetTranslations } from "@/lib/translations/calculators/planet";
-import { getErrorMessage } from "@repo/lib";
 import CalculatorHero from "./common/hero";
-
-// Planet Color and Icon Mapping
-const PLANET_META: Record<string, { color: string; icon: any }> = {
-    "Sun": { color: "#FFD700", icon: Sun },
-    "Moon": { color: "#94a3b8", icon: Moon },
-    "Mars": { color: "#ef4444", icon: Zap },
-    "Mercury": { color: "#06b6d4", icon: MessageCircle },
-    "Jupiter": { color: "#f59e0b", icon: Globe },
-    "Venus": { color: "#f472b6", icon: Star },
-    "Saturn": { color: "#6366f1", icon: Compass },
-    "Rahu": { color: "#475569", icon: Ghost },
-    "Ketu": { color: "#334155", icon: Skull },
-    "Ascendant": { color: "#b45309", icon: MapPin },
-};
+import {
+    PLANET_META,
+    fetchPlanetPositions,
+    type PlanetPositionItem,
+} from "@/app/calculator/planet-calculator/calculate";
 
 const Planet = () => {
     const { lang, toggleLang } = useLanguageStore();
@@ -66,57 +55,18 @@ const Planet = () => {
         setError("");
         setPlanetData([]);
 
-        // Validate coordinates
-        const lat = parseFloat(formData.latitude);
-        const lon = parseFloat(formData.longitude);
+        const { data, error: calcError } = await fetchPlanetPositions(formData, {
+            invalidLocationResponse: t.results.invalidLocationResponse,
+            invalidApiResponse: t.results.invalidApiResponse,
+            defaultApiError: t.results.defaultApiError,
+        });
 
-        if (isNaN(lat) || isNaN(lon)) {
-            setError(t.results.invalidLocationResponse);
-            setLoading(false);
-            return;
+        if (calcError) {
+            setError(calcError);
+        } else {
+            setPlanetData(data);
         }
-
-        const apiKey = process.env.NEXT_PUBLIC_FREE_ASTROLOGY_API_KEY || "YOUR_API_KEY_HERE";
-        const url = `${process.env.NEXT_PUBLIC_CALCULATOR_URL || "https://json.freeastrologyapi.com"}/planets`;
-
-        try {
-            const res = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "x-api-key": apiKey,
-                },
-                body: JSON.stringify({
-                    year: parseInt(formData.year.toString()),
-                    month: parseInt(formData.month.toString()),
-                    date: parseInt(formData.date.toString()),
-                    hours: parseInt(formData.hours.toString()),
-                    minutes: parseInt(formData.minutes.toString()),
-                    seconds: parseInt(formData.seconds.toString()),
-                    latitude: lat,
-                    longitude: lon,
-                    timezone: parseFloat(formData.timezone.toString()),
-                    settings: {
-                        observation_point: "topocentric",
-                        ayanamsha: "lahiri",
-                    },
-                }),
-            });
-
-            const resData = await res.json();
-            if (resData && resData.output) {
-                const outputObj = resData.output[0];
-                const formattedData = Object.values(outputObj).filter((item: any) => item && typeof item === 'object' && item.name);
-                setPlanetData(formattedData);
-            } else {
-                setError(t.results.invalidApiResponse);
-            }
-        } catch (err: any) {
-            console.error("API Error:", err);
-            setError(getErrorMessage(err) || t.results.defaultApiError);
-        } finally {
-            setLoading(false);
-        }
+        setLoading(false);
     };
 
     // Helper to render lucide icons safely in React 19/TS environment

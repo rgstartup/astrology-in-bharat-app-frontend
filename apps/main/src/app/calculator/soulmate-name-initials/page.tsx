@@ -4,6 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 import SoulmateSeoContent from "./soulmate-seo.component";
+import {
+  CALCULATION_BASIS,
+  SPECIAL_FEATURES,
+  calculateSoulmateInitials,
+} from "./calculate";
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 const icons = {
@@ -21,31 +26,6 @@ const icons = {
   comments: "fa-regular fa-comments",
 };
 
-// ── Data ─────────────────────────────────────────────────────────────────────
-const CALCULATION_BASIS = [
-  { title: "Numerology", desc: "Your name numbers and vibrations", icon: "fa-solid fa-1" },
-  { title: "Birth Date", desc: "Your life path and destiny number", icon: "fa-regular fa-calendar" },
-  { title: "Letters Energy", desc: "Alphabet energy and cosmic frequency", icon: "fa-solid fa-a" },
-  { title: "Planetary Influence", desc: "Planet positions and their effects", icon: "fa-solid fa-earth-americas" },
-];
-
-const SPECIAL_FEATURES = [
-  "100% Personalized Calculation",
-  "Advanced Numerology Algorithm",
-  "Based on Vedic Principles",
-  "High Accuracy & Reliability"
-];
-
-// ── Hash Helper ──────────────────────────────────────────────────────────────
-function hashSeed(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
 // ── Result Panel ─────────────────────────────────────────────────────────────
 const ResultPanel = ({ result }: { result: string[] }) => {
   return (
@@ -61,22 +41,20 @@ const ResultPanel = ({ result }: { result: string[] }) => {
         </div>
       </div>
 
-      {/* Main Result Area */}
-      <div className="bg-[#FCF9F5] border border-[#F5E8DC] rounded-2xl p-6 md:p-10 flex flex-col items-center relative">
-        <div className="w-12 h-12 rounded-full bg-[#FFF0E6] flex items-center justify-center absolute -top-6">
-          <i className={`${icons.heart} text-[#F26500] text-xl`} />
-        </div>
-
-        {/* Initials Cards */}
-        <div className="flex gap-2 sm:gap-4 mt-6">
+      {/* Main Result Initials Bubbles */}
+      <div className="flex flex-col items-center justify-center my-auto py-4">
+        <div className="flex flex-wrap justify-center gap-3">
           {result.map((letter, idx) => (
-            <div key={idx} className="w-12 h-14 sm:w-16 sm:h-20 bg-white border border-[#F26500]/20 rounded-xl flex items-center justify-center shadow-sm">
-              <span className="text-3xl sm:text-4xl font-black text-[#F26500]">{letter}</span>
+            <div
+              key={idx}
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-[#FFF0E6] to-white border-2 border-[#F26500] flex items-center justify-center shadow-md transform hover:-translate-y-1 transition"
+            >
+              <span className="text-2xl sm:text-3xl font-black text-[#F26500]">{letter}</span>
             </div>
           ))}
         </div>
 
-        {/* How to Read */}
+        {/* Info Guide */}
         <div className="mt-10 w-full">
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="h-px w-12 bg-[#F0E0D0]"></div>
@@ -136,22 +114,7 @@ const SoulmateInitialsPage = () => {
 
     await new Promise((r) => setTimeout(r, 700));
 
-    const seedStr = (name + dob + gender).toLowerCase().replace(/\s+/g, "");
-    const seed = hashSeed(seedStr);
-    
-    const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const initials: string[] = [];
-    
-    // Pick 5 unique random letters deterministically
-    let currSeed = seed;
-    while(initials.length < 5) {
-      currSeed = hashSeed(currSeed.toString() + "next");
-      const char = ALPHABET[currSeed % 26]!;
-      if (!initials.includes(char)) {
-        initials.push(char);
-      }
-    }
-
+    const initials = calculateSoulmateInitials(name, dob, gender);
     setResult(initials);
     setLoading(false);
   };

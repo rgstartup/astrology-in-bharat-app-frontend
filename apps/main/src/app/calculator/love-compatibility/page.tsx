@@ -4,6 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 import LoveCompatibilitySeoContent from "./love-compatibility-seo.component";
+import {
+  MEANING_DATA,
+  getLoveCompatibilityLabelAndDesc,
+  calculateLoveCompatibility,
+  type LoveCompatibilityResult,
+} from "./calculate";
 
 // ── Circular Progress Ring ───────────────────────────────────────────────────
 const CircleProgress = ({ percent }: { percent: number }) => {
@@ -43,21 +49,9 @@ const MetricCard = ({ icon, label, value }: { icon: string; label: string; value
 );
 
 // ── Result Panel ─────────────────────────────────────────────────────────────
-const ResultPanel = ({ result, yourName, partnerName }: { result: any, yourName: string, partnerName: string }) => {
+const ResultPanel = ({ result, yourName, partnerName }: { result: LoveCompatibilityResult, yourName: string, partnerName: string }) => {
   const score = result.love;
-  const label =
-    score >= 81 ? "Excellent Compatibility" :
-    score >= 61 ? "Good Compatibility" :
-    score >= 41 ? "Average Compatibility" :
-    score >= 21 ? "Low Compatibility" : "Very Low Compatibility";
-  const desc =
-    score >= 81
-      ? "You are perfect for each other. Your bond is deep, passionate, and full of love."
-      : score >= 61
-      ? "You share a strong emotional connection and understand each other well. Keep nurturing your relationship with trust, love and patience."
-      : score >= 41
-      ? "Your relationship can grow with effort. There are some areas to work on, but love and patience can overcome them."
-      : "You may face challenges in your relationship. Communication and understanding are required to make it work.";
+  const { label, desc } = getLoveCompatibilityLabelAndDesc(score);
 
   const handleDownload = () => {
     const content = `LOVE COMPATIBILITY REPORT
@@ -131,26 +125,6 @@ Note: This calculator is for fun and informational purposes.
   );
 };
 
-// ── Meaning Footer ───────────────────────────────────────────────────────────
-const MEANING_DATA = [
-  { range: "0% - 20%", label: "Very Low", icon: "fa-heart-crack text-red-500", desc: "You both are not compatible. Work on your relationship." },
-  { range: "21% - 40%", label: "Low Compatibility", icon: "fa-face-frown text-orange-400", desc: "You may face challenges in your relationship." },
-  { range: "41% - 60%", label: "Average Compatibility", icon: "fa-face-meh text-yellow-500", desc: "Your relationship can grow with effort." },
-  { range: "61% - 80%", label: "Good Compatibility", icon: "fa-face-smile text-green-500", desc: "You both understand each other well." },
-  { range: "81% - 100%", label: "Excellent Compatibility", icon: "fa-heart text-pink-500", desc: "You are perfect for each other." },
-];
-
-function hashSeed(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
-const clamp = (num: number, min: number, max: number) => Math.max(min, Math.min(max, num));
-
 // ── Main Page ────────────────────────────────────────────────────────────────
 const LoveCompatibilityPage = () => {
   const [yourName, setYourName] = useState("");
@@ -158,7 +132,7 @@ const LoveCompatibilityPage = () => {
   const [yourDob, setYourDob] = useState("");
   const [partnerDob, setPartnerDob] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<LoveCompatibilityResult | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,19 +142,8 @@ const LoveCompatibilityPage = () => {
 
     await new Promise((r) => setTimeout(r, 700));
 
-    // Calculate deterministic result
-    const seed = hashSeed((yourName + partnerName).toLowerCase().replace(/\s+/g, ""));
-    const love = (seed % 61) + 40; // 40 to 100
-    
-    setResult({
-      love,
-      loveMetric: clamp(love + ((seed % 15) - 7), 0, 100),
-      trust: clamp(love + (((seed >> 2) % 21) - 10), 0, 100),
-      communication: clamp(love + (((seed >> 4) % 15) - 5), 0, 100),
-      emotions: clamp(love + (((seed >> 6) % 11) - 2), 0, 100),
-      understanding: clamp(love + (((seed >> 8) % 17) - 8), 0, 100),
-    });
-
+    const res = calculateLoveCompatibility(yourName, partnerName);
+    setResult(res);
     setLoading(false);
   };
 
