@@ -1,9 +1,9 @@
 import authContent from "@/features/auth/data/auth-content.json";
 import { getTranslations } from "next-intl/server";
-import React, { use } from "react";
+import React from "react";
 
-const HeroComponent = () => {
-  const t = use(getTranslations("Auth"));
+const HeroComponent = async () => {
+  const t = await getTranslations("Auth");
   const { signUp } = authContent;
 
   return (

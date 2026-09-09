@@ -6,17 +6,19 @@ export const metadata: Metadata = {
 };
 
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
 import HeroComponent from "./hero";
 import { SignUpForm, TopExpertsSection } from "@/features/auth";
 import { Suspense } from "react";
+import { getLocale } from "next-intl/server";
 
 export default async function RegisterPage() {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
   if (token) {
-    redirect("/client/profile");
+    const locale = await getLocale();
+    redirect({ href: "/client/profile", locale });
   }
 
   return (
