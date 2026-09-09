@@ -31,6 +31,22 @@ export const PATHS = {
   WALLET: "/client/wallet",
   SETTINGS: "/client/settings",
 
+  // CLIENT DASHBOARD
+  DASHBOARD: "/dashboard",
+  DASHBOARD_ASTROLOGY: "/dashboard/astrology",
+  DASHBOARD_HOROSCOPE: "/dashboard/astrology/horoscope",
+  DASHBOARD_KUNDLI: "/dashboard/astrology/kundli",
+  DASHBOARD_MATCHING: "/dashboard/astrology/matching",
+  DASHBOARD_REPORTS: "/dashboard/astrology/reports",
+  DASHBOARD_CONSULTATIONS: "/dashboard/consultations",
+  DASHBOARD_EXPERTS: "/dashboard/experts",
+  DASHBOARD_ORDERS: "/dashboard/orders",
+  DASHBOARD_WALLET: "/dashboard/wallet",
+  DASHBOARD_WISHLIST: "/dashboard/wishlist",
+  DASHBOARD_NOTIFICATIONS: "/dashboard/notifications",
+  DASHBOARD_PROFILE: "/dashboard/profile",
+  DASHBOARD_SETTINGS: "/dashboard/settings",
+
   // FREE CALCULATORS
   PLANET: "/calculator/planet",
   FLAMES_CALCULATOR: "/calculator/flames",

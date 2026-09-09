@@ -33,6 +33,15 @@ const mapExpert = (item: any): ExpertProfile => {
 
   return {
     id: id,
+    userId: userId,
+    user: {
+      id: userId || id,
+      name: name,
+      avatar: avatar,
+    },
+    specialization: specialization,
+    experience_in_years: experience,
+    rating: rating,
     image: avatar,
     ratings: rating,
     name: name,

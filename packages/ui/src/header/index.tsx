@@ -157,7 +157,7 @@ const Header: React.FC<HeaderProps> = ({
     if (logoutHandler) {
       logoutHandler();
     } else {
-      await contextLogout();
+      await contextLogout(api as any);
     }
   };
 
@@ -630,8 +630,8 @@ const Header: React.FC<HeaderProps> = ({
                         <div className="flex items-center gap-2">
                           <div
                             className="cursor-pointer"
-                            onClick={() => setShowImageModal(true)}
-                            title="View Profile Picture"
+                            onClick={() => router.push(PATHS.DASHBOARD)}
+                            title="Go to My Dashboard"
                             style={{
                               width: "35px",
                               height: "35px",
@@ -733,55 +733,131 @@ const Header: React.FC<HeaderProps> = ({
 
                             {/* Menu Items */}
                             <div className="p-2">
+                              {/* Primary Actions: Dashboard & Astrology */}
                               <Link
-                                href={PATHS.PROFILE}
+                                href={PATHS.DASHBOARD}
+                                className="flex items-center gap-3 px-3 py-2 no-underline text-gray-800 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition-all mb-1 font-semibold"
+                                onClick={() => setShowProfileDropdown(false)}
+                                style={{ fontSize: "14px" }}
+                              >
+                                <div
+                                  className="rounded-full flex items-center justify-center shadow-sm bg-orange text-white"
+                                  style={{ width: "30px", height: "30px" }}
+                                >
+                                  <i className="fa-solid fa-house" style={{ fontSize: "12px" }} />
+                                </div>
+                                <span>My Dashboard</span>
+                              </Link>
+
+                              <Link
+                                href={PATHS.DASHBOARD_ASTROLOGY}
+                                className="flex items-center gap-3 px-3 py-2 no-underline text-gray-800 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition-all mb-1 font-semibold"
+                                onClick={() => setShowProfileDropdown(false)}
+                                style={{ fontSize: "14px" }}
+                              >
+                                <div
+                                  className="rounded-full flex items-center justify-center shadow-sm bg-purple-100 text-purple-600"
+                                  style={{ width: "30px", height: "30px" }}
+                                >
+                                  <i className="fa-solid fa-sparkles" style={{ fontSize: "12px" }} />
+                                </div>
+                                <span>My Astrology</span>
+                              </Link>
+
+                              <Link
+                                href={PATHS.DASHBOARD_CONSULTATIONS}
                                 className="flex items-center gap-3 px-3 py-2 no-underline text-gray-800 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition-all mb-1"
                                 onClick={() => setShowProfileDropdown(false)}
                                 style={{ fontSize: "14px" }}
                               >
                                 <div
-                                  className="rounded-full flex items-center justify-center shadow-sm bg-orange/10 text-orange"
-                                  style={{ width: "34px", height: "34px" }}
+                                  className="rounded-full flex items-center justify-center shadow-sm bg-emerald-100 text-emerald-600"
+                                  style={{ width: "30px", height: "30px" }}
                                 >
-                                  <i className="fa-solid fa-user-circle" />
+                                  <i className="fa-solid fa-comments" style={{ fontSize: "12px" }} />
                                 </div>
-                                <span className="font-medium">
-                                  {t.myProfile}
-                                </span>
+                                <span className="font-medium">My Consultations</span>
                               </Link>
 
                               <Link
-                                href={`${PATHS.PROFILE}?tab=wallet`}
+                                href={PATHS.DASHBOARD_REPORTS}
                                 className="flex items-center gap-3 px-3 py-2 no-underline text-gray-800 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition-all mb-1"
                                 onClick={() => setShowProfileDropdown(false)}
                                 style={{ fontSize: "14px" }}
                               >
                                 <div
-                                  className="rounded-full flex items-center justify-center shadow-sm bg-orange/10 text-orange"
-                                  style={{ width: "34px", height: "34px" }}
+                                  className="rounded-full flex items-center justify-center shadow-sm bg-blue-100 text-blue-600"
+                                  style={{ width: "30px", height: "30px" }}
                                 >
-                                  <i className="fa-solid fa-wallet" />
+                                  <i className="fa-solid fa-file-lines" style={{ fontSize: "12px" }} />
                                 </div>
-                                <span className="font-medium">
-                                  {t.myWallet}
-                                </span>
+                                <span className="font-medium">My Reports</span>
                               </Link>
 
-                              <div className="my-2 border-b opacity-50 mx-2" />
+                              {/* Divider */}
+                              <div className="my-1.5 border-b opacity-40 mx-2" />
+
+                              {/* Secondary Actions: Profile, Wallet, Orders */}
+                              <Link
+                                href={PATHS.DASHBOARD_PROFILE}
+                                className="flex items-center gap-3 px-3 py-1.5 no-underline text-gray-700 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition-all mb-0.5"
+                                onClick={() => setShowProfileDropdown(false)}
+                                style={{ fontSize: "13px" }}
+                              >
+                                <div
+                                  className="rounded-full flex items-center justify-center shadow-sm bg-gray-100 text-gray-600"
+                                  style={{ width: "28px", height: "28px" }}
+                                >
+                                  <i className="fa-solid fa-user" style={{ fontSize: "11px" }} />
+                                </div>
+                                <span className="font-medium">{t.myProfile}</span>
+                              </Link>
+
+                              <Link
+                                href={PATHS.DASHBOARD_WALLET}
+                                className="flex items-center gap-3 px-3 py-1.5 no-underline text-gray-700 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition-all mb-0.5"
+                                onClick={() => setShowProfileDropdown(false)}
+                                style={{ fontSize: "13px" }}
+                              >
+                                <div
+                                  className="rounded-full flex items-center justify-center shadow-sm bg-gray-100 text-gray-600"
+                                  style={{ width: "28px", height: "28px" }}
+                                >
+                                  <i className="fa-solid fa-wallet" style={{ fontSize: "11px" }} />
+                                </div>
+                                <span className="font-medium">{t.myWallet}</span>
+                              </Link>
+
+                              <Link
+                                href={PATHS.DASHBOARD_ORDERS}
+                                className="flex items-center gap-3 px-3 py-1.5 no-underline text-gray-700 rounded-xl hover:bg-orange-50 hover:text-orange-600 transition-all mb-1"
+                                onClick={() => setShowProfileDropdown(false)}
+                                style={{ fontSize: "13px" }}
+                              >
+                                <div
+                                  className="rounded-full flex items-center justify-center shadow-sm bg-gray-100 text-gray-600"
+                                  style={{ width: "28px", height: "28px" }}
+                                >
+                                  <i className="fa-solid fa-bag-shopping" style={{ fontSize: "11px" }} />
+                                </div>
+                                <span className="font-medium">My Orders</span>
+                              </Link>
+
+                              <div className="my-1.5 border-b opacity-40 mx-2" />
 
                               <button
                                 onClick={() => {
                                   setShowProfileDropdown(false);
                                   handleLogout();
                                 }}
-                                className="w-full flex items-center gap-3 px-3 py-2 border-0 bg-transparent text-red-600 rounded-xl hover:bg-red-50 transition-all"
+                                className="w-full flex items-center gap-3 px-3 py-2 border-0 bg-transparent text-red-600 rounded-xl hover:bg-red-50 transition-all cursor-pointer"
                                 style={{ fontSize: "14px" }}
                               >
                                 <div
                                   className="bg-red-100 text-red-600 rounded-full flex items-center justify-center shadow-sm"
-                                  style={{ width: "34px", height: "34px" }}
+                                  style={{ width: "30px", height: "30px" }}
                                 >
-                                  <i className="fa-solid fa-arrow-right-from-bracket" />
+                                  <i className="fa-solid fa-arrow-right-from-bracket" style={{ fontSize: "12px" }} />
                                 </div>
                                 <span className="font-bold">{t.logout}</span>
                               </button>

@@ -15,6 +15,7 @@ export interface TeamMember {
 
 export interface ExpertProfile {
   id: string;
+  userId?: string;
   user: {
     id: string;
     name: string;
@@ -115,3 +116,5 @@ export const expertSpecializations = [
   "Dispute Solution",
   "Childless Couple Solution",
 ];
+
+export type Expert = ExpertProfile;

@@ -24,7 +24,7 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
   onBack,
   onResend,
   onSuccess,
-  redirectUrl = "/client/profile",
+  redirectUrl = "/dashboard",
   initialCountdown = 60,
 }) => {
   const router = useRouter();

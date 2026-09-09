@@ -15,7 +15,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 const SignInForm: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/client/profile";
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const init = useAuthStore((state) => state.init);
 
   const t = useTranslations("Auth");
