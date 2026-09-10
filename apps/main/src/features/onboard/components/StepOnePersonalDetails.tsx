@@ -11,6 +11,7 @@ import { OnboardingFormData } from "@/lib/types";
 import { ProfilePicUpload } from "./ProfilePicUpload";
 import { AddressFields } from "./AddressFields";
 import { Link } from "@/i18n/navigation";
+import { useAuth } from "@/store/useAuthStore";
 
 interface StepOnePersonalDetailsProps {
   register: UseFormRegister<OnboardingFormData>;
@@ -33,15 +34,30 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
     setMaxDate(new Date().toISOString().split("T")[0] || "");
   }, []);
 
-  const currentAvatar = watch("avatar");
+  const { user, updateUser } = useAuth();
+
+  const currentAvatar = watch("avatar") || user?.avatar;
   const currentGender = watch("gender");
 
   return (
     <div className="space-y-6">
+      {/* Hidden input to ensure avatar is tracked in form data */}
+      <input type="hidden" {...register("avatar")} />
+
       {/* 1. Profile Picture Upload */}
       <ProfilePicUpload
         value={currentAvatar}
-        onChange={(url) => setValue("avatar", url, { shouldDirty: true })}
+        onChange={(url) => {
+          setValue("avatar", url, {
+            shouldDirty: true,
+            shouldValidate: true,
+            shouldTouch: true,
+          });
+          updateUser({
+            avatar: url,
+            profile_picture: url,
+          });
+        }}
       />
 
       {/* 2. Birth Details Section */}

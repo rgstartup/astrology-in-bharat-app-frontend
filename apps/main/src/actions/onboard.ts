@@ -36,6 +36,7 @@ export async function saveOnboardingAction(
   }
   if (data.avatar?.trim()) {
     payload.avatar = data.avatar.trim();
+    payload.profile_picture = data.avatar.trim();
   }
   if (data.languages && data.languages.length > 0) {
     payload.language_preference = data.languages.join(", ");
@@ -109,16 +110,14 @@ export async function uploadOnboardingPictureAction(
     },
   });
 
-  if (error) {
+  if (error || !resData?.avatar) {
     return {
-      error: getErrorMessage(error),
+      error: getErrorMessage(error || "Failed to upload picture"),
     };
   }
 
-  const avatarUrl = (resData as any)?.avatar || (resData as any)?.secure_url;
-
   return {
     success: true,
-    avatar: avatarUrl,
+    avatar: resData.avatar,
   };
 }

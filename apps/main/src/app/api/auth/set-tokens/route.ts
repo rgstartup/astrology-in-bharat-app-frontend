@@ -11,48 +11,48 @@ import { stripLocale } from "@/utils/getPathnameOrDefault";
  * work on HTTP localhost).
  */
 export async function GET(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
-    const accessToken = searchParams.get("accessToken");
-    const refreshToken = searchParams.get("refreshToken");
-    const redirect = searchParams.get("redirect") || "/client/profile";
+  const { searchParams } = new URL(request.url);
+  const accessToken = searchParams.get("accessToken");
+  const refreshToken = searchParams.get("refreshToken");
+  const redirect = searchParams.get("redirect") || "/client/profile";
 
-    console.log("[set-tokens] Called with:", {
-        hasAccessToken: !!accessToken,
-        hasRefreshToken: !!refreshToken,
-        redirect,
-    });
+  console.log("[set-tokens] Called with:", {
+    hasAccessToken: !!accessToken,
+    hasRefreshToken: !!refreshToken,
+    redirect,
+  });
 
-    if (!accessToken || !refreshToken) {
-        console.error("[set-tokens] Missing tokens!");
-        return NextResponse.redirect(new URL("/sign-in?error=missing_tokens", request.url));
-    }
+  if (!accessToken || !refreshToken) {
+    console.error("[set-tokens] Missing tokens!");
+    return NextResponse.redirect(
+      new URL("/sign-in?error=missing_tokens", request.url),
+    );
+  }
 
-    // Clean redirect path
-    const cleanRedirect = stripLocale(redirect);
-    const redirectUrl = new URL(cleanRedirect, request.url);
+  // Clean redirect path
+  const cleanRedirect = stripLocale(redirect);
+  const redirectUrl = new URL(cleanRedirect, request.url);
 
-    const response = NextResponse.redirect(redirectUrl);
+  const response = NextResponse.redirect(redirectUrl);
 
-    // Set HttpOnly cookies server-side (works on both HTTP and HTTPS)
-    const isProduction = process.env.NODE_ENV === "production";
+  // Set HttpOnly cookies server-side (works on both HTTP and HTTPS)
+  const isProduction = process.env.NODE_ENV === "production";
 
-    response.cookies.set("accessToken", accessToken, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
-        path: "/",
-        maxAge: 15 * 60, // 15 minutes
-    });
+  response.cookies.set("accessToken", accessToken, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
+    maxAge: 15 * 60, // 15 minutes
+  });
 
-    response.cookies.set("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
-        path: "/",
-        maxAge: 7 * 24 * 60 * 60, // 7 days
-    });
+  response.cookies.set("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
+    maxAge: 7 * 24 * 60 * 60, // 7 days
+  });
 
-    console.log("[set-tokens] Cookies set, redirecting to:", cleanRedirect);
-
-    return response;
+  return response;
 }

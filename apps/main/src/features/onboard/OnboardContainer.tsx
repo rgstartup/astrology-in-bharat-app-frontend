@@ -9,17 +9,13 @@ import { OnboardHero } from "./components/OnboardHero";
 import { OnboardStepper } from "./components/OnboardStepper";
 import { StepOnePersonalDetails } from "./components/StepOnePersonalDetails";
 import { StepTwoPreferences } from "./components/StepTwoPreferences";
+import { useAuth } from "@/store/useAuthStore";
 
-interface OnboardContainerProps {
-  initialName?: string;
-  initialEmail?: string;
-}
-
-export const OnboardContainer: React.FC<OnboardContainerProps> = ({
-  initialName = "",
-}) => {
+export const OnboardContainer = () => {
   const [step, setStep] = useState<1 | 2>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { user } = useAuth();
 
   const {
     register,
@@ -30,12 +26,12 @@ export const OnboardContainer: React.FC<OnboardContainerProps> = ({
     formState: { errors },
   } = useForm<OnboardingFormData>({
     defaultValues: {
-      full_name: initialName,
+      full_name: user?.name || "",
       date_of_birth: "",
       time_of_birth: "",
-      gender: undefined,
+      gender: user?.gender || "male",
       place_of_birth: "",
-      avatar: "",
+      avatar: user?.avatar || "",
       address: {
         line1: "",
         city: "",
@@ -48,6 +44,25 @@ export const OnboardContainer: React.FC<OnboardContainerProps> = ({
     },
     mode: "onBlur",
   });
+
+  const formAvatar = watch("avatar", user?.avatar);
+
+  // Keep form fields synchronized when user auth profile loads or updates
+  React.useEffect(() => {
+    if (user) {
+      if (user.name && !watch("full_name")) {
+        setValue("full_name", user.name);
+      }
+      if (user.gender && !watch("gender")) {
+        setValue("gender", user.gender);
+      }
+      if (user.avatar && !watch("avatar")) {
+        setValue("avatar", user.avatar, { shouldDirty: true });
+      }
+    }
+  }, [user, setValue, watch]);
+
+  console.log({ userAvatar: user?.avatar, formAvatar });
 
   const handleNext = async () => {
     // Validate step 1 required fields
@@ -63,7 +78,11 @@ export const OnboardContainer: React.FC<OnboardContainerProps> = ({
   const onSubmit = async (data: OnboardingFormData) => {
     setIsSubmitting(true);
     try {
-      const result = await saveOnboardingAction(data);
+      const payload: OnboardingFormData = {
+        ...data,
+        avatar: data.avatar || formAvatar || user?.avatar || "",
+      };
+      const result = await saveOnboardingAction(payload);
 
       if (result.error) {
         toast.error(result.error);

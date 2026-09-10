@@ -4,8 +4,8 @@ import {
   ConsultationServicesData,
 } from "@/components/features/services/homePagaData";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { Link } from "@/i18n/navigation";
+import Image from "next/image";
 
 interface PageProps {
   params: Promise<{

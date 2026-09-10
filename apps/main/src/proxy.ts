@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { decodeToken } from "@repo/lib";
 import { api, API_ROUTES } from "./actions";
-import { setAccessToken, setRefreshToken, clearAuthCookies } from "./actions/cookie";
+import {
+  setAccessToken,
+  setRefreshToken,
+  clearAuthCookies,
+} from "./actions/cookie";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 
@@ -54,7 +58,7 @@ async function refreshSession(
     .post<{
       accessToken: string;
       refreshToken: string;
-    }>(API_ROUTES.AUTH.REFRESH, { refreshToken });
+    }>(API_ROUTES.AUTH.CLIENT.REFRESH, { refreshToken });
 
   if (error || !data?.accessToken || !data.refreshToken) {
     // Don't mutate request cookies.

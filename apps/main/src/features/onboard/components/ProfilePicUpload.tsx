@@ -18,6 +18,14 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState<string>(value || "");
 
+  React.useEffect(() => {
+    if (value) {
+      setPreview(value);
+    }
+  }, [value]);
+
+  const displayImage = preview || value;
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -39,14 +47,17 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
       formData.append("file", file);
 
       const result = await uploadOnboardingPictureAction(formData);
+
+      console.log({ result });
+
       if (result.error) {
         toast.error(result.error);
       } else if (result.avatar) {
         setPreview(result.avatar);
         onChange(result.avatar);
-        toast.success("Profile photo uploaded!");
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       toast.error("Failed to upload image. Please try again.");
     } finally {
       setIsUploading(false);
@@ -61,12 +72,13 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
         onClick={() => fileInputRef.current?.click()}
       >
         <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md bg-orange/10 relative flex items-center justify-center">
-          {preview ? (
+          {displayImage ? (
             <Image
-              src={preview}
+              src={displayImage}
               alt="Profile Avatar"
               fill
               className="object-cover"
+              unoptimized
             />
           ) : (
             <div className="flex flex-col items-center justify-center text-orange">
@@ -112,7 +124,7 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
           className="inline-flex items-center text-xs font-bold text-orange hover:text-[#d64e1c] hover:underline"
         >
           <i className="fa-solid fa-cloud-arrow-up mr-1.5" />
-          {preview ? "Change Photo" : "Upload Photo"}
+          {displayImage ? "Change Photo" : "Upload Photo"}
         </button>
 
         <input

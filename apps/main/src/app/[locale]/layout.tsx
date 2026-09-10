@@ -10,7 +10,6 @@ import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 
 import { routing } from "@/i18n/routing";
-import ClientLayout from "@/components/layout/ClientLayout";
 import { AuthInitializer } from "@/components/layout/AuthInitializer";
 import { CartInitializer } from "@/components/layout/CartInitializer";
 import { WishlistInitializer } from "@/components/layout/WishlistInitializer";

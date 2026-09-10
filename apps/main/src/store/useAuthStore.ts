@@ -123,12 +123,17 @@ export const useAuthStore = create<AuthState>()(
 
       updateUser: (data: Partial<Client>) => {
         const current = get().user;
+
         if (current) {
+          const updatedUser = {
+            ...current,
+            ...data,
+          };
+
           set({
             user: {
-              ...current,
-              ...data,
-              avatar: getProfileImageUrl(current.avatar, current.name),
+              ...updatedUser,
+              avatar: getProfileImageUrl(updatedUser.avatar, updatedUser.name),
             },
           });
         }

@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import { cookies } from "next/headers";
+import { getLocale } from "next-intl/server";
+
 import { redirect } from "@/i18n/navigation";
 import { OnboardContainer } from "@/features/onboard";
-import { getLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Complete Your Profile - Astrology Bharat",

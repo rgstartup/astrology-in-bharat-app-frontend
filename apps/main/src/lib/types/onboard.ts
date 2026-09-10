@@ -10,7 +10,7 @@ export interface OnboardingFormData {
   full_name?: string;
   date_of_birth?: string;
   time_of_birth?: string;
-  gender?: "male" | "female" | "other";
+  gender?: string;
   place_of_birth?: string;
   address?: OnboardingAddress;
   languages?: string[];
