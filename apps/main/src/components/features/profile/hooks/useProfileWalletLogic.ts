@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { api as http } from "@/actions";
 import { getErrorMessage } from "@repo/lib";
 import { getWalletTransactions } from "@/libs/api-profile";

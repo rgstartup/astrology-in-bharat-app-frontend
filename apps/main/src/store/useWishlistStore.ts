@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { WishlistService } from "../services/wishlist.service";
 
 export interface WishlistItem {

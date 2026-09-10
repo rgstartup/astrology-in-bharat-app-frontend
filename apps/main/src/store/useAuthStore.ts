@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { api } from "@/actions";
 import { AuthService } from "@/services/auth.service";
 import type { Client } from "@repo/lib";

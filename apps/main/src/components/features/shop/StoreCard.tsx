@@ -18,7 +18,7 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter, usePathname, Link } from "@/i18n/navigation";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 interface StoreCardProps {

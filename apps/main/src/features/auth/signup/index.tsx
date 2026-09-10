@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { registerAction } from "@/actions/auth";
 import { Loading } from "@repo/ui";
 import GoogleLoginButton from "../GoogleLoginButton.component";

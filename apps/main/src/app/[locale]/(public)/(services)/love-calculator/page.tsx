@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { api } from "@/actions";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";
 import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
 import GuidanceCTA from "@/components/ui/GuidanceCTA";

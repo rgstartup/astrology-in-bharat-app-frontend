@@ -1,5 +1,5 @@
 import React from "react";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
 import Skeleton from "@/components/ui/Skeleton";

@@ -6,7 +6,7 @@ import { CloseButton } from "@repo/ui";
 import { useRouter, usePathname, Link } from "@/i18n/navigation";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useAuthStore } from "@/store/__useAuthStore";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { useWishlist } from "@/hooks/useWishlist";
 import { ExpertCardProps } from "@/lib/types";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";

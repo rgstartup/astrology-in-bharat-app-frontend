@@ -25,7 +25,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/hooks/useCart";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { normalizeImagePath } from "@/utils/image-utils";
 
 interface ProductQuickViewProps {

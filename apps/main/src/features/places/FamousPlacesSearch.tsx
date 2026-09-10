@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import {
   fetchStates,
   fetchDistricts,

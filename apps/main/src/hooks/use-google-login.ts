@@ -3,7 +3,7 @@
 import { useEffect, useCallback } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { API_ROUTES } from "@/actions";
 import { useTranslations } from "next-intl";
 import { stripLocale } from "@/utils/getPathnameOrDefault";

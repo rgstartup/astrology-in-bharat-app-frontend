@@ -2,7 +2,7 @@
 
 import React, { useState, FormEvent, Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { useTranslations } from "next-intl";
 import { RiLockPasswordFill, RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 

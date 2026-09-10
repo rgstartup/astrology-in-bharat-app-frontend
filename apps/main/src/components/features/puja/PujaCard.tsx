@@ -8,7 +8,7 @@ import { ExpertPuja } from "@/lib/types/puja";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useAuthStore } from "@/store/useAuthStore";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { useTranslations } from "next-intl";
 
 const LikeButton = ({

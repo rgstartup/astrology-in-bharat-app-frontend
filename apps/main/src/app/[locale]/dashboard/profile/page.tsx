@@ -12,7 +12,7 @@ import {
   Badge,
   Skeleton,
 } from "@/features/dashboard";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import {
   User,
   Phone,

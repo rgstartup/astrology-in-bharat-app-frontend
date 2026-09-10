@@ -16,7 +16,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { api } from "@/actions";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/store/__useAuthStore";
 import { getErrorMessage } from "@repo/lib";
 

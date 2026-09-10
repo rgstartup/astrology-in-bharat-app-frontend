@@ -7,7 +7,7 @@ import ExpertSortModal from "./components/ExpertSortModal";
 import dummyExperts from "./data/dummy-experts.json";
 import { useExpertListStore } from "@/store/useExpertListStore";
 import { useTranslations } from "next-intl";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { Expert } from "@repo/lib";
 
 const fallbackExperts: Expert[] = dummyExperts.map(

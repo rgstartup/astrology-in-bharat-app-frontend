@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { io, Socket } from "socket.io-client";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { api } from "@/actions";
 import { CallStatus, CallSession } from "@/lib/types";
 import { getErrorMessage } from "@repo/lib";

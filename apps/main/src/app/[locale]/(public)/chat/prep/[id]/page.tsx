@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { api } from "@/actions";
 import { getClientProfile } from "@/libs/api-profile";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { useAuthStore } from "@repo/store";
 import { getErrorMessage } from "@repo/lib";
 import { VerificationPopup } from "@repo/ui";

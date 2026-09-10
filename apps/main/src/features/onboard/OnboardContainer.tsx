@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { OnboardingFormData } from "@/lib/types";
 import { saveOnboardingAction } from "@/actions/onboard";
 import { OnboardHero } from "./components/OnboardHero";

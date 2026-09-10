@@ -27,7 +27,7 @@ import PujaDetailSeoContent from "./puja-detail-seo.component";
 import { Loading } from "@repo/ui";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useTranslations } from "next-intl";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";
 
 const PujaDetailPage = () => {

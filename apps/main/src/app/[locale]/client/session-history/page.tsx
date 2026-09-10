@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FaComments, FaPhone, FaVideo, FaStar, FaArrowRight, FaCalendarTimes, FaCircle } from "react-icons/fa";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { api } from "@/actions";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";
 
 const SessionHistory = () => {

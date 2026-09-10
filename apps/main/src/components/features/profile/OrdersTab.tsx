@@ -6,7 +6,7 @@ import { getProductImageUrl } from "@/utils/image-utils";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
 import { cancelMyOrder } from "@/libs/api-profile";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import ReviewModal from "../../ui/modals/ReviewModal";
 import Skeleton from "@/components/ui/Skeleton";
 

@@ -2,12 +2,11 @@
 
 import React from "react";
 import Image from "next/image";
-import { useLanguageStore } from "@repo/store";
-import { authTranslations } from "@/lib/translations/auth";
 import {
   useGoogleLogin,
   UseGoogleLoginOptions,
 } from "@/hooks/use-google-login";
+import { useTranslations } from "next-intl";
 
 export interface GoogleLoginButtonProps extends UseGoogleLoginOptions {
   text?: string;
@@ -23,10 +22,7 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   className,
   disabled = false,
 }) => {
-  const { lang } = useLanguageStore();
-  const t =
-    authTranslations[lang as keyof typeof authTranslations] ||
-    authTranslations.en;
+  const t = useTranslations("Auth");
 
   const { handleGoogleLogin } = useGoogleLogin({
     callbackUrl,
@@ -52,7 +48,7 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
         className="group-hover:scale-110 transition-transform"
       />
       <span className="font-bold text-gray-600 text-sm">
-        {text || t.signIn.google}
+        {text || t("signIn.google")}
       </span>
     </button>
   );

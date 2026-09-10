@@ -2,10 +2,10 @@
 
 import React, { useEffect } from "react";
 import Image from "next/image";
-import { api } from "@/actions";
 import Skeleton from "@/components/ui/Skeleton";
 import { Expert } from "@repo/lib";
 import { useExpertListStore } from "@/store/useExpertListStore";
+import { api } from "@/actions";
 
 const GreenDot = ({ isOnline }: { isOnline: boolean }) => {
   if (!isOnline) return null;

@@ -8,7 +8,7 @@ import { api } from "@/actions";
 import { chatSocket } from "@/libs/socket";
 import { uploadClientDocument } from "@/libs/api-profile";
 import { useAuthStore } from "@/store/useAuthStore";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";
 
 import { Button, Loading } from "@repo/ui";

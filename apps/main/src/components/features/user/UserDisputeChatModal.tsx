@@ -12,7 +12,7 @@ import {
   Download,
   AlertCircle,
 } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";
 import { getSupportSocket } from "@repo/ui/sockets";
 import { useAuthStore } from "@/store/__useAuthStore"; // Changed import

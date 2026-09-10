@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { useTranslations } from "next-intl";
 
 type Props = {

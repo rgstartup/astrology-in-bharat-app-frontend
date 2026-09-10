@@ -2,7 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import React, { useState, FormEvent, Suspense } from "react";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { api } from "@/actions";
 import { RiMailSendFill, RiArrowLeftLine } from "react-icons/ri";
 import { BooleanMessage, getErrorMessage } from "@repo/lib";

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { api as http } from "@/actions";
 import { getClientProfile, applyCoupon, getMyRewards } from "@/libs/api-profile";
 import { loadRazorpay } from "@/libs/razorpay";

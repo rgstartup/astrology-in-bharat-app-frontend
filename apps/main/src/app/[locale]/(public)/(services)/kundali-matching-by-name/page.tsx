@@ -11,7 +11,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { ConsultPersonDetails, AdvancedMatchResults } from "@/lib/types";
 import { useAuthStore } from "@/store/useAuthStore";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 
 const KundaliMatchingByNamePage = () => {
   const router = useRouter();

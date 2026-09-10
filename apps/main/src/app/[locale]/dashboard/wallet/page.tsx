@@ -5,7 +5,7 @@ import { Card, CardContent, Button, WALLET_RECHARGE_PACKS } from "@/features/das
 import { useAuthStore } from "@/store/useAuthStore";
 import { api } from "@/actions";
 import { Wallet, PlusCircle, ArrowUpRight, ArrowDownLeft, ShieldCheck, Sparkles } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 
 export default function MyWalletDashboardPage() {
   const { balance, refreshBalance } = useAuthStore();

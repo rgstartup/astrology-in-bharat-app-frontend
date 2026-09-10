@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useCallback, FormEvent } from "react";
+import React, { useState, useCallback } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 
 import { Loading } from "@repo/ui";
 import { loginAction } from "@/actions/auth";

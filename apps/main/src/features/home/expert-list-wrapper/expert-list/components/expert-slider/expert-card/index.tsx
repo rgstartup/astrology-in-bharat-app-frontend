@@ -3,7 +3,7 @@
 import NextLink from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import type { Expert } from "@repo/lib";
 import { useAuthStore } from "@/store/useAuthStore";
 import { usePreloadExpertStore } from "@/store/usePreloadExpertStore";

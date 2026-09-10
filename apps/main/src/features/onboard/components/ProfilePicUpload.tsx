@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { uploadOnboardingPictureAction } from "@/actions/onboard";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 
 interface ProfilePicUploadProps {
   value?: string;
@@ -47,8 +47,6 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
       formData.append("file", file);
 
       const result = await uploadOnboardingPictureAction(formData);
-
-      console.log({ result });
 
       if (result.error) {
         toast.error(result.error);

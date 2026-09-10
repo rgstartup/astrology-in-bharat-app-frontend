@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, FormEvent } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { verifyOtpAction } from "@/actions/auth";
 import { Loading } from "@repo/ui";
 import { useTranslations } from "next-intl";

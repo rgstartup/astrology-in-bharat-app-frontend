@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Star } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";
 import { api } from "@/actions";
 
