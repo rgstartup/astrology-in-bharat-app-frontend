@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useSpecializationScroll } from "../hooks/useSpecializationScroll";
 import { useExpertListStore } from "@/store/useExpertListStore";
 import { Specialization } from "@repo/lib";
@@ -27,6 +27,8 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
     selectedSpecialization,
     setSelectedSpecialization,
     resetState: resetFilters,
+    loading,
+    setLoading,
   } = useExpertListStore();
 
   const { scrollRef, goLeft, goRight } = useSpecializationScroll(
@@ -35,11 +37,14 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
   const [specializations, setSpecializations] = useState<Specialization[]>([]);
 
   useEffect(() => {
-    fetchSpecializations().then(([res, error]) => {
-      if (error || !res) return;
+    setLoading(true);
+    fetchSpecializations()
+      .then(([res, error]) => {
+        if (error || !res) return;
 
-      setSpecializations(res.data);
-    });
+        setSpecializations(res.data);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (
