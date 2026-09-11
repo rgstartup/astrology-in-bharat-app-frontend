@@ -1,0 +1,16 @@
+services:
+  main-app:
+    build:
+      target: development
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    env_file:
+      - ../apps/main/.env.local
+    volumes:
+      - ..:/app
+      - /app/node_modules
+      - /app/apps/main/node_modules
+      - /app/apps/main/.next
+    command: ["pnpm", "--filter", "main", "dev"]

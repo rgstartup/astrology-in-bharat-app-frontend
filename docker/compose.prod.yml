@@ -1,0 +1,10 @@
+services:
+  main-app:
+    build:
+      target: production
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    env_file:
+      - ../apps/main/.env.local

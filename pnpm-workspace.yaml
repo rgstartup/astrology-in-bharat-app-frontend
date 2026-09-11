@@ -1,6 +1,7 @@
 packages:
   - "apps/*"
   - "packages/*"
+
 allowBuilds:
   '@parcel/watcher': true
   '@swc/core': true
@@ -8,3 +9,13 @@ allowBuilds:
   ngrok: true
   sharp: true
   unrs-resolver: true
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@swc/core'
+  - core-js
+  - ngrok
+  - sharp
+  - unrs-resolver
+  - esbuild
+  - turbo

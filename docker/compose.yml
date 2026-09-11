@@ -1,0 +1,16 @@
+services:
+  main-app:
+    container_name: aib-frontend-main
+    build:
+      context: ..
+      dockerfile: apps/main/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - aib-network
+
+networks:
+  aib-network:
+    name: aib-network
+    driver: bridge
