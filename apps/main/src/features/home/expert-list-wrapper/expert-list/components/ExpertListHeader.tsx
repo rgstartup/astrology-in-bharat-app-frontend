@@ -1,9 +1,11 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useLocale, useTranslations } from "next-intl";
 import { useSpecializationScroll } from "../hooks/useSpecializationScroll";
 import { useExpertListStore } from "@/store/useExpertListStore";
+import { Specialization } from "@repo/lib";
+import { fetchSpecializations } from "../api/fetch-specializations";
 
 export interface ExpertListHeaderProps {
   title?: string;
@@ -18,7 +20,6 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
   onOpenFilter,
   onOpenSort,
 }) => {
-  const lang = useLocale();
   const t = useTranslations("Home");
   const {
     searchQuery,
@@ -31,28 +32,15 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
   const { scrollRef, goLeft, goRight } = useSpecializationScroll(
     selectedSpecialization,
   );
+  const [specializations, setSpecializations] = useState<Specialization[]>([]);
 
-  const specializations = [
-    { key: "numerology", value: "Numerology" },
-    { key: "vedic", value: "Vedic" },
-    { key: "zodiacCompatibility", value: "Zodiac Compatibility" },
-    { key: "astrocartography", value: "Astrocartography" },
-    { key: "lunarNodeAnalysis", value: "Lunar Node Analysis" },
-    { key: "loveProblem", value: "Love Problem Solution" },
-    { key: "marriageProblem", value: "Marriage Problem" },
-    { key: "divorceProblem", value: "Divorce Problem Solution" },
-    { key: "breakupProblem", value: "Breakup Problem Solution" },
-    { key: "exLoveBack", value: "Get Your Ex Love Back" },
-    { key: "familyProblem", value: "Family Problem Solution" },
-    { key: "disputeSolution", value: "Dispute Solution" },
-    { key: "childlessCouple", value: "Childless Couple Solution" },
-    { key: "businessProblem", value: "Business Problem Solution" },
-  ] as const;
+  useEffect(() => {
+    fetchSpecializations().then(([res, error]) => {
+      if (error || !res) return;
 
-  // Build full list: "All" + specializations
-  const allItems: Array<
-    { key: "__all__"; value: "" } | (typeof specializations)[number]
-  > = [{ key: "__all__", value: "" }, ...specializations];
+      setSpecializations(res.data);
+    });
+  }, []);
 
   return (
     <>
@@ -157,24 +145,17 @@ const ExpertListHeader: React.FC<ExpertListHeaderProps> = ({
             ref={scrollRef}
             className="flex gap-3 py-2 w-full overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-x"
           >
-            {allItems.map((item) => {
-              const isAll = item.key === "__all__";
-              const isActive = isAll
-                ? selectedSpecialization === ""
-                : selectedSpecialization === item.value;
-              const label =
-                item.key === "__all__"
-                  ? t("expertSection.all")
-                  : t(`expertSection.specializations.${item.key}`);
+            {specializations.map((item) => {
+              const isActive = selectedSpecialization === item.id;
 
               return (
                 <div
-                  key={item.key}
+                  key={item.id}
                   data-active={isActive}
-                  onClick={() => setSelectedSpecialization(item.value)}
+                  onClick={() => setSelectedSpecialization(item.id)}
                   className={`px-6 py-2 rounded-full text-sm font-bold cursor-pointer transition-colors duration-300 shadow-md shrink-0 whitespace-nowrap snap-center ${isActive ? "bg-orange text-white" : "bg-white text-gray-800 hover:bg-orange hover:text-white"}`}
                 >
-                  {label}
+                  {item.title}
                 </div>
               );
             })}

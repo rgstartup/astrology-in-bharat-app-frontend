@@ -2,7 +2,10 @@
 
 import { api } from "@/actions";
 import { AuthService } from "@/services/auth.service";
-import { getClientProfile, updateClientProfile as updateClientProfileBase } from "@/libs/api-profile";
+import {
+  getClientProfile,
+  updateClientProfile as updateClientProfileBase,
+} from "@/libs/api-profile";
 
 /**
  * Client Dashboard SafeFetch API Client
@@ -36,11 +39,16 @@ export async function fetchActiveClientConsultation() {
 
 export async function fetchDailyHoroscope(sign: string, lang: string = "en") {
   const effectiveSign = (sign || "gemini").toLowerCase();
-  return api.get<any>(`/astrology/horoscope-daily?sign=${effectiveSign}&lang=${lang}`);
+  return api.get<any>(
+    `/astrology/horoscope-daily?sign=${effectiveSign}&lang=${lang}`,
+  );
 }
 
-export async function fetchRecommendedExperts(limit: number = 4, sort: string = "rating") {
-  return api.get<any>(`/expert/list?limit=${limit}&sort=${sort}`);
+export async function fetchRecommendedExperts(
+  limit: number = 4,
+  sort: string = "rating",
+) {
+  return api.get<any>(`/expert/account/list?limit=${limit}&sort=${sort}`);
 }
 
 export async function fetchRecentKundliReports() {
@@ -48,7 +56,9 @@ export async function fetchRecentKundliReports() {
 }
 
 export async function fetchConsultationHistory(limit?: number) {
-  const url = limit ? `/consultations/history?limit=${limit}` : "/consultations/history";
+  const url = limit
+    ? `/consultations/history?limit=${limit}`
+    : "/consultations/history";
   return api.get<any>(url);
 }
 

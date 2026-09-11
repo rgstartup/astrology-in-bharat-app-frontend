@@ -23,13 +23,25 @@ import { ExpertProfile } from "@/lib/types";
 
 const mapExpert = (item: any): ExpertProfile => {
   const id = item.id;
-  const userId = item.userId || item.user?.id;
-  const name = item.user?.name || "Expert";
-  const avatar = item.user?.avatar;
-  const specialization = item.specialization || "";
+  const userId = item.userId || item.user?.id || item.id;
+  const name = item.name || item.user?.name || "Expert";
+  const avatar = item.avatar || item.user?.avatar;
+  const specialization = Array.isArray(item.specializations)
+    ? item.specializations
+        .map((s: any) => s?.specialization?.title || s?.title || "")
+        .filter(Boolean)
+        .join(", ")
+    : item.specialization || "";
   const experience = item.experience_in_years || 0;
-  const rating = item.ratings || 0;
-  const isAvailable = item.is_available;
+  const rating = item.rating || item.ratings || 0;
+  const isAvailable = item.is_available ?? true;
+
+  const chatPrice =
+    item.pricing?.chat_price ?? item.chat_price ?? item.price ?? 0;
+  const callPrice =
+    item.pricing?.call_price ?? item.call_price ?? item.price ?? 0;
+  const videoCallPrice =
+    item.pricing?.video_call_price ?? item.video_call_price ?? chatPrice * 2;
 
   return {
     id: id,
@@ -48,14 +60,19 @@ const mapExpert = (item: any): ExpertProfile => {
     expertise: specialization,
     experience: experience,
     languages: Array.isArray(item.languages)
+      ? item.languages
+      : item.languages
+        ? item.languages.split(",").map((l: string) => l.trim())
+        : ["Hindi"],
+    language: Array.isArray(item.languages)
       ? item.languages.join(", ")
-      : "Hindi",
-    price: item.price || 0,
-    chat_price: item.chat_price,
-    call_price: item.call_price,
-    video_call_price: item.video_call_price,
-    report_price: item.report_price,
-    horoscope_price: item.horoscope_price,
+      : item.languages || "Hindi",
+    price: item.price ?? chatPrice,
+    chat_price: chatPrice,
+    call_price: callPrice,
+    video_call_price: videoCallPrice,
+    report_price: item.pricing?.report_price ?? item.report_price,
+    horoscope_price: item.pricing?.horoscope_price ?? item.horoscope_price,
     video: item.video || "",
     is_available: isAvailable,
     total_likes: item.total_likes || 0,
@@ -247,11 +264,15 @@ export const useExpertListLogic = (
         };
         const query = new URLSearchParams(params).toString();
         const [responseData, fetchErr] = await api.get<any>(
-          `/expert/list?${query}`,
+          `/expert/account/list?${query}`,
         );
         if (fetchErr || !responseData) throw fetchErr;
         setExperts((prev) => [...prev, ...responseData.data.map(mapExpert)]);
-        setHasMore(responseData.pagination.hasMore);
+        setHasMore(
+          Boolean(
+            responseData.meta?.hasNextPage ?? responseData.pagination?.hasMore,
+          ),
+        );
       } catch (error) {
         toast.error(
           lang === "hi"

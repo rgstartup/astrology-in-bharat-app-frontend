@@ -67,7 +67,7 @@ export const getExperts = async (
       }
     });
 
-    const url = `/expert/list?${queryParams.toString()}`;
+    const url = `/expert/account/list?${queryParams.toString()}`;
 
     const [result, fetchError] = await api.get<any>(url, {
       cache: "no-store",
@@ -82,9 +82,9 @@ export const getExperts = async (
       : result.data || result.experts || [];
     if (finalData.length > 0) {
     }
-    const finalPagination = result.pagination || {
-      total: finalData.length,
-      hasMore: false,
+    const finalPagination = {
+      total: result.meta.total,
+      hasMore: Boolean(result.meta.hasNextPage),
     };
 
     return {
@@ -147,6 +147,6 @@ export const getExpertReviews = async (
 
     return data;
   } catch {
-    return { data: [], total: 0, page, limit } as any;
+    return { data: [], total: 0, page, limit };
   }
 };

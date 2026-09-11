@@ -10,37 +10,53 @@ import { useTranslations } from "next-intl";
 import { toast } from "@/hooks/use-toast";
 import { Expert } from "@repo/lib";
 
-const fallbackExperts: Expert[] = dummyExperts.map(
-  ({ user, languages, ...expert }) => ({
-    ...expert,
-    is_blocked: false,
-    name: user.name,
-    email: "",
-    avatar: user.avatar,
-    phone: "",
-    gender: "",
-    date_of_birth: "",
-    languages: languages.join(", "),
-    total_likes: 0,
-    total_reviews: 0,
-    consultation_count: 0,
-    chat_price: expert.price,
-    call_price: expert.price,
-    video_call_price: expert.price,
-    about_me: "",
-    total_earning: 0,
-    razorpay_contact_id: null,
-    agent_commission_rate: null,
-    created_at: "",
-    updated_at: "",
-  }),
-);
+const fallbackExperts: Expert[] = dummyExperts.map((item: any) => ({
+  id: item.id,
+  name: item.user?.name || item.name || "Expert",
+  avatar: item.user?.avatar || item.avatar || "/images/dummy-expert.jpg",
+  about:
+    item.about ||
+    "Experienced Vedic astrologer and spiritual consultant providing insightful consultations.",
+  languages: Array.isArray(item.languages)
+    ? item.languages.join(", ")
+    : item.languages || "Hindi, English",
+  experience_in_years: item.experience_in_years || 5,
+  rating: item.rating || 5,
+  specializations: item.specialization
+    ? item.specialization.split(",").map((s: string, idx: number) => ({
+        id: `spec-${idx}`,
+        specialization: {
+          id: `spec2-${idx}`,
+          title: s.trim(),
+          slug: s.trim().toLowerCase().replace(/\s+/g, "-"),
+        },
+      }))
+    : [],
+  pricing: {
+    id: `pricing-${item.id}`,
+    chat_price: item.price || 51,
+    call_price: item.price || 51,
+    video_call_price: (item.price || 51) * 2,
+    report_price: (item.price || 51) * 5,
+    horoscope_price: (item.price || 51) * 3,
+    currency: "INR",
+  },
+  price: item.price || 51,
+  chat_price: item.price || 51,
+  call_price: item.price || 51,
+  video_call_price: (item.price || 51) * 2,
+  is_available: item.is_available ?? true,
+  total_likes: 0,
+}));
 
 interface ExpertListProps {
   initialExperts: Expert[];
   initialPagination?: {
     total: number;
     hasMore: boolean;
+    page?: number;
+    limit?: number;
+    totalPages?: number;
   };
   initialError?: string;
   title?: string;

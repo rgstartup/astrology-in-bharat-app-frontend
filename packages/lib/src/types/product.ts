@@ -1,3 +1,5 @@
+import { PaginatedResponse } from "./paginated.response";
+
 export interface Product {
   id: string;
   name: string;
@@ -23,13 +25,4 @@ export interface ProductWithLikes extends Product {
   likes_count: number;
 }
 
-export interface PaginatedProductsResponse {
-  success: boolean;
-  data: ProductWithLikes[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-  };
-}
+export interface PaginatedProductsResponse extends PaginatedResponse<ProductWithLikes> {}

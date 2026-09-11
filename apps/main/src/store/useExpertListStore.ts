@@ -99,9 +99,12 @@ export const useExpertListStore = create<ExpertListStore>((set, get) => ({
       ...(selectedSpecialization && {
         specializations: selectedSpecialization,
       }),
-      sort: filterState.sortBy,
+      ...(filterState.sortBy &&
+        filterState.sortBy !== "newest" && { sort: filterState.sortBy }),
       ...(filterState.language && { languages: filterState.language }),
-      minPrice: String(filterState.minPrice),
+      ...(filterState.minPrice > 0 && {
+        minPrice: String(filterState.minPrice),
+      }),
       ...(filterState.maxPrice < 1000 && {
         maxPrice: String(filterState.maxPrice),
       }),

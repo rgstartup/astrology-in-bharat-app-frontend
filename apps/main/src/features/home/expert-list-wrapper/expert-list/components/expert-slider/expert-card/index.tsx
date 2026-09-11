@@ -37,22 +37,33 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
     id,
     avatar,
     name = "Expert",
-    specialization,
-    experience_in_years,
+    experience_in_years = 0,
     languages,
-    price,
-    chat_price,
-    call_price,
-    video_call_price,
     video,
     rating = 0,
-    is_available,
+    is_available = true,
     total_likes = 0,
-    custom_services = [],
   } = expertData;
+
+  const chat_price =
+    expertData.pricing?.chat_price ??
+    expertData.chat_price ??
+    expertData.price ??
+    0;
+  const call_price =
+    expertData.pricing?.call_price ??
+    expertData.call_price ??
+    expertData.price ??
+    0;
+  const video_call_price =
+    expertData.pricing?.video_call_price ??
+    expertData.video_call_price ??
+    (chat_price ? chat_price * 2 : 0);
+  const price = expertData.price ?? chat_price ?? call_price ?? 0;
+
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  const [currentLikes, setCurrentLikes] = useState(total_likes);
+  const [currentLikes, setCurrentLikes] = useState<number>(total_likes);
   const [isAvailable, setIsAvailable] = useState(is_available);
   const [isBusy, setIsBusy] = useState(Boolean((expertData as any).is_busy));
 
@@ -87,19 +98,36 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   const isLiked = expertProfileId
     ? isExpertInWishlist(expertProfileId as any)
     : false;
-  const services = [
-    specialization,
-    ...(Array.isArray(custom_services)
-      ? custom_services.map((service) => service.name)
-      : []),
-  ].filter((service): service is string => Boolean(service));
+
+  const specializationsList = Array.isArray(expertData.specializations)
+    ? expertData.specializations
+        .map((s: any) =>
+          s?.specialization?.title ||
+          s?.title ||
+          (typeof s === "string" ? s : ""),
+        )
+        .filter(Boolean)
+    : expertData.specialization
+      ? expertData.specialization.split(",").map((s: string) => s.trim())
+      : [];
+
+  const customServicesList = Array.isArray(expertData.custom_services)
+    ? expertData.custom_services.map((service) => service.name)
+    : [];
+
+  const services = [...specializationsList, ...customServicesList].filter(
+    (service): service is string => Boolean(service),
+  );
+
   const displayedLanguages = Array.isArray(languages)
     ? languages.join(", ")
     : languages || "";
+
   const stopNavigation = (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
   };
+
   const handleLike = (event: React.MouseEvent<HTMLButtonElement>) => {
     stopNavigation(event);
     if (!isAuthenticated) {
@@ -112,7 +140,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
       });
       return;
     }
-    setCurrentLikes((current) =>
+    setCurrentLikes((current: number) =>
       isLiked ? Math.max(0, current - 1) : current + 1,
     );
     toggleLike({ id: expertProfileId as any, type: "expert", isLiked });

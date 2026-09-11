@@ -37,7 +37,15 @@ async function getInitialExpertListProps({
 
   const listProps = {
     initialExperts: response?.data || [],
-    initialPagination: response?.pagination,
+    initialPagination: response?.meta
+      ? {
+          total: response.meta.total,
+          hasMore: response.meta.hasNextPage,
+          page: response.meta.page,
+          limit: response.meta.limit,
+          totalPages: response.meta.totalPages,
+        }
+      : undefined,
     initialError: error?.message,
     title,
   };

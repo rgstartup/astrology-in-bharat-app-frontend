@@ -122,7 +122,7 @@ const OurExpert = () => {
       try {
         if (!isSilent) setLoading(true);
         const [responseData, fetchErr] = await api.get<IFetchExpertsResponse>(
-          `/expert/list?${new URLSearchParams(
+          `/expert/account/list?${new URLSearchParams(
             Object.entries({
               limit: String(limit),
               page: String(currentPage),
@@ -145,7 +145,8 @@ const OurExpert = () => {
         );
 
         if (fetchErr || !responseData) throw fetchErr;
-        const { data, pagination } = responseData;
+        const data = responseData.data || [];
+        const hasNext = Boolean(responseData.meta?.hasNextPage);
 
         const getImageUrl = (path?: string) => {
           if (!path) return "/images/dummy-expert.jpg";
@@ -168,32 +169,48 @@ const OurExpert = () => {
           return `/uploads/${path}`;
         };
 
-        const mappedData = data.map((item: any) => ({
-          id: item.id,
-          userId: item.userId || item.user?.id,
-          image: getImageUrl(item.user?.avatar),
-          ratings: item.ratings || 5,
-          name: item.user?.name || "Expert",
-          expertise: item.specialization || "",
-          experience: item.experience_in_years || 0,
-          language: Array.isArray(item.languages)
-            ? item.languages.join(", ")
-            : "Hindi",
-          price: item.price,
-          chat_price: item.chat_price,
-          call_price: item.call_price,
-          video_call_price: item.video_call_price,
-          is_available: item.is_available,
-          video: item.video,
-          modalId: `modal-${item.id}`,
-        }));
+        const mappedData = data.map((item: any) => {
+          const specText = Array.isArray(item.specializations)
+            ? item.specializations
+                .map((s: any) => s?.specialization?.title || s?.title || "")
+                .filter(Boolean)
+                .join(", ")
+            : item.specialization || "";
+
+          const chat =
+            item.pricing?.chat_price ?? item.chat_price ?? item.price ?? 51;
+          const call =
+            item.pricing?.call_price ?? item.call_price ?? item.price ?? 51;
+          const videoCall =
+            item.pricing?.video_call_price ?? item.video_call_price ?? chat * 2;
+
+          return {
+            id: item.id,
+            userId: item.userId || item.user?.id || item.id,
+            image: getImageUrl(item.user?.avatar || item.avatar),
+            ratings: item.rating || item.ratings || 5,
+            name: item.user?.name || item.name || "Expert",
+            expertise: specText,
+            experience: item.experience_in_years || 0,
+            language: Array.isArray(item.languages)
+              ? item.languages.join(", ")
+              : item.languages || "Hindi",
+            price: item.price ?? chat,
+            chat_price: chat,
+            call_price: call,
+            video_call_price: videoCall,
+            is_available: item.is_available ?? true,
+            video: item.video,
+            modalId: `modal-${item.id}`,
+          };
+        });
 
         if (isLoadMore) {
           setExperts((prev) => [...prev, ...mappedData]);
         } else {
           setExperts(mappedData);
         }
-        setHasMore(pagination.hasMore);
+        setHasMore(hasNext);
       } catch (error) {
         console.error("Error fetching experts:", error);
       } finally {

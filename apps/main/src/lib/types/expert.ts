@@ -28,6 +28,7 @@ export interface ExpertProfile {
   experience_in_years: number;
   experience?: number;
   languages: string[];
+  language?: string;
   price: number;
   rating: number;
   ratings?: number;
@@ -118,3 +119,4 @@ export const expertSpecializations = [
 ];
 
 export type Expert = ExpertProfile;
+export type ClientExpertProfile = ExpertProfile;

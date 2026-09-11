@@ -172,9 +172,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   const createDetailsUrl = () => (id ? `/expert/${id}` : "#");
 
   // Combine expertise and custom services for display
-  const allServices = [expertise, ...custom_services.map((s) => s.name)].filter(
-    Boolean,
-  );
+  const customServicesList = Array.isArray(custom_services)
+    ? custom_services.map((s: any) => s.name)
+    : [];
+  const allServices = [expertise, ...customServicesList].filter(Boolean);
 
   const displayServices = allServices.slice(0, 3);
   const remainingCount = allServices.length - 3;
@@ -209,7 +210,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
               is_available: isAvailable,
               total_likes: currentLikes,
               custom_services,
-            });
+            } as any);
           }}
         >
           {isNavigating && (
@@ -507,7 +508,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b">
                 <h5 className="font-bold text-gray-900 text-lg m-0">
-                  {t.expertCard.videoModalTitle.replace("{name}", name)}
+                  {t.expertCard.videoModalTitle.replace(
+                    "{name}",
+                    name || "Expert",
+                  )}
                 </h5>
                 <CloseButton
                   onClick={(e) => {

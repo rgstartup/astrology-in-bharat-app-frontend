@@ -8,18 +8,14 @@ import { FaHeart, FaGift, FaUserAstronaut, FaSpinner } from "react-icons/fa";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { MdStars } from "react-icons/md";
 import { PujaCard } from "@/components/features/puja/PujaCard";
-import { useLanguageStore } from "@repo/store";
-import { profileTranslations } from "@/lib/translations/profile";
 import { getProductImageUrl } from "@/utils/image-utils";
 import Skeleton from "@/components/ui/Skeleton";
+import { useTranslations } from "next-intl";
 
 const WishlistGrid: React.FC = () => {
   const { wishlistItems, expertWishlistItems, pujaWishlistItems, isLoading } =
     useWishlistStore();
-  const { lang } = useLanguageStore();
-  const t =
-    profileTranslations[lang as keyof typeof profileTranslations] ||
-    profileTranslations.en;
+  const t = useTranslations("Profile");
 
   if (isLoading) {
     return (
@@ -55,10 +51,10 @@ const WishlistGrid: React.FC = () => {
           <FaHeart size={40} className="animate-pulse" />
         </div>
         <h5 className="text-2xl md:text-3xl font-black text-slate-950 uppercase tracking-tighter mb-4">
-          {t.wishlist.emptyTitle}
+          {t("wishlist.emptyTitle")}
         </h5>
         <p className="text-base md:text-lg text-slate-400 font-bold italic mb-0 max-w-sm mx-auto">
-          {t.wishlist.emptyDesc}
+          {t("wishlist.emptyDesc")}
         </p>
       </div>
     );
@@ -73,16 +69,16 @@ const WishlistGrid: React.FC = () => {
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
                 <FaGift className="text-primary text-[10px]" />
                 <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                  {t.wishlist.savedItems}
+                  {t("wishlist.savedItems")}
                 </span>
               </div>
               <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">
-                {t.wishlist.likedProducts}
+                {t("wishlist.likedProducts")}
               </h2>
             </div>
             <div className="flex items-center gap-2 text-slate-400 font-bold italic text-sm">
               <span className="tabular-nums">{wishlistItems.length}</span>{" "}
-              {t.wishlist.itemsSaved}
+              {t("wishlist.itemsSaved")}
             </div>
           </div>
 
@@ -122,16 +118,16 @@ const WishlistGrid: React.FC = () => {
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/10 rounded-full">
                 <FaUserAstronaut className="text-indigo-500 text-[10px]" />
                 <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">
-                  {t.wishlist.favoriteExperts}
+                  {t("wishlist.favoriteExperts")}
                 </span>
               </div>
               <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">
-                {t.wishlist.likedExperts}
+                {t("wishlist.likedExperts")}
               </h2>
             </div>
             <div className="flex items-center gap-2 text-slate-400 font-bold italic text-sm">
               <span className="tabular-nums">{expertWishlistItems.length}</span>{" "}
-              {t.wishlist.expertsSaved}
+              {t("wishlist.expertsSaved")}
             </div>
           </div>
 
@@ -156,25 +152,27 @@ const WishlistGrid: React.FC = () => {
                     style={{ animationDelay: `${idx * 100}ms` }}
                   >
                     <ExpertCard
-                      expertData={{
-                        id: expert?.id || item.id || "",
-                        userId: (expert as any)?.userId,
-                        image: getProductImageUrl({ imageUrl: avatar }),
-                        name: name,
-                        expertise: (expert as any)?.specialization || "",
-                        experience: (expert as any)?.experience_in_years || 0,
-                        languages: Array.isArray((expert as any)?.languages)
-                          ? (expert as any).languages.join(", ")
-                          : "Hindi",
-                        price: (expert as any)?.price,
-                        chat_price: (expert as any)?.chat_price,
-                        call_price: (expert as any)?.call_price,
-                        video_call_price: (expert as any)?.video_call_price,
-                        video: (expert as any)?.video,
-                        ratings: (expert as any)?.ratings,
-                        is_available: (expert as any)?.is_available,
-                        total_likes: (expert as any)?.total_likes,
-                      }}
+                      expertData={
+                        {
+                          id: expert?.id || item.id || "",
+                          userId: (expert as any)?.userId,
+                          image: getProductImageUrl({ imageUrl: avatar }),
+                          name: name,
+                          expertise: (expert as any)?.specialization || "",
+                          experience: (expert as any)?.experience_in_years || 0,
+                          languages: Array.isArray((expert as any)?.languages)
+                            ? (expert as any).languages.join(", ")
+                            : "Hindi",
+                          price: (expert as any)?.price,
+                          chat_price: (expert as any)?.chat_price,
+                          call_price: (expert as any)?.call_price,
+                          video_call_price: (expert as any)?.video_call_price,
+                          video: (expert as any)?.video,
+                          ratings: (expert as any)?.ratings,
+                          is_available: (expert as any)?.is_available,
+                          total_likes: (expert as any)?.total_likes,
+                        } as any
+                      }
                     />
                   </div>
                 );
@@ -190,16 +188,16 @@ const WishlistGrid: React.FC = () => {
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-500/10 rounded-full">
                 <MdStars className="text-orange-500 text-[10px]" />
                 <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest">
-                  {t.wishlist.divineRituals}
+                  {t("wishlist.divineRituals")}
                 </span>
               </div>
               <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tight">
-                {t.wishlist.likedPujas}
+                {t("wishlist.likedPujas")}
               </h2>
             </div>
             <div className="flex items-center gap-2 text-slate-400 font-bold italic text-sm">
               <span className="tabular-nums">{pujaWishlistItems.length}</span>{" "}
-              {t.wishlist.pujasSaved}
+              {t("wishlist.pujasSaved")}
             </div>
           </div>
 
@@ -224,7 +222,7 @@ const WishlistGrid: React.FC = () => {
         <div className="inline-flex items-center gap-3 md:gap-6 px-6 md:px-10 py-3 md:py-5 bg-white rounded-full border border-gray-100 shadow-sm">
           <HiOutlineSparkles className="text-orange" />
           <span className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]">
-            {t.wishlist.syncNote}
+            {t("wishlist.syncNote")}
           </span>
         </div>
       </div>

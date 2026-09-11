@@ -29,19 +29,30 @@ const ExpertGrid = () => {
     async (currentPage: number, append = false) => {
       setLoading(true);
 
-      const params = buildFetchParams(currentPage, debouncedSearch);
-      const query = new URLSearchParams(params).toString();
+      try {
+        const params = buildFetchParams(currentPage, debouncedSearch);
+        const query = new URLSearchParams(params).toString();
 
-      const [responseData, fetchError] = await api
-        .get<IFetchExpertsResponse>(`/expert/account/list?${query}`)
-        .finally(() => setLoading(false));
+        const [responseData, fetchError] = await api
+          .get<IFetchExpertsResponse>(`/expert/account/list?${query}`)
+          .finally(() => setLoading(false));
 
-      if (fetchError || !responseData) throw fetchError;
+        if (fetchError || !responseData) {
+          if (fetchError) {
+            console.error("Error fetching experts:", fetchError);
+          }
+          return;
+        }
 
-      setExperts((previous) =>
-        append ? [...previous, ...responseData.data] : responseData.data,
-      );
-      setHasMore(responseData.pagination.hasMore);
+        const newExperts = responseData.data || [];
+        setExperts((previous) =>
+          append ? [...previous, ...newExperts] : newExperts,
+        );
+        setHasMore(Boolean(responseData.meta?.hasNextPage));
+      } catch (err) {
+        console.error("Failed to fetch experts:", err);
+        setLoading(false);
+      }
     },
     [buildFetchParams, debouncedSearch, setExperts, setHasMore, setLoading],
   );

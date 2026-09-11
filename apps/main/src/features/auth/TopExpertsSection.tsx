@@ -83,7 +83,7 @@ const TopExpertsSection: React.FC = () => {
                       width={80}
                       className="w-20 h-20 rounded-full object-cover border-2 border-orange/20 p-1 group-hover:scale-105 transition-transform duration-300"
                     />
-                    <GreenDot isOnline={expert.is_available} />
+                    <GreenDot isOnline={Boolean(expert.is_available)} />
                   </div>
                   <h6 className="font-bold text-[#301118] leading-tight mb-1 truncate px-1">
                     {expert.name || "Expert"}
@@ -95,7 +95,9 @@ const TopExpertsSection: React.FC = () => {
                     </span>
                   </div>
                   <span className="text-[10px] font-bold text-gray-800 uppercase tracking-wider truncate block">
-                    {expert.specialization || "Astrology"}
+                    {expert.specializations?.[0]?.specialization?.title ||
+                      expert.specialization ||
+                      "Astrology"}
                   </span>
                 </div>
               </div>
