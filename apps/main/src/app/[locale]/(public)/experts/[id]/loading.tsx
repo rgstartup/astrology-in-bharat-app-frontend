@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { usePreloadExpertStore } from "@/store/usePreloadExpertStore";
+import { useExpertListStore } from "@/store/useExpertListStore";
 
 // ─── Skeleton Components ─────────────────────────────────────────────
 const SkeletonBlock = ({ className = "" }: { className?: string }) => (
@@ -189,7 +189,7 @@ const InstantProfileCard = ({ expert }: { expert: any }) => {
 
 // ─── Main Loading Component ──────────────────────────────────────────
 export default function Loading() {
-  const { preloadedExpert } = usePreloadExpertStore();
+  const { preloadedExpert } = useExpertListStore();
 
   return (
     <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 mt-10">

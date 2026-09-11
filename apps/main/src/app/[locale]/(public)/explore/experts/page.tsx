@@ -2,14 +2,13 @@ import { Suspense } from "react";
 import { api } from "@/actions";
 import type { PaginatedExpertResponse } from "@repo/lib";
 import ExploreExpertsPage from "@/features/explore-experts";
-import OurExpertsSeoContent from "./our-experts-seo.component";
 
 export const dynamic = "force-dynamic";
 
 async function getInitialExperts() {
   try {
     const [response] = await api.get<PaginatedExpertResponse>(
-      "/expert/account/list?limit=18&page=1",
+      "/expert/account/list?limit=10&page=1",
     );
     return {
       experts: response?.data || [],
@@ -25,26 +24,24 @@ async function getInitialExperts() {
   }
 }
 
-const page = async ({
+export default async function Page({
+  params,
   searchParams,
 }: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) => {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  await params;
   await searchParams;
   const initialData = await getInitialExperts();
 
   return (
-    <>
-      <Suspense fallback={<div className="min-h-screen bg-[#FFFDF8]" />}>
-        <ExploreExpertsPage
-          initialExperts={initialData.experts}
-          initialTotal={initialData.total}
-          initialHasNextPage={initialData.hasNextPage}
-        />
-      </Suspense>
-      {/* <OurExpertsSeoContent /> */}
-    </>
+    <Suspense fallback={<div className="min-h-screen bg-[#FFFDF8]" />}>
+      <ExploreExpertsPage
+        initialExperts={initialData.experts}
+        initialTotal={initialData.total}
+        initialHasNextPage={initialData.hasNextPage}
+      />
+    </Suspense>
   );
-};
-
-export default page;
+}

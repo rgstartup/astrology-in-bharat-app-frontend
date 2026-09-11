@@ -27,6 +27,8 @@ interface ExpertListStore {
   selectedSpecialization: string;
   filterState: ExpertFilterState;
   localFilter: ExpertFilterState;
+  preloadedExpert: Expert | null;
+  setPreloadedExpert: (expert: Expert | null) => void;
   setExperts: (value: StateUpdate<Expert[]>) => void;
   updateExpertAvailability: (expertId: string | number, isAvailable: boolean) => void;
   setLoading: (loading: boolean) => void;
@@ -52,12 +54,14 @@ const initialState = {
   searchQuery: "",
   debouncedSearch: "",
   selectedSpecialization: "",
+  preloadedExpert: null as Expert | null,
   filterState: { ...defaultExpertFilterState },
   localFilter: { ...defaultExpertFilterState },
 };
 
 export const useExpertListStore = create<ExpertListStore>((set, get) => ({
   ...initialState,
+  setPreloadedExpert: (preloadedExpert) => set({ preloadedExpert }),
   setExperts: (value) =>
     set((state) => ({
       experts: typeof value === "function" ? value(state.experts) : value,
