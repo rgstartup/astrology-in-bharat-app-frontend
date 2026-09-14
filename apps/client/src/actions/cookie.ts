@@ -1,5 +1,12 @@
 import type { ResponseCookies } from "next/dist/compiled/@edge-runtime/cookies";
 
+const cookieOptions = {
+  httpOnly: true,
+  path: "/",
+  sameSite: "strict" as const,
+  secure: process.env.NODE_ENV === "production",
+};
+
 export const setAccessToken = (
   cookieStore: ResponseCookies,
   accessToken?: string,
@@ -7,10 +14,7 @@ export const setAccessToken = (
   if (!accessToken) return;
 
   cookieStore.set("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: "/",
+    ...cookieOptions,
     maxAge: 60 * 60 * 24 * 7,
   });
 };
@@ -22,21 +26,14 @@ export const setRefreshToken = (
   if (!refreshToken) return;
 
   cookieStore.set("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: "/",
+    ...cookieOptions,
     maxAge: 60 * 60 * 24 * 7,
   });
 };
 
 export const clearAuthCookies = (cookieStore: ResponseCookies) => {
-  const isProd = process.env.NODE_ENV === "production";
   const options = {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: "strict" as const,
-    path: "/",
+    ...cookieOptions,
     maxAge: 0,
     expires: new Date(0),
   };
