@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import ServiceDataKeys from "./service-data-key";
 
 const SubHeaderSlider = () => {
@@ -47,7 +47,7 @@ const SubHeaderSlider = () => {
                     <a
                       href={service.href}
                       onClick={(e) => {
-                        if (service.isInternal && service.href !== "#") {
+                        if (service.isInternal && (service.href as string) !== "#") {
                           e.preventDefault();
                           router.push(service.href);
                         }

@@ -119,7 +119,7 @@ const HeroSection = async () => {
             </div>
           </div>
 
-          <Featured4Cards />
+          {/* <Featured4Cards /> */}
         </div>
       </div>
     </section>

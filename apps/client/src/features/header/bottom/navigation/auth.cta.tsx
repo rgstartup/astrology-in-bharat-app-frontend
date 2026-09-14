@@ -1,64 +1,48 @@
 "use client";
 
 import { PATHS } from "@repo/routes";
-import { headerTranslations, useLanguageStore } from "@repo/store";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
+import { LogIn, UserPlus } from "lucide-react";
 
 interface AuthCTAProps {
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface ButtonProps {
-  text: string;
-  action: () => void;
-}
-
-const SignInButton = (props: ButtonProps) => {
-  return (
-    <button
-      onClick={props.action}
-      className="flex-1 bg-orange text-white py-2 rounded-xl font-bold border-0"
-    >
-      {props.text}
-    </button>
-  );
-};
-
-const SignUpButton = (props: ButtonProps) => {
-  return (
-    <button
-      onClick={props.action}
-      className="flex-1 bg-white/10 border border-white/20 text-white py-2 rounded-xl font-bold"
-    >
-      {props.text}
-    </button>
-  );
-};
-
-const AuthCTA = (props: AuthCTAProps) => {
+const AuthCTA = ({ setIsMenuOpen }: AuthCTAProps) => {
   const router = useRouter();
-  const { lang } = useLanguageStore();
-  const t = headerTranslations[lang] || headerTranslations.en;
-
-  const signInText = t.signIn || "Sign In";
-  const signUpText = t.register || "Register";
+  const t = useTranslations("Navigation");
 
   const signInAction = () => {
-    props.setIsMenuOpen(false);
+    setIsMenuOpen(false);
     router.push(PATHS.SIGN_IN);
   };
 
   const signUpAction = () => {
-    props.setIsMenuOpen(false);
+    setIsMenuOpen(false);
     router.push(PATHS.REGISTER);
   };
 
   return (
-    <div className="flex gap-2 px-3 py-2">
-      <SignInButton action={signInAction} text={signInText} />
-      <SignUpButton action={signUpAction} text={signUpText} />
+    <div className="flex gap-2.5 w-full">
+      <button
+        onClick={signInAction}
+        className="flex-1 flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#e65100] text-white py-2.5 px-3 rounded-xl font-semibold shadow-xs transition-all cursor-pointer text-sm"
+      >
+        <LogIn className="size-4" />
+        {t("common.signIn")}
+      </button>
+
+      <button
+        onClick={signUpAction}
+        className="flex-1 flex items-center justify-center gap-2 bg-white border border-stone-200 hover:bg-stone-50 hover:border-orange-300 text-stone-800 py-2.5 px-3 rounded-xl font-semibold shadow-2xs transition-all cursor-pointer text-sm"
+      >
+        <UserPlus className="size-4 text-orange-600" />
+        {t("common.register")}
+      </button>
     </div>
   );
 };
 
 export default AuthCTA;
+

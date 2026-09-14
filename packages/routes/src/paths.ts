@@ -1,7 +1,11 @@
 export const PATHS = {
   HOME: "/",
   ASTROLOGY: {
+    KUNDLI: "/astrology/kundali-matching-by-name",
     HOROSCOPE: "/astrology/horoscope",
+    PANCHANG: "/hindu-calendar",
+    MUHURAT: "/hindu-calendar",
+    CALCULATORS: "/free-services",
     KUNDALI_MATCHING: "/astrology/kundali-matching-by-name",
     NAKSHATRA_MILAN: "/astrology/nakshatra-milan",
     KUNDALI_MATCHING_BY_NAME: "/astrology/kundali-matching-by-name",
@@ -35,6 +39,21 @@ export const PATHS = {
       DAHEJ_CALCULATOR: "/astrology/calculator/dahej",
     },
   },
+  EXPERTS: {
+    ROOT: "/experts",
+    ASTROLOGERS: "/experts?category=astrologer",
+    NUMEROLOGISTS: "/experts?category=numerologist",
+    VASTU: "/experts?category=vastu",
+    PANDIT: "/experts?category=pandit",
+    PUROHIT: "/experts?category=purohit",
+  },
+  DEVOTION: {
+    ROOT: "/famous-places",
+    TEMPLES: "/famous-places",
+    LIVE: "/live-darshan",
+    RITUALS_PUJA: "/astrology/online-puja",
+  },
+  PRODUCTS: "/buy-products",
   BUY_PRODUCTS: "/buy-products",
   FREE_SERVICES: "/free-services",
   ONLINE_PUJA: "/astrology/online-puja",

@@ -1,0 +1,115 @@
+{
+  "astrology": {
+    "title": "Astrology",
+    "description": "Vedic astrology insights, horoscopes, and astrological calculations",
+    "items": {
+      "kundli": {
+        "title": "Kundli",
+        "description": "Janam Kundli generation and birth chart matchmaking analysis",
+        "badge": "Popular"
+      },
+      "horoscope": {
+        "title": "Horoscope",
+        "description": "Daily, weekly, monthly and yearly zodiac predictions"
+      },
+      "panchang": {
+        "title": "Panchang",
+        "description": "Daily Vedic calendar with Tithi, Nakshatra, Yoga and Karana"
+      },
+      "muhurat": {
+        "title": "Muhurat",
+        "description": "Auspicious Shubh Muhurat and Choghadiya timings"
+      }
+    }
+  },
+  "calculators": {
+    "title": "Calculators",
+    "description": "Accurate Vedic calculations for love, marriage, destiny, and numbers",
+    "items": {
+      "loveCompatibility": {
+        "title": "Love Compatibility",
+        "description": "Check romantic bond and harmony between zodiac partners",
+        "badge": "Popular"
+      },
+      "marriageAge": {
+        "title": "Marriage Age",
+        "description": "Predict ideal marriage timing and auspicious marital yogas"
+      },
+      "nameNumerology": {
+        "title": "Name Numerology",
+        "description": "Reveal destiny numbers, hidden traits, and life potentials"
+      },
+      "luckyNumber": {
+        "title": "Lucky Number & Color",
+        "description": "Find your daily auspicious digits and fortunate colors"
+      },
+      "soulmateInitials": {
+        "title": "Soulmate Initials",
+        "description": "Discover cosmic name initials of your potential soulmate"
+      },
+      "flames": {
+        "title": "FLAMES Calculator",
+        "description": "Calculate Friends, Lovers, Affection, Marriage, Enemies, Siblings"
+      }
+    }
+  },
+  "experts": {
+    "title": "Experts",
+    "description": "Consult verified Vedic astrologers, pandits, and spiritual guides",
+    "items": {
+      "astrologers": {
+        "title": "Astrologers",
+        "description": "Connect with top verified Vedic astrologers and Tarot readers"
+      },
+      "numerologists": {
+        "title": "Numerologists",
+        "description": "Unlock destiny numbers, name vibrations, and life path guidance"
+      },
+      "vastuExperts": {
+        "title": "Vastu Experts",
+        "description": "Harmonize your living and workspaces with Vedic Vastu guidance"
+      },
+      "pandit": {
+        "title": "Pandit",
+        "description": "Experienced Vedic pandits for home pujas and sacred ceremonies"
+      },
+      "purohit": {
+        "title": "Purohit",
+        "description": "Certified priests for traditional rituals, sanskars and havans"
+      }
+    }
+  },
+  "devotion": {
+    "title": "Devotion",
+    "description": "Explore sacred shrines and 24x7 live temple darshans",
+    "items": {
+      "temples": {
+        "title": "Temples",
+        "description": "Discover famous sacred temples, history, and pilgrimage spots across Bharat"
+      },
+      "live": {
+        "title": "Live",
+        "description": "Live Temple Darshan and Aarti streams from divine shrines",
+        "badge": "Live"
+      }
+    }
+  },
+  "ritualsPuja": {
+    "title": "Rituals / Puja",
+    "description": "Book personalized Vedic pujas, havans and sacred ritual remedies"
+  },
+  "products": {
+    "title": "Products",
+    "description": "Certified gemstones, energized yantras, rudraksha and puja essentials"
+  },
+  "common": {
+    "exploreAll": "Explore All",
+    "viewMore": "View More",
+    "askExpert": "Ask Expert",
+    "signIn": "Sign In",
+    "register": "Register",
+    "myProfile": "My Profile",
+    "myWallet": "My Wallet",
+    "logout": "Logout"
+  }
+}

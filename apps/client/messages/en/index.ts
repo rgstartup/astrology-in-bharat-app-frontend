@@ -22,6 +22,7 @@ import Livedarshan from "./live-darshan.json";
 import Places from "./places.json";
 import Horoscope from "./horoscope.json";
 import Chat from "./chat.json";
+import Navigation from "./navigation.json";
 
 export default {
   Auth,
@@ -48,4 +49,5 @@ export default {
   Places,
   Horoscope,
   Chat,
+  Navigation,
 };
