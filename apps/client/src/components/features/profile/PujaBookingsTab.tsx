@@ -127,7 +127,7 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
         </div>
         <h6 className="font-bold text-gray-900 text-lg mb-2">{t.pujas.noBookings}</h6>
         <p className="text-gray-500 text-sm max-w-xs m-0">{t.pujas.noBookingsHint}</p>
-        <a href="/online-puja" className="mt-6 px-6 py-2.5 bg-orange-600 text-white font-bold rounded-xl text-sm hover:bg-orange-700 transition-all shadow-lg shadow-orange-100">
+        <a href="/astrology/online-puja" className="mt-6 px-6 py-2.5 bg-orange-600 text-white font-bold rounded-xl text-sm hover:bg-orange-700 transition-all shadow-lg shadow-orange-100">
           {t.pujas.exploreBtn}
         </a>
       </div>

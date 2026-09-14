@@ -72,7 +72,7 @@ export default function KundliMatchingDashboardPage() {
             </p>
           </div>
 
-          <Link href={PATHS.KUNDALI_MATCHING} className="no-underline block">
+          <Link href={PATHS.ASTROLOGY.KUNDALI_MATCHING} className="no-underline block">
             <Button variant="default" className="w-full justify-center font-bold">
               <span>Launch Kundli Matching Calculator</span>
               <ArrowRight className="w-4 h-4 ml-1.5" />

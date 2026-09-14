@@ -54,12 +54,12 @@ const HoroscopeContent = () => {
   ];
 
   const handleSignSelect = (sign: any) => {
-    router.push(`/horoscope/${sign.title.toLowerCase()}`);
+    router.push(`/astrology/horoscope/${sign.title.toLowerCase()}`);
   };
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen pb-20">
-      <HeroComponent />
+      {/* <HeroComponent /> */}
 
       {/* Tabs */}
       <div className="max-w-[1300px] mx-auto px-4 md:px-8 mt-6">

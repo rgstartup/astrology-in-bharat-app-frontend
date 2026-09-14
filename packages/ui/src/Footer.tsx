@@ -52,12 +52,12 @@ const Footer: React.FC = () => {
                 <h4 className="text-[16px] md:text-[18px] font-semibold text-[#ff6b00] mb-3 md:mb-[15px]">{t.freeCalculator}</h4>
                 <ul className="flex flex-col items-start gap-2.5 pl-0">
                   {[
-                    { label: t.marriageAge, href: PATHS.MARRIAGE_AGE_CALCULATOR },
-                    { label: t.dahejCalculator, href: PATHS.DAHEJ_CALCULATOR },
-                    { label: t.loveCompatibility, href: PATHS.LOVE_COMPATIBILITY_CALCULATOR },
-                    { label: t.luckyNumber, href: PATHS.LUCKY_NUMBER_CALCULATOR },
-                    { label: t.lifePath, href: PATHS.LIFE_PATH_CALCULATOR },
-                    { label: t.nakshatraFinder, href: PATHS.NAKSHATRA_FINDER },
+                    { label: t.marriageAge, href: PATHS.ASTROLOGY.CALCULATOR.MARRIAGE_AGE_CALCULATOR },
+                    { label: t.dahejCalculator, href: PATHS.ASTROLOGY.CALCULATOR.DAHEJ_CALCULATOR },
+                    { label: t.loveCompatibility, href: PATHS.ASTROLOGY.CALCULATOR.LOVE_COMPATIBILITY_CALCULATOR },
+                    { label: t.luckyNumber, href: PATHS.ASTROLOGY.CALCULATOR.LUCKY_NUMBER_CALCULATOR },
+                    { label: t.lifePath, href: PATHS.ASTROLOGY.CALCULATOR.LIFE_PATH_CALCULATOR },
+                    { label: t.nakshatraFinder, href: PATHS.ASTROLOGY.CALCULATOR.NAKSHATRA_FINDER },
                   ].map((link, idx) => (
                     <li key={idx}>
                       <Link href={link.href} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group">
@@ -75,9 +75,9 @@ const Footer: React.FC = () => {
                 <ul className="flex flex-col items-start gap-2.5 pl-0">
                   <li><Link href={PATHS.ONLINE_PUJA} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.onlinePuja}</span></Link></li>
                   <li><a href="/our-experts" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.talkToExpert}</span></a></li>
-                  <li><Link href="/horoscope" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.dailyHoroscope}</span></Link></li>
-                  <li><Link href={PATHS.KUNDALI_MATCHING} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.kundliMatching}</span></Link></li>
-                  <li><a href="/calculator/name-numerology" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.numerologyReport}</span></a></li>
+                  <li><Link href={PATHS.ASTROLOGY.HOROSCOPE} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.dailyHoroscope}</span></Link></li>
+                  <li><Link href={PATHS.ASTROLOGY.KUNDALI_MATCHING} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.kundliMatching}</span></Link></li>
+                  <li><Link href={PATHS.ASTROLOGY.CALCULATOR.NAME_NUMEROLOGY_CALCULATOR} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.numerologyReport}</span></Link></li>
                   <li><Link href={PATHS.HINDU_CALENDAR} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.shubhMuhurat}</span></Link></li>
                 </ul>
               </div>

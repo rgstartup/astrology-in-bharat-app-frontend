@@ -30,7 +30,7 @@ const ServicesSection = async () => {
       icon: "fa-ring",
       label: t("service6Label"),
       desc: t("service6Desc"),
-      link: "/online-puja",
+      link: "/astrology/online-puja",
     },
     { icon: "fa-gem", label: t("service7Label"), desc: t("service7Desc") },
     {

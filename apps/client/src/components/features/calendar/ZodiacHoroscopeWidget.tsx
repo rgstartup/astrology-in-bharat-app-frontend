@@ -45,7 +45,7 @@ export default function ZodiacHoroscopeWidget({ horoscope, lang }: ZodiacHorosco
           <i className="fa-solid fa-sparkles text-[#c85a17]"></i>
           {lang === 'hi' ? 'आज का राशिफल' : 'Today\'s Horoscope by Zodiac'}
         </h3>
-        <Link href="/horoscope" className="text-[#c85a17] text-sm font-semibold hover:underline">
+        <Link href="/astrology/horoscope" className="text-[#c85a17] text-sm font-semibold hover:underline">
           {lang === 'hi' ? 'सभी देखें' : 'View All'} <i className="fa-solid fa-arrow-right ml-1"></i>
         </Link>
       </div>
@@ -67,7 +67,7 @@ export default function ZodiacHoroscopeWidget({ horoscope, lang }: ZodiacHorosco
             const staticMatch = fallbackHoroscope.find(f => f.sign === item.sign) || fallbackHoroscope[0];
             return (
               <Link 
-                href={`/horoscope/${item.sign.toLowerCase()}`}
+                href={`/astrology/horoscope/${item.sign.toLowerCase()}`}
                 key={idx} 
                 className="min-w-[190px] bg-white rounded-xl border-2 border-[#ff6b00] p-4 shadow-sm snap-start flex flex-col items-center justify-center text-center hover:shadow-lg hover:shadow-[#ff6b00]/20 hover:bg-[#fffaf5] hover:-translate-y-1 transition-all duration-300 cursor-pointer group/card"
               >

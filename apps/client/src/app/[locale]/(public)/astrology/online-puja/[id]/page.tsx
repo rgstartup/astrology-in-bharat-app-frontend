@@ -61,7 +61,7 @@ const PujaDetailPage = () => {
       );
       const [res, error] = await api.get<ExpertPuja>(route);
       if (error) {
-        router.push("/online-puja");
+        router.push("/astrology/online-puja");
       } else if (res) {
         setPuja(res);
         setLikesCount(res.total_likes || 0);
@@ -182,7 +182,7 @@ const PujaDetailPage = () => {
           </span>
         </span>,
         {
-          onClick: () => router.push(`/sign-in?callbackUrl=/online-puja/${id}`),
+          onClick: () => router.push(`/sign-in?callbackUrl=/astrology/online-puja/${id}`),
           style: { cursor: "pointer" },
         },
       );
@@ -226,7 +226,7 @@ const PujaDetailPage = () => {
             {t("detail.home")}
           </Link>
           <span className="mx-2 text-gray-300">›</span>
-          <Link href="/online-puja" className="text-[#FF5500] font-semibold">
+          <Link href="/astrology/online-puja" className="text-[#FF5500] font-semibold">
             {t("hero.title")}
           </Link>
           <span className="mx-2 text-gray-300">›</span>
@@ -908,7 +908,7 @@ const PujaDetailPage = () => {
               ? relatedPujas.map((p) => (
                   <div
                     key={p.id}
-                    onClick={() => router.push(`/online-puja/${p.id}`)}
+                    onClick={() => router.push(`/astrology/online-puja/${p.id}`)}
                     className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
                   >
                     <div className="h-32 relative overflow-hidden">

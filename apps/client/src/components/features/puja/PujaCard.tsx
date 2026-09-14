@@ -109,7 +109,7 @@ export const PujaCard: React.FC<PujaCardProps> = ({ puja }) => {
 
   return (
     <Link
-      href={`/online-puja/${puja.id}`}
+      href={`/astrology/online-puja/${puja.id}`}
       className="group flex flex-col bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer no-underline h-full p-3"
     >
       {/* Puja Image Container */}

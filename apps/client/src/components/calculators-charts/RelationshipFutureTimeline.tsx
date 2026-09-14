@@ -25,7 +25,7 @@ import {
 import {
   normalizeName,
   calculateRelationshipTimeline,
-} from "@/app/[locale]/(public)/(free-tools)/calculator/relationship-future-timeline/calculate";
+} from "@/app/[locale]/(public)/astrology/calculator/relationship-future-timeline/calculate";
 
 const premiumCardStyles = `
   .glass-card {
@@ -152,7 +152,7 @@ const RelationshipFutureTimeline: React.FC = () => {
         partnerName,
         relationshipType,
       },
-      t.results
+      t.results,
     );
 
     setResult(timelineRes);

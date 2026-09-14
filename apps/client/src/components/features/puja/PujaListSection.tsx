@@ -287,7 +287,7 @@ const PujaListSection = () => {
         {!loading && (
           <div className="view-all mt-6 md:mt-8 text-center">
             <Link
-              href="/online-puja"
+              href="/astrology/online-puja"
               className="no-underline bg-orange-600 hover:bg-orange-700 text-white px-8 py-3.5 rounded-full font-bold shadow-lg transition-all mx-auto flex items-center justify-center gap-2 w-fit active:scale-95 shadow-orange-900/40 hover:translate-y-[-2px]"
             >
               <i className="fa-solid fa-om text-lg"></i>

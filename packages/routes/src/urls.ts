@@ -18,7 +18,7 @@ export const BASE_URLS = {
 export const URLS = {
   MAIN: {
     HOME: `${BASE_URLS.MAIN}${PATHS.HOME}`,
-    HOROSCOPE: `${BASE_URLS.MAIN}${PATHS.HOROSCOPE}`,
+    HOROSCOPE: `${BASE_URLS.MAIN}${PATHS.ASTROLOGY.HOROSCOPE}`,
     // Add other main routes as needed
   },
   ECOMMERCE: {

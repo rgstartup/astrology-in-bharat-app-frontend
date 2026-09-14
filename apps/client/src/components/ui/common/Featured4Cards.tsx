@@ -27,7 +27,7 @@ const Featured4Cards = async () => {
       desc: t("featuredCards.store.desc"),
     },
     {
-      href: "/online-puja",
+      href: "/astrology/online-puja",
       icon: "/images/icon4.png",
       alt: "Pooja",
       title: t("featuredCards.pooja.title"),

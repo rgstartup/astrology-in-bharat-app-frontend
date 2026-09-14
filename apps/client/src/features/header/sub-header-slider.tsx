@@ -1,57 +1,15 @@
 "use client";
 
-import { PATHS } from "@repo/routes";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import { useRouter } from "next/navigation";
-import { headerTranslations, useLanguageStore } from "@repo/store";
-
-// Swiper styles are imported in the root layout.tsx to avoid resolution issues in the shared package.
-const SERVICES_DATA_KEYS = [
-  {
-    id: 1,
-    key: "serviceMatchmaking",
-    icon: "images/top-icon1.png",
-    href: PATHS.MARRIAGE_AGE_CALCULATOR,
-    isInternal: true,
-  },
-  {
-    id: 2,
-    key: "serviceGunaMilan",
-    icon: "images/top-icon2.png",
-    href: PATHS.KUNDALI_MATCHING,
-    isInternal: true,
-  },
-  {
-    id: 3,
-    key: "serviceOnlinePuja",
-    icon: "images/top-icon3.png",
-    href: PATHS.ONLINE_PUJA,
-    isInternal: true,
-  },
-  {
-    id: 4,
-    key: "serviceLoveMatch",
-    icon: "images/top-icon4.png",
-    href: "/love-calculator",
-    isInternal: true,
-  },
-  {
-    id: 7,
-    key: "serviceMatchAnalysis",
-    icon: "images/top-icon6.png",
-    href: PATHS.KUNDALI_MATCHING,
-    isInternal: true,
-  },
-];
+import ServiceDataKeys from "./service-data-key";
 
 const SubHeaderSlider = () => {
   const router = useRouter();
-  const { lang } = useLanguageStore();
-  const t =
-    headerTranslations[lang as keyof typeof headerTranslations] ||
-    headerTranslations.en;
+
+  const SERVICE_DATA_KEYS = ServiceDataKeys();
 
   return (
     <header className="bg-orange shadow-[0_4px_15px_rgba(0,0,0,0.1)] z-10 relative">
@@ -71,7 +29,7 @@ const SubHeaderSlider = () => {
               spaceBetween={10}
               slidesPerView={2}
               grabCursor={true}
-              loop={SERVICES_DATA_KEYS.length > 5}
+              loop={SERVICE_DATA_KEYS.length > 5}
               autoplay={{
                 delay: 3000,
                 disableOnInteraction: false,
@@ -83,16 +41,13 @@ const SubHeaderSlider = () => {
               }}
               className="w-full relative"
             >
-              {SERVICES_DATA_KEYS.map((service) => (
+              {SERVICE_DATA_KEYS.map((service) => (
                 <SwiperSlide key={service.id}>
                   <div className="flex justify-center w-full p-[2px] sm:p-[5px]">
                     <a
                       href={service.href}
                       onClick={(e) => {
-                        if (
-                          service.isInternal &&
-                          (service.href as any) !== "#"
-                        ) {
+                        if (service.isInternal && service.href !== "#") {
                           e.preventDefault();
                           router.push(service.href);
                         }
@@ -102,12 +57,12 @@ const SubHeaderSlider = () => {
                       <Image
                         src={`/${service.icon}`}
                         className="w-[20px] sm:w-[30px] mr-1 flex-shrink-0"
-                        alt={(t as any)[service.key] || service.key}
+                        alt={service.key}
                         width={40}
                         height={40}
                       />
                       <span className="whitespace-nowrap overflow-hidden text-ellipsis tracking-[0.3px] text-[10px] sm:text-sm font-bold sm:font-semibold">
-                        {(t as any)[service.key] || service.key}
+                        {service.key}
                       </span>
                     </a>
                   </div>

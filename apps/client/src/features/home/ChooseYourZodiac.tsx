@@ -178,7 +178,7 @@ const ChooseYourZodiac: React.FC<ChooseYourZodiacProps> = async ({
 
             return (
               <Link
-                href={`/horoscope/${sign.title.toLowerCase()}`}
+                href={`/astrology/horoscope/${sign.title.toLowerCase()}`}
                 key={sign.id}
                 className="block no-underline"
               >

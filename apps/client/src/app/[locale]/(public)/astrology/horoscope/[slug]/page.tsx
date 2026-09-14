@@ -123,7 +123,7 @@ export default function ZodiacDetailsPage() {
             {t("detailsPage.notFoundDesc")}
           </p>
           <button
-            onClick={() => router.push("/horoscope")}
+            onClick={() => router.push("/astrology/horoscope")}
             className="inline-flex items-center gap-3 bg-slate-950 text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] no-underline transition-all hover:bg-orange-600 hover:-translate-y-1 shadow-2xl"
           >
             {t("detailsPage.backToHoroscopes")}

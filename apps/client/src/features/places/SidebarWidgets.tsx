@@ -100,7 +100,7 @@ export const ZodiacRecommendationSidebar = () => {
 
   return (
     <Link
-      href="/horoscope"
+      href="/astrology/horoscope"
       className="relative block w-full rounded-2xl overflow-hidden shadow-sm bg-gradient-to-br from-[#3b1c15] to-[#250d0a] hover:opacity-95 transition-opacity p-4 md:p-6 min-h-[140px] md:min-h-[160px] flex flex-col justify-center border border-[#4a261d]"
     >
       {/* Zodiac Wheel Background Image */}
