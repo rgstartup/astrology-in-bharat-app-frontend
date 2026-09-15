@@ -61,16 +61,7 @@ async function refreshSession(
     }>(API_ROUTES.AUTH.CLIENT.REFRESH, { refreshToken });
 
   if (error || !data?.accessToken || !data.refreshToken) {
-    // Don't mutate request cookies.
-    // request.cookies represents the incoming request.
-
-    const response = isProtected
-      ? redirectToLogin(request, pathname)
-      : handleI18nRouting(request);
-
-    clearAuthCookies(response.cookies);
-
-    return response;
+    return redirectToLogout(request, pathname, isProtected);
   }
 
   const response = redirect
@@ -82,6 +73,34 @@ async function refreshSession(
 
   return response;
 }
+
+const redirectToLogout = (
+  request: NextRequest,
+  pathname: string,
+  isProtected: boolean,
+): NextResponse => {
+  const normalized = getPathnameWithoutLocale(pathname);
+  const target = isProtected ? "/sign-in" : normalized || "/";
+  const url = new URL(target, request.url);
+
+  url.searchParams.set("logout", "1");
+  if (
+    isProtected &&
+    normalized &&
+    normalized !== "/" &&
+    !normalized.startsWith("/sign-in")
+  ) {
+    url.searchParams.set("callbackUrl", normalized);
+  }
+
+  console.log(
+    `[Proxy:redirectToLogout] Clearing auth cookies and redirecting to: ${url.pathname}${url.search}`,
+  );
+
+  const response = withI18nCookies(NextResponse.redirect(url), request);
+  clearAuthCookies(response.cookies);
+  return response;
+};
 
 const redirectToLogin = (
   request: NextRequest,
@@ -191,21 +210,18 @@ export async function proxy(request: NextRequest) {
      * Try refresh regardless of the route.
      */
     if (refreshToken) {
-      console.log("refresh token initiate");
+      console.log(
+        `[Proxy] Access token expiring/expired for "${normalizedPathname}" -> initiating session refresh`,
+      );
       return refreshSession(refreshToken, request, pathname, isPathProtected);
     }
 
     /*
      * No refresh token available to refresh with!
      * Refreshing the token has failed.
-     * Clear the expired/invalid accessToken cookie!
+     * Clear the expired/invalid accessToken cookie and reset client state!
      */
-    const response = isPathProtected
-      ? redirectToLogin(request, pathname)
-      : handleI18nRouting(request);
-
-    clearAuthCookies(response.cookies);
-    return response;
+    return redirectToLogout(request, pathname, isPathProtected);
   }
 
   /*
