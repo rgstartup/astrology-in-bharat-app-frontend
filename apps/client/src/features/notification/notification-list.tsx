@@ -1,5 +1,7 @@
+"use client";
+
 import { INotification } from "@/lib/types/notification.type";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 
 interface NotifcationListProps {
   show: boolean;
@@ -7,10 +9,10 @@ interface NotifcationListProps {
   markNotificationAsRead: (notificationId: string) => void;
 }
 
-const NotificationList = async (props: NotifcationListProps) => {
+const NotificationList = (props: NotifcationListProps) => {
   if (!props.show) return null;
 
-  const t = await getTranslations("Header");
+  const t = useTranslations("Header");
 
   const { notifications } = props;
 

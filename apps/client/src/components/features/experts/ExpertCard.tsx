@@ -319,33 +319,42 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
 
           {/* RATING */}
           <div
-            className="flex justify-center items-center text-center gap-1.5 pt-3"
+            className="flex justify-center items-center text-center gap-1.5 pt-3 h-8"
             style={{ fontSize: "1.05rem" }}
           >
-            {Array.from({ length: 5 }).map((_, i) => {
-              const starIndex = i + 1;
-              if (ratings >= starIndex)
-                return (
-                  <i key={i} className="fa-solid fa-star text-[#daa23e]" />
-                );
-              if (ratings >= starIndex - 0.5)
-                return (
-                  <i
-                    key={i}
-                    className="fa-solid fa-star-half-stroke text-[#daa23e]"
-                  />
-                );
-              return (
-                <i
-                  key={i}
-                  className="fa-regular fa-star"
-                  style={{ color: "#ccc" }}
-                />
-              );
-            })}
-            <span className="text-gray-500 text-sm ml-2">
-              {ratings.toFixed(1)} / 5
-            </span>
+            {ratings > 0 ? (
+              <>
+                {Array.from({ length: 5 }).map((_, i) => {
+                  const starIndex = i + 1;
+                  if (ratings >= starIndex)
+                    return (
+                      <i key={i} className="fa-solid fa-star text-[#daa23e]" />
+                    );
+                  if (ratings >= starIndex - 0.5)
+                    return (
+                      <i
+                        key={i}
+                        className="fa-solid fa-star-half-stroke text-[#daa23e]"
+                      />
+                    );
+                  return (
+                    <i
+                      key={i}
+                      className="fa-regular fa-star"
+                      style={{ color: "#ccc" }}
+                    />
+                  );
+                })}
+                <span className="text-gray-500 text-sm ml-2 font-medium">
+                  {ratings.toFixed(1)} / 5
+                </span>
+              </>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200/60">
+                <i className="fa-solid fa-star text-amber-500 text-[10px]" />
+                New Expert
+              </span>
+            )}
           </div>
 
           {/* DETAILS */}
@@ -359,33 +368,26 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
 
           {/* Expertise Tags — wrap properly */}
           <div
-            className="px-3 mt-1 mb-1 flex flex-wrap justify-center items-center gap-1"
-            style={{ minHeight: "28px" }}
+            className="px-3 mt-1 mb-1 flex flex-wrap justify-center items-center gap-1 min-h-[28px]"
           >
-            {allServices.slice(0, 3).map((service, index) => (
+            {allServices.slice(0, 2).map((service, index) => (
               <span
                 key={index}
-                className="inline-block bg-orange text-white text-[10px] font-semibold px-2 py-0.5 rounded-full text-center"
-                style={{
-                  maxWidth: "100%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
+                className="inline-block bg-orange text-white text-[10px] font-semibold px-2 py-0.5 rounded-full text-center max-w-[120px] truncate"
                 title={service}
               >
                 {service}
               </span>
             ))}
-            {allServices.length > 3 && (
+            {allServices.length > 2 && (
               <span className="inline-block bg-orange/20 text-orange text-[11px] font-semibold px-2 py-0.5 rounded-full">
-                +{allServices.length - 3}
+                +{allServices.length - 2}
               </span>
             )}
           </div>
 
           {/* Experience */}
-          <div className="px-2 my-2 text-[14px] text-[#1a1a1a] flex items-center justify-center gap-1.5">
+          <div className="px-2 my-1.5 text-[14px] text-[#1a1a1a] flex items-center justify-center gap-1.5">
             <strong>{t.expertCard.exp}</strong>
             <span className="font-semibold bg-orange/10 text-orange px-2 py-0.5 rounded text-[12px] shrink-0">
               {experience} {t.expertCard.years}
@@ -396,10 +398,16 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
           <div className="px-2 my-1.5 text-[14px] text-[#1a1a1a] flex items-center justify-center gap-1.5 w-full">
             <strong>{t.expertCard.lang}</strong>
             <span
-              className="font-semibold bg-gray-100 px-2 py-0.5 rounded text-[12px] truncate max-w-[130px] inline-block"
+              className="font-medium bg-gray-100 text-gray-800 px-2 py-0.5 rounded-md text-[12px] inline-flex items-center gap-1 max-w-[160px]"
               title={languages.join(", ")}
+              aria-label={`Languages: ${languages.join(", ")}`}
             >
-              {languages.join(", ")}
+              <span className="truncate">{languages.slice(0, 2).join(", ")}</span>
+              {languages.length > 2 && (
+                <span className="text-[10px] font-bold text-orange-600 shrink-0">
+                  +{languages.length - 2}
+                </span>
+              )}
             </span>
           </div>
         </Link>
@@ -410,7 +418,8 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             {/* Chat Button */}
             <button
               onClick={handleChatClick}
-              className="flex-1 min-w-0 flex flex-col items-center justify-center py-2 bg-[#ff6b00] text-white rounded-xl shadow-[0_4px_10px_rgba(255,107,0,0.2)] hover:shadow-[0_6px_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 transition-all duration-300 border-0 overflow-hidden cursor-pointer"
+              aria-label={`Start chat consultation with ${name}`}
+              className="flex-1 min-w-0 flex flex-col items-center justify-center py-2 min-h-[46px] bg-[#ff6b00] text-white rounded-xl shadow-[0_4px_10px_rgba(255,107,0,0.2)] hover:shadow-[0_6px_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 transition-all duration-300 border-0 overflow-hidden cursor-pointer"
             >
               <div className="flex items-center gap-1 mb-0.5">
                 <i className="fa-regular fa-comment-dots text-[10px] sm:text-sm" />
@@ -425,19 +434,19 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
                     : price > 0
                       ? price
                       : 0;
-                return p > 0 ? (
+                return (
                   <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate w-full text-center px-1">
-                    ₹{p}
-                    {t.expertCard.perMin}
+                    {p > 0 ? `₹${p}${t.expertCard.perMin}` : "Free Chat"}
                   </span>
-                ) : null;
+                );
               })()}
             </button>
 
             {/* Call Button */}
             <button
               onClick={handleCallClick}
-              className="flex-1 min-w-0 flex flex-col items-center justify-center py-2 bg-[#ff6b00] text-white rounded-xl shadow-[0_4px_10px_rgba(255,107,0,0.2)] hover:shadow-[0_6px_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 transition-all duration-300 border-0 overflow-hidden cursor-pointer"
+              aria-label={`Start audio call with ${name}`}
+              className="flex-1 min-w-0 flex flex-col items-center justify-center py-2 min-h-[46px] bg-[#ff6b00] text-white rounded-xl shadow-[0_4px_10px_rgba(255,107,0,0.2)] hover:shadow-[0_6px_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 transition-all duration-300 border-0 overflow-hidden cursor-pointer"
             >
               <div className="flex items-center gap-1 mb-0.5">
                 <i className="fa-solid fa-phone-volume text-[10px] sm:text-sm" />
@@ -452,12 +461,11 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
                     : price > 0
                       ? price
                       : 0;
-                return p > 0 ? (
+                return (
                   <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate w-full text-center px-1">
-                    ₹{p}
-                    {t.expertCard.perMin}
+                    {p > 0 ? `₹${p}${t.expertCard.perMin}` : "Free Call"}
                   </span>
-                ) : null;
+                );
               })()}
             </button>
           </div>
@@ -465,7 +473,8 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
           {/* Video Call Button */}
           <button
             onClick={handleVideoCallClick}
-            className="w-full flex items-center justify-center gap-1.5 py-2 bg-[#ff6b00] text-white rounded-xl shadow-[0_4px_10px_rgba(255,107,0,0.2)] hover:shadow-[0_6px_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 transition-all duration-300 border-0 overflow-hidden cursor-pointer"
+            aria-label={`Start video call with ${name}`}
+            className="w-full flex items-center justify-center gap-1.5 py-2 min-h-[38px] bg-[#ff6b00] text-white rounded-xl shadow-[0_4px_10px_rgba(255,107,0,0.2)] hover:shadow-[0_6px_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 transition-all duration-300 border-0 overflow-hidden cursor-pointer"
           >
             <i className="fa-solid fa-video text-[10px] sm:text-sm shrink-0" />
             <span className="text-[12px] sm:text-[14px] font-bold shrink-0">
@@ -478,12 +487,11 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
                   : price > 0
                     ? price * 2
                     : 0;
-              return p > 0 ? (
+              return (
                 <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate">
-                  ₹{p}
-                  {t.expertCard.perMin}
+                  {p > 0 ? `₹${p}${t.expertCard.perMin}` : "(Online)"}
                 </span>
-              ) : null;
+              );
             })()}
           </button>
         </div>

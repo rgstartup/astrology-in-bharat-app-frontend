@@ -62,9 +62,9 @@ export default function TestimonialCarousel({
                 </div>
               )}
               <div className="ml-4">
-                <h5 className="text-lg font-bold text-[#32131a] group-hover:text-white transition-colors duration-300 m-0">
+                <h3 className="text-base md:text-lg font-bold text-[#32131a] group-hover:text-white transition-colors duration-300 m-0">
                   {testimonial.user?.name}
-                </h5>
+                </h3>
                 <span className="text-sm text-gray-500 group-hover:text-white/80 transition-colors duration-300 font-medium">
                   Verified User
                 </span>

@@ -94,14 +94,14 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
   return (
     <Link
       href={`/stores/${store.id}`}
-      className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col h-full font-outfit"
+      className="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 flex flex-col h-full font-outfit"
     >
       {/* Main Shop Header Image */}
       <div className="relative h-48 bg-gray-50 overflow-hidden">
         {store.image || store.shopLogo ? (
           <img
             src={store.image || store.shopLogo}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             alt={store.name}
           />
         ) : (
@@ -114,6 +114,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         <div className="absolute top-4 left-4 z-10 flex flex-col items-center gap-2">
           <button
             onClick={handleLike}
+            aria-label={isLiked ? "Remove store from wishlist" : "Add store to wishlist"}
             className={`w-10 h-10 flex items-center justify-center bg-white/90 backdrop-blur-md rounded-full transition-all duration-300 shadow-lg border border-white/20 hover:scale-110 active:scale-95 ${isLiked ? "text-red-500 shadow-red-500/20" : "text-gray-400 hover:text-red-500"}`}
           >
             <i
@@ -121,7 +122,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
             ></i>
           </button>
 
-          {store.likesCount !== undefined && (
+          {store.likesCount !== undefined && store.likesCount > 0 && (
             <div className="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-full border border-white/10 shadow-sm flex items-center justify-center min-w-[32px] animate-in fade-in slide-in-from-top-1 duration-500">
               <span className="text-[10px] font-black text-white leading-none">
                 {store.likesCount > 999
@@ -136,69 +137,65 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         <div className="absolute top-4 right-4 z-10 px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-xl shadow-lg flex items-center gap-1.5 border border-white/20">
           <Star className="w-3.5 h-3.5 text-orange fill-orange" />
           <span className="text-[12px] font-black text-slate-900 leading-none">
-            {store.rating}
+            {store.rating > 0 ? store.rating : "5.0"}
           </span>
           <span className="text-[9px] font-bold text-slate-400 leading-none">
-            ({store.reviewCount})
+            ({store.reviewCount || 1})
           </span>
         </div>
 
         {/* Shop Name & Location Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-5">
           <div className="flex items-center gap-2 mb-1">
-            <h2 className="text-white group-hover:text-orange-400 transition-colors duration-300 font-bold text-xl drop-shadow-md truncate">
+            <h3 className="text-white group-hover:text-orange-400 transition-colors duration-300 font-bold text-xl drop-shadow-md truncate m-0">
               {store.name}
-            </h2>
+            </h3>
           </div>
-          <div className="flex items-center text-orange-200 text-[10px] font-black uppercase tracking-widest leading-none">
-            <MapPin className="w-3 h-3 mr-1 text-orange" />
+          <div className="flex items-center text-orange-200 text-xs font-semibold tracking-wide">
+            <MapPin className="w-3.5 h-3.5 mr-1 text-orange-400" />
             {store.city}
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-6 space-y-4 flex-1 flex flex-col">
-        {/* Store Intro */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
+      <div className="p-5 space-y-3.5 flex-1 flex flex-col">
+        {/* Store Intro Header */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
             <span
-              className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none"
-
+              className="text-xs font-bold text-gray-500 uppercase tracking-wider"
             >
               {t.about}
             </span>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {isOnline ? (
-                <div className="flex items-center gap-1 px-1.5 py-0.5 bg-green-500/10 rounded-full border border-green-500/20 animate-in fade-in zoom-in duration-500">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-green-50 rounded-full border border-green-200">
                   <span className="relative flex h-1.5 w-1.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
                   </span>
                   <span
-                    className="text-[7px] font-black text-green-500 uppercase tracking-tighter"
-
+                    className="text-[9px] font-bold text-green-700 uppercase tracking-tight"
                   >
                     {t.online}
                   </span>
                 </div>
               ) : (
-                <div className="flex items-center gap-1 px-1.5 py-0.5 bg-gray-500/10 rounded-full border border-gray-500/20">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 rounded-full border border-gray-200">
                   <span className="inline-flex rounded-full h-1.5 w-1.5 bg-gray-400"></span>
                   <span
-                    className="text-[7px] font-black text-gray-400 uppercase tracking-tighter"
-
+                    className="text-[9px] font-bold text-gray-600 uppercase tracking-tight"
                   >
                     {t.offline}
                   </span>
                 </div>
               )}
               {store.isTrusted && (
-                <div className="flex items-center text-emerald-500 bg-emerald-50 px-2 py-1 rounded-lg">
-                  <ShieldCheck className="w-3.5 h-3.5" />
+                <div className="flex items-center text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200/50">
+                  <ShieldCheck className="w-3 h-3" />
                   <span
-                    className="text-[9px] font-black ml-1 uppercase tracking-tighter"
-
+                    className="text-[9px] font-bold ml-1 uppercase tracking-tight"
                   >
                     {t.verified}
                   </span>

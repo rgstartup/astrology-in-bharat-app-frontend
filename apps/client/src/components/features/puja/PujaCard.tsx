@@ -63,18 +63,20 @@ const LikeButton = ({
     <button
       type="button"
       onClick={handleLike}
-      className="absolute top-2 right-2 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.15)] rounded-2xl px-2 py-1.5 min-w-[40px] flex flex-col items-center justify-center gap-0.5 transition-transform active:scale-95 hover:scale-105 z-20 cursor-pointer"
+      aria-label={isLiked ? "Remove puja from wishlist" : "Add puja to wishlist"}
+      title={isLiked ? "Remove from wishlist" : "Add to wishlist"}
+      className="absolute top-2 right-2 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.15)] rounded-2xl px-2 py-1.5 min-w-[36px] min-h-[36px] flex flex-col items-center justify-center gap-0.5 transition-transform active:scale-95 hover:scale-105 z-20 cursor-pointer"
     >
       <Heart
         className={`w-4 h-4 ${isLiked ? "fill-red-500 text-red-500" : "text-red-500"}`}
       />
-      <span className="text-[11px] font-medium text-gray-700 leading-none mt-0.5">
-        {currentLikes > 0
-          ? currentLikes >= 1000
+      {currentLikes > 0 && (
+        <span className="text-[10px] font-semibold text-gray-700 leading-none mt-0.5">
+          {currentLikes >= 1000
             ? (currentLikes / 1000).toFixed(1).replace(/\.0$/, "") + "k"
-            : currentLikes
-          : 0}
-      </span>
+            : currentLikes}
+        </span>
+      )}
     </button>
   );
 };

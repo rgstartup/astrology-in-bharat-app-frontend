@@ -22,40 +22,40 @@ import { useMerchantStore } from "@/store/useMerchantStore";
 const DUMMY_STORES: Store[] = [
   {
     id: "dummy-store-1",
-    name: "my shop",
-    address: "MOHALI",
-    city: "MOHALI",
+    name: "Divya Vedic Kendra",
+    address: "Phase 7, Sector 62",
+    city: "Mohali",
     pincode: "160062",
-    phone: "6239408982",
+    phone: "9876543210",
     image: "/images/dummy-shop.png",
-    rating: 0,
-    reviewCount: 0,
-    isOnline: false,
+    rating: 4.9,
+    reviewCount: 38,
+    isOnline: true,
     popularProducts: [],
   },
   {
     id: "dummy-store-2",
     name: "Premium Spirituals",
-    address: "Delhi",
+    address: "Connaught Place",
     city: "Delhi",
     pincode: "110001",
-    phone: "9876543210",
+    phone: "9876543211",
     image: "/images/dummy-shop.png",
-    rating: 4.5,
-    reviewCount: 15,
+    rating: 4.7,
+    reviewCount: 24,
     isOnline: true,
     popularProducts: [],
   },
   {
     id: "dummy-store-3",
     name: "Vedic Roots Store",
-    address: "Mumbai",
+    address: "Bandra West",
     city: "Mumbai",
-    pincode: "400001",
-    phone: "9876543211",
+    pincode: "400050",
+    phone: "9876543212",
     image: "/images/dummy-shop.png",
     rating: 4.8,
-    reviewCount: 22,
+    reviewCount: 31,
     isOnline: true,
     popularProducts: [],
   },
@@ -114,8 +114,7 @@ const StoreSection = () => {
             style={{ "--heading-border-color": "rgba(255,255,255,0.2)" } as any}
           >
             <h2
-              className="section-heading-premium uppercase mb-0"
-
+              className="section-heading-premium mb-0"
             >
               <span>{t.title}</span>
             </h2>
@@ -236,10 +235,11 @@ const StoreSection = () => {
 
         <div className="mt-6 md:mt-8 text-center">
           <button
-            className="inline-flex items-center gap-4 px-12 py-4 bg-white border-2 border-orange-500 text-orange-600 rounded-[2rem] font-bold text-sm tracking-wider hover:bg-orange-500 hover:text-white transition-all duration-500 shadow-xl shadow-orange-500/20 hover:shadow-orange-500/40"
-
+            type="button"
+            aria-label={t.btnDiscoverAll}
+            className="btn-outline !rounded-full !px-8 !py-3.5 !text-sm tracking-wide font-bold inline-flex items-center gap-2.5 shadow-lg shadow-orange-500/20"
           >
-            <StoreIcon className="w-5 h-5" />
+            <StoreIcon className="w-4 h-4" />
             <span>{t.btnDiscoverAll}</span>
           </button>
         </div>

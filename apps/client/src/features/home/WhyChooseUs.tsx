@@ -43,9 +43,9 @@ const WhyChooseUs = async () => {
                     className={`fa-solid ${item.icon} text-2xl md:text-2xl text-white group-hover:scale-110 transition-transform duration-500 drop-shadow-md`}
                   ></i>
                 </div>
-                <h4 className="text-white text-sm md:text-base font-bold leading-snug group-hover:text-orange-50 transition-colors duration-300">
+                <h3 className="text-white text-sm md:text-base font-bold leading-snug group-hover:text-orange-50 transition-colors duration-300 m-0">
                   {reasons[index]}
-                </h4>
+                </h3>
               </div>
             ))}
           </div>
@@ -86,9 +86,9 @@ const WhyChooseUs = async () => {
                     className={`fa-solid ${item.icon} text-2xl md:text-2xl text-white group-hover:scale-110 transition-transform duration-500 drop-shadow-md`}
                   ></i>
                 </div>
-                <h4 className="text-white text-sm md:text-base font-bold leading-snug group-hover:text-orange-50 transition-colors duration-300">
+                <h3 className="text-white text-sm md:text-base font-bold leading-snug group-hover:text-orange-50 transition-colors duration-300 m-0">
                   {reasons[index + 3]}
-                </h4>
+                </h3>
               </div>
             ))}
           </div>

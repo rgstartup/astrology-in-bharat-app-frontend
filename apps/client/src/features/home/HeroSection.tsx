@@ -43,27 +43,27 @@ const HeroSection = async () => {
                     </h1>
 
                     {/* card-title */}
-                    <h4 className="text-[18px] md:text-[22px] text-orange font-semibold mt-[10px] md:mt-[15px] mb-[10px]">
+                    <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl text-orange font-semibold mt-3 md:mt-4 mb-2 md:mb-3 leading-snug break-words">
                       {t("hero.subtitle")}
-                    </h4>
+                    </h2>
 
                     {/* banner-part p */}
-                    <p className="text-[14px] md:text-[16px] text-[#1a1a1a] mb-[14px] md:mb-[18px]">
+                    <p className="text-sm md:text-base text-gray-700 mb-3 md:mb-4 leading-relaxed">
                       {t("hero.description")}
                     </p>
 
                     {/* list-check */}
-                    <ul className="list-none p-0 m-0">
+                    <ul className="list-none p-0 m-0 space-y-1">
                       {features.map((point) => (
                         <li
                           key={point}
-                          className="flex items-start md:items-center gap-2 text-[14px] md:text-[16px] text-[#1e1e1e] py-[5px] md:py-[7px] leading-snug"
+                          className="flex items-start md:items-center gap-2.5 text-sm md:text-base text-gray-800 py-1 leading-snug"
                         >
                           <i
-                            className="fa-solid fa-check text-white text-xs flex items-center justify-center rounded-full flex-shrink-0"
+                            className="fa-solid fa-check text-white text-xs flex items-center justify-center rounded-full flex-shrink-0 mt-0.5 md:mt-0"
                             style={{
-                              width: "25px",
-                              height: "25px",
+                              width: "22px",
+                              height: "22px",
                               background: "#ff6e20",
                               border: "2px solid #FF6B00",
                               padding: "2px",
@@ -74,14 +74,9 @@ const HeroSection = async () => {
                       ))}
                     </ul>
 
-                    {/* wfc — width: fit-content, padding: 15px 23px, letter-spacing: 1px */}
                     <Link
                       href="/our-experts"
-                      className="mt-4 mb-4 inline-block no-underline bg-orange text-white font-bold rounded-full hover:opacity-90 active:scale-95 transition-all text-[14px] md:text-[16px] px-6 py-3 md:px-8 md:py-4"
-                      style={{
-                        width: "fit-content",
-                        letterSpacing: "1px",
-                      }}
+                      className="btn-primary !rounded-full !px-8 !py-3.5 !text-base mt-5 mb-3 shadow-lg shadow-orange-600/20 tracking-wide font-bold inline-block"
                     >
                       {t("hero.startConsultationBtn")}
                     </Link>

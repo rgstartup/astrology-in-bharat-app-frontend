@@ -28,9 +28,9 @@ const ConsultationCard = async ({ item }: ConsultationCardProps) => {
           className="w-full h-full object-cover rounded-full"
         />
       </div>
-      <h4 className="text-xs sm:text-sm md:text-base font-bold text-[#1e0b0f] transition-colors duration-300 group-hover:text-orange leading-tight px-1">
+      <h3 className="text-xs sm:text-sm md:text-base font-bold text-[#1e0b0f] transition-colors duration-300 group-hover:text-orange leading-tight px-1">
         {displayTitle}
-      </h4>
+      </h3>
     </div>
   );
 };

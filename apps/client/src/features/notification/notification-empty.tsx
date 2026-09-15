@@ -1,13 +1,13 @@
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 
 interface EmptyNotificationProps {
   show: boolean;
 }
 
-const EmptyNotification = async (props: EmptyNotificationProps) => {
+const EmptyNotification = (props: EmptyNotificationProps) => {
   if (!props.show) return null;
 
-  const t = await getTranslations("Header");
+  const t = useTranslations("Header");
 
   return (
     <div className="flex flex-col items-center justify-center px-4 py-12 text-center">
