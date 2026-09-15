@@ -1,6 +1,5 @@
 import React from "react";
 import HeroSection from "@/features/home/HeroSection";
-import ExpertServices from "@/features/home/expert-services";
 import ExpertConsultant from "@/features/home/ExpertConsultant";
 import ChooseYourZodiac from "@/features/home/ChooseYourZodiac";
 import WhyChooseUs from "@/features/home/WhyChooseUs";
@@ -10,6 +9,7 @@ import ClientLayout from "@/components/layout/ClientLayout";
 export default function HomeLayout({
   children,
   experts,
+  services,
   pujas,
   stores,
   products,
@@ -17,6 +17,7 @@ export default function HomeLayout({
 }: {
   children: React.ReactNode;
   experts: React.ReactNode;
+  services: React.ReactNode;
   pujas: React.ReactNode;
   stores: React.ReactNode;
   products: React.ReactNode;
@@ -26,7 +27,7 @@ export default function HomeLayout({
     <ClientLayout>
       <HeroSection />
       {experts}
-      <ExpertServices />
+      {services}
       {pujas}
       <ExpertConsultant />
       <ChooseYourZodiac />
