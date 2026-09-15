@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef } from "react";
-import ExpertCard from "./expert-slider/expert-card";
+import { ExploreExpertCard } from "@/features/explore-experts/components/ExploreExpertCard";
 import { SkeletonCard } from "./expert-slider/SkeletonCard";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { FaSpinner } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useExpertListStore } from "@/store/useExpertListStore";
 import { useDebounce } from "@/hooks/use-debounce";
-import { api } from "@/actions";
+import { api, API_ROUTES } from "@/actions";
 import { IFetchExpertsResponse } from "../api/fetch-expert";
 
 const ExpertGrid = () => {
@@ -34,7 +34,7 @@ const ExpertGrid = () => {
         const query = new URLSearchParams(params).toString();
 
         const [responseData, fetchError] = await api
-          .get<IFetchExpertsResponse>(`/expert/account/list?${query}`)
+          .get<IFetchExpertsResponse>(`${API_ROUTES.EXPERT.LIST}?${query}`)
           .finally(() => setLoading(false));
 
         if (fetchError || !responseData) {
@@ -93,7 +93,7 @@ const ExpertGrid = () => {
     return (
       <div className="mt-12 w-full">
         {/* Dynamic Grid System */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={`skeleton-${i}`} className="w-full h-full">
               <SkeletonCard />
@@ -105,16 +105,16 @@ const ExpertGrid = () => {
   }
 
   return (
-    <div className="mt-12 w-full">
+    <div className="mt-8 w-full">
       {/* Dynamic Grid System */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {experts.map((item, idx) => (
           <div
             key={item.id}
             className="w-full animate-in fade-in slide-in-from-bottom-6 duration-700"
             style={{ animationDelay: `${idx * 50}ms` }}
           >
-            <ExpertCard expertData={item} />
+            <ExploreExpertCard expert={item} />
           </div>
         ))}
       </div>

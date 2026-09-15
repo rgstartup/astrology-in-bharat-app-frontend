@@ -26,6 +26,8 @@ export const API_ROUTES = {
     BALANCE: "/wallet/balance",
   },
   EXPERT: {
+    LIST: "/expert/account/list",
+    DETAILS: "/expert/account/profile",
     GET_ALL_PUJAS: "/expert/pujas/all",
     GET_PUJA_BY_ID: "/expert/puja/info/:id",
   },

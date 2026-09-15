@@ -195,14 +195,14 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
             <span>{expert.name}</span>
           </h4>
 
-          <p className="text-xs text-gray-500 font-medium line-clamp-2 mt-0.5 leading-relaxed">
+          {/* <p className="text-xs text-gray-500 font-medium line-clamp-2 mt-0.5 leading-relaxed">
             {expert.about ||
               "Celebrated Vedic Astrologer providing profound insights on horoscope, love compatibility, and career."}
-          </p>
+          </p> */}
         </div>
 
         {/* Specialization Badges */}
-        <div className="flex flex-wrap gap-1.5 mb-3.5">
+        {/* <div className="flex flex-wrap gap-1.5 mb-3.5">
           {specializationsList.slice(0, 3).map((spec, i) => {
             const variants: Array<"saffron" | "gold" | "emerald" | "purple"> = [
               "saffron",
@@ -226,7 +226,7 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
               +{specializationsList.length - 3} more
             </span>
           )}
-        </div>
+        </div> */}
 
         {/* Experience & Languages Info Row */}
         <div className="flex items-center justify-between text-xs text-gray-600 pt-3 border-t border-gray-200 font-medium">

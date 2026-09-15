@@ -30,7 +30,10 @@ interface ExpertListStore {
   preloadedExpert: Expert | null;
   setPreloadedExpert: (expert: Expert | null) => void;
   setExperts: (value: StateUpdate<Expert[]>) => void;
-  updateExpertAvailability: (expertId: string | number, isAvailable: boolean) => void;
+  updateExpertAvailability: (
+    expertId: string | number,
+    isAvailable: boolean,
+  ) => void;
   setLoading: (loading: boolean) => void;
   setPage: (page: number) => void;
   setHasMore: (hasMore: boolean) => void;
@@ -97,7 +100,7 @@ export const useExpertListStore = create<ExpertListStore>((set, get) => ({
     const { selectedSpecialization, filterState } = get();
 
     return {
-      limit: "20",
+      limit: "10",
       page: String(currentPage),
       ...(debouncedSearch && { q: debouncedSearch }),
       ...(selectedSpecialization && {
