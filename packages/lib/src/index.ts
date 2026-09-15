@@ -6,5 +6,8 @@ export * from "./types/boolean-message";
 export * from "./types/expert";
 export * from "./types/paginated.response";
 export * from "./types/specializations";
+export * from "./types/astrology-service";
+export * from "./types/devotional-ritual";
 export { getErrorMessage } from "./utils/error";
 export { decodeToken, type IBaseJWT } from "./utils/jwt-decode";
+

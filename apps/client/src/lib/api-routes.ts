@@ -39,6 +39,8 @@ export const API_ROUTES = {
     GET_USER_APPOINTMENTS: "/puja-appointments/user",
   },
   ASTROLOGY: {
+    SERVICES: "/astrology/services",
+    SERVICE_BY_ID: "/astrology/services/:id",
     HOROSCOPE_DAILY: "/astrology/horoscope-daily",
     KUNDLI_MATCHING: "/astrology/matching/advanced",
     MANGAL_DOSHA: "/astrology/mangal-dosha",
@@ -46,6 +48,11 @@ export const API_ROUTES = {
     PANCHANG: "/astrology/panchang",
     PLANETARY_POSITIONS: "/astrology/planetary-positions",
   },
+  DEVOTION: {
+    RITUALS: "/devotion/rituals",
+    RITUAL_BY_ID: "/devotion/rituals/:id",
+  },
   QUOTES: "/quotes",
   PRODUCTS: "/products",
 } as const;
+
