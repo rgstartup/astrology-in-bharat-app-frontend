@@ -41,6 +41,32 @@ function CardSkeleton() {
   );
 }
 
+function EmptyExpertGrid({ onResetFilters }: { onResetFilters: () => void }) {
+  return (
+    <div className="w-full bg-white rounded-3xl p-12 text-center border-2 border-dashed border-amber-300 shadow-sm flex flex-col items-center justify-center min-h-[380px]">
+      <div className="size-16 rounded-full bg-amber-500/10 text-orange flex items-center justify-center mb-4">
+        <Sparkles className="size-8" />
+      </div>
+      <h3 className="text-xl font-bold text-gray-900 mb-2 font-display">
+        No Astrologers Match Your Criteria
+      </h3>
+      <p className="text-sm text-gray-500 max-w-md mx-auto mb-6">
+        Try expanding your price range, clearing some specializations, or
+        unchecking the &quot;Online Only&quot; toggle to see more verified
+        gurus.
+      </p>
+      <button
+        type="button"
+        onClick={onResetFilters}
+        className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-orange text-white font-bold text-sm shadow-md shadow-orange/30 hover:opacity-90 active:scale-95 transition-all"
+      >
+        <RotateCcw className="size-4" />
+        <span>Reset All Filters</span>
+      </button>
+    </div>
+  );
+}
+
 export function ExploreExpertGrid({
   experts,
   loading,
@@ -50,29 +76,7 @@ export function ExploreExpertGrid({
 }: ExploreExpertGridProps) {
   // Empty State
   if (!loading && experts.length === 0) {
-    return (
-      <div className="w-full bg-white rounded-3xl p-12 text-center border-2 border-dashed border-amber-300 shadow-sm flex flex-col items-center justify-center min-h-[380px]">
-        <div className="size-16 rounded-full bg-amber-500/10 text-orange flex items-center justify-center mb-4">
-          <Sparkles className="size-8" />
-        </div>
-        <h3 className="text-xl font-bold text-gray-900 mb-2 font-display">
-          No Astrologers Match Your Criteria
-        </h3>
-        <p className="text-sm text-gray-500 max-w-md mx-auto mb-6">
-          Try expanding your price range, clearing some specializations, or
-          unchecking the &quot;Online Only&quot; toggle to see more verified
-          gurus.
-        </p>
-        <button
-          type="button"
-          onClick={onResetFilters}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-orange text-white font-bold text-sm shadow-md shadow-orange/30 hover:opacity-90 active:scale-95 transition-all"
-        >
-          <RotateCcw className="size-4" />
-          <span>Reset All Filters</span>
-        </button>
-      </div>
-    );
+    return <EmptyExpertGrid onResetFilters={onResetFilters} />;
   }
 
   return (

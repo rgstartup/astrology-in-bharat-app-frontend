@@ -1,8 +1,8 @@
 "use client";
 
+import React, { useRef, useState } from "react";
 import { useLocale } from "next-intl";
-import { useRef, useState } from "react";
-
+import { ChevronDown } from "lucide-react";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
 import type { AppLocale } from "@/i18n/routing";
@@ -19,13 +19,13 @@ const LanguageButtons = (props: LanguageButtonProps) => {
   if (!props.showLanguageDropDown) return null;
 
   return (
-    <div className="absolute top-[120%] left-0 md:left-auto md:right-0 bg-white rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.15)] overflow-hidden w-[120px] text-gray-800 z-[1002] border border-gray-100 flex flex-col">
+    <div className="absolute top-[125%] left-0 md:left-auto md:right-0 bg-white rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)] overflow-hidden w-[110px] text-gray-800 z-[1002] border border-gray-100 flex flex-col animate-in fade-in-0 zoom-in-95 duration-100">
       <button
         onClick={() => {
           props.changeLanguage("en");
           props.closeLanguageDropdown();
         }}
-        className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-orange-50 hover:text-orange ${props.lang === "en" ? "font-bold bg-orange-50/50 text-orange" : "font-medium"}`}
+        className={`px-3 py-1.5 text-left text-xs transition-colors cursor-pointer hover:bg-orange-50 hover:text-orange ${props.lang === "en" ? "font-bold bg-orange-50/50 text-orange" : "font-medium"}`}
       >
         English
       </button>
@@ -35,7 +35,7 @@ const LanguageButtons = (props: LanguageButtonProps) => {
           props.changeLanguage("hi");
           props.closeLanguageDropdown();
         }}
-        className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-orange-50 hover:text-orange ${props.lang === "hi" ? "font-bold bg-orange-50/50 text-orange" : "font-medium"}`}
+        className={`px-3 py-1.5 text-left text-xs transition-colors cursor-pointer hover:bg-orange-50 hover:text-orange ${props.lang === "hi" ? "font-bold bg-orange-50/50 text-orange" : "font-medium"}`}
       >
         हिंदी
       </button>
@@ -61,19 +61,19 @@ const LanguageSwitcherDropdown = () => {
   useClickOutside(ref, closeLanguageDropdown, showLanguageDropDown);
   useScrollClose(closeLanguageDropdown, showLanguageDropDown);
 
-  /* Language Switcher Dropdown */
   return (
-    <div className="language-dropdown-container relative" ref={ref}>
+    <div className="language-dropdown-container relative flex items-center" ref={ref}>
       <button
+        type="button"
         onClick={() => setShowLanguageDropDown(!showLanguageDropDown)}
-        className="flex items-center gap-1 sm:gap-1.5 focus:outline-none bg-white/10 hover:bg-white/20 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all border border-white/20 select-none"
+        className="flex items-center justify-center gap-1 h-7.5 px-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/15 text-xs font-semibold select-none transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
+        aria-label="Toggle language menu"
       >
-        <i className="fa-solid fa-globe text-[10px] sm:text-sm" />
-        <span className="text-[10px] sm:text-sm font-semibold">
-          {activeLanguage === "hi" ? "हिंदी" : "EN"}
-        </span>
-        <i
-          className={`fa-solid fa-chevron-down text-[8px] sm:text-[10px] transition-transform ${showLanguageDropDown ? "rotate-180" : ""}`}
+        <span>{activeLanguage === "hi" ? "हिंदी" : "EN"}</span>
+        <ChevronDown
+          className={`size-3 text-white/80 transition-transform duration-200 ${
+            showLanguageDropDown ? "rotate-180" : ""
+          }`}
         />
       </button>
 

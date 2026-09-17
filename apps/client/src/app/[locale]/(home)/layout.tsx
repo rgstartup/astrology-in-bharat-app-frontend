@@ -11,7 +11,7 @@ export default function HomeLayout({
   experts,
   services,
   pujas,
-  stores,
+  // stores,
   products,
   testimonials,
 }: {
@@ -19,7 +19,7 @@ export default function HomeLayout({
   experts: React.ReactNode;
   services: React.ReactNode;
   pujas: React.ReactNode;
-  stores: React.ReactNode;
+  // stores: React.ReactNode;
   products: React.ReactNode;
   testimonials: React.ReactNode;
 }) {
@@ -31,7 +31,7 @@ export default function HomeLayout({
       {pujas}
       <ExpertConsultant />
       <ChooseYourZodiac />
-      {stores}
+      {/* {stores} */}
       {products}
       <WhyChooseUs />
       {testimonials}

@@ -158,7 +158,7 @@ export const RecommendedExperts: React.FC = () => {
                 </div>
 
                 <Link
-                  href={`/experts/${expert.id || expert.userId}`}
+                  href={`/consultants/${expert.id || expert.userId}`}
                   className="no-underline mt-2 block"
                 >
                   <Button

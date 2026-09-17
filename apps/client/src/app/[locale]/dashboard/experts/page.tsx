@@ -19,7 +19,7 @@ export default function DashboardExpertsPage() {
           </p>
         </div>
 
-        <Link href="/experts" className="no-underline">
+        <Link href="/consultants" className="no-underline">
           <Button variant="secondary" size="sm" className="font-bold border border-orange-200">
             <span>Explore All Marketplace Experts</span>
             <ArrowRight className="w-3.5 h-3.5 ml-1" />

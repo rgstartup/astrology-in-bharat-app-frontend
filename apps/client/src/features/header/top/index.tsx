@@ -16,8 +16,8 @@ const TopHeader = () => {
 
   return (
     <header
-      className="bg-[#301118] text-white shadow-sm relative z-[1001] overflow-visible flex items-center"
-      style={{ minHeight: "52px", scrollbarWidth: "none" }}
+      className="bg-[#301118] text-white shadow-xs relative z-[1001] overflow-visible flex items-center py-1 sm:py-1.5"
+      style={{ minHeight: "38px", scrollbarWidth: "none" }}
     >
       <div
         className="max-w-[1320px] mx-auto px-3 sm:px-4 md:px-8 lg:px-16 w-full"
@@ -26,13 +26,13 @@ const TopHeader = () => {
         <div className="flex items-center justify-between w-full gap-2 sm:gap-4">
           {/* Left section: Welcome Text */}
           <div className="hidden lg:block truncate">
-            <p className="m-0 text-white/90 text-sm font-medium truncate">
+            <p className="m-0 text-white/90 text-[12.5px] font-medium truncate">
               {t("welcomeText")}
             </p>
           </div>
 
           {/* Right section: Actions (Language, Wallet, Saved Items, Cart, Notification, Avatar) */}
-          <div className="flex items-center justify-end gap-2 sm:gap-2.5 md:gap-3.5 ml-auto">
+          <div className="flex items-center justify-end gap-1.5 sm:gap-2 md:gap-2.5 ml-auto">
             {/* Language Switcher */}
             <LanguageSwitcherDropdown />
 

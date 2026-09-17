@@ -14,7 +14,7 @@ const BottomHeaderComponent = () => {
       className="main-head bg-white border-b border-[#FF6B002e] shadow-[0_8px_11px_#0000000d]"
       style={{ backdropFilter: "saturate(160%) blur(8px)" }}
     >
-      <div className="max-w-[1320px] mx-auto px-2 sm:px-4 md:px-8 lg:px-16 py-3">
+      <div className="max-w-[1320px] mx-auto px-2 sm:px-4 md:px-8 lg:px-16 py-1.5 sm:py-2">
         <div className="flex items-center justify-between">
           {/* Logo + Nav — takes most of the space */}
           <div className="flex-1">

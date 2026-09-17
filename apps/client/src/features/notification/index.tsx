@@ -1,5 +1,6 @@
 "use client";
 
+import { Bell } from "lucide-react";
 import NotificationCountIndicator from "./notification-indicator";
 import { useNotification } from "@/store/useNotificationStore";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -123,10 +124,10 @@ const NotificationComponent = () => {
       ref={notificationRef}
     >
       <div
-        className="cursor-pointer relative inline-flex"
+        className="cursor-pointer relative size-7.5 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 border border-white/15 shadow-xs shrink-0"
         onClick={() => setShowNotificationDropDown(!showNotificationDropDown)}
       >
-        <i className="fa-solid fa-bell text-white text-xl" />
+        <Bell className="size-4 text-white" />
         <NotificationCountIndicator unreadCount={unread_count} />
       </div>
 

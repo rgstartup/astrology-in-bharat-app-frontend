@@ -206,8 +206,8 @@ const ExpertList: React.FC<ExpertListProps> = ({
       id="our-experts"
       className="pt-6 pb-12 relative overflow-hidden"
       style={{
-        // backgroundImage: "url(/images/bg-dark.png)",
         backgroundColor: "#301118",
+        backgroundImage: "url(/images/bg-dark.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",

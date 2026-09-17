@@ -30,6 +30,9 @@ export const API_ROUTES = {
     DETAILS: "/expert/account/profile",
     GET_ALL_PUJAS: "/expert/pujas/all",
     GET_PUJA_BY_ID: "/expert/puja/info/:id",
+    PRODUCTS: {
+      ROOT: "/expert/products",
+    },
   },
   WISHLIST: {
     PUJA_TOGGLE: "/wishlist/puja/:id/toggle",
@@ -55,4 +58,3 @@ export const API_ROUTES = {
   QUOTES: "/quotes",
   PRODUCTS: "/products",
 } as const;
-

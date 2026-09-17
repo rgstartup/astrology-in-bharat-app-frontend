@@ -61,7 +61,7 @@ export function ExploreHeader({
         {/* Right: Search + Sort + Mobile Filter Toolbar */}
         <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap w-full md:w-auto justify-end">
           {/* Search Input */}
-          <div className="relative flex items-center h-11 w-full sm:w-80 md:w-96 lg:w-[440px] xl:w-[480px] bg-white border border-gray-200 rounded-lg px-3.5 hover:border-gray-300 focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 transition-colors">
+          <div className="relative flex items-center h-11 w-full sm:w-80 md:w-96 lg:w-[440px] xl:w-[480px] bg-white border border-gray-200 rounded-xl px-3.5 hover:border-gray-300 focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 transition-all shadow-xs">
             <Search className="size-4.5 text-gray-400 shrink-0 mr-2.5" />
             <input
               type="text"
@@ -84,7 +84,7 @@ export function ExploreHeader({
           </div>
 
           {/* Sort Dropdown */}
-          <div className="relative flex items-center h-11 bg-white border border-gray-200 rounded-lg px-3 hover:border-gray-300 focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 transition-colors shrink-0">
+          <div className="relative flex items-center h-11 bg-white border border-gray-200 rounded-xl px-3 hover:border-gray-300 focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 transition-all shadow-xs shrink-0">
             <ArrowUpDown className="size-3.5 text-gray-400 mr-2 shrink-0" />
             <select
               value={filters.sortBy}
@@ -105,7 +105,7 @@ export function ExploreHeader({
           <button
             type="button"
             onClick={onOpenMobileFilters}
-            className="lg:hidden flex items-center gap-1.5 h-11 px-3.5 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors shrink-0 cursor-pointer"
+            className="lg:hidden flex items-center gap-1.5 h-11 px-3.5 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors shrink-0 cursor-pointer shadow-xs"
             aria-label="Open filters"
           >
             <SlidersHorizontal className="size-3.5 text-gray-500" />

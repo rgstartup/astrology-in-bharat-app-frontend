@@ -15,8 +15,6 @@ import {
   Award,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -149,7 +147,7 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
 
       {/* Card Body */}
       <Link
-        href={`/expert/${expertId}`}
+        href={`/consultants/${expertId}`}
         onClick={handleCardClick}
         className="flex-1 px-5 pt-0 pb-4 block cursor-pointer select-none"
       >

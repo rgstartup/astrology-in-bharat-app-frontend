@@ -77,14 +77,16 @@ export function useExploreExperts(initialExperts?: Expert[]) {
   const [filters, setFilters] = useState<ExploreFilterState>(defaultFilters);
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [experts, setExperts] = useState<Expert[]>(
-    initialExperts && initialExperts.length > 0
-      ? initialExperts
-      : fallbackExperts,
+    initialExperts && initialExperts.length > 0 ? initialExperts : [],
   );
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(
+    !initialExperts || initialExperts.length === 0,
+  );
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [totalCount, setTotalCount] = useState<number>(experts.length);
+  const [totalCount, setTotalCount] = useState<number>(
+    initialExperts ? initialExperts.length : 0,
+  );
   const [specializationsList, setSpecializationsList] = useState<
     Specialization[]
   >([]);
@@ -294,7 +296,9 @@ export function useExploreExperts(initialExperts?: Expert[]) {
     });
   }, [debouncedSearch, filters]);
 
-  const prevFingerprint = useRef(queryFingerprint);
+  const prevFingerprint = useRef(
+    initialExperts && initialExperts.length > 0 ? queryFingerprint : "",
+  );
 
   useEffect(() => {
     if (prevFingerprint.current === queryFingerprint) return;

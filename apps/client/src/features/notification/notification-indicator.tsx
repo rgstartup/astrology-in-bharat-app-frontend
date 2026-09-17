@@ -6,19 +6,8 @@ const NotificationCountIndicator = ({
   if (unreadCount < 1) return null;
 
   return (
-    <span
-      className="absolute inline-flex items-center justify-center rounded-full bg-red-500 text-white"
-      style={{
-        top: "-6px",
-        right: "-10px",
-        fontSize: "9px",
-        padding: "2px 5px",
-        minWidth: "15px",
-        height: "15px",
-        border: "1px solid #331a1a",
-      }}
-    >
-      {unreadCount}
+    <span className="absolute -top-1 -right-1 min-w-3.5 h-3.5 px-0.5 rounded-full bg-[#FF5500] text-white text-[9px] font-bold flex items-center justify-center border border-[#301118] shadow-xs animate-in zoom-in-50">
+      {unreadCount > 99 ? "99+" : unreadCount}
     </span>
   );
 };

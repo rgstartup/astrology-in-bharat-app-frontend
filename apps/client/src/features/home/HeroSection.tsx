@@ -75,7 +75,7 @@ const HeroSection = async () => {
                     </ul>
 
                     <Link
-                      href="/our-experts"
+                      href="/consultants"
                       className="btn-primary !rounded-full !px-8 !py-3.5 !text-base mt-5 mb-3 shadow-lg shadow-orange-600/20 tracking-wide font-bold inline-block"
                     >
                       {t("hero.startConsultationBtn")}
