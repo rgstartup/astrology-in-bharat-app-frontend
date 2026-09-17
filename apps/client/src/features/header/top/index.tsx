@@ -3,41 +3,15 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 
-import { useAuth } from "@/store/useAuthStore";
 import NotificationComponent from "@/features/notification";
 import UserProfileDropdown from "@/features/profile";
 
 import LanguageSwitcherDropdown from "./language-switcher.button";
 import BalanceIndicator from "./balance-indicator.button";
-import AuthCTA from "./auth.cta";
+import SavedItemsButton from "./saved-items.button";
 import CartComponent from "./cart";
 
-interface IAuthenticatedHeader {
-  isAuthenticated: boolean;
-}
-
-const AuthenticatedHeaderActions: React.FC<IAuthenticatedHeader> = ({
-  isAuthenticated,
-}) => {
-  if (!isAuthenticated) return <AuthCTA show={true} />;
-
-  return (
-    <div className="flex gap-4 items-center justify-end">
-      {/* Cart Icon */}
-      <CartComponent />
-
-      {/* Notification Bell */}
-      <NotificationComponent />
-
-      {/* User Profile & Dropdown */}
-      <UserProfileDropdown />
-    </div>
-  );
-};
-
 const TopHeader = () => {
-  const { isAuthenticated } = useAuth();
-
   const t = useTranslations("Header");
 
   return (
@@ -46,28 +20,36 @@ const TopHeader = () => {
       style={{ minHeight: "52px", scrollbarWidth: "none" }}
     >
       <div
-        className="max-w-[1320px] mx-auto px-2 sm:px-4 md:px-8 lg:px-16 w-full"
+        className="max-w-[1320px] mx-auto px-3 sm:px-4 md:px-8 lg:px-16 w-full"
         style={{ overflow: "visible" }}
       >
-        <div className="flex items-center w-full">
+        <div className="flex items-center justify-between w-full gap-2 sm:gap-4">
           {/* Left section: Welcome Text */}
-          <div className="flex-1 hidden md:block">
-            <p className="m-0 text-white text-base font-medium">
+          <div className="hidden lg:block truncate">
+            <p className="m-0 text-white/90 text-sm font-medium truncate">
               {t("welcomeText")}
             </p>
           </div>
 
-          {/* Right section: Balance + Icons */}
-          <div className="ml-auto w-full md:w-auto">
-            <div className="flex justify-between md:justify-end items-center gap-1.5 sm:gap-3 md:gap-5 w-full">
-              {/* Language Switcher Dropdown */}
-              <LanguageSwitcherDropdown />
-              <BalanceIndicator />
+          {/* Right section: Actions (Language, Wallet, Saved Items, Cart, Notification, Avatar) */}
+          <div className="flex items-center justify-end gap-2 sm:gap-2.5 md:gap-3.5 ml-auto">
+            {/* Language Switcher */}
+            <LanguageSwitcherDropdown />
 
-              <div className="flex gap-1.5 sm:gap-3 md:gap-4 items-center">
-                <AuthenticatedHeaderActions isAuthenticated={isAuthenticated} />
-              </div>
-            </div>
+            {/* Wallet Balance Indicator */}
+            <BalanceIndicator />
+
+            {/* Saved Items (Wishlist) */}
+            <SavedItemsButton />
+
+            {/* Cart */}
+            <CartComponent />
+
+            {/* Notifications (renders when authenticated) */}
+            <NotificationComponent />
+
+            {/* User Profile / Guest Avatar Dropdown */}
+            <UserProfileDropdown />
           </div>
         </div>
       </div>

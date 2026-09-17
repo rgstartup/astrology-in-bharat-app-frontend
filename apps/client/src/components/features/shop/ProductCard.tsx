@@ -49,7 +49,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const router = useRouter();
   const pathname = usePathname();
 
-  const productId = product.id;
+  const productId = product.id ? String(product.id) : "";
   const isLiked = productId ? isInWishlist(productId) : false;
   const [currentLikes, setCurrentLikes] = React.useState<number>(
     Number((product as ProductWithLikes).likes_count || 0),

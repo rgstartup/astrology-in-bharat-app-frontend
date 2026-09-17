@@ -11,7 +11,7 @@ const BottomHeaderComponent = () => {
 
   return (
     <header
-      className="main-head sticky top-0 z-50 bg-white border-b border-[#FF6B002e] shadow-[0_8px_11px_#0000000d]"
+      className="main-head bg-white border-b border-[#FF6B002e] shadow-[0_8px_11px_#0000000d]"
       style={{ backdropFilter: "saturate(160%) blur(8px)" }}
     >
       <div className="max-w-[1320px] mx-auto px-2 sm:px-4 md:px-8 lg:px-16 py-3">
