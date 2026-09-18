@@ -2,10 +2,18 @@
 
 import React from "react";
 import Image from "next/image";
-import { Award, CheckCircle2, Play } from "lucide-react";
+import { Award, CheckCircle2, Play, Heart } from "lucide-react";
 import { ProfileHeroBannerProps } from "./types";
+import { useWishlistStore } from "@/store/useWishlistStore";
+import { useWishlist } from "@/hooks/useWishlist";
+import { useAuthStore } from "@/store/__useAuthStore";
+import { toast } from "@/hooks/use-toast";
+import { useRouter, usePathname } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
+import { Toggle } from "@/components/ui/toggle";
 
 export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
+  expertId,
   name,
   avatar,
   primaryProfession,
@@ -14,6 +22,36 @@ export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
   videoUrl,
   onVideoClick,
 }) => {
+  const { isExpertInWishlist } = useWishlistStore();
+  const { isAuthenticated } = useAuthStore();
+  const { toggleLike, isPending } = useWishlist();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const isFavorite = expertId ? isExpertInWishlist(expertId) : false;
+
+  const handleFavoriteToggle = () => {
+    if (!expertId) return;
+
+    if (!isAuthenticated) {
+      toast.info("Please sign in to save this astrologer to your favorites.", {
+        action: {
+          label: "Sign In",
+          onClick: () =>
+            router.push(
+              `/sign-in?callbackUrl=${encodeURIComponent(pathname || window.location.pathname)}`,
+            ),
+          style: { cursor: "pointer" },
+        },
+      });
+      return;
+    }
+
+    toggleLike({ id: expertId as any, type: "expert", isLiked: isFavorite });
+    toast.success(
+      isFavorite ? "Removed from your favorites." : "Added to your favorites!",
+    );
+  };
   return (
     <div>
       {/* Top Banner with Single Orange Wave SVG */}
@@ -46,7 +84,7 @@ export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
         {/* Top Astrologer Badge */}
         <div className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 text-slate-800 border border-white/80 shadow-2xs backdrop-blur-md transition-colors">
           <Award className="size-3.5 text-amber-500 fill-amber-500/20" />
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-800">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-800">
             Top Astrologer
           </span>
         </div>
@@ -80,41 +118,65 @@ export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
         </div>
       </div>
 
-      {/* Left-Aligned Profile Avatar */}
-      <div className="relative -mt-12 sm:-mt-14 ml-3 sm:ml-4 size-24 sm:size-28 rounded-full p-0.5 bg-white ring-1 ring-black/[0.08] shadow-sm shrink-0 group/avatar">
-        <div className="relative size-full rounded-full overflow-hidden bg-slate-100">
-          <Image
-            src={avatar}
-            alt={name}
-            fill
-            sizes="112px"
-            className="object-cover object-top transition-transform duration-500 group-hover/avatar:scale-105"
-            priority
-          />
+      {/* Avatar & Top Action Row */}
+      <div className="flex items-end justify-between px-2 sm:px-3 -mt-12 sm:-mt-14">
+        {/* Left-Aligned Profile Avatar */}
+        <div className="relative size-24 sm:size-28 rounded-full p-0.5 bg-white ring-1 ring-black/[0.08] shadow-sm shrink-0 group/avatar">
+          <div className="relative size-full rounded-full overflow-hidden bg-slate-100">
+            <Image
+              src={avatar}
+              alt={name}
+              fill
+              sizes="112px"
+              className="object-cover object-top transition-transform duration-500 group-hover/avatar:scale-105"
+              priority
+            />
+          </div>
+
+          {/* Video Intro Play Button */}
+          {videoUrl && (
+            <button
+              type="button"
+              onClick={() => onVideoClick(videoUrl)}
+              className="absolute bottom-0.5 right-0.5 bg-slate-900/90 hover:bg-slate-900 text-white size-7 sm:size-8 rounded-full border border-white shadow-xs flex items-center justify-center transition-transform hover:scale-110 active:scale-95 cursor-pointer z-10"
+              title="Watch Intro Video"
+            >
+              <Play className="size-3 sm:size-3.5 fill-white ml-0.5" />
+            </button>
+          )}
         </div>
 
-        {/* Video Intro Play Button */}
-        {videoUrl && (
-          <button
-            type="button"
-            onClick={() => onVideoClick(videoUrl)}
-            className="absolute bottom-0.5 right-0.5 bg-slate-900/90 hover:bg-slate-900 text-white size-7 sm:size-8 rounded-full border border-white shadow-xs flex items-center justify-center transition-transform hover:scale-110 active:scale-95 cursor-pointer z-10"
-            title="Watch Intro Video"
-          >
-            <Play className="size-3 sm:size-3.5 fill-white ml-0.5" />
-          </button>
-        )}
+        {/* Favorite Icon Toggle (shadcn) */}
+        <Toggle
+          variant="heart"
+          size="icon"
+          pressed={isFavorite}
+          disabled={isPending}
+          onPressedChange={handleFavoriteToggle}
+          aria-label={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+          title={isFavorite ? "Favorited" : "Add to favorites"}
+          className="relative z-10 mb-1 backdrop-blur-md transition-transform hover:scale-110 active:scale-95 group/heart"
+        >
+          <Heart
+            className={cn(
+              "size-4 transition-transform duration-200",
+              isFavorite
+                ? "fill-rose-500 text-rose-500 scale-110"
+                : "text-slate-400 group-hover/heart:text-rose-500",
+            )}
+          />
+        </Toggle>
       </div>
 
       {/* Consultant Name & Primary Profession */}
       <div className="text-left px-1 mt-2.5">
         <div className="flex items-center gap-1.5">
-          <h2 className="text-lg sm:text-xl font-black text-gray-900 tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
             {name}
           </h2>
           <CheckCircle2 className="size-4.5 text-orange shrink-0 fill-orange/10" />
         </div>
-        <p className="text-xs font-semibold text-gray-500 mt-0.5">
+        <p className="text-xs sm:text-sm font-medium text-slate-600 mt-0.5">
           {primaryProfession}
         </p>
       </div>

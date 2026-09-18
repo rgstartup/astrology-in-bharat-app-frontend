@@ -49,7 +49,9 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
     (chatPrice ? chatPrice * 2 : 50);
 
   const parsedSpecs = extractSpecializationNames(
-    expert.specializations || expert.specialization || (expert as any).expertise,
+    expert.specializations ||
+      expert.specialization ||
+      (expert as any).expertise,
   );
   const specializationsList: string[] =
     parsedSpecs.length > 0 ? parsedSpecs : ["Vedic Astrology"];
@@ -68,7 +70,7 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
     }
 
     setCurrentLikes((prev) => (isLiked ? Math.max(0, prev - 1) : prev + 1));
-    toggleLike({ id: expertId, type: "expert", isLiked });
+    toggleLike({ id: String(expertId), type: "expert", isLiked });
   };
 
   const handleConsult = (
@@ -254,7 +256,7 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
           </div>
 
           <Link
-            href={`/expert/${expertId}`}
+            href={`/consultants/${expertId}`}
             onClick={handleCardClick}
             className="text-xs font-bold text-orange hover:text-[#e65100] transition-colors underline underline-offset-2"
           >

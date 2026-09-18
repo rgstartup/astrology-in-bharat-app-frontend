@@ -254,11 +254,6 @@ export function extractPrimaryProfession(
     }
   }
 
-  // 2. Direct string profession
-  if (typeof expert.profession === "string" && expert.profession.trim()) {
-    return expert.profession.trim();
-  }
-
   // 3. Direct object profession
   if (typeof expert.profession === "object" && expert.profession) {
     const title = expert.profession.title;

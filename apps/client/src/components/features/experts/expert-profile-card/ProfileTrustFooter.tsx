@@ -25,14 +25,14 @@ export const ProfileTrustFooter: React.FC<TrustFooterProps> = ({
         <div className="flex items-center gap-2">
           {reportPrice ? (
             <div className="px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200/70 flex items-center gap-1.5 text-xs">
-              <span className="font-semibold text-slate-700">Kundli:</span>
-              <span className="font-bold text-gray-900">₹{reportPrice}</span>
+              <span className="font-medium text-slate-600">Kundli:</span>
+              <span className="font-bold text-slate-900">₹{reportPrice}</span>
             </div>
           ) : null}
           {horoscopePrice ? (
             <div className="px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200/70 flex items-center gap-1.5 text-xs">
-              <span className="font-semibold text-slate-700">Horoscope:</span>
-              <span className="font-bold text-gray-900">₹{horoscopePrice}</span>
+              <span className="font-medium text-slate-600">Horoscope:</span>
+              <span className="font-bold text-slate-900">₹{horoscopePrice}</span>
             </div>
           ) : null}
         </div>

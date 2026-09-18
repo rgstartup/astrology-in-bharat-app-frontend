@@ -13,7 +13,6 @@ export interface ProductListStore<
 > {
   products: T[];
   isLoading: boolean;
-  isloading: boolean; // Lowercase alias matching exact specification
   searchQuery: string;
   selectedProduct: T | null;
   error: string | null;
@@ -59,7 +58,6 @@ const matchesId = (
 const initialState = {
   products: [] as ProductItem[],
   isLoading: false,
-  isloading: false,
   searchQuery: "",
   selectedProduct: null as ProductItem | null,
   error: null as string | null,
@@ -73,11 +71,9 @@ export const useProductListStore = create<ProductListStore<ProductItem>>(
     setSearchQuery: (searchQuery: string) => set({ searchQuery }),
 
     // Loading & Error
-    setIsLoading: (isLoading: boolean) =>
-      set({ isLoading, isloading: isLoading }),
+    setIsLoading: (isLoading: boolean) => set({ isLoading }),
 
-    setLoading: (loading: boolean) =>
-      set({ isLoading: loading, isloading: loading }),
+    setLoading: (loading: boolean) => set({ isLoading: loading }),
 
     setError: (error: string | null) => set({ error }),
 

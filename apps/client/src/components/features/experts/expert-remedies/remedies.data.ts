@@ -170,7 +170,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Comprehensive 9-planet balancing havan to alleviate malefic influences and invite peace.",
       productGroup: ProductGroup.RITUAL,
-      productType: ProductType.SERVICES,
+      productType: ProductType.SERVICE,
       price: 3501,
       originalPrice: 5100,
       discountPercent: 31,
@@ -196,7 +196,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Sacred 11,000 Maha Mrityunjaya mantra chants for vitality, recovery, and long life.",
       productGroup: ProductGroup.RITUAL,
-      productType: ProductType.SERVICES,
+      productType: ProductType.SERVICE,
       price: 5100,
       originalPrice: 7500,
       discountPercent: 32,
@@ -221,7 +221,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Neutralizes Rahu-Ketu planetary dosha to clear blocked career paths and life progress.",
       productGroup: ProductGroup.RITUAL,
-      productType: ProductType.SERVICES,
+      productType: ProductType.SERVICE,
       price: 4100,
       originalPrice: 6000,
       discountPercent: 31,
@@ -246,7 +246,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Sacred Panchamrit abhishek on Shivling for marital peace, delay removal, and temperament balance.",
       productGroup: ProductGroup.RITUAL,
-      productType: ProductType.SERVICES,
+      productType: ProductType.SERVICE,
       price: 2999,
       originalPrice: 4500,
       discountPercent: 33,
@@ -274,7 +274,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Lab-certified natural Ceylon Yellow Sapphire for wealth, marriage, and spiritual wisdom.",
       productGroup: ProductGroup.ITEM,
-      productType: ProductType.PHYSICAL,
+      productType: ProductType.GOODS,
       price: 12500,
       originalPrice: 18000,
       discountPercent: 30,
@@ -300,7 +300,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Hand-knotted 108+1 natural Nepali Rudraksha mala energized with Lord Shiva mantras.",
       productGroup: ProductGroup.ITEM,
-      productType: ProductType.PHYSICAL,
+      productType: ProductType.GOODS,
       price: 1299,
       originalPrice: 2499,
       discountPercent: 48,
@@ -325,7 +325,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Sacred energized geometric Yantra to attract wealth, positive vibrations, and family peace.",
       productGroup: ProductGroup.ITEM,
-      productType: ProductType.PHYSICAL,
+      productType: ProductType.GOODS,
       price: 2199,
       originalPrice: 3999,
       discountPercent: 45,
@@ -350,7 +350,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Lab-certified authentic Saturn gemstone for quick career breakthroughs and discipline.",
       productGroup: ProductGroup.ITEM,
-      productType: ProductType.PHYSICAL,
+      productType: ProductType.GOODS,
       price: 15999,
       originalPrice: 22000,
       discountPercent: 27,
@@ -378,7 +378,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "The ultimate classical treatise on Vedic astrology with authentic Sanskrit slokas and Hindi commentary.",
       productGroup: ProductGroup.BOOK,
-      productType: ProductType.PHYSICAL,
+      productType: ProductType.GOODS,
       price: 1850,
       originalPrice: 2500,
       discountPercent: 26,
@@ -404,7 +404,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Authentic edition of the famous Lal Kitab with simple, highly effective self-remedies.",
       productGroup: ProductGroup.BOOK,
-      productType: ProductType.PHYSICAL,
+      productType: ProductType.GOODS,
       price: 999,
       originalPrice: 1500,
       discountPercent: 33,
@@ -429,7 +429,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Revered classical text for mastering accurate astrological predictions and transit analysis.",
       productGroup: ProductGroup.BOOK,
-      productType: ProductType.PHYSICAL,
+      productType: ProductType.GOODS,
       price: 750,
       originalPrice: 1100,
       discountPercent: 31,
@@ -454,7 +454,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Master classical reference on planetary strength, royal combinations, and character analysis.",
       productGroup: ProductGroup.BOOK,
-      productType: ProductType.PHYSICAL,
+      productType: ProductType.GOODS,
       price: 1150,
       originalPrice: 1600,
       discountPercent: 28,
@@ -482,7 +482,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Direct 30-minute private audio/video consultation for instant clarity and targeted remedies.",
       productGroup: ProductGroup.SESSION,
-      productType: ProductType.SERVICES,
+      productType: ProductType.SERVICE,
       price: 799,
       originalPrice: 1500,
       discountPercent: 46,
@@ -508,7 +508,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "In-depth 60-minute private session covering full chart analysis, 5-year outlook, and remedies.",
       productGroup: ProductGroup.SESSION,
-      productType: ProductType.SERVICES,
+      productType: ProductType.SERVICE,
       price: 1499,
       originalPrice: 2800,
       discountPercent: 46,
@@ -534,7 +534,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "Time-tested Prashna Kundli session for urgent question resolution without exact birth time.",
       productGroup: ProductGroup.SESSION,
-      productType: ProductType.SERVICES,
+      productType: ProductType.SERVICE,
       price: 899,
       originalPrice: 1600,
       discountPercent: 43,
@@ -559,7 +559,7 @@ export const CURATED_REMEDIES: Record<RemedyTabKey, RemedyItem[]> = {
       shortDescription:
         "60-minute dedicated couple session analyzing both birth charts and marital harmony upayas.",
       productGroup: ProductGroup.SESSION,
-      productType: ProductType.SERVICES,
+      productType: ProductType.SERVICE,
       price: 1999,
       originalPrice: 3500,
       discountPercent: 42,

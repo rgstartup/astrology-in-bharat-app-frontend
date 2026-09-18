@@ -40,6 +40,8 @@ export const getProductImageUrl = (product: any): string => {
   if (!product) return "/images/image-not-found.png";
 
   const rawImage =
+    product.media?.[0]?.media?.url ||
+    product.variants?.[0]?.media?.[0]?.media?.url ||
     product.productImage ||
     product.imageUrl ||
     product.image ||
@@ -54,6 +56,7 @@ export const getProductImageUrl = (product: any): string => {
     ? normalizeImagePath(normalizedValue)
     : "/images/image-not-found.png";
 };
+
 
 export const getProfileImageUrl = (url?: string | null, name?: string) => {
   if (!url) {

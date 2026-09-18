@@ -77,7 +77,11 @@ export const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
     expert.specializations || expert.specialization || expert.expertise,
   );
 
+  console.log(expert.professions);
+
   const primaryProfession = extractPrimaryProfession(expert, "Astrologer");
+
+  console.log({ primaryProfession });
 
   const isOnline =
     isAvailable !== undefined
@@ -90,8 +94,15 @@ export const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
     <div className="w-full flex flex-col lg:flex-row items-stretch gap-5 lg:gap-6">
       {/* ── Section 1: Left Profile Card (Primary Identity: Avatar, Name, Stats & Mobile CTAs) ── */}
       <div className="w-full lg:w-[320px] xl:w-[340px] shrink-0 overflow-hidden border border-slate-200/60 bg-white rounded-2xl p-4 sm:p-5 flex flex-col justify-between gap-4 shadow-2xs">
-        {/* Top Upper Section: Single Orange Wave Banner + Avatar + Identity */}
+        {/* Top Upper Section: Single Orange Wave Banner + Avatar + Identity + Favorite CTA */}
         <ProfileHeroBanner
+          expertId={
+            (expert as any).userId ||
+            expert.expert_id ||
+            expert.id ||
+            (expert as any).user_id ||
+            ""
+          }
           name={name}
           avatar={avatar}
           primaryProfession={primaryProfession}

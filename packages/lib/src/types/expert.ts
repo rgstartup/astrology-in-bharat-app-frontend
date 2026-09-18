@@ -1,12 +1,5 @@
 import { PaginatedResponse } from "./paginated.response";
-import { Specialization } from "..";
-
-export interface CustomService {
-  id: string | number;
-  name: string;
-  price: number;
-  unit: string;
-}
+import { ExpertProduct, Specialization } from "..";
 
 export interface Profession {
   id: number | string;
@@ -23,18 +16,9 @@ export interface ExpertProfession {
   profession?: Profession;
 }
 
-export interface SpecializationDetail {
-  id: number | string;
-  title: string;
-  slug?: string;
-  icon?: string;
-  description?: string;
-}
-
 export interface ExpertSpecialization {
   id: number | string;
-  specialization_id?: number | string;
-  specialization: SpecializationDetail | Specialization | string;
+  specialization: Specialization;
 }
 
 export interface Pricing {
@@ -42,40 +26,29 @@ export interface Pricing {
   chat_price?: number;
   call_price?: number;
   video_call_price?: number;
-  report_price?: number;
-  horoscope_price?: number;
   currency?: string;
 }
 
 export interface Expert {
-  id: string | number;
+  id: number;
   name: string;
   avatar?: string | null;
   about?: string;
-  languages?: string | string[];
+  languages?: string;
   experience_in_years?: number;
   rating?: number;
   professions?: ExpertProfession[];
   specializations?: ExpertSpecialization[];
   pricing?: Pricing;
   // Runtime / backward-compatibility fields
-  profession?: string | Profession;
-  specialization?: string;
-  experience?: number;
-  price?: number;
-  chat_price?: number;
-  call_price?: number;
-  video_call_price?: number;
-  report_price?: number;
-  horoscope_price?: number;
+  profession?: Profession;
   video?: string;
   is_available?: boolean;
   is_busy?: boolean;
   total_likes?: number;
   total_reviews?: number;
   consultation_count?: number;
-  custom_services?: CustomService[];
-  expert_products?: import("./product").ExpertProduct[];
+  expert_products?: ExpertProduct[];
   [key: string]: any;
 }
 

@@ -52,9 +52,9 @@ const ExpertMediaModals: React.FC<ExpertMediaModalsProps> = ({
                 </video>
               )}
             </div>
-            <div className="bg-white p-4 flex items-center justify-between border-t border-gray-100 rounded-b-2xl shadow-2xl">
-              <h4 className="text-base font-bold text-gray-800">Playing Video</h4>
-              <span className="text-xs text-gray-500">Expert {expertName}</span>
+            <div className="bg-white p-4 flex items-center justify-between border-t border-slate-100 rounded-b-2xl shadow-2xl">
+              <h4 className="text-base font-bold text-slate-900">Playing Video</h4>
+              <span className="text-xs text-slate-500">Expert {expertName}</span>
             </div>
           </div>
           <div className="absolute inset-0 -z-10" onClick={() => setSelectedVideo(null)} aria-hidden="true"></div>

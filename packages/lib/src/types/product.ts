@@ -116,28 +116,15 @@ export interface ProductDetail {
 export interface Product {
   id: string | number;
   name: string;
-  sku?: string;
-  category?: unknown;
   categories?: ProductCategory[];
   description: string | null;
-  short_description?: string | null;
-  price?: number;
-  original_price?: number;
-  image_url?: string;
-  gallery?: string[] | null;
-  stock?: number;
-  merchant_id?: string | number;
-  is_shipping_chargeable?: boolean;
-  shipping_charge?: string;
   is_active?: boolean;
-  percentage_off?: number;
   created_at?: string | Date;
   updated_at?: string | Date;
   type?: ProductType;
   product_group?: ProductGroup;
   variants?: ProductVariant[];
   media?: ProductMedia[];
-  [key: string]: any;
 }
 
 export interface ProductWithLikes extends Product {

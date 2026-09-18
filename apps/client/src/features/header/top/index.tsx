@@ -16,8 +16,8 @@ const TopHeader = () => {
 
   return (
     <header
-      className="bg-[#301118] text-white shadow-xs relative z-[1001] overflow-visible flex items-center py-1 sm:py-1.5"
-      style={{ minHeight: "38px", scrollbarWidth: "none" }}
+      className="bg-[#301118] text-white shadow-xs relative z-[1001] overflow-visible flex items-center py-2 sm:py-1.5 min-h-[44px] sm:min-h-[38px]"
+      style={{ scrollbarWidth: "none" }}
     >
       <div
         className="max-w-[1320px] mx-auto px-3 sm:px-4 md:px-8 lg:px-16 w-full"

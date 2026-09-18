@@ -17,7 +17,7 @@ type StateUpdate<T> = T | ((current: T) => T);
 
 export type ExpertFetchParams = Record<string, string>;
 
-interface ExpertListStore {
+export interface ExpertListStore {
   experts: Expert[];
   loading: boolean;
   page: number;

@@ -13,4 +13,8 @@ export {
   ToastTitle,
   ToastViewport,
   type ToastProps,
+  type ToastActionConfig,
+  type ToastType,
+  type ToastVariant,
+  type CustomToastData,
 } from "./toast";
