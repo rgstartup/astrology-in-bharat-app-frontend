@@ -25,6 +25,9 @@ type ToastVariant =
 interface ToastActionConfig {
   label: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  style?: React.CSSProperties;
+  className?: string;
+  altText?: string;
 }
 
 interface CustomToastData {
@@ -345,6 +348,8 @@ function ToastList() {
           </div>
           {hasAction && (
             <ToastAction
+              style={isActionConfig(action) ? action.style : undefined}
+              className={isActionConfig(action) ? action.className : undefined}
               onClick={(e: React.MouseEvent<HTMLElement>) => {
                 if (isActionConfig(action) && action.onClick) {
                   action.onClick(e);

@@ -47,7 +47,7 @@ export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
       return;
     }
 
-    toggleLike({ id: expertId as any, type: "expert", isLiked: isFavorite });
+    toggleLike({ id: String(expertId), type: "expert", isLiked: isFavorite });
     toast.success(
       isFavorite ? "Removed from your favorites." : "Added to your favorites!",
     );
