@@ -21,11 +21,11 @@ const Footer: React.FC = () => {
                 alt="Astrology in Bharat Logo"
                 className="mb-4 w-[200px] md:w-full md:max-w-[260px] object-contain"
               />
-              <p className="text-[13px] md:text-[14px] leading-[1.7] text-[#dfdfdf] mb-6 px-4 md:px-0">
+              <p className="text-xs md:text-sm leading-relaxed text-[#dfdfdf] mb-3.5 px-4 md:px-0">
                 {t.aboutText}
               </p>
 
-              <ul className="flex items-center gap-3">
+              <ul className="flex items-center gap-2.5">
                 {[
                   { icon: "fa-facebook", href: "#" },
                   { icon: "fa-instagram", href: "#" },
@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
                   <li key={idx}>
                     <a
                       href={social.href}
-                      className="w-[35px] h-[35px] flex items-center justify-center rounded-full bg-white border-2 border-[#ff6b00] text-[#ff6b00] hover:bg-[#ff6b00] hover:text-white transition-all duration-300"
+                      className="w-[34px] h-[34px] flex items-center justify-center rounded-full bg-white border-2 border-[#ff6b00] text-[#ff6b00] hover:bg-[#ff6b00] hover:text-white transition-all duration-300"
                     >
                       <i className={`fa-brands ${social.icon} text-sm`}></i>
                     </a>
@@ -46,10 +46,10 @@ const Footer: React.FC = () => {
             </div>
 
             {/* Links columns wrapper */}
-            <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-left">
+            <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 text-left">
               {/* Free Calculator */}
               <div>
-                <h4 className="text-[16px] md:text-[18px] font-semibold text-[#ff6b00] mb-3 md:mb-[15px]">{t.freeCalculator}</h4>
+                <h4 className="text-sm md:text-base font-semibold text-[#ff6b00] mb-3 md:mb-3.5">{t.freeCalculator}</h4>
                 <ul className="flex flex-col items-start gap-2.5 pl-0">
                   {[
                     { label: t.marriageAge, href: PATHS.ASTROLOGY.CALCULATOR.MARRIAGE_AGE_CALCULATOR },
@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
                     { label: t.nakshatraFinder, href: PATHS.ASTROLOGY.CALCULATOR.NAKSHATRA_FINDER },
                   ].map((link, idx) => (
                     <li key={idx}>
-                      <Link href={link.href} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group">
+                      <Link href={link.href} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group">
                         <i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" />
                         <span className="leading-tight">{link.label}</span>
                       </Link>
@@ -71,40 +71,40 @@ const Footer: React.FC = () => {
 
               {/* Astrology Services */}
               <div>
-                <h4 className="text-[16px] md:text-[18px] font-semibold text-[#ff6b00] mb-3 md:mb-[15px]">{t.astrologyServices}</h4>
+                <h4 className="text-sm md:text-base font-semibold text-[#ff6b00] mb-3 md:mb-3.5">{t.astrologyServices}</h4>
                 <ul className="flex flex-col items-start gap-2.5 pl-0">
-                  <li><Link href={PATHS.ONLINE_PUJA} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.onlinePuja}</span></Link></li>
-                  <li><a href="/our-experts" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.talkToExpert}</span></a></li>
-                  <li><Link href={PATHS.ASTROLOGY.HOROSCOPE} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.dailyHoroscope}</span></Link></li>
-                  <li><Link href={PATHS.ASTROLOGY.KUNDALI_MATCHING} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.kundliMatching}</span></Link></li>
-                  <li><Link href={PATHS.ASTROLOGY.CALCULATOR.NAME_NUMEROLOGY_CALCULATOR} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.numerologyReport}</span></Link></li>
-                  <li><Link href={PATHS.HINDU_CALENDAR} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.shubhMuhurat}</span></Link></li>
+                  <li><Link href={PATHS.ONLINE_PUJA} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.onlinePuja}</span></Link></li>
+                  <li><a href="/our-experts" className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.talkToExpert}</span></a></li>
+                  <li><Link href={PATHS.ASTROLOGY.HOROSCOPE} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.dailyHoroscope}</span></Link></li>
+                  <li><Link href={PATHS.ASTROLOGY.KUNDALI_MATCHING} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.kundliMatching}</span></Link></li>
+                  <li><Link href={PATHS.ASTROLOGY.CALCULATOR.NAME_NUMEROLOGY_CALCULATOR} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.numerologyReport}</span></Link></li>
+                  <li><Link href={PATHS.HINDU_CALENDAR} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.shubhMuhurat}</span></Link></li>
                 </ul>
               </div>
 
               {/* Important Links */}
               <div>
-                <h4 className="text-[16px] md:text-[18px] font-semibold text-[#ff6b00] mb-3 md:mb-[15px]">{t.importantLinks}</h4>
+                <h4 className="text-sm md:text-base font-semibold text-[#ff6b00] mb-3 md:mb-3.5">{t.importantLinks}</h4>
                 <ul className="flex flex-col items-start gap-2.5 pl-0">
-                  <li><a href="https://astrology-in-bharat-app-expert-dash.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.expertLogin}</span></a></li>
-                  <li><a href="https://astrology-in-bharat-app-expert-dash.vercel.app/register" target="_blank" rel="noopener noreferrer" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.expertRegistration}</span></a></li>
-                  <li><Link href="/register" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.userRegistration}</span></Link></li>
-                  <li><a href="http://localhost:3004/login" target="_blank" rel="noopener noreferrer" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.merchantLogin}</span></a></li>
-                  <li><a href="http://localhost:3004/register" target="_blank" rel="noopener noreferrer" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.merchantRegistration}</span></a></li>
-                  <li><Link href={PATHS.BUY_PRODUCTS} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.shopProducts}</span></Link></li>
+                  <li><a href="https://astrology-in-bharat-app-expert-dash.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.expertLogin}</span></a></li>
+                  <li><a href="https://astrology-in-bharat-app-expert-dash.vercel.app/register" target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.expertRegistration}</span></a></li>
+                  <li><Link href="/register" className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.userRegistration}</span></Link></li>
+                  <li><a href="http://localhost:3004/login" target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.merchantLogin}</span></a></li>
+                  <li><a href="http://localhost:3004/register" target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.merchantRegistration}</span></a></li>
+                  <li><Link href={PATHS.BUY_PRODUCTS} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.shopProducts}</span></Link></li>
                 </ul>
               </div>
 
               {/* Helpful Info */}
               <div>
-                <h4 className="text-[16px] md:text-[18px] font-semibold text-[#ff6b00] mb-3 md:mb-[15px]">{t.helpfulInfo}</h4>
+                <h4 className="text-sm md:text-base font-semibold text-[#ff6b00] mb-3 md:mb-3.5">{t.helpfulInfo}</h4>
                 <ul className="flex flex-col items-start gap-2.5 pl-0">
-                  <li><Link href={PATHS.REFUND_POLICY} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.refundPolicy}</span></Link></li>
-                  <li><Link href={PATHS.PRIVACY_POLICY} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.privacyPolicy}</span></Link></li>
-                  <li><Link href={PATHS.TERMS_AND_CONDITIONS} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.termsConditions}</span></Link></li>
-                  <li><Link href={PATHS.COPYRIGHT} className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.copyrightNotice}</span></Link></li>
-                  <li><Link href="/about" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.aboutUs}</span></Link></li>
-                  <li><Link href="/contact-us" className="text-[13px] md:text-[14px] text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.contactUs}</span></Link></li>
+                  <li><Link href={PATHS.REFUND_POLICY} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.refundPolicy}</span></Link></li>
+                  <li><Link href={PATHS.PRIVACY_POLICY} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.privacyPolicy}</span></Link></li>
+                  <li><Link href={PATHS.TERMS_AND_CONDITIONS} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.termsConditions}</span></Link></li>
+                  <li><Link href={PATHS.COPYRIGHT} className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.copyrightNotice}</span></Link></li>
+                  <li><Link href="/about" className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.aboutUs}</span></Link></li>
+                  <li><Link href="/contact-us" className="text-xs md:text-sm text-[#f3f3f3] hover:text-[#ff6b00] transition-colors no-underline flex items-start md:items-center gap-2 group"><i className="fa-solid fa-angle-right text-[#ff6b00] text-[10px] transform group-hover:translate-x-1 transition-transform mt-1 md:mt-0" /><span className="leading-tight">{t.contactUs}</span></Link></li>
                 </ul>
               </div>
             </div>

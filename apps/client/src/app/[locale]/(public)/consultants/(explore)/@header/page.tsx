@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useExploreExpertsContext } from "@/features/explore-experts/context/ExploreExpertsContext";
-import { ExploreBreadcrumb } from "@/features/explore-experts/components/ExploreBreadcrumb";
 import { ExploreHeader } from "@/features/explore-experts/components/ExploreHeader";
 import { ExploreMobileFiltersDrawer } from "@/features/explore-experts/components/ExploreMobileFiltersDrawer";
 
@@ -21,9 +20,6 @@ export default function HeaderSlot() {
 
   return (
     <>
-      {/* Breadcrumb Navigation on Top */}
-      <ExploreBreadcrumb />
-
       {/* Top Header with Search Bar, Sort Dropdown & Control Bar */}
       <ExploreHeader
         filters={filters}

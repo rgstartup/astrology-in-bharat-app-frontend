@@ -6,7 +6,6 @@ import {
   ExploreExpertsProvider,
   useExploreExpertsContext,
 } from "./context/ExploreExpertsContext";
-import { ExploreBreadcrumb } from "./components/ExploreBreadcrumb";
 import { ExploreHeader } from "./components/ExploreHeader";
 import { ExploreSidebarFilters } from "./components/sidebar-filters";
 import { ExploreMobileFiltersDrawer } from "./components/ExploreMobileFiltersDrawer";
@@ -37,10 +36,7 @@ function ExploreExpertsContent() {
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] text-gray-900 pb-20">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        {/* Breadcrumb Navigation on Top */}
-        <ExploreBreadcrumb />
-
+      <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pt-4">
         {/* Top Header with Search Bar & Control Bar */}
         <ExploreHeader
           filters={filters}

@@ -24,6 +24,14 @@ const badgeVariants = cva(
           "border-purple-500/20 bg-purple-500/10 text-purple-700 dark:text-purple-400 font-bold hover:bg-purple-500/20",
         amber:
           "border-amber-500/30 bg-amber-500/15 text-amber-800 dark:text-amber-300 font-bold hover:bg-amber-500/25",
+        blue:
+          "border-blue-500/20 bg-blue-500/10 text-blue-700 dark:text-blue-400 font-bold hover:bg-blue-500/20",
+        rose:
+          "border-rose-500/20 bg-rose-500/10 text-rose-700 dark:text-rose-400 font-bold hover:bg-rose-500/20",
+        teal:
+          "border-teal-500/20 bg-teal-500/10 text-teal-700 dark:text-teal-400 font-bold hover:bg-teal-500/20",
+        indigo:
+          "border-indigo-500/20 bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 font-bold hover:bg-indigo-500/20",
       },
     },
     defaultVariants: {

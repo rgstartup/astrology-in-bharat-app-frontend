@@ -3,22 +3,30 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getExpertReviews, Review } from "@/libs/api-experts";
-import { Expert } from "@/lib/types";
+import type { Expert } from "@repo/lib";
 
-export const useExpertDetails = (expertId: string, userId?: string) => {
+export const useExpertDetails = (
+  expertId: string,
+  userId?: string,
+  initialAvailable: boolean = false,
+  initialBusy: boolean = false,
+) => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'about' | 'experience' | 'reviews' | 'gallery' | 'videos'>('about');
+  const [activeTab, setActiveTab] = useState<
+    "about" | "experience" | "reviews" | "gallery" | "videos"
+  >("about");
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loadingReviews, setLoadingReviews] = useState(false);
   const [totalReviews, setTotalReviews] = useState(0);
-  const [isAvailable, setIsAvailable] = useState<boolean>(false);
+  const [isAvailable, setIsAvailable] = useState<boolean>(initialAvailable);
+  const [isBusy, setIsBusy] = useState<boolean>(initialBusy);
   const [isNavigating, setIsNavigating] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (activeTab === 'reviews') {
+    if (activeTab === "reviews") {
       const fetchReviews = async () => {
         setLoadingReviews(true);
         try {
@@ -41,21 +49,38 @@ export const useExpertDetails = (expertId: string, userId?: string) => {
 
     const handleStatusSync = (data: any) => {
       const expertIdFromEvent = data.expert_id || data.id || data.userId;
-      
+
       // Check both IDs for a match (expert profile id and user id)
-      const isMatch = String(expertIdFromEvent) === String(expertId) || 
-                      (userId && String(expertIdFromEvent) === String(userId));
+      const isMatch =
+        String(expertIdFromEvent) === String(expertId) ||
+        (userId && String(expertIdFromEvent) === String(userId));
 
       if (isMatch) {
-        console.log(`[Presence] Expert Detail Page: Expert ${expertId} status changed to ${data.is_available ? 'Online' : 'Offline'}`);
-        setIsAvailable(data.is_available);
+        console.log(
+          `[Presence] Expert Detail Page: Expert ${expertId} status changed to ${data.is_available ? "Online" : "Offline"}`,
+        );
+        setIsAvailable(Boolean(data.is_available));
+        if (!data.is_available) setIsBusy(false);
+      }
+    };
+
+    const handleBusySync = (data: any) => {
+      const expertIdFromEvent = data.expert_id || data.id || data.userId;
+      const isMatch =
+        String(expertIdFromEvent) === String(expertId) ||
+        (userId && String(expertIdFromEvent) === String(userId));
+
+      if (isMatch) {
+        setIsBusy(Boolean(data.is_busy));
       }
     };
 
     socket.on("expert_status_changed", handleStatusSync);
+    socket.on("expert_busy_changed", handleBusySync);
 
     return () => {
       socket.off("expert_status_changed", handleStatusSync);
+      socket.off("expert_busy_changed", handleBusySync);
     };
   }, [expertId, userId]);
 
@@ -75,14 +100,25 @@ export const useExpertDetails = (expertId: string, userId?: string) => {
   };
 
   return {
-    isReviewModalOpen, setIsReviewModalOpen,
-    selectedVideo, setSelectedVideo,
-    selectedImage, setSelectedImage,
-    activeTab, setActiveTab,
-    reviews, loadingReviews, totalReviews,
-    handleChatClick, handleCallClick, handleVideoCallClick,
-    isAvailable, setIsAvailable,
-    isNavigating
+    isReviewModalOpen,
+    setIsReviewModalOpen,
+    selectedVideo,
+    setSelectedVideo,
+    selectedImage,
+    setSelectedImage,
+    activeTab,
+    setActiveTab,
+    reviews,
+    loadingReviews,
+    totalReviews,
+    handleChatClick,
+    handleCallClick,
+    handleVideoCallClick,
+    isAvailable,
+    setIsAvailable,
+    isBusy,
+    setIsBusy,
+    isNavigating,
   };
 };
 

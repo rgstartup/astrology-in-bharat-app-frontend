@@ -6,6 +6,7 @@ import { toast } from "@/hooks/use-toast";
 import { api } from "@/actions";
 import { socket } from "@/libs/socket";
 import { ExpertProfile } from "@/lib/types";
+import { formatSpecializationsString } from "@/utils/expert-utils";
 
 // const getImageUrl = (path?: string) => {
 //   if (!path) return "/images/dummy-expert.jpg";
@@ -26,12 +27,9 @@ const mapExpert = (item: any): ExpertProfile => {
   const userId = item.userId || item.user?.id || item.id;
   const name = item.name || item.user?.name || "Expert";
   const avatar = item.avatar || item.user?.avatar;
-  const specialization = Array.isArray(item.specializations)
-    ? item.specializations
-        .map((s: any) => s?.specialization?.title || s?.title || "")
-        .filter(Boolean)
-        .join(", ")
-    : item.specialization || "";
+  const specialization = formatSpecializationsString(
+    item.specializations || item.specialization || item.expertise,
+  );
   const experience = item.experience_in_years || 0;
   const rating = item.rating || item.ratings || 0;
   const isAvailable = item.is_available ?? true;

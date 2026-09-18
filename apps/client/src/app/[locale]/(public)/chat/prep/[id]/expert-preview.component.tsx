@@ -13,6 +13,7 @@ import {
   AlertCircle,
   Wallet,
 } from "lucide-react";
+import { formatSpecializationsString } from "@/utils/expert-utils";
 
 type Props = {
   expert: Partial<Expert> | null;
@@ -107,9 +108,17 @@ const ExpertPreview = ({
                     </span>
                     <span
                       className="text-white font-bold text-sm line-clamp-1 truncate"
-                      title={expert?.specialization}
+                      title={formatSpecializationsString(
+                        expert?.specializations ||
+                          expert?.specialization ||
+                          (expert as any)?.expertise,
+                      )}
                     >
-                      {expert?.specialization || "Astrology, Vastu, Palmistry"}
+                      {formatSpecializationsString(
+                        expert?.specializations ||
+                          expert?.specialization ||
+                          (expert as any)?.expertise,
+                      )}
                     </span>
                   </div>
                   <div className="w-[1px] h-8 bg-[#1A1A1A]/20 flex-shrink-0"></div>

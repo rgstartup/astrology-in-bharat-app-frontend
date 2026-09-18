@@ -9,6 +9,7 @@ import { HiOutlineSparkles } from "react-icons/hi";
 import { MdStars } from "react-icons/md";
 import { PujaCard } from "@/components/features/puja/PujaCard";
 import { getProductImageUrl } from "@/utils/image-utils";
+import { formatSpecializationsString } from "@/utils/expert-utils";
 import Skeleton from "@/components/ui/Skeleton";
 import { useTranslations } from "next-intl";
 
@@ -158,7 +159,11 @@ const WishlistGrid: React.FC = () => {
                           userId: (expert as any)?.userId,
                           image: getProductImageUrl({ imageUrl: avatar }),
                           name: name,
-                          expertise: (expert as any)?.specialization || "",
+                          expertise: formatSpecializationsString(
+                            (expert as any)?.specializations ||
+                              (expert as any)?.specialization ||
+                              (expert as any)?.expertise,
+                          ),
                           experience: (expert as any)?.experience_in_years || 0,
                           languages: Array.isArray((expert as any)?.languages)
                             ? (expert as any).languages.join(", ")

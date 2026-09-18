@@ -1,5 +1,6 @@
 import { createSafeFetchInstance } from "@repo/safe-fetch";
 export { API_ROUTES } from "@/lib/api-routes";
+export * from "./expert-products";
 
 export const api = createSafeFetchInstance({
   baseUrl: process.env.NEXT_PUBLIC_API_URL!,

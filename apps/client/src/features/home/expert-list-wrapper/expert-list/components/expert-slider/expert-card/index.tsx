@@ -11,6 +11,7 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import socket from "@/lib/socket";
+import { extractSpecializationNames } from "@/utils/expert-utils";
 import ExpertActions from "./ExpertActions";
 import ExpertCardProfile from "./ExpertCardProfile";
 import ExpertDetails from "./ExpertDetails";
@@ -99,17 +100,11 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
     ? isExpertInWishlist(expertProfileId as any)
     : false;
 
-  const specializationsList = Array.isArray(expertData.specializations)
-    ? expertData.specializations
-        .map((s: any) =>
-          s?.specialization?.title ||
-          s?.title ||
-          (typeof s === "string" ? s : ""),
-        )
-        .filter(Boolean)
-    : expertData.specialization
-      ? expertData.specialization.split(",").map((s: string) => s.trim())
-      : [];
+  const specializationsList = extractSpecializationNames(
+    expertData.specializations ||
+      expertData.specialization ||
+      (expertData as any).expertise,
+  );
 
   const customServicesList = Array.isArray(expertData.custom_services)
     ? expertData.custom_services.map((service) => service.name)

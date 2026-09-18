@@ -11,6 +11,7 @@ import ExpertCard from "@/components/features/experts/ExpertCard";
 
 import { useTranslations } from "next-intl";
 import { IFetchExpertsResponse } from "./expert-list-wrapper/expert-list/api/fetch-expert";
+import { formatSpecializationsString } from "@/utils/expert-utils";
 
 const DUMMY_EXPERTS = [
   {
@@ -170,12 +171,9 @@ const OurExpert = () => {
         };
 
         const mappedData = data.map((item: any) => {
-          const specText = Array.isArray(item.specializations)
-            ? item.specializations
-                .map((s: any) => s?.specialization?.title || s?.title || "")
-                .filter(Boolean)
-                .join(", ")
-            : item.specialization || "";
+          const specText = formatSpecializationsString(
+            item.specializations || item.specialization || item.expertise,
+          );
 
           const chat =
             item.pricing?.chat_price ?? item.chat_price ?? item.price ?? 51;

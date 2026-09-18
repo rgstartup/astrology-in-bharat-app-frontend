@@ -13,6 +13,7 @@ import { UserX, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import type { Expert } from "@repo/lib";
+import { formatSpecializationsString } from "@/utils/expert-utils";
 import HeroInfo from "./hero-info.component";
 import ExpertPreview from "./expert-preview.component";
 import SecurityTipsModal from "./security-modal.component";
@@ -112,7 +113,16 @@ export default function ConsultationPrep() {
         return;
       }
 
-      const [res, fetchError] = await api.get<any>(`/expert/details/${id}`);
+      let [res, fetchError] = await api.get<any>(`/expert/account/${id}`);
+      if (fetchError || !res) {
+        const [fallbackRes, fallbackErr] = await api.get<any>(
+          `/expert/details/${id}`,
+        );
+        if (!fallbackErr && fallbackRes) {
+          res = fallbackRes;
+          fetchError = null;
+        }
+      }
 
       if (fetchError) {
         console.error("Failed to fetch expert for prep:", fetchError);
@@ -121,17 +131,25 @@ export default function ConsultationPrep() {
         const data = res?.data || res;
         setExpert({
           id: data.id,
-          name: data.user?.name || "Expert",
-          avatar: data.user?.avatar || "/images/dummy-expert.jpg",
-          specialization: data.specialization || "",
-          experience_in_years: data.experience_in_years || 0,
-          price: data.price,
-          chat_price: data.chat_price,
-          call_price: data.call_price,
-          video_call_price: data.video_call_price,
-          languages: data.languages?.join(", ") || "",
-          rating: data.ratings || 5,
-          is_available: data.is_available,
+          name: data.user?.name || data.name || "Expert",
+          avatar:
+            data.user?.avatar || data.avatar || "/images/dummy-expert.jpg",
+          specialization: formatSpecializationsString(
+            data.specializations || data.specialization || data.expertise,
+          ),
+          experience_in_years:
+            data.experience_in_years ?? data.experience ?? 0,
+          price: Number(data.price || data.chat_price || 0),
+          chat_price: Number(data.chat_price || data.price || 0),
+          call_price: Number(data.call_price || data.price || 0),
+          video_call_price: Number(
+            data.video_call_price || (data.price ? data.price * 2 : 0),
+          ),
+          languages: Array.isArray(data.languages)
+            ? data.languages.join(", ")
+            : data.languages || "Hindi, English",
+          rating: Number(data.ratings ?? data.rating ?? 5),
+          is_available: data.is_available ?? false,
         });
       } else {
         setExpert(null);

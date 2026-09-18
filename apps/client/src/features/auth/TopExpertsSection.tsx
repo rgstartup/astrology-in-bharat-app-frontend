@@ -6,6 +6,7 @@ import Skeleton from "@/components/ui/Skeleton";
 import { Expert } from "@repo/lib";
 import { useExpertListStore } from "@/store/useExpertListStore";
 import { api } from "@/actions";
+import { formatSpecializationsString } from "@/utils/expert-utils";
 
 const GreenDot = ({ isOnline }: { isOnline: boolean }) => {
   if (!isOnline) return null;
@@ -95,9 +96,12 @@ const TopExpertsSection: React.FC = () => {
                     </span>
                   </div>
                   <span className="text-[10px] font-bold text-gray-800 uppercase tracking-wider truncate block">
-                    {expert.specializations?.[0]?.specialization?.title ||
-                      expert.specialization ||
-                      "Astrology"}
+                    {formatSpecializationsString(
+                      expert.specializations ||
+                        expert.specialization ||
+                        (expert as any).expertise,
+                      "Astrology",
+                    )}
                   </span>
                 </div>
               </div>

@@ -10,6 +10,7 @@ import { fetchRecommendedExperts } from "../api/dashboard.api";
 import { SAMPLE_RECOMMENDED_EXPERTS } from "../data";
 import { Star, MessageSquare, ArrowRight, ShieldCheck } from "lucide-react";
 import Image from "next/image";
+import { formatSpecializationsString } from "@/utils/expert-utils";
 
 export const RecommendedExperts: React.FC = () => {
   const [experts, setExperts] = useState<any[]>([]);
@@ -87,8 +88,12 @@ export const RecommendedExperts: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {experts.slice(0, 4).map((expert: any) => {
             const name = expert.user?.name || expert.name || "Astrology Expert";
-            const specialization =
-              expert.specialization || "Vedic Astrology";
+            const specialization = formatSpecializationsString(
+              expert.specializations ||
+                expert.specialization ||
+                expert.expertise,
+              "Vedic Astrology",
+            );
             const rating = Number(expert.ratings || 4.9).toFixed(1);
             const isOnline = Boolean(expert.is_available);
             const price = expert.chat_price || expert.price || 25;

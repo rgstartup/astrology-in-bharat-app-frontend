@@ -21,6 +21,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { useExpertListStore } from "@/store/useExpertListStore";
 import { toast } from "@/hooks/use-toast";
 import type { Expert } from "@repo/lib";
+import { extractSpecializationNames } from "@/utils/expert-utils";
 
 interface ExploreExpertCardProps {
   expert: Expert;
@@ -47,18 +48,11 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
     expert.video_call_price ??
     (chatPrice ? chatPrice * 2 : 50);
 
-  const specializationsList: string[] = Array.isArray(expert.specializations)
-    ? expert.specializations
-        .map(
-          (s: any) =>
-            s?.specialization?.title ||
-            s?.title ||
-            (typeof s === "string" ? s : ""),
-        )
-        .filter(Boolean)
-    : expert.specialization
-      ? expert.specialization.split(",").map((s: string) => s.trim())
-      : ["Vedic Astrology"];
+  const parsedSpecs = extractSpecializationNames(
+    expert.specializations || expert.specialization || (expert as any).expertise,
+  );
+  const specializationsList: string[] =
+    parsedSpecs.length > 0 ? parsedSpecs : ["Vedic Astrology"];
 
   const languagesDisplay = Array.isArray(expert.languages)
     ? expert.languages.join(", ")

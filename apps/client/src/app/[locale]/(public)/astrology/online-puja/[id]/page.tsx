@@ -29,6 +29,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useTranslations } from "next-intl";
 import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";
+import { formatSpecializationsString } from "@/utils/expert-utils";
 
 const PujaDetailPage = () => {
   const { id } = useParams();
@@ -453,8 +454,12 @@ const PujaDetailPage = () => {
                     </div>
                   </div>
                   <p className="text-sm text-slate-500 mb-3 leading-relaxed">
-                    {puja.expert?.specialization ||
-                      t("detail.specializationFallback")}
+                    {formatSpecializationsString(
+                      puja.expert?.specializations ||
+                        puja.expert?.specialization ||
+                        (puja.expert as any)?.expertise,
+                      t("detail.specializationFallback"),
+                    )}
                   </p>
                   <Link
                     href={`/expert/${puja.expert_id}`}

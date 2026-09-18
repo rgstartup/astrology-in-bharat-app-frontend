@@ -16,17 +16,15 @@ export interface TeamMember {
 export interface ExpertProfile {
   id: string;
   userId?: string;
-  user: {
-    id: string;
-    name: string;
+  user?: {
+    id?: string;
+    name?: string;
     avatar?: string;
   };
   name?: string;
   image?: string;
   specialization: string;
-  expertise?: string;
   experience_in_years: number;
-  experience?: number;
   languages: string[];
   language?: string;
   price: number;
@@ -48,7 +46,10 @@ export interface ExpertProfile {
   detailed_experience?: any[];
   gallery?: string[];
   videos?: string[];
-  custom_services?: CustomService[] | string;
+  avatar?: string;
+  specializations?: any[];
+  is_busy?: boolean;
+  [key: string]: any;
 }
 
 // Component Props & State Types

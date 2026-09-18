@@ -22,6 +22,7 @@ import { getErrorMessage } from "@repo/lib";
 
 import { VerificationPopup } from "@repo/ui";
 import CallPrepSeoContent from "./call-prep-seo.component";
+import { formatSpecializationsString } from "@/utils/expert-utils";
 
 interface ExpertData {
   id: string;
@@ -68,26 +69,43 @@ function CallPrepContent() {
 
   useEffect(() => {
     const fetchAstro = async () => {
-      const [res, fetchError] = await api.get<any>(`/expert/details/${id}`);
+      let [res, fetchError] = await api.get<any>(`/expert/account/${id}`);
+      if (fetchError || !res) {
+        const [fallbackRes, fallbackErr] = await api.get<any>(
+          `/expert/details/${id}`,
+        );
+        if (!fallbackErr && fallbackRes) {
+          res = fallbackRes;
+          fetchError = null;
+        }
+      }
 
       if (fetchError) {
         console.error("Failed to fetch expert for call prep:", fetchError);
         setExpert(null);
-      } else if (res && (res.id || res.user)) {
+      } else if (res && (res.id || res.user || res.data)) {
         const data = res?.data || res;
         setExpert({
           id: data.id,
-          name: data.user?.name || "Expert",
-          image: data.user?.avatar,
-          expertise: data.specialization || "",
-          experience: data.experience_in_years || 0,
-          price: data.price,
-          chat_price: data.chat_price,
-          call_price: data.call_price,
-          video_call_price: data.video_call_price,
-          languages: data.languages || [],
-          rating: data.rating,
-          is_available: data.is_available,
+          name: data.user?.name || data.name || "Expert",
+          image: data.user?.avatar || data.avatar || "/images/dummy-expert.jpg",
+          expertise: formatSpecializationsString(
+            data.specializations || data.specialization || data.expertise,
+          ),
+          experience: data.experience_in_years ?? data.experience ?? 0,
+          price: Number(data.price || data.call_price || 0),
+          chat_price: Number(data.chat_price || data.price || 0),
+          call_price: Number(data.call_price || data.price || 0),
+          video_call_price: Number(
+            data.video_call_price || (data.price ? data.price * 2 : 0),
+          ),
+          languages: Array.isArray(data.languages)
+            ? data.languages
+            : typeof data.languages === "string"
+              ? data.languages.split(",").map((s: string) => s.trim())
+              : ["Hindi", "English"],
+          rating: Number(data.ratings ?? data.rating ?? 5),
+          is_available: data.is_available ?? false,
         });
       } else {
         setExpert(null);

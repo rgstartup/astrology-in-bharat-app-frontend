@@ -12,6 +12,7 @@ import { ExpertCardProps } from "@/lib/types";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { getYoutubeId, getYoutubeEmbedUrl } from "@/utils/video-utils";
 import { usePreloadExpertStore } from "@/store/usePreloadExpertStore";
+import { extractSpecializationNames } from "@/utils/expert-utils";
 
 const ExpertCard: React.FC<ExpertCardProps> = ({
   expertData,
@@ -173,9 +174,14 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
 
   // Combine expertise and custom services for display
   const customServicesList = Array.isArray(custom_services)
-    ? custom_services.map((s: any) => s.name)
+    ? custom_services.map((s: any) => s.name || s.title || s)
     : [];
-  const allServices = [expertise, ...customServicesList].filter(Boolean);
+  const extractedSpecs = extractSpecializationNames(
+    (expertData as any).specializations ||
+      (expertData as any).specialization ||
+      expertise,
+  );
+  const allServices = [...extractedSpecs, ...customServicesList].filter(Boolean);
 
   const displayServices = allServices.slice(0, 3);
   const remainingCount = allServices.length - 3;

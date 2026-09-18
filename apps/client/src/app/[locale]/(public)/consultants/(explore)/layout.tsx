@@ -21,7 +21,7 @@ export default function ExpertsLayout({
   return (
     <ExploreExpertsProvider>
       <div className="min-h-screen bg-[#FFFFFF] text-gray-900 pb-20">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16 pt-4">
           <Suspense fallback={<HeaderLoading />}>
             {header}
           </Suspense>
