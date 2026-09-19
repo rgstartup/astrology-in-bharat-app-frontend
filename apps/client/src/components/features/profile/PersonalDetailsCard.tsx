@@ -33,7 +33,7 @@ const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
 }) => {
   const [copied, setCopied] = useState(false);
 
-  const rawId = user?.uid || user?.id;
+  const rawId = user?.public_id || user?.uid || user?.id;
   const displayUid =
     rawId && rawId.length > 20
       ? `AIB-USR-${rawId.split("-")[0].toUpperCase()}`

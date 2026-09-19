@@ -4,6 +4,7 @@ export * from "./user-status.enum";
 export * from "./product-type.enum";
 export * from "./product-group.enum";
 export * from "./media-role.enum";
+export * from "./media-source.enum";
 export * from "./fulfillment-type.enum";
 export * from "./discount-type.enum";
 export * from "./delivery-type.enum";

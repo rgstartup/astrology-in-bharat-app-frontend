@@ -2,15 +2,24 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { toast } from "react-toastify";
 import { SafeFetchInstance } from "@repo/safe-fetch";
+import type { Media } from "@repo/lib";
 
 export interface ClientUser {
   id: string;
+  public_id?: string;
+  /**
+   * @deprecated uid has been renamed to public_id
+   */
   uid?: string;
   name?: string;
   email?: string;
   role?: string;
   roles?: string[];
+  /**
+   * @deprecated avatar is soon to be deprecated. Use avatar_media instead.
+   */
   avatar?: string;
+  avatar_media?: Media | null;
   profile_picture?: string;
   phone?: string;
   profile?: string;
@@ -134,31 +143,53 @@ export const useAuthStore = create<AuthState>()(
         if (raw?.user?.id) {
           user = {
             id: raw.user.id,
-            uid: raw.user.uid || raw.uid,
+            public_id:
+              raw.user.public_id ||
+              raw.public_id ||
+              raw.user.uid ||
+              raw.uid,
+            uid:
+              raw.user.public_id ||
+              raw.public_id ||
+              raw.user.uid ||
+              raw.uid,
             name: raw.user.name,
             email: raw.user.email,
             roles: raw.user.roles || [],
             profile_picture:
+              raw.avatar_media?.url ||
+              raw.user?.avatar_media?.url ||
               raw.profile_picture ||
               raw.user?.profile_picture ||
               raw.avatar ||
               raw.user?.avatar,
             avatar:
+              raw.avatar_media?.url ||
+              raw.user?.avatar_media?.url ||
               raw.profile_picture ||
               raw.user?.profile_picture ||
               raw.avatar ||
               raw.user?.avatar,
+            avatar_media: raw.avatar_media || raw.user?.avatar_media || null,
             profile: raw.profile || raw.user.profile || raw.id,
           };
         } else if (raw?.id) {
           user = {
             id: raw.id,
-            uid: raw.uid,
+            public_id: raw.public_id || raw.uid,
+            uid: raw.public_id || raw.uid,
             name: raw.full_name || raw.name || "User",
             email: raw.email || "",
             roles: raw.roles || [],
-            profile_picture: raw.profile_picture || raw.avatar,
-            avatar: raw.profile_picture || raw.avatar,
+            profile_picture:
+              raw.avatar_media?.url ||
+              raw.profile_picture ||
+              raw.avatar,
+            avatar:
+              raw.avatar_media?.url ||
+              raw.profile_picture ||
+              raw.avatar,
+            avatar_media: raw.avatar_media || null,
             profile: raw.profile || raw.id,
           };
         }
