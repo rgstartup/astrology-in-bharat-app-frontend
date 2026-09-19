@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,57 +17,78 @@ import {
 } from "@/components/ui/input-group";
 import GoogleLoginButton from "../GoogleLoginButton.component";
 import { AuthHeader } from "../AuthHeader";
+import { OtpVerification } from "../OtpVerification.component";
 import { useTranslations } from "next-intl";
 import { PATHS } from "@repo/routes";
 import { stripLocale, withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { useAuthStore } from "@/store/useAuthStore";
 
+interface SignInFormInputs {
+  email: string;
+  password: string;
+}
+
 const SignInForm: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callback_url =
-    searchParams.get("callback_url") ||
-    searchParams.get("callbackUrl") ||
-    "/dashboard";
+  const callback_url = searchParams.get("callback_url") || "/dashboard";
   const init = useAuthStore((state) => state.init);
 
   const t = useTranslations("Auth");
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showOtp, setShowOtp] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState("");
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInFormInputs>({
+    defaultValues: {
+      email: "",
+      password: "",
     },
-    [],
-  );
+    mode: "onBlur",
+  });
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!formData.email || !formData.password) {
-      toast.error(t("signIn.errors.required"));
-      return;
+  const handleResendOtp = async () => {
+    const currentValues = watch();
+    const result = await loginAction({
+      email: (unverifiedEmail || currentValues.email).trim(),
+      password: currentValues.password,
+    });
+    if (result.error && !result.requiresVerification && !result.isUnverified) {
+      throw new Error(result.error);
     }
+  };
 
-    setIsLoading(true);
-
+  const onSignInSubmit = async (data: SignInFormInputs) => {
     try {
       // Use Server Action to validate credentials and set HttpOnly cookies
       const result = await loginAction({
-        ...formData,
+        email: data.email.trim(),
+        password: data.password,
       });
 
       if (result.error) {
+        // If email is not verified, backend already dispatched new OTP with 409 message
+        if (
+          result.requiresVerification ||
+          result.isUnverified ||
+          /not\s*verified|verify\s*otp|verify\s*email|verification\s*required/i.test(
+            result.error,
+          )
+        ) {
+          setUnverifiedEmail(data.email.trim());
+          setShowOtp(true);
+          if (typeof window !== "undefined") {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+          return;
+        }
+
         toast.error(result.error);
         return;
       }
@@ -80,10 +101,26 @@ const SignInForm: React.FC = () => {
       router.push(stripLocale(callback_url));
     } catch {
       toast.error(t("signIn.errors.unexpected"));
-    } finally {
-      setIsLoading(false);
     }
   };
+
+  // If email verification required: render shared OTP verification component
+  if (showOtp) {
+    return (
+      <OtpVerification
+        email={unverifiedEmail || watch("email").trim()}
+        subtitle={t("signIn.header")}
+        redirectUrl={callback_url}
+        onBack={() => {
+          setShowOtp(false);
+          if (typeof window !== "undefined") {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        }}
+        onResend={handleResendOtp}
+      />
+    );
+  }
 
   return (
     <div className="w-full max-w-[460px] sm:max-w-[480px] mx-auto lg:mx-0 py-0">
@@ -106,7 +143,11 @@ const SignInForm: React.FC = () => {
       </div>
 
       {/* Inputs Form */}
-      <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
+      <form
+        onSubmit={handleSubmit(onSignInSubmit)}
+        className="space-y-3.5 sm:space-y-4"
+        noValidate
+      >
         <div>
           <Label
             htmlFor="email"
@@ -114,21 +155,25 @@ const SignInForm: React.FC = () => {
           >
             {t("signIn.emailLabel")}
           </Label>
-          <InputGroup className="h-11">
+          <InputGroup error={!!errors.email} className="h-11">
             <InputGroupAddon align="start">
               <Mail className="size-4" />
             </InputGroupAddon>
             <InputGroupInput
               type="email"
               id="email"
-              name="email"
               autoComplete="email"
               placeholder={t("signIn.emailPlaceholder")}
-              value={formData.email}
-              onChange={handleInputChange}
-              required
+              {...register("email", {
+                required: t("signIn.errors.required") || "Email is required",
+              })}
             />
           </InputGroup>
+          {errors.email && (
+            <p className="text-red-500 text-[10px] mt-0.5 font-medium">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         <div>
@@ -138,19 +183,18 @@ const SignInForm: React.FC = () => {
           >
             {t("signIn.passwordLabel")}
           </Label>
-          <InputGroup className="h-11">
+          <InputGroup error={!!errors.password} className="h-11">
             <InputGroupAddon align="start">
               <Lock className="size-4" />
             </InputGroupAddon>
             <InputGroupInput
               type={showPassword ? "text" : "password"}
               id="password"
-              name="password"
               autoComplete="current-password"
               placeholder={t("signIn.passwordPlaceholder")}
-              value={formData.password}
-              onChange={handleInputChange}
-              required
+              {...register("password", {
+                required: t("signIn.errors.required") || "Password is required",
+              })}
             />
             <InputGroupAddon align="end">
               <InputGroupButton
@@ -166,6 +210,11 @@ const SignInForm: React.FC = () => {
               </InputGroupButton>
             </InputGroupAddon>
           </InputGroup>
+          {errors.password && (
+            <p className="text-red-500 text-[10px] mt-0.5 font-medium">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
         <div className="flex justify-end pt-1">
@@ -179,10 +228,10 @@ const SignInForm: React.FC = () => {
 
         <Button
           type="submit"
-          disabled={isLoading}
+          disabled={isSubmitting}
           className="w-full h-11 sm:h-11.5 rounded-full bg-gradient-to-r from-orange to-[#EA580C] hover:from-orange/95 hover:to-[#C2410C] text-white text-sm font-bold shadow-md shadow-orange/20 hover:shadow-lg hover:shadow-orange/25 active:scale-[0.99] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer mt-2.5 sm:mt-3 gap-2"
         >
-          {isLoading ? (
+          {isSubmitting ? (
             <>
               <Loader2 className="size-4 animate-spin text-white" />
               <span>{t("signIn.signingIn")}</span>

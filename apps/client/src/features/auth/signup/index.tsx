@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/input-group";
 import GoogleLoginButton from "../GoogleLoginButton.component";
 import { AuthHeader } from "../AuthHeader";
-import OtpVerification from "./OtpVerification.component";
+import { OtpVerification } from "../OtpVerification.component";
 import { useTranslations } from "next-intl";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
@@ -116,6 +116,7 @@ export const SignUpForm: React.FC = () => {
     return (
       <OtpVerification
         email={registeredEmail}
+        subtitle={t("signUp.header")}
         redirectUrl={callback_url}
         onBack={() => {
           setStep(1);

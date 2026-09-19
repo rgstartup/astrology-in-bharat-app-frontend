@@ -26,8 +26,23 @@ export async function loginAction(
   );
 
   if (error) {
+    const errorMsg = getErrorMessage(error);
+    const status = (error as any)?.status || (error as any)?.body?.statusCode;
+    const body = (error as any)?.body;
+    const errorCode = body?.errorCode || body?.code;
+    const isUnverified =
+      status === 409 ||
+      errorCode === "EMAIL_NOT_VERIFIED" ||
+      errorCode === "UNVERIFIED" ||
+      errorCode === "USER_NOT_VERIFIED" ||
+      /verify\s*your\s*email|not\s*verified|verify\s*otp|verification\s*required|account\s*not\s*verified|email\s*is\s*not\s*verified/i.test(
+        errorMsg || "",
+      );
+
     return {
-      error: getErrorMessage(error),
+      error: errorMsg,
+      requiresVerification: isUnverified,
+      isUnverified,
     };
   }
 
@@ -47,6 +62,39 @@ export async function loginAction(
   }
 
   return { success: true, user: data?.user };
+}
+
+// ─────────────────────────────────────────────────────────
+// RESEND OTP — Re-initiates registration/verification for email
+// ─────────────────────────────────────────────────────────
+export async function resendOtpAction(
+  email: string,
+  password?: string,
+): Promise<AuthActionResponse> {
+  const payload: Record<string, any> = { email: email.trim() };
+  if (password) {
+    payload.password = password;
+  }
+
+  const [data, error] = await api.post<{ message?: string }>(
+    API_ROUTES.AUTH.CLIENT.REGISTER,
+    payload,
+  );
+
+  if (error) {
+    const errorMsg = getErrorMessage(error);
+    console.error("[DEBUG][ServerAction] resendOtpAction error:", errorMsg);
+    return {
+      error: errorMsg,
+    };
+  }
+
+  return {
+    success: true,
+    message:
+      data?.message ||
+      "OTP has been sent to your email successfully.",
+  };
 }
 
 // ─────────────────────────────────────────────────────────

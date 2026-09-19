@@ -33,6 +33,8 @@ export interface AuthActionResponse {
   error?: string;
   user?: User;
   message?: string;
+  requiresVerification?: boolean;
+  isUnverified?: boolean;
 }
 
 export interface VerificationResponse {
