@@ -1,7 +1,6 @@
-export enum AddressTag {
-  HOME = "home",
-  OFFICE = "office",
-  BILLING = "billing",
-  SHIPPING = "shipping",
-  OTHER = "other",
+export enum UserStatusEnum {
+  PENDING_REGISTRATION = "PENDING_REGISTRATION",
+  ACTIVE = "ACTIVE",
+  BLOCKED = "BLOCKED",
+  SUSPENDED = "SUSPENDED",
 }

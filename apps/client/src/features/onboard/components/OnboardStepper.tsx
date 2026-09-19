@@ -1,6 +1,9 @@
 "use client";
 
 import React from "react";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+import { Check, Sparkles, User, Sliders } from "lucide-react";
 
 interface OnboardStepperProps {
   currentStep: 1 | 2;
@@ -11,91 +14,98 @@ export const OnboardStepper: React.FC<OnboardStepperProps> = ({
   currentStep,
   onStepClick,
 }) => {
+  const steps = [
+    {
+      step: 1 as const,
+      title: "Personal Details",
+      subtitle: "Birth & General",
+      icon: User,
+    },
+    {
+      step: 2 as const,
+      title: "Preferences",
+      subtitle: "Topics & Languages",
+      icon: Sliders,
+    },
+  ];
+
+  const progressValue = currentStep === 1 ? 50 : 100;
+
   return (
-    <div className="w-full mb-8">
-      {/* Progress Bar Container */}
-      <div className="relative flex items-center justify-between">
-        {/* Background Connecting Line */}
-        <div className="absolute top-1/2 left-10 right-10 -translate-y-1/2 h-1 bg-gray-100 -z-0" />
-        {/* Active Connecting Line */}
-        <div
-          className="absolute top-1/2 left-10 -translate-y-1/2 h-1 bg-orange transition-all duration-500 -z-0"
-          style={{
-            width: currentStep === 2 ? "calc(100% - 5rem)" : "0%",
-          }}
+    <div className="w-full space-y-4 mb-8">
+      {/* Progress Bar Header */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
+          <span className="flex items-center gap-1.5 text-orange font-bold">
+            <Sparkles className="size-3.5" />
+            Step {currentStep} of 2
+          </span>
+          <span>{progressValue}% Completed</span>
+        </div>
+        <Progress
+          value={progressValue}
+          className="h-1.5 bg-orange/10"
+          indicatorClassName="bg-orange"
         />
+      </div>
 
-        {/* Step 1 Pill */}
-        <button
-          type="button"
-          onClick={() => onStepClick && onStepClick(1)}
-          className={`relative z-10 flex items-center gap-3 py-1.5 px-3 rounded-full transition-all duration-300 ${
-            currentStep === 1
-              ? "bg-white shadow-md border-2 border-orange"
-              : "bg-white border border-gray-200"
-          }`}
-        >
-          <div
-            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-              currentStep === 1
-                ? "bg-orange text-white"
-                : currentStep > 1
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-100 text-gray-400"
-            }`}
-          >
-            {currentStep > 1 ? (
-              <i className="fa-solid fa-check text-xs" />
-            ) : (
-              "1"
-            )}
-          </div>
-          <div className="text-left hidden sm:block pr-2">
-            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-              Step 1
-            </p>
-            <p
-              className={`text-xs font-bold leading-none ${
-                currentStep === 1 ? "text-orange" : "text-gray-700"
-              }`}
-            >
-              Birth & General Details
-            </p>
-          </div>
-        </button>
+      {/* Stepper Buttons */}
+      <div className="grid grid-cols-2 gap-3">
+        {steps.map((item) => {
+          const isActive = currentStep === item.step;
+          const isCompleted = currentStep > item.step;
+          const Icon = item.icon;
 
-        {/* Step 2 Pill */}
-        <button
-          type="button"
-          onClick={() => onStepClick && onStepClick(2)}
-          className={`relative z-10 flex items-center gap-3 py-1.5 px-3 rounded-full transition-all duration-300 ${
-            currentStep === 2
-              ? "bg-white shadow-md border-2 border-orange"
-              : "bg-white border border-gray-200"
-          }`}
-        >
-          <div
-            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-              currentStep === 2
-                ? "bg-orange text-white"
-                : "bg-gray-100 text-gray-400"
-            }`}
-          >
-            2
-          </div>
-          <div className="text-left hidden sm:block pr-2">
-            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-              Step 2
-            </p>
-            <p
-              className={`text-xs font-bold leading-none ${
-                currentStep === 2 ? "text-orange" : "text-gray-700"
-              }`}
+          return (
+            <button
+              key={item.step}
+              type="button"
+              onClick={() => onStepClick?.(item.step)}
+              className={cn(
+                "flex items-center gap-3 p-3 rounded-2xl border text-left transition-all duration-200 outline-none select-none cursor-pointer",
+                isActive
+                  ? "bg-orange/5 border-orange ring-1 ring-orange/30 shadow-xs"
+                  : isCompleted
+                    ? "bg-emerald-50/50 border-emerald-200 hover:bg-emerald-50"
+                    : "bg-white border-border/70 hover:border-orange/30 hover:bg-gray-50/50"
+              )}
             >
-              Preferences & Topics
-            </p>
-          </div>
-        </button>
+              <div
+                className={cn(
+                  "size-8 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 transition-colors",
+                  isActive
+                    ? "bg-orange text-white shadow-xs"
+                    : isCompleted
+                      ? "bg-emerald-600 text-white"
+                      : "bg-muted text-muted-foreground"
+                )}
+              >
+                {isCompleted ? (
+                  <Check className="size-4" />
+                ) : (
+                  <Icon className="size-4" />
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p
+                  className={cn(
+                    "text-xs font-bold leading-tight truncate",
+                    isActive
+                      ? "text-orange"
+                      : isCompleted
+                        ? "text-emerald-800"
+                        : "text-foreground"
+                  )}
+                >
+                  {item.title}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {item.subtitle}
+                </p>
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

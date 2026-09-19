@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const AVAILABLE_LANGUAGES = [
   { id: "English", label: "English", native: "English" },
@@ -35,11 +37,11 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="block text-sm font-bold text-[#301118]">
+        <label className="block text-sm font-bold text-foreground">
           Preferred Consultation Languages{" "}
           <span className="text-orange">*</span>
         </label>
-        <span className="text-xs text-gray-500 font-medium">
+        <span className="text-xs text-muted-foreground font-medium">
           Select one or more
         </span>
       </div>
@@ -52,21 +54,25 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
               key={lang.id}
               type="button"
               onClick={() => toggleLanguage(lang.id)}
-              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 border ${
+              className={cn(
+                "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 border cursor-pointer outline-none",
                 isSelected
-                  ? "bg-orange text-white border-orange shadow-sm shadow-orange/30 scale-[1.02]"
-                  : "bg-white text-gray-700 border-gray-200 hover:border-orange/50 hover:bg-orange/5"
-              }`}
+                  ? "bg-orange text-white border-orange shadow-xs shadow-orange/30 scale-[1.02]"
+                  : "bg-white text-foreground border-border hover:border-orange/50 hover:bg-orange/5"
+              )}
             >
               <span>{lang.native}</span>
               {lang.id !== lang.native && (
                 <span
-                  className={`text-xs ${isSelected ? "text-white/80" : "text-gray-400"}`}
+                  className={cn(
+                    "text-xs",
+                    isSelected ? "text-white/80" : "text-muted-foreground"
+                  )}
                 >
                   ({lang.label})
                 </span>
               )}
-              {isSelected && <i className="fa-solid fa-check text-xs ml-0.5" />}
+              {isSelected && <Check className="size-3.5 ml-0.5" />}
             </button>
           );
         })}

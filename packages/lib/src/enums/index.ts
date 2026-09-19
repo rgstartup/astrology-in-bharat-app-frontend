@@ -9,3 +9,4 @@ export * from "./fulfillment-type.enum";
 export * from "./discount-type.enum";
 export * from "./delivery-type.enum";
 export * from "./expert-product-relation-type.enum";
+export * from "./order-status.enum";

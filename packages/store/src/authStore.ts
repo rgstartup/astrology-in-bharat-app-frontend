@@ -12,6 +12,8 @@ export interface ClientUser {
    */
   uid?: string;
   name?: string;
+  first_name?: string;
+  last_name?: string | null;
   email?: string;
   role?: string;
   roles?: string[];
@@ -141,6 +143,19 @@ export const useAuthStore = create<AuthState>()(
         let user: ClientUser | null = null;
 
         if (raw?.user?.id) {
+          const rawFirstName = raw.user.first_name || raw.first_name || "";
+          const rawLastName =
+            raw.user.last_name !== undefined
+              ? raw.user.last_name
+              : raw.last_name !== undefined
+                ? raw.last_name
+                : null;
+          const rawName =
+            raw.user.name ||
+            raw.name ||
+            [rawFirstName, rawLastName].filter(Boolean).join(" ") ||
+            "User";
+
           user = {
             id: raw.user.id,
             public_id:
@@ -153,7 +168,9 @@ export const useAuthStore = create<AuthState>()(
               raw.public_id ||
               raw.user.uid ||
               raw.uid,
-            name: raw.user.name,
+            name: rawName,
+            first_name: rawFirstName,
+            last_name: rawLastName,
             email: raw.user.email,
             roles: raw.user.roles || [],
             profile_picture:
@@ -174,11 +191,22 @@ export const useAuthStore = create<AuthState>()(
             profile: raw.profile || raw.user.profile || raw.id,
           };
         } else if (raw?.id) {
+          const rawFirstName = raw.first_name || "";
+          const rawLastName =
+            raw.last_name !== undefined ? raw.last_name : null;
+          const rawName =
+            raw.full_name ||
+            raw.name ||
+            [rawFirstName, rawLastName].filter(Boolean).join(" ") ||
+            "User";
+
           user = {
             id: raw.id,
             public_id: raw.public_id || raw.uid,
             uid: raw.public_id || raw.uid,
-            name: raw.full_name || raw.name || "User",
+            name: rawName,
+            first_name: rawFirstName,
+            last_name: rawLastName,
             email: raw.email || "",
             roles: raw.roles || [],
             profile_picture:

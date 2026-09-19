@@ -4,6 +4,8 @@ export interface User {
   id: string;
   public_id?: string;
   name: string;
+  first_name?: string;
+  last_name?: string | null;
   email: string;
   roles?: string[];
   /** @deprecated Soon to be deprecated. Use avatar_media instead */
@@ -18,6 +20,8 @@ export interface Client {
   /** @deprecated uid has been renamed to public_id */
   uid?: string;
   name: string;
+  first_name?: string;
+  last_name?: string | null;
   email: string;
   /** @deprecated Soon to be deprecated. Use avatar_media instead */
   avatar?: string;

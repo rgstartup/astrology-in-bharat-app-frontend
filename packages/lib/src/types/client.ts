@@ -1,4 +1,15 @@
+import { UserStatusEnum } from "../enums";
 import { Media } from "./media";
+
+export interface ClientPreferences {
+  languages?: string[];
+  topics?: number[];
+  specializations?: number[];
+  professions?: number[];
+  communication_channel?: "chat" | "call" | "both";
+  receive_daily_panchang?: boolean;
+  [key: string]: unknown;
+}
 
 export interface Client {
   id: string;
@@ -9,6 +20,8 @@ export interface Client {
   uid?: string;
   is_blocked: boolean;
   name: string;
+  first_name: string;
+  last_name: string | null;
   email: string;
   /**
    * @deprecated avatar is soon to be deprecated. Use avatar_media instead.
@@ -19,15 +32,14 @@ export interface Client {
   gender: string;
   phone: string;
   phone_verified_at: Date;
-  preferences: any;
-  language_preference: any;
   time_of_birth: string;
   place_of_birth: string;
   marital_status: string;
   occupation: string;
   about_me: string;
   total_spending: number;
-  status: string;
+  status: UserStatusEnum;
+  preferences: ClientPreferences;
   created_at: string;
   updated_at: string;
 }

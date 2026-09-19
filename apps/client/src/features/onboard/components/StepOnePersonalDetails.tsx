@@ -1,31 +1,36 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  UseFormRegister,
-  FieldErrors,
-  UseFormSetValue,
-  UseFormWatch,
-} from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { OnboardingFormData } from "@/lib/types";
 import { ProfilePicUpload } from "./ProfilePicUpload";
 import { AddressFields } from "./AddressFields";
 import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/store/useAuthStore";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Cake,
+  ArrowRight,
+  Crosshair,
+  Mars,
+  Venus,
+  CircleDot,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface StepOnePersonalDetailsProps {
-  register: UseFormRegister<OnboardingFormData>;
-  errors: FieldErrors<OnboardingFormData>;
-  setValue: UseFormSetValue<OnboardingFormData>;
-  watch: UseFormWatch<OnboardingFormData>;
   onNext: () => void;
 }
 
 export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
-  register,
-  errors,
-  setValue,
-  watch,
   onNext,
 }) => {
   const [maxDate, setMaxDate] = useState("");
@@ -35,15 +40,12 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
   }, []);
 
   const { user, updateUser } = useAuth();
+  const { control, setValue, watch } = useFormContext<OnboardingFormData>();
 
   const currentAvatar = watch("avatar") || user?.avatar;
-  const currentGender = watch("gender");
 
   return (
     <div className="space-y-6">
-      {/* Hidden input to ensure avatar is tracked in form data */}
-      <input type="hidden" {...register("avatar")} />
-
       {/* 1. Profile Picture Upload */}
       <ProfilePicUpload
         value={currentAvatar}
@@ -61,157 +63,191 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
       />
 
       {/* 2. Birth Details Section */}
-      <div>
-        <div className="flex items-center gap-2 pb-2 mb-4 border-b border-gray-100">
-          <i className="fa-solid fa-cake-candles text-orange text-sm" />
-          <h5 className="text-sm font-bold text-[#301118]">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 pb-1.5 border-b border-gray-100">
+          <Cake className="size-4 text-orange" />
+          <h3 className="text-sm font-bold text-foreground">
             Birth & Personal Details
-          </h5>
+          </h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Full Name */}
-          <div className="md:col-span-2">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
-              Full Name
-            </label>
-            <input
-              type="text"
-              placeholder="Enter your full name"
-              {...register("full_name")}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange/20 focus:border-orange transition-all placeholder:text-gray-400"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+          {/* First Name */}
+          <div>
+            <FormField
+              control={control}
+              name="first_name"
+              rules={{
+                required: "First name is required",
+              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>First Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. Aarav" {...field} />
+                  </FormControl>
+                  <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* Last Name */}
+          <div>
+            <FormField
+              control={control}
+              name="last_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. Sharma" {...field} />
+                  </FormControl>
+                  <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
+                </FormItem>
+              )}
             />
           </div>
 
           {/* Date of Birth */}
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
-              Date of Birth <span className="text-orange">*</span>
-            </label>
-            <input
-              type="date"
-              max={maxDate}
-              {...register("date_of_birth", {
+            <FormField
+              control={control}
+              name="date_of_birth"
+              rules={{
                 required: "Date of birth is required for astrological charts",
-              })}
-              className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-orange/20 transition-all ${
-                errors.date_of_birth
-                  ? "border-red-400 bg-red-50/30"
-                  : "border-gray-200 focus:border-orange"
-              }`}
+              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Date of Birth</FormLabel>
+                  <FormControl>
+                    <Input type="date" max={maxDate} {...field} />
+                  </FormControl>
+                  <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
+                </FormItem>
+              )}
             />
-            {errors.date_of_birth && (
-              <p className="text-xs text-red-500 font-medium mt-1">
-                {errors.date_of_birth.message}
-              </p>
-            )}
           </div>
 
           {/* Time of Birth */}
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
-              Time of Birth{" "}
-              <span className="text-xs text-gray-400">
-                (Optional if unknown)
-              </span>
-            </label>
-            <input
-              type="time"
-              {...register("time_of_birth")}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange/20 focus:border-orange transition-all"
+            <FormField
+              control={control}
+              name="time_of_birth"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Time of Birth{" "}
+                    <span className="text-xs font-normal text-muted-foreground">
+                      (Optional)
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="time" {...field} />
+                  </FormControl>
+                  <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
+                </FormItem>
+              )}
             />
           </div>
 
           {/* Gender */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-              Gender <span className="text-orange">*</span>
-            </label>
-            <div className="grid grid-cols-3 gap-3">
-              {(
-                [
-                  { id: "male", label: "Male", icon: "fa-solid fa-mars" },
-                  { id: "female", label: "Female", icon: "fa-solid fa-venus" },
-                  {
-                    id: "other",
-                    label: "Other",
-                    icon: "fa-solid fa-genderless",
-                  },
-                ] as const
-              ).map((genderOption) => {
-                const isSelected = currentGender === genderOption.id;
-                return (
-                  <button
-                    key={genderOption.id}
-                    type="button"
-                    onClick={() =>
-                      setValue("gender", genderOption.id, {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      })
-                    }
-                    className={`py-2.5 px-3 rounded-xl border text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
-                      isSelected
-                        ? "bg-orange text-white border-orange shadow-sm"
-                        : "bg-white text-gray-700 border-gray-200 hover:border-orange/40 hover:bg-orange/5"
-                    }`}
-                  >
-                    <i className={genderOption.icon} />
-                    <span>{genderOption.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <input
-              type="hidden"
-              {...register("gender", { required: "Please select your gender" })}
+            <FormField
+              control={control}
+              name="gender"
+              rules={{ required: "Please select your gender" }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Gender</FormLabel>
+                  <FormControl>
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { id: "male", label: "Male", icon: Mars },
+                        { id: "female", label: "Female", icon: Venus },
+                        { id: "other", label: "Other", icon: CircleDot },
+                      ].map((genderOption) => {
+                        const isSelected = field.value === genderOption.id;
+                        const Icon = genderOption.icon;
+
+                        return (
+                          <button
+                            key={genderOption.id}
+                            type="button"
+                            onClick={() =>
+                              field.onChange(genderOption.id)
+                            }
+                            className={cn(
+                              "py-2.5 px-3 rounded-xl border text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer outline-none",
+                              isSelected
+                                ? "bg-orange text-white border-orange shadow-xs"
+                                : "bg-white text-foreground border-border hover:border-orange/40 hover:bg-orange/5"
+                            )}
+                          >
+                            <Icon className="size-4" />
+                            <span>{genderOption.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
+                </FormItem>
+              )}
             />
-            {errors.gender && (
-              <p className="text-xs text-red-500 font-medium mt-1">
-                {errors.gender.message}
-              </p>
-            )}
           </div>
 
           {/* Place of Birth */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
-              Place of Birth{" "}
-              <span className="text-xs text-gray-400">(Optional)</span>
-            </label>
-            <div className="relative">
-              <i className="fa-solid fa-location-crosshairs absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
-              <input
-                type="text"
-                placeholder="City, State, Country (e.g. Varanasi, Uttar Pradesh)"
-                {...register("place_of_birth")}
-                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange/20 focus:border-orange transition-all placeholder:text-gray-400"
-              />
-            </div>
+            <FormField
+              control={control}
+              name="place_of_birth"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Place of Birth{" "}
+                    <span className="text-xs font-normal text-muted-foreground">
+                      (Optional)
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Crosshair className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                      <Input
+                        placeholder="City, State, Country (e.g. Varanasi, Uttar Pradesh)"
+                        className="pl-9"
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
+                </FormItem>
+              )}
+            />
           </div>
         </div>
       </div>
 
       {/* 3. Address Section */}
-      <AddressFields register={register} errors={errors} />
+      <AddressFields />
 
       {/* Navigation */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-100">
         <Link
           href="/client/profile"
-          className="text-xs font-semibold text-gray-400 hover:text-gray-600 transition-colors"
+          className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
         >
           Skip for now →
         </Link>
 
-        <button
+        <Button
           type="button"
           onClick={onNext}
-          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-orange hover:bg-[#d64e1c] text-white text-sm font-bold shadow-md shadow-orange/20 flex items-center justify-center gap-2 transition-all hover:translate-x-0.5"
+          className="w-full sm:w-auto px-6 py-2.5 h-11 rounded-xl bg-orange hover:bg-orange/90 text-white text-sm font-bold shadow-md shadow-orange/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
         >
           <span>Continue to Preferences</span>
-          <i className="fa-solid fa-arrow-right text-xs" />
-        </button>
+          <ArrowRight className="size-4" />
+        </Button>
       </div>
     </div>
   );

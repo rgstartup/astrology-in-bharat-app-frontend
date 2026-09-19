@@ -1,84 +1,110 @@
 "use client";
 
 import React from "react";
-import { UseFormRegister, FieldErrors } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { OnboardingFormData } from "@/lib/types";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { MapPin, ChevronDown } from "lucide-react";
 
-interface AddressFieldsProps {
-  register: UseFormRegister<OnboardingFormData>;
-  errors: FieldErrors<OnboardingFormData>;
-}
+export const AddressFields: React.FC = () => {
+  const { control } = useFormContext<OnboardingFormData>();
 
-export const AddressFields: React.FC<AddressFieldsProps> = ({
-  register,
-  errors,
-}) => {
   return (
-    <div className="space-y-4 pt-2">
-      <div className="flex items-center gap-2 pb-1 border-b border-gray-100">
-        <i className="fa-solid fa-location-dot text-orange text-sm" />
-        <h5 className="text-sm font-bold text-[#301118]">
-          Address Details{" "}
-          <span className="text-xs font-normal text-gray-400">
-            (For accurate geographic calculations & delivery)
+    <details className="group pt-2 border-t border-gray-100">
+      <summary className="flex items-center justify-between py-2.5 cursor-pointer select-none text-sm font-bold text-foreground hover:text-orange transition-colors list-none">
+        <div className="flex items-center gap-2">
+          <MapPin className="size-4 text-orange" />
+          <span>Address Details</span>
+          <span className="text-xs font-normal text-muted-foreground">
+            (Optional for physical reports & delivery)
           </span>
-        </h5>
-      </div>
+        </div>
+        <ChevronDown className="size-4 text-muted-foreground transition-transform duration-200 group-open:rotate-180" />
+      </summary>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 items-start">
         {/* Street Address */}
         <div className="md:col-span-2">
-          <label className="block text-xs font-semibold text-gray-700 mb-1">
-            Street Address / House No.
-          </label>
-          <input
-            type="text"
-            placeholder="e.g. 124, Lotus Apartments, MG Road"
-            {...register("address.line1")}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange/20 focus:border-orange transition-all placeholder:text-gray-400"
+          <FormField
+            control={control}
+            name="address.line1"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Street Address / House No.</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="e.g. 124, Lotus Apartments, MG Road"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
+              </FormItem>
+            )}
           />
         </div>
 
         {/* City */}
         <div>
-          <label className="block text-xs font-semibold text-gray-700 mb-1">
-            City / Town
-          </label>
-          <input
-            type="text"
-            placeholder="e.g. New Delhi"
-            {...register("address.city")}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange/20 focus:border-orange transition-all placeholder:text-gray-400"
+          <FormField
+            control={control}
+            name="address.city"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>City / Town</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. New Delhi" {...field} />
+                </FormControl>
+                <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
+              </FormItem>
+            )}
           />
         </div>
 
         {/* State */}
         <div>
-          <label className="block text-xs font-semibold text-gray-700 mb-1">
-            State
-          </label>
-          <input
-            type="text"
-            placeholder="e.g. Delhi"
-            {...register("address.state")}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange/20 focus:border-orange transition-all placeholder:text-gray-400"
+          <FormField
+            control={control}
+            name="address.state"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>State</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. Delhi" {...field} />
+                </FormControl>
+                <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
+              </FormItem>
+            )}
           />
         </div>
 
         {/* PIN Code */}
         <div>
-          <label className="block text-xs font-semibold text-gray-700 mb-1">
-            PIN / Postal Code
-          </label>
-          <input
-            type="text"
-            maxLength={6}
-            placeholder="e.g. 110001"
-            {...register("address.pincode")}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange/20 focus:border-orange transition-all placeholder:text-gray-400"
+          <FormField
+            control={control}
+            name="address.pincode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>PIN / Postal Code</FormLabel>
+                <FormControl>
+                  <Input
+                    maxLength={6}
+                    placeholder="e.g. 110001"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
+              </FormItem>
+            )}
           />
         </div>
       </div>
-    </div>
+    </details>
   );
 };

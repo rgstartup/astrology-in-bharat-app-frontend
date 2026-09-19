@@ -19,8 +19,18 @@ export async function saveOnboardingAction(
 
   const payload: Record<string, any> = {};
 
+  if (data.first_name?.trim()) {
+    payload.first_name = data.first_name.trim();
+  }
+  if (data.last_name?.trim()) {
+    payload.last_name = data.last_name.trim();
+  }
   if (data.full_name?.trim()) {
     payload.full_name = data.full_name.trim();
+  } else if (data.first_name?.trim() || data.last_name?.trim()) {
+    payload.full_name = [data.first_name?.trim(), data.last_name?.trim()]
+      .filter(Boolean)
+      .join(" ");
   }
   if (data.date_of_birth?.trim()) {
     payload.date_of_birth = data.date_of_birth.trim();

@@ -20,6 +20,9 @@ export interface ClientProfileData {
     public_id?: string;
     /** @deprecated uid has been renamed to public_id */
     uid?: string;
+    first_name?: string;
+    last_name?: string | null;
+    name?: string;
     full_name?: string;
     username?: string;
     date_of_birth?: string;
@@ -40,6 +43,8 @@ export interface ClientProfileData {
     user?: {
         id: string;
         public_id?: string;
+        first_name?: string;
+        last_name?: string | null;
         name: string;
         email: string;
         /** @deprecated Use avatar_media instead */
