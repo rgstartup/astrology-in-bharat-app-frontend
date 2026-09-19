@@ -1,16 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useOptimistic, useTransition } from "react";
 import Image from "next/image";
 import { Award, CheckCircle2, Play, Heart } from "lucide-react";
 import { ProfileHeroBannerProps } from "./types";
 import { useWishlistStore } from "@/store/useWishlistStore";
-import { useWishlist } from "@/hooks/useWishlist";
 import { useAuthStore } from "@/store/__useAuthStore";
 import { toast } from "@/hooks/use-toast";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Toggle } from "@/components/ui/toggle";
+import { toggleExpertFavoriteAction } from "@/actions";
 
 export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
   expertId,
@@ -24,11 +24,19 @@ export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
 }) => {
   const { isExpertInWishlist } = useWishlistStore();
   const { isAuthenticated } = useAuthStore();
-  const { toggleLike, isPending } = useWishlist();
   const router = useRouter();
   const pathname = usePathname();
 
-  const isFavorite = expertId ? isExpertInWishlist(expertId) : false;
+  const isStoredFavorite = expertId
+    ? isExpertInWishlist(String(expertId))
+    : false;
+
+  const [optimisticIsFavorite, setOptimisticIsFavorite] = useOptimistic(
+    isStoredFavorite,
+    (_current: boolean, update: boolean) => update,
+  );
+
+  const [isPending, startTransition] = useTransition();
 
   const handleFavoriteToggle = () => {
     if (!expertId) return;
@@ -47,10 +55,46 @@ export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
       return;
     }
 
-    toggleLike({ id: String(expertId), type: "expert", isLiked: isFavorite });
-    toast.success(
-      isFavorite ? "Removed from your favorites." : "Added to your favorites!",
-    );
+    const targetState = !optimisticIsFavorite;
+
+    startTransition(async () => {
+      // 1. Immediate optimistic UI feedback
+      setOptimisticIsFavorite(targetState);
+
+      try {
+        // 2. Call Server Action via API_ROUTES
+        const res = await toggleExpertFavoriteAction(expertId, !targetState);
+
+        if (res?.error) {
+          toast.error(res.error);
+          return;
+        }
+
+        // 3. Update Zustand store baseline state
+        if (targetState) {
+          useWishlistStore.setState((state) => ({
+            expertWishlistItems: [
+              ...state.expertWishlistItems,
+              {
+                expertId: String(expertId),
+                expert: { id: String(expertId) },
+              } as any,
+            ],
+          }));
+          toast.success("Added to your favorites!");
+        } else {
+          useWishlistStore.setState((state) => ({
+            expertWishlistItems: state.expertWishlistItems.filter(
+              (item) =>
+                String(item.expertId || item.expert?.id) !== String(expertId),
+            ),
+          }));
+          toast.success("Removed from your favorites.");
+        }
+      } catch (err: any) {
+        toast.error(err?.message || "Failed to update favorites");
+      }
+    });
   };
   return (
     <div>
@@ -150,17 +194,19 @@ export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
         <Toggle
           variant="heart"
           size="icon"
-          pressed={isFavorite}
+          pressed={optimisticIsFavorite}
           disabled={isPending}
           onPressedChange={handleFavoriteToggle}
-          aria-label={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-          title={isFavorite ? "Favorited" : "Add to favorites"}
+          aria-label={
+            optimisticIsFavorite ? "Remove from Favorites" : "Add to Favorites"
+          }
+          title={optimisticIsFavorite ? "Favorited" : "Add to favorites"}
           className="relative z-10 mb-1 backdrop-blur-md transition-transform hover:scale-110 active:scale-95 group/heart"
         >
           <Heart
             className={cn(
               "size-4 transition-transform duration-200",
-              isFavorite
+              optimisticIsFavorite
                 ? "fill-rose-500 text-rose-500 scale-110"
                 : "text-slate-400 group-hover/heart:text-rose-500",
             )}

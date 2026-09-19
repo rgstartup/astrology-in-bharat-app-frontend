@@ -66,7 +66,7 @@ interface WishlistState {
     // Expert Actions
     addExpertToWishlist: (expertId: string, isAuthenticated: boolean) => Promise<void>;
     removeExpertFromWishlist: (expertId: string) => Promise<void>;
-    isExpertInWishlist: (expertId: string) => boolean;
+    isExpertInWishlist: (expertId: string | number) => boolean;
     toggleExpertWishlist: (expertId: string, isAuthenticated: boolean) => Promise<void>;
 
     // Puja Actions
@@ -196,7 +196,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
         }
     },
 
-    isExpertInWishlist: (expertId: string | string) => {
+    isExpertInWishlist: (expertId: string | number) => {
         const { expertWishlistItems } = get();
         return expertWishlistItems.some(item =>
             item != null && (

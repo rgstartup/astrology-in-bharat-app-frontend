@@ -11,7 +11,7 @@ export interface ExpertProfileCardProps {
 }
 
 export interface ProfileHeroBannerProps {
-  expertId?: string;
+  expertId: string | number;
   name: string;
   avatar: string;
   primaryProfession: string;

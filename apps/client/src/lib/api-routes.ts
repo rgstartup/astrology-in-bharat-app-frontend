@@ -18,6 +18,34 @@ export const API_ROUTES = {
     FORGOT_PASSWORD: "/auth/forgot/password",
     RESET_PASSWORD: "/auth/reset/password",
   },
+  CLIENT: {
+    AUTH: {
+      LOGIN: "/client/auth/email/login",
+      REGISTER: "/client/auth/email/register/initiate",
+      VERIFY_OTP: "/client/auth/email/register/complete",
+      GOOGLE_LOGIN: "/client/auth/google/login",
+      ME: "/client/account",
+      PICTURE: "/client/account/picture",
+      REFRESH: "/client/auth/refresh",
+    },
+    FAVORITES: {
+      EXPERT: {
+        LIST: "/client/favorites/expert",
+        ADD_TO_FAVORITE: "/client/favorites/expert/:id",
+        REMOVE_FROM_FAVORITE: "/client/favorites/expert/:id",
+      },
+      PRODUCT: {
+        LIST: "/client/favorites/product",
+        ADD_TO_FAVORITE: "/client/favorites/product/:id",
+        REMOVE_FROM_FAVORITE: "/client/favorites/product/:id",
+      },
+      PRODUCT_VARIANT: {
+        LIST: "/client/favorites/product-variant",
+        ADD_TO_FAVORITE: "/client/favorites/product-variant/:id",
+        REMOVE_FROM_FAVORITE: "/client/favorites/product-variant/:id",
+      },
+    },
+  },
   PLACES: {
     SEARCH: "/places/search",
     IMAGES: "/places/images",
