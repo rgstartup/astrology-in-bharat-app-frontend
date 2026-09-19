@@ -9,12 +9,15 @@ import {
 import { useTranslations } from "next-intl";
 
 export interface GoogleLoginButtonProps extends UseGoogleLoginOptions {
+  callback_url?: string;
+  callbackUrl?: string;
   text?: string;
   className?: string;
   disabled?: boolean;
 }
 
 export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
+  callback_url,
   callbackUrl,
   role = "client",
   onError,
@@ -25,7 +28,7 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   const t = useTranslations("Auth");
 
   const { handleGoogleLogin } = useGoogleLogin({
-    callbackUrl,
+    callback_url: callback_url || callbackUrl,
     role,
     onError,
   });
@@ -36,18 +39,18 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
       disabled={disabled}
       className={
         className ||
-        "flex items-center justify-center gap-3 w-full border-2 border-gray-100 rounded-2xl py-3 px-6 hover:bg-gray-50 hover:border-gray-200 transition-all cursor-pointer shadow-sm group disabled:opacity-50 disabled:cursor-not-allowed"
+        "flex items-center justify-center gap-2.5 w-full border border-stone-200 hover:border-stone-300 rounded-full h-11 px-4 bg-white hover:bg-stone-50 active:bg-stone-100 transition-all duration-200 cursor-pointer text-xs sm:text-sm group disabled:opacity-50 disabled:cursor-not-allowed shadow-2xs hover:shadow-xs"
       }
       onClick={handleGoogleLogin}
     >
       <Image
         src="/images/google-color-svgrepo-com.svg"
         alt="Google"
-        height={20}
-        width={20}
-        className="group-hover:scale-110 transition-transform"
+        height={18}
+        width={18}
+        className="group-hover:scale-105 transition-transform"
       />
-      <span className="font-bold text-gray-600 text-sm">
+      <span className="font-semibold text-foreground text-xs sm:text-sm">
         {text || t("signIn.google")}
       </span>
     </button>

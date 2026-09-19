@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { MouseEventHandler } from "react";
 
 interface ExpertCardProfileProps {
-  avatar?: string;
+  avatar?: string | null;
   name: string;
   isLiked: boolean;
   currentLikes: number;

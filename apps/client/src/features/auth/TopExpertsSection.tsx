@@ -12,9 +12,15 @@ const GreenDot = ({ isOnline }: { isOnline: boolean }) => {
   if (!isOnline) return null;
 
   return (
-    <span className="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full shadow-sm" />
+    <span className="absolute bottom-0.5 right-0.5 size-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-2xs" />
   );
 };
+
+const FALLBACK_EXPERT_AVATARS = [
+  "/images/Expert.png",
+  "/images/Expert-h.png",
+  "/images/astro.png",
+];
 
 const TopExpertsSection: React.FC = () => {
   const { experts, loading, setLoading, setExperts } = useExpertListStore();
@@ -41,71 +47,85 @@ const TopExpertsSection: React.FC = () => {
   }, []);
 
   return (
-    <div className="mt-8 mb-8 md:mb-0">
-      <h3 className="text-2xl font-black text-[#301118] mb-6 flex items-center gap-2">
-        <span className="w-8 h-8 rounded-full bg-orange/10 flex items-center justify-center">
-          <i className="fa-solid fa-crown text-orange text-sm"></i>
+    <div className="mt-0 mb-0">
+      <h3 className="text-sm font-semibold text-foreground mb-3.5 flex items-center gap-2">
+        <span className="size-5.5 rounded-full bg-amber-100/80 text-amber-700 flex items-center justify-center shrink-0">
+          <i className="fa-solid fa-crown text-[10px]"></i>
         </span>
         Top Rated Experts
       </h3>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-3">
         {loading || experts.length === 0
           ? [1, 2, 3].map((_, idx) => (
               <div className="w-full" key={idx}>
-                <div className="bg-white rounded-3xl border-2 border-orange/50 p-4 text-center animate-pulse">
-                  <div className="relative inline-block mb-3">
+                <div className="bg-white rounded-xl border border-stone-200/80 p-3 text-center animate-pulse">
+                  <div className="relative inline-block mb-2">
                     <Skeleton
                       variant="circular"
-                      width={80}
-                      height={80}
-                      className="border-2 border-orange/20 p-1"
+                      width={52}
+                      height={52}
+                      className="border border-stone-200"
                     />
                   </div>
-                  <div className="flex flex-col items-center gap-2 mb-2">
-                    <Skeleton width="70%" height={16} className="rounded-md" />
-                    <Skeleton width={40} height={12} className="rounded-full" />
+                  <div className="flex flex-col items-center gap-1.5 mb-1.5">
+                    <Skeleton width="80%" height={11} className="rounded-md" />
+                    <Skeleton width={40} height={11} className="rounded-full" />
                   </div>
                   <Skeleton
-                    width="50%"
-                    height={10}
+                    width="60%"
+                    height={9}
                     className="rounded-md mx-auto"
                   />
                 </div>
               </div>
             ))
-          : experts.map((expert, idx) => (
-              <div className="group" key={`${expert.id}-${idx}`}>
-                <div className="bg-white rounded-3xl border-2 border-orange p-4 text-center hover:shadow-[0_10px_30px_rgba(255,107,0,0.15)] transition-all duration-300">
-                  <div className="relative inline-block mb-3">
-                    <Image
-                      src={expert.avatar || "/images/dummy-expert.jpg"}
-                      alt={expert.name || "Expert"}
-                      height={80}
-                      width={80}
-                      className="w-20 h-20 rounded-full object-cover border-2 border-orange/20 p-1 group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <GreenDot isOnline={Boolean(expert.is_available)} />
-                  </div>
-                  <h6 className="font-bold text-[#301118] leading-tight mb-1 truncate px-1">
-                    {expert.name || "Expert"}
-                  </h6>
-                  <div className="flex items-center justify-center gap-1 mb-1 bg-orange/5 rounded-full py-0.5 px-2 w-fit mx-auto">
-                    <i className="fa-solid fa-star text-orange text-[10px]"></i>
-                    <span className="text-xs font-black text-orange">
-                      {expert.rating || "5.0"}
+          : experts.map((expert, idx) => {
+              const specialization = formatSpecializationsString(
+                expert.specializations ||
+                  expert.specialization ||
+                  (expert as any).expertise,
+                "Astrology",
+              );
+              const avatarSrc =
+                expert.avatar ||
+                FALLBACK_EXPERT_AVATARS[idx % FALLBACK_EXPERT_AVATARS.length] ||
+                "/images/dummy-expert.jpg";
+
+              return (
+                <div className="group" key={`${expert.id}-${idx}`}>
+                  <div className="bg-white rounded-2xl border border-stone-200 p-3 text-center shadow-xs hover:border-orange/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                    <div className="relative inline-block mb-2">
+                      <Image
+                        src={avatarSrc}
+                        alt={expert.name || "Expert"}
+                        height={52}
+                        width={52}
+                        className="size-13 rounded-full object-cover border-2 border-white shadow-2xs group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <GreenDot isOnline={Boolean(expert.is_available)} />
+                    </div>
+                    <p
+                      title={expert.name || "Expert"}
+                      className="text-xs font-semibold text-stone-900 leading-tight line-clamp-2 min-h-[2rem] px-0.5 mb-1"
+                    >
+                      {expert.name || "Expert"}
+                    </p>
+                    <div className="flex items-center justify-center gap-1 mb-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full py-0.5 px-2.5 w-fit mx-auto">
+                      <i className="fa-solid fa-star text-amber-500 text-[9px]"></i>
+                      <span className="text-[10px] font-bold text-amber-900 leading-none">
+                        {expert.rating || "5.0"}
+                      </span>
+                    </div>
+                    <span
+                      title={specialization}
+                      className="text-xs font-medium text-stone-500 line-clamp-2 leading-tight block min-h-[2rem]"
+                    >
+                      {specialization}
                     </span>
                   </div>
-                  <span className="text-[10px] font-bold text-gray-800 uppercase tracking-wider truncate block">
-                    {formatSpecializationsString(
-                      expert.specializations ||
-                        expert.specialization ||
-                        (expert as any).expertise,
-                      "Astrology",
-                    )}
-                  </span>
                 </div>
-              </div>
-            ))}
+              );
+            })}
       </div>
     </div>
   );

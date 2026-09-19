@@ -10,6 +10,8 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/hooks/useCart";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
+import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { getProductImageUrl } from "@/utils/image-utils";
 import {
   useProductListStore,
@@ -96,7 +98,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {
           onClick: () =>
             router.push(
-              `/sign-in?callbackUrl=${encodeURIComponent(pathname === "/" ? "/#astrology-products" : pathname)}`,
+              withCallbackUrl(
+                PATHS.SIGN_IN,
+                pathname === "/" ? "/#astrology-products" : pathname,
+              ),
             ),
           style: { cursor: "pointer" },
         },
@@ -225,7 +230,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                   {
                     onClick: () =>
                       router.push(
-                        `/sign-in?callbackUrl=${encodeURIComponent(pathname === "/" ? "/#astrology-products" : pathname)}`,
+                        withCallbackUrl(
+                          PATHS.SIGN_IN,
+                          pathname === "/" ? "/#astrology-products" : pathname,
+                        ),
                       ),
                     style: { cursor: "pointer" },
                   },

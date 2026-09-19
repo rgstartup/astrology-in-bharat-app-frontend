@@ -1,21 +1,34 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import Image from "next/image";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
-
-import { Loading } from "@repo/ui";
+import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { loginAction } from "@/actions/auth";
+import { Label } from "@/components/ui/label";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupButton,
+} from "@/components/ui/input-group";
 import GoogleLoginButton from "../GoogleLoginButton.component";
+import { AuthHeader } from "../AuthHeader";
 import { useTranslations } from "next-intl";
-import { stripLocale } from "@/utils/getPathnameOrDefault";
+import { PATHS } from "@repo/routes";
+import { stripLocale, withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const SignInForm: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const callback_url =
+    searchParams.get("callback_url") ||
+    searchParams.get("callbackUrl") ||
+    "/dashboard";
   const init = useAuthStore((state) => state.init);
 
   const t = useTranslations("Auth");
@@ -64,7 +77,7 @@ const SignInForm: React.FC = () => {
 
       // Refresh server components and navigate to callback URL
       router.refresh();
-      router.push(stripLocale(callbackUrl));
+      router.push(stripLocale(callback_url));
     } catch {
       toast.error(t("signIn.errors.unexpected"));
     } finally {
@@ -72,122 +85,126 @@ const SignInForm: React.FC = () => {
     }
   };
 
-  if (isLoading) {
-    return <Loading fullScreen />;
-  }
-
   return (
-    <div className="w-full max-w-[480px] mx-auto lg:ml-auto lg:mr-0 bg-white rounded-3xl shadow-[0_10px_50px_rgba(0,0,0,0.06)] border border-gray-100 p-6 md:p-10 my-0">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-gray-50">
-        <div>
-          <h6 className="text-sm font-semibold text-gray-800 mb-0.5">
-            {t("signIn.welcome")}
-          </h6>
-          <span className="text-xl font-black text-orange block">
-            {t("signIn.brandName")}
-          </span>
-        </div>
-        <div className="text-left sm:text-right">
-          <h6 className="text-sm font-semibold text-gray-800 mb-0.5">
-            {t("signIn.noAccount")}
-          </h6>
-          <Link
-            href="/register"
-            className="text-base font-bold text-[#4A1D1F] hover:text-orange transition-all"
-          >
-            {t("signIn.signUp")}
-          </Link>
-        </div>
+    <div className="w-full max-w-[460px] sm:max-w-[480px] mx-auto lg:mx-0 py-0">
+      {/* Top Header with Expert emblem alongside brand name */}
+      <AuthHeader subtitle={t("signIn.header")} />
+
+      {/* Google Login Button */}
+      <div className="mb-4 sm:mb-5">
+        <GoogleLoginButton callback_url={callback_url} />
       </div>
 
-      <div className="mb-6">
-        <h2 className="text-[26px] md:text-3xl font-black text-[#301118]">
-          {t("signIn.title")}
-        </h2>
-        <p className="text-gray-800 text-xs md:text-sm mt-1 font-medium">
-          {t("signIn.subtitle")}
-        </p>
-      </div>
-
-      <div className="mb-6">
-        <GoogleLoginButton callbackUrl={callbackUrl} />
-      </div>
-
-      <div className="relative mb-6 text-center">
+      {/* Divider */}
+      <div className="relative my-4 sm:my-5 text-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-50"></div>
+          <div className="w-full border-t border-stone-200"></div>
         </div>
-        <span className="relative px-3 text-xs font-semibold text-gray-500 bg-white">
+        <span className="relative px-3 text-xs font-medium text-stone-500 bg-white">
           {t("signIn.orEmail")}
         </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Inputs Form */}
+      <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
         <div>
-          <label
+          <Label
             htmlFor="email"
-            className="block text-sm font-semibold text-gray-700 mb-1.5"
+            className="block text-xs font-semibold text-stone-700 mb-1.5"
           >
             {t("signIn.emailLabel")}
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-700 text-black font-semibold text-sm"
-            placeholder={t("signIn.emailPlaceholder")}
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
+          </Label>
+          <InputGroup className="h-11">
+            <InputGroupAddon align="start">
+              <Mail className="size-4" />
+            </InputGroupAddon>
+            <InputGroupInput
+              type="email"
+              id="email"
+              name="email"
+              autoComplete="email"
+              placeholder={t("signIn.emailPlaceholder")}
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </InputGroup>
         </div>
 
         <div>
-          <label
+          <Label
             htmlFor="password"
-            className="block text-sm font-semibold text-gray-700 mb-1.5"
+            className="block text-xs font-semibold text-stone-700 mb-1.5"
           >
             {t("signIn.passwordLabel")}
-          </label>
-          <div className="relative">
-            <input
+          </Label>
+          <InputGroup className="h-11">
+            <InputGroupAddon align="start">
+              <Lock className="size-4" />
+            </InputGroupAddon>
+            <InputGroupInput
               type={showPassword ? "text" : "password"}
               id="password"
               name="password"
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-700 text-black font-semibold text-sm"
+              autoComplete="current-password"
               placeholder={t("signIn.passwordPlaceholder")}
               value={formData.password}
               onChange={handleInputChange}
               required
             />
-            <button
-              type="button"
-              className="absolute right-4 top-1/2 -translate-y-1/2 border-0 bg-transparent text-gray-300 hover:text-orange transition-colors"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              <i
-                className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} text-base`}
-              ></i>
-            </button>
-          </div>
+            <InputGroupAddon align="end">
+              <InputGroupButton
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end pt-1">
           <Link
             href="/forgot-password"
-            className="text-xs font-bold text-orange hover:opacity-80 transition-all"
+            className="text-xs font-medium text-stone-500 hover:text-orange hover:underline transition-colors focus-visible:ring-2 focus-visible:ring-orange/30 rounded-sm"
           >
             {t("signIn.forgotPassword")}
           </Link>
         </div>
 
-        <button
+        <Button
           type="submit"
-          className="w-full py-3.5 rounded-2xl bg-orange text-white text-base font-black shadow-[0_8px_20px_rgba(255,107,0,0.2)] hover:shadow-[0_12px_25px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none disabled:cursor-not-allowed cursor-pointer hover:cursor-pointer mt-2"
           disabled={isLoading}
+          className="w-full h-11 sm:h-11.5 rounded-full bg-gradient-to-r from-orange to-[#EA580C] hover:from-orange/95 hover:to-[#C2410C] text-white text-sm font-bold shadow-md shadow-orange/20 hover:shadow-lg hover:shadow-orange/25 active:scale-[0.99] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer mt-2.5 sm:mt-3 gap-2"
         >
-          {isLoading ? t("signIn.signingIn") : t("signIn.submit")}
-        </button>
+          {isLoading ? (
+            <>
+              <Loader2 className="size-4 animate-spin text-white" />
+              <span>{t("signIn.signingIn")}</span>
+            </>
+          ) : (
+            <span>{t("signIn.submit")}</span>
+          )}
+        </Button>
+
+        {/* Secondary registration prompt */}
+        <div className="text-center pt-2 sm:pt-3 text-xs sm:text-sm text-stone-600">
+          <span>{t("signIn.noAccount")} </span>
+          <Link
+            href={withCallbackUrl(
+              PATHS.REGISTER,
+              callback_url !== "/dashboard" ? callback_url : undefined,
+            )}
+            className="font-bold text-orange hover:text-[#EA580C] underline-offset-2 hover:underline transition-colors"
+          >
+            {t("signIn.signUp")}
+          </Link>
+        </div>
       </form>
     </div>
   );

@@ -20,6 +20,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter, usePathname, Link } from "@/i18n/navigation";
 import { toast } from "@/hooks/use-toast";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
+import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
 interface StoreCardProps {
   store: Store;
@@ -54,7 +56,10 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         {
           onClick: () =>
             router.push(
-              `/sign-in?callbackUrl=${encodeURIComponent(pathname === "/" ? "/#astrology-store" : pathname)}`,
+              withCallbackUrl(
+                PATHS.SIGN_IN,
+                pathname === "/" ? "/#astrology-store" : pathname,
+              ),
             ),
           style: { cursor: "pointer" },
         },

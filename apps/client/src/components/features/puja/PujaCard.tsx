@@ -10,6 +10,8 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "@/hooks/use-toast";
 import { useTranslations } from "next-intl";
+import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
 const LikeButton = ({
   pujaId,
@@ -46,7 +48,10 @@ const LikeButton = ({
         {
           onClick: () =>
             router.push(
-              `/sign-in?callbackUrl=${encodeURIComponent(pathname === "/" ? "/#sacred-pujas" : pathname)}`,
+              withCallbackUrl(
+                PATHS.SIGN_IN,
+                pathname === "/" ? "/#sacred-pujas" : pathname,
+              ),
             ),
           style: { cursor: "pointer" },
         },

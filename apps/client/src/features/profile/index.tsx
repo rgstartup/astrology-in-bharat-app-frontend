@@ -21,6 +21,7 @@ import {
 import { useAuth } from "@/store/useAuthStore";
 import { PATHS } from "@repo/routes";
 import { getProfileImageUrl } from "@/utils/image-utils";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { formatCompactNumber } from "@repo/ui";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
@@ -249,9 +250,7 @@ const UserProfileDropdown = () => {
               <div className="p-2 bg-gray-50/80 border-b border-gray-100 grid grid-cols-2 gap-1.5">
                 <Button
                   onClick={() =>
-                    handleNavigate(
-                      `${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(pathname)}`,
-                    )
+                    handleNavigate(withCallbackUrl(PATHS.SIGN_IN, pathname))
                   }
                   className="w-full bg-[#FF5500] hover:bg-[#e04b00] text-white font-bold h-7.5 rounded-lg text-xs shadow-xs flex items-center justify-center gap-1.5 cursor-pointer px-2"
                 >
@@ -262,9 +261,7 @@ const UserProfileDropdown = () => {
                 <Button
                   variant="outline"
                   onClick={() =>
-                    handleNavigate(
-                      `${PATHS.REGISTER}?callbackUrl=${encodeURIComponent(pathname)}`,
-                    )
+                    handleNavigate(withCallbackUrl(PATHS.REGISTER, pathname))
                   }
                   className="w-full border-gray-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold h-7.5 rounded-lg text-xs flex items-center justify-center gap-1.5 cursor-pointer px-2"
                 >
@@ -283,9 +280,7 @@ const UserProfileDropdown = () => {
                   type="button"
                   onClick={() =>
                     handleNavigate(
-                      `${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(
-                        PATHS.DASHBOARD_ORDERS,
-                      )}`,
+                      withCallbackUrl(PATHS.SIGN_IN, PATHS.DASHBOARD_ORDERS),
                     )
                   }
                   className="w-full px-2 py-1.5 cursor-pointer rounded-lg hover:bg-gray-50 flex items-center gap-2 text-xs sm:text-[13px] font-medium text-gray-700 bg-transparent border-0 text-left transition-colors"
@@ -300,9 +295,10 @@ const UserProfileDropdown = () => {
                   type="button"
                   onClick={() =>
                     handleNavigate(
-                      `${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(
+                      withCallbackUrl(
+                        PATHS.SIGN_IN,
                         `${PATHS.PROFILE}?tab=wishlist`,
-                      )}`,
+                      ),
                     )
                   }
                   className="w-full px-2 py-1.5 cursor-pointer rounded-lg hover:bg-gray-50 flex items-center gap-2 text-xs sm:text-[13px] font-medium text-gray-700 bg-transparent border-0 text-left transition-colors"
@@ -317,9 +313,10 @@ const UserProfileDropdown = () => {
                   type="button"
                   onClick={() =>
                     handleNavigate(
-                      `${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(
+                      withCallbackUrl(
+                        PATHS.SIGN_IN,
                         `${PATHS.PROFILE}?tab=wallet`,
-                      )}`,
+                      ),
                     )
                   }
                   className="w-full px-2 py-1.5 cursor-pointer rounded-lg hover:bg-gray-50 flex items-center gap-2 text-xs sm:text-[13px] font-medium text-gray-700 bg-transparent border-0 text-left transition-colors"

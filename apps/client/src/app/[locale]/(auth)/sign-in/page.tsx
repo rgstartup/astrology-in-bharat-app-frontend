@@ -1,7 +1,8 @@
 import { Metadata } from "next";
-import { SignInForm, TopExpertsSection } from "@/features/auth";
+import { SignInForm } from "@/features/auth";
 import { Suspense } from "react";
-import HeroComponent from "./hero";
+import ShowcaseCard from "./ShowcaseCard";
+import BackButton from "@/components/ui/BackButton";
 
 export const metadata: Metadata = {
   title: "Sign In - Astrology Bharat",
@@ -11,27 +12,33 @@ export const metadata: Metadata = {
 
 export default async function SignInPage() {
   return (
-    <section className="relative pt-10 pb-8 md:pt-16 md:pb-12 bg-[#FFF9F4] bg-[url('/images/white-background.png')] bg-cover bg-no-repeat overflow-hidden">
+    <section className="relative flex-1 flex items-start lg:items-center justify-center pt-6 pb-8 sm:pt-8 sm:pb-10 lg:py-8 w-full min-h-[calc(100vh-140px)]">
       <div className="w-full max-w-[1140px] mx-auto px-4 md:px-8 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start justify-between">
-          {/* Left Side: Branding and Astrology Info */}
-          <div className="w-full lg:w-1/2 pt-0 md:pt-4">
-            <HeroComponent />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-start">
+          {/* Left Section: Back Button + Form */}
+          <div className="w-full flex justify-center lg:justify-start">
+            <div className="w-full max-w-[460px] sm:max-w-[480px]">
+              <div className="mb-7 sm:mb-8">
+                <BackButton />
+              </div>
 
-            <TopExpertsSection />
+              <Suspense
+                fallback={
+                  <div className="flex items-center justify-center p-12">
+                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-orange" />
+                  </div>
+                }
+              >
+                <SignInForm />
+              </Suspense>
+            </div>
           </div>
 
-          {/* Right Side: Sign In Form */}
-          <div className="w-full lg:w-1/2">
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center p-20">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange" />
-                </div>
-              }
-            >
-              <SignInForm />
-            </Suspense>
+          {/* Right Section: The showcase card */}
+          <div className="hidden lg:flex w-full justify-end">
+            <div className="w-full max-w-[500px] bg-white rounded-3xl p-7 sm:p-8 border border-stone-200/90 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06)] overflow-hidden">
+              <ShowcaseCard />
+            </div>
           </div>
         </div>
       </div>

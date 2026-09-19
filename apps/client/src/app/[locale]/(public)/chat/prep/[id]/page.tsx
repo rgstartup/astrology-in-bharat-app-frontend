@@ -11,6 +11,8 @@ import { getErrorMessage } from "@repo/lib";
 import { VerificationPopup } from "@repo/ui";
 import { UserX, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
 import type { Expert } from "@repo/lib";
 import { formatSpecializationsString } from "@/utils/expert-utils";
@@ -98,7 +100,7 @@ export default function ConsultationPrep() {
     const fetchAstro = async () => {
       if (id?.startsWith("dummy-")) {
         setExpert({
-          id: id,
+          id: Number(id),
           name: "Expert",
           avatar: "/images/dummy-expert.jpg",
           specialization: "Vedic, Numerology",
@@ -137,8 +139,7 @@ export default function ConsultationPrep() {
           specialization: formatSpecializationsString(
             data.specializations || data.specialization || data.expertise,
           ),
-          experience_in_years:
-            data.experience_in_years ?? data.experience ?? 0,
+          experience_in_years: data.experience_in_years ?? data.experience ?? 0,
           price: Number(data.price || data.chat_price || 0),
           chat_price: Number(data.chat_price || data.price || 0),
           call_price: Number(data.call_price || data.price || 0),
@@ -191,8 +192,7 @@ export default function ConsultationPrep() {
           <span className="underline font-black">{t("loginNow")}</span>
         </span>,
         {
-          onClick: () =>
-            router.push(`/sign-in?callbackUrl=${encodeURIComponent(pathname)}`),
+          onClick: () => router.push(withCallbackUrl(PATHS.SIGN_IN, pathname)),
           style: { cursor: "pointer" },
         },
       );

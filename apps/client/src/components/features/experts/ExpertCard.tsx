@@ -12,6 +12,8 @@ import { ExpertCardProps } from "@/lib/types";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { getYoutubeId, getYoutubeEmbedUrl } from "@/utils/video-utils";
 import { usePreloadExpertStore } from "@/store/usePreloadExpertStore";
+import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 
 const ExpertCard: React.FC<ExpertCardProps> = ({
@@ -128,7 +130,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
         {
           onClick: () =>
             router.push(
-              `/sign-in?callbackUrl=${encodeURIComponent(pathname === "/" ? "/#our-experts" : pathname)}`,
+              withCallbackUrl(
+                PATHS.SIGN_IN,
+                pathname === "/" ? "/#our-experts" : pathname,
+              ),
             ),
           style: { cursor: "pointer" },
         },

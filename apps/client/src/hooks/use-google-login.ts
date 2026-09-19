@@ -9,21 +9,30 @@ import { useTranslations } from "next-intl";
 import { stripLocale } from "@/utils/getPathnameOrDefault";
 
 export interface UseGoogleLoginOptions {
+  callback_url?: string;
   callbackUrl?: string;
   role?: string;
   onError?: (error: string) => void;
 }
 
 export function useGoogleLogin(options: UseGoogleLoginOptions = {}) {
-  const { callbackUrl: customCallbackUrl, onError } = options;
+  const {
+    callback_url: customCallbackUrlSnake,
+    callbackUrl: customCallbackUrlCamel,
+    onError,
+  } = options;
+  const customCallbackUrl = customCallbackUrlSnake || customCallbackUrlCamel;
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   const t = useTranslations("Auth");
 
-  const callbackUrl = stripLocale(
-    customCallbackUrl || searchParams.get("callbackUrl") || "/client/profile",
+  const callback_url = stripLocale(
+    customCallbackUrl ||
+      searchParams.get("callback_url") ||
+      searchParams.get("callbackUrl") ||
+      "/client/profile",
   );
 
   useEffect(() => {
@@ -44,10 +53,10 @@ export function useGoogleLogin(options: UseGoogleLoginOptions = {}) {
 
   const handleGoogleLogin = useCallback(() => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-    const googleLoginUrl = `${baseUrl}${API_ROUTES.AUTH.CLIENT.GOOGLE_LOGIN}?redirect_uri=${encodeURIComponent(callbackUrl)}`;
+    const googleLoginUrl = `${baseUrl}${API_ROUTES.AUTH.CLIENT.GOOGLE_LOGIN}?redirect_uri=${encodeURIComponent(callback_url)}`;
 
     router.push(googleLoginUrl);
-  }, [callbackUrl]);
+  }, [callback_url]);
 
   return {
     handleGoogleLogin,

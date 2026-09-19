@@ -11,6 +11,8 @@ import { useRouter, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Toggle } from "@/components/ui/toggle";
 import { toggleExpertFavoriteAction } from "@/actions";
+import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
 export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
   expertId,
@@ -47,7 +49,11 @@ export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
           label: "Sign In",
           onClick: () =>
             router.push(
-              `/sign-in?callbackUrl=${encodeURIComponent(pathname || window.location.pathname)}`,
+              withCallbackUrl(
+                PATHS.SIGN_IN,
+                pathname ||
+                  (typeof window !== "undefined" ? window.location.pathname : "/"),
+              ),
             ),
           style: { cursor: "pointer" },
         },

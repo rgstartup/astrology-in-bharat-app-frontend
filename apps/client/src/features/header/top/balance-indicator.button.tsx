@@ -6,6 +6,7 @@ import { Wallet, ArrowRight, PlusCircle, History, LogIn } from "lucide-react";
 import { useAuth } from "@/store/useAuthStore";
 import { formatCompactNumber } from "@repo/ui";
 import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
 
@@ -108,9 +109,7 @@ const BalanceIndicator = () => {
                 type="button"
                 onClick={() =>
                   handleNavigate(
-                    `${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(
-                      `${PATHS.PROFILE}?tab=wallet`,
-                    )}`,
+                    withCallbackUrl(PATHS.SIGN_IN, `${PATHS.PROFILE}?tab=wallet`),
                   )
                 }
                 className="w-full h-7.5 bg-[#FF5500] hover:bg-[#e04b00] text-white text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer border-0 shadow-xs"

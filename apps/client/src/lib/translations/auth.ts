@@ -3,9 +3,9 @@ export const authTranslations = {
     signIn: {
       title: "Sign In",
       subtitle: "Access your personalized cosmic insights",
-      brandTitle: "Sign In",
+      brandTitle: "Welcome",
       brandTo: "to",
-      brandName: "Astrology Bharat",
+      brandName: "Astrology in Bharat",
       welcome: "Welcome to",
       noAccount: "No Account?",
       signUp: "Sign Up",
@@ -16,7 +16,7 @@ export const authTranslations = {
       passwordLabel: "Password",
       passwordPlaceholder: "••••••••",
       forgotPassword: "Forgot Password?",
-      submit: "Sign In Account",
+      submit: "Sign In",
       signingIn: "Signing In...",
       errors: {
         required: "Email and Password are required.",

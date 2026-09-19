@@ -29,6 +29,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useTranslations } from "next-intl";
 import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";
+import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 
 const PujaDetailPage = () => {
@@ -183,7 +185,10 @@ const PujaDetailPage = () => {
           </span>
         </span>,
         {
-          onClick: () => router.push(`/sign-in?callbackUrl=/astrology/online-puja/${id}`),
+          onClick: () =>
+            router.push(
+              withCallbackUrl(PATHS.SIGN_IN, `/astrology/online-puja/${id}`),
+            ),
           style: { cursor: "pointer" },
         },
       );

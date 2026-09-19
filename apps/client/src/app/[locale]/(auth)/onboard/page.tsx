@@ -4,6 +4,8 @@ import { getLocale } from "next-intl/server";
 
 import { redirect } from "@/i18n/navigation";
 import { OnboardContainer } from "@/features/onboard";
+import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
 export const metadata: Metadata = {
   title: "Complete Your Profile - Astrology Bharat",
@@ -18,7 +20,7 @@ export default async function OnboardPage() {
   // If user is not authenticated, redirect to sign-in with callback
   if (!token) {
     redirect({
-      href: "/sign-in?callbackUrl=/onboard",
+      href: withCallbackUrl(PATHS.SIGN_IN, "/onboard"),
       locale,
     });
   }

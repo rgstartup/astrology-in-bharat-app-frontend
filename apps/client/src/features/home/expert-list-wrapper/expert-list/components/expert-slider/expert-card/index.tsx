@@ -10,6 +10,8 @@ import { usePreloadExpertStore } from "@/store/usePreloadExpertStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
+import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import socket from "@/lib/socket";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import ExpertActions from "./ExpertActions";
@@ -129,7 +131,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
       toast.error("Please login to like this expert. Login now →", {
         onClick: () =>
           router.push(
-            `/sign-in?callbackUrl=${encodeURIComponent(pathname === "/" ? "/#our-experts" : pathname)}`,
+            withCallbackUrl(
+              PATHS.SIGN_IN,
+              pathname === "/" ? "/#our-experts" : pathname,
+            ),
           ),
         style: { cursor: "pointer" },
       });

@@ -9,6 +9,7 @@ import {
 } from "./actions/cookie";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
+import { withCallbackUrl } from "./utils/getPathnameOrDefault";
 
 const handleI18nRouting = createMiddleware(routing);
 
@@ -80,18 +81,18 @@ const redirectToLogout = (
   isProtected: boolean,
 ): NextResponse => {
   const normalized = getPathnameWithoutLocale(pathname);
-  const target = isProtected ? "/sign-in" : normalized || "/";
-  const url = new URL(target, request.url);
-
-  url.searchParams.set("logout", "1");
-  if (
+  const baseTarget = isProtected ? "/sign-in" : normalized || "/";
+  const callback =
     isProtected &&
     normalized &&
     normalized !== "/" &&
     !normalized.startsWith("/sign-in")
-  ) {
-    url.searchParams.set("callbackUrl", normalized);
-  }
+      ? normalized
+      : null;
+
+  const targetUrlStr = withCallbackUrl(baseTarget, callback);
+  const url = new URL(targetUrlStr, request.url);
+  url.searchParams.set("logout", "1");
 
   console.log(
     `[Proxy:redirectToLogout] Clearing auth cookies and redirecting to: ${url.pathname}${url.search}`,
@@ -107,19 +108,22 @@ const redirectToLogin = (
   pathname: string,
 ): NextResponse => {
   const normalized = getPathnameWithoutLocale(pathname);
-  const url = new URL("/sign-in", request.url);
-  if (normalized && normalized !== "/") {
-    url.searchParams.set("callbackUrl", normalized);
-  }
+  const target = withCallbackUrl(
+    "/sign-in",
+    normalized && normalized !== "/" ? normalized : null,
+  );
+  const url = new URL(target, request.url);
   return withI18nCookies(NextResponse.redirect(url), request);
 };
 
 const redirectToCallback = (request: NextRequest): NextResponse => {
-  let redirectRoute = "/client/profile";
-  const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
+  let redirectRoute = "/client/dashboard";
+  const callback_url =
+    request.nextUrl.searchParams.get("callback_url") ||
+    request.nextUrl.searchParams.get("callbackUrl");
 
-  if (callbackUrl && callbackUrl !== "/") {
-    redirectRoute = getPathnameWithoutLocale(callbackUrl);
+  if (callback_url && callback_url !== "/") {
+    redirectRoute = getPathnameWithoutLocale(callback_url);
   }
 
   const url = new URL(redirectRoute, request.url);

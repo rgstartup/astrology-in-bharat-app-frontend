@@ -6,6 +6,7 @@ import { Heart } from "lucide-react";
 import { useAuth } from "@/store/useAuthStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
 const SavedItemsButton = () => {
   const { isAuthenticated } = useAuth();
@@ -29,7 +30,7 @@ const SavedItemsButton = () => {
 
   const targetHref = isAuthenticated
     ? `${PATHS.PROFILE}?tab=wishlist`
-    : `${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(`${PATHS.PROFILE}?tab=wishlist`)}`;
+    : withCallbackUrl(PATHS.SIGN_IN, `${PATHS.PROFILE}?tab=wishlist`);
 
   return (
     <Link

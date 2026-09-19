@@ -4,7 +4,7 @@ import React from "react";
 import { PATHS } from "@repo/routes";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { getPathnameOrDefault } from "@/utils/getPathnameOrDefault";
+import { getPathnameOrDefault, withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
 const AuthCTA = (props: { show: boolean }) => {
   const pathname = usePathname();
@@ -15,17 +15,19 @@ const AuthCTA = (props: { show: boolean }) => {
 
   if (!props.show) return null;
 
+  const callback = getPathnameOrDefault(pathname, "/client/profile");
+
   return (
     <div className="flex gap-1.5 sm:gap-3">
       <Link
-        href={`${PATHS.SIGN_IN}?callbackUrl=${encodeURIComponent(getPathnameOrDefault(pathname, "/client/profile"))}`}
+        href={withCallbackUrl(PATHS.SIGN_IN, callback)}
         className="bg-orange text-white rounded-xl sm:rounded-[14px] px-2.5 sm:px-[15px] py-1.5 sm:py-[6px] text-[10px] sm:text-sm font-semibold inline-block no-underline transition-all hover:opacity-90 active:scale-95 cursor-pointer whitespace-nowrap"
       >
         {signInText}
       </Link>
 
       <Link
-        href={`${PATHS.REGISTER}?callbackUrl=${encodeURIComponent(getPathnameOrDefault(pathname, "/client/profile"))}`}
+        href={withCallbackUrl(PATHS.REGISTER, callback)}
         className="bg-orange text-white rounded-xl sm:rounded-[14px] px-2.5 sm:px-[15px] py-1.5 sm:py-[6px] text-[10px] sm:text-sm font-semibold inline-block no-underline transition-all hover:opacity-90 active:scale-95 cursor-pointer whitespace-nowrap"
       >
         {signUpText}

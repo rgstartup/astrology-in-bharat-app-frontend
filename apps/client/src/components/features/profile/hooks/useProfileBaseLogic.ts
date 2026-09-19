@@ -13,6 +13,8 @@ import {
     AddressDto,
 } from "@/libs/api-profile";
 import { getErrorMessage } from "@repo/lib";
+import { PATHS } from "@repo/routes";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
 // Types
 export type ProfileData = ClientProfileData;
@@ -71,7 +73,7 @@ export const useProfileBaseLogic = () => {
         if (isAuthenticated) return; // already authenticated, no redirect
 
         console.log('[ProfileBaseLogic] Not authenticated after wait, redirecting to sign-in');
-        router.push("/sign-in?callbackUrl=/client/profile");
+        router.push(withCallbackUrl(PATHS.SIGN_IN, PATHS.PROFILE));
     }, [authLoading, isAuthenticated, router]);
 
     // Tab Initialization
