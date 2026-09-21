@@ -1,6 +1,4 @@
-export * from "./OnboardContainer";
 export * from "./components/OnboardHero";
-export * from "./components/OnboardStepper";
 export * from "./components/OnboardingStepTransition";
 export * from "./components/StepOnePersonalDetails";
 export * from "./components/StepTwoPreferences";
