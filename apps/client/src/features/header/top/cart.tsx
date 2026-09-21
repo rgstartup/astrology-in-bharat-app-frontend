@@ -22,7 +22,7 @@ const CartComponent = () => {
       href={PATHS.CART}
       aria-label="Shopping cart"
       title="Shopping Cart"
-      className="relative size-7.5 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 no-underline border border-white/15 group shadow-xs shrink-0"
+      className="relative size-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 no-underline border border-white/15 group shadow-xs shrink-0"
     >
       <ShoppingBag className="size-4 text-white group-hover:text-amber-200 transition-colors" />
       {cartCount > 0 && (

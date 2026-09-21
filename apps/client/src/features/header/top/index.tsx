@@ -16,7 +16,7 @@ const TopHeader = () => {
 
   return (
     <header
-      className="bg-[#301118] text-white shadow-xs relative z-[1001] overflow-visible flex items-center py-2 sm:py-1.5 min-h-[44px] sm:min-h-[38px]"
+      className="bg-[#301118] text-white shadow-xs relative z-[1001] overflow-visible flex items-center py-2.5 sm:py-2 min-h-[48px] sm:min-h-[44px]"
       style={{ scrollbarWidth: "none" }}
     >
       <div
@@ -24,17 +24,24 @@ const TopHeader = () => {
         style={{ overflow: "visible" }}
       >
         <div className="flex items-center justify-between w-full gap-2 sm:gap-4">
-          {/* Left section: Welcome Text */}
-          <div className="hidden lg:block truncate">
-            <p className="m-0 text-white/90 text-[12.5px] font-medium truncate">
-              {t("welcomeText")}
-            </p>
+          {/* Left section: Language Switcher on mobile/tablet, Welcome Text on desktop */}
+          <div className="flex items-center">
+            <div className="block lg:hidden">
+              <LanguageSwitcherDropdown />
+            </div>
+            <div className="hidden lg:block truncate">
+              <p className="m-0 text-white/90 text-[12.5px] font-medium truncate">
+                {t("welcomeText")}
+              </p>
+            </div>
           </div>
 
-          {/* Right section: Actions (Language, Wallet, Saved Items, Cart, Notification, Avatar) */}
-          <div className="flex items-center justify-end gap-1.5 sm:gap-2 md:gap-2.5 ml-auto">
-            {/* Language Switcher */}
-            <LanguageSwitcherDropdown />
+          {/* Right section: Actions (Language on desktop, Wallet, Saved Items, Cart, Notification, Avatar) */}
+          <div className="flex items-center justify-end gap-2 sm:gap-3 md:gap-3.5 ml-auto">
+            {/* Language Switcher (desktop) */}
+            <div className="hidden lg:block">
+              <LanguageSwitcherDropdown />
+            </div>
 
             {/* Wallet Balance Indicator */}
             <BalanceIndicator />

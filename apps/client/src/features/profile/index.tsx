@@ -72,7 +72,7 @@ const UserProfileDropdown = () => {
       >
         {isAuthenticated ? (
           <div className="relative flex items-center gap-1 shrink-0">
-            <Avatar className="size-7.5 ring-1.5 ring-orange/80 group-hover:ring-orange shadow-xs transition-all duration-200">
+            <Avatar className="size-8 ring-1.5 ring-orange/80 group-hover:ring-orange shadow-xs transition-all duration-200">
               <AvatarImage src={avatarUrl} alt={userDisplayName} />
               <AvatarFallback className="bg-orange/20 text-orange font-bold text-[11px]">
                 {userInitial}
@@ -85,7 +85,7 @@ const UserProfileDropdown = () => {
             />
           </div>
         ) : (
-          <div className="flex items-center justify-center size-7.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/15 transition-all duration-200 hover:scale-105 active:scale-95 shadow-xs shrink-0">
+          <div className="flex items-center justify-center size-8 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/15 transition-all duration-200 hover:scale-105 active:scale-95 shadow-xs shrink-0">
             <User className="size-4 text-white" />
           </div>
         )}

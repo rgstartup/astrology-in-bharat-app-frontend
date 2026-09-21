@@ -37,7 +37,7 @@ const SavedItemsButton = () => {
       href={targetHref}
       aria-label="Saved items"
       title="Saved Items / Wishlist"
-      className="relative size-7.5 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 no-underline border border-white/15 group shadow-xs shrink-0"
+      className="relative size-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 no-underline border border-white/15 group shadow-xs shrink-0"
     >
       <Heart className="size-4 text-white group-hover:text-rose-300 group-hover:fill-rose-300 transition-colors" />
       {totalSavedCount > 0 && (

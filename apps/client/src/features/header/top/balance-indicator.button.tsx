@@ -40,7 +40,7 @@ const BalanceIndicator = () => {
         onClick={() => setShowWalletDropDown((prev) => !prev)}
         aria-label="User Wallet Balance"
         aria-expanded={showWalletDropDown}
-        className="inline-flex items-center gap-1.5 h-7.5 px-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/15 text-xs font-semibold tracking-tight transition-all duration-200 hover:scale-105 active:scale-95 shadow-xs cursor-pointer select-none"
+        className="inline-flex items-center gap-1.5 h-8 px-2.5 sm:px-3 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/15 text-xs font-semibold tracking-tight transition-all duration-200 hover:scale-105 active:scale-95 shadow-xs cursor-pointer select-none"
       >
         <div className="flex items-center justify-center size-4.5 rounded-full bg-amber-400/20 text-amber-300">
           <Wallet className="size-3 text-amber-300" />

@@ -124,7 +124,7 @@ const NotificationComponent = () => {
       ref={notificationRef}
     >
       <div
-        className="cursor-pointer relative size-7.5 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 border border-white/15 shadow-xs shrink-0"
+        className="cursor-pointer relative size-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 border border-white/15 shadow-xs shrink-0"
         onClick={() => setShowNotificationDropDown(!showNotificationDropDown)}
       >
         <Bell className="size-4 text-white" />

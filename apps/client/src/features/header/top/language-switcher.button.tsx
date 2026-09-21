@@ -19,7 +19,7 @@ const LanguageButtons = (props: LanguageButtonProps) => {
   if (!props.showLanguageDropDown) return null;
 
   return (
-    <div className="absolute top-[125%] left-0 md:left-auto md:right-0 bg-white rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)] overflow-hidden w-[110px] text-gray-800 z-[1002] border border-gray-100 flex flex-col animate-in fade-in-0 zoom-in-95 duration-100">
+    <div className="absolute top-[125%] left-0 lg:left-auto lg:right-0 bg-white rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.12)] overflow-hidden w-[110px] text-gray-800 z-[1002] border border-gray-100 flex flex-col animate-in fade-in-0 zoom-in-95 duration-100">
       <button
         onClick={() => {
           props.changeLanguage("en");
@@ -66,7 +66,7 @@ const LanguageSwitcherDropdown = () => {
       <button
         type="button"
         onClick={() => setShowLanguageDropDown(!showLanguageDropDown)}
-        className="flex items-center justify-center gap-1 h-7.5 px-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/15 text-xs font-semibold select-none transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
+        className="flex items-center justify-center gap-1.5 h-8 px-2.5 sm:px-3 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/15 text-xs font-semibold select-none transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
         aria-label="Toggle language menu"
       >
         <span>{activeLanguage === "hi" ? "हिंदी" : "EN"}</span>
