@@ -91,7 +91,6 @@ export const StepTwoPreferences: React.FC<StepTwoPreferencesProps> = ({
 
         <Button
           type="submit"
-          onClick={onNext}
           className="w-full sm:w-auto px-6 sm:px-7 h-11 rounded-full bg-orange hover:bg-orange/90 text-white text-sm font-semibold shadow-md shadow-orange/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
         >
           <span>Continue to Specialization</span>

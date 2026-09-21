@@ -50,7 +50,7 @@ export const RecommendedExperts: React.FC = () => {
         </div>
 
         <Link
-          href={PATHS.DASHBOARD_EXPERTS}
+          href={PATHS.DASHBOARD.EXPERTS}
           className="no-underline text-xs sm:text-sm font-bold text-[#ff6b00] hover:text-[#e65100] flex items-center gap-1 group"
         >
           <span>View All</span>
@@ -78,7 +78,7 @@ export const RecommendedExperts: React.FC = () => {
           <p className="text-xs sm:text-sm text-slate-600 font-medium mb-3">
             Explore our community of verified astrology experts.
           </p>
-          <Link href={PATHS.DASHBOARD_EXPERTS} className="no-underline">
+          <Link href={PATHS.DASHBOARD.EXPERTS} className="no-underline">
             <Button variant="default" size="sm">
               <span>Browse All Experts</span>
             </Button>

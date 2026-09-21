@@ -103,7 +103,7 @@ export function TodaysGuidanceCard({
           </CardTitle>
         </div>
 
-        <Link href={PATHS.DASHBOARD_HOROSCOPE} className="no-underline shrink-0">
+        <Link href={PATHS.DASHBOARD.HOROSCOPE} className="no-underline shrink-0">
           <Button
             variant="outline"
             size="sm"
@@ -204,7 +204,7 @@ export function TodaysGuidanceCard({
           </div>
 
           <Link
-            href={PATHS.DASHBOARD_HOROSCOPE}
+            href={PATHS.DASHBOARD.HOROSCOPE}
             className="text-[11px] font-bold text-[#ff6b00] hover:underline no-underline"
           >
             Check Tomorrow's Transit →

@@ -68,7 +68,7 @@ export default function MyAstrologyHubPage() {
             </div>
           </div>
         ) : (
-          <Link href={PATHS.DASHBOARD_PROFILE} className="no-underline">
+          <Link href={PATHS.DASHBOARD.PROFILE} className="no-underline">
             <Button variant="default" size="sm">
               <PlusCircle className="w-4 h-4 mr-1.5" />
               <span>Complete Birth Profile</span>

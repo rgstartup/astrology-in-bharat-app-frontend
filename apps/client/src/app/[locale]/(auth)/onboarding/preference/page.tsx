@@ -14,7 +14,9 @@ import { OnboardingStepTransition } from "@/features/onboard/components/Onboardi
 
 export default function OnboardingPreferencePage() {
   const router = useRouter();
-  const { formData, setFormData, setStep } = useOnboardStore();
+  const formData = useOnboardStore((s) => s.formData);
+  const setFormData = useOnboardStore((s) => s.setFormData);
+  const setStep = useOnboardStore((s) => s.setStep);
 
   const form = useForm<OnboardingFormData>({
     defaultValues: {
@@ -31,11 +33,10 @@ export default function OnboardingPreferencePage() {
   const { trigger, getValues } = form;
 
   const handleBack = () => {
-    setFormData(getValues());
+    const currentValues = getValues();
+    setFormData(currentValues);
     setStep(1, "backward");
-    React.startTransition(() => {
-      router.push(PATHS.ONBOARDING.PROFILE);
-    });
+    router.push(PATHS.ONBOARDING.PROFILE);
   };
 
   const handleNext = async () => {
@@ -48,11 +49,8 @@ export default function OnboardingPreferencePage() {
     const currentValues = getValues();
     setFormData(currentValues);
     setStep(3, "forward");
-    React.startTransition(() => {
-      router.push(PATHS.ONBOARDING.SPECIALIZATION);
-    });
+    router.push(PATHS.ONBOARDING.SPECIALIZATION);
   };
-
 
   return (
     <OnboardingStepTransition>

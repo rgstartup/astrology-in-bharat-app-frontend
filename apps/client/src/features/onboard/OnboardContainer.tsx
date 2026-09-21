@@ -16,6 +16,7 @@ import { Form } from "@/components/ui/form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { OnboardingStepTransition } from "./components/OnboardingStepTransition";
+import { scrollToTop } from "@/utils/scroll";
 
 export const OnboardContainer = () => {
   const {
@@ -100,7 +101,7 @@ export const OnboardContainer = () => {
     }
     setFormData(getValues());
     setStep(2);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop(1.8);
   };
 
   const handleStepTwoNext = async () => {
@@ -111,19 +112,19 @@ export const OnboardContainer = () => {
     }
     setFormData(getValues());
     setStep(3);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop(1.8);
   };
 
   const handleStepTwoBack = () => {
     setFormData(getValues());
     setStep(1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop(1.8);
   };
 
   const handleStepThreeBack = () => {
     setFormData(getValues());
     setStep(2);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop(1.8);
   };
 
   const onSubmit = async (data: OnboardingFormData) => {

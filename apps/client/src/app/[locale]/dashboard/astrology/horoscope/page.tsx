@@ -305,7 +305,7 @@ export default function MyHoroscopePage() {
             <p className="text-xs text-slate-500 mb-4 leading-relaxed">
               Consult a verified Vedic expert to understand current Mahadasha transits affecting your chart.
             </p>
-            <Link href={PATHS.DASHBOARD_EXPERTS} className="no-underline block">
+            <Link href={PATHS.DASHBOARD.EXPERTS} className="no-underline block">
               <Button variant="default" size="sm" className="w-full justify-center">
                 <span>Talk to an Astrologer</span>
               </Button>

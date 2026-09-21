@@ -110,6 +110,21 @@ export const PATHS = {
     SETTINGS: "/dashboard/settings",
   },
 
+  // Backward compatibility aliases for DASHBOARD_*
+  DASHBOARD_ASTROLOGY: "/dashboard/astrology",
+  DASHBOARD_HOROSCOPE: "/dashboard/astrology/horoscope",
+  DASHBOARD_KUNDLI: "/dashboard/astrology/kundli",
+  DASHBOARD_MATCHING: "/dashboard/astrology/matching",
+  DASHBOARD_REPORTS: "/dashboard/astrology/reports",
+  DASHBOARD_CONSULTATIONS: "/dashboard/consultations",
+  DASHBOARD_EXPERTS: "/dashboard/experts",
+  DASHBOARD_ORDERS: "/dashboard/orders",
+  DASHBOARD_WALLET: "/dashboard/wallet",
+  DASHBOARD_WISHLIST: "/dashboard/wishlist",
+  DASHBOARD_NOTIFICATIONS: "/dashboard/notifications",
+  DASHBOARD_PROFILE: "/dashboard/profile",
+  DASHBOARD_SETTINGS: "/dashboard/settings",
+
   LIVE_DARSHAN: "/live-darshan",
   HINDU_CALENDAR: "/hindu-calendar",
 } as const;

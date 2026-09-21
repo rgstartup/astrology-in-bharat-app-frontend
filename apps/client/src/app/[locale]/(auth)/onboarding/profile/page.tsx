@@ -13,11 +13,12 @@ import { Badge } from "@/components/ui/badge";
 import { StepOnePersonalDetails } from "@/features/onboard/components/StepOnePersonalDetails";
 import { OnboardingStepTransition } from "@/features/onboard/components/OnboardingStepTransition";
 
-
 export default function OnboardingProfilePage() {
   const router = useRouter();
   const { user } = useAuth();
-  const { formData, setFormData, setStep } = useOnboardStore();
+  const formData = useOnboardStore((s) => s.formData);
+  const setFormData = useOnboardStore((s) => s.setFormData);
+  const setStep = useOnboardStore((s) => s.setStep);
 
   const defaultFirstName =
     formData.first_name ||
@@ -101,9 +102,7 @@ export default function OnboardingProfilePage() {
     const currentValues = getValues();
     setFormData(currentValues);
     setStep(2, "forward");
-    React.startTransition(() => {
-      router.push(PATHS.ONBOARDING.PREFERENCE);
-    });
+    router.push(PATHS.ONBOARDING.PREFERENCE);
   };
 
   return (
@@ -121,7 +120,8 @@ export default function OnboardingProfilePage() {
           Personal & Birth Details
         </h1>
         <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-          Provide your birth details and contact info for accurate Kundli charts and predictions.
+          Provide your birth details and contact info for accurate Kundli charts
+          and predictions.
         </p>
       </div>
 

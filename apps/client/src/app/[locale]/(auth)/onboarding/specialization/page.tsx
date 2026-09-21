@@ -17,12 +17,10 @@ import { OnboardingStepTransition } from "@/features/onboard/components/Onboardi
 export default function OnboardingSpecializationPage() {
   const router = useRouter();
   const { user } = useAuth();
-  const {
-    formData,
-    setFormData,
-    setStep,
-    resetOnboard,
-  } = useOnboardStore();
+  const formData = useOnboardStore((s) => s.formData);
+  const setFormData = useOnboardStore((s) => s.setFormData);
+  const setStep = useOnboardStore((s) => s.setStep);
+  const resetOnboard = useOnboardStore((s) => s.resetOnboard);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<OnboardingFormData>({
@@ -40,11 +38,10 @@ export default function OnboardingSpecializationPage() {
   const { getValues } = form;
 
   const handleBack = () => {
-    setFormData(getValues());
+    const currentValues = getValues();
+    setFormData(currentValues);
     setStep(2, "backward");
-    React.startTransition(() => {
-      router.push(PATHS.ONBOARDING.PREFERENCE);
-    });
+    router.push(PATHS.ONBOARDING.PREFERENCE);
   };
 
   const onSubmit = async (data: OnboardingFormData) => {
@@ -70,9 +67,6 @@ export default function OnboardingSpecializationPage() {
       if (result.error) {
         toast.error(result.error);
       } else {
-        toast.success(
-          result.message || "Profile completed successfully! Welcome aboard.",
-        );
         resetOnboard();
         window.location.href = PATHS.DASHBOARD.ROOT;
       }
@@ -82,7 +76,6 @@ export default function OnboardingSpecializationPage() {
       setIsSubmitting(false);
     }
   };
-
 
   return (
     <OnboardingStepTransition>
@@ -99,7 +92,8 @@ export default function OnboardingSpecializationPage() {
           Expert Specialization
         </h1>
         <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-          Select the astrological disciplines and expert types you are most interested in consulting.
+          Select the astrological disciplines and expert types you are most
+          interested in consulting.
         </p>
       </div>
 

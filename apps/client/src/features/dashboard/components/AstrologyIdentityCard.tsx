@@ -89,7 +89,7 @@ export function AstrologyIdentityCard({
             </div>
           </div>
 
-          <Link href={PATHS.DASHBOARD_PROFILE} className="no-underline shrink-0">
+          <Link href={PATHS.DASHBOARD.PROFILE} className="no-underline shrink-0">
             <Button
               variant="default"
               className="font-bold flex items-center gap-2 shadow-md shadow-[#ff6b00]/20"
@@ -191,7 +191,7 @@ export function AstrologyIdentityCard({
         </div>
 
         {/* Action button */}
-        <Link href={PATHS.DASHBOARD_KUNDLI} className="no-underline shrink-0">
+        <Link href={PATHS.DASHBOARD.KUNDLI} className="no-underline shrink-0">
           <Button
             variant="outline"
             size="sm"
@@ -251,7 +251,7 @@ export function AstrologyIdentityCard({
           </div>
 
           <Link
-            href={PATHS.DASHBOARD_PROFILE}
+            href={PATHS.DASHBOARD.PROFILE}
             className="text-[11px] font-bold text-[#ff6b00] hover:text-[#e65100] transition-colors no-underline"
           >
             Edit Birth Details →

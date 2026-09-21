@@ -24,22 +24,22 @@ export interface NavItem {
 export const ASTROLOGY_SUB_LINKS: NavItem[] = [
   {
     name: "Daily Horoscope",
-    href: PATHS.DASHBOARD_HOROSCOPE,
+    href: PATHS.DASHBOARD.HOROSCOPE,
     icon: Sun,
   },
   {
     name: "Saved Kundli",
-    href: PATHS.DASHBOARD_KUNDLI,
+    href: PATHS.DASHBOARD.KUNDLI,
     icon: Compass,
   },
   {
     name: "Kundli Milan",
-    href: PATHS.DASHBOARD_MATCHING,
+    href: PATHS.DASHBOARD.MATCHING,
     icon: HeartHandshake,
   },
   {
     name: "My Reports",
-    href: PATHS.DASHBOARD_REPORTS,
+    href: PATHS.DASHBOARD.REPORTS,
     icon: FileText,
   },
 ];
@@ -47,32 +47,32 @@ export const ASTROLOGY_SUB_LINKS: NavItem[] = [
 export const MAIN_SERVICES_NAV: NavItem[] = [
   {
     name: "Consultations",
-    href: PATHS.DASHBOARD_CONSULTATIONS,
+    href: PATHS.DASHBOARD.CONSULTATIONS,
     icon: MessageSquare,
   },
   {
     name: "Top Astrologers",
-    href: PATHS.DASHBOARD_EXPERTS,
+    href: PATHS.DASHBOARD.EXPERTS,
     icon: Users,
   },
   {
     name: "My Orders",
-    href: PATHS.DASHBOARD_ORDERS,
+    href: PATHS.DASHBOARD.ORDERS,
     icon: ShoppingBag,
   },
   {
     name: "Wallet & Credits",
-    href: PATHS.DASHBOARD_WALLET,
+    href: PATHS.DASHBOARD.WALLET,
     icon: Wallet,
   },
   {
     name: "Saved / Wishlist",
-    href: PATHS.DASHBOARD_WISHLIST,
+    href: PATHS.DASHBOARD.WISHLIST,
     icon: Heart,
   },
   {
     name: "Notifications",
-    href: PATHS.DASHBOARD_NOTIFICATIONS,
+    href: PATHS.DASHBOARD.NOTIFICATIONS,
     icon: Bell,
   },
 ];
@@ -80,12 +80,12 @@ export const MAIN_SERVICES_NAV: NavItem[] = [
 export const ACCOUNT_NAV_ITEMS: NavItem[] = [
   {
     name: "Vedic Profile",
-    href: PATHS.DASHBOARD_PROFILE,
+    href: PATHS.DASHBOARD.PROFILE,
     icon: User,
   },
   {
     name: "Preferences & Settings",
-    href: PATHS.DASHBOARD_SETTINGS,
+    href: PATHS.DASHBOARD.SETTINGS,
     icon: Settings,
   },
 ];

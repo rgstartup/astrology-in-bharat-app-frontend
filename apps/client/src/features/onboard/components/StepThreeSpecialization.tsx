@@ -20,10 +20,9 @@ interface StepThreeSpecializationProps {
   isSubmitting?: boolean;
 }
 
-export const StepThreeSpecialization: React.FC<StepThreeSpecializationProps> = ({
-  onBack,
-  isSubmitting = false,
-}) => {
+export const StepThreeSpecialization: React.FC<
+  StepThreeSpecializationProps
+> = ({ onBack, isSubmitting = false }) => {
   const { control } = useFormContext<OnboardingFormData>();
 
   return (

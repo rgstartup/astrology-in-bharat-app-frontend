@@ -19,6 +19,7 @@ import {
 import GoogleLoginButton from "../GoogleLoginButton.component";
 import { AuthHeader } from "../AuthHeader";
 import { OtpVerification } from "../OtpVerification.component";
+import { scrollToTop } from "@/utils/scroll";
 import { useTranslations } from "next-intl";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
@@ -84,9 +85,7 @@ export const SignUpForm: React.FC = () => {
         toast.success(result.message || t("signUp.otpSent"));
         setRegisteredEmail(data.email.trim());
         setStep(2);
-        if (typeof window !== "undefined") {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
+        scrollToTop(1.8);
       }
     } catch (err) {
       console.error("[SignUpForm] registerAction error:", err);
@@ -120,9 +119,7 @@ export const SignUpForm: React.FC = () => {
         redirectUrl={callback_url}
         onBack={() => {
           setStep(1);
-          if (typeof window !== "undefined") {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }
+          scrollToTop(1.8);
         }}
         onResend={handleResendOtp}
       />

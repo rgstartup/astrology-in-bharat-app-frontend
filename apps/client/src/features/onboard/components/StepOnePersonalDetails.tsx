@@ -44,7 +44,7 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
   const { user, updateUser } = useAuth();
   const { control, setValue, watch } = useFormContext<OnboardingFormData>();
 
-  const currentAvatar = watch("avatar") || user?.avatar;
+  const currentAvatar = watch("avatar") || user?.avatar_media?.url;
 
   return (
     <div className="space-y-6">
@@ -195,7 +195,9 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
                             <Icon
                               className={cn(
                                 "size-4 shrink-0",
-                                isSelected ? "text-emerald-700" : "text-stone-500",
+                                isSelected
+                                  ? "text-emerald-700"
+                                  : "text-stone-500",
                               )}
                             />
                             <span>{genderOption.label}</span>

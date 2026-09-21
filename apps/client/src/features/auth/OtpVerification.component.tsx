@@ -19,6 +19,7 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { MailCheck, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthHeader } from "./AuthHeader";
+import { scrollToTop } from "@/utils/scroll";
 
 export interface OtpVerificationProps {
   email: string;
@@ -50,9 +51,7 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
 
   // Scroll to top on mount (especially useful on mobile)
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    scrollToTop(1.8);
   }, []);
 
   // Countdown timer for resending OTP
@@ -106,8 +105,7 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
         if (onSuccess) {
           onSuccess(result.user);
         } else {
-          router.refresh();
-          router.push(stripLocale(redirectUrl));
+          window.location.href = stripLocale(redirectUrl);
         }
       }
     } catch {

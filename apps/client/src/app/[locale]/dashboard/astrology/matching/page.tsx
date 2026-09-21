@@ -50,7 +50,7 @@ export default function KundliMatchingDashboardPage() {
           </div>
 
           {!hasBirthDetails && (
-            <Link href={PATHS.DASHBOARD_PROFILE} className="no-underline">
+            <Link href={PATHS.DASHBOARD.PROFILE} className="no-underline">
               <Button variant="secondary" size="sm" className="font-bold">
                 Update Your Birth Details
               </Button>

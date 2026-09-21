@@ -21,7 +21,7 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
   const [astroExpanded, setAstroExpanded] = useState(true);
 
   const isActive = (path: string) => {
-    if (path === PATHS.DASHBOARD) {
+    if (path === PATHS.DASHBOARD.ROOT) {
       return pathname === "/dashboard";
     }
     return pathname.startsWith(path);
@@ -36,7 +36,7 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
       {/* Sidebar Brand Header */}
       <div className="h-16 px-5 flex items-center justify-between border-b border-orange-100/80 shrink-0">
         <Link
-          href={PATHS.DASHBOARD}
+          href={PATHS.DASHBOARD.ROOT}
           onClick={onClose}
           className="flex items-center gap-3 no-underline group"
         >
@@ -76,10 +76,10 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
         {/* Top Level: Main Dashboard */}
         <div>
           <Link
-            href={PATHS.DASHBOARD}
+            href={PATHS.DASHBOARD.ROOT}
             onClick={onClose}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-xs tracking-wide transition-all no-underline ${
-              isActive(PATHS.DASHBOARD)
+              isActive(PATHS.DASHBOARD.ROOT)
                 ? "bg-[#ff6b00] text-white shadow-xs shadow-[#ff6b00]/25"
                 : "text-slate-700 hover:bg-orange-50/60 hover:text-[#ff6b00]"
             }`}

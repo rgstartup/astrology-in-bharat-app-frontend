@@ -18,6 +18,7 @@ import {
 import GoogleLoginButton from "../GoogleLoginButton.component";
 import { AuthHeader } from "../AuthHeader";
 import { OtpVerification } from "../OtpVerification.component";
+import { scrollToTop } from "@/utils/scroll";
 import { useTranslations } from "next-intl";
 import { PATHS } from "@repo/routes";
 import { stripLocale, withCallbackUrl } from "@/utils/getPathnameOrDefault";
@@ -83,9 +84,7 @@ const SignInForm: React.FC = () => {
         ) {
           setUnverifiedEmail(data.email.trim());
           setShowOtp(true);
-          if (typeof window !== "undefined") {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }
+          scrollToTop(1.8);
           return;
         }
 
@@ -96,9 +95,8 @@ const SignInForm: React.FC = () => {
       // Fetch client profile into Zustand auth store using the new session cookies
       await init(true);
 
-      // Refresh server components and navigate to callback URL
-      router.refresh();
-      router.push(stripLocale(callback_url));
+      // Perform clean full-page navigation to reset session & re-evaluate server components
+      window.location.href = stripLocale(callback_url);
     } catch {
       toast.error(t("signIn.errors.unexpected"));
     }
@@ -113,9 +111,7 @@ const SignInForm: React.FC = () => {
         redirectUrl={callback_url}
         onBack={() => {
           setShowOtp(false);
-          if (typeof window !== "undefined") {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }
+          scrollToTop(1.8);
         }}
         onResend={handleResendOtp}
       />

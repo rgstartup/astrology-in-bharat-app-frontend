@@ -45,7 +45,7 @@ export default function MyConsultationsPage() {
           </p>
         </div>
 
-        <Link href={PATHS.DASHBOARD_EXPERTS} className="no-underline">
+        <Link href={PATHS.DASHBOARD.EXPERTS} className="no-underline">
           <Button variant="default" size="sm" className="font-bold">
             <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
             <span>Consult an Expert</span>
@@ -73,7 +73,7 @@ export default function MyConsultationsPage() {
           <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto mb-6">
             You haven't consulted an expert yet. Connect with our verified astrologers for personalized Vedic guidance.
           </p>
-          <Link href={PATHS.DASHBOARD_EXPERTS} className="no-underline">
+          <Link href={PATHS.DASHBOARD.EXPERTS} className="no-underline">
             <Button variant="default" className="font-bold">
               <span>Find an Astrologer</span>
             </Button>

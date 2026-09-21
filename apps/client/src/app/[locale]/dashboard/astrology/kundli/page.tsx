@@ -66,7 +66,7 @@ export default function MyKundliPage() {
             details each time.
           </p>
 
-          <Link href={PATHS.DASHBOARD_PROFILE} className="no-underline">
+          <Link href={PATHS.DASHBOARD.PROFILE} className="no-underline">
             <Button variant="default" className="shadow-md font-bold">
               <span>Add Birth Details</span>
             </Button>
@@ -133,7 +133,7 @@ export default function MyKundliPage() {
           </div>
 
           {/* Action: Edit Birth Details */}
-          <Link href={PATHS.DASHBOARD_PROFILE} className="no-underline shrink-0">
+          <Link href={PATHS.DASHBOARD.PROFILE} className="no-underline shrink-0">
             <Button
               variant="outline"
               size="sm"
@@ -397,7 +397,7 @@ export default function MyKundliPage() {
                 <p className="text-xs text-slate-600 mb-3">
                   Ask our verified astrologers about specific yogas, career houses, and timing.
                 </p>
-                <Link href={PATHS.DASHBOARD_EXPERTS} className="no-underline block">
+                <Link href={PATHS.DASHBOARD.EXPERTS} className="no-underline block">
                   <Button variant="default" size="sm" className="w-full justify-center">
                     <span>Ask Astrologer</span>
                   </Button>
@@ -583,7 +583,7 @@ export default function MyKundliPage() {
             <p className="text-xs text-slate-500 max-w-sm mx-auto mb-4">
               Explore your detailed generated compatibility and astrological reports.
             </p>
-            <Link href={PATHS.DASHBOARD_REPORTS} className="no-underline">
+            <Link href={PATHS.DASHBOARD.REPORTS} className="no-underline">
               <Button variant="default" size="sm">
                 <span>Go to Saved Reports</span>
               </Button>

@@ -11,18 +11,19 @@ const HeroSection = async () => {
   return (
     <section
       className="py-0 overflow-x-hidden"
-      style={{
-        backgroundImage: "url('/images/white-background.png')",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-      }}
+      // style={{
+      //   backgroundImage: "url('/images/white-background.png')",
+      //   backgroundSize: "cover",
+      //   backgroundRepeat: "no-repeat",
+      // }}
     >
       <div className="py-10">
         <div className="max-w-[1320px] mx-auto px-4 md:px-8 lg:px-16">
           {/* contant-hero */}
           <div
-            className="bg-[#f7f3ec] rounded-[20px] p-5 md:p-6 overflow-visible"
-            style={{ border: "solid 1px rgba(242,107,0,0.17)" }}
+            // bg-[#f7f3ec]
+            className="rounded-[20px] p-5 md:p-6 overflow-visible"
+            // style={{ border: "solid 1px rgba(242,107,0,0.17)" }}
           >
             {/* row: flex col-reverse on mobile, row on lg */}
             <div className="flex flex-col-reverse lg:flex-row items-center gap-6 overflow-visible">
