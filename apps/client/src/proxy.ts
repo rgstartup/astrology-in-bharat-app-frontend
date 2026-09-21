@@ -32,7 +32,7 @@ const PROTECTED_ROUTES = ["/client", "/dashboard"];
 const isProtectedRoute = (pathname: string) =>
   PROTECTED_ROUTES.some((prefix) => pathname.startsWith(prefix));
 
-const AUTH_ROUTES = ["/sign-in", "/register"];
+const AUTH_ROUTES = ["/login", "/sign-in", "/register"];
 const isAuthRoute = (pathname: string) => AUTH_ROUTES.includes(pathname);
 
 const getPathnameWithoutLocale = (pathname: string) => {
@@ -81,11 +81,12 @@ const redirectToLogout = (
   isProtected: boolean,
 ): NextResponse => {
   const normalized = getPathnameWithoutLocale(pathname);
-  const baseTarget = isProtected ? "/sign-in" : normalized || "/";
+  const baseTarget = isProtected ? "/login" : normalized || "/";
   const callback =
     isProtected &&
     normalized &&
     normalized !== "/" &&
+    !normalized.startsWith("/login") &&
     !normalized.startsWith("/sign-in")
       ? normalized
       : null;
@@ -109,7 +110,7 @@ const redirectToLogin = (
 ): NextResponse => {
   const normalized = getPathnameWithoutLocale(pathname);
   const target = withCallbackUrl(
-    "/sign-in",
+    "/login",
     normalized && normalized !== "/" ? normalized : null,
   );
   const url = new URL(target, request.url);

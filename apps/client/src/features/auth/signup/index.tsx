@@ -358,7 +358,7 @@ export const SignUpForm: React.FC = () => {
           <span>{t("signUp.alreadyAccount")} </span>
           <Link
             href={withCallbackUrl(
-              PATHS.SIGN_IN,
+              PATHS.LOGIN,
               callback_url !== "/onboard" && callback_url !== "/dashboard"
                 ? callback_url
                 : undefined,

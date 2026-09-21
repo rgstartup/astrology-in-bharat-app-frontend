@@ -180,7 +180,7 @@ export const useCompleteProfile = (onClose: () => void) => {
       if (fetchErr) {
         if (fetchErr.status === 401) {
           setError("You are not authenticated. Please sign in first.");
-          setTimeout(() => { onClose(); router.push("/sign-in"); }, 3000);
+          setTimeout(() => { onClose(); router.push("/login"); }, 3000);
         } else {
           setError(getErrorMessage(fetchErr) || `An error occurred (${fetchErr.status})`);
         }

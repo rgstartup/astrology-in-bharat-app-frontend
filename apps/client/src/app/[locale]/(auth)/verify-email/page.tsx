@@ -157,7 +157,7 @@ const VerifyEmailContent: React.FC = () => {
           {!isLoading && (
             <div className="pt-4 flex flex-col gap-4">
               <Link
-                href="/sign-in"
+                href="/login"
                 className="group relative w-full py-6 bg-slate-950 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-[0.4em] shadow-2xl hover:bg-orange transition-all duration-500 active:scale-95"
               >
                 <span className="relative z-10">

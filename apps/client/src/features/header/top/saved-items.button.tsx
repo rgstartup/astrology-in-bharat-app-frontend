@@ -30,7 +30,7 @@ const SavedItemsButton = () => {
 
   const targetHref = isAuthenticated
     ? `${PATHS.PROFILE}?tab=wishlist`
-    : withCallbackUrl(PATHS.SIGN_IN, `${PATHS.PROFILE}?tab=wishlist`);
+    : withCallbackUrl(PATHS.LOGIN, `${PATHS.PROFILE}?tab=wishlist`);
 
   return (
     <Link

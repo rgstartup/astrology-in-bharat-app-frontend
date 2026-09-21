@@ -57,7 +57,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
           onClick: () =>
             router.push(
               withCallbackUrl(
-                PATHS.SIGN_IN,
+                PATHS.LOGIN,
                 pathname === "/" ? "/#astrology-store" : pathname,
               ),
             ),

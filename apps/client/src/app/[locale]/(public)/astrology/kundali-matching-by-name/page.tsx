@@ -98,7 +98,7 @@ const KundaliMatchingByNamePage = () => {
 
     if (!isAuthenticated) {
       toast.error(t("form.loginRequired"), {
-        onClick: () => router.push("/sign-in"),
+        onClick: () => router.push("/login"),
         autoClose: 3000,
         style: { cursor: "pointer" },
       });

@@ -72,8 +72,8 @@ export const useProfileBaseLogic = () => {
         if (authLoading) return; // still loading, don't redirect yet
         if (isAuthenticated) return; // already authenticated, no redirect
 
-        console.log('[ProfileBaseLogic] Not authenticated after wait, redirecting to sign-in');
-        router.push(withCallbackUrl(PATHS.SIGN_IN, PATHS.PROFILE));
+        console.log('[ProfileBaseLogic] Not authenticated after wait, redirecting to login');
+        router.push(withCallbackUrl(PATHS.LOGIN, PATHS.PROFILE));
     }, [authLoading, isAuthenticated, router]);
 
     // Tab Initialization

@@ -100,7 +100,7 @@ const ForgotPasswordContent: React.FC = () => {
 
                   <div className="flex justify-center pt-2">
                     <Link
-                      href="/sign-in"
+                      href="/login"
                       className="group text-[10px] font-black text-slate-400 hover:text-orange transition-all flex items-center gap-2 uppercase tracking-[0.25em] no-underline"
                     >
                       <RiArrowLeftLine className="text-sm group-hover:-translate-x-1 transition-transform" />
@@ -135,7 +135,7 @@ const ForgotPasswordContent: React.FC = () => {
                     {t("forgotPassword.resend")}
                   </button>
                   <Link
-                    href="/sign-in"
+                    href="/login"
                     className="inline-flex items-center justify-center w-full py-5 rounded-2xl bg-slate-900 text-white text-[10px] font-black shadow-xl hover:bg-slate-800 hover:-translate-y-1 transition-all uppercase tracking-[0.25em] no-underline"
                   >
                     {t("forgotPassword.backToSignIn")}

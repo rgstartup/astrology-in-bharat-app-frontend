@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useAuth } from "@/store/useAuthStore";
 import { PATHS } from "@repo/routes";
 import {
   NavigationMenu,
@@ -22,15 +21,12 @@ import {
 } from "@/components/ui/sheet";
 import { NAV_ITEMS_CONFIG } from "./nav-config";
 import MobileSubMenu from "./mobile/sub-menu";
-import AuthCTA from "./auth.cta";
+import ProfileCTA from "./profile.cta";
 import {
   ChevronDown,
+  ChevronRight,
   ShoppingBag,
   Sparkles,
-  User,
-  Wallet,
-  LogOut,
-  ArrowRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +40,6 @@ const NavigationMenuComponent: React.FC<INavigationMenuProps> = ({
   setIsMobileMenuOpen,
 }) => {
   const t = useTranslations("Navigation");
-  const { isAuthenticated, logout } = useAuth();
 
   // Mobile open state for each accordion section
   const [openMobileSections, setOpenMobileSections] = useState<
@@ -58,11 +53,6 @@ const NavigationMenuComponent: React.FC<INavigationMenuProps> = ({
       ...prev,
       [id]: !prev[id],
     }));
-  };
-
-  const handleLogout = async () => {
-    setIsMobileMenuOpen(false);
-    await logout();
   };
 
   const closeMobileMenu = () => {
@@ -92,51 +82,47 @@ const NavigationMenuComponent: React.FC<INavigationMenuProps> = ({
             </div>
             <SheetTitle className="sr-only">Mobile Navigation Menu</SheetTitle>
             <SheetDescription className="sr-only">
-              Navigation drawer for exploring astrology services, verified experts, and devotion.
+              Navigation drawer for exploring astrology services, verified consultants, and devotion.
             </SheetDescription>
           </SheetHeader>
 
           {/* Sheet Scrollable Body */}
           <div
             data-lenis-prevent
-            className="flex-1 overflow-y-auto px-3 py-3 space-y-1.5 [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-thumb]:bg-orange/30 [&::-webkit-scrollbar-thumb]:rounded-full"
+            className="flex-1 overflow-y-auto px-3 py-3 space-y-1 [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-thumb]:bg-orange/30 [&::-webkit-scrollbar-thumb]:rounded-full"
           >
             {NAV_ITEMS_CONFIG.map((section) => {
               const hasSubMenu = section.items && section.items.length > 0;
               const isSectionOpen = !!openMobileSections[section.id];
               const title = t(section.titleKey as any);
-              const description = section.descKey
-                ? t(section.descKey as any)
-                : null;
+              const SectionIcon = section.icon || ShoppingBag;
 
               if (!hasSubMenu && section.href) {
-                const SectionIcon = section.icon || ShoppingBag;
                 return (
                   <div
                     key={section.id}
-                    className="w-full border-b border-stone-100 pb-1"
+                    className="w-full border-b border-stone-100/80 pb-0.5 last:border-0"
                   >
                     <Link
                       href={section.href}
                       onClick={closeMobileMenu}
-                      className="flex items-center justify-between p-2.5 rounded-xl no-underline text-stone-900 hover:text-orange-600 hover:bg-orange-50/60 transition-colors font-medium text-[15px]"
+                      className="flex items-center justify-between p-2.5 rounded-xl no-underline text-stone-900 hover:text-orange-600 hover:bg-orange-50/60 active:scale-[0.99] transition-all font-medium group"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="size-8 rounded-lg bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div
+                          className={cn(
+                            "size-8 rounded-lg flex items-center justify-center shrink-0 shadow-2xs transition-transform group-hover:scale-105",
+                            section.iconBg || "bg-orange-50",
+                            section.iconColor || "text-orange-600"
+                          )}
+                        >
                           <SectionIcon className="size-4" />
                         </div>
-                        <div>
-                          <div className="font-semibold text-stone-900 text-[14px]">
-                            {title}
-                          </div>
-                          {description && (
-                            <div className="text-[11.5px] text-stone-500 leading-tight line-clamp-1 mt-0.5 font-normal">
-                              {description}
-                            </div>
-                          )}
-                        </div>
+                        <span className="font-semibold text-stone-900 text-[14px] group-hover:text-orange-600 transition-colors">
+                          {title}
+                        </span>
                       </div>
-                      <ArrowRight className="size-4 text-stone-400" />
+                      <ChevronRight className="size-4 text-stone-300 group-hover:text-orange-500 group-hover:translate-x-0.5 transition-all shrink-0" />
                     </Link>
                   </div>
                 );
@@ -145,22 +131,26 @@ const NavigationMenuComponent: React.FC<INavigationMenuProps> = ({
               return (
                 <div
                   key={section.id}
-                  className="w-full border-b border-stone-100 pb-1"
+                  className="w-full border-b border-stone-100/80 pb-0.5 last:border-0"
                 >
                   <button
                     type="button"
                     onClick={() => toggleMobileSection(section.id)}
-                    className="w-full flex items-center justify-between p-2.5 rounded-xl bg-transparent border-0 text-left text-stone-900 hover:text-orange-600 hover:bg-orange-50/60 transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-between p-2.5 rounded-xl bg-transparent border-0 text-left text-stone-900 hover:text-orange-600 hover:bg-orange-50/60 active:scale-[0.99] transition-all cursor-pointer group"
                   >
-                    <div>
-                      <div className="font-semibold text-[14px] text-stone-900">
-                        {title}
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div
+                        className={cn(
+                          "size-8 rounded-lg flex items-center justify-center shrink-0 shadow-2xs transition-transform group-hover:scale-105",
+                          section.iconBg || "bg-orange-50",
+                          section.iconColor || "text-orange-600"
+                        )}
+                      >
+                        <SectionIcon className="size-4" />
                       </div>
-                      {description && (
-                        <div className="text-[11.5px] text-stone-500 line-clamp-1 mt-0.5 font-normal">
-                          {description}
-                        </div>
-                      )}
+                      <span className="font-semibold text-[14px] text-stone-900 group-hover:text-orange-600 transition-colors">
+                        {title}
+                      </span>
                     </div>
                     <ChevronDown
                       className={cn(
@@ -182,40 +172,9 @@ const NavigationMenuComponent: React.FC<INavigationMenuProps> = ({
             })}
           </div>
 
-          {/* Sheet Bottom Footer: Auth & Profile */}
-          <div className="p-3.5 border-t border-stone-100 bg-[#FFF9F4]">
-            {isAuthenticated ? (
-              <div className="space-y-1">
-                <Link
-                  href={PATHS.PROFILE}
-                  onClick={closeMobileMenu}
-                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-stone-800 hover:text-orange-600 hover:bg-white transition-colors no-underline text-sm font-medium"
-                >
-                  <User className="size-4 text-orange-600" />
-                  {t("common.myProfile")}
-                </Link>
-
-                <Link
-                  href={`${PATHS.PROFILE}?tab=wallet`}
-                  onClick={closeMobileMenu}
-                  className="flex items-center gap-3 px-3 py-2 rounded-xl text-stone-800 hover:text-orange-600 hover:bg-white transition-colors no-underline text-sm font-medium"
-                >
-                  <Wallet className="size-4 text-orange-600" />
-                  {t("common.myWallet")}
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors bg-transparent border-0 text-left text-sm font-medium cursor-pointer"
-                >
-                  <LogOut className="size-4 text-red-600" />
-                  {t("common.logout")}
-                </button>
-              </div>
-            ) : (
-              <AuthCTA setIsMenuOpen={setIsMobileMenuOpen} />
-            )}
+          {/* Sheet Bottom Footer: Profile CTA */}
+          <div className="p-3 border-t border-stone-100 bg-[#FFF9F4]">
+            <ProfileCTA setIsMenuOpen={setIsMobileMenuOpen} />
           </div>
         </SheetContent>
       </Sheet>

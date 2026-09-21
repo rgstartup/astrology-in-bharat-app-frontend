@@ -15,7 +15,7 @@ const AuthCTA = ({ setIsMenuOpen }: AuthCTAProps) => {
 
   const signInAction = () => {
     setIsMenuOpen(false);
-    router.push(PATHS.SIGN_IN);
+    router.push(PATHS.LOGIN);
   };
 
   const signUpAction = () => {

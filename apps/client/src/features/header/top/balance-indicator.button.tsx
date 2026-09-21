@@ -109,7 +109,7 @@ const BalanceIndicator = () => {
                 type="button"
                 onClick={() =>
                   handleNavigate(
-                    withCallbackUrl(PATHS.SIGN_IN, `${PATHS.PROFILE}?tab=wallet`),
+                    withCallbackUrl(PATHS.LOGIN, `${PATHS.PROFILE}?tab=wallet`),
                   )
                 }
                 className="w-full h-7.5 bg-[#FF5500] hover:bg-[#e04b00] text-white text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer border-0 shadow-xs"

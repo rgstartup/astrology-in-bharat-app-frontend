@@ -7,17 +7,17 @@ import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
-  title: "Sign Up - Astrology Bharat",
+  title: "Register - Astrology Bharat",
   description: "Create your free account and start your cosmic journey today.",
 };
 
 export default async function RegisterPage() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
+  const token = Boolean(cookieStore.get("accessToken")?.value);
 
   if (token) {
     const locale = await getLocale();
-    redirect({ href: "/client/profile", locale });
+    redirect({ href: "/client/dashboard", locale });
   }
 
   return (

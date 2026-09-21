@@ -31,7 +31,7 @@ const CartPage: React.FC = () => {
 
     // Only redirect if we ARE NOT loading anymore and we ARE NOT authenticated
     if (!loading && !isAuthenticated) {
-      router.push("/sign-in");
+      router.push("/login");
     }
 
     const fetchProducts = async () => {

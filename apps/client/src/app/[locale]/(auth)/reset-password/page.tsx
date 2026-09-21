@@ -27,7 +27,7 @@ const ResetPasswordContent: React.FC = () => {
   useEffect(() => {
     if (!token) {
       toast.error(t("resetPassword.errors.invalidToken"));
-      router.push("/sign-in");
+      router.push("/login");
     }
   }, [token, router]);
 
@@ -67,7 +67,7 @@ const ResetPasswordContent: React.FC = () => {
     toast.success(data?.message || t("resetPassword.successMessage"));
     setIsSuccess(true);
     setTimeout(() => {
-      router.push("/sign-in");
+      router.push("/login");
     }, 3000);
   };
 
@@ -185,7 +185,7 @@ const ResetPasswordContent: React.FC = () => {
                 </div>
                 <div className="pt-4">
                   <Link
-                    href="/sign-in"
+                    href="/login"
                     className="inline-flex items-center gap-3 px-10 py-5 bg-slate-900 text-white rounded-full font-black text-xs uppercase tracking-[0.3em] shadow-xl hover:bg-slate-800 hover:-translate-y-1 transition-all no-underline"
                   >
                     {t("resetPassword.goToSignIn")}

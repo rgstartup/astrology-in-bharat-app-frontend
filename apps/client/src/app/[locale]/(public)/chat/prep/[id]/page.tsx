@@ -192,7 +192,7 @@ export default function ConsultationPrep() {
           <span className="underline font-black">{t("loginNow")}</span>
         </span>,
         {
-          onClick: () => router.push(withCallbackUrl(PATHS.SIGN_IN, pathname)),
+          onClick: () => router.push(withCallbackUrl(PATHS.LOGIN, pathname)),
           style: { cursor: "pointer" },
         },
       );

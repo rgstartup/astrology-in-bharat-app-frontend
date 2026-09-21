@@ -44,13 +44,13 @@ export const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
     if (!expertId) return;
 
     if (!isAuthenticated) {
-      toast.info("Please sign in to save this astrologer to your favorites.", {
+      toast.info("Please login to save this astrologer to your favorites.", {
         action: {
-          label: "Sign In",
+          label: "Login",
           onClick: () =>
             router.push(
               withCallbackUrl(
-                PATHS.SIGN_IN,
+                PATHS.LOGIN,
                 pathname ||
                   (typeof window !== "undefined" ? window.location.pathname : "/"),
               ),

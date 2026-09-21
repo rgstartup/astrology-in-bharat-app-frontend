@@ -25,9 +25,9 @@ export function getPathnameOrDefault(
 }
 
 /**
- * Appends a sanitized `callback_url` parameter to a destination path (e.g., PATHS.SIGN_IN or PATHS.REGISTER).
+ * Appends a sanitized `callback_url` parameter to a destination path (e.g., PATHS.LOGIN or PATHS.REGISTER).
  *
- * @param destinationPath - The path to navigate to (e.g., "/sign-in", "/register")
+ * @param destinationPath - The path to navigate to (e.g., "/login", "/register")
  * @param callbackUrl - The return URL or route to attach as `callback_url`
  * @returns The destination path with the formatted `callback_url` query param, or untouched if no callback URL is provided.
  */

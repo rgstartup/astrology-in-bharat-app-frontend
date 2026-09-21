@@ -132,7 +132,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
         onClick: () =>
           router.push(
             withCallbackUrl(
-              PATHS.SIGN_IN,
+              PATHS.LOGIN,
               pathname === "/" ? "/#our-experts" : pathname,
             ),
           ),

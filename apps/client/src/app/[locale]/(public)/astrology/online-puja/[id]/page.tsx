@@ -187,7 +187,7 @@ const PujaDetailPage = () => {
         {
           onClick: () =>
             router.push(
-              withCallbackUrl(PATHS.SIGN_IN, `/astrology/online-puja/${id}`),
+              withCallbackUrl(PATHS.LOGIN, `/astrology/online-puja/${id}`),
             ),
           style: { cursor: "pointer" },
         },

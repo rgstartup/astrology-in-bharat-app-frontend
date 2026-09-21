@@ -49,7 +49,7 @@ const LikeButton = ({
           onClick: () =>
             router.push(
               withCallbackUrl(
-                PATHS.SIGN_IN,
+                PATHS.LOGIN,
                 pathname === "/" ? "/#sacred-pujas" : pathname,
               ),
             ),

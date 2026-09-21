@@ -5,12 +5,12 @@ import ShowcaseCard from "./ShowcaseCard";
 import BackButton from "@/components/ui/BackButton";
 
 export const metadata: Metadata = {
-  title: "Sign In - Astrology Bharat",
+  title: "Login - Astrology Bharat",
   description:
-    "Sign in to your account and unlock personalized astrology insights.",
+    "Login to your account and unlock personalized astrology insights.",
 };
 
-export default async function SignInPage() {
+export default async function LoginPage() {
   return (
     <section className="relative flex-1 flex items-start lg:items-center justify-center pt-6 pb-8 sm:pt-8 sm:pb-10 lg:py-8 w-full min-h-[calc(100vh-140px)]">
       <div className="w-full max-w-[1140px] mx-auto px-4 md:px-8 relative z-10">

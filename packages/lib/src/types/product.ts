@@ -123,7 +123,7 @@ export interface Product {
   updated_at?: string | Date;
   type?: ProductType;
   product_group?: ProductGroup;
-  variants?: ProductVariant[];
+  variants: ProductVariant[];
   media?: ProductMedia[];
 }
 

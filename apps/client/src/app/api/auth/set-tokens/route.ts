@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
   if (!accessToken || !refreshToken) {
     console.error("[set-tokens] Missing tokens!");
     return NextResponse.redirect(
-      new URL("/sign-in?error=missing_tokens", request.url),
+      new URL("/login?error=missing_tokens", request.url),
     );
   }
 

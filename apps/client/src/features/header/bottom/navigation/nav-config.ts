@@ -17,6 +17,7 @@ import {
   Gem,
   Hash,
   Palette,
+  Calculator,
   type LucideIcon,
 } from "lucide-react";
 
@@ -37,6 +38,8 @@ export interface NavMenuSectionConfig {
   descKey?: string;
   href?: string;
   icon?: LucideIcon;
+  iconColor?: string;
+  iconBg?: string;
   items?: NavSubItemConfig[];
 }
 
@@ -45,6 +48,9 @@ export const NAV_ITEMS_CONFIG: NavMenuSectionConfig[] = [
     id: "astrology",
     titleKey: "astrology.title",
     descKey: "astrology.description",
+    icon: Sparkles,
+    iconColor: "text-amber-600",
+    iconBg: "bg-amber-50",
     items: [
       {
         id: "kundli",
@@ -89,6 +95,9 @@ export const NAV_ITEMS_CONFIG: NavMenuSectionConfig[] = [
     id: "calculators",
     titleKey: "calculators.title",
     descKey: "calculators.description",
+    icon: Calculator,
+    iconColor: "text-rose-600",
+    iconBg: "bg-rose-50",
     items: [
       {
         id: "loveCompatibility",
@@ -151,6 +160,9 @@ export const NAV_ITEMS_CONFIG: NavMenuSectionConfig[] = [
     id: "experts",
     titleKey: "experts.title",
     descKey: "experts.description",
+    icon: UserCheck,
+    iconColor: "text-orange-600",
+    iconBg: "bg-orange-50",
     items: [
       {
         id: "astrologers",
@@ -205,6 +217,8 @@ export const NAV_ITEMS_CONFIG: NavMenuSectionConfig[] = [
     descKey: "ritualsPuja.description",
     href: PATHS.ONLINE_PUJA,
     icon: Flower2,
+    iconColor: "text-red-600",
+    iconBg: "bg-red-50",
   },
   {
     id: "products",
@@ -212,11 +226,16 @@ export const NAV_ITEMS_CONFIG: NavMenuSectionConfig[] = [
     descKey: "products.description",
     href: PATHS.PRODUCTS,
     icon: ShoppingBag,
+    iconColor: "text-emerald-600",
+    iconBg: "bg-emerald-50",
   },
   {
     id: "devotion",
     titleKey: "devotion.title",
     descKey: "devotion.description",
+    icon: Landmark,
+    iconColor: "text-purple-600",
+    iconBg: "bg-purple-50",
     items: [
       {
         id: "temples",

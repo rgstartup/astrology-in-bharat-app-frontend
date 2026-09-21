@@ -20,7 +20,7 @@ const AuthCTA = (props: { show: boolean }) => {
   return (
     <div className="flex gap-1.5 sm:gap-3">
       <Link
-        href={withCallbackUrl(PATHS.SIGN_IN, callback)}
+        href={withCallbackUrl(PATHS.LOGIN, callback)}
         className="bg-orange text-white rounded-xl sm:rounded-[14px] px-2.5 sm:px-[15px] py-1.5 sm:py-[6px] text-[10px] sm:text-sm font-semibold inline-block no-underline transition-all hover:opacity-90 active:scale-95 cursor-pointer whitespace-nowrap"
       >
         {signInText}

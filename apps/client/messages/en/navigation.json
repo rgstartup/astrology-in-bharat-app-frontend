@@ -54,7 +54,7 @@
     }
   },
   "experts": {
-    "title": "Experts",
+    "title": "Consultants",
     "description": "Consult verified Vedic astrologers, pandits, and spiritual guides",
     "items": {
       "astrologers": {
@@ -105,7 +105,7 @@
   "common": {
     "exploreAll": "Explore All",
     "viewMore": "View More",
-    "askExpert": "Ask Expert",
+    "askExpert": "Ask Consultant",
     "signIn": "Sign In",
     "register": "Register",
     "myProfile": "My Profile",

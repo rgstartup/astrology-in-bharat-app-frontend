@@ -38,9 +38,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const { lang, t } = useHomeTranslations();
   const imageUrl = getProductImageUrl(product);
 
-  const originalPrice = Number(product.original_price) || 0;
-  const price = Number(product.price) || 0;
-  const percentageOff = Number(product.percentage_off) || 0;
+  const firstVariant = product.variants?.[0];
+  const firstPricing = firstVariant?.pricing?.[0];
+  const firstPromotion = firstVariant?.promotions?.[0];
+
+  const originalPrice = Number(firstPricing?.amount) || 0;
+  const percentageOff = Number(firstPromotion?.discount_value) || 0;
+  const price =
+    Number((product as any).price) ||
+    (originalPrice > 0 ? originalPrice * (1 - percentageOff) : 0);
 
   // Hooks
   const { isInWishlist } = useWishlistStore();
@@ -68,7 +74,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <span className="underline font-black">Login now →</span>
         </span>,
       );
-      router.push(`/sign-in?redirect=${encodeURIComponent(pathname)}`);
+      router.push(withCallbackUrl(PATHS.LOGIN, pathname));
       return;
     }
 
@@ -99,7 +105,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           onClick: () =>
             router.push(
               withCallbackUrl(
-                PATHS.SIGN_IN,
+                PATHS.LOGIN,
                 pathname === "/" ? "/#astrology-products" : pathname,
               ),
             ),
@@ -209,10 +215,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             onClick={handleAddToCart}
             className={`flex-1 ${isCompact ? "h-9 rounded-lg px-0.5 text-[9px]" : "h-10 md:h-11 rounded-xl px-2 text-[10px] md:text-[11px]"} border-2 border-gray-100 text-gray-500 font-bold uppercase tracking-wider hover:border-orange hover:text-orange hover:bg-orange/5 transition-all duration-300 flex items-center justify-center group/btn shadow-sm hover:shadow-md cursor-pointer`}
           >
-            <span
-              className="leading-tight text-center"
-
-            >
+            <span className="leading-tight text-center">
               {t.products.addToCart}
             </span>
           </button>
@@ -231,7 +234,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                     onClick: () =>
                       router.push(
                         withCallbackUrl(
-                          PATHS.SIGN_IN,
+                          PATHS.LOGIN,
                           pathname === "/" ? "/#astrology-products" : pathname,
                         ),
                       ),
@@ -256,10 +259,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             ) : (
               <>
-                <span
-                  className="leading-tight text-center"
-
-                >
+                <span className="leading-tight text-center">
                   {t.products.buyNow}
                 </span>
               </>

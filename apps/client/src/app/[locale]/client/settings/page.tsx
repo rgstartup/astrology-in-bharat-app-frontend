@@ -25,7 +25,7 @@ export default async function ClientSettingsPage() {
     
     if (err) {
       if (err.status === 401 || err.status === 403) {
-        redirect(PATHS.SIGN_IN);
+        redirect(PATHS.LOGIN);
       }
       initialData = {
         full_name: "",
@@ -53,7 +53,7 @@ export default async function ClientSettingsPage() {
   } catch (err: any) {
     // 401 or network error → redirect to sign in
     if (err?.status === 401 || err?.status === 403) {
-      redirect(PATHS.SIGN_IN);
+      redirect(PATHS.LOGIN);
     }
     // For other errors, show empty form (user can still fill manually)
     initialData = {

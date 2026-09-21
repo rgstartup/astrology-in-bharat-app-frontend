@@ -24,7 +24,7 @@ export function FilterHeader() {
         </div>
       </div>
 
-      {activeFiltersCount > 0 ? (
+      {activeFiltersCount > 0 && (
         <button
           type="button"
           onClick={resetFilters}
@@ -33,13 +33,6 @@ export function FilterHeader() {
           <RotateCcw className="size-3" />
           <span>Reset ({activeFiltersCount})</span>
         </button>
-      ) : (
-        <Badge
-          variant="outline"
-          className="text-[11px] font-semibold text-gray-400"
-        >
-          All Experts
-        </Badge>
       )}
     </div>
   );

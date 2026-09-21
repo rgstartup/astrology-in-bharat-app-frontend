@@ -49,7 +49,7 @@ export function ExploreHeader({
         {/* Left: Count */}
         <div className="flex items-center gap-2.5 shrink-0">
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">
-            {totalCount} {totalCount === 1 ? "Astrologer" : "Astrologers"} Available
+            Total {totalCount} {totalCount === 1 ? "Consultant" : "Consultants"}
           </h1>
           {activeFiltersCount > 0 && (
             <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
@@ -127,7 +127,7 @@ export function ExploreHeader({
           {filters.onlyOnline && (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">
               <span className="size-1.5 rounded-full bg-emerald-500" />
-              Online Only
+              Online
             </span>
           )}
 

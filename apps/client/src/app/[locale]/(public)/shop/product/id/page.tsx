@@ -88,7 +88,7 @@ const Page = () => {
   const handleBuyNow = () => {
     if (!isAuthenticated) {
       toast.error("Please login first to buy products", {
-        onClick: () => router.push("/sign-in"),
+        onClick: () => router.push("/login"),
         autoClose: 3000,
         style: { cursor: "pointer" },
       });
@@ -104,7 +104,7 @@ const Page = () => {
   const handleAddToCartClick = () => {
     if (!isAuthenticated) {
       toast.error("Please login first to add products to cart", {
-        onClick: () => router.push("/sign-in"),
+        onClick: () => router.push("/login"),
         autoClose: 3000,
         style: { cursor: "pointer" },
       });

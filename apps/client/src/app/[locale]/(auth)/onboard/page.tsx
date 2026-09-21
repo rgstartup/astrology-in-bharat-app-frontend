@@ -17,10 +17,10 @@ export default async function OnboardPage() {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
-  // If user is not authenticated, redirect to sign-in with callback
+  // If user is not authenticated, redirect to login with callback
   if (!token) {
     redirect({
-      href: withCallbackUrl(PATHS.SIGN_IN, "/onboard"),
+      href: withCallbackUrl(PATHS.LOGIN, "/onboard"),
       locale,
     });
   }

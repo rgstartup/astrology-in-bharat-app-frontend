@@ -8,7 +8,6 @@ import UserProfileDropdown from "@/features/profile";
 
 import LanguageSwitcherDropdown from "./language-switcher.button";
 import BalanceIndicator from "./balance-indicator.button";
-import SavedItemsButton from "./saved-items.button";
 import CartComponent from "./cart";
 
 const TopHeader = () => {
@@ -36,7 +35,7 @@ const TopHeader = () => {
             </div>
           </div>
 
-          {/* Right section: Actions (Language on desktop, Wallet, Saved Items, Cart, Notification, Avatar) */}
+          {/* Right section: Actions (Language on desktop, Wallet, Cart, Notification, Avatar) */}
           <div className="flex items-center justify-end gap-2 sm:gap-3 md:gap-3.5 ml-auto">
             {/* Language Switcher (desktop) */}
             <div className="hidden lg:block">
@@ -45,9 +44,6 @@ const TopHeader = () => {
 
             {/* Wallet Balance Indicator */}
             <BalanceIndicator />
-
-            {/* Saved Items (Wishlist) */}
-            <SavedItemsButton />
 
             {/* Cart */}
             <CartComponent />

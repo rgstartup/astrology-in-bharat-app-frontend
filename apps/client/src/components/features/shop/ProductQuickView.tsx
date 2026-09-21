@@ -97,7 +97,7 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({
     e.stopPropagation();
     if (!isAuthenticated) {
       toast.error("Please login first to use wishlist", {
-        onClick: () => router.push("/sign-in"),
+        onClick: () => router.push("/login"),
         autoClose: 3000,
         style: { cursor: "pointer" },
       });
@@ -110,7 +110,7 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({
     e.stopPropagation();
     if (!isAuthenticated) {
       toast.error("Please login first to buy products", {
-        onClick: () => router.push("/sign-in"),
+        onClick: () => router.push("/login"),
         autoClose: 3000,
         style: { cursor: "pointer" },
       });
@@ -123,7 +123,7 @@ const ProductQuickView: React.FC<ProductQuickViewProps> = ({
     e.stopPropagation();
     if (!isAuthenticated) {
       toast.error("Please login first to buy products", {
-        onClick: () => router.push("/sign-in"),
+        onClick: () => router.push("/login"),
         autoClose: 3000,
         style: { cursor: "pointer" },
       });
