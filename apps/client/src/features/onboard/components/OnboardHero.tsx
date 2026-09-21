@@ -2,108 +2,186 @@
 
 import React from "react";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { Sparkles, Star, ShieldCheck } from "lucide-react";
+import { Check, ShieldCheck } from "lucide-react";
+import { PATHS } from "@repo/routes";
+import { cn } from "@/lib/utils";
+import { usePathname } from "@/i18n/navigation";
 
-export const OnboardHero: React.FC = () => {
+interface OnboardHeroProps {
+  currentStep?: 1 | 2 | 3;
+}
+
+export const OnboardHero: React.FC<OnboardHeroProps> = ({
+  currentStep: propStep,
+}) => {
+  const pathname = usePathname();
+
+  // Detect active step from route if not explicitly passed
+  const activeStep = React.useMemo(() => {
+    if (propStep) return propStep;
+    if (pathname.includes(PATHS.ONBOARDING.SPECIALIZATION)) return 3;
+    if (pathname.includes(PATHS.ONBOARDING.PREFERENCE)) return 2;
+    return 1;
+  }, [pathname, propStep]);
+
+
+  const steps = [
+    {
+      step: 1 as const,
+      number: "1",
+      title: "Personal & Birth Details",
+      description:
+        "Enter your birth date, time, and birthplace for precise natal chart calculation.",
+    },
+    {
+      step: 2 as const,
+      number: "2",
+      title: "Consultation Preferences",
+      description:
+        "Select your preferred consultation topics and comfortable languages.",
+    },
+    {
+      step: 3 as const,
+      number: "3",
+      title: "Expert Specialization",
+      description:
+        "Choose astrological disciplines and expert types you want to connect with.",
+    },
+  ];
+
   return (
-    <div className="w-full flex flex-col justify-between h-full py-2">
+    <div className="w-full flex flex-col justify-between h-full py-1">
       <div>
-        {/* Brand Tagline */}
-        <Badge
-          variant="saffron"
-          className="mb-4 px-3 py-1 text-xs font-semibold gap-1.5"
-        >
-          <Sparkles className="size-3.5" />
-          <span>Cosmic Onboarding</span>
-        </Badge>
+        {/* Brand Header with Expert emblem */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="relative shrink-0">
+            <Image
+              src="/images/Expert.png"
+              alt="Astrology in Bharat"
+              width={44}
+              height={44}
+              className="size-10 sm:size-11 object-contain"
+              priority
+            />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-0.5">
+              Profile Setup
+            </p>
+            <h2 className="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange to-[#EA580C] tracking-tight leading-tight">
+              Astrology in Bharat
+            </h2>
+          </div>
+        </div>
 
-        {/* Welcome Message */}
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-foreground leading-tight mb-2">
-          Welcome to <span className="text-orange">Astrology in Bharat</span>
-        </h1>
-
-        <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed mb-5 font-medium">
-          Personalize your journey so our verified astrologers, tarot masters,
-          and Vedic algorithms can chart your planetary positions with pinpoint
-          accuracy.
+        <p className="text-stone-600 text-xs sm:text-sm leading-relaxed mb-8 font-normal">
+          Complete these quick steps to personalize your astrological charts and
+          connect with verified experts.
         </p>
 
-        {/* Elevated Trust Badges */}
-        <div className="space-y-2.5 mb-5">
-          <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/80 border border-orange/15 shadow-xs">
-            <div className="size-7 rounded-lg bg-orange/10 text-orange flex items-center justify-center shrink-0">
-              <Star className="size-4" />
-            </div>
-            <div>
-              <h3 className="text-xs font-bold text-foreground">
-                Precision Natal Chart (Kundli)
-              </h3>
-              <p className="text-xs text-muted-foreground">
-                Calculated to the exact minute and geographical coordinates.
-              </p>
-            </div>
-          </div>
+        {/* Step Timeline */}
+        <div className="space-y-0 relative">
+          {steps.map((item, index) => {
+            const isCompleted = activeStep > item.step;
+            const isActive = activeStep === item.step;
+            const isLast = index === steps.length - 1;
 
-          <div className="flex items-center gap-3 p-2.5 rounded-xl bg-white/80 border border-orange/15 shadow-xs">
-            <div className="size-7 rounded-lg bg-emerald-600/10 text-emerald-600 flex items-center justify-center shrink-0">
-              <ShieldCheck className="size-4" />
-            </div>
-            <div>
-              <h3 className="text-xs font-bold text-foreground">
-                100% Confidential & Secure
-              </h3>
-              <p className="text-xs text-muted-foreground">
-                Your birth details are encrypted and shared only with your
-                chosen expert.
-              </p>
-            </div>
-          </div>
-        </div>
+            return (
+              <div
+                key={item.step}
+                className="relative flex items-start gap-4 pb-7 last:pb-0"
+              >
+                {/* Connecting Line between steps */}
+                {!isLast && (
+                  <div className="absolute left-4 top-8 bottom-0 w-0.5 -translate-x-1/2 bg-stone-200 overflow-hidden rounded-full">
+                    {/* CSS Animated Fill line moving down when advancing and retracting when moving back */}
+                    <div
+                      className={cn(
+                        "w-full h-full bg-emerald-600 origin-top transition-transform duration-700 ease-in-out",
+                        isCompleted ? "scale-y-100" : "scale-y-0"
+                      )}
+                    />
+                  </div>
+                )}
 
-        {/* Featured Welcoming Temple Image */}
-        <div className="relative w-full h-48 sm:h-56 md:h-64 rounded-2xl overflow-hidden shadow-md border-2 border-orange/20 mb-5 group">
-          <Image
-            src="/images/onboard-welcome.jpg"
-            alt="Welcome to Astrology In Bharat"
-            fill
-            className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
-          <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-            <span className="text-xs font-bold tracking-wide flex items-center gap-1.5 drop-shadow-md">
-              <Sparkles className="size-3.5 text-amber-400" />
-              <span>Namaste & Welcome</span>
-            </span>
-            <span className="text-xs font-semibold bg-white/20 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/20 drop-shadow-md">
-              शुभ स्वागतम्
-            </span>
-          </div>
-        </div>
+                {/* Step Circle / Indicator */}
+                <div className="relative shrink-0">
+                  <div
+                    className={cn(
+                      "relative z-10 size-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all duration-500 ease-out shadow-xs",
+                      isActive
+                        ? "bg-orange border-orange text-white ring-4 ring-orange/20 scale-105"
+                        : isCompleted
+                          ? "bg-emerald-50 border-emerald-600 text-emerald-700 scale-100 shadow-2xs"
+                          : "bg-white border-stone-300 text-stone-700 scale-100"
+                    )}
+                  >
+                    {isCompleted ? (
+                      <Check className="size-4 stroke-[2.5] text-emerald-700 transition-transform duration-300 animate-in zoom-in-50" />
+                    ) : (
+                      <span className="transition-opacity duration-300 animate-in fade-in">
+                        {item.number}
+                      </span>
+                    )}
+                  </div>
 
-        {/* Astrology Quote Card */}
-        <div className="relative p-4 rounded-2xl bg-white border border-orange/20 shadow-xs overflow-hidden">
-          <div className="absolute top-1 right-3 text-orange/10 text-4xl font-serif select-none pointer-events-none">
-            “
-          </div>
-          <div className="relative z-10 flex gap-3">
-            <div className="w-1 bg-orange rounded-full shrink-0" />
-            <div>
-              <p className="text-foreground text-xs sm:text-sm font-semibold italic leading-relaxed">
-                “Millionaires don&apos;t use astrology, billionaires do.”
-              </p>
-              <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
-                <span className="text-xs text-muted-foreground font-bold">
-                  — J.P. Morgan
-                </span>
-                <span className="text-xs text-orange font-semibold bg-orange/10 px-2 py-0.5 rounded-md">
-                  यत् पिण्डे तत् ब्रह्माण्डे
-                </span>
+                  {/* Active Step Breathing Glow Ring */}
+                  {isActive && (
+                    <div className="absolute inset-0 rounded-full bg-orange/30 -z-10 animate-ping opacity-30" />
+                  )}
+                </div>
+
+                {/* Step Details */}
+                <div
+                  className={cn(
+                    "flex-1 pt-0.5 transition-all duration-500 ease-out",
+                    isActive ? "translate-x-1" : "translate-x-0"
+                  )}
+                >
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span
+                      className={cn(
+                        "text-[11px] font-bold tracking-wide uppercase transition-colors duration-300",
+                        isActive
+                          ? "text-orange font-extrabold"
+                          : isCompleted
+                            ? "text-emerald-600 font-bold"
+                            : "text-stone-600"
+                      )}
+                    >
+                      Step {item.step}
+                    </span>
+                  </div>
+
+                  <h3
+                    className={cn(
+                      "text-xs sm:text-sm leading-snug font-bold transition-colors duration-300",
+                      isActive
+                        ? "text-stone-900"
+                        : isCompleted
+                          ? "text-stone-900"
+                          : "text-stone-700 font-semibold"
+                    )}
+                  >
+                    {item.title}
+                  </h3>
+
+                  <p className="text-xs text-stone-600 leading-relaxed mt-0.5 font-normal">
+                    {item.description}
+                  </p>
+                </div>
               </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
+      </div>
+
+      {/* Confidentiality Footer */}
+      <div className="mt-8 pt-5 border-t border-stone-200 flex items-center gap-2.5 text-xs text-stone-700">
+        <ShieldCheck className="size-4 text-emerald-600 shrink-0" />
+        <span className="text-xs leading-tight font-medium">
+          Your birth data is 100% confidential and securely encrypted.
+        </span>
       </div>
     </div>
   );

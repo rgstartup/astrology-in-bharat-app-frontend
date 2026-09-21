@@ -8,16 +8,23 @@ interface BackButtonProps {
   className?: string;
   fallbackUrl?: string;
   label?: string;
+  onClick?: () => void;
 }
 
 export default function BackButton({
   className = "",
   fallbackUrl = "/",
   label = "Back",
+  onClick,
 }: BackButtonProps) {
   const router = useRouter();
 
   const handleBack = () => {
+    if (onClick) {
+      onClick();
+      return;
+    }
+
     if (typeof window !== "undefined" && window.history.length > 1) {
       router.back();
     } else {

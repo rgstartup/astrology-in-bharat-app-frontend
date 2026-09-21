@@ -5,6 +5,7 @@ import { SignUpForm, ShowcaseCard } from "@/features/auth";
 import BackButton from "@/components/ui/BackButton";
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
+import { PATHS } from "@repo/routes";
 
 export const metadata: Metadata = {
   title: "Register - Astrology Bharat",
@@ -17,7 +18,7 @@ export default async function RegisterPage() {
 
   if (token) {
     const locale = await getLocale();
-    redirect({ href: "/client/dashboard", locale });
+    redirect({ href: PATHS.DASHBOARD.ROOT, locale });
   }
 
   return (

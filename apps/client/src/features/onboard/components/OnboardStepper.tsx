@@ -66,7 +66,7 @@ export const OnboardStepper: React.FC<OnboardStepperProps> = ({
                 isActive
                   ? "bg-orange/5 border-orange ring-1 ring-orange/30 shadow-xs"
                   : isCompleted
-                    ? "bg-emerald-50/50 border-emerald-200 hover:bg-emerald-50"
+                    ? "bg-emerald-50/60 border-emerald-200/80 hover:bg-emerald-50"
                     : "bg-white border-border/70 hover:border-orange/30 hover:bg-gray-50/50"
               )}
             >
@@ -76,12 +76,12 @@ export const OnboardStepper: React.FC<OnboardStepperProps> = ({
                   isActive
                     ? "bg-orange text-white shadow-xs"
                     : isCompleted
-                      ? "bg-emerald-600 text-white"
+                      ? "bg-emerald-100 text-emerald-700 shadow-2xs"
                       : "bg-muted text-muted-foreground"
                 )}
               >
                 {isCompleted ? (
-                  <Check className="size-4" />
+                  <Check className="size-4 stroke-[2.5] text-emerald-700" />
                 ) : (
                   <Icon className="size-4" />
                 )}

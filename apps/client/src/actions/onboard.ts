@@ -44,23 +44,12 @@ export async function saveOnboardingAction(
   if (data.place_of_birth?.trim()) {
     payload.place_of_birth = data.place_of_birth.trim();
   }
-  if (data.avatar?.trim()) {
-    payload.avatar = data.avatar.trim();
-    payload.profile_picture = data.avatar.trim();
-  }
-  if (data.languages && data.languages.length > 0) {
-    payload.language_preference = data.languages.join(", ");
-  }
 
-  const preferencesObj: Record<string, any> = {};
-  if (data.consultation_categories && data.consultation_categories.length > 0) {
-    preferencesObj.consultation_categories = data.consultation_categories;
-  }
-  if (data.expert_categories && data.expert_categories.length > 0) {
-    preferencesObj.expert_categories = data.expert_categories;
-  }
-  if (Object.keys(preferencesObj).length > 0) {
-    payload.preferences = JSON.stringify(preferencesObj);
+  if (data.preferences) {
+    payload.preferences = data.preferences;
+    if (data.preferences.languages && data.preferences.languages.length > 0) {
+      payload.language_preference = data.preferences.languages.join(", ");
+    }
   }
 
   if (
@@ -87,6 +76,7 @@ export async function saveOnboardingAction(
   });
 
   if (error) {
+    console.log(error);
     return {
       error: getErrorMessage(error),
     };

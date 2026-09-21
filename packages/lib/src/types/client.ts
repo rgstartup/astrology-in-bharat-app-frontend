@@ -4,7 +4,7 @@ import { Media } from "./media";
 export interface ClientPreferences {
   languages?: string[];
   topics?: number[];
-  specializations?: number[];
+  specializations?: (string | number)[];
   professions?: number[];
   communication_channel?: "chat" | "call" | "both";
   receive_daily_panchang?: boolean;

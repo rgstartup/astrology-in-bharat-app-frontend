@@ -1,6 +1,6 @@
 export * from "./utils/cn";
 export * from "./enums";
-
+export * from "./types/consultation";
 export * from "./types/media";
 export * from "./types/cart";
 export * from "./types/client";

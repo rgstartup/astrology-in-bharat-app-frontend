@@ -1,3 +1,5 @@
+import type { ClientPreferences } from "./user";
+
 export interface OnboardingAddress {
   line1?: string;
   city?: string;
@@ -8,16 +10,14 @@ export interface OnboardingAddress {
 export interface OnboardingFormData {
   avatar?: string;
   first_name?: string;
-  last_name?: string;
+  last_name?: string | null;
   full_name?: string;
   date_of_birth?: string;
   time_of_birth?: string;
   gender?: string;
   place_of_birth?: string;
   address?: OnboardingAddress;
-  languages?: string[];
-  consultation_categories?: string[];
-  expert_categories?: string[];
+  preferences?: ClientPreferences;
 }
 
 export interface OnboardingActionResponse {

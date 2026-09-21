@@ -10,6 +10,7 @@ import {
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import { withCallbackUrl } from "./utils/getPathnameOrDefault";
+import { PATHS } from "@repo/routes";
 
 const handleI18nRouting = createMiddleware(routing);
 
@@ -110,7 +111,7 @@ const redirectToLogin = (
 ): NextResponse => {
   const normalized = getPathnameWithoutLocale(pathname);
   const target = withCallbackUrl(
-    "/login",
+    PATHS.LOGIN as string,
     normalized && normalized !== "/" ? normalized : null,
   );
   const url = new URL(target, request.url);
@@ -118,7 +119,7 @@ const redirectToLogin = (
 };
 
 const redirectToCallback = (request: NextRequest): NextResponse => {
-  let redirectRoute = "/client/dashboard";
+  let redirectRoute = PATHS.DASHBOARD.ROOT as string;
   const callback_url =
     request.nextUrl.searchParams.get("callback_url") ||
     request.nextUrl.searchParams.get("callbackUrl");

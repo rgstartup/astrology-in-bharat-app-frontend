@@ -18,9 +18,9 @@ export const AddressFields: React.FC = () => {
 
   return (
     <details className="group pt-2 border-t border-gray-100">
-      <summary className="flex items-center justify-between py-2.5 cursor-pointer select-none text-sm font-bold text-foreground hover:text-orange transition-colors list-none">
+      <summary className="flex items-center justify-between py-2.5 cursor-pointer select-none text-sm font-semibold text-foreground hover:text-emerald-600 transition-colors list-none">
         <div className="flex items-center gap-2">
-          <MapPin className="size-4 text-orange" />
+          <MapPin className="size-4 text-orange-600" />
           <span>Address Details</span>
           <span className="text-xs font-normal text-muted-foreground">
             (Optional for physical reports & delivery)
@@ -42,6 +42,7 @@ export const AddressFields: React.FC = () => {
                   <Input
                     placeholder="e.g. 124, Lotus Apartments, MG Road"
                     {...field}
+                    value={field.value ?? ""}
                   />
                 </FormControl>
                 <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
@@ -59,7 +60,11 @@ export const AddressFields: React.FC = () => {
               <FormItem>
                 <FormLabel>City / Town</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. New Delhi" {...field} />
+                  <Input
+                    placeholder="e.g. New Delhi"
+                    {...field}
+                    value={field.value ?? ""}
+                  />
                 </FormControl>
                 <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
               </FormItem>
@@ -76,7 +81,11 @@ export const AddressFields: React.FC = () => {
               <FormItem>
                 <FormLabel>State</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Delhi" {...field} />
+                  <Input
+                    placeholder="e.g. Delhi"
+                    {...field}
+                    value={field.value ?? ""}
+                  />
                 </FormControl>
                 <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
               </FormItem>
@@ -97,6 +106,7 @@ export const AddressFields: React.FC = () => {
                     maxLength={6}
                     placeholder="e.g. 110001"
                     {...field}
+                    value={field.value ?? ""}
                   />
                 </FormControl>
                 <FormMessage className="text-xs text-destructive mt-1 leading-tight" />

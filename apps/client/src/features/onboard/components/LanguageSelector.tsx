@@ -55,10 +55,10 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
               type="button"
               onClick={() => toggleLanguage(lang.id)}
               className={cn(
-                "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 border cursor-pointer outline-none",
+                "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 border cursor-pointer outline-none select-none",
                 isSelected
-                  ? "bg-orange text-white border-orange shadow-xs shadow-orange/30 scale-[1.02]"
-                  : "bg-white text-foreground border-border hover:border-orange/50 hover:bg-orange/5"
+                  ? "bg-emerald-50 text-emerald-800 border-emerald-600 ring-1 ring-emerald-600/20 shadow-2xs scale-[1.02]"
+                  : "bg-white text-foreground border-border hover:border-emerald-400/50 hover:bg-emerald-50/30 shadow-2xs hover:shadow-xs"
               )}
             >
               <span>{lang.native}</span>
@@ -66,13 +66,15 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                 <span
                   className={cn(
                     "text-xs",
-                    isSelected ? "text-white/80" : "text-muted-foreground"
+                    isSelected ? "text-emerald-700/80 font-medium" : "text-muted-foreground"
                   )}
                 >
                   ({lang.label})
                 </span>
               )}
-              {isSelected && <Check className="size-3.5 ml-0.5" />}
+              {isSelected && (
+                <Check className="size-3.5 ml-0.5 stroke-[2.5] text-emerald-700" />
+              )}
             </button>
           );
         })}

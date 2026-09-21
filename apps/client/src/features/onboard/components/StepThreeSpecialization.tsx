@@ -3,8 +3,7 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { OnboardingFormData } from "@/lib/types";
-import { LanguageSelector } from "./LanguageSelector";
-import { ConsultationCategorySelector } from "./ConsultationCategorySelector";
+import { ExpertCategorySelector } from "./ExpertCategorySelector";
 import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
 import {
@@ -14,51 +13,29 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, Sparkles, Loader2 } from "lucide-react";
 
-interface StepTwoPreferencesProps {
+interface StepThreeSpecializationProps {
   onBack: () => void;
-  onNext?: () => void;
+  isSubmitting?: boolean;
 }
 
-export const StepTwoPreferences: React.FC<StepTwoPreferencesProps> = ({
+export const StepThreeSpecialization: React.FC<StepThreeSpecializationProps> = ({
   onBack,
-  onNext,
+  isSubmitting = false,
 }) => {
   const { control } = useFormContext<OnboardingFormData>();
 
   return (
     <div className="space-y-6">
-      {/* 1. Language Preferences */}
+      {/* 1. Expert Disciplines & Specializations */}
       <FormField
         control={control}
-        name="preferences.languages"
-        rules={{
-          validate: (value) =>
-            (value && value.length > 0) ||
-            "Please select at least one preferred language",
-        }}
+        name="preferences.specializations"
         render={({ field }) => (
           <FormItem>
             <FormControl>
-              <LanguageSelector
-                selected={field.value || []}
-                onChange={field.onChange}
-              />
-            </FormControl>
-            <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
-          </FormItem>
-        )}
-      />
-
-      {/* 2. Consultation Categories */}
-      <FormField
-        control={control}
-        name="preferences.topics"
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <ConsultationCategorySelector
+              <ExpertCategorySelector
                 selected={field.value || []}
                 onChange={field.onChange}
               />
@@ -91,11 +68,20 @@ export const StepTwoPreferences: React.FC<StepTwoPreferencesProps> = ({
 
         <Button
           type="submit"
-          onClick={onNext}
-          className="w-full sm:w-auto px-6 sm:px-7 h-11 rounded-full bg-orange hover:bg-orange/90 text-white text-sm font-semibold shadow-md shadow-orange/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
+          disabled={isSubmitting}
+          className="w-full sm:w-auto px-7 sm:px-8 h-11 rounded-full bg-orange hover:bg-orange/90 text-white text-sm font-semibold shadow-md shadow-orange/20 flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-70"
         >
-          <span>Continue to Specialization</span>
-          <ArrowRight className="size-4" />
+          {isSubmitting ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              <span>Completing Profile...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles className="size-4" />
+              <span>Complete Profile & Begin</span>
+            </>
+          )}
         </Button>
       </div>
     </div>

@@ -5,7 +5,8 @@ import { uploadOnboardingPictureAction } from "@/actions/onboard";
 import { toast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Camera, Upload, User, Loader2 } from "lucide-react";
+import { Camera, Upload, User, Loader2, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ProfilePicUploadProps {
   value?: string;
@@ -61,57 +62,95 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-orange/5 border border-orange/15">
+    <div
+      className={cn(
+        "flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl border transition-all duration-200 shadow-2xs",
+        displayImage
+          ? "bg-emerald-50/40 border-emerald-200/80"
+          : "bg-stone-50/50 border-border hover:border-emerald-300"
+      )}
+    >
       <div
-        className="relative group cursor-pointer"
+        className="relative group cursor-pointer shrink-0"
         onClick={() => fileInputRef.current?.click()}
       >
-        <Avatar className="size-24 border-4 border-white shadow-md bg-orange/10">
+        <Avatar className="size-16 sm:size-18 border-2 border-white shadow-sm ring-2 ring-emerald-300/60 bg-emerald-50">
           {displayImage ? (
-            <AvatarImage src={displayImage} alt="Profile Avatar" />
+            <AvatarImage
+              src={displayImage}
+              alt="Profile Avatar"
+              className="object-cover"
+            />
           ) : null}
-          <AvatarFallback className="bg-orange/10 text-orange">
-            <User className="size-10" />
+          <AvatarFallback className="bg-emerald-100/70 text-emerald-600">
+            <User className="size-8" />
           </AvatarFallback>
         </Avatar>
 
         {isUploading && (
           <div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center backdrop-blur-xs">
-            <Loader2 className="size-6 text-white animate-spin" />
+            <Loader2 className="size-5 text-white animate-spin" />
           </div>
         )}
 
         {!isUploading && (
-          <div className="absolute inset-0 rounded-full bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
-            <Camera className="size-4 mr-1" /> Change
+          <div className="absolute inset-0 rounded-full bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[11px] font-semibold">
+            <Camera className="size-3.5 mr-1" /> Change
           </div>
         )}
 
         <button
           type="button"
           aria-label="Upload profile picture"
-          className="absolute -bottom-1 -right-1 size-8 rounded-full bg-orange text-white shadow-md flex items-center justify-center hover:bg-[#d64e1c] transition-colors cursor-pointer"
+          className="absolute -bottom-1 -right-1 size-6 sm:size-7 rounded-full bg-emerald-600 text-white shadow-sm flex items-center justify-center hover:bg-emerald-700 transition-all cursor-pointer"
         >
-          <Camera className="size-4" />
+          <Camera className="size-3.5" />
         </button>
       </div>
 
-      <div className="text-center sm:text-left flex-1">
-        <h3 className="text-sm font-bold text-foreground mb-0.5">Profile Photo</h3>
-        <p className="text-xs text-muted-foreground mb-2.5">
-          Upload a clear picture of yourself (JPG, PNG or WEBP, max 5MB).
+      <div className="text-center sm:text-left flex-1 min-w-0">
+        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
+          <h3 className="text-sm font-bold text-foreground">Profile Photo</h3>
+          {displayImage && (
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-100/80 border border-emerald-200 px-2 py-0.5 rounded-full shadow-2xs">
+              <Check className="size-3 stroke-[2.5]" />
+              Uploaded
+            </span>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground mb-3">
+          Upload a clear photo of yourself (JPG, PNG or WEBP, max 5MB).
         </p>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={isUploading}
-          onClick={() => fileInputRef.current?.click()}
-          className="h-8 text-xs font-bold border-orange/30 text-orange hover:bg-orange/10 hover:text-orange cursor-pointer"
-        >
-          <Upload className="size-3.5 mr-1.5" />
-          {displayImage ? "Change Photo" : "Upload Photo"}
-        </Button>
+        <div className="flex items-center justify-center sm:justify-start gap-2">
+          <Button
+            type="button"
+            size="sm"
+            disabled={isUploading}
+            onClick={() => fileInputRef.current?.click()}
+            className={cn(
+              "h-8 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all shadow-2xs flex items-center gap-1.5",
+              displayImage
+                ? "bg-white text-foreground border border-border hover:border-emerald-300 hover:bg-emerald-50/40"
+                : "bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100/60 shadow-2xs"
+            )}
+          >
+            <Upload className="size-3.5" />
+            <span>{displayImage ? "Change Photo" : "Upload Photo"}</span>
+          </Button>
+          {displayImage && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setPreview("");
+                onChange("");
+              }}
+              className="text-xs text-muted-foreground hover:text-destructive transition-colors px-2 py-1 font-medium cursor-pointer"
+            >
+              Remove
+            </button>
+          )}
+        </div>
 
         <input
           ref={fileInputRef}

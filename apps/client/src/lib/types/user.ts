@@ -14,6 +14,16 @@ export interface User {
   phone?: string;
 }
 
+export interface ClientPreferences {
+  languages?: string[];
+  topics?: number[];
+  specializations?: (string | number)[];
+  professions?: number[];
+  communication_channel?: "chat" | "call" | "both";
+  receive_daily_panchang?: boolean;
+  [key: string]: unknown;
+}
+
 export interface Client {
   id: string;
   public_id?: string;
@@ -27,4 +37,5 @@ export interface Client {
   avatar?: string;
   avatar_media?: Media | null;
   phone?: string;
+  preferences?: ClientPreferences | null;
 }

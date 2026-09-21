@@ -401,27 +401,7 @@ a.btn-ask-expert,
 .btn-outline:focus-visible {
   outline: 2px solid #ff6b00;
   outline-offset: 2px;
-}
-
-.btn-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 9999px;
-  background-color: #ffffff;
-  color: #4b5563;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-}
-.btn-icon:hover {
-  transform: scale(1.05);
-  color: #ff6b00;
-}
-.btn-icon:active {
-  transform: scale(0.95);
+  border-radius: 10px;
 }
 
 @theme inline {
@@ -500,3 +480,53 @@ a.btn-ask-expert,
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
+/* ─── Onboarding View Transitions & Animations ───────────────────────────────── */
+@keyframes onboarding-fade-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes onboarding-fade-out-left {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+@keyframes onboarding-fade-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes onboarding-fade-out-right {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+.onboarding-step-transition {
+  animation: onboarding-fade-in-right 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

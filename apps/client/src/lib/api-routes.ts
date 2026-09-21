@@ -46,6 +46,10 @@ export const API_ROUTES = {
       },
     },
   },
+  CONSULTATION: {
+    TOPICS: "/consultations/topics",
+  },
+  SPECIALIZATIONS: "/specializations",
   PLACES: {
     SEARCH: "/places/search",
     IMAGES: "/places/images",

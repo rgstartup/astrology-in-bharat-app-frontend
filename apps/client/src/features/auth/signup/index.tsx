@@ -37,7 +37,7 @@ export const SignUpForm: React.FC = () => {
   const callback_url =
     searchParams.get("callback_url") ||
     searchParams.get("callbackUrl") ||
-    "/onboard";
+    PATHS.ONBOARDING.PROFILE;
 
   // Step 1: Register Form, Step 2: OTP Verification
   const [step, setStep] = useState<1 | 2>(1);
@@ -359,7 +359,9 @@ export const SignUpForm: React.FC = () => {
           <Link
             href={withCallbackUrl(
               PATHS.LOGIN,
-              callback_url !== "/onboard" && callback_url !== "/dashboard"
+              callback_url !== PATHS.ONBOARDING.ROOT &&
+              callback_url !== PATHS.ONBOARDING.PROFILE &&
+              callback_url !== PATHS.DASHBOARD.ROOT
                 ? callback_url
                 : undefined,
             )}

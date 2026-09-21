@@ -1,89 +1,89 @@
 "use client";
 
-import React from "react";
-import {
-  MoonStar,
-  Layers,
-  Hand,
-  Hash,
-  Home,
-  Scroll,
-  Compass,
-  Smile,
-  Check,
-  type LucideIcon,
-} from "lucide-react";
+import React, { useState, useEffect, useCallback } from "react";
+import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-export interface ExpertCategory {
-  id: string;
-  label: string;
-  subtitle: string;
-  icon: LucideIcon;
-}
-
-export const EXPERT_CATEGORIES: ExpertCategory[] = [
-  {
-    id: "vedic_astrology",
-    label: "Vedic Astrology",
-    subtitle: "Ancient Jyotish & planetary charts",
-    icon: MoonStar,
-  },
-  {
-    id: "tarot_reading",
-    label: "Tarot Card Reading",
-    subtitle: "Intuitive cards for present & future",
-    icon: Layers,
-  },
-  {
-    id: "palm_reading",
-    label: "Palm Reading (Palmistry)",
-    subtitle: "Hast Rekha analysis & fate lines",
-    icon: Hand,
-  },
-  {
-    id: "numerology",
-    label: "Numerology",
-    subtitle: "Life path numbers & destiny vibrations",
-    icon: Hash,
-  },
-  {
-    id: "vastu_shastra",
-    label: "Vastu Shastra",
-    subtitle: "Architectural energy & home harmony",
-    icon: Home,
-  },
-  {
-    id: "kundli_reading",
-    label: "Kundli Reading",
-    subtitle: "Dasha, antardasha & planetary yogas",
-    icon: Scroll,
-  },
-  {
-    id: "prashna_kundli",
-    label: "Prashna Kundli",
-    subtitle: "Instant answers to pressing questions",
-    icon: Compass,
-  },
-  {
-    id: "face_reading",
-    label: "Face Reading (Samudrik)",
-    subtitle: "Personality & destiny through features",
-    icon: Smile,
-  },
-];
+import { getSpecializationsAction } from "@/actions/specialization";
+import { type Specialization, type PaginationMeta } from "@repo/lib";
+import { Button } from "@/components/ui/button";
 
 interface ExpertCategorySelectorProps {
-  selected: string[];
-  onChange: (categories: string[]) => void;
+  selected?: (string | number)[];
+  onChange: (specializations: (string | number)[]) => void;
 }
+
+const PAGE_SIZE = 12;
 
 export const ExpertCategorySelector: React.FC<ExpertCategorySelectorProps> = ({
   selected = [],
   onChange,
 }) => {
-  const toggleCategory = (id: string) => {
-    if (selected.includes(id)) {
+  const [specializations, setSpecializations] = useState<Specialization[]>([]);
+  const [pagination, setPagination] = useState<PaginationMeta | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchSpecializations = useCallback(
+    async (targetPage: number, isInitial = false) => {
+      try {
+        if (isInitial) {
+          setIsLoading(true);
+          setError(null);
+        } else {
+          setIsLoadingMore(true);
+        }
+
+        const res = await getSpecializationsAction({
+          page: targetPage,
+          limit: PAGE_SIZE,
+        });
+
+        if (res.success && res.data) {
+          setSpecializations((prev) => {
+            if (targetPage === 1) return res.data!;
+            const existingIds = new Set(prev.map((s) => s.id));
+            const newItems = res.data!.filter((s) => !existingIds.has(s.id));
+            return [...prev, ...newItems];
+          });
+          if (res.meta) {
+            setPagination(res.meta);
+          }
+          setPage(targetPage);
+        } else if (res.error && targetPage === 1) {
+          setError(res.error);
+        }
+      } catch (err) {
+        if (targetPage === 1) {
+          setError(
+            (err as Error)?.message || "Failed to load specializations"
+          );
+        }
+      } finally {
+        setIsLoading(false);
+        setIsLoadingMore(false);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    fetchSpecializations(1, true);
+  }, [fetchSpecializations]);
+
+  const handleLoadMore = () => {
+    if (isLoadingMore) return;
+    const nextPage = page + 1;
+    fetchSpecializations(nextPage, false);
+  };
+
+  const hasNextPage =
+    pagination?.hasNextPage ??
+    (pagination ? page < pagination.totalPages : false);
+
+  const toggleSpecialization = (id: string | number) => {
+    if (selected.includes(id as any)) {
       onChange(selected.filter((item) => item !== id));
     } else {
       onChange([...selected, id]);
@@ -97,66 +97,89 @@ export const ExpertCategorySelector: React.FC<ExpertCategorySelectorProps> = ({
           Preferred Astrologer & Expert Types
         </label>
         <span className="text-xs text-muted-foreground font-medium">
-          Choose disciplines of interest
+          Select one or more
         </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {EXPERT_CATEGORIES.map((cat) => {
-          const isSelected = selected.includes(cat.id);
-          const Icon = cat.icon;
+      {isLoading ? (
+        <div className="flex flex-wrap gap-2.5">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-9 w-28 rounded-xl border border-border bg-stone-100/80 animate-pulse"
+            />
+          ))}
+        </div>
+      ) : error ? (
+        <div className="p-4 rounded-2xl border border-destructive/20 bg-destructive/5 text-xs text-destructive flex items-center justify-between">
+          <span>{error}</span>
+          <button
+            type="button"
+            onClick={() => fetchSpecializations(1, true)}
+            className="underline font-semibold cursor-pointer"
+          >
+            Retry
+          </button>
+        </div>
+      ) : specializations.length === 0 ? (
+        <div className="p-6 rounded-2xl border border-dashed border-stone-300 text-center text-xs text-muted-foreground">
+          No specializations available at the moment.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="flex flex-wrap gap-2.5">
+            {specializations.map((spec) => {
+              const isSelected = selected.includes(spec.id as any);
 
-          return (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => toggleCategory(cat.id)}
-              className={cn(
-                "p-3.5 rounded-2xl text-left transition-all duration-200 border flex items-start gap-3 relative cursor-pointer outline-none",
-                isSelected
-                  ? "bg-orange/10 border-orange shadow-xs ring-1 ring-orange/30"
-                  : "bg-white border-border hover:border-orange/40 hover:bg-gray-50/50"
-              )}
-            >
-              <div
-                className={cn(
-                  "size-9 rounded-xl flex items-center justify-center shrink-0 transition-colors",
-                  isSelected
-                    ? "bg-orange text-white"
-                    : "bg-orange/10 text-orange"
-                )}
-              >
-                <Icon className="size-4.5" />
-              </div>
-
-              <div className="flex-1 min-w-0 pr-5">
-                <p
+              return (
+                <button
+                  key={spec.id}
+                  type="button"
+                  onClick={() => toggleSpecialization(spec.id)}
                   className={cn(
-                    "text-sm font-bold truncate",
-                    isSelected ? "text-orange" : "text-foreground"
+                    "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 border cursor-pointer outline-none select-none",
+                    isSelected
+                      ? "bg-emerald-50 text-emerald-800 border-emerald-600 ring-1 ring-emerald-600/20 shadow-2xs scale-[1.02]"
+                      : "bg-white text-foreground border-border hover:border-emerald-400/50 hover:bg-emerald-50/30 shadow-2xs hover:shadow-xs"
                   )}
                 >
-                  {cat.label}
-                </p>
-                <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
-                  {cat.subtitle}
-                </p>
-              </div>
+                  <span
+                    className={cn(
+                      "text-xs font-bold",
+                      isSelected
+                        ? "text-emerald-700 font-extrabold"
+                        : "text-emerald-600/60 font-bold"
+                    )}
+                  >
+                    #
+                  </span>
+                  <span>{spec.title}</span>
+                  {isSelected && (
+                    <Check className="size-3.5 ml-0.5 stroke-[2.5] text-emerald-700" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
-              <div
-                className={cn(
-                  "size-5 rounded-full border flex items-center justify-center absolute top-3.5 right-3.5 transition-colors",
-                  isSelected
-                    ? "bg-orange border-orange text-white"
-                    : "border-gray-300 bg-white"
-                )}
+          {hasNextPage && (
+            <div className="pt-1">
+              <Button
+                type="button"
+                variant="link"
+                disabled={isLoadingMore}
+                onClick={handleLoadMore}
+                className="h-auto p-0 text-xs font-semibold text-orange hover:text-orange/80 cursor-pointer inline-flex items-center gap-1.5"
               >
-                {isSelected && <Check className="size-3" />}
-              </div>
-            </button>
-          );
-        })}
-      </div>
+                {isLoadingMore && (
+                  <Loader2 className="size-3.5 animate-spin" />
+                )}
+                <span>View more</span>
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

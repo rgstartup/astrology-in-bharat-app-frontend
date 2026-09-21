@@ -6,6 +6,7 @@ import { OnboardingFormData } from "@/lib/types";
 import { ProfilePicUpload } from "./ProfilePicUpload";
 import { AddressFields } from "./AddressFields";
 import { Link } from "@/i18n/navigation";
+import { PATHS } from "@repo/routes";
 import { useAuth } from "@/store/useAuthStore";
 import {
   FormControl,
@@ -23,6 +24,7 @@ import {
   Mars,
   Venus,
   CircleDot,
+  Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -65,8 +67,8 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
       {/* 2. Birth Details Section */}
       <div className="space-y-4">
         <div className="flex items-center gap-2 pb-1.5 border-b border-gray-100">
-          <Cake className="size-4 text-orange" />
-          <h3 className="text-sm font-bold text-foreground">
+          <Cake className="size-4 text-orange-600" />
+          <h3 className="text-sm font-semibold text-foreground">
             Birth & Personal Details
           </h3>
         </div>
@@ -84,7 +86,11 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
                 <FormItem>
                   <FormLabel required>First Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Aarav" {...field} />
+                    <Input
+                      placeholder="e.g. Aarav"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
                 </FormItem>
@@ -101,7 +107,11 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
                 <FormItem>
                   <FormLabel>Last Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Sharma" {...field} />
+                    <Input
+                      placeholder="e.g. Sharma"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage className="text-xs text-destructive mt-1 leading-tight" />
                 </FormItem>
@@ -161,7 +171,7 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
                 <FormItem>
                   <FormLabel required>Gender</FormLabel>
                   <FormControl>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-3 gap-2.5">
                       {[
                         { id: "male", label: "Male", icon: Mars },
                         { id: "female", label: "Female", icon: Venus },
@@ -174,18 +184,24 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
                           <button
                             key={genderOption.id}
                             type="button"
-                            onClick={() =>
-                              field.onChange(genderOption.id)
-                            }
+                            onClick={() => field.onChange(genderOption.id)}
                             className={cn(
-                              "py-2.5 px-3 rounded-xl border text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer outline-none",
+                              "px-3 py-2.5 rounded-xl border text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer outline-none select-none",
                               isSelected
-                                ? "bg-orange text-white border-orange shadow-xs"
-                                : "bg-white text-foreground border-border hover:border-orange/40 hover:bg-orange/5"
+                                ? "bg-emerald-50 text-emerald-800 border-emerald-600 ring-1 ring-emerald-600/20 shadow-2xs scale-[1.02]"
+                                : "bg-white text-foreground border-border hover:border-emerald-400/50 hover:bg-emerald-50/30 shadow-2xs hover:shadow-xs",
                             )}
                           >
-                            <Icon className="size-4" />
+                            <Icon
+                              className={cn(
+                                "size-4 shrink-0",
+                                isSelected ? "text-emerald-700" : "text-stone-500",
+                              )}
+                            />
                             <span>{genderOption.label}</span>
+                            {isSelected && (
+                              <Check className="size-3.5 ml-0.5 stroke-[2.5] shrink-0 text-emerald-700" />
+                            )}
                           </button>
                         );
                       })}
@@ -217,6 +233,7 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
                         placeholder="City, State, Country (e.g. Varanasi, Uttar Pradesh)"
                         className="pl-9"
                         {...field}
+                        value={field.value ?? ""}
                       />
                     </div>
                   </FormControl>
@@ -232,18 +249,18 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
       <AddressFields />
 
       {/* Navigation */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-100">
+      <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-100">
         <Link
-          href="/client/profile"
-          className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+          href={PATHS.DASHBOARD.ROOT}
+          className="text-xs sm:text-sm font-medium text-stone-500 hover:text-stone-800 underline decoration-stone-300 hover:decoration-stone-600 underline-offset-4 transition-colors"
         >
-          Skip for now →
+          Skip
         </Link>
 
         <Button
           type="button"
           onClick={onNext}
-          className="w-full sm:w-auto px-6 py-2.5 h-11 rounded-xl bg-orange hover:bg-orange/90 text-white text-sm font-bold shadow-md shadow-orange/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
+          className="w-full sm:w-auto px-6 sm:px-7 h-11 rounded-full bg-orange hover:bg-orange/90 text-white text-sm font-semibold shadow-md shadow-orange/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
         >
           <span>Continue to Preferences</span>
           <ArrowRight className="size-4" />
