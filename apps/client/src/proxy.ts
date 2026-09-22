@@ -63,6 +63,15 @@ async function refreshSession(
     }>(API_ROUTES.AUTH.CLIENT.REFRESH, { refreshToken });
 
   if (error || !data?.accessToken || !data.refreshToken) {
+    console.log(
+      "[Proxy:refreshSessionFailed]: ",
+      "error:",
+      error,
+      "data:",
+      data,
+      "refreshToken:",
+      refreshToken,
+    );
     return redirectToLogout(request, pathname, isProtected);
   }
 
