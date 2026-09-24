@@ -7,12 +7,20 @@
 @config "../../tailwind.config.js";
 
 :root {
-  /* Brand Colors */
-  --primary: oklch(0.205 0 0);
-  --primary-hover: #e65100;
-  --secondary: oklch(0.97 0 0);
+  /* Saffron leads; emerald is for restrained secondary accents.
+     Neutral surfaces and navigation keep the dashboard predominantly white. */
+  --brand-saffron: #ff6b00;
+  --brand-saffron-strong: #c2410c;
+  --brand-emerald: #047857;
+  --brand-brown: #301118;
+  --brand-brown-muted: #75666a;
+  --primary: #c2410c;
+  --primary-hover: #9a3412;
+  --secondary: #f3f4f6;
   --accent-gold: #d4af37;
-  --bg-light: #fff9f4;
+  --bg-light: #ffffff;
+  /* Force pure white — overrides lab(100% 0 0) injected by shadcn which renders warm on some displays */
+  --background: #ffffff;
 
   --bs-primary: #ff6b00 !important;
   --bs-primary-rgb: 255, 107, 0 !important;
@@ -25,42 +33,41 @@
   --font-outfit: "Outfit", sans-serif !important;
   --font-sans: "Inter", sans-serif !important;
   --font-display: "Outfit", sans-serif !important;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --foreground: var(--brand-brown);
+  --card: #ffffff;
+  --card-foreground: var(--brand-brown);
+  --popover: #ffffff;
+  --popover-foreground: var(--brand-brown);
+  --primary-foreground: #ffffff;
+  --secondary-foreground: #047857;
+  --muted: #f3f4f6;
+  --muted-foreground: var(--brand-brown-muted);
+  --accent: #f3f4f6;
+  --accent-foreground: var(--brand-brown);
+  --destructive: #b91c1c;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #c2410c;
+  --chart-1: #c2410c;
+  --chart-2: #047857;
+  --chart-3: #54353d;
+  --chart-4: var(--brand-brown-muted);
+  --chart-5: #a18f94;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #ffffff;
+  --sidebar-foreground: var(--brand-brown);
+  --sidebar-primary: #f3f4f6;
+  --sidebar-primary-foreground: var(--brand-brown);
+  --sidebar-accent: #f3f4f6;
+  --sidebar-accent-foreground: var(--brand-brown);
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: var(--brand-brown-muted);
 }
 
 /* Global Styles */
 body {
-  background-color: var(--bg-light);
-  color: #1a1a1a;
+  background-color: #ffffff;
+  color: var(--foreground);
   font-family: "Inter", sans-serif !important;
 }
 
@@ -79,6 +86,7 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    background-color: #ffffff;
   }
   html {
     @apply font-sans;
@@ -405,6 +413,12 @@ a.btn-ask-expert,
 }
 
 @theme inline {
+  --color-brown: var(--brand-brown);
+  --color-brown-muted: var(--brand-brown-muted);
+  --color-saffron: var(--brand-saffron);
+  --color-saffron-strong: var(--brand-saffron-strong);
+  --color-brand-emerald: var(--brand-emerald);
+  --color-primary-hover: var(--primary-hover);
   --font-heading: var(--font-sans);
   --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -448,37 +462,40 @@ a.btn-ask-expert,
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --brand-saffron-strong: #fb923c;
+  --brand-emerald: #6ee7b7;
+  --primary-hover: #fb923c;
+  --background: #1c1014;
+  --foreground: #f9fafb;
+  --card: #301e24;
+  --card-foreground: #f9fafb;
+  --popover: #301e24;
+  --popover-foreground: #f9fafb;
+  --primary: #ff6b00;
+  --primary-foreground: #1c1014;
+  --secondary: #301e24;
+  --secondary-foreground: #6ee7b7;
+  --muted: #301e24;
+  --muted-foreground: #c0adb3;
+  --accent: #49343b;
+  --accent-foreground: #f9fafb;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --border: #49343b;
+  --input: #634b54;
+  --ring: #ff6b00;
+  --chart-1: #ff6b00;
+  --chart-2: #6ee7b7;
+  --chart-3: #f9fafb;
+  --chart-4: #c0adb3;
+  --chart-5: #9c858e;
+  --sidebar: #1c1014;
+  --sidebar-foreground: #f9fafb;
+  --sidebar-primary: #49343b;
+  --sidebar-primary-foreground: #f9fafb;
+  --sidebar-accent: #301e24;
+  --sidebar-accent-foreground: #f9fafb;
+  --sidebar-border: #49343b;
+  --sidebar-ring: #c0adb3;
 }
 
 /* ─── Onboarding View Transitions & Animations ───────────────────────────────── */

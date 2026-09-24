@@ -51,3 +51,27 @@
 - Standard toast notifications: `react-toastify` (`toast.error(...)`, `toast.success(...)`).
 - Icons: Prefer `lucide-react` or `react-icons`.
 - Server state: Use TanStack React Query (`@tanstack/react-query`). Client UI state: Zustand.
+
+## 6. Design Identity & Airbnb Inspiration
+
+- Keep visual similarity to Airbnb at **40% maximum**, treating this as a qualitative design limit rather than a precisely measurable score.
+- Borrow general usability principles such as clear hierarchy, generous spacing, and intuitive navigation. Keep at least 60% of the visual direction rooted in Astrology in Bharat's own brand, typography, colors, imagery, layouts, and component styling.
+- Do not reproduce Airbnb screens or combine its distinctive layout, typography, colors, and controls into a lookalike. When a design feels too close, strengthen our own identity before shipping.
+
+- Preserve **fully rounded (`rounded-full`) buttons and action controls** as part of our own design identity. Prefer compact sizing; do not replace pill shapes merely to reduce Airbnb similarity.
+
+## 7. Dashboard Color Direction (client app)
+
+- Keep the client dashboard primarily white: `bg-white` surfaces, neutral resting borders (`border-slate-200` / `border-border`), and gray/slate text. The same direction applies to the dashboard header, sidebar, overview widgets, and all `dashboard/*` sub-pages.
+- Never use orange/saffron in resting borders, and never use warm-tinted backgrounds (`orange-50/100`, `amber-50/100`, `#FFFDF9`-style paper fills, warm gradients). Icon chips, skeletons, empty states, table hovers, and tab containers stay slate/white.
+- Reserve **orange/saffron (`#ff6b00`)** for important buttons, selected action states, and action text/icons (CTAs, links, focus accents). Solid orange is fine for primary/selected states; hover fills on secondary surfaces stay neutral slate.
+- Use **emerald** only for subtle highlights (live-status pills, success accents, active-nav tint); avoid solid emerald fills.
+- This is a design guideline, not a strict rule — tiny semantic glyphs (e.g. rating stars) may keep conventional coloring.
+
+### Dashboard color direction (flexible guidance)
+
+- Prefer a primarily white dashboard. Avoid warm-tinted backgrounds and orange-accented borders.
+- Reserve orange/saffron for important actions, buttons, or text; use accessible darker shades for small text.
+- Use emerald for subtle highlights (light tints, icons, or text), not solid emerald fills.
+- Use gray/slate for default text, borders, surfaces, and other UI elements. Preserve compact, fully rounded controls.
+- This is a design guideline, not a strict palette rule; adapt to usability and context.

@@ -35,7 +35,7 @@ export default function MyOrdersDashboardPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-orange-100 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-[#301118] font-outfit">
             My Orders
@@ -56,15 +56,15 @@ export default function MyOrdersDashboardPage() {
       {isLoading ? (
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <Card key={i} className="p-5 border-orange-100 bg-white space-y-2">
-              <Skeleton className="h-5 w-48 bg-orange-100" />
-              <Skeleton className="h-4 w-32 bg-orange-100" />
+            <Card key={i} className="p-5 border-slate-200 bg-white space-y-2">
+              <Skeleton className="h-5 w-48" />
+              <Skeleton className="h-4 w-32" />
             </Card>
           ))}
         </div>
       ) : !orders || orders.length === 0 ? (
-        <Card className="p-12 text-center border-orange-200/80 bg-white">
-          <div className="w-14 h-14 rounded-2xl bg-orange-50 text-[#ff6b00] flex items-center justify-center mx-auto mb-3">
+        <Card className="p-12 text-center border-slate-200 bg-white">
+          <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center mx-auto mb-3">
             <Package className="w-7 h-7" />
           </div>
           <h3 className="text-lg font-bold text-slate-900 font-outfit mb-1">
@@ -93,10 +93,10 @@ export default function MyOrdersDashboardPage() {
             return (
               <Card
                 key={ord.id}
-                className="p-5 border-orange-100 bg-white hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="p-5 border-slate-200 bg-white hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-orange-50 text-[#ff6b00] flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
                     <ShoppingBag className="w-6 h-6" />
                   </div>
                   <div>

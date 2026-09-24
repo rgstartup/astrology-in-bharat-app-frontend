@@ -29,12 +29,12 @@
 
   /* Neutrals & UI */
   --color-white: #FFFFFF;
-  --color-cream: #FFF9F4;
+  --color-cream: #FFFFFF;
   --color-black: #000000;
   --color-black-soft: #1A1A1A;
   --color-black-muted: #4A4A4A;
 
-  --color-background-light: var(--color-cream);
+  --color-background-light: #FFFFFF;
   --color-background-dark: #0F0808;
 
   --color-text-primary: #1A1A1A;

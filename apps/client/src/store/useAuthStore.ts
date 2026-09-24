@@ -1,10 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { toast } from "@/hooks/use-toast";
 import { api } from "@/actions";
 import { AuthService } from "@/services/auth.service";
 import type { Client } from "@repo/lib";
-import { getProfileImageUrl } from "@/utils/image-utils";
 
 interface AuthState {
   user: (Client & Record<string, any>) | null;
@@ -44,7 +42,7 @@ export const useAuthStore = create<AuthState>()(
         if (error || !client) {
           get().reset();
 
-          if ((error as any)?.status === 401) {
+          if (error?.status === 401) {
             try {
               await fetch("/api/auth/logout", { method: "POST" });
             } catch {
@@ -55,10 +53,7 @@ export const useAuthStore = create<AuthState>()(
         }
 
         set({
-          user: {
-            ...client,
-            avatar: getProfileImageUrl(client.avatar, client.name),
-          },
+          user: client,
           loading: false,
           isAuthenticated: true,
           isInitialized: true,
@@ -68,10 +63,7 @@ export const useAuthStore = create<AuthState>()(
       login: (userData?: Client) => {
         if (userData) {
           set({
-            user: {
-              ...userData,
-              avatar: getProfileImageUrl(userData.avatar, userData.name),
-            },
+            user: userData,
             isAuthenticated: true,
             loading: false,
             isInitialized: true,
@@ -131,10 +123,7 @@ export const useAuthStore = create<AuthState>()(
           };
 
           set({
-            user: {
-              ...updatedUser,
-              avatar: getProfileImageUrl(updatedUser.avatar, updatedUser.name),
-            },
+            user: updatedUser,
           });
         }
       },
@@ -160,7 +149,18 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "astrology-auth-storage",
       partialize: (state) => ({
-        user: state.user,
+        user: state.user
+          ? {
+              public_id: state.user.public_id,
+              first_name: state.user.first_name,
+              last_name: state.user.last_name,
+              email: state.user.email,
+              avatar_media: {
+                id: state.user.avatar_media?.id,
+                url: state.user.avatar_media?.url,
+              },
+            }
+          : null,
         isAuthenticated: state.isAuthenticated,
       }),
     },

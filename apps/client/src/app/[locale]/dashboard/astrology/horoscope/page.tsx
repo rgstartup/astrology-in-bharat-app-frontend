@@ -62,12 +62,12 @@ export default function MyHoroscopePage() {
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
       {/* Header Banner */}
-      <div className="border-b border-orange-100/80 pb-6">
+      <div className="border-b border-slate-200 pb-6">
         <div className="flex items-center gap-2 mb-1.5">
-          <span className="p-1.5 rounded-lg bg-amber-100 text-amber-700">
+          <span className="p-1.5 rounded-lg bg-slate-100 text-slate-600">
             <Sun className="w-4 h-4" />
           </span>
-          <span className="text-xs font-black uppercase tracking-wider text-amber-800 font-outfit">
+          <span className="text-xs font-black uppercase tracking-wider text-[#ff6b00] font-outfit">
             Personal Transit Forecast
           </span>
         </div>
@@ -84,7 +84,7 @@ export default function MyHoroscopePage() {
 
           {/* Quick Vedic Badge */}
           <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-slate-700">
-            <span className="px-3 py-1.5 rounded-xl bg-orange-100/60 text-[#ff6b00] border border-orange-200/50 flex items-center gap-1.5">
+            <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-[#ff6b00] border border-slate-200 flex items-center gap-1.5">
               <Sun className="w-3.5 h-3.5" />
               <span>{astrologyDetails?.sunSign || "Gemini"}</span>
             </span>
@@ -96,7 +96,7 @@ export default function MyHoroscopePage() {
               <Star className="w-3.5 h-3.5" />
               <span>{astrologyDetails?.nakshatra || "Rohini"}</span>
             </span>
-            <span className="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-200/50 flex items-center gap-1.5">
+            <span className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 border border-slate-200 flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5" />
               <span>{astrologyDetails?.ascendant || "Gemini"} Ascendant</span>
             </span>
@@ -106,7 +106,7 @@ export default function MyHoroscopePage() {
 
       {/* Day Navigation Tabs */}
       <div className="flex justify-center sm:justify-start">
-        <div className="inline-flex p-1 rounded-2xl bg-orange-100/60 border border-orange-200/60 shadow-xs">
+        <div className="inline-flex p-1 rounded-2xl bg-slate-100 border border-slate-200 shadow-xs">
           {dayTabs.map((tab) => (
             <button
               key={tab.id}
@@ -127,7 +127,7 @@ export default function MyHoroscopePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column (8 cols): Overall Interpretation & Aspect Scores */}
         <div className="lg:col-span-8 space-y-6">
-          <Card className="border-orange-200/80 bg-white p-6 sm:p-8 shadow-sm">
+          <Card className="border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-[#ff6b00]">
@@ -148,16 +148,16 @@ export default function MyHoroscopePage() {
 
             {isLoading ? (
               <div className="space-y-4">
-                <Skeleton className="h-6 w-full bg-orange-100" />
-                <Skeleton className="h-6 w-5/6 bg-orange-100" />
-                <Skeleton className="h-6 w-4/6 bg-orange-100" />
+                <Skeleton className="h-6 w-full" />
+                <Skeleton className="h-6 w-5/6" />
+                <Skeleton className="h-6 w-4/6" />
               </div>
             ) : (
               <div className="prose prose-slate max-w-none">
                 <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-medium">
                   {horoscope?.summary}
                 </p>
-                <div className="mt-6 p-4 rounded-2xl bg-orange-50/60 border border-orange-100 flex items-start gap-3">
+                <div className="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-3">
                   <Sparkles className="w-5 h-5 text-[#ff6b00] shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[#ff6b00] mb-1 font-outfit">
@@ -212,17 +212,17 @@ export default function MyHoroscopePage() {
               </p>
             </Card>
 
-            <Card className="p-5 border-amber-100 bg-amber-50/30">
+            <Card className="p-5 border-slate-200 bg-white">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <span className="p-2 rounded-xl bg-amber-100 text-amber-600">
+                  <span className="p-2 rounded-xl bg-slate-100 text-slate-600">
                     <Coins className="w-4 h-4" />
                   </span>
                   <h3 className="font-bold text-sm text-slate-900 font-outfit">
                     Finance & Wealth
                   </h3>
                 </div>
-                <span className="text-sm font-black text-amber-600">
+                <span className="text-sm font-black text-slate-700">
                   {scores.finance}%
                 </span>
               </div>
@@ -255,16 +255,16 @@ export default function MyHoroscopePage() {
         {/* Right Column (4 cols): Lucky Elements & Guidance Card */}
         <div className="lg:col-span-4 space-y-6">
           {/* Lucky Elements */}
-          <Card className="p-6 border-orange-200/80 bg-gradient-to-br from-amber-50/60 to-orange-50/40 shadow-xs">
+          <Card className="p-6 border-slate-200 bg-white shadow-xs">
             <h3 className="text-base font-bold text-[#301118] font-outfit mb-4 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#ff6b00]" />
               <span>Auspicious Elements</span>
             </h3>
 
             <div className="space-y-3.5">
-              <div className="p-3 rounded-xl bg-white border border-orange-100 flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
                 <div className="flex items-center gap-2.5 text-xs text-slate-600">
-                  <Hash className="w-4 h-4 text-amber-500" />
+                  <Hash className="w-4 h-4 text-slate-400" />
                   <span className="font-semibold">Lucky Number</span>
                 </div>
                 <span className="text-sm font-black text-slate-900">
@@ -272,7 +272,7 @@ export default function MyHoroscopePage() {
                 </span>
               </div>
 
-              <div className="p-3 rounded-xl bg-white border border-orange-100 flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
                 <div className="flex items-center gap-2.5 text-xs text-slate-600">
                   <Palette className="w-4 h-4 text-rose-500" />
                   <span className="font-semibold">Lucky Color</span>
@@ -282,7 +282,7 @@ export default function MyHoroscopePage() {
                 </span>
               </div>
 
-              <div className="p-3 rounded-xl bg-white border border-orange-100 flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
                 <div className="flex items-center gap-2.5 text-xs text-slate-600">
                   <Clock className="w-4 h-4 text-indigo-500" />
                   <span className="font-semibold">Lucky Time</span>
@@ -295,8 +295,8 @@ export default function MyHoroscopePage() {
           </Card>
 
           {/* Need Specific Consultation CTA */}
-          <Card className="p-6 border-orange-200/80 bg-white text-center">
-            <div className="w-12 h-12 rounded-2xl bg-orange-100 text-[#ff6b00] flex items-center justify-center mx-auto mb-3 shadow-xs">
+          <Card className="p-6 border-slate-200 bg-white text-center">
+            <div className="w-12 h-12 rounded-2xl bg-slate-100 text-[#ff6b00] flex items-center justify-center mx-auto mb-3 shadow-xs">
               <Sun className="w-6 h-6" />
             </div>
             <h4 className="text-base font-bold text-slate-900 font-outfit mb-1.5">

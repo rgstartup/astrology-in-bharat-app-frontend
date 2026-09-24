@@ -37,10 +37,10 @@ export default function MyAstrologyHubPage() {
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-orange-100/80 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="p-1.5 rounded-lg bg-orange-100 text-[#ff6b00]">
+            <span className="p-1.5 rounded-lg bg-slate-100 text-[#ff6b00]">
               <Sparkles className="w-4 h-4" />
             </span>
             <span className="text-xs font-black uppercase tracking-wider text-[#ff6b00] font-outfit">
@@ -56,7 +56,7 @@ export default function MyAstrologyHubPage() {
         </div>
 
         {hasBirthDetails ? (
-          <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-orange-50 border border-orange-200/70">
+          <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-200">
             <Compass className="w-5 h-5 text-[#ff6b00]" />
             <div className="text-xs">
               <p className="font-bold text-slate-900 leading-tight">
@@ -87,7 +87,7 @@ export default function MyAstrologyHubPage() {
               href={item.href}
               className="no-underline group block h-full"
             >
-              <Card className="h-full p-5 sm:p-6 border-orange-100/80 bg-white hover:shadow-lg transition-all duration-200 hover:border-orange-300 flex flex-col justify-between">
+              <Card className="h-full p-5 sm:p-6 border-slate-200 bg-white hover:shadow-lg transition-all duration-200 hover:border-slate-200 flex flex-col justify-between">
                 <div>
                   <div className="flex items-start justify-between mb-4">
                     <div

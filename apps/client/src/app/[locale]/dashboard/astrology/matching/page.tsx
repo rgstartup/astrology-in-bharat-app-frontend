@@ -11,7 +11,7 @@ export default function KundliMatchingDashboardPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
-      <div className="border-b border-orange-100 pb-4">
+      <div className="border-b border-slate-200 pb-4">
         <h1 className="text-2xl sm:text-3xl font-black text-[#301118] font-outfit">
           Kundli Matching (Guna Milan)
         </h1>
@@ -22,7 +22,7 @@ export default function KundliMatchingDashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Your Profile Card */}
-        <Card className="p-6 border-orange-200/80 bg-orange-50/40">
+        <Card className="p-6 border-slate-200 bg-white">
           <div className="flex items-center gap-2 mb-3">
             <UserCheck className="w-5 h-5 text-[#ff6b00]" />
             <h3 className="font-bold text-base text-slate-900 font-outfit">
@@ -59,7 +59,7 @@ export default function KundliMatchingDashboardPage() {
         </Card>
 
         {/* Action Card */}
-        <Card className="p-6 border-orange-200/80 bg-white flex flex-col justify-between">
+        <Card className="p-6 border-slate-200 bg-white flex flex-col justify-between">
           <div>
             <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-3">
               <HeartHandshake className="w-6 h-6" />

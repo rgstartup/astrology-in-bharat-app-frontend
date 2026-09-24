@@ -1,5 +1,2 @@
-export * from "./api";
-export * from "./hooks";
-export * from "./components";
-export * from "./data";
-
+export * from "./dashboard";
+export * from "./profile";

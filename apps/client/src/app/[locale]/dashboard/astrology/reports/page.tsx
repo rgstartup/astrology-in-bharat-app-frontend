@@ -6,7 +6,7 @@ import ReportsTab from "@/components/features/profile/ReportsTab";
 export default function MyReportsDashboardPage() {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="border-b border-orange-100 pb-4">
+      <div className="border-b border-slate-200 pb-4">
         <h1 className="text-2xl sm:text-3xl font-black text-[#301118] font-outfit">
           My Saved Reports
         </h1>

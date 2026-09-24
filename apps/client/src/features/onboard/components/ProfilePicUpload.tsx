@@ -63,18 +63,13 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
 
   return (
     <div
-      className={cn(
-        "flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl border transition-all duration-200 shadow-2xs",
-        displayImage
-          ? "bg-emerald-50/40 border-emerald-200/80"
-          : "bg-stone-50/50 border-border hover:border-emerald-300"
-      )}
+      className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl border border-slate-200 bg-white transition-all duration-200 shadow-2xs"
     >
       <div
         className="relative group cursor-pointer shrink-0"
         onClick={() => fileInputRef.current?.click()}
       >
-        <Avatar className="size-16 sm:size-18 border-2 border-white shadow-sm ring-2 ring-emerald-300/60 bg-emerald-50">
+        <Avatar className="size-16 sm:size-18 border-2 border-white shadow-sm ring-1 ring-slate-200 bg-slate-100">
           {displayImage ? (
             <AvatarImage
               src={displayImage}
@@ -82,7 +77,7 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
               className="object-cover"
             />
           ) : null}
-          <AvatarFallback className="bg-emerald-100/70 text-emerald-600">
+          <AvatarFallback className="bg-slate-100 text-slate-500">
             <User className="size-8" />
           </AvatarFallback>
         </Avatar>
@@ -98,21 +93,13 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
             <Camera className="size-3.5 mr-1" /> Change
           </div>
         )}
-
-        <button
-          type="button"
-          aria-label="Upload profile picture"
-          className="absolute -bottom-1 -right-1 size-6 sm:size-7 rounded-full bg-emerald-600 text-white shadow-sm flex items-center justify-center hover:bg-emerald-700 transition-all cursor-pointer"
-        >
-          <Camera className="size-3.5" />
-        </button>
       </div>
 
       <div className="text-center sm:text-left flex-1 min-w-0">
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
-          <h3 className="text-sm font-bold text-foreground">Profile Photo</h3>
+          <span className="text-sm font-bold text-slate-800">Profile Photo</span>
           {displayImage && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-100/80 border border-emerald-200 px-2 py-0.5 rounded-full shadow-2xs">
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shadow-2xs">
               <Check className="size-3 stroke-[2.5]" />
               Uploaded
             </span>
@@ -128,10 +115,10 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
             disabled={isUploading}
             onClick={() => fileInputRef.current?.click()}
             className={cn(
-              "h-8 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all shadow-2xs flex items-center gap-1.5",
+              "h-8 px-4 rounded-full text-xs font-semibold cursor-pointer transition-all shadow-2xs flex items-center gap-1.5",
               displayImage
-                ? "bg-white text-foreground border border-border hover:border-emerald-300 hover:bg-emerald-50/40"
-                : "bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100/60 shadow-2xs"
+                ? "bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                : "bg-[#ff6b00] text-white hover:bg-[#e05e00] border-transparent"
             )}
           >
             <Upload className="size-3.5" />
@@ -145,7 +132,7 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
                 setPreview("");
                 onChange("");
               }}
-              className="text-xs text-muted-foreground hover:text-destructive transition-colors px-2 py-1 font-medium cursor-pointer"
+              className="text-xs text-slate-500 hover:text-red-600 transition-colors px-2.5 py-1 font-medium cursor-pointer rounded-full"
             >
               Remove
             </button>

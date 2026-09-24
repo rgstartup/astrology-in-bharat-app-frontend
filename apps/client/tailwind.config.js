@@ -12,8 +12,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        orange: "#FF6B00",
-        brown: "#301118",
+        // Keep existing orange utilities aligned with the brand palette.
+        orange: "var(--brand-saffron)",
+        saffron: {
+          DEFAULT: "var(--brand-saffron)",
+          strong: "var(--brand-saffron-strong)",
+        },
+        "brand-emerald": "var(--brand-emerald)",
+        brown: {
+          DEFAULT: "var(--brand-brown)",
+          muted: "var(--brand-brown-muted)",
+        },
         white: "#FFFFFF",
         primary: {
           DEFAULT: "var(--primary)",

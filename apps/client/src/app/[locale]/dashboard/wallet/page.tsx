@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, Button, WALLET_RECHARGE_PACKS } from "@/features/dashboard";
+import { Card, Button, WALLET_RECHARGE_PACKS } from "@/features/dashboard";
 import { useAuthStore } from "@/store/useAuthStore";
 import { api } from "@/actions";
-import { Wallet, PlusCircle, ArrowUpRight, ArrowDownLeft, ShieldCheck, Sparkles } from "lucide-react";
+import { Wallet, PlusCircle, ShieldCheck } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 export default function MyWalletDashboardPage() {
@@ -44,7 +44,7 @@ export default function MyWalletDashboardPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
-      <div className="border-b border-orange-100 pb-4">
+      <div className="border-b border-slate-200 pb-4">
         <h1 className="text-2xl sm:text-3xl font-black text-[#301118] font-outfit">
           My Wallet
         </h1>
@@ -56,8 +56,8 @@ export default function MyWalletDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Balance Card */}
         <div className="lg:col-span-5">
-          <Card className="p-6 sm:p-8 border-orange-200/90 bg-gradient-to-br from-[#301118] to-[#4a1d1f] text-white shadow-lg shadow-rose-950/20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-36 h-36 bg-orange-500/10 rounded-bl-full pointer-events-none" />
+          <Card className="p-6 sm:p-8 border-slate-200 bg-gradient-to-br from-[#301118] to-[#4a1d1f] text-white shadow-lg shadow-rose-950/20 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-bl-full pointer-events-none" />
 
             <div className="flex items-center gap-2 mb-3 text-amber-300">
               <Wallet className="w-5 h-5" />
@@ -74,7 +74,8 @@ export default function MyWalletDashboardPage() {
             </div>
 
             <p className="text-xs text-slate-300 leading-relaxed mb-4">
-              Used automatically for chat, audio, and video consultations with our verified Vedic experts.
+              Used automatically for chat, audio, and video consultations with
+              our verified Vedic experts.
             </p>
 
             <div className="flex items-center gap-1.5 text-[11px] text-amber-200">
@@ -86,7 +87,7 @@ export default function MyWalletDashboardPage() {
 
         {/* Quick Recharge Card */}
         <div className="lg:col-span-7">
-          <Card className="p-6 sm:p-8 border-orange-200/80 bg-white">
+          <Card className="p-6 sm:p-8 border-slate-200 bg-white">
             <h3 className="text-lg font-bold text-slate-900 font-outfit mb-4">
               Recharge Credits
             </h3>
@@ -104,12 +105,20 @@ export default function MyWalletDashboardPage() {
                     className={`relative py-2.5 px-3 rounded-xl text-sm font-bold border transition-all cursor-pointer flex flex-col items-center justify-center ${
                       rechargeAmount === pack.amount
                         ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-xs"
-                        : "bg-orange-50/50 text-slate-800 border-orange-100 hover:bg-orange-100/60"
+                        : "bg-slate-50 text-slate-800 border-slate-200 hover:bg-slate-100"
                     }`}
                   >
                     <span>{pack.label}</span>
                     {pack.bonus && (
-                      <span className={`text-[10px] font-semibold ${rechargeAmount === pack.amount ? "text-amber-200" : "text-emerald-600"}`}>
+                      <span
+                        className={`text-[10px] font-semibold 
+                          ${
+                            rechargeAmount === pack.amount
+                              ? "text-amber-200"
+                              : "text-emerald-600"
+                          }
+                        `}
+                      >
                         +₹{pack.bonus} extra
                       </span>
                     )}
@@ -127,7 +136,7 @@ export default function MyWalletDashboardPage() {
                 min="50"
                 value={rechargeAmount}
                 onChange={(e) => setRechargeAmount(Number(e.target.value))}
-                className="w-full px-4 py-2.5 rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-[#ff6b00] text-sm font-bold text-slate-900"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#ff6b00] text-sm font-bold text-slate-900"
                 placeholder="Enter amount (min ₹50)"
               />
             </div>
@@ -138,7 +147,11 @@ export default function MyWalletDashboardPage() {
               className="w-full justify-center font-bold"
             >
               <PlusCircle className="w-4 h-4 mr-1.5" />
-              <span>{isProcessing ? "Processing..." : `Recharge ₹${rechargeAmount} Now`}</span>
+              <span>
+                {isProcessing
+                  ? "Processing..."
+                  : `Recharge ₹${rechargeAmount} Now`}
+              </span>
             </Button>
           </Card>
         </div>

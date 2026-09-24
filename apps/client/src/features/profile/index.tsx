@@ -11,6 +11,7 @@ import {
   LogOut,
   LogIn,
   ChevronDown,
+  ArrowUpRight,
 } from "lucide-react";
 
 import { useAuth } from "@/store/useAuthStore";
@@ -44,7 +45,12 @@ const UserProfileDropdown = () => {
   };
 
   const userDisplayName = user?.name?.trim() || "User";
-  const userInitial = userDisplayName.charAt(0).toUpperCase() || "U";
+  const userInitial = userDisplayName
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
   const avatarUrl = user ? getProfileImageUrl(user.avatar, user.name) : "";
 
   // Dynamic URLs based on auth status
@@ -65,46 +71,113 @@ const UserProfileDropdown = () => {
     : withCallbackUrl(PATHS.LOGIN, `${PATHS.PROFILE}?tab=wishlist`);
 
   return (
-    <div className="user-profile-dropdown-container relative" ref={dropdownRef}>
+    <div
+      className="user-profile-dropdown-container relative"
+      ref={dropdownRef}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          closeDropdown();
+          dropdownRef.current
+            ?.querySelector<HTMLButtonElement>("button")
+            ?.focus();
+        }
+      }}
+    >
       {/* Trigger Button */}
       <button
         type="button"
         onClick={() => setShowProfileDropDown((prev) => !prev)}
-        className="flex items-center gap-1 sm:gap-1.5 focus:outline-none select-none cursor-pointer group bg-transparent border-0 p-0"
-        aria-label="User Profile and Account Menu"
+        className="group inline-flex h-8 items-center gap-1.5 rounded-full border border-white/20 bg-white/5 py-0.5 pl-0.5 pr-2 text-white transition-colors hover:bg-white/10 aria-expanded:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
+        aria-label={
+          isAuthenticated
+            ? `${userDisplayName}, profile and account menu`
+            : "Profile and account menu"
+        }
         aria-expanded={showProfileDropDown}
       >
-        {isAuthenticated ? (
-          <div className="relative flex items-center gap-1 shrink-0">
-            <Avatar className="size-8 ring-1.5 ring-orange/80 group-hover:ring-orange shadow-xs transition-all duration-200">
-              <AvatarImage src={avatarUrl} alt={userDisplayName} />
-              <AvatarFallback className="bg-orange/20 text-orange font-bold text-[11px]">
-                {userInitial}
-              </AvatarFallback>
-            </Avatar>
-            <ChevronDown
-              className={`size-3 text-white/80 group-hover:text-white transition-transform duration-200 ${
-                showProfileDropDown ? "rotate-180" : ""
-              }`}
-            />
-          </div>
-        ) : (
-          <div className="flex items-center justify-center size-8 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/15 transition-all duration-200 hover:scale-105 active:scale-95 shadow-xs shrink-0">
-            <User className="size-4 text-white" />
-          </div>
+        <Avatar className="size-6">
+          <AvatarFallback className="absolute inset-0 bg-gray-100 text-brown">
+            {isAuthenticated ? (
+              userInitial
+            ) : (
+              <User aria-hidden="true" className="size-4" strokeWidth={1.8} />
+            )}
+          </AvatarFallback>
+          {isAuthenticated && avatarUrl && (
+            <AvatarImage src={avatarUrl} alt="" className="relative" />
+          )}
+        </Avatar>
+        {isAuthenticated && (
+          <span
+            className="hidden max-w-32 truncate text-sm font-medium leading-5 sm:block"
+            title={userDisplayName}
+          >
+            {userDisplayName}
+          </span>
         )}
+        <ChevronDown
+          aria-hidden="true"
+          className="size-3.5 text-white/75 transition-transform duration-150 group-aria-expanded:rotate-180 motion-reduce:transition-none"
+        />
       </button>
 
       {/* Dropdown Popup Menu */}
       {showProfileDropDown && (
-        <div className="absolute top-[125%] right-0 w-56 sm:w-60 rounded-xl bg-white text-gray-900 shadow-[0_10px_25px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden z-[1100] animate-in fade-in-0 zoom-in-95 duration-150 p-1.5 space-y-0.5">
+        <div
+          data-lenis-prevent
+          className="absolute top-[calc(100%+12px)] right-0 w-80 max-w-[calc(100vw-1.5rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain rounded-2xl bg-white text-brown shadow-xl shadow-brown/15 border border-gray-200 z-[1100] animate-in fade-in-0 zoom-in-95 duration-150 motion-reduce:animate-none p-2"
+        >
+          <div className="mb-2 border-b border-gray-200 px-3 pb-4 pt-3">
+            <div className="flex items-center gap-3">
+              <Avatar className="size-12">
+                <AvatarFallback className="absolute inset-0 bg-gray-100 text-brown">
+                  {isAuthenticated ? (
+                    userInitial
+                  ) : (
+                    <User aria-hidden="true" className="size-6" />
+                  )}
+                </AvatarFallback>
+                {isAuthenticated && avatarUrl && (
+                  <AvatarImage src={avatarUrl} alt="" className="relative" />
+                )}
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <p className="mb-1 text-xs font-medium text-saffron-strong">
+                  Your personal space
+                </p>
+                <p className="truncate text-base font-semibold tracking-tight">
+                  {isAuthenticated ? userDisplayName : "Welcome to AIB"}
+                </p>
+                <p className="mt-1 text-xs leading-5 text-brown/65">
+                  {isAuthenticated
+                    ? "Your guidance, all in one place."
+                    : "Begin your astrology journey."}
+                </p>
+              </div>
+            </div>
+            <Link
+              href={
+                isAuthenticated
+                  ? PATHS.DASHBOARD.ROOT
+                  : withCallbackUrl(PATHS.LOGIN, pathname)
+              }
+              onClick={closeDropdown}
+              className="mt-4 flex min-h-10 items-center justify-between gap-3 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
+              {isAuthenticated ? "Open my dashboard" : "Sign in to get started"}
+              <ArrowUpRight aria-hidden="true" className="size-4" />
+            </Link>
+          </div>
+          <p className="px-3 pb-1 pt-1 text-xs font-semibold tracking-wide text-brown/65">
+            Account & activity
+          </p>
           {/* 1. My Profile */}
           <Link
             href={profileHref}
             onClick={closeDropdown}
-            className="w-full px-2.5 py-2 cursor-pointer rounded-lg hover:bg-[#301118]/5 flex items-center gap-2.5 text-xs sm:text-[13px] font-medium text-gray-700 hover:text-[#301118] transition-colors no-underline group"
+            className="w-full min-h-11 px-3 py-2 cursor-pointer rounded-xl hover:bg-gray-50 flex items-center gap-2.5 text-sm font-medium text-brown/85 hover:text-brown transition-colors no-underline group"
           >
-            <div className="size-6 rounded-md bg-[#301118]/10 text-[#301118] group-hover:bg-[#301118]/15 flex items-center justify-center shrink-0 transition-colors">
+            <div className="size-8 rounded-full bg-gray-100 text-brown group-hover:bg-gray-200 flex items-center justify-center shrink-0 transition-colors">
               <User className="size-3.5" />
             </div>
             <span>My Profile</span>
@@ -114,9 +187,9 @@ const UserProfileDropdown = () => {
           <Link
             href={ordersHref}
             onClick={closeDropdown}
-            className="w-full px-2.5 py-2 cursor-pointer rounded-lg hover:bg-[#301118]/5 flex items-center gap-2.5 text-xs sm:text-[13px] font-medium text-gray-700 hover:text-[#301118] transition-colors no-underline group"
+            className="w-full min-h-11 px-3 py-2 cursor-pointer rounded-xl hover:bg-gray-50 flex items-center gap-2.5 text-sm font-medium text-brown/85 hover:text-brown transition-colors no-underline group"
           >
-            <div className="size-6 rounded-md bg-[#301118]/10 text-[#301118] group-hover:bg-[#301118]/15 flex items-center justify-center shrink-0 transition-colors">
+            <div className="size-8 rounded-full bg-gray-100 text-brown group-hover:bg-gray-200 flex items-center justify-center shrink-0 transition-colors">
               <Package className="size-3.5" />
             </div>
             <span>My Orders</span>
@@ -126,16 +199,16 @@ const UserProfileDropdown = () => {
           <Link
             href={walletHref}
             onClick={closeDropdown}
-            className="w-full px-2.5 py-2 cursor-pointer rounded-lg hover:bg-[#301118]/5 flex items-center gap-2.5 text-xs sm:text-[13px] font-medium text-gray-700 hover:text-[#301118] transition-colors no-underline group"
+            className="w-full min-h-11 px-3 py-2 cursor-pointer rounded-xl hover:bg-gray-50 flex items-center gap-2.5 text-sm font-medium text-brown/85 hover:text-brown transition-colors no-underline group"
           >
-            <div className="size-6 rounded-md bg-[#301118]/10 text-[#301118] group-hover:bg-[#301118]/15 flex items-center justify-center shrink-0 transition-colors">
+            <div className="size-8 rounded-full bg-gray-100 text-brown group-hover:bg-gray-200 flex items-center justify-center shrink-0 transition-colors">
               <Wallet className="size-3.5" />
             </div>
             <span className="flex-1">Wallet</span>
             {isAuthenticated && (
               <Badge
                 variant="outline"
-                className="text-[9px] px-1.5 py-0 font-medium border-[#301118]/20 text-[#301118] bg-[#301118]/5"
+                className="text-xs px-2 py-0.5 font-medium border-gray-200 text-brown bg-gray-50"
               >
                 ₹{formatCompactNumber(balance ?? 0)}
               </Badge>
@@ -146,9 +219,9 @@ const UserProfileDropdown = () => {
           <Link
             href={wishlistHref}
             onClick={closeDropdown}
-            className="w-full px-2.5 py-2 cursor-pointer rounded-lg hover:bg-[#301118]/5 flex items-center gap-2.5 text-xs sm:text-[13px] font-medium text-gray-700 hover:text-[#301118] transition-colors no-underline group"
+            className="w-full min-h-11 px-3 py-2 cursor-pointer rounded-xl hover:bg-gray-50 flex items-center gap-2.5 text-sm font-medium text-brown/85 hover:text-brown transition-colors no-underline group"
           >
-            <div className="size-6 rounded-md bg-[#301118]/10 text-[#301118] group-hover:bg-[#301118]/15 flex items-center justify-center shrink-0 transition-colors">
+            <div className="size-8 rounded-full bg-gray-100 text-brown group-hover:bg-gray-200 flex items-center justify-center shrink-0 transition-colors">
               <Heart className="size-3.5" />
             </div>
             <span>Saved Items / Wishlist</span>
@@ -158,16 +231,16 @@ const UserProfileDropdown = () => {
           <Link
             href={PATHS.HELP}
             onClick={closeDropdown}
-            className="w-full px-2.5 py-2 cursor-pointer rounded-lg hover:bg-[#301118]/5 flex items-center gap-2.5 text-xs sm:text-[13px] font-medium text-gray-700 hover:text-[#301118] transition-colors no-underline group"
+            className="w-full min-h-11 px-3 py-2 cursor-pointer rounded-xl hover:bg-gray-50 flex items-center gap-2.5 text-sm font-medium text-brown/85 hover:text-brown transition-colors no-underline group"
           >
-            <div className="size-6 rounded-md bg-[#301118]/10 text-[#301118] group-hover:bg-[#301118]/15 flex items-center justify-center shrink-0 transition-colors">
+            <div className="size-8 rounded-full bg-gray-100 text-brown group-hover:bg-gray-200 flex items-center justify-center shrink-0 transition-colors">
               <HelpCircle className="size-3.5" />
             </div>
             <span>Support</span>
           </Link>
 
           {/* Divider */}
-          <hr className="my-1 border-gray-100" />
+          <hr className="my-2 border-gray-200" />
 
           {/* Bottom Auth Actions */}
           {!isAuthenticated ? (
@@ -175,9 +248,9 @@ const UserProfileDropdown = () => {
             <Link
               href={withCallbackUrl(PATHS.LOGIN, pathname)}
               onClick={closeDropdown}
-              className="w-full px-2.5 py-2 cursor-pointer rounded-lg hover:bg-[#301118]/5 text-gray-700 hover:text-[#301118] flex items-center gap-2.5 text-xs sm:text-[13px] font-medium transition-colors no-underline group"
+              className="w-full min-h-11 px-3 py-2 cursor-pointer rounded-xl hover:bg-gray-50 text-brown/85 hover:text-brown flex items-center gap-2.5 text-sm font-medium transition-colors no-underline group"
             >
-              <div className="size-6 rounded-md bg-[#301118]/10 text-[#301118] group-hover:bg-[#301118]/15 flex items-center justify-center shrink-0 transition-colors">
+              <div className="size-8 rounded-full bg-gray-100 text-brown group-hover:bg-gray-200 flex items-center justify-center shrink-0 transition-colors">
                 <LogIn className="size-3.5" />
               </div>
               <span>Login / Register</span>
@@ -187,9 +260,9 @@ const UserProfileDropdown = () => {
             <button
               type="button"
               onClick={handleLogout}
-              className="w-full px-2.5 py-2 cursor-pointer rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 flex items-center gap-2.5 text-xs sm:text-[13px] font-medium bg-transparent border-0 text-left transition-colors group"
+              className="w-full min-h-11 px-3 py-2 cursor-pointer rounded-xl text-brown/85 hover:bg-red-50 hover:text-red-600 flex items-center gap-2.5 text-sm font-medium bg-transparent border-0 text-left transition-colors group"
             >
-              <div className="size-6 rounded-md bg-[#301118]/10 text-[#301118] group-hover:bg-red-100 group-hover:text-red-600 flex items-center justify-center shrink-0 transition-colors">
+              <div className="size-8 rounded-full bg-gray-100 text-brown group-hover:bg-red-100 group-hover:text-red-600 flex items-center justify-center shrink-0 transition-colors">
                 <LogOut className="size-3.5" />
               </div>
               <span>{loading ? "Logging out..." : "Logout"}</span>
@@ -202,4 +275,3 @@ const UserProfileDropdown = () => {
 };
 
 export default UserProfileDropdown;
-

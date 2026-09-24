@@ -37,7 +37,7 @@ export default function NotificationsDashboardPage() {
         return <Sparkles className="w-4 h-4 text-purple-600" />;
       case "order":
       case "orders":
-        return <ShoppingBag className="w-4 h-4 text-orange-600" />;
+        return <ShoppingBag className="w-4 h-4 text-slate-600" />;
       default:
         return <Bell className="w-4 h-4 text-[#ff6b00]" />;
     }
@@ -51,7 +51,7 @@ export default function NotificationsDashboardPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-orange-100 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-[#301118] font-outfit">
             Notifications
@@ -84,7 +84,7 @@ export default function NotificationsDashboardPage() {
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               selectedCategory === c.id
                 ? "bg-[#ff6b00] text-white shadow-xs"
-                : "bg-white text-slate-600 hover:bg-orange-50 border border-orange-100"
+                : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
             }`}
           >
             {c.label}
@@ -98,13 +98,13 @@ export default function NotificationsDashboardPage() {
           {[1, 2, 3].map((i) => (
             <Card
               key={i}
-              className="p-4 bg-white border-orange-100 h-16 animate-pulse"
+              className="p-4 bg-white border-slate-200 h-16 animate-pulse"
             />
           ))}
         </div>
       ) : filteredNotifications.length === 0 ? (
-        <Card className="p-12 text-center border-orange-100 bg-white">
-          <div className="w-12 h-12 rounded-full bg-orange-50 text-orange-400 flex items-center justify-center mx-auto mb-3">
+        <Card className="p-12 text-center border-slate-200 bg-white">
+          <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
             <Bell className="w-6 h-6" />
           </div>
           <h4 className="text-base font-bold text-slate-800 font-outfit mb-1">
@@ -124,11 +124,11 @@ export default function NotificationsDashboardPage() {
               className={`p-4 transition-all cursor-pointer border ${
                 notif.is_read
                   ? "bg-white border-slate-100"
-                  : "bg-orange-50/40 border-orange-200/80 shadow-xs"
+                  : "bg-slate-50 border-slate-200 shadow-xs"
               }`}
             >
               <div className="flex items-start gap-3.5">
-                <div className="p-2 rounded-xl bg-white border border-orange-100 shrink-0">
+                <div className="p-2 rounded-xl bg-white border border-slate-200 shrink-0">
                   {getCategoryIcon(notif.type)}
                 </div>
                 <div className="flex-1 min-w-0">
