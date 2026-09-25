@@ -40,6 +40,7 @@ interface CustomToastData {
 
 interface ToastProps {
   id?: string;
+  toastId?: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
   variant?: ToastVariant;
@@ -65,7 +66,22 @@ function isActionConfig(value: unknown): value is ToastActionConfig {
 
 function isToastProps(input: unknown): input is ToastProps {
   return (
-    typeof input === "object" && input !== null && !React.isValidElement(input)
+    typeof input === "object" &&
+    input !== null &&
+    !Array.isArray(input) &&
+    !React.isValidElement(input) &&
+    ("title" in input ||
+      "description" in input ||
+      "variant" in input ||
+      "type" in input ||
+      "action" in input ||
+      "id" in input ||
+      "toastId" in input ||
+      "duration" in input ||
+      "autoClose" in input ||
+      "timeout" in input ||
+      "data" in input ||
+      "onClose" in input)
   );
 }
 
@@ -74,9 +90,13 @@ function normalizeToastOptions(
   options?: Partial<ToastProps>,
   defaultType?: ToastType,
 ): ToastManagerAddOptions<CustomToastData> {
+  const resolvedDescription = Array.isArray(input)
+    ? input.map(String).join(", ")
+    : (input as React.ReactNode);
+
   const mergedProps: ToastProps = isToastProps(input)
     ? { ...input, ...options }
-    : { description: input, ...options };
+    : { description: resolvedDescription, ...options };
 
   const resolvedTimeout =
     mergedProps.timeout ?? mergedProps.autoClose ?? mergedProps.duration;
@@ -100,7 +120,7 @@ function normalizeToastOptions(
   };
 
   return {
-    id: mergedProps.id,
+    id: mergedProps.id ?? mergedProps.toastId,
     title: mergedProps.title,
     description: mergedProps.description,
     type: resolvedType,

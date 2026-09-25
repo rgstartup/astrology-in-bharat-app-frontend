@@ -30,7 +30,7 @@ export const DashboardShell: React.FC<DashboardShellProps> = ({ children }) => {
         >
           Skip to content
         </a>
-        <aside className="fixed inset-y-0 left-0 z-40 hidden h-dvh min-h-0 w-64 overflow-hidden flex-col border-r border-border bg-background md:flex lg:w-72">
+        <aside className="fixed inset-y-0 left-0 z-40 hidden h-dvh min-h-0 overflow-hidden flex-col border-r border-border bg-background md:flex w-64 lg:w-68">
           <DashboardSidebar />
         </aside>
         <SheetContent
@@ -42,7 +42,7 @@ export const DashboardShell: React.FC<DashboardShellProps> = ({ children }) => {
           <SheetTitle className="sr-only">Dashboard navigation</SheetTitle>
           <DashboardSidebar onClose={() => setMobileMenuOpen(false)} />
         </SheetContent>
-        <div className="flex min-w-0 flex-1 flex-col md:pl-64 lg:pl-72">
+        <div className="flex min-w-0 flex-1 flex-col md:pl-64 lg:pl-68">
           <header className="sticky top-0 z-20 h-18 shrink-0 border-b border-border bg-background">
             <DashboardHeader />
           </header>

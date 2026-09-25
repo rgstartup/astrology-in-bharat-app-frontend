@@ -71,7 +71,7 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-background text-foreground">
-      <div className="flex h-18 shrink-0 items-center justify-between gap-1 px-5">
+      <div className="flex h-18 shrink-0 items-center justify-between gap-1 px-5 border-b border-border">
         <Link
           href={PATHS.DASHBOARD.ROOT}
           onClick={onClose}
@@ -99,7 +99,7 @@ export function DashboardSidebar({ onClose }: DashboardSidebarProps) {
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="size-11 shrink-0 text-slate-600 hover:bg-slate-100"
+            className="size-11 shrink-0 text-slate-600 hover:bg-slate-100 cursor-pointer"
             aria-label="Close navigation"
           >
             <X aria-hidden="true" />

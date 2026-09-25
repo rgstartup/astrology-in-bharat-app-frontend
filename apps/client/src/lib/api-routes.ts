@@ -45,6 +45,11 @@ export const API_ROUTES = {
         REMOVE_FROM_FAVORITE: "/client/favorites/product-variant/:id",
       },
     },
+    WALLET: {
+      TRANSACTIONS: "/client/wallet/transaction",
+      RECHARGE_INITIATE: "/client/wallet/recharge/initiate",
+      RECHARGE_VERIFY: "/client/wallet/recharge/verify",
+    },
   },
   CONSULTATION: {
     TOPICS: "/consultations/topics",

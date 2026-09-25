@@ -18,6 +18,7 @@ interface AuthState {
   logout: (redirectUrl?: string) => Promise<string>;
   refreshAuth: () => Promise<void>;
   refreshBalance: () => Promise<void>;
+  updateBalance: (balance: number) => void;
   updateUser: (data: Partial<Client> & Record<string, any>) => void;
   closeImageModal: () => void;
   openImageModal: () => void;
@@ -144,6 +145,11 @@ export const useAuthStore = create<AuthState>()(
           isInitialized: false,
           balance: 0,
         });
+      },
+
+      updateBalance: (balance: number) => {
+        const current = get().balance;
+        set({ balance: current + balance });
       },
     }),
     {

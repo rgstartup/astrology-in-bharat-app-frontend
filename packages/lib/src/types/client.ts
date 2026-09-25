@@ -1,6 +1,11 @@
 import { UserStatusEnum } from "../enums";
 import { Address } from "./address";
 import { Media } from "./media";
+import {
+  ClientWalletTransactionPurpose,
+  ClientWalletTransactionType,
+} from "../enums";
+import { PaginatedResponse } from "./paginated.response";
 
 export interface ClientPreferences {
   languages?: string[];
@@ -47,3 +52,38 @@ export interface Client {
 }
 
 export type IGender = "male" | "female" | "other";
+
+export interface ClientWallet {
+  id: number;
+  client: Client;
+  client_id: number;
+  balance: number;
+  reserved_balance: number;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface ClientWalletTransaction {
+  id: number;
+  wallet: ClientWallet;
+  wallet_id: number;
+  amount: number;
+  balance_before: number | null;
+  balance_after: number | null;
+  type: ClientWalletTransactionType;
+  purpose: ClientWalletTransactionPurpose;
+  reference_id: string | null;
+  reference_type: string | null;
+  transaction_no: string | null;
+  metadata: Record<string, any> | null;
+  created_at: Date;
+}
+
+export interface IPaginatedClientWalletTransaction extends PaginatedResponse<ClientWalletTransaction> {}
+
+// === WALLET RECHARGE ===
+export interface IClientRechargeInitiateResponse {
+  id: string;
+  amount: number;
+  currency: string;
+}
