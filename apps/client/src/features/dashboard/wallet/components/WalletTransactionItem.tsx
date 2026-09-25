@@ -132,7 +132,7 @@ export function WalletTransactionItem({ tx }: WalletTransactionItemProps) {
       {/* Right: Amount & Status */}
       <div className="text-right shrink-0">
         <span
-          className={`text-sm sm:text-base font-black font-outfit block ${
+          className={`text-sm sm:text-base font-bold font-outfit block ${
             isFailed
               ? "text-slate-500 line-through"
               : isDebit

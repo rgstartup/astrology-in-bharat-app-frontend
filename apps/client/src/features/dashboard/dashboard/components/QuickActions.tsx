@@ -12,7 +12,7 @@ export function QuickActions() {
   return (
     <div className="mb-6 sm:mb-8">
       <div className="mb-3">
-        <h2 className="text-xl sm:text-2xl font-black text-[#301118] font-outfit">
+        <h2 className="text-xl sm:text-2xl font-bold text-[#301118] font-outfit">
           Quick Actions
         </h2>
         <p className="text-xs sm:text-sm text-slate-500 font-medium">

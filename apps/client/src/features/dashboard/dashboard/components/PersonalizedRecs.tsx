@@ -15,11 +15,11 @@ export function PersonalizedRecs() {
       <div className="mb-4">
         <div className="flex items-center gap-1.5 mb-1">
           <Sparkles className="w-3.5 h-3.5 text-[#ff6b00]" />
-          <span className="text-[10px] font-black uppercase tracking-wider text-[#ff6b00] font-outfit">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff6b00] font-outfit">
             Curated Insights
           </span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-black text-[#301118] font-outfit">
+        <h2 className="text-xl sm:text-2xl font-bold text-[#301118] font-outfit">
           Recommended For You
         </h2>
         <p className="text-xs sm:text-sm text-slate-500 font-medium">

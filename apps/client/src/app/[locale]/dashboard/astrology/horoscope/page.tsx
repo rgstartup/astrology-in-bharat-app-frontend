@@ -67,14 +67,14 @@ export default function MyHoroscopePage() {
           <span className="p-1.5 rounded-lg bg-slate-100 text-slate-600">
             <Sun className="w-4 h-4" />
           </span>
-          <span className="text-xs font-black uppercase tracking-wider text-[#ff6b00] font-outfit">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#ff6b00] font-outfit">
             Personal Transit Forecast
           </span>
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-4xl font-black text-[#301118] font-outfit tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-bold text-[#301118] font-outfit tracking-tight">
               My Horoscope
             </h1>
             <p className="text-sm text-slate-600 font-medium mt-1">
@@ -130,10 +130,10 @@ export default function MyHoroscopePage() {
           <Card className="border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
               <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#ff6b00]">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff6b00]">
                   Daily Vedic Synthesis
                 </span>
-                <h2 className="text-xl sm:text-2xl font-black text-[#301118] font-outfit">
+                <h2 className="text-xl sm:text-2xl font-bold text-[#301118] font-outfit">
                   Overall Atmosphere
                 </h2>
               </div>
@@ -184,7 +184,7 @@ export default function MyHoroscopePage() {
                     Love & Relationships
                   </h3>
                 </div>
-                <span className="text-sm font-black text-rose-600">
+                <span className="text-sm font-bold text-rose-600">
                   {scores.relationships}%
                 </span>
               </div>
@@ -203,7 +203,7 @@ export default function MyHoroscopePage() {
                     Career & Ambition
                   </h3>
                 </div>
-                <span className="text-sm font-black text-blue-600">
+                <span className="text-sm font-bold text-blue-600">
                   {scores.career}%
                 </span>
               </div>
@@ -222,7 +222,7 @@ export default function MyHoroscopePage() {
                     Finance & Wealth
                   </h3>
                 </div>
-                <span className="text-sm font-black text-slate-700">
+                <span className="text-sm font-bold text-slate-700">
                   {scores.finance}%
                 </span>
               </div>
@@ -241,7 +241,7 @@ export default function MyHoroscopePage() {
                     Wellbeing & Vitality
                   </h3>
                 </div>
-                <span className="text-sm font-black text-emerald-600">
+                <span className="text-sm font-bold text-emerald-600">
                   {scores.wellbeing}%
                 </span>
               </div>
@@ -267,7 +267,7 @@ export default function MyHoroscopePage() {
                   <Hash className="w-4 h-4 text-slate-400" />
                   <span className="font-semibold">Lucky Number</span>
                 </div>
-                <span className="text-sm font-black text-slate-900">
+                <span className="text-sm font-bold text-slate-900">
                   {horoscope?.luckyNumber || 7}
                 </span>
               </div>

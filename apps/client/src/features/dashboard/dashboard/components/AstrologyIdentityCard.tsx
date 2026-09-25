@@ -205,7 +205,7 @@ export function AstrologyIdentityCard({
               Personal Kundli Identity
             </span>
           </div>
-          <CardTitle className="text-xl font-black text-[#301118]">
+          <CardTitle className="text-xl font-bold text-[#301118]">
             Your Astrological Identity
           </CardTitle>
         </div>
@@ -246,7 +246,7 @@ export function AstrologyIdentityCard({
 
                 <div>
                   <h4
-                    className={`text-lg sm:text-xl font-black font-outfit ${pillar.textColor} truncate`}
+                    className={`text-lg sm:text-xl font-bold font-outfit ${pillar.textColor} truncate`}
                   >
                     {pillar.value}
                   </h4>

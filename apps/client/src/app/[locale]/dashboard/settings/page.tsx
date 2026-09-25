@@ -17,7 +17,7 @@ export default function SettingsDashboardPage() {
   return (
     <div className="space-y-6 animate-in fade-in duration-300 max-w-4xl">
       <div className="border-b border-slate-200 pb-4">
-        <h1 className="text-2xl sm:text-3xl font-black text-[#301118] font-outfit">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#301118] font-outfit">
           Account Settings & Preferences
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">

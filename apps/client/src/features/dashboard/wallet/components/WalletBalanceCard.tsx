@@ -36,7 +36,7 @@ export function WalletBalanceCard({
 
       <div className="pt-1">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl sm:text-3xl font-black font-outfit text-slate-900 tracking-tight">
+          <span className="text-2xl sm:text-3xl font-bold font-outfit text-slate-900 tracking-tight">
             ₹{balance?.toLocaleString("en-IN") || 0}
           </span>
           <span className="text-xs font-semibold text-slate-600">.00</span>

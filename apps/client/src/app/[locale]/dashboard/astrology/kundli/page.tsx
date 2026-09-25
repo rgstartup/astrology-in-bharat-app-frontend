@@ -56,7 +56,7 @@ export default function MyKundliPage() {
             <Scroll className="w-8 h-8" />
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-black text-[#301118] font-outfit mb-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#301118] font-outfit mb-2">
             Your Kundli Isn't Generated Yet
           </h2>
 
@@ -107,12 +107,12 @@ export default function MyKundliPage() {
               <span className="p-1 rounded-md bg-slate-100 text-[#ff6b00]">
                 <Scroll className="w-4 h-4" />
               </span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#ff6b00] font-outfit">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff6b00] font-outfit">
                 Saved Vedic Janam Kundli
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-black text-[#301118] font-outfit">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#301118] font-outfit">
               {user?.name || "Client"}'s Kundli
             </h1>
 
@@ -241,7 +241,7 @@ export default function MyKundliPage() {
                       x="200"
                       y="120"
                       textAnchor="middle"
-                      className="font-black text-[13px] fill-slate-900"
+                      className="font-bold text-[13px] fill-slate-900"
                     >
                       {astrologyDetails?.ascendant || "Gemini"}
                     </text>
@@ -299,7 +299,7 @@ export default function MyKundliPage() {
                       x="200"
                       y="320"
                       textAnchor="middle"
-                      className="font-black text-[13px] fill-slate-900"
+                      className="font-bold text-[13px] fill-slate-900"
                     >
                       Sagittarius
                     </text>

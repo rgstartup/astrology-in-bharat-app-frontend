@@ -87,7 +87,7 @@ export const DashboardHeader: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8 bg-amber-500/25 border-b border-amber-800">
+    <div className="flex h-full items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
       <div className="flex min-w-0 items-center gap-2">
         <SheetTrigger
           aria-label="Open navigation"
@@ -97,7 +97,7 @@ export const DashboardHeader: React.FC = () => {
         </SheetTrigger>
         <span
           aria-hidden="true"
-          className="mr-1 hidden size-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700 md:flex"
+          className="mr-1 hidden size-10 shrink-0 items-center justify-center rounded-full bg-[#f3ebd8] text-[#8b6534] md:flex border border-[#e3d7c3]"
         >
           <Compass className="size-5" strokeWidth={1.7} />
         </span>
@@ -106,7 +106,7 @@ export const DashboardHeader: React.FC = () => {
             <li
               className={
                 isOverview
-                  ? "font-outfit text-base font-semibold leading-6 tracking-tight text-slate-800 sm:text-lg"
+                  ? "font-outfit text-base font-semibold leading-6 tracking-tight text-[#2d2118] sm:text-lg"
                   : "hidden sm:block"
               }
             >
@@ -115,7 +115,7 @@ export const DashboardHeader: React.FC = () => {
               ) : (
                 <Link
                   href={PATHS.DASHBOARD.ROOT}
-                  className="inline-flex min-h-11 sm:min-h-10 items-center rounded-full text-sm font-normal leading-5 text-muted-foreground no-underline hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+                  className="inline-flex min-h-11 sm:min-h-10 items-center rounded-full text-sm font-normal leading-5 text-[#857262] no-underline hover:text-[#2d2118] focus-visible:outline-2 focus-visible:outline-amber-600"
                 >
                   Overview
                 </Link>
@@ -125,13 +125,13 @@ export const DashboardHeader: React.FC = () => {
               <>
                 <li
                   aria-hidden="true"
-                  className="hidden text-muted-foreground sm:block"
+                  className="hidden text-[#a69280] sm:block"
                 >
                   <ChevronRight className="size-4" />
                 </li>
                 <li
                   aria-current="page"
-                  className="truncate font-outfit text-base font-semibold leading-6 tracking-tight text-slate-800 sm:text-lg"
+                  className="truncate font-outfit text-base font-semibold leading-6 tracking-tight text-[#2d2118] sm:text-lg"
                 >
                   {pageName}
                 </li>
@@ -144,21 +144,21 @@ export const DashboardHeader: React.FC = () => {
       <div className="flex shrink-0 items-center gap-1 sm:gap-2">
         <Link
           href="/"
-          className="hidden min-h-11 sm:min-h-10 items-center gap-2 rounded-full px-3 text-sm font-medium text-slate-800 no-underline transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-ring lg:inline-flex"
+          className="hidden min-h-11 sm:min-h-10 items-center gap-2 rounded-full px-3 text-sm font-medium text-[#4a392c] no-underline transition-colors hover:bg-[#f3ebd8] focus-visible:outline-2 focus-visible:outline-amber-600 lg:inline-flex"
         >
-          <Globe aria-hidden="true" className="size-4" /> Explore website
+          <Globe aria-hidden="true" className="size-4 text-[#857262]" /> Explore website
         </Link>
         <Link
           href={PATHS.DASHBOARD.WALLET}
           aria-label="Wallet and credits"
-          className="inline-flex min-h-11 sm:min-h-10 min-w-11 sm:min-w-10 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 no-underline transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:px-3"
+          className="inline-flex min-h-11 sm:min-h-10 min-w-11 sm:min-w-10 items-center justify-center gap-2 rounded-full border border-[#ded3be] bg-white/90 px-3 text-sm font-semibold text-[#3a2c20] no-underline transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 sm:px-3 shadow-2xs"
         >
-          <Wallet aria-hidden="true" className="size-[18px]" />
+          <Wallet aria-hidden="true" className="size-[18px] text-[#8b6534]" />
           <span className="hidden sm:inline">Wallet</span>
         </Link>
         <Link
           href={PATHS.DASHBOARD.NOTIFICATIONS}
-          className={`relative ${iconLink}`}
+          className={`relative ${iconLink} text-[#4a392c] hover:bg-[#f3ebd8]`}
           aria-label={
             unread > 0 ? `Notifications, ${unread} unread` : "Notifications"
           }
@@ -167,7 +167,7 @@ export const DashboardHeader: React.FC = () => {
           {unread > 0 && (
             <span
               aria-hidden="true"
-              className="absolute right-1 top-1 flex min-w-4 items-center justify-center rounded-full bg-slate-700 px-1 text-[10px] font-semibold leading-4 text-primary-foreground ring-2 ring-background"
+              className="absolute right-1 top-1 flex min-w-4 items-center justify-center rounded-full bg-[#8b6534] px-1 text-[10px] font-semibold leading-4 text-white ring-2 ring-[#fcf9f2]"
             >
               {unread > 9 ? "9+" : unread}
             </span>
@@ -176,10 +176,10 @@ export const DashboardHeader: React.FC = () => {
         <DropdownMenu>
           <DropdownMenuTrigger
             aria-label={`Account menu for ${userName}`}
-            className="ml-1 flex min-h-11 sm:min-h-10 items-center gap-2 rounded-full bg-background p-1 text-slate-800 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:gap-2 sm:pr-2.5"
+            className="ml-1 flex min-h-11 sm:min-h-10 items-center gap-2 rounded-full bg-transparent p-1 text-[#2d2118] transition-colors hover:bg-[#f3ebd8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 sm:gap-2 sm:pr-2.5"
           >
-            <Avatar className="size-8">
-              <AvatarFallback className="absolute inset-0">
+            <Avatar className="size-8 ring-1 ring-[#ded3be]">
+              <AvatarFallback className="absolute inset-0 bg-[#ebdcc7] text-[#4a392c]">
                 {initials}
               </AvatarFallback>
               {user?.avatar_media?.url && (

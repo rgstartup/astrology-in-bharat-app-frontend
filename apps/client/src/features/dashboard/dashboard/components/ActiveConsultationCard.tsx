@@ -43,12 +43,12 @@ export function ActiveConsultationCard({
 
           <div>
             <div className="flex items-center gap-2 mb-0.5">
-              <span className="inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full">
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full">
                 <Radio className="w-3 h-3 text-emerald-600 animate-pulse" />
                 <span>Session in Progress</span>
               </span>
             </div>
-            <h3 className="text-base sm:text-lg font-black text-slate-900 font-outfit">
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 font-outfit">
               Active Consultation with {expertName}
             </h3>
             <p className="text-xs text-slate-600">

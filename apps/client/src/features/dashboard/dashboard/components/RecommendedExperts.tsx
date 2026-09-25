@@ -41,7 +41,7 @@ export const RecommendedExperts: React.FC = () => {
     <div className="mb-8 sm:mb-10">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-black text-[#301118] font-outfit">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#301118] font-outfit">
             Experts For You
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 font-medium">

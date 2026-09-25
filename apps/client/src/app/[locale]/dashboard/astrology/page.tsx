@@ -43,11 +43,11 @@ export default function MyAstrologyHubPage() {
             <span className="p-1.5 rounded-lg bg-slate-100 text-[#ff6b00]">
               <Sparkles className="w-4 h-4" />
             </span>
-            <span className="text-xs font-black uppercase tracking-wider text-[#ff6b00] font-outfit">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#ff6b00] font-outfit">
               Private Astrology Hub
             </span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-black text-[#301118] font-outfit tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-bold text-[#301118] font-outfit tracking-tight">
             My Astrology
           </h1>
           <p className="text-sm sm:text-base text-slate-600 font-medium mt-1">

@@ -98,7 +98,7 @@ export function TodaysGuidanceCard({
               {horoscope?.sign || "Gemini"} Forecast
             </span>
           </div>
-          <CardTitle className="text-xl font-black text-[#301118]">
+          <CardTitle className="text-xl font-bold text-[#301118]">
             Today's Astrological Guidance
           </CardTitle>
         </div>
@@ -122,7 +122,7 @@ export function TodaysGuidanceCard({
             <Sparkles className="w-4 h-4" />
           </div>
           <div className="space-y-1">
-            <span className="text-[11px] font-black uppercase tracking-wider text-[#ff6b00]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#ff6b00]">
               Planetary Influence
             </span>
             <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
@@ -151,7 +151,7 @@ export function TodaysGuidanceCard({
                 </div>
 
                 <div className="flex items-baseline justify-between mb-2">
-                  <span className="text-xl font-black font-outfit text-slate-900">
+                  <span className="text-xl font-bold font-outfit text-slate-900">
                     {item.score}
                     <span className="text-[10px] text-slate-400 font-normal">
                       /100
