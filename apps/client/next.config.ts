@@ -85,6 +85,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    useTypeScriptCli: true,
+  },
   // Move turbo rules here and rename to turbopack
   turbopack: {
     rules: {
