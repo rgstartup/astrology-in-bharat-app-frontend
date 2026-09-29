@@ -75,3 +75,10 @@
 - Use emerald for subtle highlights (light tints, icons, or text), not solid emerald fills.
 - Use gray/slate for default text, borders, surfaces, and other UI elements. Preserve compact, fully rounded controls.
 - This is a design guideline, not a strict palette rule; adapt to usability and context.
+
+## 8. Component Modularity & Complexity Rule (150–200 Lines Limit)
+
+- **Mandatory Decomposition**: When component complexity is high or file length exceeds **150 to 200 lines**, decompose it into smaller, single-responsibility sub-components.
+- **Dedicated Directory**: Place extracted sub-components in a dedicated sub-folder (e.g. `components/<feature-name>/` or `components/history/`) alongside a barrel `index.ts`.
+- **Clean Composition**: The parent container component should focus purely on layout orchestration, state, and props passing.
+

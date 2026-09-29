@@ -85,30 +85,40 @@ export function WalletRechargeModal({
         description: "Wallet Recharge",
         order_id: orderRes.id,
         handler: async (response: any) => {
-          const [verifyRes, verifyError] = await api.post<{
-            balance: number;
-          }>(API_ROUTES.CLIENT.WALLET.RECHARGE_VERIFY, {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-          }, {
-            timeoutMs: 10000
-          });
-
-          if (verifyError || !verifyRes) {
-            toast.error(
-              getErrorMessage(verifyError) || "Payment verification failed!",
+          try {
+            const [verifyRes, verifyError] = await api.post<{
+              balance: number;
+            }>(
+              API_ROUTES.CLIENT.WALLET.RECHARGE_VERIFY,
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              },
+              {
+                timeoutMs: 60000,
+              },
             );
-            return;
+
+            if (verifyError || !verifyRes) {
+              toast.error(
+                getErrorMessage(verifyError) || "Payment verification failed!",
+              );
+              return;
+            }
+
+            updateBalance(verifyRes.balance);
+            toast.success(`Successfully recharged ₹${rechargeAmount}!`);
+
+            onSuccess();
+            onOpenChange(false);
+          } catch {
+            toast.error("Payment verification failed!");
+          } finally {
+            setIsProcessing(false);
           }
-
-          updateBalance(verifyRes.balance);
-          toast.success(`Successfully recharged ₹${rechargeAmount}!`);
-
-          onSuccess();
-          onOpenChange(false);
-          setIsProcessing(false);
         },
+        
         prefill: {
           name: user?.name || "",
           email: user?.email || "",
@@ -129,10 +139,10 @@ export function WalletRechargeModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md p-5 bg-white rounded-3xl overflow-hidden border border-amber-800 shadow-2xl">
-        <DialogHeader className="pb-2.5 border-b border-amber-800/20">
+      <DialogContent className="sm:max-w-md p-5 bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-2xl">
+        <DialogHeader className="pb-2.5 border-b border-slate-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-950 flex items-center justify-center shrink-0 border border-amber-800/30">
+            <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
               <CreditCard className="w-4 h-4" />
             </div>
             <div>
@@ -213,7 +223,7 @@ export function WalletRechargeModal({
           </div>
 
           {/* Summary Box */}
-          <div className="p-2.5 rounded-xl bg-slate-50/90 border border-amber-800/20 space-y-1">
+          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
             <div className="flex items-center justify-between text-xs">
               <span className="text-slate-500 font-medium">
                 Recharge Payable

@@ -10,3 +10,8 @@
 - Terse, technically precise, zero fluff.
 - Drop articles, filler, pleasantries, preambles, and tool narration.
 - Direct output: root cause, diff, command, or action.
+
+## 3. Component Size & Modularity (150–200 Lines Rule)
+- Break down any component exceeding **150–200 lines** or high complexity into sub-components.
+- Group extracted sub-components into a dedicated feature/sub-folder with barrel `index.ts`.
+
