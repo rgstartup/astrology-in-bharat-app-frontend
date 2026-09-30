@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { Loading } from "@/components/ui/Loading";
 import { useAuthStore } from "@/store/auth.store";
 import { CLIENT_API_URL } from "@/lib/config";
 import { BrandingSection } from "./BrandingSection";
@@ -51,8 +50,6 @@ export const LoginView: React.FC = () => {
         <BrandingSection stats={stats} />
         <LoginForm onLoadingChange={setLoading} />
       </div>
-
-      {loading && <Loading fullScreen />}
     </div>
   );
 };
