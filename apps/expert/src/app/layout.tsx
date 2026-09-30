@@ -1,5 +1,5 @@
 import "@/styles/index.css"
-import { AuthInitializer } from '@/components/layout/AuthInitializer'
+import { AuthProvider } from '@/providers/AuthProvider';
 import { SocketConnectionManager } from '@/components/layout/SocketConnectionManager';
 import { cookies } from "next/headers";
 
@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { CLIENT_API_URL } from '@/lib/config';
 import { ReactQueryProvider } from '@/providers/ReactQueryProvider';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale } from 'next-intl/server';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
@@ -61,22 +63,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     }
   }
 
+  const locale = await getLocale();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
       <body className="font-sans" suppressHydrationWarning>
-        <ReactQueryProvider>
-          <AuthInitializer initialUser={initialUser}>
-            <SocketConnectionManager />
-            {children}
-            <ToastContainer position="top-right" />
-            <ToastContainer containerId="notification" position="bottom-right" />
-          </AuthInitializer>
-        </ReactQueryProvider>
+        <NextIntlClientProvider>
+          <ReactQueryProvider>
+            <AuthProvider initialUser={initialUser}>
+              <SocketConnectionManager />
+              {children}
+              <ToastContainer position="top-right" />
+              <ToastContainer containerId="notification" position="bottom-right" />
+            </AuthProvider>
+          </ReactQueryProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

@@ -1,29 +1,9 @@
 {
   "extends": "../../packages/typescript-config/nextjs.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@repo/ui": [
-        "../../packages/ui/src/index.ts"
-      ],
-      "@repo/ui/*": [
-        "../../packages/ui/src/*"
-      ],
-      "@repo/lib": [
-        "../../packages/lib/src/index.ts"
-      ],
-      "@repo/lib/*": [
-        "../../packages/lib/src/*"
-      ],
-      "@packages/*": [
-        "../../packages/*"
-      ],
-      "@repo/safe-fetch": [
-        "../../packages/safe-fetch/index.ts"
-      ]
+      "@/*": ["./src/*"],
+      "@messages/*": ["./messages/*"]
     },
     "plugins": [
       {
@@ -31,19 +11,6 @@
       }
     ]
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "../../packages/ui/src/**/*.ts",
-    "../../packages/ui/src/**/*.tsx",
-    "../../packages/lib/src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "dist",
-    "build"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next", "dist", "build"]
 }

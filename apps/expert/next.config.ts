@@ -1,4 +1,9 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin({
+  requestConfig: "./src/i18n/request.ts",
+});
 
 // ─── Security Headers ──────────────────────────────────────────────────────────
 const securityHeaders = [
@@ -32,39 +37,24 @@ const nextConfig: NextConfig = {
   // Allow large file uploads (videos up to 50MB)
   experimental: {
     serverActions: {
-      bodySizeLimit: '50mb',
+      bodySizeLimit: "50mb",
     },
+    useTypeScriptCli: true,
   },
   transpilePackages: ["@repo/ui", "@repo/routes", "@repo/safe-fetch"],
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'content.jdmagicbox.com',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "content.jdmagicbox.com",
+        pathname: "/**",
       },
     ],
-  },
-  async rewrites() {
-    const backendUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543')
-      .replace(/\/api\/v1\/?$/, '')
-      .replace(/\/+$/, '');
-
-    return [
-      {
-        source: "/api/v1/:path*",
-        destination: `${backendUrl}/api/v1/:path*`, // Proxy to Backend
-      },
-      {
-        source: '/uploads/:path*',
-        destination: `${backendUrl}/uploads/:path*`,
-      },
-    ];
   },
   async headers() {
     return [
@@ -76,4 +66,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

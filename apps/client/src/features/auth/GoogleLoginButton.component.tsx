@@ -2,10 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import {
-  useGoogleLogin,
-  UseGoogleLoginOptions,
-} from "@/hooks/use-google-login";
+import { useGoogleLogin, UseGoogleLoginOptions } from "@/hooks/use-google-login";
 import { useTranslations } from "next-intl";
 
 export interface GoogleLoginButtonProps extends UseGoogleLoginOptions {
@@ -19,7 +16,6 @@ export interface GoogleLoginButtonProps extends UseGoogleLoginOptions {
 export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   callback_url,
   callbackUrl,
-  role = "client",
   onError,
   text,
   className,
@@ -29,7 +25,6 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
 
   const { handleGoogleLogin } = useGoogleLogin({
     callback_url: callback_url || callbackUrl,
-    role,
     onError,
   });
 

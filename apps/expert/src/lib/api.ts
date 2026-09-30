@@ -13,7 +13,7 @@ const API_BASE = IS_SERVER
   ? (process.env.NEXT_PUBLIC_API_URL || 'https://astrology-in-bharat-services.onrender.com/api/v1') 
   : '/api/v1';
 
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/auth.store";
 import { toast } from "react-toastify";
 
 // --- Refresh Token Logic ---
