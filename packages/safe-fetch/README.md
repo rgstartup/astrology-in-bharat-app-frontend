@@ -221,3 +221,4 @@ export async function GET() {
 - ✅ Works client & server
 - ✅ Timeout + cancellation
 - ✅ Next.js compatible
+

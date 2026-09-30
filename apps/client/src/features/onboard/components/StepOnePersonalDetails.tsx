@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { OnboardingFormData } from "@/lib/types";
+import type { Media } from "@repo/lib";
 import { ProfilePicUpload } from "./ProfilePicUpload";
 import { AddressFields } from "./AddressFields";
 import { Link } from "@/i18n/navigation";
@@ -45,13 +46,15 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
   const { control, setValue, watch } = useFormContext<OnboardingFormData>();
 
   const currentAvatar = watch("avatar") || user?.avatar_media?.url;
+  const currentPublicId = user?.avatar_media?.public_id || undefined;
 
   return (
     <div className="space-y-6">
       {/* 1. Profile Picture Upload */}
       <ProfilePicUpload
         value={currentAvatar}
-        onChange={(url) => {
+        publicId={currentPublicId}
+        onChange={(url, media) => {
           setValue("avatar", url, {
             shouldDirty: true,
             shouldValidate: true,
@@ -60,6 +63,7 @@ export const StepOnePersonalDetails: React.FC<StepOnePersonalDetailsProps> = ({
           updateUser({
             avatar: url,
             profile_picture: url,
+            avatar_media: media ?? (url ? ({ url } as Media) : null),
           });
         }}
       />

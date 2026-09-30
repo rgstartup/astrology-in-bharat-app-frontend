@@ -1,11 +1,15 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { api } from "@/actions";
-import { AuthService } from "@/services/auth.service";
-import type { Client } from "@repo/lib";
+import { api, API_ROUTES } from "@/actions";
+import type { Client, ClientWallet } from "@repo/lib";
+
+interface IAuthUser extends Client {
+  wallet?: ClientWallet;
+  [key: string]: any;
+}
 
 interface AuthState {
-  user: (Client & Record<string, any>) | null;
+  user: IAuthUser | null;
   balance: number;
   loading: boolean;
   isAuthenticated: boolean;
@@ -17,9 +21,14 @@ interface AuthState {
   login: (userData?: any) => void;
   logout: (redirectUrl?: string) => Promise<string>;
   refreshAuth: () => Promise<void>;
+
+  /**
+   * @deprecated
+   */
   refreshBalance: () => Promise<void>;
+
   updateBalance: (balance: number) => void;
-  updateUser: (data: Partial<Client> & Record<string, any>) => void;
+  updateUser: (data: Partial<IAuthUser>) => void;
   closeImageModal: () => void;
   openImageModal: () => void;
   reset: () => void;
@@ -38,9 +47,9 @@ export const useAuthStore = create<AuthState>()(
       init: async (force: boolean = false) => {
         if (get().isInitialized && !force) return;
 
-        const [client, error] = await AuthService.fetchProfile();
+        const [user, error] = await api.get<IAuthUser>(API_ROUTES.AUTH.CLIENT.ME);
 
-        if (error || !client) {
+        if (error || !user) {
           get().reset();
 
           if (error?.status === 401) {
@@ -54,28 +63,21 @@ export const useAuthStore = create<AuthState>()(
         }
 
         set({
-          user: client,
+          user,
           loading: false,
           isAuthenticated: true,
           isInitialized: true,
         });
       },
 
-      login: (userData?: Client) => {
-        if (userData) {
-          set({
-            user: userData,
-            isAuthenticated: true,
-            loading: false,
-            isInitialized: true,
-          });
-        } else {
-          set({
-            isAuthenticated: true,
-            loading: false,
-            isInitialized: true,
-          });
-        }
+      login: (userData?: IAuthUser) => {
+        set({
+          user: userData || null,
+          isAuthenticated: Boolean(userData),
+          loading: false,
+          isInitialized: true,
+        });
+
         get().refreshBalance();
       },
 
@@ -95,8 +97,11 @@ export const useAuthStore = create<AuthState>()(
         await get().init(true);
       },
 
+      /**
+       * @deprecated
+       */
       refreshBalance: async () => {
-        const [res, error] = await api.get<any>("/wallet/balance");
+        const [res, error] = await api.get<any>(API_ROUTES.CLIENT.WALLET.ROOT);
         if (error) return;
 
         const raw = res?.data ?? res;
@@ -148,8 +153,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       updateBalance: (balance: number) => {
-        const current = get().balance;
-        set({ balance: current + balance });
+        set({ balance: Number(balance) || 0 });
       },
     }),
     {

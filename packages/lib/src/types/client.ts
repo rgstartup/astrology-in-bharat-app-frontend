@@ -1,10 +1,7 @@
 import { UserStatusEnum } from "../enums";
 import { Address } from "./address";
 import { Media } from "./media";
-import {
-  ClientWalletTransactionPurpose,
-  ClientWalletTransactionType,
-} from "../enums";
+import { ClientWalletTransactionPurpose, ClientWalletTransactionType } from "../enums";
 import { PaginatedResponse } from "./paginated.response";
 
 export interface ClientPreferences {

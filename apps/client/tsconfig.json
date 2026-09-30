@@ -18,14 +18,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "../../packages/ui/src/**/*.ts",
-    "../../packages/ui/src/**/*.tsx",
-    "../../packages/lib/src/**/*.ts",
     "next.config.ts",
     "globals.d.ts",
     "next-env.d.ts",
-    "env.d.ts",
-    "../../packages/lib/src/types/expert.ts"
+    "env.d.ts"
   ],
   "exclude": ["node_modules", ".next", "dist", "build"]
 }

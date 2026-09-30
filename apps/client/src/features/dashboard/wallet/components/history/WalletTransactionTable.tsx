@@ -6,10 +6,11 @@ import {
   TableHead,
   TableRow,
 } from "@/components/ui/table";
+import { ClientWalletTransaction } from "@repo/lib";
 import { WalletTransactionTableRow } from "./WalletTransactionTableRow";
 
 interface WalletTransactionTableProps {
-  transactions: any[];
+  transactions: ClientWalletTransaction[];
 }
 
 export function WalletTransactionTable({

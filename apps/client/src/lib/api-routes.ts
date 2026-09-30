@@ -46,6 +46,7 @@ export const API_ROUTES = {
       },
     },
     WALLET: {
+      ROOT: "/client/wallet",
       TRANSACTIONS: "/client/wallet/transactions",
       RECHARGE_INITIATE: "/client/wallet/recharge/initiate",
       RECHARGE_VERIFY: "/client/wallet/recharge/verify",

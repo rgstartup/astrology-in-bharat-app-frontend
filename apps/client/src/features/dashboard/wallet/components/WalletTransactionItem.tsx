@@ -11,35 +11,37 @@ import {
   Check,
 } from "lucide-react";
 import { useFormatter } from "next-intl";
+import {
+  ClientWalletTransaction,
+  ClientWalletTransactionType,
+  ClientWalletTransactionPurpose,
+} from "@repo/lib";
 
 interface WalletTransactionItemProps {
-  tx: any;
+  tx: ClientWalletTransaction;
 }
+
+const formatPurpose = (purpose?: ClientWalletTransactionPurpose | string) => {
+  if (!purpose) return "Transaction";
+  return purpose
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
 
 export function WalletTransactionItem({ tx }: WalletTransactionItemProps) {
   const [isCopied, setIsCopied] = useState(false);
 
-  const rawAmount =
-    typeof tx.amount === "object" && tx.amount !== null
-      ? (tx.amount.amount ?? tx.amount.value ?? tx.amount.total ?? 0)
-      : (tx.amount ?? 0);
-  const amount = Number(rawAmount) || 0;
-
-  const typeLower = (tx.type || "credit").toLowerCase();
-  const isDebit = ["debit", "hold", "deduction"].includes(typeLower);
-  const isHold = typeLower === "hold";
-  const statusLower = (tx.status || "completed").toLowerCase();
-  const isFailed = ["failed", "cancelled", "error", "rejected"].includes(
-    statusLower,
-  );
-  const isSuccess = ["completed", "success", "confirmed"].includes(statusLower);
-
-  const dateVal = tx.created_at || tx.createdAt || tx.date;
+  const amount = Number(tx.amount) || 0;
+  const isDebit =
+    tx.type === ClientWalletTransactionType.DEBIT ||
+    tx.type === ClientWalletTransactionType.HOLD;
+  const isHold = tx.type === ClientWalletTransactionType.HOLD;
 
   const formatter = useFormatter();
 
-  const formattedDate = dateVal
-    ? formatter.dateTime(new Date(dateVal), {
+  const formattedDate = tx.created_at
+    ? formatter.dateTime(new Date(tx.created_at), {
         day: "numeric",
         month: "short",
         year: "numeric",
@@ -64,19 +66,17 @@ export function WalletTransactionItem({ tx }: WalletTransactionItemProps) {
   return (
     <div className="py-3 sm:py-3.5 first:pt-0 last:pb-0 flex items-center justify-between gap-3 hover:bg-white/50 px-2 rounded-xl transition-colors">
       {/* Left: Icon + Info */}
-      <div className="flex items-center gap-3 min-w-0">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
         <div
           className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 border border-amber-800/20 shadow-xs ${
-            isFailed
-              ? "bg-rose-100/90 text-rose-800"
+            isHold
+              ? "bg-amber-100/90 text-amber-800"
               : isDebit
                 ? "bg-white/80 text-slate-800"
                 : "bg-emerald-100/90 text-emerald-800"
           }`}
         >
-          {isFailed ? (
-            <AlertCircle className="w-4 h-4" />
-          ) : isDebit ? (
+          {isDebit ? (
             <ArrowUpRight className="w-4 h-4" />
           ) : (
             <ArrowDownLeft className="w-4 h-4" />
@@ -86,10 +86,7 @@ export function WalletTransactionItem({ tx }: WalletTransactionItemProps) {
         <div className="min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
             <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate font-outfit">
-              {tx.description ||
-                tx.reason ||
-                tx.purpose ||
-                (isDebit ? "Wallet Deduction" : "Wallet Recharge")}
+              {formatPurpose(tx.purpose)}
             </h4>
             <span
               className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider border ${
@@ -100,64 +97,55 @@ export function WalletTransactionItem({ tx }: WalletTransactionItemProps) {
                     : "bg-emerald-100/90 text-emerald-900 border-emerald-700/30"
               }`}
             >
-              {tx.type || "credit"}
+              {tx.type || ClientWalletTransactionType.CREDIT}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5 text-[10px] text-slate-700 mt-0.5">
             <Clock className="w-3 h-3 shrink-0 text-amber-950" />
             <span>{formattedDate}</span>
-            {refId && (
-              <>
-                <span>•</span>
-                <button
-                  type="button"
-                  onClick={handleCopyRef}
-                  title="Click to copy ID"
-                  className="inline-flex items-center gap-1 font-mono text-[9.5px] font-medium text-slate-800 hover:text-slate-950 uppercase transition-colors cursor-pointer"
-                >
-                  <span>{refId}</span>
-                  {isCopied ? (
-                    <Check className="w-2.5 h-2.5 text-emerald-700" />
-                  ) : (
-                    <Copy className="w-2.5 h-2.5 opacity-60 hover:opacity-100" />
-                  )}
-                </button>
-              </>
-            )}
           </div>
         </div>
+
+        {refId && (
+          <div className="ml-auto shrink-0">
+            <button
+              type="button"
+              onClick={handleCopyRef}
+              title={isCopied ? "Copied!" : "Copy Transaction ID"}
+              aria-label={isCopied ? "Copied!" : "Copy Transaction ID"}
+              className="inline-flex items-center justify-center p-1 rounded hover:bg-black/5 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer w-fit"
+            >
+              {isCopied ? (
+                <Check className="w-3 h-3 text-emerald-700" />
+              ) : (
+                <Copy className="w-3 h-3 opacity-70 hover:opacity-100" />
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Right: Amount & Status */}
       <div className="text-right shrink-0">
         <span
           className={`text-sm sm:text-base font-bold font-outfit block ${
-            isFailed
-              ? "text-slate-500 line-through"
-              : isDebit
-                ? "text-slate-900"
-                : "text-emerald-800"
+            isDebit ? "text-slate-900" : "text-emerald-800"
           }`}
         >
           {isDebit ? "-" : "+"}₹{amount.toLocaleString("en-IN")}
         </span>
 
         <div className="flex items-center justify-end gap-1 text-[10px] font-bold mt-0.5">
-          {isSuccess ? (
-            <span className="inline-flex items-center gap-0.5 text-emerald-800">
-              <CheckCircle2 className="w-2.5 h-2.5" />
-              <span className="capitalize">{tx.status || "Completed"}</span>
-            </span>
-          ) : isFailed ? (
-            <span className="inline-flex items-center gap-0.5 text-rose-800">
-              <AlertCircle className="w-2.5 h-2.5" />
-              <span className="capitalize">{tx.status || "Failed"}</span>
+          {isHold ? (
+            <span className="inline-flex items-center gap-0.5 text-amber-800">
+              <Clock className="w-2.5 h-2.5" />
+              <span>On Hold</span>
             </span>
           ) : (
-            <span className="inline-flex items-center gap-0.5 text-slate-700">
-              <Clock className="w-2.5 h-2.5" />
-              <span className="capitalize">{tx.status || "Pending"}</span>
+            <span className="inline-flex items-center gap-0.5 text-emerald-800">
+              <CheckCircle2 className="w-2.5 h-2.5" />
+              <span>Completed</span>
             </span>
           )}
         </div>

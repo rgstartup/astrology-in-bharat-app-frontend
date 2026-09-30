@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { api, API_ROUTES } from "@/actions";
-import { getErrorMessage } from "@repo/lib";
+import { getErrorMessage, Media } from "@repo/lib";
 import { OnboardingFormData, OnboardingActionResponse } from "@/lib/types";
 
 export async function saveOnboardingAction(
@@ -28,9 +28,7 @@ export async function saveOnboardingAction(
   if (data.full_name?.trim()) {
     payload.full_name = data.full_name.trim();
   } else if (data.first_name?.trim() || data.last_name?.trim()) {
-    payload.full_name = [data.first_name?.trim(), data.last_name?.trim()]
-      .filter(Boolean)
-      .join(" ");
+    payload.full_name = [data.first_name?.trim(), data.last_name?.trim()].filter(Boolean).join(" ");
   }
   if (data.date_of_birth?.trim()) {
     payload.date_of_birth = data.date_of_birth.trim();
@@ -52,10 +50,7 @@ export async function saveOnboardingAction(
     }
   }
 
-  if (
-    data.address &&
-    (data.address.line1 || data.address.city || data.address.pincode)
-  ) {
+  if (data.address && (data.address.line1 || data.address.city || data.address.pincode)) {
     payload.addresses = [
       {
         line1: data.address.line1?.trim() || "",
@@ -90,6 +85,7 @@ export async function saveOnboardingAction(
 
 export async function uploadOnboardingPictureAction(
   formData: FormData,
+  public_id?: string,
 ): Promise<OnboardingActionResponse> {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
@@ -100,15 +96,21 @@ export async function uploadOnboardingPictureAction(
     };
   }
 
+  if (public_id) {
+    formData.append("public_id", public_id);
+  }
+
   const [resData, error] = await api.patch<{
     avatar?: string;
-    secure_url?: string;
+    avatar_media: Media | null;
   }>(API_ROUTES.AUTH.CLIENT.PICTURE, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
       Cookie: `accessToken=${token}`,
     },
   });
+
+  console.log(error);
 
   if (error || !resData?.avatar) {
     return {
@@ -119,5 +121,6 @@ export async function uploadOnboardingPictureAction(
   return {
     success: true,
     avatar: resData.avatar,
+    avatar_media: resData.avatar_media,
   };
 }

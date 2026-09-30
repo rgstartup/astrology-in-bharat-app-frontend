@@ -5,8 +5,10 @@ import {
   ClientWalletTransactionPurpose,
   ClientWalletTransaction,
   IPaginatedClientWalletTransaction,
+  ClientWallet,
 } from "@repo/lib";
 import { api, API_ROUTES } from "@/actions";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const PAGE_SIZE = 10;
 
@@ -35,11 +37,7 @@ export function useWalletTransactions() {
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 
   const fetchTransactions = useCallback(
-    async (
-      pageNum = 1,
-      currentFilter: TabFilterType = tabFilter,
-      forceShowLoader = false,
-    ) => {
+    async (pageNum = 1, currentFilter: TabFilterType = tabFilter, forceShowLoader = false) => {
       if (pageNum === 1) {
         setIsFetchingTx(true);
       } else {
@@ -107,11 +105,21 @@ export function useWalletTransactions() {
     [tabFilter],
   );
 
+  const fetchWalletBalance = useCallback(async () => {
+    const [res, err] = await api.get<ClientWallet>(API_ROUTES.CLIENT.WALLET.ROOT);
+
+    if (err || !res) {
+      return;
+    }
+    useAuthStore.getState().updateBalance(res.balance);
+  }, []);
+
   useEffect(() => {
     if (!tabData[tabFilter].loaded) {
       fetchTransactions(1, tabFilter);
+      fetchWalletBalance();
     }
-  }, [tabFilter, tabData, fetchTransactions]);
+  }, [tabFilter, tabData, fetchTransactions, fetchWalletBalance]);
 
   const handleFilterChange = (newFilter: TabFilterType) => {
     if (newFilter === tabFilter) return;
@@ -134,7 +142,8 @@ export function useWalletTransactions() {
       recharge: { items: [], page: 1, hasMore: false, loaded: false },
     });
     fetchTransactions(1, tabFilter, true);
-  }, [fetchTransactions, tabFilter]);
+    fetchWalletBalance();
+  }, [fetchTransactions, tabFilter, fetchWalletBalance]);
 
   const currentTab = tabData[tabFilter] || {
     items: [],
@@ -151,5 +160,6 @@ export function useWalletTransactions() {
     handleFilterChange,
     handleLoadMore,
     resetAndRefresh,
+    fetchWalletBalance,
   };
 }

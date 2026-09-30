@@ -1,3 +1,4 @@
+import { Media } from "@repo/lib";
 import type { ClientPreferences } from "./user";
 
 export interface OnboardingAddress {
@@ -25,4 +26,5 @@ export interface OnboardingActionResponse {
   error?: string;
   message?: string;
   avatar?: string;
+  avatar_media?: Media | null;
 }

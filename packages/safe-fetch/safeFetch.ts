@@ -142,6 +142,7 @@ async function executeFetch<T>(
       const error = new ApiError(res.status, message, data, res.headers, {
         callSiteStack: callSite,
       });
+
       if (instanceConfig.onError) await instanceConfig.onError(error);
       return [null, error];
     }

@@ -30,6 +30,7 @@ import {
   Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { Media } from "@repo/lib";
 import {
   profileSchema,
   type ProfileFormValues,
@@ -42,7 +43,8 @@ interface ProfileUpdateFormProps {
   onSubmit: (values: ProfileFormValues) => Promise<void>;
   isSaving?: boolean;
   avatarUrl?: string;
-  onAvatarChange?: (url: string) => void;
+  avatarPublicId?: string | null;
+  onAvatarChange?: (url: string, media?: Media | null) => void;
 }
 
 const GENDER_OPTIONS = [
@@ -67,6 +69,7 @@ export function ProfileUpdateForm({
   onSubmit,
   isSaving: isSavingProp,
   avatarUrl,
+  avatarPublicId,
   onAvatarChange,
 }: ProfileUpdateFormProps) {
   const form = useForm<ProfileFormValues>({
@@ -106,7 +109,8 @@ export function ProfileUpdateForm({
             {/* Avatar (updates separately on upload) */}
             <ProfilePicUpload
               value={avatarUrl}
-              onChange={(newUrl) => onAvatarChange?.(newUrl)}
+              publicId={avatarPublicId}
+              onChange={(newUrl, media) => onAvatarChange?.(newUrl, media)}
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

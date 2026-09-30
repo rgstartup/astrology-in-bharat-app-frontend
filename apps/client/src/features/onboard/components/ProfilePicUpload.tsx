@@ -8,24 +8,37 @@ import { Button } from "@/components/ui/button";
 import { Camera, Upload, User, Loader2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import type { Media } from "@repo/lib";
+
 interface ProfilePicUploadProps {
   value?: string;
-  onChange: (url: string) => void;
+  publicId?: string | null;
+  onChange: (url: string, media?: Media | null) => void;
 }
 
 export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
   value,
+  publicId,
   onChange,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState<string>(value || "");
+  const [currentPublicId, setCurrentPublicId] = useState<string | undefined>(
+    publicId || undefined,
+  );
 
   React.useEffect(() => {
     if (value) {
       setPreview(value);
     }
   }, [value]);
+
+  React.useEffect(() => {
+    if (publicId !== undefined) {
+      setCurrentPublicId(publicId || undefined);
+    }
+  }, [publicId]);
 
   const displayImage = preview || value;
 
@@ -46,13 +59,19 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
       const formData = new FormData();
       formData.append("file", file);
 
-      const result = await uploadOnboardingPictureAction(formData);
+      const result = await uploadOnboardingPictureAction(
+        formData,
+        currentPublicId,
+      );
 
       if (result.error) {
         toast.error(result.error);
       } else if (result.avatar) {
         setPreview(result.avatar);
-        onChange(result.avatar);
+        if (result.avatar_media?.public_id) {
+          setCurrentPublicId(result.avatar_media.public_id);
+        }
+        onChange(result.avatar, result.avatar_media);
       }
     } catch {
       toast.error("Failed to upload image. Please try again.");
@@ -130,7 +149,8 @@ export const ProfilePicUpload: React.FC<ProfilePicUploadProps> = ({
               onClick={(e) => {
                 e.stopPropagation();
                 setPreview("");
-                onChange("");
+                setCurrentPublicId(undefined);
+                onChange("", null);
               }}
               className="text-xs text-slate-500 hover:text-red-600 transition-colors px-2.5 py-1 font-medium cursor-pointer rounded-full"
             >

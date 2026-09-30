@@ -3,12 +3,9 @@
 import React from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "@/hooks/use-toast";
-import {
-  ProfileUpdateForm,
-  type ProfileFormValues,
-} from "@/features/dashboard/profile";
+import { ProfileUpdateForm, type ProfileFormValues } from "@/features/dashboard/profile";
 import { updateCurrentUser } from "@/features/dashboard/profile/actions/update-account";
-import type { Client } from "@repo/lib";
+import type { Client, Media } from "@repo/lib";
 import { useProfile } from "./ProfileContext";
 
 export default function DashboardProfilePage() {
@@ -55,18 +52,20 @@ export default function DashboardProfilePage() {
     }
   };
 
-  const currentAvatarUrl =
-    profile?.avatar_media?.url || profile?.avatar || "";
+  const currentAvatarUrl = profile?.avatar_media?.url || profile?.avatar || "";
+  const currentAvatarPublicId = profile?.avatar_media?.public_id || undefined;
 
   return (
     <ProfileUpdateForm
       defaultValues={defaultValues}
       onSubmit={handleSave}
       avatarUrl={currentAvatarUrl}
-      onAvatarChange={(newAvatar) => {
+      avatarPublicId={currentAvatarPublicId}
+      onAvatarChange={(newAvatar, media) => {
         updateUser({
           avatar: newAvatar,
-          avatar_media: { url: newAvatar } as any,
+          avatar_media:
+            media ?? (newAvatar ? ({ url: newAvatar } as Media) : null),
         } as Client);
       }}
     />
