@@ -1,266 +1,300 @@
 import React from "react";
-import { User, Clock, Edit3, Save, Plus, X, IndianRupee, Briefcase, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  User,
+  Clock,
+  Edit3,
+  Save,
+  Plus,
+  X,
+  IndianRupee,
+  Briefcase,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { Profile } from "@/types/profile";
-import Button from "../ui/Button";
+import Button from "@/components/ui/button";
 
 interface ExpertiseAvailabilityProps {
-    profile: Profile;
-    tempProfile: Profile;
-    isEditing: boolean;
-    onEdit: () => void;
-    onSave: () => void;
-    onCancel: () => void;
-    onChange: (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-    ) => void;
-    onLanguageChange: (languages: string[]) => void;
-    isActive?: boolean;
+  profile: Profile;
+  tempProfile: Profile;
+  isEditing: boolean;
+  onEdit: () => void;
+  onSave: () => void;
+  onCancel: () => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => void;
+  onLanguageChange: (languages: string[]) => void;
+  isActive?: boolean;
 }
 
 export default function ExpertiseAvailability({
-    profile,
-    tempProfile,
-    isEditing,
-    onEdit,
-    onSave,
-    onCancel,
-    onChange,
-    onLanguageChange,
-    isActive
+  profile,
+  tempProfile,
+  isEditing,
+  onEdit,
+  onSave,
+  onCancel,
+  onChange,
+  onLanguageChange,
+  isActive,
 }: ExpertiseAvailabilityProps) {
-    const [newLang, setNewLang] = React.useState("");
-    const [isExpanded, setIsExpanded] = React.useState(true);
+  const [newLang, setNewLang] = React.useState("");
+  const [isExpanded, setIsExpanded] = React.useState(true);
 
-    const addLanguage = () => {
-        if (newLang && !tempProfile.languages.includes(newLang)) {
-            onLanguageChange([...tempProfile.languages, newLang]);
-            setNewLang("");
-        }
-    };
+  const addLanguage = () => {
+    if (newLang && !tempProfile.languages.includes(newLang)) {
+      onLanguageChange([...tempProfile.languages, newLang]);
+      setNewLang("");
+    }
+  };
 
-    const removeLanguage = (lang: string) => {
-        onLanguageChange(tempProfile.languages.filter((l) => l !== lang));
-    };
+  const removeLanguage = (lang: string) => {
+    onLanguageChange(tempProfile.languages.filter((l) => l !== lang));
+  };
 
-    return (
-        <div className="bg-white rounded-2xl shadow-lg border-2 border-orange-400 overflow-hidden transition-all duration-300">
-            <div 
-                className={`flex justify-between items-center transition-all duration-300 select-none cursor-pointer ${
-                    isActive 
-                        ? "bg-gradient-to-r from-orange-600 to-orange-500 text-white p-4 sm:p-6 shadow-md shadow-orange-500/10" 
-                        : "hover:bg-gray-50/50 p-4 sm:p-6 text-gray-800"
-                }`}
-                onClick={() => setIsExpanded(!isExpanded)}
+  return (
+    <div className="bg-white rounded-2xl shadow-lg border-2 border-orange-400 overflow-hidden transition-all duration-300">
+      <div
+        className={`flex justify-between items-center transition-all duration-300 select-none cursor-pointer ${
+          isActive
+            ? "bg-gradient-to-r from-orange-600 to-orange-500 text-white p-4 sm:p-6 shadow-md shadow-orange-500/10"
+            : "hover:bg-gray-50/50 p-4 sm:p-6 text-gray-800"
+        }`}
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <h2 className="flex items-center text-lg sm:text-xl font-bold">
+          <Briefcase className={`w-5 h-5 mr-2 ${isActive ? "text-white" : "text-orange-500"}`} />{" "}
+          Expertise & Pricing
+        </h2>
+        <div className="flex items-center space-x-2">
+          {!isEditing && (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit();
+              }}
+              variant="ghost"
+              size="sm"
+              className={`flex items-center gap-1 mr-2 ${isActive ? "text-white hover:text-white/80 hover:bg-white/10" : "text-orange hover:text-orange/80"}`}
             >
-                <h2 className="flex items-center text-lg sm:text-xl font-bold">
-                    <Briefcase className={`w-5 h-5 mr-2 ${isActive ? "text-white" : "text-orange-500"}`} /> Expertise & Pricing
-                </h2>
-                <div className="flex items-center space-x-2">
-                    {!isEditing && (
-                        <Button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onEdit();
-                            }}
-                            variant="ghost"
-                            size="sm"
-                            className={`flex items-center gap-1 mr-2 ${isActive ? "text-white hover:text-white/80 hover:bg-white/10" : "text-orange hover:text-orange/80"}`}
-                        >
-                            <Edit3 className="w-4 h-4" />
-                            <span>Edit</span>
-                        </Button>
-                    )}
-                    {isExpanded ? (
-                        <ChevronUp className={`w-5 h-5 ${isActive ? "text-white" : "text-gray-500"}`} />
-                    ) : (
-                        <ChevronDown className={`w-5 h-5 ${isActive ? "text-white" : "text-gray-500"}`} />
-                    )}
-                </div>
-            </div>
-
-            {isExpanded && (
-                <div className="p-4 sm:p-6 pt-0 animate-in fade-in slide-in-from-top-2 duration-300">
-                    {isEditing ? (
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Specialization</label>
-                                <input
-                                    type="text"
-                                    name="specialization"
-                                    value={tempProfile.specialization}
-                                    onChange={onChange}
-                                    placeholder="e.g. Vedic Astrology, Numerology"
-                                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
-                                />
-                                <p className="text-[10px] text-gray-400 mt-1">Separate with commas for multiple.</p>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Chat Price (per minute)</label>
-                                    <div className="relative">
-                                        <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                        <input
-                                            type="number"
-                                            name="chat_price"
-                                            value={tempProfile.chat_price}
-                                            onChange={onChange}
-                                            min="0"
-                                            className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Audio Call Price (per minute)</label>
-                                    <div className="relative">
-                                        <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                        <input
-                                            type="number"
-                                            name="call_price"
-                                            value={tempProfile.call_price}
-                                            onChange={onChange}
-                                            min="0"
-                                            className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Video Call Price (per minute)</label>
-                                    <div className="relative">
-                                        <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                        <input
-                                            type="number"
-                                            name="video_call_price"
-                                            value={tempProfile.video_call_price}
-                                            onChange={onChange}
-                                            min="0"
-                                            className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Report/Horoscope Price</label>
-                                    <div className="relative">
-                                        <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                        <input
-                                            type="number"
-                                            name="price"
-                                            value={tempProfile.price}
-                                            onChange={onChange}
-                                            min="0"
-                                            className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">Languages</label>
-                                <div className="flex flex-wrap gap-2 mb-2">
-                                    {tempProfile.languages.map((lang, i) => (
-                                        <span key={i} className="flex items-center bg-gray-100 text-gray-900 px-2 py-1 rounded-md text-sm border border-gray-200">
-                                            {lang}
-                                            <Button
-                                                onClick={() => removeLanguage(lang)}
-                                                variant="ghost"
-                                                size="sm"
-                                                className="ml-1.5 p-1 h-auto hover:text-red-500 transition-colors"
-                                            >
-                                                <X className="w-3 h-3" />
-                                            </Button>
-                                        </span>
-                                    ))}
-                                </div>
-                                <div className="flex space-x-2">
-                                    <input
-                                        type="text"
-                                        value={newLang}
-                                        onChange={(e) => setNewLang(e.target.value)}
-                                        placeholder="Add language..."
-                                        className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
-                                        onKeyPress={(e) => e.key === 'Enter' && addLanguage()}
-                                    />
-                                    <Button
-                                        type="button"
-                                        onClick={addLanguage}
-                                        variant="secondary"
-                                        className="p-2 h-auto"
-                                    >
-                                        <Plus className="w-5 h-5" />
-                                    </Button>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
-                                <Button
-                                    onClick={onCancel}
-                                    variant="secondary"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    onClick={onSave}
-                                    variant="primary"
-                                    leftIcon={<Save className="w-4 h-4" />}
-                                    className="bg-orange hover:bg-orange/90"
-                                >
-                                    Save Changes
-                                </Button>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <p className="text-xs font-medium text-gray-900 mb-1">Experience</p>
-                                    <p className="text-sm font-semibold text-gray-900">{profile.experience_in_years} Years</p>
-                                </div>
-                                <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <p className="text-xs font-medium text-gray-900 mb-1">Chat Price</p>
-                                    <p className="text-sm font-semibold text-gray-900">₹{profile.chat_price}/min</p>
-                                </div>
-                                <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <p className="text-xs font-medium text-gray-900 mb-1">Audio Price</p>
-                                    <p className="text-sm font-semibold text-gray-900">₹{profile.call_price}/min</p>
-                                </div>
-                                <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <p className="text-xs font-medium text-gray-900 mb-1">Video Price</p>
-                                    <p className="text-sm font-semibold text-gray-900">₹{profile.video_call_price}/min</p>
-                                </div>
-                            </div>
-
-                            <div>
-                                <p className="text-xs font-medium text-gray-900 mb-2">Languages</p>
-                                <div className="flex flex-wrap gap-2">
-                                    {profile.languages.length > 0 ? (
-                                        profile.languages.map((lang, i) => (
-                                            <span
-                                                key={i}
-                                                className="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full border border-gray-200"
-                                            >
-                                                {lang}
-                                            </span>
-                                        ))
-                                    ) : (
-                                        <p className="text-xs text-gray-900">No languages added</p>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
-                                <div className="flex items-center text-sm">
-                                    <Clock className={`w-4 h-4 mr-2 ${profile.is_available ? 'text-green-500' : 'text-gray-400'}`} />
-                                    <span className={profile.is_available ? 'text-green-600 font-medium' : 'text-gray-900 font-medium'}>
-                                        {profile.is_available ? 'Available Now' : 'Currently Away'}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )}
+              <Edit3 className="w-4 h-4" />
+              <span>Edit</span>
+            </Button>
+          )}
+          {isExpanded ? (
+            <ChevronUp className={`w-5 h-5 ${isActive ? "text-white" : "text-gray-500"}`} />
+          ) : (
+            <ChevronDown className={`w-5 h-5 ${isActive ? "text-white" : "text-gray-500"}`} />
+          )}
         </div>
-    );
+      </div>
+
+      {isExpanded && (
+        <div className="p-4 sm:p-6 pt-0 animate-in fade-in slide-in-from-top-2 duration-300">
+          {isEditing ? (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">
+                  Specialization
+                </label>
+                <input
+                  type="text"
+                  name="specialization"
+                  value={tempProfile.specialization}
+                  onChange={onChange}
+                  placeholder="e.g. Vedic Astrology, Numerology"
+                  className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
+                />
+                <p className="text-[10px] text-gray-400 mt-1">Separate with commas for multiple.</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">
+                    Chat Price (per minute)
+                  </label>
+                  <div className="relative">
+                    <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="number"
+                      name="chat_price"
+                      value={tempProfile.chat_price}
+                      onChange={onChange}
+                      min="0"
+                      className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">
+                    Audio Call Price (per minute)
+                  </label>
+                  <div className="relative">
+                    <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="number"
+                      name="call_price"
+                      value={tempProfile.call_price}
+                      onChange={onChange}
+                      min="0"
+                      className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">
+                    Video Call Price (per minute)
+                  </label>
+                  <div className="relative">
+                    <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="number"
+                      name="video_call_price"
+                      value={tempProfile.video_call_price}
+                      onChange={onChange}
+                      min="0"
+                      className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">
+                    Report/Horoscope Price
+                  </label>
+                  <div className="relative">
+                    <IndianRupee className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="number"
+                      name="price"
+                      value={tempProfile.price}
+                      onChange={onChange}
+                      min="0"
+                      className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-900 uppercase tracking-wider mb-1">
+                  Languages
+                </label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {tempProfile.languages.map((lang, i) => (
+                    <span
+                      key={i}
+                      className="flex items-center bg-gray-100 text-gray-900 px-2 py-1 rounded-md text-sm border border-gray-200"
+                    >
+                      {lang}
+                      <Button
+                        onClick={() => removeLanguage(lang)}
+                        variant="ghost"
+                        size="sm"
+                        className="ml-1.5 p-1 h-auto hover:text-red-500 transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                      </Button>
+                    </span>
+                  ))}
+                </div>
+                <div className="flex space-x-2">
+                  <input
+                    type="text"
+                    value={newLang}
+                    onChange={(e) => setNewLang(e.target.value)}
+                    placeholder="Add language..."
+                    className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange outline-none text-sm text-black"
+                    onKeyPress={(e) => e.key === "Enter" && addLanguage()}
+                  />
+                  <Button
+                    type="button"
+                    onClick={addLanguage}
+                    variant="secondary"
+                    className="p-2 h-auto"
+                  >
+                    <Plus className="w-5 h-5" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
+                <Button onClick={onCancel} variant="secondary">
+                  Cancel
+                </Button>
+                <Button
+                  onClick={onSave}
+                  variant="primary"
+                  leftIcon={<Save className="w-4 h-4" />}
+                  className="bg-orange hover:bg-orange/90"
+                >
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                  <p className="text-xs font-medium text-gray-900 mb-1">Experience</p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {profile.experience_in_years} Years
+                  </p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                  <p className="text-xs font-medium text-gray-900 mb-1">Chat Price</p>
+                  <p className="text-sm font-semibold text-gray-900">₹{profile.chat_price}/min</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                  <p className="text-xs font-medium text-gray-900 mb-1">Audio Price</p>
+                  <p className="text-sm font-semibold text-gray-900">₹{profile.call_price}/min</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                  <p className="text-xs font-medium text-gray-900 mb-1">Video Price</p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    ₹{profile.video_call_price}/min
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-gray-900 mb-2">Languages</p>
+                <div className="flex flex-wrap gap-2">
+                  {profile.languages.length > 0 ? (
+                    profile.languages.map((lang, i) => (
+                      <span
+                        key={i}
+                        className="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full border border-gray-200"
+                      >
+                        {lang}
+                      </span>
+                    ))
+                  ) : (
+                    <p className="text-xs text-gray-900">No languages added</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
+                <div className="flex items-center text-sm">
+                  <Clock
+                    className={`w-4 h-4 mr-2 ${profile.is_available ? "text-green-500" : "text-gray-400"}`}
+                  />
+                  <span
+                    className={
+                      profile.is_available
+                        ? "text-green-600 font-medium"
+                        : "text-gray-900 font-medium"
+                    }
+                  >
+                    {profile.is_available ? "Available Now" : "Currently Away"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
-
-

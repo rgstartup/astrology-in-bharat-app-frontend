@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Image as ImageIcon, Video, Trash2, Plus, Upload, Link as LinkIcon, X, Play, Save, ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import Button from "../ui/Button";
+import Button from "@/components/ui/button";
 import { Profile } from "@/types/profile";
 
 interface PortfolioGalleryProps {

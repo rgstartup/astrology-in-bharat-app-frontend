@@ -1,26 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "@/i18n/navigation";
-import { useAuthStore } from "@/store/auth.store";
 import { CLIENT_API_URL } from "@/lib/config";
 import { BrandingSection } from "./BrandingSection";
 import { LoginForm } from "./LoginForm";
 
 export const LoginView: React.FC = () => {
-  const router = useRouter();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({
     totalExperts: "0+",
     totalServices: "0+",
   });
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, router]);
 
   useEffect(() => {
     const fetchStats = async () => {

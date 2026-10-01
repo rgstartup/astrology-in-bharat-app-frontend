@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 /**
  * Skeleton for the Top Stats Cards
@@ -7,7 +7,10 @@ export const StatsSkeleton = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {[1, 2, 3, 4].map((i) => (
-        <div key={i} className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm flex items-start justify-between">
+        <div
+          key={i}
+          className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm flex items-start justify-between"
+        >
           <div className="space-y-3 flex-1">
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-8 w-32" />
@@ -60,7 +63,9 @@ export const TableSkeleton = () => {
       </div>
       <div className="space-y-4">
         <div className="grid grid-cols-4 gap-4 pb-2 border-b border-gray-100">
-          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-4 w-20" />)}
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-4 w-20" />
+          ))}
         </div>
         {[1, 2, 3, 4, 5].map((i) => (
           <div key={i} className="grid grid-cols-4 gap-4 py-2">
@@ -89,16 +94,18 @@ export const ChartSkeleton = () => {
         </div>
       </div>
       <div className="flex-1 flex items-end gap-4 pb-4">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(i => (
-          <Skeleton 
-            key={i} 
-            className="flex-1 rounded-t-lg" 
-            style={{ height: `${Math.floor(Math.random() * 60) + 20}%` }} 
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
+          <Skeleton
+            key={i}
+            className="flex-1 rounded-t-lg"
+            style={{ height: `${Math.floor(Math.random() * 60) + 20}%` }}
           />
         ))}
       </div>
       <div className="flex justify-between mt-4">
-        {[1, 2, 3, 4, 5, 6].map(i => <Skeleton key={i} className="h-3 w-12" />)}
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <Skeleton key={i} className="h-3 w-12" />
+        ))}
       </div>
     </div>
   );
@@ -111,7 +118,10 @@ export const HistorySkeleton = () => {
   return (
     <div className="space-y-4">
       {[1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className="bg-white rounded-2xl border border-gray-100 p-5 flex justify-between items-center">
+        <div
+          key={i}
+          className="bg-white rounded-2xl border border-gray-100 p-5 flex justify-between items-center"
+        >
           <div className="space-y-2">
             <Skeleton className="h-3 w-16" />
             <Skeleton className="h-5 w-24" />
@@ -154,7 +164,7 @@ export const RatingSkeleton = () => {
           <Skeleton className="h-4 w-40" />
         </div>
         <div className="flex-1 w-full space-y-4">
-          {[1,2,3,4,5].map(i => (
+          {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="flex items-center gap-3">
               <Skeleton className="h-4 w-12" />
               <Skeleton className="h-3 flex-1 rounded-full" />
@@ -187,8 +197,11 @@ export const PricingSkeleton = () => {
           <Skeleton className="h-6 w-48" />
         </div>
         <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="bg-white p-7 rounded-2xl shadow-sm border border-gray-100 flex flex-col space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="bg-white p-7 rounded-2xl shadow-sm border border-gray-100 flex flex-col space-y-4"
+            >
               <div className="flex justify-between items-start">
                 <Skeleton className="h-6 w-32" />
                 <Skeleton className="h-10 w-10 rounded-full" />
@@ -216,11 +229,11 @@ export const PricingSkeleton = () => {
 export const InsightsSkeleton = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {[1, 2].map(i => (
+      {[1, 2].map((i) => (
         <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <Skeleton className="h-6 w-48 mb-6" />
           <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map(j => (
+            {[1, 2, 3, 4, 5].map((j) => (
               <div key={j} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Skeleton className="h-10 w-10 rounded-full" />
@@ -244,8 +257,11 @@ export const WalletSkeleton = () => {
     <div className="p-4 sm:p-8 min-h-screen max-w-7xl mx-auto space-y-8">
       {/* Stats Skeleton */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {[1, 2, 3].map(i => (
-          <div key={i} className="bg-white rounded-xl border border-gray-100 p-6 flex justify-between items-start">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="bg-white rounded-xl border border-gray-100 p-6 flex justify-between items-start"
+          >
             <div className="space-y-3">
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-8 w-32" />
@@ -278,7 +294,7 @@ export const WalletSkeleton = () => {
           <Skeleton className="h-6 w-32" />
         </div>
         <div className="p-6 space-y-4">
-          {[1, 2, 3, 4, 5].map(i => (
+          {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="flex justify-between items-center py-2">
               <div className="flex items-center gap-3">
                 <Skeleton className="h-10 w-10 rounded-xl" />
@@ -309,7 +325,7 @@ export const NotificationSkeleton = () => {
           <div className="h-px flex-1 bg-gray-100/50"></div>
         </div>
         <div className="space-y-4">
-          {[1, 2, 3].map(i => (
+          {[1, 2, 3].map((i) => (
             <div key={i} className="flex gap-4 p-4 bg-white rounded-2xl border border-gray-100">
               <Skeleton className="h-10 w-10 rounded-full shrink-0" />
               <div className="flex-1 space-y-2">
@@ -326,7 +342,7 @@ export const NotificationSkeleton = () => {
           <div className="h-px flex-1 bg-gray-100/50"></div>
         </div>
         <div className="space-y-4">
-          {[1, 2].map(i => (
+          {[1, 2].map((i) => (
             <div key={i} className="flex gap-4 p-4 bg-white rounded-2xl border border-gray-100">
               <Skeleton className="h-10 w-10 rounded-full shrink-0" />
               <div className="flex-1 space-y-2">
@@ -355,8 +371,11 @@ export const ProfileSkeleton = () => {
 
       {/* Grid of Section Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {[1, 2, 3, 4, 5, 6].map(i => (
-          <div key={i} className="bg-white rounded-3xl p-6 border border-gray-100 space-y-6 shadow-sm">
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div
+            key={i}
+            className="bg-white rounded-3xl p-6 border border-gray-100 space-y-6 shadow-sm"
+          >
             <div className="flex justify-between items-center">
               <Skeleton className="h-6 w-48" />
               <Skeleton className="h-8 w-8 rounded-full" />

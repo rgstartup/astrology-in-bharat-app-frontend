@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import * as LucideIcons from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { getReviews } from "@/lib/reviews";
-import Button from "../ui/Button";
+import Button from "../ui/button";
 import { HistorySkeleton } from "../dashboard/DashboardSkeletons";
 import { Loading } from "@repo/ui";
 

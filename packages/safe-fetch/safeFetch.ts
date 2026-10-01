@@ -1,6 +1,6 @@
 import parseBody from "./body-parser";
 import anySignal from "./any-signal";
-import { ApiError } from "./error";
+import { ApiError, type FieldErrors } from "./error";
 
 export interface SafeFetchInit extends Omit<RequestInit, "body"> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,10 +22,43 @@ export interface SafeFetchInstanceConfig {
   onError?: (error: ApiError) => void | Promise<void>;
 }
 
-// Result type: either data of type T or an ApiError
-type Result<T> = [T | null, ApiError | null];
+// Result type: discriminated union with ok, data, error
+export type Result<T> =
+  | { ok: true; data: T; error?: never }
+  | { ok: false; error: ApiError; data?: never };
+
+// Legacy Result type: [data, error] tuple
+export type LegacyResult<T> = [T | null, ApiError | null];
 
 export interface SafeFetchInstance {
+  <T>(url: string, init?: SafeFetchInit): Promise<LegacyResult<T>>;
+  get: <T>(url: string, init?: SafeFetchInit) => Promise<LegacyResult<T>>;
+  post: <T>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => Promise<LegacyResult<T>>;
+  put: <T>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => Promise<LegacyResult<T>>;
+  patch: <T>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => Promise<LegacyResult<T>>;
+  delete: <T>(url: string, init?: SafeFetchInit) => Promise<LegacyResult<T>>;
+  upload: <T>(
+    url: string,
+    body: FormData,
+    init?: SafeFetchInit,
+  ) => Promise<LegacyResult<T>>;
+  /** Extend the instance with additional config (returns a new instance) */
+  extend: (config: SafeFetchInstanceConfig) => SafeFetchInstance;
+}
+
+export interface SafeFetchResultInstance {
   <T>(url: string, init?: SafeFetchInit): Promise<Result<T>>;
   get: <T>(url: string, init?: SafeFetchInit) => Promise<Result<T>>;
   post: <T>(
@@ -50,7 +83,7 @@ export interface SafeFetchInstance {
     init?: SafeFetchInit,
   ) => Promise<Result<T>>;
   /** Extend the instance with additional config (returns a new instance) */
-  extend: (config: SafeFetchInstanceConfig) => SafeFetchInstance;
+  extend: (config: SafeFetchInstanceConfig) => SafeFetchResultInstance;
 }
 
 function mergeHeaders(...sources: (HeadersInit | undefined)[]): Headers {
@@ -72,14 +105,14 @@ function resolveUrl(base: string | undefined, path: string): string {
 }
 
 /**
- * @desc Core fetch executor, shared by both the standalone function and instances.
+ * @desc Core fetch executor, shared by both standalone functions and instances.
  */
 async function executeFetch<T>(
   url: string,
   init: SafeFetchInit | undefined,
   instanceConfig: SafeFetchInstanceConfig,
   callSiteStack?: string,
-): Promise<Result<T>> {
+): Promise<LegacyResult<T>> {
   const callSite = callSiteStack || new Error().stack;
   const {
     timeoutMs = instanceConfig.timeoutMs ?? 15000,
@@ -133,14 +166,30 @@ async function executeFetch<T>(
     const data = await parseBody(res);
 
     if (!res.ok) {
-      const message =
-        data && typeof data === "object" && "message" in data
-          ? Array.isArray(data.message)
-            ? data.message[0]
-            : data.message
-          : res.statusText;
+      let message = res.statusText;
+      let errorCode: string | undefined;
+      let fieldErrors: FieldErrors | undefined;
+
+      if (data && typeof data === "object") {
+        if ("message" in data) {
+          message = Array.isArray(data.message) ? data.message[0] : String(data.message);
+        }
+        if ("errorCode" in data && typeof data.errorCode === "string") {
+          errorCode = data.errorCode;
+        }
+        if (
+          "fieldErrors" in data &&
+          typeof data.fieldErrors === "object" &&
+          data.fieldErrors !== null
+        ) {
+          fieldErrors = data.fieldErrors as FieldErrors;
+        }
+      }
+
       const error = new ApiError(res.status, message, data, res.headers, {
         callSiteStack: callSite,
+        errorCode,
+        fieldErrors,
       });
 
       if (instanceConfig.onError) await instanceConfig.onError(error);
@@ -169,6 +218,14 @@ async function executeFetch<T>(
   } finally {
     clearTimeout(id);
   }
+}
+
+async function toResult<T>(promise: Promise<LegacyResult<T>>): Promise<Result<T>> {
+  const [data, error] = await promise;
+  if (error) {
+    return { ok: false, error };
+  }
+  return { ok: true, data: data as T };
 }
 
 function withBody(method: string, body?: unknown): Partial<SafeFetchInit> {
@@ -202,24 +259,15 @@ function getCallSite(callerFn?: Function): string | undefined {
 
 /**
  * @desc Creates a reusable safeFetch instance with shared base URL, headers, and config —
- * similar to `axios.create()`.
- *
- * @example
- * const api = createSafeFetchInstance({
- *   baseUrl: 'https://api.example.com',
- *   headers: { Authorization: `Bearer ${token}` },
- *   timeoutMs: 10_000,
- * });
- *
- * const [user, err] = await api.get<User>('/users/1');
+ * returning legacy [data, error] tuples.
  */
 export function createSafeFetchInstance(
   config: SafeFetchInstanceConfig = {},
 ): SafeFetchInstance {
-  const instance = <T>(url: string, init?: SafeFetchInit) => {
+  const instance = (<T>(url: string, init?: SafeFetchInit) => {
     const callSite = getCallSite(instance);
     return executeFetch<T>(url, init, config, callSite);
-  };
+  }) as SafeFetchInstance;
 
   instance.get = <T>(url: string, init?: SafeFetchInit) => {
     const callSite = getCallSite(instance.get);
@@ -259,26 +307,63 @@ export function createSafeFetchInstance(
       headers: mergeHeaders(config.headers, overrides.headers),
     });
 
-  return instance as SafeFetchInstance;
+  return instance;
+}
+
+/**
+ * @desc Creates a reusable safeFetchResult instance returning Result<T> discriminated union ({ ok: true, data } | { ok: false, error }).
+ */
+export function createSafeFetchResultInstance(
+  config: SafeFetchInstanceConfig = {},
+): SafeFetchResultInstance {
+  const legacyInstance = createSafeFetchInstance(config);
+
+  const instance = (<T>(url: string, init?: SafeFetchInit) =>
+    toResult(legacyInstance<T>(url, init))) as SafeFetchResultInstance;
+
+  instance.get = <T>(url: string, init?: SafeFetchInit) =>
+    toResult(legacyInstance.get<T>(url, init));
+
+  instance.post = <T>(url: string, body?: unknown, init?: SafeFetchInit) =>
+    toResult(legacyInstance.post<T>(url, body, init));
+
+  instance.put = <T>(url: string, body?: unknown, init?: SafeFetchInit) =>
+    toResult(legacyInstance.put<T>(url, body, init));
+
+  instance.patch = <T>(url: string, body?: unknown, init?: SafeFetchInit) =>
+    toResult(legacyInstance.patch<T>(url, body, init));
+
+  instance.delete = <T>(url: string, init?: SafeFetchInit) =>
+    toResult(legacyInstance.delete<T>(url, init));
+
+  instance.upload = <T>(url: string, body: FormData, init?: SafeFetchInit) =>
+    toResult(legacyInstance.upload<T>(url, body, init));
+
+  instance.extend = (overrides: SafeFetchInstanceConfig) =>
+    createSafeFetchResultInstance({
+      ...config,
+      ...overrides,
+      headers: mergeHeaders(config.headers, overrides.headers),
+    });
+
+  return instance;
 }
 
 /**
  * @desc A safe wrapper around fetch that returns a tuple of [data, error] instead of throwing.
- * It also includes a timeout mechanism and supports aborting via an optional user-provided AbortController.
- *
- * @example
- * const [data, error] = await safeFetch<SomeType>('/api/data');
- * if (error) {
- *   console.error('API Error:', error);
- * } else {
- *   console.log('Data:', data);
- * }
+ * Maintained for backward compatibility.
  */
 export default async function safeFetch<T>(
   url: string,
   init?: SafeFetchInit,
-): Promise<Result<T>> {
+): Promise<LegacyResult<T>> {
   const callSite = getCallSite(safeFetch);
   return executeFetch<T>(url, init, {}, callSite);
 }
+
+/**
+ * @desc A safe wrapper around fetch returning Result<T> discriminated union ({ ok: true, data } | { ok: false, error }).
+ */
+export const safeFetchResult = createSafeFetchResultInstance();
+
 

@@ -12,4 +12,5 @@ export * from "./types/specializations";
 export * from "./types/astrology-service";
 export * from "./types/devotional-ritual";
 export { getErrorMessage } from "./utils/error";
+export { ValidationError } from "./utils/validation-error";
 export { decodeToken, type IBaseJWT } from "./utils/jwt-decode";

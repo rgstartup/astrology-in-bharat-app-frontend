@@ -1,15 +1,34 @@
 // Error body structure returned by the API
+export type FieldErrors = Record<string, string[]>;
+
 export interface ApiErrorBody {
-  statusCode: number;
+  status?: number;
+  statusCode?: number;
   errorCode?: string;
-  message: string;
-  path: string;
-  timestamp: string;
+  message?: string | string[];
+  fieldErrors?: FieldErrors;
+  path?: string;
+  timestamp?: string;
+  [key: string]: unknown;
 }
 
 export interface ApiErrorOptions {
   cause?: unknown;
   callSiteStack?: string;
+  errorCode?: string;
+  fieldErrors?: FieldErrors;
+}
+
+export interface ApiErrorPayload {
+  status: number;
+  errorCode?: string;
+  message: string;
+  fieldErrors?: FieldErrors;
+  body?: ApiErrorBody;
+  headers?: Headers;
+  cause?: unknown;
+  callSiteStack?: string;
+  options?: ApiErrorOptions;
 }
 
 function cleanStack(
@@ -37,6 +56,7 @@ function cleanStack(
       lower.includes("safe-fetch") ||
       lower.includes("executefetch") ||
       lower.includes("createsafefetchinstance") ||
+      lower.includes("createsafefetchresultinstance") ||
       lower.includes("any-signal") ||
       lower.includes("body-parser");
 
@@ -50,26 +70,75 @@ function cleanStack(
   return [header, ...frames].join("\n");
 }
 
-// Custom error class to capture API errors with status, message, body, headers, and call-site stack trace
+// Custom error class to capture API errors with status, message, errorCode, fieldErrors, body, headers, and call-site stack trace
 export class ApiError extends Error {
+  public status: number;
+  public errorCode?: string;
+  public fieldErrors?: FieldErrors;
+  public body?: ApiErrorBody;
+  public headers?: Headers;
   public cause?: unknown;
 
+  constructor(payload: ApiErrorPayload);
   constructor(
-    public status: number,
+    status: number,
     message: string,
-    public body?: ApiErrorBody,
-    public headers?: Headers,
+    body?: ApiErrorBody,
+    headers?: Headers,
+    options?: ApiErrorOptions,
+  );
+  constructor(
+    statusOrPayload: number | ApiErrorPayload,
+    message?: string,
+    body?: ApiErrorBody,
+    headers?: Headers,
     options?: ApiErrorOptions,
   ) {
-    super(message);
-    this.name = "ApiError";
+    let finalStatus: number;
+    let finalMessage: string;
+    let finalBody: ApiErrorBody | undefined;
+    let finalHeaders: Headers | undefined;
+    let finalErrorCode: string | undefined;
+    let finalFieldErrors: FieldErrors | undefined;
+    let finalOptions: ApiErrorOptions | undefined;
 
-    if (options?.cause !== undefined) {
-      this.cause = options.cause;
+    if (typeof statusOrPayload === "object" && statusOrPayload !== null) {
+      finalStatus = statusOrPayload.status;
+      finalMessage = statusOrPayload.message;
+      finalErrorCode = statusOrPayload.errorCode ?? statusOrPayload.body?.errorCode;
+      finalFieldErrors = statusOrPayload.fieldErrors ?? statusOrPayload.body?.fieldErrors;
+      finalBody = statusOrPayload.body;
+      finalHeaders = statusOrPayload.headers;
+      finalOptions = {
+        cause: statusOrPayload.cause ?? statusOrPayload.options?.cause,
+        callSiteStack: statusOrPayload.callSiteStack ?? statusOrPayload.options?.callSiteStack,
+        errorCode: finalErrorCode,
+        fieldErrors: finalFieldErrors,
+      };
+    } else {
+      finalStatus = statusOrPayload;
+      finalMessage = message || "Unknown API Error";
+      finalBody = body;
+      finalHeaders = headers;
+      finalErrorCode = options?.errorCode ?? body?.errorCode;
+      finalFieldErrors = options?.fieldErrors ?? body?.fieldErrors;
+      finalOptions = options;
     }
 
-    if (options?.callSiteStack) {
-      const cleaned = cleanStack(options.callSiteStack, this.name, message);
+    super(finalMessage);
+    this.name = "ApiError";
+    this.status = finalBody?.status ?? finalBody?.statusCode ?? finalStatus;
+    this.errorCode = finalErrorCode;
+    this.fieldErrors = finalFieldErrors;
+    this.body = finalBody;
+    this.headers = finalHeaders;
+
+    if (finalOptions?.cause !== undefined) {
+      this.cause = finalOptions.cause;
+    }
+
+    if (finalOptions?.callSiteStack) {
+      const cleaned = cleanStack(finalOptions.callSiteStack, this.name, finalMessage);
       if (cleaned) {
         this.stack = cleaned;
         try {
@@ -88,5 +157,20 @@ export class ApiError extends Error {
       };
       v8Error.captureStackTrace?.(this, ApiError);
     }
+  }
+
+  isValidationError(): boolean {
+    return (
+      this.errorCode === "VALIDATION_ERROR" ||
+      Boolean(this.fieldErrors && Object.keys(this.fieldErrors).length > 0)
+    );
+  }
+
+  getFieldError(field: string): string | undefined {
+    return this.fieldErrors?.[field]?.[0];
+  }
+
+  getFieldErrors(field: string): string[] {
+    return this.fieldErrors?.[field] ?? [];
   }
 }

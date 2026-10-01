@@ -30,7 +30,6 @@ interface SignInFormInputs {
 }
 
 const SignInForm: React.FC = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callback_url = searchParams.get("callback_url") || "/dashboard";
   const init = useAuthStore((state) => state.init);
@@ -78,9 +77,7 @@ const SignInForm: React.FC = () => {
         if (
           result.requiresVerification ||
           result.isUnverified ||
-          /not\s*verified|verify\s*otp|verify\s*email|verification\s*required/i.test(
-            result.error,
-          )
+          /not\s*verified|verify\s*otp|verify\s*email|verification\s*required/i.test(result.error)
         ) {
           setUnverifiedEmail(data.email.trim());
           setShowOtp(true);
@@ -139,16 +136,9 @@ const SignInForm: React.FC = () => {
       </div>
 
       {/* Inputs Form */}
-      <form
-        onSubmit={handleSubmit(onSignInSubmit)}
-        className="space-y-3.5 sm:space-y-4"
-        noValidate
-      >
+      <form onSubmit={handleSubmit(onSignInSubmit)} className="space-y-3.5 sm:space-y-4" noValidate>
         <div>
-          <Label
-            htmlFor="email"
-            className="block text-xs font-semibold text-stone-700 mb-1.5"
-          >
+          <Label htmlFor="email" className="block text-xs font-semibold text-stone-700 mb-1.5">
             {t("signIn.emailLabel")}
           </Label>
           <InputGroup error={!!errors.email} className="h-11">
@@ -166,17 +156,12 @@ const SignInForm: React.FC = () => {
             />
           </InputGroup>
           {errors.email && (
-            <p className="text-red-500 text-[10px] mt-0.5 font-medium">
-              {errors.email.message}
-            </p>
+            <p className="text-red-500 text-[10px] mt-0.5 font-medium">{errors.email.message}</p>
           )}
         </div>
 
         <div>
-          <Label
-            htmlFor="password"
-            className="block text-xs font-semibold text-stone-700 mb-1.5"
-          >
+          <Label htmlFor="password" className="block text-xs font-semibold text-stone-700 mb-1.5">
             {t("signIn.passwordLabel")}
           </Label>
           <InputGroup error={!!errors.password} className="h-11">
@@ -198,18 +183,12 @@ const SignInForm: React.FC = () => {
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? (
-                  <EyeOff className="size-4" />
-                ) : (
-                  <Eye className="size-4" />
-                )}
+                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
               </InputGroupButton>
             </InputGroupAddon>
           </InputGroup>
           {errors.password && (
-            <p className="text-red-500 text-[10px] mt-0.5 font-medium">
-              {errors.password.message}
-            </p>
+            <p className="text-red-500 text-[10px] mt-0.5 font-medium">{errors.password.message}</p>
           )}
         </div>
 

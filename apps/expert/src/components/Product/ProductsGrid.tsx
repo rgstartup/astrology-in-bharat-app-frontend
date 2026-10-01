@@ -1,8 +1,8 @@
 "use client";
 
-import React from 'react';
-import { ChevronDown, Plus } from 'lucide-react';
-import Button from './ui/Button';
+import React from "react";
+import { ChevronDown, Plus } from "lucide-react";
+import Button from "../ui/button";
 
 export const ProductsGrid: React.FC = () => {
   const products = [
@@ -16,11 +16,7 @@ export const ProductsGrid: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Manage Products</h3>
         <div className="flex items-center space-x-3">
-          <Button
-            variant="outline"
-            size="sm"
-            rightIcon={<ChevronDown className="w-4 h-4" />}
-          >
+          <Button variant="outline" size="sm" rightIcon={<ChevronDown className="w-4 h-4" />}>
             All Products
           </Button>
           <Button
@@ -40,11 +36,7 @@ export const ProductsGrid: React.FC = () => {
             key={index}
             className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-gray-50"
           >
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-40 object-cover"
-            />
+            <img src={product.image} alt={product.name} className="w-full h-40 object-cover" />
             <div className="p-4">
               <h4 className="font-semibold text-gray-900 mb-1">{product.name}</h4>
               <p className="text-sm text-gray-600 mb-2">{product.category}</p>

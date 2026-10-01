@@ -19,10 +19,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useAuthStore } from "@/store/auth.store";
-import { LoginSchema, type LoginFormData } from "@/types/auth";
-import { expertLoginAction } from "@/actions/auth";
 import { useGoogleLogin } from "../hooks/useGoogleLogin";
+import { loginAction } from "../actions/login.action";
+import { LoginSchema, type LoginFormData } from "../schemas/login.schema";
+import { useAuthStore } from "@/store";
 
 export interface LoginFormProps {
   onLoadingChange?: (loading: boolean) => void;
@@ -30,10 +30,11 @@ export interface LoginFormProps {
 
 export const LoginForm: React.FC<LoginFormProps> = ({ onLoadingChange }) => {
   const router = useRouter();
-  const { login } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState("");
+
+  const initAuth = useAuthStore((state) => state.init);
 
   const { handleGoogleLogin } = useGoogleLogin({
     callback_url: "/dashboard",
@@ -58,18 +59,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoadingChange }) => {
     setServerError("");
 
     try {
-      const result = await expertLoginAction(data);
+      const result = await loginAction(data);
 
-      if (result.success) {
-        await login(result.user);
-        toast.success("Welcome back, Expert!");
-        router.push("/dashboard");
-      } else {
-        setServerError(result.error || "Invalid credentials. Please try again.");
+      if (!result.ok) {
+        setServerError(result.error.message);
+        return;
       }
-    } catch (err) {
-      console.error("Login error:", err);
-      setServerError("An unexpected error occurred.");
+
+      toast.success("Welcome back, Expert!");
+      router.push("/dashboard");
     } finally {
       updateLoading(false);
     }

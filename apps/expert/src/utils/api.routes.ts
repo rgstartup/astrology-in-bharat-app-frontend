@@ -7,4 +7,7 @@ export const API_ROUTES = {
     REGISTER_INITIATE: "/expert/auth/email/register/initiate",
     REGISTER_CONFIRM: "/expert/auth/email/register/confirm",
   },
+  ACCOUNT: {
+    ROOT: "/expert/account",
+  },
 };
