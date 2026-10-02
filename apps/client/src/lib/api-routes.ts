@@ -1,56 +1,40 @@
 export const API_ROUTES = {
   AUTH: {
-    CLIENT: {
-      LOGIN: "/client/auth/email/login",
-      REGISTER: "/client/auth/email/register/initiate",
-      VERIFY_OTP: "/client/auth/email/register/complete",
-      GOOGLE_LOGIN: "/client/auth/google/login",
-      ME: "/client/account",
-      PICTURE: "/client/account/picture",
-      REFRESH: "/client/auth/refresh",
+    LOGIN: {
+      EMAIL: "/client/auth/email/login",
+      GOOGLE: "/client/auth/google/login",
     },
-    LOGIN: "/auth/email/login",
-    LOGOUT: "/auth/logout",
-    REFRESH: "/auth/refresh",
+    REGISTER: {
+      INITIATE: "/client/auth/email/register/initiate",
+      COMPLETE: "/client/auth/email/register/complete",
+    },
+    LOGOUT: "/client/auth/logout",
     ME: "/client/account",
-    REGISTER: "/auth/email/register",
-    VERIFY_EMAIL: "/auth/email/verify",
-    FORGOT_PASSWORD: "/auth/forgot/password",
-    RESET_PASSWORD: "/auth/reset/password",
+    PICTURE: "/client/account/picture",
+    REFRESH: "/client/auth/refresh",
   },
-  CLIENT: {
-    AUTH: {
-      LOGIN: "/client/auth/email/login",
-      REGISTER: "/client/auth/email/register/initiate",
-      VERIFY_OTP: "/client/auth/email/register/complete",
-      GOOGLE_LOGIN: "/client/auth/google/login",
-      ME: "/client/account",
-      PICTURE: "/client/account/picture",
-      REFRESH: "/client/auth/refresh",
+  FAVORITES: {
+    EXPERT: {
+      LIST: "/client/favorites/expert",
+      ADD_TO_FAVORITE: "/client/favorites/expert/:id",
+      REMOVE_FROM_FAVORITE: "/client/favorites/expert/:id",
     },
-    FAVORITES: {
-      EXPERT: {
-        LIST: "/client/favorites/expert",
-        ADD_TO_FAVORITE: "/client/favorites/expert/:id",
-        REMOVE_FROM_FAVORITE: "/client/favorites/expert/:id",
-      },
-      PRODUCT: {
-        LIST: "/client/favorites/product",
-        ADD_TO_FAVORITE: "/client/favorites/product/:id",
-        REMOVE_FROM_FAVORITE: "/client/favorites/product/:id",
-      },
-      PRODUCT_VARIANT: {
-        LIST: "/client/favorites/product-variant",
-        ADD_TO_FAVORITE: "/client/favorites/product-variant/:id",
-        REMOVE_FROM_FAVORITE: "/client/favorites/product-variant/:id",
-      },
+    PRODUCT: {
+      LIST: "/client/favorites/product",
+      ADD_TO_FAVORITE: "/client/favorites/product/:id",
+      REMOVE_FROM_FAVORITE: "/client/favorites/product/:id",
     },
-    WALLET: {
-      ROOT: "/client/wallet",
-      TRANSACTIONS: "/client/wallet/transactions",
-      RECHARGE_INITIATE: "/client/wallet/recharge/initiate",
-      RECHARGE_VERIFY: "/client/wallet/recharge/verify",
+    PRODUCT_VARIANT: {
+      LIST: "/client/favorites/product-variant",
+      ADD_TO_FAVORITE: "/client/favorites/product-variant/:id",
+      REMOVE_FROM_FAVORITE: "/client/favorites/product-variant/:id",
     },
+  },
+  WALLET: {
+    ROOT: "/client/wallet",
+    TRANSACTIONS: "/client/wallet/transactions",
+    RECHARGE_INITIATE: "/client/wallet/recharge/initiate",
+    RECHARGE_VERIFY: "/client/wallet/recharge/verify",
   },
   CONSULTATION: {
     TOPICS: "/consultations/topics",
@@ -60,11 +44,8 @@ export const API_ROUTES = {
     SEARCH: "/places/search",
     IMAGES: "/places/images",
   },
-  WALLET: {
-    BALANCE: "/wallet/balance",
-  },
-  EXPERT: {
-    ACCOUNT: "/expert/account/:id",
+  EXPERTS: {
+    ACCOUNT: "/experts/:id",
     LIST: "/expert/account/list",
     DETAILS: "/expert/account/profile",
     GET_ALL_PUJAS: "/expert/pujas/all",

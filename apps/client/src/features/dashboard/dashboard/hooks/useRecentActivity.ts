@@ -88,8 +88,8 @@ export function useRecentActivity() {
       const consultations = Array.isArray(consultRes?.data)
         ? consultRes.data
         : Array.isArray(consultRes)
-        ? consultRes
-        : [];
+          ? consultRes
+          : [];
       consultations.slice(0, 2).forEach((c: any) => {
         activities.push({
           id: `consult-${c.id}`,
@@ -114,8 +114,8 @@ export function useRecentActivity() {
       const orders = Array.isArray(ordersRes?.data)
         ? ordersRes.data
         : Array.isArray(ordersRes)
-        ? ordersRes
-        : [];
+          ? ordersRes
+          : [];
       orders.slice(0, 2).forEach((ord: any) => {
         activities.push({
           id: `order-${ord.id}`,
@@ -135,9 +135,7 @@ export function useRecentActivity() {
     }
 
     // Sort by date descending
-    activities.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    activities.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     setData(activities);
     setIsLoading(false);

@@ -1,28 +1,28 @@
 // "use server";
 
-import { api, API_ROUTES } from "@/actions";
-import type { Client } from "@repo/lib";
+import { apiV2, API_ROUTES } from "@/actions";
+import type { Client, ClientWallet } from "@repo/lib";
 
 export const AuthService = {
   logout: async () => {
-    return api.post(API_ROUTES.AUTH.LOGOUT);
+    return apiV2.post(API_ROUTES.AUTH.LOGOUT);
   },
 
   fetchProfile: async (serverHeaders?: HeadersInit) => {
-    return api
+    return apiV2
       .extend({
         headers: {
           ...serverHeaders,
         },
       })
-      .get<Client>(API_ROUTES.AUTH.CLIENT.ME);
+      .get<Client>(API_ROUTES.AUTH.ME);
   },
 
   fetchBalance: async () => {
-    return api.get(API_ROUTES.WALLET.BALANCE);
+    return apiV2.get<ClientWallet>(API_ROUTES.WALLET.ROOT);
   },
 
   refreshToken: async () => {
-    return api.post(API_ROUTES.AUTH.REFRESH);
+    return apiV2.post<{ accessToken: string; refreshToken: string }>(API_ROUTES.AUTH.REFRESH);
   },
 };

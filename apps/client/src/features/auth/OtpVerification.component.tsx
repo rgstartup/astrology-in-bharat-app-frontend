@@ -7,6 +7,7 @@ import { verifyOtpAction } from "@/actions/auth";
 import { PATHS } from "@repo/routes";
 import { useTranslations } from "next-intl";
 import { User } from "@/lib/types";
+import { AuthActionResponse } from "@/lib/types/auth";
 import { stripLocale } from "@/utils/getPathnameOrDefault";
 import { useAuthStore } from "@/store/useAuthStore";
 import {
@@ -26,6 +27,14 @@ export interface OtpVerificationProps {
   subtitle?: string;
   onBack?: () => void;
   onResend?: () => Promise<void> | void;
+  /**
+   * Custom OTP verification handler.
+   * When provided (e.g. login flow re-calls `loginAction` with
+   * { email, password, otp }), it is used instead of the default
+   * register `verifyOtpAction`. Lets the user see the same OTP UI
+   * while the request goes to the login endpoint.
+   */
+  onVerify?: (otp: string) => Promise<AuthActionResponse>;
   onSuccess?: (user?: User) => void;
   redirectUrl?: string;
   initialCountdown?: number;
@@ -36,6 +45,7 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
   subtitle,
   onBack,
   onResend,
+  onVerify,
   onSuccess,
   redirectUrl = "/dashboard",
   initialCountdown = 60,
@@ -90,15 +100,17 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
 
     setIsVerifying(true);
     try {
-      const result = await verifyOtpAction({
-        email: email.trim(),
-        otp,
-      });
+      const result = onVerify
+        ? await onVerify(otp)
+        : await verifyOtpAction({
+            email: email.trim(),
+            otp,
+          });
 
       if (result.error) {
         toast.error(result.error);
       } else if (result.success) {
-        toast.success(t("signUp.success"));
+        toast.success(onVerify ? t("signIn.success") : t("signUp.success"));
         // Fetch client profile into Zustand store now that cookies are set
         await init(true);
 

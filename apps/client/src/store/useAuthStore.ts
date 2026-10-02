@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { api, API_ROUTES } from "@/actions";
+import { apiV2, API_ROUTES } from "@/actions";
 import type { Client, ClientWallet } from "@repo/lib";
 
 interface IAuthUser extends Client {
@@ -47,12 +47,12 @@ export const useAuthStore = create<AuthState>()(
       init: async (force: boolean = false) => {
         if (get().isInitialized && !force) return;
 
-        const [user, error] = await api.get<IAuthUser>(API_ROUTES.AUTH.CLIENT.ME);
+        const result = await apiV2.get<IAuthUser>(API_ROUTES.AUTH.ME);
 
-        if (error || !user) {
+        if (!result.ok) {
           get().reset();
 
-          if (error?.status === 401) {
+          if (result.error.status === 401) {
             try {
               await fetch("/api/auth/logout", { method: "POST" });
             } catch {
@@ -63,7 +63,7 @@ export const useAuthStore = create<AuthState>()(
         }
 
         set({
-          user,
+          user: result.data,
           loading: false,
           isAuthenticated: true,
           isInitialized: true,
@@ -84,7 +84,7 @@ export const useAuthStore = create<AuthState>()(
       logout: async (redirectUrl?: string) => {
         get().reset();
         set({ loading: true });
-        await api.post("/auth/logout");
+        await apiV2.post("/auth/logout");
 
         await fetch("/api/auth/logout", { method: "POST" });
 
@@ -101,10 +101,10 @@ export const useAuthStore = create<AuthState>()(
        * @deprecated
        */
       refreshBalance: async () => {
-        const [res, error] = await api.get<any>(API_ROUTES.CLIENT.WALLET.ROOT);
-        if (error) return;
+        const result = await apiV2.get<any>(API_ROUTES.WALLET.ROOT);
+        if (!result.ok) return;
 
-        const raw = res?.data ?? res;
+        const raw = result.data;
         let parsed = 0;
         if (typeof raw === "number") {
           parsed = raw;

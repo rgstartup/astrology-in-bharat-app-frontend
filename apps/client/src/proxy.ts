@@ -2,11 +2,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { decodeToken } from "@repo/lib";
 import { api, API_ROUTES } from "./actions";
-import {
-  setAccessToken,
-  setRefreshToken,
-  clearAuthCookies,
-} from "./actions/cookie";
+import { setAccessToken, setRefreshToken, clearAuthCookies } from "./actions/cookie";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import { withCallbackUrl } from "./utils/getPathnameOrDefault";
@@ -60,7 +56,7 @@ async function refreshSession(
     .post<{
       accessToken: string;
       refreshToken: string;
-    }>(API_ROUTES.AUTH.CLIENT.REFRESH, { refreshToken });
+    }>(API_ROUTES.AUTH.REFRESH, { refreshToken });
 
   if (error || !data?.accessToken || !data.refreshToken) {
     console.log(
@@ -75,9 +71,7 @@ async function refreshSession(
     return redirectToLogout(request, pathname, isProtected);
   }
 
-  const response = redirect
-    ? redirectToCallback(request)
-    : handleI18nRouting(request);
+  const response = redirect ? redirectToCallback(request) : handleI18nRouting(request);
 
   setAccessToken(response.cookies, data.accessToken);
   setRefreshToken(response.cookies, data.refreshToken);
@@ -114,10 +108,7 @@ const redirectToLogout = (
   return response;
 };
 
-const redirectToLogin = (
-  request: NextRequest,
-  pathname: string,
-): NextResponse => {
+const redirectToLogin = (request: NextRequest, pathname: string): NextResponse => {
   const normalized = getPathnameWithoutLocale(pathname);
   const target = withCallbackUrl(
     PATHS.LOGIN as string,
@@ -180,13 +171,7 @@ export async function proxy(request: NextRequest) {
       }
 
       if (refreshToken) {
-        return refreshSession(
-          refreshToken,
-          request,
-          pathname,
-          isPathProtected,
-          true,
-        );
+        return refreshSession(refreshToken, request, pathname, isPathProtected, true);
       }
 
       // Expired accessToken and no refreshToken -> clear cookies and allow viewing auth page
@@ -196,13 +181,7 @@ export async function proxy(request: NextRequest) {
     }
 
     if (refreshToken) {
-      return refreshSession(
-        refreshToken,
-        request,
-        pathname,
-        isPathProtected,
-        true,
-      );
+      return refreshSession(refreshToken, request, pathname, isPathProtected, true);
     }
 
     return handleI18nRouting(request);
@@ -264,7 +243,5 @@ export async function proxy(request: NextRequest) {
 
 // Matcher configuration for proxy
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|images|\\.well-known).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|images|\\.well-known).*)"],
 };

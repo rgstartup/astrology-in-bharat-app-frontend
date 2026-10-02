@@ -10,10 +10,7 @@ export interface ExpertListProps {
   title?: string;
 }
 
-async function getInitialExpertListProps({
-  searchParams,
-  title,
-}: ExpertListProps) {
+async function getInitialExpertListProps({ searchParams, title }: ExpertListProps) {
   const filteredParams = Object.keys(searchParams)
     .filter((key) => allowedParams.includes(key))
     .reduce(
@@ -31,9 +28,7 @@ async function getInitialExpertListProps({
   };
   const params = new URLSearchParams(queryParams).toString();
 
-  const [response, error] = await api.get<IFetchExpertsResponse>(
-    `/expert/account/list?${params}`,
-  );
+  const [response, error] = await api.get<IFetchExpertsResponse>(`/experts?${params}`);
 
   const listProps = {
     initialExperts: response?.data || [],

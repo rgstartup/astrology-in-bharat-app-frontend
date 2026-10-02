@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
@@ -39,6 +39,7 @@ const SignInForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [unverifiedEmail, setUnverifiedEmail] = useState("");
+  const [unverifiedPassword, setUnverifiedPassword] = useState("");
 
   const {
     register,
@@ -53,15 +54,25 @@ const SignInForm: React.FC = () => {
     mode: "onBlur",
   });
 
+  // Re-calls the SAME login endpoint without OTP — backend re-sends a fresh OTP.
   const handleResendOtp = async () => {
-    const currentValues = watch();
     const result = await loginAction({
-      email: (unverifiedEmail || currentValues.email).trim(),
-      password: currentValues.password,
+      email: unverifiedEmail.trim(),
+      password: unverifiedPassword,
     });
     if (result.error && !result.requiresVerification && !result.isUnverified) {
       throw new Error(result.error);
     }
+    toast.success(t("signUp.otpSent"));
+  };
+
+  // Verifies OTP via the SAME login endpoint with { email, password, otp }.
+  const handleVerifyLoginOtp = async (otp: string) => {
+    return loginAction({
+      email: unverifiedEmail.trim(),
+      password: unverifiedPassword,
+      otp,
+    });
   };
 
   const onSignInSubmit = async (data: SignInFormInputs) => {
@@ -73,14 +84,18 @@ const SignInForm: React.FC = () => {
       });
 
       if (result.error) {
-        // If email is not verified, backend already dispatched new OTP with 409 message
+        // If email is not verified, backend already dispatched new OTP with 409 message.
+        // Keep the password so the OTP step can re-call the same login
+        // endpoint with { email, password, otp }.
         if (
           result.requiresVerification ||
           result.isUnverified ||
           /not\s*verified|verify\s*otp|verify\s*email|verification\s*required/i.test(result.error)
         ) {
           setUnverifiedEmail(data.email.trim());
+          setUnverifiedPassword(data.password);
           setShowOtp(true);
+          toast.success(result.error);
           scrollToTop(1.8);
           return;
         }
@@ -99,7 +114,8 @@ const SignInForm: React.FC = () => {
     }
   };
 
-  // If email verification required: render shared OTP verification component
+  // If email verification required: render shared OTP verification component,
+  // but verify via the SAME login endpoint (email + password + otp).
   if (showOtp) {
     return (
       <OtpVerification
@@ -111,12 +127,13 @@ const SignInForm: React.FC = () => {
           scrollToTop(1.8);
         }}
         onResend={handleResendOtp}
+        onVerify={handleVerifyLoginOtp}
       />
     );
   }
 
   return (
-    <div className="w-full max-w-[460px] sm:max-w-[480px] mx-auto lg:mx-0 py-0">
+    <div className="w-full max-w-115 sm:max-w-120 mx-auto lg:mx-0 py-0">
       {/* Top Header with Expert emblem alongside brand name */}
       <AuthHeader subtitle={t("signIn.header")} />
 
@@ -204,7 +221,7 @@ const SignInForm: React.FC = () => {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-11 sm:h-11.5 rounded-full bg-gradient-to-r from-orange to-[#EA580C] hover:from-orange/95 hover:to-[#C2410C] text-white text-sm font-bold shadow-md shadow-orange/20 hover:shadow-lg hover:shadow-orange/25 active:scale-[0.99] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer mt-2.5 sm:mt-3 gap-2"
+          className="w-full h-11 sm:h-11.5 rounded-full bg-linear-to-r from-orange to-[#EA580C] hover:from-orange/95 hover:to-[#C2410C] text-white text-sm font-bold shadow-md shadow-orange/20 hover:shadow-lg hover:shadow-orange/25 active:scale-[0.99] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer mt-2.5 sm:mt-3 gap-2"
         >
           {isSubmitting ? (
             <>

@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { api, API_ROUTES } from "@/actions";
+import { apiV2, API_ROUTES } from "@/actions";
 import { getErrorMessage } from "@repo/lib";
 import { setAccessToken, setRefreshToken, clearAuthCookies } from "./cookie";
 
@@ -16,20 +16,17 @@ import {
 // ─────────────────────────────────────────────────────────
 // LOGIN — Calls backend via api (Server-Side Only)
 // Credentials NEVER appear in the browser Network tab.
+// Supports OTP: when email is unverified, backend sends an OTP
+// (409). The same endpoint is then re-called with { email, password, otp }
+// to verify and log in.
 // ─────────────────────────────────────────────────────────
-export async function loginAction(
-  formData: LoginFormData,
-): Promise<AuthActionResponse> {
-  const [data, error] = await api.post<AuthResponse>(
-    API_ROUTES.AUTH.CLIENT.LOGIN,
-    formData,
-  );
+export async function loginAction(formData: LoginFormData): Promise<AuthActionResponse> {
+  const result = await apiV2.post<AuthResponse>(API_ROUTES.AUTH.LOGIN.EMAIL, formData);
 
-  if (error) {
-    const errorMsg = getErrorMessage(error);
-    const status = (error as any)?.status || (error as any)?.body?.statusCode;
-    const body = (error as any)?.body;
-    const errorCode = body?.errorCode || body?.code;
+  if (!result.ok) {
+    const errorMsg = getErrorMessage(result.error);
+    const status = result.error.status;
+    const errorCode = result.error.errorCode;
     const isUnverified =
       status === 409 ||
       errorCode === "EMAIL_NOT_VERIFIED" ||
@@ -49,9 +46,7 @@ export async function loginAction(
   // Set HttpOnly cookies on the server — JS on browser can NEVER read these
   const cookieStore = await cookies();
 
-  const accessToken =
-    data?.accessToken || data?.tokens?.accessToken || (data as any)?.token;
-  const refreshToken = data?.refreshToken || data?.tokens?.refreshToken;
+  const { accessToken, refreshToken } = result.data;
 
   if (accessToken) {
     setAccessToken(cookieStore, accessToken);
@@ -61,7 +56,7 @@ export async function loginAction(
     setRefreshToken(cookieStore, refreshToken);
   }
 
-  return { success: true, user: data?.user };
+  return { success: true };
 }
 
 // ─────────────────────────────────────────────────────────
@@ -76,24 +71,17 @@ export async function resendOtpAction(
     payload.password = password;
   }
 
-  const [data, error] = await api.post<{ message?: string }>(
-    API_ROUTES.AUTH.CLIENT.REGISTER,
-    payload,
-  );
+  const result = await apiV2.post<{ message?: string }>(API_ROUTES.AUTH.REGISTER.INITIATE, payload);
 
-  if (error) {
-    const errorMsg = getErrorMessage(error);
-    console.error("[DEBUG][ServerAction] resendOtpAction error:", errorMsg);
+  if (!result.ok) {
     return {
-      error: errorMsg,
+      error: result.error.message,
     };
   }
 
   return {
     success: true,
-    message:
-      data?.message ||
-      "OTP has been sent to your email successfully.",
+    message: result.data.message || "OTP has been sent to your email successfully.",
   };
 }
 
@@ -102,18 +90,16 @@ export async function resendOtpAction(
 // ─────────────────────────────────────────────────────────
 export async function logoutAction(): Promise<AuthActionResponse> {
   const cookieStore = await cookies();
-  clearAuthCookies(cookieStore as any);
+  clearAuthCookies(cookieStore);
   return { success: true };
 }
 
 // ─────────────────────────────────────────────────────────
 // REGISTER (2-Step Flow: Step 1) — Submits firstname, lastname, email, password
 // ─────────────────────────────────────────────────────────
-export async function registerAction(
-  registerData: RegisterFormData,
-): Promise<AuthActionResponse> {
-  const firstName = registerData.first_name || (registerData as any).firstname;
-  const lastName = registerData.last_name || (registerData as any).lastname;
+export async function registerAction(registerData: RegisterFormData): Promise<AuthActionResponse> {
+  const firstName = registerData.first_name;
+  const lastName = registerData.last_name;
 
   const payload: Record<string, any> = {
     first_name: firstName,
@@ -125,51 +111,38 @@ export async function registerAction(
     payload.last_name = lastName;
   }
 
-  const [data, error] = await api.post<{ message?: string }>(
-    API_ROUTES.AUTH.CLIENT.REGISTER,
-    payload,
-  );
+  const result = await apiV2.post<{ message?: string }>(API_ROUTES.AUTH.REGISTER.INITIATE, payload);
 
-  if (error) {
-    const errorMsg = getErrorMessage(error);
-    console.error("[DEBUG][ServerAction] registerAction error:", errorMsg);
+  if (!result.ok) {
     return {
-      error: errorMsg,
+      error: result.error.message,
     };
   }
 
   return {
     success: true,
     message:
-      data?.message ||
-      "Registration initiated! Please enter the OTP sent to your email.",
+      result.data.message || "Registration initiated! Please enter the OTP sent to your email.",
   };
 }
 
 // ─────────────────────────────────────────────────────────
-// VERIFY OTP (2-Step Flow: Step 2) — Submits email and otp only
+// VERIFY OTP (Register 2-Step Flow: Step 2) — Submits email and otp only
 // Upon verification, tokens are received and set in HttpOnly cookies
 // ─────────────────────────────────────────────────────────
-export async function verifyOtpAction(
-  verifyData: VerifyOtpFormData,
-): Promise<AuthActionResponse> {
-  const [data, error] = await api.post<AuthResponse>(
-    API_ROUTES.AUTH.CLIENT.VERIFY_OTP,
-    {
-      email: verifyData.email,
-      otp: verifyData.otp,
-    },
-  );
+export async function verifyOtpAction(verifyData: VerifyOtpFormData): Promise<AuthActionResponse> {
+  const result = await apiV2.post<AuthResponse>(API_ROUTES.AUTH.REGISTER.COMPLETE, {
+    email: verifyData.email,
+    otp: verifyData.otp,
+  });
 
-  if (error) {
+  if (!result.ok) {
     return {
-      error: getErrorMessage(error),
+      error: result.error.message,
     };
   }
 
-  const accessToken =
-    data?.accessToken || data?.tokens?.accessToken || (data as any)?.token;
-  const refreshToken = data?.refreshToken || data?.tokens?.refreshToken;
+  const { accessToken, refreshToken } = result.data;
 
   const cookieStore = await cookies();
 
@@ -183,25 +156,20 @@ export async function verifyOtpAction(
 
   return {
     success: true,
-    user: data?.user,
-    message: data?.message || "OTP verified successfully!",
+    message: result.data.message,
   };
 }
 
 // ─────────────────────────────────────────────────────────
 // COMPLETE REGISTRATION
 // ─────────────────────────────────────────────────────────
-export async function completeRegistrationAction(
-  payload: any,
-): Promise<AuthActionResponse> {
+export async function completeRegistrationAction(payload: any): Promise<AuthActionResponse> {
   console.log(
     "[DEBUG][ServerAction] completeRegistrationAction called with payload:",
     JSON.stringify(
       {
         email: payload.email,
-        token: payload.token
-          ? payload.token.substring(0, 30) + "..."
-          : "MISSING TOKEN",
+        token: payload.token ? payload.token.substring(0, 30) + "..." : "MISSING TOKEN",
         name: payload.name,
         phone: payload.phone,
         gender: payload.gender,
@@ -214,39 +182,16 @@ export async function completeRegistrationAction(
     ),
   );
 
-  const [data, error] = await api.post<AuthResponse>(
-    "/auth/email/register/complete",
-    payload,
-  );
+  const result = await apiV2.post<AuthResponse>("/auth/email/register/complete", payload);
 
-  console.log(
-    "[DEBUG][ServerAction] Response from backend - error:",
-    error ? JSON.stringify(error) : "none",
-  );
-  console.log(
-    "[DEBUG][ServerAction] Response from backend - data:",
-    data
-      ? JSON.stringify({
-          hasAccessToken: !!data.accessToken,
-          hasRefreshToken: !!data.refreshToken,
-          user: data.user,
-        })
-      : "none",
-  );
-
-  if (error) {
-    console.error(
-      "[DEBUG][ServerAction] Returning error:",
-      getErrorMessage(error),
-    );
-    return { error: getErrorMessage(error) };
+  if (!result.ok) {
+    return { error: result.error.message };
   }
 
   const cookieStore = await cookies();
 
-  const accessToken =
-    data?.accessToken || data?.tokens?.accessToken || (data as any)?.token;
-  const refreshToken = data?.refreshToken || data?.tokens?.refreshToken;
+  const accessToken = result.data.accessToken;
+  const refreshToken = result.data.refreshToken;
 
   if (accessToken) {
     setAccessToken(cookieStore, accessToken);
@@ -256,42 +201,5 @@ export async function completeRegistrationAction(
     setRefreshToken(cookieStore, refreshToken);
   }
 
-  return { success: true, user: data?.user };
-}
-
-// ─────────────────────────────────────────────────────────
-// VERIFY EMAIL — Calls backend, sets cookies on success
-// ─────────────────────────────────────────────────────────
-export async function verifyEmailAction(
-  token: string,
-): Promise<AuthActionResponse> {
-  const [data, error] = (await api.get<AuthResponse>(
-    `${API_ROUTES.AUTH.VERIFY_EMAIL}?token=${encodeURIComponent(token)}`,
-  )) as any;
-
-  if (error) {
-    return {
-      error: getErrorMessage(error),
-    };
-  }
-
-  // Set HttpOnly cookies on the server, but only if they are fully registered
-  const cookieStore = await cookies();
-  const isFullyRegistered = !!data?.user?.name;
-
-  if (isFullyRegistered) {
-    const accessToken =
-      data?.accessToken || data?.tokens?.accessToken || (data as any)?.token;
-    const refreshToken = data?.refreshToken || data?.tokens?.refreshToken;
-
-    if (accessToken) {
-      setAccessToken(cookieStore, accessToken);
-    }
-
-    if (refreshToken) {
-      setRefreshToken(cookieStore, refreshToken);
-    }
-  }
-
-  return { success: true, user: data?.user, message: data?.message };
+  return { success: true, user: result.data.user };
 }

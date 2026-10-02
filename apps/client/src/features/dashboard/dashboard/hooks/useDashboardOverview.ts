@@ -24,21 +24,20 @@ export function useDashboardOverview() {
   const { user, isAuthenticated, loading: authLoading } = useAuthStore();
 
   const [profileData, setProfileData] = useState<any>(null);
-  const [astrologyDetails, setAstrologyDetails] = useState<
-    BirthAstrologyDetails | undefined
-  >(undefined);
+  const [astrologyDetails, setAstrologyDetails] = useState<BirthAstrologyDetails | undefined>(
+    undefined,
+  );
   const [isLoadingAstrology, setIsLoadingAstrology] = useState<boolean>(false);
   const [activeConsultation, setActiveConsultation] = useState<any>(null);
-  const [isLoadingConsultation, setIsLoadingConsultation] =
-    useState<boolean>(false);
+  const [isLoadingConsultation, setIsLoadingConsultation] = useState<boolean>(false);
 
   const activeUser = profileData || user;
 
   // Has complete birth details?
   const hasBirthDetails = Boolean(
     activeUser?.date_of_birth &&
-      activeUser?.time_of_birth &&
-      (activeUser?.place_of_birth || (activeUser as any)?.birth_place)
+    activeUser?.time_of_birth &&
+    (activeUser?.place_of_birth || (activeUser as any)?.birth_place),
   );
 
   // 1. Fetch Profile using safeFetch
@@ -47,9 +46,9 @@ export function useDashboardOverview() {
 
     let isMounted = true;
     const loadProfile = async () => {
-      const [data, err] = await fetchClientProfile();
-      if (!err && data && isMounted) {
-        setProfileData(data);
+      const result = await fetchClientProfile();
+      if (result.ok && result.data && isMounted) {
+        setProfileData(result.data);
       }
     };
 
@@ -71,9 +70,7 @@ export function useDashboardOverview() {
       setIsLoadingAstrology(true);
 
       const u = activeUser;
-      const dob = u.date_of_birth?.includes("T")
-        ? u.date_of_birth.split("T")[0]
-        : u.date_of_birth;
+      const dob = u.date_of_birth?.includes("T") ? u.date_of_birth.split("T")[0] : u.date_of_birth;
       const tob = u.time_of_birth || "12:00";
       const datetime = `${dob}T${tob}:00+05:30`;
 
@@ -137,10 +134,7 @@ export function useDashboardOverview() {
         setActiveConsultation(null);
       } else {
         const session = res?.data ?? res;
-        if (
-          session &&
-          (session.status === "active" || session.status === "pending")
-        ) {
+        if (session && (session.status === "active" || session.status === "pending")) {
           setActiveConsultation(session);
         } else {
           setActiveConsultation(null);

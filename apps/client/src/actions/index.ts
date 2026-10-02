@@ -1,4 +1,4 @@
-import { createSafeFetchInstance } from "@repo/safe-fetch";
+import { createSafeFetchInstance, createSafeFetchResultInstance } from "@repo/safe-fetch";
 export { API_ROUTES } from "@/lib/api-routes";
 export * from "./expert-products";
 export * from "./favorites";
@@ -7,6 +7,14 @@ export * from "./specialization";
 export * from "./onboard";
 
 export const api = createSafeFetchInstance({
+  baseUrl: process.env.NEXT_PUBLIC_API_URL!,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  credentials: "include",
+});
+
+export const apiV2 = createSafeFetchResultInstance({
   baseUrl: process.env.NEXT_PUBLIC_API_URL!,
   headers: {
     "Content-Type": "application/json",
