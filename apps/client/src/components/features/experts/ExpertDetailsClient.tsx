@@ -10,7 +10,7 @@ import type { IExpert } from "@repo/lib";
 import { Loading } from "@repo/ui";
 import { useConsultantBreadcrumbStore } from "@/store/consultantBreadcrumbStore";
 
-export default function ExpertDetailsClient({ expert }: { expert: Expert }) {
+export default function ExpertDetailsClient({ expert }: { expert: IExpert }) {
   const setConsultantName = useConsultantBreadcrumbStore((s) => s.setConsultantName);
 
   const expertName = expert.name || "Astrologer";
@@ -44,9 +44,7 @@ export default function ExpertDetailsClient({ expert }: { expert: Expert }) {
     handleCallClick,
     handleVideoCallClick,
     isAvailable,
-    setIsAvailable,
     isBusy,
-    setIsBusy,
     isNavigating,
   } = useExpertDetails(
     String(expert.id!),
@@ -54,16 +52,6 @@ export default function ExpertDetailsClient({ expert }: { expert: Expert }) {
     Boolean(expert.is_available),
     Boolean(expert.is_busy),
   );
-
-  // Initialize presence state from SSR
-  React.useEffect(() => {
-    if (expert.is_available !== undefined) {
-      setIsAvailable(Boolean(expert.is_available));
-    }
-    if (expert.is_busy !== undefined) {
-      setIsBusy(Boolean(expert.is_busy));
-    }
-  }, [expert.is_available, expert.is_busy, setIsAvailable, setIsBusy]);
 
   return (
     <>

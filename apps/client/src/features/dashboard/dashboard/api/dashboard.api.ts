@@ -1,9 +1,6 @@
 import { api, API_ROUTES } from "@/actions";
 import { AuthService } from "@/services/auth.service";
-import {
-  getClientProfile,
-  updateClientProfile as updateClientProfileBase,
-} from "@/libs/api-profile";
+import { updateClientProfile as updateClientProfileBase } from "@/libs/api-profile";
 import { PaginatedExpertResponse } from "@repo/lib";
 
 /**

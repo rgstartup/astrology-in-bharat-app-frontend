@@ -1,4 +1,4 @@
-import { api, API_ROUTES, apiV2 } from "@/actions";
+import { API_ROUTES, apiV2 } from "@/actions";
 import allowedParams from "./expert-list/data/allowed-params";
 import { IFetchExpertsResponse } from "./expert-list/api/fetch-expert";
 import ExpertList from "./expert-list";

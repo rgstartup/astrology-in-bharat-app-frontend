@@ -38,30 +38,9 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
   const handleLogout = async () => {
     setShowProfileMenu(false);
-    if (user && isOnline) {
-      const actualUserId = user?.userId || user?.id;
-      const { socket } = require("@/lib/socket");
-      socket.emit("expert_offline", { userId: String(actualUserId) });
-    }
     await logout();
     router.push("/");
   };
-
-  // Handle tab closure / page hide
-  React.useEffect(() => {
-    const handleUnload = () => {
-      const actualUserId = user?.userId || user?.id;
-      if (user && actualUserId && isOnline) {
-        const { socket } = require("@/lib/socket");
-        socket.emit("expert_offline", { userId: String(actualUserId) });
-      }
-    };
-
-    window.addEventListener("beforeunload", handleUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleUnload);
-    };
-  }, [user, isOnline]);
 
   return (
     <header className="bg-transparent px-4 sm:px-6 py-3 sm:py-4 z-40">

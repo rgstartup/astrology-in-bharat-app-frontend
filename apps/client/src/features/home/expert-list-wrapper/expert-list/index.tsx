@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef, useCallback } from "react";
 import ExpertListHeader from "./components/ExpertListHeader";
 import { useExpertListStore } from "@/store/expertListStore";
 import { useDebounce } from "@/hooks/use-debounce";
-import { api, API_ROUTES } from "@/actions";
+import { apiV2, API_ROUTES } from "@/actions";
 import { toast } from "@/hooks/use-toast";
 import { IExpert, PaginationMeta } from "@repo/lib";
 import { IFetchExpertsResponse } from "./api/fetch-expert";
@@ -58,11 +58,11 @@ const ExpertList: React.FC<ExpertListProps> = ({
       const params = buildFetchParams(1, debouncedSearch);
       const query = new URLSearchParams(params).toString();
 
-      const [responseData, fetchError] = await api
+      const result = await apiV2
         .get<IFetchExpertsResponse>(`${API_ROUTES.EXPERTS.LIST}?${query}`)
         .finally(() => setLoading(false));
 
-      if (fetchError || !responseData) {
+      if (!result.ok) {
         // If API fails or backend is unreachable, filter fallback locally
         let filtered = [...defaultList];
         if (debouncedSearch) {
@@ -85,9 +85,9 @@ const ExpertList: React.FC<ExpertListProps> = ({
         return;
       }
 
-      const list = responseData.data || [];
+      const list = result.data.data || [];
       setExperts(list.length > 0 ? list : defaultList);
-      setHasMore(Boolean(responseData.meta?.hasNextPage));
+      setHasMore(Boolean(result.data.meta?.hasNextPage));
     } catch {
       setLoading(false);
       setExperts(defaultList);

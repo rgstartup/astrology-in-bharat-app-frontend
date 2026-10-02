@@ -4,7 +4,7 @@ import { getLocale } from "next-intl/server";
 
 import { ToastContainer } from "react-toastify";
 
-import { AuthProvider } from "@/providers/AuthProvider";
+import { AuthProvider, ExpertPresenceProvider } from "@/providers";
 import { SocketConnectionManager } from "@/components/layout/SocketConnectionManager";
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
 import { cn } from "@/lib/cn";
@@ -33,10 +33,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <NextIntlClientProvider>
           <ReactQueryProvider>
             <AuthProvider>
-              <SocketConnectionManager />
-              {children}
-              <ToastContainer position="top-right" />
-              <ToastContainer containerId="notification" position="bottom-right" />
+              <ExpertPresenceProvider>
+                <SocketConnectionManager />
+                {children}
+                <ToastContainer position="top-right" />
+                <ToastContainer containerId="notification" position="bottom-right" />
+              </ExpertPresenceProvider>
             </AuthProvider>
           </ReactQueryProvider>
         </NextIntlClientProvider>

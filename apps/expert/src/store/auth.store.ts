@@ -66,13 +66,11 @@ export const useAuthStore = create<AuthState>()(
         const user = get().user;
         const actualUserId = user?.userId || user?.id;
 
-        if (actualUserId) {
-          try {
-            const { socket } = await import("@/lib/socket");
-            socket.emit("expert_offline", { userId: String(actualUserId) });
-          } catch {
-            // ignore socket errors on logout
-          }
+        try {
+          const { disconnectExpertPresence } = await import("@/lib/socket");
+          disconnectExpertPresence();
+        } catch {
+          // ignore socket errors on logout
         }
 
         get().reset();

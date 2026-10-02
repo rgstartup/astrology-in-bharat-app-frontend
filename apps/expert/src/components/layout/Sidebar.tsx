@@ -164,18 +164,9 @@ export const Sidebar: React.FC<SidebarProps> = memo(
     const { logout, user } = useAuthStore();
 
     const handleLogout = useCallback(async () => {
-      if (user?.isAvailable) {
-        const actualUserId = user?.userId || user?.id;
-        if (actualUserId) {
-          const { socket } = await import("@/lib/socket");
-          socket.emit("expert_offline", { userId: String(actualUserId) });
-          // Small delay to ensure the packet is sent before session is destroyed
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-      }
       await logout();
       router.push('/');
-    }, [logout, router, user]);
+    }, [logout, router]);
 
     const menuItems = useMemo((): MenuItem[] => {
       return expertMenu.menuItems.map((item: any) => ({

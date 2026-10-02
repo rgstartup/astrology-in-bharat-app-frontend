@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getExpertReviews, Review } from "@/libs/api-experts";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
-import type { Expert } from "@repo/lib";
+import type { IExpert } from "@repo/lib";
 
 export const useExpertDetails = (
   expertId: string,
@@ -29,7 +29,6 @@ export const useExpertDetails = (
     initialStatus: initialAvailable,
     autoSubscribe: true,
   });
-  const isAvailable = isAvailableForConsultation;
 
   const handleChatClick = () => {
     setIsNavigating(true);
@@ -61,12 +60,8 @@ export const useExpertDetails = (
     handleChatClick,
     handleCallClick,
     handleVideoCallClick,
-    isAvailable,
-    setIsAvailable,
     isBusy,
-    setIsBusy,
     isNavigating,
+    isAvailable: isAvailableForConsultation,
   };
 };
-
-

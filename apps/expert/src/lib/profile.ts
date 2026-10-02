@@ -94,7 +94,7 @@ export const updatePricing = async (data: any): Promise<[any | null, ApiError | 
 };
 
 export const updateExpertStatus = async (isAvailable: boolean): Promise<[any | null, ApiError | null]> => {
-    return api.patch<any>('/expert/status', { is_available: isAvailable });
+    return api.patch<any>('/expert/availability', { mode: isAvailable ? 'available' : 'unavailable' });
 };
 
 export const updateBankDetails = async (bankDetails: string): Promise<[any | null, ApiError | null]> => {

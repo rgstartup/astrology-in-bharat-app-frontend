@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { decodeToken } from "@repo/lib";
-import safeFetch from "@repo/safe-fetch";
+import api from "@/actions/api";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
-import { setAccessToken, setRefreshToken, clearAuthCookies } from "@/actions/cookie";
+import {
+  setAccessToken,
+  setRefreshToken,
+  clearAuthCookies,
+} from "@/actions/cookie";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
+import { API_ROUTES } from "./utils/api.routes";
 
 const handleI18nRouting = createMiddleware(routing);
 
@@ -39,8 +44,6 @@ const getPathnameWithoutLocale = (pathname: string) => {
   return pathname;
 };
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
-
 async function refreshSession(
   refreshToken: string,
   request: NextRequest,
@@ -48,32 +51,29 @@ async function refreshSession(
   isProtected: boolean,
   redirect = false,
 ) {
-  const [data, error] = await safeFetch<{
-    accessToken: string;
-    refreshToken: string;
-  }>(`${API_BASE_URL}/auth/refresh`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: `refreshToken=${refreshToken}`,
-    },
-    body: JSON.stringify({ refreshToken }),
-  });
+  const result = await api
+    .extend({
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `refreshToken=${refreshToken}`,
+      },
+    })
+    .post<{
+      accessToken: string;
+      refreshToken: string;
+    }>(API_ROUTES.AUTH.REFRESH, {
+      body: JSON.stringify({ refreshToken }),
+    });
 
-  if (error || !data?.accessToken) {
-    console.log(
-      "[Proxy:refreshSessionFailed]: ",
-      "error:",
-      error,
-      "data:",
-      data,
-      "refreshToken:",
-      refreshToken,
-    );
+  if (!result.ok) {
+    console.log("[Proxy:refreshSessionFailed]: ", "error:", result.error);
     return redirectToLogout(request, pathname, isProtected);
   }
 
-  const response = redirect ? redirectToCallback(request) : handleI18nRouting(request);
+  const data = result.data;
+  const response = redirect
+    ? redirectToCallback(request)
+    : handleI18nRouting(request);
 
   setAccessToken(response.cookies, data.accessToken);
   if (data.refreshToken) {
@@ -113,11 +113,16 @@ const redirectToLogout = (
   return response;
 };
 
-const redirectToLogin = (request: NextRequest, pathname: string): NextResponse => {
+const redirectToLogin = (
+  request: NextRequest,
+  pathname: string,
+): NextResponse => {
   const normalized = getPathnameWithoutLocale(pathname);
   const target = withCallbackUrl(
     "/login",
-    normalized && normalized !== "/" && normalized !== "/login" ? normalized : null,
+    normalized && normalized !== "/" && normalized !== "/login"
+      ? normalized
+      : null,
   );
   const url = new URL(target, request.url);
   return withI18nCookies(NextResponse.redirect(url), request);
@@ -155,12 +160,15 @@ export async function proxy(request: NextRequest) {
   const normalizedPathname = getPathnameWithoutLocale(pathname);
 
   // Capture tokens from URL (e.g. from Social Login or OAuth redirects)
-  const urlAccessToken = searchParams.get("accessToken") || searchParams.get("token");
-  const urlRefreshToken = searchParams.get("refreshToken") || searchParams.get("refresh_token");
+  const urlAccessToken =
+    searchParams.get("accessToken") || searchParams.get("token");
+  const urlRefreshToken =
+    searchParams.get("refreshToken") || searchParams.get("refresh_token");
 
   // EXCLUDE verification and reset-password routes from stripping token
   const isTokenVerifyRoute =
-    normalizedPathname.includes("/verify-email") || normalizedPathname.includes("/reset-password");
+    normalizedPathname.includes("/verify-email") ||
+    normalizedPathname.includes("/reset-password");
 
   if (urlAccessToken && !isTokenVerifyRoute) {
     const nextResponse = withI18nCookies(
@@ -196,7 +204,13 @@ export async function proxy(request: NextRequest) {
       }
 
       if (refreshToken) {
-        return refreshSession(refreshToken, request, pathname, isPathProtected, true);
+        return refreshSession(
+          refreshToken,
+          request,
+          pathname,
+          isPathProtected,
+          true,
+        );
       }
 
       // Expired accessToken and no refreshToken -> clear cookies and allow viewing auth page
@@ -206,7 +220,13 @@ export async function proxy(request: NextRequest) {
     }
 
     if (refreshToken) {
-      return refreshSession(refreshToken, request, pathname, isPathProtected, true);
+      return refreshSession(
+        refreshToken,
+        request,
+        pathname,
+        isPathProtected,
+        true,
+      );
     }
 
     return handleI18nRouting(request);
@@ -268,5 +288,7 @@ export async function proxy(request: NextRequest) {
 
 // Matcher configuration for proxy
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|images|\\.well-known).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|images|\\.well-known).*)",
+  ],
 };

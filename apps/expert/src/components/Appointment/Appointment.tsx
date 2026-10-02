@@ -211,7 +211,6 @@ export default function AppointmentsPage() {
         if (!socket.connected) {
           socket.connect();
         }
-        socket.emit('expert_online', { userId: registrationId });
 
         if (!chatSocket.connected) {
           chatSocket.connect();
