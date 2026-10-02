@@ -2,7 +2,7 @@
 
 import React from "react";
 import { CloseButton } from "@repo/ui";
-import { useAuth } from "@/store/useAuthStore";
+import { useAuth } from "@/store/authStore";
 
 const ProfileImagePreviewModal = () => {
   const { user, showImageModal, closeImageModal } = useAuth();

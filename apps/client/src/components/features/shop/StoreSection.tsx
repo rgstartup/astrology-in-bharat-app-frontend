@@ -17,7 +17,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { StoreSkeletonCard } from "./StoreSkeletonCard";
 import type { Store } from "@/lib/types/shop";
-import { useMerchantStore } from "@/store/useMerchantStore";
+import { useMerchantStore } from "@/store/merchantStore";
 
 const DUMMY_STORES: Store[] = [
   {

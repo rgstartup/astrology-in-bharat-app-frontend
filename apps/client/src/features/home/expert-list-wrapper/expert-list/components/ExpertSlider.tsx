@@ -9,7 +9,7 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import { ExploreExpertCard } from "@/features/explore-experts/components/ExploreExpertCard";
-import { useExpertListStore } from "@/store/useExpertListStore";
+import { useExpertListStore } from "@/store/expertListStore";
 
 function ExpertCardSkeleton() {
   return (

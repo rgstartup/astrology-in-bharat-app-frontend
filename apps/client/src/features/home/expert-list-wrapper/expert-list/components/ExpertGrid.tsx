@@ -6,7 +6,8 @@ import { SkeletonCard } from "./expert-slider/SkeletonCard";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { FaSpinner } from "react-icons/fa";
 import { useTranslations } from "next-intl";
-import { useExpertListStore } from "@/store/useExpertListStore";
+import { useExpertListStore } from "@/store/expertListStore";
+import { usePresenceStore } from "@/store/presenceStore";
 import { useDebounce } from "@/hooks/use-debounce";
 import { api, API_ROUTES } from "@/actions";
 import { IFetchExpertsResponse } from "../api/fetch-expert";
@@ -34,7 +35,7 @@ const ExpertGrid = () => {
         const query = new URLSearchParams(params).toString();
 
         const [responseData, fetchError] = await api
-          .get<IFetchExpertsResponse>(`${API_ROUTES.EXPERT.LIST}?${query}`)
+          .get<IFetchExpertsResponse>(`${API_ROUTES.EXPERTS.LIST}?${query}`)
           .finally(() => setLoading(false));
 
         if (fetchError || !responseData) {
@@ -45,6 +46,14 @@ const ExpertGrid = () => {
         }
 
         const newExperts = responseData.data || [];
+        if (newExperts.length > 0) {
+          usePresenceStore.getState().batchSetExpertStatus(
+            newExperts.map((item) => ({
+              expertId: item.id,
+              status: item.is_available ? "online" : "offline",
+            })),
+          );
+        }
         setExperts((previous) =>
           append ? [...previous, ...newExperts] : newExperts,
         );

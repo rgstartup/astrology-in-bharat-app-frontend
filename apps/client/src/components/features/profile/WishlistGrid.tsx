@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useWishlistStore } from "@/store/useWishlistStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { ProductCard } from "@/components/features/shop/ProductCard";
 import ExpertCard from "@/components/features/experts/ExpertCard";
 import { FaHeart, FaGift, FaUserAstronaut, FaSpinner } from "react-icons/fa";

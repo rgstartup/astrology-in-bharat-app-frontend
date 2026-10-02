@@ -15,7 +15,7 @@ export const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
             refetchOnWindowFocus: false,
           },
         },
-      })
+      }),
   );
 
   useEffect(() => {

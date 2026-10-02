@@ -16,7 +16,7 @@ import {
   Video,
   ExternalLink,
 } from "lucide-react";
-import { useMerchantStore } from "@/store/useMerchantStore";
+import { useMerchantStore } from "@/store/merchantStore";
 import { ProductCard } from "@/components/features/shop/ProductCard";
 import { Product } from "@/lib/types";
 import { Store } from "@/lib/types/shop";

@@ -6,8 +6,8 @@ import { toast } from "@/hooks/use-toast";
 import { api as http } from "@/actions";
 import { getClientProfile, applyCoupon, getMyRewards } from "@/libs/api-profile";
 import { loadRazorpay } from "@/libs/razorpay";
-import { useAuthStore } from "@/store/__useAuthStore";
-import { useCartStore } from "@/store/useCartStore";
+import { useAuthStore } from "@/store/__authStore";
+import { useCartStore } from "@/store/cartStore";
 import { Product, AddressDto } from "@/lib/types";
 import { getErrorMessage } from "@repo/lib";
 

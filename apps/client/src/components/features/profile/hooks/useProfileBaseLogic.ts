@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
-import { useAuthStore } from "@/store/__useAuthStore";
+import { useAuthStore } from "@/store/__authStore";
 import {
     getClientProfile,
     createClientProfile,

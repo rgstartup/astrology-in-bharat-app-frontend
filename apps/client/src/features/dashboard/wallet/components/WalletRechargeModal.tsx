@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 import { api, API_ROUTES } from "@/actions";
 import { loadRazorpay } from "@/libs/razorpay";
 import { getErrorMessage, IClientRechargeInitiateResponse } from "@repo/lib";

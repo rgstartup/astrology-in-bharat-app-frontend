@@ -8,7 +8,7 @@ import { ProfilePicUpload } from "./ProfilePicUpload";
 import { AddressFields } from "./AddressFields";
 import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
-import { useAuth } from "@/store/useAuthStore";
+import { useAuth } from "@/store/authStore";
 import {
   FormControl,
   FormField,

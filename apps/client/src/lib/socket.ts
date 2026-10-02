@@ -1,3 +1,7 @@
+/**
+ * @deprecated This monolithic socket file is deprecated.
+ * Use modular socket instances and utilities from `@/lib/socket` instead.
+ */
 import { io, type Socket } from "socket.io-client";
 import { getErrorMessage } from "@repo/lib";
 

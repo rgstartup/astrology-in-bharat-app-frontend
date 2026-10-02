@@ -17,7 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useSpecializationScroll } from "../hooks/useSpecializationScroll";
-import { useExpertListStore } from "@/store/useExpertListStore";
+import { useExpertListStore } from "@/store/expertListStore";
 import { Specialization } from "@repo/lib";
 import { fetchSpecializations } from "../api/fetch-specializations";
 import {

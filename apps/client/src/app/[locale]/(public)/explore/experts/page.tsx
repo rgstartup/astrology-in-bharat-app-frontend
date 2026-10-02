@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { api } from "@/actions";
+import { api, API_ROUTES } from "@/actions";
 import type { PaginatedExpertResponse } from "@repo/lib";
 import ExploreExpertsPage from "@/features/explore-experts";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 async function getInitialExperts() {
   try {
     const [response] = await api.get<PaginatedExpertResponse>(
-      "/expert/account/list?limit=10&page=1",
+      API_ROUTES.EXPERTS.LIST,
     );
     return {
       experts: response?.data || [],

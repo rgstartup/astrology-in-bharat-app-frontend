@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import Skeleton from "@/components/ui/Skeleton";
 import { Expert } from "@repo/lib";
-import { useExpertListStore } from "@/store/useExpertListStore";
+import { useExpertListStore } from "@/store/expertListStore";
 import { api } from "@/actions";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 

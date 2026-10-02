@@ -2,71 +2,16 @@
 
 import React, { useEffect, useMemo, useRef, useCallback } from "react";
 import ExpertListHeader from "./components/ExpertListHeader";
-import dummyExperts from "./data/dummy-experts.json";
-import { useExpertListStore } from "@/store/useExpertListStore";
+import { useExpertListStore } from "@/store/expertListStore";
 import { useDebounce } from "@/hooks/use-debounce";
 import { api, API_ROUTES } from "@/actions";
 import { toast } from "@/hooks/use-toast";
-import { Expert } from "@repo/lib";
+import { IExpert, PaginationMeta } from "@repo/lib";
 import { IFetchExpertsResponse } from "./api/fetch-expert";
 
-const fallbackExperts: Expert[] = dummyExperts.map((item: any) => ({
-  id: item.id,
-  name: item.user?.name || item.name || "Acharya Rajesh Sharma",
-  avatar: item.user?.avatar || item.avatar || "/images/dummy-expert.jpg",
-  about:
-    item.about ||
-    "Celebrated Vedic Astrologer providing profound insights on horoscope, love compatibility, and career.",
-  languages: Array.isArray(item.languages)
-    ? item.languages.join(", ")
-    : item.languages || "Hindi, English",
-  experience_in_years: item.experience_in_years || 8,
-  rating: item.rating || 4.9,
-  specializations: item.specialization
-    ? item.specialization.split(",").map((s: string, idx: number) => ({
-        id: `spec-${idx}`,
-        specialization: {
-          id: `spec2-${idx}`,
-          title: s.trim(),
-          slug: s.trim().toLowerCase().replace(/\s+/g, "-"),
-        },
-      }))
-    : [
-        {
-          id: "spec-1",
-          specialization: { id: "s1", title: "Vedic Astrology", slug: "vedic" },
-        },
-        {
-          id: "spec-2",
-          specialization: { id: "s2", title: "Kundli", slug: "kundli" },
-        },
-      ],
-  pricing: {
-    id: `pricing-${item.id}`,
-    chat_price: item.price || 31,
-    call_price: item.price || 35,
-    video_call_price: (item.price || 31) * 2,
-    report_price: (item.price || 31) * 5,
-    horoscope_price: (item.price || 31) * 3,
-    currency: "INR",
-  },
-  price: item.price || 31,
-  chat_price: item.price || 31,
-  call_price: item.price || 35,
-  video_call_price: (item.price || 31) * 2,
-  is_available: item.is_available ?? true,
-  total_likes: item.total_likes || 42,
-}));
-
 interface ExpertListProps {
-  initialExperts: Expert[];
-  initialPagination?: {
-    total: number;
-    hasMore: boolean;
-    page?: number;
-    limit?: number;
-    totalPages?: number;
-  };
+  initialExperts: IExpert[];
+  initialPagination?: PaginationMeta;
   initialError?: string;
   title?: string;
   children: React.ReactNode;
@@ -80,8 +25,7 @@ const ExpertList: React.FC<ExpertListProps> = ({
   children,
 }) => {
   const store = useExpertListStore();
-  const { filterState, setExperts, setHasMore, setLoading, buildFetchParams } =
-    store;
+  const { filterState, setExperts, setHasMore, setLoading, buildFetchParams } = store;
 
   const debouncedSearch = useDebounce<string>(store.searchQuery, 400);
 
@@ -105,10 +49,7 @@ const ExpertList: React.FC<ExpertListProps> = ({
     );
   }, [filterState, store.searchQuery, store.selectedSpecialization]);
 
-  const defaultList = useMemo(
-    () => (initialExperts.length > 0 ? initialExperts : fallbackExperts),
-    [initialExperts],
-  );
+  const defaultList = useMemo(() => initialExperts, [initialExperts]);
 
   // Live filter / fetch handler
   const fetchFilteredExperts = useCallback(async () => {
@@ -118,7 +59,7 @@ const ExpertList: React.FC<ExpertListProps> = ({
       const query = new URLSearchParams(params).toString();
 
       const [responseData, fetchError] = await api
-        .get<IFetchExpertsResponse>(`${API_ROUTES.EXPERT.LIST}?${query}`)
+        .get<IFetchExpertsResponse>(`${API_ROUTES.EXPERTS.LIST}?${query}`)
         .finally(() => setLoading(false));
 
       if (fetchError || !responseData) {
@@ -133,15 +74,11 @@ const ExpertList: React.FC<ExpertListProps> = ({
           filtered = filtered.filter((e) => e.is_available);
         }
         if (filterState.minRating > 0) {
-          filtered = filtered.filter(
-            (e) => (e.rating || 5) >= filterState.minRating,
-          );
+          filtered = filtered.filter((e) => (e.rating || 5) >= filterState.minRating);
         }
         if (filterState.language) {
           filtered = filtered.filter((e) =>
-            String(e.languages)
-              .toLowerCase()
-              .includes(filterState.language.toLowerCase()),
+            String(e.languages).toLowerCase().includes(filterState.language.toLowerCase()),
           );
         }
         setExperts(filtered.length > 0 ? filtered : defaultList);
@@ -171,7 +108,7 @@ const ExpertList: React.FC<ExpertListProps> = ({
       // First mount: set initial experts
       previousQuerySignature.current = querySignature;
       setExperts(defaultList);
-      setHasMore(initialPagination?.hasMore ?? false);
+      setHasMore(initialPagination?.hasNextPage ?? false);
       return;
     }
 
@@ -187,7 +124,7 @@ const ExpertList: React.FC<ExpertListProps> = ({
   }, [
     defaultList,
     fetchFilteredExperts,
-    initialPagination?.hasMore,
+    initialPagination?.hasNextPage,
     isFiltered,
     querySignature,
     setExperts,

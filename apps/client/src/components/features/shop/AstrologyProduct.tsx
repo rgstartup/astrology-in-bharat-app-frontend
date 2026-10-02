@@ -4,7 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { getProducts } from "@/libs/api-products";
 import ProductSection from "./ProductSection";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
-import { useProductListStore } from "@/store/useProductListStore";
+import { useProductListStore } from "@/store/productListStore";
 
 const AstrologyProduct = () => {
   const { t } = useHomeTranslations();

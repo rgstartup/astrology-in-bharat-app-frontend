@@ -14,7 +14,7 @@ interface ReportIssueModalProps {
     onSuccess?: (newDispute?: any) => void;
 }
 
-import { useAuthStore } from "@/store/__useAuthStore";
+import { useAuthStore } from "@/store/__authStore";
 import UserDisputeChatModal from './UserDisputeChatModal';
 
 export default function ReportIssueModal({

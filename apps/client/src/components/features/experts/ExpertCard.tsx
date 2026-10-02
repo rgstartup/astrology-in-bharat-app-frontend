@@ -4,17 +4,18 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { CloseButton } from "@repo/ui";
 import { useRouter, usePathname, Link } from "@/i18n/navigation";
-import { useWishlistStore } from "@/store/useWishlistStore";
-import { useAuthStore } from "@/store/__useAuthStore";
+import { useWishlistStore } from "@/store/wishlistStore";
+import { useAuthStore } from "@/store/__authStore";
 import { toast } from "@/hooks/use-toast";
 import { useWishlist } from "@/hooks/useWishlist";
 import { ExpertCardProps } from "@/lib/types";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { getYoutubeId, getYoutubeEmbedUrl } from "@/utils/video-utils";
-import { usePreloadExpertStore } from "@/store/usePreloadExpertStore";
+import { usePreloadExpertStore } from "@/store/preloadExpertStore";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { extractSpecializationNames } from "@/utils/expert-utils";
+import { useExpertPresence } from "@/hooks/useExpertPresence";
 
 const ExpertCard: React.FC<ExpertCardProps> = ({
   expertData,
@@ -62,51 +63,17 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
 
   // Local state for optimistic updates
   const [currentLikes, setCurrentLikes] = useState(total_likes);
-  const [isAvailable, setIsAvailable] = useState(is_available);
-  const [isBusy, setIsBusy] = useState((expertData as any).is_busy || false);
 
   // Sync with prop if it changes
   React.useEffect(() => {
     setCurrentLikes(total_likes);
   }, [total_likes]);
 
-  // Sync isAvailable with prop
-  React.useEffect(() => {
-    setIsAvailable(is_available);
-  }, [is_available]);
-
-  // Real-time status sync via Socket
-  React.useEffect(() => {
-    const { socket } = require("@/lib/socket");
-
-    const handleStatusSync = (data: any) => {
-      const expertIdFromEvent = data.expert_id || data.id || data.userId;
-
-      // Match with either ID type (expert profile ID or user ID)
-      if (String(expertIdFromEvent) === String(id)) {
-        console.log(
-          `[Presence] Expert ${name} status changed to ${data.is_available ? "Online" : "Offline"}`,
-        );
-        setIsAvailable(data.is_available);
-        if (!data.is_available) setIsBusy(false); // offline expert can't be busy
-      }
-    };
-
-    const handleBusySync = (data: any) => {
-      const expertIdFromEvent = data.expert_id || data.id;
-      if (String(expertIdFromEvent) === String(id)) {
-        setIsBusy(data.is_busy);
-      }
-    };
-
-    socket.on("expert_status_changed", handleStatusSync);
-    socket.on("expert_busy_changed", handleBusySync);
-
-    return () => {
-      socket.off("expert_status_changed", handleStatusSync);
-      socket.off("expert_busy_changed", handleBusySync);
-    };
-  }, [id, name]);
+  // Real-time status sync via centralized presence hook
+  const { isAvailableForConsultation, isBusy } = useExpertPresence(id, {
+    initialStatus: is_available,
+  });
+  const isAvailable = isAvailableForConsultation;
 
   // For chat/consultation, we use id (expert profile ID) - safe fallback check
   const expertProfileId = id;

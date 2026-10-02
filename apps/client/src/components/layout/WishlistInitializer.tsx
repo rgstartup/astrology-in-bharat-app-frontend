@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useWishlistStore } from "../../store/useWishlistStore";
+import { useAuthStore } from "@/store/authStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 
 export const WishlistInitializer = ({ children }: { children: React.ReactNode }) => {
     const { isAuthenticated } = useAuthStore(); // Changed usage

@@ -8,7 +8,7 @@ import {
   ClientWallet,
 } from "@repo/lib";
 import { api, API_ROUTES } from "@/actions";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 
 const PAGE_SIZE = 10;
 

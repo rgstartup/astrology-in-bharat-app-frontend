@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
-import { api } from "@/actions";
-import { socket } from "@/libs/socket";
+import { api, API_ROUTES } from "@/actions";
+import { usePresenceStore } from "@/store/presenceStore";
 import { ExpertProfile } from "@/lib/types";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 
@@ -144,28 +144,22 @@ export const useExpertListLogic = (
     );
   }, [filterState]);
 
+  const presenceMap = usePresenceStore((state) => state.presenceMap);
+
   useEffect(() => {
-    const handleStatusUpdate = (data: any) => {
-      const expertId = data.expert_id || data.userId || data.id;
-      const isAvailable =
-        data.is_available !== undefined
-          ? data.is_available
-          : data.status === "online";
-      if (!expertId) return;
-      setExperts((prev) =>
-        prev.map((astro) =>
-          String(astro.id) === String(expertId) ||
-          String(astro.userId) === String(expertId)
-            ? { ...astro, is_available: isAvailable }
-            : astro,
-        ),
-      );
-    };
-    socket.on("expert_status_changed", handleStatusUpdate);
-    return () => {
-      socket.off("expert_status_changed", handleStatusUpdate);
-    };
-  }, []);
+    setExperts((prev) =>
+      prev.map((astro) => {
+        const presence =
+          presenceMap[Number(astro.id)] ??
+          (astro.userId ? presenceMap[Number(astro.userId)] : undefined);
+        if (!presence) return astro;
+        return {
+          ...astro,
+          is_available: presence.isAvailableForConsultation,
+        };
+      }),
+    );
+  }, [presenceMap]);
 
   useEffect(() => {
     if (initialError) {
@@ -261,10 +255,21 @@ export const useExpertListLogic = (
           ...(filterState.onlyOnline && { online: "true" }),
         };
         const query = new URLSearchParams(params).toString();
-        const [responseData, fetchErr] = await api.get<any>(
-          `/expert/account/list?${query}`,
-        );
+        const [responseData, fetchErr] = await api.get<{
+          data: ExpertProfile[];
+          meta?: { hasNextPage?: boolean };
+          pagination?: { hasMore?: boolean };
+        }>(`${API_ROUTES.EXPERTS.LIST}?${query}`);
         if (fetchErr || !responseData) throw fetchErr;
+
+        if (responseData.data && Array.isArray(responseData.data)) {
+          usePresenceStore.getState().batchSetExpertStatus(
+            responseData.data.map((item) => ({
+              expertId: item.id,
+              status: item.is_available ? "online" : "offline",
+            })),
+          );
+        }
         setExperts((prev) => [...prev, ...responseData.data.map(mapExpert)]);
         setHasMore(
           Boolean(

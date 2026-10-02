@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 
 import { CloseButton } from "@repo/ui";
-import { useExpertListStore } from "@/store/useExpertListStore";
+import { useExpertListStore } from "@/store/expertListStore";
 import { useTranslations } from "next-intl";
 
 export interface ExpertFilterModalProps {

@@ -3,8 +3,8 @@
 import React, { useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { Heart } from "lucide-react";
-import { useAuth } from "@/store/useAuthStore";
-import { useWishlistStore } from "@/store/useWishlistStore";
+import { useAuth } from "@/store/authStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 

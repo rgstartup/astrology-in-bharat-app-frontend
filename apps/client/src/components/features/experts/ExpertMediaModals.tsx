@@ -28,8 +28,8 @@ const ExpertMediaModals: React.FC<ExpertMediaModalsProps> = ({
       {selectedVideo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="relative w-full max-w-4xl animate-in zoom-in-95 duration-200 flex flex-col">
-            <CloseButton 
-              onClick={() => setSelectedVideo(null)} 
+            <CloseButton
+              onClick={() => setSelectedVideo(null)}
               className="absolute -top-3 -right-3 z-50 shadow-lg"
             />
             <div className="relative w-full bg-black rounded-t-2xl shadow-2xl overflow-hidden aspect-video flex items-center justify-center">
@@ -57,7 +57,11 @@ const ExpertMediaModals: React.FC<ExpertMediaModalsProps> = ({
               <span className="text-xs text-slate-500">Expert {expertName}</span>
             </div>
           </div>
-          <div className="absolute inset-0 -z-10" onClick={() => setSelectedVideo(null)} aria-hidden="true"></div>
+          <div
+            className="absolute inset-0 -z-10"
+            onClick={() => setSelectedVideo(null)}
+            aria-hidden="true"
+          ></div>
         </div>
       )}
 
@@ -68,10 +72,20 @@ const ExpertMediaModals: React.FC<ExpertMediaModalsProps> = ({
               <CloseButton onClick={() => setSelectedImage(null)} />
             </div>
             <div className="relative w-full h-[80vh] rounded-lg overflow-hidden">
-              <Image src={selectedImage} alt="Full view" fill sizes="100vw" className="object-contain" />
+              <Image
+                src={selectedImage}
+                alt="Full view"
+                fill
+                sizes="100vw"
+                className="object-contain"
+              />
             </div>
           </div>
-          <div className="absolute inset-0 -z-10" onClick={() => setSelectedImage(null)} aria-hidden="true"></div>
+          <div
+            className="absolute inset-0 -z-10"
+            onClick={() => setSelectedImage(null)}
+            aria-hidden="true"
+          ></div>
         </div>
       )}
     </>

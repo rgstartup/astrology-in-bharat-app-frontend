@@ -3,7 +3,7 @@
 import React from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { ChevronRight, Home } from "lucide-react";
-import { useConsultantBreadcrumbStore } from "@/store/useConsultantBreadcrumbStore";
+import { useConsultantBreadcrumbStore } from "@/store/consultantBreadcrumbStore";
 
 export function ConsultantsBreadcrumb() {
   const pathname = usePathname();

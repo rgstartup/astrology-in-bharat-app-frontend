@@ -2,7 +2,7 @@
 
 import { Bell } from "lucide-react";
 import NotificationCountIndicator from "./notification-indicator";
-import { useNotification } from "@/store/useNotificationStore";
+import { useNotification } from "@/store/notificationStore";
 import { useCallback, useEffect, useRef, useState } from "react";
 import NotificationDropDown from "./notification-dropdown";
 import {
@@ -16,7 +16,7 @@ import EmptyNotification from "./notification-empty";
 import NotificationList from "./notification-list";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 
 const NotificationComponent = () => {
   const notificationRef = useRef<HTMLDivElement>(null);

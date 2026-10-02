@@ -17,12 +17,13 @@ import {
 } from "lucide-react";
 import { api } from "@/actions";
 import { toast } from "@/hooks/use-toast";
-import { useAuthStore } from "@/store/__useAuthStore";
+import { useAuthStore } from "@/store/__authStore";
 import { getErrorMessage } from "@repo/lib";
 
 import { VerificationPopup } from "@repo/ui";
 import CallPrepSeoContent from "./call-prep-seo.component";
 import { formatSpecializationsString } from "@/utils/expert-utils";
+import { useExpertPresence } from "@/hooks/useExpertPresence";
 
 interface ExpertData {
   id: string;
@@ -61,6 +62,16 @@ function CallPrepContent() {
     refreshBalance,
   } = useAuthStore();
 
+  const { isAvailableForConsultation, isBusy, isOnline } = useExpertPresence(
+    id,
+    {
+      initialStatus: expert?.is_available,
+      autoSubscribe: true,
+    },
+  );
+
+  const isExpertAvailable = expert ? isAvailableForConsultation : false;
+
   useEffect(() => {
     if (isAuthenticated) {
       refreshBalance();
@@ -69,10 +80,10 @@ function CallPrepContent() {
 
   useEffect(() => {
     const fetchAstro = async () => {
-      let [res, fetchError] = await api.get<any>(`/expert/account/${id}`);
+      let [res, fetchError] = await api.get<any>(`/experts/${id}`);
       if (fetchError || !res) {
         const [fallbackRes, fallbackErr] = await api.get<any>(
-          `/expert/details/${id}`,
+          `/expert/account/${id}`,
         );
         if (!fallbackErr && fallbackRes) {
           res = fallbackRes;
@@ -121,7 +132,7 @@ function CallPrepContent() {
       return;
     }
 
-    if (expert && !expert.is_available) {
+    if (expert && !isExpertAvailable) {
       setShowOfflinePopup(true);
       return;
     }
@@ -321,15 +332,15 @@ function CallPrepContent() {
 
                 {/* Availability Badge */}
                 <div
-                  className={`absolute top-6 left-6 px-4 py-2 backdrop-blur-md rounded-full border shadow-sm flex items-center gap-2 ${expert.is_available ? "bg-white/95 border-orange/30" : "bg-white/95 border-gray-200"}`}
+                  className={`absolute top-6 left-6 px-4 py-2 backdrop-blur-md rounded-full border shadow-sm flex items-center gap-2 ${isExpertAvailable ? "bg-white/95 border-orange/30" : "bg-white/95 border-gray-200"}`}
                 >
                   <div
-                    className={`w-2 h-2 rounded-full ${expert.is_available ? "bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.4)]" : "bg-gray-400"}`}
+                    className={`w-2 h-2 rounded-full ${isExpertAvailable ? "bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.4)]" : isBusy ? "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]" : "bg-gray-400"}`}
                   ></div>
                   <span
-                    className={`${expert.is_available ? "text-orange" : "text-gray-500"} text-[10px] font-black uppercase tracking-widest`}
+                    className={`${isExpertAvailable ? "text-orange" : isBusy ? "text-amber-600" : "text-gray-500"} text-[10px] font-black uppercase tracking-widest`}
                   >
-                    {expert.is_available ? "Available Now" : "Offline"}
+                    {isExpertAvailable ? "Available Now" : isBusy ? "In Consultation" : "Offline"}
                   </span>
                 </div>
 

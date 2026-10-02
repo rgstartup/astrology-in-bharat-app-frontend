@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Card, Button } from "@/features/dashboard";
-import { useNotification } from "@/store/useNotificationStore";
+import { useNotification } from "@/store/notificationStore";
 import {
   Bell,
   Sparkles,

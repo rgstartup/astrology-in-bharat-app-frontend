@@ -6,7 +6,7 @@ import { useRouter } from "@/i18n/navigation";
 import { toast } from "@/hooks/use-toast";
 import { PATHS } from "@repo/routes";
 import { OnboardingFormData } from "@/lib/types";
-import { useOnboardStore } from "@/store/useOnboardStore";
+import { useOnboardStore } from "@/store/onboardStore";
 import { Form } from "@/components/ui/form";
 import { Badge } from "@/components/ui/badge";
 import { StepTwoPreferences } from "@/features/onboard/components/StepTwoPreferences";

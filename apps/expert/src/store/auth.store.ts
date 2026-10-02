@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import api from "@/actions/api";
 import { expertLogoutAction } from "@/actions/auth";
-import { type Expert as IExpert } from "@repo/lib";
+import { type IExpert } from "@repo/lib";
 import { API_ROUTES } from "@/utils/api.routes";
 
 export interface AuthState {

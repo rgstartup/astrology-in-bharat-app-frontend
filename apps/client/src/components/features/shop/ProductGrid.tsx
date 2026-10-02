@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { Search, X } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
-import { useProductListStore } from "@/store/useProductListStore";
+import { useProductListStore } from "@/store/productListStore";
 import { useDebounce } from "@/hooks/use-debounce";
 import { getProducts } from "@/libs/api-products";
 

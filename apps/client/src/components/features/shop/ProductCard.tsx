@@ -3,9 +3,9 @@
 import React from "react";
 import Image from "next/image";
 import { toast } from "@/hooks/use-toast";
-import { useAuthStore } from "@/store/useAuthStore"; // Changed import
+import { useAuthStore } from "@/store/authStore"; // Changed import
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { useWishlistStore } from "@/store/useWishlistStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/hooks/useCart";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
@@ -16,7 +16,7 @@ import { getProductImageUrl } from "@/utils/image-utils";
 import {
   useProductListStore,
   type ProductItem,
-} from "@/store/useProductListStore";
+} from "@/store/productListStore";
 import type { ProductWithLikes } from "@repo/lib";
 
 interface ProductCardProps {

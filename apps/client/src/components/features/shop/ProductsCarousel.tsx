@@ -5,7 +5,7 @@ import { Navigation, Autoplay } from "swiper/modules";
 import { getProducts } from "@/libs/api-products";
 import { ProductCard } from "./ProductCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useProductListStore } from "@/store/useProductListStore";
+import { useProductListStore } from "@/store/productListStore";
 
 const ProductsCarousel = () => {
   const { products, isLoading, setProducts, setIsLoading } =

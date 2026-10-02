@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 import { toast } from "@/hooks/use-toast";
 import { api as baseApi } from "@/actions";
 

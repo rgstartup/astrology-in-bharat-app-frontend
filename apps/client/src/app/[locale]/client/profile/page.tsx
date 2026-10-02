@@ -392,7 +392,7 @@ const ProfileContent: React.FC = () => {
 };
 
 import { Suspense } from "react";
-import { useAuth } from "@/store/useAuthStore";
+import { useAuth } from "@/store/authStore";
 import { useLocale, useTranslations } from "next-intl";
 
 export default function ProfilePage() {

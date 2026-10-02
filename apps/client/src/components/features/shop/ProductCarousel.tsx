@@ -9,7 +9,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   useProductListStore,
   type ProductItem,
-} from "@/store/useProductListStore";
+} from "@/store/productListStore";
 
 interface ProductCarouselProps {
   products?: ProductItem[];

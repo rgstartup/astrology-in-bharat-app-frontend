@@ -6,14 +6,12 @@ import ExpertProfileCard from "./ExpertProfileCard";
 import ExpertContentSection from "./ExpertContentSection";
 import ExpertMediaModals from "./ExpertMediaModals";
 import { useExpertDetails } from "./useExpertDetails";
-import type { Expert } from "@repo/lib";
+import type { IExpert } from "@repo/lib";
 import { Loading } from "@repo/ui";
-import { useConsultantBreadcrumbStore } from "@/store/useConsultantBreadcrumbStore";
+import { useConsultantBreadcrumbStore } from "@/store/consultantBreadcrumbStore";
 
 export default function ExpertDetailsClient({ expert }: { expert: Expert }) {
-  const setConsultantName = useConsultantBreadcrumbStore(
-    (s) => s.setConsultantName,
-  );
+  const setConsultantName = useConsultantBreadcrumbStore((s) => s.setConsultantName);
 
   const expertName = expert.name || "Astrologer";
 
@@ -28,10 +26,7 @@ export default function ExpertDetailsClient({ expert }: { expert: Expert }) {
   }, [expertName, setConsultantName]);
 
   const expertUserId =
-    (expert as any).userId ||
-    (expert as any).user_id ||
-    (expert as any).user?.id ||
-    "";
+    (expert as any).userId || (expert as any).user_id || (expert as any).user?.id || "";
 
   const {
     isReviewModalOpen,

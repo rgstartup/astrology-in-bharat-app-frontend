@@ -25,7 +25,7 @@ import { ExpertPuja } from "@/lib/types/puja";
 import Image from "next/image";
 import PujaDetailSeoContent from "./puja-detail-seo.component";
 import { Loading } from "@repo/ui";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 import { useTranslations } from "next-intl";
 import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";

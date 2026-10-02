@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import { User } from "@/lib/types";
 import { AuthActionResponse } from "@/lib/types/auth";
 import { stripLocale } from "@/utils/getPathnameOrDefault";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 import {
   InputOTP,
   InputOTPGroup,

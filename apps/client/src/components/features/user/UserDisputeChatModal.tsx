@@ -15,7 +15,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";
 import { getSupportSocket } from "@repo/ui/sockets";
-import { useAuthStore } from "@/store/__useAuthStore"; // Changed import
+import { useAuthStore } from "@/store/__authStore"; // Changed import
 import {
   getDisputeMessages,
   sendDisputeMessage,

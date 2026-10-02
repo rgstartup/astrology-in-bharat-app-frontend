@@ -14,7 +14,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
-import { useAuth } from "@/store/useAuthStore";
+import { useAuth } from "@/store/authStore";
 import { PATHS } from "@repo/routes";
 import { getProfileImageUrl } from "@/utils/image-utils";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";

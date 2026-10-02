@@ -10,4 +10,4 @@ export const API_ROUTES = {
   ACCOUNT: {
     ROOT: "/expert/account",
   },
-};
+} as const;

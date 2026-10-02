@@ -4,16 +4,16 @@ import NextLink from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
-import type { Expert } from "@repo/lib";
-import { useAuthStore } from "@/store/useAuthStore";
-import { usePreloadExpertStore } from "@/store/usePreloadExpertStore";
-import { useWishlistStore } from "@/store/useWishlistStore";
+import type { IExpert } from "@repo/lib";
+import { useAuthStore } from "@/store/authStore";
+import { usePreloadExpertStore } from "@/store/preloadExpertStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
-import socket from "@/lib/socket";
 import { extractSpecializationNames } from "@/utils/expert-utils";
+import { useExpertPresence } from "@/hooks/useExpertPresence";
 import ExpertActions from "./ExpertActions";
 import ExpertCardProfile from "./ExpertCardProfile";
 import ExpertDetails from "./ExpertDetails";
@@ -21,14 +21,11 @@ import ExpertRating from "./ExpertRating";
 import ExpertVideoModal from "./ExpertVideoModal";
 
 export interface ExpertCardProps {
-  expertData: Expert;
+  expertData: IExpert;
   cardClassName?: string;
 }
 
-const ExpertCard: React.FC<ExpertCardProps> = ({
-  expertData,
-  cardClassName = "",
-}) => {
+const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" }) => {
   const { t } = useHomeTranslations();
   const router = useRouter();
   const pathname = usePathname();
@@ -49,15 +46,9 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   } = expertData;
 
   const chat_price =
-    expertData.pricing?.chat_price ??
-    expertData.chat_price ??
-    expertData.price ??
-    0;
+    expertData.pricing?.chat_price ?? expertData.chat_price ?? expertData.price ?? 0;
   const call_price =
-    expertData.pricing?.call_price ??
-    expertData.call_price ??
-    expertData.price ??
-    0;
+    expertData.pricing?.call_price ?? expertData.call_price ?? expertData.price ?? 0;
   const video_call_price =
     expertData.pricing?.video_call_price ??
     expertData.video_call_price ??
@@ -67,8 +58,6 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [currentLikes, setCurrentLikes] = useState<number>(total_likes);
-  const [isAvailable, setIsAvailable] = useState(is_available);
-  const [isBusy, setIsBusy] = useState(Boolean((expertData as any).is_busy));
 
   useEffect(
     () => () => {
@@ -77,35 +66,17 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
     [],
   );
   useEffect(() => setCurrentLikes(total_likes), [total_likes]);
-  useEffect(() => setIsAvailable(is_available), [is_available]);
-  useEffect(() => {
-    const status = (data: any) => {
-      const eventId = data.expert_id || data.id || data.userId;
-      if (String(eventId) !== String(id)) return;
-      setIsAvailable(data.is_available);
-      if (!data.is_available) setIsBusy(false);
-    };
-    const busy = (data: any) => {
-      if (String(data.expert_id || data.id) === String(id))
-        setIsBusy(data.is_busy);
-    };
-    socket.on("expert_status_changed", status);
-    socket.on("expert_busy_changed", busy);
-    return () => {
-      socket.off("expert_status_changed", status);
-      socket.off("expert_busy_changed", busy);
-    };
-  }, [id]);
+
+  const { isAvailableForConsultation, isBusy } = useExpertPresence(id, {
+    initialStatus: is_available,
+  });
+  const isAvailable = isAvailableForConsultation;
 
   const expertProfileId = id || (expertData as any).expert_id;
-  const isLiked = expertProfileId
-    ? isExpertInWishlist(expertProfileId as any)
-    : false;
+  const isLiked = expertProfileId ? isExpertInWishlist(expertProfileId as any) : false;
 
   const specializationsList = extractSpecializationNames(
-    expertData.specializations ||
-      expertData.specialization ||
-      (expertData as any).expertise,
+    expertData.specializations || expertData.specialization || (expertData as any).expertise,
   );
 
   const customServicesList = Array.isArray(expertData.custom_services)
@@ -116,9 +87,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
     (service): service is string => Boolean(service),
   );
 
-  const displayedLanguages = Array.isArray(languages)
-    ? languages.join(", ")
-    : languages || "";
+  const displayedLanguages = Array.isArray(languages) ? languages.join(", ") : languages || "";
 
   const stopNavigation = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -130,19 +99,12 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
     if (!isAuthenticated) {
       toast.error("Please login to like this expert. Login now →", {
         onClick: () =>
-          router.push(
-            withCallbackUrl(
-              PATHS.LOGIN,
-              pathname === "/" ? "/#our-experts" : pathname,
-            ),
-          ),
+          router.push(withCallbackUrl(PATHS.LOGIN, pathname === "/" ? "/#our-experts" : pathname)),
         style: { cursor: "pointer" },
       });
       return;
     }
-    setCurrentLikes((current: number) =>
-      isLiked ? Math.max(0, current - 1) : current + 1,
-    );
+    setCurrentLikes((current: number) => (isLiked ? Math.max(0, current - 1) : current + 1));
     toggleLike({ id: expertProfileId as any, type: "expert", isLiked });
   };
   const consult = (
@@ -167,7 +129,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
         className={`flex h-full flex-col rounded-xl border border-[#daa23e] bg-white p-3 text-center shadow-sm transition-transform duration-300 hover:-translate-y-1.5 ${cardClassName} ${isNavigating ? "pointer-events-none opacity-70" : ""}`}
       >
         <NextLink
-          href={id ? `/expert/${id}` : "#"}
+          href={id ? `/consultants/${id}` : "#"}
           className="relative flex flex-1 flex-col no-underline hover:no-underline"
           onClick={() => {
             setIsNavigating(true);

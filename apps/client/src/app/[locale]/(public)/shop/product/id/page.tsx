@@ -10,7 +10,7 @@ import Reviews from "./Reviews";
 import ShopByPurpose from "./ShopByPurpose";
 import Features from "./Features";
 import { useRouter } from "@/i18n/navigation";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 import { useCart } from "@/hooks/useCart";
 import { toast } from "@/hooks/use-toast";
 

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MessageSquare, X } from "lucide-react";
 import { api as http } from "@/actions";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 
 const FloatingChatButton: React.FC<{ show: boolean }> = ({ show }) => {
 

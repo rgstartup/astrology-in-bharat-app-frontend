@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "@/actions";
+import { api, API_ROUTES } from "@/actions";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -123,7 +123,7 @@ const OurExpert = () => {
       try {
         if (!isSilent) setLoading(true);
         const [responseData, fetchErr] = await api.get<IFetchExpertsResponse>(
-          `/expert/account/list?${new URLSearchParams(
+          `${API_ROUTES.EXPERTS.LIST}?${new URLSearchParams(
             Object.entries({
               limit: String(limit),
               page: String(currentPage),

@@ -13,8 +13,8 @@ import OnlinePujaSeoContent from "./online-puja-seo.component";
 import { api, API_ROUTES } from "@/actions";
 import { ExpertPuja } from "@/lib/types/puja";
 import { PujaCard } from "@/components/features/puja/PujaCard";
-import { useWishlistStore } from "@/store/useWishlistStore";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useWishlistStore } from "@/store/wishlistStore";
+import { useAuthStore } from "@/store/authStore";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 

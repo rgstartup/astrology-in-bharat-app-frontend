@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
 import Image from "next/image";
+import React, { useState } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { Lock, Mail, Eye, EyeOff, LogIn, ShieldCheck } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -66,8 +66,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoadingChange }) => {
         return;
       }
 
-      toast.success("Welcome back, Expert!");
-      router.push("/dashboard");
+      await initAuth(true);
+
+      window.location.href = "/dashboard";
     } finally {
       updateLoading(false);
     }

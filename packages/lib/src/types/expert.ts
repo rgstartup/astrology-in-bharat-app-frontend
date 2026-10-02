@@ -29,7 +29,7 @@ export interface Pricing {
   currency?: string;
 }
 
-export interface Expert {
+export interface IExpert {
   id: number;
   name: string;
   avatar?: string | null;
@@ -52,4 +52,4 @@ export interface Expert {
   [key: string]: any;
 }
 
-export interface PaginatedExpertResponse extends PaginatedResponse<Expert> {}
+export interface PaginatedExpertResponse extends PaginatedResponse<IExpert> {}

@@ -3,8 +3,8 @@
 import React, { useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { ShoppingBag } from "lucide-react";
-import { useAuth } from "@/store/useAuthStore";
-import { useCartStore } from "@/store/useCartStore";
+import { useAuth } from "@/store/authStore";
+import { useCartStore } from "@/store/cartStore";
 import { PATHS } from "@repo/routes";
 
 const CartComponent = () => {

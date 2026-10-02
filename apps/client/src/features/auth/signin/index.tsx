@@ -22,7 +22,7 @@ import { scrollToTop } from "@/utils/scroll";
 import { useTranslations } from "next-intl";
 import { PATHS } from "@repo/routes";
 import { stripLocale, withCallbackUrl } from "@/utils/getPathnameOrDefault";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 
 interface SignInFormInputs {
   email: string;

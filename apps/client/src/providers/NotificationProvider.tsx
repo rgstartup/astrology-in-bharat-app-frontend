@@ -7,8 +7,8 @@ import {
   getNotificationSocket,
 } from "@repo/ui/sockets";
 import type { INotification } from "@/lib/types/notification.type";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useNotification } from "@/store/useNotificationStore";
+import { useAuthStore } from "@/store/authStore";
+import { useNotification } from "@/store/notificationStore";
 
 const isNotification = (data: unknown): data is INotification => {
   if (!data || typeof data !== "object") return false;

@@ -45,8 +45,8 @@ export const API_ROUTES = {
     IMAGES: "/places/images",
   },
   EXPERTS: {
+    LIST: "/experts",
     ACCOUNT: "/experts/:id",
-    LIST: "/expert/account/list",
     DETAILS: "/expert/account/profile",
     GET_ALL_PUJAS: "/expert/pujas/all",
     GET_PUJA_BY_ID: "/expert/puja/info/:id",

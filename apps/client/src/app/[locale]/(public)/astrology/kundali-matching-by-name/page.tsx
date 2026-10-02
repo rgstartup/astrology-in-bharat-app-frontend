@@ -10,7 +10,7 @@ import KundaliMatchingSeoContent from "./kundali-matching-seo.component";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { ConsultPersonDetails, AdvancedMatchResults } from "@/lib/types";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 import { toast } from "@/hooks/use-toast";
 
 const KundaliMatchingByNamePage = () => {

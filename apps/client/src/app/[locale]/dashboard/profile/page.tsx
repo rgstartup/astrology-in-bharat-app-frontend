@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 import { toast } from "@/hooks/use-toast";
 import { ProfileUpdateForm, type ProfileFormValues } from "@/features/dashboard/profile";
 import { updateCurrentUser } from "@/features/dashboard/profile/actions/update-account";

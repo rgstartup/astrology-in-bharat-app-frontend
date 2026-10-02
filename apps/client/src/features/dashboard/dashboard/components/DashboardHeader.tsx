@@ -3,8 +3,8 @@
 import React from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useNotification } from "@/store/useNotificationStore";
+import { useAuthStore } from "@/store/authStore";
+import { useNotification } from "@/store/notificationStore";
 import {
   Menu,
   Compass,

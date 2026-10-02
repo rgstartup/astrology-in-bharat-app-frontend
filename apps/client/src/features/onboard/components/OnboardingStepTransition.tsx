@@ -2,7 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { useOnboardStore } from "@/store/useOnboardStore";
+import { useOnboardStore } from "@/store/onboardStore";
 
 interface OnboardingStepTransitionProps {
   children: React.ReactNode;

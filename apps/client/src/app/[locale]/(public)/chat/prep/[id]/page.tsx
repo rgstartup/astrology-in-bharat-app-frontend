@@ -16,6 +16,7 @@ import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
 import type { Expert } from "@repo/lib";
 import { formatSpecializationsString } from "@/utils/expert-utils";
+import { useExpertPresence } from "@/hooks/useExpertPresence";
 import HeroInfo from "./hero-info.component";
 import ExpertPreview from "./expert-preview.component";
 import SecurityTipsModal from "./security-modal.component";
@@ -54,6 +55,16 @@ export default function ConsultationPrep() {
     pob: "",
   });
   const { isAuthenticated, refreshBalance } = useAuthStore();
+
+  const { isAvailableForConsultation, isBusy, isOnline } = useExpertPresence(
+    id,
+    {
+      initialStatus: expert?.is_available,
+      autoSubscribe: true,
+    },
+  );
+
+  const isExpertAvailable = expert ? isAvailableForConsultation : false;
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -199,7 +210,7 @@ export default function ConsultationPrep() {
       return;
     }
 
-    if (expert && !expert.is_available) {
+    if (expert && !isExpertAvailable) {
       setShowOfflinePopup(true);
       return;
     }
@@ -209,7 +220,7 @@ export default function ConsultationPrep() {
 
   const proceedToChat = async () => {
     setShowSecurityModal(false);
-    if (expert && !expert.is_available) {
+    if (expert && !isExpertAvailable) {
       setShowOfflinePopup(true);
       return;
     }
@@ -296,7 +307,9 @@ export default function ConsultationPrep() {
           <HeroInfo expertName={expert?.name} />
 
           <ExpertPreview
-            expert={expert}
+            expert={
+              expert ? { ...expert, is_available: isExpertAvailable } : null
+            }
             askSomeoneElse={askSomeoneElse}
             setAskSomeoneElse={setAskSomeoneElse}
             someoneElseData={someoneElseData}

@@ -1,4 +1,4 @@
-import type { Expert } from "@repo/lib";
+import type { IExpert } from "@repo/lib";
 
 /**
  * Extracts and normalizes an array of human-readable specialization names
@@ -51,9 +51,7 @@ export function extractSpecializationNames(raw: any): string[] {
         const extracted =
           item.specialization?.name ||
           item.specialization?.title ||
-          (typeof item.specialization === "string"
-            ? item.specialization
-            : "") ||
+          (typeof item.specialization === "string" ? item.specialization : "") ||
           item.name ||
           item.title ||
           item.specialization_name ||
@@ -102,10 +100,7 @@ export function extractSpecializationNames(raw: any): string[] {
 /**
  * Returns a clean comma-separated string of specializations.
  */
-export function formatSpecializationsString(
-  raw: any,
-  fallback = "Vedic Astrology",
-): string {
+export function formatSpecializationsString(raw: any, fallback = "Vedic Astrology"): string {
   const names = extractSpecializationNames(raw);
   return names.length > 0 ? names.join(", ") : fallback;
 }
@@ -136,64 +131,46 @@ const SPECIALIZATION_PALETTES: SpecializationBadgeStyle[] = [
   {
     variant: "purple",
     iconColor: "text-purple-600",
-    badgeBg:
-      "bg-purple-500/10 border-purple-500/20 text-purple-700 dark:text-purple-300",
+    badgeBg: "bg-purple-500/10 border-purple-500/20 text-purple-700 dark:text-purple-300",
   },
   {
     variant: "emerald",
     iconColor: "text-emerald-600",
-    badgeBg:
-      "bg-emerald-500/10 border-emerald-500/20 text-emerald-700 dark:text-emerald-300",
+    badgeBg: "bg-emerald-500/10 border-emerald-500/20 text-emerald-700 dark:text-emerald-300",
   },
   {
     variant: "blue",
     iconColor: "text-blue-600",
-    badgeBg:
-      "bg-blue-500/10 border-blue-500/20 text-blue-700 dark:text-blue-300",
+    badgeBg: "bg-blue-500/10 border-blue-500/20 text-blue-700 dark:text-blue-300",
   },
   {
     variant: "rose",
     iconColor: "text-rose-600",
-    badgeBg:
-      "bg-rose-500/10 border-rose-500/20 text-rose-700 dark:text-rose-300",
+    badgeBg: "bg-rose-500/10 border-rose-500/20 text-rose-700 dark:text-rose-300",
   },
   {
     variant: "amber",
     iconColor: "text-amber-600",
-    badgeBg:
-      "bg-amber-500/15 border-amber-500/30 text-amber-800 dark:text-amber-300",
+    badgeBg: "bg-amber-500/15 border-amber-500/30 text-amber-800 dark:text-amber-300",
   },
   {
     variant: "teal",
     iconColor: "text-teal-600",
-    badgeBg:
-      "bg-teal-500/10 border-teal-500/20 text-teal-700 dark:text-teal-300",
+    badgeBg: "bg-teal-500/10 border-teal-500/20 text-teal-700 dark:text-teal-300",
   },
   {
     variant: "indigo",
     iconColor: "text-indigo-600",
-    badgeBg:
-      "bg-indigo-500/10 border-indigo-500/20 text-indigo-700 dark:text-indigo-300",
+    badgeBg: "bg-indigo-500/10 border-indigo-500/20 text-indigo-700 dark:text-indigo-300",
   },
 ];
 
-export function getSpecializationBadgeStyle(
-  name: string,
-  index = 0,
-): SpecializationBadgeStyle {
+export function getSpecializationBadgeStyle(name: string, index = 0): SpecializationBadgeStyle {
   const lower = (name || "").toLowerCase();
-  if (
-    lower.includes("vedic") ||
-    lower.includes("kundli") ||
-    lower.includes("jyotish")
-  ) {
+  if (lower.includes("vedic") || lower.includes("kundli") || lower.includes("jyotish")) {
     return SPECIALIZATION_PALETTES[0]!;
   }
-  if (
-    lower.includes("tarot") ||
-    lower.includes("psychic") ||
-    lower.includes("spiritual")
-  ) {
+  if (lower.includes("tarot") || lower.includes("psychic") || lower.includes("spiritual")) {
     return SPECIALIZATION_PALETTES[1]!;
   }
   if (lower.includes("vastu") || lower.includes("feng")) {
@@ -202,18 +179,10 @@ export function getSpecializationBadgeStyle(
   if (lower.includes("numerology") || lower.includes("prashna")) {
     return SPECIALIZATION_PALETTES[3]!;
   }
-  if (
-    lower.includes("love") ||
-    lower.includes("relationship") ||
-    lower.includes("palmistry")
-  ) {
+  if (lower.includes("love") || lower.includes("relationship") || lower.includes("palmistry")) {
     return SPECIALIZATION_PALETTES[4]!;
   }
-  if (
-    lower.includes("gem") ||
-    lower.includes("rudraksha") ||
-    lower.includes("remedy")
-  ) {
+  if (lower.includes("gem") || lower.includes("rudraksha") || lower.includes("remedy")) {
     return SPECIALIZATION_PALETTES[5]!;
   }
   if (lower.includes("kp") || lower.includes("lal kitab")) {
@@ -227,10 +196,7 @@ export function getSpecializationBadgeStyle(
  * respecting the new `professions` array with `is_primary: true`,
  * and gracefully falling back to legacy fields.
  */
-export function extractPrimaryProfession(
-  expert: Expert,
-  fallback = "Astrologer",
-): string {
+export function extractPrimaryProfession(expert: Expert, fallback = "Astrologer"): string {
   if (!expert) {
     console.log("no expert, falling back to astrologer");
     return fallback;
@@ -263,10 +229,7 @@ export function extractPrimaryProfession(
   }
 
   // 4. primary_profession property
-  if (
-    typeof expert.primary_profession === "string" &&
-    expert.primary_profession.trim()
-  ) {
+  if (typeof expert.primary_profession === "string" && expert.primary_profession.trim()) {
     return expert.primary_profession.trim();
   }
 
@@ -283,8 +246,7 @@ export function extractProfessionNames(expert: any): string[] {
     const names: string[] = [];
     for (const p of expert.professions) {
       if (!p) continue;
-      const title =
-        p.profession?.title || p.profession?.name || p.title || p.name;
+      const title = p.profession?.title || p.profession?.name || p.title || p.name;
       if (title && typeof title === "string" && title.trim()) {
         names.push(title.trim());
       }

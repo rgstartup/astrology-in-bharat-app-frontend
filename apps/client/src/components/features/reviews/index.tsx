@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import ReviewForm from "./form";
 import SuccessComponent from "./success";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 import { usePathname } from "next/navigation";
 import { getReviewModal, setReviewModal } from "./storage";
 

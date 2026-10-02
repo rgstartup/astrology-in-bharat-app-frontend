@@ -5,9 +5,9 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { AlertCircle } from "lucide-react";
 import { api } from "@/actions";
-import { chatSocket } from "@/libs/socket";
+import { chatSocket } from "@/lib/socket";
 import { uploadClientDocument } from "@/libs/api-profile";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 import { toast } from "@/hooks/use-toast";
 import { getErrorMessage } from "@repo/lib";
 

@@ -8,4 +8,4 @@ export * from "./components/AddressFields";
 export * from "./components/LanguageSelector";
 export * from "./components/ConsultationCategorySelector";
 export * from "./components/ExpertCategorySelector";
-export * from "@/store/useOnboardStore";
+export * from "@/store/onboardStore";

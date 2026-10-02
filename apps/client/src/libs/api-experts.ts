@@ -1,4 +1,4 @@
-import { api } from "@/actions";
+import { api, API_ROUTES } from "@/actions";
 import { getErrorMessage } from "@repo/lib";
 
 export interface ExpertProfile {
@@ -67,7 +67,10 @@ export const getExperts = async (
       }
     });
 
-    const url = `/expert/account/list?${queryParams.toString()}`;
+    const queryString = queryParams.toString();
+    const url = queryString
+      ? `${API_ROUTES.EXPERTS.LIST}?${queryString}`
+      : API_ROUTES.EXPERTS.LIST;
 
     const [result, fetchError] = await api.get<any>(url, {
       cache: "no-store",

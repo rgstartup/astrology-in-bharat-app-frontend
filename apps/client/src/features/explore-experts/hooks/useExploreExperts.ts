@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { api } from "@/actions";
-import socket from "@/lib/socket";
-import type { Expert, Specialization } from "@repo/lib";
+import { api, API_ROUTES } from "@/actions";
+import { usePresenceStore } from "@/store/presenceStore";
+import type { IExpert, Specialization } from "@repo/lib";
 import { fetchSpecializations } from "@/features/home/expert-list-wrapper/expert-list/api/fetch-specializations";
 import dummyExperts from "@/features/home/expert-list-wrapper/expert-list/data/dummy-experts.json";
 import { ExploreFilterState, SortOption, ConsultationMode } from "../types";
@@ -109,36 +109,23 @@ export function useExploreExperts(initialExperts?: Expert[]) {
     });
   }, []);
 
-  // Realtime availability updates
+  // Subscribe to centralized presence store
+  const presenceMap = usePresenceStore((state) => state.presenceMap);
+
   useEffect(() => {
-    const onStatus = (data: any) => {
-      const expertId = String(data.expert_id || data.id || data.userId);
-      setExperts((prev) =>
-        prev.map((exp) =>
-          String(exp.id) === expertId
-            ? { ...exp, is_available: data.is_available }
-            : exp,
-        ),
-      );
-    };
-
-    const onBusy = (data: any) => {
-      const expertId = String(data.expert_id || data.id);
-      setExperts((prev) =>
-        prev.map((exp) =>
-          String(exp.id) === expertId ? { ...exp, is_busy: data.is_busy } : exp,
-        ),
-      );
-    };
-
-    socket.on("expert_status_changed", onStatus);
-    socket.on("expert_busy_changed", onBusy);
-
-    return () => {
-      socket.off("expert_status_changed", onStatus);
-      socket.off("expert_busy_changed", onBusy);
-    };
-  }, []);
+    setExperts((prev) =>
+      prev.map((exp) => {
+        const presence = presenceMap[Number(exp.id)];
+        if (!presence) return exp;
+        return {
+          ...exp,
+          is_available: presence.isAvailableForConsultation,
+          status: presence.status,
+          is_busy: presence.status === "busy",
+        };
+      }),
+    );
+  }, [presenceMap]);
 
   // Keep refs to avoid unnecessary recreations of fetchExperts
   const filtersRef = useRef(filters);
@@ -202,7 +189,9 @@ export function useExploreExperts(initialExperts?: Expert[]) {
       setLoading(true);
       try {
         const query = buildQuery(targetPage);
-        const [res, err] = await api.get<any>(`/expert/account/list?${query}`);
+        const [res, err] = await api.get<any>(
+          `${API_ROUTES.EXPERTS.LIST}?${query}`,
+        );
 
         if (err || !res?.data) {
           // If error or empty response on first load, use client-side filtered fallback
@@ -270,6 +259,14 @@ export function useExploreExperts(initialExperts?: Expert[]) {
         }
 
         const newItems: Expert[] = res.data || [];
+        if (newItems.length > 0) {
+          usePresenceStore.getState().batchSetExpertStatus(
+            newItems.map((item) => ({
+              expertId: item.id,
+              status: item.status || (item.is_available ? "online" : "offline"),
+            })),
+          );
+        }
         setExperts((prev) => {
           const updated = append ? [...prev, ...newItems] : newItems;
           const total = res.meta?.total !== undefined ? res.meta.total : updated.length;

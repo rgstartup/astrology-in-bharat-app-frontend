@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import ProductCarousel from "./ProductCarousel";
 import { Search, X } from "lucide-react";
 
-import { useProductListStore } from "@/store/useProductListStore";
+import { useProductListStore } from "@/store/productListStore";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { useDebounce } from "@/hooks/use-debounce";
 import { getProducts } from "@/libs/api-products";

@@ -1,12 +1,12 @@
 import React from "react";
 import ExpertDetailsClient from "@/components/features/experts/ExpertDetailsClient";
 import { apiV2, API_ROUTES } from "@/actions";
-import { Expert } from "@repo/lib";
+import { IExpert } from "@repo/lib";
 
 export default async function ProfileSlot({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const result = await apiV2.get<Expert>(API_ROUTES.EXPERTS.ACCOUNT.replace(":id", id));
+  const result = await apiV2.get<IExpert>(API_ROUTES.EXPERTS.ACCOUNT.replace(":id", id));
 
   if (!result.ok) {
     console.log(result.error.message);

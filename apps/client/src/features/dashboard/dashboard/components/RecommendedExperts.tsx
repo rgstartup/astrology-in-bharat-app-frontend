@@ -9,8 +9,9 @@ import { Skeleton } from "./ui/skeleton";
 import { fetchRecommendedExperts } from "../api/dashboard.api";
 import { SAMPLE_RECOMMENDED_EXPERTS } from "../data";
 import { Star, MessageSquare, ArrowRight, ShieldCheck } from "lucide-react";
-import Image from "next/image";
 import { formatSpecializationsString } from "@/utils/expert-utils";
+import { usePresenceStore } from "@/store/presenceStore";
+import Image from "next/image";
 
 export const RecommendedExperts: React.FC = () => {
   const [experts, setExperts] = useState<any[]>([]);
@@ -24,6 +25,12 @@ export const RecommendedExperts: React.FC = () => {
       if (!isMounted) return;
 
       if (!err && res?.data && Array.isArray(res.data) && res.data.length > 0) {
+        usePresenceStore.getState().batchSetExpertStatus(
+          res.data.map((item: any) => ({
+            expertId: item.id,
+            status: item.status || (item.is_available ? "online" : "offline"),
+          })),
+        );
         setExperts(res.data);
       } else {
         setExperts(SAMPLE_RECOMMENDED_EXPERTS);
@@ -89,18 +96,13 @@ export const RecommendedExperts: React.FC = () => {
           {experts.slice(0, 4).map((expert: any) => {
             const name = expert.user?.name || expert.name || "Astrology Expert";
             const specialization = formatSpecializationsString(
-              expert.specializations ||
-                expert.specialization ||
-                expert.expertise,
+              expert.specializations || expert.specialization || expert.expertise,
               "Vedic Astrology",
             );
             const rating = Number(expert.ratings || 4.9).toFixed(1);
             const isOnline = Boolean(expert.is_available);
             const price = expert.chat_price || expert.price || 25;
-            const avatar =
-              expert.user?.avatar ||
-              expert.avatar ||
-              "/images/dummy-expert.jpg";
+            const avatar = expert.user?.avatar || expert.avatar || "/images/dummy-expert.jpg";
 
             return (
               <Card
@@ -118,8 +120,7 @@ export const RecommendedExperts: React.FC = () => {
                           height={48}
                           className="w-full h-full object-cover"
                           onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src =
-                              "/images/dummy-expert.jpg";
+                            (e.currentTarget as HTMLImageElement).src = "/images/dummy-expert.jpg";
                           }}
                         />
                       </div>
@@ -134,19 +135,13 @@ export const RecommendedExperts: React.FC = () => {
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1">
-                        <h4 className="text-sm font-bold text-slate-900 truncate">
-                          {name}
-                        </h4>
+                        <h4 className="text-sm font-bold text-slate-900 truncate">{name}</h4>
                         <ShieldCheck className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                       </div>
-                      <p className="text-[11px] text-slate-500 truncate">
-                        {specialization}
-                      </p>
+                      <p className="text-[11px] text-slate-500 truncate">{specialization}</p>
                       <div className="flex items-center gap-1 mt-0.5">
                         <Star className="w-3 h-3 text-amber-500 fill-amber-400" />
-                        <span className="text-[11px] font-bold text-slate-700">
-                          {rating}
-                        </span>
+                        <span className="text-[11px] font-bold text-slate-700">{rating}</span>
                       </div>
                     </div>
                   </div>
@@ -155,9 +150,7 @@ export const RecommendedExperts: React.FC = () => {
                     <span className="text-slate-500 font-medium">Rate:</span>
                     <span className="font-bold text-slate-900">
                       ₹{price}
-                      <span className="text-[10px] text-slate-400 font-normal">
-                        /min
-                      </span>
+                      <span className="text-[10px] text-slate-400 font-normal">/min</span>
                     </span>
                   </div>
                 </div>

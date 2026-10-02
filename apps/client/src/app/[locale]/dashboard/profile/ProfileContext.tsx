@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect } from "react";
 import type { Client } from "@repo/lib";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/store/authStore";
 
 interface ProfileContextType {
   profile: Client | null;

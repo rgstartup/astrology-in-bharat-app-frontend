@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { Client } from "@/lib/types";
 import { PATHS } from "@repo/routes";
 import { useTranslations } from "next-intl";
-import { useAuth } from "@/store/useAuthStore";
+import { useAuth } from "@/store/authStore";
 
 interface IProfileDropdown {
   showProfileDropdown: boolean;

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { merchantSocket } from "@/lib/socket";
-import { useMerchantStore } from "@/store/useMerchantStore";
+import { useMerchantStore } from "@/store/merchantStore";
 
 export default function MerchantStatusProvider({
   children,
