@@ -14,7 +14,7 @@ import { useTranslations } from "next-intl";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
-import type { Expert } from "@repo/lib";
+import type { IExpert } from "@repo/lib";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import HeroInfo from "./hero-info.component";
@@ -29,7 +29,7 @@ export default function ConsultationPrep() {
   const id = params.id as string;
   const t = useTranslations("Chat.page");
 
-  const [expert, setExpert] = useState<Partial<Expert> | null>(null);
+  const [expert, setExpert] = useState<Partial<IExpert> | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [askSomeoneElse, setAskSomeoneElse] = useState(true);
@@ -59,7 +59,10 @@ export default function ConsultationPrep() {
   const { isAvailableForConsultation, isBusy, isOnline } = useExpertPresence(
     id,
     {
-      initialStatus: expert?.is_available,
+      initialStatus:
+        expert?.isAvailableForConsultation ??
+        expert?.status ??
+        expert?.is_available,
       autoSubscribe: true,
     },
   );

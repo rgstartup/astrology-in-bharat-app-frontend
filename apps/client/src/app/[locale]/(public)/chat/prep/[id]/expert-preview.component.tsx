@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "@/i18n/navigation";
-import type { Expert } from "@repo/lib";
+import type { IExpert } from "@repo/lib";
 import { useTranslations } from "next-intl";
 import {
   MapPin,
@@ -16,7 +16,7 @@ import {
 import { formatSpecializationsString } from "@/utils/expert-utils";
 
 type Props = {
-  expert: Partial<Expert> | null;
+  expert: Partial<IExpert> | null;
   askSomeoneElse: boolean;
   setAskSomeoneElse: (val: boolean) => void;
   someoneElseData: any;
@@ -53,6 +53,11 @@ const ExpertPreview = ({
     !eligibility.isEligibleForFree &&
     !eligibility.hasBalance;
 
+  const isExpertAvailable = Boolean(
+    expert?.isAvailableForConsultation ??
+      (expert?.status === "online" || Boolean(expert?.is_available)),
+  );
+
   return (
     <div className="order-1 lg:order-2 lg:col-span-5 relative">
       <div className="sticky top-28">
@@ -70,24 +75,24 @@ const ExpertPreview = ({
             {/* Availability Badge */}
             <div
               className={`absolute top-6 left-6 px-4 py-2 backdrop-blur-md rounded-full border shadow-sm flex items-center gap-2 ${
-                expert?.is_available
+                isExpertAvailable
                   ? "bg-[#FF5500] border-white/20"
                   : "bg-[#1A1A1A] border-gray-800"
               }`}
             >
               <div
                 className={`w-2 h-2 rounded-full ${
-                  expert?.is_available
+                  isExpertAvailable
                     ? "bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)]"
                     : "bg-gray-400"
                 }`}
               ></div>
               <span
                 className={`${
-                  expert?.is_available ? "text-white" : "text-gray-400"
+                  isExpertAvailable ? "text-white" : "text-gray-400"
                 } text-[10px] font-black uppercase tracking-widest`}
               >
-                {expert?.is_available ? tx("availableNow") : tx("offline")}
+                {isExpertAvailable ? tx("availableNow") : tx("offline")}
               </span>
             </div>
 

@@ -40,9 +40,12 @@ export interface IExpert {
   professions?: ExpertProfession[];
   specializations?: ExpertSpecialization[];
   pricing?: Pricing;
-  // Runtime / backward-compatibility fields
+  // Runtime / status fields
+  status?: string;
+  isAvailableForConsultation?: boolean;
   profession?: Profession;
   video?: string;
+  /** @deprecated Use `isAvailableForConsultation` or `status === 'online'` */
   is_available?: boolean;
   is_busy?: boolean;
   total_likes?: number;

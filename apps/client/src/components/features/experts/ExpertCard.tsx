@@ -71,7 +71,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
 
   // Real-time status sync via centralized presence hook
   const { isAvailableForConsultation, isBusy } = useExpertPresence(id, {
-    initialStatus: is_available,
+    initialStatus:
+      expertData.isAvailableForConsultation ??
+      expertData.status ??
+      expertData.is_available,
   });
   const isAvailable = isAvailableForConsultation;
 
@@ -185,10 +188,11 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
               horoscope_price,
               video,
               ratings,
+              isAvailableForConsultation: isAvailable,
               is_available: isAvailable,
               total_likes: currentLikes,
               custom_services,
-            } as any);
+            });
           }}
         >
           {isNavigating && (

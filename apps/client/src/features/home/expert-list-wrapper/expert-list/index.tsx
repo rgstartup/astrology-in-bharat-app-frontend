@@ -71,7 +71,12 @@ const ExpertList: React.FC<ExpertListProps> = ({
           );
         }
         if (filterState.onlyOnline) {
-          filtered = filtered.filter((e) => e.is_available);
+          filtered = filtered.filter(
+            (e) =>
+              e.isAvailableForConsultation ??
+              e.status === "online" ??
+              e.is_available,
+          );
         }
         if (filterState.minRating > 0) {
           filtered = filtered.filter((e) => (e.rating || 5) >= filterState.minRating);

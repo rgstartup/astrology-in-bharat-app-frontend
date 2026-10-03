@@ -37,6 +37,8 @@ interface ExpertData {
   video_call_price?: number;
   languages: string[];
   rating: number;
+  status?: string;
+  isAvailableForConsultation?: boolean;
   is_available: boolean;
 }
 
@@ -65,7 +67,10 @@ function CallPrepContent() {
   const { isAvailableForConsultation, isBusy, isOnline } = useExpertPresence(
     id,
     {
-      initialStatus: expert?.is_available,
+      initialStatus:
+        expert?.isAvailableForConsultation ??
+        expert?.status ??
+        expert?.is_available,
       autoSubscribe: true,
     },
   );

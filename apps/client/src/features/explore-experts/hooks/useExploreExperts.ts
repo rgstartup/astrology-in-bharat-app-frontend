@@ -119,6 +119,7 @@ export function useExploreExperts(initialExperts?: Expert[]) {
         if (!presence) return exp;
         return {
           ...exp,
+          isAvailableForConsultation: presence.isAvailableForConsultation,
           is_available: presence.isAvailableForConsultation,
           status: presence.status,
           is_busy: presence.status === "busy",
@@ -227,7 +228,12 @@ export function useExploreExperts(initialExperts?: Expert[]) {
             }
 
             if (currentFilters.onlyOnline) {
-              filteredFallback = filteredFallback.filter((e) => e.is_available);
+              filteredFallback = filteredFallback.filter(
+                (e) =>
+                  e.isAvailableForConsultation ??
+                  e.status === "online" ??
+                  e.is_available,
+              );
             }
 
             if (currentFilters.minRating > 0) {
@@ -263,7 +269,13 @@ export function useExploreExperts(initialExperts?: Expert[]) {
           usePresenceStore.getState().batchSetExpertStatus(
             newItems.map((item) => ({
               expertId: item.id,
-              status: item.status || (item.is_available ? "online" : "offline"),
+              status:
+                item.status ||
+                (item.isAvailableForConsultation
+                  ? "online"
+                  : item.is_available
+                    ? "online"
+                    : "offline"),
             })),
           );
         }

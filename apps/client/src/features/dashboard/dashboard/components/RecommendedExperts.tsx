@@ -28,7 +28,13 @@ export const RecommendedExperts: React.FC = () => {
         usePresenceStore.getState().batchSetExpertStatus(
           res.data.map((item: any) => ({
             expertId: item.id,
-            status: item.status || (item.is_available ? "online" : "offline"),
+            status:
+              item.status ||
+              (item.isAvailableForConsultation
+                ? "online"
+                : item.is_available
+                  ? "online"
+                  : "offline"),
           })),
         );
         setExperts(res.data);
@@ -100,7 +106,10 @@ export const RecommendedExperts: React.FC = () => {
               "Vedic Astrology",
             );
             const rating = Number(expert.ratings || 4.9).toFixed(1);
-            const isOnline = Boolean(expert.is_available);
+            const isOnline = Boolean(
+              expert.isAvailableForConsultation ??
+                (expert.status === "online" || Boolean(expert.is_available)),
+            );
             const price = expert.chat_price || expert.price || 25;
             const avatar = expert.user?.avatar || expert.avatar || "/images/dummy-expert.jpg";
 

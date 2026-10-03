@@ -84,13 +84,16 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
   };
 
   const handleCardClick = () => {
-    setPreloadedExpert(expert as any);
+    setPreloadedExpert(expert);
   };
 
   const { isOnline, isBusy, isAvailableForConsultation } = useExpertPresence(
     expert.id,
     {
-      initialStatus: expert.is_available,
+      initialStatus:
+        expert.isAvailableForConsultation ??
+        expert.status ??
+        expert.is_available,
     },
   );
 

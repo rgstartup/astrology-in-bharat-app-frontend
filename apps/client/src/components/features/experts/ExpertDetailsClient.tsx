@@ -49,8 +49,12 @@ export default function ExpertDetailsClient({ expert }: { expert: IExpert }) {
   } = useExpertDetails(
     String(expert.id!),
     String(expertUserId),
-    Boolean(expert.is_available),
-    Boolean(expert.is_busy),
+    Boolean(
+      expert.isAvailableForConsultation ??
+        (expert.status === "online") ??
+        expert.is_available,
+    ),
+    Boolean(expert.is_busy ?? expert.status === "busy"),
   );
 
   return (

@@ -68,7 +68,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" 
   useEffect(() => setCurrentLikes(total_likes), [total_likes]);
 
   const { isAvailableForConsultation, isBusy } = useExpertPresence(id, {
-    initialStatus: is_available,
+    initialStatus:
+      expertData.isAvailableForConsultation ??
+      expertData.status ??
+      expertData.is_available,
   });
   const isAvailable = isAvailableForConsultation;
 
@@ -136,9 +139,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" 
             document.body.style.cursor = "wait";
             setPreloadedExpert({
               ...expertData,
+              isAvailableForConsultation: isAvailable,
               is_available: isAvailable,
               total_likes: currentLikes,
-            } as any);
+            });
           }}
         >
           <ExpertCardProfile
