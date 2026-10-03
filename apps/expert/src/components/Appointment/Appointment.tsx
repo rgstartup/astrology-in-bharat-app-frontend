@@ -9,7 +9,14 @@ import RescheduleModal from "./RescheduleModal";
 import { Appointment } from "./types";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
-import { socket, chatSocket, callSocket } from "@/lib/socket";
+import {
+  getRootSocket,
+  chatSocket,
+  callSocket,
+  connectChatSocket,
+  connectCallSocket,
+} from "@/lib/socket";
+import { getSocketTokenAction } from "@/actions/auth";
 import { getReviews } from "@/lib/reviews";
 import { getDashboardStats, DashboardStats } from "@/lib/dashboard";
 import { TableSkeleton, StatsSkeleton } from "../dashboard/DashboardSkeletons";
@@ -204,35 +211,22 @@ export default function AppointmentsPage() {
     fetchAllSessions();
 
     if (isExpertAuthenticated && expertUser) {
-      // ... (socket listeners remain same)
+      let isSubscribed = true;
       const registrationId = expertUser.profileId || expertUser.id;
+      const rootSocket = getRootSocket();
 
-      const connectSocket = () => {
-        if (!socket.connected) {
-          socket.connect();
+      const connectSockets = async () => {
+        try {
+          const token = await getSocketTokenAction();
+          if (!isSubscribed) return;
+          connectChatSocket(token, registrationId);
+          connectCallSocket(token, registrationId);
+        } catch (err) {
+          console.error("[Appointment] Failed to get socket token:", err);
         }
-
-        if (!chatSocket.connected) {
-          chatSocket.connect();
-        }
-        chatSocket.emit('register_expert', { expert_id: registrationId });
-
-        if (!callSocket.connected) {
-          callSocket.connect();
-        }
-        callSocket.emit('register_expert', { expert_id: registrationId });
       };
 
-      // Connect if not connected
-      connectSocket();
-
-      // Handle reconnection
-      socket.on('connect', () => {
-        connectSocket();
-      });
-      chatSocket.on('connect', () => {
-        connectSocket();
-      });
+      connectSockets();
 
       // 2. Real-time update when NEW request arrives
       const handleNewPujaRequest = (session: any) => {
@@ -369,7 +363,7 @@ export default function AppointmentsPage() {
         ));
       };
 
-      socket.on('new_puja_request', handleNewPujaRequest);
+      rootSocket.on('new_puja_request', handleNewPujaRequest);
       chatSocket.on('new_chat_request', handleNewRequest);
       callSocket.on('new_call_request', handleNewCallRequest);
 
@@ -386,12 +380,11 @@ export default function AppointmentsPage() {
       callSocket.on('call_accepted', handleCallAccepted);
 
       return () => {
-        socket.off('new_puja_request');
-        socket.off('connect');
+        isSubscribed = false;
+        rootSocket.off('new_puja_request', handleNewPujaRequest);
         chatSocket.off('new_chat_request', handleNewRequest);
         chatSocket.off('session_activated');
         chatSocket.off('session_ended', handleSessionEnded);
-        chatSocket.off('connect');
 
         callSocket.off('new_call_request', handleNewCallRequest);
         callSocket.off('call_accepted', handleCallAccepted);

@@ -4,9 +4,11 @@ import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import api from "@/actions/api";
 import {
-  presenceSocket,
+  getRootSocket,
   chatSocket,
   ExpertClientStatus,
+  SOCKET_LISTEN_EVENTS,
+  SOCKET_EMIT_EVENTS,
   type PresenceChangedEventPayload,
   type LegacyPresenceEventPayload,
   type ExpertFullAvailabilityResponse,
@@ -61,6 +63,7 @@ export function useExpertAvailability(): UseExpertAvailabilityResult {
     if (!isAuthenticated || !user) return;
 
     const currentExpertId = user?.userId || user?.id;
+    const rootSocket = getRootSocket();
 
     const handlePresenceChanged = (payload: PresenceChangedEventPayload) => {
       if (String(payload.expertId) === String(currentExpertId)) {
@@ -77,12 +80,12 @@ export function useExpertAvailability(): UseExpertAvailabilityResult {
       }
     };
 
-    presenceSocket.on("expert.presence.changed", handlePresenceChanged);
-    presenceSocket.on("expert_status_changed", handleLegacyStatusSync);
+    rootSocket.on(SOCKET_LISTEN_EVENTS.PRESENCE_CHANGED, handlePresenceChanged);
+    rootSocket.on(SOCKET_LISTEN_EVENTS.LEGACY_STATUS_CHANGED, handleLegacyStatusSync);
 
     return () => {
-      presenceSocket.off("expert.presence.changed", handlePresenceChanged);
-      presenceSocket.off("expert_status_changed", handleLegacyStatusSync);
+      rootSocket.off(SOCKET_LISTEN_EVENTS.PRESENCE_CHANGED, handlePresenceChanged);
+      rootSocket.off(SOCKET_LISTEN_EVENTS.LEGACY_STATUS_CHANGED, handleLegacyStatusSync);
     };
   }, [isAuthenticated, user]);
 
@@ -103,7 +106,7 @@ export function useExpertAvailability(): UseExpertAvailabilityResult {
 
     // End active chats if switching to offline mode
     if (!newStatus && user?.profileId) {
-      chatSocket.emit("force_end_active_chats", {
+      chatSocket.emit(SOCKET_EMIT_EVENTS.FORCE_END_ACTIVE_CHATS, {
         expert_id: String(user.profileId),
       });
     }

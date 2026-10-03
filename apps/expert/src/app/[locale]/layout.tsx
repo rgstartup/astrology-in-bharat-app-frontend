@@ -4,9 +4,7 @@ import { getLocale } from "next-intl/server";
 
 import { ToastContainer } from "react-toastify";
 
-import { AuthProvider, ExpertPresenceProvider } from "@/providers";
-import { SocketConnectionManager } from "@/components/layout/SocketConnectionManager";
-import { ReactQueryProvider } from "@/providers/ReactQueryProvider";
+import { AuthProvider, SocketProvider, ReactQueryProvider } from "@/providers";
 import { cn } from "@/lib/cn";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -16,8 +14,6 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
-
-  // const
 
   return (
     <html lang={locale} suppressHydrationWarning className={cn("font-sans", geist.variable)}>
@@ -33,12 +29,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <NextIntlClientProvider>
           <ReactQueryProvider>
             <AuthProvider>
-              <ExpertPresenceProvider>
-                <SocketConnectionManager />
+              <SocketProvider>
                 {children}
                 <ToastContainer position="top-right" />
                 <ToastContainer containerId="notification" position="bottom-right" />
-              </ExpertPresenceProvider>
+              </SocketProvider>
             </AuthProvider>
           </ReactQueryProvider>
         </NextIntlClientProvider>

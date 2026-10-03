@@ -1,5 +1,7 @@
 export { AuthProvider, type IAuthProviderProps } from "./AuthProvider";
 export {
-  ExpertPresenceProvider,
-  type IExpertPresenceProviderProps,
-} from "./ExpertPresenceProvider";
+  SocketProvider,
+  useSocket,
+  type ISocketProviderProps,
+} from "./SocketProvider";
+export { ReactQueryProvider } from "./ReactQueryProvider";

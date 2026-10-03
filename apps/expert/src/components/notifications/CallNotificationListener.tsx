@@ -2,8 +2,14 @@
 
 import React, { useEffect, useCallback } from "react";
 import { Phone, Video } from "lucide-react";
-import { callSocket } from "@/lib/socket";
-import { useAuthStore } from "@/store/useAuthStore";
+import {
+  callSocket,
+  connectCallSocket,
+  SOCKET_EMIT_EVENTS,
+  SOCKET_LISTEN_EVENTS,
+} from "@/lib/socket";
+import { useAuthStore } from "@/store/auth.store";
+import { getSocketTokenAction } from "@/actions/auth";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import api from "@/actions/api";
@@ -17,42 +23,42 @@ export const CallNotificationListener: React.FC = () => {
     toast.dismiss();
     const result = await api.post(`/consultations/reject/${sessionId}`);
     if (!result.ok) {
-      console.error("[CallNotification] Failed to reject session:", result.error.message);
+      console.error(
+        "[CallNotification] Failed to reject session:",
+        result.error.message,
+      );
     }
   };
 
   const registerExpert = useCallback(() => {
-    if (!user) {
-      console.log("[CallNotification] Cannot register: user is missing");
-      return;
-    }
+    if (!user) return;
     const expertId = user.profileId || user.id;
-    if (!expertId) {
-      console.log("[CallNotification] Cannot register: expertId is missing");
-      return;
-    }
-    console.log("[CallNotification] Registering expert with callSocket:", expertId);
-    callSocket.emit("register_expert", { expert_id: expertId });
+    if (!expertId) return;
+    console.log(
+      "[CallNotification] Registering expert with callSocket:",
+      expertId,
+    );
+    callSocket.emit(SOCKET_EMIT_EVENTS.REGISTER_EXPERT, { expert_id: expertId });
   }, [user]);
 
   useEffect(() => {
     if (!isAuthenticated || !user) return;
 
-    if (!callSocket.connected) {
-      console.log("[CallNotification] callSocket not connected. Connecting...");
-      callSocket.connect();
-    } else {
-      console.log("[CallNotification] callSocket already connected. Registering expert...");
-      registerExpert();
-    }
+    let isSubscribed = true;
+    const expertId = user.profileId || user.id;
 
     const onConnect = () => {
-      console.log("[CallNotification] callSocket Connected! Registering expert...");
+      console.log(
+        "[CallNotification] callSocket Connected! Registering expert...",
+      );
       registerExpert();
     };
 
     const onReconnect = (attempt: number) => {
-      console.log("[CallNotification] callSocket Reconnected! Attempt:", attempt);
+      console.log(
+        "[CallNotification] callSocket Reconnected! Attempt:",
+        attempt,
+      );
       registerExpert();
     };
 
@@ -64,10 +70,13 @@ export const CallNotificationListener: React.FC = () => {
       console.log("[CallNotification] Received new_call_request!", data);
       const session = data.session || data;
       if (!session) {
-        console.warn("[CallNotification] No session found in new_call_request data.");
+        console.warn(
+          "[CallNotification] No session found in new_call_request data.",
+        );
         return;
       }
-      const callerName = session.client?.user?.name || session.user?.name || "A Client";
+      const callerName =
+        session.client?.user?.name || session.user?.name || "A Client";
       const callType = session.type || "audio";
       const callerAvatar =
         session.client?.profile_picture ||
@@ -83,7 +92,11 @@ export const CallNotificationListener: React.FC = () => {
             <div className="relative">
               <div className="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center overflow-hidden border-2 border-orange-500/20">
                 {callerAvatar ? (
-                  <img src={callerAvatar} alt="Caller" className="w-full h-full object-cover" />
+                  <img
+                    src={callerAvatar}
+                    alt="Caller"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-black text-xl">
                     {callerName.charAt(0)}
@@ -104,7 +117,9 @@ export const CallNotificationListener: React.FC = () => {
               <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600 mb-0.5">
                 Incoming {callType} Call
               </h4>
-              <p className="text-sm font-black text-neutral-900 leading-tight">{callerName}</p>
+              <p className="text-sm font-black text-neutral-900 leading-tight">
+                {callerName}
+              </p>
               <p className="text-[10px] font-bold text-neutral-400 mt-0.5 italic">
                 Astro-Secure Line Connected...
               </p>
@@ -151,7 +166,6 @@ export const CallNotificationListener: React.FC = () => {
     const handleAutoDismiss = (data: any) => {
       toast.dismiss();
 
-      // For V2.1: Show a summary toast if metadata is present
       if (data && data.split) {
         const expertShare = data.split.expertShare || 0;
         const terminatedBy = data.terminatedBy === "EXPERT" ? "You" : "User";
@@ -165,22 +179,38 @@ export const CallNotificationListener: React.FC = () => {
       }
     };
 
-    callSocket.on("connect", onConnect);
-    callSocket.on("reconnect", onReconnect);
-    callSocket.on("connect_error", onConnectError);
-    callSocket.on("new_call_request", handleNewCall);
-    callSocket.on("call_accepted", handleAutoDismiss);
-    callSocket.on("call_ended", handleAutoDismiss);
+    callSocket.on(SOCKET_LISTEN_EVENTS.CONNECT, onConnect);
+    callSocket.on(SOCKET_LISTEN_EVENTS.RECONNECT, onReconnect);
+    callSocket.on(SOCKET_LISTEN_EVENTS.CONNECT_ERROR, onConnectError);
+    callSocket.on(SOCKET_LISTEN_EVENTS.NEW_CALL_REQUEST, handleNewCall);
+    callSocket.on(SOCKET_LISTEN_EVENTS.CALL_ACCEPTED, handleAutoDismiss);
+    callSocket.on(SOCKET_LISTEN_EVENTS.CALL_ENDED, handleAutoDismiss);
+
+    const initCall = async () => {
+      try {
+        const token = await getSocketTokenAction();
+        if (!isSubscribed) return;
+        connectCallSocket(token, expertId);
+      } catch (err) {
+        console.error(
+          "[CallNotificationListener] Failed to initialize call socket auth:",
+          err,
+        );
+      }
+    };
+
+    initCall();
 
     return () => {
-      callSocket.off("connect", onConnect);
-      callSocket.off("reconnect", onReconnect);
-      callSocket.off("connect_error", onConnectError);
-      callSocket.off("new_call_request", handleNewCall);
-      callSocket.off("call_accepted", handleAutoDismiss);
-      callSocket.off("call_ended", handleAutoDismiss);
+      isSubscribed = false;
+      callSocket.off(SOCKET_LISTEN_EVENTS.CONNECT, onConnect);
+      callSocket.off(SOCKET_LISTEN_EVENTS.RECONNECT, onReconnect);
+      callSocket.off(SOCKET_LISTEN_EVENTS.CONNECT_ERROR, onConnectError);
+      callSocket.off(SOCKET_LISTEN_EVENTS.NEW_CALL_REQUEST, handleNewCall);
+      callSocket.off(SOCKET_LISTEN_EVENTS.CALL_ACCEPTED, handleAutoDismiss);
+      callSocket.off(SOCKET_LISTEN_EVENTS.CALL_ENDED, handleAutoDismiss);
     };
-  }, [isAuthenticated, !!user, router, registerExpert]);
+  }, [isAuthenticated, user, router, registerExpert]);
 
   return null;
 };

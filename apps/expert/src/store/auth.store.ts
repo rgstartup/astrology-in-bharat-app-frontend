@@ -67,8 +67,18 @@ export const useAuthStore = create<AuthState>()(
         const actualUserId = user?.userId || user?.id;
 
         try {
-          const { disconnectExpertPresence } = await import("@/lib/socket");
-          disconnectExpertPresence();
+          const {
+            disconnectRootSocket,
+            disconnectChatSocket,
+            disconnectCallSocket,
+            disconnectNotificationSocket,
+            stopPresenceHeartbeat,
+          } = await import("@/lib/socket");
+          stopPresenceHeartbeat();
+          disconnectRootSocket();
+          disconnectChatSocket();
+          disconnectCallSocket();
+          disconnectNotificationSocket();
         } catch {
           // ignore socket errors on logout
         }

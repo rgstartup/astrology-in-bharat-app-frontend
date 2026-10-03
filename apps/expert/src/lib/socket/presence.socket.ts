@@ -1,46 +1,15 @@
-import { io, type Socket } from "socket.io-client";
-import { defaultSocketOptions, getBaseSocketUrl } from "./config";
+import { type Socket } from "socket.io-client";
+import { getRootSocket } from "./core";
+import { SOCKET_EMIT_EVENTS } from "./events";
 import type { HeartbeatAck } from "./types";
 
-export const presenceSocket: Socket = io(getBaseSocketUrl(), {
-  ...defaultSocketOptions,
-});
-
-presenceSocket.on("connect", () => {
-  console.log(
-    "[ExpertPresenceSocket] Connected to root namespace:",
-    presenceSocket.id,
-  );
-});
-
-presenceSocket.on("connect_error", (error) => {
-  console.warn("[ExpertPresenceSocket] Connection error:", error.message);
-});
-
-presenceSocket.on("disconnect", (reason) => {
-  console.log("[ExpertPresenceSocket] Disconnected:", reason);
-});
+let heartbeatTimer: NodeJS.Timeout | null = null;
+const HEARTBEAT_INTERVAL_MS = 10_000; // 10 seconds (backend Redis TTL is 30s)
 
 /**
- * Connect the presence socket with JWT token authentication.
+ * Access the presence socket (backed by the root socket instance).
  */
-export const connectExpertPresence = (token?: string | null): void => {
-  if (token) {
-    presenceSocket.auth = { token };
-  }
-  if (!presenceSocket.connected) {
-    presenceSocket.connect();
-  }
-};
-
-/**
- * Disconnect the presence socket.
- */
-export const disconnectExpertPresence = (): void => {
-  if (presenceSocket.connected) {
-    presenceSocket.disconnect();
-  }
-};
+export const getPresenceSocket = (): Socket => getRootSocket();
 
 /**
  * Emit a heartbeat for expert presence keeping active session alive in Redis (30s TTL).
@@ -48,11 +17,36 @@ export const disconnectExpertPresence = (): void => {
 export const emitPresenceHeartbeat = (
   onAck?: (ack: HeartbeatAck) => void,
 ): void => {
-  if (!presenceSocket.connected) return;
+  const socket = getRootSocket();
+  if (!socket.connected) return;
 
-  presenceSocket.emit("heartbeat", (ack: HeartbeatAck) => {
+  socket.emit(SOCKET_EMIT_EVENTS.HEARTBEAT, (ack: HeartbeatAck) => {
     if (onAck && ack) {
       onAck(ack);
     }
   });
+};
+
+/**
+ * Start the recurring presence heartbeat.
+ */
+export const startPresenceHeartbeat = (): void => {
+  stopPresenceHeartbeat();
+
+  // Initial immediate pulse
+  emitPresenceHeartbeat();
+
+  heartbeatTimer = setInterval(() => {
+    emitPresenceHeartbeat();
+  }, HEARTBEAT_INTERVAL_MS);
+};
+
+/**
+ * Stop the recurring presence heartbeat.
+ */
+export const stopPresenceHeartbeat = (): void => {
+  if (heartbeatTimer) {
+    clearInterval(heartbeatTimer);
+    heartbeatTimer = null;
+  }
 };

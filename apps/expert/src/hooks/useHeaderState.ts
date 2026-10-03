@@ -73,8 +73,8 @@ export const useHeaderState = () => {
     let socketInstance: any = null;
 
     const setupKycListener = async () => {
-      const { presenceSocket } = await import("@/lib/socket");
-      socketInstance = presenceSocket;
+      const { getRootSocket } = await import("@/lib/socket");
+      socketInstance = getRootSocket();
 
       const handleKycUpdate = (data: any) => {
         const expertId = data.expert_id || data.id || data.userId;
@@ -89,7 +89,7 @@ export const useHeaderState = () => {
         }
       };
 
-      presenceSocket.on("kyc_status_updated", handleKycUpdate);
+      socketInstance.on("kyc_status_updated", handleKycUpdate);
     };
 
     setupKycListener();
