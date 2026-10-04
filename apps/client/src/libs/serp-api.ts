@@ -1,5 +1,8 @@
 import { Place } from "@/lib/types";
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6543/api/v1';
+const API_BASE_URL =
+  process.env.API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  'http://localhost:6543/api/v1';
 export type { Place };
 
 const BLOCKED_DOMAINS = [

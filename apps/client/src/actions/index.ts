@@ -6,8 +6,13 @@ export * from "./consultation";
 export * from "./specialization";
 export * from "./onboard";
 
+// Server actions run INSIDE the container: localhost = this container.
+// API_URL (e.g. http://aib-backend-dev:6543/api/v1) is the container-network
+// address; NEXT_PUBLIC_API_URL is the browser-facing fallback.
+const baseUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL!;
+
 export const api = createSafeFetchInstance({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL!,
+  baseUrl,
   headers: {
     "Content-Type": "application/json",
   },
@@ -15,7 +20,7 @@ export const api = createSafeFetchInstance({
 });
 
 export const apiV2 = createSafeFetchResultInstance({
-  baseUrl: process.env.NEXT_PUBLIC_API_URL!,
+  baseUrl,
   headers: {
     "Content-Type": "application/json",
   },

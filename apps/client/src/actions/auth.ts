@@ -2,7 +2,6 @@
 
 import { cookies } from "next/headers";
 import { apiV2, API_ROUTES } from "@/actions";
-import { getErrorMessage } from "@repo/lib";
 import { setAccessToken, setRefreshToken, clearAuthCookies } from "./cookie";
 
 import {
@@ -20,11 +19,16 @@ import {
 // (409). The same endpoint is then re-called with { email, password, otp }
 // to verify and log in.
 // ─────────────────────────────────────────────────────────
-export async function loginAction(formData: LoginFormData): Promise<AuthActionResponse> {
-  const result = await apiV2.post<AuthResponse>(API_ROUTES.AUTH.LOGIN.EMAIL, formData);
+export async function loginAction(
+  formData: LoginFormData,
+): Promise<AuthActionResponse> {
+  const result = await apiV2.post<AuthResponse>(
+    API_ROUTES.AUTH.LOGIN.EMAIL,
+    formData,
+  );
 
   if (!result.ok) {
-    const errorMsg = getErrorMessage(result.error);
+    const errorMsg = result.error.message;
     const status = result.error.status;
     const errorCode = result.error.errorCode;
     const isUnverified =
@@ -71,7 +75,10 @@ export async function resendOtpAction(
     payload.password = password;
   }
 
-  const result = await apiV2.post<{ message?: string }>(API_ROUTES.AUTH.REGISTER.INITIATE, payload);
+  const result = await apiV2.post<{ message?: string }>(
+    API_ROUTES.AUTH.REGISTER.INITIATE,
+    payload,
+  );
 
   if (!result.ok) {
     return {
@@ -81,7 +88,8 @@ export async function resendOtpAction(
 
   return {
     success: true,
-    message: result.data.message || "OTP has been sent to your email successfully.",
+    message:
+      result.data.message || "OTP has been sent to your email successfully.",
   };
 }
 
@@ -97,7 +105,9 @@ export async function logoutAction(): Promise<AuthActionResponse> {
 // ─────────────────────────────────────────────────────────
 // REGISTER (2-Step Flow: Step 1) — Submits firstname, lastname, email, password
 // ─────────────────────────────────────────────────────────
-export async function registerAction(registerData: RegisterFormData): Promise<AuthActionResponse> {
+export async function registerAction(
+  registerData: RegisterFormData,
+): Promise<AuthActionResponse> {
   const firstName = registerData.first_name;
   const lastName = registerData.last_name;
 
@@ -111,7 +121,10 @@ export async function registerAction(registerData: RegisterFormData): Promise<Au
     payload.last_name = lastName;
   }
 
-  const result = await apiV2.post<{ message?: string }>(API_ROUTES.AUTH.REGISTER.INITIATE, payload);
+  const result = await apiV2.post<{ message?: string }>(
+    API_ROUTES.AUTH.REGISTER.INITIATE,
+    payload,
+  );
 
   if (!result.ok) {
     return {
@@ -122,7 +135,8 @@ export async function registerAction(registerData: RegisterFormData): Promise<Au
   return {
     success: true,
     message:
-      result.data.message || "Registration initiated! Please enter the OTP sent to your email.",
+      result.data.message ||
+      "Registration initiated! Please enter the OTP sent to your email.",
   };
 }
 
@@ -130,11 +144,16 @@ export async function registerAction(registerData: RegisterFormData): Promise<Au
 // VERIFY OTP (Register 2-Step Flow: Step 2) — Submits email and otp only
 // Upon verification, tokens are received and set in HttpOnly cookies
 // ─────────────────────────────────────────────────────────
-export async function verifyOtpAction(verifyData: VerifyOtpFormData): Promise<AuthActionResponse> {
-  const result = await apiV2.post<AuthResponse>(API_ROUTES.AUTH.REGISTER.COMPLETE, {
-    email: verifyData.email,
-    otp: verifyData.otp,
-  });
+export async function verifyOtpAction(
+  verifyData: VerifyOtpFormData,
+): Promise<AuthActionResponse> {
+  const result = await apiV2.post<AuthResponse>(
+    API_ROUTES.AUTH.REGISTER.COMPLETE,
+    {
+      email: verifyData.email,
+      otp: verifyData.otp,
+    },
+  );
 
   if (!result.ok) {
     return {
@@ -163,13 +182,17 @@ export async function verifyOtpAction(verifyData: VerifyOtpFormData): Promise<Au
 // ─────────────────────────────────────────────────────────
 // COMPLETE REGISTRATION
 // ─────────────────────────────────────────────────────────
-export async function completeRegistrationAction(payload: any): Promise<AuthActionResponse> {
+export async function completeRegistrationAction(
+  payload: any,
+): Promise<AuthActionResponse> {
   console.log(
     "[DEBUG][ServerAction] completeRegistrationAction called with payload:",
     JSON.stringify(
       {
         email: payload.email,
-        token: payload.token ? payload.token.substring(0, 30) + "..." : "MISSING TOKEN",
+        token: payload.token
+          ? payload.token.substring(0, 30) + "..."
+          : "MISSING TOKEN",
         name: payload.name,
         phone: payload.phone,
         gender: payload.gender,
@@ -182,7 +205,10 @@ export async function completeRegistrationAction(payload: any): Promise<AuthActi
     ),
   );
 
-  const result = await apiV2.post<AuthResponse>("/auth/email/register/complete", payload);
+  const result = await apiV2.post<AuthResponse>(
+    "/auth/email/register/complete",
+    payload,
+  );
 
   if (!result.ok) {
     return { error: result.error.message };

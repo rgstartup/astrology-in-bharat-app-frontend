@@ -1,9 +1,14 @@
 import { createSafeFetchInstance } from "@repo/safe-fetch";
 
 const getBaseUrl = () => {
-  // Server-side: must use absolute URL
+  // Server-side (inside the container): localhost = this container,
+  // so use the container-network address via API_URL.
   if (typeof window === "undefined") {
-    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543/api/v1";
+    return (
+      process.env.API_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      "http://localhost:6543/api/v1"
+    );
   }
   // Client-side: use relative path to utilize Next.js rewrites/proxy
   return "/api/v1";

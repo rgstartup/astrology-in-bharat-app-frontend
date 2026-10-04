@@ -113,8 +113,12 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
+    // Rewrites run server-side (inside the container): prefer API_URL,
+    // the container-network address of the backend.
     const backendUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
+      process.env.API_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      "http://localhost:6543";
     // .replace(/\/+$/, "").replace(/\/api\/v1\/?$/i, "");
     return [
       {
