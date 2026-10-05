@@ -3,6 +3,18 @@ export { API_ROUTES } from "@/lib/api-routes";
 export * from "./expert-products";
 export * from "./favorites";
 export * from "./consultation";
+export {
+  getChatEligibilityAction,
+  initiateChatAction,
+  getChatPrepExpertAction,
+} from "./chat";
+export type {
+  ChatEligibility,
+  ChatEligibilityResponse,
+  SomeoneElseData,
+  InitiateChatResponse,
+  ChatPrepExpertResponse,
+} from "./chat";
 export * from "./specialization";
 export * from "./onboard";
 

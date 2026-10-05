@@ -4,6 +4,7 @@ export { WalletQuickPerksCard } from "./components/WalletQuickPerksCard";
 export { WalletTransactionItem } from "./components/WalletTransactionItem";
 export { WalletTransactionHistory } from "./components/WalletTransactionHistory";
 export { WalletRechargeModal } from "./components/WalletRechargeModal";
+export { WalletRechargeForm } from "./components/WalletRechargeForm";
 export * from "./components/history";
 
 // hooks

@@ -31,6 +31,8 @@ type Props = {
     currentBalance: number;
   } | null;
   isAuthenticated?: boolean;
+  /** When provided, low-balance CTA enters an embedded recharge step instead of redirecting. */
+  onRecharge?: () => void;
 };
 
 const ExpertPreview = ({
@@ -43,6 +45,7 @@ const ExpertPreview = ({
   actionLoading,
   eligibility = null,
   isAuthenticated = false,
+  onRecharge,
 }: Props) => {
   const router = useRouter();
   const tx = useTranslations("Chat.expertPreview");
@@ -304,7 +307,11 @@ const ExpertPreview = ({
                     </div>
                   </div>
                   <button
-                    onClick={() => router.push("/client/profile?tab=wallet")}
+                    onClick={() =>
+                      onRecharge
+                        ? onRecharge()
+                        : router.push("/client/profile?tab=wallet")
+                    }
                     className="w-full py-4 bg-red-500 text-white rounded-2xl font-black text-lg shadow-lg hover:bg-red-600 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <CreditCard className="w-5 h-5" />

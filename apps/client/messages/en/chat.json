@@ -111,5 +111,11 @@
     "activeChatTitle": "Active Chat Exists",
     "activeChatDesc": "You already have an active or pending chat request with another expert. Please go to that chat to continue or cancel it before starting a new one.",
     "goToChatBtn": "Go to existing chat"
+  },
+  "modal": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "rechargeTitle": "Recharge Wallet",
+    "rechargeDesc": "Minimum ₹{price} balance is required to start this chat."
   }
 }
