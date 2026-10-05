@@ -67,15 +67,15 @@ export const useAuthStore = create<AuthState>()(
         const actualUserId = user?.userId || user?.id;
 
         try {
+          const { stopPresenceHeartbeat } = await import("@/realtime/topics/presence");
+          const { disconnectRealtimeSocket } = await import("@/realtime/socket");
           const {
-            disconnectRootSocket,
             disconnectChatSocket,
             disconnectCallSocket,
             disconnectNotificationSocket,
-            stopPresenceHeartbeat,
           } = await import("@/lib/socket");
           stopPresenceHeartbeat();
-          disconnectRootSocket();
+          disconnectRealtimeSocket();
           disconnectChatSocket();
           disconnectCallSocket();
           disconnectNotificationSocket();
