@@ -4,7 +4,9 @@ import { SOCKET_EMIT_EVENTS } from "./events";
 import type { HeartbeatAck } from "./types";
 
 let heartbeatTimer: NodeJS.Timeout | null = null;
-const HEARTBEAT_INTERVAL_MS = 10_000; // 10 seconds (backend Redis TTL is 30s)
+const HEARTBEAT_INTERVAL_MS = 30_000;
+// Matches backend PRESENCE_TTL (90s): 30s heartbeat keeps the key alive
+// with 3x headroom; only a safety net since disconnect is explicit. // 10 seconds (backend Redis TTL is 30s)
 
 /**
  * Access the presence socket (backed by the root socket instance).

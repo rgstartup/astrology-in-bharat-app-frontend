@@ -3,16 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import api from "@/actions/api";
+import { realtimeSocket } from "@/realtime/socket";
+import { PRESENCE_EVENTS } from "@/realtime/topics/presence";
 import {
-  getRootSocket,
-  chatSocket,
   ExpertClientStatus,
-  SOCKET_LISTEN_EVENTS,
-  SOCKET_EMIT_EVENTS,
   type PresenceChangedEventPayload,
-  type LegacyPresenceEventPayload,
-  type ExpertFullAvailabilityResponse,
-} from "@/lib/socket";
+} from "@/realtime/types/presence";
+import type { ExpertFullAvailabilityResponse } from "@/lib/socket";
 import { useAuthStore } from "@/store/auth.store";
 import { API_ROUTES } from "@/utils/api.routes";
 
@@ -58,34 +55,23 @@ export function useExpertAvailability(): UseExpertAvailabilityResult {
     };
   }, [isAuthenticated, user]);
 
-  // Sync realtime presence events
+  // Sync own realtime presence (auto-joined `expert:{id}` room)
   useEffect(() => {
     if (!isAuthenticated || !user) return;
 
     const currentExpertId = user?.userId || user?.id;
-    const rootSocket = getRootSocket();
+    const socket = realtimeSocket();
 
     const handlePresenceChanged = (payload: PresenceChangedEventPayload) => {
-      if (String(payload.expertId) === String(currentExpertId)) {
+      if (payload && String(payload.expertId) === String(currentExpertId)) {
         setIsOnline(payload.status === ExpertClientStatus.ONLINE);
       }
     };
 
-    const handleLegacyStatusSync = (data: LegacyPresenceEventPayload) => {
-      const expertId = data.expert_id || data.userId || data.id;
-      if (String(currentExpertId) === String(expertId)) {
-        const isAvailable =
-          data.is_available !== undefined ? data.is_available : data.status === "online";
-        setIsOnline(Boolean(isAvailable));
-      }
-    };
-
-    rootSocket.on(SOCKET_LISTEN_EVENTS.PRESENCE_CHANGED, handlePresenceChanged);
-    rootSocket.on(SOCKET_LISTEN_EVENTS.LEGACY_STATUS_CHANGED, handleLegacyStatusSync);
+    socket.on(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
 
     return () => {
-      rootSocket.off(SOCKET_LISTEN_EVENTS.PRESENCE_CHANGED, handlePresenceChanged);
-      rootSocket.off(SOCKET_LISTEN_EVENTS.LEGACY_STATUS_CHANGED, handleLegacyStatusSync);
+      socket.off(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
     };
   }, [isAuthenticated, user]);
 
@@ -104,15 +90,8 @@ export function useExpertAvailability(): UseExpertAvailabilityResult {
 
     setIsOnline(newStatus);
 
-    // End active chats if switching to offline mode
-    if (!newStatus && user?.profileId) {
-      chatSocket.emit(SOCKET_EMIT_EVENTS.FORCE_END_ACTIVE_CHATS, {
-        expert_id: String(user.profileId),
-      });
-    }
-
     setLoading(false);
-  }, [isOnline, user]);
+  }, [isOnline]);
 
   return {
     isOnline,

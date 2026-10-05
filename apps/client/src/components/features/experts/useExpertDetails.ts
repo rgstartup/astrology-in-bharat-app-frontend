@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getExpertReviews, Review } from "@/libs/api-experts";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
+import { toExpertStatus } from "@/realtime/types/presence";
 import type { IExpert } from "@repo/lib";
 
 export const useExpertDetails = (
@@ -25,8 +26,8 @@ export const useExpertDetails = (
   const router = useRouter();
 
   // Real-time status sync via centralized presence hook with room subscription
-  const { isAvailableForConsultation, isBusy } = useExpertPresence(expertId, {
-    initialStatus: initialAvailable,
+  const { isAvailableForConsultation, isBusy } = useExpertPresence(Number(expertId), {
+    initialStatus: toExpertStatus(initialAvailable),
     autoSubscribe: true,
   });
 

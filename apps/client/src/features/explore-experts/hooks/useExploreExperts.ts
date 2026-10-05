@@ -266,7 +266,8 @@ export function useExploreExperts(initialExperts?: Expert[]) {
 
         const newItems: Expert[] = res.data || [];
         if (newItems.length > 0) {
-          usePresenceStore.getState().batchSetExpertStatus(
+          const store = usePresenceStore.getState();
+          store.batchSetExpertStatus(
             newItems.map((item) => ({
               expertId: item.id,
               status:
@@ -276,8 +277,10 @@ export function useExploreExperts(initialExperts?: Expert[]) {
                   : item.is_available
                     ? "online"
                     : "offline"),
+              lastSeenAt: (item as any).lastSeenAt ?? (item as any).last_seen_at ?? null,
             })),
           );
+          store.subscribeManyToExperts(newItems.map((item) => item.id));
         }
         setExperts((prev) => {
           const updated = append ? [...prev, ...newItems] : newItems;

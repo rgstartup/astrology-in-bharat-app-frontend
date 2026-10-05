@@ -24,6 +24,7 @@ import { VerificationPopup } from "@repo/ui";
 import CallPrepSeoContent from "./call-prep-seo.component";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
+import { toExpertStatus } from "@/realtime/types/presence";
 
 interface ExpertData {
   id: string;
@@ -65,12 +66,13 @@ function CallPrepContent() {
   } = useAuthStore();
 
   const { isAvailableForConsultation, isBusy, isOnline } = useExpertPresence(
-    id,
+    Number(id),
     {
-      initialStatus:
+      initialStatus: toExpertStatus(
         expert?.isAvailableForConsultation ??
         expert?.status ??
         expert?.is_available,
+      ),
       autoSubscribe: true,
     },
   );

@@ -17,6 +17,7 @@ import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import type { IExpert } from "@repo/lib";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
+import { toExpertStatus } from "@/realtime/types/presence";
 import HeroInfo from "./hero-info.component";
 import ExpertPreview from "./expert-preview.component";
 import SecurityTipsModal from "./security-modal.component";
@@ -57,12 +58,13 @@ export default function ConsultationPrep() {
   const { isAuthenticated, refreshBalance } = useAuthStore();
 
   const { isAvailableForConsultation, isBusy, isOnline } = useExpertPresence(
-    id,
+    Number(id),
     {
-      initialStatus:
+      initialStatus: toExpertStatus(
         expert?.isAvailableForConsultation ??
         expert?.status ??
         expert?.is_available,
+      ),
       autoSubscribe: true,
     },
   );

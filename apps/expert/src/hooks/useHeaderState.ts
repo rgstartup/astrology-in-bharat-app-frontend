@@ -66,41 +66,6 @@ export const useHeaderState = () => {
     loadNotifications();
   }, [loadNotifications]);
 
-  // KYC status realtime updates
-  useEffect(() => {
-    if (!isAuthenticated || !user) return;
-
-    let socketInstance: any = null;
-
-    const setupKycListener = async () => {
-      const { getRootSocket } = await import("@/lib/socket");
-      socketInstance = getRootSocket();
-
-      const handleKycUpdate = (data: any) => {
-        const expertId = data.expert_id || data.id || data.userId;
-        const myId = user?.id || user?.profileId;
-
-        if (String(myId) === String(expertId)) {
-          toast.info(`Profile Update: Your status is now ${data.status}`);
-          loadNotifications();
-          if (data.status === "rejected" || data.status === "active") {
-            setTimeout(() => window.location.reload(), 3000);
-          }
-        }
-      };
-
-      socketInstance.on("kyc_status_updated", handleKycUpdate);
-    };
-
-    setupKycListener();
-
-    return () => {
-      if (socketInstance) {
-        socketInstance.off("kyc_status_updated");
-      }
-    };
-  }, [user, isAuthenticated, loadNotifications]);
-
   const handleClearNotifications = async () => {
     const [_, error] = await deleteAllNotifications();
     if (error) {

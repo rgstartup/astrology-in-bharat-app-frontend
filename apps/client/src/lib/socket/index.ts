@@ -1,26 +1,24 @@
-export {
-  ExpertClientStatus,
-} from "./types";
-
+/** @deprecated Import from `@/realtime/...` instead. Kept for legacy `@/lib/socket` imports. */
+export { ExpertClientStatus } from "@/realtime/types/presence";
 export type {
   PresenceChangedEventPayload,
-  LegacyPresenceEventPayload,
+  PresenceSubscriptionSnapshot,
   SubscribeExpertPresenceAck,
-  HeartbeatAck,
+  SubscribeManyPresenceAck,
   PresenceRecord,
-} from "./types";
-
+} from "@/realtime/types/presence";
+export {
+  PRESENCE_EVENTS,
+  subscribeExpertPresence,
+  unsubscribeExpertPresence,
+  subscribeManyExpertPresence,
+  unsubscribeManyExpertPresence,
+} from "@/realtime/topics/presence";
 export {
   getBaseSocketUrl,
   defaultSocketOptions,
   isBrowser,
 } from "./config";
-
-export {
-  presenceSocket,
-  subscribeExpertPresence,
-  emitPresenceHeartbeat,
-} from "./presence.socket";
 
 export {
   merchantSocket,

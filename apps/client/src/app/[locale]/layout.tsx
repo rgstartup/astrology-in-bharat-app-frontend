@@ -13,7 +13,7 @@ import { routing } from "@/i18n/routing";
 import { AuthInitializer } from "@/components/layout/AuthInitializer";
 import { CartInitializer } from "@/components/layout/CartInitializer";
 import { WishlistInitializer } from "@/components/layout/WishlistInitializer";
-import ExpertStatusProvider from "@/providers/ExpertStatusProvider";
+import { RealtimeProvider } from "@/realtime/socket-provider";
 import MerchantStatusProvider from "@/providers/MerchantStatusProvider";
 import NotificationProvider from "@/providers/NotificationProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
@@ -58,7 +58,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       </head>
       <body className="min-h-screen bg-white text-black font-sans">
         <NextIntlClientProvider>
-          <ExpertStatusProvider>
+          <RealtimeProvider>
             <MerchantStatusProvider>
               <NotificationProvider>
                 <QueryProvider>
@@ -73,7 +73,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                 </QueryProvider>
               </NotificationProvider>
             </MerchantStatusProvider>
-          </ExpertStatusProvider>
+          </RealtimeProvider>
         </NextIntlClientProvider>
         <ToastProvider />
       </body>

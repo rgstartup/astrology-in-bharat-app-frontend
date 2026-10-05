@@ -32,7 +32,13 @@ const mapExpert = (item: any): ExpertProfile => {
   );
   const experience = item.experience_in_years || 0;
   const rating = item.rating || item.ratings || 0;
-  const isAvailable = item.is_available ?? true;
+  // Prefer canonical presence snapshot (status/lastSeenAt) over legacy flag.
+  const status = typeof item.status === "string" ? item.status.toLowerCase() : null;
+  const isAvailable =
+    item.isAvailableForConsultation ??
+    (status ? status === "online" : undefined) ??
+    item.is_available ??
+    true;
 
   const chatPrice =
     item.pricing?.chat_price ?? item.chat_price ?? item.price ?? 0;
@@ -73,6 +79,7 @@ const mapExpert = (item: any): ExpertProfile => {
     horoscope_price: item.pricing?.horoscope_price ?? item.horoscope_price,
     video: item.video || "",
     is_available: isAvailable,
+    lastSeenAt: item.lastSeenAt ?? item.last_seen_at ?? null,
     total_likes: item.total_likes || 0,
     custom_services: Array.isArray(item.custom_services)
       ? item.custom_services
@@ -178,8 +185,30 @@ export const useExpertListLogic = (
       setLoading(false); // Done loading initial data
       if (initialExperts.length < limit) setHasMore(false);
       else if (initialPagination) setHasMore(initialPagination.hasMore);
+      // Snapshot + room subscriptions for the server-rendered batch.
+      const store = usePresenceStore.getState();
+      store.batchSetExpertStatus(
+        initialExperts.map((item: any) => ({
+          expertId: item.id,
+          status:
+            item.status ??
+            (item.is_available ? "online" : "offline"),
+          lastSeenAt: item.lastSeenAt ?? item.last_seen_at ?? null,
+        })),
+      );
+      store.subscribeManyToExperts(initialExperts.map((item: any) => item.id));
     }
   }, [initialExperts, initialPagination, initialError, offset, lang]);
+
+  // Leave all presence rooms when the list page unmounts.
+  useEffect(() => {
+    return () => {
+      const store = usePresenceStore.getState();
+      if (store.subscribedExpertIds.length > 0) {
+        store.unsubscribeManyFromExperts(store.subscribedExpertIds);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchQuery), 1000);
@@ -263,12 +292,23 @@ export const useExpertListLogic = (
         if (fetchErr || !responseData) throw fetchErr;
 
         if (responseData.data && Array.isArray(responseData.data)) {
+          // REST snapshot first, then join rooms for live deltas.
           usePresenceStore.getState().batchSetExpertStatus(
             responseData.data.map((item) => ({
               expertId: item.id,
-              status: item.is_available ? "online" : "offline",
+              status:
+                item.status ??
+                (item.isAvailableForConsultation
+                  ? "online"
+                  : item.is_available
+                    ? "online"
+                    : "offline"),
+              lastSeenAt: item.lastSeenAt ?? item.last_seen_at ?? null,
             })),
           );
+          usePresenceStore
+            .getState()
+            .subscribeManyToExperts(responseData.data.map((item) => item.id));
         }
         setExperts((prev) => [...prev, ...responseData.data.map(mapExpert)]);
         setHasMore(

@@ -47,12 +47,21 @@ const ExpertGrid = () => {
 
         const newExperts = responseData.data || [];
         if (newExperts.length > 0) {
-          usePresenceStore.getState().batchSetExpertStatus(
+          const store = usePresenceStore.getState();
+          store.batchSetExpertStatus(
             newExperts.map((item) => ({
               expertId: item.id,
-              status: item.is_available ? "online" : "offline",
+              status:
+                (item as any).status ||
+                ((item as any).isAvailableForConsultation
+                  ? "online"
+                  : item.is_available
+                    ? "online"
+                    : "offline"),
+              lastSeenAt: (item as any).lastSeenAt ?? (item as any).last_seen_at ?? null,
             })),
           );
+          store.subscribeManyToExperts(newExperts.map((item) => item.id));
         }
         setExperts((previous) =>
           append ? [...previous, ...newExperts] : newExperts,

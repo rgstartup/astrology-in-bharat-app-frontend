@@ -25,7 +25,8 @@ export const RecommendedExperts: React.FC = () => {
       if (!isMounted) return;
 
       if (!err && res?.data && Array.isArray(res.data) && res.data.length > 0) {
-        usePresenceStore.getState().batchSetExpertStatus(
+        const store = usePresenceStore.getState();
+        store.batchSetExpertStatus(
           res.data.map((item: any) => ({
             expertId: item.id,
             status:
@@ -35,8 +36,10 @@ export const RecommendedExperts: React.FC = () => {
                 : item.is_available
                   ? "online"
                   : "offline"),
+            lastSeenAt: item.lastSeenAt ?? item.last_seen_at ?? null,
           })),
         );
+        store.subscribeManyToExperts(res.data.map((item: any) => item.id));
         setExperts(res.data);
       } else {
         setExperts(SAMPLE_RECOMMENDED_EXPERTS);

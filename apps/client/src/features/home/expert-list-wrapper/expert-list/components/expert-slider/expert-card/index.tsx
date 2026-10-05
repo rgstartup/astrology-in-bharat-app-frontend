@@ -14,6 +14,7 @@ import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
+import { toExpertStatus } from "@/realtime/types/presence";
 import ExpertActions from "./ExpertActions";
 import ExpertCardProfile from "./ExpertCardProfile";
 import ExpertDetails from "./ExpertDetails";
@@ -67,11 +68,12 @@ const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" 
   );
   useEffect(() => setCurrentLikes(total_likes), [total_likes]);
 
-  const { isAvailableForConsultation, isBusy } = useExpertPresence(id, {
-    initialStatus:
+  const { isAvailableForConsultation, isBusy } = useExpertPresence(Number(id), {
+    initialStatus: toExpertStatus(
       expertData.isAvailableForConsultation ??
       expertData.status ??
       expertData.is_available,
+    ),
   });
   const isAvailable = isAvailableForConsultation;
 

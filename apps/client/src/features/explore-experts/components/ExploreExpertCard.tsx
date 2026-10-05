@@ -23,6 +23,7 @@ import { toast } from "@/hooks/use-toast";
 import type { IExpert } from "@repo/lib";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
+import { toExpertStatus } from "@/realtime/types/presence";
 
 interface ExploreExpertCardProps {
   expert: IExpert;
@@ -88,12 +89,13 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
   };
 
   const { isOnline, isBusy, isAvailableForConsultation } = useExpertPresence(
-    expert.id,
+    Number(expert.id),
     {
-      initialStatus:
+      initialStatus: toExpertStatus(
         expert.isAvailableForConsultation ??
         expert.status ??
         expert.is_available,
+      ),
     },
   );
 
