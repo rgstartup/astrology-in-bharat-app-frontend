@@ -1,18 +1,13 @@
 "use server";
 
-import { api, API_ROUTES } from "@/actions";
-import { cookies } from "next/headers";
+import { api, API_ROUTES, AUTH_COOKIE_NAMES } from "@/actions";
+import { getAccessToken } from "@/actions/cookie";
 import { redirect } from "@/i18n/navigation";
 import { getLocale } from "next-intl/server";
 import { Client } from "@repo/lib";
 
-const getAuthToken = async () => {
-  const cookieStore = await cookies();
-  return cookieStore.get("accessToken")?.value;
-};
-
 export const fetchCurrentUser = async () => {
-  const token = await getAuthToken();
+  const token = await getAccessToken();
   const locale = await getLocale();
   if (!token) {
     redirect({ href: "/", locale });
@@ -21,8 +16,8 @@ export const fetchCurrentUser = async () => {
   return await api
     .extend({
       headers: {
-        Cookie: `accessToken=${token}`,
+        Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
       },
     })
-    .get<Client>(API_ROUTES.CLIENT.AUTH.ME);
+    .get<Client>(API_ROUTES.AUTH.ME);
 };

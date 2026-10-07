@@ -1,7 +1,7 @@
 "use server";
 
-import { cookies } from "next/headers";
-import { api, API_ROUTES } from "@/actions";
+import { api, API_ROUTES, AUTH_COOKIE_NAMES } from "@/actions";
+import { getAccessToken } from "@/actions/cookie";
 import { getErrorMessage } from "@repo/lib";
 
 export interface FavoriteActionResponse<T = any> {
@@ -19,8 +19,7 @@ export async function addExpertToFavoritesAction(
   expertId: string | number,
 ): Promise<FavoriteActionResponse> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value;
+    const token = await getAccessToken();
 
     if (!token) {
       return {
@@ -28,7 +27,7 @@ export async function addExpertToFavoritesAction(
       };
     }
 
-    const endpoint = API_ROUTES.CLIENT.FAVORITES.EXPERT.ADD_TO_FAVORITE.replace(
+    const endpoint = API_ROUTES.FAVORITES.EXPERT.ADD_TO_FAVORITE.replace(
       ":id",
       String(expertId),
     );
@@ -39,7 +38,7 @@ export async function addExpertToFavoritesAction(
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          Cookie: `accessToken=${token}`,
+          Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
         },
       },
     );
@@ -70,8 +69,7 @@ export async function removeExpertFromFavoritesAction(
   expertId: string | number,
 ): Promise<FavoriteActionResponse> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value;
+    const token = await getAccessToken();
 
     if (!token) {
       return {
@@ -79,16 +77,15 @@ export async function removeExpertFromFavoritesAction(
       };
     }
 
-    const endpoint =
-      API_ROUTES.CLIENT.FAVORITES.EXPERT.REMOVE_FROM_FAVORITE.replace(
-        ":id",
-        String(expertId),
-      );
+    const endpoint = API_ROUTES.FAVORITES.EXPERT.REMOVE_FROM_FAVORITE.replace(
+      ":id",
+      String(expertId),
+    );
 
     const [res, error] = await api.delete(endpoint, {
       headers: {
         Authorization: `Bearer ${token}`,
-        Cookie: `accessToken=${token}`,
+        Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
       },
     });
 
@@ -132,19 +129,18 @@ export async function toggleExpertFavoriteAction(
  */
 export async function getFavoriteExpertsAction(): Promise<any[]> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value;
+    const token = await getAccessToken();
 
     if (!token) {
       return [];
     }
 
     const [res, error] = await api.get<any>(
-      API_ROUTES.CLIENT.FAVORITES.EXPERT.LIST,
+      API_ROUTES.FAVORITES.EXPERT.LIST,
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          Cookie: `accessToken=${token}`,
+          Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
         },
       },
     );

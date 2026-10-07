@@ -12,6 +12,12 @@ export const CHAT_EVENTS = {
   MESSAGE: "chat:message",
   TYPING: "chat:typing",
   END: "chat:end",
+  REQUEST: "chat:request",
+  INCOMING: "chat:incoming",
+  ACCEPT: "chat:accept",
+  REJECT: "chat:reject",
+  ACCEPTED: "chat:accepted",
+  REJECTED: "chat:rejected",
 } as const;
 
 export interface SendChatMessageInput {
@@ -45,3 +51,10 @@ export const sendChatTyping = (
   if (!active.connected) return;
   active.emit(CHAT_EVENTS.TYPING, { consultationId, isTyping });
 };
+
+/** Client → server chat request (acked). Server forwards `chat:incoming` to the expert. */
+export const requestChat = (
+  consultationId: number,
+  expertId: number,
+): Promise<JoinChatAck> =>
+  emitWithAck<JoinChatAck>(CHAT_EVENTS.REQUEST, { consultationId, expertId });

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { clearAuthCookies } from "@/actions/cookie";
+import { AUTH_COOKIE_NAMES } from "@/actions";
 
 /**
  * POST /api/auth/logout
@@ -24,8 +25,8 @@ export async function POST() {
       headers: {
         // Belt + suspenders: also clear via Set-Cookie header
         "Set-Cookie": [
-          `accessToken=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict${secureFlag}`,
-          `refreshToken=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict${secureFlag}`,
+          `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict${secureFlag}`,
+          `${AUTH_COOKIE_NAMES.REFRESH_TOKEN}=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict${secureFlag}`,
         ].join(", "),
       },
     },

@@ -82,3 +82,22 @@
 - **Dedicated Directory**: Place extracted sub-components in a dedicated sub-folder (e.g. `components/<feature-name>/` or `components/history/`) alongside a barrel `index.ts`.
 - **Clean Composition**: The parent container component should focus purely on layout orchestration, state, and props passing.
 
+## 9. API Client Migration (`api` → `apiV2`)
+
+- We are migrating from `api` to `apiV2`. New code must use `apiV2`.
+- When updating or modifying any client component or server action that fetches data with `api`, replace it with `apiV2` in the same change (including its response-unwrap/error-handling adjustments).
+
+## 10. TypeScript Strictness (`any` Ban)
+
+- NEVER use `any` in new or touched code — no `as any`, no `Record<string, any>`, no implicit `any` params.
+- Type `apiV2.get<T>` / `apiV2.post<T>` with the existing contract (`IExpert`, DTO interfaces, `@repo/lib` types) and consume `res.data` directly. If the runtime shape disagrees with the contract, fix the contract or the backend — do not paper over it with a cast.
+- For genuinely unknown JSON (error bodies with extra fields), extend `ApiErrorBody` and pass it as the second generic — never cast, never `any`:
+  ```ts
+  interface InitiateChatErrorBody extends ApiErrorBody {
+    existingConsultationId?: number;
+  }
+  const res = await apiV2.post<Data, InitiateChatErrorBody>(url, payload);
+  if (!res.ok) res.error.body?.existingConsultationId; // typed, no cast
+  ```
+- `unknown` + narrowing is the escape hatch when no contract exists yet. `any` is never the answer.
+

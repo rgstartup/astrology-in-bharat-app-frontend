@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,8 +11,11 @@ import {
 import { VerificationPopup } from "@repo/ui";
 import { UserX, MessageCircle, ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useAuthStore } from "@repo/store";
+import { api } from "@/actions";
 import { WalletRechargeForm } from "@/features/dashboard";
 import ExpertPreview from "./expert-preview.component";
+import PrepSkeleton from "./components/prep-skeleton";
 import SecurityTipsModal from "./security-modal.component";
 import { useChatPrep } from "./use-chat-prep";
 
@@ -41,13 +44,22 @@ const ChatPrepModal = ({ expertId, open, onOpenChange }: Props) => {
     setShowOfflinePopup,
     existingChatDetails,
     setExistingChatDetails,
-    eligibility,
-    refreshEligibility,
+    needsRecharge,
+    setNeedsRecharge,
     isAuthenticated,
     isExpertAvailable,
     handleStartConsultation,
     proceedToChat,
   } = useChatPrep(expertId);
+  const balance = useAuthStore((s) => s.balance);
+  const refreshBalance = useAuthStore((s) => s.refreshBalance);
+
+  // Backend holds 5 minutes upfront: min top-up = 5 × per-minute price.
+  const minBalanceRequired = (expert?.chat_price || expert?.price || 0) * 5;
+
+  useEffect(() => {
+    if (needsRecharge) setStep("recharge");
+  }, [needsRecharge]);
 
   const close = () => onOpenChange(false);
 
@@ -61,9 +73,7 @@ const ChatPrepModal = ({ expertId, open, onOpenChange }: Props) => {
           </DialogHeader>
 
           {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF5500]"></div>
-            </div>
+            <PrepSkeleton />
           ) : !expert ? (
             <div className="flex flex-col items-center justify-center text-center px-6 py-12">
               <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-4">
@@ -98,16 +108,17 @@ const ChatPrepModal = ({ expertId, open, onOpenChange }: Props) => {
                   </h2>
                   <p className="text-[11px] text-slate-500">
                     {tm("rechargeDesc", {
-                      price: eligibility?.minBalanceRequired || 0,
+                      price: minBalanceRequired || 0,
                     })}
                   </p>
                 </div>
               </div>
 
               <WalletRechargeForm
-                defaultAmount={eligibility?.minBalanceRequired || 500}
+                defaultAmount={minBalanceRequired || 500}
                 onSuccess={async () => {
-                  await refreshEligibility();
+                  await refreshBalance(api);
+                  setNeedsRecharge(false);
                   setStep("details");
                 }}
               />
@@ -128,24 +139,24 @@ const ChatPrepModal = ({ expertId, open, onOpenChange }: Props) => {
               </div>
             </div>
           ) : (
-            <div className="p-3">
-              <ExpertPreview
-                expert={
-                  expert
-                    ? { ...expert, is_available: isExpertAvailable }
-                    : null
-                }
+            <ExpertPreview
+              expert={
+                expert
+                  ? { ...expert, is_available: isExpertAvailable }
+                  : null
+              }
                 askSomeoneElse={askSomeoneElse}
                 setAskSomeoneElse={setAskSomeoneElse}
                 someoneElseData={someoneElseData}
                 setSomeoneElseData={setSomeoneElseData}
                 handleStartConsultation={handleStartConsultation}
                 actionLoading={actionLoading}
-                eligibility={eligibility}
+                balance={isAuthenticated ? balance : null}
+                showLowBalance={needsRecharge}
+                minBalanceRequired={minBalanceRequired}
                 isAuthenticated={isAuthenticated}
                 onRecharge={() => setStep("recharge")}
               />
-            </div>
           )}
         </DialogContent>
       </Dialog>
@@ -174,9 +185,7 @@ const ChatPrepModal = ({ expertId, open, onOpenChange }: Props) => {
         buttonText={t("goToChatBtn")}
         onConfirm={() => {
           if (existingChatDetails) {
-            router.push(
-              `/chat/room/${existingChatDetails.expertId}?sessionId=${existingChatDetails.sessionId}`,
-            );
+            router.push(`/chat/room/${existingChatDetails.expertId}`);
           }
         }}
         icon={<MessageCircle className="w-10 h-10 text-[#FF5500]" />}

@@ -10,11 +10,13 @@ import { usePreloadExpertStore } from "@/store/preloadExpertStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
+import { useTranslations } from "next-intl";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
+import { requestChatConsult } from "@/components/chat-prep/request-chat-consult";
 import ExpertActions from "./ExpertActions";
 import ExpertCardProfile from "./ExpertCardProfile";
 import ExpertDetails from "./ExpertDetails";
@@ -29,6 +31,7 @@ export interface ExpertCardProps {
 const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" }) => {
   const { t } = useHomeTranslations();
   const router = useRouter();
+  const tChat = useTranslations("Chat.page");
   const pathname = usePathname();
   const { isAuthenticated } = useAuthStore();
   const { isExpertInWishlist } = useWishlistStore();
@@ -121,11 +124,17 @@ const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" 
       toast.error("Expert details not found. Please try again.");
       return;
     }
-    router.push(
-      type === "chat"
-        ? `/chat/prep/${expertProfileId}`
-        : `/call/prep/${expertProfileId}?type=${type}`,
-    );
+    if (type === "chat") {
+      requestChatConsult(String(expertProfileId), {
+        isAuthenticated,
+        pathname,
+        push: (url) => router.push(url),
+        loginTitle: tChat("toastLogin"),
+        loginActionLabel: tChat("loginNow"),
+      });
+      return;
+    }
+    router.push(`/call/prep/${expertProfileId}?type=${type}`);
   };
 
   return (

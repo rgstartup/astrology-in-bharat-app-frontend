@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { decodeToken } from "@repo/lib";
-import { api, API_ROUTES } from "./actions";
+import { api, API_ROUTES, AUTH_COOKIE_NAMES } from "./actions";
 import { setAccessToken, setRefreshToken, clearAuthCookies } from "./actions/cookie";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
@@ -50,7 +50,7 @@ async function refreshSession(
   const [data, error] = await api
     .extend({
       headers: {
-        Cookie: `refreshToken=${refreshToken}`,
+        Cookie: `${AUTH_COOKIE_NAMES.REFRESH_TOKEN}=${refreshToken}`,
       },
     })
     .post<{
@@ -152,8 +152,8 @@ export async function proxy(request: NextRequest) {
   const isPathProtected = isProtectedRoute(normalizedPathname);
   const isPathAuth = isAuthRoute(normalizedPathname);
 
-  const accessToken = request.cookies.get("accessToken")?.value;
-  const refreshToken = request.cookies.get("refreshToken")?.value;
+  const accessToken = request.cookies.get(AUTH_COOKIE_NAMES.ACCESS_TOKEN)?.value;
+  const refreshToken = request.cookies.get(AUTH_COOKIE_NAMES.REFRESH_TOKEN)?.value;
 
   /*
    * 1. Auth routes (/sign-in, /register)

@@ -217,6 +217,15 @@ function Toast({
       data-slot="toast"
       toast={toastItem}
       onClick={(e) => {
+        // Dismiss and action clicks must not trigger the toast-level onClick.
+        if (
+          (e.target as HTMLElement).closest(
+            '[data-slot="toast-close"], [data-slot="toast-action"]',
+          )
+        ) {
+          onClick?.(e);
+          return;
+        }
         if (toastItem.data?.onClick) {
           toastItem.data.onClick(e);
         }
@@ -339,8 +348,8 @@ function ToastIcon({ type }: { type?: string }) {
       );
     case "loading":
       return (
-        <div className="size-9 rounded-xl bg-orange/10 text-orange border border-orange/20 flex items-center justify-center shrink-0 shadow-2xs">
-          <Loader2 className="size-4.5 text-orange animate-spin stroke-[2.2]" />
+        <div className="size-9 rounded-xl bg-[#FF5500]/10 text-[#FF5500] border border-[#FF5500]/20 flex items-center justify-center shrink-0 shadow-2xs">
+          <Loader2 className="size-4.5 text-[#FF5500] animate-spin stroke-[2.2]" />
         </div>
       );
     default:

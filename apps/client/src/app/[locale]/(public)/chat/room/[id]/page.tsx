@@ -5,7 +5,6 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { AlertCircle } from "lucide-react";
 import { api } from "@/actions";
-import { chatSocket } from "@/lib/socket";
 import { uploadClientDocument } from "@/libs/api-profile";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "@/hooks/use-toast";
@@ -13,7 +12,7 @@ import { getErrorMessage } from "@repo/lib";
 
 import { Button, Loading } from "@repo/ui";
 import { ChatMessage, ChatSession } from "@/lib/types";
-import type { Expert } from "@repo/lib";
+import type { IExpert } from "@repo/lib";
 
 import WaitingCountdown from "./waiting-countdown.component";
 import Header from "./header.component";
@@ -36,10 +35,8 @@ function ChatRoomContent() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [sessionStatus, setSessionStatus] = useState<
-    "pending" | "active" | "completed"
-  >("pending");
-  const [expertData, setExpertData] = useState<Expert | null>(null);
+  const [sessionStatus, setSessionStatus] = useState<"pending" | "active" | "completed">("pending");
+  const [expertData, setExpertData] = useState<IExpert | null>(null);
   const [startedAt, setStartedAt] = useState<string | null>(null);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [isFree, setIsFree] = useState<boolean>(false);
@@ -52,9 +49,7 @@ function ChatRoomContent() {
   const [reviewComment, setReviewComment] = useState<string>("");
   const [reviewSubmitted, setReviewSubmitted] = useState<boolean>(false);
 
-  const [sessionSummary, setSessionSummary] = useState<ChatSession | null>(
-    null,
-  );
+  const [sessionSummary, setSessionSummary] = useState<ChatSession | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [typingStatus, setTypingStatus] = useState<{
     senderName: string;
@@ -109,9 +104,7 @@ function ChatRoomContent() {
 
         const currentSessionId = sessionId || data.session.id;
         if (currentSessionId) {
-          const [historyRes, historyErr] = await api.get<any>(
-            `/chat/history/${currentSessionId}`,
-          );
+          const [historyRes, historyErr] = await api.get<any>(`/chat/history/${currentSessionId}`);
           if (!historyErr && historyRes) {
             setMessages(historyRes);
           } else {
@@ -146,96 +139,86 @@ function ChatRoomContent() {
     return () => clearInterval(pollInterval);
   }, [id, sessionId, isAuthenticated, mounted]);
 
-  useEffect(() => {
-    if (!sessionId) return;
+  // useEffect(() => {
+  //   if (!sessionId) return;
 
-    const joinRoom = () => {
-      console.log(`[Socket] ✅ Connected! Joining room_${sessionId}...`);
-      chatSocket.emit("join_room", { sessionId: sessionId });
-    };
+  //   const joinRoom = () => {
+  //     console.log(`[Socket] ✅ Connected! Joining room_${sessionId}...`);
+  //     chatSocket.emit("join_room", { sessionId: sessionId });
+  //   };
 
-    // If already connected, join room immediately
-    if (chatSocket.connected) {
-      joinRoom();
-    }
+  //   // If already connected, join room immediately
+  //   if (chatSocket.connected) {
+  //     joinRoom();
+  //   }
 
-    // Join room when socket connects (or reconnects)
-    chatSocket.on("connect", joinRoom);
+  //   // Join room when socket connects (or reconnects)
+  //   chatSocket.on("connect", joinRoom);
 
-    console.log(
-      `[Socket] Connecting to chat socket for session ${sessionId}...`,
-    );
-    chatSocket.connect();
+  //   console.log(`[Socket] Connecting to chat socket for session ${sessionId}...`);
+  //   chatSocket.connect();
 
-    chatSocket.on("new_message", (message: ChatMessage) => {
-      console.log(`[Socket] 📩 Received new_message:`, message);
-      setMessages((prev) => [...prev, message]);
-      setTypingStatus(null);
-    });
+  //   chatSocket.on("new_message", (message: ChatMessage) => {
+  //     console.log(`[Socket] 📩 Received new_message:`, message);
+  //     setMessages((prev) => [...prev, message]);
+  //     setTypingStatus(null);
+  //   });
 
-    chatSocket.on(
-      "typing_status",
-      (data: { senderName: string; isTyping: boolean }) => {
-        setTypingStatus(data);
-      },
-    );
+  //   chatSocket.on("typing_status", (data: { senderName: string; isTyping: boolean }) => {
+  //     setTypingStatus(data);
+  //   });
 
-    chatSocket.on("session_activated", (dataValue: any) => {
-      setSessionStatus("active");
-      if (dataValue.startedAt || dataValue.started_at)
-        setStartedAt(dataValue.startedAt || dataValue.started_at);
-      if (dataValue.expiresAt || dataValue.expires_at)
-        setExpiresAt(dataValue.expiresAt || dataValue.expires_at);
+  //   chatSocket.on("session_activated", (dataValue: any) => {
+  //     setSessionStatus("active");
+  //     if (dataValue.startedAt || dataValue.started_at)
+  //       setStartedAt(dataValue.startedAt || dataValue.started_at);
+  //     if (dataValue.expiresAt || dataValue.expires_at)
+  //       setExpiresAt(dataValue.expiresAt || dataValue.expires_at);
 
-      if (dataValue.remainingSeconds !== undefined)
-        setTimeLeft(dataValue.remainingSeconds);
-      if (dataValue.elapsedSeconds !== undefined)
-        setElapsedTime(dataValue.elapsedSeconds);
-    });
+  //     if (dataValue.remainingSeconds !== undefined) setTimeLeft(dataValue.remainingSeconds);
+  //     if (dataValue.elapsedSeconds !== undefined) setElapsedTime(dataValue.elapsedSeconds);
+  //   });
 
-    chatSocket.on("session_ended", (summary: ChatSession) => {
-      setSessionStatus("completed");
-      setSessionSummary(summary);
-      setShowModal(true);
-      refreshBalance();
-    });
+  //   chatSocket.on("session_ended", (summary: ChatSession) => {
+  //     setSessionStatus("completed");
+  //     setSessionSummary(summary);
+  //     setShowModal(true);
+  //     refreshBalance();
+  //   });
 
-    chatSocket.on("free_time_ending_soon", (data: any) => {
-      setFreeLimitData(data);
-      setShowFreeEndPrompt(true);
-      setContinuationTimer(30);
-    });
+  //   chatSocket.on("free_time_ending_soon", (data: any) => {
+  //     setFreeLimitData(data);
+  //     setShowFreeEndPrompt(true);
+  //     setContinuationTimer(30);
+  //   });
 
-    chatSocket.on("paid_continuation_confirmed", (data: any) => {
-      setShowFreeEndPrompt(false);
-      setIsFree(false);
-      if (data.expiresAt || data.expires_at)
-        setExpiresAt(data.expiresAt || data.expires_at);
-      if (data.remainingSeconds !== undefined) {
-        setTimeLeft(data.remainingSeconds);
-      }
-      toast.success("Consultation continued as paid session");
-    });
+  //   chatSocket.on("paid_continuation_confirmed", (data: any) => {
+  //     setShowFreeEndPrompt(false);
+  //     setIsFree(false);
+  //     if (data.expiresAt || data.expires_at) setExpiresAt(data.expiresAt || data.expires_at);
+  //     if (data.remainingSeconds !== undefined) {
+  //       setTimeLeft(data.remainingSeconds);
+  //     }
+  //     toast.success("Consultation continued as paid session");
+  //   });
 
-    return () => {
-      chatSocket.off("connect", joinRoom);
-      chatSocket.off("new_message");
-      chatSocket.off("typing_status");
-      chatSocket.off("session_activated");
-      chatSocket.off("session_ended");
-      chatSocket.off("free_time_ending_soon");
-      chatSocket.off("paid_continuation_confirmed");
-    };
-  }, [sessionId, refreshBalance]);
+  //   return () => {
+  //     chatSocket.off("connect", joinRoom);
+  //     chatSocket.off("new_message");
+  //     chatSocket.off("typing_status");
+  //     chatSocket.off("session_activated");
+  //     chatSocket.off("session_ended");
+  //     chatSocket.off("free_time_ending_soon");
+  //     chatSocket.off("paid_continuation_confirmed");
+  //   };
+  // }, [sessionId, refreshBalance]);
 
   useEffect(() => {
     if (sessionStatus !== "active") return;
 
     const timer = setInterval(() => {
       setElapsedTime((prev) => prev + 1);
-      setTimeLeft((prev) =>
-        prev !== null && prev > 0 ? prev - 1 : prev === null ? null : 0,
-      );
+      setTimeLeft((prev) => (prev !== null && prev > 0 ? prev - 1 : prev === null ? null : 0));
     }, 1000);
 
     return () => clearInterval(timer);
@@ -243,15 +226,12 @@ function ChatRoomContent() {
 
   useEffect(() => {
     if (sessionStatus === "active" && timeLeft === 0 && expiresAt && !isFree) {
-      console.log(
-        "[ChatRoom] Balance exhausted, waiting for backend termination.",
-        {
-          sessionStatus,
-          timeLeft,
-          expiresAt,
-          isFree,
-        },
-      );
+      console.log("[ChatRoom] Balance exhausted, waiting for backend termination.", {
+        sessionStatus,
+        timeLeft,
+        expiresAt,
+        isFree,
+      });
     }
   }, [timeLeft, sessionStatus, expiresAt, isFree]);
 
@@ -295,60 +275,59 @@ function ChatRoomContent() {
     }
 
     console.log(`[Socket] 📤 Sending message:`, payload);
-    chatSocket.emit("send_message", payload, (response: any) => {
-      console.log(`[Socket] 📬 Received ACK for send_message:`, response);
-      // Fallback: If socket broadcast doesn't work for the sender, append it manually from ACK
-      if (response && response.id) {
-        setMessages((prev) => {
-          // Check if already exists to prevent duplicate if broadcast DOES work
-          if (!prev.some((m) => m.id === response.id)) {
-            console.log(`[Socket] 🔧 Appending message manually from ACK`);
-            return [...prev, response];
-          }
-          return prev;
-        });
-      }
-    });
+    // chatSocket.emit("send_message", payload, (response: any) => {
+    //   console.log(`[Socket] 📬 Received ACK for send_message:`, response);
+    //   // Fallback: If socket broadcast doesn't work for the sender, append it manually from ACK
+    //   if (response && response.id) {
+    //     setMessages((prev) => {
+    //       // Check if already exists to prevent duplicate if broadcast DOES work
+    //       if (!prev.some((m) => m.id === response.id)) {
+    //         console.log(`[Socket] 🔧 Appending message manually from ACK`);
+    //         return [...prev, response];
+    //       }
+    //       return prev;
+    //     });
+    //   }
+    // });
     setInputValue("");
     setPendingAttachment(null);
   };
 
   const handleEndChat = (force = false) => {
     if (!sessionId) return;
-    if (!force && !confirm("Are you sure you want to end this session?"))
-      return;
+    if (!force && !confirm("Are you sure you want to end this session?")) return;
 
     isEndingSession.current = true;
 
-    if (user && sessionId) {
-      chatSocket.emit("send_message", {
-        sessionId: sessionId,
-        senderId: user.profile || user.id,
-        senderType: "admin",
-        content: "User has ended the consultation.",
-      });
-    }
+    // if (user && sessionId) {
+    //   chatSocket.emit("send_message", {
+    //     sessionId: sessionId,
+    //     senderId: user.profile || user.id,
+    //     senderType: "admin",
+    //     content: "User has ended the consultation.",
+    //   });
+    // }
 
-    chatSocket.emit("end_chat", { sessionId: sessionId });
+    // chatSocket.emit("end_chat", { sessionId: sessionId });
   };
 
-  const handleInputTyping = () => {
-    if (!sessionId || !user) return;
-    chatSocket.emit("typing", {
-      sessionId,
-      senderName: user.name || "User",
-      isTyping: true,
-    });
+  // const handleInputTyping = () => {
+  //   if (!sessionId || !user) return;
+  //   // chatSocket.emit("typing", {
+  //   //   sessionId,
+  //   //   senderName: user.name || "User",
+  //   //   isTyping: true,
+  //   // });
 
-    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
-    typingTimeoutRef.current = setTimeout(() => {
-      chatSocket.emit("typing", {
-        sessionId,
-        senderName: user.name || "User",
-        isTyping: false,
-      });
-    }, 1500);
-  };
+  //   if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+  //   typingTimeoutRef.current = setTimeout(() => {
+  //     chatSocket.emit("typing", {
+  //       sessionId,
+  //       senderName: user.name || "User",
+  //       isTyping: false,
+  //     });
+  //   }, 1500);
+  // };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -366,9 +345,7 @@ function ChatRoomContent() {
       console.error("Upload error:", error);
       toast.error(getErrorMessage(error) || "Upload failed");
     } else if (uploadRes && uploadRes.url) {
-      const attachmentType = file.type.startsWith("image")
-        ? "image"
-        : "document";
+      const attachmentType = file.type.startsWith("image") ? "image" : "document";
       setPendingAttachment({
         url: uploadRes.url,
         type: attachmentType as any,
@@ -395,17 +372,11 @@ function ChatRoomContent() {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-[#1a0c0c] p-6 text-center">
         <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
-        <h2 className="text-white font-bold text-xl mb-2">
-          Failed to Load Session
-        </h2>
+        <h2 className="text-white font-bold text-xl mb-2">Failed to Load Session</h2>
         <p className="text-white/60 mb-6">
-          We couldn't retrieve your chat details. Please try again or go back to
-          home.
+          We couldn't retrieve your chat details. Please try again or go back to home.
         </p>
-        <Button
-          onClick={() => window.location.reload()}
-          className="bg-[#fd6410]"
-        >
+        <Button onClick={() => window.location.reload()} className="bg-[#fd6410]">
           Retry
         </Button>
       </div>
@@ -425,10 +396,7 @@ function ChatRoomContent() {
       className={`fixed inset-0 flex flex-col ${isDarkMode ? "bg-[#1a0c0c] text-white" : "bg-[#FFF9F5] text-[#2A0A0A]"} overflow-hidden font-outfit transition-colors duration-500 z-50`}
     >
       {sessionStatus === "pending" && expiresAt && (
-        <WaitingCountdown
-          expiresAt={expiresAt}
-          onExpire={() => router.push("/")}
-        />
+        <WaitingCountdown expiresAt={expiresAt} onExpire={() => router.push("/")} />
       )}
 
       <Header
@@ -497,7 +465,7 @@ function ChatRoomContent() {
             inputValue={inputValue}
             setInputValue={setInputValue}
             handleSendMessage={handleSendMessage}
-            handleInputTyping={handleInputTyping}
+            handleInputTyping={() => {}}
           />
         </div>
 
@@ -527,7 +495,7 @@ function ChatRoomContent() {
         freeLimitData={freeLimitData}
         expertData={expertData}
         router={router}
-        chatSocket={chatSocket}
+        chatSocket={() => {}}
         sessionId={sessionId}
         handleEndChat={handleEndChat}
       />

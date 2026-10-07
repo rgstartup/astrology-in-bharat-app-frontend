@@ -1,15 +1,14 @@
 "use server";
 
-import { cookies } from "next/headers";
-import { api, API_ROUTES } from "@/actions";
+import { api, API_ROUTES, AUTH_COOKIE_NAMES } from "@/actions";
+import { getAccessToken } from "@/actions/cookie";
 import { getErrorMessage, Media } from "@repo/lib";
 import { OnboardingFormData, OnboardingActionResponse } from "@/lib/types";
 
 export async function saveOnboardingAction(
   data: OnboardingFormData,
 ): Promise<OnboardingActionResponse> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
+  const token = await getAccessToken();
 
   if (!token) {
     return {
@@ -63,10 +62,10 @@ export async function saveOnboardingAction(
     ];
   }
 
-  const [, error] = await api.patch(API_ROUTES.AUTH.CLIENT.ME, payload, {
+  const [, error] = await api.patch(API_ROUTES.AUTH.ME, payload, {
     headers: {
       Authorization: `Bearer ${token}`,
-      Cookie: `accessToken=${token}`,
+      Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
     },
   });
 
@@ -87,8 +86,7 @@ export async function uploadOnboardingPictureAction(
   formData: FormData,
   public_id?: string,
 ): Promise<OnboardingActionResponse> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
+  const token = await getAccessToken();
 
   if (!token) {
     return {
@@ -103,10 +101,10 @@ export async function uploadOnboardingPictureAction(
   const [resData, error] = await api.patch<{
     avatar?: string;
     avatar_media: Media | null;
-  }>(API_ROUTES.AUTH.CLIENT.PICTURE, formData, {
+  }>(API_ROUTES.AUTH.PICTURE, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
-      Cookie: `accessToken=${token}`,
+      Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
     },
   });
 

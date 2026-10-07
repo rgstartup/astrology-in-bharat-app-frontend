@@ -1,20 +1,11 @@
 import { createSafeFetchInstance, createSafeFetchResultInstance } from "@repo/safe-fetch";
+export type { Result, ApiErrorBody } from "@repo/safe-fetch";
 export { API_ROUTES } from "@/lib/api-routes";
+export { AUTH_COOKIE_NAMES } from "@/lib/constants/auth";
+export type { AuthTokens, AuthCookieName } from "@/lib/constants/auth";
 export * from "./expert-products";
 export * from "./favorites";
 export * from "./consultation";
-export {
-  getChatEligibilityAction,
-  initiateChatAction,
-  getChatPrepExpertAction,
-} from "./chat";
-export type {
-  ChatEligibility,
-  ChatEligibilityResponse,
-  SomeoneElseData,
-  InitiateChatResponse,
-  ChatPrepExpertResponse,
-} from "./chat";
 export * from "./specialization";
 export * from "./onboard";
 

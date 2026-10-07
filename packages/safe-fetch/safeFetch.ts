@@ -1,6 +1,6 @@
 import parseBody from "./body-parser";
 import anySignal from "./any-signal";
-import { ApiError, type FieldErrors } from "./error";
+import { ApiError, type ApiErrorBody, type FieldErrors } from "./error";
 
 export interface SafeFetchInit extends Omit<RequestInit, "body"> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,69 +19,92 @@ export interface SafeFetchInstanceConfig {
   // Interceptors
   onRequest?: (url: string, init: RequestInit) => void | Promise<void>;
   onResponse?: <T>(data: T, res: Response) => void | Promise<void>;
-  onError?: (error: ApiError) => void | Promise<void>;
+  onError?: <TBody extends ApiErrorBody>(error: ApiError<TBody>) => void | Promise<void>;
 }
 
-// Result type: discriminated union with ok, data, error
-export type Result<T> =
+// Result type: discriminated union with ok, data, error (generic over error body)
+export type Result<T, TErrorBody extends ApiErrorBody = ApiErrorBody> =
   | { ok: true; data: T; error?: never }
-  | { ok: false; error: ApiError; data?: never };
+  | { ok: false; error: ApiError<TErrorBody>; data?: never };
 
-// Legacy Result type: [data, error] tuple
-export type LegacyResult<T> = [T | null, ApiError | null];
+// Legacy Result type: [data, error] tuple (generic over error body, defaults preserve compat)
+/** @deprecated Use `Result<T, TErrorBody>` discriminated union with `createSafeFetchResultInstance`. */
+export type LegacyResult<T, TErrorBody extends ApiErrorBody = ApiErrorBody> = [
+  T | null,
+  ApiError<TErrorBody> | null,
+];
 
+/** @deprecated Use `SafeFetchResultInstance` via `createSafeFetchResultInstance`. */
 export interface SafeFetchInstance {
-  <T>(url: string, init?: SafeFetchInit): Promise<LegacyResult<T>>;
-  get: <T>(url: string, init?: SafeFetchInit) => Promise<LegacyResult<T>>;
-  post: <T>(
+  <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ): Promise<LegacyResult<T, TErrorBody>>;
+  get: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => Promise<LegacyResult<T, TErrorBody>>;
+  post: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
     body?: unknown,
     init?: SafeFetchInit,
-  ) => Promise<LegacyResult<T>>;
-  put: <T>(
+  ) => Promise<LegacyResult<T, TErrorBody>>;
+  put: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
     body?: unknown,
     init?: SafeFetchInit,
-  ) => Promise<LegacyResult<T>>;
-  patch: <T>(
+  ) => Promise<LegacyResult<T, TErrorBody>>;
+  patch: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
     body?: unknown,
     init?: SafeFetchInit,
-  ) => Promise<LegacyResult<T>>;
-  delete: <T>(url: string, init?: SafeFetchInit) => Promise<LegacyResult<T>>;
-  upload: <T>(
+  ) => Promise<LegacyResult<T, TErrorBody>>;
+  delete: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => Promise<LegacyResult<T, TErrorBody>>;
+  upload: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
     body: FormData,
     init?: SafeFetchInit,
-  ) => Promise<LegacyResult<T>>;
+  ) => Promise<LegacyResult<T, TErrorBody>>;
   /** Extend the instance with additional config (returns a new instance) */
   extend: (config: SafeFetchInstanceConfig) => SafeFetchInstance;
 }
 
 export interface SafeFetchResultInstance {
-  <T>(url: string, init?: SafeFetchInit): Promise<Result<T>>;
-  get: <T>(url: string, init?: SafeFetchInit) => Promise<Result<T>>;
-  post: <T>(
+  <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ): Promise<Result<T, TErrorBody>>;
+  get: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => Promise<Result<T, TErrorBody>>;
+  post: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
     body?: unknown,
     init?: SafeFetchInit,
-  ) => Promise<Result<T>>;
-  put: <T>(
+  ) => Promise<Result<T, TErrorBody>>;
+  put: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
     body?: unknown,
     init?: SafeFetchInit,
-  ) => Promise<Result<T>>;
-  patch: <T>(
+  ) => Promise<Result<T, TErrorBody>>;
+  patch: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
     body?: unknown,
     init?: SafeFetchInit,
-  ) => Promise<Result<T>>;
-  delete: <T>(url: string, init?: SafeFetchInit) => Promise<Result<T>>;
-  upload: <T>(
+  ) => Promise<Result<T, TErrorBody>>;
+  delete: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => Promise<Result<T, TErrorBody>>;
+  upload: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
     body: FormData,
     init?: SafeFetchInit,
-  ) => Promise<Result<T>>;
+  ) => Promise<Result<T, TErrorBody>>;
   /** Extend the instance with additional config (returns a new instance) */
   extend: (config: SafeFetchInstanceConfig) => SafeFetchResultInstance;
 }
@@ -107,12 +130,12 @@ function resolveUrl(base: string | undefined, path: string): string {
 /**
  * @desc Core fetch executor, shared by both standalone functions and instances.
  */
-async function executeFetch<T>(
+async function executeFetch<T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
   url: string,
   init: SafeFetchInit | undefined,
   instanceConfig: SafeFetchInstanceConfig,
   callSiteStack?: string,
-): Promise<LegacyResult<T>> {
+): Promise<LegacyResult<T, TErrorBody>> {
   const callSite = callSiteStack || new Error().stack;
   const {
     timeoutMs = instanceConfig.timeoutMs ?? 15000,
@@ -186,13 +209,22 @@ async function executeFetch<T>(
         }
       }
 
-      const error = new ApiError(res.status, message, data, res.headers, {
-        callSiteStack: callSite,
-        errorCode,
-        fieldErrors,
-      });
+      const error = new ApiError<TErrorBody>(
+        res.status,
+        message,
+        data as TErrorBody,
+        res.headers,
+        {
+          callSiteStack: callSite,
+          errorCode,
+          fieldErrors,
+        },
+      );
 
-      if (instanceConfig.onError) await instanceConfig.onError(error);
+      if (instanceConfig.onError)
+        await (instanceConfig.onError as (error: ApiError<TErrorBody>) => void | Promise<void>)(
+          error,
+        );
       return [null, error];
     }
 
@@ -208,19 +240,24 @@ async function executeFetch<T>(
       ? "Request aborted or timeout"
       : err?.message || "Network error";
 
-    const error = new ApiError(0, message, undefined, undefined, {
+    const error = new ApiError<TErrorBody>(0, message, undefined, undefined, {
       cause: err,
       callSiteStack: callSite,
     });
 
-    if (instanceConfig.onError) await instanceConfig.onError(error);
+    if (instanceConfig.onError)
+      await (instanceConfig.onError as (error: ApiError<TErrorBody>) => void | Promise<void>)(
+        error,
+      );
     return [null, error];
   } finally {
     clearTimeout(id);
   }
 }
 
-async function toResult<T>(promise: Promise<LegacyResult<T>>): Promise<Result<T>> {
+async function toResult<T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+  promise: Promise<LegacyResult<T, TErrorBody>>,
+): Promise<Result<T, TErrorBody>> {
   const [data, error] = await promise;
   if (error) {
     return { ok: false, error };
@@ -260,43 +297,89 @@ function getCallSite(callerFn?: Function): string | undefined {
 /**
  * @desc Creates a reusable safeFetch instance with shared base URL, headers, and config —
  * returning legacy [data, error] tuples.
+ * @deprecated Use `createSafeFetchResultInstance` returning `Result<T>` discriminated union.
  */
 export function createSafeFetchInstance(
   config: SafeFetchInstanceConfig = {},
 ): SafeFetchInstance {
-  const instance = (<T>(url: string, init?: SafeFetchInit) => {
+  const instance = (<T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => {
     const callSite = getCallSite(instance);
-    return executeFetch<T>(url, init, config, callSite);
+    return executeFetch<T, TErrorBody>(url, init, config, callSite);
   }) as SafeFetchInstance;
 
-  instance.get = <T>(url: string, init?: SafeFetchInit) => {
+  instance.get = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => {
     const callSite = getCallSite(instance.get);
-    return executeFetch<T>(url, { method: "GET", ...init }, config, callSite);
+    return executeFetch<T, TErrorBody>(url, { method: "GET", ...init }, config, callSite);
   };
 
-  instance.post = <T>(url: string, body?: unknown, init?: SafeFetchInit) => {
+  instance.post = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => {
     const callSite = getCallSite(instance.post);
-    return executeFetch<T>(url, { ...withBody("POST", body), ...init }, config, callSite);
+    return executeFetch<T, TErrorBody>(
+      url,
+      { ...withBody("POST", body), ...init },
+      config,
+      callSite,
+    );
   };
 
-  instance.put = <T>(url: string, body?: unknown, init?: SafeFetchInit) => {
+  instance.put = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => {
     const callSite = getCallSite(instance.put);
-    return executeFetch<T>(url, { ...withBody("PUT", body), ...init }, config, callSite);
+    return executeFetch<T, TErrorBody>(
+      url,
+      { ...withBody("PUT", body), ...init },
+      config,
+      callSite,
+    );
   };
 
-  instance.patch = <T>(url: string, body?: unknown, init?: SafeFetchInit) => {
+  instance.patch = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => {
     const callSite = getCallSite(instance.patch);
-    return executeFetch<T>(url, { ...withBody("PATCH", body), ...init }, config, callSite);
+    return executeFetch<T, TErrorBody>(
+      url,
+      { ...withBody("PATCH", body), ...init },
+      config,
+      callSite,
+    );
   };
 
-  instance.delete = <T>(url: string, init?: SafeFetchInit) => {
+  instance.delete = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => {
     const callSite = getCallSite(instance.delete);
-    return executeFetch<T>(url, { method: "DELETE", ...init }, config, callSite);
+    return executeFetch<T, TErrorBody>(url, { method: "DELETE", ...init }, config, callSite);
   };
 
-  instance.upload = <T>(url: string, body: FormData, init?: SafeFetchInit) => {
+  instance.upload = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body: FormData,
+    init?: SafeFetchInit,
+  ) => {
     const callSite = getCallSite(instance.upload);
-    return executeFetch<T>(url, { ...withBody("POST", body), ...init }, config, callSite);
+    return executeFetch<T, TErrorBody>(
+      url,
+      { ...withBody("POST", body), ...init },
+      config,
+      callSite,
+    );
   };
 
   /** Inherit config and override with new values — headers are merged, not replaced */
@@ -318,26 +401,44 @@ export function createSafeFetchResultInstance(
 ): SafeFetchResultInstance {
   const legacyInstance = createSafeFetchInstance(config);
 
-  const instance = (<T>(url: string, init?: SafeFetchInit) =>
-    toResult(legacyInstance<T>(url, init))) as SafeFetchResultInstance;
+  const instance = (<T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => toResult(legacyInstance<T, TErrorBody>(url, init))) as SafeFetchResultInstance;
 
-  instance.get = <T>(url: string, init?: SafeFetchInit) =>
-    toResult(legacyInstance.get<T>(url, init));
+  instance.get = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => toResult(legacyInstance.get<T, TErrorBody>(url, init));
 
-  instance.post = <T>(url: string, body?: unknown, init?: SafeFetchInit) =>
-    toResult(legacyInstance.post<T>(url, body, init));
+  instance.post = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => toResult(legacyInstance.post<T, TErrorBody>(url, body, init));
 
-  instance.put = <T>(url: string, body?: unknown, init?: SafeFetchInit) =>
-    toResult(legacyInstance.put<T>(url, body, init));
+  instance.put = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => toResult(legacyInstance.put<T, TErrorBody>(url, body, init));
 
-  instance.patch = <T>(url: string, body?: unknown, init?: SafeFetchInit) =>
-    toResult(legacyInstance.patch<T>(url, body, init));
+  instance.patch = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => toResult(legacyInstance.patch<T, TErrorBody>(url, body, init));
 
-  instance.delete = <T>(url: string, init?: SafeFetchInit) =>
-    toResult(legacyInstance.delete<T>(url, init));
+  instance.delete = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => toResult(legacyInstance.delete<T, TErrorBody>(url, init));
 
-  instance.upload = <T>(url: string, body: FormData, init?: SafeFetchInit) =>
-    toResult(legacyInstance.upload<T>(url, body, init));
+  instance.upload = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body: FormData,
+    init?: SafeFetchInit,
+  ) => toResult(legacyInstance.upload<T, TErrorBody>(url, body, init));
 
   instance.extend = (overrides: SafeFetchInstanceConfig) =>
     createSafeFetchResultInstance({
@@ -352,6 +453,7 @@ export function createSafeFetchResultInstance(
 /**
  * @desc A safe wrapper around fetch that returns a tuple of [data, error] instead of throwing.
  * Maintained for backward compatibility.
+ * @deprecated Use `safeFetchResult` returning `Result<T>` discriminated union.
  */
 export default async function safeFetch<T>(
   url: string,

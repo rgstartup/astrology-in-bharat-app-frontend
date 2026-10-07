@@ -19,12 +19,12 @@ export interface ApiErrorOptions {
   fieldErrors?: FieldErrors;
 }
 
-export interface ApiErrorPayload {
+export interface ApiErrorPayload<TBody extends ApiErrorBody = ApiErrorBody> {
   status: number;
   errorCode?: string;
   message: string;
   fieldErrors?: FieldErrors;
-  body?: ApiErrorBody;
+  body?: TBody;
   headers?: Headers;
   cause?: unknown;
   callSiteStack?: string;
@@ -71,32 +71,32 @@ function cleanStack(
 }
 
 // Custom error class to capture API errors with status, message, errorCode, fieldErrors, body, headers, and call-site stack trace
-export class ApiError extends Error {
+export class ApiError<TBody extends ApiErrorBody = ApiErrorBody> extends Error {
   public status: number;
   public errorCode?: string;
   public fieldErrors?: FieldErrors;
-  public body?: ApiErrorBody;
+  public body?: TBody;
   public headers?: Headers;
   public cause?: unknown;
 
-  constructor(payload: ApiErrorPayload);
+  constructor(payload: ApiErrorPayload<TBody>);
   constructor(
     status: number,
     message: string,
-    body?: ApiErrorBody,
+    body?: TBody,
     headers?: Headers,
     options?: ApiErrorOptions,
   );
   constructor(
-    statusOrPayload: number | ApiErrorPayload,
+    statusOrPayload: number | ApiErrorPayload<TBody>,
     message?: string,
-    body?: ApiErrorBody,
+    body?: TBody,
     headers?: Headers,
     options?: ApiErrorOptions,
   ) {
     let finalStatus: number;
     let finalMessage: string;
-    let finalBody: ApiErrorBody | undefined;
+    let finalBody: TBody | undefined;
     let finalHeaders: Headers | undefined;
     let finalErrorCode: string | undefined;
     let finalFieldErrors: FieldErrors | undefined;

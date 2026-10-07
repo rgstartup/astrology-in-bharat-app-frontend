@@ -180,6 +180,15 @@ export async function verifyOtpAction(
 }
 
 // ─────────────────────────────────────────────────────────
+// SOCKET TOKEN — Exposes the HttpOnly accessToken to the realtime
+// socket handshake (`auth: { token }`). Never called for credentials,
+// only to re-authenticate the already-established session on `/realtime`.
+export async function getSocketTokenAction(): Promise<string | null> {
+  const cookieStore = await cookies();
+  return cookieStore.get("accessToken")?.value ?? null;
+}
+
+// ─────────────────────────────────────────────────────────
 // COMPLETE REGISTRATION
 // ─────────────────────────────────────────────────────────
 export async function completeRegistrationAction(

@@ -30,6 +30,9 @@ export const API_ROUTES = {
       REMOVE_FROM_FAVORITE: "/client/favorites/product-variant/:id",
     },
   },
+  CHAT: {
+    INITIATE: "/client/chat/initiate",
+  },
   WALLET: {
     ROOT: "/client/wallet",
     TRANSACTIONS: "/client/wallet/transactions",

@@ -19,6 +19,7 @@ import NotificationProvider from "@/providers/NotificationProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import ToastProvider from "@/components/layout/ToastProvider";
 import PlatformReviewModal from "@/components/features/reviews";
+import ChatPrepHost from "@/components/chat-prep/ChatPrepHost";
 import QueryProvider from "@/providers/QueryProvider";
 
 export const metadata: Metadata = {
@@ -69,6 +70,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                       </WishlistInitializer>
                     </CartInitializer>
                     <PlatformReviewModal />
+                    <ChatPrepHost />
                   </AuthInitializer>
                 </QueryProvider>
               </NotificationProvider>

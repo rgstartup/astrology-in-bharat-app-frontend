@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
 import { stripLocale } from "@/utils/getPathnameOrDefault";
+import { AUTH_COOKIE_NAMES } from "@/actions";
 
 /**
  * GET /api/auth/set-tokens?accessToken=...&refreshToken=...&redirect=...
@@ -12,8 +13,8 @@ import { stripLocale } from "@/utils/getPathnameOrDefault";
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const accessToken = searchParams.get("accessToken");
-  const refreshToken = searchParams.get("refreshToken");
+  const accessToken = searchParams.get(AUTH_COOKIE_NAMES.ACCESS_TOKEN);
+  const refreshToken = searchParams.get(AUTH_COOKIE_NAMES.REFRESH_TOKEN);
   const redirect = searchParams.get("redirect") || "/client/profile";
 
   console.log("[set-tokens] Called with:", {
@@ -38,7 +39,7 @@ export async function GET(request: NextRequest) {
   // Set HttpOnly cookies server-side (works on both HTTP and HTTPS)
   const isProduction = process.env.NODE_ENV === "production";
 
-  response.cookies.set("accessToken", accessToken, {
+  response.cookies.set(AUTH_COOKIE_NAMES.ACCESS_TOKEN, accessToken, {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",
@@ -46,7 +47,7 @@ export async function GET(request: NextRequest) {
     maxAge: 15 * 60, // 15 minutes
   });
 
-  response.cookies.set("refreshToken", refreshToken, {
+  response.cookies.set(AUTH_COOKIE_NAMES.REFRESH_TOKEN, refreshToken, {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",

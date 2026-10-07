@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import {
   Star,
   MessageSquare,
@@ -24,6 +24,8 @@ import type { IExpert } from "@repo/lib";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
+import { requestChatConsult } from "@/components/chat-prep/request-chat-consult";
+import { useTranslations } from "next-intl";
 
 interface ExploreExpertCardProps {
   expert: IExpert;
@@ -31,6 +33,8 @@ interface ExploreExpertCardProps {
 
 export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const tChat = useTranslations("Chat.page");
   const { isAuthenticated } = useAuthStore();
   const { isExpertInWishlist } = useWishlistStore();
   const { toggleLike } = useWishlist();
@@ -78,7 +82,13 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
     }
 
     if (type === "chat") {
-      router.push(`/chat/prep/${expertId}`);
+      requestChatConsult(String(expertId), {
+        isAuthenticated,
+        pathname,
+        push: (url) => router.push(url),
+        loginTitle: tChat("toastLogin"),
+        loginActionLabel: tChat("loginNow"),
+      });
     } else {
       router.push(`/call/prep/${expertId}?type=${type}`);
     }

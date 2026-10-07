@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { useWishlist } from "@/hooks/useWishlist";
 import { ExpertCardProps } from "@/lib/types";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
+import { useTranslations } from "next-intl";
 import { getYoutubeId, getYoutubeEmbedUrl } from "@/utils/video-utils";
 import { usePreloadExpertStore } from "@/store/preloadExpertStore";
 import { PATHS } from "@repo/routes";
@@ -17,6 +18,7 @@ import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
+import { requestChatConsult } from "@/components/chat-prep/request-chat-consult";
 
 const ExpertCard: React.FC<ExpertCardProps> = ({
   expertData,
@@ -60,6 +62,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   const { isAuthenticated } = useAuthStore();
   const { toggleLike } = useWishlist();
   const router = useRouter();
+  const tChat = useTranslations("Chat.page");
   const pathname = usePathname();
 
   // Local state for optimistic updates
@@ -132,7 +135,13 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
     }
 
     // Use expert profile ID for chat
-    router.push(`/chat/prep/${expertProfileId}`);
+    requestChatConsult(String(expertProfileId), {
+      isAuthenticated,
+      pathname,
+      push: (url) => router.push(url),
+      loginTitle: tChat("toastLogin"),
+      loginActionLabel: tChat("loginNow"),
+    });
   };
 
   const handleCallClick = (e: React.MouseEvent) => {

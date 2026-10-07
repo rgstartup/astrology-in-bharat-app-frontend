@@ -32,7 +32,15 @@ export const isRealtimeSocketConnected = (): boolean => socket?.connected ?? fal
 export const connectRealtimeSocket = (token?: string | null): Socket => {
   const active = realtimeSocket();
   if (token) {
-    active.auth = { token, actorType: "client" };
+    const current = active.auth as { token?: string } | undefined;
+    if (current?.token !== token) {
+      active.auth = { token, actorType: "client" };
+      // Already-connected anonymous socket ignores new `auth` until it
+      // reconnects — force one so post-login handshakes carry the JWT.
+      if (active.connected) {
+        active.disconnect();
+      }
+    }
   }
   if (!active.connected) {
     active.connect();

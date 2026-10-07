@@ -13,6 +13,7 @@ import {
   stopPresenceHeartbeat,
 } from "@/realtime/topics/presence";
 import { useAuthStore } from "@/store/auth.store";
+import { ChatIncomingStack } from "@/realtime/components/chat-incoming";
 
 /**
  * Singleton owner of the `/realtime` connection (expert app). Authenticates
@@ -77,7 +78,12 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
     };
   }, [isAuthenticated, user?.id]);
 
-  return children;
+  return (
+    <>
+      {children}
+      <ChatIncomingStack />
+    </>
+  );
 }
 
 export default RealtimeProvider;
