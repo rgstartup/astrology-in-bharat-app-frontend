@@ -1,23 +1,31 @@
 import { emitWithAck, realtimeSocket } from "@/realtime/socket";
 import type {
   JoinChatAck,
+  ChatPauseAck,
+  ChatResumeAck,
   SendChatMessageAck,
 } from "@/realtime/types/chat";
 
 // Canonical backend event names (SOCKET_EVENTS.CHAT).
 export const CHAT_EVENTS = {
-  JOIN: "chat:join",
-  LEAVE: "chat:leave",
-  SEND: "chat:send",
-  MESSAGE: "chat:message",
-  TYPING: "chat:typing",
-  END: "chat:end",
-  REQUEST: "chat:request",
-  INCOMING: "chat:incoming",
-  ACCEPT: "chat:accept",
-  REJECT: "chat:reject",
-  ACCEPTED: "chat:accepted",
-  REJECTED: "chat:rejected",
+  JOIN: "consultation:chat:join",
+  LEAVE: "consultation:chat:leave",
+  SEND: "consultation:chat:send",
+  MESSAGE: "consultation:chat:message",
+  TYPING: "consultation:chat:typing",
+  END: "consultation:chat:end",
+  REQUEST: "consultation:chat:request",
+  INCOMING: "consultation:chat:incoming",
+  ACCEPT: "consultation:chat:accept",
+  REJECT: "consultation:chat:reject",
+  ACCEPTED: "consultation:chat:accepted",
+  REJECTED: "consultation:chat:rejected",
+  CANCEL: "consultation:chat:cancel",
+  ENDED: "consultation:chat:ended",
+  PAUSE: "consultation:chat:pause",
+  PAUSED: "consultation:chat:paused",
+  RESUME: "consultation:chat:resume",
+  RESUMED: "consultation:chat:resumed",
 } as const;
 
 export interface SendChatMessageInput {
@@ -58,3 +66,18 @@ export const acceptChat = (consultationId: number): Promise<JoinChatAck> =>
 
 export const rejectChat = (consultationId: number): Promise<JoinChatAck> =>
   emitWithAck<JoinChatAck>(CHAT_EVENTS.REJECT, { consultationId });
+
+/** Client cancels a pending request (acked). Server settles + notifies the expert. */
+export const cancelChat = (consultationId: number): Promise<JoinChatAck> =>
+  emitWithAck<JoinChatAck>(CHAT_EVENTS.CANCEL, { consultationId });
+
+/** Either actor ends an active chat (acked). Server flips to COMPLETED + emits `chat:ended` to the room. */
+export const endChat = (consultationId: number): Promise<JoinChatAck> =>
+  emitWithAck<JoinChatAck>(CHAT_EVENTS.END, { consultationId });
+
+/** Balance-exhaustion pause / resume (acked). Only the client timer sends these; the expert only listens. */
+export const pauseChat = (consultationId: number): Promise<ChatPauseAck> =>
+  emitWithAck<ChatPauseAck>(CHAT_EVENTS.PAUSE, { consultationId });
+
+export const resumeChat = (consultationId: number): Promise<ChatResumeAck> =>
+  emitWithAck<ChatResumeAck>(CHAT_EVENTS.RESUME, { consultationId });

@@ -222,3 +222,31 @@ export async function GET() {
 - ✅ Timeout + cancellation
 - ✅ Next.js compatible
 
+---
+
+## 15. Upload With Progress (Client-Only, XHR)
+
+`fetch` exposes no upload-progress signal, so file uploads with progress use a
+separate XHR transport sharing the same `Result<T>` / `ApiError` contract.
+Never import it in Server Actions or Route Handlers.
+
+```ts
+"use client";
+import { createSafeFetchUploadInstance } from "@repo/safe-fetch";
+
+const uploadApi = createSafeFetchUploadInstance({ baseUrl: "/api" });
+
+const res = await uploadApi.upload<{ url: string }>("/uploads", formData, {
+  timeoutMs: 120_000,
+  onUploadProgress: ({ loaded, total, percent }) => setProgress(percent ?? 0),
+});
+
+if (!res.ok) return toast.error(res.error.message);
+
+console.log(res.data.url);
+```
+
+- ✅ Same `Result<T>` discriminated union as `safeFetchResult`
+- ✅ `onUploadProgress`, `timeoutMs` (default 120s), `signal`, `params`, `extend()`
+- ✅ Browser-only: resolves `{ ok: false, error }` on the server
+

@@ -34,6 +34,8 @@ export interface ChatMessage {
   senderId: string;
   senderType: MessageSenderType;
   content: string;
+  /** Owning session from the nested history contract (present for REST seeds). */
+  sessionId?: string;
   type?: string;
   attachmentUrl?: string;
   attachmentType?: AttachmentType;
@@ -61,6 +63,14 @@ export interface PendingAttachment {
   url: string;
   type: AttachmentType;
   name: string;
+  /**
+   * Local file staged for the single-call attachment send (`POST
+   * expert/chat/attachments`). Absent for legacy remote-URL stages sent
+   * over the socket.
+   */
+  file?: File;
+  /** Generated at pick time; reused across send retries so retries replay. */
+  idempotencyKey?: string;
 }
 
 // ─── Socket Payloads ─────────────────────────────────────────────────────────

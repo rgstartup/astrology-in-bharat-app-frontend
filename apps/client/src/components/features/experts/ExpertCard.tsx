@@ -18,12 +18,9 @@ import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { requestChatConsult } from "@/components/chat-prep/request-chat-consult";
+import { requestChatConsult } from "@/features/chat-prep/request-chat-consult";
 
-const ExpertCard: React.FC<ExpertCardProps> = ({
-  expertData,
-  cardClassName = "",
-}) => {
+const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" }) => {
   const { t } = useHomeTranslations();
   const {
     id,
@@ -76,9 +73,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
   // Real-time status sync via centralized presence hook
   const { isAvailableForConsultation, isBusy } = useExpertPresence(Number(id), {
     initialStatus: toExpertStatus(
-      expertData.isAvailableForConsultation ??
-      expertData.status ??
-      expertData.is_available,
+      expertData.isAvailableForConsultation ?? expertData.status ?? expertData.is_available,
     ),
   });
   const isAvailable = isAvailableForConsultation;
@@ -88,9 +83,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
 
   // For wishlist, we use the expert profile ID (it matches what backend returns in getExpertWishlist)
   const wishlistTargetId = expertProfileId;
-  const isLiked = wishlistTargetId
-    ? isExpertInWishlist(wishlistTargetId as any)
-    : false;
+  const isLiked = wishlistTargetId ? isExpertInWishlist(wishlistTargetId as any) : false;
 
   const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -105,10 +98,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
         {
           onClick: () =>
             router.push(
-              withCallbackUrl(
-                PATHS.LOGIN,
-                pathname === "/" ? "/#our-experts" : pathname,
-              ),
+              withCallbackUrl(PATHS.LOGIN, pathname === "/" ? "/#our-experts" : pathname),
             ),
           style: { cursor: "pointer" },
         },
@@ -163,9 +153,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
     ? custom_services.map((s: any) => s.name || s.title || s)
     : [];
   const extractedSpecs = extractSpecializationNames(
-    (expertData as any).specializations ||
-      (expertData as any).specialization ||
-      expertise,
+    (expertData as any).specializations || (expertData as any).specialization || expertise,
   );
   const allServices = [...extractedSpecs, ...customServicesList].filter(Boolean);
 
@@ -229,9 +217,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
                 <span className="text-xs font-semibold text-white bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">
                   {((count: number) => {
                     if (count >= 1000) {
-                      return (
-                        (count / 1000).toFixed(1).replace(/\.0$/, "") + "k"
-                      );
+                      return (count / 1000).toFixed(1).replace(/\.0$/, "") + "k";
                     }
                     return count;
                   })(currentLikes)}
@@ -252,18 +238,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             >
               <i
                 className={`fa-solid fa-circle ${
-                  isBusy
-                    ? "text-amber-500"
-                    : isAvailable
-                      ? "text-green-500"
-                      : "text-gray-400"
+                  isBusy ? "text-amber-500" : isAvailable ? "text-green-500" : "text-gray-400"
                 }`}
               />
-              {isBusy
-                ? "Busy"
-                : isAvailable
-                  ? t.expertCard.online
-                  : t.expertCard.offline}
+              {isBusy ? "Busy" : isAvailable ? t.expertCard.online : t.expertCard.offline}
             </div>
 
             {/* PROFILE IMAGE */}
@@ -320,23 +298,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
                 {Array.from({ length: 5 }).map((_, i) => {
                   const starIndex = i + 1;
                   if (ratings >= starIndex)
-                    return (
-                      <i key={i} className="fa-solid fa-star text-[#daa23e]" />
-                    );
+                    return <i key={i} className="fa-solid fa-star text-[#daa23e]" />;
                   if (ratings >= starIndex - 0.5)
-                    return (
-                      <i
-                        key={i}
-                        className="fa-solid fa-star-half-stroke text-[#daa23e]"
-                      />
-                    );
-                  return (
-                    <i
-                      key={i}
-                      className="fa-regular fa-star"
-                      style={{ color: "#ccc" }}
-                    />
-                  );
+                    return <i key={i} className="fa-solid fa-star-half-stroke text-[#daa23e]" />;
+                  return <i key={i} className="fa-regular fa-star" style={{ color: "#ccc" }} />;
                 })}
                 <span className="text-gray-500 text-sm ml-2 font-medium">
                   {ratings.toFixed(1)} / 5
@@ -360,9 +325,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
           </div>
 
           {/* Expertise Tags — wrap properly */}
-          <div
-            className="px-3 mt-1 mb-1 flex flex-wrap justify-center items-center gap-1 min-h-[28px]"
-          >
+          <div className="px-3 mt-1 mb-1 flex flex-wrap justify-center items-center gap-1 min-h-[28px]">
             {allServices.slice(0, 2).map((service, index) => (
               <span
                 key={index}
@@ -392,15 +355,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             <strong>{t.expertCard.lang}</strong>
             <span
               className="font-medium bg-gray-100 text-gray-800 px-2 py-0.5 rounded-md text-[12px] inline-flex items-center gap-1 max-w-[160px]"
-              title={languages.join(", ")}
-              aria-label={`Languages: ${languages.join(", ")}`}
+              title={languages}
+              aria-label={`Languages: ${languages}`}
             >
-              <span className="truncate">{languages.slice(0, 2).join(", ")}</span>
-              {languages.length > 2 && (
-                <span className="text-[10px] font-bold text-orange-600 shrink-0">
-                  +{languages.length - 2}
-                </span>
-              )}
+              <span className="truncate">{languages}</span>
             </span>
           </div>
         </Link>
@@ -416,17 +374,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             >
               <div className="flex items-center gap-1 mb-0.5">
                 <i className="fa-regular fa-comment-dots text-[10px] sm:text-sm" />
-                <span className="text-[12px] sm:text-[14px] font-bold">
-                  {t.expertCard.chat}
-                </span>
+                <span className="text-[12px] sm:text-[14px] font-bold">{t.expertCard.chat}</span>
               </div>
               {(() => {
-                const p =
-                  chat_price && chat_price > 0
-                    ? chat_price
-                    : price > 0
-                      ? price
-                      : 0;
+                const p = chat_price && chat_price > 0 ? chat_price : price > 0 ? price : 0;
                 return (
                   <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate w-full text-center px-1">
                     {p > 0 ? `₹${p}${t.expertCard.perMin}` : "Free Chat"}
@@ -443,17 +394,10 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
             >
               <div className="flex items-center gap-1 mb-0.5">
                 <i className="fa-solid fa-phone-volume text-[10px] sm:text-sm" />
-                <span className="text-[12px] sm:text-[14px] font-bold">
-                  {t.expertCard.call}
-                </span>
+                <span className="text-[12px] sm:text-[14px] font-bold">{t.expertCard.call}</span>
               </div>
               {(() => {
-                const p =
-                  call_price && call_price > 0
-                    ? call_price
-                    : price > 0
-                      ? price
-                      : 0;
+                const p = call_price && call_price > 0 ? call_price : price > 0 ? price : 0;
                 return (
                   <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate w-full text-center px-1">
                     {p > 0 ? `₹${p}${t.expertCard.perMin}` : "Free Call"}
@@ -509,10 +453,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b">
                 <h5 className="font-bold text-gray-900 text-lg m-0">
-                  {t.expertCard.videoModalTitle.replace(
-                    "{name}",
-                    name || "Expert",
-                  )}
+                  {t.expertCard.videoModalTitle.replace("{name}", name || "Expert")}
                 </h5>
                 <CloseButton
                   onClick={(e) => {
@@ -561,10 +502,9 @@ const ExpertCard: React.FC<ExpertCardProps> = ({
                       Intro Video Unavailable
                     </h4>
                     <p className="text-gray-500 font-medium text-center max-w-sm px-6 leading-relaxed">
-                      Looks like{" "}
-                      <span className="font-bold text-orange-600">{name}</span>{" "}
-                      hasn't uploaded an introductory video yet. Don't worry,
-                      you can still connect instantly via chat or call!
+                      Looks like <span className="font-bold text-orange-600">{name}</span> hasn't
+                      uploaded an introductory video yet. Don't worry, you can still connect
+                      instantly via chat or call!
                     </p>
                   </div>
                 )}

@@ -5,6 +5,8 @@ import ExpertListHeader from "./components/ExpertListHeader";
 import { useExpertListStore } from "@/store/expertListStore";
 import { useDebounce } from "@/hooks/use-debounce";
 import { apiV2, API_ROUTES } from "@/actions";
+import { usePresenceStore } from "@/store/presenceStore";
+import { toExpertStatus } from "@/realtime/types/presence";
 import { toast } from "@/hooks/use-toast";
 import { IExpert, PaginationMeta } from "@repo/lib";
 import { IFetchExpertsResponse } from "./api/fetch-expert";
@@ -142,6 +144,28 @@ const ExpertList: React.FC<ExpertListProps> = ({
       toastId: `expert-list-${initialError}`,
     });
   }, [initialError]);
+
+  // The SSR snapshot seeds the store but joins no presence rooms; without
+  // this the cards never receive `presence:updated` (the backend fans out
+  // room-only) and stay stale until a reload or profile visit.
+  useEffect(() => {
+    if (initialExperts.length === 0) return;
+    const presenceStore = usePresenceStore.getState();
+    presenceStore.batchSetExpertStatus(
+      initialExperts.map((item) => ({
+        expertId: Number(item.id),
+        status: toExpertStatus(
+          item.status ??
+          item.isAvailableForConsultation ??
+          item.is_available,
+        ),
+        lastSeenAt: item.lastSeenAt ?? item.last_seen_at ?? null,
+      })),
+    );
+    presenceStore.subscribeManyToExperts(
+      initialExperts.map((item) => Number(item.id)),
+    );
+  }, [initialExperts]);
 
   return (
     <section

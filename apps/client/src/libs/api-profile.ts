@@ -27,18 +27,22 @@ export const uploadClientDocument = async (file: File): Promise<[{ url: string; 
 };
 
 export const getActiveChatSessions = async (): Promise<[any | null, ApiError | null]> => {
+    /** @deprecated Legacy `/chat` REST. No canonical replacement yet; do not add new callers. */
     return await api.get('/chat/sessions/pending') as any;
 };
 
 export const getPendingChatSessions = async (): Promise<[any | null, ApiError | null]> => {
+    /** @deprecated Legacy `/chat` REST. No canonical replacement yet; do not add new callers. */
     return await api.get('/chat/sessions/pending') as any;
 };
 
 export const endChatSession = async (sessionId: string): Promise<[any | null, ApiError | null]> => {
+    /** @deprecated Legacy `/chat` REST. End chats via realtime `chat:end` (`endChat()` in `@/realtime/topics/chat`) instead. */
     return await api.post(`/chat/end/${sessionId}`) as any;
 };
 
 export const getAllChatSessions = async (): Promise<[any | null, ApiError | null]> => {
+    /** @deprecated Legacy `/chat` REST. No canonical replacement yet; do not add new callers. */
     return await api.get('/chat/sessions/my-sessions') as any;
 };
 
@@ -47,6 +51,7 @@ export const getConsultationHistory = async (params?: { page?: number, limit?: n
 };
 
 export const getChatHistory = async (sessionId: string): Promise<[any | null, ApiError | null]> => {
+    /** @deprecated Legacy `/chat` REST. Use `getChatHistoryAction(consultationId)` (`GET /client/chat/history/:id`) instead. */
     return await api.get(`/chat/history/${sessionId}`) as any;
 };
 

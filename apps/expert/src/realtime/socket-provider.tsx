@@ -49,7 +49,30 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
     };
 
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") pulse();
+      if (document.visibilityState !== "visible") return;
+      // Re-arm a dead socket (retry budget exhausted during backend
+      // downtime) so heartbeat/subscriptions resume; otherwise pulse.
+      if (!socket.connected) {
+        getSocketTokenAction()
+          .then((token) => {
+            if (!cancelled) connectRealtimeSocket(token);
+          })
+          .catch(() => undefined);
+      } else {
+        pulse();
+      }
+    };
+
+    const handleFocus = () => {
+      if (!socket.connected) {
+        getSocketTokenAction()
+          .then((token) => {
+            if (!cancelled) connectRealtimeSocket(token);
+          })
+          .catch(() => undefined);
+      } else {
+        pulse();
+      }
     };
 
     socket.on("connect", handleConnect);
@@ -60,7 +83,7 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
       startPresenceHeartbeat();
     }
     window.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("focus", pulse);
+    window.addEventListener("focus", handleFocus);
 
     getSocketTokenAction()
       .then((token) => {
@@ -72,7 +95,7 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
       cancelled = true;
       stopPresenceHeartbeat();
       window.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("focus", pulse);
+      window.removeEventListener("focus", handleFocus);
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
     };

@@ -32,6 +32,8 @@ export const API_ROUTES = {
   },
   CHAT: {
     INITIATE: "/client/chat/initiate",
+    HISTORY: "/client/chat/history",
+    ATTACHMENTS: "/client/chat/attachments",
   },
   WALLET: {
     ROOT: "/client/wallet",

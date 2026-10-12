@@ -10,6 +10,7 @@ import { useExpertListStore } from "@/store/expertListStore";
 import { usePresenceStore } from "@/store/presenceStore";
 import { useDebounce } from "@/hooks/use-debounce";
 import { api, API_ROUTES } from "@/actions";
+import { toExpertStatus } from "@/realtime/types/presence";
 import { IFetchExpertsResponse } from "../api/fetch-expert";
 
 const ExpertGrid = () => {
@@ -51,13 +52,11 @@ const ExpertGrid = () => {
           store.batchSetExpertStatus(
             newExperts.map((item) => ({
               expertId: item.id,
-              status:
-                (item as any).status ||
-                ((item as any).isAvailableForConsultation
-                  ? "online"
-                  : item.is_available
-                    ? "online"
-                    : "offline"),
+              status: toExpertStatus(
+                (item as any).status ??
+                (item as any).isAvailableForConsultation ??
+                item.is_available,
+              ),
               lastSeenAt: (item as any).lastSeenAt ?? (item as any).last_seen_at ?? null,
             })),
           );

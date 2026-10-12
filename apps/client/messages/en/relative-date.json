@@ -1,0 +1,10 @@
+{
+  "RelativeDate": {
+    "justNow": "Just now",
+    "minutesAgo": "{count, plural, =1 {1 min ago} other {# mins ago}}",
+    "hoursAgo": "{count, plural, =1 {1 hour ago} other {# hours ago}}",
+    "yesterday": "Yesterday",
+    "daysAgo": "{count, plural, =1 {1 day ago} other {# days ago}}",
+    "invalidDate": "Invalid date"
+  }
+}

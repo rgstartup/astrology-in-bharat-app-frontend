@@ -5,6 +5,9 @@ import Image from "next/image";
 import Skeleton from "@/components/ui/Skeleton";
 import { Expert } from "@repo/lib";
 import { useExpertListStore } from "@/store/expertListStore";
+import { usePresenceStore } from "@/store/presenceStore";
+import { useExpertPresence } from "@/hooks/useExpertPresence";
+import { toExpertStatus } from "@/realtime/types/presence";
 import { api } from "@/actions";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 
@@ -14,6 +17,20 @@ const GreenDot = ({ isOnline }: { isOnline: boolean }) => {
   return (
     <span className="absolute bottom-0.5 right-0.5 size-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-2xs" />
   );
+};
+
+/** Live presence dot: falls back to the REST snapshot until the socket state arrives. */
+const TopExpertPresenceDot = ({
+  expertId,
+  fallbackAvailable,
+}: {
+  expertId: number;
+  fallbackAvailable: boolean;
+}) => {
+  const { isOnline } = useExpertPresence(expertId, {
+    initialStatus: toExpertStatus(fallbackAvailable),
+  });
+  return <GreenDot isOnline={isOnline} />;
 };
 
 const FALLBACK_EXPERT_AVATARS = [
@@ -41,6 +58,21 @@ const TopExpertsSection: React.FC = () => {
       }
 
       setExperts(res);
+
+      // Join presence rooms so the dots live-update (backend fans out room-only).
+      const presenceStore = usePresenceStore.getState();
+      presenceStore.batchSetExpertStatus(
+        res.map((item) => ({
+          expertId: Number(item.id),
+          status: toExpertStatus(
+            item.status ??
+            item.isAvailableForConsultation ??
+            item.is_available,
+          ),
+          lastSeenAt: item.lastSeenAt ?? item.last_seen_at ?? null,
+        })),
+      );
+      presenceStore.subscribeManyToExperts(res.map((item) => Number(item.id)));
     };
 
     fetchTopExperts();
@@ -102,7 +134,10 @@ const TopExpertsSection: React.FC = () => {
                         width={52}
                         className="size-13 rounded-full object-cover border-2 border-white shadow-2xs group-hover:scale-105 transition-transform duration-300"
                       />
-                      <GreenDot isOnline={Boolean(expert.is_available)} />
+                      <TopExpertPresenceDot
+                        expertId={Number(expert.id)}
+                        fallbackAvailable={Boolean(expert.is_available)}
+                      />
                     </div>
                     <p
                       title={expert.name || "Expert"}

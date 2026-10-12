@@ -14,7 +14,6 @@ const API_BASE = IS_SERVER
   : '/api/v1';
 
 import { useAuthStore } from "@/store/auth.store";
-import { toast } from "react-toastify";
 
 // --- Refresh Token Logic ---
 let isRefreshing = false;
@@ -59,10 +58,9 @@ export const api = {
             
             // If refresh fails, logout and redirect to login
             const state = useAuthStore.getState();
-            state.logout();
-            toast.error("Session expired. Please login again.");
+            await state.logout();
             if (typeof window !== 'undefined') {
-                window.location.href = "/?expired=1";
+                window.location.href = "/login?logout=1";
             }
         }
         return [res, err];
@@ -74,10 +72,9 @@ export const api = {
             if (success) return await baseApi.post<T>(url, body, init);
 
             const state = useAuthStore.getState();
-            state.logout();
-            toast.error("Session expired. Please login again.");
+            await state.logout();
             if (typeof window !== 'undefined') {
-                window.location.href = "/?expired=1";
+                window.location.href = "/login?logout=1";
             }
         }
         return [res, err];
@@ -89,10 +86,9 @@ export const api = {
             if (success) return await baseApi.put<T>(url, body, init);
 
             const state = useAuthStore.getState();
-            state.logout();
-            toast.error("Session expired. Please login again.");
+            await state.logout();
             if (typeof window !== 'undefined') {
-                window.location.href = "/?expired=1";
+                window.location.href = "/login?logout=1";
             }
         }
         return [res, err];
@@ -104,10 +100,9 @@ export const api = {
             if (success) return await baseApi.patch<T>(url, body, init);
 
             const state = useAuthStore.getState();
-            state.logout();
-            toast.error("Session expired. Please login again.");
+            await state.logout();
             if (typeof window !== 'undefined') {
-                window.location.href = "/?expired=1";
+                window.location.href = "/login?logout=1";
             }
         }
         return [res, err];
@@ -119,10 +114,9 @@ export const api = {
             if (success) return await baseApi.delete<T>(url, init);
 
             const state = useAuthStore.getState();
-            state.logout();
-            toast.error("Session expired. Please login again.");
+            await state.logout();
             if (typeof window !== 'undefined') {
-                window.location.href = "/?expired=1";
+                window.location.href = "/login?logout=1";
             }
         }
         return [res, err];

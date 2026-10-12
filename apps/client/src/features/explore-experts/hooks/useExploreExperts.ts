@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api, API_ROUTES } from "@/actions";
 import { usePresenceStore } from "@/store/presenceStore";
+import { ExpertClientStatus, toExpertStatus } from "@/realtime/types/presence";
 import type { IExpert, Specialization } from "@repo/lib";
 import { fetchSpecializations } from "@/features/home/expert-list-wrapper/expert-list/api/fetch-specializations";
 import dummyExperts from "@/features/home/expert-list-wrapper/expert-list/data/dummy-experts.json";
@@ -92,6 +93,25 @@ export function useExploreExperts(initialExperts?: Expert[]) {
   >([]);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
+  // SSR/initial seed path skips fetchExperts (and its subscribe), so join
+  // presence rooms here — otherwise cards go stale until reload/filter change.
+  useEffect(() => {
+    if (!initialExperts || initialExperts.length === 0) return;
+    const store = usePresenceStore.getState();
+    store.batchSetExpertStatus(
+      initialExperts.map((item) => ({
+        expertId: Number(item.id),
+        status: toExpertStatus(
+          item.status ??
+          item.isAvailableForConsultation ??
+          item.is_available,
+        ),
+        lastSeenAt: item.lastSeenAt ?? item.last_seen_at ?? null,
+      })),
+    );
+    store.subscribeManyToExperts(initialExperts.map((item) => Number(item.id)));
+  }, []);
+
   // Debounce search query
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -111,10 +131,20 @@ export function useExploreExperts(initialExperts?: Expert[]) {
 
   // Subscribe to centralized presence store
   const presenceMap = usePresenceStore((state) => state.presenceMap);
+  const isPresenceLive = usePresenceStore((state) => state.isLive);
 
   useEffect(() => {
     setExperts((prev) =>
       prev.map((exp) => {
+        if (!isPresenceLive) {
+          return {
+            ...exp,
+            isAvailableForConsultation: false,
+            is_available: false,
+            status: ExpertClientStatus.OFFLINE,
+            is_busy: false,
+          };
+        }
         const presence = presenceMap[Number(exp.id)];
         if (!presence) return exp;
         return {
@@ -126,7 +156,7 @@ export function useExploreExperts(initialExperts?: Expert[]) {
         };
       }),
     );
-  }, [presenceMap]);
+  }, [presenceMap, isPresenceLive]);
 
   // Keep refs to avoid unnecessary recreations of fetchExperts
   const filtersRef = useRef(filters);
@@ -270,13 +300,11 @@ export function useExploreExperts(initialExperts?: Expert[]) {
           store.batchSetExpertStatus(
             newItems.map((item) => ({
               expertId: item.id,
-              status:
-                item.status ||
-                (item.isAvailableForConsultation
-                  ? "online"
-                  : item.is_available
-                    ? "online"
-                    : "offline"),
+              status: toExpertStatus(
+                item.status ??
+                item.isAvailableForConsultation ??
+                item.is_available,
+              ),
               lastSeenAt: (item as any).lastSeenAt ?? (item as any).last_seen_at ?? null,
             })),
           );

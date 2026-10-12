@@ -13,4 +13,7 @@ export const API_ROUTES = {
     AVAILABILITY: "/expert/availability",
     AVAILABILITY_ME: "/expert/availability/me",
   },
+  CHAT: {
+    ATTACHMENTS: "/expert/chat/attachments",
+  },
 } as const;

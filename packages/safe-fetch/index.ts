@@ -19,6 +19,13 @@ export type {
   SafeFetchInstanceConfig,
   SafeFetchInit,
 } from "./safeFetch";
+export {
+  createSafeFetchUploadInstance,
+  safeUpload,
+  type UploadProgress,
+  type SafeUploadInit,
+  type SafeFetchUploadInstance,
+} from "./upload";
 
 import safeFetch from "./safeFetch";
 export default safeFetch;

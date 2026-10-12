@@ -369,6 +369,9 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@shadcn/react':
+        specifier: ^0.3.1
+        version: 0.3.1(@types/react@19.3.0)(react@19.3.0)
       '@tanstack/react-query':
         specifier: ^5.104.0
         version: 5.104.0(react@19.3.0)
@@ -1966,6 +1969,17 @@ packages:
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
+
+  '@shadcn/react@0.3.1':
+    resolution: {integrity: sha512-2gOR0HDMtWeRsCZfNDaU0YDFdgH3zsDQ6lz67Fv/y/qjY9y+R8kJqAn6q56phqv7/zHi0wqURjntrNO9zL7vnQ==}
+    peerDependencies:
+      '@types/react': '>=19'
+      react: '>=19'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   '@sindresorhus/is@4.6.0':
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
@@ -6649,6 +6663,11 @@ snapshots:
   '@schummar/icu-type-parser@1.21.5': {}
 
   '@sec-ant/readable-stream@0.4.1': {}
+
+  '@shadcn/react@0.3.1(@types/react@19.3.0)(react@19.3.0)':
+    optionalDependencies:
+      '@types/react': 19.3.0
+      react: 19.3.0
 
   '@sindresorhus/is@4.6.0': {}
 

@@ -47,6 +47,7 @@ export const authStore = create<AuthState>()(
       init: async (force: boolean = false) => {
         if (get().isInitialized && !force) return;
 
+        const wasAuthenticated = get().isAuthenticated;
         const result = await apiV2.get<IAuthUser>(API_ROUTES.AUTH.ME);
 
         if (!result.ok) {
@@ -58,6 +59,17 @@ export const authStore = create<AuthState>()(
             } catch {
               // ignore
             }
+          }
+
+          // Session died mid-use (not a logged-out visitor on a public
+          // page): hard-navigate so cookies, store, and URL all reset
+          // together. The initializer consumes `logout=1` and strips it.
+          if (
+            wasAuthenticated &&
+            result.error.status === 401 &&
+            typeof window !== "undefined"
+          ) {
+            window.location.href = "/login?logout=1";
           }
           return;
         }

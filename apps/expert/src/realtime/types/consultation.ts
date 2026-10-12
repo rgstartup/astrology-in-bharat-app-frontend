@@ -3,3 +3,65 @@ export interface ConsultationRoomsResult {
   chat: unknown;
   call: unknown;
 }
+
+export type ConsultationMode = "chat" | "voice" | "video";
+export type ConsultationState = "requested" | "accepted" | "active" | "paused" | "completed" | "rejected" | "cancelled";
+
+export interface ConsultationStatePayload {
+  consultationId: number;
+  mode: ConsultationMode;
+  state: ConsultationState;
+  reason?: string;
+  startedAt?: string | null;
+  elapsedSeconds?: number;
+  maxMinutes?: number;
+  ratePerMinute?: number;
+  timestamp: string;
+}
+
+export interface ConsultationEndedPayload {
+  consultationId: number;
+  mode: ConsultationMode;
+  endedBy: string;
+  reason: string;
+  totalDurationSeconds?: number;
+  timestamp: string;
+}
+
+export interface ConsultationActionAck {
+  status: string;
+  consultationId: number;
+  payload?: ConsultationStatePayload | ConsultationEndedPayload;
+  message?: string;
+}
+
+export interface ConsultationBudgetHoldPayload {
+  consultationId: number;
+  mode: ConsultationMode;
+  state: "budget_hold";
+  reason: "insufficient_balance";
+  graceDeadline: string;
+  graceDurationSeconds: number;
+  rechargeRequired?: boolean;
+  minRechargeAmount?: number;
+  waitingForClient?: boolean;
+  timestamp: string;
+}
+
+export interface ConsultationBudgetTickPayload {
+  consultationId: number;
+  mode: ConsultationMode;
+  remainingSeconds: number;
+  elapsedSeconds: number;
+  maxMinutes: number;
+  ratePerMinute: number;
+  timestamp: string;
+}
+
+export interface ConsultationBudgetWarningPayload {
+  consultationId: number;
+  mode: ConsultationMode;
+  remainingSeconds: number;
+  message?: string;
+  timestamp: string;
+}

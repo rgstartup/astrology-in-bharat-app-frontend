@@ -14,7 +14,13 @@ import {
 export interface PresenceState {
   presenceMap: Record<number, PresenceRecord>;
   subscribedExpertIds: number[];
-  setExpertStatus: (
+  /**
+   * False once the realtime socket has been continuously disconnected past
+   * the stale grace period (e.g. backend down). Consumers must treat every
+   * expert as OFFLINE while false — the map only holds last-known values.
+   */
+  isLive: boolean;
+  setLive: (live: boolean) => void;  setExpertStatus: (
     expertId: number,
     status: ExpertClientStatus,
     timestamp?: string,
@@ -33,7 +39,11 @@ export interface PresenceState {
 export const presenceStore = create<PresenceState>((set, get) => ({
   presenceMap: {},
   subscribedExpertIds: [],
+  isLive: true,
 
+  setLive: (live) => {
+    if (get().isLive !== live) set({ isLive: live });
+  },
   setExpertStatus: (expertId, status, timestamp, lastSeenAt) => {
     const writtenAt = timestamp ? Date.parse(timestamp) : Date.now();
 
@@ -150,6 +160,7 @@ export const presenceStore = create<PresenceState>((set, get) => ({
   },
 
   getExpertStatus: (expertId) => {
+    if (!get().isLive) return ExpertClientStatus.OFFLINE;
     const record = get().presenceMap[expertId];
     return record ? record.status : ExpertClientStatus.OFFLINE;
   },

@@ -16,6 +16,9 @@ interface WalletRechargeModalProps {
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
   defaultAmount?: number;
+  title?: string;
+  subtitle?: string;
+  banner?: React.ReactNode;
 }
 
 export function WalletRechargeModal({
@@ -23,6 +26,9 @@ export function WalletRechargeModal({
   onOpenChange,
   onSuccess,
   defaultAmount = 500,
+  title = "Recharge Credits",
+  subtitle = "Instant credit addition to your consultation wallet",
+  banner,
 }: WalletRechargeModalProps) {
   const [rechargeKey, setRechargeKey] = useState(0);
 
@@ -42,19 +48,21 @@ export function WalletRechargeModal({
       <DialogContent className="sm:max-w-md p-5 bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-2xl">
         <DialogHeader className="pb-2.5 border-b border-slate-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+            <div className="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 border border-orange-200">
               <CreditCard className="w-4 h-4" />
             </div>
             <div>
               <DialogTitle className="text-base sm:text-lg font-bold text-slate-900 font-outfit">
-                Recharge Credits
+                {title}
               </DialogTitle>
               <DialogDescription className="text-[11px] text-slate-500">
-                Instant credit addition to your consultation wallet
+                {subtitle}
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
+
+        {banner}
 
         <WalletRechargeForm
           key={rechargeKey}

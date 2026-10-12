@@ -152,10 +152,14 @@ export const useExpertListLogic = (
   }, [filterState]);
 
   const presenceMap = usePresenceStore((state) => state.presenceMap);
+  const isPresenceLive = usePresenceStore((state) => state.isLive);
 
   useEffect(() => {
     setExperts((prev) =>
       prev.map((astro) => {
+        if (!isPresenceLive) {
+          return { ...astro, is_available: false };
+        }
         const presence =
           presenceMap[Number(astro.id)] ??
           (astro.userId ? presenceMap[Number(astro.userId)] : undefined);
@@ -166,7 +170,7 @@ export const useExpertListLogic = (
         };
       }),
     );
-  }, [presenceMap]);
+  }, [presenceMap, isPresenceLive]);
 
   useEffect(() => {
     if (initialError) {

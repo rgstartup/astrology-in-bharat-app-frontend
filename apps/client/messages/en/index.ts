@@ -23,6 +23,7 @@ import Places from "./places.json";
 import Horoscope from "./horoscope.json";
 import Chat from "./chat.json";
 import Navigation from "./navigation.json";
+import RelativeDate from "./relative-date.json";
 
 export default {
   Auth,
@@ -50,4 +51,5 @@ export default {
   Horoscope,
   Chat,
   Navigation,
+  RelativeDate,
 };

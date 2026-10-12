@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function WaitingCountdown({
   expiresAt,
@@ -45,13 +46,12 @@ export default function WaitingCountdown({
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className="flex items-center gap-2 bg-black/10 px-4 py-1.5 rounded-full border border-orange-500/20">
-        <Clock className="w-3 h-3 text-orange-500" />
-        <span className="text-orange-500 font-black tabular-nums text-xs">
-          Auto-Expires in:{" "}
-          {mounted ? `${mins}:${secs.toString().padStart(2, "0")}` : "--:--"}
+      <Badge variant="secondary">
+        <Clock />
+        <span className="tabular-nums">
+          Auto-Expires in {mounted ? `${mins}:${secs.toString().padStart(2, "0")}` : "--:--"}
         </span>
-      </div>
+      </Badge>
     </div>
   );
 }

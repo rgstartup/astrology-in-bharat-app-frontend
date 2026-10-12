@@ -1,3 +1,8 @@
+/**
+ * @deprecated Legacy `/chat` namespace socket. Use `@/realtime` (`/realtime`
+ * namespace: `chat:join/send/typing/request/cancel/end`) instead. Kept until
+ * the last legacy caller migrates, then delete.
+ */
 import { io, type Socket } from "socket.io-client";
 import { defaultSocketOptions, getBaseSocketUrl } from "./config";
 

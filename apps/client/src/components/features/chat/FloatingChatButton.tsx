@@ -3,12 +3,22 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MessageSquare, X } from "lucide-react";
-import { api as http } from "@/actions";
+import { apiV2 } from "@/actions";
 import { useAuthStore } from "@/store/authStore";
+
+interface FloatingActiveSession {
+  id: number;
+  status: string;
+  expertId?: number;
+  expert_id?: number;
+  consultationId?: number;
+  consultation_id?: number;
+  expert?: { id?: number; user?: { name?: string } };
+}
 
 const FloatingChatButton: React.FC<{ show: boolean }> = ({ show }) => {
 
-  const [activeSession, setActiveSession] = useState<any>(null);
+  const [activeSession, setActiveSession] = useState<FloatingActiveSession | null>(null);
   const [position, setPosition] = useState({ x: 24, y: 24 }); // Bottom-right offset
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -19,13 +29,17 @@ const FloatingChatButton: React.FC<{ show: boolean }> = ({ show }) => {
     if (!isAuthenticated) return;
 
     const checkActiveSession = async () => {
-      const [res, error] = await http.get<any>("/chat/sessions/active-client");
+      // TODO: migrate to a canonical `GET /client/chat/active` once the
+      // backend exposes it. Legacy `/chat/sessions/active-client` is deprecated.
+      const res = await apiV2.get<FloatingActiveSession>(
+        "/chat/sessions/active-client",
+      );
 
-      if (error) {
+      if (!res.ok) {
         // Silent failure, session might not exist
         setActiveSession(null);
       } else {
-        const session = res?.data ?? res;
+        const session = res.data;
         if (
           session &&
           (session.status === "active" || session.status === "pending")
@@ -142,8 +156,12 @@ const FloatingChatButton: React.FC<{ show: boolean }> = ({ show }) => {
                 activeSession.expertId ||
                 activeSession.expert_id ||
                 activeSession.expert?.id;
+              const cId =
+                activeSession.consultationId ?? activeSession.consultation_id;
               if (eId) {
-                router.push(`/chat/room/${eId}?sessionId=${activeSession.id}`);
+                router.push(
+                  `/chat/room/${eId}?sessionId=${activeSession.id}${cId ? `&consultationId=${cId}` : ""}`,
+                );
               } else {
                 console.error(
                   "Could not find expertId in session:",

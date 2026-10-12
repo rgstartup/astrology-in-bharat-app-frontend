@@ -30,6 +30,7 @@ export const useExpertPresence = (
   const presenceRecord = usePresenceStore((state) =>
     expertId === null ? undefined : state.presenceMap[expertId],
   );
+  const isLive = usePresenceStore((state) => state.isLive);
   const setExpertStatus = usePresenceStore((state) => state.setExpertStatus);
   const subscribeToExpert = usePresenceStore((state) => state.subscribeToExpert);
   const unsubscribeFromExpert = usePresenceStore(
@@ -56,8 +57,11 @@ export const useExpertPresence = (
   }, [expertId, autoSubscribe, subscribeToExpert, unsubscribeFromExpert]);
 
   return useMemo(() => {
-    const status: ExpertClientStatus =
-      presenceRecord?.status ?? initialStatus ?? ExpertClientStatus.OFFLINE;
+    // Socket dead past the grace period: last-known values are unverifiable,
+    // so report OFFLINE rather than a stale online/busy.
+    const status: ExpertClientStatus = !isLive
+      ? ExpertClientStatus.OFFLINE
+      : (presenceRecord?.status ?? initialStatus ?? ExpertClientStatus.OFFLINE);
 
     return {
       status,
@@ -67,5 +71,5 @@ export const useExpertPresence = (
       isAvailableForConsultation: status === ExpertClientStatus.ONLINE,
       lastSeenAt: presenceRecord?.lastSeenAt ?? initialLastSeenAt,
     };
-  }, [presenceRecord?.status, presenceRecord?.lastSeenAt, initialStatus, initialLastSeenAt]);
+  }, [isLive, presenceRecord?.status, presenceRecord?.lastSeenAt, initialStatus, initialLastSeenAt]);
 };

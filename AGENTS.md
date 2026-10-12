@@ -101,3 +101,24 @@
   ```
 - `unknown` + narrowing is the escape hatch when no contract exists yet. `any` is never the answer.
 
+## 11. Render Branching: Waterfall Early Returns (Ternary Ban)
+
+- NEVER use nested ternary operators for render branching. Use sequential early returns (waterfall style) so each state reads top-to-bottom:
+  ```tsx
+  if (loading) return <PrepSkeleton />;
+  if (!expert) return <ExpertNotFound onClose={onClose} />;
+  if (step === "recharge") return <RechargeStep ... />;
+  return <DetailsStep ... />;
+  ```
+- Each branch must return its own single-responsibility sub-component — no inline JSX blocks inside the branching component.
+- When waterfall branching produces sub-components, colocate them: create a directory named after the main component and put the main component plus all its sub-components there, with a barrel `index.ts`:
+  ```
+  components/chat-prep-modal/
+  ├── index.ts
+  ├── chat-prep-modal.component.tsx
+  ├── modal-body.component.tsx
+  ├── details-step.component.tsx
+  └── ...
+  ```
+- This rule complements §8: §8 triggers on file size, this rule triggers on branching shape — even small components with 3+ render branches get decomposed.
+

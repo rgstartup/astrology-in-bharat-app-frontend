@@ -24,7 +24,7 @@ import type { IExpert } from "@repo/lib";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { requestChatConsult } from "@/components/chat-prep/request-chat-consult";
+import { requestChatConsult } from "@/features/chat-prep/request-chat-consult";
 import { useTranslations } from "next-intl";
 
 interface ExploreExpertCardProps {
@@ -117,7 +117,7 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
 
         {/* Top Badges */}
         <div className="relative z-10 flex items-center gap-1.5">
-          {isOnline ? (
+          {isOnline || isBusy ? (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/90 text-white shadow-sm backdrop-blur-xs">
               <span className="size-1.5 rounded-full bg-white animate-pulse" />
               <span>{isBusy ? "In Consultation" : "Online Now"}</span>

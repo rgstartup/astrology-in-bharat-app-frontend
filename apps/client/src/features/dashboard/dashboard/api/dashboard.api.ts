@@ -29,6 +29,10 @@ export async function fetchBirthAstrologyDetails(params: {
   return api.get<any>(`/astrology/birth-details?${query.toString()}`);
 }
 
+/**
+ * @deprecated Legacy `/chat` REST. Migrate to a canonical
+ * `GET /client/chat/active` once the backend exposes it; do not add new callers.
+ */
 export async function fetchActiveClientConsultation() {
   return api.get<any>("/chat/sessions/active-client");
 }

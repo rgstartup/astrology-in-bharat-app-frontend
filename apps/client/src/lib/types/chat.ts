@@ -7,6 +7,8 @@ export interface ChatMessage {
     senderId: string;
     senderType: "user" | "expert" | "admin";
     content: string;
+    /** Owning session from the nested history contract (present for REST seeds). */
+    sessionId?: string;
     type?: string;
     attachmentUrl?: string;
     attachmentType?: "image" | "document";

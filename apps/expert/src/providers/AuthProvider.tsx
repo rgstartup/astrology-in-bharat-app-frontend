@@ -26,7 +26,9 @@ function AuthProviderLogic() {
       return;
     }
 
-    init();
+    // Force revalidation on navigation: a plain init() early-returns once
+    // initialized, so a session that died mid-use would stay stale forever.
+    init(true);
   }, [isLogout, pathname, router, reset, init]);
 
   return null;

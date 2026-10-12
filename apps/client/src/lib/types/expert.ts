@@ -1,3 +1,5 @@
+import { IExpert } from "@repo/lib";
+
 export interface CustomService {
   id: string;
   name: string;
@@ -99,7 +101,7 @@ export interface ExpertSectionProps {
 }
 
 export interface ExpertCardProps {
-  expertData: ExpertProfile;
+  expertData: IExpert;
   cardClassName?: string;
 }
 

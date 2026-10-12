@@ -41,7 +41,16 @@
     "connecting": "Connecting...",
     "startConsultation": "Start Consultation",
     "availableNow": "Available Now",
-    "offline": "Offline"
+    "offline": "Offline",
+    "back": "Back",
+    "continue": "Continue",
+    "nameMin": "Please enter a valid name",
+    "fieldRequired": "This field is required",
+    "safetyTitle": "Stay safe on Bharat",
+    "termsPrefix": "By clicking Start Consultation, you agree to our",
+    "termsLink": "Terms",
+    "perMin": "/ min",
+    "minSession": "5-min minimum • ₹{price} held upfront"
   },
   "securityModal": {
     "title": "Important Safety Guidelines",
@@ -116,6 +125,10 @@
     "back": "Back",
     "cancel": "Cancel",
     "rechargeTitle": "Recharge Wallet",
-    "rechargeDesc": "Minimum ₹{price} balance is required to start this chat."
+    "rechargeDesc": "Minimum ₹{price} balance is required to start this chat.",
+    "insufficientTitle": "Insufficient Funds",
+    "insufficientDesc": "Recharge <b>₹{shortfall} or more</b> to start chatting.",
+    "currentBalance": "Current balance",
+    "requiredBalance": "Required"
   }
 }

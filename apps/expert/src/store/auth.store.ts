@@ -33,6 +33,7 @@ export const useAuthStore = create<AuthState>()(
 
         set({ loading: true });
 
+        const wasAuthenticated = get().isAuthenticated;
         const result = await api.get<IExpert>(API_ROUTES.ACCOUNT.ROOT);
 
         if (!result.ok) {
@@ -43,6 +44,12 @@ export const useAuthStore = create<AuthState>()(
               await fetch("/api/auth/logout", { method: "POST" });
             } catch {
               // ignore
+            }
+
+            // Session died mid-use: hard-navigate so cookies, store, and
+            // URL all reset together. The provider consumes `logout=1`.
+            if (wasAuthenticated) {
+              window.location.href = "/login?logout=1";
             }
           }
           return;

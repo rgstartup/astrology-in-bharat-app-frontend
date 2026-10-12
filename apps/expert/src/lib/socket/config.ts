@@ -11,7 +11,9 @@ export const getBaseSocketUrl = (): string => {
 export const defaultSocketOptions: Partial<ManagerOptions & SocketOptions> = {
   autoConnect: false,
   reconnection: true,
-  reconnectionAttempts: 10,
+  // Presence heartbeat is long-lived: never give up retrying across backend
+  // restarts, or the expert stays offline until the app is reloaded.
+  reconnectionAttempts: Infinity,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5 * 1000,
   timeout: 10 * 1000,

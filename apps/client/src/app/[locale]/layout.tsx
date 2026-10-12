@@ -19,7 +19,7 @@ import NotificationProvider from "@/providers/NotificationProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import ToastProvider from "@/components/layout/ToastProvider";
 import PlatformReviewModal from "@/components/features/reviews";
-import ChatPrepHost from "@/components/chat-prep/ChatPrepHost";
+import ChatPrepHost from "@/features/chat-prep/ChatPrepHost";
 import QueryProvider from "@/providers/QueryProvider";
 
 export const metadata: Metadata = {

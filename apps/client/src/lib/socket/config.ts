@@ -13,7 +13,10 @@ export const getBaseSocketUrl = (): string => {
 export const defaultSocketOptions: Partial<ManagerOptions & SocketOptions> = {
   autoConnect: true,
   reconnection: true,
-  reconnectionAttempts: 10,
+  // Presence is long-lived: never give up retrying across backend restarts.
+  // A capped count wedges the socket permanently dead (no resubscribe, no
+  // broadcasts) until a full page reload.
+  reconnectionAttempts: Infinity,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5 * 1000,
   timeout: 10 * 1000,

@@ -1,4 +1,10 @@
 "use client"
+/**
+ * @deprecated Dead mock with local fake messages (no socket, no REST). Not
+ * rendered anywhere in the chat flow — the canonical room is
+ * `app/[locale]/(public)/chat/room/[id]/page.tsx`. Delete after confirming
+ * no route imports it.
+ */
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 

@@ -3,14 +3,14 @@ import type { JoinCallAck } from "@/realtime/types/call";
 
 // Canonical backend event names (SOCKET_EVENTS.CALL).
 export const CALL_EVENTS = {
-  JOIN: "call:join",
-  OFFER: "call:offer",
-  ANSWER: "call:answer",
-  ICE_CANDIDATE: "call:ice_candidate",
-  ACCEPT: "call:accept",
-  REJECT: "call:reject",
-  END: "call:end",
-  INCOMING: "call:incoming",
+  JOIN: "consultation:call:join",
+  OFFER: "consultation:call:offer",
+  ANSWER: "consultation:call:answer",
+  ICE_CANDIDATE: "consultation:call:ice_candidate",
+  ACCEPT: "consultation:call:accept",
+  REJECT: "consultation:call:reject",
+  END: "consultation:call:end",
+  INCOMING: "consultation:call:incoming",
 } as const;
 
 export const joinCall = (consultationId: number): Promise<JoinCallAck> =>

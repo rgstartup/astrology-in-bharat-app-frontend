@@ -1,0 +1,10 @@
+{
+  "RelativeDate": {
+    "justNow": "अभी-अभी",
+    "minutesAgo": "{count, plural, =1 {1 मिनट पहले} other {# मिनट पहले}}",
+    "hoursAgo": "{count, plural, =1 {1 घंटे पहले} other {# घंटे पहले}}",
+    "yesterday": "कल",
+    "daysAgo": "{count, plural, =1 {1 दिन पहले} other {# दिन पहले}}",
+    "invalidDate": "अमान्य तारीख"
+  }
+}

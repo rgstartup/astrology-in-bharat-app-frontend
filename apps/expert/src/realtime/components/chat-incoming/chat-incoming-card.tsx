@@ -23,7 +23,7 @@ export const CHAT_REQUEST_TTL_SEC = 120;
 interface ChatIncomingCardProps {
   request: ChatIncomingPayload;
   ttlSec?: number;
-  onAccept: (consultationId: number) => Promise<void>;
+  onAccept: (consultationId: number, sessionId: number | null) => Promise<void>;
   onReject: (consultationId: number) => Promise<void>;
   onExpire: (consultationId: number) => void;
 }
@@ -63,7 +63,7 @@ export function ChatIncomingCard({
     setBusy(action);
     try {
       if (action === "accepting") {
-        await onAccept(request.consultationId);
+        await onAccept(request.consultationId, request.sessionId ?? null);
       } else {
         await onReject(request.consultationId);
       }
@@ -91,7 +91,7 @@ export function ChatIncomingCard({
       <CardHeader className="flex-row items-center gap-3">
         <Avatar aria-hidden="true">
           <AvatarFallback>
-            {String(request.clientId).slice(0, 2).toUpperCase()}
+            {(request.clientName ?? String(request.clientId)).slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
@@ -100,7 +100,7 @@ export function ChatIncomingCard({
             <span className="truncate">New chat request</span>
           </CardTitle>
           <CardDescription id={`chat-req-${request.consultationId}-desc`} className="truncate">
-            Consultation #{request.consultationId} · Client {String(request.clientId)}
+            Consultation #{request.consultationId} · {request.clientName ?? `Client ${String(request.clientId)}`}
           </CardDescription>
         </div>
         <Badge
@@ -135,7 +135,7 @@ export function ChatIncomingCard({
           type="button"
           variant="outline"
           size="lg"
-          fullWidth
+          className="flex-1"
           disabled={busy !== "idle"}
           isLoading={busy === "rejecting"}
           onClick={() => run("rejecting")}
@@ -146,7 +146,7 @@ export function ChatIncomingCard({
         <Button
           type="button"
           size="lg"
-          fullWidth
+          className="flex-1"
           disabled={busy !== "idle"}
           isLoading={busy === "accepting"}
           onClick={() => run("accepting")}

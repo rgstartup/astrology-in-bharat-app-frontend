@@ -79,12 +79,35 @@ async function refreshSession(
   return response;
 }
 
+/**
+ * Background requests (Server Action POSTs, RSC navigations/prefetches) also
+ * pass through this proxy, but a redirect response to a background `fetch`
+ * never navigates the SPA — while its `Set-Cookie` headers still clear the
+ * cookies. That leaves cleared cookies + stale auth store + no redirect.
+ * Answer those with 401 JSON (cookies still cleared) so the client store —
+ * the only thing that can reset SPA state — picks it up via `init()`.
+ */
+const isBackgroundRequest = (request: NextRequest): boolean =>
+  request.headers.has("next-action") || request.headers.has("rsc");
+
+const sessionExpiredResponse = (request: NextRequest): NextResponse => {
+  const response = NextResponse.json(
+    { code: "SESSION_EXPIRED", message: "Session expired. Please login again." },
+    { status: 401 },
+  );
+  clearAuthCookies(response.cookies);
+  return response;
+};
+
 const redirectToLogout = (
   request: NextRequest,
   pathname: string,
   isProtected: boolean,
 ): NextResponse => {
   const normalized = getPathnameWithoutLocale(pathname);
+  if (isBackgroundRequest(request)) {
+    return sessionExpiredResponse(request);
+  }
   const baseTarget = isProtected ? "/login" : normalized || "/";
   const callback =
     isProtected &&
@@ -109,6 +132,9 @@ const redirectToLogout = (
 };
 
 const redirectToLogin = (request: NextRequest, pathname: string): NextResponse => {
+  if (isBackgroundRequest(request)) {
+    return sessionExpiredResponse(request);
+  }
   const normalized = getPathnameWithoutLocale(pathname);
   const target = withCallbackUrl(
     PATHS.LOGIN as string,

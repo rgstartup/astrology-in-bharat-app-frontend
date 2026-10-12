@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ * @deprecated Legacy free→paid continuation prompt for the old `/chat`
+ * namespace (`confirm_paid_continuation` — no backend handler on `/realtime`).
+ * The chat room no longer renders this. Kept until the paid-continuation flow
+ * is redesigned on `/realtime`, then delete.
+ */
 import React from "react";
 import { Clock } from "lucide-react";
 

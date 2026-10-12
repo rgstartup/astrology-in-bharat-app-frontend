@@ -16,7 +16,7 @@ import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { requestChatConsult } from "@/components/chat-prep/request-chat-consult";
+import { requestChatConsult } from "@/features/chat-prep/request-chat-consult";
 import ExpertActions from "./ExpertActions";
 import ExpertCardProfile from "./ExpertCardProfile";
 import ExpertDetails from "./ExpertDetails";

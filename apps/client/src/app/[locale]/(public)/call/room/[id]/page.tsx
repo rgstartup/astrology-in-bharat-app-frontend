@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { useCallLogic } from "./useCallLogic";
 import FreeEndPromptModal from "./free-end-prompt-modal.component";
-import SessionSummaryModal from "@/app/[locale]/(public)/chat/room/[id]/session-summary-modal.component";
+import SessionSummaryModal from "@/app/[locale]/(public)/chat/room/[id]/session-summary";
 
 export default function CallRoomPage() {
   const router = useRouter();
