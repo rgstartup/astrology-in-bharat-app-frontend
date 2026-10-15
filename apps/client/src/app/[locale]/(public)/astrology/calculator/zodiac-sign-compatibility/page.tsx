@@ -13,6 +13,165 @@ import {
   type ZodiacCompatibilityResult,
 } from "./calculate";
 
+/**
+ * Resolves 1-based sign indices for selected zodiac signs.
+ */
+function resolveSelectedSignIds(
+  yourSign: string,
+  partnerSign: string,
+): number[] {
+  const ids: number[] = [];
+  if (yourSign) {
+    const idx = ZODIAC_SIGNS.findIndex((z) => z.name === yourSign);
+    if (idx !== -1) ids.push(idx + 1);
+  }
+  if (partnerSign) {
+    const idx = ZODIAC_SIGNS.findIndex((z) => z.name === partnerSign);
+    if (idx !== -1) ids.push(idx + 1);
+  }
+  return ids;
+}
+
+/**
+ * Submit button inner content displaying spinner or heart icon.
+ */
+function SubmitButtonContent({ loading }: { loading: boolean }) {
+  if (loading) {
+    return (
+      <>
+        <i className="fa-solid fa-spinner animate-spin" /> Checking...
+      </>
+    );
+  }
+  return (
+    <>
+      <i className="fa-solid fa-heart" /> Check Compatibility
+    </>
+  );
+}
+
+/**
+ * Explanatory note describing elemental compatibility between two signs.
+ */
+function ElementMatchNote({
+  yourSign,
+  partnerSign,
+}: {
+  yourSign: (typeof ZODIAC_SIGNS)[number];
+  partnerSign: (typeof ZODIAC_SIGNS)[number];
+}) {
+  if (yourSign.element === partnerSign.element) {
+    return (
+      <p className="text-sm text-[#444] font-medium leading-relaxed">
+        Both are {yourSign.element} signs — you share the same elemental energy,
+        creating a strong natural bond!
+      </p>
+    );
+  }
+  return (
+    <p className="text-sm text-[#444] font-medium leading-relaxed">
+      {yourSign.name} ({yourSign.element}) and {partnerSign.name} (
+      {partnerSign.element}) — different elements can complement each other
+      beautifully.
+    </p>
+  );
+}
+
+/**
+ * Result card displaying compatibility score, elements, and badges.
+ */
+function CompatibilityResultCard({
+  result,
+}: {
+  result: ZodiacCompatibilityResult | null;
+}) {
+  if (!result) return null;
+
+  const yourSignData = ZODIAC_SIGNS[result.yourIdx];
+  const partnerSignData = ZODIAC_SIGNS[result.partnerIdx];
+  const compat = getCompatLabel(result.score);
+  if (!yourSignData || !partnerSignData || !compat) return null;
+
+  return (
+    <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5 shadow-sm relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-[#F26500]/5 rounded-bl-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#F26500]/5 rounded-tr-full pointer-events-none" />
+
+      <h2 className="text-[#F26500] font-black text-sm uppercase tracking-wider">
+        Compatibility Result
+      </h2>
+
+      {/* Signs display */}
+      <div className="flex items-center justify-center gap-4">
+        <div className="flex flex-col items-center gap-1">
+          <div className="w-16 h-16 rounded-full bg-[#FFF8F3] border-2 border-[#F5E0CC] flex items-center justify-center text-3xl">
+            {yourSignData.emoji}
+          </div>
+          <span className="text-xs font-bold text-[#333]">
+            {yourSignData.name}
+          </span>
+          <span
+            className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${ELEMENT_COLORS[yourSignData.element]}`}
+          >
+            {yourSignData.element}
+          </span>
+        </div>
+
+        <div className="flex flex-col items-center gap-1">
+          <i className="fa-solid fa-heart text-[#F26500] text-xl" />
+          <span className={`text-3xl font-black ${compat.color}`}>
+            {result.score}%
+          </span>
+          <span
+            className={`text-[11px] font-bold px-3 py-1 rounded-full border ${compat.bg} ${compat.color}`}
+          >
+            {compat.label}
+          </span>
+        </div>
+
+        <div className="flex flex-col items-center gap-1">
+          <div className="w-16 h-16 rounded-full bg-[#FFF8F3] border-2 border-[#F5E0CC] flex items-center justify-center text-3xl">
+            {partnerSignData.emoji}
+          </div>
+          <span className="text-xs font-bold text-[#333]">
+            {partnerSignData.name}
+          </span>
+          <span
+            className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${ELEMENT_COLORS[partnerSignData.element]}`}
+          >
+            {partnerSignData.element}
+          </span>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div>
+        <div className="flex justify-between text-xs font-bold text-[#888] mb-2">
+          <span>Compatibility Score</span>
+          <span>{result.score}%</span>
+        </div>
+        <div className="w-full h-3 bg-[#F5E0CC] rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-[#F26500] to-[#FF9A3C] rounded-full transition-all duration-700"
+            style={{ width: `${result.score}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Elements note */}
+      <div className="bg-[#F9F9F9] border border-[#EEE] rounded-xl p-4 relative z-10">
+        <p className="text-xs font-bold text-[#888] uppercase tracking-wide mb-2">
+          Element Match
+        </p>
+        <ElementMatchNote
+          yourSign={yourSignData}
+          partnerSign={partnerSignData}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function ZodiacCompatibilityPage() {
   const [yourSign, setYourSign] = useState("");
   const [partnerSign, setPartnerSign] = useState("");
@@ -32,10 +191,6 @@ export default function ZodiacCompatibilityPage() {
 
   const selectCls =
     "w-full border-2 border-[#F0E0D0] rounded-xl px-4 py-3.5 text-sm text-[#333] bg-white focus:outline-none focus:border-[#F26500] focus:ring-4 focus:ring-[#F26500]/10 transition-all font-medium appearance-none cursor-pointer";
-
-  const yourSignData = result ? ZODIAC_SIGNS[result.yourIdx] : null;
-  const partnerSignData = result ? ZODIAC_SIGNS[result.partnerIdx] : null;
-  const compat = result ? getCompatLabel(result.score) : null;
 
   return (
     <div
@@ -150,98 +305,12 @@ export default function ZodiacCompatibilityPage() {
               disabled={!yourSign || !partnerSign || loading}
               className="mt-2 w-full bg-gradient-to-r from-[#F26500] to-[#E65A00] hover:from-[#E65A00] hover:to-[#D95A00] disabled:opacity-50 text-white font-black rounded-xl py-4 flex items-center justify-center gap-2 transition-all shadow-lg"
             >
-              {loading ? (
-                <>
-                  <i className="fa-solid fa-spinner animate-spin" /> Checking...
-                </>
-              ) : (
-                <>
-                  <i className="fa-solid fa-heart" /> Check Compatibility
-                </>
-              )}
+              <SubmitButtonContent loading={loading} />
             </button>
           </form>
 
           {/* ── Middle: Result ── */}
-          {result && yourSignData && partnerSignData && compat && (
-            <div className="bg-white border-2 border-[#F26500] rounded-3xl p-6 md:p-8 flex flex-col gap-5 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#F26500]/5 rounded-bl-full pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#F26500]/5 rounded-tr-full pointer-events-none" />
-
-              <h2 className="text-[#F26500] font-black text-sm uppercase tracking-wider">
-                Compatibility Result
-              </h2>
-
-              {/* Signs display */}
-              <div className="flex items-center justify-center gap-4">
-                <div className="flex flex-col items-center gap-1">
-                  <div className="w-16 h-16 rounded-full bg-[#FFF8F3] border-2 border-[#F5E0CC] flex items-center justify-center text-3xl">
-                    {yourSignData.emoji}
-                  </div>
-                  <span className="text-xs font-bold text-[#333]">
-                    {yourSignData.name}
-                  </span>
-                  <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${ELEMENT_COLORS[yourSignData.element]}`}
-                  >
-                    {yourSignData.element}
-                  </span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1">
-                  <i className="fa-solid fa-heart text-[#F26500] text-xl" />
-                  <span className={`text-3xl font-black ${compat.color}`}>
-                    {result.score}%
-                  </span>
-                  <span
-                    className={`text-[11px] font-bold px-3 py-1 rounded-full border ${compat.bg} ${compat.color}`}
-                  >
-                    {compat.label}
-                  </span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1">
-                  <div className="w-16 h-16 rounded-full bg-[#FFF8F3] border-2 border-[#F5E0CC] flex items-center justify-center text-3xl">
-                    {partnerSignData.emoji}
-                  </div>
-                  <span className="text-xs font-bold text-[#333]">
-                    {partnerSignData.name}
-                  </span>
-                  <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${ELEMENT_COLORS[partnerSignData.element]}`}
-                  >
-                    {partnerSignData.element}
-                  </span>
-                </div>
-              </div>
-
-              {/* Progress bar */}
-              <div>
-                <div className="flex justify-between text-xs font-bold text-[#888] mb-2">
-                  <span>Compatibility Score</span>
-                  <span>{result.score}%</span>
-                </div>
-                <div className="w-full h-3 bg-[#F5E0CC] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-[#F26500] to-[#FF9A3C] rounded-full transition-all duration-700"
-                    style={{ width: `${result.score}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Elements note */}
-              <div className="bg-[#F9F9F9] border border-[#EEE] rounded-xl p-4 relative z-10">
-                <p className="text-xs font-bold text-[#888] uppercase tracking-wide mb-2">
-                  Element Match
-                </p>
-                <p className="text-sm text-[#444] font-medium leading-relaxed">
-                  {yourSignData.element === partnerSignData.element
-                    ? `Both are ${yourSignData.element} signs — you share the same elemental energy, creating a strong natural bond!`
-                    : `${yourSignData.name} (${yourSignData.element}) and ${partnerSignData.name} (${partnerSignData.element}) — different elements can complement each other beautifully.`}
-                </p>
-              </div>
-            </div>
-          )}
+          <CompatibilityResultCard result={result} />
 
           {/* ── Right: Guidance Card ── */}
           <div
@@ -254,14 +323,7 @@ export default function ZodiacCompatibilityPage() {
         {/* Existing ChooseYourZodiac Component */}
         <div className="mt-8 rounded-3xl overflow-hidden border border-[#F0E0D0]">
           <ChooseYourZodiac
-            selectedSignIds={[
-              yourSign
-                ? ZODIAC_SIGNS.findIndex((z) => z.name === yourSign) + 1
-                : -1,
-              partnerSign
-                ? ZODIAC_SIGNS.findIndex((z) => z.name === partnerSign) + 1
-                : -1,
-            ].filter((id) => id > 0)}
+            selectedSignIds={resolveSelectedSignIds(yourSign, partnerSign)}
             onSelectSign={(sign) => {
               if (!yourSign || (yourSign && partnerSign)) {
                 setYourSign(sign.title);

@@ -11,6 +11,10 @@ import {
 } from "@/actions/cookie";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { API_ROUTES } from "./utils/api.routes";
+import {
+  appendSetCookiesToResponse,
+  captureSetCookies,
+} from "./utils/forwarded-cookies";
 
 const handleI18nRouting = createMiddleware(routing);
 
@@ -44,6 +48,9 @@ const getPathnameWithoutLocale = (pathname: string) => {
   return pathname;
 };
 
+/** First 8 chars of a token for logs — never prints full secrets. */
+const tok = (v?: string) => (v ? `${v.slice(0, 8)}…` : "(none)");
+
 async function refreshSession(
   refreshToken: string,
   request: NextRequest,
@@ -51,22 +58,30 @@ async function refreshSession(
   isProtected: boolean,
   redirect = false,
 ) {
+  console.log(
+    `[Proxy:refresh:start] for "${pathname}" (redirect=${redirect}): presenting ${tok(refreshToken)}`,
+  );
+  let backendSetCookies: string[] = [];
   const result = await api
     .extend({
       headers: {
         "Content-Type": "application/json",
         Cookie: `refreshToken=${refreshToken}`,
       },
+      onResponse: (_data, res) => {
+        backendSetCookies = captureSetCookies(res.headers);
+      },
     })
     .post<{
       accessToken: string;
       refreshToken: string;
-    }>(API_ROUTES.AUTH.REFRESH, {
-      body: JSON.stringify({ refreshToken }),
-    });
+    }>(API_ROUTES.AUTH.REFRESH, { refreshToken });
 
   if (!result.ok) {
-    console.log("[Proxy:refreshSessionFailed]: ", "error:", result.error);
+    console.log(
+      `[Proxy:refresh:fail] for "${pathname}": presented ${tok(refreshToken)}, error:`,
+      result.error,
+    );
     return redirectToLogout(request, pathname, isProtected);
   }
 
@@ -75,10 +90,29 @@ async function refreshSession(
     ? redirectToCallback(request)
     : handleI18nRouting(request);
 
-  setAccessToken(response.cookies, data.accessToken);
-  if (data.refreshToken) {
-    setRefreshToken(response.cookies, data.refreshToken);
+  if (backendSetCookies.length > 0) {
+    appendSetCookiesToResponse(response, backendSetCookies);
+  } else {
+    console.log(
+      `[Proxy:refresh:ok] for "${pathname}": backend sent no Set-Cookie, using manual fallback`,
+    );
+    setAccessToken(response.cookies, data.accessToken);
+    if (data.refreshToken) {
+      setRefreshToken(response.cookies, data.refreshToken);
+    }
   }
+
+  console.log(
+    `[Proxy:refresh:ok] for "${pathname}":`,
+    "presented:",
+    `${refreshToken.slice(0, 8)}…`,
+    "rotated:",
+    data.refreshToken ? `${data.refreshToken.slice(0, 8)}…` : "(missing!)",
+    "forwarded:",
+    backendSetCookies.length,
+    "cookies:",
+    response.cookies.getAll().map((c) => c.name),
+  );
 
   return response;
 }
@@ -197,6 +231,7 @@ export async function proxy(request: NextRequest) {
     normalizedPathname.includes("/reset-password");
 
   if (urlAccessToken && !isTokenVerifyRoute) {
+    console.log(`[Proxy:urlTokens] setting cookies from URL for "${pathname}"`);
     const nextResponse = withI18nCookies(
       NextResponse.redirect(new URL(pathname, request.url)),
       request,
@@ -214,6 +249,13 @@ export async function proxy(request: NextRequest) {
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
+  console.log(
+    `[Proxy:req] "${pathname}" → normalized "${normalizedPathname}":`,
+    `protected=${isPathProtected} auth=${isPathAuth} bg=${isBackgroundRequest(request)}`,
+    `access=${tok(accessToken)} refresh=${tok(refreshToken)}`,
+    urlAccessToken ? "urlTokens=yes" : "",
+  );
+
   /*
    * 1. Auth routes (/, /register, /forgot-password)
    *
@@ -223,13 +265,16 @@ export async function proxy(request: NextRequest) {
    *   - If no refresh token or refresh fails, clear cookies and allow viewing auth page.
    */
   if (isPathAuth) {
+    console.log(`[Proxy:authRoute] "${pathname}"`);
     if (accessToken) {
       const isExpired = checkTokenAboutToExpire(accessToken);
       if (!isExpired) {
+        console.log(`[Proxy:authRoute] valid access → callback`);
         return redirectToCallback(request);
       }
 
       if (refreshToken) {
+        console.log(`[Proxy:authRoute] expired access → refresh + callback`);
         return refreshSession(
           refreshToken,
           request,
@@ -240,12 +285,14 @@ export async function proxy(request: NextRequest) {
       }
 
       // Expired accessToken and no refreshToken -> clear cookies and allow viewing auth page
+      console.log(`[Proxy:authRoute] expired access, no refresh → clear + pass`);
       const response = handleI18nRouting(request);
       clearAuthCookies(response.cookies);
       return response;
     }
 
     if (refreshToken) {
+      console.log(`[Proxy:authRoute] no access → refresh + callback`);
       return refreshSession(
         refreshToken,
         request,
@@ -255,6 +302,7 @@ export async function proxy(request: NextRequest) {
       );
     }
 
+    console.log(`[Proxy:authRoute] no tokens → pass`);
     return handleI18nRouting(request);
   }
 
@@ -267,6 +315,7 @@ export async function proxy(request: NextRequest) {
     const tokenAboutToExpire = checkTokenAboutToExpire(accessToken);
 
     if (!tokenAboutToExpire) {
+      console.log(`[Proxy:access] valid → pass ("${normalizedPathname}")`);
       return handleI18nRouting(request);
     }
 
@@ -286,6 +335,7 @@ export async function proxy(request: NextRequest) {
      * Refreshing the token has failed.
      * Clear the expired/invalid accessToken cookie and reset expert state!
      */
+    console.log(`[Proxy:access] expired access, no refresh → logout`);
     return redirectToLogout(request, pathname, isPathProtected);
   }
 
@@ -296,6 +346,7 @@ export async function proxy(request: NextRequest) {
    * regardless of whether the route is protected.
    */
   if (refreshToken) {
+    console.log(`[Proxy:noAccess] no access, refresh present → refresh`);
     return refreshSession(refreshToken, request, pathname, isPathProtected);
   }
 
@@ -306,9 +357,11 @@ export async function proxy(request: NextRequest) {
    * Public → continue
    */
   if (isPathProtected) {
+    console.log(`[Proxy:noTokens] protected → login`);
     return redirectToLogin(request, pathname);
   }
 
+  console.log(`[Proxy:noTokens] public → pass`);
   return handleI18nRouting(request);
 }
 

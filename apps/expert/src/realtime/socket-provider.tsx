@@ -19,8 +19,12 @@ import { ChatIncomingStack } from "@/realtime/components/chat-incoming";
  * Singleton owner of the `/realtime` connection (expert app). Authenticates
  * with the expert JWT, drives the 30s presence heartbeat, and re-pulses on
  * tab visibility / window focus. Own presence updates arrive as
- * `presence:updated` on the auto-joined `expert:{id}` room.
+ * `presence:updated` on the auto-joined `expert:{id}` room. A dead-man poll
+ * re-drives the connection with a fresh token if the socket is found dead —
+ * socket.io retries forever, but a wedged manager or an expired JWT after a
+ * long outage never recovers on its own.
  */
+const DEAD_MAN_INTERVAL_MS = 30_000;
 export function RealtimeProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
@@ -48,10 +52,8 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
       emitPresenceHeartbeat().catch(() => undefined);
     };
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState !== "visible") return;
-      // Re-arm a dead socket (retry budget exhausted during backend
-      // downtime) so heartbeat/subscriptions resume; otherwise pulse.
+    /** Re-drive a dead socket with a fresh token; otherwise just pulse. */
+    const repulse = () => {
       if (!socket.connected) {
         getSocketTokenAction()
           .then((token) => {
@@ -63,16 +65,13 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== "visible") return;
+      repulse();
+    };
+
     const handleFocus = () => {
-      if (!socket.connected) {
-        getSocketTokenAction()
-          .then((token) => {
-            if (!cancelled) connectRealtimeSocket(token);
-          })
-          .catch(() => undefined);
-      } else {
-        pulse();
-      }
+      repulse();
     };
 
     socket.on("connect", handleConnect);
@@ -91,8 +90,13 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
       })
       .catch(() => undefined);
 
+    const deadManTimer = setInterval(() => {
+      if (!cancelled) repulse();
+    }, DEAD_MAN_INTERVAL_MS);
+
     return () => {
       cancelled = true;
+      clearInterval(deadManTimer);
       stopPresenceHeartbeat();
       window.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("focus", handleFocus);

@@ -1,0 +1,106 @@
+export const planetTranslations = {
+    en: {
+        hero: {
+            titlePart1: "Planet Positions",
+            titlePart2: "&",
+            titlePart3: "Analysis",
+            paragraph: "Unlock cosmic insights with accurate planetary positions. Enter your birth details below to analyze the celestial alignment."
+        },
+        form: {
+            title: "Birth Details",
+            date: "Date",
+            month: "Month",
+            year: "Year",
+            hour: "Hour",
+            min: "Min",
+            sec: "Sec",
+            location: "Location",
+            locationPlaceholder: "Search city...",
+            timezone: "Timezone (GMT)",
+            submit: "Get Results",
+            loading: "Calculating..."
+        },
+        results: {
+            errorTitle: "Calculation Error",
+            invalidLocationResponse: "Please select a valid location from the search results.",
+            invalidApiResponse: "Invalid response from API. Please check your details and API key.",
+            defaultApiError: "Failed to fetch planet data. Please try again later.",
+            emptyStateTitle: "Begin Your Journey",
+            emptyStateDesc: "Fill in your birth details and click 'Get Results' to discover the planetary alignments influencing your life.",
+            normalized: "Normalized",
+            fullDegree: "Full Degree",
+            retrograde: "Retrograde",
+            insightTitle: "Celestial Insight",
+            insightDesc: "\"Planets are the instruments of fate. By understanding their positions, we decode the unique vibration of our life's purpose.\""
+        },
+        planets: {
+            "Sun": "Sun",
+            "Moon": "Moon",
+            "Mars": "Mars",
+            "Mercury": "Mercury",
+            "Jupiter": "Jupiter",
+            "Venus": "Venus",
+            "Saturn": "Saturn",
+            "Rahu": "Rahu",
+            "Ketu": "Ketu",
+            "Ascendant": "Ascendant",
+            "Unknown": "Unknown"
+        },
+        zodiacs: [
+            "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+            "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
+        ]
+    },
+    hi: {
+        hero: {
+            titlePart1: "ग्रहों की स्थिति",
+            titlePart2: "और",
+            titlePart3: "विश्लेषण",
+            paragraph: "सटीक ग्रहीय स्थिति के साथ ब्रह्मांडीय अंतर्दृष्टि प्राप्त करें। खगोलीय संरेखण का विश्लेषण करने के लिए नीचे अपना जन्म विवरण दर्ज करें।"
+        },
+        form: {
+            title: "जन्म विवरण",
+            date: "तारीख",
+            month: "महीना",
+            year: "वर्ष",
+            hour: "घंटा",
+            min: "मिनट",
+            sec: "सेकंड",
+            location: "जन्म स्थान",
+            locationPlaceholder: "शहर खोजें...",
+            timezone: "समय क्षेत्र (GMT)",
+            submit: "परिणाम प्राप्त करें",
+            loading: "गणना की जा रही है..."
+        },
+        results: {
+            errorTitle: "गणना में त्रुटि",
+            invalidLocationResponse: "कृपया खोज परिणामों में से एक वैध स्थान का चयन करें।",
+            invalidApiResponse: "API से अमान्य प्रतिक्रिया। कृपया अपना विवरण और API कुंजी जांचें।",
+            defaultApiError: "ग्रह डेटा प्राप्त करने में विफल। कृपया बाद में पुनः प्रयास करें।",
+            emptyStateTitle: "अपनी यात्रा शुरू करें",
+            emptyStateDesc: "अपना जन्म विवरण भरें और अपने जीवन को प्रभावित करने वाले ग्रहीय संरेखण को जानने के लिए 'परिणाम प्राप्त करें' पर क्लिक करें।",
+            normalized: "सामान्यीकृत",
+            fullDegree: "पूर्ण अंश (Degree)",
+            retrograde: "वक्री",
+            insightTitle: "खगोलीय अंतर्दृष्टि",
+            insightDesc: "\"ग्रह भाग्य के उपकरण हैं। उनकी स्थिति को समझकर, हम अपने जीवन के उद्देश्य के अद्वितीय कंपन को डिकोड करते हैं।\""
+        },
+        planets: {
+            "Sun": "सूर्य",
+            "Moon": "चंद्रमा",
+            "Mars": "मंगल",
+            "Mercury": "बुध",
+            "Jupiter": "बृहस्पति",
+            "Venus": "शुक्र",
+            "Saturn": "शनि",
+            "Rahu": "राहु",
+            "Ketu": "केतु",
+            "Ascendant": "लग्न",
+            "Unknown": "अज्ञात"
+        },
+        zodiacs: [
+            "मेष", "वृषभ", "मिथुन", "कर्क", "सिंह", "कन्या",
+            "तुला", "वृश्चिक", "धनु", "मकर", "कुंभ", "मीन"
+        ]
+    }
+};

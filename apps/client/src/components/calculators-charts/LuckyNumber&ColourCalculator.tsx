@@ -5,8 +5,7 @@ import CalculatorHero from "./common/hero";
 import LuckyVibesForm from "./LuckyVibesForm";
 import LuckyVibesResult from "./LuckyVibesResult";
 import { useLuckyVibes } from "./useLuckyVibes";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "@/lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { GiLotus } from "react-icons/gi";
 
 const premiumCardStyles = `
@@ -41,9 +40,8 @@ const LuckyColorNumberCalculator: React.FC = () => {
     calculate,
   } = useLuckyVibes();
 
-  const { lang } = useLanguageStore();
-  const translationSet = (homeTranslations[lang as "en" | "hi"] || homeTranslations.en) as any;
-  const t = translationSet.calculators.luckyVibes;
+  const { t: translationSet } = useHomeTranslations();
+  const t = (translationSet as any).calculators.luckyVibes;
 
   const resultsRef = useRef<HTMLDivElement | null>(null);
 

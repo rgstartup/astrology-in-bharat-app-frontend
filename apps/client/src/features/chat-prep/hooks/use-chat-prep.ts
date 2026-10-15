@@ -10,14 +10,14 @@ import { type IExpert } from "@repo/lib";
 import { useTranslations } from "next-intl";
 import { getChatPrepExpertAction, initiateChatAction, type SomeoneElseData } from "@/actions/chat";
 import { useChatPrepStore } from "@/store/chatPrepStore";
+import { useConsultationTrackerStore } from "@/store/consultationTrackerStore";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { requestChat, cancelChat, CHAT_EVENTS } from "@/realtime/topics/chat";
-import { cancelConsultation, CONSULTATION_EVENTS } from "@/realtime/topics/consultation";
+import { requestConsultation, cancelConsultation, CONSULTATION_EVENTS } from "@/realtime/topics/consultation";
 import { realtimeSocket } from "@/realtime/socket";
 
-import { CHAT_STATUS, JoinChatAck } from "@/realtime/types/chat";
+import { CHAT_STATUS } from "@/realtime/types/chat";
 
 import type { ChatVerdict, WaitOutcome } from "../types";
 
@@ -29,6 +29,12 @@ const EMPTY_SOMEONE_ELSE: SomeoneElseData = {
   pob: "",
 };
 
+/**
+ * Headroom so the server-owned expiry (cron sweep, up to ~10s granularity)
+ * wins the verdict race. The local timer is a silent fallback only.
+ */
+const SERVER_LAG_GRACE_SEC = 15;
+
 export function useChatPrep(expertId: string) {
   const router = useRouter();
   const pathname = usePathname();
@@ -39,8 +45,6 @@ export function useChatPrep(expertId: string) {
   const [actionLoading, setActionLoading] = useState(false);
   const [isWaitingForExpert, setIsWaitingForExpert] = useState(false);
   const [waitOutcome, setWaitOutcome] = useState<WaitOutcome>(null);
-  const [waitTotal, setWaitTotal] = useState(0);
-  const [waitLeft, setWaitLeft] = useState(0);
   const waitResolveRef = useRef<((v: ChatVerdict) => void) | null>(null);
   const waitConsultationRef = useRef<number | null>(null);
   const [askSomeoneElse, setAskSomeoneElse] = useState(true);
@@ -90,11 +94,28 @@ export function useChatPrep(expertId: string) {
       // ChatPrepHost lives in the root layout and survives navigation —
       // close it here or the prep modal stays open over the chat room.
       useChatPrepStore.getState().closeChatPrep();
+      // Seed the global tracker so the floating card appears if the
+      // client walks out of the room mid-consultation.
+      useConsultationTrackerStore.getState().setSession({
+        consultationId,
+        sessionId,
+        expertId: String(targetExpertId),
+        expertName: expert?.name ?? `Expert ${targetExpertId}`,
+        expertAvatar: expert?.avatar ?? null,
+        startedAt: new Date().toISOString(),
+        paused: false,
+      });
       router.push(
-        `/chat/room/${targetExpertId}?sessionId=${sessionId}&consultationId=${consultationId}`,
+        `/consultation/${consultationId}?sessionId=${sessionId}&expertId=${targetExpertId}`,
       );
+      // The request-window key served its purpose: the expert accepted.
+      // Remove it so a later hard refresh never replays a stale expiry
+      // redirect while the room re-joins (bug-072).
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem(`chat:pending:${consultationId}`);
+      }
     },
-    [router, t],
+    [router, t, expert],
   );
 
   /** One-shot wait for the expert verdict. Delivery ack is NOT the verdict. */
@@ -106,8 +127,8 @@ export function useChatPrep(expertId: string) {
           Number(p?.consultationId) === consultationId;
         const cleanup = () => {
           clearTimeout(timer);
-          socket.off(CHAT_EVENTS.ACCEPTED, onAccepted);
-          socket.off(CHAT_EVENTS.REJECTED, onRejected);
+          socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onAccepted);
+          socket.off(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
           waitResolveRef.current = null;
           waitConsultationRef.current = null;
         };
@@ -125,10 +146,12 @@ export function useChatPrep(expertId: string) {
             resolve("accepted");
           }
         };
-        const onRejected = (p: { consultationId: number | string }) => {
+        const onRejected = (p: { consultationId: number | string; reason?: string }) => {
           if (match(p)) {
             cleanup();
-            resolve("rejected");
+            // Cron expiry arrives as a system reject — surface it as a
+            // timeout so the UI can say "no response" instead of "declined".
+            resolve(p?.reason === "request_timeout" ? "timeout" : "rejected");
           }
         };
         waitResolveRef.current = (v) => {
@@ -136,9 +159,7 @@ export function useChatPrep(expertId: string) {
           resolve(v);
         };
         waitConsultationRef.current = consultationId;
-        socket.on(CHAT_EVENTS.ACCEPTED, onAccepted);
         socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onAccepted);
-        socket.on(CHAT_EVENTS.REJECTED, onRejected);
         socket.on(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
       }),
     [],
@@ -150,9 +171,7 @@ export function useChatPrep(expertId: string) {
     // Tell the server only if the verdict is still pending — otherwise the
     // request already settled (accepted/rejected/expired) and must not flip.
     if (consultationId != null) {
-      cancelConsultation(consultationId).catch(() => {
-        cancelChat(consultationId).catch(() => undefined);
-      });
+      cancelConsultation(consultationId).catch(() => undefined);
     }
   }, []);
 
@@ -169,8 +188,8 @@ export function useChatPrep(expertId: string) {
     maxMinutes?: number,
   ) => {
     try {
-      const ack: JoinChatAck = await requestChat(consultationId, Number(expertId));
-      if (ack.status !== CHAT_STATUS.REQUESTED) {
+      const ack = await requestConsultation(consultationId, Number(expertId));
+      if (ack.status !== "requested" && ack.status !== CHAT_STATUS.REQUESTED) {
         toast.error("Expert did not receive your chat request. Please try again.");
         return;
       }
@@ -188,23 +207,23 @@ export function useChatPrep(expertId: string) {
       );
     }
     setIsWaitingForExpert(true);
-    setWaitTotal(expiresInSec);
-    setWaitLeft(expiresInSec);
-    const countdown = setInterval(() => {
-      setWaitLeft((s) => (s > 0 ? s - 1 : 0));
-    }, 1000);
     try {
-      const verdict = await waitForVerdict(consultationId, expiresInSec);
+      // Server owns the timeout (cron sweep lags the window by up to ~10s),
+      // so the local timer is a silent fallback with grace — it must never
+      // win the race and strand an accept that lands just after expiry.
+      const verdict = await waitForVerdict(
+        consultationId,
+        expiresInSec + SERVER_LAG_GRACE_SEC,
+      );
       if (verdict === "accepted") {
         goToRoom(expertId, sessionId, consultationId);
       } else if (verdict === "rejected") {
         setWaitOutcome("rejected");
         return;
-      } else if (verdict === "expired") {
-        toast.error("The expert did not respond in time. Please try again later.");
+      } else if (verdict === "timeout" || verdict === "expired") {
+        setWaitOutcome("timeout");
       }
     } finally {
-      clearInterval(countdown);
       setIsWaitingForExpert(false);
     }
   };
@@ -305,8 +324,6 @@ export function useChatPrep(expertId: string) {
     cancelWaiting,
     waitOutcome,
     clearWaiting,
-    waitTotal,
-    waitLeft,
     askSomeoneElse,
     setAskSomeoneElse,
     someoneElseData,

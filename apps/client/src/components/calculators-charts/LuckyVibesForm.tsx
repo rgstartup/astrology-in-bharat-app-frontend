@@ -10,8 +10,7 @@ import {
 import { TbCrystalBall } from "react-icons/tb";
 import { ZodiacSign, SIGNS, elementBySign } from "./useLuckyVibes";
 import { LuckyVibesFormProps } from "@/lib/types/calculator";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "@/lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 const LuckyVibesForm: React.FC<LuckyVibesFormProps> = ({
   fullName,
@@ -24,9 +23,8 @@ const LuckyVibesForm: React.FC<LuckyVibesFormProps> = ({
   setZodiac,
   handleCalculate,
 }) => {
-  const { lang } = useLanguageStore();
-  const translationSet = (homeTranslations[lang as "en" | "hi"] || homeTranslations.en) as any;
-  const t = translationSet.calculators.luckyVibes;
+  const { t: translationSet } = useHomeTranslations();
+  const t = (translationSet as any).calculators.luckyVibes;
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);

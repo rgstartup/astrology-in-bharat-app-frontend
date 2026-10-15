@@ -84,6 +84,8 @@ export interface ChatDecisionPayload {
 export interface ChatEndedPayload {
   consultationId: number;
   endedBy: string;
+  /** Total billable seconds accumulated in the consultation. */
+  totalDurationSeconds?: number;
   /** Display-only end reason (e.g. `balance_exhausted`); absent on older servers. */
   reason?: string;
   timestamp: string;

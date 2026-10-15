@@ -37,6 +37,72 @@ export interface AstrologyIdentityCardProps {
   isLoading?: boolean;
 }
 
+/** Skeleton shown while birth astrology details load. */
+function IdentityLoading() {
+  return (
+    <Card className="mb-6 sm:mb-8 p-6 space-y-4">
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-6 w-36" />
+        <Skeleton className="h-6 w-24" />
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+        {[1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className="h-20 rounded-xl" />
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+/** Onboarding prompt shown when birth details are missing. */
+function IdentityOnboarding() {
+  return (
+    <Card className="mb-6 sm:mb-8 border-dashed overflow-hidden">
+      <CardContent className="p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-full bg-[#ebe7e1] text-[#111111] flex items-center justify-center shrink-0">
+            <Sparkles className="w-6 h-6" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Badge variant="secondary">Action required</Badge>
+              <span className="font-sans text-xs font-medium text-[#626260]">
+                Birth profile missing
+              </span>
+            </div>
+            <h3 className="font-sans text-lg sm:text-xl font-medium tracking-tight text-[#111111]">
+              Complete your Vedic birth details
+            </h3>
+            <p className="font-sans text-xs sm:text-sm text-[#626260] max-w-lg mt-1 leading-relaxed">
+              Add your Date, Time, and Place of Birth to generate your
+              personalized Kundli, planetary dashas, and precision daily
+              horoscope.
+            </p>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-end">
+        <Link
+          href={PATHS.DASHBOARD.PROFILE}
+          className="no-underline shrink-0"
+        >
+          <Button
+            variant="default"
+            className="flex items-center gap-2"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>Add birth details</span>
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
+  );
+}
+
+/**
+ * Vedic identity summary for the dashboard: sun/moon/ascendant/
+ * nakshatra pillars plus the birth metadata row.
+ */
 export function AstrologyIdentityCard({
   astrologyDetails: propAstrologyDetails,
   hasBirthDetails: propHasBirthDetails,
@@ -55,66 +121,12 @@ export function AstrologyIdentityCard({
   const isLoadingAstrology =
     propIsLoading !== undefined ? propIsLoading : hookData.isLoadingAstrology;
 
-  // If loading astrology details
   if (isLoadingAstrology) {
-    return (
-      <Card className="mb-6 sm:mb-8 border-slate-200 bg-white p-6 space-y-4 shadow-sm">
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-6 w-36" />
-          <Skeleton className="h-6 w-24" />
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
-          {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-20 rounded-xl" />
-          ))}
-        </div>
-      </Card>
-    );
+    return <IdentityLoading />;
   }
 
-  // If user has not completed birth details, show onboarding prompt
   if (!hasBirthDetails) {
-    return (
-      <Card className="mb-6 sm:mb-8 border-dashed border-2 border-slate-300 bg-white overflow-hidden shadow-xs">
-        <CardContent className="p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 shadow-xs">
-              <Sparkles className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Badge variant="gold">Action Required</Badge>
-                <span className="text-xs font-bold text-slate-600">
-                  Birth Profile Missing
-                </span>
-              </div>
-              <h3 className="text-lg sm:text-xl text-[#301118] font-outfit">
-                Complete your Vedic birth details
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-700 max-w-lg mt-1 leading-relaxed">
-                Add your Date, Time, and Place of Birth to generate your
-                personalized Kundli, planetary dashas, and precision daily
-                horoscope.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-end">
-          <Link
-            href={PATHS.DASHBOARD.PROFILE}
-            className="no-underline shrink-0"
-          >
-            <Button
-              variant="default"
-              className="font-bold flex items-center gap-2 shadow-md shadow-[#ff6b00]/20"
-            >
-              <PlusCircle className="w-4 h-4" />
-              <span>Add Birth Details</span>
-            </Button>
-          </Link>
-        </CardFooter>
-      </Card>
-    );
+    return <IdentityOnboarding />;
   }
 
   const details: BirthAstrologyDetails =
@@ -146,99 +158,80 @@ export function AstrologyIdentityCard({
 
   const astroPillars = [
     {
-      title: "Sun Sign",
+      title: "Sun sign",
       value: details.sunSign || "Aries",
-      subtitle: "Core Identity",
+      subtitle: "Core identity",
       icon: Sun,
-      bgColor: "bg-slate-50",
-      textColor: "text-slate-900",
-      iconColor: "text-emerald-600",
-      borderColor: "border-slate-200",
     },
     {
-      title: "Moon Sign (Rashi)",
+      title: "Moon sign (Rashi)",
       value: details.moonSign || "Taurus",
-      subtitle: "Emotional Mind",
+      subtitle: "Emotional mind",
       icon: Moon,
-      bgColor: "bg-slate-50",
-      textColor: "text-slate-900",
-      iconColor: "text-emerald-600",
-      borderColor: "border-slate-200",
     },
     {
       title: "Ascendant (Lagna)",
       value: details.ascendant || "Gemini",
-      subtitle: "Life Path & Persona",
+      subtitle: "Life path & persona",
       icon: Compass,
-      bgColor: "bg-slate-50",
-      textColor: "text-slate-900",
-      iconColor: "text-emerald-600",
-      borderColor: "border-slate-200",
     },
     {
       title: "Nakshatra",
       value: details.nakshatra || "Rohini",
       subtitle: details.nakshatraLord
         ? `Lord: ${details.nakshatraLord}`
-        : "Birth Star",
+        : "Birth star",
       icon: Star,
-      bgColor: "bg-slate-50",
-      textColor: "text-slate-900",
-      iconColor: "text-emerald-600",
-      borderColor: "border-slate-200",
     },
   ];
 
   return (
-    <Card className="mb-6 sm:mb-8 border-slate-200 bg-white overflow-hidden shadow-sm">
-      {/* Header bar */}
-      <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 gap-3 border-b border-slate-200">
+    <Card className="mb-6 sm:mb-8 overflow-hidden">
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 gap-3 border-b border-[#ebe7e1]">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Badge
-              variant="brand"
-              className="text-[10px] tracking-wider uppercase"
+              variant="secondary"
+              className="text-[10px]"
             >
-              Vedic Blueprint
+              Vedic blueprint
             </Badge>
-            <span className="text-xs font-bold text-slate-500">
-              Personal Kundli Identity
+            <span className="font-sans text-xs font-medium text-[#626260]">
+              Personal kundli identity
             </span>
           </div>
-          <CardTitle className="text-xl font-bold text-[#301118]">
-            Your Astrological Identity
+          <CardTitle className="text-xl">
+            Your astrological identity
           </CardTitle>
         </div>
 
-        {/* Action button */}
         <Link href={PATHS.DASHBOARD.KUNDLI} className="no-underline shrink-0">
           <Button
             variant="outline"
             size="sm"
-            className="text-xs font-bold gap-1.5"
+            className="text-xs gap-1.5"
           >
-            <span>Explore My Kundli Chart</span>
+            <span>Explore my Kundli chart</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Button>
         </Link>
       </CardHeader>
 
       <CardContent className="pt-5 space-y-5">
-        {/* 4 Pillars Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {astroPillars.map((pillar) => {
             const Icon = pillar.icon;
             return (
               <div
                 key={pillar.title}
-                className={`p-4 rounded-2xl border ${pillar.borderColor} ${pillar.bgColor} flex flex-col justify-between transition-transform hover:-translate-y-0.5 duration-200`}
+                className="p-4 rounded-xl border border-[#ebe7e1] bg-[#f5f1ec] flex flex-col justify-between"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                  <span className="font-sans text-[11px] font-medium text-[#626260]">
                     {pillar.title}
                   </span>
                   <div
-                    className={`p-1.5 rounded-lg bg-white shadow-2xs ${pillar.iconColor}`}
+                    className="p-1.5 rounded-md bg-white border border-[#ebe7e1] text-[#111111]"
                   >
                     <Icon className="w-3.5 h-3.5" />
                   </div>
@@ -246,11 +239,11 @@ export function AstrologyIdentityCard({
 
                 <div>
                   <h4
-                    className={`text-lg sm:text-xl font-bold font-outfit ${pillar.textColor} truncate`}
+                    className="font-sans text-lg sm:text-xl font-medium tracking-tight text-[#111111] truncate"
                   >
                     {pillar.value}
                   </h4>
-                  <p className="text-[11px] text-slate-500 font-medium truncate mt-0.5">
+                  <p className="font-sans text-[11px] text-[#626260] truncate mt-0.5">
                     {pillar.subtitle}
                   </p>
                 </div>
@@ -259,16 +252,15 @@ export function AstrologyIdentityCard({
           })}
         </div>
 
-        {/* Birth metadata row */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-slate-200 text-xs text-slate-500">
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-[#ebe7e1] text-xs">
           <div className="flex flex-wrap items-center gap-4 sm:gap-6">
             {birthMeta.map((m) => {
               const Icon = m.icon;
               return (
                 <div key={m.label} className="flex items-center gap-1.5">
-                  <Icon className="w-3.5 h-3.5 text-slate-400" />
-                  <span className="font-medium text-slate-400">{m.label}:</span>
-                  <span className="font-bold text-slate-700">{m.val}</span>
+                  <Icon className="w-3.5 h-3.5 text-[#7b7b78]" />
+                  <span className="font-sans text-[#7b7b78]">{m.label}:</span>
+                  <span className="font-sans font-medium text-[#111111]">{m.val}</span>
                 </div>
               );
             })}
@@ -276,9 +268,9 @@ export function AstrologyIdentityCard({
 
           <Link
             href={PATHS.DASHBOARD.PROFILE}
-            className="text-[11px] font-bold text-[#ff6b00] hover:text-[#e65100] transition-colors no-underline"
+            className="font-sans text-[11px] font-medium text-[#111111] hover:underline no-underline"
           >
-            Edit Birth Details →
+            Edit birth details →
           </Link>
         </div>
       </CardContent>

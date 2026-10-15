@@ -8,6 +8,10 @@ export interface GreetingCardProps {
   name?: string;
 }
 
+/**
+ * Page greeting header for the client dashboard. Sets the time-aware
+ * salutation, current date, and intro line above the widgets.
+ */
 export function GreetingCard({ name }: GreetingCardProps) {
   const currentDateObject = new Date();
 
@@ -30,20 +34,19 @@ export function GreetingCard({ name }: GreetingCardProps) {
   return (
     <div className="mb-6 sm:mb-8">
       <div className="flex items-center gap-2 mb-1.5">
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-emerald-50 text-emerald-800 border border-emerald-200/70">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#d3cec6] bg-white font-sans text-[11px] font-medium text-[#111111]">
           <Sparkles className="w-3 h-3" />
-          <span>Vedic Sanctuary</span>
+          <span>Vedic sanctuary</span>
         </span>
-        <span className="text-xs text-amber-800 font-medium">
+        <span className="font-sans text-xs text-[#7b7b78]">
           {currentDate}
         </span>
       </div>
 
-      <h1 className="text-2xl sm:text-3xl lg:text-4xl text-slate-700 font-outfit tracking-tight">
-        {getGreetingTime()},{" "}
-        <span className="text-orange-500">{displayName}</span> 👋
+      <h1 className="font-sans text-2xl sm:text-3xl lg:text-4xl text-[#111111] font-medium tracking-tight">
+        {getGreetingTime()}, {displayName} 👋
       </h1>
-      <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+      <p className="font-sans text-xs sm:text-sm text-[#626260] mt-1">
         Welcome to your personal astrology space. Planetary alignments and
         guidance curated for your chart.
       </p>

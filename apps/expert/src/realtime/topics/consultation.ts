@@ -67,6 +67,22 @@ export const acceptConsultation = (
     consultationId,
   });
 
+export const requestConsultation = (
+  consultationId: number,
+  expertId: number,
+): Promise<ConsultationActionAck> =>
+  emitWithAck<ConsultationActionAck>(CONSULTATION_EVENTS.COMMANDS.REQUEST, {
+    consultationId,
+    expertId,
+  });
+
+export const cancelConsultation = (
+  consultationId: number,
+): Promise<ConsultationActionAck> =>
+  emitWithAck<ConsultationActionAck>(CONSULTATION_EVENTS.COMMANDS.CANCEL, {
+    consultationId,
+  });
+
 export const rejectConsultation = (
   consultationId: number,
   reason?: string,

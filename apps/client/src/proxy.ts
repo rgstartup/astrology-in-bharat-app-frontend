@@ -25,7 +25,7 @@ function withI18nCookies(response: NextResponse, request: NextRequest) {
   return response;
 }
 
-const PROTECTED_ROUTES = ["/client", "/dashboard"];
+const PROTECTED_ROUTES = ["/client", "/dashboard", "/consultation"];
 const isProtectedRoute = (pathname: string) =>
   PROTECTED_ROUTES.some((prefix) => pathname.startsWith(prefix));
 

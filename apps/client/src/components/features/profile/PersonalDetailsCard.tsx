@@ -18,19 +18,15 @@ interface PersonalDetailsCardProps {
   loading?: boolean;
 }
 
-const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
-  lang,
-  t,
-  profileData,
+function UserIdBlock({
   user,
-  editing,
-  saving,
-  setEditing,
-  handleInputChange,
-  handleSave,
-  setShowPhoneVerify,
-  loading = false,
-}) => {
+  loading,
+  t,
+}: {
+  user: any;
+  loading: boolean;
+  t: any;
+}) {
   const [copied, setCopied] = useState(false);
 
   const rawId = user?.public_id || user?.uid || user?.id;
@@ -46,6 +42,185 @@ const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
       setTimeout(() => setCopied(false), 2000);
     }
   };
+
+  return (
+    <div className="md:col-span-2">
+      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+        {t.personalDetails.userId}
+      </label>
+      <div className="flex items-center gap-3">
+        {loading ? (
+          <Skeleton width={120} height={24} className="rounded-full" />
+        ) : (
+          <>
+            <span
+              className="font-bold px-4 py-1.5 rounded-full text-xs"
+              style={{
+                backgroundColor: "rgba(255,107,0,0.1)",
+                color: "#FF6B00",
+                letterSpacing: "0.05em",
+                fontFamily: "monospace",
+              }}
+            >
+              {displayUid || t.personalDetails.notAssigned}
+            </span>
+            {displayUid && (
+              <button
+                type="button"
+                title={copied ? t.personalDetails.copied : t.personalDetails.copyId}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
+                  copied
+                    ? "bg-green-100 text-green-700 border-green-200"
+                    : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
+                } border`}
+                onClick={handleCopy}
+              >
+                <i className={`fa-${copied ? "solid fa-check" : "regular fa-copy"}`}></i>
+                {copied && <span>{t.personalDetails.copied}</span>}
+              </button>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PersonalFieldItem({
+  field,
+  editing,
+  loading,
+  handleInputChange,
+  setShowPhoneVerify,
+  isPhoneVerified,
+  t,
+}: {
+  field: any;
+  editing: boolean;
+  loading: boolean;
+  handleInputChange: (key: string, value: any) => void;
+  setShowPhoneVerify: (val: boolean) => void;
+  isPhoneVerified?: boolean;
+  t: any;
+}) {
+  return (
+    <div>
+      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+        {field.label}
+      </label>
+      {loading ? (
+        <Skeleton width="100%" height={24} />
+      ) : editing && !field.noEdit ? (
+        field.isSelect ? (
+          <select
+            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
+            value={field.value || ""}
+            onChange={(e) => handleInputChange(field.key, e.target.value)}
+          >
+            {field.key === "gender" ? (
+              <>
+                <option value="male">{t.personalDetails.genders.male}</option>
+                <option value="female">{t.personalDetails.genders.female}</option>
+                <option value="other">{t.personalDetails.genders.other}</option>
+              </>
+            ) : (
+              <>
+                <option value="">{t.personalDetails.maritalStatuses.select}</option>
+                <option value="single">{t.personalDetails.maritalStatuses.single}</option>
+                <option value="married">{t.personalDetails.maritalStatuses.married}</option>
+                <option value="divorced">{t.personalDetails.maritalStatuses.divorced}</option>
+                <option value="widowed">{t.personalDetails.maritalStatuses.widowed}</option>
+                <option value="other">{t.personalDetails.maritalStatuses.other}</option>
+              </>
+            )}
+          </select>
+        ) : (
+          <input
+            type="text"
+            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
+            value={field.value || ""}
+            onChange={(e) => handleInputChange(field.key, e.target.value)}
+          />
+        )
+      ) : (
+        <div className="flex items-center gap-3">
+          <p className={`font-bold text-gray-900 m-0 ${field.key === "email" ? "" : "capitalize"}`}>
+            {field.isSelect
+              ? field.value
+                ? field.key === "gender"
+                  ? t.personalDetails.genders[field.value]
+                  : t.personalDetails.maritalStatuses[field.value]
+                : t.personalDetails.notSet
+              : field.value || t.personalDetails.notSet}
+          </p>
+          {field.isPhone && field.value && !isPhoneVerified && (
+            <button
+              type="button"
+              onClick={() => setShowPhoneVerify(true)}
+              className="px-3 py-1 bg-orange text-white text-[10px] font-bold rounded-lg shadow-sm hover:bg-orange/90 transition-all border-0"
+            >
+              {t.personalDetails.verifyNow}
+            </button>
+          )}
+          {field.isPhone && field.value && isPhoneVerified && (
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-green-50 text-green-600 text-[9px] font-bold">
+              <i className="fa-solid fa-circle-check"></i> {t.personalDetails.verified}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
+  t,
+  profileData,
+  user,
+  editing,
+  saving,
+  setEditing,
+  handleInputChange,
+  handleSave,
+  setShowPhoneVerify,
+  loading = false,
+}) => {
+  const fields = [
+    {
+      label: t.personalDetails.fullName,
+      value: profileData.full_name || user?.name,
+      key: "full_name",
+    },
+    {
+      label: t.personalDetails.email,
+      value: user?.email,
+      key: "email",
+      noEdit: true,
+    },
+    {
+      label: t.personalDetails.phone,
+      value: profileData.phone,
+      key: "phone",
+      isPhone: true,
+    },
+    {
+      label: t.personalDetails.gender,
+      value: profileData.gender,
+      key: "gender",
+      isSelect: true,
+    },
+    {
+      label: t.personalDetails.maritalStatus,
+      value: profileData.marital_status,
+      key: "marital_status",
+      isSelect: true,
+    },
+    {
+      label: t.personalDetails.occupation,
+      value: profileData.occupation,
+      key: "occupation",
+    },
+  ];
 
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden">
@@ -92,183 +267,19 @@ const PersonalDetailsCard: React.FC<PersonalDetailsCardProps> = ({
       </div>
       <div className="p-6 md:p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          <div className="md:col-span-2">
-            <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">
-              {t.personalDetails.userId}
-            </label>
-            <div className="flex items-center gap-3">
-              {loading ? (
-                <Skeleton width={120} height={24} className="rounded-full" />
-              ) : (
-                <>
-                  <span
-                    className="font-bold px-4 py-1.5 rounded-full text-xs"
-                    style={{
-                      backgroundColor: "rgba(255,107,0,0.1)",
-                      color: "#FF6B00",
-                      letterSpacing: "0.05em",
-                      fontFamily: "monospace",
-                    }}
-                  >
-                    {displayUid || t.personalDetails.notAssigned}
-                  </span>
-                  {displayUid && (
-                    <button
-                      type="button"
-                      title={
-                        copied
-                          ? t.personalDetails.copied
-                          : t.personalDetails.copyId
-                      }
-                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
-                        copied
-                          ? "bg-green-100 text-green-700 border-green-200"
-                          : "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
-                      } border`}
-                      onClick={handleCopy}
-                    >
-                      <i
-                        className={`fa-${copied ? "solid fa-check" : "regular fa-copy"}`}
-                      ></i>
-                      {copied && <span>{t.personalDetails.copied}</span>}
-                    </button>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
+          <UserIdBlock user={user} loading={loading} t={t} />
 
-          {[
-            {
-              label: t.personalDetails.fullName,
-              value: profileData.full_name || user?.name,
-              key: "full_name",
-            },
-            {
-              label: t.personalDetails.email,
-              value: user?.email,
-              key: "email",
-              noEdit: true,
-            },
-            {
-              label: t.personalDetails.phone,
-              value: profileData.phone,
-              key: "phone",
-              isPhone: true,
-            },
-            {
-              label: t.personalDetails.gender,
-              value: profileData.gender,
-              key: "gender",
-              isSelect: true,
-            },
-            {
-              label: t.personalDetails.maritalStatus,
-              value: profileData.marital_status,
-              key: "marital_status",
-              isSelect: true,
-            },
-            {
-              label: t.personalDetails.occupation,
-              value: profileData.occupation,
-              key: "occupation",
-            },
-          ].map((field, idx) => (
-            <div key={idx}>
-              <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">
-                {field.label}
-              </label>
-              {loading ? (
-                <Skeleton width="100%" height={24} />
-              ) : editing && !field.noEdit ? (
-                field.isSelect ? (
-                  <select
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
-                    value={field.value || ""}
-                    onChange={(e) =>
-                      handleInputChange(field.key, e.target.value)
-                    }
-                  >
-                    {field.key === "gender" ? (
-                      <>
-                        <option value="male">
-                          {t.personalDetails.genders.male}
-                        </option>
-                        <option value="female">
-                          {t.personalDetails.genders.female}
-                        </option>
-                        <option value="other">
-                          {t.personalDetails.genders.other}
-                        </option>
-                      </>
-                    ) : (
-                      <>
-                        <option value="">
-                          {t.personalDetails.maritalStatuses.select}
-                        </option>
-                        <option value="single">
-                          {t.personalDetails.maritalStatuses.single}
-                        </option>
-                        <option value="married">
-                          {t.personalDetails.maritalStatuses.married}
-                        </option>
-                        <option value="divorced">
-                          {t.personalDetails.maritalStatuses.divorced}
-                        </option>
-                        <option value="widowed">
-                          {t.personalDetails.maritalStatuses.widowed}
-                        </option>
-                        <option value="other">
-                          {t.personalDetails.maritalStatuses.other}
-                        </option>
-                      </>
-                    )}
-                  </select>
-                ) : (
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
-                    value={field.value || ""}
-                    onChange={(e) =>
-                      handleInputChange(field.key, e.target.value)
-                    }
-                  />
-                )
-              ) : (
-                <div className="flex items-center gap-3">
-                  <p
-                    className={`font-bold text-gray-900 m-0 ${field.key === "email" ? "" : "capitalize"}`}
-                  >
-                    {field.isSelect
-                      ? field.value
-                        ? field.key === "gender"
-                          ? t.personalDetails.genders[field.value]
-                          : t.personalDetails.maritalStatuses[field.value]
-                        : t.personalDetails.notSet
-                      : field.value || t.personalDetails.notSet}
-                  </p>
-                  {field.isPhone &&
-                    field.value &&
-                    !profileData.phone_verified_at && (
-                      <button
-                        type="button"
-                        onClick={() => setShowPhoneVerify(true)}
-                        className="px-3 py-1 bg-orange text-white text-[10px] font-bold rounded-lg shadow-sm hover:bg-orange/90 transition-all border-0"
-                      >
-                        {t.personalDetails.verifyNow}
-                      </button>
-                    )}
-                  {field.isPhone &&
-                    field.value &&
-                    profileData.phone_verified_at && (
-                      <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-green-50 text-green-600 text-[9px] font-bold">
-                        <i className="fa-solid fa-circle-check"></i>{" "}
-                        {t.personalDetails.verified}
-                      </span>
-                    )}
-                </div>
-              )}
-            </div>
+          {fields.map((field, idx) => (
+            <PersonalFieldItem
+              key={idx}
+              field={field}
+              editing={editing}
+              loading={loading}
+              handleInputChange={handleInputChange}
+              setShowPhoneVerify={setShowPhoneVerify}
+              isPhoneVerified={Boolean(profileData.phone_verified_at)}
+              t={t}
+            />
           ))}
 
           <div className="md:col-span-2">

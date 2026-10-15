@@ -1,8 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "@/lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 interface PersonalGuidanceCardProps {
   className?: string;
@@ -10,8 +9,7 @@ interface PersonalGuidanceCardProps {
 }
 
 const PersonalGuidanceCard: React.FC<PersonalGuidanceCardProps> = ({ className = "", showExtraContent = false }) => {
-  const { lang } = useLanguageStore();
-  const tHome = homeTranslations[lang as keyof typeof homeTranslations] || homeTranslations.en;
+  const { t: tHome } = useHomeTranslations();
   const t = tHome.guidanceCard;
 
   return (

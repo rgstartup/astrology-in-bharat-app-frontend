@@ -88,6 +88,10 @@ body {
     @apply bg-background text-foreground;
     background-color: #ffffff;
   }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
   html {
     @apply font-sans;
   }

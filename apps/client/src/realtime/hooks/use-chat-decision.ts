@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { realtimeSocket } from "@/realtime/socket";
-import { CHAT_EVENTS } from "@/realtime/topics/chat";
+import { CONSULTATION_EVENTS } from "@/realtime/topics/consultation";
 import { CHAT_STATUS } from "@/realtime/types/chat";
 import type { ChatDecisionPayload } from "@/realtime/types/chat";
 
@@ -42,11 +42,11 @@ export const useChatDecision = (consultationId?: number | string | null) => {
     const onRejected = (p: ChatDecisionPayload) => {
       if (match(p)) setDecision(CHAT_DECISION.REJECTED);
     };
-    socket.on(CHAT_EVENTS.ACCEPTED, onAccepted);
-    socket.on(CHAT_EVENTS.REJECTED, onRejected);
+    socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onAccepted);
+    socket.on(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
     return () => {
-      socket.off(CHAT_EVENTS.ACCEPTED, onAccepted);
-      socket.off(CHAT_EVENTS.REJECTED, onRejected);
+      socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onAccepted);
+      socket.off(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
     };
   }, [id, isValidId]);
 

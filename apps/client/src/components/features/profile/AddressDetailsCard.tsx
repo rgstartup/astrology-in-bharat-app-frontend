@@ -16,8 +16,125 @@ interface AddressDetailsCardProps {
   loading?: boolean;
 }
 
+function AddressEditForm({
+  t,
+  profileData,
+  handleAddressChange,
+}: {
+  t: any;
+  profileData: any;
+  handleAddressChange: (index: number, key: string, value: string) => void;
+}) {
+  const address = profileData.addresses?.[0] || {};
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+      <div className="lg:col-span-12">
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+          {t.addressDetails.line1}
+        </label>
+        <input
+          type="text"
+          className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
+          value={address.line1 || ""}
+          onChange={(e) => handleAddressChange(0, "line1", e.target.value)}
+        />
+      </div>
+      <div className="lg:col-span-12">
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+          {t.addressDetails.line2}
+        </label>
+        <input
+          type="text"
+          className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
+          value={address.line2 || ""}
+          onChange={(e) => handleAddressChange(0, "line2", e.target.value)}
+        />
+      </div>
+      <div className="lg:col-span-6">
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+          {t.addressDetails.city}
+        </label>
+        <input
+          type="text"
+          className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
+          value={address.city || ""}
+          onChange={(e) => handleAddressChange(0, "city", e.target.value)}
+        />
+      </div>
+      <div className="lg:col-span-6">
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+          {t.addressDetails.state}
+        </label>
+        <input
+          type="text"
+          className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
+          value={address.state || ""}
+          onChange={(e) => handleAddressChange(0, "state", e.target.value)}
+        />
+      </div>
+      <div className="lg:col-span-6">
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+          {t.addressDetails.country}
+        </label>
+        <input
+          type="text"
+          className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
+          value={address.country || ""}
+          onChange={(e) => handleAddressChange(0, "country", e.target.value)}
+        />
+      </div>
+      <div className="lg:col-span-6">
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5">
+          {t.addressDetails.zipCode}
+        </label>
+        <input
+          type="text"
+          className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
+          value={address.zip_code || ""}
+          onChange={(e) => handleAddressChange(0, "zip_code", e.target.value)}
+        />
+      </div>
+    </div>
+  );
+}
+
+function AddressDisplayView({
+  addresses,
+  noAddressText,
+}: {
+  addresses?: any[];
+  noAddressText: string;
+}) {
+  if (!addresses || addresses.length === 0) {
+    return (
+      <p className="text-gray-500 italic m-0 bg-gray-50 p-6 rounded-2xl border border-dashed border-gray-200 text-center">
+        {noAddressText}
+      </p>
+    );
+  }
+
+  const first = addresses[0];
+
+  return (
+    <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+      <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-gray-400 mt-1 flex-shrink-0">
+        <i className="fa-solid fa-map-location-dot"></i>
+      </div>
+      <div>
+        <p className="font-bold text-gray-900 mb-1">{first?.line1}</p>
+        {first?.line2 && (
+          <p className="text-gray-500 text-sm mb-1 font-medium">{first?.line2}</p>
+        )}
+        <p className="text-gray-600 font-medium text-sm m-0 leading-relaxed">
+          {first?.city}, {first?.state}, {first?.country} - {first?.zip_code}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
-  lang,
   t,
   profileData,
   editing,
@@ -30,10 +147,7 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden">
       <div className="px-4 py-3 sm:px-6 sm:py-5 bg-white border-b border-gray-100 flex flex-row justify-between items-center gap-2 sm:gap-4">
-        <h5
-          className="text-sm sm:text-lg font-bold text-gray-900 mb-0 flex items-center leading-tight sm:leading-normal"
-
-        >
+        <h5 className="text-sm sm:text-lg font-bold text-gray-900 mb-0 flex items-center leading-tight sm:leading-normal">
           <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-orange/10 text-orange flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0 text-sm sm:text-base">
             <i className="fa-solid fa-location-dot"></i>
           </span>
@@ -45,7 +159,6 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
             size="sm"
             onClick={() => setEditing(true)}
             className="shadow-gold cursor-pointer hover:cursor-pointer !px-3 sm:!px-5 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
-
           >
             <i className="fa-solid fa-pen-to-square mr-2"></i>
             {t.addressDetails.edit}
@@ -58,7 +171,6 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
               size="sm"
               onClick={() => setEditing(false)}
               className="cursor-pointer hover:cursor-pointer !px-3 sm:!px-6 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
-
             >
               {t.addressDetails.cancel}
             </Button>
@@ -68,7 +180,6 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
               loading={saving}
               onClick={handleSave}
               className="shadow-md cursor-pointer hover:cursor-pointer !px-3 sm:!px-6 !py-1.5 sm:!py-2 !text-xs sm:!text-sm whitespace-nowrap"
-
             >
               {t.addressDetails.save}
             </Button>
@@ -84,138 +195,16 @@ const AddressDetailsCard: React.FC<AddressDetailsCardProps> = ({
             <Skeleton width="60%" height={20} />
           </div>
         ) : editing ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-12">
-              <label
-                className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-
-              >
-                {t.addressDetails.line1}
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
-                value={profileData.addresses?.[0]?.line1 || ""}
-                onChange={(e) => handleAddressChange(0, "line1", e.target.value)}
-
-              />
-            </div>
-            <div className="lg:col-span-12">
-              <label
-                className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-
-              >
-                {t.addressDetails.line2}
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
-                value={profileData.addresses?.[0]?.line2 || ""}
-                onChange={(e) => handleAddressChange(0, "line2", e.target.value)}
-
-              />
-            </div>
-            <div className="lg:col-span-6">
-              <label
-                className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-
-              >
-                {t.addressDetails.city}
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
-                value={profileData.addresses?.[0]?.city || ""}
-                onChange={(e) => handleAddressChange(0, "city", e.target.value)}
-
-              />
-            </div>
-            <div className="lg:col-span-6">
-              <label
-                className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-
-              >
-                {t.addressDetails.state}
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
-                value={profileData.addresses?.[0]?.state || ""}
-                onChange={(e) => handleAddressChange(0, "state", e.target.value)}
-
-              />
-            </div>
-            <div className="lg:col-span-6">
-              <label
-                className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-
-              >
-                {t.addressDetails.country}
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
-                value={profileData.addresses?.[0]?.country || ""}
-                onChange={(e) =>
-                  handleAddressChange(0, "country", e.target.value)
-                }
-
-              />
-            </div>
-            <div className="lg:col-span-6">
-              <label
-                className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
-
-              >
-                {t.addressDetails.zipCode}
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-orange/20 focus:border-orange outline-none transition-all"
-                value={profileData.addresses?.[0]?.zip_code || ""}
-                onChange={(e) =>
-                  handleAddressChange(0, "zip_code", e.target.value)
-                }
-
-              />
-            </div>
-          </div>
+          <AddressEditForm
+            t={t}
+            profileData={profileData}
+            handleAddressChange={handleAddressChange}
+          />
         ) : (
-          <div>
-            {profileData.addresses && profileData.addresses.length > 0 ? (
-              <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-gray-400 mt-1 flex-shrink-0">
-                  <i className="fa-solid fa-map-location-dot"></i>
-                </div>
-                <div>
-                  <p className="font-bold text-gray-900 mb-1">
-                    {profileData.addresses[0]?.line1}
-                  </p>
-                  {profileData.addresses[0]?.line2 && (
-                    <p className="text-gray-500 text-sm mb-1 font-medium">
-                      {profileData.addresses[0]?.line2}
-                    </p>
-                  )}
-                  <p
-                    className="text-gray-600 font-medium text-sm m-0 leading-relaxed"
-
-                  >
-                    {profileData.addresses[0]?.city},{" "}
-                    {profileData.addresses[0]?.state},{" "}
-                    {profileData.addresses[0]?.country} -{" "}
-                    {profileData.addresses[0]?.zip_code}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <p
-                className="text-gray-500 italic m-0 bg-gray-50 p-6 rounded-2xl border border-dashed border-gray-200 text-center"
-
-              >
-                {t.addressDetails.noAddress}
-              </p>
-            )}
-          </div>
+          <AddressDisplayView
+            addresses={profileData.addresses}
+            noAddressText={t.addressDetails.noAddress}
+          />
         )}
       </div>
       {saving && <Loading fullScreen />}

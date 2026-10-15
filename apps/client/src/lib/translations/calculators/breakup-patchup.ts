@@ -1,0 +1,72 @@
+export const breakupPatchupTranslations = {
+    en: {
+        hero: {
+            badge: "Fun Relationship Insight",
+            titleMain: "Breakup",
+            titleAccent: "Patchup",
+            paragraph: "Enter both names and ages to reveal breakup vs patchup chances with quick advice."
+        },
+        form: {
+            title: "Breakup vs",
+            titleAccent: "Patchup Chance",
+            yourNameLabel: "Your Name",
+            yourNamePlaceholder: "Type your name...",
+            partnerNameLabel: "Partner Name",
+            partnerNamePlaceholder: "Type partner name...",
+            yourAgeLabel: "Your Age",
+            partnerAgeLabel: "Partner Age",
+            agePlaceholder: "e.g. 22",
+            ageNote: "Ages are required for form completeness, but the result is calculated from names only.",
+            calculate: "Check Chances",
+            calculating: "Calculating..."
+        },
+        results: {
+            badge: "Chances Result",
+            title: "Breakup /",
+            titleAccent: "Patchup",
+            patchupLabel: "Patchup Chance",
+            breakupLabel: "Breakup Chance",
+            disclaimer: "For fun & entertainment only",
+            advice: {
+                high: "Small issues can be fixed easily. Talk calmly.",
+                medium: "Mixed phase. Communication will decide the future.",
+                low: "Emotions may clash. Give space and avoid ego fights."
+            }
+        }
+    },
+    hi: {
+        hero: {
+            badge: "मज़ेदार रिलेशनशिप जानकारी",
+            titleMain: "ब्रेकअप",
+            titleAccent: "पैचअप",
+            paragraph: "त्वरित सलाह के साथ ब्रेकअप बनाम पैचअप की संभावनाओं को जानने के लिए दोनों नाम और उम्र दर्ज करें।"
+        },
+        form: {
+            title: "ब्रेकअप बनाम",
+            titleAccent: "पैचअप की संभावना",
+            yourNameLabel: "आपका नाम",
+            yourNamePlaceholder: "अपना नाम टाइप करें...",
+            partnerNameLabel: "पार्टनर का नाम",
+            partnerNamePlaceholder: "पार्टनर का नाम टाइप करें...",
+            yourAgeLabel: "आपकी उम्र",
+            partnerAgeLabel: "पार्टनर की उम्र",
+            agePlaceholder: "जैसे 22",
+            ageNote: "फॉर्म पूरा करने के लिए उम्र आवश्यक है, लेकिन परिणाम केवल नामों से गणना किया जाता है।",
+            calculate: "संभावनाएं जांचें",
+            calculating: "गणना हो रही है..."
+        },
+        results: {
+            badge: "संभावना परिणाम",
+            title: "ब्रेकअप /",
+            titleAccent: "पैचअप",
+            patchupLabel: "पैचअप की संभावना",
+            breakupLabel: "ब्रेकअप की संभावना",
+            disclaimer: "केवल मनोरंजन के उद्देश्य से",
+            advice: {
+                high: "छोटी समस्याओं को आसानी से ठीक किया जा सकता है। शांति से बात करें।",
+                medium: "मिश्रित चरण। बातचीत भविष्य तय करेगी।",
+                low: "भावनाएं टकरा सकती हैं। जगह दें और अहंकार की लड़ाई से बचें।"
+            }
+        }
+    }
+};

@@ -5,20 +5,25 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "default" | "secondary" | "destructive" | "outline" | "gold" | "brand";
 }
 
+/**
+ * Neutral Intercom badge: white + hairline border with charcoal text.
+ * The destructive variant renders error red (#c41c1c). Live/success
+ * indicators should pair this badge with a #0bdf50 dot.
+ */
 function Badge({ className, variant = "default", ...props }: BadgeProps) {
   const variantStyles = {
-    default: "border-transparent bg-[#ff6b00] text-white shadow-xs hover:bg-[#ff6b00]/90",
-    secondary: "border-transparent bg-slate-100 text-slate-700 hover:bg-slate-200/70",
-    destructive: "border-transparent bg-rose-500 text-white shadow-xs hover:bg-rose-500/80",
-    outline: "text-slate-700 border-slate-200",
-    gold: "border-emerald-200/80 bg-emerald-50 text-emerald-800 shadow-xs",
-    brand: "border-transparent bg-[#301118] text-white shadow-xs",
+    default: "border-[#d3cec6] bg-white text-[#111111]",
+    secondary: "border-[#d3cec6] bg-white text-[#111111] hover:bg-[#f5f1ec]",
+    destructive: "border-[#d3cec6] bg-white text-[#c41c1c]",
+    outline: "text-[#111111] border-[#d3cec6] bg-white",
+    gold: "border-[#d3cec6] bg-white text-[#111111]",
+    brand: "border-[#d3cec6] bg-white text-[#111111]",
   };
 
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+        "inline-flex items-center rounded-md border px-2.5 py-0.5 font-sans text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
         variantStyles[variant],
         className
       )}

@@ -33,66 +33,38 @@ import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 
-const PujaDetailPage = () => {
-  const { id } = useParams();
-  const router = useRouter();
-  const t = useTranslations("PujaTranslations");
+/**
+ * Calculates selected service fee based on active puja mode.
+ */
+function getPujaCost(
+  puja: ExpertPuja,
+  mode: "online" | "home_visit_with" | "home_visit_without" | null,
+): number {
+  if (mode === "online") return puja.online_cost;
+  if (mode === "home_visit_with") return puja.home_visit_with_samagri_cost;
+  if (mode === "home_visit_without") return puja.home_visit_without_samagri_cost;
+  return 0;
+}
 
-  const [puja, setPuja] = useState<ExpertPuja | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedMode, setSelectedMode] = useState<
-    "online" | "home_visit_with" | "home_visit_without" | null
-  >(null);
-  const [scheduledDate, setScheduledDate] = useState("");
-  const [scheduledTime, setScheduledTime] = useState("");
-  const [askExpertForDate, setAskExpertForDate] = useState(false);
-  const [userMessage, setUserMessage] = useState("");
-  const [isBooking, setIsBooking] = useState(false);
+/**
+ * Hook to manage wishlist toggling and sync for a puja.
+ */
+function usePujaWishlist(
+  id: string | undefined,
+  isAuthenticated: boolean,
+  initialLikes: number,
+  t: (key: string) => string,
+) {
   const [liked, setLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
-  const [relatedPujas, setRelatedPujas] = useState<ExpertPuja[]>([]);
-  const [relatedLoading, setRelatedLoading] = useState(true);
-  const { isAuthenticated } = useAuthStore();
+  const [likesCount, setLikesCount] = useState(initialLikes);
 
   useEffect(() => {
-    const fetchPujaDetails = async () => {
-      if (!id) return;
-      setLoading(true);
-      const route = API_ROUTES.EXPERT.GET_PUJA_BY_ID.replace(
-        ":id",
-        id as string,
-      );
-      const [res, error] = await api.get<ExpertPuja>(route);
-      if (error) {
-        router.push("/astrology/online-puja");
-      } else if (res) {
-        setPuja(res);
-        setLikesCount(res.total_likes || 0);
-
-        if (res.is_online) setSelectedMode("online");
-        else if (res.is_home_visit) setSelectedMode("home_visit_without");
-      }
-      setLoading(false);
-    };
-    fetchPujaDetails();
-
-    // Fetch related pujas
-    const fetchRelatedPujas = async () => {
-      setRelatedLoading(true);
-      const [res] = await api.get<ExpertPuja[]>(
-        API_ROUTES.EXPERT.GET_ALL_PUJAS,
-      );
-      if (res && Array.isArray(res)) {
-        setRelatedPujas(res.filter((p) => p.id !== id).slice(0, 5));
-      }
-      setRelatedLoading(false);
-    };
-    fetchRelatedPujas();
-  }, [id, router]);
+    setLikesCount(initialLikes);
+  }, [initialLikes]);
 
   useEffect(() => {
     const fetchUserWishlist = async () => {
-      if (!isAuthenticated) return;
+      if (!isAuthenticated || !id) return;
       const [res] = await api.get<any>("/puja-like");
       if (res) {
         const items = Array.isArray(res)
@@ -108,6 +80,1071 @@ const PujaDetailPage = () => {
     };
     fetchUserWishlist();
   }, [id, isAuthenticated]);
+
+  const handleLikeToggle = async () => {
+    if (!isAuthenticated) {
+      toast.error(t("detail.toastLoginLike"));
+      return;
+    }
+
+    const newLikedState = !liked;
+    setLiked(newLikedState);
+    setLikesCount((prev) => (newLikedState ? prev + 1 : prev - 1));
+
+    if (newLikedState) {
+      const [_, error] = await api.post("/puja-like/add", { pujaId: id });
+      if (error && error.status !== 409) {
+        setLiked(!newLikedState);
+        setLikesCount((prev) => (!newLikedState ? prev + 1 : prev - 1));
+        toast.error(getErrorMessage(error) || "Failed to add to wishlist");
+      }
+    } else {
+      const [_, error] = await api.delete(`/puja-like/remove/${id}`);
+      if (error && error.status !== 404 && error.status !== 400) {
+        setLiked(!newLikedState);
+        setLikesCount((prev) => (!newLikedState ? prev + 1 : prev - 1));
+        toast.error(getErrorMessage(error) || "Failed to remove from wishlist");
+      }
+    }
+  };
+
+  return { liked, likesCount, handleLikeToggle };
+}
+
+/**
+ * Hero banner component showing puja image, return button, like action, and duration tags.
+ */
+function PujaHeroBanner({
+  puja,
+  localizedPujaName,
+  liked,
+  likesCount,
+  onLikeToggle,
+  onReturn,
+  t,
+}: {
+  puja: ExpertPuja;
+  localizedPujaName: string;
+  liked: boolean;
+  likesCount: number;
+  onLikeToggle: () => void;
+  onReturn: () => void;
+  t: (key: string, values?: any) => string;
+}) {
+  const likeBadgeLabel =
+    likesCount > 0 ? likesCount : liked ? "1" : t("detail.like");
+
+  return (
+    <div className="relative rounded-3xl overflow-hidden aspect-video bg-[#1a0b0b]">
+      {puja.puja_image_url ? (
+        <>
+          <Image
+            src={puja.puja_image_url}
+            alt=""
+            fill
+            className="object-cover blur-2xl opacity-60"
+            aria-hidden="true"
+          />
+          <Image
+            src={puja.puja_image_url}
+            alt={localizedPujaName}
+            fill
+            className="object-contain relative z-10 transition-transform duration-500 hover:scale-105"
+          />
+        </>
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
+          <Sparkles className="w-24 h-24 text-orange-500 opacity-20" />
+        </div>
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+      <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+        <button
+          onClick={onReturn}
+          className="flex items-center gap-2 px-4 py-2 bg-[#1A1A1A]/20 backdrop-blur-sm rounded-xl text-white text-sm font-bold border border-white/20 hover:bg-[#1A1A1A]/30 transition-all cursor-pointer"
+        >
+          <ArrowLeft className="w-4 h-4" /> {t("detail.return")}
+        </button>
+        <button
+          onClick={onLikeToggle}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-all cursor-pointer ${liked ? "bg-[#1A1A1A] text-gray-100 border-white" : "bg-[#1A1A1A]/20 backdrop-blur-sm text-white border-white/20 hover:bg-[#1A1A1A]/30"}`}
+        >
+          <Heart
+            className={`w-4 h-4 ${liked ? "fill-red-500 text-red-500" : ""}`}
+          />
+          {likeBadgeLabel}
+        </button>
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+        <h1 className="text-3xl sm:text-4xl font-black text-white mb-3 drop-shadow-xl">
+          {localizedPujaName}
+        </h1>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/10">
+            <Clock className="w-3.5 h-3.5 text-orange-300" />
+            <span className="text-xs font-bold text-white">
+              {t("detail.hoursApprox", {
+                min: puja.min_duration_hours,
+                max: puja.max_duration_hours,
+              })}
+            </span>
+          </div>
+          {puja.is_online && (
+            <span className="px-3 py-1.5 bg-[#FF5500] text-white text-xs font-black rounded-xl">
+              {t("card.online")}
+            </span>
+          )}
+          {puja.is_home_visit && (
+            <span className="px-3 py-1.5 bg-emerald-500 text-white text-xs font-black rounded-xl">
+              {t("card.homeVisit")}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PujaAboutSection({
+  localizedPujaName,
+  description,
+  fallback,
+  label,
+}: {
+  localizedPujaName: string;
+  description?: string | null;
+  fallback: string;
+  label: string;
+}) {
+  return (
+    <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center text-xl">
+          🕉️
+        </div>
+        <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">
+          {label}
+        </h2>
+      </div>
+      <p className="text-slate-500 leading-relaxed text-sm font-medium">
+        {description || fallback}
+      </p>
+    </div>
+  );
+}
+
+function PujaBenefitsSection({
+  title,
+  benefits,
+}: {
+  title: string;
+  benefits: Array<{ icon: string; label: string; sub: string }>;
+}) {
+  return (
+    <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+          <Star className="w-5 h-5 text-[#FF5500]" />
+        </div>
+        <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">
+          {title}
+        </h2>
+      </div>
+      <div className="flex flex-wrap gap-x-8 gap-y-4">
+        {benefits.map((b, i) => (
+          <div key={i} className="flex items-center gap-3 min-w-[140px]">
+            <div className="w-12 h-12 bg-[#FFF0E6] border border-[#F5D5C0] rounded-full flex items-center justify-center text-xl shrink-0">
+              {b.icon}
+            </div>
+            <div>
+              <p className="text-sm font-bold text-[#333] leading-tight">
+                {b.label}
+              </p>
+              <p className="text-xs text-gray-500 leading-tight">{b.sub}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PujaPanditCard({
+  puja,
+  t,
+}: {
+  puja: ExpertPuja;
+  t: (key: string, values?: Record<string, any>) => string;
+}) {
+  const panditName =
+    puja.expert?.user?.name || puja.expert?.name || "Pandit Ji";
+  const panditInitial = (puja.expert?.user?.name || "P").charAt(0);
+  const panditRating = puja.expert?.rating || 0;
+  const panditLanguages = Array.isArray(puja.expert?.languages)
+    ? puja.expert.languages.join(", ")
+    : puja.expert?.languages || "Hindi, Sanskrit";
+  const consultationCountLabel = puja.expert?.consultation_count
+    ? `${puja.expert.consultation_count}+`
+    : "0";
+
+  return (
+    <div className="bg-[#FFFDF9] rounded-3xl p-4 sm:p-6 border border-[#F0E0D0] shadow-sm">
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+          <Users className="w-5 h-5 text-[#FF5500]" />
+        </div>
+        <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">
+          {t("detail.panditHeading")}
+        </h2>
+      </div>
+      <div className="flex flex-col lg:flex-row gap-5 items-start">
+        <div className="flex-1 w-full">
+          <div className="flex gap-3 sm:gap-5 items-start w-full mb-3">
+            <div className="w-24 h-32 sm:w-32 sm:h-40 rounded-2xl overflow-hidden shrink-0 border-2 border-[#F0E0D0] relative">
+              {puja.expert?.user?.avatar ? (
+                <Image
+                  src={puja.expert.user.avatar}
+                  alt="Pandit"
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-[#FFF0E6] flex items-center justify-center text-3xl font-black text-[#FF5500]">
+                  {panditInitial}
+                </div>
+              )}
+            </div>
+            <div className="flex-1">
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <h3 className="text-lg font-black text-[#1A1A1A]">
+                  {panditName}
+                </h3>
+                <span className="px-2 py-0.5 bg-yellow-50 border border-yellow-200 text-yellow-700 text-[10px] font-black rounded-lg uppercase flex items-center gap-1">
+                  <Star className="w-2.5 h-2.5 fill-yellow-500 text-yellow-500" />{" "}
+                  {t("detail.topRated")}
+                </span>
+              </div>
+              <div className="flex items-center gap-1 mb-2">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star
+                    key={s}
+                    className={`w-4 h-4 ${s <= panditRating ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`}
+                  />
+                ))}
+                <span className="text-sm font-bold text-slate-600 ml-1">
+                  {puja.expert?.rating || "0"}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {t("detail.reviews", {
+                    count: puja.expert?.total_reviews || 0,
+                  })}
+                </span>
+              </div>
+              <p className="text-sm font-bold text-[#1A1A1A] mb-1">
+                {t("detail.yrsExp", {
+                  years: puja.expert?.experience_in_years || "0",
+                })}{" "}
+                <span className="text-slate-600 mx-1">|</span>{" "}
+                {t("detail.vedicExpert")}
+              </p>
+            </div>
+          </div>
+          <p className="text-sm text-slate-500 mb-3 leading-relaxed">
+            {formatSpecializationsString(
+              puja.expert?.specializations ||
+                puja.expert?.specialization ||
+                (puja.expert as any)?.expertise,
+              t("detail.specializationFallback"),
+            )}
+          </p>
+          <Link
+            href={`/expert/${puja.expert_id}`}
+            className="inline-flex items-center gap-1 text-[#FF5500] text-[15px] font-black hover:underline"
+          >
+            {t("detail.viewFullProfile")} <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="bg-[#FCF9F7] rounded-3xl p-5 shrink-0 w-full lg:w-auto lg:min-w-[180px] flex flex-row lg:flex-col justify-around lg:justify-start gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 text-[#FF5500] bg-[#FFFDF9] rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">
+              📜
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-slate-500 leading-tight mb-1">
+                {t("detail.pujasPerformed")}
+              </p>
+              <p className="text-sm font-black text-[#1A1A1A] leading-tight">
+                {consultationCountLabel}
+              </p>
+            </div>
+          </div>
+          <div className="w-px h-auto lg:h-px lg:w-full bg-[#F0E0D0]" />
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 text-[#FF5500] bg-[#FFFDF9] rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">
+              🗣️
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-slate-500 leading-tight mb-1">
+                {t("detail.languages")}
+              </p>
+              <p className="text-sm font-black text-[#1A1A1A] leading-tight capitalize">
+                {panditLanguages}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PujaSamagriSection({
+  samagriList,
+  t,
+}: {
+  samagriList: NonNullable<ExpertPuja["samagri_list"]>;
+  t: (key: string, values?: Record<string, any>) => string;
+}) {
+  return (
+    <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+          <Package className="w-5 h-5 text-[#FF5500]" />
+        </div>
+        <div>
+          <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">
+            {t("detail.essentialSamagri")}
+          </h2>
+          <p className="text-xs text-slate-500">
+            {t("detail.providedByPandit")}
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-6">
+        {samagriList.map((item, idx) => (
+          <div
+            key={idx}
+            className="flex items-center gap-4 bg-[#FDF6F0]/50 border border-[#F0E0D0] p-4 rounded-xl transition-colors hover:bg-[#FFF0E6]"
+          >
+            <div className="w-8 h-8 rounded-full bg-[#FFF0E6] text-[#FF5500] font-black text-sm flex items-center justify-center shrink-0 border border-[#FFD9BF]">
+              {idx + 1}
+            </div>
+            <div className="text-left">
+              <p className="text-[15px] font-black text-[#1A1A1A] leading-tight">
+                {item.name}
+              </p>
+              <p className="text-xs text-gray-500 leading-tight mt-0.5">
+                {item.quantity}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-gray-500 mt-3 italic">
+        {t("detail.samagriNote")}
+      </p>
+    </div>
+  );
+}
+
+function PujaDistrictsSection({
+  districts,
+  title,
+}: {
+  districts: string[];
+  title: string;
+}) {
+  return (
+    <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
+          <MapPin className="w-5 h-5 text-green-500" />
+        </div>
+        <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">
+          {title}
+        </h2>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {districts.map((district, idx) => (
+          <span
+            key={idx}
+            className="px-3 py-1.5 bg-[#F5FFF8] border border-green-100 text-green-700 rounded-xl text-xs font-bold"
+          >
+            {district}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PujaTrustBadges({
+  badges,
+}: {
+  badges: Array<{ icon: string; title: string; sub: string }>;
+}) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      {badges.map((b, i) => (
+        <div
+          key={i}
+          className="bg-[#FFFDF9] rounded-2xl p-4 border border-[#F0E0D0] flex items-center gap-4"
+        >
+          <div className="text-4xl shrink-0 text-[#FF5500] opacity-80">
+            {b.icon}
+          </div>
+          <div>
+            <p className="text-[15px] sm:text-base font-black text-[#1A1A1A] leading-tight mb-1">
+              {b.title}
+            </p>
+            <p className="text-sm text-slate-500 leading-tight">{b.sub}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PujaDetailsSection({
+  puja,
+  localizedPujaName,
+  t,
+}: {
+  puja: ExpertPuja;
+  localizedPujaName: string;
+  t: (key: string, values?: Record<string, any>) => string;
+}) {
+  const benefits = [
+    {
+      icon: "🙏",
+      label: t("detail.benefits.peace"),
+      sub: t("detail.benefits.peaceSub"),
+    },
+    {
+      icon: "🌿",
+      label: t("detail.benefits.negative"),
+      sub: t("detail.benefits.negativeSub"),
+    },
+    {
+      icon: "❤️",
+      label: t("detail.benefits.health"),
+      sub: t("detail.benefits.healthSub"),
+    },
+    {
+      icon: "💼",
+      label: t("detail.benefits.career"),
+      sub: t("detail.benefits.careerSub"),
+    },
+    {
+      icon: "⭐",
+      label: t("detail.benefits.spiritual"),
+      sub: t("detail.benefits.spiritualSub"),
+    },
+  ];
+
+  const badges = [
+    {
+      icon: "📜",
+      title: t("detail.trust.vedicTitle"),
+      sub: t("detail.trust.vedicSub"),
+    },
+    {
+      icon: "✅",
+      title: t("detail.trust.panditTitle"),
+      sub: t("detail.trust.panditSub"),
+    },
+    {
+      icon: "🌺",
+      title: t("detail.trust.authenticTitle"),
+      sub: t("detail.trust.authenticSub"),
+    },
+    {
+      icon: "🔒",
+      title: t("detail.trust.secureTitle"),
+      sub: t("detail.trust.secureSub"),
+    },
+  ];
+
+  return (
+    <div className="mt-6 space-y-5">
+      <PujaAboutSection
+        localizedPujaName={localizedPujaName}
+        description={puja.description}
+        fallback={t("detail.aboutFallback")}
+        label={t("detail.about", { name: localizedPujaName })}
+      />
+      <PujaBenefitsSection
+        title={t("detail.keyBenefits")}
+        benefits={benefits}
+      />
+      <PujaPanditCard puja={puja} t={t} />
+      {puja.samagri_list && puja.samagri_list.length > 0 && (
+        <PujaSamagriSection samagriList={puja.samagri_list} t={t} />
+      )}
+      {puja.is_home_visit &&
+        puja.districts &&
+        puja.districts.length > 0 && (
+          <PujaDistrictsSection
+            districts={puja.districts}
+            title={t("detail.availableDistricts")}
+          />
+        )}
+      <PujaTrustBadges badges={badges} />
+    </div>
+  );
+}
+
+function PujaOnlineOption({
+  selected,
+  onSelect,
+  title,
+  subtitle,
+}: {
+  selected: boolean;
+  onSelect: () => void;
+  title: string;
+  subtitle: string;
+}) {
+  const borderClass = selected
+    ? "border-[#FF5500] bg-orange-50"
+    : "border-[#E8D5C0] hover:border-orange-200";
+  const circleClass = selected ? "border-[#FF5500]" : "border-gray-700";
+  const iconClass = selected
+    ? "bg-[#FF5500]/10 text-[#FF5500]"
+    : "bg-white text-slate-500";
+  const textClass = selected ? "text-[#FF5500]" : "text-[#3D1A0B]";
+
+  return (
+    <button
+      onClick={onSelect}
+      className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left cursor-pointer ${borderClass}`}
+    >
+      <div
+        className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${circleClass}`}
+      >
+        {selected && <div className="w-2 h-2 rounded-full bg-[#FF5500]" />}
+      </div>
+      <div
+        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${iconClass}`}
+      >
+        <Video className="w-5 h-5" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className={`text-sm font-black ${textClass}`}>{title}</p>
+        <p className="text-xs text-gray-500 leading-tight">{subtitle}</p>
+      </div>
+    </button>
+  );
+}
+
+function PujaHomeVisitOptions({
+  selectedMode,
+  onSelectWithout,
+  onSelectWith,
+  t,
+}: {
+  selectedMode: "online" | "home_visit_with" | "home_visit_without" | null;
+  onSelectWithout: () => void;
+  onSelectWith: () => void;
+  t: (key: string, values?: Record<string, any>) => string;
+}) {
+  const withoutSelected = selectedMode === "home_visit_without";
+  const withSelected = selectedMode === "home_visit_with";
+
+  const withoutBorder = withoutSelected
+    ? "border-[#FF5500] bg-orange-50"
+    : "border-[#E8D5C0] hover:border-orange-200";
+  const withoutCircle = withoutSelected ? "border-[#FF5500]" : "border-gray-700";
+  const withoutIcon = withoutSelected
+    ? "bg-[#FF5500]/10 text-[#FF5500]"
+    : "bg-white text-slate-500";
+  const withoutText = withoutSelected ? "text-[#FF5500]" : "text-[#3D1A0B]";
+
+  const withBorder = withSelected
+    ? "border-[#FF5500] bg-orange-50"
+    : "border-[#E8D5C0] hover:border-orange-200";
+  const withCircle = withSelected ? "border-[#FF5500]" : "border-gray-700";
+  const withIcon = withSelected
+    ? "bg-[#FF5500]/10 text-[#FF5500]"
+    : "bg-white text-slate-500";
+  const withText = withSelected ? "text-[#FF5500]" : "text-[#3D1A0B]";
+
+  return (
+    <>
+      <button
+        onClick={onSelectWithout}
+        className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left cursor-pointer ${withoutBorder}`}
+      >
+        <div
+          className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${withoutCircle}`}
+        >
+          {withoutSelected && (
+            <div className="w-2 h-2 rounded-full bg-[#FF5500]" />
+          )}
+        </div>
+        <div
+          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${withoutIcon}`}
+        >
+          <MapPin className="w-5 h-5" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className={`text-sm font-black ${withoutText}`}>
+            {t("detail.homeBasicTitle")}
+          </p>
+          <p className="text-xs text-gray-500 leading-tight">
+            {t("detail.homeBasicSub")}
+          </p>
+        </div>
+      </button>
+
+      <button
+        onClick={onSelectWith}
+        className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left cursor-pointer ${withBorder}`}
+      >
+        <div
+          className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${withCircle}`}
+        >
+          {withSelected && (
+            <div className="w-2 h-2 rounded-full bg-[#FF5500]" />
+          )}
+        </div>
+        <div
+          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${withIcon}`}
+        >
+          <Package className="w-5 h-5" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className={`text-sm font-black ${withText}`}>
+            {t("detail.homePremiumTitle")}
+          </p>
+          <p className="text-xs text-gray-500 leading-tight">
+            {t("detail.homePremiumSub")}
+          </p>
+        </div>
+      </button>
+    </>
+  );
+}
+
+function PujaModeSelector({
+  puja,
+  selectedMode,
+  setSelectedMode,
+  t,
+}: {
+  puja: ExpertPuja;
+  selectedMode: "online" | "home_visit_with" | "home_visit_without" | null;
+  setSelectedMode: (
+    mode: "online" | "home_visit_with" | "home_visit_without",
+  ) => void;
+  t: (key: string, values?: Record<string, any>) => string;
+}) {
+  return (
+    <div>
+      <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">
+        {t("detail.step1")}
+      </p>
+      <div className="space-y-2">
+        {puja.is_online && (
+          <PujaOnlineOption
+            selected={selectedMode === "online"}
+            onSelect={() => setSelectedMode("online")}
+            title={t("detail.onlineTitle")}
+            subtitle={t("detail.onlineSub")}
+          />
+        )}
+        {puja.is_home_visit && (
+          <PujaHomeVisitOptions
+            selectedMode={selectedMode}
+            onSelectWithout={() => setSelectedMode("home_visit_without")}
+            onSelectWith={() => setSelectedMode("home_visit_with")}
+            t={t}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PujaBookingSummary({
+  currentCost,
+  selectedMode,
+  isBooking,
+  onBookingRequest,
+  t,
+}: {
+  currentCost: number;
+  selectedMode: "online" | "home_visit_with" | "home_visit_without" | null;
+  isBooking: boolean;
+  onBookingRequest: () => void;
+  t: (key: string, values?: Record<string, any>) => string;
+}) {
+  const isOnlineSelected = selectedMode === "online";
+  const trustItems = [
+    { icon: "🔒", label: t("detail.secureBooking") },
+    { icon: "✅", label: t("detail.verifiedPandits") },
+    { icon: "💯", label: t("detail.authentic") },
+  ];
+
+  return (
+    <div className="border-t border-[#E8D5C0] pt-4">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-base font-black text-slate-600">
+          {t("detail.priceSummary")}
+        </p>
+        <div className="flex items-center gap-1 text-emerald-500 text-xs font-black">
+          <ShieldCheck className="w-3.5 h-3.5" /> {t("detail.securePrice")}
+        </div>
+      </div>
+      <div className="space-y-2 mb-4">
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-500 font-medium">
+            {t("detail.pujaPrice")}{" "}
+            {isOnlineSelected
+              ? t("detail.onlineLabel")
+              : t("detail.homeVisitLabel")}
+          </span>
+          <span className="font-black text-[#1A1A1A]">₹ {currentCost}</span>
+        </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-500 font-medium">{t("detail.taxes")}</span>
+          <span className="font-black text-emerald-500">₹ 0</span>
+        </div>
+        <div className="h-px bg-[#F0E0D0]" />
+        <div className="flex justify-between">
+          <span className="text-base font-black text-[#1A1A1A]">
+            {t("detail.total")}
+          </span>
+          <span className="text-lg font-black text-[#FF5500]">
+            ₹ {currentCost}
+          </span>
+        </div>
+      </div>
+
+      <button
+        onClick={onBookingRequest}
+        disabled={isBooking}
+        className="w-full py-4 bg-[#FF5500] hover:bg-[#E64D00] text-white font-black rounded-2xl flex items-center justify-center gap-2 text-[13px] sm:text-base whitespace-nowrap shadow-lg shadow-orange-200 active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer"
+      >
+        {isBooking ? (
+          <>
+            <Loader2 className="w-5 h-5 animate-spin" />{" "}
+            {t("detail.processing")}
+          </>
+        ) : (
+          <>
+            <Send className="w-4 h-4 sm:w-5 sm:h-5" /> {t("detail.sendReq")}
+          </>
+        )}
+      </button>
+
+      <p className="mt-3 text-xs text-center text-gray-500 flex items-start justify-center gap-1.5">
+        <Info className="w-4 h-4 shrink-0 mt-0.5" />
+        {t("detail.notCharged")}
+      </p>
+
+      <div className="flex items-center justify-around pt-4 border-t border-[#E8D5C0] mt-3">
+        {trustItems.map((b, i) => (
+          <div key={i} className="flex flex-col items-center gap-1.5">
+            <span className="text-2xl">{b.icon}</span>
+            <p className="text-[11px] text-gray-500 font-bold text-center whitespace-pre-line leading-tight">
+              {b.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PujaBookingWidget({
+  puja,
+  selectedMode,
+  setSelectedMode,
+  scheduledDate,
+  setScheduledDate,
+  scheduledTime,
+  setScheduledTime,
+  askExpertForDate,
+  setAskExpertForDate,
+  userMessage,
+  setUserMessage,
+  currentCost,
+  isBooking,
+  onBookingRequest,
+  t,
+}: {
+  puja: ExpertPuja;
+  selectedMode: "online" | "home_visit_with" | "home_visit_without" | null;
+  setSelectedMode: (
+    mode: "online" | "home_visit_with" | "home_visit_without",
+  ) => void;
+  scheduledDate: string;
+  setScheduledDate: (date: string) => void;
+  scheduledTime: string;
+  setScheduledTime: (time: string) => void;
+  askExpertForDate: boolean;
+  setAskExpertForDate: (val: boolean) => void;
+  userMessage: string;
+  setUserMessage: (val: string) => void;
+  currentCost: number;
+  isBooking: boolean;
+  onBookingRequest: () => void;
+  t: (key: string, values?: Record<string, any>) => string;
+}) {
+  return (
+    <div className="bg-[#FFFDF9] rounded-3xl border border-[#F0E0D0] shadow-lg overflow-hidden">
+      <div className="px-6 py-5 border-b border-[#F0E0D0]">
+        <h3 className="text-lg font-black text-[#1A1A1A]">
+          {t("detail.bookTitle")}
+        </h3>
+        <p className="text-gray-500 text-sm font-medium mt-0.5">
+          {t("detail.bookSub")}
+        </p>
+      </div>
+
+      <div className="p-5 space-y-5">
+        <PujaModeSelector
+          puja={puja}
+          selectedMode={selectedMode}
+          setSelectedMode={setSelectedMode}
+          t={t}
+        />
+
+        {/* Date & Time */}
+        <div className="border-t border-[#E8D5C0] pt-4">
+          <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">
+            {t("detail.step2")}
+          </p>
+          <label className="flex items-center gap-2 mb-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={askExpertForDate}
+              onChange={(e) => setAskExpertForDate(e.target.checked)}
+              className="w-4 h-4 accent-[#FF5500]"
+            />
+            <span className="text-sm font-bold text-slate-600">
+              {t("detail.askExpert")}
+            </span>
+            <Info className="w-3.5 h-3.5 text-slate-500" />
+          </label>
+          {!askExpertForDate && (
+            <div className="space-y-2">
+              <p className="text-xs text-gray-500 font-bold uppercase">
+                {t("detail.orChoose")}
+              </p>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder={t("detail.selDate")}
+                  onFocus={(e) => (e.target.type = "date")}
+                  onBlur={(e) => !e.target.value && (e.target.type = "text")}
+                  value={scheduledDate}
+                  onChange={(e) => setScheduledDate(e.target.value)}
+                  min={new Date().toISOString().split("T")[0]}
+                  className="w-full px-4 pr-10 py-3 border border-[#E8D5C0] rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-slate-600"
+                />
+                <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder={t("detail.selTime")}
+                  onFocus={(e) => (e.target.type = "time")}
+                  onBlur={(e) => !e.target.value && (e.target.type = "text")}
+                  value={scheduledTime}
+                  onChange={(e) => setScheduledTime(e.target.value)}
+                  className="w-full px-4 pr-10 py-3 border border-[#E8D5C0] rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-slate-600"
+                />
+                <Clock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Message */}
+        <div className="border-t border-[#E8D5C0] pt-4">
+          <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">
+            {t("detail.step3")}{" "}
+            <span className="text-slate-500 normal-case font-medium">
+              {t("detail.optional")}
+            </span>
+          </p>
+          <textarea
+            placeholder={t("detail.msgPlaceholder")}
+            value={userMessage}
+            onChange={(e) => setUserMessage(e.target.value)}
+            rows={3}
+            maxLength={250}
+            className="w-full p-3 border-2 border-[#E8D5C0] rounded-2xl text-sm focus:border-[#FF5500] outline-none resize-none text-slate-600 placeholder-gray-400"
+          />
+          <p className="text-right text-xs text-slate-500">
+            {userMessage.length}/250
+          </p>
+        </div>
+
+        <PujaBookingSummary
+          currentCost={currentCost}
+          selectedMode={selectedMode}
+          isBooking={isBooking}
+          onBookingRequest={onBookingRequest}
+          t={t}
+        />
+      </div>
+    </div>
+  );
+}
+
+function PujaRelatedSection({
+  relatedLoading,
+  relatedPujas,
+  onPujaClick,
+  t,
+}: {
+  relatedLoading: boolean;
+  relatedPujas: ExpertPuja[];
+  onPujaClick: (id: string) => void;
+  t: (key: string, values?: Record<string, any>) => string;
+}) {
+  return (
+    <div className="max-w-7xl mx-auto px-4 pb-4 mt-8 border-t border-[#F0E0D0] pt-8">
+      <h2 className="text-2xl font-black text-[#1A1A1A] mb-6">
+        {t("detail.youMayAlsoLike")}
+      </h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+        {relatedLoading ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm animate-pulse"
+            >
+              <div className="h-32 bg-gradient-to-br from-[#F5E6D8] to-[#EDD5BD]" />
+              <div className="p-4 space-y-2">
+                <div className="h-3.5 bg-gray-200 rounded-full w-4/5" />
+                <div className="h-3 bg-[#2A2A2A] rounded-full w-2/5" />
+                <div className="h-4 bg-orange-100 rounded-full w-3/5" />
+              </div>
+            </div>
+          ))
+        ) : relatedPujas.length > 0 ? (
+          relatedPujas.map((p) => {
+            const minCost = Math.min(
+              ...[
+                p.online_cost,
+                p.home_visit_without_samagri_cost,
+                p.home_visit_with_samagri_cost,
+              ].filter(Boolean),
+            );
+
+            return (
+              <div
+                key={p.id}
+                onClick={() => onPujaClick(p.id)}
+                className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
+              >
+                <div className="h-32 relative overflow-hidden">
+                  {p.puja_image_url ? (
+                    <Image
+                      src={p.puja_image_url}
+                      alt={p.name || "Puja"}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-[#FFF0E6] to-[#FFD9BF]" />
+                  )}
+                  <div className="absolute top-2 left-2 flex gap-1 flex-wrap">
+                    {p.is_online && (
+                      <span className="bg-[#FF5500] text-white text-[10px] font-black px-2 py-0.5 rounded-md">
+                        {t("card.online")}
+                      </span>
+                    )}
+                    {p.is_home_visit && (
+                      <span className="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md">
+                        {t("card.homeVisit")}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="p-4">
+                  <p className="text-base font-black text-[#1A1A1A] leading-tight mb-2 group-hover:text-[#FF5500] transition-colors">
+                    {p.name}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {t("detail.startingFrom")}
+                  </p>
+                  <p className="text-lg font-black text-[#FF5500]">₹ {minCost}</p>
+                </div>
+              </div>
+            );
+          })
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+const PujaDetailPage = () => {
+  const { id } = useParams();
+  const router = useRouter();
+  const t = useTranslations("PujaTranslations");
+
+  const [puja, setPuja] = useState<ExpertPuja | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedMode, setSelectedMode] = useState<
+    "online" | "home_visit_with" | "home_visit_without" | null
+  >(null);
+  const [scheduledDate, setScheduledDate] = useState("");
+  const [scheduledTime, setScheduledTime] = useState("");
+  const [askExpertForDate, setAskExpertForDate] = useState(false);
+  const [userMessage, setUserMessage] = useState("");
+  const [isBooking, setIsBooking] = useState(false);
+  const [relatedPujas, setRelatedPujas] = useState<ExpertPuja[]>([]);
+  const [relatedLoading, setRelatedLoading] = useState(true);
+  const { isAuthenticated } = useAuthStore();
+
+  const { liked, likesCount, handleLikeToggle } = usePujaWishlist(
+    id as string,
+    isAuthenticated,
+    puja?.total_likes || 0,
+    t,
+  );
+
+  useEffect(() => {
+    const fetchPujaDetails = async () => {
+      if (!id) return;
+      setLoading(true);
+      const route = API_ROUTES.EXPERT.GET_PUJA_BY_ID.replace(
+        ":id",
+        id as string,
+      );
+      const [res, error] = await api.get<ExpertPuja>(route);
+      if (error) {
+        router.push("/astrology/online-puja");
+      } else if (res) {
+        setPuja(res);
+        if (res.is_online) setSelectedMode("online");
+        else if (res.is_home_visit) setSelectedMode("home_visit_without");
+      }
+      setLoading(false);
+    };
+    fetchPujaDetails();
+
+    const fetchRelatedPujas = async () => {
+      setRelatedLoading(true);
+      const [res] = await api.get<ExpertPuja[]>(
+        API_ROUTES.EXPERT.GET_ALL_PUJAS,
+      );
+      if (res && Array.isArray(res)) {
+        setRelatedPujas(res.filter((p) => p.id !== id).slice(0, 5));
+      }
+      setRelatedLoading(false);
+    };
+    fetchRelatedPujas();
+  }, [id, router]);
 
   if (loading) {
     return (
@@ -128,52 +1165,7 @@ const PujaDetailPage = () => {
     localizedPujaName = puja.name;
   }
 
-  const getCurrentCost = () => {
-    if (selectedMode === "online") return puja.online_cost;
-    if (selectedMode === "home_visit_with")
-      return puja.home_visit_with_samagri_cost;
-    if (selectedMode === "home_visit_without")
-      return puja.home_visit_without_samagri_cost;
-    return 0;
-  };
-
-  const handleLikeToggle = async () => {
-    if (!isAuthenticated) {
-      toast.error(t("detail.toastLoginLike"));
-      return;
-    }
-
-    // Optimistic update
-    const newLikedState = !liked;
-    setLiked(newLikedState);
-    setLikesCount((prev) => (newLikedState ? prev + 1 : prev - 1));
-
-    if (newLikedState) {
-      const [_, error] = await api.post("/puja-like/add", {
-        pujaId: id,
-      });
-      if (error) {
-        const status = error.status;
-        if (status !== 409) {
-          setLiked(!newLikedState);
-          setLikesCount((prev) => (!newLikedState ? prev + 1 : prev - 1));
-          toast.error(getErrorMessage(error) || "Failed to add to wishlist");
-        }
-      }
-    } else {
-      const [_, error] = await api.delete(`/puja-like/remove/${id}`);
-      if (error) {
-        const status = error.status;
-        if (status !== 404 && status !== 400) {
-          setLiked(!newLikedState);
-          setLikesCount((prev) => (!newLikedState ? prev + 1 : prev - 1));
-          toast.error(
-            getErrorMessage(error) || "Failed to remove from wishlist",
-          );
-        }
-      }
-    }
-  };
+  const currentCost = getPujaCost(puja, selectedMode);
 
   const handleBookingRequest = async () => {
     if (!isAuthenticated) {
@@ -205,12 +1197,12 @@ const PujaDetailPage = () => {
       scheduled_time: askExpertForDate ? null : scheduledTime,
       ask_expert_for_date: askExpertForDate,
       mode: selectedMode,
-      price: getCurrentCost(),
+      price: currentCost,
       user_message: userMessage,
     })) as any;
-    if (error)
+    if (error) {
       toast.error(getErrorMessage(error) || t("detail.toastRequestFailed"));
-    else {
+    } else {
       toast.success(t("detail.toastRequestSent"));
       setScheduledDate("");
       setScheduledTime("");
@@ -232,7 +1224,10 @@ const PujaDetailPage = () => {
             {t("detail.home")}
           </Link>
           <span className="mx-2 text-gray-300">›</span>
-          <Link href="/astrology/online-puja" className="text-[#FF5500] font-semibold">
+          <Link
+            href="/astrology/online-puja"
+            className="text-[#FF5500] font-semibold"
+          >
             {t("hero.title")}
           </Link>
           <span className="mx-2 text-gray-300">›</span>
@@ -244,730 +1239,52 @@ const PujaDetailPage = () => {
       <div className="max-w-7xl mx-auto px-4 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* LEFT: Hero Image */}
         <div className="lg:col-span-8">
-          <div className="relative rounded-3xl overflow-hidden aspect-video bg-[#1a0b0b]">
-            {puja.puja_image_url ? (
-              <>
-                {/* Blurred background to fill empty sides */}
-                <Image
-                  src={puja.puja_image_url}
-                  alt=""
-                  fill
-                  className="object-cover blur-2xl opacity-60"
-                  aria-hidden="true"
-                />
-                {/* Main image fully visible */}
-                <Image
-                  src={puja.puja_image_url}
-                  alt={localizedPujaName}
-                  fill
-                  className="object-contain relative z-10 transition-transform duration-500 hover:scale-105"
-                />
-              </>
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <Sparkles className="w-24 h-24 text-orange-500 opacity-20" />
-              </div>
-            )}
-            {/* Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-            {/* Top Buttons */}
-            <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-              <button
-                onClick={() => router.back()}
-                className="flex items-center gap-2 px-4 py-2 bg-[#1A1A1A]/20 backdrop-blur-sm rounded-xl text-white text-sm font-bold border border-white/20 hover:bg-[#1A1A1A]/30 transition-all cursor-pointer"
-              >
-                <ArrowLeft className="w-4 h-4" /> {t("detail.return")}
-              </button>
-              <button
-                onClick={handleLikeToggle}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-all cursor-pointer ${liked ? "bg-[#1A1A1A] text-gray-100 border-white" : "bg-[#1A1A1A]/20 backdrop-blur-sm text-white border-white/20 hover:bg-[#1A1A1A]/30"}`}
-              >
-                <Heart
-                  className={`w-4 h-4 ${liked ? "fill-red-500 text-red-500" : ""}`}
-                />
-                {likesCount > 0 ? likesCount : liked ? "1" : t("detail.like")}
-              </button>
-            </div>
-
-            {/* Bottom Content */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
-              <h1 className="text-3xl sm:text-4xl font-black text-white mb-3 drop-shadow-xl">
-                {localizedPujaName}
-              </h1>
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/10">
-                  <Clock className="w-3.5 h-3.5 text-orange-300" />
-                  <span className="text-xs font-bold text-white">
-                    {t("detail.hoursApprox", {
-                      min: puja.min_duration_hours,
-                      max: puja.max_duration_hours,
-                    })}
-                  </span>
-                </div>
-                {puja.is_online && (
-                  <span className="px-3 py-1.5 bg-[#FF5500] text-white text-xs font-black rounded-xl">
-                    {t("card.online")}
-                  </span>
-                )}
-                {puja.is_home_visit && (
-                  <span className="px-3 py-1.5 bg-emerald-500 text-white text-xs font-black rounded-xl">
-                    {t("card.homeVisit")}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* ── BELOW IMAGE: All Content Sections ── */}
-          <div className="mt-6 space-y-5">
-            {/* About */}
-            <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center text-xl">
-                  🕉️
-                </div>
-                <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">
-                  {t("detail.about", { name: localizedPujaName })}
-                </h2>
-              </div>
-              <p className="text-slate-500 leading-relaxed text-sm font-medium">
-                {puja.description || t("detail.aboutFallback")}
-              </p>
-            </div>
-
-            {/* Key Benefits */}
-            <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
-                  <Star className="w-5 h-5 text-[#FF5500]" />
-                </div>
-                <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">
-                  {t("detail.keyBenefits")}
-                </h2>
-              </div>
-              <div className="flex flex-wrap gap-x-8 gap-y-4">
-                {[
-                  {
-                    icon: "🙏",
-                    label: t("detail.benefits.peace"),
-                    sub: t("detail.benefits.peaceSub"),
-                  },
-                  {
-                    icon: "🌿",
-                    label: t("detail.benefits.negative"),
-                    sub: t("detail.benefits.negativeSub"),
-                  },
-                  {
-                    icon: "❤️",
-                    label: t("detail.benefits.health"),
-                    sub: t("detail.benefits.healthSub"),
-                  },
-                  {
-                    icon: "💼",
-                    label: t("detail.benefits.career"),
-                    sub: t("detail.benefits.careerSub"),
-                  },
-                  {
-                    icon: "⭐",
-                    label: t("detail.benefits.spiritual"),
-                    sub: t("detail.benefits.spiritualSub"),
-                  },
-                ].map((b, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-3 min-w-[140px]"
-                  >
-                    <div className="w-12 h-12 bg-[#FFF0E6] border border-[#F5D5C0] rounded-full flex items-center justify-center text-xl shrink-0">
-                      {b.icon}
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-[#333] leading-tight">
-                        {b.label}
-                      </p>
-                      <p className="text-xs text-gray-500 leading-tight">
-                        {b.sub}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Pandit */}
-            <div className="bg-[#FFFDF9] rounded-3xl p-4 sm:p-6 border border-[#F0E0D0] shadow-sm">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
-                  <Users className="w-5 h-5 text-[#FF5500]" />
-                </div>
-                <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">
-                  {t("detail.panditHeading")}
-                </h2>
-              </div>
-              <div className="flex flex-col lg:flex-row gap-5 items-start">
-                <div className="flex-1 w-full">
-                  <div className="flex gap-3 sm:gap-5 items-start w-full mb-3">
-                    <div className="w-24 h-32 sm:w-32 sm:h-40 rounded-2xl overflow-hidden shrink-0 border-2 border-[#F0E0D0] relative">
-                      {puja.expert?.user?.avatar ? (
-                        <Image
-                          src={puja.expert.user.avatar}
-                          alt="Pandit"
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-[#FFF0E6] flex items-center justify-center text-3xl font-black text-[#FF5500]">
-                          {(puja.expert?.user?.name || "P").charAt(0)}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex flex-wrap items-center gap-2 mb-1">
-                        <h3 className="text-lg font-black text-[#1A1A1A]">
-                          {puja.expert?.user?.name ||
-                            puja.expert?.name ||
-                            "Pandit Ji"}
-                        </h3>
-                        <span className="px-2 py-0.5 bg-yellow-50 border border-yellow-200 text-yellow-700 text-[10px] font-black rounded-lg uppercase flex items-center gap-1">
-                          <Star className="w-2.5 h-2.5 fill-yellow-500 text-yellow-500" />{" "}
-                          {t("detail.topRated")}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1 mb-2">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <Star
-                            key={s}
-                            className={`w-4 h-4 ${s <= (puja.expert?.rating || 0) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`}
-                          />
-                        ))}
-                        <span className="text-sm font-bold text-slate-600 ml-1">
-                          {puja.expert?.rating || "0"}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {t("detail.reviews", {
-                            count: puja.expert?.total_reviews || 0,
-                          })}
-                        </span>
-                      </div>
-                      <p className="text-sm font-bold text-[#1A1A1A] mb-1">
-                        {t("detail.yrsExp", {
-                          years: puja.expert?.experience_in_years || "0",
-                        })}{" "}
-                        <span className="text-slate-600 mx-1">|</span>{" "}
-                        {t("detail.vedicExpert")}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-slate-500 mb-3 leading-relaxed">
-                    {formatSpecializationsString(
-                      puja.expert?.specializations ||
-                        puja.expert?.specialization ||
-                        (puja.expert as any)?.expertise,
-                      t("detail.specializationFallback"),
-                    )}
-                  </p>
-                  <Link
-                    href={`/expert/${puja.expert_id}`}
-                    className="inline-flex items-center gap-1 text-[#FF5500] text-[15px] font-black hover:underline"
-                  >
-                    {t("detail.viewFullProfile")}{" "}
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-
-                <div className="bg-[#FCF9F7] rounded-3xl p-5 shrink-0 w-full lg:w-auto lg:min-w-[180px] flex flex-row lg:flex-col justify-around lg:justify-start gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 text-[#FF5500] bg-[#FFFDF9] rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">
-                      📜
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-bold text-slate-500 leading-tight mb-1">
-                        {t("detail.pujasPerformed")}
-                      </p>
-                      <p className="text-sm font-black text-[#1A1A1A] leading-tight">
-                        {puja.expert?.consultation_count
-                          ? `${puja.expert.consultation_count}+`
-                          : "0"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="w-px h-auto lg:h-px lg:w-full bg-[#F0E0D0]" />
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 text-[#FF5500] bg-[#FFFDF9] rounded-[10px] flex items-center justify-center border border-[#FFD9BF] text-sm shrink-0 shadow-sm">
-                      🗣️
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-bold text-slate-500 leading-tight mb-1">
-                        {t("detail.languages")}
-                      </p>
-                      <p className="text-sm font-black text-[#1A1A1A] leading-tight capitalize">
-                        {Array.isArray(puja.expert?.languages)
-                          ? puja.expert.languages.join(", ")
-                          : puja.expert?.languages || "Hindi, Sanskrit"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Samagri */}
-            {puja.samagri_list && puja.samagri_list.length > 0 && (
-              <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
-                    <Package className="w-5 h-5 text-[#FF5500]" />
-                  </div>
-                  <div>
-                    <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">
-                      {t("detail.essentialSamagri")}
-                    </h2>
-                    <p className="text-xs text-slate-500">
-                      {t("detail.providedByPandit")}
-                    </p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-6">
-                  {puja.samagri_list.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-4 bg-[#FDF6F0]/50 border border-[#F0E0D0] p-4 rounded-xl transition-colors hover:bg-[#FFF0E6]"
-                    >
-                      <div className="w-8 h-8 rounded-full bg-[#FFF0E6] text-[#FF5500] font-black text-sm flex items-center justify-center shrink-0 border border-[#FFD9BF]">
-                        {idx + 1}
-                      </div>
-                      <div className="text-left">
-                        <p className="text-[15px] font-black text-[#1A1A1A] leading-tight">
-                          {item.name}
-                        </p>
-                        <p className="text-xs text-gray-500 leading-tight mt-0.5">
-                          {item.quantity}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-xs text-gray-500 mt-3 italic">
-                  {t("detail.samagriNote")}
-                </p>
-              </div>
-            )}
-
-            {/* Districts */}
-            {puja.is_home_visit &&
-              puja.districts &&
-              puja.districts.length > 0 && (
-                <div className="bg-[#FFFDF9] rounded-3xl p-6 border border-[#F0E0D0] shadow-sm">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
-                      <MapPin className="w-5 h-5 text-green-500" />
-                    </div>
-                    <h2 className="text-[15px] sm:text-lg font-black text-[#1A1A1A]">
-                      {t("detail.availableDistricts")}
-                    </h2>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {puja.districts.map((district, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1.5 bg-[#F5FFF8] border border-green-100 text-green-700 rounded-xl text-xs font-bold"
-                      >
-                        {district}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-            {/* Trust Badges */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {[
-                {
-                  icon: "📜",
-                  title: t("detail.trust.vedicTitle"),
-                  sub: t("detail.trust.vedicSub"),
-                },
-                {
-                  icon: "✅",
-                  title: t("detail.trust.panditTitle"),
-                  sub: t("detail.trust.panditSub"),
-                },
-                {
-                  icon: "🌺",
-                  title: t("detail.trust.authenticTitle"),
-                  sub: t("detail.trust.authenticSub"),
-                },
-                {
-                  icon: "🔒",
-                  title: t("detail.trust.secureTitle"),
-                  sub: t("detail.trust.secureSub"),
-                },
-              ].map((b, i) => (
-                <div
-                  key={i}
-                  className="bg-[#FFFDF9] rounded-2xl p-4 border border-[#F0E0D0] flex items-center gap-4"
-                >
-                  <div className="text-4xl shrink-0 text-[#FF5500] opacity-80">
-                    {b.icon}
-                  </div>
-                  <div>
-                    <p className="text-[15px] sm:text-base font-black text-[#1A1A1A] leading-tight mb-1">
-                      {b.title}
-                    </p>
-                    <p className="text-sm text-slate-500 leading-tight">
-                      {b.sub}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <PujaHeroBanner
+            puja={puja}
+            localizedPujaName={localizedPujaName}
+            liked={liked}
+            likesCount={likesCount}
+            onLikeToggle={handleLikeToggle}
+            onReturn={() => router.back()}
+            t={t}
+          />
+          <PujaDetailsSection
+            puja={puja}
+            localizedPujaName={localizedPujaName}
+            t={t}
+          />
         </div>
 
         {/* RIGHT: Sticky Booking Widget */}
         <div className="lg:col-span-4 lg:sticky lg:top-24 h-fit">
-          <div className="bg-[#FFFDF9] rounded-3xl border border-[#F0E0D0] shadow-lg overflow-hidden">
-            {/* Header */}
-            <div className="px-6 py-5 border-b border-[#F0E0D0]">
-              <h3 className="text-lg font-black text-[#1A1A1A]">
-                {t("detail.bookTitle")}
-              </h3>
-              <p className="text-gray-500 text-sm font-medium mt-0.5">
-                {t("detail.bookSub")}
-              </p>
-            </div>
-
-            <div className="p-5 space-y-5">
-              {/* Mode Selection */}
-              <div>
-                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">
-                  {t("detail.step1")}
-                </p>
-                <div className="space-y-2">
-                  {puja.is_online && (
-                    <button
-                      onClick={() => setSelectedMode("online")}
-                      className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left cursor-pointer ${selectedMode === "online" ? "border-[#FF5500] bg-orange-50" : "border-[#E8D5C0] hover:border-orange-200"}`}
-                    >
-                      <div
-                        className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${selectedMode === "online" ? "border-[#FF5500]" : "border-gray-700"}`}
-                      >
-                        {selectedMode === "online" && (
-                          <div className="w-2 h-2 rounded-full bg-[#FF5500]" />
-                        )}
-                      </div>
-                      <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selectedMode === "online" ? "bg-[#FF5500]/10 text-[#FF5500]" : "bg-white text-slate-500"}`}
-                      >
-                        <Video className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p
-                          className={`text-sm font-black ${selectedMode === "online" ? "text-[#FF5500]" : "text-[#3D1A0B]"}`}
-                        >
-                          {t("detail.onlineTitle")}
-                        </p>
-                        <p className="text-xs text-gray-500 leading-tight">
-                          {t("detail.onlineSub")}
-                        </p>
-                      </div>
-                    </button>
-                  )}
-                  {puja.is_home_visit && (
-                    <>
-                      <button
-                        onClick={() => setSelectedMode("home_visit_without")}
-                        className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left cursor-pointer ${selectedMode === "home_visit_without" ? "border-[#FF5500] bg-orange-50" : "border-[#E8D5C0] hover:border-orange-200"}`}
-                      >
-                        <div
-                          className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${selectedMode === "home_visit_without" ? "border-[#FF5500]" : "border-gray-700"}`}
-                        >
-                          {selectedMode === "home_visit_without" && (
-                            <div className="w-2 h-2 rounded-full bg-[#FF5500]" />
-                          )}
-                        </div>
-                        <div
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selectedMode === "home_visit_without" ? "bg-[#FF5500]/10 text-[#FF5500]" : "bg-white text-slate-500"}`}
-                        >
-                          <MapPin className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p
-                            className={`text-sm font-black ${selectedMode === "home_visit_without" ? "text-[#FF5500]" : "text-[#3D1A0B]"}`}
-                          >
-                            {t("detail.homeBasicTitle")}
-                          </p>
-                          <p className="text-xs text-gray-500 leading-tight">
-                            {t("detail.homeBasicSub")}
-                          </p>
-                        </div>
-                      </button>
-                      <button
-                        onClick={() => setSelectedMode("home_visit_with")}
-                        className={`w-full flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all text-left cursor-pointer ${selectedMode === "home_visit_with" ? "border-[#FF5500] bg-orange-50" : "border-[#E8D5C0] hover:border-orange-200"}`}
-                      >
-                        <div
-                          className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${selectedMode === "home_visit_with" ? "border-[#FF5500]" : "border-gray-700"}`}
-                        >
-                          {selectedMode === "home_visit_with" && (
-                            <div className="w-2 h-2 rounded-full bg-[#FF5500]" />
-                          )}
-                        </div>
-                        <div
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${selectedMode === "home_visit_with" ? "bg-[#FF5500]/10 text-[#FF5500]" : "bg-white text-slate-500"}`}
-                        >
-                          <Package className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p
-                            className={`text-sm font-black ${selectedMode === "home_visit_with" ? "text-[#FF5500]" : "text-[#3D1A0B]"}`}
-                          >
-                            {t("detail.homePremiumTitle")}
-                          </p>
-                          <p className="text-xs text-gray-500 leading-tight">
-                            {t("detail.homePremiumSub")}
-                          </p>
-                        </div>
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Date & Time */}
-              <div className="border-t border-[#E8D5C0] pt-4">
-                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">
-                  {t("detail.step2")}
-                </p>
-                <label className="flex items-center gap-2 mb-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={askExpertForDate}
-                    onChange={(e) => setAskExpertForDate(e.target.checked)}
-                    className="w-4 h-4 accent-[#FF5500]"
-                  />
-                  <span className="text-sm font-bold text-slate-600">
-                    {t("detail.askExpert")}
-                  </span>
-                  <Info className="w-3.5 h-3.5 text-slate-500" />
-                </label>
-                {!askExpertForDate && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-gray-500 font-bold uppercase">
-                      {t("detail.orChoose")}
-                    </p>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        placeholder={t("detail.selDate")}
-                        onFocus={(e) => (e.target.type = "date")}
-                        onBlur={(e) =>
-                          !e.target.value && (e.target.type = "text")
-                        }
-                        value={scheduledDate}
-                        onChange={(e) => setScheduledDate(e.target.value)}
-                        min={new Date().toISOString().split("T")[0]}
-                        className="w-full px-4 pr-10 py-3 border border-[#E8D5C0] rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-slate-600"
-                      />
-                      <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
-                    </div>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        placeholder={t("detail.selTime")}
-                        onFocus={(e) => (e.target.type = "time")}
-                        onBlur={(e) =>
-                          !e.target.value && (e.target.type = "text")
-                        }
-                        value={scheduledTime}
-                        onChange={(e) => setScheduledTime(e.target.value)}
-                        className="w-full px-4 pr-10 py-3 border border-[#E8D5C0] rounded-xl text-sm font-medium focus:border-[#FF5500] outline-none transition-all text-slate-600"
-                      />
-                      <Clock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Message */}
-              <div className="border-t border-[#E8D5C0] pt-4">
-                <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">
-                  {t("detail.step3")}{" "}
-                  <span className="text-slate-500 normal-case font-medium">
-                    {t("detail.optional")}
-                  </span>
-                </p>
-                <textarea
-                  placeholder={t("detail.msgPlaceholder")}
-                  value={userMessage}
-                  onChange={(e) => setUserMessage(e.target.value)}
-                  rows={3}
-                  maxLength={250}
-                  className="w-full p-3 border-2 border-[#E8D5C0] rounded-2xl text-sm focus:border-[#FF5500] outline-none resize-none text-slate-600 placeholder-gray-400"
-                />
-                <p className="text-right text-xs text-slate-500">
-                  {userMessage.length}/250
-                </p>
-              </div>
-
-              {/* Price Summary */}
-              <div className="border-t border-[#E8D5C0] pt-4">
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-base font-black text-slate-600">
-                    {t("detail.priceSummary")}
-                  </p>
-                  <div className="flex items-center gap-1 text-emerald-500 text-xs font-black">
-                    <ShieldCheck className="w-3.5 h-3.5" />{" "}
-                    {t("detail.securePrice")}
-                  </div>
-                </div>
-                <div className="space-y-2 mb-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500 font-medium">
-                      {t("detail.pujaPrice")}{" "}
-                      {selectedMode === "online"
-                        ? t("detail.onlineLabel")
-                        : t("detail.homeVisitLabel")}
-                    </span>
-                    <span className="font-black text-[#1A1A1A]">
-                      ₹ {getCurrentCost()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500 font-medium">
-                      {t("detail.taxes")}
-                    </span>
-                    <span className="font-black text-emerald-500">₹ 0</span>
-                  </div>
-                  <div className="h-px bg-[#F0E0D0]" />
-                  <div className="flex justify-between">
-                    <span className="text-base font-black text-[#1A1A1A]">
-                      {t("detail.total")}
-                    </span>
-                    <span className="text-lg font-black text-[#FF5500]">
-                      ₹ {getCurrentCost()}
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleBookingRequest}
-                  disabled={isBooking}
-                  className="w-full py-4 bg-[#FF5500] hover:bg-[#E64D00] text-white font-black rounded-2xl flex items-center justify-center gap-2 text-[13px] sm:text-base whitespace-nowrap shadow-lg shadow-orange-200 active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer"
-                >
-                  {isBooking ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />{" "}
-                      {t("detail.processing")}
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 sm:w-5 sm:h-5" />{" "}
-                      {t("detail.sendReq")}
-                    </>
-                  )}
-                </button>
-
-                <p className="mt-3 text-xs text-center text-gray-500 flex items-start justify-center gap-1.5">
-                  <Info className="w-4 h-4 shrink-0 mt-0.5" />
-                  {t("detail.notCharged")}
-                </p>
-
-                <div className="flex items-center justify-around pt-4 border-t border-[#E8D5C0] mt-3">
-                  {[
-                    { icon: "🔒", label: t("detail.secureBooking") },
-                    { icon: "✅", label: t("detail.verifiedPandits") },
-                    { icon: "💯", label: t("detail.authentic") },
-                  ].map((b, i) => (
-                    <div key={i} className="flex flex-col items-center gap-1.5">
-                      <span className="text-2xl">{b.icon}</span>
-                      <p className="text-[11px] text-gray-500 font-bold text-center whitespace-pre-line leading-tight">
-                        {b.label}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <PujaBookingWidget
+            puja={puja}
+            selectedMode={selectedMode}
+            setSelectedMode={setSelectedMode}
+            scheduledDate={scheduledDate}
+            setScheduledDate={setScheduledDate}
+            scheduledTime={scheduledTime}
+            setScheduledTime={setScheduledTime}
+            askExpertForDate={askExpertForDate}
+            setAskExpertForDate={setAskExpertForDate}
+            userMessage={userMessage}
+            setUserMessage={setUserMessage}
+            currentCost={currentCost}
+            isBooking={isBooking}
+            onBookingRequest={handleBookingRequest}
+            t={t}
+          />
         </div>
       </div>
 
-      {/* You May Also Like (Full Width Bottom) */}
-      <div className="max-w-7xl mx-auto px-4 pb-4 mt-8 border-t border-[#F0E0D0] pt-8">
-        <h2 className="text-2xl font-black text-[#1A1A1A] mb-6">
-          {t("detail.youMayAlsoLike")}
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
-          {relatedLoading
-            ? // Skeleton Loader — 4 dummy cards
-              Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm animate-pulse"
-                >
-                  <div className="h-32 bg-gradient-to-br from-[#F5E6D8] to-[#EDD5BD]" />
-                  <div className="p-4 space-y-2">
-                    <div className="h-3.5 bg-gray-200 rounded-full w-4/5" />
-                    <div className="h-3 bg-[#2A2A2A] rounded-full w-2/5" />
-                    <div className="h-4 bg-orange-100 rounded-full w-3/5" />
-                  </div>
-                </div>
-              ))
-            : relatedPujas.length > 0
-              ? relatedPujas.map((p) => (
-                  <div
-                    key={p.id}
-                    onClick={() => router.push(`/astrology/online-puja/${p.id}`)}
-                    className="bg-[#FFFDF9] rounded-2xl border border-[#F0E0D0] overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
-                  >
-                    <div className="h-32 relative overflow-hidden">
-                      {p.puja_image_url ? (
-                        <Image
-                          src={p.puja_image_url}
-                          alt={p.name || "Puja"}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#FFF0E6] to-[#FFD9BF]" />
-                      )}
-                      <div className="absolute top-2 left-2 flex gap-1 flex-wrap">
-                        {p.is_online && (
-                          <span className="bg-[#FF5500] text-white text-[10px] font-black px-2 py-0.5 rounded-md">
-                            {t("card.online")}
-                          </span>
-                        )}
-                        {p.is_home_visit && (
-                          <span className="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md">
-                            {t("card.homeVisit")}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <p className="text-base font-black text-[#1A1A1A] leading-tight mb-2 group-hover:text-[#FF5500] transition-colors">
-                        {p.name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {t("detail.startingFrom")}
-                      </p>
-                      <p className="text-lg font-black text-[#FF5500]">
-                        ₹{" "}
-                        {Math.min(
-                          ...[
-                            p.online_cost,
-                            p.home_visit_without_samagri_cost,
-                            p.home_visit_with_samagri_cost,
-                          ].filter(Boolean),
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                ))
-              : null}
-        </div>
-      </div>
+      <PujaRelatedSection
+        relatedLoading={relatedLoading}
+        relatedPujas={relatedPujas}
+        onPujaClick={(targetId) =>
+          router.push(`/astrology/online-puja/${targetId}`)
+        }
+        t={t}
+      />
 
       {/* Dynamic SEO Content */}
       <PujaDetailSeoContent pujaName={localizedPujaName} />

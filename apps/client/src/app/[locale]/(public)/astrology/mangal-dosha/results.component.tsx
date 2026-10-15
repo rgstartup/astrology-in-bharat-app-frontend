@@ -31,6 +31,125 @@ const renderContent = (content: any): React.ReactNode => {
   return String(content);
 };
 
+/**
+ * Icon indicating dosha presence status.
+ */
+function DoshaIcon({ hasDosha }: { hasDosha: boolean }) {
+  if (hasDosha) {
+    return <FaMars size={56} className="animate-pulse" />;
+  }
+  return <FaCheckCircle size={56} />;
+}
+
+/**
+ * Visual status gauge indicating Mars dosha intensity and status.
+ */
+function DoshaStatusGauge({
+  hasDosha,
+  type,
+}: {
+  hasDosha: boolean;
+  type?: any;
+}) {
+  const containerCls = hasDosha
+    ? "bg-gray-950 border border-gray-900"
+    : "bg-emerald-500 border border-emerald-400";
+  const iconWrapCls = hasDosha
+    ? "bg-red-600 text-white"
+    : "bg-white text-emerald-600";
+  const title = hasDosha ? "Dosha Detected" : "Pure Chart";
+  const levelText = hasDosha ? "Level: High Intensity" : "Level: Favorable";
+  const levelCls = hasDosha ? "text-red-500" : "text-emerald-100";
+
+  return (
+    <div className="lg:col-span-5">
+      <div
+        className={`h-full rounded-[3rem] p-12 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-2xl transition-all duration-700 ${containerCls}`}
+      >
+        <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-white/5 to-transparent opacity-30"></div>
+
+        <div
+          className={`w-32 h-32 rounded-3xl flex items-center justify-center mb-8 relative z-10 shadow-2xl ${iconWrapCls}`}
+        >
+          <DoshaIcon hasDosha={hasDosha} />
+        </div>
+
+        <div className="relative z-10 space-y-4">
+          <h3 className="text-3xl font-black uppercase tracking-wider text-white">
+            {title}
+          </h3>
+          <p
+            className={`text-[10px] font-black uppercase tracking-[0.4em] ${levelCls}`}
+          >
+            {levelText}
+          </p>
+          {type && (
+            <div className="pt-6">
+              <span className="px-6 py-2 bg-white/5 backdrop-blur-md rounded-xl text-[10px] font-black text-white/50 border border-white/10 uppercase tracking-widest">
+                Variation: {renderContent(type)}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Notice icon for the synopsis advice box.
+ */
+function DoshaNoticeIcon({ hasDosha }: { hasDosha: boolean }) {
+  if (hasDosha) {
+    return <FaExclamationTriangle className="text-red-500 text-2xl shrink-0" />;
+  }
+  return <FaCheckCircle className="text-emerald-500 text-2xl shrink-0" />;
+}
+
+/**
+ * Detailed textual synopsis card with remedial advice.
+ */
+function DoshaSynopsisCard({
+  hasDosha,
+  description,
+}: {
+  hasDosha: boolean;
+  description: any;
+}) {
+  const noticeBoxCls = hasDosha
+    ? "bg-red-50 border-red-100 text-red-900"
+    : "bg-emerald-50 border-emerald-100 text-emerald-900";
+  const adviceText = hasDosha
+    ? "Since Mangal Dosha is present, it is highly recommended to consult with our specialized faculty for Kumbh Vivah or other specific neutralizing rituals before marriage."
+    : "Your chart demonstrates auspicious planetary alignment. Mars remains balanced, ensuring life-long harmony in professional and domestic spheres.";
+
+  return (
+    <div className="lg:col-span-7">
+      <div className="bg-gray-50/50 rounded-[3rem] p-12 md:p-16 border border-gray-100 h-full flex flex-col justify-center">
+        <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
+          <div className="w-1.5 h-1.5 bg-gray-900 rounded-full"></div>
+          Expert Synopsis
+        </h4>
+
+        <div className="space-y-8">
+          <p className="text-xl md:text-2xl font-black text-gray-900 leading-relaxed italic pr-8">
+            &quot;{renderContent(description)}&quot;
+          </p>
+
+          <div
+            className={`p-8 rounded-[2rem] border flex gap-6 items-start transition-all ${noticeBoxCls}`}
+          >
+            <DoshaNoticeIcon hasDosha={hasDosha} />
+            <p className="text-sm font-bold leading-relaxed italic">
+              {adviceText}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const ResultsSection = ({ resultsRef, result }: Props) => {
   return (
     <section
@@ -57,93 +176,14 @@ const ResultsSection = ({ resultsRef, result }: Props) => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch mb-20">
-              {/* Status Gauge Area */}
-              <div className="lg:col-span-5">
-                <div
-                  className={`h-full rounded-[3rem] p-12 flex flex-col items-center justify-center text-center relative overflow-hidden shadow-2xl transition-all duration-700 ${
-                    result.has_dosha
-                      ? "bg-gray-950 border border-gray-900"
-                      : "bg-emerald-500 border border-emerald-400"
-                  }`}
-                >
-                  <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-white/5 to-transparent opacity-30"></div>
-
-                  <div
-                    className={`w-32 h-32 rounded-3xl flex items-center justify-center mb-8 relative z-10 shadow-2xl ${
-                      result.has_dosha
-                        ? "bg-red-600 text-white"
-                        : "bg-white text-emerald-600"
-                    }`}
-                  >
-                    {result.has_dosha ? (
-                      <FaMars size={56} className="animate-pulse" />
-                    ) : (
-                      <FaCheckCircle size={56} />
-                    )}
-                  </div>
-
-                  <div className="relative z-10 space-y-4">
-                    <h3
-                      className={`text-3xl font-black uppercase tracking-wider ${
-                        result.has_dosha ? "text-white" : "text-white"
-                      }`}
-                    >
-                      {result.has_dosha ? "Dosha Detected" : "Pure Chart"}
-                    </h3>
-                    <p
-                      className={`text-[10px] font-black uppercase tracking-[0.4em] ${
-                        result.has_dosha ? "text-red-500" : "text-emerald-100"
-                      }`}
-                    >
-                      {result.has_dosha
-                        ? "Level: High Intensity"
-                        : "Level: Favorable"}
-                    </p>
-                    {result.type && (
-                      <div className="pt-6">
-                        <span className="px-6 py-2 bg-white/5 backdrop-blur-md rounded-xl text-[10px] font-black text-white/50 border border-white/10 uppercase tracking-widest">
-                          Variation: {renderContent(result.type)}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Textual Breakdown */}
-              <div className="lg:col-span-7">
-                <div className="bg-gray-50/50 rounded-[3rem] p-12 md:p-16 border border-gray-100 h-full flex flex-col justify-center">
-                  <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 bg-gray-900 rounded-full"></div>
-                    Expert Synopsis
-                  </h4>
-
-                  <div className="space-y-8">
-                    <p className="text-xl md:text-2xl font-black text-gray-900 leading-relaxed italic pr-8">
-                      &quot;{renderContent(result.description)}&quot;
-                    </p>
-
-                    <div
-                      className={`p-8 rounded-[2rem] border flex gap-6 items-start transition-all ${
-                        result.has_dosha
-                          ? "bg-red-50 border-red-100 text-red-900"
-                          : "bg-emerald-50 border-emerald-100 text-emerald-900"
-                      }`}
-                    >
-                      {result.has_dosha ? (
-                        <FaExclamationTriangle className="text-red-500 text-2xl shrink-0" />
-                      ) : (
-                        <FaCheckCircle className="text-emerald-500 text-2xl shrink-0" />
-                      )}
-                      <p className="text-sm font-bold leading-relaxed italic">
-                        {result.has_dosha
-                          ? "Since Mangal Dosha is present, it is highly recommended to consult with our specialized faculty for Kumbh Vivah or other specific neutralizing rituals before marriage."
-                          : "Your chart demonstrates auspicious planetary alignment. Mars remains balanced, ensuring life-long harmony in professional and domestic spheres."}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <DoshaStatusGauge
+                hasDosha={Boolean(result?.has_dosha)}
+                type={result?.type}
+              />
+              <DoshaSynopsisCard
+                hasDosha={Boolean(result?.has_dosha)}
+                description={result?.description}
+              />
             </div>
 
             {/* Exceptions & Remedies Grid */}

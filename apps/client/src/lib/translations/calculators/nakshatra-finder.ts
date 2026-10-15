@@ -1,0 +1,110 @@
+export const nakshatraFinderTranslations = {
+    en: {
+        hero: {
+            badge: "Approximate Finder",
+            titleMain: "Nakshatra",
+            titleAccent: "Finder",
+            paragraph: "Enter your date of birth and optional birth time to get an approximate Nakshatra prediction with nature insights."
+        },
+        form: {
+            title: "Find Your",
+            titleAccent: "Nakshatra",
+            dobLabel: "Date of Birth (Required)",
+            timeLabel: "Birth Time (Optional)",
+            timeTip: "Adding time can slightly change the seed, but result is still approximate.",
+            calculate: "Find Nakshatra",
+            calculating: "Finding..."
+        },
+        results: {
+            badge: "Your Nakshatra Result",
+            title: "Nakshatra",
+            titleAccent: "Name",
+            label: "Nakshatra #{index} / 27",
+            disclaimer: "Approximate result (DOB-only)",
+            note: "For accurate Nakshatra, Moon position (kundli calculation) is required.",
+            nakshatras: [
+                { name: "Ashwini", nature: "Fast, energetic, healing nature. Quick decision maker with a bold spirit." },
+                { name: "Bharani", nature: "Strong will, intense emotions, and transformation energy. Deep responsibility vibes." },
+                { name: "Krittika", nature: "Sharp, fearless, and goal-focused. Natural leader with a powerful presence." },
+                { name: "Rohini", nature: "Charming, creative, and comfort-loving. Strong attraction and emotional warmth." },
+                { name: "Mrigashira", nature: "Curious, playful, and always searching for meaning. Intelligent and adaptable." },
+                { name: "Ardra", nature: "Intense thinker with strong emotions. Powerful growth after challenges." },
+                { name: "Punarvasu", nature: "Optimistic, pure-hearted, and calm. Brings stability and fresh starts." },
+                { name: "Pushya", nature: "Supportive, disciplined, and nurturing. Strong spiritual and family values." },
+                { name: "Ashlesha", nature: "Mystical, strategic, and emotionally deep. Highly intuitive and protective." },
+                { name: "Magha", nature: "Royal mindset, proud, and traditional. Strong respect for ancestors and legacy." },
+                { name: "Purva Phalguni", nature: "Romantic, fun-loving, and artistic. Loves luxury, creativity, and comfort." },
+                { name: "Uttara Phalguni", nature: "Reliable, loyal, and partnership-focused. Strong responsibility and leadership." },
+                { name: "Hasta", nature: "Skillful, clever, and practical. Great communication and hardworking energy." },
+                { name: "Chitra", nature: "Creative, stylish, and ambitious. Strong desire to build something unique." },
+                { name: "Swati", nature: "Independent, flexible, and freedom-loving. Balanced mindset and diplomatic nature." },
+                { name: "Vishakha", nature: "Goal-driven, determined, and competitive. Strong focus on success and growth." },
+                { name: "Anuradha", nature: "Loyal, friendly, and spiritually aligned. Strong bonding and supportive nature." },
+                { name: "Jyeshtha", nature: "Protective, powerful, and mature. Strong leadership with deep emotions." },
+                { name: "Mula", nature: "Truth seeker, intense, and transformational. Removes negativity and rebuilds stronger." },
+                { name: "Purva Ashadha", nature: "Confident, persuasive, and proud. Strong belief system and unstoppable energy." },
+                { name: "Uttara Ashadha", nature: "Disciplined, responsible, and victory-minded. Strong ethics and leadership." },
+                { name: "Shravana", nature: "Wise listener, calm, and learning-focused. Strong spiritual intelligence." },
+                { name: "Dhanishta", nature: "Ambitious, energetic, and socially active. Strong rhythm, music, and success vibes." },
+                { name: "Shatabhisha", nature: "Mysterious, healing, and independent. Deep thinker with strong intuition." },
+                { name: "Purva Bhadrapada", nature: "Intense, visionary, and spiritual. Powerful transformation and inner strength." },
+                { name: "Uttara Bhadrapada", nature: "Calm, wise, and stable. Strong patience, maturity, and spiritual depth." },
+                { name: "Revati", nature: "Gentle, caring, and protective. Brings emotional peace and guidance energy." }
+            ]
+        }
+    },
+    hi: {
+        hero: {
+            badge: "अनुमानित खोजक",
+            titleMain: "नक्षत्र",
+            titleAccent: "खोजें",
+            paragraph: "स्वभाव की अंतर्दृष्टि के साथ अनुमानित नक्षत्र भविष्यवाणी प्राप्त करने के लिए अपनी जन्मतिथि और वैकल्पिक जन्म समय दर्ज करें।"
+        },
+        form: {
+            title: "अपना",
+            titleAccent: "नक्षत्र खोजें",
+            dobLabel: "जन्मतिथि (आवश्यक)",
+            timeLabel: "जन्म समय (वैकल्पिक)",
+            timeTip: "समय जोड़ने से गणना में थोड़ा बदलाव हो सकता है, लेकिन परिणाम अभी भी अनुमानित ही रहता है।",
+            calculate: "नक्षत्र खोजें",
+            calculating: "खोज जारी है..."
+        },
+        results: {
+            badge: "आपका नक्षत्र परिणाम",
+            title: "नक्षत्र",
+            titleAccent: "का नाम",
+            label: "नक्षत्र #{index} / 27",
+            disclaimer: "अनुमानित परिणाम (केवल जन्मतिथि के आधार पर)",
+            note: "सटीक नक्षत्र के लिए, चंद्रमा की स्थिति (कुंडली गणना) आवश्यक है।",
+            nakshatras: [
+                { name: "अश्विनी", nature: "तेज, ऊर्जावान, उपचार करने वाला स्वभाव। साहसी भावना के साथ त्वरित निर्णय लेने वाला।" },
+                { name: "भरणी", nature: "दृढ़ इच्छाशक्ति, तीव्र भावनाएं और परिवर्तन की ऊर्जा। गहरी जिम्मेदारी की भावना।" },
+                { name: "कृत्तिका", nature: "तीक्ष्ण, निडर और लक्ष्य-केंद्रित। शक्तिशाली उपस्थिति के साथ स्वाभाविक नेता।" },
+                { name: "रोहिणी", nature: "आकर्षक, रचनात्मक और आराम पसंद। मजबूत आकर्षण और भावनात्मक गर्माहट।" },
+                { name: "मृगशिरा", nature: "जिज्ञासु, चंचल और हमेशा अर्थ की तलाश में रहने वाला। बुद्धिमान और अनुकूलनीय।" },
+                { name: "आर्द्रा", nature: "मजबूत भावनाओं वाला तीव्र विचारक। चुनौतियों के बाद शक्तिशाली विकास।" },
+                { name: "पुनर्वसु", nature: "आशावादी, शुद्ध हृदय और शांत। स्थिरता और नई शुरुआत लाता है।" },
+                { name: "पुष्य", nature: "सहायक, अनुशासित और पोषण करने वाला। मजबूत आध्यात्मिक और पारिवारिक मूल्य।" },
+                { name: "आश्लेषा", nature: "रहस्यमय, रणनीतिक और भावनात्मक रूप से गहरा। अत्यधिक सहज और सुरक्षात्मक।" },
+                { name: "मघा", nature: "शाही मानसिकता, गौरवान्वित और पारंपरिक। पूर्वजों और विरासत के प्रति गहरा सम्मान।" },
+                { name: "पूर्वा फाल्गुनी", nature: "रोमांटिक, मौज-मस्ती करने वाला और कलात्मक। विलासिता, रचनात्मकता और आराम से प्यार करता है।" },
+                { name: "उत्तरा फाल्गुनी", nature: "विश्वसनीय, वफादार और साझेदारी पर केंद्रित। मजबूत जिम्मेदारी और नेतृत्व।" },
+                { name: "हस्त", nature: "कुशल, चतुर और व्यावहारिक। महान संचार और कड़ी मेहनत वाली ऊर्जा।" },
+                { name: "चित्रा", nature: "रचनात्मक, स्टाइलिश और महत्वाकांक्षी। कुछ अनोखा बनाने की तीव्र इच्छा।" },
+                { name: "स्वाति", nature: "स्वतंत्र, लचीला और स्वतंत्रता-प्रेमी। संतुलित मानसिकता और कूटनीतिक स्वभाव।" },
+                { name: "विशाखा", nature: "लक्ष्य-संचालित, दृढ़ और प्रतिस्पर्धी। सफलता और विकास पर मजबूत ध्यान।" },
+                { name: "अनुराधा", nature: "वफादार, मिलनसार और आध्यात्मिक रूप से संरेखित। मजबूत बंधन और सहायक स्वभाव।" },
+                { name: "ज्येष्ठा", nature: "सुरक्षात्मक, शक्तिशाली और परिपक्व। गहरी भावनाओं के साथ मजबूत नेतृत्व।" },
+                { name: "मूल", nature: "सत्य खोजी, तीव्र और परिवर्तनकारी। नकारात्मकता को दूर करता है और मजबूत पुनर्निर्माण करता है।" },
+                { name: "पूर्वाषाढ़ा", nature: "आत्मविश्वासी, प्रेरक और गौरवान्वित। मजबूत विश्वास प्रणाली और अजेय ऊर्जा।" },
+                { name: "उत्तराषाढ़ा", nature: "अनुशासित, जिम्मेदार और विजय-उन्मुख। मजबूत नैतिकता और नेतृत्व।" },
+                { name: "श्रवण", nature: "बुद्धिमान श्रोता, शांत और सीखने पर केंद्रित। मजबूत आध्यात्मिक बुद्धिमत्ता।" },
+                { name: "धनिष्ठा", nature: "महत्वाकांक्षी, ऊर्जावान और सामाजिक रूप से सक्रिय। मजबूत लय, संगीत और सफलता की वाइब्स।" },
+                { name: "शतभिषा", nature: "रहस्यमय, उपचार करने वाला और स्वतंत्र। गहरी अंतर्दृष्टि वाला गहरा विचारक।" },
+                { name: "पूर्वाभाद्रपद", nature: "तीव्र, दूरदर्शी और आध्यात्मिक। शक्तिशाली परिवर्तन और आंतरिक शक्ति।" },
+                { name: "उत्तराभाद्रपद", nature: "शांत, बुद्धिमान और स्थिर। मजबूत धैर्य, परिपक्वता और आध्यात्मिक गहराई।" },
+                { name: "रेवती", nature: "कोमल, देखभाल करने वाला और सुरक्षात्मक। भावनात्मक शांति और मार्गदर्शन ऊर्जा लाता है।" }
+            ]
+        }
+    }
+};

@@ -186,7 +186,7 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null) 
         setShowSummary(true);
       } else {
         toast.info("Session has ended. Redirecting...", { autoClose: 2000 });
-        setTimeout(() => router.back(), 2000);
+        setTimeout(() => router.push("/dashboard"), 2000);
       }
     });
 
@@ -231,7 +231,7 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null) 
     if (!endedVerdict) return;
     setSessionStatus("completed");
     toast.info("Session has ended. Redirecting...", { autoClose: 2000 });
-    setTimeout(() => router.back(), 2000);
+    setTimeout(() => router.push("/dashboard"), 2000);
   }, [endedVerdict, router]);
 
   useEffect(() => {

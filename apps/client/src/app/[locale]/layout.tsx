@@ -20,6 +20,7 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import ToastProvider from "@/components/layout/ToastProvider";
 import PlatformReviewModal from "@/components/features/reviews";
 import ChatPrepHost from "@/features/chat-prep/ChatPrepHost";
+import ConsultationTrackerHost from "@/features/active-consultation/consultation-tracker-host.component";
 import QueryProvider from "@/providers/QueryProvider";
 
 export const metadata: Metadata = {
@@ -71,6 +72,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                     </CartInitializer>
                     <PlatformReviewModal />
                     <ChatPrepHost />
+                    <ConsultationTrackerHost />
                   </AuthInitializer>
                 </QueryProvider>
               </NotificationProvider>

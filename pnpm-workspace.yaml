@@ -6,14 +6,17 @@ allowBuilds:
   '@parcel/watcher': true
   '@swc/core': true
   core-js: true
+  core-js-pure: true
   ngrok: true
   sharp: true
   unrs-resolver: true
+  esbuild: true
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@swc/core'
   - core-js
+  - core-js-pure
   - ngrok
   - sharp
   - unrs-resolver

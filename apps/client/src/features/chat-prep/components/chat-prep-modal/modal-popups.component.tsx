@@ -8,25 +8,23 @@ import type { ChatPrepController } from "./types";
 
 type Props = {
   expertName: string;
+  expertAvatar?: string;
   isWaitingForExpert: boolean;
   waitOutcome: ChatPrepController["waitOutcome"];
-  waitLeft: number;
-  waitTotal: number;
   onCancelWaiting: () => void;
   onClearWaiting: () => void;
   showOfflinePopup: boolean;
   onCloseOfflinePopup: () => void;
   existingChatDetails: ChatPrepController["existingChatDetails"];
   onCloseExistingChat: () => void;
-  onGoToExistingChat: (expertId: string) => void;
+  onGoToExistingChat: (consultationId: number, expertId: string) => void;
 };
 
 const ModalPopups = ({
   expertName,
+  expertAvatar,
   isWaitingForExpert,
   waitOutcome,
-  waitLeft,
-  waitTotal,
   onCancelWaiting,
   onClearWaiting,
   showOfflinePopup,
@@ -40,11 +38,11 @@ const ModalPopups = ({
   return (
     <>
       <ChatWaitingModal
-        open={isWaitingForExpert || waitOutcome === "rejected"}
+        open={isWaitingForExpert || waitOutcome === "rejected" || waitOutcome === "timeout"}
         expertName={expertName}
+        expertAvatar={expertAvatar}
         rejected={waitOutcome === "rejected"}
-        secondsLeft={waitLeft}
-        totalSeconds={waitTotal}
+        timedOut={waitOutcome === "timeout"}
         onCancel={onCancelWaiting}
         onClose={onClearWaiting}
       />
@@ -65,7 +63,10 @@ const ModalPopups = ({
         buttonText={t("goToChatBtn")}
         onConfirm={() => {
           if (existingChatDetails) {
-            onGoToExistingChat(existingChatDetails.expertId);
+            onGoToExistingChat(
+              existingChatDetails.consultationId,
+              existingChatDetails.expertId,
+            );
           }
         }}
         icon={<MessageCircle className="w-10 h-10 text-[#FF5500]" />}

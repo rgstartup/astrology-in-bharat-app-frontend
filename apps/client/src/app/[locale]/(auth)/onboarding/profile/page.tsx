@@ -13,6 +13,90 @@ import { Badge } from "@/components/ui/badge";
 import { StepOnePersonalDetails } from "@/features/onboard/components/StepOnePersonalDetails";
 import { OnboardingStepTransition } from "@/features/onboard/components/OnboardingStepTransition";
 
+/**
+ * Resolves initial first name from stored onboarding data or authenticated user.
+ */
+function resolveDefaultFirstName(
+  formDataFirstName?: string,
+  userFirstName?: string,
+  userName?: string
+): string {
+  if (formDataFirstName) return formDataFirstName;
+  if (userFirstName) return userFirstName;
+  if (userName) {
+    const parts = userName.trim().split(" ");
+    return parts[0] || "";
+  }
+  return "";
+}
+
+/**
+ * Resolves initial last name from stored onboarding data or authenticated user.
+ */
+function resolveDefaultLastName(
+  formDataLastName?: string | null,
+  userLastName?: string | null,
+  userName?: string
+): string {
+  if (formDataLastName !== undefined && formDataLastName !== null) {
+    return formDataLastName;
+  }
+  if (userLastName !== undefined && userLastName !== null) {
+    return userLastName;
+  }
+  if (userName) {
+    const parts = userName.trim().split(" ");
+    if (parts.length > 1) {
+      return parts.slice(1).join(" ");
+    }
+  }
+  return "";
+}
+
+/**
+ * Custom hook to sync loaded user profile fields into onboarding form.
+ */
+function useSyncUserToForm(
+  user: ReturnType<typeof useAuth>["user"],
+  form: ReturnType<typeof useForm<OnboardingFormData>>
+) {
+  const { setValue, watch } = form;
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (user.first_name && !watch("first_name")) {
+      setValue("first_name", user.first_name);
+    } else if (user.name && !watch("first_name")) {
+      const parts = user.name.trim().split(" ");
+      setValue("first_name", parts[0] || "");
+    }
+
+    if (
+      user.last_name !== undefined &&
+      user.last_name !== null &&
+      !watch("last_name")
+    ) {
+      setValue("last_name", user.last_name);
+    } else if (user.name && !watch("last_name")) {
+      const parts = user.name.trim().split(" ");
+      if (parts.length > 1) {
+        setValue("last_name", parts.slice(1).join(" "));
+      }
+    }
+
+    if (user.gender && !watch("gender")) {
+      setValue("gender", user.gender);
+    }
+    if (user.avatar && !watch("avatar")) {
+      setValue("avatar", user.avatar, { shouldDirty: true });
+    }
+  }, [user, setValue, watch]);
+}
+
+/**
+ * Onboarding profile step page for personal and birth details.
+ */
 export default function OnboardingProfilePage() {
   const router = useRouter();
   const { user } = useAuth();
@@ -20,19 +104,16 @@ export default function OnboardingProfilePage() {
   const setFormData = useOnboardStore((s) => s.setFormData);
   const setStep = useOnboardStore((s) => s.setStep);
 
-  const defaultFirstName =
-    formData.first_name ||
-    user?.first_name ||
-    (user?.name ? user.name.trim().split(" ")[0] : "") ||
-    "";
-  const defaultLastName =
-    formData.last_name !== undefined && formData.last_name !== null
-      ? formData.last_name
-      : user?.last_name !== undefined && user?.last_name !== null
-        ? user.last_name
-        : user?.name && user.name.trim().split(" ").length > 1
-          ? user.name.trim().split(" ").slice(1).join(" ")
-          : "";
+  const defaultFirstName = resolveDefaultFirstName(
+    formData.first_name,
+    user?.first_name,
+    user?.name
+  );
+  const defaultLastName = resolveDefaultLastName(
+    formData.last_name,
+    user?.last_name,
+    user?.name
+  );
 
   const form = useForm<OnboardingFormData>({
     defaultValues: {
@@ -58,39 +139,8 @@ export default function OnboardingProfilePage() {
     mode: "onBlur",
   });
 
-  const { setValue, watch, trigger, getValues } = form;
-
-  // Sync auth profile into form fields when user loads
-  useEffect(() => {
-    if (user) {
-      if (user.first_name && !watch("first_name")) {
-        setValue("first_name", user.first_name);
-      } else if (user.name && !watch("first_name")) {
-        const parts = user.name.trim().split(" ");
-        setValue("first_name", parts[0] || "");
-      }
-
-      if (
-        user.last_name !== undefined &&
-        user.last_name !== null &&
-        !watch("last_name")
-      ) {
-        setValue("last_name", user.last_name);
-      } else if (user.name && !watch("last_name")) {
-        const parts = user.name.trim().split(" ");
-        if (parts.length > 1) {
-          setValue("last_name", parts.slice(1).join(" "));
-        }
-      }
-
-      if (user.gender && !watch("gender")) {
-        setValue("gender", user.gender);
-      }
-      if (user.avatar && !watch("avatar")) {
-        setValue("avatar", user.avatar, { shouldDirty: true });
-      }
-    }
-  }, [user, setValue, watch]);
+  useSyncUserToForm(user, form);
+  const { trigger, getValues } = form;
 
   const handleNext = async () => {
     const isValid = await trigger(["first_name", "date_of_birth", "gender"]);

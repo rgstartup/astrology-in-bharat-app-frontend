@@ -9,13 +9,11 @@ import {
 import { TbCrystalBall } from "react-icons/tb";
 import { GiLotus, GiSparkles } from "react-icons/gi";
 import { LuckyVibesResultProps } from "@/lib/types/calculator";
-import { useLanguageStore } from "@repo/store";
-import { homeTranslations } from "@/lib/translations/home";
+import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 const LuckyVibesResult: React.FC<LuckyVibesResultProps> = ({ result }) => {
-  const { lang } = useLanguageStore();
-  const translationSet = (homeTranslations[lang as "en" | "hi"] || homeTranslations.en) as any;
-  const t = translationSet.calculators.luckyVibes;
+  const { t: translationSet } = useHomeTranslations();
+  const t = (translationSet as any).calculators.luckyVibes;
 
   return (
     <div className="bg-gradient-to-br from-[#301118] to-[#1a090d] rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden border border-orange-500/20 w-full h-full flex flex-col justify-center">

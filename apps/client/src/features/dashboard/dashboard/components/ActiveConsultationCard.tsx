@@ -4,13 +4,17 @@ import React from "react";
 import { Link } from "@/i18n/navigation";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
-import { MessageSquare, ArrowRight, Radio } from "lucide-react";
+import { MessageSquare, ArrowRight } from "lucide-react";
 import { useDashboardOverview } from "../hooks/useDashboardOverview";
 
 export interface ActiveConsultationCardProps {
   session?: any;
 }
 
+/**
+ * Banner for a live consultation session. Renders nothing when
+ * no session is active; otherwise links back into the chat.
+ */
 export function ActiveConsultationCard({
   session,
 }: ActiveConsultationCardProps = {}) {
@@ -24,34 +28,34 @@ export function ActiveConsultationCard({
   const expertName =
     activeConsultation.expert?.user?.name ||
     activeConsultation.expert_name ||
-    "Astrology Expert";
+    "Astrology expert";
   const sessionUrl = `/chat?session_id=${activeConsultation.id || activeConsultation._id}`;
 
   return (
-    <Card className="mb-6 sm:mb-8 border-2 border-slate-200 bg-white shadow-md animate-in fade-in duration-300">
+    <Card className="mb-6 sm:mb-8 animate-in fade-in duration-300">
       <CardContent className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
           <div className="relative shrink-0">
-            <div className="w-12 h-12 rounded-2xl bg-[#ff6b00] text-white flex items-center justify-center shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#111111] text-white flex items-center justify-center">
               <MessageSquare className="w-6 h-6" />
             </div>
             <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0bdf50] opacity-75" />
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#0bdf50] border-2 border-white" />
             </span>
           </div>
 
           <div>
             <div className="flex items-center gap-2 mb-0.5">
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full">
-                <Radio className="w-3 h-3 text-emerald-600 animate-pulse" />
-                <span>Session in Progress</span>
+              <span className="inline-flex items-center gap-1.5 font-sans text-[11px] font-medium text-[#111111] bg-white px-2 py-0.5 rounded-full border border-[#d3cec6]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0bdf50]" />
+                <span>Session in progress</span>
               </span>
             </div>
-            <h3 className="text-base sm:text-lg font-bold text-slate-900 font-outfit">
-              Active Consultation with {expertName}
+            <h3 className="font-sans text-base sm:text-lg font-medium tracking-tight text-[#111111]">
+              Active consultation with {expertName}
             </h3>
-            <p className="text-xs text-slate-600">
+            <p className="font-sans text-xs text-[#626260]">
               Your consultation is currently active. Rejoin the live chat to continue receiving Vedic guidance.
             </p>
           </div>
@@ -61,9 +65,9 @@ export function ActiveConsultationCard({
           <Button
             variant="default"
             size="lg"
-            className="w-full sm:w-auto font-bold shadow-md shadow-[#ff6b00]/25"
+            className="w-full sm:w-auto"
           >
-            <span>Resume Chat Session</span>
+            <span>Resume chat session</span>
             <ArrowRight className="w-4 h-4 ml-1.5" />
           </Button>
         </Link>

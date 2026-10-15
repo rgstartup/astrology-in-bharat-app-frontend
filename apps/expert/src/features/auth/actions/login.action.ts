@@ -6,6 +6,7 @@ import { ApiError, type Result } from "@repo/safe-fetch";
 import { ValidationError } from "@repo/lib";
 import { setAccessToken, setRefreshToken } from "@/actions/cookie";
 import { API_ROUTES } from "@/utils/api.routes";
+import { captureSetCookies, mirrorSetCookies } from "@/utils/forwarded-cookies";
 import api from "@/actions/api";
 
 import { LoginFormData, LoginSchema } from "../schemas/login.schema";
@@ -22,7 +23,14 @@ export async function loginAction(formData: LoginFormData): Promise<Result<ILogi
     return { ok: false, error: ValidationError.fromZod(safeParseResult.error) };
   }
 
-  const result = await api.post<ILoginResponse>(API_ROUTES.AUTH.LOGIN.EMAIL, safeParseResult.data);
+  let backendSetCookies: string[] = [];
+  const result = await api
+    .extend({
+      onResponse: (_data, res) => {
+        backendSetCookies = captureSetCookies(res.headers);
+      },
+    })
+    .post<ILoginResponse>(API_ROUTES.AUTH.LOGIN.EMAIL, safeParseResult.data);
 
   if (!result.ok) {
     return result;
@@ -40,8 +48,11 @@ export async function loginAction(formData: LoginFormData): Promise<Result<ILogi
 
   const cookieStore = await cookies();
 
-  setAccessToken(cookieStore, data.accessToken);
-  setRefreshToken(cookieStore, data.refreshToken);
+  const mirrored = mirrorSetCookies(cookieStore, backendSetCookies);
+  if (mirrored.length === 0) {
+    setAccessToken(cookieStore, data.accessToken);
+    setRefreshToken(cookieStore, data.refreshToken);
+  }
 
   return result;
 }

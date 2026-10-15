@@ -34,6 +34,8 @@ export interface JoinChatAck {
   maxMinutes?: number;
   /** Countdown anchor (resume anchor or session start), null before start. */
   startedAt?: string | null;
+  /** Consumed seconds at ack time (pre-resume base + anchor drift); absent on older servers. */
+  elapsedSeconds?: number;
 }
 
 export interface SendChatMessageAck {
@@ -80,6 +82,8 @@ export interface ChatDecisionPayload {
 export interface ChatEndedPayload {
   consultationId: number;
   endedBy: string;
+  /** Total billable seconds accumulated in the consultation. */
+  totalDurationSeconds?: number;
   /** Display-only end reason (e.g. `balance_exhausted`); absent on older servers. */
   reason?: string;
   timestamp: string;
@@ -98,6 +102,8 @@ export interface ChatResumedPayload {
   consultationId: number;
   maxMinutes: number;
   startedAt: string;
+  /** Consumed seconds carried forward as the resume base; absent on older servers. */
+  elapsedSeconds?: number;
   timestamp: string;
 }
 
@@ -114,4 +120,6 @@ export interface ChatResumeAck {
   consultationId: number;
   maxMinutes?: number;
   startedAt?: string | null;
+  /** Consumed seconds carried forward as the resume base; absent on older servers. */
+  elapsedSeconds?: number;
 }

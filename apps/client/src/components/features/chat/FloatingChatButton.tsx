@@ -16,6 +16,12 @@ interface FloatingActiveSession {
   expert?: { id?: number; user?: { name?: string } };
 }
 
+/**
+ * @deprecated Superseded by the global `ConsultationTrackerHost`
+ * (`@/features/active-consultation`), mounted in the root locale layout.
+ * This button polled the deprecated `/chat/sessions/active-client` endpoint
+ * and duplicated the tracker. Kept only to avoid breaking unknown imports.
+ */
 const FloatingChatButton: React.FC<{ show: boolean }> = ({ show }) => {
 
   const [activeSession, setActiveSession] = useState<FloatingActiveSession | null>(null);
@@ -158,9 +164,9 @@ const FloatingChatButton: React.FC<{ show: boolean }> = ({ show }) => {
                 activeSession.expert?.id;
               const cId =
                 activeSession.consultationId ?? activeSession.consultation_id;
-              if (eId) {
+              if (eId && cId) {
                 router.push(
-                  `/chat/room/${eId}?sessionId=${activeSession.id}${cId ? `&consultationId=${cId}` : ""}`,
+                  `/consultation/${cId}?sessionId=${activeSession.id}&expertId=${eId}`,
                 );
               } else {
                 console.error(

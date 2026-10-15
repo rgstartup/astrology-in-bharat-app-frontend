@@ -33,8 +33,6 @@ const ChatPrepModal = ({ expertId, open, onOpenChange }: Props) => {
     cancelWaiting,
     waitOutcome,
     clearWaiting,
-    waitTotal,
-    waitLeft,
     askSomeoneElse,
     setAskSomeoneElse,
     someoneElseData,
@@ -113,19 +111,18 @@ const ChatPrepModal = ({ expertId, open, onOpenChange }: Props) => {
 
       <ModalPopups
         expertName={expert?.name || "the expert"}
+        expertAvatar={expert?.avatar || expert?.avatar_url || undefined}
         isWaitingForExpert={isWaitingForExpert}
         waitOutcome={waitOutcome}
-        waitLeft={waitLeft}
-        waitTotal={waitTotal}
         onCancelWaiting={cancelWaiting}
         onClearWaiting={clearWaiting}
         showOfflinePopup={showOfflinePopup}
         onCloseOfflinePopup={() => setShowOfflinePopup(false)}
         existingChatDetails={existingChatDetails}
         onCloseExistingChat={() => setExistingChatDetails(null)}
-        onGoToExistingChat={(id) => {
+        onGoToExistingChat={(consultationId, expertId) => {
           useChatPrepStore.getState().closeChatPrep();
-          router.push(`/chat/room/${id}`);
+          router.push(`/consultation/${consultationId}?expertId=${expertId}`);
         }}
       />
     </>

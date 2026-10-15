@@ -14,21 +14,9 @@ import { ExpertiseOverview } from "./ExpertiseOverview";
 import { DesktopConsultationActions } from "./DesktopConsultationActions";
 import { ProfileTrustFooter } from "./ProfileTrustFooter";
 
-export const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
-  expert,
-  isAvailable,
-  isBusy,
-  onChatClick,
-  onCallClick,
-  onVideoCallClick,
-  onVideoClick,
-}) => {
-  const name = expert.name || "Astrologer";
-  const avatar = getProfileImageUrl(expert.avatar, expert.name);
-
+function computeCardStats(expert: any) {
   const ratingValue = Number(expert.rating ?? expert.ratings ?? 4.9).toFixed(1);
   const totalLikes = expert.total_likes ?? 0;
-
   const currentLikesFormatted =
     totalLikes >= 1000
       ? `${(totalLikes / 1000).toFixed(1).replace(/\.0$/, "")}k`
@@ -43,6 +31,10 @@ export const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
         : "500+";
 
   const expYears = expert.experience_in_years ?? expert.experience ?? 5;
+  return { ratingValue, currentLikesFormatted, consultFormatted, expYears };
+}
+
+function computeCardPricing(expert: any) {
   const defaultPrice = Number(expert.price ?? 0);
 
   const chatPrice =
@@ -69,6 +61,25 @@ export const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
         ? defaultPrice * 2
         : 0);
 
+  return { chatPrice, callPrice, videoCallPrice };
+}
+
+export const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
+  expert,
+  isAvailable,
+  isBusy,
+  onChatClick,
+  onCallClick,
+  onVideoCallClick,
+  onVideoClick,
+}) => {
+  const name = expert.name || "Astrologer";
+  const avatar = getProfileImageUrl(expert.avatar, expert.name);
+
+  const { ratingValue, currentLikesFormatted, consultFormatted, expYears } =
+    computeCardStats(expert);
+  const { chatPrice, callPrice, videoCallPrice } = computeCardPricing(expert);
+
   const languagesList = Array.isArray(expert.languages)
     ? expert.languages.join(", ")
     : expert.languages || expert.language || "Hindi, English";
@@ -88,9 +99,7 @@ export const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
 
   return (
     <div className="w-full flex flex-col lg:flex-row items-stretch gap-5 lg:gap-6">
-      {/* ── Section 1: Left Profile Card (Primary Identity: Avatar, Name, Stats & Mobile CTAs) ── */}
       <div className="w-full lg:w-[320px] xl:w-[340px] shrink-0 overflow-hidden border border-slate-200/60 bg-white rounded-2xl p-4 sm:p-5 flex flex-col justify-between gap-4 shadow-2xs">
-        {/* Top Upper Section: Single Orange Wave Banner + Avatar + Identity + Favorite CTA */}
         <ProfileHeroBanner
           expertId={expert.id}
           name={name}
@@ -102,7 +111,6 @@ export const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
           onVideoClick={onVideoClick}
         />
 
-        {/* Lower Actions Area: Number-First Stats Strip & Mobile Instant CTAs */}
         <div className="flex flex-col gap-3">
           <ProfileStatsStrip
             expYears={expYears}
@@ -121,7 +129,6 @@ export const ExpertProfileCard: React.FC<ExpertProfileCardProps> = ({
         </div>
       </div>
 
-      {/* ── Section 2: Right / Mid Info & Consultation Actions Card ── */}
       <div className="flex-1 min-w-0 overflow-hidden border border-slate-200/60 bg-white rounded-2xl p-5 sm:p-6 lg:p-7 flex flex-col justify-between gap-5 shadow-2xs">
         <ExpertiseOverview
           specializations={specializations}

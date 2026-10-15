@@ -2,10 +2,12 @@ import {
   ProductGroup,
   ProductType,
   ExpertProductRelationType,
-  Expert,
+  IExpert,
   Product,
   ExpertProduct,
 } from "@repo/lib";
+
+export { ProductGroup, ProductType, ExpertProductRelationType } from "@repo/lib";
 
 export type RemedyTabKey =
   | "reports"
@@ -52,7 +54,13 @@ export interface RemedyTabConfig {
 export interface ExpertRemediesSectionProps {
   expertId: string;
   expertName?: string;
-  expert?: Expert;
+  expert?: IExpert;
   initialProducts?: (ExpertProduct | Product | RemedyItem)[];
   initialTab?: RemedyTabKey;
+}
+
+export interface RemedyCardProps {
+  item: RemedyItem;
+  expertName?: string;
+  expertId?: string | number;
 }

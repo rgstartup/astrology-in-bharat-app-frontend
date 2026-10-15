@@ -22,6 +22,14 @@ import { useAuthStore } from "@/store/authStore";
  */
 const STALE_AFTER_MS = 8000;
 
+/**
+ * Dead-man poll: socket.io retries forever, but a wedged manager or an
+ * expired JWT after a long outage never recovers on its own. Re-drive the
+ * connection with a fresh token whenever the socket is found dead. Gated on
+ * `!connected` so a healthy socket costs nothing.
+ */
+const DEAD_MAN_INTERVAL_MS = 30_000;
+
 export function RealtimeProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const userId = useAuthStore((state) => state.user?.id ?? state.user?.public_id);
@@ -113,9 +121,16 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
     if (!socket.connected) scheduleStale();
     connectWithAuth();
 
+    const deadManTimer = setInterval(() => {
+      if (!cancelled && !socket.connected) {
+        connectWithAuth();
+      }
+    }, DEAD_MAN_INTERVAL_MS);
+
     return () => {
       cancelled = true;
       clearStaleTimer();
+      clearInterval(deadManTimer);
       socket.off(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);

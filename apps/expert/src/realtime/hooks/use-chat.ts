@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { realtimeSocket } from "@/realtime/socket";
 import {
   CHAT_EVENTS,
@@ -32,6 +32,9 @@ export const useChat = (consultationId?: number | string | null) => {
     maxMinutes: null,
     startedAt: null,
   });
+  // Terminal latch: ENDED is final. Late PAUSED / RESUMED / RESTORED racing
+  // the end commit must never revive the paused banner post-end.
+  const endedRef = useRef(false);
 
   useEffect(() => {
     if (!isValidId) return;
@@ -51,12 +54,14 @@ export const useChat = (consultationId?: number | string | null) => {
 
     const handleEnded = (payload: ChatEndedPayload) => {
       if (payload && Number(payload.consultationId) === id) {
+        endedRef.current = true;
         setEnded(payload);
         setPaused(null);
       }
     };
 
     const handlePaused = (payload: any) => {
+      if (endedRef.current) return;
       if (payload && Number(payload.consultationId) === id) {
         setPaused({
           ...payload,
@@ -75,6 +80,7 @@ export const useChat = (consultationId?: number | string | null) => {
     };
 
     const handleResumed = (payload: ChatResumedPayload) => {
+      if (endedRef.current) return;
       if (payload && Number(payload.consultationId) === id) {
         setPaused(null);
         setBudget({
@@ -94,6 +100,7 @@ export const useChat = (consultationId?: number | string | null) => {
     };
 
     const handleBudgetRestored = (payload: any) => {
+      if (endedRef.current) return;
       if (payload && Number(payload.consultationId) === id) {
         setPaused(null);
         if (typeof payload.maxMinutes === "number") {
@@ -129,11 +136,8 @@ export const useChat = (consultationId?: number | string | null) => {
 
     socket.on(CHAT_EVENTS.MESSAGE, handleMessage);
     socket.on(CHAT_EVENTS.TYPING, handleTyping);
-    socket.on(CHAT_EVENTS.ENDED, handleEnded);
     socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
-    socket.on(CHAT_EVENTS.PAUSED, handlePaused);
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
-    socket.on(CHAT_EVENTS.RESUMED, handleResumed);
     socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
     socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
     socket.on(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
@@ -142,11 +146,8 @@ export const useChat = (consultationId?: number | string | null) => {
     return () => {
       socket.off(CHAT_EVENTS.MESSAGE, handleMessage);
       socket.off(CHAT_EVENTS.TYPING, handleTyping);
-      socket.off(CHAT_EVENTS.ENDED, handleEnded);
       socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
-      socket.off(CHAT_EVENTS.PAUSED, handlePaused);
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
-      socket.off(CHAT_EVENTS.RESUMED, handleResumed);
       socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
       socket.off(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);

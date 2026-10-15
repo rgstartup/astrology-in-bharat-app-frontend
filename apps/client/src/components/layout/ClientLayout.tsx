@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { Footer } from "@repo/ui";
 import Header from "@/features/header";
-import FloatingChatButton from "../features/chat/FloatingChatButton";
 
 export default function ClientLayout({
   children,
@@ -15,7 +14,6 @@ export default function ClientLayout({
       <main className="flex-1">
         <Suspense>{children}</Suspense>
       </main>
-      <FloatingChatButton show={true} />
       <Footer />
     </div>
   );

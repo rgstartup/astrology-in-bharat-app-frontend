@@ -1,0 +1,62 @@
+export const soulmateInitialsTranslations = {
+    en: {
+        hero: {
+            badge: "Fun Soulmate Prediction",
+            titleMain: "Soulmate",
+            titleAccent: "Initial Finder",
+            paragraph: "Enter your name (and optional DOB) to reveal 3 possible soulmate initials and your lucky meeting month."
+        },
+        form: {
+            title: "Find Your",
+            titleAccent: "Soulmate Initials",
+            nameLabel: "Name (Required)",
+            namePlaceholder: "Type your name...",
+            dobLabel: "DOB (Optional)",
+            calculate: "Find Initials",
+            calculating: "Calculating..."
+        },
+        results: {
+            badge: "Your Prediction",
+            title: "Soulmate",
+            titleAccent: "Initials",
+            possibleInitials: "Possible Initials",
+            message: "Your soulmate initials might be:",
+            luckyMonth: "Lucky meeting month:",
+            disclaimer: "For fun & entertainment only"
+        },
+        months: [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ]
+    },
+    hi: {
+        hero: {
+            badge: "मज़ेदार सोलमेट भविष्यवाणी",
+            titleMain: "सोलमेट",
+            titleAccent: "नाम के अक्षर",
+            paragraph: "अपने सोलमेट के 3 संभावित शुरुआती अक्षर और अपने भाग्यशाली मिलने वाले महीने को जानने के लिए अपना नाम (और वैकल्पिक जन्मतिथि) दर्ज करें।"
+        },
+        form: {
+            title: "अपने",
+            titleAccent: "सोलमेट के अक्षर खोजें",
+            nameLabel: "नाम (आवश्यक)",
+            namePlaceholder: "अपना नाम टाइप करें...",
+            dobLabel: "जन्मतिथि (वैकल्पिक)",
+            calculate: "अक्षर खोजें",
+            calculating: "गणना हो रही है..."
+        },
+        results: {
+            badge: "आपकी भविष्यवाणी",
+            title: "सोलमेट",
+            titleAccent: "के अक्षर",
+            possibleInitials: "संभावित अक्षर",
+            message: "आपके सोलमेट के नाम के शुरुआती अक्षर हो सकते हैं:",
+            luckyMonth: "भाग्यशाली मिलने का महीना:",
+            disclaimer: "केवल मनोरंजन के उद्देश्य से"
+        },
+        months: [
+            "जनवरी", "फरवरी", "मार्च", "अप्रैल", "मई", "जून",
+            "जुलाई", "अगस्त", "सितंबर", "अक्टूबर", "नवंबर", "दिसंबर"
+        ]
+    }
+};

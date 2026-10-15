@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { realtimeSocket } from "@/realtime/socket";
 import {
   CHAT_EVENTS,
@@ -28,6 +28,8 @@ import type {
 export interface ChatBudget {
   maxMinutes: number | null;
   startedAt: string | null;
+  /** Pre-anchor consumed seconds (resume base); null before start or on older servers. */
+  baseSeconds: number | null;
 }
 
 /**
@@ -42,19 +44,42 @@ export const useChat = (consultationId?: number | string | null) => {
   const [ended, setEnded] = useState<ChatEndedPayload | null>(null);
   const [paused, setPaused] = useState<ChatPausedPayload | null>(null);
   const [consultationStatus, setConsultationStatus] = useState<string | null>(null);
-  const [budget, setBudget] = useState<ChatBudget>({ maxMinutes: null, startedAt: null });
+  const [budget, setBudget] = useState<ChatBudget>({ maxMinutes: null, startedAt: null, baseSeconds: null });
+  // A `consultation:paused` racing a completed end must never revive the
+  // recharge dialog — the server now guards this too, this covers in-flight emits.
+  const endedRef = useRef(false);
 
   useEffect(() => {
     if (!isValidId) return;
     const socket = realtimeSocket();
+    /**
+     * Merge a server budget into state. `elapsedSeconds` is the server's live
+     * elapsed (base + anchor drift at send time), so the resume base is
+     * recovered by subtracting local anchor drift at receive time. A fresh
+     * anchor without `elapsedSeconds` (older servers) resets the base.
+     */
     const applyBudget = (ack?: JoinChatAck | ChatResumedPayload | null) => {
       if (!ack) return;
-      setBudget((prev) => ({
-        maxMinutes:
-          typeof ack.maxMinutes === "number" ? ack.maxMinutes : prev.maxMinutes,
-        startedAt:
-          typeof ack.startedAt === "string" ? ack.startedAt : prev.startedAt,
-      }));
+      setBudget((prev) => {
+        const startedAt =
+          typeof ack.startedAt === "string" ? ack.startedAt : prev.startedAt;
+        let baseSeconds = prev.baseSeconds;
+        if (typeof ack.elapsedSeconds === "number" && typeof ack.startedAt === "string") {
+          const anchorMs = new Date(ack.startedAt).getTime();
+          const drift = !isNaN(anchorMs)
+            ? Math.max(0, Math.floor((Date.now() - anchorMs) / 1000))
+            : 0;
+          baseSeconds = Math.max(0, Math.floor(ack.elapsedSeconds - drift));
+        } else if (typeof ack.startedAt === "string") {
+          baseSeconds = 0;
+        }
+        return {
+          maxMinutes:
+            typeof ack.maxMinutes === "number" ? ack.maxMinutes : prev.maxMinutes,
+          startedAt,
+          baseSeconds,
+        };
+      });
     };
 
     const handleMessage = (payload: ChatMessagePayload) => {
@@ -71,12 +96,14 @@ export const useChat = (consultationId?: number | string | null) => {
 
     const handleEnded = (payload: ChatEndedPayload) => {
       if (payload && Number(payload.consultationId) === id) {
+        endedRef.current = true;
         setEnded(payload);
         setPaused(null);
       }
     };
 
     const handlePaused = (payload: any) => {
+      if (endedRef.current) return;
       if (payload && Number(payload.consultationId) === id) {
         setPaused({
           ...payload,
@@ -106,6 +133,7 @@ export const useChat = (consultationId?: number | string | null) => {
         setBudget((prev) => ({
           maxMinutes: typeof payload.maxMinutes === "number" ? payload.maxMinutes : prev.maxMinutes,
           startedAt: prev.startedAt,
+          baseSeconds: prev.baseSeconds,
         }));
       }
     };
@@ -134,11 +162,8 @@ export const useChat = (consultationId?: number | string | null) => {
 
     socket.on(CHAT_EVENTS.MESSAGE, handleMessage);
     socket.on(CHAT_EVENTS.TYPING, handleTyping);
-    socket.on(CHAT_EVENTS.ENDED, handleEnded);
     socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
-    socket.on(CHAT_EVENTS.PAUSED, handlePaused);
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
-    socket.on(CHAT_EVENTS.RESUMED, handleResumed);
     socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
     socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
     socket.on(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
@@ -147,11 +172,8 @@ export const useChat = (consultationId?: number | string | null) => {
     return () => {
       socket.off(CHAT_EVENTS.MESSAGE, handleMessage);
       socket.off(CHAT_EVENTS.TYPING, handleTyping);
-      socket.off(CHAT_EVENTS.ENDED, handleEnded);
       socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
-      socket.off(CHAT_EVENTS.PAUSED, handlePaused);
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
-      socket.off(CHAT_EVENTS.RESUMED, handleResumed);
       socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
       socket.off(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);

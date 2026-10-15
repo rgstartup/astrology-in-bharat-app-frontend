@@ -34,6 +34,15 @@ function MessageScroller({
   )
 }
 
+/**
+ * Scroll viewport for the chat timeline.
+ *
+ * The scrollbar always paints while content overflows. Upstream demo classes
+ * that hide scroll chrome on `data-autoscrolling` (transparent thumb/track)
+ * and `data-pending-scroll` (`invisible`) are intentionally dropped here: the
+ * async history-seed path drives programmatic scrolls that can leave those
+ * flags set, hiding the scrollbar until the next manual scroll.
+ */
 function MessageScrollerViewport({
   className,
   ...props
@@ -42,7 +51,7 @@ function MessageScrollerViewport({
     <MessageScrollerPrimitive.Viewport
       data-slot="message-scroller-viewport"
       className={cn(
-        "size-full min-h-0 min-w-0 scroll-fade-b scrollbar-thin scrollbar-gutter-stable overflow-y-auto overscroll-contain contain-content data-autoscrolling:scrollbar-thumb-transparent data-autoscrolling:scrollbar-track-transparent data-pending-scroll:invisible",
+        "size-full min-h-0 min-w-0 overflow-y-auto overscroll-contain contain-content scrollbar-thin scrollbar-gutter-stable scrollbar-track-transparent scrollbar-thumb-[#d3cec6]",
         className
       )}
       {...props}

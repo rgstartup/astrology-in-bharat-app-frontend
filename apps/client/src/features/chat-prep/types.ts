@@ -1,3 +1,3 @@
-export type ChatVerdict = "accepted" | "rejected" | "expired" | "cancelled";
+export type ChatVerdict = "accepted" | "rejected" | "timeout" | "expired" | "cancelled";
 
-export type WaitOutcome = null | "rejected";
+export type WaitOutcome = null | "rejected" | "timeout";

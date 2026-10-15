@@ -238,3 +238,33 @@ export async function completeRegistrationAction(
 
   return { success: true, user: result.data.user };
 }
+
+// ─────────────────────────────────────────────────────────
+// VERIFY EMAIL — Calls backend email verification endpoint
+// ─────────────────────────────────────────────────────────
+export async function verifyEmailAction(
+  token: string,
+): Promise<AuthActionResponse> {
+  const result = await apiV2.get<AuthResponse>(
+    `/client/auth/email/verify?token=${encodeURIComponent(token)}`,
+  );
+
+  if (!result.ok) {
+    return {
+      error: result.error.message,
+    };
+  }
+
+  const cookieStore = await cookies();
+  const { accessToken, refreshToken, user, message } = result.data;
+
+  if (accessToken) {
+    setAccessToken(cookieStore, accessToken);
+  }
+
+  if (refreshToken) {
+    setRefreshToken(cookieStore, refreshToken);
+  }
+
+  return { success: true, user, message };
+}

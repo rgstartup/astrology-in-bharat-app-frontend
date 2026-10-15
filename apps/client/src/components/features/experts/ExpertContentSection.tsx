@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import Image from "next/image";
 import { Review } from "@/libs/api-experts";
-import type { Expert } from "@repo/lib";
+import type { IExpert as Expert } from "@repo/lib";
 import { renderStars } from "./renderStars";
 import { getYoutubeId } from "@/utils/video-utils";
 import {
@@ -17,13 +17,11 @@ import {
   Layers,
   ShieldCheck,
   Compass,
-  TrendingUp,
   Sparkles,
 } from "lucide-react";
 
 import {
   extractSpecializationNames,
-  getSpecializationBadgeStyle,
   extractProfessionNames,
 } from "@/utils/expert-utils";
 import {
@@ -36,8 +34,6 @@ import { useDraggableScroll } from "@/hooks/useDraggableScroll";
 import { cn } from "@/lib/utils";
 
 interface ExpertContentSectionProps {
-
-
   expert: Expert;
   isAvailable?: boolean;
   activeTab: "about" | "experience" | "reviews" | "gallery" | "videos";
@@ -51,7 +47,6 @@ interface ExpertContentSectionProps {
   onVideoClick: (url: string) => void;
 }
 
-// ─── Skeleton Blocks ─────────────────────────────────────────────────
 const Skeleton = ({ className = "" }: { className?: string }) => (
   <div className={`animate-pulse bg-slate-200 rounded-lg ${className}`} />
 );
@@ -94,7 +89,6 @@ const VideosSkeleton = () => (
   </div>
 );
 
-// ─── Lazy Image Component ─────────────────────────────────────────────
 const LazyGalleryImage = ({
   src,
   index,
@@ -151,7 +145,6 @@ const LazyGalleryImage = ({
   );
 };
 
-// ─── Lazy Video Thumbnail ─────────────────────────────────────────────
 const LazyVideoThumb = ({
   vid,
   index,
@@ -217,7 +210,419 @@ const LazyVideoThumb = ({
   );
 };
 
-// ─── Main Component ───────────────────────────────────────────────────
+function ExpertAboutTab({
+  expert,
+  expertName,
+  specializationNames,
+  professionNames,
+  languagesList,
+  customServicesList,
+}: {
+  expert: Expert;
+  expertName: string;
+  specializationNames: string[];
+  professionNames: string[];
+  languagesList: string[];
+  customServicesList: any[];
+}) {
+  return (
+    <TabsContent value="about" className="outline-none">
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
+            <Compass className="size-5 text-orange" />
+            <span>About {expertName}</span>
+          </h2>
+          <div className="text-slate-600 text-sm leading-relaxed whitespace-pre-line bg-slate-50/80 p-5 rounded-2xl border border-slate-200/70">
+            {expert.about || expert.bio ? (
+              expert.about || expert.bio
+            ) : (
+              <p className="text-slate-400 italic">
+                No detailed description provided yet by this consultant.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {specializationNames.length > 0 && (
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+              <Sparkles className="size-4 text-orange" />
+              <span>Specializations & Areas of Guidance</span>
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {specializationNames.map((name, idx) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-800 bg-gradient-to-r from-[#d9eff4] via-[#e6f6f9] to-[#f4fcfe] border-2 border-white shadow-[0_2px_6px_rgba(15,23,42,0.06)] hover:shadow-sm hover:scale-[1.02] transition-all cursor-default"
+                >
+                  <Sparkles className="size-3.5 text-slate-700 shrink-0" />
+                  <span>{name}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+          {professionNames.length > 0 && (
+            <div className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/70">
+              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
+                <ShieldCheck className="size-4 text-orange" />
+                <span>Verified Professions</span>
+              </h4>
+              <div className="flex flex-wrap gap-1.5">
+                {professionNames.map((prof, pIdx) => (
+                  <span
+                    key={pIdx}
+                    className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-800 text-xs font-medium shadow-2xs"
+                  >
+                    {prof}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {languagesList.length > 0 && (
+            <div className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/70">
+              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
+                <Compass className="size-4 text-orange" />
+                <span>Languages for Consultation</span>
+              </h4>
+              <div className="flex flex-wrap gap-1.5">
+                {languagesList.map((lang, lIdx) => (
+                  <span
+                    key={lIdx}
+                    className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-800 text-xs font-medium shadow-2xs"
+                  >
+                    {lang}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {customServicesList.length > 0 && (
+          <div className="pt-4 border-t border-slate-100">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <Layers className="size-5 text-orange" />
+              <span>Specialized Advisory Consultations</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {customServicesList.map((service, idx) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-2xl bg-white border border-slate-200 flex items-center justify-between shadow-2xs hover:border-orange/40 transition-colors"
+                >
+                  <div>
+                    <h4 className="font-bold text-sm text-slate-900">
+                      {service.name || service.title || "Consultation Service"}
+                    </h4>
+                    <span className="text-xs text-slate-500 font-medium">
+                      {service.unit || service.duration || "per session"}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-base font-extrabold text-emerald-600">
+                      ₹{service.price}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </TabsContent>
+  );
+}
+
+function ExpertExperienceTab({
+  expert,
+  expYears,
+}: {
+  expert: Expert;
+  expYears: any;
+}) {
+  return (
+    <TabsContent value="experience" className="outline-none">
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
+            <Award className="size-5 text-orange" />
+            <span>Astrological Lineage & Background</span>
+          </h2>
+          <div className="text-slate-600 text-sm leading-relaxed whitespace-pre-line bg-slate-50/80 p-5 rounded-2xl border border-slate-200/70">
+            {expert.bio || expert.about ? (
+              expert.bio || expert.about
+            ) : (
+              <p className="text-slate-400 italic">
+                No detailed biography provided yet by this consultant.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {typeof expYears === "number" && expYears > 0 && (
+          <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/60 flex items-center gap-3">
+            <div className="size-10 rounded-xl bg-orange text-white flex items-center justify-center font-extrabold text-sm shrink-0">
+              {expYears}+
+            </div>
+            <div>
+              <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                {expYears} Years of Astrological Practice
+              </h4>
+              <p className="text-xs text-slate-600 mt-0.5">
+                Providing guidance in Vedic predictions, Kundli analysis, and spiritual counseling.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {Array.isArray(expert.detailed_experience) && expert.detailed_experience.length > 0 && (
+          <div className="pt-2">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+              Key Career Milestones
+            </h4>
+            <div className="space-y-3">
+              {expert.detailed_experience.map((exp: any, i: number) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/70"
+                >
+                  <Calendar className="size-4 text-orange shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold text-xs sm:text-sm text-slate-900">
+                      {exp.title || exp.role || `Milestone ${i + 1}`}
+                    </span>
+                    <p className="text-xs text-slate-600 mt-0.5">
+                      {exp.description || exp.details || exp}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </TabsContent>
+  );
+}
+
+function ExpertReviewsTab({
+  reviews,
+  loadingReviews,
+  totalReviews,
+  ratingScore,
+}: {
+  reviews: Review[];
+  loadingReviews: boolean;
+  totalReviews: number;
+  ratingScore: number;
+}) {
+  return (
+    <TabsContent value="reviews" className="outline-none">
+      <div className="space-y-6">
+        <div className="p-5 rounded-2xl bg-slate-50/80 border border-slate-200/70 flex flex-col sm:flex-row items-center gap-6 justify-between">
+          <div className="flex items-center gap-4 text-center sm:text-left">
+            <div className="size-16 rounded-2xl bg-amber-500 text-white flex flex-col items-center justify-center shadow-md">
+              <span className="text-2xl font-black">{ratingScore.toFixed(1)}</span>
+              <div className="flex text-white text-[9px] gap-0.5">
+                <Star className="size-2.5 fill-white" />
+              </div>
+            </div>
+            <div>
+              <h4 className="font-bold text-base text-slate-900">Overall Client Rating</h4>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">
+                Based on verified consultations and feedback
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center sm:text-right">
+            <span className="block text-xl font-extrabold text-slate-900">
+              {totalReviews || reviews.length}
+            </span>
+            <span className="text-xs font-medium text-slate-500">Verified Reviews</span>
+          </div>
+        </div>
+
+        <div className="space-y-3.5 max-h-[440px] overflow-y-auto pr-1" data-lenis-prevent="true">
+          {loadingReviews ? (
+            <ReviewSkeleton />
+          ) : reviews.length > 0 ? (
+            reviews.map((review) => {
+              const dateStr =
+                (review as any).createdAt || (review as any).created_at || (review as any).date;
+              const date = new Date(dateStr);
+              const formattedDate = isNaN(date.getTime())
+                ? "Recently"
+                : date.toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  });
+
+              return (
+                <div
+                  key={review.id}
+                  className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-2xs hover:border-slate-300 transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="relative size-10 rounded-full overflow-hidden border border-slate-200 bg-slate-50 shrink-0">
+                        <Image
+                          src={
+                            review.user?.avatar ||
+                            (review as any).client?.avatar ||
+                            "/images/dummy-expert.jpg"
+                          }
+                          alt={review.user?.name || (review as any).client?.name || "Seeker"}
+                          fill
+                          sizes="40px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <h5 className="font-bold text-sm text-slate-900">
+                            {review.user?.name || (review as any).client?.name || "Seeker"}
+                          </h5>
+                          <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded-sm">
+                            <CheckCircle2 className="size-2.5" />
+                            Verified
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-400 font-medium">{formattedDate}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex text-amber-500 text-xs bg-amber-50 px-2.5 py-1 rounded-full gap-0.5">
+                      {renderStars(review.rating)}
+                    </div>
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed italic border-l-2 border-orange/40 pl-3 py-0.5 font-normal">
+                    "{review.comment}"
+                  </p>
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+              <Star className="size-8 text-slate-300 mx-auto mb-2" />
+              <p className="text-sm text-slate-600 font-medium">
+                No reviews yet for this consultant.
+              </p>
+              <p className="text-xs text-slate-400 mt-1">
+                Be the first to leave a review after your consultation session.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </TabsContent>
+  );
+}
+
+function ExpertGalleryTab({
+  visitedTabs,
+  expert,
+  onImageClick,
+}: {
+  visitedTabs: Set<string>;
+  expert: Expert;
+  onImageClick: (url: string) => void;
+}) {
+  if (!visitedTabs.has("gallery")) {
+    return (
+      <TabsContent value="gallery" className="outline-none">
+        <GallerySkeleton />
+      </TabsContent>
+    );
+  }
+
+  return (
+    <TabsContent value="gallery" className="outline-none">
+      <div
+        className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 max-h-[400px] overflow-y-auto pr-1"
+        data-lenis-prevent="true"
+      >
+        {expert.gallery && expert.gallery.length > 0 ? (
+          expert.gallery.map((img: string, index: number) => (
+            <LazyGalleryImage
+              key={index}
+              src={img}
+              index={index}
+              onClick={() => onImageClick(img)}
+            />
+          ))
+        ) : (
+          <div className="col-span-full text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+            <ImageIcon className="size-8 text-slate-300 mx-auto mb-2" />
+            <p className="text-sm text-slate-600 font-medium">
+              No gallery photos uploaded yet.
+            </p>
+          </div>
+        )}
+      </div>
+    </TabsContent>
+  );
+}
+
+function ExpertVideosTab({
+  visitedTabs,
+  expert,
+  onVideoClick,
+}: {
+  visitedTabs: Set<string>;
+  expert: Expert;
+  onVideoClick: (url: string) => void;
+}) {
+  if (!visitedTabs.has("videos")) {
+    return (
+      <TabsContent value="videos" className="outline-none">
+        <VideosSkeleton />
+      </TabsContent>
+    );
+  }
+
+  return (
+    <TabsContent value="videos" className="outline-none">
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[380px] overflow-y-auto pr-1"
+        data-lenis-prevent="true"
+      >
+        {expert.videos && expert.videos.length > 0 ? (
+          expert.videos.map((vid: string, index: number) => (
+            <LazyVideoThumb
+              key={index}
+              vid={vid}
+              index={index}
+              onClick={() => onVideoClick(vid)}
+            />
+          ))
+        ) : expert.video ? (
+          <LazyVideoThumb
+            vid={expert.video}
+            index={0}
+            onClick={() => onVideoClick(expert.video!)}
+          />
+        ) : (
+          <div className="col-span-full text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+            <VideoIcon className="size-8 text-slate-300 mx-auto mb-2" />
+            <p className="text-sm text-slate-600 font-medium">
+              No video clips uploaded yet.
+            </p>
+          </div>
+        )}
+      </div>
+    </TabsContent>
+  );
+}
+
 const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
   expert,
   activeTab,
@@ -229,18 +634,8 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
   onVideoClick,
 }) => {
   const tabs = [
-    {
-      key: "about" as const,
-      label: "About",
-      shortLabel: "About",
-      icon: User,
-    },
-    {
-      key: "experience" as const,
-      label: "Experience & Bio",
-      shortLabel: "Experience",
-      icon: Award,
-    },
+    { key: "about" as const, label: "About", shortLabel: "About", icon: User },
+    { key: "experience" as const, label: "Experience & Bio", shortLabel: "Experience", icon: Award },
     {
       key: "reviews" as const,
       label: "Client Reviews",
@@ -272,7 +667,6 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
     containerRef: tabsContainerRef,
     canScrollLeft,
     canScrollRight,
-    handleScroll,
     scrollToElement,
     onMouseDown,
     onMouseMove,
@@ -286,20 +680,14 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
 
   const handleTabChange = useCallback(
     (tab: typeof activeTab, tabElement?: HTMLElement | null) => {
-      // Ignore click if it was a drag gesture
       if (wasDragged()) return;
-
       setActiveTab(tab);
       setVisitedTabs((prev) => new Set([...prev, tab]));
-
-      // Smoothly bring active tab into view if partially hidden
       scrollToElement(tabElement);
     },
     [setActiveTab, wasDragged, scrollToElement],
   );
 
-
-  // Parse specializations, professions, languages from API response
   const specializationNames = extractSpecializationNames(
     expert.specializations || expert.specialization,
   );
@@ -313,7 +701,6 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
           .filter(Boolean)
       : [];
 
-  // Parse custom services if string or array
   let customServicesList: any[] = [];
   if (Array.isArray(expert.custom_services)) {
     customServicesList = expert.custom_services;
@@ -325,7 +712,6 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
     }
   }
 
-  // Parse astrology services from API
   if (Array.isArray(expert.astrology_services)) {
     expert.astrology_services.forEach((svc: any) => {
       if (!customServicesList.some((s) => s.name === svc.name)) {
@@ -346,9 +732,6 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
           onValueChange={(val) => handleTabChange(val as any)}
           className="w-full"
         >
-          {/* ─────────────────────────────────────────────────────────────
-              1. DESKTOP VIEW: 5-Pill Unified Segmented Control Track
-              ───────────────────────────────────────────────────────────── */}
           <TabsList className="hidden sm:grid sm:grid-cols-5 gap-1.5 p-1.5 rounded-2xl bg-slate-100/90 border border-slate-200/80 shadow-2xs mb-7 w-full">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.key;
@@ -367,7 +750,6 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
                       : "bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 border-transparent font-medium",
                   )}
                 >
-                  {/* Icon & Label */}
                   <div className="flex items-center gap-2 min-w-0">
                     <div
                       className={cn(
@@ -395,7 +777,6 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
                     </div>
                   </div>
 
-                  {/* Count Badge */}
                   {typeof count === "number" && count > 0 && (
                     <span
                       className={cn(
@@ -413,21 +794,15 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
             })}
           </TabsList>
 
-          {/* ─────────────────────────────────────────────────────────────
-              2. MOBILE VIEW: Horizontally Scrollable Segmented Track with Edge Fade Masks
-              ───────────────────────────────────────────────────────────── */}
           <div className="relative block sm:hidden mb-6">
-            {/* Left Fade Mask */}
             {canScrollLeft && (
               <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-slate-100 via-slate-100/80 to-transparent pointer-events-none z-10 rounded-l-2xl" />
             )}
 
-            {/* Right Fade Mask */}
             {canScrollRight && (
               <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-slate-100 via-slate-100/80 to-transparent pointer-events-none z-10 rounded-r-2xl" />
             )}
 
-            {/* Segmented Track */}
             <TabsList
               ref={tabsContainerRef}
               onMouseDown={onMouseDown}
@@ -485,387 +860,41 @@ const ExpertContentSection: React.FC<ExpertContentSectionProps> = ({
             </TabsList>
           </div>
 
-          {/* Tab Contents */}
           <div className="min-h-[280px]">
-            {/* ── 1. About Tab ── */}
-            <TabsContent value="about" className="outline-none">
-              <div className="space-y-6">
-                {/* Introduction Box */}
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
-                    <Compass className="size-5 text-orange" />
-                    <span>About {expertName}</span>
-                  </h2>
-                  <div className="text-slate-600 text-sm leading-relaxed whitespace-pre-line bg-slate-50/80 p-5 rounded-2xl border border-slate-200/70">
-                    {expert.about || expert.bio ? (
-                      expert.about || expert.bio
-                    ) : (
-                      <p className="text-slate-400 italic">
-                        No detailed description provided yet by this consultant.
-                      </p>
-                    )}
-                  </div>
-                </div>
+            <ExpertAboutTab
+              expert={expert}
+              expertName={expertName}
+              specializationNames={specializationNames}
+              professionNames={professionNames}
+              languagesList={languagesList}
+              customServicesList={customServicesList}
+            />
 
-                {/* Specializations from API */}
-                {specializationNames.length > 0 && (
-                  <div>
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
-                      <Sparkles className="size-4 text-orange" />
-                      <span>Specializations & Areas of Guidance</span>
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {specializationNames.map((name, idx) => (
-                        <span
-                          key={idx}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-800 bg-gradient-to-r from-[#d9eff4] via-[#e6f6f9] to-[#f4fcfe] border-2 border-white shadow-[0_2px_6px_rgba(15,23,42,0.06)] hover:shadow-sm hover:scale-[1.02] transition-all cursor-default"
-                        >
-                          <Sparkles className="size-3.5 text-slate-700 shrink-0" />
-                          <span>{name}</span>
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+            <ExpertExperienceTab expert={expert} expYears={expYears} />
 
-                {/* Real Professions & Languages */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                  {professionNames.length > 0 && (
-                    <div className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/70">
-                      <h4 className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
-                        <ShieldCheck className="size-4 text-orange" />
-                        <span>Verified Professions</span>
-                      </h4>
-                      <div className="flex flex-wrap gap-1.5">
-                        {professionNames.map((prof, pIdx) => (
-                          <span
-                            key={pIdx}
-                            className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-800 text-xs font-medium shadow-2xs"
-                          >
-                            {prof}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+            <ExpertReviewsTab
+              reviews={reviews}
+              loadingReviews={loadingReviews}
+              totalReviews={totalReviews}
+              ratingScore={ratingScore}
+            />
 
-                  {languagesList.length > 0 && (
-                    <div className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/70">
-                      <h4 className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
-                        <Compass className="size-4 text-orange" />
-                        <span>Languages for Consultation</span>
-                      </h4>
-                      <div className="flex flex-wrap gap-1.5">
-                        {languagesList.map((lang, lIdx) => (
-                          <span
-                            key={lIdx}
-                            className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-800 text-xs font-medium shadow-2xs"
-                          >
-                            {lang}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+            <ExpertGalleryTab
+              visitedTabs={visitedTabs}
+              expert={expert}
+              onImageClick={onImageClick}
+            />
 
-                {/* Specialized Advisory Services from API (if present) */}
-                {customServicesList.length > 0 && (
-                  <div className="pt-4 border-t border-slate-100">
-                    <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
-                      <Layers className="size-5 text-orange" />
-                      <span>Specialized Advisory Consultations</span>
-                    </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {customServicesList.map((service, idx) => (
-                        <div
-                          key={idx}
-                          className="p-4 rounded-2xl bg-white border border-slate-200 flex items-center justify-between shadow-2xs hover:border-orange/40 transition-colors"
-                        >
-                          <div>
-                            <h4 className="font-bold text-sm text-slate-900">
-                              {service.name ||
-                                service.title ||
-                                "Consultation Service"}
-                            </h4>
-                            <span className="text-xs text-slate-500 font-medium">
-                              {service.unit || service.duration || "per session"}
-                            </span>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-base font-extrabold text-emerald-600">
-                              ₹{service.price}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-
-            {/* ── 2. Experience & Bio Tab ── */}
-            <TabsContent value="experience" className="outline-none">
-              <div className="space-y-6">
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
-                    <Award className="size-5 text-orange" />
-                    <span>Astrological Lineage & Background</span>
-                  </h2>
-                  <div className="text-slate-600 text-sm leading-relaxed whitespace-pre-line bg-slate-50/80 p-5 rounded-2xl border border-slate-200/70">
-                    {expert.bio || expert.about ? (
-                      expert.bio || expert.about
-                    ) : (
-                      <p className="text-slate-400 italic">
-                        No detailed biography provided yet by this consultant.
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Experience Summary */}
-                {typeof expYears === "number" && expYears > 0 && (
-                  <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200/60 flex items-center gap-3">
-                    <div className="size-10 rounded-xl bg-orange text-white flex items-center justify-center font-extrabold text-sm shrink-0">
-                      {expYears}+
-                    </div>
-                    <div>
-                      <h4 className="text-xs sm:text-sm font-bold text-slate-900">
-                        {expYears} Years of Astrological Practice
-                      </h4>
-                      <p className="text-xs text-slate-600 mt-0.5">
-                        Providing guidance in Vedic predictions, Kundli analysis,
-                        and spiritual counseling.
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Detailed Experience Milestones from API */}
-                {Array.isArray(expert.detailed_experience) &&
-                  expert.detailed_experience.length > 0 && (
-                    <div className="pt-2">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
-                        Key Career Milestones
-                      </h4>
-                      <div className="space-y-3">
-                        {expert.detailed_experience.map((exp: any, i: number) => (
-                          <div
-                            key={i}
-                            className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/70"
-                          >
-                            <Calendar className="size-4 text-orange shrink-0 mt-0.5" />
-                            <div>
-                              <span className="font-bold text-xs sm:text-sm text-slate-900">
-                                {exp.title || exp.role || `Milestone ${i + 1}`}
-                              </span>
-                              <p className="text-xs text-slate-600 mt-0.5">
-                                {exp.description || exp.details || exp}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-              </div>
-            </TabsContent>
-
-            {/* ── 3. Reviews Tab ── */}
-            <TabsContent value="reviews" className="outline-none">
-              <div className="space-y-6">
-                {/* Rating Summary Header */}
-                <div className="p-5 rounded-2xl bg-slate-50/80 border border-slate-200/70 flex flex-col sm:flex-row items-center gap-6 justify-between">
-                  <div className="flex items-center gap-4 text-center sm:text-left">
-                    <div className="size-16 rounded-2xl bg-amber-500 text-white flex flex-col items-center justify-center shadow-md">
-                      <span className="text-2xl font-black">
-                        {ratingScore.toFixed(1)}
-                      </span>
-                      <div className="flex text-white text-[9px] gap-0.5">
-                        <Star className="size-2.5 fill-white" />
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-base text-slate-900">
-                        Overall Client Rating
-                      </h4>
-                      <p className="text-xs text-slate-500 font-medium mt-0.5">
-                        Based on verified consultations and feedback
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="text-center sm:text-right">
-                    <span className="block text-xl font-extrabold text-slate-900">
-                      {totalReviews || reviews.length}
-                    </span>
-                    <span className="text-xs font-medium text-slate-500">
-                      Verified Reviews
-                    </span>
-                  </div>
-                </div>
-
-                {/* Reviews List */}
-                <div
-                  className="space-y-3.5 max-h-[440px] overflow-y-auto pr-1"
-                  data-lenis-prevent="true"
-                >
-                  {loadingReviews ? (
-                    <ReviewSkeleton />
-                  ) : reviews.length > 0 ? (
-                    reviews.map((review) => (
-                      <div
-                        key={review.id}
-                        className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-2xs hover:border-slate-300 transition-colors"
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className="relative size-10 rounded-full overflow-hidden border border-slate-200 bg-slate-50 shrink-0">
-                              <Image
-                                src={
-                                  review.user?.avatar ||
-                                  (review as any).client?.avatar ||
-                                  "/images/dummy-expert.jpg"
-                                }
-                                alt={
-                                  review.user?.name ||
-                                  (review as any).client?.name ||
-                                  "Seeker"
-                                }
-                                fill
-                                sizes="40px"
-                                className="object-cover"
-                              />
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-1.5">
-                                <h5 className="font-bold text-sm text-slate-900">
-                                  {review.user?.name ||
-                                    (review as any).client?.name ||
-                                    "Seeker"}
-                                </h5>
-                                <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded-sm">
-                                  <CheckCircle2 className="size-2.5" />
-                                  Verified
-                                </span>
-                              </div>
-                              <p className="text-[11px] text-slate-400 font-medium">
-                                {(() => {
-                                  const dateStr =
-                                    (review as any).createdAt ||
-                                    (review as any).created_at ||
-                                    (review as any).date;
-                                  const date = new Date(dateStr);
-                                  return isNaN(date.getTime())
-                                    ? "Recently"
-                                    : date.toLocaleDateString("en-IN", {
-                                        day: "numeric",
-                                        month: "short",
-                                        year: "numeric",
-                                      });
-                                })()}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="flex text-amber-500 text-xs bg-amber-50 px-2.5 py-1 rounded-full gap-0.5">
-                            {renderStars(review.rating)}
-                          </div>
-                        </div>
-
-                        <p className="text-xs sm:text-sm text-slate-700 leading-relaxed italic border-l-2 border-orange/40 pl-3 py-0.5 font-normal">
-                          "{review.comment}"
-                        </p>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                      <Star className="size-8 text-slate-300 mx-auto mb-2" />
-                      <p className="text-sm text-slate-600 font-medium">
-                        No reviews yet for this consultant.
-                      </p>
-                      <p className="text-xs text-slate-400 mt-1">
-                        Be the first to leave a review after your consultation
-                        session.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </TabsContent>
-
-          {/* ── 4. Gallery Tab ── */}
-          <TabsContent value="gallery" className="outline-none">
-            {!visitedTabs.has("gallery") ? (
-              <GallerySkeleton />
-            ) : (
-              <div
-                className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 max-h-[400px] overflow-y-auto pr-1"
-                data-lenis-prevent="true"
-              >
-                {expert.gallery && expert.gallery.length > 0 ? (
-                  expert.gallery.map((img: string, index: number) => (
-                    <LazyGalleryImage
-                      key={index}
-                      src={img}
-                      index={index}
-                      onClick={() => onImageClick(img)}
-                    />
-                  ))
-                ) : (
-                  <div className="col-span-full text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                    <ImageIcon className="size-8 text-slate-300 mx-auto mb-2" />
-                    <p className="text-sm text-slate-600 font-medium">
-                      No gallery photos uploaded yet.
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* ── 5. Videos Tab ── */}
-          <TabsContent value="videos" className="outline-none">
-            {!visitedTabs.has("videos") ? (
-              <VideosSkeleton />
-            ) : (
-              <div
-                className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[380px] overflow-y-auto pr-1"
-                data-lenis-prevent="true"
-              >
-                {expert.videos && expert.videos.length > 0 ? (
-                  expert.videos.map((vid: string, index: number) => (
-                    <LazyVideoThumb
-                      key={index}
-                      vid={vid}
-                      index={index}
-                      onClick={() => onVideoClick(vid)}
-                    />
-                  ))
-                ) : expert.video ? (
-                  <LazyVideoThumb
-                    vid={expert.video}
-                    index={0}
-                    onClick={() => onVideoClick(expert.video!)}
-                  />
-                ) : (
-                  <div className="col-span-full text-center py-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                    <VideoIcon className="size-8 text-slate-300 mx-auto mb-2" />
-                    <p className="text-sm text-slate-600 font-medium">
-                      No video clips uploaded yet.
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-          </TabsContent>
-        </div>
-      </Tabs>
+            <ExpertVideosTab
+              visitedTabs={visitedTabs}
+              expert={expert}
+              onVideoClick={onVideoClick}
+            />
+          </div>
+        </Tabs>
+      </div>
     </div>
-  </div>
   );
 };
 
 export default ExpertContentSection;
-

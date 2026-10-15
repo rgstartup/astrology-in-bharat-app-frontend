@@ -7,6 +7,10 @@ import { Button } from "./ui/button";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { PERSONALIZED_RECOMMENDATIONS } from "../data/recommendations.data";
 
+/**
+ * Curated insight tiles matched to the user's astrology profile
+ * and planetary alignment.
+ */
 export function PersonalizedRecs() {
   const recommendations = PERSONALIZED_RECOMMENDATIONS;
 
@@ -14,15 +18,15 @@ export function PersonalizedRecs() {
     <div className="mb-8">
       <div className="mb-4">
         <div className="flex items-center gap-1.5 mb-1">
-          <Sparkles className="w-3.5 h-3.5 text-[#ff6b00]" />
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff6b00] font-outfit">
-            Curated Insights
+          <Sparkles className="w-3.5 h-3.5 text-[#111111]" />
+          <span className="font-sans text-[10px] font-medium tracking-wide text-[#7b7b78]">
+            Curated insights
           </span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-bold text-[#301118] font-outfit">
-          Recommended For You
+        <h2 className="font-sans text-xl sm:text-2xl font-medium tracking-tight text-[#111111]">
+          Recommended for you
         </h2>
-        <p className="text-xs sm:text-sm text-slate-500 font-medium">
+        <p className="font-sans text-xs sm:text-sm text-[#626260]">
           Based on your astrology profile and planetary alignment
         </p>
       </div>
@@ -33,24 +37,24 @@ export function PersonalizedRecs() {
           return (
             <Card
               key={rec.title}
-              className="border-slate-200 bg-white hover:shadow-md transition-all duration-200 p-5 sm:p-6 flex flex-col justify-between"
+              className="hover:border-[#111111] p-6 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between mb-4">
                   <div
-                    className={`w-12 h-12 rounded-2xl ${rec.iconColor} flex items-center justify-center shadow-xs`}
+                    className={`w-12 h-12 rounded-full ${rec.iconColor} flex items-center justify-center`}
                   >
                     <Icon className="w-6 h-6" />
                   </div>
-                  <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                  <span className="font-sans text-[10px] font-medium text-[#111111] bg-white border border-[#d3cec6] px-2.5 py-0.5 rounded-full tracking-wide">
                     {rec.badge}
                   </span>
                 </div>
 
-                <h3 className="text-base sm:text-lg font-bold text-slate-900 font-outfit mb-1.5">
+                <h3 className="font-sans text-base sm:text-lg font-medium tracking-tight text-[#111111] mb-1.5">
                   {rec.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
+                <p className="font-sans text-xs sm:text-sm text-[#626260] leading-relaxed mb-6">
                   {rec.desc}
                 </p>
               </div>
@@ -58,7 +62,7 @@ export function PersonalizedRecs() {
               <Link href={rec.href} className="no-underline block">
                 <Button
                   variant="outline"
-                  className="w-full justify-between font-bold text-xs sm:text-sm transition-colors"
+                  className="w-full justify-between rounded-full text-xs sm:text-sm transition-colors"
                 >
                   <span>{rec.cta}</span>
                   <ArrowRight className="w-4 h-4 ml-1" />

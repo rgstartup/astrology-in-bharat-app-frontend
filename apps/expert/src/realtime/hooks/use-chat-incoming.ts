@@ -8,7 +8,6 @@ import {
   rejectConsultation,
   CONSULTATION_EVENTS,
 } from "@/realtime/topics/consultation";
-import { CHAT_EVENTS } from "@/realtime/topics/chat";
 import type { ChatIncomingPayload } from "@/realtime/types/chat";
 
 /** Listen for incoming consultation requests; accept / reject call orchestrator directly. */
@@ -34,20 +33,14 @@ export const useChatIncoming = () => {
       );
     };
 
-    socket.on(CHAT_EVENTS.INCOMING, onIncoming);
     socket.on(CONSULTATION_EVENTS.EVENTS.INCOMING, onIncoming);
-    socket.on(CHAT_EVENTS.ACCEPTED, onSettled);
     socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onSettled);
-    socket.on(CHAT_EVENTS.REJECTED, onSettled);
     socket.on(CONSULTATION_EVENTS.EVENTS.REJECTED, onSettled);
     socket.on(CONSULTATION_EVENTS.EVENTS.CANCELLED, onSettled);
 
     return () => {
-      socket.off(CHAT_EVENTS.INCOMING, onIncoming);
       socket.off(CONSULTATION_EVENTS.EVENTS.INCOMING, onIncoming);
-      socket.off(CHAT_EVENTS.ACCEPTED, onSettled);
       socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onSettled);
-      socket.off(CHAT_EVENTS.REJECTED, onSettled);
       socket.off(CONSULTATION_EVENTS.EVENTS.REJECTED, onSettled);
       socket.off(CONSULTATION_EVENTS.EVENTS.CANCELLED, onSettled);
     };
