@@ -14,13 +14,23 @@ import {
   CONSULTATION_EVENTS,
   endConsultation,
 } from "@/realtime/topics/consultation";
-import type { ChatEndedPayload, ChatMessagePayload, ChatPausedPayload, ChatResumedPayload, ChatTypingPayload } from "@/realtime/types/chat";
+import type {
+  ChatEndedPayload,
+  ChatMessagePayload,
+  ChatPausedPayload,
+  ChatResumedPayload,
+  ChatTypingPayload,
+} from "@/realtime/types/chat";
+import type { ConsultationMode } from "@/realtime/types/consultation";
 
 /**
  * Join a consultation's chat room for its lifetime. Failures are silent —
  * REST history remains the source of truth.
  */
-export const useChat = (consultationId?: number | string | null) => {
+export const useChat = (
+  consultationId?: number | string | null,
+  mode: ConsultationMode = "chat",
+) => {
   const id = Number(consultationId);
   const isValidId = Boolean(id && !isNaN(id));
   const [messages, setMessages] = useState<ChatMessagePayload[]>([]);
@@ -28,9 +38,15 @@ export const useChat = (consultationId?: number | string | null) => {
   const [paused, setPaused] = useState<ChatPausedPayload | null>(null);
   const [remoteTyping, setRemoteTyping] = useState(false);
   const [clientName, setClientName] = useState<string | null>(null);
+  const [consultationStatus, setConsultationStatus] = useState<string | null>(null);
   const [budget, setBudget] = useState<{ maxMinutes: number | null; startedAt: string | null }>({
     maxMinutes: null,
     startedAt: null,
+  });
+  const [voiceToken, setVoiceToken] = useState<{ token: string | null; tokenExpiresAt: string | null; channelName: string | null }>({
+    token: null,
+    tokenExpiresAt: null,
+    channelName: null,
   });
   // Terminal latch: ENDED is final. Late PAUSED / RESUMED / RESTORED racing
   // the end commit must never revive the paused banner post-end.
@@ -113,7 +129,7 @@ export const useChat = (consultationId?: number | string | null) => {
     };
 
     const handleConnect = () => {
-      joinChat(id)
+      joinChat(id, mode)
         .then((ack) => {
           if (ack && typeof ack.maxMinutes === "number") {
             setBudget({
@@ -123,6 +139,14 @@ export const useChat = (consultationId?: number | string | null) => {
           }
           if (ack && typeof ack.clientName === "string" && ack.clientName) {
             setClientName(ack.clientName);
+          }
+          if (ack?.consultationStatus) setConsultationStatus(ack.consultationStatus);
+          if (ack?.token) {
+            setVoiceToken({
+              token: ack.token,
+              tokenExpiresAt: ack.tokenExpiresAt ?? null,
+              channelName: ack.channelName ?? null,
+            });
           }
         })
         .catch(() => undefined);
@@ -152,9 +176,10 @@ export const useChat = (consultationId?: number | string | null) => {
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
       socket.off(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
       socket.off("connect", handleConnect);
+      setConsultationStatus(null);
       leaveChat(id).catch(() => undefined);
     };
-  }, [id, isValidId]);
+  }, [id, isValidId, mode]);
 
   const send = useCallback(
     (input: Omit<SendChatMessageInput, "consultationId">) => {
@@ -176,7 +201,7 @@ export const useChat = (consultationId?: number | string | null) => {
     return endConsultation(id, "manual");
   }, [id, isValidId]);
 
-  return { messages, send, typing, remoteTyping, clientName, ended, end, budget, paused };
+  return { messages, send, typing, remoteTyping, clientName, ended, end, consultationStatus, budget, paused, voiceToken };
 };
 
 

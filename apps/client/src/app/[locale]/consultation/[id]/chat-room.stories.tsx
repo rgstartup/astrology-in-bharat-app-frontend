@@ -7,7 +7,7 @@ import type { useRouter } from "@/i18n/navigation";
 import type { ChatMessage } from "@/lib/types";
 import { ConsultationSidebar, MobileSidebarDrawer } from "./sidebar";
 import { ChatColumnHeader } from "./chat-column-header.component";
-import RoomBody from "./chat-room/room-body.component";
+import RoomBody from "./room/room-body.component";
 import type { TimelineItem } from "./message-area/timeline";
 
 type Router = ReturnType<typeof useRouter>;
@@ -143,13 +143,15 @@ function WholeChatRoomStage({
           timeline={timeline}
           expertData={expertData}
           typingStatus={null}
-          user={{
-            id: 1,
-            name: "Devotee",
-            email: "client@astrologyinbharat.com",
-            phone: "+919876543210",
-            role: "client",
-          } as any}
+          user={
+            {
+              id: 1,
+              name: "Devotee",
+              email: "client@astrologyinbharat.com",
+              phone: "+919876543210",
+              role: "client",
+            } as any
+          }
           pendingAttachment={null}
           removePendingAttachment={() => undefined}
           handleFileUpload={async () => undefined}

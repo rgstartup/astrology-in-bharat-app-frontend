@@ -1,15 +1,14 @@
 import { emitWithAck, realtimeSocket } from "@/realtime/socket";
+import { CONSULTATION_EVENTS } from "@/realtime/topics/consultation";
+import type { ConsultationMode } from "@/realtime/types/consultation";
 import type {
   JoinChatAck,
   SendChatMessageAck,
 } from "@/realtime/types/chat";
 
-// Canonical backend event names (SOCKET_EVENTS.CHAT) — transport only.
-// Lifecycle (request/accept/reject/cancel/end/pause/resume) goes through
-// CONSULTATION_EVENTS via the orchestrator.
+// Canonical backend event names: membership rides on consultation:join/leave,
+// transport stays on SOCKET_EVENTS.CHAT.
 export const CHAT_EVENTS = {
-  JOIN: "consultation:chat:join",
-  LEAVE: "consultation:chat:leave",
   SEND: "consultation:chat:send",
   MESSAGE: "consultation:chat:message",
   TYPING: "consultation:chat:typing",
@@ -24,13 +23,19 @@ export interface SendChatMessageInput {
 
 export const joinChat = (
   consultationId: number,
+  mode: ConsultationMode = "chat",
 ): Promise<JoinChatAck> =>
-  emitWithAck<JoinChatAck>(CHAT_EVENTS.JOIN, { consultationId });
+  emitWithAck<JoinChatAck>(CONSULTATION_EVENTS.COMMANDS.JOIN, {
+    consultationId,
+    mode,
+  });
 
 export const leaveChat = (
   consultationId: number,
 ): Promise<JoinChatAck> =>
-  emitWithAck<JoinChatAck>(CHAT_EVENTS.LEAVE, { consultationId });
+  emitWithAck<JoinChatAck>(CONSULTATION_EVENTS.COMMANDS.LEAVE, {
+    consultationId,
+  });
 
 export const sendChatMessage = (
   input: SendChatMessageInput,

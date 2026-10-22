@@ -51,6 +51,83 @@ const getPathnameWithoutLocale = (pathname: string) => {
 /** First 8 chars of a token for logs — never prints full secrets. */
 const tok = (v?: string) => (v ? `${v.slice(0, 8)}…` : "(none)");
 
+/** Outcome of one refresh round-trip, shared by every request using the same token. */
+type RefreshOutcome =
+  | {
+      ok: true;
+      accessToken: string;
+      refreshToken: string;
+      setCookies: string[];
+    }
+  | { ok: false; error?: unknown; setCookies: string[] };
+
+/**
+ * In-flight refreshes keyed by the presented refresh token.
+ *
+ * The backend rotates the refresh secret on every refresh, so two parallel
+ * requests (a navigation and a prefetch) that present the same token
+ * invalidate each other: the loser gets a 401 and is logged out — even in the
+ * middle of a live consultation. Sharing one round-trip per token keeps
+ * every request on the same result.
+ */
+const inflightRefreshes = new Map<string, Promise<RefreshOutcome>>();
+
+/**
+ * Performs the refresh round-trip against the backend.
+ *
+ * @param refreshToken - Refresh token presented to the backend.
+ * @returns The refresh outcome, never throws.
+ */
+async function performRefresh(refreshToken: string): Promise<RefreshOutcome> {
+  let backendSetCookies: string[] = [];
+  try {
+    const result = await api
+      .extend({
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `refreshToken=${refreshToken}`,
+        },
+        onResponse: (_data, res) => {
+          backendSetCookies = captureSetCookies(res.headers);
+        },
+      })
+      .post<{
+        accessToken: string;
+        refreshToken: string;
+      }>(API_ROUTES.AUTH.REFRESH, { refreshToken });
+
+    if (!result.ok) {
+      return { ok: false, error: result.error, setCookies: backendSetCookies };
+    }
+
+    return {
+      ok: true,
+      accessToken: result.data.accessToken,
+      refreshToken: result.data.refreshToken,
+      setCookies: backendSetCookies,
+    };
+  } catch (error) {
+    return { ok: false, error, setCookies: backendSetCookies };
+  }
+}
+
+/**
+ * Runs a refresh, reusing the round-trip already in flight for the token.
+ *
+ * @param refreshToken - Refresh token presented to the backend.
+ * @returns The shared refresh outcome.
+ */
+function refreshOnce(refreshToken: string): Promise<RefreshOutcome> {
+  const inflight = inflightRefreshes.get(refreshToken);
+  if (inflight) return inflight;
+
+  const pending = performRefresh(refreshToken).finally(() => {
+    inflightRefreshes.delete(refreshToken);
+  });
+  inflightRefreshes.set(refreshToken, pending);
+  return pending;
+}
+
 async function refreshSession(
   refreshToken: string,
   request: NextRequest,
@@ -61,35 +138,22 @@ async function refreshSession(
   console.log(
     `[Proxy:refresh:start] for "${pathname}" (redirect=${redirect}): presenting ${tok(refreshToken)}`,
   );
-  let backendSetCookies: string[] = [];
-  const result = await api
-    .extend({
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: `refreshToken=${refreshToken}`,
-      },
-      onResponse: (_data, res) => {
-        backendSetCookies = captureSetCookies(res.headers);
-      },
-    })
-    .post<{
-      accessToken: string;
-      refreshToken: string;
-    }>(API_ROUTES.AUTH.REFRESH, { refreshToken });
+  const outcome = await refreshOnce(refreshToken);
 
-  if (!result.ok) {
+  if (!outcome.ok) {
     console.log(
       `[Proxy:refresh:fail] for "${pathname}": presented ${tok(refreshToken)}, error:`,
-      result.error,
+      outcome.error,
     );
     return redirectToLogout(request, pathname, isProtected);
   }
 
-  const data = result.data;
+  const data = outcome;
   const response = redirect
     ? redirectToCallback(request)
     : handleI18nRouting(request);
 
+  const backendSetCookies = data.setCookies;
   if (backendSetCookies.length > 0) {
     appendSetCookiesToResponse(response, backendSetCookies);
   } else {

@@ -111,10 +111,15 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
       recover();
     };
 
+    const handleConnectError = (err: Error) => {
+      console.error("[realtime] connect_error:", err.message);
+    };
+
     socket.on(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
     // socket.io re-fires "connect" on every reconnection.
     socket.on("connect", handleConnect);
     socket.on("disconnect", handleDisconnect);
+    socket.on("connect_error", handleConnectError);
     window.addEventListener("visibilitychange", handleVisible);
     window.addEventListener("focus", handleFocus);
 
@@ -134,6 +139,7 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
       socket.off(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
+      socket.off("connect_error", handleConnectError);
       window.removeEventListener("visibilitychange", handleVisible);
       window.removeEventListener("focus", handleFocus);
     };

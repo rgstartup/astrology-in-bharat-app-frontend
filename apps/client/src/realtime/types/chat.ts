@@ -1,3 +1,5 @@
+import type { ConsultationMode } from "./consultation";
+
 /** Persisted attachment shape emitted by the backend on `chat:message` (HTTP sends). */
 export interface ChatAttachmentPayload {
   url: string;
@@ -28,6 +30,8 @@ export interface ChatTypingPayload {
 export interface JoinChatAck {
   status: ChatStatus;
   consultationId: number;
+  /** Room mode the join was metered under (echoes the requested mode). */
+  mode?: ConsultationMode;
   /** Authoritative parent-consultation status at join time (requested/accepted/active/completed/…); absent on older servers. */
   consultationStatus?: string | null;
   /** Live display budget (affordable minutes), absent when unresolvable. */
@@ -69,7 +73,7 @@ export interface ChatIncomingPayload {
   timestamp: string;
 }
 
-export interface ChatDecisionPayload {
+export interface ConsultationDecisionPayload {
   consultationId: number;
   expertId: number | string;
   timestamp: string;
@@ -77,10 +81,16 @@ export interface ChatDecisionPayload {
   maxMinutes?: number;
   /** Countdown anchor on accept, null before start. */
   startedAt?: string | null;
+  /** Accept-time Agora voice token (voice/video only), targeted to this client. */
+  token?: string;
+  tokenExpiresAt?: string;
+  channelName?: string;
 }
 
 export interface ChatEndedPayload {
   consultationId: number;
+  /** Room mode the consultation ended under. */
+  mode?: ConsultationMode;
   endedBy: string;
   /** Total billable seconds accumulated in the consultation. */
   totalDurationSeconds?: number;

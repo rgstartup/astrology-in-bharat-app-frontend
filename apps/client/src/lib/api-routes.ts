@@ -35,6 +35,11 @@ export const API_ROUTES = {
     HISTORY: "/client/chat/history",
     ATTACHMENTS: "/client/chat/attachments",
   },
+  VOICE: {
+    INITIATE: "/client/voice/initiate",
+    ELIGIBILITY: "/client/voice/eligibility",
+    TOKEN: "/client/voice/token",
+  },
   WALLET: {
     ROOT: "/client/wallet",
     TRANSACTIONS: "/client/wallet/transactions",
@@ -43,6 +48,7 @@ export const API_ROUTES = {
   },
   CONSULTATION: {
     TOPICS: "/consultations/topics",
+    INITIATE: "/client/consultations/initiate",
   },
   SPECIALIZATIONS: "/specializations",
   PLACES: {

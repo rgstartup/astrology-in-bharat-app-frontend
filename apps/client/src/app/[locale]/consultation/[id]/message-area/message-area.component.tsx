@@ -5,14 +5,6 @@ import { MessageCircle } from "lucide-react";
 import type { ChatMessage } from "@/lib/types";
 import type { IAuthUser } from "@/store/authStore";
 import {
-  MessageScroller,
-  MessageScrollerProvider,
-  MessageScrollerViewport,
-  MessageScrollerContent,
-  MessageScrollerItem,
-  MessageScrollerButton,
-} from "@/components/ui/message-scroller";
-import {
   Dialog,
   DialogContent,
   DialogTitle,
@@ -25,12 +17,9 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty";
-import StatusPill from "./status-pill.component";
-import MessageRow from "./message-row.component";
-import DateMarker from "./date-marker.component";
-import SessionMarker from "./session-marker.component";
-import type { TimelineDateItem, TimelineItem, TimelineMessageItem, TimelineSessionItem } from "./timeline";
+import MessageList, { StatusCenterRow } from "./message-list.component";
 import TypingIndicator from "./typing-indicator.component";
+import type { TimelineItem } from "./timeline";
 
 type MessageAreaProps = {
   /** Light-only canvas. Accepted for orchestrator compatibility, never used for styling. */
@@ -43,19 +32,6 @@ type MessageAreaProps = {
   typingStatus: { senderName: string; isTyping: boolean } | null;
   user?: IAuthUser | null;
 };
-
-function rawSenderType(msg: ChatMessage): string | undefined {
-  const raw = msg as ChatMessage & Record<string, unknown>;
-  if (msg.senderType) return msg.senderType;
-  const fallback = raw.sender_type;
-  if (typeof fallback === "string") return fallback;
-  return undefined;
-}
-
-function isUserMessage(msg: ChatMessage): boolean {
-  if (rawSenderType(msg) === "user") return true;
-  return false;
-}
 
 function isTerminated(sessionSummary: { status?: string } | null): boolean {
   if (!sessionSummary) return false;
@@ -102,37 +78,6 @@ function AttachmentPreviewDialog({
   );
 }
 
-/**
- * Renders typing status item inside message scroller with early return.
- */
-function TypingScrollerItem({
-  typingStatus,
-}: {
-  typingStatus: { senderName: string; isTyping: boolean } | null;
-}) {
-  if (!typingStatus) return null;
-  if (!typingStatus.isTyping) return null;
-  return (
-    <MessageScrollerItem messageId="typing-status">
-      <TypingIndicator typingStatus={typingStatus} />
-    </MessageScrollerItem>
-  );
-}
-
-function StatusCenterRow({
-  sessionStatus,
-  sessionSummary,
-}: {
-  sessionStatus: string;
-  sessionSummary: { status?: string } | null;
-}) {
-  return (
-    <div className="flex justify-center">
-      <StatusPill sessionStatus={sessionStatus} sessionTerminated={isTerminated(sessionSummary)} />
-    </div>
-  );
-}
-
 function EmptyConversation({
   sessionStatus,
   sessionSummary,
@@ -149,7 +94,7 @@ function EmptyConversation({
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-[#f5f1ec]">
       <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-4 md:p-8">
-        <StatusCenterRow sessionStatus={sessionStatus} sessionSummary={sessionSummary} />
+        <StatusCenterRow sessionStatus={sessionStatus} sessionTerminated={isTerminated(sessionSummary)} />
         <Empty className="rounded-xl border border-[#d3cec6] bg-[#ffffff]">
           <EmptyHeader>
             <EmptyMedia
@@ -171,77 +116,6 @@ function EmptyConversation({
   );
 }
 
-function DateTimelineEntry({ item }: { item: TimelineDateItem }) {
-  return (
-    <MessageScrollerItem messageId={item.key}>
-      <DateMarker label={item.label} />
-    </MessageScrollerItem>
-  );
-}
-
-function SessionTimelineEntry({ item }: { item: TimelineSessionItem }) {
-  return (
-    <MessageScrollerItem messageId={item.key}>
-      <SessionMarker label={item.label} startedAt={item.startedAt} />
-    </MessageScrollerItem>
-  );
-}
-
-function MessageTimelineEntry({
-  item,
-  expertData,
-  user,
-  mounted,
-  onPreview,
-}: {
-  item: TimelineMessageItem;
-  expertData: { image?: string; name?: string } | null;
-  user?: IAuthUser | null;
-  mounted: boolean;
-  onPreview: (url: string) => void;
-}) {
-  const msg = item.message;
-  return (
-    <MessageScrollerItem messageId={String(msg.id)} scrollAnchor={isUserMessage(msg)}>
-      <MessageRow
-        msg={msg}
-        expertImage={expertData?.image}
-        expertName={expertData?.name}
-        userAvatar={user?.avatar || user?.profile_picture}
-        userName={user?.name}
-        mounted={mounted}
-        onPreview={onPreview}
-      />
-    </MessageScrollerItem>
-  );
-}
-
-function TimelineEntry({
-  item,
-  expertData,
-  user,
-  mounted,
-  onPreview,
-}: {
-  item: TimelineItem;
-  expertData: { image?: string; name?: string } | null;
-  user?: IAuthUser | null;
-  mounted: boolean;
-  onPreview: (url: string) => void;
-}) {
-  if (item.kind === "date") return <DateTimelineEntry item={item} />;
-  if (item.kind === "session") return <SessionTimelineEntry item={item} />;
-  return (
-    <MessageTimelineEntry
-      item={item}
-      expertData={expertData}
-      user={user}
-      mounted={mounted}
-      onPreview={onPreview}
-    />
-  );
-}
-
 function buildItems(messages: ChatMessage[], timeline?: TimelineItem[]): TimelineItem[] {
   if (timeline) return timeline;
   return messages.map((m) => ({
@@ -249,6 +123,46 @@ function buildItems(messages: ChatMessage[], timeline?: TimelineItem[]): Timelin
     key: `msg-${m.id}`,
     message: m,
   }));
+}
+
+function PopulatedConversation({
+  sessionStatus,
+  sessionSummary,
+  items,
+  expertData,
+  typingStatus,
+  user,
+  mounted,
+  previewImage,
+  onClosePreview,
+  onPreview,
+}: {
+  sessionStatus: string;
+  sessionSummary: { status?: string } | null;
+  items: TimelineItem[];
+  expertData: { image?: string; name?: string } | null;
+  typingStatus: { senderName: string; isTyping: boolean } | null;
+  user?: IAuthUser | null;
+  mounted: boolean;
+  previewImage: string | null;
+  onClosePreview: () => void;
+  onPreview: (url: string) => void;
+}) {
+  return (
+    <div className="flex min-h-0 flex-1 flex-col bg-[#f5f1ec]">
+      <MessageList
+        sessionStatus={sessionStatus}
+        sessionTerminated={isTerminated(sessionSummary)}
+        items={items}
+        expertData={expertData}
+        typingStatus={typingStatus}
+        user={user}
+        mounted={mounted}
+        onPreview={onPreview}
+      />
+      <AttachmentPreviewDialog image={previewImage} onClose={onClosePreview} />
+    </div>
+  );
 }
 
 export default function MessageArea({
@@ -285,31 +199,17 @@ export default function MessageArea({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col bg-[#f5f1ec]">
-      <MessageScrollerProvider autoScroll>
-        <MessageScroller className="min-h-0 flex-1 bg-[#f5f1ec]" data-lenis-prevent>
-          <MessageScrollerViewport>
-            <MessageScrollerContent className="mx-auto max-w-4xl gap-6 bg-[#f5f1ec] p-4 md:p-8">
-              <MessageScrollerItem messageId="session-status">
-                <StatusCenterRow sessionStatus={sessionStatus} sessionSummary={sessionSummary} />
-              </MessageScrollerItem>
-              {items.map((item) => (
-                <TimelineEntry
-                  key={item.key}
-                  item={item}
-                  expertData={expertData}
-                  user={user}
-                  mounted={mounted}
-                  onPreview={setPreviewImage}
-                />
-              ))}
-              <TypingScrollerItem typingStatus={typingStatus} />
-            </MessageScrollerContent>
-          </MessageScrollerViewport>
-          <MessageScrollerButton />
-        </MessageScroller>
-      </MessageScrollerProvider>
-      <AttachmentPreviewDialog image={previewImage} onClose={closePreview} />
-    </div>
+    <PopulatedConversation
+      sessionStatus={sessionStatus}
+      sessionSummary={sessionSummary}
+      items={items}
+      expertData={expertData}
+      typingStatus={typingStatus}
+      user={user}
+      mounted={mounted}
+      previewImage={previewImage}
+      onClosePreview={closePreview}
+      onPreview={setPreviewImage}
+    />
   );
 }

@@ -19,9 +19,11 @@ import NotificationProvider from "@/providers/NotificationProvider";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import ToastProvider from "@/components/layout/ToastProvider";
 import PlatformReviewModal from "@/components/features/reviews";
-import ChatPrepHost from "@/features/chat-prep/ChatPrepHost";
+import ConsultationPrepHost from "@/features/consultation-prep/ConsultationPrepHost";
+import { ConsultationPrepProvider } from "@/store/consultationPrepStore";
 import ConsultationTrackerHost from "@/features/active-consultation/consultation-tracker-host.component";
 import QueryProvider from "@/providers/QueryProvider";
+import { getMeAction } from "@/actions/auth";
 
 export const metadata: Metadata = {
   title: "Astrology in Bharat",
@@ -44,6 +46,9 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
+  const userResult = await getMeAction();
+  const initialUser = userResult.ok ? userResult.data : null;
+
   return (
     <html lang={locale} data-scroll-behavior="smooth">
       <head>
@@ -64,20 +69,21 @@ export default async function LocaleLayout({ children, params }: Props) {
             <MerchantStatusProvider>
               <NotificationProvider>
                 <QueryProvider>
-                  <AuthInitializer>
-                    <CartInitializer>
-                      <WishlistInitializer>
+                  <CartInitializer>
+                    <WishlistInitializer>
+                      <ConsultationPrepProvider>
                         <SmoothScroll>{children}</SmoothScroll>
-                      </WishlistInitializer>
-                    </CartInitializer>
-                    <PlatformReviewModal />
-                    <ChatPrepHost />
-                    <ConsultationTrackerHost />
-                  </AuthInitializer>
+                        <PlatformReviewModal />
+                        <ConsultationPrepHost />
+                        <ConsultationTrackerHost />
+                      </ConsultationPrepProvider>
+                    </WishlistInitializer>
+                  </CartInitializer>
                 </QueryProvider>
               </NotificationProvider>
             </MerchantStatusProvider>
           </RealtimeProvider>
+          <AuthInitializer initialUser={initialUser} />
         </NextIntlClientProvider>
         <ToastProvider />
       </body>

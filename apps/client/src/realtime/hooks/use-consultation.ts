@@ -13,6 +13,7 @@ import {
   resumeConsultation,
   startConsultation,
 } from "@/realtime/topics/consultation";
+import type { ConsultationDecisionPayload } from "@/realtime/types/chat";
 import type {
   ConsultationBudgetHoldPayload,
   ConsultationBudgetTickPayload,
@@ -20,6 +21,12 @@ import type {
   ConsultationEndedPayload,
   ConsultationStatePayload,
 } from "@/realtime/types/consultation";
+
+/**
+ * Decision lifecycle mirrors the backend `ConsultationLifecycleState`
+ * decision subset: waiting → accepted/rejected/cancelled.
+ */
+export type ConsultationDecision = "waiting" | "accepted" | "rejected" | "cancelled";
 
 /**
  * Root consultation orchestrator hook for client app.
@@ -41,6 +48,12 @@ export const useConsultation = (consultationId?: number | string | null) => {
   const [budgetTick, setBudgetTick] = useState<ConsultationBudgetTickPayload | null>(null);
   const [budgetWarning, setBudgetWarning] = useState<ConsultationBudgetWarningPayload | null>(null);
   const [budgetHold, setBudgetHold] = useState<ConsultationBudgetHoldPayload | null>(null);
+const [decision, setDecision] = useState<ConsultationDecision>("waiting");
+const [voiceToken, setVoiceToken] = useState<{
+  token: string | null;
+  tokenExpiresAt: string | null;
+  channelName: string | null;
+}>({ token: null, tokenExpiresAt: null, channelName: null });
   // Terminal latch (see docblock): refs stay current inside socket handlers.
   const endedRef = useRef(false);
 
@@ -54,6 +67,9 @@ export const useConsultation = (consultationId?: number | string | null) => {
         setState(payload);
         if (payload.state === "active") {
           setBudgetHold(null);
+        }
+        if (payload.state === "budget_hold") {
+          setBudgetHold(payload as unknown as ConsultationBudgetHoldPayload);
         }
       }
     };
@@ -97,6 +113,59 @@ export const useConsultation = (consultationId?: number | string | null) => {
       }
     };
 
+    const matchDecision = (p: ConsultationDecisionPayload) => Number(p.consultationId) === id;
+
+    const onAccepted = (p: ConsultationDecisionPayload) => {
+      if (!matchDecision(p)) return;
+      setDecision("accepted");
+      setVoiceToken({
+        token: p.token ?? null,
+        tokenExpiresAt: p.tokenExpiresAt ?? null,
+        channelName: p.channelName ?? null,
+      });
+      setState((prev) => ({
+        consultationId: p.consultationId,
+        mode: prev?.mode ?? "chat",
+        state: "accepted",
+        startedAt: p.startedAt ?? null,
+        maxMinutes: p.maxMinutes ?? prev?.maxMinutes,
+        timestamp: p.timestamp,
+      }));
+      setBudgetHold(null);
+    };
+
+    const onRejected = (p: ConsultationDecisionPayload) => {
+      if (!matchDecision(p)) return;
+      setDecision("rejected");
+      setState((prev) => ({
+        consultationId: p.consultationId,
+        mode: prev?.mode ?? "chat",
+        state: "rejected",
+        timestamp: p.timestamp,
+      }));
+    };
+
+    const onCancelled = (p: ConsultationDecisionPayload) => {
+      if (!matchDecision(p)) return;
+      setDecision("cancelled");
+      setState((prev) => ({
+        consultationId: p.consultationId,
+        mode: prev?.mode ?? "chat",
+        state: "cancelled",
+        timestamp: p.timestamp,
+      }));
+    };
+
+    const onDisconnected = (p: ConsultationDecisionPayload) => {
+      if (!matchDecision(p)) return;
+      setState((prev) => ({
+        consultationId: p.consultationId,
+        mode: prev?.mode ?? "chat",
+        state: "reconnecting",
+        timestamp: p.timestamp,
+      }));
+    };
+
     /** Rejoin rooms + refresh state; safe to run on every (re)connect. */
     const handleConnect = () => {
       joinConsultationRooms(id)
@@ -118,6 +187,10 @@ export const useConsultation = (consultationId?: number | string | null) => {
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
     socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleState);
     socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
+    socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onAccepted);
+    socket.on(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
+    socket.on(CONSULTATION_EVENTS.EVENTS.CANCELLED, onCancelled);
+    socket.on(CONSULTATION_EVENTS.EVENTS.DISCONNECTED, onDisconnected);
     socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
     socket.on(CONSULTATION_EVENTS.BUDGET.WARNING, handleBudgetWarning);
     socket.on(CONSULTATION_EVENTS.BUDGET.EXHAUSTED, handleBudgetExhausted);
@@ -130,6 +203,10 @@ export const useConsultation = (consultationId?: number | string | null) => {
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
       socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleState);
       socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
+      socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onAccepted);
+      socket.off(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
+      socket.off(CONSULTATION_EVENTS.EVENTS.CANCELLED, onCancelled);
+      socket.off(CONSULTATION_EVENTS.EVENTS.DISCONNECTED, onDisconnected);
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
       socket.off(CONSULTATION_EVENTS.BUDGET.WARNING, handleBudgetWarning);
       socket.off(CONSULTATION_EVENTS.BUDGET.EXHAUSTED, handleBudgetExhausted);
@@ -169,6 +246,9 @@ export const useConsultation = (consultationId?: number | string | null) => {
 
   return {
     state,
+    consultationStatus: state?.state ?? null,
+    decision,
+    voiceToken,
     ended,
     budgetTick,
     budgetWarning,

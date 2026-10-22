@@ -8,6 +8,8 @@ export { default as IntroCard } from "./intro-card.component";
 export { default as TypingIndicator } from "./typing-indicator.component";
 export { default as DateMarker } from "./date-marker.component";
 export { default as SessionMarker } from "./session-marker.component";
+export { default as MessageList } from "./message-list.component";
+export { default as ScrollButton } from "./scroll-button.component";
 export type {
   TimelineItem,
   TimelineDateItem,

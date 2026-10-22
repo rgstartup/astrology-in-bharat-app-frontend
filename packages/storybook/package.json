@@ -7,8 +7,12 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "storybook": "pnpm storybook:client",
+    "storybook:client": "storybook dev -c ./configs/client -p 6006",
+    "storybook:expert": "storybook dev -c ./configs/expert -p 6007",
+    "build-storybook": "pnpm build-storybook:client && pnpm build-storybook:expert",
+    "build-storybook:client": "storybook build -c ./configs/client -o ./storybook-static/client",
+    "build-storybook:expert": "storybook build -c ./configs/expert -o ./storybook-static/expert",
     "check-types": "tsc --noEmit",
     "lint": "eslint ."
   },
@@ -32,6 +36,7 @@
     "postcss-loader": "^8.2.0",
     "style-loader": "^4.0.0",
     "eslint": "^10.11.0",
+    "next-intl": "^4.14.8",
     "postcss": "^8.5.28",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",

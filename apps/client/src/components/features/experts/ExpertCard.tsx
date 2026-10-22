@@ -19,7 +19,7 @@ import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { requestChatConsult } from "@/features/chat-prep/request-chat-consult";
+import { requestConsultationPrep } from "@/features/consultation-prep";
 
 function formatLikesCount(count: number) {
   if (count >= 1000) {
@@ -375,25 +375,61 @@ const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" 
       return;
     }
 
-    requestChatConsult(String(expertProfileId), {
-      isAuthenticated,
-      pathname,
-      push: (url) => router.push(url),
-      loginTitle: tChat("toastLogin"),
-      loginActionLabel: tChat("loginNow"),
-    });
+    requestConsultationPrep(
+      String(expertProfileId),
+      {
+        isAuthenticated,
+        pathname,
+        push: (url) => router.push(url),
+        loginTitle: tChat("toastLogin"),
+        loginActionLabel: tChat("loginNow"),
+      },
+      "chat",
+    );
   };
 
   const handleCallClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    router.push(`/call/prep/${expertProfileId}?type=audio`);
+
+    if (!expertProfileId) {
+      toast.error("Expert details not found. Please try again.");
+      return;
+    }
+
+    requestConsultationPrep(
+      String(expertProfileId),
+      {
+        isAuthenticated,
+        pathname,
+        push: (url) => router.push(url),
+        loginTitle: tChat("toastLogin"),
+        loginActionLabel: tChat("loginNow"),
+      },
+      "voice",
+    );
   };
 
   const handleVideoCallClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    router.push(`/call/prep/${expertProfileId}?type=video`);
+
+    if (!expertProfileId) {
+      toast.error("Expert details not found. Please try again.");
+      return;
+    }
+
+    requestConsultationPrep(
+      String(expertProfileId),
+      {
+        isAuthenticated,
+        pathname,
+        push: (url) => router.push(url),
+        loginTitle: tChat("toastLogin"),
+        loginActionLabel: tChat("loginNow"),
+      },
+      "video",
+    );
   };
 
   const customServicesList = Array.isArray(custom_services)

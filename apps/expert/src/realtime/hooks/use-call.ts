@@ -3,14 +3,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { realtimeSocket } from "@/realtime/socket";
 import {
-  CALL_EVENTS,
+  MEDIA_EVENTS,
   endCall,
   joinCall,
   relayCallAnswer,
   relayCallOffer,
   relayIceCandidate,
 } from "@/realtime/topics/call";
+import { CONSULTATION_EVENTS } from "@/realtime/topics/consultation";
 import type { CallEndedPayload, CallSignalPayload } from "@/realtime/types/call";
+import type { ConsultationEndedPayload } from "@/realtime/types/consultation";
 
 /**
  * Join a consultation's call room and stream signalling (offer / answer /
@@ -40,8 +42,14 @@ export const useCall = (consultationId?: number | string | null) => {
     const handleIceCandidate = (payload: CallSignalPayload) => {
       if (matches(payload)) setIceCandidate(payload);
     };
-    const handleEnd = (payload: CallEndedPayload) => {
-      if (matches(payload)) setEnded(payload);
+    const handleEnd = (payload: ConsultationEndedPayload) => {
+      if (matches(payload)) {
+        setEnded({
+          consultationId: payload.consultationId,
+          endedBy: payload.endedBy,
+          reason: payload.reason,
+        });
+      }
     };
 
     const handleConnect = () => {
@@ -54,17 +62,17 @@ export const useCall = (consultationId?: number | string | null) => {
       handleConnect();
     }
 
-    socket.on(CALL_EVENTS.OFFER, handleOffer);
-    socket.on(CALL_EVENTS.ANSWER, handleAnswer);
-    socket.on(CALL_EVENTS.ICE_CANDIDATE, handleIceCandidate);
-    socket.on(CALL_EVENTS.END, handleEnd);
+    socket.on(MEDIA_EVENTS.OFFER, handleOffer);
+    socket.on(MEDIA_EVENTS.ANSWER, handleAnswer);
+    socket.on(MEDIA_EVENTS.ICE_CANDIDATE, handleIceCandidate);
+    socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnd);
     socket.on("connect", handleConnect);
 
     return () => {
-      socket.off(CALL_EVENTS.OFFER, handleOffer);
-      socket.off(CALL_EVENTS.ANSWER, handleAnswer);
-      socket.off(CALL_EVENTS.ICE_CANDIDATE, handleIceCandidate);
-      socket.off(CALL_EVENTS.END, handleEnd);
+      socket.off(MEDIA_EVENTS.OFFER, handleOffer);
+      socket.off(MEDIA_EVENTS.ANSWER, handleAnswer);
+      socket.off(MEDIA_EVENTS.ICE_CANDIDATE, handleIceCandidate);
+      socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnd);
       socket.off("connect", handleConnect);
     };
   }, [id, isValidId]);

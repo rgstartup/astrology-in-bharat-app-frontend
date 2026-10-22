@@ -1,0 +1,32 @@
+{
+  "name": "@repo/rtc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Headless real-time communication core: provider-agnostic voice/video session, device permission layer, and React bindings. No UI components.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./twilio": "./src/adapters/twilio/index.ts",
+    "./agora": "./src/adapters/agora/index.ts",
+    "./react": "./src/react/index.ts",
+    "./devices": "./src/devices/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.3.0",
+    "typescript": "7.0.2"
+  },
+  "dependencies": {
+    "agora-rtc-sdk-ng": "^4.24.9",
+    "twilio-video": "^2.36.1"
+  }
+}

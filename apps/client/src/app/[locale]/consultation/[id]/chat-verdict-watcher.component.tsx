@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { realtimeSocket } from "@/realtime/socket";
-import { joinChat } from "@/realtime/topics/chat";
-import { useChatDecision } from "@/realtime/hooks/use-chat-decision";
+
+type ConsultationDecision = "waiting" | "accepted" | "rejected" | "cancelled";
 
 function VerdictCard({ onDismiss }: { onDismiss: () => void }) {
   return (
@@ -25,31 +24,19 @@ function VerdictCard({ onDismiss }: { onDismiss: () => void }) {
 }
 
 /**
- * Safety net for a reject that lands after room entry.
- * (Re)joins `chat:{consultationId}` on mount and reconnect, then
- * routes the client out on reject.
+ * Safety net for a reject that lands after room entry: routes the client out.
+ * `decision` is passed in — the room already owns the single consultation
+ * subscription, and useChat already joins the chat room on mount/reconnect.
  */
 export function ChatVerdictWatcher({
   consultationId,
+  decision,
 }: {
   consultationId: number | null;
+  decision: ConsultationDecision;
 }) {
   const router = useRouter();
-  const { decision } = useChatDecision(consultationId);
   const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    if (!consultationId) return;
-    const socket = realtimeSocket();
-    const join = () => {
-      joinChat(consultationId).catch(() => undefined);
-    };
-    if (socket.connected) join();
-    socket.on("connect", join);
-    return () => {
-      socket.off("connect", join);
-    };
-  }, [consultationId]);
 
   useEffect(() => {
     if (decision !== "rejected" || dismissed) return;

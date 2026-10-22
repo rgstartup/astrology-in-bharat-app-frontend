@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { getExpertReviews, Review } from "@/libs/api-experts";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { useChatPrepStore } from "@/store/chatPrepStore";
+import { useConsultationPrepStore } from "@/store/consultationPrepStore";
 import type { IExpert } from "@repo/lib";
 
 export const useExpertDetails = (
@@ -24,7 +24,7 @@ export const useExpertDetails = (
   const [loadingReviews, setLoadingReviews] = useState(false);
   const [totalReviews, setTotalReviews] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
-  const openChatPrep = useChatPrepStore((s) => s.openChatPrep);
+  const openConsultationPrep = useConsultationPrepStore((s) => s.openConsultationPrep);
   const router = useRouter();
 
   // Real-time status sync via centralized presence hook with room subscription
@@ -34,17 +34,15 @@ export const useExpertDetails = (
   });
 
   const handleChatClick = () => {
-    openChatPrep(String(expertId));
+    openConsultationPrep(String(expertId), "chat");
   };
 
   const handleCallClick = () => {
-    setIsNavigating(true);
-    router.push(`/call/prep/${expertId}?type=audio`);
+    openConsultationPrep(String(expertId), "voice");
   };
 
   const handleVideoCallClick = () => {
-    setIsNavigating(true);
-    router.push(`/call/prep/${expertId}?type=video`);
+    openConsultationPrep(String(expertId), "video");
   };
 
   return {

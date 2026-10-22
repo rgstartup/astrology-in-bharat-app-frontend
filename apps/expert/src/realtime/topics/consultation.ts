@@ -1,11 +1,11 @@
-import { emitWithAck } from "@/realtime/socket";
-import { joinCall } from "@/realtime/topics/call";
-import { joinChat, leaveChat } from "@/realtime/topics/chat";
+import { emitWithAck, realtimeSocket } from "@/realtime/socket";
 import type {
   ConsultationActionAck,
+  ConsultationMode,
   ConsultationRoomsResult,
   ConsultationStatePayload,
 } from "@/realtime/types/consultation";
+import type { JoinChatAck } from "@/realtime/types/chat";
 
 export const CONSULTATION_EVENTS = {
   COMMANDS: {
@@ -14,11 +14,15 @@ export const CONSULTATION_EVENTS = {
     REJECT: "consultation:reject",
     CANCEL: "consultation:cancel",
     START: "consultation:start",
+    JOIN: "consultation:join",
+    LEAVE: "consultation:leave",
     PAUSE: "consultation:pause",
     RESUME: "consultation:resume",
     DISCONNECT: "consultation:disconnect",
     END: "consultation:end",
     GET_STATUS: "consultation:get_status",
+    VOICE_TOKEN: "consultation:voice_token",
+    MEDIA_READY: "consultation:media_ready",
   },
   EVENTS: {
     STATE: "consultation:state",
@@ -27,6 +31,7 @@ export const CONSULTATION_EVENTS = {
     REJECTED: "consultation:rejected",
     CANCELLED: "consultation:cancelled",
     STARTED: "consultation:started",
+    MEDIA_READY: "consultation:media_ready",
     PAUSED: "consultation:paused",
     RESUMED: "consultation:resumed",
     DISCONNECTED: "consultation:disconnected",
@@ -41,23 +46,34 @@ export const CONSULTATION_EVENTS = {
 } as const;
 
 /**
-  * Consultation room membership: a consultation rides on both the chat and
-  * the call rooms (`chat:{id}` / `call:{id}`). One helper instead of two joins.
+  * Consultation room membership: one room covers chat + call.
+  * `mode` only selects the billing rate (and a voice token for voice/video).
   */
+export const joinRoom = (
+  consultationId: number,
+  mode: ConsultationMode = "chat",
+): Promise<JoinChatAck> =>
+  emitWithAck<JoinChatAck>(CONSULTATION_EVENTS.COMMANDS.JOIN, {
+    consultationId,
+    mode,
+  });
+
+export const leaveRoom = (consultationId: number): Promise<JoinChatAck> =>
+  emitWithAck<JoinChatAck>(CONSULTATION_EVENTS.COMMANDS.LEAVE, {
+    consultationId,
+  });
+
 export const joinConsultationRooms = async (
   consultationId: number,
 ): Promise<ConsultationRoomsResult> => {
-  const [chat, call] = await Promise.all([
-    joinChat(consultationId),
-    joinCall(consultationId),
-  ]);
-  return { consultationId, chat, call };
+  const room = await joinRoom(consultationId, "chat");
+  return { consultationId, room };
 };
 
 export const leaveConsultationRooms = async (
   consultationId: number,
 ): Promise<void> => {
-  await leaveChat(consultationId).catch(() => undefined);
+  await leaveRoom(consultationId).catch(() => undefined);
 };
 
 export const acceptConsultation = (
@@ -129,3 +145,38 @@ export const getConsultationStatus = (
     CONSULTATION_EVENTS.COMMANDS.GET_STATUS,
     { consultationId },
   );
+
+/** Renew an expiring Agora voice token for a live consultation. */
+export const voiceToken = (
+  consultationId: number,
+): Promise<{ token: string; tokenExpiresAt: string; channelName: string }> =>
+  emitWithAck<{
+    token: string;
+    tokenExpiresAt: string;
+    channelName: string;
+  }>(CONSULTATION_EVENTS.COMMANDS.VOICE_TOKEN, { consultationId });
+
+/**
+ * Signal that the local side has joined the Agora channel for this
+ * consultation. The backend starts billing once both sides report ready
+ * (see `ConsultationOrchestratorService.mediaReady`); failure here must
+ * never block the voice join, so it is fire-and-forget.
+ */
+export const mediaReady = (consultationId: number): void => {
+  const socket = realtimeSocket();
+  if (socket.connected) {
+    socket.emit(CONSULTATION_EVENTS.COMMANDS.MEDIA_READY, {
+      consultationId,
+    });
+    return;
+  }
+  // Socket not connected (e.g. mid-reconnect): emit once on reconnect so the
+  // readiness signal is not lost. Listener self-removes after firing.
+  const onceConnected = (): void => {
+    socket.off("connect", onceConnected);
+    socket.emit(CONSULTATION_EVENTS.COMMANDS.MEDIA_READY, {
+      consultationId,
+    });
+  };
+  socket.on("connect", onceConnected);
+};

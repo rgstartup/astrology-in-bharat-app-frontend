@@ -16,7 +16,7 @@ import { SessionTimersSection } from "./session-timers-section.component";
 import { UpgradeConsultationSection } from "./upgrade-consultation-section.component";
 import { EndConsultationAction } from "./end-consultation-action.component";
 
-type MobileSidebarDrawerProps = {
+export type MobileSidebarDrawerProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   expertData: IExpert;

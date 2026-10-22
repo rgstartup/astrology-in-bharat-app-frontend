@@ -2,11 +2,11 @@
 
 import React from "react";
 import { Sparkles, RotateCcw, Loader2 } from "lucide-react";
-import type { Expert } from "@repo/lib";
+import type { IExpert } from "@repo/lib";
 import { ExploreExpertCard } from "./ExploreExpertCard";
 
 interface ExploreExpertGridProps {
-  experts: Expert[];
+  experts: IExpert[];
   loading: boolean;
   hasMore: boolean;
   onLoadMore: () => void;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
@@ -21,7 +21,7 @@ import { OtpVerification } from "../OtpVerification.component";
 import { scrollToTop } from "@/utils/scroll";
 import { useTranslations } from "next-intl";
 import { PATHS } from "@repo/routes";
-import { stripLocale, withCallbackUrl } from "@/utils/getPathnameOrDefault";
+import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { useAuthStore } from "@/store/authStore";
 
 interface SignInFormInputs {
@@ -30,6 +30,7 @@ interface SignInFormInputs {
 }
 
 const SignInForm: React.FC = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const callback_url = searchParams.get("callback_url") || "/dashboard";
   const init = useAuthStore((state) => state.init);
@@ -107,8 +108,9 @@ const SignInForm: React.FC = () => {
       // Fetch client profile into Zustand auth store using the new session cookies
       await init(true);
 
-      // Perform clean full-page navigation to reset session & re-evaluate server components
-      window.location.href = stripLocale(callback_url);
+      // Perform soft router navigation to reset session & re-evaluate server components
+      router.push(callback_url);
+      router.refresh();
     } catch {
       toast.error(t("signIn.errors.unexpected"));
     }

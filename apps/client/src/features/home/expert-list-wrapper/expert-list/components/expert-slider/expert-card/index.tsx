@@ -1,7 +1,6 @@
 "use client";
 
-import NextLink from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import type { IExpert } from "@repo/lib";
@@ -16,7 +15,7 @@ import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { requestChatConsult } from "@/features/chat-prep/request-chat-consult";
+import { requestConsultationPrep } from "@/features/consultation-prep";
 import ExpertActions from "./ExpertActions";
 import ExpertCardProfile from "./ExpertCardProfile";
 import ExpertDetails from "./ExpertDetails";
@@ -124,17 +123,18 @@ const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" 
       toast.error("Expert details not found. Please try again.");
       return;
     }
-    if (type === "chat") {
-      requestChatConsult(String(expertProfileId), {
+    const consultationMode = type === "audio" ? "voice" : type === "video" ? "video" : "chat";
+    requestConsultationPrep(
+      String(expertProfileId),
+      {
         isAuthenticated,
         pathname,
         push: (url) => router.push(url),
         loginTitle: tChat("toastLogin"),
         loginActionLabel: tChat("loginNow"),
-      });
-      return;
-    }
-    router.push(`/call/prep/${expertProfileId}?type=${type}`);
+      },
+      consultationMode,
+    );
   };
 
   return (
@@ -142,7 +142,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" 
       <div
         className={`flex h-full flex-col rounded-xl border border-[#daa23e] bg-white p-3 text-center shadow-sm transition-transform duration-300 hover:-translate-y-1.5 ${cardClassName} ${isNavigating ? "pointer-events-none opacity-70" : ""}`}
       >
-        <NextLink
+        <Link
           href={id ? `/consultants/${id}` : "#"}
           className="relative flex flex-1 flex-col no-underline hover:no-underline"
           onClick={() => {
@@ -184,7 +184,7 @@ const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" 
               languages: t.expertCard.lang,
             }}
           />
-        </NextLink>
+        </Link>
         <ExpertActions
           price={price}
           chatPrice={chat_price}

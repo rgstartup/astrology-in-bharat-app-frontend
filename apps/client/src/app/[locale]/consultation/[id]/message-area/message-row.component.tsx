@@ -2,6 +2,7 @@
 
 import { AlertCircle } from "lucide-react";
 import type { ChatMessage } from "@/lib/types";
+import { isAttachmentFallbackText } from "@repo/chat";
 import {
   Message,
   MessageAvatar as MessageAvatarSlot,
@@ -157,8 +158,7 @@ function AttachmentOnlyTextGuard({ m, outgoing }: { m: NormalizedMessage; outgoi
   if (!m.attachmentUrl) return <TextBubble m={m} outgoing={outgoing} />;
   const trimmed = m.content.trim().toLowerCase();
   if (trimmed === "") return null;
-  if (trimmed === "sent an image") return null;
-  if (trimmed === "sent an attachment") return null;
+  if (isAttachmentFallbackText(m.content)) return null;
   return <TextBubble m={m} outgoing={outgoing} />;
 }
 
@@ -185,14 +185,18 @@ function StandardMessage({
         />
       </MessageAvatarSlot>
       <MessageContent>
-        <MessageAttachment
-          attachmentUrl={m.attachmentUrl}
-          attachmentType={m.attachmentType}
-          isUser={outgoing}
-          isOnlyAttachment={isOnlyAttachment}
-          onPreview={onPreview}
-        />
-        <AttachmentOnlyTextGuard m={m} outgoing={outgoing} />
+        {m.attachmentUrl ? (
+          <MessageAttachment
+            attachmentUrl={m.attachmentUrl}
+            attachmentType={m.attachmentType}
+            isUser={outgoing}
+            isOnlyAttachment={isOnlyAttachment}
+            content={m.content}
+            onPreview={onPreview}
+          />
+        ) : (
+          <AttachmentOnlyTextGuard m={m} outgoing={outgoing} />
+        )}
         <MessageFooter className="font-sans text-[11px] text-[#7b7b78]">
           {formatTime(mounted, m.createdAt)}
         </MessageFooter>
@@ -205,9 +209,7 @@ function isAttachmentOnly(m: NormalizedMessage): boolean {
   if (!m.attachmentUrl) return false;
   const trimmed = m.content.trim().toLowerCase();
   if (trimmed === "") return true;
-  if (trimmed === "sent an image") return true;
-  if (trimmed === "sent an attachment") return true;
-  return false;
+  return isAttachmentFallbackText(m.content);
 }
 
 /** Waterfall: admin marker → intro-card → standard bubble. One branch, one return. */

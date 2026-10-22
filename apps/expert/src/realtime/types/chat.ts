@@ -1,3 +1,5 @@
+import type { ConsultationMode } from "./consultation";
+
 /** Persisted attachment shape emitted by the backend on `chat:message` (HTTP sends). */
 export interface ChatAttachmentPayload {
   url: string;
@@ -28,6 +30,8 @@ export interface ChatTypingPayload {
 export interface JoinChatAck {
   status: ChatStatus;
   consultationId: number;
+  /** Room mode the join was metered under (echoes the requested mode). */
+  mode?: ConsultationMode;
   /** Authoritative parent-consultation status at join time; absent on older servers. */
   consultationStatus?: string | null;
   /** Live display budget (affordable minutes), absent when unresolvable. */
@@ -36,6 +40,10 @@ export interface JoinChatAck {
   startedAt?: string | null;
   /** Display name of the consulting client; absent on older servers. */
   clientName?: string | null;
+  /** Accept-time RTC voice token (voice/video only), targeted to this expert. */
+  token?: string;
+  tokenExpiresAt?: string;
+  channelName?: string;
 }
 
 export interface SendChatMessageAck {
@@ -67,8 +75,25 @@ export interface ChatIncomingPayload {
   senderType: string;
   sessionId: number | null;
   timestamp: string;
+  /** Consultation mode requested: chat, voice, or video */
+  mode?: ConsultationMode;
   /** Display name of the requesting client; absent on older servers. */
   clientName?: string | null;
+  /** Client topic or query details if provided */
+  topic?: string | null;
+  /** Accept-time RTC voice token (voice/video only), targeted to this expert. */
+  token?: string;
+  tokenExpiresAt?: string;
+  channelName?: string;
+  /** Devotee birth / intake details if provided */
+  dateOfBirth?: string | null;
+  timeOfBirth?: string | null;
+  placeOfBirth?: string | null;
+  rashi?: string | null;
+  nakshatra?: string | null;
+  lagna?: string | null;
+  gender?: string | null;
+  avatar?: string | null;
 }
 
 export interface ChatDecisionPayload {
@@ -83,6 +108,8 @@ export interface ChatDecisionPayload {
 
 export interface ChatEndedPayload {
   consultationId: number;
+  /** Room mode the consultation ended under. */
+  mode?: ConsultationMode;
   endedBy: string;
   /** Total billable seconds accumulated in the consultation. */
   totalDurationSeconds?: number;

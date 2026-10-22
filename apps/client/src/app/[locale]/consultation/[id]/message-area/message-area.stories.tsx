@@ -169,3 +169,63 @@ export const WithComposer: Story = {
   parameters: { layout: "fullscreen", backgrounds: { default: "Intercom canvas" } },
   render: () => <ConversationWithComposer />,
 };
+
+const ATTACHMENT_SHOWCASE_MESSAGES: ChatMessage[] = [
+  expertMessage("att-1", "Namaste! Please share your palm photo or chart.", "2026-10-13T09:00:00.000Z"),
+  {
+    id: "att-2",
+    senderId: "user-1",
+    senderType: "user",
+    content: "sent an attachment",
+    attachmentUrl: "https://images.unsplash.com/photo-1532968961962-8a0cb3a2d4f5?w=800",
+    attachmentType: "image",
+    createdAt: "2026-10-13T09:01:00.000Z",
+  },
+  {
+    id: "att-3",
+    senderId: "expert-7",
+    senderType: "expert",
+    content: "I have annotated the mounts and lines on your palm for clarity.",
+    attachmentUrl: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800",
+    attachmentType: "image",
+    createdAt: "2026-10-13T09:03:00.000Z",
+  },
+  {
+    id: "att-4",
+    senderId: "user-1",
+    senderType: "user",
+    content: "Here is also my birth chart generated from local software.",
+    attachmentUrl: "https://example.com/documents/birth-chart.pdf",
+    attachmentType: "document",
+    createdAt: "2026-10-13T09:05:00.000Z",
+  },
+  {
+    id: "att-5",
+    senderId: "expert-7",
+    senderType: "expert",
+    content: "",
+    attachmentUrl: "https://example.com/documents/transit-analysis.pdf",
+    attachmentType: "document",
+    createdAt: "2026-10-13T09:07:00.000Z",
+  },
+];
+
+const ATTACHMENT_SHOWCASE_TIMELINE: TimelineItem[] = [
+  { kind: "date", key: "date-today", label: "Today" },
+  { kind: "message", key: "msg-att-1", message: ATTACHMENT_SHOWCASE_MESSAGES[0] as ChatMessage },
+  { kind: "message", key: "msg-att-2", message: ATTACHMENT_SHOWCASE_MESSAGES[1] as ChatMessage },
+  { kind: "message", key: "msg-att-3", message: ATTACHMENT_SHOWCASE_MESSAGES[2] as ChatMessage },
+  { kind: "message", key: "msg-att-4", message: ATTACHMENT_SHOWCASE_MESSAGES[3] as ChatMessage },
+  { kind: "message", key: "msg-att-5", message: ATTACHMENT_SHOWCASE_MESSAGES[4] as ChatMessage },
+];
+
+export const AttachmentVariants: Story = {
+  args: {
+    sessionStatus: "active",
+    sessionSummary: null,
+    messages: ATTACHMENT_SHOWCASE_MESSAGES,
+    timeline: ATTACHMENT_SHOWCASE_TIMELINE,
+    expertData: EXPERT,
+    typingStatus: null,
+  },
+};

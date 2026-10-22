@@ -11,7 +11,9 @@
   "dependencies": {
     "@base-ui/react": "^1.8.0",
     "@hookform/resolvers": "^5.9.1",
+    "@repo/chat": "workspace:*",
     "@repo/lib": "workspace:*",
+    "@repo/rtc": "workspace:*",
     "@repo/safe-fetch": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",
@@ -49,6 +51,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",
+    "@repo/storybook": "workspace:*",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",

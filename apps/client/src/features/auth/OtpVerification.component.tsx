@@ -8,7 +8,6 @@ import { PATHS } from "@repo/routes";
 import { useTranslations } from "next-intl";
 import { User } from "@/lib/types";
 import { AuthActionResponse } from "@/lib/types/auth";
-import { stripLocale } from "@/utils/getPathnameOrDefault";
 import { useAuthStore } from "@/store/authStore";
 import {
   InputOTP,
@@ -117,7 +116,8 @@ export const OtpVerification: React.FC<OtpVerificationProps> = ({
         if (onSuccess) {
           onSuccess(result.user);
         } else {
-          window.location.href = stripLocale(redirectUrl);
+          router.push(redirectUrl);
+          router.refresh();
         }
       }
     } catch {

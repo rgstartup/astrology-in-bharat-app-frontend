@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
 import ChatFooter from "./chat-footer.component";
-import type { PendingAttachment } from "./chat-room/hooks/use-room-composer";
+import type { PendingAttachment } from "./room/hooks/use-room-composer";
 
 function ActiveComposerStory() {
   const [inputValue, setInputValue] = useState("What does this week hold for my career?");

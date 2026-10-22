@@ -40,6 +40,72 @@ const getPathnameWithoutLocale = (pathname: string) => {
   return pathname;
 };
 
+/** Outcome of one refresh round-trip, shared by every request using the same token. */
+type RefreshOutcome =
+  | { ok: true; accessToken: string; refreshToken: string }
+  | { ok: false; error?: unknown; data?: unknown };
+
+/**
+ * In-flight refreshes keyed by the presented refresh token.
+ *
+ * The backend rotates the refresh secret on every refresh, so two parallel
+ * requests (a navigation and a prefetch) that present the same token
+ * invalidate each other: the loser gets a 401 and is logged out — even in the
+ * middle of a live consultation. Sharing one round-trip per token keeps
+ * every request on the same result.
+ */
+const inflightRefreshes = new Map<string, Promise<RefreshOutcome>>();
+
+/**
+ * Performs the refresh round-trip against the backend.
+ *
+ * @param refreshToken - Refresh token presented to the backend.
+ * @returns The refresh outcome, never throws.
+ */
+async function performRefresh(refreshToken: string): Promise<RefreshOutcome> {
+  try {
+    const [data, error] = await api
+      .extend({
+        headers: {
+          Cookie: `${AUTH_COOKIE_NAMES.REFRESH_TOKEN}=${refreshToken}`,
+        },
+      })
+      .post<{
+        accessToken: string;
+        refreshToken: string;
+      }>(API_ROUTES.AUTH.REFRESH, { refreshToken });
+
+    if (error || !data?.accessToken || !data.refreshToken) {
+      return { ok: false, error, data };
+    }
+
+    return {
+      ok: true,
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+    };
+  } catch (error) {
+    return { ok: false, error };
+  }
+}
+
+/**
+ * Runs a refresh, reusing the round-trip already in flight for the token.
+ *
+ * @param refreshToken - Refresh token presented to the backend.
+ * @returns The shared refresh outcome.
+ */
+function refreshOnce(refreshToken: string): Promise<RefreshOutcome> {
+  const inflight = inflightRefreshes.get(refreshToken);
+  if (inflight) return inflight;
+
+  const pending = performRefresh(refreshToken).finally(() => {
+    inflightRefreshes.delete(refreshToken);
+  });
+  inflightRefreshes.set(refreshToken, pending);
+  return pending;
+}
+
 async function refreshSession(
   refreshToken: string,
   request: NextRequest,
@@ -47,24 +113,15 @@ async function refreshSession(
   isProtected: boolean,
   redirect = false,
 ) {
-  const [data, error] = await api
-    .extend({
-      headers: {
-        Cookie: `${AUTH_COOKIE_NAMES.REFRESH_TOKEN}=${refreshToken}`,
-      },
-    })
-    .post<{
-      accessToken: string;
-      refreshToken: string;
-    }>(API_ROUTES.AUTH.REFRESH, { refreshToken });
+  const outcome = await refreshOnce(refreshToken);
 
-  if (error || !data?.accessToken || !data.refreshToken) {
+  if (!outcome.ok) {
     console.log(
       "[Proxy:refreshSessionFailed]: ",
       "error:",
-      error,
+      outcome.error,
       "data:",
-      data,
+      outcome.data,
       "refreshToken:",
       refreshToken,
     );
@@ -73,8 +130,8 @@ async function refreshSession(
 
   const response = redirect ? redirectToCallback(request) : handleI18nRouting(request);
 
-  setAccessToken(response.cookies, data.accessToken);
-  setRefreshToken(response.cookies, data.refreshToken);
+  setAccessToken(response.cookies, outcome.accessToken);
+  setRefreshToken(response.cookies, outcome.refreshToken);
 
   return response;
 }

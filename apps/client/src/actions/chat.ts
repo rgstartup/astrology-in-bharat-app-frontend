@@ -1,7 +1,13 @@
 "use server";
 
-import { apiV2, AUTH_COOKIE_NAMES, API_ROUTES, type ApiErrorBody } from "@/actions";
+import {
+  apiV2,
+  AUTH_COOKIE_NAMES,
+  API_ROUTES,
+  type ApiErrorBody,
+} from "@/actions";
 import { getAccessToken } from "@/actions/cookie";
+import { ConsultationMode } from "@/store/consultationPrepStore";
 import { type IExpert } from "@repo/lib";
 
 export interface SomeoneElseData {
@@ -12,39 +18,55 @@ export interface SomeoneElseData {
   pob: string;
 }
 
-export interface InitiateChatData {
+export interface InitiateConsultationData {
   consultationId: number;
   sessionId: number;
   maxMinutes: number;
   requestExpiresInSec: number;
 }
 
-/** Extra fields the backend attaches to chat domain-error bodies. */
-export interface InitiateChatErrorBody extends ApiErrorBody {
+/** Extra fields the backend attaches to initiate domain-error bodies. */
+export interface InitiateConsultationErrorBody extends ApiErrorBody {
   existingConsultationId?: number;
   existingExpertId?: number;
 }
 
 /**
- * Plain (JSON-serializable) result for chat initiation. The `ApiError`
+ * Plain (JSON-serializable) result for consultation initiation. The `ApiError`
  * class does not survive the "use server" flight boundary (client receives
  * message + stack only), so the error code is extracted here, server-side,
  * while the full error is still available.
  */
-export type InitiateChatResult =
-  | { ok: true; data: InitiateChatData }
+export type InitiateConsultationResult =
+  | { ok: true; data: InitiateConsultationData }
   | {
       ok: false;
       code?: string;
       message: string;
-      body?: InitiateChatErrorBody;
+      body?: InitiateConsultationErrorBody;
     };
 
-export async function initiateChatAction(
-  expertId: string | number,
-  metadata: SomeoneElseData | null,
+/**
+ * Unified initiate action for all consultation modes (chat | voice).
+ *
+ * Calls the single `POST /v1/client/consultations/initiate` endpoint which
+ * replaces the deprecated `POST /client/chat/initiate` and
+ * `POST /client/voice/initiate` aliases. Shapes match `InitiateConsultationResult`
+ * (consultation/session IDs, budget, request window) and the same domain
+ * error codes (`ACTIVE_CONSULTATION_EXISTS`, `EXPERT_BUSY_IN_CONSULTATION`,
+ * `INSUFFICIENT_BALANCE`).
+ *
+ * @param expertId - Expert being consulted.
+ * @param mode - `"chat"` or `"voice"` (video has no initiate core yet).
+ * @param metadata - Optional someone-else details (chat only; voice ignores).
+ * @param consultationId - Optional existing consultation to re-initiate into.
+ */
+export async function initiateConsultationAction(
+  expertId: number | string,
+  mode: ConsultationMode,
+  metadata: SomeoneElseData | null = null,
   consultationId?: number,
-): Promise<InitiateChatResult> {
+): Promise<InitiateConsultationResult> {
   const accessToken = await getAccessToken();
 
   const res = await apiV2
@@ -53,11 +75,15 @@ export async function initiateChatAction(
         Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${accessToken}`,
       },
     })
-    .post<InitiateChatData, InitiateChatErrorBody>(API_ROUTES.CHAT.INITIATE, {
-      expert_id: Number(expertId),
-      ...(consultationId != null ? { consultation_id: consultationId } : {}),
-      ...(metadata ? { metadata } : {}),
-    });
+    .post<InitiateConsultationData, InitiateConsultationErrorBody>(
+      API_ROUTES.CONSULTATION.INITIATE,
+      {
+        expert_id: Number(expertId),
+        mode,
+        ...(consultationId != null ? { consultation_id: consultationId } : {}),
+        ...(metadata ? { metadata } : {}),
+      },
+    );
 
   if (res.ok) return { ok: true, data: res.data };
 
@@ -69,8 +95,6 @@ export async function initiateChatAction(
     body: err.body,
   };
 }
-
-/** Single file attachment on a history message (mirrors backend `ChatHistoryAttachmentDto`). */
 export interface ChatHistoryAttachment {
   url: string;
   mimeType?: string | null;
@@ -118,14 +142,14 @@ export async function getChatHistoryAction(consultationId: number) {
         Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${accessToken}`,
       },
     })
-    .get<ChatHistoryResponse>(
-      `${API_ROUTES.CHAT.HISTORY}/${consultationId}`,
-    );
+    .get<ChatHistoryResponse>(`${API_ROUTES.CHAT.HISTORY}/${consultationId}`);
 }
 
 /**
  * Fetch expert for chat prep via canonical /experts/:id.
  */
 export async function getChatPrepExpertAction(expertId: string | number) {
-  return apiV2.get<IExpert>(API_ROUTES.EXPERTS.ACCOUNT.replace(":id", String(expertId)));
+  return apiV2.get<IExpert>(
+    API_ROUTES.EXPERTS.ACCOUNT.replace(":id", String(expertId)),
+  );
 }

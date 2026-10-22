@@ -1,7 +1,6 @@
 export interface ConsultationRoomsResult {
   consultationId: number;
-  chat: unknown;
-  call: unknown;
+  room: unknown;
 }
 
 export type ConsultationMode = "chat" | "voice" | "video";
@@ -33,6 +32,10 @@ export interface ConsultationActionAck {
   consultationId: number;
   payload?: ConsultationStatePayload | ConsultationEndedPayload;
   message?: string;
+  /** Accept-time Agora voice token (voice/video), returned on accept. */
+  token?: string;
+  tokenExpiresAt?: string;
+  channelName?: string;
 }
 
 export interface ConsultationBudgetHoldPayload {
@@ -63,5 +66,15 @@ export interface ConsultationBudgetWarningPayload {
   mode: ConsultationMode;
   remainingSeconds: number;
   message?: string;
+  timestamp: string;
+}
+
+export interface ConsultationMediaReadyPayload {
+  consultationId: number;
+  actorType: "client" | "expert";
+  actorId: number;
+  clientReady: boolean;
+  expertReady: boolean;
+  bothReady: boolean;
   timestamp: string;
 }

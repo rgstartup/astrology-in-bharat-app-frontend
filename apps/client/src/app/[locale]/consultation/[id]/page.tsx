@@ -5,8 +5,8 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { Empty, EmptyTitle } from "@/components/ui/empty";
 import { Spinner } from "@/components/ui/spinner";
-import { ChatRoomContent, RoomErrorState, RoomLoadingState } from "./chat-room";
-import { useRoomSeed } from "./chat-room/hooks/use-room-seed";
+import { ChatRoomContent, RoomErrorState, RoomLoadingState } from "./room";
+import { useRoomSeed } from "./room/hooks/use-room-seed";
 
 /**
  * Route shell: owns search params + the initial REST seed
@@ -23,8 +23,7 @@ function ChatRoomBootstrap() {
   const searchParams = useSearchParams();
   const consultationIdParam = params.id as string;
   const consultationId = consultationIdParam ? Number(consultationIdParam) : NaN;
-  const roomConsultationId =
-    consultationIdParam && !isNaN(consultationId) ? consultationId : null;
+  const roomConsultationId = consultationIdParam && !isNaN(consultationId) ? consultationId : null;
   const sessionId = searchParams.get("sessionId");
   const expertId = searchParams.get("expertId");
 

@@ -20,15 +20,15 @@ const bubbleVariants = cva(
     variants: {
       variant: {
         default:
-          "*:data-[slot=bubble-content]:bg-orange-600 *:data-[slot=bubble-content]:text-white [&>[data-slot=bubble-content]:is(button,a):hover]:bg-orange-700",
+          "*:data-[slot=bubble-content]:border *:data-[slot=bubble-content]:border-[#111111] *:data-[slot=bubble-content]:bg-[#111111] *:data-[slot=bubble-content]:text-white",
         secondary:
-          "*:data-[slot=bubble-content]:bg-slate-100 *:data-[slot=bubble-content]:text-slate-900 *:data-[slot=bubble-content]:border *:data-[slot=bubble-content]:border-slate-200/80",
+          "*:data-[slot=bubble-content]:bg-white *:data-[slot=bubble-content]:text-[#111111] *:data-[slot=bubble-content]:border *:data-[slot=bubble-content]:border-[#d3cec6]",
         muted:
           "*:data-[slot=bubble-content]:bg-slate-50 *:data-[slot=bubble-content]:text-slate-700 *:data-[slot=bubble-content]:border *:data-[slot=bubble-content]:border-slate-200",
         tinted:
           "*:data-[slot=bubble-content]:bg-orange-50 *:data-[slot=bubble-content]:text-orange-950 *:data-[slot=bubble-content]:border *:data-[slot=bubble-content]:border-orange-200/60",
         outline:
-          "*:data-[slot=bubble-content]:border *:data-[slot=bubble-content]:border-slate-200 *:data-[slot=bubble-content]:bg-white *:data-[slot=bubble-content]:text-slate-900",
+          "*:data-[slot=bubble-content]:border *:data-[slot=bubble-content]:border-[#d3cec6] *:data-[slot=bubble-content]:bg-white *:data-[slot=bubble-content]:text-[#111111]",
         ghost:
           "border-none *:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0",
         destructive:

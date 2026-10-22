@@ -112,7 +112,7 @@ export const ChatNotificationListener: React.FC = () => {
             <button
               onClick={() => {
                 toast.dismiss();
-                router.push(`/dashboard/chat/${session.id}`);
+                router.push(`/dashboard/consultations/${session.id}`);
               }}
               className="flex-[2] bg-[#fd6410] text-white py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-orange-500/30 hover:bg-[#e55a0e] transition-all active:scale-95 flex items-center justify-center gap-2"
             >
@@ -139,9 +139,13 @@ export const ChatNotificationListener: React.FC = () => {
     };
 
     const handleSessionEnded = (data: any) => {
+      const targetSessionId = data.id || data.sessionId;
       if (
         window.location.pathname.includes(
-          `/dashboard/chat/${data.id || data.sessionId}`,
+          `/dashboard/consultations/${targetSessionId}`,
+        ) ||
+        window.location.pathname.includes(
+          `/dashboard/chat/${targetSessionId}`,
         )
       )
         return;

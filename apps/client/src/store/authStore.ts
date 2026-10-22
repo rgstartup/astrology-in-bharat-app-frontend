@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { apiV2, API_ROUTES } from "@/actions";
+import { getMeAction, getWalletBalanceAction } from "@/actions/auth";
 import type { Client, ClientWallet } from "@repo/lib";
 
 export interface IAuthUser extends Client {
@@ -17,6 +18,7 @@ interface AuthState {
   showImageModal: boolean;
 
   // Actions
+  setInitialUser: (user: IAuthUser | null) => void;
   init: (force?: boolean) => Promise<void>;
   login: (userData?: any) => void;
   logout: (redirectUrl?: string) => Promise<string>;
@@ -44,11 +46,32 @@ export const authStore = create<AuthState>()(
       isInitialized: false,
       showImageModal: false,
 
+      setInitialUser: (user: IAuthUser | null) => {
+        if (user && (user.id || user.public_id)) {
+          set({
+            user,
+            isAuthenticated: true,
+            loading: false,
+            isInitialized: true,
+            balance: Number(user.wallet?.balance) || 0,
+          });
+          return;
+        }
+
+        set({
+          user: null,
+          isAuthenticated: false,
+          loading: false,
+          isInitialized: true,
+          balance: 0,
+        });
+      },
+
       init: async (force: boolean = false) => {
         if (get().isInitialized && !force) return;
 
         const wasAuthenticated = get().isAuthenticated;
-        const result = await apiV2.get<IAuthUser>(API_ROUTES.AUTH.ME);
+        const result = await getMeAction();
 
         if (!result.ok) {
           get().reset();
@@ -129,9 +152,7 @@ export const authStore = create<AuthState>()(
       },
 
       refreshBalance: async () => {
-        const result = await apiV2.get<{ balance: number }>(
-          API_ROUTES.WALLET.ROOT,
-        );
+        const result = await getWalletBalanceAction();
         if (result.ok && result.data) {
           get().updateBalance(result.data.balance);
         }

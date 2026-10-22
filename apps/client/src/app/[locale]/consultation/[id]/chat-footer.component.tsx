@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import type { PendingAttachment } from "./chat-room/hooks/use-room-composer";
+import type { PendingAttachment } from "./room/hooks/use-room-composer";
 
 type ChatFooterProps = {
   sessionStatus: string;

@@ -24,7 +24,7 @@ import type { IExpert } from "@repo/lib";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { requestChatConsult } from "@/features/chat-prep/request-chat-consult";
+import { requestConsultationPrep } from "@/features/consultation-prep";
 import { useTranslations } from "next-intl";
 
 interface ExploreExpertCardProps {
@@ -45,15 +45,22 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
   const expertId = expert.id;
   const isLiked = expertId ? isExpertInWishlist(expertId) : false;
 
-  const chatPrice = expert.pricing?.chat_price ?? expert.chat_price ?? expert.price ?? 25;
-  const callPrice = expert.pricing?.call_price ?? expert.call_price ?? expert.price ?? 30;
+  const chatPrice =
+    expert.pricing?.chat_price ?? expert.chat_price ?? expert.price ?? 25;
+  const callPrice =
+    expert.pricing?.call_price ?? expert.call_price ?? expert.price ?? 30;
   const videoPrice =
-    expert.pricing?.video_call_price ?? expert.video_call_price ?? (chatPrice ? chatPrice * 2 : 50);
+    expert.pricing?.video_call_price ??
+    expert.video_call_price ??
+    (chatPrice ? chatPrice * 2 : 50);
 
   const parsedSpecs = extractSpecializationNames(
-    expert.specializations || expert.specialization || (expert as any).expertise,
+    expert.specializations ||
+      expert.specialization ||
+      (expert as any).expertise,
   );
-  const specializationsList: string[] = parsedSpecs.length > 0 ? parsedSpecs : ["Vedic Astrology"];
+  const specializationsList: string[] =
+    parsedSpecs.length > 0 ? parsedSpecs : ["Vedic Astrology"];
 
   const languagesDisplay = Array.isArray(expert.languages)
     ? expert.languages.join(", ")
@@ -72,7 +79,10 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
     toggleLike({ id: String(expertId), type: "expert", isLiked });
   };
 
-  const handleConsult = (e: React.MouseEvent, type: "chat" | "audio" | "video") => {
+  const handleConsult = (
+    e: React.MouseEvent,
+    mode: "chat" | "voice" | "video",
+  ) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -81,17 +91,17 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
       return;
     }
 
-    if (type === "chat") {
-      requestChatConsult(String(expertId), {
+    requestConsultationPrep(
+      String(expertId),
+      {
         isAuthenticated,
         pathname,
         push: (url) => router.push(url),
         loginTitle: tChat("toastLogin"),
         loginActionLabel: tChat("loginNow"),
-      });
-    } else {
-      router.push(`/call/prep/${expertId}?type=${type}`);
-    }
+      },
+      mode,
+    );
   };
 
   const handleCardClick = () => {
@@ -103,8 +113,8 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
     {
       initialStatus: toExpertStatus(
         expert.isAvailableForConsultation ??
-        expert.status ??
-        expert.is_available,
+          expert.status ??
+          expert.is_available,
       ),
     },
   );
@@ -180,7 +190,9 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
           <div className="flex flex-col items-end">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 font-extrabold text-xs shadow-xs">
               <Star className="size-3.5 fill-[#FF6B00] text-[#FF6B00]" />
-              <span>{expert.rating ? Number(expert.rating).toFixed(1) : "4.9"}</span>
+              <span>
+                {expert.rating ? Number(expert.rating).toFixed(1) : "4.9"}
+              </span>
               <span className="text-[10px] text-gray-400 font-medium">
                 ({expert.total_reviews || 85})
               </span>
@@ -234,7 +246,9 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
         <div className="flex items-center justify-between text-xs text-gray-600 pt-3 border-t border-gray-200 font-medium">
           <div className="flex items-center gap-1.5">
             <Award className="size-3.5 text-orange" />
-            <span className="font-bold text-gray-800">{expert.experience_in_years || 5}+ yrs</span>
+            <span className="font-bold text-gray-800">
+              {expert.experience_in_years || 5}+ yrs
+            </span>
           </div>
 
           <div className="flex items-center gap-1.5 text-gray-500 max-w-[55%] truncate">
@@ -252,8 +266,12 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
               Consultation Starts At
             </span>
             <div className="flex items-baseline gap-1">
-              <span className="text-lg font-black text-gray-900">₹{chatPrice}</span>
-              <span className="text-[11px] font-semibold text-gray-500">/min</span>
+              <span className="text-lg font-black text-gray-900">
+                ₹{chatPrice}
+              </span>
+              <span className="text-[11px] font-semibold text-gray-500">
+                /min
+              </span>
             </div>
           </div>
 
@@ -286,7 +304,7 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
           {/* Audio Call Button */}
           <button
             type="button"
-            onClick={(e) => handleConsult(e, "audio")}
+            onClick={(e) => handleConsult(e, "voice")}
             className="flex flex-col items-center justify-center py-2.5 px-1 rounded-xl bg-emerald-50/70 hover:bg-emerald-100/70 border-2 border-emerald-500/40 hover:border-emerald-600 text-emerald-700 transition-all active:scale-95 shadow-xs cursor-pointer"
           >
             <div className="flex items-center gap-1 text-emerald-700">

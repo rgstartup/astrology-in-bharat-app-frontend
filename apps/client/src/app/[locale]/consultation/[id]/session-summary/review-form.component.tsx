@@ -72,41 +72,41 @@ function getStarIconClass(star: number, activeRating: number): string {
 function RatingFeedbackComment({ activeRating }: { activeRating: number }) {
   if (activeRating === 1) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-medium text-rose-800 transition-all">
+      <span className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50 px-2.5 py-0.5 text-[11px] font-medium text-rose-800 transition-all">
         Poor — Needs improvement
       </span>
     );
   }
   if (activeRating === 2) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800 transition-all">
+      <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[11px] font-medium text-amber-800 transition-all">
         Fair — Could have been better
       </span>
     );
   }
   if (activeRating === 3) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-medium text-slate-800 transition-all">
+      <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-800 transition-all">
         Good — Satisfactory session
       </span>
     );
   }
   if (activeRating === 4) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800 transition-all">
+      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-800 transition-all">
         Very Good — Helpful and insightful
       </span>
     );
   }
   if (activeRating === 5) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-100/70 px-3 py-1 text-xs font-medium text-emerald-900 transition-all">
+      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-100/70 px-2.5 py-0.5 text-[11px] font-medium text-emerald-900 transition-all">
         Excellent! — Loved the consultation
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-[#ece8e1] bg-white px-3 py-1 text-xs text-[#7b7b78] transition-all">
+    <span className="inline-flex items-center gap-1 rounded-full border border-[#ece8e1] bg-white px-2.5 py-0.5 text-[11px] text-[#7b7b78] transition-all">
       Tap a star to rate
     </span>
   );
@@ -200,8 +200,8 @@ export default function ReviewForm({
 
   if (reviewSubmitted) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50/70 p-5 text-center">
-        <CheckCircle className="size-6 text-emerald-600" />
+      <div className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 text-center">
+        <CheckCircle className="size-5 text-emerald-600" />
         <h4 className="text-sm font-semibold text-emerald-900">Review Submitted</h4>
         <p className="text-xs text-emerald-700">
           Thank you for sharing your feedback. Redirecting you home...
@@ -211,17 +211,17 @@ export default function ReviewForm({
   }
 
   return (
-    <section aria-label="Rate your experience" className="flex w-full flex-col gap-3.5">
+    <section aria-label="Rate your experience" className="flex w-full flex-col gap-2.5">
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-[#111111]">
+        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-[#111111]">
           Rate Your Consultation
         </h3>
       </div>
 
       {/* Star Selector Box with contextual comment underneath */}
-      <div className="flex flex-col items-center justify-center gap-2.5 rounded-xl border border-[#ece8e1] bg-[#faf8f5]/60 py-3.5 px-4 shadow-2xs">
+      <div className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-[#ece8e1] bg-[#faf8f5]/60 py-2.5 px-3 shadow-2xs">
         <div
-          className="flex items-center justify-center gap-2"
+          className="flex items-center justify-center gap-1"
           role="radiogroup"
           aria-label="Rating"
         >
@@ -234,11 +234,11 @@ export default function ReviewForm({
               onMouseLeave={() => setHoverRating(0)}
               aria-label={getStarAriaLabel(star)}
               aria-pressed={star === reviewRating}
-              className="group p-1.5 transition-transform hover:scale-115 active:scale-95 focus:outline-hidden touch-manipulation cursor-pointer"
+              className="group p-1 transition-transform hover:scale-115 active:scale-95 focus:outline-hidden touch-manipulation cursor-pointer"
             >
               <Star
                 className={cn(
-                  "size-7 sm:size-8 transition-colors",
+                  "size-5 sm:size-6 transition-colors",
                   getStarIconClass(star, activeRating)
                 )}
               />
@@ -251,7 +251,7 @@ export default function ReviewForm({
       </div>
 
       {/* Comment Section */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1">
         <label htmlFor="review-comment" className="text-xs font-medium text-[#626260]">
           Feedback & Comments <span className="text-[#9c9fa5]">(Optional)</span>
         </label>
@@ -260,14 +260,14 @@ export default function ReviewForm({
           value={reviewComment}
           onChange={(e) => setReviewComment(e.target.value)}
           placeholder="Share what went well or how the expert can improve..."
-          rows={3}
-          className="resize-none rounded-xl border-[#e3ded6] bg-white text-sm text-[#111111] placeholder:text-[#9c9fa5] focus-visible:border-[#111111] focus-visible:ring-0"
+          rows={2}
+          className="max-h-24 resize-none overflow-y-auto rounded-xl border-[#e3ded6] bg-white text-sm text-[#111111] placeholder:text-[#9c9fa5] focus-visible:border-[#111111] focus-visible:ring-0"
         />
       </div>
 
       {/* Submit Button */}
       <Button
-        className="h-11 w-full rounded-xl bg-[#111111] text-sm font-medium text-white transition-all hover:bg-black active:scale-[0.99] cursor-pointer"
+        className="h-10 w-full rounded-xl bg-[#111111] text-sm font-medium text-white transition-all hover:bg-black active:scale-[0.99] cursor-pointer"
         disabled={isSubmitting}
         onClick={handleSubmit}
       >

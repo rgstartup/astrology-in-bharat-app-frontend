@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiV2, API_ROUTES } from "@/actions";
-import { setAccessToken, setRefreshToken, clearAuthCookies } from "./cookie";
+import { apiV2, API_ROUTES, AUTH_COOKIE_NAMES, type Result } from "@/actions";
+import { setAccessToken, setRefreshToken, clearAuthCookies, getAccessToken } from "./cookie";
+import type { IAuthUser } from "@/store/authStore";
 
 import {
   LoginFormData,
@@ -268,3 +269,54 @@ export async function verifyEmailAction(
 
   return { success: true, user, message };
 }
+
+// ─────────────────────────────────────────────────────────
+// GET CURRENT USER — Server-Side action using HttpOnly accessToken cookie
+// ─────────────────────────────────────────────────────────
+export async function getMeAction(): Promise<Result<IAuthUser>> {
+  const token = await getAccessToken();
+  if (!token) {
+    return {
+      ok: false,
+      error: {
+        status: 401,
+        message: "Unauthorized",
+        errorCode: "UNAUTHORIZED",
+      },
+    };
+  }
+
+  return apiV2
+    .extend({
+      headers: {
+        Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
+      },
+    })
+    .get<IAuthUser>(API_ROUTES.AUTH.ME);
+}
+
+// ─────────────────────────────────────────────────────────
+// GET WALLET BALANCE — Server-Side action using HttpOnly accessToken cookie
+// ─────────────────────────────────────────────────────────
+export async function getWalletBalanceAction(): Promise<Result<{ balance: number }>> {
+  const token = await getAccessToken();
+  if (!token) {
+    return {
+      ok: false,
+      error: {
+        status: 401,
+        message: "Unauthorized",
+        errorCode: "UNAUTHORIZED",
+      },
+    };
+  }
+
+  return apiV2
+    .extend({
+      headers: {
+        Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
+      },
+    })
+    .get<{ balance: number }>(API_ROUTES.WALLET.ROOT);
+}
+
