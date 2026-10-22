@@ -10,33 +10,33 @@ export default function HomeLayout({
   children,
   experts,
   services,
-  pujas,
+  // pujas,
   // stores,
-  products,
+  // products,
   testimonials,
 }: {
   children: React.ReactNode;
   experts: React.ReactNode;
   services: React.ReactNode;
-  pujas: React.ReactNode;
+  // pujas: React.ReactNode;
   // stores: React.ReactNode;
-  products: React.ReactNode;
+  // products: React.ReactNode;
   testimonials: React.ReactNode;
 }) {
   return (
     <ClientLayout>
       <HeroSection />
       {experts}
-      {services}
-      {pujas}
-      <ExpertConsultant />
+      {/* {services} */}
+      {/* {pujas} */}
+      {/* <ExpertConsultant /> */}
       <ChooseYourZodiac />
       {/* {stores} */}
-      {products}
+      {/* {products} */}
       <WhyChooseUs />
       {testimonials}
       <CTA />
-      {children}
+      {/* {children} */}
     </ClientLayout>
   );
 }

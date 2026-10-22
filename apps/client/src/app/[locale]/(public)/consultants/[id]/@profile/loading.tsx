@@ -54,14 +54,18 @@ const ProfileRightCardSkeleton = () => (
 
       {/* Specialization Tags */}
       <div className="flex flex-wrap gap-2">
-        {["Vedic Astrology", "Kundli Analysis", "Numerology", "Vastu", "Prashna"].map(
-          (tag, i) => (
-            <div
-              key={i}
-              className="h-6 w-24 bg-slate-100 rounded-full border border-slate-200/60"
-            />
-          ),
-        )}
+        {[
+          "Vedic Astrology",
+          "Kundli Analysis",
+          "Numerology",
+          "Vastu",
+          "Prashna",
+        ].map((tag, i) => (
+          <div
+            key={i}
+            className="h-6 w-24 bg-slate-100 rounded-full border border-slate-200/60"
+          />
+        ))}
       </div>
 
       {/* Languages Strip */}
@@ -96,14 +100,18 @@ const ContentSectionSkeleton = () => (
   <div className="w-full bg-white rounded-2xl border border-slate-200/60 p-5 sm:p-6 lg:p-8 shadow-2xs animate-pulse">
     {/* Tabs Navigation Header */}
     <div className="flex items-center gap-6 border-b border-slate-100 pb-3 mb-6">
-      {["About Consultant", "Experience & Credentials", "Client Reviews (0)", "Photo Gallery", "Videos"].map(
-        (tab, i) => (
-          <div
-            key={i}
-            className={`h-4 rounded ${i === 0 ? "w-28 bg-orange/30" : "w-24 bg-slate-200"}`}
-          />
-        ),
-      )}
+      {[
+        "About Consultant",
+        "Experience & Credentials",
+        "Client Reviews (0)",
+        "Photo Gallery",
+        "Videos",
+      ].map((tab, i) => (
+        <div
+          key={i}
+          className={`h-4 rounded ${i === 0 ? "w-28 bg-orange/30" : "w-24 bg-slate-200"}`}
+        />
+      ))}
     </div>
 
     {/* Bio & Overview Paragraphs */}
@@ -132,7 +140,7 @@ const ContentSectionSkeleton = () => (
   </div>
 );
 
-// ─── Main Profile Slot Loading Component ───────────────────────────────
+// ─── Main Profile Slot Loading Component ──────────────────────────
 export default function ProfileLoading() {
   return (
     <div className="bg-slate-50/70 pb-8">

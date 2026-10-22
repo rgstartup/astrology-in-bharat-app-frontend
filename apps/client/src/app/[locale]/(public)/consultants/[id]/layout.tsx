@@ -17,7 +17,7 @@ export default function ConsultantLayout({
       {profile}
 
       {/* 2. Products / Remedies Slot (Reports loaded by default, on-demand tabs for ritual, item, session) */}
-      {products}
+      {/* {products} */}
 
       {/* 3. Children Slot (SEO Content, Structured Schema, FAQs) */}
       {children}
