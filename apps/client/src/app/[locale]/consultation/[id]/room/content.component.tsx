@@ -274,7 +274,7 @@ export default function RoomContent({
         elapsedText: formatTime(elapsedTime),
         rate: displayVoiceRate,
         muted: directVoice.muted,
-        onToggleMute: () => void directVoice.toggleMute(),
+        onToggleMute: () => void directVoice.toggleMic(),
         speakerMuted: directVoice.speakerMuted,
         onToggleSpeaker: () => void directVoice.toggleSpeaker(),
         onEnd: () => setVoiceCancelOpen(true),
@@ -356,7 +356,7 @@ export default function RoomContent({
               ? {
                   phase: voice.voicePhase,
                   muted: voice.muted,
-                  onToggleMute: () => void voice.toggleMute(),
+                  onToggleMute: () => void voice.toggleMic(),
                   speakerMuted: voice.speakerMuted,
                   onToggleSpeaker: () => void voice.toggleSpeaker(),
                   onEndVoice: () => void voice.endVoice(),

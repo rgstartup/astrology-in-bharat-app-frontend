@@ -15,7 +15,11 @@ type UseDirectVoiceOptions = {
   userId: number | string | null;
   enabled: boolean;
   /** Accept-time Agora voice token (voice/video). Skips the per-join token round trip when provided. */
-  voiceToken?: { token: string | null; channelName: string | null; tokenExpiresAt?: string | null } | null;
+  voiceToken?: {
+    token: string | null;
+    channelName: string | null;
+    tokenExpiresAt?: string | null;
+  } | null;
   /** Fired after the local Agora join succeeds and `mediaReady()` has been emitted. */
   onLocalReady?: () => void;
   /** Consultation ended (socket ENDED / verdict watcher) — tears down the RTC session. */
@@ -30,7 +34,7 @@ type UseDirectVoiceResult = {
   cameraEnabled: boolean;
   busy: boolean;
   error: string | null;
-  toggleMute: () => Promise<void>;
+  toggleMic: () => Promise<void>;
   toggleSpeaker: () => Promise<void>;
   toggleCamera: () => Promise<void>;
   endVoice: () => Promise<void>;
@@ -53,7 +57,9 @@ type UseDirectVoiceResult = {
  * @param options - Consultation id, client id for RTC identity, enabled flag, and optional accept-time voice token.
  * @returns RTC phase plus voice controls bound to the current consultation.
  */
-export function useDirectVoice(options: UseDirectVoiceOptions): UseDirectVoiceResult {
+export function useDirectVoice(
+  options: UseDirectVoiceOptions,
+): UseDirectVoiceResult {
   const { consultationId, userId, enabled, voiceToken, onLocalReady, ended } =
     options;
   const rtc = useVoiceSession();
@@ -142,7 +148,7 @@ export function useDirectVoice(options: UseDirectVoiceOptions): UseDirectVoiceRe
     cameraEnabled: rtc.cameraEnabled,
     busy: rtc.busy,
     error: rtc.error,
-    toggleMute: rtc.toggleMute,
+    toggleMic: rtc.toggleMic,
     toggleSpeaker: rtc.toggleSpeaker,
     toggleCamera: rtc.toggleCamera,
     endVoice,

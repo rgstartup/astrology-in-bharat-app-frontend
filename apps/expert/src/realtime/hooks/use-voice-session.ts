@@ -17,11 +17,15 @@ export interface ExpertVoiceRtcControls {
   join: (
     consultationId: number,
     identity: string,
-    token?: { token: string | null; channelName: string | null; tokenExpiresAt?: string | null },
+    token?: {
+      token: string | null;
+      channelName: string | null;
+      tokenExpiresAt?: string | null;
+    },
     onLocalReady?: () => void,
   ) => Promise<void>;
   leave: () => Promise<void>;
-  toggleMute: () => Promise<void>;
+  toggleMic: () => Promise<void>;
   toggleSpeaker: () => Promise<void>;
   clearError: () => void;
 }
@@ -107,11 +111,19 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
     async (
       consultationId: number,
       identity: string,
-      token?: { token: string | null; channelName: string | null; tokenExpiresAt?: string | null } | null,
+      token?: {
+        token: string | null;
+        channelName: string | null;
+        tokenExpiresAt?: string | null;
+      } | null,
       onLocalReady?: () => void,
     ): Promise<void> => {
       // If already active in the same consultation room, preserve and notify ready
-      if (globalSession && globalActive && globalConsultationId === consultationId) {
+      if (
+        globalSession &&
+        globalActive &&
+        globalConsultationId === consultationId
+      ) {
         onLocalReady?.();
         return;
       }
@@ -162,7 +174,8 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
         // dangling connection.
         void globalSession?.leave().catch(() => undefined);
         globalSession = null;
-        globalError = err instanceof Error ? err.message : "Could not join voice.";
+        globalError =
+          err instanceof Error ? err.message : "Could not join voice.";
         globalActive = false;
         globalSnapshot = null;
         globalConsultationId = null;
@@ -194,10 +207,10 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
     }
   }, []);
 
-  const toggleMute = useCallback(async (): Promise<void> => {
+  const toggleMic = useCallback(async (): Promise<void> => {
     if (!globalSession) return;
-    const muted = !globalSession.getSnapshot().localMedia.microphoneEnabled;
-    if (muted) await globalSession.mute();
+    const micEnabled = globalSession.getSnapshot().localMedia.microphoneEnabled;
+    if (micEnabled) await globalSession.mute();
     else await globalSession.unmute();
     notifySubscribers();
   }, []);
@@ -214,9 +227,15 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
     notifySubscribers();
   }, []);
 
-  const voicePhase = globalActive ? toExpertVoicePhase(globalSnapshot, globalBusy) : null;
-  const muted = globalSnapshot ? !globalSnapshot.localMedia.microphoneEnabled : false;
-  const speakerMuted = globalSnapshot ? globalSnapshot.localMedia.speakerMuted : false;
+  const voicePhase = globalActive
+    ? toExpertVoicePhase(globalSnapshot, globalBusy)
+    : null;
+  const muted = globalSnapshot
+    ? !globalSnapshot.localMedia.microphoneEnabled
+    : false;
+  const speakerMuted = globalSnapshot
+    ? globalSnapshot.localMedia.speakerMuted
+    : false;
 
   return useMemo(
     () => ({
@@ -229,7 +248,7 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
       active: globalActive,
       join,
       leave,
-      toggleMute,
+      toggleMic,
       toggleSpeaker,
       clearError,
     }),
@@ -243,7 +262,7 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
       globalActive,
       join,
       leave,
-      toggleMute,
+      toggleMic,
       toggleSpeaker,
       clearError,
     ],

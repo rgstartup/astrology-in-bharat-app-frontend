@@ -34,7 +34,7 @@ export interface VoiceUpgradeControls {
   cancelVoice: () => Promise<void>;
   backToChat: () => void;
   returnToVoice: () => void;
-  toggleMute: () => Promise<void>;
+  toggleMic: () => Promise<void>;
   toggleSpeaker: () => Promise<void>;
   toggleCamera: () => Promise<void>;
   clearError: () => void;
@@ -153,7 +153,7 @@ export function useVoiceUpgrade(options: VoiceUpgradeOptions): VoiceUpgradeContr
     cancelVoice,
     backToChat,
     returnToVoice,
-    toggleMute: rtc.toggleMute,
+    toggleMic: rtc.toggleMic,
     toggleSpeaker: rtc.toggleSpeaker,
     toggleCamera: rtc.toggleCamera,
     clearError,

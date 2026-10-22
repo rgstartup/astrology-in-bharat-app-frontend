@@ -28,7 +28,11 @@ interface ChatRoomContentProps {
   mode?: ConsultationMode;
 }
 
-export function ChatRoomContent({ sessionId, newFlowId, mode: modeProp }: ChatRoomContentProps) {
+export function ChatRoomContent({
+  sessionId,
+  newFlowId,
+  mode: modeProp,
+}: ChatRoomContentProps) {
   const { user } = useAuthStore();
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
 
@@ -79,7 +83,11 @@ export function ChatRoomContent({ sessionId, newFlowId, mode: modeProp }: ChatRo
     sendLiveTyping,
   });
 
-  const parsedSummaryData = (summaryData as { split?: { totalAmount: number; platformFee: number; expertShare: number } })?.split;
+  const parsedSummaryData = (
+    summaryData as {
+      split?: { totalAmount: number; platformFee: number; expertShare: number };
+    }
+  )?.split;
 
   // Mic gate: verified in waiting modal prior to room entrance
   const [micConfirmed, setMicConfirmed] = useState(true);
@@ -103,7 +111,10 @@ export function ChatRoomContent({ sessionId, newFlowId, mode: modeProp }: ChatRo
     clearError: voiceClearError,
   } = voice;
   const expertId = user?.id;
-  const identity = expertId != null && newFlowId != null ? `expert_${expertId}_consult_${newFlowId}` : null;
+  const identity =
+    expertId != null && newFlowId != null
+      ? `expert_${expertId}_consult_${newFlowId}`
+      : null;
 
   useEffect(() => {
     if (!isVoiceMode) return;
@@ -180,10 +191,10 @@ export function ChatRoomContent({ sessionId, newFlowId, mode: modeProp }: ChatRo
             ratePerMinute: resolvedRatePerMinute,
           }}
           muted={voice.muted}
-          onToggleMute={() => void voice.toggleMute()}
+          onToggleMute={voice.toggleMic}
           speakerMuted={voice.speakerMuted}
-          onToggleSpeaker={() => void voice.toggleSpeaker()}
-          onEndCall={() => void handleEndChat()}
+          onToggleSpeaker={voice.toggleSpeaker}
+          onEndCall={handleEndChat}
         />
       )}
 
@@ -232,7 +243,9 @@ export function ChatRoomContent({ sessionId, newFlowId, mode: modeProp }: ChatRo
         <SummaryModal
           isOpen={showSummary}
           data={parsedSummaryData}
-          title={isVoiceMode ? "Voice Consultation Ended" : "Chat Consultation Ended"}
+          title={
+            isVoiceMode ? "Voice Consultation Ended" : "Chat Consultation Ended"
+          }
         />
       )}
     </div>

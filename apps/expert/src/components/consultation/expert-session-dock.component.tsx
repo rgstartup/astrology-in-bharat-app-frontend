@@ -136,7 +136,7 @@ export function ExpertSessionDock({
   const isCamOff = onToggleCamera ? cameraOff : localCameraOff;
   const isSpeakerOff = onToggleSpeaker ? speakerMuted : localSpeakerMuted;
 
-  function toggleMute() {
+  function toggleMic() {
     if (onToggleMute) onToggleMute();
     else setLocalMuted((prev) => !prev);
   }
@@ -205,7 +205,7 @@ export function ExpertSessionDock({
         <Button
           size="icon"
           aria-label={isMuted ? "Unmute mic" : "Mute mic"}
-          onClick={toggleMute}
+          onClick={toggleMic}
           className={cn(
             "size-8 shrink-0 rounded-full transition-all cursor-pointer",
             isMuted

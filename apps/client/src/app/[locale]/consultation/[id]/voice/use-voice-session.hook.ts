@@ -37,7 +37,7 @@ export interface VoiceRtcControls {
   active: boolean;
   join: (consultationId: number, identity: string, token?: { token: string | null; channelName: string | null; tokenExpiresAt?: string | null }) => Promise<void>;
   leave: () => Promise<void>;
-  toggleMute: () => Promise<void>;
+  toggleMic: () => Promise<void>;
   toggleSpeaker: () => Promise<void>;
   toggleCamera: () => Promise<void>;
   clearError: () => void;
@@ -182,11 +182,11 @@ export function useVoiceSession(): VoiceRtcControls {
     }
   }, []);
 
-  const toggleMute = useCallback(async (): Promise<void> => {
+  const toggleMic = useCallback(async (): Promise<void> => {
     const session = sessionRef.current;
     if (!session) return;
-    const muted = !session.getSnapshot().localMedia.microphoneEnabled;
-    if (muted) await session.mute();
+    const micEnabled = session.getSnapshot().localMedia.microphoneEnabled;
+    if (micEnabled) await session.mute();
     else await session.unmute();
   }, []);
 
@@ -223,7 +223,7 @@ export function useVoiceSession(): VoiceRtcControls {
     active,
     join,
     leave,
-    toggleMute,
+    toggleMic,
     toggleSpeaker,
     toggleCamera,
     clearError,
