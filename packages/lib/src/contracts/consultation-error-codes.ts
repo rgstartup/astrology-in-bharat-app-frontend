@@ -1,0 +1,32 @@
+/**
+ * Error code contract for the consultation domain.
+ */
+export const ConsultationErrorCode = {
+  ACTIVE_CONSULTATION_EXISTS: "ACTIVE_CONSULTATION_EXISTS",
+  CANNOT_REVIEW_UNPARTICIPATED_SESSION:
+    "CANNOT_REVIEW_UNPARTICIPATED_SESSION",
+  CHAT_ATTACHMENT_UPLOAD_FAILED: "CHAT_ATTACHMENT_UPLOAD_FAILED",
+  CLIENT_NOT_FOUND: "CLIENT_NOT_FOUND",
+  CONSULTATION_ALREADY_IN_CHAT_MODE: "CONSULTATION_ALREADY_IN_CHAT_MODE",
+  CONSULTATION_NOT_AVAILABLE: "CONSULTATION_NOT_AVAILABLE",
+  CONSULTATION_NOT_FOUND: "CONSULTATION_NOT_FOUND",
+  CONSULTATION_NOT_OWNER: "CONSULTATION_NOT_OWNER",
+  CONSULTATION_NOT_SWITCHABLE: "CONSULTATION_NOT_SWITCHABLE",
+  EXPERT_BUSY_IN_CONSULTATION: "EXPERT_BUSY_IN_CONSULTATION",
+  EXPERT_NOT_FOUND: "EXPERT_NOT_FOUND",
+  EXPERT_UNAVAILABLE: "EXPERT_UNAVAILABLE",
+  INSUFFICIENT_BALANCE: "INSUFFICIENT_BALANCE",
+  PRICE_NOT_FOUND: "PRICE_NOT_FOUND",
+  SESSION_ALREADY_REVIEWED: "SESSION_ALREADY_REVIEWED",
+  SESSION_NOT_FOUND: "SESSION_NOT_FOUND",
+} as const;
+
+export type ConsultationErrorCode =
+  (typeof ConsultationErrorCode)[keyof typeof ConsultationErrorCode];
+
+export const isConsultationErrorCode = (
+  value: unknown,
+): value is ConsultationErrorCode =>
+  typeof value === "string" &&
+  (Object.prototype.hasOwnProperty.call(ConsultationErrorCode, value) ||
+    Object.values(ConsultationErrorCode).includes(value as ConsultationErrorCode));

@@ -251,6 +251,7 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
   }, [endedVerdict, router]);
 
   useEffect(() => {
+    if (pausedState?.reason === "billing_hold") return;
     if (pausedState) {
       toast.warn("Client balance exhausted — chat paused. Waiting for recharge.", {
         toastId: `chat_paused_${newFlowId ?? sessionId}`,
@@ -259,7 +260,7 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
   }, [pausedState, newFlowId, sessionId]);
 
   // 5-minute wait window while the client recharges (new stack only).
-  const pauseWaitSeconds = pausedState
+  const pauseWaitSeconds = pausedState && pausedState.reason !== "billing_hold"
     ? (() => {
         const expiresSec =
           typeof pausedState.pauseExpiresInSec === "number" && !isNaN(pausedState.pauseExpiresInSec)
@@ -278,6 +279,8 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
     const timer = setInterval(() => {
       const nowMs = Date.now();
       setNow(nowMs);
+      // A pause freezes the meter; `now` keeps ticking for the recharge wait.
+      if (pausedState) return;
       const budgetMinutes = newStackBudget?.maxMinutes;
       const budgetAnchor = newStackBudget?.startedAt;
       if (
@@ -285,7 +288,8 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
         typeof budgetAnchor === "string"
       ) {
         const s = new Date(budgetAnchor).getTime();
-        const elapsed = isNaN(s) ? 0 : Math.max(0, Math.floor((nowMs - s) / 1000));
+        const base = newStackBudget?.baseSeconds ?? 0;
+        const elapsed = isNaN(s) ? base : base + Math.max(0, Math.floor((nowMs - s) / 1000));
         setElapsedTime(elapsed);
         setTimeLeft(Math.max(0, budgetMinutes * 60 - elapsed));
         return;
@@ -312,7 +316,7 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [sessionStatus, startedAt, expiresAt, newStackBudget?.maxMinutes, newStackBudget?.startedAt]);
+  }, [sessionStatus, pausedState, startedAt, expiresAt, newStackBudget?.maxMinutes, newStackBudget?.startedAt, newStackBudget?.baseSeconds]);
 
   // Auto scroll to bottom, unless the expert has scrolled up to read history.
   useEffect(() => {

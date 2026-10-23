@@ -87,6 +87,7 @@ export default function ConsultationPrepHost() {
       mode={mode}
       open={isOpen}
       onOpenChange={setConsultationPrepOpen}
+      consultationId={null}
     />
   );
 }

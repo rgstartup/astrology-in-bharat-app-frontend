@@ -10,6 +10,7 @@ import { ConsultationModeSection } from "./consultation-mode-section.component";
 import { SessionTimersSection } from "./session-timers-section.component";
 import { UpgradeConsultationSection } from "./upgrade-consultation-section.component";
 import { EndConsultationAction } from "./end-consultation-action.component";
+import { ContinueConsultationSection } from "./continue-consultation-section.component";
 
 export type ConsultationSidebarProps = {
   expertData: IExpert;
@@ -20,6 +21,8 @@ export type ConsultationSidebarProps = {
   handleEndChat: (force?: boolean) => void;
   isWarning?: boolean;
   onUpgrade?: (mode: "voice" | "video") => void;
+  isSessionEnded?: boolean;
+  consultationId: number | null;
   className?: string;
 };
 
@@ -38,6 +41,8 @@ export function ConsultationSidebar({
   handleEndChat,
   isWarning = false,
   onUpgrade,
+  isSessionEnded = false,
+  consultationId,
   className,
 }: ConsultationSidebarProps) {
   if (!expertData) return null;
@@ -62,11 +67,20 @@ export function ConsultationSidebar({
         isWarning={isWarning}
       />
 
-      <UpgradeConsultationSection expertData={expertData} onUpgrade={onUpgrade} />
+      {isSessionEnded ? (
+        <ContinueConsultationSection
+          expertData={expertData}
+          consultationId={consultationId}
+        />
+      ) : (
+        <>
+          <UpgradeConsultationSection expertData={expertData} onUpgrade={onUpgrade} />
 
-      <div className="mt-auto pt-4 border-t border-[#f0ebe3]">
-        <EndConsultationAction handleEndChat={handleEndChat} />
-      </div>
+          <div className="mt-auto pt-4 border-t border-[#f0ebe3]">
+            <EndConsultationAction handleEndChat={handleEndChat} />
+          </div>
+        </>
+      )}
     </aside>
   );
 }

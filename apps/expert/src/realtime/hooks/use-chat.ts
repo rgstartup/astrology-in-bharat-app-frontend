@@ -39,9 +39,10 @@ export const useChat = (
   const [remoteTyping, setRemoteTyping] = useState(false);
   const [clientName, setClientName] = useState<string | null>(null);
   const [consultationStatus, setConsultationStatus] = useState<string | null>(null);
-  const [budget, setBudget] = useState<{ maxMinutes: number | null; startedAt: string | null }>({
+  const [budget, setBudget] = useState<{ maxMinutes: number | null; startedAt: string | null; baseSeconds: number | null }>({
     maxMinutes: null,
     startedAt: null,
+    baseSeconds: null,
   });
   const [voiceToken, setVoiceToken] = useState<{ token: string | null; tokenExpiresAt: string | null; channelName: string | null }>({
     token: null,
@@ -55,6 +56,38 @@ export const useChat = (
   useEffect(() => {
     if (!isValidId) return;
     const socket = realtimeSocket();
+
+    /**
+     * Merge a server budget into state. `elapsedSeconds` is the server's live
+     * elapsed, so the resume base is recovered by subtracting local anchor
+     * drift at receive time; a fresh anchor without it (older servers) resets.
+     */
+    const applyBudget = (ack: {
+      maxMinutes?: number;
+      startedAt?: string | null;
+      elapsedSeconds?: number;
+    }) => {
+      setBudget((prev) => {
+        const startedAt =
+          typeof ack.startedAt === "string" ? ack.startedAt : prev.startedAt;
+        let baseSeconds = prev.baseSeconds;
+        if (typeof ack.elapsedSeconds === "number" && typeof ack.startedAt === "string") {
+          const anchorMs = new Date(ack.startedAt).getTime();
+          const drift = !isNaN(anchorMs)
+            ? Math.max(0, Math.floor((Date.now() - anchorMs) / 1000))
+            : 0;
+          baseSeconds = Math.max(0, Math.floor(ack.elapsedSeconds - drift));
+        } else if (typeof ack.startedAt === "string") {
+          baseSeconds = 0;
+        }
+        return {
+          maxMinutes:
+            typeof ack.maxMinutes === "number" ? ack.maxMinutes : prev.maxMinutes,
+          startedAt,
+          baseSeconds,
+        };
+      });
+    };
 
     const handleMessage = (payload: ChatMessagePayload) => {
       if (payload && Number(payload.consultationId) === id) {
@@ -99,10 +132,7 @@ export const useChat = (
       if (endedRef.current) return;
       if (payload && Number(payload.consultationId) === id) {
         setPaused(null);
-        setBudget({
-          maxMinutes: payload.maxMinutes,
-          startedAt: payload.startedAt,
-        });
+        applyBudget(payload);
       }
     };
 
@@ -111,6 +141,7 @@ export const useChat = (
         setBudget((prev) => ({
           maxMinutes: typeof payload.maxMinutes === "number" ? payload.maxMinutes : prev.maxMinutes,
           startedAt: prev.startedAt,
+          baseSeconds: prev.baseSeconds,
         }));
       }
     };
@@ -119,24 +150,14 @@ export const useChat = (
       if (endedRef.current) return;
       if (payload && Number(payload.consultationId) === id) {
         setPaused(null);
-        if (typeof payload.maxMinutes === "number") {
-          setBudget({
-            maxMinutes: payload.maxMinutes,
-            startedAt: typeof payload.startedAt === "string" ? payload.startedAt : null,
-          });
-        }
+        applyBudget(payload);
       }
     };
 
     const handleConnect = () => {
       joinChat(id, mode)
         .then((ack) => {
-          if (ack && typeof ack.maxMinutes === "number") {
-            setBudget({
-              maxMinutes: ack.maxMinutes,
-              startedAt: typeof ack.startedAt === "string" ? ack.startedAt : null,
-            });
-          }
+          if (ack) applyBudget(ack);
           if (ack && typeof ack.clientName === "string" && ack.clientName) {
             setClientName(ack.clientName);
           }

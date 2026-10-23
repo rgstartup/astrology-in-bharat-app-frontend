@@ -23,7 +23,10 @@ import { useRoomBudget } from "./hooks/use-room-budget";
 import { useRoomSessionSummary } from "./hooks/use-room-session-summary";
 import { useRoomTrackerSync } from "./hooks/use-room-tracker-sync";
 import { liveMessageKey, toChatMessage } from "./message-keys";
-import type { ChatHistorySessionDto } from "@/actions/chat";
+import {
+  getChatHistoryAction,
+  type ChatHistorySessionDto,
+} from "@/actions/chat";
 import RoomPendingBanner from "./room-pending-banner.component";
 import RoomPausedDialog from "./room-paused-dialog.component";
 import RoomBody from "./room-body.component";
@@ -87,6 +90,7 @@ export default function RoomContent({
     paused: pausedState,
     pause: pauseLiveChat,
     resume: resumeLiveChat,
+    sessionRevision,
   } = useChat(roomConsultationId);
 
   // Single subscription: the decision shim used to mount a second copy here
@@ -116,8 +120,25 @@ export default function RoomContent({
     baseKeys: (m) => [liveMessageKey(m)],
     toMessage: toChatMessage,
   });
-  const [sessions] = useState<ChatHistorySessionDto[]>(initialSessions);
+  const [sessions, setSessions] = useState<ChatHistorySessionDto[]>(initialSessions);
   const timeline = useChatTimeline(messages, sessions);
+
+  // The switch closes the call session server-side; re-seed so its ended_at
+  // (and the new chat session) reaches the timeline without a page reload.
+  const refreshSessions = React.useCallback(async () => {
+    if (!roomConsultationId) return;
+    const history = await getChatHistoryAction(roomConsultationId);
+    if (history.ok && history.data) {
+      setSessions(history.data.sessions ?? []);
+    }
+  }, [roomConsultationId]);
+
+  // Pause closes a session and resume opens a new one; re-seed on both so the
+  // timeline shows the boundary without a reload.
+  React.useEffect(() => {
+    if (sessionRevision === 0) return;
+    void refreshSessions();
+  }, [sessionRevision, refreshSessions]);
 
   const { sessionStatus, showModal, setShowModal, handleEndChat } =
     useRoomVerdict({
@@ -219,6 +240,32 @@ export default function RoomContent({
   const roomMode = resolveRoomMode(initialSessions, consultationState?.mode);
   const isDirectVoice = roomMode === "voice";
   const isSessionEnded = sessionStatus === "completed" || Boolean(endedVerdict);
+
+  // For an ended session the live timer (now - startedAt) keeps growing with
+  // wall-clock time, producing nonsense like "370:24". Freeze the elapsed
+  // value to the actual billable duration instead.
+  const endedElapsedSeconds = React.useMemo(() => {
+    if (!isSessionEnded) return null;
+    if (
+      endedVerdict &&
+      typeof endedVerdict.totalDurationSeconds === "number" &&
+      endedVerdict.totalDurationSeconds > 0
+    ) {
+      return endedVerdict.totalDurationSeconds;
+    }
+    let total = 0;
+    for (const s of sessions) {
+      if (s.startedAt && s.endedAt) {
+        const ms =
+          new Date(s.endedAt).getTime() - new Date(s.startedAt).getTime();
+        if (ms > 0) total += Math.floor(ms / 1000);
+      }
+    }
+    return total > 0 ? total : null;
+  }, [isSessionEnded, endedVerdict, sessions]);
+
+  const displayElapsedTime = endedElapsedSeconds ?? elapsedTime;
+  const displayTimeLeft = isSessionEnded ? 0 : (timeLeft ?? 0);
   const directVoice = useDirectVoice({
     consultationId: roomConsultationId,
     userId: user?.id ?? null,
@@ -232,20 +279,69 @@ export default function RoomContent({
 
   const [voiceCancelOpen, setVoiceCancelOpen] = useState(false);
   const [voiceCancelBusy, setVoiceCancelBusy] = useState(false);
+  // Dialog-driven billing hold: pause/resume are serialized so a fast dismiss
+  // can never land the hold after the resume and freeze the clock forever.
+  const voiceHoldActive = React.useRef(false);
+  const voiceHoldChain = React.useRef<Promise<unknown>>(Promise.resolve());
+
+  const queueVoiceHold = React.useCallback(
+    (command: "hold" | "release") => {
+      const next = voiceHoldChain.current
+        .catch(() => undefined)
+        .then(() =>
+          command === "hold"
+            ? pauseLiveChat("billing_hold")
+            : resumeLiveChat(),
+        );
+      voiceHoldChain.current = next;
+      return next.catch(() => undefined);
+    },
+    [pauseLiveChat, resumeLiveChat],
+  );
+
+  const openVoiceCancel = React.useCallback(() => {
+    setVoiceCancelOpen(true);
+    // Only a live call burns budget; a pending request has no clock to hold.
+    if (sessionStatus !== "active") return;
+    voiceHoldActive.current = true;
+    void queueVoiceHold("hold");
+  }, [queueVoiceHold, sessionStatus]);
+
+  const handleVoiceCancelOpenChange = React.useCallback(
+    (open: boolean) => {
+      // While the switch is in flight it owns the hold; ignore Escape/backdrop.
+      if (!open && voiceCancelBusy) return;
+      setVoiceCancelOpen(open);
+      if (open || !voiceHoldActive.current) return;
+      voiceHoldActive.current = false;
+      void queueVoiceHold("release");
+    },
+    [queueVoiceHold, voiceCancelBusy],
+  );
 
   // Leaving a voice call offers a chat continuation: the backend closes the
   // call session, opens a chat session, and flips the consultation mode.
   const handleVoiceContinueOverChat = React.useCallback(async () => {
     setVoiceCancelBusy(true);
+    // The switch re-anchors the clock from frozen elapsed; let any in-flight
+    // hold land first so the two commands cannot interleave.
+    await voiceHoldChain.current.catch(() => undefined);
+    voiceHoldActive.current = false;
     const switched = await directVoice.switchToChat();
     setVoiceCancelBusy(false);
     if (switched) {
       setVoiceCancelOpen(false);
+      await refreshSessions();
+      return;
     }
-  }, [directVoice]);
+    // The call is still up and likely still held: closing must release it.
+    voiceHoldActive.current = true;
+  }, [directVoice, refreshSessions]);
 
   const handleVoiceEndSession = React.useCallback(async () => {
     setVoiceCancelOpen(false);
+    await voiceHoldChain.current.catch(() => undefined);
+    voiceHoldActive.current = false;
     if (sessionStatus === "active") {
       await directVoice.endVoice();
       return;
@@ -277,12 +373,12 @@ export default function RoomContent({
         onToggleMute: () => void directVoice.toggleMic(),
         speakerMuted: directVoice.speakerMuted,
         onToggleSpeaker: () => void directVoice.toggleSpeaker(),
-        onEnd: () => setVoiceCancelOpen(true),
-        onCancelRequest: () => setVoiceCancelOpen(true),
+        onEnd: openVoiceCancel,
+        onCancelRequest: openVoiceCancel,
       };
     }
     return null;
-  }, [isSessionEnded, isDirectVoice, directVoice, elapsedTime, displayVoiceRate]);
+  }, [isSessionEnded, isDirectVoice, directVoice, elapsedTime, displayVoiceRate, openVoiceCancel]);
 
   // Shared sidebar facts: desktop sidebar renders in parallel with the main
   // column; the mobile drawer takes the same group inside MainArea.
@@ -290,12 +386,18 @@ export default function RoomContent({
     expertData,
     sessionStatus,
     formatTime,
-    elapsedTime,
-    timeLeft: timeLeft || 0,
+    elapsedTime: displayElapsedTime,
+    timeLeft: displayTimeLeft,
     handleEndChat,
     isWarning,
     onUpgrade: handleUpgrade,
+    isSessionEnded,
+    consultationId: roomConsultationId,
   };
+
+  // A dialog-driven hold freezes the clock only; it is not a recharge pause.
+  const rechargePaused =
+    endedVerdict || pausedState?.reason === "billing_hold" ? null : pausedState;
 
   return (
     <div className="font-sans fixed inset-0 z-50 flex overflow-hidden bg-[#f5f1ec] text-[#111111]">
@@ -304,7 +406,7 @@ export default function RoomContent({
         expiresAt={pendingExpiresAt}
       />
       <RoomPausedDialog
-        paused={endedVerdict ? null : pausedState}
+        paused={rechargePaused}
         onResume={() => {
           resumeLiveChat().catch(() => undefined);
         }}
@@ -314,7 +416,7 @@ export default function RoomContent({
       />
       <VoiceCancelDialog
         open={voiceCancelOpen}
-        onOpenChange={setVoiceCancelOpen}
+        onOpenChange={handleVoiceCancelOpenChange}
         onContinueOverChat={() => {
           void handleVoiceContinueOverChat();
         }}
@@ -334,6 +436,7 @@ export default function RoomContent({
           router={router}
           onOpenMobileSidebar={() => setMobileSidebarOpen(true)}
           handleEndChat={handleEndChat}
+          isSessionEnded={isSessionEnded}
         />
 
         <MainArea

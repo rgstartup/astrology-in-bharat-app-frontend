@@ -134,21 +134,86 @@ export const SessionDividers: Story = {
   },
 };
 
+const POST_CALL_MESSAGES: ChatMessage[] = [
+  expertMessage("c1", "Picking up from the call — here is the timing summary.", "2026-10-13T09:10:00.000Z"),
+  userMessage("c2", "Thank you, that answers my question.", "2026-10-13T09:12:00.000Z"),
+];
+
+const CALL_THEN_CHAT_TIMELINE: TimelineItem[] = [
+  {
+    kind: "session_event",
+    key: "session-event-s1",
+    event: {
+      sessionId: "s1",
+      mode: "AUDIO_CALL",
+      status: "completed",
+      startedAt: "2026-10-13T09:00:00.000Z",
+      endedAt: "2026-10-13T09:08:00.000Z",
+      nextMode: "CHAT",
+    },
+  },
+  { kind: "date", key: "date-post-call", label: "Today" },
+  { kind: "message", key: "msg-c1", message: POST_CALL_MESSAGES[0] as ChatMessage },
+  { kind: "message", key: "msg-c2", message: POST_CALL_MESSAGES[1] as ChatMessage },
+  {
+    kind: "session_event",
+    key: "session-event-s2",
+    event: {
+      sessionId: "s2",
+      mode: "VIDEO_CALL",
+      status: "completed",
+      startedAt: "2026-10-13T09:20:00.000Z",
+      endedAt: "2026-10-13T09:45:00.000Z",
+    },
+  },
+];
+
+export const CallThenChat: Story = {
+  args: {
+    sessionStatus: "active",
+    sessionSummary: null,
+    messages: POST_CALL_MESSAGES,
+    timeline: CALL_THEN_CHAT_TIMELINE,
+    expertData: EXPERT,
+    typingStatus: null,
+  },
+};
+
+export const CallWithoutMessages: Story = {
+  args: {
+    sessionStatus: "active",
+    sessionSummary: null,
+    messages: [],
+    timeline: [
+      {
+        kind: "session_event",
+        key: "session-event-s1",
+        event: {
+          sessionId: "s1",
+          mode: "VIDEO_CALL",
+          status: "active",
+          startedAt: "2026-10-13T09:00:00.000Z",
+        },
+      },
+    ],
+    expertData: EXPERT,
+    typingStatus: null,
+  },
+};
+
 function ConversationWithComposer() {
   const [inputValue, setInputValue] = useState("Blessings for the new venture…");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className="flex h-[560px] w-full min-h-0 flex-col overflow-hidden bg-[#f5f1ec]">
-      <div className="min-h-0 min-w-0 flex-1">
-        <MessageArea
-          sessionStatus="active"
-          sessionSummary={null}
-          messages={ACTIVE_MESSAGES}
-          timeline={ACTIVE_TIMELINE}
-          expertData={EXPERT}
-          typingStatus={{ senderName: "Acharya Meera", isTyping: true }}
-        />
-      </div>
+      <MessageArea
+        sessionStatus="active"
+        sessionSummary={null}
+        messages={ACTIVE_MESSAGES}
+        timeline={ACTIVE_TIMELINE}
+        expertData={EXPERT}
+        typingStatus={{ senderName: "Acharya Meera", isTyping: true }}
+      />
       <ChatFooter
         sessionStatus="active"
         pendingAttachment={null}

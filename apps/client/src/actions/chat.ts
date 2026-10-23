@@ -118,6 +118,7 @@ export interface ChatHistorySessionDto {
   mode?: string | null;
   startedAt?: string | null;
   endedAt?: string | null;
+  endedReason?: string | null;
   messages: ChatHistoryMessageDto[];
 }
 

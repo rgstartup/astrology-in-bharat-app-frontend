@@ -3,12 +3,19 @@
 import { useCallback, useRef, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import type { IExpert } from "@repo/lib";
+import { ConsultationErrorCode } from "@repo/lib";
+import { apiV2, API_ROUTES } from "@/actions";
 import {
-  initiateConsultationAction,
+  type InitiateConsultationData,
+  type InitiateConsultationErrorBody,
+  type InitiateConsultationResult,
   type SomeoneElseData,
 } from "@/actions/chat";
 import type { ConsultationMode } from "@/store/consultationPrepStore";
-import { requestConsultation, mediaReady } from "@/realtime/topics/consultation";
+import {
+  requestConsultation,
+  mediaReady,
+} from "@/realtime/topics/consultation";
 import { CHAT_STATUS } from "@/realtime/types/chat";
 import type { ConsultationWaitStep } from "../components/consultation-wait-stepper.component";
 import { useVerdictWait } from "./use-verdict-wait";
@@ -22,6 +29,8 @@ export interface ConsultationRequestOptions {
   expert: Partial<IExpert> | null;
   /** Trips the prep modal's forced-recharge step on INSUFFICIENT_BALANCE. */
   onInsufficientBalance: () => void;
+  /** Existing consultation to re-initiate into (e.g. continue chat). */
+  consultationId?: number | null;
 }
 
 /**
@@ -39,15 +48,19 @@ export function useConsultationRequest({
   mode,
   expert,
   onInsufficientBalance,
+  consultationId,
 }: ConsultationRequestOptions) {
   const [actionLoading, setActionLoading] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
-  const [waitStep, setWaitStep] = useState<ConsultationWaitStep>("waiting_acceptance");
+  const [waitStep, setWaitStep] =
+    useState<ConsultationWaitStep>("waiting_acceptance");
   const [micGranted, setMicGranted] = useState(false);
   const [micDenied, setMicDenied] = useState(false);
   const [mediaFailed, setMediaFailed] = useState(false);
   const [mediaError, setMediaError] = useState<string | null>(null);
-  const [redirectCountdown, setRedirectCountdown] = useState<number | null>(null);
+  const [redirectCountdown, setRedirectCountdown] = useState<number | null>(
+    null,
+  );
   const [existingChatDetails, setExistingChatDetails] = useState<{
     consultationId: number;
     expertId: string;
@@ -60,6 +73,7 @@ export function useConsultationRequest({
     token?: string;
     channelName?: string;
   } | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const verdictWait = useVerdictWait();
   const goToRoom = useGoToRoom(expert);
@@ -71,7 +85,10 @@ export function useConsultationRequest({
    * @returns True if granted, false on error or denial.
    */
   const checkMicPermission = useCallback(async (): Promise<boolean> => {
-    if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
+    if (
+      typeof navigator === "undefined" ||
+      !navigator.mediaDevices?.getUserMedia
+    ) {
       setMicDenied(true);
       return false;
     }
@@ -163,7 +180,9 @@ export function useConsultationRequest({
         goToRoom(expertId, sessionId, consultationId);
       } catch (err) {
         setMediaFailed(true);
-        setMediaError(err instanceof Error ? err.message : "Media connection failed.");
+        setMediaError(
+          err instanceof Error ? err.message : "Media connection failed.",
+        );
         useVoiceSessionStore.getState().clearSession();
       }
     },
@@ -188,9 +207,21 @@ export function useConsultationRequest({
       setWaitStep("waiting_acceptance");
       setRedirectCountdown(null);
 
+      if (abortControllerRef.current?.signal.aborted) {
+        setIsWaiting(false);
+        return;
+      }
+
       try {
         const ack = await requestConsultation(consultationId, Number(expertId));
-        if (ack.status !== "requested" && ack.status !== CHAT_STATUS.REQUESTED) {
+        if (abortControllerRef.current?.signal.aborted) {
+          setIsWaiting(false);
+          return;
+        }
+        if (
+          ack.status !== "requested" &&
+          ack.status !== CHAT_STATUS.REQUESTED
+        ) {
           toast.error("Expert did not receive your request. Please try again.");
           setIsWaiting(false);
           return;
@@ -253,30 +284,94 @@ export function useConsultationRequest({
    */
   const executeInitiate = useCallback(
     async (metadata: SomeoneElseData | null) => {
+      if (
+        !abortControllerRef.current ||
+        abortControllerRef.current.signal.aborted
+      ) {
+        abortControllerRef.current = new AbortController();
+      }
+      const controller = abortControllerRef.current;
       setActionLoading(true);
       try {
-        const res = await initiateConsultationAction(expertId, mode, metadata);
+        const apiRes = await apiV2.post<
+          InitiateConsultationData,
+          InitiateConsultationErrorBody
+        >(
+          API_ROUTES.CONSULTATION.INITIATE,
+          {
+            expert_id: Number(expertId),
+            mode,
+            ...(consultationId != null
+              ? { consultation_id: consultationId }
+              : {}),
+            ...(metadata ? { metadata } : {}),
+          },
+          { controller },
+        );
+
+        if (controller.signal.aborted) {
+          setIsWaiting(false);
+          return;
+        }
+
+        const res: InitiateConsultationResult = apiRes.ok
+          ? { ok: true, data: apiRes.data }
+          : {
+              ok: false,
+              code: apiRes.error?.errorCode ?? apiRes.error?.body?.errorCode,
+              message:
+                apiRes.error?.message ??
+                "Failed to start consultation. Please try again.",
+              body: apiRes.error?.body,
+            };
 
         if (!res.ok) {
           const errCode = res.code;
           const errorBody = res.body;
 
           if (
-            errCode === "ACTIVE_CONSULTATION_EXISTS" &&
+            errCode === ConsultationErrorCode.ACTIVE_CONSULTATION_EXISTS &&
             errorBody?.existingConsultationId != null
           ) {
             setExistingChatDetails({
               consultationId: errorBody.existingConsultationId,
               expertId: String(errorBody.existingExpertId ?? expertId),
             });
-            const retry = await initiateConsultationAction(
-              expertId,
-              mode,
-              metadata,
-              errorBody.existingConsultationId,
+
+            const retryApiRes = await apiV2.post<
+              InitiateConsultationData,
+              InitiateConsultationErrorBody
+            >(
+              API_ROUTES.CONSULTATION.INITIATE,
+              {
+                expert_id: Number(expertId),
+                mode,
+                consultation_id: errorBody.existingConsultationId,
+                ...(metadata ? { metadata } : {}),
+              },
+              { controller },
             );
+
+            if (controller.signal.aborted) {
+              setIsWaiting(false);
+              return;
+            }
+
+            const retry: InitiateConsultationResult = retryApiRes.ok
+              ? { ok: true, data: retryApiRes.data }
+              : {
+                  ok: false,
+                  code:
+                    retryApiRes.error?.errorCode ??
+                    retryApiRes.error?.body?.errorCode,
+                  message:
+                    retryApiRes.error?.message ??
+                    "Failed to start consultation. Please try again.",
+                  body: retryApiRes.error?.body,
+                };
+
             if (!retry.ok) {
-              if (retry.code === "INSUFFICIENT_BALANCE") {
+              if (retry.code === ConsultationErrorCode.INSUFFICIENT_BALANCE) {
                 onInsufficientBalance();
                 setIsWaiting(false);
                 return;
@@ -286,6 +381,10 @@ export function useConsultationRequest({
               return;
             }
 
+            if (controller.signal.aborted) {
+              setIsWaiting(false);
+              return;
+            }
             await sendConsultationRequest(
               retry.data.consultationId,
               retry.data.sessionId,
@@ -297,26 +396,26 @@ export function useConsultationRequest({
 
           setIsWaiting(false);
 
-          if (errCode === "EXPERT_BUSY_IN_CONSULTATION") {
+          if (errCode === ConsultationErrorCode.EXPERT_BUSY_IN_CONSULTATION) {
             toast.error(
               "Expert is busy in a consultation. Please try again later.",
             );
             return;
           }
 
-          if (errCode === "INSUFFICIENT_BALANCE") {
+          if (errCode === ConsultationErrorCode.INSUFFICIENT_BALANCE) {
             onInsufficientBalance();
             return;
           }
 
-          if (errCode === "PRICE_NOT_FOUND") {
+          if (errCode === ConsultationErrorCode.PRICE_NOT_FOUND) {
             const modeLabel =
               mode === "voice" ? "voice consultations" : "chat consultations";
             toast.error(`This expert does not offer ${modeLabel}.`);
             return;
           }
 
-          if (errCode === "EXPERT_UNAVAILABLE") {
+          if (errCode === ConsultationErrorCode.EXPERT_UNAVAILABLE) {
             toast.error(
               "This expert is currently unavailable. Please try again later.",
             );
@@ -329,6 +428,10 @@ export function useConsultationRequest({
           return;
         }
 
+        if (controller.signal.aborted) {
+          setIsWaiting(false);
+          return;
+        }
         await sendConsultationRequest(
           res.data.consultationId,
           res.data.sessionId,
@@ -339,7 +442,13 @@ export function useConsultationRequest({
         setActionLoading(false);
       }
     },
-    [expertId, mode, onInsufficientBalance, sendConsultationRequest],
+    [
+      expertId,
+      mode,
+      onInsufficientBalance,
+      consultationId,
+      sendConsultationRequest,
+    ],
   );
 
   /**
@@ -354,13 +463,22 @@ export function useConsultationRequest({
       setMediaFailed(false);
       setMediaError(null);
       setIsWaiting(true);
+      abortControllerRef.current = new AbortController();
 
       if (mode === "voice" || mode === "video") {
         setWaitStep("mic_access");
         const granted = await checkMicPermission();
-        if (!granted) {
+        if (!granted || abortControllerRef.current?.signal.aborted) {
+          if (abortControllerRef.current?.signal.aborted) {
+            setIsWaiting(false);
+          }
           return;
         }
+      }
+
+      if (abortControllerRef.current?.signal.aborted) {
+        setIsWaiting(false);
+        return;
       }
 
       await executeInitiate(metadata);
@@ -396,8 +514,11 @@ export function useConsultationRequest({
   }, [connectMediaAndEnterRoom]);
 
   const cancelWaiting = useCallback(() => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
     verdictWait.cancelWaiting();
     setIsWaiting(false);
+    setActionLoading(false);
     setWaitStep("waiting_acceptance");
     setMicDenied(false);
     setMediaFailed(false);

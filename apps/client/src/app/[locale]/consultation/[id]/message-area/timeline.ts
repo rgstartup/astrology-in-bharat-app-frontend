@@ -9,6 +9,16 @@ export type {
   TimelineDateItem,
   TimelineItem,
   TimelineMessageItem,
+  TimelineSessionEventItem,
   TimelineSessionItem,
 } from "@repo/chat";
-export { dateLabel, sessionLabel, toTimeline } from "@repo/chat";
+export {
+  dateLabel,
+  formatSessionDuration,
+  formatSessionTime,
+  formatSessionTimeRange,
+  isCallMode,
+  sessionDurationSeconds,
+  sessionLabel,
+  toTimeline,
+} from "@repo/chat";

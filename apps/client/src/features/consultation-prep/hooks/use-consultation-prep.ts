@@ -25,6 +25,7 @@ import { useConsultationRequest } from "./use-consultation-request";
 export function useConsultationPrep(
   expertId: string,
   mode: ConsultationMode = "chat",
+  consultationId?: number | null,
 ) {
   const router = useRouter();
   const pathname = usePathname();
@@ -49,6 +50,7 @@ export function useConsultationPrep(
     mode,
     expert,
     onInsufficientBalance: () => setNeedsRecharge(true),
+    consultationId,
   });
 
   const proceedToConsultation = async () => {

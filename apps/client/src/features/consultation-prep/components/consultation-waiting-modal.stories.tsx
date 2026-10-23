@@ -91,7 +91,7 @@ function WaitingModalDemo({
 
 /**
  * Interactive full simulator executing the entire lifecycle:
- * Step 1 (allow mic) -> Step 2 (waiting acceptance) -> Step 3 (connecting media)
+ * Step 1 (allow mic) -> Step 2 (waiting acceptance) -> connecting (loading)
  * -> 3s countdown (3->2->1s) -> Room entry.
  */
 function InteractiveFullSimulatorDemo() {
@@ -224,7 +224,7 @@ export const VoiceStep2WaitingExpert: Story = {
   ),
 };
 
-/** Voice consultation Step 3: Expert accepted call, establishing secure media connection. */
+/** Voice consultation: Expert accepted call, connecting (loading spinner). */
 export const VoiceStep3EstablishingConnection: Story = {
   render: () => (
     <WaitingModalDemo
@@ -238,7 +238,7 @@ export const VoiceStep3EstablishingConnection: Story = {
   ),
 };
 
-/** Voice consultation Step 3 Ready: Media connection established, redirecting to room with countdown. */
+/** Voice consultation: Connection ready, redirecting to room with countdown. */
 export const VoiceStep3ConnectionReady: Story = {
   render: () => (
     <WaitingModalDemo

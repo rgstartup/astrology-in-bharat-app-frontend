@@ -38,6 +38,8 @@ export interface JoinChatAck {
   maxMinutes?: number;
   /** Countdown anchor (resume anchor or session start), null before start. */
   startedAt?: string | null;
+  /** Consumed seconds before the anchor (resume base); absent on older servers. */
+  elapsedSeconds?: number;
   /** Display name of the consulting client; absent on older servers. */
   clientName?: string | null;
   /** Accept-time RTC voice token (voice/video only), targeted to this expert. */
@@ -124,6 +126,8 @@ export interface ChatPausedPayload {
   consumedAmount: number;
   maxMinutes: number;
   pauseExpiresInSec: number;
+  /** Pause origin (`billing_hold` freezes the clock only); absent on older servers. */
+  reason?: string;
   timestamp: string;
 }
 
@@ -131,6 +135,8 @@ export interface ChatResumedPayload {
   consultationId: number;
   maxMinutes: number;
   startedAt: string;
+  /** Consumed seconds carried forward as the resume base; absent on older servers. */
+  elapsedSeconds?: number;
   timestamp: string;
 }
 

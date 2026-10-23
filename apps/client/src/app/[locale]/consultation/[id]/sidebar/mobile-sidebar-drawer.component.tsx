@@ -15,6 +15,7 @@ import { ConsultationModeSection } from "./consultation-mode-section.component";
 import { SessionTimersSection } from "./session-timers-section.component";
 import { UpgradeConsultationSection } from "./upgrade-consultation-section.component";
 import { EndConsultationAction } from "./end-consultation-action.component";
+import { ContinueConsultationSection } from "./continue-consultation-section.component";
 
 export type MobileSidebarDrawerProps = {
   open: boolean;
@@ -28,6 +29,8 @@ export type MobileSidebarDrawerProps = {
   isWarning?: boolean;
   router: ReturnType<typeof useRouter>;
   onUpgrade?: (mode: "voice" | "video") => void;
+  isSessionEnded?: boolean;
+  consultationId: number | null;
 };
 
 /**
@@ -47,6 +50,8 @@ export function MobileSidebarDrawer({
   isWarning = false,
   router,
   onUpgrade,
+  isSessionEnded = false,
+  consultationId,
 }: MobileSidebarDrawerProps) {
   if (!expertData) return null;
 
@@ -74,19 +79,28 @@ export function MobileSidebarDrawer({
             isWarning={isWarning}
           />
 
-          <UpgradeConsultationSection
-            expertData={expertData}
-            onUpgrade={onUpgrade}
-          />
-
-          <div className="pt-4 border-t border-[#f0ebe3]">
-            <EndConsultationAction
-              handleEndChat={(force) => {
-                onOpenChange(false);
-                handleEndChat(force);
-              }}
+          {isSessionEnded ? (
+            <ContinueConsultationSection
+              expertData={expertData}
+              consultationId={consultationId}
             />
-          </div>
+          ) : (
+            <>
+              <UpgradeConsultationSection
+                expertData={expertData}
+                onUpgrade={onUpgrade}
+              />
+
+              <div className="pt-4 border-t border-[#f0ebe3]">
+                <EndConsultationAction
+                  handleEndChat={(force) => {
+                    onOpenChange(false);
+                    handleEndChat(force);
+                  }}
+                />
+              </div>
+            </>
+          )}
         </div>
       </SheetContent>
     </Sheet>

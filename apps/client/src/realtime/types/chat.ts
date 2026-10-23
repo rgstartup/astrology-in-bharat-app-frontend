@@ -105,6 +105,8 @@ export interface ChatPausedPayload {
   consumedAmount: number;
   maxMinutes: number;
   pauseExpiresInSec: number;
+  /** Pause origin (`billing_hold` freezes the clock only); absent on older servers. */
+  reason?: string;
   timestamp: string;
 }
 

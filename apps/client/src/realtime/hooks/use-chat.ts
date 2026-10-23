@@ -45,6 +45,8 @@ export const useChat = (consultationId?: number | string | null) => {
   const [paused, setPaused] = useState<ChatPausedPayload | null>(null);
   const [consultationStatus, setConsultationStatus] = useState<string | null>(null);
   const [budget, setBudget] = useState<ChatBudget>({ maxMinutes: null, startedAt: null, baseSeconds: null });
+  /** Bumped on pause/resume so the room can re-seed session history. */
+  const [sessionRevision, setSessionRevision] = useState(0);
   // A `consultation:paused` racing a completed end must never revive the
   // recharge dialog — the server now guards this too, this covers in-flight emits.
   const endedRef = useRef(false);
@@ -99,6 +101,9 @@ export const useChat = (consultationId?: number | string | null) => {
         endedRef.current = true;
         setEnded(payload);
         setPaused(null);
+        // Re-seed chat history so session ended_at / ended_reason changes
+        // (e.g. a paused call row cleared on end) reach the timeline.
+        setSessionRevision((value) => value + 1);
       }
     };
 
@@ -118,6 +123,7 @@ export const useChat = (consultationId?: number | string | null) => {
         if (typeof payload.maxMinutes === "number") {
           setBudget((prev) => ({ ...prev, maxMinutes: payload.maxMinutes }));
         }
+        setSessionRevision((value) => value + 1);
       }
     };
 
@@ -125,6 +131,7 @@ export const useChat = (consultationId?: number | string | null) => {
       if (payload && Number(payload.consultationId) === id) {
         setPaused(null);
         applyBudget(payload);
+        setSessionRevision((value) => value + 1);
       }
     };
 
@@ -203,9 +210,9 @@ export const useChat = (consultationId?: number | string | null) => {
     return endConsultation(id, "manual");
   }, [id, isValidId]);
 
-  const pause = useCallback(() => {
+  const pause = useCallback((reason?: string) => {
     if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
-    return pauseConsultation(id);
+    return pauseConsultation(id, reason);
   }, [id, isValidId]);
 
   const resume = useCallback(() => {
@@ -225,6 +232,7 @@ export const useChat = (consultationId?: number | string | null) => {
     paused,
     pause,
     resume,
+    sessionRevision,
   };
 };
 

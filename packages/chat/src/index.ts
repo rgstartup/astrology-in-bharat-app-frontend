@@ -7,6 +7,7 @@ export type {
   TimelineDateItem,
   TimelineItem,
   TimelineMessageItem,
+  TimelineSessionEventItem,
   TimelineSessionItem,
   TypingStatus,
 } from "./types";
@@ -22,9 +23,15 @@ export {
   resolveAttachmentUrl,
 } from "./utils/attachments";
 
-export { formatClock } from "./utils/format";
+export {
+  formatClock,
+  formatSessionDuration,
+  formatSessionTime,
+  formatSessionTimeRange,
+  sessionDurationSeconds,
+} from "./utils/format";
 
-export { dateLabel, sessionLabel, toTimeline } from "./utils/timeline";
+export { dateLabel, isCallMode, sessionLabel, toTimeline } from "./utils/timeline";
 
 export { useChatMessages } from "./hooks/use-chat-messages";
 export { useChatTypingDisplay } from "./hooks/use-chat-typing";

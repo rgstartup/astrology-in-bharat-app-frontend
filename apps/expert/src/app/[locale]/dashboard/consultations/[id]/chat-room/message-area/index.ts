@@ -6,7 +6,7 @@ export { ChatAttachmentView } from "./chat-attachment-view.component";
 export { ChatTypingIndicator } from "./chat-typing-indicator.component";
 export { ChatEmptyState } from "./chat-empty-state.component";
 export { ChatDateMarker } from "./chat-date-marker.component";
-export { ChatSessionMarker } from "./chat-session-marker.component";
+export { ChatSessionBadge } from "./chat-session-marker.component";
 export type {
   TimelineItem,
   TimelineDateItem,

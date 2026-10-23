@@ -374,6 +374,44 @@ function MediaWaitingState({
 }) {
   const modeLabel = getConsultationModeLabel(mode);
 
+  const isConnecting =
+    step === "connecting_media" || step === "ready";
+
+  if (isConnecting) {
+    const subtitle =
+      typeof countdown === "number" && countdown > 0
+        ? `Redirecting to consultation room in ${countdown}s…`
+        : "Generating secure token and connecting…";
+
+    return (
+      <div className="flex flex-col items-center text-center">
+        <WaitingVisual expertName={expertName} expertAvatar={expertAvatar} mode={mode} />
+
+        <div className="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-orange-50 border border-orange-200/60 text-orange-700 text-[11px] font-bold tracking-wide uppercase">
+          <ConsultationModeIcon mode={mode} className="w-3 h-3" />
+          <span>{modeLabel} Consultation</span>
+        </div>
+
+        <h3 className="mt-2 text-base font-bold text-slate-900 tracking-tight">
+          Connecting to {expertName}
+        </h3>
+
+        <div className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-600">
+          <span className="size-4 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+          <span>{subtitle}</span>
+        </div>
+
+        <button
+          type="button"
+          onClick={onCancel}
+          className="mt-5 w-full h-10 rounded-xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold tracking-wide transition-all cursor-pointer active:scale-[0.98]"
+        >
+          Cancel
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center text-center">
       <WaitingVisual expertName={expertName} expertAvatar={expertAvatar} mode={mode} />

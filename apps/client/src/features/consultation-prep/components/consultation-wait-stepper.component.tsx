@@ -163,67 +163,12 @@ function AcceptStepRow({
 }
 
 /**
- * Step 3: Secure media connection row.
- *
- * @param props - Status and expert name.
- * @returns Step 3 element.
- */
-function ConnectionStepRow({
-  isCompleted,
-  isActive,
-  countdown,
-}: {
-  isCompleted: boolean;
-  isActive: boolean;
-  countdown?: number | null;
-}) {
-  if (isCompleted) {
-    const subtitle =
-      typeof countdown === "number" && countdown > 0
-        ? `Redirecting to consultation room in ${countdown}s…`
-        : "Redirecting to consultation room…";
-
-    return (
-      <div className="flex items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50/50 p-3 text-left">
-        <StepIndicator isCompleted={true} isActive={false} stepNumber={3} />
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold text-emerald-950">Secure connection</p>
-          <p className="text-[11px] font-medium text-emerald-700 tabular-nums">{subtitle}</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (isActive) {
-    return (
-      <div className="flex items-center gap-3 rounded-xl border border-orange-200/80 bg-orange-50/40 p-3 text-left">
-        <StepIndicator isCompleted={false} isActive={true} stepNumber={3} />
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold text-slate-900">Secure connection</p>
-          <p className="text-[11px] text-orange-700">Establishing audio connection…</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/40 p-3 text-left opacity-60">
-      <StepIndicator isCompleted={false} isActive={false} stepNumber={3} />
-      <div className="min-w-0 flex-1">
-        <p className="text-xs font-medium text-slate-700">Secure connection</p>
-        <p className="text-[11px] text-slate-400">Audio handshake</p>
-      </div>
-    </div>
-  );
-}
-
-/**
- * 3-Step Progress Stepper for Voice and Video Consultations.
+ * 2-Step Progress Stepper for Voice and Video Consultations.
  *
  * Replaces dual waiting lobbies with a single unified, sequential checklist:
  * 1. Give mic access
  * 2. Join accepted
- * 3. Establish connection
+ * (connection is shown as a loading spinner, not a numbered step)
  *
  * Follows OpenWolf Rule 4 (zero JSX ternaries; waterfall early returns).
  *
@@ -259,12 +204,6 @@ export function ConsultationWaitStepper({
         isActive={isStep2Active}
         expertName={expertName}
       />
-      <ConnectionStepRow
-        isCompleted={isConnectionDone}
-        isActive={isStep3Active}
-        countdown={countdown}
-      />
-
       {rate !== undefined && (
         <div className="mt-1 flex items-center justify-between rounded-lg bg-slate-50 px-3 py-1.5 text-xs text-slate-600">
           <span className="font-medium text-slate-500">Billing rate:</span>

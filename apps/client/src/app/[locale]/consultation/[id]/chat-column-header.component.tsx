@@ -11,6 +11,7 @@ type ChatColumnHeaderProps = {
   router: ReturnType<typeof useRouter>;
   onOpenMobileSidebar: () => void;
   handleEndChat: (force?: boolean) => void;
+  isSessionEnded?: boolean;
 };
 
 /**
@@ -24,6 +25,7 @@ export function ChatColumnHeader({
   router,
   onOpenMobileSidebar,
   handleEndChat,
+  isSessionEnded = false,
 }: ChatColumnHeaderProps) {
   return (
     <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between border-b border-[#d3cec6] bg-white px-3 md:px-6">
@@ -55,9 +57,11 @@ export function ChatColumnHeader({
           <span>Connected securely</span>
         </div>
 
-        <div className="md:hidden">
-          <EndSessionButton handleEndChat={handleEndChat} />
-        </div>
+        {!isSessionEnded && (
+          <div className="md:hidden">
+            <EndSessionButton handleEndChat={handleEndChat} />
+          </div>
+        )}
 
         <Button
           variant="outline"

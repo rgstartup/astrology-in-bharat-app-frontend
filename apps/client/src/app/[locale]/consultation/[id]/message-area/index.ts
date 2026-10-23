@@ -7,7 +7,8 @@ export { default as StatusPill } from "./status-pill.component";
 export { default as IntroCard } from "./intro-card.component";
 export { default as TypingIndicator } from "./typing-indicator.component";
 export { default as DateMarker } from "./date-marker.component";
-export { default as SessionMarker } from "./session-marker.component";
+export { default as SessionBadge } from "./session-marker.component";
+export { default as SessionEventCard } from "./session-event-card.component";
 export { default as MessageList } from "./message-list.component";
 export { default as ScrollButton } from "./scroll-button.component";
 export type {
@@ -15,6 +16,12 @@ export type {
   TimelineDateItem,
   TimelineSessionItem,
   TimelineMessageItem,
+  TimelineSessionEventItem,
   SessionMeta,
 } from "./timeline";
-export { toTimeline, dateLabel, sessionLabel } from "./timeline";
+export {
+  toTimeline,
+  dateLabel,
+  isCallMode,
+  sessionLabel,
+} from "./timeline";

@@ -6,10 +6,17 @@ import { useChatScrollBottom } from "@repo/chat";
 import StatusPill from "./status-pill.component";
 import MessageRow from "./message-row.component";
 import DateMarker from "./date-marker.component";
-import SessionMarker from "./session-marker.component";
+import SessionBadge from "./session-marker.component";
+import SessionEventCard from "./session-event-card.component";
 import TypingIndicator from "./typing-indicator.component";
 import ScrollButton from "./scroll-button.component";
-import type { TimelineDateItem, TimelineItem, TimelineMessageItem, TimelineSessionItem } from "./timeline";
+import type {
+  TimelineDateItem,
+  TimelineItem,
+  TimelineMessageItem,
+  TimelineSessionEventItem,
+  TimelineSessionItem,
+} from "./timeline";
 
 type MessageListProps = {
   sessionStatus: string;
@@ -35,7 +42,11 @@ function DateTimelineEntry({ item }: { item: TimelineDateItem }) {
 }
 
 function SessionTimelineEntry({ item }: { item: TimelineSessionItem }) {
-  return <SessionMarker label={item.label} startedAt={item.startedAt} />;
+  return <SessionBadge label={item.label} startedAt={item.startedAt} />;
+}
+
+function SessionEventTimelineEntry({ item, mounted }: { item: TimelineSessionEventItem; mounted: boolean }) {
+  return <SessionEventCard event={item.event} mounted={mounted} />;
 }
 
 function MessageTimelineEntry({
@@ -80,6 +91,7 @@ function TimelineEntry({
 }) {
   if (item.kind === "date") return <DateTimelineEntry item={item} />;
   if (item.kind === "session") return <SessionTimelineEntry item={item} />;
+  if (item.kind === "session_event") return <SessionEventTimelineEntry item={item} mounted={mounted} />;
   return (
     <MessageTimelineEntry
       item={item}

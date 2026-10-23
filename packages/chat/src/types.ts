@@ -46,7 +46,14 @@ export interface TypingStatus {
 export interface SessionMeta {
   sessionId: string | number;
   mode?: string | null;
+  status?: string | null;
   startedAt?: string | null;
+  endedAt?: string | null;
+  /** Why the session closed when not a normal end (e.g. `paused`). */
+  endedReason?: string | null;
+  /** Adjacent modes, set by `toTimeline` so event cards can name the transition. */
+  previousMode?: string | null;
+  nextMode?: string | null;
 }
 
 export type TimelineDateItem = {
@@ -69,4 +76,15 @@ export type TimelineMessageItem = {
   message: ChatMessage;
 };
 
-export type TimelineItem = TimelineDateItem | TimelineSessionItem | TimelineMessageItem;
+/** One call session rendered as a system event card in the message stream. */
+export type TimelineSessionEventItem = {
+  kind: "session_event";
+  key: string;
+  event: SessionMeta;
+};
+
+export type TimelineItem =
+  | TimelineDateItem
+  | TimelineSessionItem
+  | TimelineMessageItem
+  | TimelineSessionEventItem;

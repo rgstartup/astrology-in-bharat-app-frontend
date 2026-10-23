@@ -118,9 +118,11 @@ export const startConsultation = (
 
 export const pauseConsultation = (
   consultationId: number,
+  reason?: string,
 ): Promise<ConsultationActionAck> =>
   emitWithAck<ConsultationActionAck>(CONSULTATION_EVENTS.COMMANDS.PAUSE, {
     consultationId,
+    reason,
   });
 
 export const resumeConsultation = (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +23,10 @@ export interface ConsultationPrepModalProps {
   mode?: ConsultationMode;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** When true, automatically starts the consultation flow once the modal opens. */
+  autoStart?: boolean;
+  /** Existing consultation to re-initiate into (e.g. continue chat). */
+  consultationId: number | null;
 }
 
 /**
@@ -37,6 +41,8 @@ export function ConsultationPrepModal({
   mode = "chat",
   open,
   onOpenChange,
+  autoStart = false,
+  consultationId,
 }: ConsultationPrepModalProps) {
   const tm = useTranslations("Chat.modal");
   // Manual nav between details/recharge; needsRecharge (below) overrides it.
@@ -76,7 +82,32 @@ export function ConsultationPrepModal({
     onGrantMic,
     onRetryMic,
     onRetryMedia,
-  } = useConsultationPrep(expertId, mode);
+  } = useConsultationPrep(expertId, mode, consultationId);
+
+  const autoStartedRef = useRef(false);
+  useEffect(() => {
+    if (!autoStart) return;
+    if (!open) {
+      autoStartedRef.current = false;
+      return;
+    }
+    if (autoStartedRef.current) return;
+    if (loading || !expert) return;
+    if (isWaitingForExpert || actionLoading) return;
+    autoStartedRef.current = true;
+    const timer = setTimeout(() => {
+      handleStartConsultation();
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [
+    autoStart,
+    open,
+    loading,
+    expert,
+    isWaitingForExpert,
+    actionLoading,
+    handleStartConsultation,
+  ]);
 
   const balance = useAuthStore((s) => s.balance);
   const refreshBalance = useAuthStore((s) => s.refreshBalance);

@@ -7,7 +7,7 @@ import { ChatMessageRow } from "./chat-message-row.component";
 import { ChatTypingIndicator } from "./chat-typing-indicator.component";
 import { ChatEmptyState } from "./chat-empty-state.component";
 import { ChatDateMarker } from "./chat-date-marker.component";
-import { ChatSessionMarker } from "./chat-session-marker.component";
+import { ChatSessionBadge } from "./chat-session-marker.component";
 import { ChatScrollButton } from "./chat-scroll-button.component";
 import { useChatScrollBottom, useChatTimeline } from "@repo/chat";
 import type { TimelineItem } from "@repo/chat";
@@ -92,7 +92,7 @@ function TimelineList({
               return <ChatDateMarker key={item.key} label={item.label} />;
             }
             if (item.kind === "session") {
-              return <ChatSessionMarker key={item.key} label={item.label} />;
+              return <ChatSessionBadge key={item.key} label={item.label} />;
             }
             const msg = item.message;
             return (
