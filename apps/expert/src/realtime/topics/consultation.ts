@@ -7,6 +7,14 @@ import type {
 } from "@/realtime/types/consultation";
 import type { JoinChatAck } from "@/realtime/types/chat";
 
+/**
+ * Consultation the expert most recently joined via `consultation:join` —
+ * the live context used to end the session promptly when the expert logs out.
+ */
+let activeConsultationId: number | null = null;
+
+export const getActiveConsultationId = (): number | null => activeConsultationId;
+
 export const CONSULTATION_EVENTS = {
   COMMANDS: {
     REQUEST: "consultation:request",
@@ -53,16 +61,20 @@ export const CONSULTATION_EVENTS = {
 export const joinRoom = (
   consultationId: number,
   mode: ConsultationMode = "chat",
-): Promise<JoinChatAck> =>
-  emitWithAck<JoinChatAck>(CONSULTATION_EVENTS.COMMANDS.JOIN, {
+): Promise<JoinChatAck> => {
+  activeConsultationId = consultationId;
+  return emitWithAck<JoinChatAck>(CONSULTATION_EVENTS.COMMANDS.JOIN, {
     consultationId,
     mode,
   });
+};
 
-export const leaveRoom = (consultationId: number): Promise<JoinChatAck> =>
-  emitWithAck<JoinChatAck>(CONSULTATION_EVENTS.COMMANDS.LEAVE, {
+export const leaveRoom = (consultationId: number): Promise<JoinChatAck> => {
+  activeConsultationId = null;
+  return emitWithAck<JoinChatAck>(CONSULTATION_EVENTS.COMMANDS.LEAVE, {
     consultationId,
   });
+};
 
 export const joinConsultationRooms = async (
   consultationId: number,

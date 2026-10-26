@@ -4,6 +4,7 @@ import api from "@/actions/api";
 import { expertLogoutAction } from "@/actions/auth";
 import { type IExpert } from "@repo/lib";
 import { API_ROUTES } from "@/utils/api.routes";
+import { getActiveConsultationId, endConsultation } from "@/realtime/topics/consultation";
 
 export interface AuthState {
   user: IExpert | null;
@@ -70,6 +71,13 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: async (redirectUrl?: string) => {
+        // An auth logout must not leave a live consultation running — end it
+        // server-side before the auth state resets and redirects away.
+        const consultationId = getActiveConsultationId();
+        if (consultationId) {
+          endConsultation(consultationId, "expert_disconnected").catch(() => undefined);
+        }
+
         const user = get().user;
         const actualUserId = user?.userId || user?.id;
 
@@ -100,7 +108,7 @@ export const useAuthStore = create<AuthState>()(
         }
 
         try {
-          await api.post("/auth/logout");
+          await api.post(API_ROUTES.AUTH.LOGOUT);
         } catch {
           // ignore
         }
