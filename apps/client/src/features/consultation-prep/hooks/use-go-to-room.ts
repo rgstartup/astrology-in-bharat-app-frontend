@@ -36,11 +36,10 @@ export function useGoToRoom(expert: Partial<IExpert> | null) {
         paused: false,
       });
 
-      // Room mode resolves server-side (history session mode + live state).
-      // Never carry `?mode=` in the URL — it is spoofable and ignored.
-      router.push(
-        `/consultation/${consultationId}?sessionId=${sessionId}&expertId=${targetExpertId}`,
-      );
+      // Room mode + session resolve server-side (history session mode + live
+      // state). Never carry `?mode=` / `?sessionId=` — stale after continue,
+      // spoofable, and ignored.
+      router.push(`/consultation/${consultationId}?expertId=${targetExpertId}`);
 
       if (typeof window !== "undefined") {
         window.sessionStorage.removeItem(`chat:pending:${consultationId}`);

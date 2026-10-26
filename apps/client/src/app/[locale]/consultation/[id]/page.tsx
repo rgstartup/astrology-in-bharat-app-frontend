@@ -24,7 +24,6 @@ function ChatRoomBootstrap() {
   const consultationIdParam = params.id as string;
   const consultationId = consultationIdParam ? Number(consultationIdParam) : NaN;
   const roomConsultationId = consultationIdParam && !isNaN(consultationId) ? consultationId : null;
-  const sessionId = searchParams.get("sessionId");
   const expertId = searchParams.get("expertId");
 
   const { isAuthenticated } = useAuthStore();
@@ -43,7 +42,6 @@ function ChatRoomBootstrap() {
 
   return (
     <ChatRoomContent
-      sessionId={sessionId}
       roomConsultationId={roomConsultationId}
       expertData={seed.expertData}
       initialMessages={seed.messages}

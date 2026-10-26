@@ -101,6 +101,13 @@ export const useChat = (consultationId?: number | string | null) => {
         endedRef.current = true;
         setEnded(payload);
         setPaused(null);
+        // The budget seed and pending deadline are dead once the session
+        // ends — clear them so a later continue with new pricing/options
+        // can't inherit stale values.
+        if (typeof window !== "undefined") {
+          window.sessionStorage.removeItem(`chat:pending:${id}`);
+          window.sessionStorage.removeItem(`chat:budget:${id}`);
+        }
         // Re-seed chat history so session ended_at / ended_reason changes
         // (e.g. a paused call row cleared on end) reach the timeline.
         setSessionRevision((value) => value + 1);
@@ -145,6 +152,21 @@ export const useChat = (consultationId?: number | string | null) => {
       }
     };
 
+    const handleAccepted = (payload: any) => {
+      if (payload && Number(payload.consultationId) === id) {
+        // Continue-consultation re-accept: unlatch an ended session and
+        // refresh budget + session history for the new session's timeline.
+        endedRef.current = false;
+        setEnded(null);
+        setPaused(null);
+        applyBudget({
+          maxMinutes: payload.maxMinutes,
+          startedAt: payload.startedAt,
+        } as JoinChatAck);
+        setSessionRevision((value) => value + 1);
+      }
+    };
+
     const handleBudgetRestored = (payload: any) => {
       if (payload && Number(payload.consultationId) === id) {
         setPaused(null);
@@ -172,6 +194,7 @@ export const useChat = (consultationId?: number | string | null) => {
     socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
     socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
     socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
     socket.on(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
     socket.on("connect", handleConnect);
@@ -182,6 +205,7 @@ export const useChat = (consultationId?: number | string | null) => {
       socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
       socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
       socket.off(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
       socket.off("connect", handleConnect);

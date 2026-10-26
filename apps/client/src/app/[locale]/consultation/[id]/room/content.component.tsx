@@ -49,7 +49,6 @@ const formatTime = (seconds: number) => {
 };
 
 type RoomContentProps = {
-  sessionId: string | null;
   roomConsultationId: number | null;
   expertData: IExpert;
   initialMessages: ChatMessage[];
@@ -61,7 +60,6 @@ type RoomContentProps = {
  * hooks, billing window, and view switchers, then lays out the room tree.
  */
 export default function RoomContent({
-  sessionId,
   roomConsultationId,
   expertData,
   initialMessages,
@@ -122,6 +120,16 @@ export default function RoomContent({
   });
   const [sessions, setSessions] = useState<ChatHistorySessionDto[]>(initialSessions);
   const timeline = useChatTimeline(messages, sessions);
+
+  // Live session id, derived from refreshed history instead of a (stale)
+  // `?sessionId=` route param: composer attachments + the tracker always
+  // target the active session, else the newest known one.
+  const sessionId = React.useMemo<string | null>(() => {
+    const source = sessions.length > 0 ? sessions : initialSessions;
+    const active = source.find((s) => s.status === "active");
+    const latest = active ?? source[source.length - 1];
+    return latest ? String(latest.sessionId) : null;
+  }, [sessions, initialSessions]);
 
   // The switch closes the call session server-side; re-seed so its ended_at
   // (and the new chat session) reaches the timeline without a page reload.

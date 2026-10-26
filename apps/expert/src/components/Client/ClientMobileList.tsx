@@ -64,7 +64,7 @@ export default function ClientMobileList({ clients, onViewChat }: ClientMobileLi
                   ({client.lastConsultation.duration})
                 </span>
               </span>
-              {client.lastConsultation.type === "call" && <Phone size={14} className="ml-1" />}
+              {(client.lastConsultation.type === "voice" || client.lastConsultation.type === "call") && <Phone size={14} className="ml-1" />}
               {client.lastConsultation.type === "chat" && (
                 <MessageSquare size={14} className="ml-1" />
               )}

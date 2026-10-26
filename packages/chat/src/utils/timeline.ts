@@ -32,12 +32,14 @@ export const dateLabel = (iso?: string): string => {
 };
 
 const MODE_LABEL: Record<string, string> = {
-  CHAT: "Connection resumed",
+  CHAT: "Consultation resumed",
   AUDIO_CALL: "Switched to audio call",
   VIDEO_CALL: "Switched to video call",
+  VOICE: "Switched to audio call",
+  VIDEO: "Switched to video call",
 };
 
-const CALL_MODES = new Set(["AUDIO_CALL", "VIDEO_CALL"]);
+const CALL_MODES = new Set(["AUDIO_CALL", "VIDEO_CALL", "VOICE", "VIDEO"]);
 
 /** True for voice/video sessions (they render as system event cards). */
 export const isCallMode = (mode?: string | null): boolean =>
@@ -47,8 +49,8 @@ export const sessionLabel = (current: SessionMeta, previous: SessionMeta | null)
   if (!previous) return "";
   const cur = (current.mode ?? "CHAT").toUpperCase();
   const prev = (previous.mode ?? "CHAT").toUpperCase();
-  if (cur !== prev) return MODE_LABEL[cur] ?? "Connection resumed";
-  return "Connection resumed";
+  if (cur !== prev) return MODE_LABEL[cur] ?? "Consultation resumed";
+  return "Consultation resumed";
 };
 
 const modeOf = (mode?: string | null): string => (mode ?? "CHAT").toUpperCase();
@@ -144,7 +146,7 @@ function toTimelineGrouped(messages: ChatMessage[]): TimelineItem[] {
     const bucket = groups.get(sid) ?? [];
     if (bucket.length === 0) continue;
     if (seenGroup) {
-      items.push({ kind: "session", key: `session-${sid}`, sessionId: sid, label: "Connection resumed" });
+      items.push({ kind: "session", key: `session-${sid}`, sessionId: sid, label: "Consultation resumed" });
     }
     for (const message of bucket) pushInto(items, lastDay, message);
     seenGroup = true;
@@ -291,7 +293,7 @@ function toTimelineWithSessions(messages: ChatMessage[], sessions: SessionMeta[]
         kind: "session",
         key: `session-${explicitSid}`,
         sessionId: explicitSid,
-        label: "Connection resumed",
+        label: "Consultation resumed",
       });
     }
     for (const message of untagged) pushInto(items, lastDay, message);

@@ -23,6 +23,7 @@ export const CONSULTATION_EVENTS = {
     GET_STATUS: "consultation:get_status",
     VOICE_TOKEN: "consultation:voice_token",
     MEDIA_READY: "consultation:media_ready",
+    CLOSE: "consultation:close",
   },
   EVENTS: {
     STATE: "consultation:state",
@@ -104,6 +105,16 @@ export const rejectConsultation = (
   reason?: string,
 ): Promise<ConsultationActionAck> =>
   emitWithAck<ConsultationActionAck>(CONSULTATION_EVENTS.COMMANDS.REJECT, {
+    consultationId,
+    reason,
+  });
+
+/** Expert closes a completed/reopened consultation — terminal, cannot reopen. */
+export const closeConsultation = (
+  consultationId: number,
+  reason?: string,
+): Promise<ConsultationActionAck> =>
+  emitWithAck<ConsultationActionAck>(CONSULTATION_EVENTS.COMMANDS.CLOSE, {
     consultationId,
     reason,
   });

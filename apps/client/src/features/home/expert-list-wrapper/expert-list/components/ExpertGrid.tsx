@@ -8,7 +8,7 @@ import { FaSpinner } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useExpertListStore } from "@/store/expertListStore";
 import { usePresenceStore } from "@/store/presenceStore";
-import { useDebounce } from "@/hooks/use-debounce";
+import { useDebounceValue } from "@/hooks/external-hooks";
 import { api, API_ROUTES } from "@/actions";
 import { toExpertStatus } from "@/realtime/types/presence";
 import { IFetchExpertsResponse } from "../api/fetch-expert";
@@ -16,7 +16,7 @@ import { IFetchExpertsResponse } from "../api/fetch-expert";
 const ExpertGrid = () => {
   const t = useTranslations("Home");
   const store = useExpertListStore();
-  const debouncedSearch = useDebounce<string>(store.searchQuery);
+  const [debouncedSearch] = useDebounceValue(store.searchQuery, 300);
   const querySignature = JSON.stringify({
     search: debouncedSearch,
     specialization: store.selectedSpecialization,

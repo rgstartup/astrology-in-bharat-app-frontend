@@ -32,28 +32,21 @@ function isAuthRoute(pathname: string): boolean {
 }
 
 /**
- * Checks whether the current pathname is an active consultation room route.
- *
- * @param pathname - Locale-stripped pathname from `usePathname`.
- * @returns True when inside a consultation room.
- */
-function isConsultationRoomRoute(pathname: string): boolean {
-  if (!pathname) return false;
-  return pathname === "/consultation" || pathname.startsWith("/consultation/");
-}
-
-/**
  * Root host component mounted in the root layout.
  * Listens to global consultation prep store state and renders the preparation modal
  * with the selected expert and mode. Re-opens pending consultation requests upon login
  * once the user has navigated away from auth routes to their target destination.
  *
- * @returns Preparation modal element or null when inactive or on auth/room routes.
+ * Rendered on ALL routes — including the consultation room, where the
+ * in-room "continue consultation" CTA opens this same global modal.
+ *
+ * @returns Preparation modal element or null when inactive or on auth routes.
  */
 export default function ConsultationPrepHost() {
   const pathname = usePathname();
   const expertId = useConsultationPrepStore((s) => s.expertId);
   const mode = useConsultationPrepStore((s) => s.mode);
+  const consultationId = useConsultationPrepStore((s) => s.consultationId);
   const isOpen = useConsultationPrepStore((s) => s.isOpen);
   const setConsultationPrepOpen = useConsultationPrepStore(
     (s) => s.setConsultationPrepOpen,
@@ -64,7 +57,7 @@ export default function ConsultationPrepHost() {
 
   useEffect(() => {
     // Never auto-open while user is on an auth or onboarding screen
-    if (isAuthRoute(pathname) || isConsultationRoomRoute(pathname)) {
+    if (isAuthRoute(pathname)) {
       return;
     }
 
@@ -75,7 +68,7 @@ export default function ConsultationPrepHost() {
     }
   }, [isAuthenticated, pendingExpertId, pendingMode, pathname]);
 
-  if (isAuthRoute(pathname) || isConsultationRoomRoute(pathname)) {
+  if (isAuthRoute(pathname)) {
     return null;
   }
 
@@ -87,7 +80,7 @@ export default function ConsultationPrepHost() {
       mode={mode}
       open={isOpen}
       onOpenChange={setConsultationPrepOpen}
-      consultationId={null}
+      consultationId={consultationId}
     />
   );
 }

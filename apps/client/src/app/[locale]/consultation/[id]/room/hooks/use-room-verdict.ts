@@ -26,7 +26,11 @@ export const useRoomVerdict = ({ decision, endedVerdict, joinedStatus, endLiveCh
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (decision === "accepted") setSessionStatus("active");
+    if (decision === "accepted") {
+      setSessionStatus("active");
+      // Continue-consultation re-accept clears a prior ended-state dialog.
+      setShowModal(false);
+    }
   }, [decision]);
 
   useEffect(() => {

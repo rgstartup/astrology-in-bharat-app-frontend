@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { type IExpert } from "@repo/lib";
 import { getChatPrepExpertAction } from "@/actions/chat";
@@ -11,8 +11,11 @@ import { toExpertStatus } from "@/realtime/types/presence";
  * Fetches the prep-time expert profile and resolves live availability
  * (REST snapshot + realtime presence subscription).
  *
+ * The fetch itself is exposed so the composition root can run it with
+ * Promise.all alongside the wallet balance refresh on modal open.
+ *
  * @param expertId - Expert identifier.
- * @returns Expert profile, fetch loading flag, and resolved availability.
+ * @returns Expert profile, fetch loading flag, resolved availability, and the imperative fetch.
  */
 export function usePrepExpert(expertId: string) {
   const [expert, setExpert] = useState<Partial<IExpert> | null>(null);
@@ -29,28 +32,29 @@ export function usePrepExpert(expertId: string) {
 
   const isExpertAvailable = expert ? isAvailableForConsultation : false;
 
+  // Latest expertId seen: responses racing an id change must not land.
+  const expertIdRef = useRef(expertId);
   useEffect(() => {
-    if (!expertId) return;
-    let isCancelled = false;
-
-    const fetchExpert = async () => {
-      setLoading(true);
-      const res = await getChatPrepExpertAction(expertId);
-      if (isCancelled) return;
-      setLoading(false);
-
-      if (!res.ok) {
-        toast.error(res.error.message || "Failed to fetch expert");
-        return;
-      }
-      setExpert(res.data);
-    };
-
-    fetchExpert();
-    return () => {
-      isCancelled = true;
-    };
+    expertIdRef.current = expertId;
   }, [expertId]);
 
-  return { expert, loading, isExpertAvailable };
+  const fetchExpert = useCallback(async (): Promise<Partial<IExpert> | null> => {
+    if (!expertId) return null;
+    setLoading(true);
+    const res = await getChatPrepExpertAction(expertId);
+    if (expertIdRef.current !== expertId) return null;
+    setLoading(false);
+    if (!res.ok) {
+      toast.error(res.error.message || "Failed to fetch expert");
+      return null;
+    }
+    setExpert(res.data);
+    return res.data;
+  }, [expertId]);
+
+  useEffect(() => {
+    void fetchExpert();
+  }, [fetchExpert]);
+
+  return { expert, loading, isExpertAvailable, fetchExpert };
 }

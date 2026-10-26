@@ -5,7 +5,7 @@ import { Search, X } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { useProductListStore } from "@/store/productListStore";
-import { useDebounce } from "@/hooks/use-debounce";
+import { useDebounceValue } from "@/hooks/external-hooks";
 import { getProducts } from "@/libs/api-products";
 
 const SearchIcon = Search;
@@ -23,7 +23,7 @@ const ProductGrid: React.FC = () => {
     setIsLoading,
   } = useProductListStore();
 
-  const debouncedSearch = useDebounce(searchQuery, 400);
+  const [debouncedSearch] = useDebounceValue(searchQuery, 400);
 
   // Query API whenever debounced search query changes
   useEffect(() => {

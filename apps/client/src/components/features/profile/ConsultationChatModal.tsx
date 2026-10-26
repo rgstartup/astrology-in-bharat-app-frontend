@@ -2,6 +2,16 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
 
+/** Session kind across the legacy (`AUDIO_CALL`) and current (`voice`) vocabularies. */
+function sessionKind(session: any): "chat" | "voice" | "video" {
+  const raw = String(session.type ?? session.session_type ?? "").toLowerCase();
+  if (raw === "video" || raw === "video_call" || raw === "video-call") return "video";
+  if (raw === "voice" || raw === "audio" || raw === "audio_call" || raw === "audio-call" || raw === "call") {
+    return "voice";
+  }
+  return "chat";
+}
+
 interface ConsultationChatModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -105,8 +115,7 @@ function BirthDetailsIntroCard({ data }: { data: any }) {
 }
 
 function CallSessionSummary({ selectedSession }: { selectedSession: any }) {
-  const isVideo =
-    selectedSession.type === "VIDEO_CALL" || selectedSession.session_type === "video";
+  const isVideo = sessionKind(selectedSession) === "video";
   const iconClass = isVideo ? "fa-video text-purple-600" : "fa-phone text-blue-600";
   const bgClass = isVideo ? "bg-purple-50" : "bg-blue-50";
 
@@ -329,11 +338,7 @@ const ConsultationChatModal: React.FC<ConsultationChatModalProps> = ({
 
   if (!mounted || !isOpen || !selectedSession) return null;
 
-  const isCall =
-    selectedSession.type === "AUDIO_CALL" ||
-    selectedSession.type === "VIDEO_CALL" ||
-    selectedSession.session_type === "audio" ||
-    selectedSession.session_type === "video";
+  const isCall = sessionKind(selectedSession) !== "chat";
 
   const userDisplayAvatar =
     userAvatar ||

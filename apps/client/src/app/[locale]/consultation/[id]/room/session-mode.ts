@@ -3,7 +3,7 @@ import type { ConsultationMode } from "@/realtime/types/consultation";
 
 /**
  * Normalizes a history session mode into the room's voice vocabulary.
- * Backend history uses `CHAT | AUDIO_CALL | VIDEO_CALL` (nullable on old rows);
+ * Backend history uses `chat | voice | video` (nullable on old rows);
  * the room uses `chat | voice | video`.
  *
  * @param mode - Raw mode string from `ChatHistorySessionDto`.

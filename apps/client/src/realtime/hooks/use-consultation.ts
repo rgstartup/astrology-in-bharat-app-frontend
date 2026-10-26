@@ -117,6 +117,10 @@ const [voiceToken, setVoiceToken] = useState<{
 
     const onAccepted = (p: ConsultationDecisionPayload) => {
       if (!matchDecision(p)) return;
+      // Continue-consultation re-accept: clear the ENDED terminal latch so
+      // subsequent state/budget events the new session emits still apply.
+      endedRef.current = false;
+      setEnded(null);
       setDecision("accepted");
       setVoiceToken({
         token: p.token ?? null,

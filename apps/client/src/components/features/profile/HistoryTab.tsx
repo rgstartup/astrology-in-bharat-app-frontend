@@ -4,6 +4,16 @@ import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
 import Skeleton from "@/components/ui/Skeleton";
 
+/** Session kind across the legacy (`AUDIO_CALL`) and current (`voice`) vocabularies. */
+function sessionKind(session: any): "chat" | "voice" | "video" {
+  const raw = String(session.type ?? session.session_type ?? "").toLowerCase();
+  if (raw === "video" || raw === "video_call" || raw === "video-call") return "video";
+  if (raw === "voice" || raw === "audio" || raw === "audio_call" || raw === "audio-call" || raw === "call") {
+    return "voice";
+  }
+  return "chat";
+}
+
 interface HistoryTabProps {
   loadingHistory: boolean;
   consultationHistory: any[];
@@ -67,8 +77,9 @@ function SessionExpandedDetails({
   onReportIssue: (session: any) => void;
   t: any;
 }) {
-  const isVideo = session.type === "VIDEO_CALL" || session.session_type === "video";
-  const isAudio = session.type === "AUDIO_CALL" || session.session_type === "audio";
+  const kind = sessionKind(session);
+  const isVideo = kind === "video";
+  const isAudio = kind === "voice";
   const typeIcon = isVideo ? "fa-video" : isAudio ? "fa-phone" : "fa-message";
   const typeLabel = isVideo ? "Video Call" : isAudio ? "Audio Call" : "Chat";
   const viewActionLabel = isVideo ? t.viewVideo : isAudio ? t.viewCall : t.viewChat;
@@ -152,7 +163,7 @@ function SessionExpandedDetails({
         <button
           onClick={() => onViewDetails(session)}
           className="w-full sm:w-auto rounded-full px-6 py-2.5 text-sm font-bold border-2 border-[#fd6410] text-[#fd6410] bg-white hover:bg-[#fd6410]/5 flex items-center justify-center gap-2.5 transition-all shadow-sm active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-          disabled={session.type !== "CHAT" && session.session_type !== "chat" && session.session_type !== undefined}
+          disabled={session.type !== "CHAT" && session.type !== "chat" && session.session_type !== "chat" && session.session_type !== undefined}
         >
           <i className={`fa-solid ${typeIcon} text-base`}></i>
           {viewActionLabel}
@@ -206,8 +217,9 @@ function SessionHistoryRow({
   lang: string;
   t: any;
 }) {
-  const isVideo = session.type === "VIDEO_CALL" || session.session_type === "video";
-  const isAudio = session.type === "AUDIO_CALL" || session.session_type === "audio";
+  const kind = sessionKind(session);
+  const isVideo = kind === "video";
+  const isAudio = kind === "voice";
   const typeIcon = isVideo ? "fa-video text-purple-600" : isAudio ? "fa-phone text-blue-600" : "fa-message text-blue-500";
   const typeText = isVideo
     ? t.viewVideo

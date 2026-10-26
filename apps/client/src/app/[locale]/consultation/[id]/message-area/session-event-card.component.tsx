@@ -24,7 +24,8 @@ function lower(value?: string | null): string {
 }
 
 function isVideo(event: SessionMeta): boolean {
-  return (event.mode ?? "").toUpperCase() === "VIDEO_CALL";
+  const mode = (event.mode ?? "").toUpperCase();
+  return mode === "VIDEO_CALL" || mode === "VIDEO";
 }
 
 function callName(event: SessionMeta): string {

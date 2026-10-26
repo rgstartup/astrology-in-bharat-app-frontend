@@ -80,7 +80,7 @@ export const getRecentAppointments = async (): Promise<[any[] | null, ApiError |
   const uniqueSessions = Array.from(
     new Map(
       allSessions.map((item) => {
-        const typePrefix = (item as any).type ? "call" : "chat"; // Call sessions have a type (AUDIO/VIDEO)
+        const typePrefix = (item as any).type ? "call" : "chat"; // Call sessions have a type (voice/video)
         return [`${typePrefix}_${item.id}`, item];
       }),
     ).values(),

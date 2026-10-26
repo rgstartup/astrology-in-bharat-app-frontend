@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { toast } from "@/hooks/use-toast";
 import { PATHS } from "@repo/routes";
@@ -26,13 +26,25 @@ export function useConsultationPrep(
   expertId: string,
   mode: ConsultationMode = "chat",
   consultationId?: number | null,
+  /** Prep-dialog close; called when the expert verdict lands. */
+  close?: () => void,
 ) {
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("Chat.page");
 
-  const { expert, loading, isExpertAvailable } = usePrepExpert(expertId);
-  const { isAuthenticated, needsRecharge, setNeedsRecharge } = useBalanceGate();
+  const {
+    expert,
+    loading,
+    isExpertAvailable,
+    fetchExpert,
+  } = usePrepExpert(expertId);
+  const {
+    isAuthenticated,
+    needsRecharge,
+    setNeedsRecharge,
+    refreshBalanceNow,
+  } = useBalanceGate();
   const { deviceHint, clearDeviceHint, runPreflight, resetDevices } =
     useDevicePreflight();
   const {
@@ -43,6 +55,12 @@ export function useConsultationPrep(
   } = useSomeoneElseForm();
   const [showOfflinePopup, setShowOfflinePopup] = useState(false);
 
+  // On modal open: latest expert data + wallet balance, fetched in parallel
+  // so the rate and the recharge gate reflect both before the CTA is used.
+  useEffect(() => {
+    void Promise.all([fetchExpert(), refreshBalanceNow()]);
+  }, [fetchExpert, refreshBalanceNow]);
+
   const currentPrice = resolveModePrice(expert, mode);
 
   const request = useConsultationRequest({
@@ -51,6 +69,7 @@ export function useConsultationPrep(
     expert,
     onInsufficientBalance: () => setNeedsRecharge(true),
     consultationId,
+    onVerdictResolved: close,
   });
 
   const proceedToConsultation = async () => {
@@ -66,6 +85,9 @@ export function useConsultationPrep(
       });
       return;
     }
+    // Refresh the wallet first: the recharge gate and initiate both act on
+    // the current server-side balance, not the stale store snapshot.
+    await refreshBalanceNow();
     if (expert && !isExpertAvailable) {
       return;
     }
@@ -73,12 +95,22 @@ export function useConsultationPrep(
       return;
     }
     setNeedsRecharge(false);
-    await request.initiate(
-      !askSomeoneElse ? someoneElseData : null,
-    );
+    await request.initiate(!askSomeoneElse ? someoneElseData : null);
   };
 
   const handleStartConsultation = () => {
+    if (!isAuthenticated) {
+      const id = toast.warning(t("toastLogin"), {
+        action: {
+          label: t("loginNow"),
+          onClick: () => {
+            toast.dismiss(id);
+            router.push(withCallbackUrl(PATHS.LOGIN, pathname));
+          },
+        },
+      });
+      return;
+    }
     void proceedToConsultation();
   };
 

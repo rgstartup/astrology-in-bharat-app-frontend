@@ -1,17 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEventListener } from "@/hooks/external-hooks";
 
+// Wrapper over usehooks-ts' useEventListener to keep our `enabled` toggle.
 export function useScrollClose(callback: () => void, enabled = true) {
-  useEffect(() => {
-    if (!enabled) return;
-
-    window.addEventListener("scroll", callback, {
-      passive: true,
-    });
-
-    return () => {
-      window.removeEventListener("scroll", callback);
-    };
-  }, [callback, enabled]);
+  useEventListener(
+    "scroll",
+    () => {
+      if (enabled) callback();
+    },
+    undefined,
+    { passive: true },
+  );
 }

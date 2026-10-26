@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useRef, useCallback } from "react";
 import ExpertListHeader from "./components/ExpertListHeader";
 import { useExpertListStore } from "@/store/expertListStore";
-import { useDebounce } from "@/hooks/use-debounce";
+import { useDebounceValue } from "@/hooks/external-hooks";
 import { apiV2, API_ROUTES } from "@/actions";
 import { usePresenceStore } from "@/store/presenceStore";
 import { toExpertStatus } from "@/realtime/types/presence";
@@ -29,7 +29,7 @@ const ExpertList: React.FC<ExpertListProps> = ({
   const store = useExpertListStore();
   const { filterState, setExperts, setHasMore, setLoading, buildFetchParams } = store;
 
-  const debouncedSearch = useDebounce<string>(store.searchQuery, 400);
+  const [debouncedSearch] = useDebounceValue(store.searchQuery, 400);
 
   const querySignature = JSON.stringify({
     search: debouncedSearch,

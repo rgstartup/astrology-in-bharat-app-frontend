@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { MessageCircle, Phone, Video } from "lucide-react";
 import type { IExpert } from "@repo/lib";
 import { cn } from "@/lib/utils";
 import { resolveModePrice } from "@/lib/pricing";
-import { ConsultationPrepModal } from "@/features/consultation-prep/components/consultation-prep-modal/consultation-prep-modal.root";
+import { useConsultationPrepStore } from "@/store/consultationPrepStore";
 import type { ConsultationMode } from "@/store/consultationPrepStore";
 
 type ContinueConsultationSectionProps = {
@@ -19,13 +19,9 @@ export function ContinueConsultationSection({
   consultationId,
   className,
 }: ContinueConsultationSectionProps) {
-  const [mode, setMode] = useState<ConsultationMode | null>(null);
-  const [open, setOpen] = useState(false);
-
-  const start = (m: ConsultationMode) => {
-    setMode(m);
-    setOpen(true);
-  };
+  const openConsultationPrep = useConsultationPrepStore(
+    (s) => s.openConsultationPrep,
+  );
 
   const rates = {
     chat: resolveModePrice(expertData, "chat") || 25,
@@ -59,7 +55,9 @@ export function ContinueConsultationSection({
             <button
               key={opt.mode}
               type="button"
-              onClick={() => start(opt.mode)}
+              onClick={() =>
+                openConsultationPrep(String(expertData.id), opt.mode, consultationId)
+              }
               className="group flex items-center justify-between rounded-xl border border-[#d3cec6] bg-white p-3 text-left transition-all hover:border-neutral-400 hover:shadow-xs"
             >
               <div className="flex items-center gap-3">
@@ -84,17 +82,6 @@ export function ContinueConsultationSection({
           );
         })}
       </div>
-
-      {mode && (
-        <ConsultationPrepModal
-          expertId={String(expertData.id)}
-          mode={mode}
-          open={open}
-          onOpenChange={setOpen}
-          autoStart
-          consultationId={consultationId}
-        />
-      )}
     </div>
   );
 }

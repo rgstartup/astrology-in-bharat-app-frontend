@@ -65,6 +65,8 @@ export interface ConsultationPrepDataState {
   expertId: string | null;
   mode: ConsultationMode;
   isOpen: boolean;
+  /** Existing consultation to re-initiate into (e.g. continue from the room). */
+  consultationId: number | null;
   /** Expert picked while logged out; reopened automatically after login. */
   pendingExpertId: string | null;
   pendingMode: ConsultationMode;
@@ -74,7 +76,11 @@ export interface ConsultationPrepDataState {
  * Actions modifying consultation preparation state.
  */
 export interface ConsultationPrepActions {
-  openConsultationPrep: (expertId: string, mode?: ConsultationMode) => void;
+  openConsultationPrep: (
+    expertId: string,
+    mode?: ConsultationMode,
+    consultationId?: number | null,
+  ) => void;
   closeConsultationPrep: () => void;
   setConsultationPrepOpen: (open: boolean) => void;
   setPendingExpert: (expertId: string | null, mode?: ConsultationMode) => void;
@@ -102,14 +108,16 @@ export const {
       expertId: null,
       mode: "chat",
       isOpen: false,
+      consultationId: null,
       pendingExpertId: initialPending.pendingExpertId,
       pendingMode: initialPending.pendingMode,
-      openConsultationPrep: (expertId, mode = "chat") => {
+      openConsultationPrep: (expertId, mode = "chat", consultationId = null) => {
         writePendingSession(null, "chat");
         set({
           expertId,
           mode,
           isOpen: true,
+          consultationId,
           pendingExpertId: null,
           pendingMode: mode,
         });
@@ -118,9 +126,12 @@ export const {
         set({
           isOpen: false,
           expertId: null,
+          consultationId: null,
         }),
       setConsultationPrepOpen: (open) =>
-        set(open ? { isOpen: true } : { isOpen: false, expertId: null }),
+        set(open
+          ? { isOpen: true }
+          : { isOpen: false }),
       setPendingExpert: (pendingExpertId, mode = "chat") => {
         writePendingSession(pendingExpertId, mode);
         set({ pendingExpertId, pendingMode: mode });

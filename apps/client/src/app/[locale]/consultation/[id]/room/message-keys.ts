@@ -36,6 +36,7 @@ export const toChatMessage = (m: ChatMessagePayload): ChatMessage => {
     senderId: String(m.senderId),
     senderType: m.senderType === "expert" ? "expert" : "user",
     content: m.content,
+    ...(m.sessionId != null ? { sessionId: String(m.sessionId) } : {}),
     ...(attachmentUrl ? { attachmentUrl } : {}),
     ...(attachmentType ? { attachmentType } : {}),
     createdAt: m.timestamp,

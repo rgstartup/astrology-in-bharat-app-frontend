@@ -18,6 +18,8 @@ export interface ChatMessagePayload {
   /** Raw persisted attachments (HTTP attachment sends carry only this). */
   attachments?: ChatAttachmentPayload[];
   timestamp: string;
+  /** Owning session id — buckets live messages for timeline dividers. */
+  sessionId?: number | null;
 }
 
 export interface ChatTypingPayload {

@@ -77,7 +77,7 @@ export const CallNotificationListener: React.FC = () => {
       }
       const callerName =
         session.client?.user?.name || session.user?.name || "A Client";
-      const callType = session.type || "audio";
+      const callType = String(session.type ?? "").toLowerCase().includes("video") ? "video" : "voice";
       const callerAvatar =
         session.client?.profile_picture ||
         session.client?.user?.avatar ||

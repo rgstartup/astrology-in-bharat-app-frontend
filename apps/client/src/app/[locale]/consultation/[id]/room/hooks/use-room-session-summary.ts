@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { type IExpert } from "@repo/lib";
 import type { ChatSession } from "@/lib/types";
 import type { ChatEndedPayload, ChatPausedPayload } from "@/realtime/types/chat";
-import { resolveChatRate } from "@/lib/pricing";
+import { resolveChatRate, resolveModePrice } from "@/lib/pricing";
 
 /**
  * Normalizes backend end reasons into client summary keys.
@@ -82,6 +82,17 @@ export function useRoomSessionSummary({
 }: RoomSessionSummaryParams) {
   const chatRate = useMemo(() => resolveChatRate(expertData), [expertData]);
 
+  // Summary bills at the ended mode's rate (a voice call ends → voice rate),
+  // not chat; `chatRate` stays chat-only for the voice-stage rate note.
+  const endedMode = endedVerdict?.mode;
+  const summaryRate = useMemo(
+    () =>
+      endedMode === "voice" || endedMode === "video"
+        ? resolveModePrice(expertData, endedMode)
+        : chatRate,
+    [expertData, endedMode, chatRate],
+  );
+
   const [consumedAmount, setConsumedAmount] = useState(0);
   useEffect(() => {
     if (pausedState) setConsumedAmount(Number(pausedState.consumedAmount) || 0);
@@ -100,7 +111,7 @@ export function useRoomSessionSummary({
     const totalCost = calculateSessionCost(
       consumedAmount,
       finalDuration,
-      chatRate,
+      summaryRate,
     );
     const remainingBalance = calculateRemainingBalance(balance, totalCost);
     const durationMinutes = finalDuration > 0 ? finalDuration / 60 : 0;
@@ -110,8 +121,8 @@ export function useRoomSessionSummary({
       reason,
       duration_seconds: finalDuration,
       durationMins: durationMinutes,
-      pricePerMinute: chatRate,
-      price_per_minute: chatRate,
+      pricePerMinute: summaryRate,
+      price_per_minute: summaryRate,
       totalCost,
       total_cost: totalCost,
       remainingBalance,
@@ -123,7 +134,7 @@ export function useRoomSessionSummary({
     endedVerdict,
     consumedAmount,
     elapsedTime,
-    chatRate,
+    summaryRate,
     balance,
     isFree,
     freeMinutes,

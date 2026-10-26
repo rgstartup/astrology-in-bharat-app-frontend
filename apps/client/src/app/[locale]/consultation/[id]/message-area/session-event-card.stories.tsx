@@ -23,7 +23,7 @@ type Story = StoryObj<typeof SessionEventCard>;
 function event(overrides: Partial<SessionMeta>): SessionMeta {
   return {
     sessionId: "1",
-    mode: "AUDIO_CALL",
+    mode: "voice",
     status: "completed",
     startedAt: "2026-10-13T10:00:00.000Z",
     endedAt: "2026-10-13T10:14:20.000Z",
@@ -38,7 +38,7 @@ export const VoiceCallCompleted: Story = {
 export const VideoCallCompleted: Story = {
   args: {
     event: event({
-      mode: "VIDEO_CALL",
+      mode: "video",
       startedAt: "2026-10-13T10:30:00.000Z",
       endedAt: "2026-10-13T10:55:00.000Z",
     }),
@@ -50,7 +50,7 @@ export const VoiceSwitchedToChat: Story = {
   args: {
     event: event({
       endedAt: "2026-10-13T10:08:00.000Z",
-      nextMode: "CHAT",
+      nextMode: "chat",
     }),
     mounted: true,
   },
@@ -59,10 +59,10 @@ export const VoiceSwitchedToChat: Story = {
 export const VideoSwitchedToChat: Story = {
   args: {
     event: event({
-      mode: "VIDEO_CALL",
+      mode: "video",
       startedAt: "2026-10-13T11:00:00.000Z",
       endedAt: "2026-10-13T11:15:00.000Z",
-      nextMode: "CHAT",
+      nextMode: "chat",
     }),
     mounted: true,
   },
@@ -82,7 +82,7 @@ export const CallReconnected: Story = {
   args: {
     event: event({
       status: "active",
-      previousMode: "AUDIO_CALL",
+      previousMode: "voice",
       endedAt: null,
     }),
     mounted: true,

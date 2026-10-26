@@ -21,7 +21,7 @@ function formatDateTime(dateStr: string) {
 function getTypeIcon(type: string) {
   const t = (type || "").toLowerCase();
   if (t.includes("chat")) return <FaComments />;
-  if (t.includes("audio")) return <FaPhone />;
+  if (t.includes("audio") || t.includes("voice")) return <FaPhone />;
   if (t.includes("video")) return <FaVideo />;
   return <FaStar />;
 }
@@ -95,10 +95,11 @@ function SessionCardAction({ session, status }: { session: any; status: string }
   }
 
   if (status === "ACTIVE") {
+    const type = String(session.type ?? session.mode ?? "").toLowerCase();
     const route =
-      session.type === "CHAT"
+      type === "chat"
         ? `/chat/${session.id}`
-        : session.type === "VIDEO_CALL"
+        : type === "video_call" || type === "video"
           ? `/video/${session.id}`
           : `/call/${session.id}`;
 

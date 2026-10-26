@@ -13,7 +13,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, Mousewheel } from "swiper/modules";
 import { useAllMerchants } from "@/hooks/useAllMerchants";
 import { useMerchantCities } from "@/hooks/useMerchantCities";
-import { useDebounce } from "@/hooks/use-debounce";
+import { useDebounceValue } from "@/hooks/external-hooks";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { StoreSkeletonCard } from "./StoreSkeletonCard";
 import type { Store } from "@/lib/types/shop";
@@ -71,7 +71,7 @@ const StoreSection = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const debouncedSearch = useDebounce(searchQuery, 500);
+  const [debouncedSearch] = useDebounceValue(searchQuery, 500);
 
   const { data: citiesData = [] } = useMerchantCities();
   const uniqueCities = useMemo(

@@ -18,6 +18,16 @@ const { X, MessageSquare, Clock, IndianRupee, Calendar, Star, Sun, ClipboardList
 
 import { createPortal } from "react-dom";
 
+/** Session kind across the legacy (`AUDIO_CALL`) and current (`voice`) vocabularies. */
+function sessionKind(session: any): "chat" | "voice" | "video" {
+  const raw = String(session?.type ?? session?.session_type ?? "").toLowerCase();
+  if (raw === "video" || raw === "video_call" || raw === "video-call") return "video";
+  if (raw === "voice" || raw === "audio" || raw === "audio_call" || raw === "audio-call" || raw === "call") {
+    return "voice";
+  }
+  return "chat";
+}
+
 export default function ClientsPage() {
   const { user: expertUser } = useAuthStore();
   const [clients, setClients] = useState<Client[]>([]);
@@ -98,7 +108,7 @@ export default function ClientsPage() {
             lastConsultation: {
               date: session.startTime || session.createdAt || new Date().toISOString(),
               duration: session.durationString || "0s",
-              type: (session.type || "interaction").toLowerCase()
+              type: sessionKind(session)
             },
             rating: session.rating || 0,
             review: session.comment || "No review yet",
@@ -262,9 +272,9 @@ export default function ClientsPage() {
                         <div className="flex flex-col w-[45%] sm:w-auto sm:min-w-[100px]">
                           <span className="text-gray-900 text-[11px] font-bold uppercase tracking-wider mb-1">Type</span>
                           <span className="font-bold text-gray-800 flex items-center gap-2">
-                             {(session?.type === 'AUDIO_CALL' || session?.session_type === 'audio') ? (
+                             {sessionKind(session) === 'voice' ? (
                                <><LucideIcons.Phone size={14} className="text-blue-500" /> Audio</>
-                             ) : (session?.type === 'VIDEO_CALL' || session?.session_type === 'video') ? (
+                             ) : sessionKind(session) === 'video' ? (
                                <><LucideIcons.Video size={14} className="text-purple-500" /> Video</>
                              ) : (
                                <><LucideIcons.MessageSquare size={14} className="text-[#fd6410]" /> Chat</>
@@ -362,7 +372,7 @@ export default function ClientsPage() {
                                 <div className="flex flex-col">
                                   <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Consultation</span>
                                   <span className="text-sm font-black text-gray-700 capitalize">
-                                    {(session?.type || session?.session_type || "Session")} • {session.durationString || "0s"}
+                                    {sessionKind(session)} • {session.durationString || "0s"}
                                   </span>
                                 </div>
                              </div>

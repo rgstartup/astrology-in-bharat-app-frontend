@@ -165,9 +165,7 @@ const FloatingChatButton: React.FC<{ show: boolean }> = ({ show }) => {
               const cId =
                 activeSession.consultationId ?? activeSession.consultation_id;
               if (eId && cId) {
-                router.push(
-                  `/consultation/${cId}?sessionId=${activeSession.id}&expertId=${eId}`,
-                );
+                router.push(`/consultation/${cId}?expertId=${eId}`);
               } else {
                 console.error(
                   "Could not find expertId in session:",

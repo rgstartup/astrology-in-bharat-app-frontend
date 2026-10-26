@@ -31,6 +31,11 @@ export interface ConsultationRequestOptions {
   onInsufficientBalance: () => void;
   /** Existing consultation to re-initiate into (e.g. continue chat). */
   consultationId?: number | null;
+  /**
+   * Called when the expert verdict lands (accepted / rejected / timeout) so
+   * the prep modal closes itself for all mounting routes, including in-room.
+   */
+  onVerdictResolved?: () => void;
 }
 
 /**
@@ -49,6 +54,7 @@ export function useConsultationRequest({
   expert,
   onInsufficientBalance,
   consultationId,
+  onVerdictResolved,
 }: ConsultationRequestOptions) {
   const [actionLoading, setActionLoading] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
@@ -261,6 +267,9 @@ export function useConsultationRequest({
         };
 
         if (mode === "voice" || mode === "video") {
+          // Close before attempting media: on failure the retry UI lives in
+          // the ModalPopups layer, which renders outside the prep Dialog.
+          onVerdictResolved?.();
           await connectMediaAndEnterRoom(
             consultationId,
             sessionId,
@@ -271,6 +280,11 @@ export function useConsultationRequest({
           goToRoom(expertId, sessionId, consultationId);
         }
       } else {
+        // Rejected/timeout/expired close the prep dialog (the outcome popup
+        // lives outside it); a user-initiated cancel stays on the prep modal.
+        if (res.verdict !== "cancelled") {
+          onVerdictResolved?.();
+        }
         setIsWaiting(false);
       }
     },

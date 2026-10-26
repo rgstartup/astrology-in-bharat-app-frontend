@@ -221,7 +221,7 @@ export const useProfileOrdersHistoryLogic = (
             setShowChatModal(true);
             
             // Only fetch chat history if it's a CHAT session
-            if (session.type === 'CHAT' || session.session_type === 'chat' || !session.type) {
+            if (String(session.type ?? session.session_type ?? "").toLowerCase() === 'chat' || !session.type) {
                 const [messages, error] = await getChatHistory(session.id) as any;
                 if (error) {
                     console.error("Error fetching chat history:", error);

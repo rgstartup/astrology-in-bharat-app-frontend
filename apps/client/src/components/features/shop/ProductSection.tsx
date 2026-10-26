@@ -6,7 +6,7 @@ import { Search, X } from "lucide-react";
 
 import { useProductListStore } from "@/store/productListStore";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
-import { useDebounce } from "@/hooks/use-debounce";
+import { useDebounceValue } from "@/hooks/external-hooks";
 import { getProducts } from "@/libs/api-products";
 
 /* 🔹 Premium Skeleton Card */
@@ -37,7 +37,7 @@ const ProductSection: React.FC = () => {
     setIsLoading,
   } = useProductListStore();
 
-  const debouncedSearch = useDebounce(searchQuery, 400);
+  const [debouncedSearch] = useDebounceValue(searchQuery, 400);
 
   // Query API whenever debounced search query changes
   useEffect(() => {

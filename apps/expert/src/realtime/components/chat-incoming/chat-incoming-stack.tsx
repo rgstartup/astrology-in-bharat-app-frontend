@@ -114,6 +114,16 @@ export function ChatIncomingStack() {
     if (activeModalId !== null) {
       const cid = activeModalId;
       dismiss(cid);
+      setCallWaitSteps((prev) => {
+        const next = { ...prev };
+        delete next[cid];
+        return next;
+      });
+      setCallCountdowns((prev) => {
+        const next = { ...prev };
+        delete next[cid];
+        return next;
+      });
       setCancelledMap((prev) => {
         const next = { ...prev };
         delete next[cid];
@@ -139,6 +149,19 @@ export function ChatIncomingStack() {
           if (current === null || current === undefined || current <= 1) {
             window.clearInterval(interval);
             dismiss(consultationId);
+            // Drop the step latched during this accept so a later REOPENED
+            // request for the same consultation id opens a fresh modal
+            // instead of rendering the previous "accepted" state.
+            setCallWaitSteps((p) => {
+              const next = { ...p };
+              delete next[consultationId];
+              return next;
+            });
+            setCallCountdowns((p) => {
+              const next = { ...p };
+              delete next[consultationId];
+              return next;
+            });
             setActiveModalId(null);
             router.push(`/dashboard/consultations/${consultationId}?mode=${kind}`);
             return { ...prev, [consultationId]: 0 };
@@ -191,6 +214,20 @@ export function ChatIncomingStack() {
         // Chat mode: ready immediately without media connection
         startReadyCountdown(consultationId, kind);
       }
+    } else {
+      // Accept ack failure (settled elsewhere / terminal status): unlatch the
+      // step instead of freezing the modal on the "accepted" row.
+      setCallWaitSteps((prev) => {
+        const next = { ...prev };
+        delete next[consultationId];
+        return next;
+      });
+      setCallCountdowns((prev) => {
+        const next = { ...prev };
+        delete next[consultationId];
+        return next;
+      });
+      toast.error("Could not accept the consultation request");
     }
   };
 
@@ -363,6 +400,7 @@ function ActiveRequestModalOverlay({
           client={clientProfile}
           kind={resolvedKind}
           step={resolvedStep}
+          ratePerMinute={request.ratePerMinute ?? 30}
           micGranted={micGranted}
           countdown={countdown}
           timedOut={timedOut}

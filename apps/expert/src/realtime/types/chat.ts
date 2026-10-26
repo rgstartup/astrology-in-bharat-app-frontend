@@ -79,6 +79,8 @@ export interface ChatIncomingPayload {
   timestamp: string;
   /** Consultation mode requested: chat, voice, or video */
   mode?: ConsultationMode;
+  /** Per-minute rate of the requested mode from the budget snapshot; absent on older servers. */
+  ratePerMinute?: number;
   /** Display name of the requesting client; absent on older servers. */
   clientName?: string | null;
   /** Client topic or query details if provided */

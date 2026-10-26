@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useInterval } from "@/hooks/external-hooks";
 
 /**
  * Formats an elapsed duration as mm:ss (hours fold into minutes).
@@ -33,9 +34,8 @@ export function useTrackerElapsed(startedAt: string | null): string {
 
   useEffect(() => {
     setElapsed(compute());
-    const timer = setInterval(() => setElapsed(compute()), 1000);
-    return () => clearInterval(timer);
   }, [startedAt]);
+  useInterval(() => setElapsed(compute()), startedAt ? 1000 : null);
 
   return formatTrackerElapsed(elapsed);
 }
