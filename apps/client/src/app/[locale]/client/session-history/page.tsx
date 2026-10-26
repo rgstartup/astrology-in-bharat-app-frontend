@@ -163,7 +163,7 @@ function SessionHistoryCard({
               Total Paid
             </p>
             <h6 className="text-lg font-black text-orange-600 tabular-nums uppercase">
-              ₹{session.total_cost || session.amount || 0}
+              ₹{session.payable_amount ?? session.total_cost ?? session.amount ?? 0}
             </h6>
           </div>
         </div>
@@ -174,6 +174,45 @@ function SessionHistoryCard({
             <SessionCardAction session={session} status={status} />
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function SettlementBreakdown({ session }: { session: any }) {
+  const num = (v: unknown) => Number(v ?? 0);
+  const money = (v: unknown) => `₹${num(v).toFixed(2)}`;
+  const freeSeconds = Math.max(0, Math.floor(num(session.consumed_promotional_seconds)));
+  const hasAny =
+    num(session.promotional_discount) > 0 ||
+    num(session.wallet_deduction) > 0 ||
+    num(session.payable_amount) > 0;
+  if (!hasAny) return null;
+
+  return (
+    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-3">
+      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">
+        Payment Breakdown
+      </p>
+      <div className="flex justify-between text-sm font-bold text-slate-600 tabular-nums">
+        <span>Gross charge</span>
+        <span>{money(session.total_cost ?? session.amount)}</span>
+      </div>
+      {(freeSeconds > 0 || num(session.promotional_discount) > 0) && (
+        <div className="flex justify-between text-sm font-bold text-emerald-600 tabular-nums">
+          <span>{freeSeconds > 0 ? `Offer applied (${freeSeconds}s free)` : "Offer applied"}</span>
+          <span>−{money(session.promotional_discount)}</span>
+        </div>
+      )}
+      {num(session.wallet_deduction) > 0 && (
+        <div className="flex justify-between text-sm font-bold text-slate-600 tabular-nums">
+          <span>Charged to wallet</span>
+          <span>{money(session.wallet_deduction)}</span>
+        </div>
+      )}
+      <div className="flex justify-between text-sm font-black text-slate-950 tabular-nums border-t border-slate-200 pt-3">
+        <span>TOTAL PAID</span>
+        <span>{money(session.payable_amount)}</span>
       </div>
     </div>
   );
@@ -252,6 +291,8 @@ function SessionDetailModal({
               </h5>
             </div>
           </div>
+
+          <SettlementBreakdown session={selectedSession} />
 
           {selectedSession.terminatedBy && (
             <div className="flex items-center justify-between px-8 py-4 bg-slate-50 rounded-2xl border border-slate-100">
