@@ -2,7 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { apiV2, API_ROUTES } from "@/actions";
 import { getMeAction, getWalletBalanceAction } from "@/actions/auth";
-import { useConsultationTrackerStore } from "@/store/consultationTrackerStore";
+import { useConsultationRoomStore } from "@/store/consultationRoomStore";
+import { useVoiceSessionStore } from "@/store/voiceSessionStore";
 import { endConsultation } from "@/realtime/topics/consultation";
 import type { Client, ClientWallet } from "@repo/lib";
 
@@ -130,8 +131,8 @@ export const authStore = create<AuthState>()(
       logout: async (redirectUrl?: string) => {
         // An auth logout must not leave a live consultation running — end it
         // server-side before the auth state resets and redirects away.
-        const trackerSession = useConsultationTrackerStore.getState().session;
-        const consultationId = trackerSession?.consultationId ?? null;
+        const roomState = useConsultationRoomStore.getState();
+        const consultationId = roomState.consultationId;
         if (consultationId) {
           endConsultation(consultationId, "client_disconnected").catch(() => undefined);
         }
@@ -191,7 +192,7 @@ export const authStore = create<AuthState>()(
       reset: () => {
         // Auth state is gone — no live consultation context can survive it,
         // so the floating tracker must not outlive the session.
-        useConsultationTrackerStore.getState().clearSession();
+        useVoiceSessionStore.getState().clearSession();
         set({
           user: null,
           isAuthenticated: false,

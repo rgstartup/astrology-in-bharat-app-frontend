@@ -6,13 +6,17 @@ import { toast } from "@/hooks/use-toast";
 import { useTranslations } from "next-intl";
 import { type IExpert } from "@repo/lib";
 import { useConsultationPrepStore } from "@/store/consultationPrepStore";
-import { useConsultationTrackerStore } from "@/store/consultationTrackerStore";
 
 /**
- * Terminal step of a successful request: toast, close the prep modal, seed
- * the floating tracker, and push the room deep link.
+ * Terminal step of a successful request: toast, close the prep modal,
+ * and push the room deep link.
+ * 
+ * NOTE: The consultation tracker is NOT set here. It is set by
+ * `useRoomTrackerSync` when the consultation becomes ACTIVE (expert accepted),
+ * not at initiation. This prevents the tracker from showing a running timer
+ * while the room still shows "waiting for expert".
  *
- * @param expert - Accepted expert profile (tracker display fields).
+ * @param expert - Accepted expert profile (for future use if needed).
  */
 export function useGoToRoom(expert: Partial<IExpert> | null) {
   const router = useRouter();
@@ -26,15 +30,6 @@ export function useGoToRoom(expert: Partial<IExpert> | null) {
     ) => {
       toast.success(t("toastConnecting"));
       useConsultationPrepStore.getState().closeConsultationPrep();
-      useConsultationTrackerStore.getState().setSession({
-        consultationId,
-        sessionId,
-        expertId: String(targetExpertId),
-        expertName: expert?.name ?? `Expert ${targetExpertId}`,
-        expertAvatar: expert?.avatar ?? null,
-        startedAt: new Date().toISOString(),
-        paused: false,
-      });
 
       // Room mode + session resolve server-side (history session mode + live
       // state). Never carry `?mode=` / `?sessionId=` — stale after continue,

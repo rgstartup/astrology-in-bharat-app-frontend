@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useInterval } from "@/hooks/external-hooks";
+import { useConsultationRoomStore } from "@/store/consultationRoomStore";
 
 /**
  * Formats an elapsed duration as mm:ss (hours fold into minutes).
@@ -17,25 +18,27 @@ export function formatTrackerElapsed(totalSeconds: number): string {
 }
 
 /**
- * Ticks once per second from a session start timestamp.
- *
- * @param startedAt - ISO start timestamp; null renders `00:00`.
+ * Ticks once per second using the global consultation room store
+ * (single source of truth written by the room component).
+ * 
  * @returns Formatted elapsed string for display.
  */
-export function useTrackerElapsed(startedAt: string | null): string {
-  const compute = (): number => {
-    if (!startedAt) return 0;
-    const start = new Date(startedAt).getTime();
-    if (Number.isNaN(start)) return 0;
-    return Math.max(0, (Date.now() - start) / 1000);
-  };
+export function useTrackerElapsed(): string {
+  const elapsedSeconds = useConsultationRoomStore((s) => s.elapsedSeconds);
+  const paused = useConsultationRoomStore((s) => s.paused);
 
-  const [elapsed, setElapsed] = useState<number>(() => compute());
+  const [elapsed, setElapsed] = useState<number>(elapsedSeconds);
 
+  // Sync with global elapsed time when it changes
   useEffect(() => {
-    setElapsed(compute());
-  }, [startedAt]);
-  useInterval(() => setElapsed(compute()), startedAt ? 1000 : null);
+    setElapsed(elapsedSeconds);
+  }, [elapsedSeconds]);
+
+  // Tick locally only if not paused
+  useInterval(() => {
+    if (paused) return;
+    setElapsed((prev) => prev + 1);
+  }, !paused ? 1000 : null);
 
   return formatTrackerElapsed(elapsed);
 }

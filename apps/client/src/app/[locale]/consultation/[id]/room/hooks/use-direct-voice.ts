@@ -13,7 +13,9 @@ import { toast } from "@/hooks/use-toast";
 type UseDirectVoiceOptions = {
   consultationId: number | null;
   userId: number | string | null;
-  enabled: boolean;
+  /** Only join when consultation is verified active or accepted — never when status is completed or unverified. */
+  sessionStatus?: string | null;
+  decision?: string | null;
   /** Accept-time Agora voice token (voice/video). Skips the per-join token round trip when provided. */
   voiceToken?: {
     token: string | null;
@@ -54,19 +56,30 @@ type UseDirectVoiceResult = {
  * once (no new consultation is created) and ends/cancels that same row.
  * Upgrade flow (`useVoiceUpgrade`) stays untouched for chat -> voice.
  *
- * @param options - Consultation id, client id for RTC identity, enabled flag, and optional accept-time voice token.
+ * Only joins Agora when consultation is verified active or accepted —
+ * never when status is completed or unverified.
+ *
+ * @param options - Consultation id, client id for RTC identity, session status, decision, and optional accept-time voice token.
  * @returns RTC phase plus voice controls bound to the current consultation.
  */
 export function useDirectVoice(
   options: UseDirectVoiceOptions,
 ): UseDirectVoiceResult {
-  const { consultationId, userId, enabled, voiceToken, onLocalReady, ended } =
+  const { consultationId, userId, sessionStatus, decision, voiceToken, onLocalReady, ended } =
     options;
   const rtc = useVoiceSession();
   const joinedRef = useRef<number | null>(null);
+  const joinAbortedRef = useRef(false);
 
-  // Toast on error transitions only — the room used to depend on this whole
-  // hook result and re-ran the check every render.
+  // Determine if we should join Agora: only when session is active or accepted
+  const enabled = Boolean(
+    consultationId !== null &&
+    !ended &&
+    (sessionStatus === "active" || decision === "accepted") &&
+    (voiceToken?.token && voiceToken?.channelName)
+  );
+
+  // Toast on error transitions only
   useEffect(() => {
     if (!rtc.error) return;
     toast.error(rtc.error);
@@ -75,6 +88,8 @@ export function useDirectVoice(
 
   useEffect(() => {
     if (!enabled) {
+      // Cancel any in-flight join
+      joinAbortedRef.current = true;
       void rtc.leave().catch(() => undefined);
       joinedRef.current = null;
       return;
@@ -82,26 +97,37 @@ export function useDirectVoice(
     if (consultationId === null) return;
     if (joinedRef.current === consultationId) return;
     if (rtc.active || rtc.busy) return;
+    
+    joinAbortedRef.current = false;
     joinedRef.current = consultationId;
     const identity =
       userId === null
         ? `client_${consultationId}`
         : `client_${userId}_consult_${consultationId}`;
-    void rtc
+    
+    const joinPromise = rtc
       .join(consultationId, identity, voiceToken ?? undefined)
       .then(() => {
-        onLocalReady?.();
+        if (!joinAbortedRef.current) {
+          onLocalReady?.();
+        }
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (!joinAbortedRef.current) {
+          // Error already handled by toast effect
+        }
+      });
+    
     return () => {
+      joinAbortedRef.current = true;
       void rtc.leave().catch(() => undefined);
       joinedRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, consultationId, voiceToken, options.onLocalReady]);
+  }, [enabled, consultationId, voiceToken, onLocalReady, rtc]);
 
   const endVoice = useCallback(async (): Promise<void> => {
     joinedRef.current = null;
+    joinAbortedRef.current = true;
     await rtc.leave();
     if (consultationId !== null) {
       await endConsultation(consultationId).catch(() => undefined);
@@ -110,6 +136,7 @@ export function useDirectVoice(
 
   const cancelVoice = useCallback(async (): Promise<void> => {
     joinedRef.current = null;
+    joinAbortedRef.current = true;
     await rtc.leave();
     if (consultationId !== null) {
       await cancelConsultation(consultationId).catch(() => undefined);
@@ -126,15 +153,16 @@ export function useDirectVoice(
       return false;
     }
     joinedRef.current = null;
+    joinAbortedRef.current = true;
     await rtc.leave();
     return true;
   }, [rtc, consultationId]);
 
-  // Leave the Agora RTC session when the consultation ends (socket ENDED or
-  // verdict watcher) so the SDK does not keep running after billing stops.
+  // Leave the Agora RTC session when the consultation ends
   useEffect(() => {
     if (!ended || joinedRef.current === null) return;
     joinedRef.current = null;
+    joinAbortedRef.current = true;
     void rtc.leave().catch(() => undefined);
   }, [ended, rtc]);
 

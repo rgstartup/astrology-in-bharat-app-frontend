@@ -129,7 +129,7 @@ const [voiceToken, setVoiceToken] = useState<{
       });
       setState((prev) => ({
         consultationId: p.consultationId,
-        mode: prev?.mode ?? "chat",
+        mode: p.mode ?? prev?.mode ?? "chat",
         state: "accepted",
         startedAt: p.startedAt ?? null,
         maxMinutes: p.maxMinutes ?? prev?.maxMinutes,

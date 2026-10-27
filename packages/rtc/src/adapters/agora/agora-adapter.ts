@@ -36,6 +36,8 @@ export class AgoraAdapter implements RtcAdapter {
   private kind: SessionKind = "voice";
   private speakerMuted = false;
   private listeners = new Map<AdapterEventName, Set<AdapterListener>>();
+  // In-flight connection guard: abort join if disconnect() is called during connect()
+  private connectingAbortController: AbortController | null = null;
 
   /** True after `configure` succeeds. */
   get isConfigured(): boolean {
@@ -61,6 +63,11 @@ export class AgoraAdapter implements RtcAdapter {
    */
   async connect(options: RtcConnectOptions): Promise<void> {
     assertAdapterConfigured(this);
+    
+    // Create abort controller for in-flight cancellation
+    this.connectingAbortController = new AbortController();
+    const { signal } = this.connectingAbortController;
+
     const client = AgoraRTC.createClient({
       mode: this.options?.mode ?? "rtc",
       codec: this.options?.codec ?? "vp8",
@@ -77,7 +84,20 @@ export class AgoraAdapter implements RtcAdapter {
       } else {
         this.audioTrack = await AgoraRTC.createMicrophoneAudioTrack();
       }
+      
+      // Check for abort before join
+      if (signal.aborted) {
+        throw new RtcError("CONNECT_ABORTED", "Connection aborted", "agora", false);
+      }
+      
       await client.join(this.options?.appId ?? "", options.roomName, options.token, null);
+      
+      // Check for abort after join
+      if (signal.aborted) {
+        await this.teardown();
+        throw new RtcError("CONNECT_ABORTED", "Connection aborted", "agora", false);
+      }
+      
       const tracks =
         this.videoTrack === null
           ? [this.audioTrack]
@@ -87,15 +107,24 @@ export class AgoraAdapter implements RtcAdapter {
       await this.teardown();
       const message = error instanceof Error ? error.message : "Agora join failed";
       throw new RtcError("CONNECT_FAILED", message, "agora", true);
+    } finally {
+      this.connectingAbortController = null;
     }
     this.refresh();
   }
 
   /**
    * Leave the channel and release local tracks.
+   * Aborts any in-flight connection attempt.
    */
   async disconnect(): Promise<void> {
     assertAdapterConfigured(this);
+    
+    // Abort in-flight connection if one is in progress
+    if (this.connectingAbortController) {
+      this.connectingAbortController.abort();
+    }
+    
     await this.teardown();
     this.refresh();
   }
@@ -243,12 +272,31 @@ export class AgoraAdapter implements RtcAdapter {
   private async teardown(): Promise<void> {
     const client = this.client;
     this.client = null;
-    this.audioTrack?.stop();
-    this.audioTrack?.close();
-    this.videoTrack?.stop();
-    this.videoTrack?.close();
-    this.audioTrack = null;
-    this.videoTrack = null;
+    
+    // Explicitly stop and close audio track to release hardware microphone
+    if (this.audioTrack) {
+      try {
+        // Stop the track to release the microphone hardware
+        this.audioTrack.stop();
+        // Close the track to clean up resources
+        this.audioTrack.close();
+      } catch {
+        // Best effort - ignore errors during teardown
+      }
+      this.audioTrack = null;
+    }
+    
+    // Explicitly stop and close video track
+    if (this.videoTrack) {
+      try {
+        this.videoTrack.stop();
+        this.videoTrack.close();
+      } catch {
+        // Best effort
+      }
+      this.videoTrack = null;
+    }
+    
     if (client !== null) {
       client.removeAllListeners();
       try {

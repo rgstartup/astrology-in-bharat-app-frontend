@@ -172,7 +172,7 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
       } catch (err) {
         // Tear down the Agora client so a failed join doesn't leave a
         // dangling connection.
-        void globalSession?.leave().catch(() => undefined);
+        await globalSession?.leave().catch(() => undefined);
         globalSession = null;
         globalError =
           err instanceof Error ? err.message : "Could not join voice.";

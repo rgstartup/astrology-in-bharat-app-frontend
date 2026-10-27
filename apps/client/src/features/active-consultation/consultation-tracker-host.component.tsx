@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
-import { useConsultationTrackerStore } from "@/store/consultationTrackerStore";
+import { useConsultationRoomStore } from "@/store/consultationRoomStore";
 import { realtimeSocket } from "@/realtime/socket";
 import {
   CONSULTATION_EVENTS,
@@ -42,21 +42,34 @@ function buildRoomHref(expertId: string, sessionId: number | null, consultationI
 }
 
 /**
- * Global floating tracker: renders the live-consultation card on every
- * page except the chat room itself. Owns the socket subscription for the
- * stored session (join + state refresh + end/pause/resume) so the card
- * stays truthful even after the room unmounts.
+ * Global floating tracker: reads from the global consultation room store
+ * (single source of truth written by the room component). Owns the socket
+ * subscription for the stored session (join + state refresh + end/pause/resume)
+ * so the card stays truthful even after the room unmounts.
+ * 
+ * On mount, verifies the stored consultation is still active with the server.
+ * Clears stale sessions (completed/rejected/cancelled) immediately.
  */
 export default function ConsultationTrackerHost() {
-  const session = useConsultationTrackerStore((s) => s.session);
-  const consultationId = session?.consultationId ?? null;
+  const consultationId = useConsultationRoomStore((s) => s.consultationId);
+  const sessionId = useConsultationRoomStore((s) => s.sessionId);
+  const expertId = useConsultationRoomStore((s) => s.expertId);
+  const sessionStatus = useConsultationRoomStore((s) => s.sessionStatus);
+  const mode = useConsultationRoomStore((s) => s.mode);
+  const setPaused = useConsultationRoomStore((s) => s.setPaused);
+  const clear = useConsultationRoomStore((s) => s.clear);
   const pathname = usePathname();
   const router = useRouter();
 
+  const isRoom = isConsultationRoomPath(pathname);
+  // Only show tracker when consultation is ACTIVE (expert accepted)
+  // sessionStatus === "active" means expert has accepted and consultation is live
+  const isActive = sessionStatus === "active";
+
+  // Listen for real-time updates ONLY when outside the consultation room.
+  // When inside the room, RoomContent directly manages socket lifecycle and store updates.
   useEffect(() => {
-    if (consultationId === null) return;
-    if (isConsultationRoomPath(pathname)) return;
-    const store = useConsultationTrackerStore.getState();
+    if (!consultationId || !isActive || isRoom) return;
     const socket = realtimeSocket();
     if (!socket.connected) socket.connect();
 
@@ -66,28 +79,33 @@ export default function ConsultationTrackerHost() {
     const handleEnded = (p: { consultationId: number | string }) => {
       if (match(p)) {
         leaveConsultationRooms(consultationId).catch(() => undefined);
-        store.clearSession();
+        clear();
       }
     };
     const handlePaused = (p: { consultationId: number | string }) => {
-      if (match(p)) store.setPaused(true);
+      if (match(p)) setPaused(true);
     };
     const handleResumed = (p: { consultationId: number | string }) => {
-      if (match(p)) store.setPaused(false);
+      if (match(p)) setPaused(false);
     };
     const refresh = () => {
-      joinConsultationRooms(consultationId)
+      joinConsultationRooms(consultationId, mode ?? "chat")
         .then(() => getConsultationStatus(consultationId))
         .then((status) => {
-          if (!status) return;
-          if (status.state === "completed" || status.state === "rejected" || status.state === "cancelled") {
-            leaveConsultationRooms(consultationId).catch(() => undefined);
-            store.clearSession();
+          if (!status) {
+            clear();
             return;
           }
-          store.setPaused(status.state === "paused");
+          if (status.state === "completed" || status.state === "rejected" || status.state === "cancelled") {
+            leaveConsultationRooms(consultationId).catch(() => undefined);
+            clear();
+            return;
+          }
+          setPaused(status.state === "paused");
         })
-        .catch(() => undefined);
+        .catch(() => {
+          clear();
+        });
     };
 
     refresh();
@@ -102,24 +120,18 @@ export default function ConsultationTrackerHost() {
       socket.off("connect", refresh);
       leaveConsultationRooms(consultationId).catch(() => undefined);
     };
-  }, [consultationId, pathname]);
+  }, [consultationId, isActive, isRoom, mode, clear, setPaused]);
 
   const handleReturn = useCallback(() => {
-    const current = useConsultationTrackerStore.getState().session;
-    if (!current) return;
-    router.push(buildRoomHref(current.expertId, current.sessionId, current.consultationId));
-  }, [router]);
+    if (!expertId || !consultationId) return;
+    router.push(buildRoomHref(expertId, sessionId, consultationId));
+  }, [router, expertId, sessionId, consultationId]);
 
-  if (!session) return null;
-  if (isConsultationRoomPath(pathname)) return null;
+  if (!isActive || isRoom) return null;
 
   return (
     <div className="fixed right-4 bottom-4 z-[60]">
       <ConsultationTrackerCard
-        expertName={session.expertName}
-        expertAvatar={session.expertAvatar}
-        startedAt={session.startedAt}
-        paused={session.paused}
         onReturn={handleReturn}
       />
     </div>

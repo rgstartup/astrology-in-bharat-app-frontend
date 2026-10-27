@@ -1,9 +1,6 @@
 "use client";
 
-type TrackerAvatarProps = {
-  name: string;
-  avatar?: string | null;
-};
+import { useConsultationRoomStore } from "@/store/consultationRoomStore";
 
 function AvatarInitials({ name }: { name: string }) {
   const initials = name
@@ -17,20 +14,20 @@ function AvatarInitials({ name }: { name: string }) {
       {initials || "EX"}
     </div>
   );
-};
+}
 
 /**
  * Expert avatar with initials fallback.
- *
- * @param name - Expert display name used for alt text and initials.
- * @param avatar - Optional avatar image URL.
+ * Reads expert name and avatar from the global consultation room store.
  */
-export function ConsultationTrackerAvatar({ name, avatar }: TrackerAvatarProps) {
-  if (!avatar) return <AvatarInitials name={name} />;
+export function ConsultationTrackerAvatar() {
+  const expertName = useConsultationRoomStore((s) => s.expertName) ?? "Expert";
+  const expertAvatar = useConsultationRoomStore((s) => s.expertAvatar);
+  if (!expertAvatar) return <AvatarInitials name={expertName} />;
   return (
     <img
-      src={avatar}
-      alt={name}
+      src={expertAvatar}
+      alt={expertName}
       className="h-10 w-10 shrink-0 rounded-full border border-slate-200 object-cover"
     />
   );

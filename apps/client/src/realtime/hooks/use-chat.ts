@@ -167,6 +167,21 @@ export const useChat = (consultationId?: number | string | null) => {
       }
     };
 
+    const handleStarted = (payload: any) => {
+      if (payload && Number(payload.consultationId) === id) {
+        // Consultation started (both sides media ready): update budget and unlatch ended
+        endedRef.current = false;
+        setEnded(null);
+        setPaused(null);
+        applyBudget({
+          maxMinutes: payload.maxMinutes,
+          startedAt: payload.startedAt,
+          elapsedSeconds: payload.elapsedSeconds ?? 0,
+        } as JoinChatAck);
+        setSessionRevision((value) => value + 1);
+      }
+    };
+
     const handleBudgetRestored = (payload: any) => {
       if (payload && Number(payload.consultationId) === id) {
         setPaused(null);
@@ -195,6 +210,7 @@ export const useChat = (consultationId?: number | string | null) => {
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
     socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
     socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
+    socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
     socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
     socket.on(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
     socket.on("connect", handleConnect);
@@ -206,6 +222,7 @@ export const useChat = (consultationId?: number | string | null) => {
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
       socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
       socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
+      socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
       socket.off(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
       socket.off("connect", handleConnect);

@@ -1,5 +1,7 @@
 "use client";
 
+import { useConsultationRoomStore } from "@/store/consultationRoomStore";
+
 function PausedStatusPill() {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
@@ -23,10 +25,10 @@ function LiveStatusPill() {
 
 /**
  * Live/paused presence pill for the tracker card.
- *
- * @param paused - True while the consultation waits on recharge.
+ * Reads paused state from the global consultation room store.
  */
-export function ConsultationTrackerStatus({ paused }: { paused: boolean }) {
+export function ConsultationTrackerStatus() {
+  const paused = useConsultationRoomStore((s) => s.paused);
   if (paused) return <PausedStatusPill />;
   return <LiveStatusPill />;
 }

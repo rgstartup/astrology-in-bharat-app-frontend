@@ -14,6 +14,7 @@ import { API_ROUTES } from "./utils/api.routes";
 import {
   appendSetCookiesToResponse,
   captureSetCookies,
+  mirrorSetCookies,
 } from "./utils/forwarded-cookies";
 
 const handleI18nRouting = createMiddleware(routing);
@@ -155,6 +156,7 @@ async function refreshSession(
 
   const backendSetCookies = data.setCookies;
   if (backendSetCookies.length > 0) {
+    mirrorSetCookies(response.cookies, backendSetCookies);
     appendSetCookiesToResponse(response, backendSetCookies);
   } else {
     console.log(

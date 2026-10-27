@@ -14,6 +14,7 @@ export type RtcErrorCode =
   | "DEVICE_CONSTRAINED"
   | "TOKEN_FAILED"
   | "CONNECT_FAILED"
+  | "CONNECT_ABORTED"
   | "DISCONNECT_FAILED"
   | "UNSUPPORTED";
 

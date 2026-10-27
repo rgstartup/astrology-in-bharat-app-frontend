@@ -52,6 +52,10 @@ export interface VoiceRtcControls {
  * factory and the media token plus channel come opaquely from the realtime
  * `joinCall` ack. No Twilio/Agora imports, config, or channel conventions
  * live in app code. The legacy REST voice-token endpoint is deprecated.
+ *
+ * Sessions created in the prep modal (via useConsultationRequest) are stored
+ * in useVoiceSessionStore. This hook subscribes to that store so the session
+ * is automatically picked up when entering the room.
  */
 export function useVoiceSession(): VoiceRtcControls {
   const sessionRef = useRef<RtcSession | null>(null);
@@ -61,21 +65,28 @@ export function useVoiceSession(): VoiceRtcControls {
   const [error, setError] = useState<string | null>(null);
   const [active, setActive] = useState(false);
 
+  // Subscribe to the global store for sessions created externally (e.g., prep modal)
+  const storeSession = useVoiceSessionStore((s) => s.session);
+  const storeConsultationId = useVoiceSessionStore((s) => s.consultationId);
+  const storeSetSession = useVoiceSessionStore((s) => s.setSession);
+  const storeLeaveAndClear = useVoiceSessionStore((s) => s.leaveAndClearSession);
+
+  // Sync local ref with store on mount and when store session changes
   useEffect(() => {
-    mountedRef.current = true;
-    const existing = useVoiceSessionStore.getState().session;
-    if (existing) {
-      sessionRef.current = existing;
-      setSnapshot(existing.getSnapshot());
+    if (storeSession && storeSession !== sessionRef.current) {
+      sessionRef.current = storeSession;
+      setSnapshot(storeSession.getSnapshot());
       setActive(true);
-      const unsub = existing.subscribe((next) => {
+      const unsub = storeSession.subscribe((next) => {
         if (mountedRef.current) setSnapshot(next);
       });
-      return () => {
-        mountedRef.current = false;
-        unsub();
-      };
+      return () => unsub();
     }
+  }, [storeSession]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    mountedRef.current = true;
     return () => {
       mountedRef.current = false;
     };
@@ -83,7 +94,7 @@ export function useVoiceSession(): VoiceRtcControls {
 
   const ensureSession = useCallback(async (): Promise<RtcSession> => {
     if (sessionRef.current) return sessionRef.current;
-    const existing = useVoiceSessionStore.getState().session;
+    const existing = storeSession;
     if (existing) {
       sessionRef.current = existing;
       existing.subscribe((next) => {
@@ -98,9 +109,9 @@ export function useVoiceSession(): VoiceRtcControls {
       if (mountedRef.current) setSnapshot(next);
     });
     sessionRef.current = session;
-    useVoiceSessionStore.getState().setSession(session);
+    storeSetSession(session);
     return session;
-  }, []);
+  }, [storeSession, storeSetSession]);
 
   const join = useCallback(
     async (
@@ -143,7 +154,7 @@ export function useVoiceSession(): VoiceRtcControls {
             token: tokenValue,
           });
         }
-        useVoiceSessionStore.getState().setSession(session, consultationId);
+        storeSetSession(session, consultationId);
         // Local side is inside Agora — tell the backend so billing can start
         // once the peer also reports media_ready. Fire-and-forget.
         mediaReady(consultationId);
@@ -152,7 +163,7 @@ export function useVoiceSession(): VoiceRtcControls {
           // Tear down the Agora client so a failed join doesn't leave a
           // dangling XHR/polling connection to the Agora edge.
           void sessionRef.current?.leave().catch(() => undefined);
-          useVoiceSessionStore.getState().clearSession();
+          storeLeaveAndClear();
           sessionRef.current = null;
           setError(err instanceof Error ? err.message : "Could not join voice.");
           setActive(false);
@@ -162,14 +173,14 @@ export function useVoiceSession(): VoiceRtcControls {
         if (mountedRef.current) setBusy(false);
       }
     },
-    [ensureSession],
+    [ensureSession, storeSetSession, storeLeaveAndClear],
   );
 
   const leave = useCallback(async (): Promise<void> => {
     setBusy(true);
     try {
       await sessionRef.current?.leave();
-      useVoiceSessionStore.getState().clearSession();
+      await storeLeaveAndClear();
     } catch {
       // Leave is best-effort; the snapshot reset below is what the UI reads.
     } finally {
@@ -180,7 +191,7 @@ export function useVoiceSession(): VoiceRtcControls {
         setBusy(false);
       }
     }
-  }, []);
+  }, [storeLeaveAndClear]);
 
   const toggleMic = useCallback(async (): Promise<void> => {
     const session = sessionRef.current;

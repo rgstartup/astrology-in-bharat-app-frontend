@@ -66,8 +66,9 @@ export const leaveRoom = (consultationId: number): Promise<JoinChatAck> =>
 
 export const joinConsultationRooms = async (
   consultationId: number,
+  mode: ConsultationModeType = "chat",
 ): Promise<ConsultationRoomsResult> => {
-  const room = await joinRoom(consultationId, "chat");
+  const room = await joinRoom(consultationId, mode);
   return { consultationId, room };
 };
 

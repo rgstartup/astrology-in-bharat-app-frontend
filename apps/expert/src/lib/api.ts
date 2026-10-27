@@ -24,7 +24,7 @@ async function handleRefresh(): Promise<boolean> {
     isRefreshing = true;
     refreshPromise = (async () => {
         try {
-            const [res, err] = await baseApi.post('/auth/refresh');
+            const [res, err] = await baseApi.post('/expert/auth/refresh');
             return !err;
         } catch (error) {
             console.error("[API] Refresh failed:", error);
@@ -52,7 +52,7 @@ export const api = {
     ...baseApi,
     get: async <T>(url: string, init?: any) => {
         let [res, err] = await baseApi.get<T>(url, init);
-        if (err?.status === 401 && typeof window !== 'undefined' && !url.includes('/auth/refresh')) {
+        if (err?.status === 401 && typeof window !== 'undefined' && !url.includes('/expert/auth/refresh')) {
             const success = await handleRefresh();
             if (success) return await baseApi.get<T>(url, init);
             
@@ -67,7 +67,7 @@ export const api = {
     },
     post: async <T>(url: string, body?: any, init?: any) => {
         let [res, err] = await baseApi.post<T>(url, body, init);
-        if (err?.status === 401 && typeof window !== 'undefined' && !url.includes('/auth/refresh')) {
+        if (err?.status === 401 && typeof window !== 'undefined' && !url.includes('/expert/auth/refresh')) {
             const success = await handleRefresh();
             if (success) return await baseApi.post<T>(url, body, init);
 
@@ -81,7 +81,7 @@ export const api = {
     },
     put: async <T>(url: string, body?: any, init?: any) => {
         let [res, err] = await baseApi.put<T>(url, body, init);
-        if (err?.status === 401 && typeof window !== 'undefined' && !url.includes('/auth/refresh')) {
+        if (err?.status === 401 && typeof window !== 'undefined' && !url.includes('/expert/auth/refresh')) {
             const success = await handleRefresh();
             if (success) return await baseApi.put<T>(url, body, init);
 
@@ -95,7 +95,7 @@ export const api = {
     },
     patch: async <T>(url: string, body?: any, init?: any) => {
         let [res, err] = await baseApi.patch<T>(url, body, init);
-        if (err?.status === 401 && typeof window !== 'undefined' && !url.includes('/auth/refresh')) {
+        if (err?.status === 401 && typeof window !== 'undefined' && !url.includes('/expert/auth/refresh')) {
             const success = await handleRefresh();
             if (success) return await baseApi.patch<T>(url, body, init);
 
@@ -109,7 +109,7 @@ export const api = {
     },
     delete: async <T>(url: string, init?: any) => {
         let [res, err] = await baseApi.delete<T>(url, init);
-        if (err?.status === 401 && typeof window !== 'undefined' && !url.includes('/auth/refresh')) {
+        if (err?.status === 401 && typeof window !== 'undefined' && !url.includes('/expert/auth/refresh')) {
             const success = await handleRefresh();
             if (success) return await baseApi.delete<T>(url, init);
 

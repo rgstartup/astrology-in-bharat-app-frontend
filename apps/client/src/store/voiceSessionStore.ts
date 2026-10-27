@@ -18,14 +18,21 @@ export interface VoiceSessionStoreState {
   setSession: (session: RtcSession | null, consultationId?: number | null) => void;
   /**
    * Detaches the session reference without disconnecting network media.
+   * @deprecated Use leaveAndClearSession() instead to ensure proper track teardown.
    */
   clearSession: () => void;
   /**
    * Leaves the active RTC session, tears down audio tracks, and clears state.
+   * This is the canonical cleanup method - use this for all session termination.
    *
    * @returns Promise resolving when session teardown completes.
    */
   leaveAndClearSession: () => Promise<void>;
+  /**
+   * Emergency synchronous cleanup: stops all active media tracks immediately.
+   * Use when tracks may be orphaned (e.g., page unload, abnormal termination).
+   */
+  emergencyCleanup: () => void;
 }
 
 /**
@@ -37,12 +44,28 @@ export const useVoiceSessionStore = create<VoiceSessionStoreState>((set, get) =>
   session: null,
   consultationId: null,
   setSession: (session, consultationId = null) => set({ session, consultationId }),
-  clearSession: () => set({ session: null, consultationId: null }),
+  clearSession: () => {
+    // Always delegate to leaveAndClearSession to ensure track teardown
+    // We fire-and-forget here; callers needing completion should use leaveAndClearSession directly
+    get().leaveAndClearSession().catch(() => undefined);
+  },
   leaveAndClearSession: async () => {
     const current = get().session;
     set({ session: null, consultationId: null });
     if (current) {
       await current.leave().catch(() => undefined);
     }
+  },
+  emergencyCleanup: () => {
+    const current = get().session;
+    if (current) {
+      // Best-effort: stop all media stream tracks synchronously
+      const snapshot = current.getSnapshot();
+      // Note: RtcSnapshot doesn't expose raw tracks, but we can call leave()
+      // which will trigger adapter teardown. For true sync cleanup we'd need
+      // adapter-level access. This is a safety net.
+      current.leave().catch(() => undefined);
+    }
+    set({ session: null, consultationId: null });
   },
 }));

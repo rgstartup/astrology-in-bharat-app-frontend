@@ -15,7 +15,7 @@ export const setAccessToken = (
 
   cookieStore.set("accessToken", accessToken, {
     ...cookieOptions,
-    maxAge: 1 * 60 * 1000,
+    maxAge: 15 * 60,
   });
 };
 
@@ -27,7 +27,7 @@ export const setRefreshToken = (
 
   cookieStore.set("refreshToken", refreshToken, {
     ...cookieOptions,
-    maxAge: 2 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60,
   });
 };
 

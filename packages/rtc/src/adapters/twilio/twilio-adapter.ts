@@ -38,6 +38,8 @@ export class TwilioAdapter implements RtcAdapter {
   private options: TwilioAdapterConfig | null = null;
   private room: Room | null = null;
   private listeners = new Map<AdapterEventName, Set<AdapterListener>>();
+  // In-flight connection guard: abort join if disconnect() is called during connect()
+  private connectingAbortController: AbortController | null = null;
 
   /** True after `configure` succeeds. */
   get isConfigured(): boolean {
@@ -63,6 +65,11 @@ export class TwilioAdapter implements RtcAdapter {
    */
   async connect(options: RtcConnectOptions): Promise<void> {
     assertAdapterConfigured(this);
+    
+    // Create abort controller for in-flight cancellation
+    this.connectingAbortController = new AbortController();
+    const { signal } = this.connectingAbortController;
+
     try {
       this.room = await Video.connect(options.token, {
         name: options.roomName,
@@ -71,8 +78,16 @@ export class TwilioAdapter implements RtcAdapter {
         networkQuality: { local: 1 },
         ...(this.options?.edge !== undefined ? { edge: this.options.edge } : {}),
       });
+      
+      // Check for abort after connect
+      if (signal.aborted) {
+        await this.teardown();
+        throw new RtcError("CONNECT_ABORTED", "Connection aborted", "twilio", false);
+      }
     } catch (error: unknown) {
       throw toConnectError(error);
+    } finally {
+      this.connectingAbortController = null;
     }
     this.watchRoom(this.room);
     this.refresh();
@@ -80,29 +95,19 @@ export class TwilioAdapter implements RtcAdapter {
 
   /**
    * Leave the room and release local tracks.
+   * Aborts any in-flight connection attempt.
    *
    * @throws RtcError with code `DISCONNECT_FAILED`.
    */
   async disconnect(): Promise<void> {
     assertAdapterConfigured(this);
-    const room = this.room;
-    this.room = null;
-    if (room === null) {
-      return;
+    
+    // Abort in-flight connection if one is in progress
+    if (this.connectingAbortController) {
+      this.connectingAbortController.abort();
     }
-    try {
-      room.removeAllListeners();
-      room.disconnect();
-      for (const publication of room.localParticipant.tracks.values()) {
-        const track = publication.track;
-        if (track.kind === "audio" || track.kind === "video") {
-          track.stop();
-        }
-      }
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Twilio disconnect failed";
-      throw new RtcError("DISCONNECT_FAILED", message, "twilio", false);
-    }
+    
+    await this.teardown();
     this.refresh();
   }
 
@@ -258,5 +263,33 @@ export class TwilioAdapter implements RtcAdapter {
       return;
     }
     this.dispatch({ participants: buildTwilioParticipants(room) });
+  }
+
+  private async teardown(): Promise<void> {
+    const room = this.room;
+    this.room = null;
+    
+    if (room === null) {
+      return;
+    }
+    
+    // Explicitly stop all local audio/video tracks to release hardware microphone/camera
+    for (const publication of room.localParticipant.tracks.values()) {
+      const track = publication.track;
+      if (track.kind === "audio" || track.kind === "video") {
+        try {
+          track.stop();
+        } catch {
+          // Best effort
+        }
+      }
+    }
+    
+    try {
+      room.removeAllListeners();
+      room.disconnect();
+    } catch {
+      return;
+    }
   }
 }

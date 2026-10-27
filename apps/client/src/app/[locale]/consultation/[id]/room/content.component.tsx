@@ -16,12 +16,12 @@ import {
   useChatTypingDisplay,
   useChatTimeline,
 } from "@repo/chat";
+import { useConsultationRoomStore } from "@/store/consultationRoomStore";
 import { useRoomVerdict } from "./hooks/use-room-verdict";
 import { useRoomComposer } from "./hooks/use-room-composer";
 import { useRoomTimer } from "./hooks/use-room-timer";
 import { useRoomBudget } from "./hooks/use-room-budget";
 import { useRoomSessionSummary } from "./hooks/use-room-session-summary";
-import { useRoomTrackerSync } from "./hooks/use-room-tracker-sync";
 import { liveMessageKey, toChatMessage } from "./message-keys";
 import {
   getChatHistoryAction,
@@ -194,15 +194,49 @@ export default function RoomContent({
     (expertData as { name?: string } | null)?.name ?? "Expert",
   );
 
-  useRoomTrackerSync({
-    consultationId: roomConsultationId,
-    sessionId,
-    expertData,
-    liveStartedAt: liveBudget.startedAt,
-    acceptedStartedAt: acceptedBudget.startedAt,
-    paused: pausedState !== null,
-    ended: endedVerdict !== null,
-  });
+  // Write room state to global store (single source of truth for room + tracker)
+  const setConsultation = useConsultationRoomStore((s) => s.setConsultation);
+  const setTimer = useConsultationRoomStore((s) => s.setTimer);
+  const setPaused = useConsultationRoomStore((s) => s.setPaused);
+  const setEnded = useConsultationRoomStore((s) => s.setEnded);
+  const expertId = (expertData as { id?: number | string } | null)?.id;
+  const expertName = (expertData as { name?: string } | null)?.name ?? "Expert";
+  const expertAvatar = (expertData as { avatar?: string | null } | null)?.avatar ?? null;
+  const parsedSessionId = sessionId !== null ? Number(sessionId) : NaN;
+  const roomMode = resolveRoomMode(initialSessions, consultationState?.mode);
+
+  // Sync consultation identity + status
+  React.useEffect(() => {
+    setConsultation({
+      consultationId: roomConsultationId,
+      sessionId: Number.isNaN(parsedSessionId) ? null : parsedSessionId,
+      mode: roomMode,
+      expertId: expertId ? String(expertId) : null,
+      expertName,
+      expertAvatar,
+      sessionStatus,
+      maxMinutes,
+      paused: pausedState !== null,
+      ended: endedVerdict !== null,
+      endedVerdict: endedVerdict ? {
+        totalDurationSeconds: endedVerdict.totalDurationSeconds,
+        reason: endedVerdict.reason,
+        endedBy: endedVerdict.endedBy,
+      } : null,
+    });
+  }, [
+    roomConsultationId,
+    parsedSessionId,
+    roomMode,
+    expertId,
+    expertName,
+    expertAvatar,
+    sessionStatus,
+    maxMinutes,
+    pausedState,
+    endedVerdict,
+    setConsultation,
+  ]);
 
   const handleAttachmentSent = (message: ChatMessage) => {
     setMessages((prev: ChatMessage[]) => {
@@ -245,9 +279,18 @@ export default function RoomContent({
 
   // Authoritative room mode: live consultation state wins, latest history
   // session seeds first paint. Replaces the old spoofable `?mode=` query.
-  const roomMode = resolveRoomMode(initialSessions, consultationState?.mode);
   const isDirectVoice = roomMode === "voice";
-  const isSessionEnded = sessionStatus === "completed" || Boolean(endedVerdict);
+  
+  // Determine if session is ended: check live state first, then history
+  // A consultation is ended if:
+  // - Live state is completed/rejected/cancelled/expired
+  // - Or all historical sessions are completed and no active session exists
+  const isLiveEnded = consultationState ? 
+    ["completed", "rejected", "cancelled", "expired"].includes(consultationState.state) : false;
+  const hasActiveHistorySession = initialSessions.some(s => s.status === "active");
+  const isHistoryEnded = initialSessions.length > 0 && !hasActiveHistorySession && 
+    initialSessions.every(s => s.status === "completed" || s.status === "rejected" || s.status === "cancelled");
+  const isSessionEnded = isLiveEnded || isHistoryEnded || Boolean(endedVerdict);
 
   // For an ended session the live timer (now - startedAt) keeps growing with
   // wall-clock time, producing nonsense like "370:24". Freeze the elapsed
@@ -274,9 +317,33 @@ export default function RoomContent({
 
   const displayElapsedTime = endedElapsedSeconds ?? elapsedTime;
   const displayTimeLeft = isSessionEnded ? 0 : (timeLeft ?? 0);
+
+  // Sync timer (single source of truth) - must be after displayElapsedTime/displayTimeLeft are defined
+  React.useEffect(() => {
+    setTimer(displayElapsedTime, displayTimeLeft);
+  }, [displayElapsedTime, displayTimeLeft, setTimer]);
+
+  // Sync paused separately for quick response
+  React.useEffect(() => {
+    setPaused(pausedState !== null);
+  }, [pausedState, setPaused]);
+
+  // Sync ended
+  React.useEffect(() => {
+    if (endedVerdict) {
+      setEnded(true, {
+        totalDurationSeconds: endedVerdict.totalDurationSeconds,
+        reason: endedVerdict.reason,
+        endedBy: endedVerdict.endedBy,
+      });
+    }
+  }, [endedVerdict, setEnded]);
+
   const directVoice = useDirectVoice({
     consultationId: roomConsultationId,
     userId: user?.id ?? null,
+    sessionStatus,
+    decision,
     enabled: isDirectVoice && micConfirmed && !isSessionEnded,
     voiceToken: acceptedVoiceToken,
     onLocalReady: media.setLocalReady,
