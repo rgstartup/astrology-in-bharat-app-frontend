@@ -17,6 +17,7 @@ import {
   type AdapterListener,
   type RtcAdapter,
 } from "../../core/provider";
+import { releaseMediaStreamTrack } from "../../core/media-track";
 import type { RtcConnectOptions } from "../../core/types";
 import { buildTwilioParticipants, mapTwilioQuality } from "./twilio-mapping";
 
@@ -281,6 +282,11 @@ export class TwilioAdapter implements RtcAdapter {
           track.stop();
         } catch {
           // Best effort
+        }
+        try {
+          releaseMediaStreamTrack(track.mediaStreamTrack);
+        } catch {
+          // Best effort - release the browser-owned device track as well.
         }
       }
     }

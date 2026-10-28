@@ -52,9 +52,6 @@ export function usePrepExpert(expertId: string) {
     return res.data;
   }, [expertId]);
 
-  useEffect(() => {
-    void fetchExpert();
-  }, [fetchExpert]);
-
+  // Fetch is on-demand; the composition root fires it when the dialog opens.
   return { expert, loading, isExpertAvailable, fetchExpert };
 }

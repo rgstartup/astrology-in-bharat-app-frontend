@@ -3,6 +3,7 @@
 import React from "react";
 import { Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useRoomRevision } from "../room/hooks/use-room-revision";
 
 type SessionTimersSectionProps = {
   formatTime: (time: number) => string;
@@ -54,9 +55,12 @@ export function SessionTimersSection({
   const elapsedText = formatTime(elapsedTime);
   const remainingText = formatTime(timeLeft);
   const isLowTime = isLowTimeRemaining(timeLeft, isWarning);
+  // Lifecycle verdicts (accept/start/resume) remount the timers fresh.
+  const revision = useRoomRevision();
 
   return (
     <div
+      key={revision}
       className={cn(
         "flex flex-col gap-3 rounded-xl border border-[#d3cec6] bg-white p-3.5 shadow-xs",
         className,

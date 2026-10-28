@@ -30,7 +30,14 @@ export const useRoomVerdict = ({ decision, endedVerdict, joinedStatus, endLiveCh
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    console.log("[VoiceConsultation] verdict effect fired", {
+      decision,
+      joinedStatus,
+    });
     if (decision === "accepted" || (joinedStatus && (joinedStatus === "accepted" || joinedStatus === "active"))) {
+      console.log("[VoiceConsultation] sessionStatus -> active", {
+        reason: decision === "accepted" ? "decision=accepted" : `joinedStatus=${joinedStatus}`,
+      });
       setSessionStatus("active");
       // Continue-consultation re-accept clears a prior ended-state dialog.
       setShowModal(false);

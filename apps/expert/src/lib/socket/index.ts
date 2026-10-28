@@ -30,13 +30,3 @@ export {
   connectNotificationSocket,
   disconnectNotificationSocket,
 } from "./notification.socket";
-export {
-  chatSocket,
-  connectChatSocket,
-  disconnectChatSocket,
-} from "./chat.socket";
-export {
-  callSocket,
-  connectCallSocket,
-  disconnectCallSocket,
-} from "./call.socket";

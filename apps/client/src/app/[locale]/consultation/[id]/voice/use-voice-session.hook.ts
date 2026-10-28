@@ -103,6 +103,7 @@ export function useVoiceSession(): VoiceRtcControls {
       setSnapshot(existing.getSnapshot());
       return existing;
     }
+    console.log("[VoiceConsultation] creating new RTC session");
     const { createDefaultRtcSession } = await import("@repo/rtc");
     const session = createDefaultRtcSession();
     session.subscribe((next) => {
@@ -119,9 +120,14 @@ export function useVoiceSession(): VoiceRtcControls {
       identity: string,
       token?: { token: string | null; channelName: string | null; tokenExpiresAt?: string | null } | null,
     ): Promise<void> => {
+      console.log("[VoiceConsultation] join() called", {
+        consultationId,
+        identity,
+        hasAcceptTimeToken: Boolean(token?.token),
+      });
       setBusy(true);
       setError(null);
-      setActive(true);
+      setActive(false);
       try {
         let channelName: string | null = null;
         let tokenValue: string | null = null;
@@ -147,18 +153,45 @@ export function useVoiceSession(): VoiceRtcControls {
         const session = await ensureSession();
         const currentSnapshot = session.getSnapshot();
         if (currentSnapshot.phase !== "live" || currentSnapshot.roomName !== channelName) {
+          console.log("[VoiceConsultation] calling session.join()", {
+            consultationId,
+            roomName: channelName,
+            kind: "voice",
+          });
           await session.join({
             roomName: channelName,
             identity,
             kind: "voice",
             token: tokenValue,
           });
+          console.log("[VoiceConsultation] session.join() succeeded", {
+            consultationId,
+            roomName: channelName,
+          });
+          const postJoinSnapshot = session.getSnapshot();
+          console.log("[VoiceConsultation] post-join RTC snapshot", {
+            phase: postJoinSnapshot.phase,
+            roomName: postJoinSnapshot.roomName,
+            participantIdentities: postJoinSnapshot.participants.map(
+              (participant) => participant.identity,
+            ),
+            microphoneEnabled:
+              postJoinSnapshot.localMedia.microphoneEnabled,
+          });
         }
         storeSetSession(session, consultationId);
+        setActive(true);
         // Local side is inside Agora — tell the backend so billing can start
         // once the peer also reports media_ready. Fire-and-forget.
+        console.log("[VoiceConsultation] emitting mediaReady", {
+          consultationId,
+        });
         mediaReady(consultationId);
       } catch (err) {
+        console.log("[VoiceConsultation] join failed", {
+          consultationId,
+          error: err instanceof Error ? err.message : String(err),
+        });
         if (mountedRef.current) {
           // Tear down the Agora client so a failed join doesn't leave a
           // dangling XHR/polling connection to the Agora edge.
@@ -169,6 +202,7 @@ export function useVoiceSession(): VoiceRtcControls {
           setActive(false);
           setSnapshot(null);
         }
+        throw err;
       } finally {
         if (mountedRef.current) setBusy(false);
       }
@@ -177,6 +211,7 @@ export function useVoiceSession(): VoiceRtcControls {
   );
 
   const leave = useCallback(async (): Promise<void> => {
+    console.log("[VoiceConsultation] leaving voice session");
     setBusy(true);
     try {
       await sessionRef.current?.leave();

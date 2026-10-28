@@ -85,14 +85,10 @@ export const useAuthStore = create<AuthState>()(
           const { stopPresenceHeartbeat } = await import("@/realtime/topics/presence");
           const { disconnectRealtimeSocket } = await import("@/realtime/socket");
           const {
-            disconnectChatSocket,
-            disconnectCallSocket,
             disconnectNotificationSocket,
           } = await import("@/lib/socket");
           stopPresenceHeartbeat();
           disconnectRealtimeSocket();
-          disconnectChatSocket();
-          disconnectCallSocket();
           disconnectNotificationSocket();
         } catch {
           // ignore socket errors on logout

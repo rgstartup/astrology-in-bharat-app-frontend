@@ -46,9 +46,10 @@ function AuthInitializerLogic({
   useEffect(() => {
     if (initialUser !== undefined) {
       setInitialUser(initialUser);
-      didSyncInitialRef.current = true;
     }
   }, [initialUser, setInitialUser]);
+
+  const lastNavPathRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (isLogout) {
@@ -57,14 +58,20 @@ function AuthInitializerLogic({
       return;
     }
 
-    // If initialUser was provided, skip the redundant initial client fetch on first mount
+    // Revalidate once per navigation: a plain init() early-returns once
+    // initialized, so a session that died mid-use would stay stale forever.
+    // Same-path re-runs (StrictMode double-effect) and the server-seeded
+    // first mount must not fire another getMeAction.
+    if (lastNavPathRef.current === pathname) return;
+    lastNavPathRef.current = pathname;
+
+    // Server layout already validated the session and seeded the user for
+    // this navigation — skip the redundant client fetch on first mount.
     if (initialUser !== undefined && !didSyncInitialRef.current) {
       didSyncInitialRef.current = true;
       return;
     }
 
-    // Force revalidation on navigation: a plain init() early-returns once
-    // initialized, so a session that died mid-use would stay stale forever.
     init(true);
   }, [isLogout, pathname, router, reset, init, initialUser]);
 

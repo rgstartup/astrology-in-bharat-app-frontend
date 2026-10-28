@@ -28,6 +28,8 @@ export function useConsultationPrep(
   consultationId?: number | null,
   /** Prep-dialog close; called when the expert verdict lands. */
   close?: () => void,
+  /** Whether the prep dialog is visible; data fetches only run while open. */
+  isOpen: boolean = false,
 ) {
   const router = useRouter();
   const pathname = usePathname();
@@ -57,9 +59,13 @@ export function useConsultationPrep(
 
   // On modal open: latest expert data + wallet balance, fetched in parallel
   // so the rate and the recharge gate reflect both before the CTA is used.
+  // Effect is the single fetch site — usePrepExpert no longer fetches on
+  // mount, so a closed + still-mounted dialog (lingering expertId in the
+  // prep store) fires nothing.
   useEffect(() => {
+    if (!isOpen) return;
     void Promise.all([fetchExpert(), refreshBalanceNow()]);
-  }, [fetchExpert, refreshBalanceNow]);
+  }, [isOpen, fetchExpert, refreshBalanceNow]);
 
   const currentPrice = resolveModePrice(expert, mode);
 

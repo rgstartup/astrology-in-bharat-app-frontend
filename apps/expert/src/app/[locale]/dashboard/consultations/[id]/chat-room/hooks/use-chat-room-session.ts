@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import api from "@/actions/api";
-import { chatSocket } from "@/lib/socket";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useChat } from "@/realtime/hooks/use-chat";
 import type { ConsultationMode } from "@/realtime/types/consultation";
@@ -123,9 +122,7 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
 
   // Fetch session info and message history via Result API.
   // Legacy stack only: new-flow rooms (newFlowId != null) are driven by the
-  // /realtime join-ack + live socket traffic, so legacy REST (`/chat/session`,
-  // `/chat/history`) and the legacy `chatSocket` room must stay untouched —
-  // the ids live in different tables and the calls 500.
+  // /realtime join-ack + live socket traffic.
   useEffect(() => {
     if (newFlowId != null) return;
     if (!sessionId || !isAuthenticated || !user) return;
@@ -165,57 +162,7 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
     };
 
     fetchSessionInfo();
-
-    const joinRoom = () => {
-      chatSocket.emit("join_room", { sessionId });
-    };
-
-    if (chatSocket.connected) {
-      joinRoom();
-    }
-    chatSocket.on("connect", joinRoom);
-    chatSocket.connect();
-
-    chatSocket.on("new_message", (msg: ChatMessage) => {
-      setMessages((prev) => [...prev, msg]);
-      setTypingStatus(null);
-    });
-
-    chatSocket.on("typing_status", (data: TypingStatus) => {
-      setTypingStatus(data);
-    });
-
-    chatSocket.on("session_activated", (session: Partial<ChatSessionData>) => {
-      setSessionStatus("active");
-      if (session.startedAt) setStartedAt(session.startedAt);
-      if (session.expiresAt) setExpiresAt(session.expiresAt);
-      if (session.remainingSeconds !== undefined) setTimeLeft(session.remainingSeconds);
-      if (session.elapsedSeconds !== undefined) setElapsedTime(session.elapsedSeconds);
-      toast.success("Consultation started!", { toastId: `session_activated_${sessionId}` });
-    });
-
-    chatSocket.on("session_ended", (data: { terminatedBy?: string; interventionMessage?: string; split?: unknown }) => {
-      setSessionStatus("completed");
-      if (data?.terminatedBy === "admin") {
-        toast.error(`SESSION TERMINATED BY ADMIN: ${data.interventionMessage || "Administrative action"}`);
-      }
-      if (data?.split) {
-        setSummaryData(data);
-        setShowSummary(true);
-      } else {
-        toast.info("Session has ended. Redirecting...", { autoClose: 2000 });
-        setTimeout(() => router.push("/dashboard"), 2000);
-      }
-    });
-
-    return () => {
-      chatSocket.off("connect", joinRoom);
-      chatSocket.off("new_message");
-      chatSocket.off("typing_status");
-      chatSocket.off("session_activated");
-      chatSocket.off("session_ended");
-    };
-  }, [sessionId, newFlowId, isAuthenticated, user, router]);
+  }, [sessionId, newFlowId, isAuthenticated, user]);
 
   // New-stack verdict: the join-ack carries the authoritative parent
   // consultation status, covering (re)joins after the end event already fired.
@@ -370,18 +317,6 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
         return;
       }
     }
-    // Legacy socket teardown only: new-flow rooms end via `endLiveChat`
-    // above (`consultation:end`), so legacy `chatSocket` emits stay untouched.
-    if (newFlowId != null) return;
-    if (user && sessionId) {
-      chatSocket.emit("send_message", {
-        sessionId,
-        senderId: user.id,
-        senderType: "admin",
-        content: "Expert has ended the consultation.",
-      });
-    }
-    chatSocket.emit("end_chat", { sessionId });
   };
 
   return {

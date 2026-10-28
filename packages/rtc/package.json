@@ -9,6 +9,10 @@
     ".": "./src/index.ts",
     "./twilio": "./src/adapters/twilio/index.ts",
     "./agora": "./src/adapters/agora/index.ts",
+    "./agora/csp": {
+      "types": "./src/adapters/agora/csp-requirements.ts",
+      "default": "./src/adapters/agora/csp-requirements.json"
+    },
     "./react": "./src/react/index.ts",
     "./devices": "./src/devices/index.ts"
   },

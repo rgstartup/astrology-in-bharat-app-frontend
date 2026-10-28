@@ -2,7 +2,12 @@
 
 import { cookies } from "next/headers";
 import { apiV2, API_ROUTES, AUTH_COOKIE_NAMES, type Result } from "@/actions";
-import { setAccessToken, setRefreshToken, clearAuthCookies, getAccessToken } from "./cookie";
+import {
+  setAccessToken,
+  setRefreshToken,
+  clearAuthCookies,
+  getAccessToken,
+} from "./cookie";
 import type { IAuthUser } from "@/store/authStore";
 
 import {
@@ -298,7 +303,9 @@ export async function getMeAction(): Promise<Result<IAuthUser>> {
 // ─────────────────────────────────────────────────────────
 // GET WALLET BALANCE — Server-Side action using HttpOnly accessToken cookie
 // ─────────────────────────────────────────────────────────
-export async function getWalletBalanceAction(): Promise<Result<{ balance: number }>> {
+export async function getWalletBalanceAction(): Promise<
+  Result<{ balance: number }>
+> {
   const token = await getAccessToken();
   if (!token) {
     return {
@@ -319,4 +326,3 @@ export async function getWalletBalanceAction(): Promise<Result<{ balance: number
     })
     .get<{ balance: number }>(API_ROUTES.WALLET.ROOT);
 }
-

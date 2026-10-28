@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useChatIncoming } from "@/realtime/hooks/use-chat-incoming";
@@ -54,6 +54,14 @@ export function ChatIncomingStack() {
     consultationId: activeModalId,
     actorType: "expert",
   });
+
+  useEffect(() => {
+    if (!voice.error) return;
+    console.error("[ExpertVoice] RTC session error", {
+      consultationId: activeModalId,
+      error: voice.error,
+    });
+  }, [activeModalId, voice.error]);
 
   // Query microphone permission state on mount
   useEffect(() => {
@@ -143,31 +151,32 @@ export function ChatIncomingStack() {
       setCallWaitSteps((prev) => ({ ...prev, [consultationId]: "ready" }));
       setCallCountdowns((prev) => ({ ...prev, [consultationId]: 3 }));
 
+      let remaining = 3;
       const interval = window.setInterval(() => {
-        setCallCountdowns((prev) => {
-          const current = prev[consultationId];
-          if (current === null || current === undefined || current <= 1) {
-            window.clearInterval(interval);
-            dismiss(consultationId);
-            // Drop the step latched during this accept so a later REOPENED
-            // request for the same consultation id opens a fresh modal
-            // instead of rendering the previous "accepted" state.
-            setCallWaitSteps((p) => {
-              const next = { ...p };
-              delete next[consultationId];
-              return next;
-            });
-            setCallCountdowns((p) => {
-              const next = { ...p };
-              delete next[consultationId];
-              return next;
-            });
-            setActiveModalId(null);
-            router.push(`/dashboard/consultations/${consultationId}?mode=${kind}`);
-            return { ...prev, [consultationId]: 0 };
-          }
-          return { ...prev, [consultationId]: current - 1 };
-        });
+        remaining -= 1;
+        if (remaining <= 0) {
+          window.clearInterval(interval);
+          dismiss(consultationId);
+          // Drop the step latched during this accept so a later REOPENED
+          // request for the same consultation id opens a fresh modal
+          // instead of rendering the previous "accepted" state.
+          setCallWaitSteps((p) => {
+            const next = { ...p };
+            delete next[consultationId];
+            return next;
+          });
+          setCallCountdowns((p) => {
+            const next = { ...p };
+            delete next[consultationId];
+            return next;
+          });
+          setActiveModalId(null);
+          router.push(`/dashboard/consultations/${consultationId}?mode=${kind}`);
+          return;
+        }
+        // Updater stays pure: no side effects inside it, or React
+        // flags "cannot update Router while rendering".
+        setCallCountdowns((prev) => ({ ...prev, [consultationId]: remaining }));
       }, 1000);
     },
     [dismiss, router],
@@ -192,8 +201,21 @@ export function ChatIncomingStack() {
             ? `expert_${expertId}_consult_${consultationId}`
             : `expert_consult_${consultationId}`;
 
+        console.info("[ExpertVoice] consultation accepted", {
+          consultationId,
+          kind,
+          hasToken: Boolean(tokenVal),
+          channelName: channelVal ?? null,
+          identity,
+        });
+
         if (tokenVal && channelVal) {
           try {
+            console.info("[ExpertVoice] joining Agora from incoming modal", {
+              consultationId,
+              roomName: channelVal,
+              identity,
+            });
             await voice.join(
               consultationId,
               identity,
@@ -203,12 +225,22 @@ export function ChatIncomingStack() {
                 tokenExpiresAt: expiresVal,
               },
               () => {
+                console.info("[ExpertVoice] Agora join succeeded from incoming modal", {
+                  consultationId,
+                  roomName: channelVal,
+                });
                 media.setLocalReady();
               },
             );
           } catch (err) {
             console.error("Agora join failed in modal:", err);
           }
+        } else {
+          console.error("[ExpertVoice] Agora join skipped: missing token or channel", {
+            consultationId,
+            hasToken: Boolean(tokenVal),
+            channelName: channelVal ?? null,
+          });
         }
       } else {
         // Chat mode: ready immediately without media connection

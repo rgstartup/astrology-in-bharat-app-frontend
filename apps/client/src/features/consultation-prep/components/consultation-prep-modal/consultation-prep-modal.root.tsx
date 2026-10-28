@@ -81,7 +81,7 @@ export function ConsultationPrepModal({
     onGrantMic,
     onRetryMic,
     onRetryMedia,
-  } = useConsultationPrep(expertId, mode, consultationId, close);
+  } = useConsultationPrep(expertId, mode, consultationId, close, open);
 
 
 

@@ -15,6 +15,7 @@ import {
   type AdapterListener,
   type RtcAdapter,
 } from "../../core/provider";
+import { releaseMediaStreamTrack } from "../../core/media-track";
 import type { RtcConnectOptions, SessionKind } from "../../core/types";
 import { buildAgoraParticipants, mapAgoraQuality } from "./agora-mapping";
 
@@ -53,6 +54,11 @@ export class AgoraAdapter implements RtcAdapter {
   configure(config: RtcAdapterConfig): void {
     this.options = resolveAgoraConfig(config);
     this.configured = true;
+    AgoraRTC.onAutoplayFailed = () => {
+      console.warn(
+        "[AgoraRTC] Browser blocked audio autoplay; a user gesture is required to resume playback.",
+      );
+    };
   }
 
   /**
@@ -75,7 +81,7 @@ export class AgoraAdapter implements RtcAdapter {
     this.client = client;
     this.identity = options.identity;
     this.kind = options.kind;
-    this.watchClient(client);
+    this.watchClient(client, options.roomName);
     try {
       if (options.kind === "video") {
         const [mic, cam] = await AgoraRTC.createMicrophoneAndCameraTracks();
@@ -103,6 +109,15 @@ export class AgoraAdapter implements RtcAdapter {
           ? [this.audioTrack]
           : [this.audioTrack, this.videoTrack];
       await client.publish(tracks);
+      const localAudioTrack = this.audioTrack?.getMediaStreamTrack();
+      console.info("[AgoraRTC] local media published", {
+        roomName: options.roomName,
+        participantUids: [
+          client.uid,
+          ...client.remoteUsers.map((user) => user.uid),
+        ],
+        microphoneEnabled: localAudioTrack?.enabled ?? false,
+      });
     } catch (error: unknown) {
       await this.teardown();
       const message = error instanceof Error ? error.message : "Agora join failed";
@@ -216,22 +231,51 @@ export class AgoraAdapter implements RtcAdapter {
     }
   }
 
-  private watchClient(client: IAgoraRTCClient): void {
+  private watchClient(client: IAgoraRTCClient, roomName: string): void {
     client.on("user-published", (user, mediaType) => {
       void (async () => {
-        await client.subscribe(user, mediaType);
-        if (mediaType === "audio") {
-          await user.audioTrack?.play();
-          // Honor the current speaker-muted state for late-joining peers.
-          if (this.speakerMuted && user.audioTrack) {
-            await user.audioTrack.setVolume(0);
+        console.info("[AgoraRTC] remote media published", {
+          roomName,
+          localUid: client.uid,
+          remoteUid: user.uid,
+          mediaType,
+        });
+        try {
+          await client.subscribe(user, mediaType);
+          if (mediaType === "audio") {
+            await user.audioTrack?.play();
+            console.info("[AgoraRTC] remote audio playback requested", {
+              roomName,
+              localUid: client.uid,
+              remoteUid: user.uid,
+              hasAudioTrack: Boolean(user.audioTrack),
+            });
+            // Honor the current speaker-muted state for late-joining peers.
+            if (this.speakerMuted && user.audioTrack) {
+              await user.audioTrack.setVolume(0);
+            }
           }
+          this.refresh();
+        } catch (error: unknown) {
+          console.error("[AgoraRTC] remote subscribe/playback failed", {
+            roomName,
+            localUid: client.uid,
+            remoteUid: user.uid,
+            mediaType,
+            error: error instanceof Error ? error.message : String(error),
+          });
         }
-        this.refresh();
       })();
     });
     client.on("user-unpublished", () => this.refresh());
-    client.on("user-joined", () => this.refresh());
+    client.on("user-joined", (user) => {
+      console.info("[AgoraRTC] remote participant joined", {
+        roomName,
+        localUid: client.uid,
+        remoteUid: user.uid,
+      });
+      this.refresh();
+    });
     client.on("user-left", () => this.refresh());
     client.on("connection-state-change", (cur) => {
       if (cur === "RECONNECTING") {
@@ -274,27 +318,60 @@ export class AgoraAdapter implements RtcAdapter {
     this.client = null;
     
     // Explicitly stop and close audio track to release hardware microphone
-    if (this.audioTrack) {
+    const audioTrack = this.audioTrack;
+    this.audioTrack = null;
+    if (audioTrack) {
+      let mediaTrack: MediaStreamTrack | null = null;
       try {
-        // Stop the track to release the microphone hardware
-        this.audioTrack.stop();
-        // Close the track to clean up resources
-        this.audioTrack.close();
+        mediaTrack = audioTrack.getMediaStreamTrack();
       } catch {
-        // Best effort - ignore errors during teardown
+        // The SDK track may already be closed; still attempt its own cleanup.
       }
-      this.audioTrack = null;
+      try {
+        audioTrack.stop();
+      } catch {
+        // Still stop the browser track and close the SDK wrapper below.
+      }
+      try {
+        releaseMediaStreamTrack(mediaTrack);
+      } catch {
+        // Best effort - ignore errors during teardown.
+      }
+      try {
+        audioTrack.close();
+      } catch {
+        // Best effort - the browser track has already been stopped above.
+      }
+      console.info("[AgoraRTC] local microphone track released", {
+        readyState: mediaTrack?.readyState ?? "unavailable",
+      });
     }
     
     // Explicitly stop and close video track
-    if (this.videoTrack) {
+    const videoTrack = this.videoTrack;
+    this.videoTrack = null;
+    if (videoTrack) {
+      let mediaTrack: MediaStreamTrack | null = null;
       try {
-        this.videoTrack.stop();
-        this.videoTrack.close();
+        mediaTrack = videoTrack.getMediaStreamTrack();
       } catch {
-        // Best effort
+        // The SDK track may already be closed; still attempt wrapper cleanup.
       }
-      this.videoTrack = null;
+      try {
+        videoTrack.stop();
+      } catch {
+        // Still stop the browser track and close the SDK wrapper below.
+      }
+      try {
+        releaseMediaStreamTrack(mediaTrack);
+      } catch {
+        // Best effort - ignore errors during teardown.
+      }
+      try {
+        videoTrack.close();
+      } catch {
+        // Best effort - the browser track has already been stopped above.
+      }
     }
     
     if (client !== null) {

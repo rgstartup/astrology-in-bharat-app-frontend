@@ -63,6 +63,11 @@ export const useConsultationMedia = (
       // Socket.IO `to(room).emit()` excludes the sender, so an echo of our
       // own readiness should never arrive — but guard defensively anyway.
       if (payload.actorType === actorType) return;
+      console.log("[VoiceConsultation] media_ready received (peer)", {
+        consultationId,
+        peerActorType: payload.actorType,
+        bothReady: payload.bothReady,
+      });
       setPeerReadyState(true);
       setPeerActorType(payload.actorType);
     };
@@ -71,9 +76,16 @@ export const useConsultationMedia = (
       // `consultation:started` is only broadcast by `orchestrator.start()`,
       // which runs on the second `media_ready` — so receiving it means both
       // sides are media-ready even if the sender never saw the echo.
+      console.log("[VoiceConsultation] consultation:started received", {
+        consultationId,
+      });
       setPeerReadyState(true);
     };
 
+    console.log("[VoiceConsultation] subscribing to media_ready/started", {
+      consultationId,
+      actorType,
+    });
     socket.on(CONSULTATION_EVENTS.EVENTS.MEDIA_READY, handleMediaReady);
     socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
 

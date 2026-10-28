@@ -1,0 +1,20 @@
+{
+  "connectSrc": [
+    "https://agora.io",
+    "https://*.agora.io",
+    "https://sd-rtn.com",
+    "https://*.sd-rtn.com",
+    "https://rtnsvc.com",
+    "https://*.rtnsvc.com",
+    "https://rtesvc.com",
+    "https://*.rtesvc.com",
+    "wss://agora.io",
+    "wss://*.agora.io",
+    "wss://sd-rtn.com",
+    "wss://*.sd-rtn.com",
+    "wss://rtnsvc.com",
+    "wss://*.rtnsvc.com",
+    "wss://rtesvc.com",
+    "wss://*.rtesvc.com"
+  ]
+}

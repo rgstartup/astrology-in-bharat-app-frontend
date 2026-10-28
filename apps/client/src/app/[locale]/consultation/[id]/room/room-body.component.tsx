@@ -10,6 +10,7 @@ import type { TimelineItem } from "../message-area/timeline";
 import ChatFooter from "../chat-footer.component";
 // import Sidebar from "../sidebar.component";
 import RoomSecureStrip from "./room-secure-strip.component";
+import { useRoomRevision } from "./hooks/use-room-revision";
 import type { PendingAttachment } from "./hooks/use-room-composer";
 import { SessionDock, type SessionDockProps } from "../session";
 
@@ -43,9 +44,11 @@ type RoomBodyProps = {
  * @returns Dock element or null.
  */
 function RoomSessionDock({ dock }: { dock?: SessionDockProps | null }) {
+  const revision = useRoomRevision();
   if (!dock) return null;
   return (
     <SessionDock
+      key={revision}
       kind={dock.kind}
       phase={dock.phase}
       elapsedText={dock.elapsedText}

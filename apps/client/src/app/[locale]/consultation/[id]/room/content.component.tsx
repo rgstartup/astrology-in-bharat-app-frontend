@@ -67,6 +67,11 @@ export default function RoomContent({
 }: RoomContentProps) {
   const router = useRouter();
 
+  console.log("[VoiceConsultation] RoomContent mount", {
+    roomConsultationId,
+    expertId: expertData?.id,
+  });
+
   const { user, balance } = useAuthStore();
   const isFree = false;
   const freeMinutes = 0;
@@ -204,6 +209,10 @@ export default function RoomContent({
   const expertAvatar = (expertData as { avatar?: string | null } | null)?.avatar ?? null;
   const parsedSessionId = sessionId !== null ? Number(sessionId) : NaN;
   const roomMode = resolveRoomMode(initialSessions, consultationState?.mode);
+  console.log(
+    "[VoiceConsultation] room mode resolved",
+    { roomConsultationId, roomMode, consultationStateMode: consultationState?.mode },
+  );
 
   // Sync consultation identity + status
   React.useEffect(() => {
@@ -280,7 +289,10 @@ export default function RoomContent({
   // Authoritative room mode: live consultation state wins, latest history
   // session seeds first paint. Replaces the old spoofable `?mode=` query.
   const isDirectVoice = roomMode === "voice";
-  
+  console.log(
+    "[VoiceConsultation] voice stage eligibility",
+    { isDirectVoice, roomMode },
+  );
   // Determine if session is ended: check live state first, then history
   // A consultation is ended if:
   // - Live state is completed/rejected/cancelled/expired
@@ -432,10 +444,18 @@ export default function RoomContent({
     [voice],
   );
 
-  const showVoiceStage = !isSessionEnded && voice.voiceActive && !voice.minimized;
+  // Voice stage shows for the chat→voice upgrade path (voice.voiceActive) AND
+  // for resume/direct-voice rooms, where the stage would otherwise never
+  // appear because voiceActive only tracks the upgrade hook. dockProps uses
+  // the same directVoice condition, so both paths render identical controls.
+  const showVoiceStage =
+    !isSessionEnded &&
+    !voice.minimized &&
+    (voice.voiceActive ||
+      (isDirectVoice && directVoice.active && directVoice.phase !== "ended"));
 
   const dockProps: SessionDockProps | null = React.useMemo(() => {
-    if (isSessionEnded || directVoice.phase === "ended") {
+    if (isSessionEnded || directVoice.phase === "ended" || !directVoice.active) {
       return null;
     }
     if (isDirectVoice) {

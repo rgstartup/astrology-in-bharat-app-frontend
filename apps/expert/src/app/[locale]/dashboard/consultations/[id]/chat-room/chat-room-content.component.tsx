@@ -117,6 +117,49 @@ export function ChatRoomContent({
       : null;
 
   useEffect(() => {
+    console.info("[ExpertVoice] room join eligibility", {
+      consultationId: newFlowId,
+      isVoiceMode,
+      sessionStatus,
+      voiceActive,
+      voiceBusy,
+      hasIdentity: identity !== null,
+      micConfirmed,
+      hasToken: Boolean(voiceToken?.token),
+      channelName: voiceToken?.channelName ?? null,
+    });
+  }, [
+    newFlowId,
+    isVoiceMode,
+    sessionStatus,
+    voiceActive,
+    voiceBusy,
+    identity,
+    micConfirmed,
+    voiceToken?.token,
+    voiceToken?.channelName,
+  ]);
+
+  useEffect(() => {
+    const snapshot = voice.snapshot;
+    console.info("[ExpertVoice] RTC snapshot", {
+      consultationId: newFlowId,
+      active: voiceActive,
+      busy: voiceBusy,
+      error: voiceError,
+      phase: snapshot?.phase ?? null,
+      roomName: snapshot?.roomName ?? null,
+      participants: snapshot?.participants.map((participant) => ({
+        identity: participant.identity,
+        isLocal: participant.isLocal,
+        audioEnabled: participant.audioEnabled,
+      })) ?? [],
+      microphoneEnabled: snapshot?.localMedia.microphoneEnabled ?? false,
+    });
+  }, [newFlowId, voiceActive, voiceBusy, voiceError, voice.snapshot]);
+
+  useEffect(() => {
+    if (sessionStatus === "completed") return;
     if (!isVoiceMode) return;
     if (voiceActive || voiceBusy) return;
     if (!identity) return;
@@ -124,9 +167,21 @@ export function ChatRoomContent({
     if (!micConfirmed) return;
     const flowId = newFlowId;
     if (!voiceToken?.token || !voiceToken?.channelName) return;
-    void voiceJoin(flowId, identity, voiceToken, () => media.setLocalReady());
+    console.info("[ExpertVoice] requesting Agora join", {
+      consultationId: flowId,
+      identity,
+      roomName: voiceToken.channelName,
+    });
+    void voiceJoin(flowId, identity, voiceToken, () => {
+      console.info("[ExpertVoice] Agora join succeeded", {
+        consultationId: flowId,
+        roomName: voiceToken.channelName,
+      });
+      media.setLocalReady();
+    });
   }, [
     isVoiceMode,
+    sessionStatus,
     voiceActive,
     voiceBusy,
     voiceJoin,
@@ -139,10 +194,14 @@ export function ChatRoomContent({
 
   useEffect(() => {
     if (voiceError) {
+      console.error("[ExpertVoice] Agora join failed", {
+        consultationId: newFlowId,
+        error: voiceError,
+      });
       toast.error(voiceError);
       voiceClearError();
     }
-  }, [voiceError, voiceClearError]);
+  }, [voiceError, voiceClearError, newFlowId]);
 
   // Leave the Agora RTC session when the consultation ends, or when the client
   // continues the consultation over chat, so the SDK does not keep running.

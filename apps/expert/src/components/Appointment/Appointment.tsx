@@ -9,24 +9,12 @@ import RescheduleModal from "./RescheduleModal";
 import { Appointment } from "./types";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
-import {
-  getRootSocket,
-  chatSocket,
-  callSocket,
-  connectChatSocket,
-  connectCallSocket,
-} from "@/lib/socket";
-import { getSocketTokenAction } from "@/actions/auth";
 import { getReviews } from "@/lib/reviews";
 import { getDashboardStats, DashboardStats } from "@/lib/dashboard";
 import { TableSkeleton, StatsSkeleton } from "../dashboard/DashboardSkeletons";
 
 export default function AppointmentsPage() {
   const { user: expertUser, isAuthenticated: isExpertAuthenticated } = useAuthStore();
-
-
-
-
 
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -45,7 +33,6 @@ export default function AppointmentsPage() {
     }
 
     try {
-
       // Fetch Chat & Call sessions (pending + completed), reviews and stats
       const [
         chatPendingRes,
@@ -65,7 +52,7 @@ export default function AppointmentsPage() {
         getDashboardStats('today')
       ]);
 
-      const getSessions = (result: [any | null, any | null]) => {
+      const getSessions = (result: any) => {
         const [data, error] = result;
         if (error || !data) return [];
         const payload = data?.data || data;
@@ -82,7 +69,6 @@ export default function AppointmentsPage() {
       
       const [reviewsData, reviewsError] = reviewsRes;
       const reviews = (reviewsData as any)?.reviews || (reviewsData as any)?.data || reviewsData || [];
-
 
       // Deduplicate sessions by ID and Source (since IDs might overlap between chat and call)
       const uniqueSessionsMap = new Map();
@@ -146,7 +132,7 @@ export default function AppointmentsPage() {
           status: currentStatus,
           type: "new",
           reminder: false,
-          meetingLink: isPuja ? `/dashboard/puja-session/${session.id}` : (isCall ? (session.type === 'video' ? `/dashboard/video/${session.id}` : `/dashboard/call/${session.id}`) : `/dashboard/consultations/${session.consultation_id || session.consultationId || session.id}`),
+          meetingLink: isPuja ? `/dashboard/puja-session/${session.id}` : `/dashboard/consultations/${session.consultation_id || session.consultationId || session.id}`,
           sessionId: !isPuja ? session.id : undefined,
           clientId: session.client_id || session.userId || session.clientId,
           expiresAt: session.expires_at || session.expiresAt,
@@ -195,7 +181,6 @@ export default function AppointmentsPage() {
         setStats(statsData);
       }
 
-
       setAppointments(mappedAppointments);
     } catch (error) {
       console.error("[AppointmentDebug] Failed to fetch sessions:", error);
@@ -205,195 +190,13 @@ export default function AppointmentsPage() {
     }
   };
 
-  // Initial Fetch & Socket Listeners
+  // Initial Fetch
   useEffect(() => {
     setLoading(true);
     fetchAllSessions();
-
-    if (isExpertAuthenticated && expertUser) {
-      let isSubscribed = true;
-      const registrationId = expertUser.profileId || expertUser.id;
-      const rootSocket = getRootSocket();
-
-      const connectSockets = async () => {
-        try {
-          const token = await getSocketTokenAction();
-          if (!isSubscribed) return;
-          connectChatSocket(token, registrationId);
-          connectCallSocket(token, registrationId);
-        } catch (err) {
-          console.error("[Appointment] Failed to get socket token:", err);
-        }
-      };
-
-      connectSockets();
-
-      // 2. Real-time update when NEW request arrives
-      const handleNewPujaRequest = (session: any) => {
-        const newAppt: Appointment = {
-          id: session.id,
-          name: session.user?.name || session.client?.user?.name || session.client?.name || "Client",
-          avatar: session.client?.profile_picture || session.client?.avatar || session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.client?.user?.profile_picture || session.client?.user?.avatar || session.user_image || session.user_avatar || session.image,
-          service: session.puja?.name || "Puja Service",
-          date: session.scheduled_date || session.created_at || new Date().toISOString(),
-          status: "pending",
-          type: "new",
-          reminder: false,
-          meetingLink: `/dashboard/puja-session/${session.id}`,
-          clientId: session.user_id,
-          expiresAt: session.expires_at || session.expiresAt,
-          isFree: false,
-          freeMinutes: 0,
-          durationMins: 0,
-          pujaId: session.puja_id,
-          askExpertForDate: session.ask_expert_for_date,
-          userMessage: session.user_message,
-          expertMessage: session.expert_message,
-          scheduledTime: session.scheduled_time,
-          pujaMode: session.mode,
-          price: session.price,
-        };
-
-        setAppointments(prev => {
-          if (prev.some(a => a.id === newAppt.id)) return prev;
-          return [newAppt, ...prev];
-        });
-      };
-      const handleNewRequest = (session: any) => {
-
-        // Safety check for session data
-        if (!session || !session.id) {
-          return;
-        }
-
-
-
-        const newAppt: Appointment = {
-          id: session.id,
-          name: session.user?.name || session.client?.user?.name || session.client?.name || "Client",
-          avatar: session.client?.profile_picture || session.client?.avatar || session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.client?.user?.profile_picture || session.client?.user?.avatar || session.user_image || session.user_avatar || session.image,
-          service: "Chat Consultation",
-          date: session.created_at || session.createdAt || new Date().toISOString(),
-          status: "pending",
-          type: "new",
-          reminder: false,
-          meetingLink: `/dashboard/consultations/${session.consultation_id || session.consultationId || session.id}`,
-          sessionId: session.id,
-          clientId: session.client_id || session.userId || session.clientId,
-          expiresAt: session.expires_at || session.expiresAt,
-          isFree: !!(session.is_free ?? session.isFree),
-          freeMinutes: session.free_minutes ?? session.freeMinutes ?? 0,
-          durationMins: session.duration_mins ?? session.durationMins ?? 0,
-          review: session.review,
-          terminatedBy: session.terminated_by || session.terminatedBy,
-        };
-
-        setAppointments(prev => {
-          if (prev.some(a => a.id === newAppt.id)) {
-            return prev;
-          }
-
-          return [newAppt, ...prev];
-        });
-      };
-
-      const handleNewCallRequest = (data: any) => {
-      console.log("[Appointment] Received new_call_request!", data);
-      const session = data?.session || data;
-
-        const newAppt: Appointment = {
-          id: session.id,
-          name: session.user?.name || session.client?.user?.name || session.client?.name || "Client",
-          avatar: session.client?.profile_picture || session.client?.avatar || session.user?.profile_picture || session.user?.avatar || session.user?.profile_client?.profile_picture || session.client?.user?.profile_picture || session.client?.user?.avatar || session.user_image || session.user_avatar || session.image,
-          service: session.type === 'video' ? "Video Call" : "Voice Call",
-          date: session.created_at || session.createdAt || new Date().toISOString(),
-          status: "pending",
-          type: "new",
-          reminder: false,
-          meetingLink: session.type === 'video' ? `/dashboard/video/${session.id}` : `/dashboard/call/${session.id}`,
-          sessionId: session.id,
-          clientId: session.client_id || session.userId || session.clientId,
-          expiresAt: session.expires_at || session.expiresAt,
-          isFree: !!(session.is_free ?? session.isFree),
-          freeMinutes: session.free_minutes ?? session.freeMinutes ?? 0,
-          durationMins: session.duration_mins ?? session.durationMins ?? 0,
-          review: session.review,
-          terminatedBy: session.terminated_by || session.terminatedBy,
-        };
-
-        setAppointments(prev => {
-          if (prev.some(a => a.id === newAppt.id)) return prev;
-          return [newAppt, ...prev];
-        });
-      };
-
-      const handleSessionEnded = (data: any) => {
-        const targetId = data.id || data.sessionId;
-        if (!targetId) {
-          return;
-        }
-
-        setAppointments(prev => {
-          const index = prev.findIndex(a => a.id === targetId);
-          if (index === -1) {
-            return prev;
-          }
-
-          return prev.map(a =>
-            a.id === targetId ? {
-              ...a,
-              status: (data.status === 'expired' ? 'expired' : 'completed') as any,
-              terminatedBy: data.terminatedBy
-            } : a
-          );
-        });
-      };
-
-      const handleCallEnded = (data: any) => {
-        const targetId = data.id || data.sessionId;
-        setAppointments(prev => prev.map(a => a.id === targetId ? { ...a, status: 'completed' as any } : a));
-      };
-
-      const handleCallAccepted = (data: any) => {
-        const targetId = (data.session?.id || data.id);
-        if (!targetId) return;
-
-        setAppointments(prev => prev.map(a =>
-          a.id === targetId ? { ...a, status: 'active' as const } : a
-        ));
-      };
-
-      rootSocket.on('new_puja_request', handleNewPujaRequest);
-      chatSocket.on('new_chat_request', handleNewRequest);
-      callSocket.on('new_call_request', handleNewCallRequest);
-
-      // 3. Real-time update when session is ACTIVATED
-      chatSocket.on('session_activated', (session: any) => {
-        setAppointments(prev => prev.map(a =>
-          a.id === session.id ? { ...a, status: 'active' as const } : a
-        ));
-      });
-
-      // 4. Real-time update when session is ENDED (completed or expired)
-      chatSocket.on('session_ended', handleSessionEnded);
-      callSocket.on('call_ended', handleCallEnded);
-      callSocket.on('call_accepted', handleCallAccepted);
-
-      return () => {
-        isSubscribed = false;
-        rootSocket.off('new_puja_request', handleNewPujaRequest);
-        chatSocket.off('new_chat_request', handleNewRequest);
-        chatSocket.off('session_activated');
-        chatSocket.off('session_ended', handleSessionEnded);
-
-        callSocket.off('new_call_request', handleNewCallRequest);
-        callSocket.off('call_accepted', handleCallAccepted);
-        callSocket.off('call_ended', handleCallEnded);
-      };
-    }
   }, [isExpertAuthenticated, expertUser]);
 
-  // Polling fallback for active sessions (in case socket event is missed during redirect)
+  // Polling fallback for active sessions (in case status changed during redirect)
   useEffect(() => {
     const hasActiveSession = appointments.some(a => a.status === 'active');
 
@@ -479,5 +282,3 @@ export default function AppointmentsPage() {
     </div>
   );
 }
-
-

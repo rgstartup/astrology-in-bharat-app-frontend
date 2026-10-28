@@ -24,6 +24,3 @@ export {
   merchantSocket,
 } from "./merchant.socket";
 
-export {
-  chatSocket,
-} from "./chat.socket";

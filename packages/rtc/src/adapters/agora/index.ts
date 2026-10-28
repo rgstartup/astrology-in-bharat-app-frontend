@@ -3,6 +3,7 @@ import { createRtcSession } from "./../../core/provider";
 import type { RtcSession } from "./../../core/provider";
 
 export { AgoraAdapter };
+export { AGORA_CSP_REQUIREMENTS } from "./csp-requirements";
 
 /**
  * Create a headless RTC session over a freshly configured Agora adapter.

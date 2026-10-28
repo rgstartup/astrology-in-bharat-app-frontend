@@ -3,7 +3,6 @@
 import { useState, useRef, type ChangeEvent, type Dispatch, type SetStateAction } from "react";
 import { toast } from "react-toastify";
 import api from "@/actions/api";
-import { chatSocket } from "@/lib/socket";
 import { useAuthStore } from "@/store/useAuthStore";
 import {
   getChatAttachmentError,
@@ -42,23 +41,7 @@ export function useChatRoomComposer({
       sendLiveTyping(true);
       if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
       typingTimeoutRef.current = setTimeout(() => sendLiveTyping(false), 1500);
-      return;
     }
-
-    chatSocket.emit("typing", {
-      sessionId,
-      senderName: user.name || "Expert",
-      isTyping: true,
-    });
-
-    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
-    typingTimeoutRef.current = setTimeout(() => {
-      chatSocket.emit("typing", {
-        sessionId,
-        senderName: user.name || "Expert",
-        isTyping: false,
-      });
-    }, 1500);
   };
 
   const removePendingAttachment = () => {
@@ -128,36 +111,6 @@ export function useChatRoomComposer({
       return;
     }
 
-    const payload: {
-      sessionId: string;
-      senderId: string | number;
-      senderType: "expert";
-      content: string;
-      attachmentUrl?: string;
-      attachmentType?: "image" | "document";
-    } = {
-      sessionId,
-      senderId: user.id,
-      senderType: "expert",
-      content: textContent,
-    };
-
-    if (pendingAttachment) {
-      payload.attachmentUrl = pendingAttachment.url;
-      payload.attachmentType = pendingAttachment.type;
-    }
-
-    chatSocket.emit("send_message", payload, (response: ChatMessage) => {
-      if (response && response.id) {
-        setMessages((prev) => {
-          if (!prev.some((m) => m.id === response.id)) {
-            return [...prev, response];
-          }
-          return prev;
-        });
-      }
-    });
-
     setInputValue("");
     removePendingAttachment();
   };
@@ -185,36 +138,6 @@ export function useChatRoomComposer({
           idempotencyKey: uuidv7(),
         };
       });
-      return;
-    }
-
-    // Legacy flow: upload immediately, stage the remote URL for the socket send.
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("File size must be less than 5MB");
-      return;
-    }
-
-    try {
-      setUploading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await api.post<{ url: string }>("/expert/upload-file", formData);
-
-      if (!res.ok || !res.data?.url) {
-        toast.error(res.error?.message || "Upload failed");
-        return;
-      }
-
-      const attachmentType = file.type.startsWith("image") ? "image" : "document";
-      setPendingAttachment({
-        url: res.data.url,
-        type: attachmentType,
-        name: file.name,
-      });
-      toast.info("File uploaded. Click send to share.");
-    } finally {
-      setUploading(false);
-      if (e.target) e.target.value = "";
     }
   };
 

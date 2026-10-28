@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import "react-calendar/dist/Calendar.css";
-import { ChatNotificationListener } from "@/components/notifications/ChatNotificationListener";
-import { CallNotificationListener } from "@/components/notifications/CallNotificationListener";
 import { LayoutProps } from "@/types/expert";
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -14,8 +12,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <>
-      <ChatNotificationListener />
-      <CallNotificationListener />
       <div
         className="min-h-screen bg-cover bg-center bg-no-repeat relative"
         style={{ backgroundImage: "url('/images/back-image.webp')" }}
