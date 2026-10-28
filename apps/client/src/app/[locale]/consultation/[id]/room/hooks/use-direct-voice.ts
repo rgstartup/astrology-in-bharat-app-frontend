@@ -1,12 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useVoiceSession } from "../../voice/use-voice-session.hook";
 import type { VoicePhase } from "../../voice/voice-phase";
 import {
   cancelConsultation,
   endConsultation,
   switchConsultationToChat,
+  voiceToken as fetchVoiceToken,
 } from "@/realtime/topics/consultation";
 import { toast } from "@/hooks/use-toast";
 
@@ -71,13 +72,76 @@ export function useDirectVoice(
   const joinedRef = useRef<number | null>(null);
   const joinAbortedRef = useRef(false);
 
-  // Determine if we should join Agora: only when session is active or accepted
+  // Determined token: accept-time prop first, then self-healed local token.
+  // The local token is persisted in sessionStorage so it survives
+  // content.component.tsx remounts (which would otherwise reset useState and
+  // keep `enabled` false forever, blocking the Agora join).
+  const [localVoiceToken, setLocalVoiceToken] = useState<{
+    token: string;
+    tokenExpiresAt: string;
+    channelName: string;
+  } | null>(() => {
+    if (typeof sessionStorage === "undefined" || !consultationId) return null;
+    try {
+      const stored = sessionStorage.getItem(`voiceToken:${consultationId}`);
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+  const voiceTokenResolved = voiceToken ?? localVoiceToken;
   const enabled = Boolean(
     consultationId !== null &&
     !ended &&
     (sessionStatus === "active" || decision === "accepted") &&
-    (voiceToken?.token && voiceToken?.channelName)
+    (voiceTokenResolved?.token && voiceTokenResolved?.channelName)
   );
+
+  console.log("[VoiceConsultation] useDirectVoice enabled check", {
+    consultationId,
+    sessionStatus,
+    decision,
+    hasToken: Boolean(voiceTokenResolved?.token),
+    hasChannelName: Boolean(voiceTokenResolved?.channelName),
+    enabled,
+  });
+
+  // Token self-heal: when the consultation is accepted/active but the
+  // accept-time token never reached this client (e.g. targeted emit missed
+  // after a reconnect), fetch a fresh token via the voice_token command so
+  // the voice stage can still come up live without a page refresh.
+  useEffect(() => {
+    if (!consultationId) return;
+    if (voiceToken?.token && voiceToken?.channelName) return;
+    if (sessionStatus !== "active" && decision !== "accepted") return;
+    console.log("[VoiceConsultation] fetching voice token (self-heal)", {
+      consultationId,
+      sessionStatus,
+      decision,
+    });
+    void fetchVoiceToken(consultationId)
+      .then((issued) => {
+        console.log("[VoiceConsultation] voice token fetched", {
+          consultationId,
+          hasToken: Boolean(issued.token),
+          hasChannelName: Boolean(issued.channelName),
+        });
+        setLocalVoiceToken(issued);
+        try {
+          sessionStorage.setItem(
+            `voiceToken:${consultationId}`,
+            JSON.stringify(issued),
+          );
+        } catch {
+          // sessionStorage may be unavailable in some environments; non-fatal.
+        }
+      })
+      .catch(() => {
+        console.log("[VoiceConsultation] voice token fetch failed", {
+          consultationId,
+        });
+      });
+  }, [consultationId, sessionStatus, decision, voiceToken?.token, voiceToken?.channelName]);
 
   // Toast on error transitions only
   useEffect(() => {
@@ -105,14 +169,28 @@ export function useDirectVoice(
         ? `client_${consultationId}`
         : `client_${userId}_consult_${consultationId}`;
     
+    console.log("[VoiceConsultation] joining Agora", {
+      consultationId,
+      identity,
+      hasToken: Boolean(voiceTokenResolved?.token),
+      channelName: voiceTokenResolved?.channelName ?? null,
+    });
+    
     const joinPromise = rtc
-      .join(consultationId, identity, voiceToken ?? undefined)
+      .join(consultationId, identity, voiceTokenResolved ?? undefined)
       .then(() => {
+        console.log("[VoiceConsultation] Agora join succeeded", {
+          consultationId,
+        });
         if (!joinAbortedRef.current) {
           onLocalReady?.();
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log("[VoiceConsultation] Agora join failed", {
+          consultationId,
+          error: err instanceof Error ? err.message : String(err),
+        });
         if (!joinAbortedRef.current) {
           // Error already handled by toast effect
         }
@@ -164,7 +242,14 @@ export function useDirectVoice(
     joinedRef.current = null;
     joinAbortedRef.current = true;
     void rtc.leave().catch(() => undefined);
-  }, [ended, rtc]);
+    if (consultationId !== null) {
+      try {
+        sessionStorage.removeItem(`voiceToken:${consultationId}`);
+      } catch {
+        // non-fatal
+      }
+    }
+  }, [ended, rtc, consultationId]);
 
   const phase: VoicePhase = ended ? "ended" : (rtc.voicePhase ?? "requesting");
 
