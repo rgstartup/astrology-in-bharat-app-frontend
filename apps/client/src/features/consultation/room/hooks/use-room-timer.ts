@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface UseRoomTimerInput {
   maxMinutes: number | null;
@@ -9,14 +9,13 @@ interface UseRoomTimerInput {
   baseSeconds?: number | null;
   sessionStatus: string;
   paused: boolean;
-  onExhausted: () => void;
 }
 
 /**
  * Live budget countdown. `startedAt` is the server anchor (start or last
  * resume), `baseSeconds` the pre-anchor consumption, `maxMinutes` the
- * affordable budget. Ticks locally every second. Fires `onExhausted` once
- * when the budget hits zero so the room can ask the server to pause.
+ * affordable budget. Ticks locally every second for display; the backend is
+ * the only authority that pauses a consultation when the budget is exhausted.
  */
 export const useRoomTimer = ({
   maxMinutes,
@@ -24,12 +23,8 @@ export const useRoomTimer = ({
   baseSeconds,
   sessionStatus,
   paused,
-  onExhausted,
 }: UseRoomTimerInput) => {
   const [now, setNow] = useState(() => Date.now());
-  const exhaustedRef = useRef(false);
-  const onExhaustedRef = useRef(onExhausted);
-  onExhaustedRef.current = onExhausted;
 
   const anchorMs = startedAt ? new Date(startedAt).getTime() : NaN;
   const hasAnchor = startedAt !== null && !isNaN(anchorMs);
@@ -37,14 +32,16 @@ export const useRoomTimer = ({
   const base = typeof baseSeconds === "number" && !isNaN(baseSeconds) ? Math.max(0, Math.floor(baseSeconds)) : 0;
 
   useEffect(() => {
+    // A backend resume provides a new anchor and carried elapsed base. Rebase
+    // the display clock immediately instead of waiting for the next interval.
+    setNow(Date.now());
+  }, [startedAt, base]);
+
+  useEffect(() => {
     if (!active) return;
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
   }, [active]);
-
-  useEffect(() => {
-    if (hasAnchor) exhaustedRef.current = false;
-  }, [startedAt, base]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const elapsedSeconds = hasAnchor
     ? base + Math.max(0, Math.floor((now - anchorMs) / 1000))
@@ -52,13 +49,6 @@ export const useRoomTimer = ({
   const totalSeconds = typeof maxMinutes === "number" ? maxMinutes * 60 : null;
   const timeLeft =
     totalSeconds === null || !hasAnchor ? null : Math.max(0, totalSeconds - elapsedSeconds);
-
-  useEffect(() => {
-    if (!active || timeLeft !== 0 || totalSeconds === null) return;
-    if (exhaustedRef.current) return;
-    exhaustedRef.current = true;
-    onExhaustedRef.current();
-  }, [active, timeLeft, totalSeconds]);
 
   return { elapsedTime: elapsedSeconds, timeLeft };
 };

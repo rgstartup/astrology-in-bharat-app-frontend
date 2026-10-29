@@ -47,6 +47,8 @@ export const useChat = (consultationId?: number | string | null) => {
   const [budget, setBudget] = useState<ChatBudget>({ maxMinutes: null, startedAt: null, baseSeconds: null });
   /** Bumped on pause/resume so the room can re-seed session history. */
   const [sessionRevision, setSessionRevision] = useState(0);
+  /** Bumped only for backend resume events so the room store can reset once per resume. */
+  const [resumeRevision, setResumeRevision] = useState(0);
   // A `consultation:paused` racing a completed end must never revive the
   // recharge dialog — the server now guards this too, this covers in-flight emits.
   const endedRef = useRef(false);
@@ -136,9 +138,15 @@ export const useChat = (consultationId?: number | string | null) => {
 
     const handleResumed = (payload: ChatResumedPayload) => {
       if (payload && Number(payload.consultationId) === id) {
+        // RESUMED is a new active lifecycle boundary. A terminal event from
+        // the previous cycle must not keep the timer or RTC cleanup latched.
+        endedRef.current = false;
+        setEnded(null);
         setPaused(null);
+        setConsultationStatus("active");
         applyBudget(payload);
         setSessionRevision((value) => value + 1);
+        setResumeRevision((value) => value + 1);
       }
     };
 
@@ -274,6 +282,7 @@ export const useChat = (consultationId?: number | string | null) => {
     pause,
     resume,
     sessionRevision,
+    resumeRevision,
   };
 };
 

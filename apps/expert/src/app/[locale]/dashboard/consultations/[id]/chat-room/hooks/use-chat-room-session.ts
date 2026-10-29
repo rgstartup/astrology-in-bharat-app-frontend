@@ -178,7 +178,7 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
       return;
     }
     if (joinedStatus === "accepted" || joinedStatus === "active") {
-      setSessionStatus((prev) => (prev === "completed" ? prev : "active"));
+      setSessionStatus("active");
       return;
     }
     if (joinedStatus === "completed") {
@@ -197,17 +197,20 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
     setTimeout(() => router.push("/dashboard"), 2000);
   }, [endedVerdict, router]);
 
+  const isBalanceExhaustionPause =
+    pausedState !== null &&
+    (pausedState.reason == null || pausedState.reason === "insufficient_balance");
+
   useEffect(() => {
-    if (pausedState?.reason === "billing_hold") return;
-    if (pausedState) {
+    if (isBalanceExhaustionPause) {
       toast.warn("Client balance exhausted — chat paused. Waiting for recharge.", {
         toastId: `chat_paused_${newFlowId ?? sessionId}`,
       });
     }
-  }, [pausedState, newFlowId, sessionId]);
+  }, [isBalanceExhaustionPause, newFlowId, sessionId]);
 
   // 5-minute wait window while the client recharges (new stack only).
-  const pauseWaitSeconds = pausedState && pausedState.reason !== "billing_hold"
+  const pauseWaitSeconds = isBalanceExhaustionPause && pausedState
     ? (() => {
         const expiresSec =
           typeof pausedState.pauseExpiresInSec === "number" && !isNaN(pausedState.pauseExpiresInSec)

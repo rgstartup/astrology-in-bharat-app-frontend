@@ -34,10 +34,10 @@ export type ConsultationDecision = "waiting" | "accepted" | "rejected" | "cancel
  * Re-joins rooms and re-pulls status on every (re)connect — server-side room
  * membership is lost across reconnects, so a mount-only join would leave the
  * room deaf to broadcasts after a backend restart.
- * Terminal latch: ENDED is final at this root level. Late PAUSED / RESUMED /
- * EXHAUSTED / RESTORED arriving after end (in-flight emits racing the end
- * commit) are dropped so shared state can never regress — every mode room
- * (chat, voice, video) consuming this hook inherits the rule.
+ * Terminal latch: ENDED is final until the backend confirms a new acceptance
+ * or resume. Late pause/budget events cannot revive an ended consultation;
+ * an explicit RESUMED event starts a fresh active lifecycle for every room
+ * mode consuming this hook.
  */
 export const useConsultation = (consultationId?: number | string | null) => {
   const id = Number(consultationId);
@@ -72,6 +72,16 @@ const [voiceToken, setVoiceToken] = useState<{
           setBudgetHold(payload as unknown as ConsultationBudgetHoldPayload);
         }
       }
+    };
+
+    const handleResumed = (payload: ConsultationStatePayload) => {
+      if (!payload || Number(payload.consultationId) !== id) return;
+      endedRef.current = false;
+      setEnded(null);
+      setDecision("accepted");
+      setState({ ...payload, state: "active" });
+      setBudgetHold(null);
+      setBudgetWarning(null);
     };
 
     const handleEnded = (payload: ConsultationEndedPayload) => {
@@ -129,7 +139,7 @@ const [voiceToken, setVoiceToken] = useState<{
       });
       setState((prev) => ({
         consultationId: p.consultationId,
-        mode: p.mode ?? prev?.mode ?? "chat",
+        mode: prev?.mode ?? "chat",
         state: "accepted",
         startedAt: p.startedAt ?? null,
         maxMinutes: p.maxMinutes ?? prev?.maxMinutes,
@@ -189,7 +199,7 @@ const [voiceToken, setVoiceToken] = useState<{
     socket.on(CONSULTATION_EVENTS.EVENTS.STATE, handleState);
     socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleState);
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleState);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
     socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
     socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onAccepted);
     socket.on(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
@@ -205,7 +215,7 @@ const [voiceToken, setVoiceToken] = useState<{
       socket.off(CONSULTATION_EVENTS.EVENTS.STATE, handleState);
       socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleState);
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleState);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
       socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
       socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onAccepted);
       socket.off(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);

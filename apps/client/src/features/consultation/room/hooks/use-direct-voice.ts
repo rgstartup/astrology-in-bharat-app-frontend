@@ -194,9 +194,10 @@ export function useDirectVoice(
       });
 
     return () => {
+      if (joinedRef.current !== consultationId) return;
       joinAbortedRef.current = true;
-      void rtcRef.current.leave().catch(() => undefined);
       joinedRef.current = null;
+      void rtcRef.current.leave().catch(() => undefined);
     };
   }, [enabled, consultationId, userId]);
 

@@ -54,10 +54,11 @@ export interface ConsultationRoomState {
   setEnded: (ended: boolean, verdict?: ConsultationRoomState["endedVerdict"]) => void;
   setVoiceSession: (session: RtcSession | null, channelName: string | null, token: string | null) => void;
   clearVoiceSession: () => void;
+  resetForResume: (elapsedSeconds: number, timeLeft: number | null) => void;
   clear: () => void;
 }
 
-const initialState: Omit<ConsultationRoomState, keyof { setConsultation: any; setTimer: any; setPaused: any; setEnded: any; setVoiceSession: any; clearVoiceSession: any; clear: any }> = {
+const initialState: Omit<ConsultationRoomState, keyof { setConsultation: any; setTimer: any; setPaused: any; setEnded: any; setVoiceSession: any; clearVoiceSession: any; resetForResume: any; clear: any }> = {
   consultationId: null,
   sessionId: null,
   mode: null,
@@ -96,6 +97,20 @@ export const useConsultationRoomStore = create<ConsultationRoomState>((set) => (
   }),
   
   clearVoiceSession: () => set({ voiceSession: null, channelName: null, token: null, voiceActive: false }),
+
+  resetForResume: (elapsedSeconds, timeLeft) =>
+    set({
+      sessionStatus: "active",
+      elapsedSeconds,
+      timeLeft,
+      paused: false,
+      ended: false,
+      endedVerdict: null,
+      voiceSession: null,
+      channelName: null,
+      token: null,
+      voiceActive: false,
+    }),
   
   clear: () => set(initialState),
 }));

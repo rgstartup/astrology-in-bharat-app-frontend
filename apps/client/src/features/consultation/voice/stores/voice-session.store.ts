@@ -30,7 +30,7 @@ export interface VoiceSessionStoreState {
    *
    * @returns Promise resolving when session teardown completes.
    */
-  leaveAndClearSession: () => Promise<void>;
+  leaveAndClearSession: (expectedSession?: RtcSession | null) => Promise<void>;
   /**
    * Emergency synchronous cleanup: stops all active media tracks immediately.
    * Use when tracks may be orphaned (e.g., page unload, abnormal termination).
@@ -56,11 +56,16 @@ export const useVoiceSessionStore = create<VoiceSessionStoreState>(
         .leaveAndClearSession()
         .catch(() => undefined);
     },
-    leaveAndClearSession: async () => {
+    leaveAndClearSession: async (expectedSession) => {
       const current = get().session;
+      if (expectedSession !== undefined && current !== expectedSession) {
+        await expectedSession?.leave().catch(() => undefined);
+        return;
+      }
       set({ session: null, consultationId: null });
-      if (current) {
-        await current.leave().catch(() => undefined);
+      const session = expectedSession ?? current;
+      if (session) {
+        await session.leave().catch(() => undefined);
       }
     },
     emergencyCleanup: () => {

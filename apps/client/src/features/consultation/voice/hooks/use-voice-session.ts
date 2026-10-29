@@ -211,8 +211,7 @@ export function useVoiceSession(): VoiceRtcControls {
         if (mountedRef.current) {
           // Tear down the Agora client so a failed join doesn't leave a
           // dangling XHR/polling connection to the Agora edge.
-          void sessionRef.current?.leave().catch(() => undefined);
-          storeLeaveAndClear();
+          void storeLeaveAndClear(sessionRef.current).catch(() => undefined);
           sessionRef.current = null;
           setError(
             err instanceof Error ? err.message : "Could not join voice.",
@@ -231,11 +230,21 @@ export function useVoiceSession(): VoiceRtcControls {
   const leave = useCallback(async (): Promise<void> => {
     console.log("[VoiceConsultation] leaving voice session");
     setBusy(true);
+    const session = sessionRef.current;
     try {
-      await sessionRef.current?.leave();
-      await storeLeaveAndClear();
+      // If the active RTC session is in the bridge store, that store action
+      // owns teardown. Calling both paths leaves the same Agora session twice
+      // and can strand the next resume between leave/join.
+      if (session && session !== storeSession) {
+        await session.leave().catch(() => undefined);
+      } else {
+        await storeLeaveAndClear(session ?? undefined);
+      }
     } catch {
       // Leave is best-effort; the snapshot reset below is what the UI reads.
+      if (!session || session === storeSession) {
+        await storeLeaveAndClear(session ?? undefined).catch(() => undefined);
+      }
     } finally {
       sessionRef.current = null;
       if (mountedRef.current) {
@@ -244,7 +253,7 @@ export function useVoiceSession(): VoiceRtcControls {
         setBusy(false);
       }
     }
-  }, [storeLeaveAndClear]);
+  }, [storeLeaveAndClear, storeSession]);
 
   const toggleMic = useCallback(async (): Promise<void> => {
     const session = sessionRef.current;

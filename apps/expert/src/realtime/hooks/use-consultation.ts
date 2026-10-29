@@ -28,10 +28,10 @@ import type {
  * Re-joins rooms and re-pulls status on every (re)connect — server-side room
  * membership is lost across reconnects, so a mount-only join would leave the
  * room deaf to broadcasts after a backend restart.
- * Terminal latch: ENDED is final at this root level. Late PAUSED / RESUMED /
- * EXHAUSTED / RESTORED arriving after end (in-flight emits racing the end
- * commit) are dropped so shared state can never regress — every mode room
- * (chat, voice, video) consuming this hook inherits the rule.
+ * Terminal latch: ENDED is final until the backend confirms a new acceptance
+ * or resume. Late pause/budget events cannot revive an ended consultation;
+ * an explicit RESUMED event starts a fresh active lifecycle for every room
+ * mode consuming this hook.
  */
 export const useConsultation = (consultationId?: number | string | null) => {
   const id = Number(consultationId);
@@ -59,6 +59,15 @@ export const useConsultation = (consultationId?: number | string | null) => {
       }
     };
 
+    const handleResumed = (payload: ConsultationStatePayload) => {
+      if (!payload || Number(payload.consultationId) !== id) return;
+      endedRef.current = false;
+      setEnded(null);
+      setState({ ...payload, state: "active" });
+      setBudgetHold(null);
+      setBudgetWarning(null);
+    };
+
     const handleEnded = (payload: ConsultationEndedPayload) => {
       if (payload && Number(payload.consultationId) === id) {
         endedRef.current = true;
@@ -66,6 +75,21 @@ export const useConsultation = (consultationId?: number | string | null) => {
         setState((prev) => (prev ? { ...prev, state: "completed" } : null));
         setBudgetHold(null);
       }
+    };
+
+    const handleAccepted = (
+      payload: ConsultationStatePayload & {
+        token?: string;
+        tokenExpiresAt?: string;
+        channelName?: string;
+      },
+    ) => {
+      if (!payload || Number(payload.consultationId) !== id) return;
+      endedRef.current = false;
+      setEnded(null);
+      setBudgetHold(null);
+      setBudgetWarning(null);
+      setState({ ...payload, state: "accepted" });
     };
 
     const handleBudgetTick = (payload: ConsultationBudgetTickPayload) => {
@@ -117,8 +141,9 @@ export const useConsultation = (consultationId?: number | string | null) => {
     socket.on(CONSULTATION_EVENTS.EVENTS.STATE, handleState);
     socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleState);
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleState);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
     socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
+    socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
     socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
     socket.on(CONSULTATION_EVENTS.BUDGET.WARNING, handleBudgetWarning);
     socket.on(CONSULTATION_EVENTS.BUDGET.EXHAUSTED, handleBudgetExhausted);
@@ -129,8 +154,9 @@ export const useConsultation = (consultationId?: number | string | null) => {
       socket.off(CONSULTATION_EVENTS.EVENTS.STATE, handleState);
       socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleState);
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleState);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
       socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
+      socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
       socket.off(CONSULTATION_EVENTS.BUDGET.WARNING, handleBudgetWarning);
       socket.off(CONSULTATION_EVENTS.BUDGET.EXHAUSTED, handleBudgetExhausted);

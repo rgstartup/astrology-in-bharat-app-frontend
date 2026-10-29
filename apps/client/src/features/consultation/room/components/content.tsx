@@ -80,6 +80,7 @@ export default function RoomContent({
   const [reviewComment, setReviewComment] = useState<string>("");
   const [reviewSubmitted, setReviewSubmitted] = useState<boolean>(false);
   const [micConfirmed, setMicConfirmed] = useState<boolean>(true);
+  const handledResumeRevision = React.useRef(0);
 
   const {
     messages: liveMessages,
@@ -94,6 +95,7 @@ export default function RoomContent({
     pause: pauseLiveChat,
     resume: resumeLiveChat,
     sessionRevision,
+    resumeRevision,
   } = useChat(roomConsultationId);
 
   // Single subscription: the decision shim used to mount a second copy here
@@ -172,17 +174,12 @@ export default function RoomContent({
       consultationState,
     });
 
-  // useRoomTimer latches onExhausted itself and re-arms on anchor change,
-  // so no caller-side guard is needed.
   const { elapsedTime, timeLeft } = useRoomTimer({
     maxMinutes,
     startedAt,
     baseSeconds,
     sessionStatus,
     paused: pausedState !== null,
-    onExhausted: () => {
-      pauseLiveChat().catch(() => undefined);
-    },
   });
 
   const { chatRate, sessionSummary } = useRoomSessionSummary({
@@ -205,6 +202,7 @@ export default function RoomContent({
   const setTimer = useConsultationRoomStore((s) => s.setTimer);
   const setPaused = useConsultationRoomStore((s) => s.setPaused);
   const setEnded = useConsultationRoomStore((s) => s.setEnded);
+  const resetRoomForResume = useConsultationRoomStore((s) => s.resetForResume);
   const expertId = (expertData as { id?: number | string } | null)?.id;
   const expertName = (expertData as { name?: string } | null)?.name ?? "Expert";
   const expertAvatar =
@@ -285,6 +283,16 @@ export default function RoomContent({
     expertId: expertData.id,
     userId: user?.id ?? null,
   });
+
+  // Reset the room store for every backend resume event, independently of
+  // the consultation-state subscription or whether this is the first cycle.
+  React.useEffect(() => {
+    if (resumeRevision === 0 || handledResumeRevision.current === resumeRevision) return;
+    handledResumeRevision.current = resumeRevision;
+    resetRoomForResume(elapsedTime, timeLeft);
+    voice.returnToVoice();
+  }, [resumeRevision, elapsedTime, timeLeft, resetRoomForResume, voice.returnToVoice]);
+
   const voiceRate = React.useMemo(
     () => resolveVoiceRate(expertData),
     [expertData],
@@ -307,13 +315,20 @@ export default function RoomContent({
         consultationState.state,
       )
     : false;
-  const hasActiveHistorySession = initialSessions.some(
+  const hasActiveHistorySession = sessions.some(
     (s) => s.status === "active",
   );
+  const hasLiveActiveSignal =
+    decision === "accepted" ||
+    joinedStatus === "accepted" ||
+    joinedStatus === "active" ||
+    consultationState?.state === "accepted" ||
+    consultationState?.state === "active";
   const isHistoryEnded =
-    initialSessions.length > 0 &&
+    sessions.length > 0 &&
     !hasActiveHistorySession &&
-    initialSessions.every(
+    !hasLiveActiveSignal &&
+    sessions.every(
       (s) =>
         s.status === "completed" ||
         s.status === "rejected" ||
@@ -373,7 +388,11 @@ export default function RoomContent({
     userId: user?.id ?? null,
     sessionStatus,
     decision,
-    enabled: isDirectVoice && micConfirmed && !isSessionEnded,
+    enabled:
+      isDirectVoice &&
+      micConfirmed &&
+      !isSessionEnded &&
+      (pausedState === null || pausedState.reason === "billing_hold"),
     voiceToken: acceptedVoiceToken,
     onLocalReady: media.setLocalReady,
     // Error toasts and leave-on-END now live inside the voice hooks, keyed on
@@ -516,9 +535,12 @@ export default function RoomContent({
     consultationId: roomConsultationId,
   };
 
-  // A dialog-driven hold freezes the clock only; it is not a recharge pause.
-  const rechargePaused =
-    endedVerdict || pausedState?.reason === "billing_hold" ? null : pausedState;
+  // Disconnect pauses freeze billing/RTC during the grace window, but they do
+  // not mean the wallet is empty and must not open the recharge modal.
+  const isRechargePause =
+    pausedState !== null &&
+    (pausedState.reason == null || pausedState.reason === "insufficient_balance");
+  const rechargePaused = !endedVerdict && isRechargePause ? pausedState : null;
 
   return (
     <div className="font-sans fixed inset-0 z-50 flex overflow-hidden bg-[#f5f1ec] text-[#111111]">

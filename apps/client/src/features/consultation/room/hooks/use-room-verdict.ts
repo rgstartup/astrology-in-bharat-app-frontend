@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { toast } from "@/hooks/use-toast";
-import type { ChatEndedPayload, JoinChatAck } from "@/realtime/types/chat";
+import type { ChatEndedPayload } from "@/realtime/types/chat";
 
 export type RoomSessionStatus = "pending" | "active" | "completed";
 
@@ -21,12 +21,18 @@ type VerdictDeps = {
 /**
  * Owns room status. Live verdicts drive transitions, but the authoritative
  * join-ack status covers (re)joins after the verdict already fired.
- * 
+ *
  * For completed consultations, show the room with history - do NOT redirect.
  */
-export const useRoomVerdict = ({ decision, endedVerdict, joinedStatus, endLiveChat }: VerdictDeps) => {
+export const useRoomVerdict = ({
+  decision,
+  endedVerdict,
+  joinedStatus,
+  endLiveChat,
+}: VerdictDeps) => {
   const router = useRouter();
-  const [sessionStatus, setSessionStatus] = useState<RoomSessionStatus>("pending");
+  const [sessionStatus, setSessionStatus] =
+    useState<RoomSessionStatus>("pending");
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -34,9 +40,16 @@ export const useRoomVerdict = ({ decision, endedVerdict, joinedStatus, endLiveCh
       decision,
       joinedStatus,
     });
-    if (decision === "accepted" || (joinedStatus && (joinedStatus === "accepted" || joinedStatus === "active"))) {
+    if (
+      decision === "accepted" ||
+      (joinedStatus &&
+        (joinedStatus === "accepted" || joinedStatus === "active"))
+    ) {
       console.log("[VoiceConsultation] sessionStatus -> active", {
-        reason: decision === "accepted" ? "decision=accepted" : `joinedStatus=${joinedStatus}`,
+        reason:
+          decision === "accepted"
+            ? "decision=accepted"
+            : `joinedStatus=${joinedStatus}`,
       });
       setSessionStatus("active");
       // Continue-consultation re-accept clears a prior ended-state dialog.

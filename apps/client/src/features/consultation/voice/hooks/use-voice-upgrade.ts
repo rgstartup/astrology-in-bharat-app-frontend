@@ -4,8 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import type { VoicePhase } from "../types/voice-phase";
 import { useVoiceSession } from "../hooks/use-voice-session";
 import { toast } from "@/hooks/use-toast";
-import { checkVoiceEligibilityAction } from "@/actions/voice";
-import { initiateConsultationAction } from "@/actions/chat";
+import {
+  checkVoiceEligibilityAction,
+  initiateConsultationAction,
+} from "../api/voice-api";
 import {
   cancelConsultation,
   endConsultation,
@@ -65,7 +67,8 @@ export function useVoiceUpgrade(
     setStartError(null);
     try {
       const eligibility = await checkVoiceEligibilityAction(expertId);
-      if (!eligibility.ok) throw new Error(eligibility.message);
+      if (!eligibility.ok) throw new Error(eligibility.error.message);
+
       if (!eligibility.data.expertIsAvailable) {
         throw new Error(
           "The expert is offline right now. Please try again shortly.",
@@ -78,7 +81,7 @@ export function useVoiceUpgrade(
       }
       setVoicePrice(eligibility.data.voicePrice);
       const initiated = await initiateConsultationAction(expertId, "voice");
-      if (!initiated.ok) throw new Error(initiated.message);
+      if (!initiated.ok) throw new Error(initiated.error.message);
       const consultationId = initiated.data.consultationId;
       // Notify the expert: REST initiate only writes rows, the socket request
       // is what broadcasts `consultation:incoming` (same as chat prep).
@@ -86,6 +89,7 @@ export function useVoiceUpgrade(
         consultationId,
         Number(expertId),
       );
+
       if (requested.status !== "requested") {
         await cancelConsultation(consultationId).catch(() => undefined);
         throw new Error(

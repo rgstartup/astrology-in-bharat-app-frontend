@@ -9,3 +9,5 @@ export { default as TerminationNotice } from "./components/termination-notice";
 export { default as BillingBreakdown, type BillingSummary } from "./components/billing-breakdown";
 export { default as ReviewForm } from "./components/review-form";
 export { default as SummaryActions } from "./components/summary-actions";
+/// API
+export { submitReview } from "./api/review-api";

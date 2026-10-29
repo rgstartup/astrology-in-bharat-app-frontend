@@ -10,6 +10,8 @@ export { VoiceLobby } from "./components/voice-lobby";
 export { VoiceWaitingLobby } from "./components/voice-waiting-lobby";
 export { VoiceTranscriptStrip } from "./components/voice-transcript-strip";
 export { VoiceRateNote } from "./components/voice-rate-note";
+/// API
+export { checkVoiceEligibilityAction, initiateConsultationAction } from "./api/voice-api";
 
 /// Hooks
 export { useVoiceSession, toVoicePhase } from "./hooks/use-voice-session";

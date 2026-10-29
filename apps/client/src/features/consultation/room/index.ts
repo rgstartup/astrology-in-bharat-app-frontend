@@ -13,6 +13,8 @@ export { RoomSeedProvider, useRoomSeedContext } from "./components/room-seed-pro
 export type { RoomSeed } from "./components/room-seed-provider";
 export { default as VoiceReturnBanner } from "./components/voice-return-banner";
 export { default as SessionStateLabel } from "./components/session-state-label";
+/// API
+export { sendChatAttachment, getChatAttachmentError, toChatMessageFromAttachment, CHAT_ATTACHMENT_ALLOWED_MIME_TYPES, CHAT_ATTACHMENT_MAX_BYTES } from "./api/chat-attachments.api";
 
 /// Hooks
 export { useDirectVoice } from "./hooks/use-direct-voice";

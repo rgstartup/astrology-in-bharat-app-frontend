@@ -7,8 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
-import { getErrorMessage } from "@repo/lib";
-import { apiV2 } from "@/actions";
+import { submitReview } from "../api/review-api";
 
 import type { SessionThankYouExpert } from "./session-thank-you";
 
@@ -33,7 +32,10 @@ export type ReviewFormProps = {
  * @param reviewRating - Selected star index.
  * @returns Active star count for visual highlight.
  */
-function resolveActiveRating(hoverRating: number, reviewRating: number): number {
+function resolveActiveRating(
+  hoverRating: number,
+  reviewRating: number,
+): number {
   if (hoverRating > 0) return hoverRating;
   return reviewRating;
 }
@@ -179,12 +181,17 @@ export default function ReviewForm({
       comment: reviewComment.trim(),
     };
 
-    const res = await apiV2.post<unknown>("/reviews", payload);
+    const res = await submitReview(
+      sessionId,
+      expertData?.id ? Number(expertData.id) : 0,
+      reviewRating,
+      reviewComment.trim(),
+    );
     setIsSubmitting(false);
 
     if (!res.ok) {
-      const errMsg = getErrorMessage(res.error);
-      if (errMsg.toLowerCase().includes("already reviewed")) {
+      const errMsg = res.error.message;
+      if (errMsg?.toLowerCase().includes("already reviewed")) {
         setReviewSubmitted(true);
         setTimeout(() => router.push("/"), 1500);
         return;
@@ -202,7 +209,9 @@ export default function ReviewForm({
     return (
       <div className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 text-center">
         <CheckCircle className="size-5 text-emerald-600" />
-        <h4 className="text-sm font-semibold text-emerald-900">Review Submitted</h4>
+        <h4 className="text-sm font-semibold text-emerald-900">
+          Review Submitted
+        </h4>
         <p className="text-xs text-emerald-700">
           Thank you for sharing your feedback. Redirecting you home...
         </p>
@@ -211,7 +220,10 @@ export default function ReviewForm({
   }
 
   return (
-    <section aria-label="Rate your experience" className="flex w-full flex-col gap-2.5">
+    <section
+      aria-label="Rate your experience"
+      className="flex w-full flex-col gap-2.5"
+    >
       <div className="flex items-center justify-between">
         <h3 className="text-[11px] font-semibold uppercase tracking-wider text-[#111111]">
           Rate Your Consultation
@@ -239,7 +251,7 @@ export default function ReviewForm({
               <Star
                 className={cn(
                   "size-5 sm:size-6 transition-colors",
-                  getStarIconClass(star, activeRating)
+                  getStarIconClass(star, activeRating),
                 )}
               />
             </button>
@@ -252,7 +264,10 @@ export default function ReviewForm({
 
       {/* Comment Section */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="review-comment" className="text-xs font-medium text-[#626260]">
+        <label
+          htmlFor="review-comment"
+          className="text-xs font-medium text-[#626260]"
+        >
           Feedback & Comments <span className="text-[#9c9fa5]">(Optional)</span>
         </label>
         <Textarea

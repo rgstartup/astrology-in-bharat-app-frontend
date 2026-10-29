@@ -109,6 +109,33 @@ export const useChat = (
       }
     };
 
+    const handleAccepted = (payload: any) => {
+      if (!payload || Number(payload.consultationId) !== id) return;
+      endedRef.current = false;
+      setEnded(null);
+      setPaused(null);
+      setConsultationStatus("accepted");
+      setBudget({
+        maxMinutes: typeof payload.maxMinutes === "number" ? payload.maxMinutes : null,
+        startedAt: null,
+        baseSeconds: 0,
+      });
+      setVoiceToken({
+        token: payload.token ?? null,
+        tokenExpiresAt: payload.tokenExpiresAt ?? null,
+        channelName: payload.channelName ?? null,
+      });
+    };
+
+    const handleStarted = (payload: any) => {
+      if (!payload || Number(payload.consultationId) !== id) return;
+      endedRef.current = false;
+      setEnded(null);
+      setPaused(null);
+      setConsultationStatus("active");
+      applyBudget(payload);
+    };
+
     const handlePaused = (payload: any) => {
       if (endedRef.current) return;
       if (payload && Number(payload.consultationId) === id) {
@@ -129,9 +156,12 @@ export const useChat = (
     };
 
     const handleResumed = (payload: ChatResumedPayload) => {
-      if (endedRef.current) return;
       if (payload && Number(payload.consultationId) === id) {
+        // RESUMED starts a fresh active lifecycle after the paused cycle.
+        endedRef.current = false;
+        setEnded(null);
         setPaused(null);
+        setConsultationStatus("active");
         applyBudget(payload);
       }
     };
@@ -182,6 +212,8 @@ export const useChat = (
     socket.on(CHAT_EVENTS.MESSAGE, handleMessage);
     socket.on(CHAT_EVENTS.TYPING, handleTyping);
     socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
+    socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
+    socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
     socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
     socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
@@ -192,6 +224,8 @@ export const useChat = (
       socket.off(CHAT_EVENTS.MESSAGE, handleMessage);
       socket.off(CHAT_EVENTS.TYPING, handleTyping);
       socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
+      socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
+      socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
       socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);

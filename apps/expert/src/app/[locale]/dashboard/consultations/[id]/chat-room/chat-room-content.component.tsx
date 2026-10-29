@@ -159,7 +159,11 @@ export function ChatRoomContent({
   }, [newFlowId, voiceActive, voiceBusy, voiceError, voice.snapshot]);
 
   useEffect(() => {
-    if (sessionStatus === "completed") return;
+    if (
+      sessionStatus === "completed" ||
+      consultationState?.state === "completed"
+    ) return;
+    if (paused && paused.reason !== "billing_hold") return;
     if (!isVoiceMode) return;
     if (voiceActive || voiceBusy) return;
     if (!identity) return;
@@ -181,6 +185,8 @@ export function ChatRoomContent({
     });
   }, [
     isVoiceMode,
+    consultationState?.state,
+    paused,
     sessionStatus,
     voiceActive,
     voiceBusy,
@@ -207,7 +213,11 @@ export function ChatRoomContent({
   // continues the consultation over chat, so the SDK does not keep running.
   const hasLeftVoiceRef = useRef(false);
   useEffect(() => {
-    const shouldLeave = sessionStatus === "completed" || !isVoiceMode;
+    const shouldLeave =
+      sessionStatus === "completed" ||
+      consultationState?.state === "completed" ||
+      !isVoiceMode ||
+      (paused !== null && paused.reason !== "billing_hold");
     if (shouldLeave) {
       if (!hasLeftVoiceRef.current) {
         hasLeftVoiceRef.current = true;
@@ -216,7 +226,7 @@ export function ChatRoomContent({
     } else {
       hasLeftVoiceRef.current = false;
     }
-  }, [sessionStatus, isVoiceMode, voiceLeave]);
+  }, [sessionStatus, consultationState?.state, isVoiceMode, paused, voiceLeave]);
 
   const resolvedRatePerMinute = consultationState?.ratePerMinute || 30;
   const dockKind: ExpertSessionKind = mode === "video" ? "video" : "voice";

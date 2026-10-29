@@ -5,7 +5,7 @@ import {
   getChatAttachmentError,
   sendChatAttachment,
   toChatMessageFromAttachment,
-} from "@/api/chat-attachments.api";
+} from "../api/chat-attachments.api";
 import { toast } from "@/hooks/use-toast";
 import { getErrorMessage, uuidv7 } from "@repo/lib";
 import { useChatComposer } from "@repo/chat";
