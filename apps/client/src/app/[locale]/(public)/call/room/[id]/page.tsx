@@ -18,9 +18,7 @@ import {
 import { useAuthStore } from "@/store/authStore";
 import { useCallLogic } from "./useCallLogic";
 import FreeEndPromptModal from "./free-end-prompt-modal.component";
-import SessionSummaryModal, {
-  type SessionSummary,
-} from "@/app/[locale]/consultation/[id]/session-summary";
+import { SessionSummaryModal, type SessionSummary } from "@/features/consultation/session-summary";
 
 /**
  * Resolves per minute rate for audio or video calls from expert profile with waterfall fallbacks.
@@ -453,7 +451,7 @@ export default function CallRoomPage() {
           callDuration={callDuration}
           isFree={Boolean(sessionData?.is_free)}
           maxDuration={sessionData?.max_duration_seconds || 300}
-          statusLabel={statusLabel[status]}
+          statusLabel={statusLabel[status] ?? "Unknown"}
         />
 
         {callType === "video" ? (

@@ -111,7 +111,11 @@ export const {
       consultationId: null,
       pendingExpertId: initialPending.pendingExpertId,
       pendingMode: initialPending.pendingMode,
-      openConsultationPrep: (expertId, mode = "chat", consultationId = null) => {
+      openConsultationPrep: (
+        expertId,
+        mode = "chat",
+        consultationId = null,
+      ) => {
         writePendingSession(null, "chat");
         set({
           expertId,
@@ -129,9 +133,7 @@ export const {
           consultationId: null,
         }),
       setConsultationPrepOpen: (open) =>
-        set(open
-          ? { isOpen: true }
-          : { isOpen: false }),
+        set(open ? { isOpen: true } : { isOpen: false }),
       setPendingExpert: (pendingExpertId, mode = "chat") => {
         writePendingSession(pendingExpertId, mode);
         set({ pendingExpertId, pendingMode: mode });

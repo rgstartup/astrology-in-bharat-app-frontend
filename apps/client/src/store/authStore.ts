@@ -2,8 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { apiV2, API_ROUTES } from "@/actions";
 import { getMeAction, getWalletBalanceAction } from "@/actions/auth";
-import { useConsultationRoomStore } from "@/store/consultationRoomStore";
-import { useVoiceSessionStore } from "@/store/voiceSessionStore";
+import { useConsultationRoomStore } from "@/features/consultation/root/stores/consultation-room.store";
 import { endConsultation } from "@/realtime/topics/consultation";
 import type { Client, ClientWallet } from "@repo/lib";
 
@@ -134,7 +133,9 @@ export const authStore = create<AuthState>()(
         const roomState = useConsultationRoomStore.getState();
         const consultationId = roomState.consultationId;
         if (consultationId) {
-          endConsultation(consultationId, "client_disconnected").catch(() => undefined);
+          endConsultation(consultationId, "client_disconnected").catch(
+            () => undefined,
+          );
         }
 
         get().reset();
@@ -192,7 +193,7 @@ export const authStore = create<AuthState>()(
       reset: () => {
         // Auth state is gone — no live consultation context can survive it,
         // so the floating tracker must not outlive the session.
-        useVoiceSessionStore.getState().clearSession();
+        useConsultationRoomStore.getState().clearVoiceSession();
         set({
           user: null,
           isAuthenticated: false,

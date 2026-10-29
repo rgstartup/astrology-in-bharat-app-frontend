@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
-import { useConsultationRoomStore } from "@/store/consultationRoomStore";
+import { useConsultationRoomStore } from "@/features/consultation/root/stores/consultation-room.store";
 import { realtimeSocket } from "@/realtime/socket";
 import {
   CONSULTATION_EVENTS,
@@ -32,9 +32,14 @@ function isConsultationRoomPath(pathname: string): boolean {
  * @param consultationId - Room route owner, set by the chat prep modal.
  * @returns Relative room href with query string.
  */
-function buildRoomHref(expertId: string, sessionId: number | null, consultationId: number): string {
+function buildRoomHref(
+  expertId: string,
+  sessionId: number | null,
+  consultationId: number,
+): string {
   const params = new URLSearchParams();
-  if (sessionId !== null && !Number.isNaN(sessionId)) params.set("sessionId", String(sessionId));
+  if (sessionId !== null && !Number.isNaN(sessionId))
+    params.set("sessionId", String(sessionId));
   params.set("expertId", expertId);
   const query = params.toString();
   if (!query) return `/consultation/${consultationId}`;
@@ -46,7 +51,7 @@ function buildRoomHref(expertId: string, sessionId: number | null, consultationI
  * (single source of truth written by the room component). Owns the socket
  * subscription for the stored session (join + state refresh + end/pause/resume)
  * so the card stays truthful even after the room unmounts.
- * 
+ *
  * On mount, verifies the stored consultation is still active with the server.
  * Clears stale sessions (completed/rejected/cancelled) immediately.
  */
@@ -96,7 +101,11 @@ export default function ConsultationTrackerHost() {
             clear();
             return;
           }
-          if (status.state === "completed" || status.state === "rejected" || status.state === "cancelled") {
+          if (
+            status.state === "completed" ||
+            status.state === "rejected" ||
+            status.state === "cancelled"
+          ) {
             leaveConsultationRooms(consultationId).catch(() => undefined);
             clear();
             return;
@@ -131,9 +140,7 @@ export default function ConsultationTrackerHost() {
 
   return (
     <div className="fixed right-4 bottom-4 z-[60]">
-      <ConsultationTrackerCard
-        onReturn={handleReturn}
-      />
+      <ConsultationTrackerCard onReturn={handleReturn} />
     </div>
   );
 }

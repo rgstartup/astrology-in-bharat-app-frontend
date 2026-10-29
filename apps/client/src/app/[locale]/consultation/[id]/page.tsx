@@ -5,8 +5,8 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { Empty, EmptyTitle } from "@/components/ui/empty";
 import { Spinner } from "@/components/ui/spinner";
-import { ChatRoomContent, RoomErrorState, RoomLoadingState } from "./room";
-import { useRoomSeed } from "./room/hooks/use-room-seed";
+import { ChatRoomContent, RoomErrorState, RoomLoadingState } from "@/features/consultation/room";
+import { useRoomSeed } from "@/features/consultation/room/hooks/use-room-seed";
 
 /**
  * Route shell: owns search params + the initial REST seed

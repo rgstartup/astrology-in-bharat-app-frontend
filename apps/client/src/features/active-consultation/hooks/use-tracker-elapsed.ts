@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useInterval } from "@/hooks/external-hooks";
-import { useConsultationRoomStore } from "@/store/consultationRoomStore";
+import { useConsultationRoomStore } from "@/features/consultation/root/stores/consultation-room.store";
 
 /**
  * Formats an elapsed duration as mm:ss (hours fold into minutes).
@@ -20,7 +20,7 @@ export function formatTrackerElapsed(totalSeconds: number): string {
 /**
  * Ticks once per second using the global consultation room store
  * (single source of truth written by the room component).
- * 
+ *
  * @returns Formatted elapsed string for display.
  */
 export function useTrackerElapsed(): string {
@@ -35,10 +35,13 @@ export function useTrackerElapsed(): string {
   }, [elapsedSeconds]);
 
   // Tick locally only if not paused
-  useInterval(() => {
-    if (paused) return;
-    setElapsed((prev) => prev + 1);
-  }, !paused ? 1000 : null);
+  useInterval(
+    () => {
+      if (paused) return;
+      setElapsed((prev) => prev + 1);
+    },
+    !paused ? 1000 : null,
+  );
 
   return formatTrackerElapsed(elapsed);
 }

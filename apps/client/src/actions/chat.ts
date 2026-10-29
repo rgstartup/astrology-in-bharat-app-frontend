@@ -128,6 +128,7 @@ export interface ChatHistorySessionDto {
  */
 export interface ChatHistoryResponse {
   consultationId: number;
+  expertId: number;
   sessions: ChatHistorySessionDto[];
 }
 

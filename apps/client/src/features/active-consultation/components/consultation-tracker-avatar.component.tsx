@@ -1,6 +1,6 @@
 "use client";
 
-import { useConsultationRoomStore } from "@/store/consultationRoomStore";
+import { useConsultationRoomStore } from "@/features/consultation/root/stores/consultation-room.store";
 
 function AvatarInitials({ name }: { name: string }) {
   const initials = name

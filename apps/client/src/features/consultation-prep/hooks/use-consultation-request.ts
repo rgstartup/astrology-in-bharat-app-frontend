@@ -21,7 +21,7 @@ import type { ConsultationWaitStep } from "../components/consultation-wait-stepp
 import { useVerdictWait } from "./use-verdict-wait";
 import { useGoToRoom } from "./use-go-to-room";
 import { useAuthStore } from "@/store/authStore";
-import { useVoiceSessionStore } from "@/store/voiceSessionStore";
+import { useConsultationRoomStore } from "@/features/consultation/root/stores/consultation-room.store";
 
 export interface ConsultationRequestOptions {
   expertId: string;
@@ -42,7 +42,7 @@ export interface ConsultationRequestOptions {
  * Consultation request protocol:
  * Step 1: Microphone access preflight and grant via getUserMedia.
  * Step 2: Request initiate + socket emit, wait for expert accept verdict.
- * Step 3: Establish Agora RTC session via @repo/rtc, store in voiceSessionStore,
+ * Step 3: Establish Agora RTC session via @repo/rtc, store in consultationRoomStore,
  *         emit consultation:media_ready, run 3-second countdown, and redirect to room.
  *
  * @param options - Expert ID, mode, expert details, and low-balance handler.
@@ -159,8 +159,10 @@ export function useConsultationRequest({
           token: tokenValue,
         });
 
-        // Store active session in voiceSessionStore to bridge route transition
-        useVoiceSessionStore.getState().setSession(session, consultationId);
+        // Store active session in consultationRoomStore to bridge route transition
+        useConsultationRoomStore
+          .getState()
+          .setVoiceSession(session, finalChannel, tokenValue);
 
         // Tell backend media is ready so billing starts once peer is ready
         mediaReady(consultationId);
@@ -189,7 +191,7 @@ export function useConsultationRequest({
         setMediaError(
           err instanceof Error ? err.message : "Media connection failed.",
         );
-        useVoiceSessionStore.getState().clearSession();
+        useConsultationRoomStore.getState().clearVoiceSession();
       }
     },
     [expertId, goToRoom, mode, user?.id],
@@ -537,7 +539,7 @@ export function useConsultationRequest({
     setMicDenied(false);
     setMediaFailed(false);
     setMediaError(null);
-    useVoiceSessionStore.getState().clearSession();
+    useConsultationRoomStore.getState().clearVoiceSession();
   }, [verdictWait]);
 
   const clearWaiting = useCallback(() => {
