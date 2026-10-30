@@ -59,35 +59,30 @@ export const useConsultation = (
     const socket = realtimeSocket();
 
     const handleState = (payload: ConsultationStatePayload) => {
-      if (
-        payload &&
-        Number(payload.consultationId) === id &&
-        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      if (!payload || Number(payload.consultationId) !== id) return;
+      // A backend-confirmed active state restarts the lifecycle after a
+      // prior end (e.g. re-initiated "continue" session). Always process:
+      // it signals a new session even when local sessionId is stale.
+      if (payload.state === "active") {
+        endedRef.current = false;
+        setEnded(null);
+      } else if (
+        isValidSessionId &&
+        payload.sessionId != null &&
+        Number(payload.sessionId) !== sessionIdNum
       ) {
-        // A backend-confirmed active state restarts the lifecycle after a
-        // prior end (e.g. re-initiated "continue" session). Clear the
-        // terminal latch so the new startedAt anchor and budget apply; a
-        // late pause/budget event on a still-ended consultation is ignored.
-        if (payload.state === "active") {
-          endedRef.current = false;
-          setEnded(null);
-        } else if (endedRef.current) {
-          return;
-        }
-        setState(payload);
-        if (payload.state === "active") {
-          setBudgetHold(null);
-        }
+        return;
+      } else if (endedRef.current) {
+        return;
+      }
+      setState(payload);
+      if (payload.state === "active") {
+        setBudgetHold(null);
       }
     };
 
     const handleResumed = (payload: ConsultationStatePayload) => {
-      if (
-        !payload ||
-        Number(payload.consultationId) !== id ||
-        (isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      )
-        return;
+      if (!payload || Number(payload.consultationId) !== id) return;
       endedRef.current = false;
       setEnded(null);
       setState({ ...payload, state: "active" });
@@ -115,12 +110,7 @@ export const useConsultation = (
         channelName?: string;
       },
     ) => {
-      if (
-        !payload ||
-        Number(payload.consultationId) !== id ||
-        (isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      )
-        return;
+      if (!payload || Number(payload.consultationId) !== id) return;
       endedRef.current = false;
       setEnded(null);
       setBudgetHold(null);

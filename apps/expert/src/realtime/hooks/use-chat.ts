@@ -121,12 +121,7 @@ export const useChat = (
     };
 
     const handleAccepted = (payload: any) => {
-      if (
-        !payload ||
-        Number(payload.consultationId) !== id ||
-        (isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      )
-        return;
+      if (!payload || Number(payload.consultationId) !== id) return;
       endedRef.current = false;
       setEnded(null);
       setPaused(null);
@@ -144,12 +139,7 @@ export const useChat = (
     };
 
     const handleStarted = (payload: any) => {
-      if (
-        !payload ||
-        Number(payload.consultationId) !== id ||
-        (isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      )
-        return;
+      if (!payload || Number(payload.consultationId) !== id) return;
       endedRef.current = false;
       setEnded(null);
       setPaused(null);
@@ -181,18 +171,13 @@ export const useChat = (
     };
 
     const handleResumed = (payload: ChatResumedPayload) => {
-      if (
-        payload &&
-        Number(payload.consultationId) === id &&
-        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      ) {
-        // RESUMED starts a fresh active lifecycle after the paused cycle.
-        endedRef.current = false;
-        setEnded(null);
-        setPaused(null);
-        setConsultationStatus("active");
-        applyBudget(payload);
-      }
+      if (!payload || Number(payload.consultationId) !== id) return;
+      // RESUMED starts a fresh active lifecycle after the paused cycle.
+      endedRef.current = false;
+      setEnded(null);
+      setPaused(null);
+      setConsultationStatus("active");
+      applyBudget(payload);
     };
 
     const handleBudgetTick = (payload: any) => {
