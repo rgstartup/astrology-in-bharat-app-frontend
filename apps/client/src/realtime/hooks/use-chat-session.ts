@@ -15,7 +15,11 @@ import {
   endConsultation,
   pauseConsultation,
   resumeConsultation,
+  resumeConsultationChat,
+  resumeConsultationVoice,
+  resumeConsultationVideo,
 } from "@/realtime/topics/consultation";
+import type { ConsultationMode } from "@/realtime/types/consultation";
 import type {
   ChatEndedPayload,
   ChatMessagePayload,
@@ -217,6 +221,9 @@ export const useChat = (consultationId?: number | string | null) => {
     socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
     socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
     socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
     socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
     socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
@@ -229,6 +236,9 @@ export const useChat = (consultationId?: number | string | null) => {
       socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
       socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
       socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
       socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
@@ -264,9 +274,27 @@ export const useChat = (consultationId?: number | string | null) => {
     return pauseConsultation(id, reason);
   }, [id, isValidId]);
 
-  const resume = useCallback(() => {
+  const resume = useCallback(
+    (mode?: ConsultationMode) => {
+      if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
+      return resumeConsultation(id, mode);
+    },
+    [id, isValidId],
+  );
+
+  const resumeChat = useCallback(() => {
     if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
-    return resumeConsultation(id);
+    return resumeConsultationChat(id);
+  }, [id, isValidId]);
+
+  const resumeVoice = useCallback(() => {
+    if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
+    return resumeConsultationVoice(id);
+  }, [id, isValidId]);
+
+  const resumeVideo = useCallback(() => {
+    if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
+    return resumeConsultationVideo(id);
   }, [id, isValidId]);
 
   return {
@@ -281,6 +309,9 @@ export const useChat = (consultationId?: number | string | null) => {
     paused,
     pause,
     resume,
+    resumeChat,
+    resumeVoice,
+    resumeVideo,
     sessionRevision,
     resumeRevision,
   };

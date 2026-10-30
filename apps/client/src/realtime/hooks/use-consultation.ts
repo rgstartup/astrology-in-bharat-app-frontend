@@ -11,6 +11,9 @@ import {
   leaveConsultationRooms,
   pauseConsultation,
   resumeConsultation,
+  resumeConsultationChat,
+  resumeConsultationVoice,
+  resumeConsultationVideo,
   startConsultation,
 } from "@/realtime/topics/consultation";
 import type { ConsultationDecisionPayload } from "@/realtime/types/chat";
@@ -19,6 +22,7 @@ import type {
   ConsultationBudgetTickPayload,
   ConsultationBudgetWarningPayload,
   ConsultationEndedPayload,
+  ConsultationMode,
   ConsultationStatePayload,
 } from "@/realtime/types/consultation";
 
@@ -26,7 +30,8 @@ import type {
  * Decision lifecycle mirrors the backend `ConsultationLifecycleState`
  * decision subset: waiting → accepted/rejected/cancelled.
  */
-export type ConsultationDecision = "waiting" | "accepted" | "rejected" | "cancelled";
+export type ConsultationDecision =
+  "waiting" | "accepted" | "rejected" | "cancelled";
 
 /**
  * Root consultation orchestrator hook for client app.
@@ -45,15 +50,18 @@ export const useConsultation = (consultationId?: number | string | null) => {
 
   const [state, setState] = useState<ConsultationStatePayload | null>(null);
   const [ended, setEnded] = useState<ConsultationEndedPayload | null>(null);
-  const [budgetTick, setBudgetTick] = useState<ConsultationBudgetTickPayload | null>(null);
-  const [budgetWarning, setBudgetWarning] = useState<ConsultationBudgetWarningPayload | null>(null);
-  const [budgetHold, setBudgetHold] = useState<ConsultationBudgetHoldPayload | null>(null);
-const [decision, setDecision] = useState<ConsultationDecision>("waiting");
-const [voiceToken, setVoiceToken] = useState<{
-  token: string | null;
-  tokenExpiresAt: string | null;
-  channelName: string | null;
-}>({ token: null, tokenExpiresAt: null, channelName: null });
+  const [budgetTick, setBudgetTick] =
+    useState<ConsultationBudgetTickPayload | null>(null);
+  const [budgetWarning, setBudgetWarning] =
+    useState<ConsultationBudgetWarningPayload | null>(null);
+  const [budgetHold, setBudgetHold] =
+    useState<ConsultationBudgetHoldPayload | null>(null);
+  const [decision, setDecision] = useState<ConsultationDecision>("waiting");
+  const [voiceToken, setVoiceToken] = useState<{
+    token: string | null;
+    tokenExpiresAt: string | null;
+    channelName: string | null;
+  }>({ token: null, tokenExpiresAt: null, channelName: null });
   // Terminal latch (see docblock): refs stay current inside socket handlers.
   const endedRef = useRef(false);
 
@@ -62,8 +70,17 @@ const [voiceToken, setVoiceToken] = useState<{
     const socket = realtimeSocket();
 
     const handleState = (payload: ConsultationStatePayload) => {
-      if (endedRef.current) return;
       if (payload && Number(payload.consultationId) === id) {
+        // A backend-confirmed active state restarts the lifecycle after a
+        // prior end (e.g. re-initiated "continue" session). Clear the
+        // terminal latch so the new startedAt anchor and budget apply; a
+        // late pause/budget event on a still-ended consultation is ignored.
+        if (payload.state === "active") {
+          endedRef.current = false;
+          setEnded(null);
+        } else if (endedRef.current) {
+          return;
+        }
         setState(payload);
         if (payload.state === "active") {
           setBudgetHold(null);
@@ -80,6 +97,13 @@ const [voiceToken, setVoiceToken] = useState<{
       setEnded(null);
       setDecision("accepted");
       setState({ ...payload, state: "active" });
+      if (payload.token || payload.channelName) {
+        setVoiceToken({
+          token: payload.token ?? null,
+          tokenExpiresAt: payload.tokenExpiresAt ?? null,
+          channelName: payload.channelName ?? null,
+        });
+      }
       setBudgetHold(null);
       setBudgetWarning(null);
     };
@@ -123,7 +147,8 @@ const [voiceToken, setVoiceToken] = useState<{
       }
     };
 
-    const matchDecision = (p: ConsultationDecisionPayload) => Number(p.consultationId) === id;
+    const matchDecision = (p: ConsultationDecisionPayload) =>
+      Number(p.consultationId) === id;
 
     const onAccepted = (p: ConsultationDecisionPayload) => {
       if (!matchDecision(p)) return;
@@ -200,6 +225,9 @@ const [voiceToken, setVoiceToken] = useState<{
     socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleState);
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
     socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
     socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
     socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onAccepted);
     socket.on(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
@@ -216,6 +244,9 @@ const [voiceToken, setVoiceToken] = useState<{
       socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleState);
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
       socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
       socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
       socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onAccepted);
       socket.off(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
@@ -245,14 +276,34 @@ const [voiceToken, setVoiceToken] = useState<{
     return pauseConsultation(id);
   }, [id, isValidId]);
 
-  const resume = useCallback(() => {
+  const resume = useCallback(
+    (mode?: ConsultationMode) => {
+      if (!isValidId)
+        return Promise.reject(new Error("Missing consultationId"));
+      return resumeConsultation(id, mode);
+    },
+    [id, isValidId],
+  );
+
+  const resumeChat = useCallback(() => {
     if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
-    return resumeConsultation(id);
+    return resumeConsultationChat(id);
+  }, [id, isValidId]);
+
+  const resumeVoice = useCallback(() => {
+    if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
+    return resumeConsultationVoice(id);
+  }, [id, isValidId]);
+
+  const resumeVideo = useCallback(() => {
+    if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
+    return resumeConsultationVideo(id);
   }, [id, isValidId]);
 
   const end = useCallback(
     (reason?: string) => {
-      if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
+      if (!isValidId)
+        return Promise.reject(new Error("Missing consultationId"));
       return endConsultation(id, reason);
     },
     [id, isValidId],
@@ -273,6 +324,9 @@ const [voiceToken, setVoiceToken] = useState<{
     start,
     pause,
     resume,
+    resumeChat,
+    resumeVoice,
+    resumeVideo,
     end,
   };
 };

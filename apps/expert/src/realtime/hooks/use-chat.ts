@@ -106,6 +106,10 @@ export const useChat = (
         endedRef.current = true;
         setEnded(payload);
         setPaused(null);
+        // Mark the consultation status completed so the room timer stops
+        // immediately on this side instead of relying solely on the
+        // endedVerdict relay in useChatRoomSession.
+        setConsultationStatus("completed");
       }
     };
 
@@ -216,6 +220,9 @@ export const useChat = (
     socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
     socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
     socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
     socket.on(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
     socket.on("connect", handleConnect);
@@ -228,6 +235,9 @@ export const useChat = (
       socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
       socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
       socket.off(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
       socket.off("connect", handleConnect);

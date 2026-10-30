@@ -12,6 +12,9 @@ import {
   pauseConsultation,
   rejectConsultation,
   resumeConsultation,
+  resumeConsultationChat,
+  resumeConsultationVoice,
+  resumeConsultationVideo,
   startConsultation,
 } from "@/realtime/topics/consultation";
 import type {
@@ -19,6 +22,7 @@ import type {
   ConsultationBudgetTickPayload,
   ConsultationBudgetWarningPayload,
   ConsultationEndedPayload,
+  ConsultationMode,
   ConsultationStatePayload,
 } from "@/realtime/types/consultation";
 
@@ -50,8 +54,17 @@ export const useConsultation = (consultationId?: number | string | null) => {
     const socket = realtimeSocket();
 
     const handleState = (payload: ConsultationStatePayload) => {
-      if (endedRef.current) return;
       if (payload && Number(payload.consultationId) === id) {
+        // A backend-confirmed active state restarts the lifecycle after a
+        // prior end (e.g. re-initiated "continue" session). Clear the
+        // terminal latch so the new startedAt anchor and budget apply; a
+        // late pause/budget event on a still-ended consultation is ignored.
+        if (payload.state === "active") {
+          endedRef.current = false;
+          setEnded(null);
+        } else if (endedRef.current) {
+          return;
+        }
         setState(payload);
         if (payload.state === "active") {
           setBudgetHold(null);
@@ -142,6 +155,9 @@ export const useConsultation = (consultationId?: number | string | null) => {
     socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleState);
     socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
     socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
     socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
     socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
     socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
@@ -155,6 +171,9 @@ export const useConsultation = (consultationId?: number | string | null) => {
       socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleState);
       socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
       socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
       socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
       socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
       socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
@@ -189,9 +208,27 @@ export const useConsultation = (consultationId?: number | string | null) => {
     return pauseConsultation(id);
   }, [id, isValidId]);
 
-  const resume = useCallback(() => {
+  const resume = useCallback(
+    (mode?: ConsultationMode) => {
+      if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
+      return resumeConsultation(id, mode);
+    },
+    [id, isValidId],
+  );
+
+  const resumeChat = useCallback(() => {
     if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
-    return resumeConsultation(id);
+    return resumeConsultationChat(id);
+  }, [id, isValidId]);
+
+  const resumeVoice = useCallback(() => {
+    if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
+    return resumeConsultationVoice(id);
+  }, [id, isValidId]);
+
+  const resumeVideo = useCallback(() => {
+    if (!isValidId) return Promise.reject(new Error("Missing consultationId"));
+    return resumeConsultationVideo(id);
   }, [id, isValidId]);
 
   const end = useCallback(
@@ -215,6 +252,9 @@ export const useConsultation = (consultationId?: number | string | null) => {
     start,
     pause,
     resume,
+    resumeChat,
+    resumeVoice,
+    resumeVideo,
     end,
   };
 };
