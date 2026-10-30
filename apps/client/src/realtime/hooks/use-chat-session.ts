@@ -40,9 +40,14 @@ export interface ChatBudget {
  * Join a consultation's chat room for its lifetime. Failures are silent —
  * REST history remains the source of truth.
  */
-export const useChat = (consultationId?: number | string | null) => {
+export const useChat = (
+  consultationId?: number | string | null,
+  sessionId?: number | string | null,
+) => {
   const id = Number(consultationId);
   const isValidId = Boolean(id && !isNaN(id));
+  const sessionIdNum = sessionId != null ? Number(sessionId) : null;
+  const isValidSessionId = sessionIdNum != null && !isNaN(sessionIdNum);
   const [messages, setMessages] = useState<ChatMessagePayload[]>([]);
   const [remoteTyping, setRemoteTyping] = useState(false);
   const [ended, setEnded] = useState<ChatEndedPayload | null>(null);
@@ -91,19 +96,31 @@ export const useChat = (consultationId?: number | string | null) => {
     };
 
     const handleMessage = (payload: ChatMessagePayload) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setMessages((prev) => [...prev, payload]);
       }
     };
 
     const handleTyping = (payload: ChatTypingPayload) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setRemoteTyping(Boolean(payload.isTyping));
       }
     };
 
     const handleEnded = (payload: ChatEndedPayload) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         endedRef.current = true;
         setEnded(payload);
         setPaused(null);
@@ -122,7 +139,11 @@ export const useChat = (consultationId?: number | string | null) => {
 
     const handlePaused = (payload: any) => {
       if (endedRef.current) return;
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setPaused({
           ...payload,
           pauseExpiresInSec:
@@ -141,7 +162,11 @@ export const useChat = (consultationId?: number | string | null) => {
     };
 
     const handleResumed = (payload: ChatResumedPayload) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         // RESUMED is a new active lifecycle boundary. A terminal event from
         // the previous cycle must not keep the timer or RTC cleanup latched.
         endedRef.current = false;
@@ -155,7 +180,11 @@ export const useChat = (consultationId?: number | string | null) => {
     };
 
     const handleBudgetTick = (payload: any) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setBudget((prev) => ({
           maxMinutes: typeof payload.maxMinutes === "number" ? payload.maxMinutes : prev.maxMinutes,
           startedAt: prev.startedAt,
@@ -165,7 +194,11 @@ export const useChat = (consultationId?: number | string | null) => {
     };
 
     const handleAccepted = (payload: any) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         // Continue-consultation re-accept: unlatch an ended session and
         // refresh budget + session history for the new session's timeline.
         endedRef.current = false;
@@ -180,7 +213,11 @@ export const useChat = (consultationId?: number | string | null) => {
     };
 
     const handleStarted = (payload: any) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         // Consultation started (both sides media ready): update budget and unlatch ended
         endedRef.current = false;
         setEnded(null);
@@ -195,7 +232,11 @@ export const useChat = (consultationId?: number | string | null) => {
     };
 
     const handleBudgetRestored = (payload: any) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setPaused(null);
         applyBudget(payload);
       }
@@ -247,7 +288,7 @@ export const useChat = (consultationId?: number | string | null) => {
       setConsultationStatus(null);
       leaveChat(id).catch(() => undefined);
     };
-  }, [id, isValidId]);
+  }, [id, isValidId, sessionId, sessionIdNum]);
 
   const send = useCallback(
     (input: Omit<SendChatMessageInput, "consultationId">) => {

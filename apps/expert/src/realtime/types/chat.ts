@@ -22,6 +22,7 @@ export interface ChatMessagePayload {
 
 export interface ChatTypingPayload {
   consultationId: number;
+  sessionId?: number | null;
   senderId: number | string;
   senderType: string;
   isTyping: boolean;
@@ -112,6 +113,7 @@ export interface ChatDecisionPayload {
 
 export interface ChatEndedPayload {
   consultationId: number;
+  sessionId?: number | null;
   /** Room mode the consultation ended under. */
   mode?: ConsultationMode;
   endedBy: string;
@@ -135,6 +137,7 @@ export interface ChatPausedPayload {
 
 export interface ChatResumedPayload {
   consultationId: number;
+  sessionId?: number | null;
   maxMinutes: number;
   startedAt: string;
   /** Consumed seconds carried forward as the resume base; absent on older servers. */

@@ -29,9 +29,12 @@ import type { ConsultationMode } from "@/realtime/types/consultation";
  */
 export const useChat = (
   consultationId?: number | string | null,
+  sessionId?: number | string | null,
   mode: ConsultationMode = "chat",
 ) => {
   const id = Number(consultationId);
+  const sessionIdNum = sessionId != null ? Number(sessionId) : null;
+  const isValidSessionId = sessionIdNum != null && !isNaN(sessionIdNum);
   const isValidId = Boolean(id && !isNaN(id));
   const [messages, setMessages] = useState<ChatMessagePayload[]>([]);
   const [ended, setEnded] = useState<ChatEndedPayload | null>(null);
@@ -102,7 +105,11 @@ export const useChat = (
     };
 
     const handleEnded = (payload: ChatEndedPayload) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         endedRef.current = true;
         setEnded(payload);
         setPaused(null);
@@ -114,7 +121,12 @@ export const useChat = (
     };
 
     const handleAccepted = (payload: any) => {
-      if (!payload || Number(payload.consultationId) !== id) return;
+      if (
+        !payload ||
+        Number(payload.consultationId) !== id ||
+        (isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      )
+        return;
       endedRef.current = false;
       setEnded(null);
       setPaused(null);
@@ -132,7 +144,12 @@ export const useChat = (
     };
 
     const handleStarted = (payload: any) => {
-      if (!payload || Number(payload.consultationId) !== id) return;
+      if (
+        !payload ||
+        Number(payload.consultationId) !== id ||
+        (isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      )
+        return;
       endedRef.current = false;
       setEnded(null);
       setPaused(null);
@@ -142,7 +159,11 @@ export const useChat = (
 
     const handlePaused = (payload: any) => {
       if (endedRef.current) return;
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setPaused({
           ...payload,
           pauseExpiresInSec:
@@ -160,7 +181,11 @@ export const useChat = (
     };
 
     const handleResumed = (payload: ChatResumedPayload) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         // RESUMED starts a fresh active lifecycle after the paused cycle.
         endedRef.current = false;
         setEnded(null);
@@ -171,7 +196,11 @@ export const useChat = (
     };
 
     const handleBudgetTick = (payload: any) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setBudget((prev) => ({
           maxMinutes: typeof payload.maxMinutes === "number" ? payload.maxMinutes : prev.maxMinutes,
           startedAt: prev.startedAt,
@@ -182,7 +211,11 @@ export const useChat = (
 
     const handleBudgetRestored = (payload: any) => {
       if (endedRef.current) return;
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setPaused(null);
         applyBudget(payload);
       }
@@ -244,7 +277,7 @@ export const useChat = (
       setConsultationStatus(null);
       leaveChat(id).catch(() => undefined);
     };
-  }, [id, isValidId, mode]);
+  }, [id, isValidId, sessionId, sessionIdNum, isValidSessionId, mode]);
 
   const send = useCallback(
     (input: Omit<SendChatMessageInput, "consultationId">) => {

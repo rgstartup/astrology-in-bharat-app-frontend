@@ -37,9 +37,14 @@ import type {
  * an explicit RESUMED event starts a fresh active lifecycle for every room
  * mode consuming this hook.
  */
-export const useConsultation = (consultationId?: number | string | null) => {
+export const useConsultation = (
+  consultationId?: number | string | null,
+  sessionId?: number | string | null,
+) => {
   const id = Number(consultationId);
   const isValidId = Boolean(id && !isNaN(id));
+  const sessionIdNum = sessionId != null ? Number(sessionId) : null;
+  const isValidSessionId = sessionIdNum != null && !isNaN(sessionIdNum);
 
   const [state, setState] = useState<ConsultationStatePayload | null>(null);
   const [ended, setEnded] = useState<ConsultationEndedPayload | null>(null);
@@ -54,7 +59,11 @@ export const useConsultation = (consultationId?: number | string | null) => {
     const socket = realtimeSocket();
 
     const handleState = (payload: ConsultationStatePayload) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         // A backend-confirmed active state restarts the lifecycle after a
         // prior end (e.g. re-initiated "continue" session). Clear the
         // terminal latch so the new startedAt anchor and budget apply; a
@@ -73,7 +82,12 @@ export const useConsultation = (consultationId?: number | string | null) => {
     };
 
     const handleResumed = (payload: ConsultationStatePayload) => {
-      if (!payload || Number(payload.consultationId) !== id) return;
+      if (
+        !payload ||
+        Number(payload.consultationId) !== id ||
+        (isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      )
+        return;
       endedRef.current = false;
       setEnded(null);
       setState({ ...payload, state: "active" });
@@ -82,7 +96,11 @@ export const useConsultation = (consultationId?: number | string | null) => {
     };
 
     const handleEnded = (payload: ConsultationEndedPayload) => {
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         endedRef.current = true;
         setEnded(payload);
         setState((prev) => (prev ? { ...prev, state: "completed" } : null));
@@ -97,7 +115,12 @@ export const useConsultation = (consultationId?: number | string | null) => {
         channelName?: string;
       },
     ) => {
-      if (!payload || Number(payload.consultationId) !== id) return;
+      if (
+        !payload ||
+        Number(payload.consultationId) !== id ||
+        (isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      )
+        return;
       endedRef.current = false;
       setEnded(null);
       setBudgetHold(null);
@@ -107,28 +130,44 @@ export const useConsultation = (consultationId?: number | string | null) => {
 
     const handleBudgetTick = (payload: ConsultationBudgetTickPayload) => {
       if (endedRef.current) return;
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setBudgetTick(payload);
       }
     };
 
     const handleBudgetWarning = (payload: ConsultationBudgetWarningPayload) => {
       if (endedRef.current) return;
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setBudgetWarning(payload);
       }
     };
 
     const handleBudgetExhausted = (payload: ConsultationBudgetHoldPayload) => {
       if (endedRef.current) return;
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setBudgetHold(payload);
       }
     };
 
     const handleBudgetRestored = (payload: ConsultationStatePayload) => {
       if (endedRef.current) return;
-      if (payload && Number(payload.consultationId) === id) {
+      if (
+        payload &&
+        Number(payload.consultationId) === id &&
+        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+      ) {
         setBudgetHold(null);
         setBudgetWarning(null);
         setState(payload);
@@ -183,7 +222,7 @@ export const useConsultation = (consultationId?: number | string | null) => {
       socket.off("connect", handleConnect);
       leaveConsultationRooms(id).catch(() => undefined);
     };
-  }, [id, isValidId]);
+  }, [id, isValidId, sessionId, sessionIdNum, isValidSessionId]);
 
   const accept = useCallback(() => {
     if (!isValidId) return Promise.reject(new Error("Missing consultationId"));

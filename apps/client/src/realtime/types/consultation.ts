@@ -8,6 +8,7 @@ export type ConsultationState = "requested" | "accepted" | "active" | "paused" |
 
 export interface ConsultationStatePayload {
   consultationId: number;
+  sessionId?: number | null;
   mode: ConsultationMode;
   state: ConsultationState;
   reason?: string;
@@ -16,10 +17,14 @@ export interface ConsultationStatePayload {
   maxMinutes?: number;
   ratePerMinute?: number;
   timestamp: string;
+  token?: string;
+  tokenExpiresAt?: string;
+  channelName?: string;
 }
 
 export interface ConsultationEndedPayload {
   consultationId: number;
+  sessionId?: number | null;
   mode: ConsultationMode;
   endedBy: string;
   reason: string;
@@ -42,6 +47,7 @@ export interface ConsultationActionAck {
 
 export interface ConsultationBudgetHoldPayload {
   consultationId: number;
+  sessionId?: number | null;
   mode: ConsultationMode;
   state: "budget_hold";
   reason: "insufficient_balance";
@@ -55,6 +61,7 @@ export interface ConsultationBudgetHoldPayload {
 
 export interface ConsultationBudgetTickPayload {
   consultationId: number;
+  sessionId?: number | null;
   mode: ConsultationMode;
   remainingSeconds: number;
   elapsedSeconds: number;
@@ -65,6 +72,7 @@ export interface ConsultationBudgetTickPayload {
 
 export interface ConsultationBudgetWarningPayload {
   consultationId: number;
+  sessionId?: number | null;
   mode: ConsultationMode;
   remainingSeconds: number;
   message?: string;
