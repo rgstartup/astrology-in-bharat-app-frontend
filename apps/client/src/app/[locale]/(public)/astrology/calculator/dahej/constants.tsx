@@ -5,7 +5,7 @@ import {
     GiNecklace,
     GiWatch,
     GiGoldBar,
-} from "react-icons/gi";
+} from "@repo/design/react-icons";
 
 export const premiumStyles = `
   @keyframes float {

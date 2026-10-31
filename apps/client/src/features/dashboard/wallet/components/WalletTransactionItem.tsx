@@ -9,7 +9,7 @@ import {
   AlertCircle,
   Copy,
   Check,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { useFormatter } from "next-intl";
 import {
   ClientWalletTransaction,

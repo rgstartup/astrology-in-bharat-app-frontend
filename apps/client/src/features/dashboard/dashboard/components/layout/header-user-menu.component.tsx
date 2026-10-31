@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { ChevronDown, User, Settings, LogOut, Sparkles, Globe } from "lucide-react";
+import { ChevronDown, User, Settings, LogOut, Sparkles, Globe } from "@repo/design/lucide";
 import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/design/shadcn";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+} from "@repo/design/shadcn";
 
 export interface HeaderUserMenuProps {
   userName: string;

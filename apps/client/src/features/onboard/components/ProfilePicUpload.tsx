@@ -2,11 +2,11 @@
 
 import React, { useRef, useState } from "react";
 import { uploadOnboardingPictureAction } from "@/actions/onboard";
-import { toast } from "@/hooks/use-toast";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Camera, Upload, User, Loader2, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { toast } from "@repo/design/shadcn";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/design/shadcn";
+import { Button } from "@repo/design/shadcn";
+import { Camera, Upload, User, Loader2, Check } from "@repo/design/lucide";
+import { cn } from "@repo/design/cn";
 
 import type { Media } from "@repo/lib";
 

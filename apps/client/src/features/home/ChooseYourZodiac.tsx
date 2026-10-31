@@ -14,7 +14,7 @@ import {
   TbZodiacCapricorn,
   TbZodiacAquarius,
   TbZodiacPisces,
-} from "react-icons/tb";
+} from "@repo/design/react-icons";
 import { getTranslations } from "next-intl/server";
 
 const ZODIAC_HI_MAP: Record<string, { title: string; date: string }> = {

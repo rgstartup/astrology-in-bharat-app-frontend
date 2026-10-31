@@ -18,7 +18,7 @@ import {
   ShieldCheck,
   Compass,
   Sparkles,
-} from "lucide-react";
+} from "@repo/design/lucide";
 
 import {
   extractSpecializationNames,
@@ -29,9 +29,9 @@ import {
   TabsList,
   TabsTrigger,
   TabsContent,
-} from "@/components/ui/tabs";
+} from "@repo/design/shadcn";
 import { useDraggableScroll } from "@/hooks/useDraggableScroll";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/design/cn";
 
 interface ExpertContentSectionProps {
   expert: Expert;

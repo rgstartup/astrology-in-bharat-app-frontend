@@ -8,8 +8,8 @@ import {
   FaCheckCircle,
   FaExclamationCircle,
   FaEnvelopeOpenText,
-} from "react-icons/fa";
-import { HiOutlineSparkles } from "react-icons/hi";
+} from "@repo/design/react-icons";
+import { HiOutlineSparkles } from "@repo/design/react-icons";
 import { verifyEmailAction } from "@/actions/auth";
 import { useTranslations } from "next-intl";
 

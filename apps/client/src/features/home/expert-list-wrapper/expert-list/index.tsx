@@ -7,7 +7,7 @@ import { useDebounceValue } from "@/hooks/external-hooks";
 import { apiV2, API_ROUTES } from "@/actions";
 import { usePresenceStore } from "@/store/presenceStore";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { IExpert, PaginationMeta } from "@repo/lib";
 import { IFetchExpertsResponse } from "./api/fetch-expert";
 

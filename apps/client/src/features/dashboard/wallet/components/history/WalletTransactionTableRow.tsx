@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { TableRow, TableCell } from "@/components/ui/table";
-import { ArrowDownLeft, ArrowUpRight, CheckCircle2, Clock, Copy, Check } from "lucide-react";
+import { TableRow, TableCell } from "@repo/design/shadcn";
+import { ArrowDownLeft, ArrowUpRight, CheckCircle2, Clock, Copy, Check } from "@repo/design/lucide";
 import { useFormatter } from "next-intl";
 import {
   ClientWalletTransaction,

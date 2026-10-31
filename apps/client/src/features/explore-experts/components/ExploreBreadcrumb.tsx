@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Link } from "@/i18n/navigation";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight } from "@repo/design/lucide";
 
 export function ExploreBreadcrumb() {
   return (

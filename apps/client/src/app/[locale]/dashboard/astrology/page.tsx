@@ -17,7 +17,7 @@ import {
   FileText,
   ArrowRight,
   PlusCircle,
-} from "lucide-react";
+} from "@repo/design/lucide";
 
 const ICON_MAP: Record<string, any> = {
   Scroll,

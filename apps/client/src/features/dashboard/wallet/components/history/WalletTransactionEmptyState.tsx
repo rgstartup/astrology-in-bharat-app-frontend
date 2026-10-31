@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/features/dashboard";
-import { Receipt, PlusCircle } from "lucide-react";
+import { Receipt, PlusCircle } from "@repo/design/lucide";
 import type { TabFilterType } from "../../hooks/useWalletTransactions";
 
 interface WalletTransactionEmptyStateProps {

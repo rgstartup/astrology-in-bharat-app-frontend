@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "@/i18n/navigation";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight } from "@repo/design/lucide";
 import { PERSONALIZED_RECOMMENDATIONS } from "../data/recommendations.data";
 
 /**

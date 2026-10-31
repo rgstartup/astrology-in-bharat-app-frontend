@@ -71,7 +71,7 @@ const nextConfig: NextConfig = {
   // },
   allowedDevOrigins: ["192.168.1.29"],
   productionBrowserSourceMaps: false,
-  transpilePackages: ["@repo/ui", "@repo/routes", "swiper"],
+  transpilePackages: ["@repo/ui", "@repo/routes"],
   images: {
     qualities: [100, 75],
     remotePatterns: [

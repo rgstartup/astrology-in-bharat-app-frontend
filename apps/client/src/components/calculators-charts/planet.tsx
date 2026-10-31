@@ -9,8 +9,8 @@ import {
   Loader2,
   Compass,
   Star,
-} from "lucide-react";
-import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
+} from "@repo/design/lucide";
+import LocationAutocomplete from "@/components/calculators-charts/LocationAutocomplete";
 import PlanetForm from "./PlanetForm.component";
 import { useLanguageStore } from "@repo/store";
 import { planetTranslations } from "@/lib/translations/calculators/planet";

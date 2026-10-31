@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { type IExpert } from "@repo/lib";
 import { getChatPrepExpertAction } from "@/actions/chat";
 import { useExpertPresence } from "@/hooks/useExpertPresence";

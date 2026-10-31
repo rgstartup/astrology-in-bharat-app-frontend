@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import { api } from "@/actions";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { getErrorMessage } from "@repo/lib";
-import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
-import GuidanceCTA from "@/components/ui/GuidanceCTA";
+import PersonalGuidanceCard from "@/components/features/home/PersonalGuidanceCard";
+import GuidanceCTA from "@/components/features/home/GuidanceCTA";
 import LoveCalculatorSeoContent from "./love-calculator-seo.component";
 import { useTranslations } from "next-intl";
 

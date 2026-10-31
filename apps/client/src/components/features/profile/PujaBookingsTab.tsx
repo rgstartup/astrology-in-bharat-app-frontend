@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "../../../lib/translations/profile";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 
 interface PujaBookingsTabProps {
   loading: boolean;
@@ -22,14 +22,14 @@ const formatDate = (dateString: string, includeTime = false) => {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "TBD";
     const options: Intl.DateTimeFormatOptions = {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
     };
     if (includeTime) {
-        options.hour = '2-digit';
-        options.minute = '2-digit';
-        options.hour12 = true;
+      options.hour = "2-digit";
+      options.minute = "2-digit";
+      options.hour12 = true;
     }
     return date.toLocaleDateString("en-IN", options);
   } catch (e) {
@@ -43,13 +43,17 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
   onUpdateStatus,
   onReportIssue,
   pujaDisputes = {},
-  onViewDispute
+  onViewDispute,
 }) => {
   const { lang } = useLanguageStore();
-  const t = profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en;
-  
+  const t =
+    profileTranslations[lang as keyof typeof profileTranslations] ||
+    profileTranslations.en;
+
   const [isProcessing, setIsProcessing] = useState<string | null>(null);
-  const [showRescheduleForm, setShowRescheduleForm] = useState<string | null>(null);
+  const [showRescheduleForm, setShowRescheduleForm] = useState<string | null>(
+    null,
+  );
   const [rescheduleDate, setRescheduleDate] = useState("");
   const [rescheduleTime, setRescheduleTime] = useState("");
   const [rescheduleMessage, setRescheduleMessage] = useState("");
@@ -82,7 +86,9 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
       rejected: t.pujas.status.rejected,
     };
     return (
-      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${styles[status] || styles.pending}`}>
+      <span
+        className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${styles[status] || styles.pending}`}
+      >
         {label[status] || status}
       </span>
     );
@@ -92,7 +98,10 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
     return (
       <div className="space-y-6">
         {[1, 2].map((i) => (
-          <div key={i} className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+          <div
+            key={i}
+            className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm"
+          >
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex flex-col items-center">
                 <Skeleton width={96} height={96} variant="circular" />
@@ -125,9 +134,16 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
         <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mb-6 border border-orange-100">
           <i className="fa-solid fa-om text-3xl text-orange-400"></i>
         </div>
-        <h6 className="font-bold text-gray-900 text-lg mb-2">{t.pujas.noBookings}</h6>
-        <p className="text-gray-500 text-sm max-w-xs m-0">{t.pujas.noBookingsHint}</p>
-        <a href="/astrology/online-puja" className="mt-6 px-6 py-2.5 bg-orange-600 text-white font-bold rounded-xl text-sm hover:bg-orange-700 transition-all shadow-lg shadow-orange-100">
+        <h6 className="font-bold text-gray-900 text-lg mb-2">
+          {t.pujas.noBookings}
+        </h6>
+        <p className="text-gray-500 text-sm max-w-xs m-0">
+          {t.pujas.noBookingsHint}
+        </p>
+        <a
+          href="/astrology/online-puja"
+          className="mt-6 px-6 py-2.5 bg-orange-600 text-white font-bold rounded-xl text-sm hover:bg-orange-700 transition-all shadow-lg shadow-orange-100"
+        >
           {t.pujas.exploreBtn}
         </a>
       </div>
@@ -137,7 +153,10 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
   return (
     <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {bookings.map((booking) => (
-        <div key={booking.id} className="bg-white sm:rounded-3xl border-y sm:border border-gray-100 sm:shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 -mx-4 sm:mx-0">
+        <div
+          key={booking.id}
+          className="bg-white sm:rounded-3xl border-y sm:border border-gray-100 sm:shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 -mx-4 sm:mx-0"
+        >
           <div className="p-6 md:p-8">
             <div className="flex flex-col md:flex-row gap-8">
               {/* Left: Expert & Ritual Info */}
@@ -145,7 +164,11 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
                 <div className="relative group">
                   <div className="w-24 h-24 rounded-full border-4 border-orange-50 overflow-hidden bg-orange-50 shadow-inner">
                     <Image
-                      src={booking.expert?.user?.profile_picture || booking.expert?.user?.avatar || "/images/dummy-expert.jpg"}
+                      src={
+                        booking.expert?.user?.profile_picture ||
+                        booking.expert?.user?.avatar ||
+                        "/images/dummy-expert.jpg"
+                      }
                       width={96}
                       height={96}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -156,9 +179,11 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
                     <i className="fa-solid fa-check"></i>
                   </div>
                 </div>
-                <h4 className="mt-4 font-bold text-gray-900 text-lg leading-tight">{booking.expert?.user?.name}</h4>
+                <h4 className="mt-4 font-bold text-gray-900 text-lg leading-tight">
+                  {booking.expert?.user?.name}
+                </h4>
                 <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mt-1">
-                    {t.pujas.vedicExpert}
+                  {t.pujas.vedicExpert}
                 </p>
               </div>
 
@@ -167,17 +192,21 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
                 <div className="flex flex-wrap items-start justify-between gap-4 border-b border-gray-50 pb-5">
                   <div>
                     <h3 className="text-xl md:text-2xl font-black text-gray-900 mb-1 leading-tight">
-                        {booking.puja?.name || t.pujas.ritual}
+                      {booking.puja?.name || t.pujas.ritual}
                     </h3>
                     <div className="flex flex-wrap items-center gap-3 mt-2">
-                       {getStatusBadge(booking.status)}
-                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded">#{booking.id}</span>
+                      {getStatusBadge(booking.status)}
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-1 rounded">
+                        #{booking.id}
+                      </span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xl md:text-2xl font-black text-emerald-600">₹{booking.price}</div>
+                    <div className="text-xl md:text-2xl font-black text-emerald-600">
+                      ₹{booking.price}
+                    </div>
                     <span className="text-[10px] font-black uppercase text-gray-300 tracking-[0.2em]">
-                        {t.pujas.ritualFee}
+                      {t.pujas.ritualFee}
                     </span>
                   </div>
                 </div>
@@ -188,7 +217,9 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
                       <i className="fa-solid fa-calendar-day"></i>
                     </div>
                     <div>
-                      <span className="block text-[8px] font-black text-gray-400 uppercase tracking-widest">{t.pujas.scheduledFor}</span>
+                      <span className="block text-[8px] font-black text-gray-400 uppercase tracking-widest">
+                        {t.pujas.scheduledFor}
+                      </span>
                       <span className="text-sm font-bold text-gray-700">
                         {formatDate(booking.scheduled_date)}
                       </span>
@@ -199,8 +230,12 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
                       <i className="fa-solid fa-clock"></i>
                     </div>
                     <div>
-                      <span className="block text-[8px] font-black text-gray-400 uppercase tracking-widest">{t.pujas.timeSlot}</span>
-                      <span className="text-sm font-bold text-gray-700">{booking.scheduled_time || "TBD"}</span>
+                      <span className="block text-[8px] font-black text-gray-400 uppercase tracking-widest">
+                        {t.pujas.timeSlot}
+                      </span>
+                      <span className="text-sm font-bold text-gray-700">
+                        {booking.scheduled_time || "TBD"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -208,15 +243,23 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
                 <div className="flex flex-wrap gap-2">
                   <span className="px-4 py-1.5 bg-yellow-50 text-yellow-700 border border-yellow-100 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
                     <i className="fa-solid fa-video text-xs"></i>
-                    {booking.mode === 'online' ? t.pujas.onlineRitual : (booking.mode === 'home_visit_with' ? t.pujas.homeVisitWith : t.pujas.homeVisitBasic)}
+                    {booking.mode === "online"
+                      ? t.pujas.onlineRitual
+                      : booking.mode === "home_visit_with"
+                        ? t.pujas.homeVisitWith
+                        : t.pujas.homeVisitBasic}
                   </span>
                 </div>
 
                 {booking.expert_message && (
                   <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-100 relative overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-400"></div>
-                    <span className="block text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">{t.pujas.expertMessage}</span>
-                    <p className="text-sm text-blue-700 font-medium italic">" {booking.expert_message} "</p>
+                    <span className="block text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">
+                      {t.pujas.expertMessage}
+                    </span>
+                    <p className="text-sm text-blue-700 font-medium italic">
+                      " {booking.expert_message} "
+                    </p>
                   </div>
                 )}
               </div>
@@ -232,9 +275,10 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
               <div className="flex flex-wrap gap-3 w-full sm:w-auto">
                 {pujaDisputes[booking.id] ? (
                   <button
-                    onClick={() => onViewDispute && onViewDispute(pujaDisputes[booking.id])}
+                    onClick={() =>
+                      onViewDispute && onViewDispute(pujaDisputes[booking.id])
+                    }
                     className="flex-1 sm:flex-none px-6 py-2 bg-orange text-white font-bold text-xs rounded-xl hover:bg-orange/90 transition-all shadow-md flex items-center justify-center gap-2"
-
                   >
                     <i className="fa-solid fa-comments"></i>
                     {t.pujas.reportIssueDiscussion}
@@ -243,57 +287,56 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
                   <button
                     onClick={() => onReportIssue && onReportIssue(booking)}
                     className="flex-1 sm:flex-none px-6 py-2 border border-red-100 text-red-500 font-bold text-xs rounded-xl hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
-
                   >
                     <i className="fa-solid fa-circle-exclamation"></i>
                     {t.pujas.reportIssue}
                   </button>
                 )}
 
-                {booking.status === 'on_hold' && (
+                {booking.status === "on_hold" && (
                   <>
                     <button
                       disabled={isProcessing === booking.id}
-                      onClick={() => handleAction(booking.id, 'confirmed')}
+                      onClick={() => handleAction(booking.id, "confirmed")}
                       className="flex-1 sm:flex-none px-6 py-3 md:px-8 md:py-3 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 shadow-lg shadow-emerald-100 transition-all active:scale-95 flex items-center justify-center gap-2"
-
                     >
-                      {isProcessing === booking.id ? <i className="fa-solid fa-spinner fa-spin"></i> : <i className="fa-solid fa-credit-card"></i>}
+                      {isProcessing === booking.id ? (
+                        <i className="fa-solid fa-spinner fa-spin"></i>
+                      ) : (
+                        <i className="fa-solid fa-credit-card"></i>
+                      )}
                       {t.pujas.btnAcceptPay}
                     </button>
                     <button
                       disabled={isProcessing === booking.id}
                       onClick={() => setShowRescheduleForm(booking.id)}
                       className="flex-1 sm:flex-none px-6 py-3 md:px-8 md:py-3 bg-gray-100 text-gray-700 font-bold rounded-2xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
-
                     >
                       {t.pujas.btnReschedule}
                     </button>
                   </>
                 )}
 
-                {booking.status === 'pending' && (
-                   <button
+                {booking.status === "pending" && (
+                  <button
                     disabled={true}
                     className="w-full sm:w-auto px-6 py-3 md:px-8 md:py-3 bg-gray-50 text-gray-400 font-bold rounded-2xl border border-gray-100 cursor-not-allowed flex items-center justify-center gap-2"
-
                   >
                     <i className="fa-solid fa-hourglass-half animate-spin"></i>
                     {t.pujas.btnAwaiting}
                   </button>
                 )}
 
-                {booking.status === 'accepted' && (
-                   <button
+                {booking.status === "accepted" && (
+                  <button
                     disabled={isProcessing === booking.id}
-                    onClick={() => handleAction(booking.id, 'confirmed')}
-                    className={`w-full sm:w-auto px-6 py-3 md:px-10 md:py-4 bg-orange-600 text-white font-black uppercase text-xs tracking-widest rounded-2xl shadow-xl shadow-orange-100 transition-all flex items-center justify-center gap-3 ${isProcessing === booking.id ? 'opacity-70 cursor-wait' : 'hover:bg-orange-700 cursor-pointer active:scale-95'}`}
-
+                    onClick={() => handleAction(booking.id, "confirmed")}
+                    className={`w-full sm:w-auto px-6 py-3 md:px-10 md:py-4 bg-orange-600 text-white font-black uppercase text-xs tracking-widest rounded-2xl shadow-xl shadow-orange-100 transition-all flex items-center justify-center gap-3 ${isProcessing === booking.id ? "opacity-70 cursor-wait" : "hover:bg-orange-700 cursor-pointer active:scale-95"}`}
                   >
                     {isProcessing === booking.id ? (
-                       <i className="fa-solid fa-spinner fa-spin text-lg"></i>
+                      <i className="fa-solid fa-spinner fa-spin text-lg"></i>
                     ) : (
-                       <i className="fa-solid fa-shield-halved text-lg"></i>
+                      <i className="fa-solid fa-shield-halved text-lg"></i>
                     )}
                     {t.pujas.btnPayNow}
                   </button>
@@ -305,31 +348,38 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
             {showRescheduleForm === booking.id && (
               <div className="mt-8 p-6 bg-orange-50 rounded-3xl border border-orange-100 animate-in slide-in-from-top-4 duration-300">
                 <h5 className="font-bold text-orange-900 mb-4 flex items-center gap-2">
-                  <i className="fa-solid fa-calendar-plus"></i> {t.pujas.rescheduleTitle}
+                  <i className="fa-solid fa-calendar-plus"></i>{" "}
+                  {t.pujas.rescheduleTitle}
                 </h5>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-[10px] font-black text-orange-400 uppercase tracking-widest mb-1.5 ml-1">{t.pujas.newDate}</label>
-                    <input 
-                      type="date" 
-                      value={rescheduleDate} 
+                    <label className="block text-[10px] font-black text-orange-400 uppercase tracking-widest mb-1.5 ml-1">
+                      {t.pujas.newDate}
+                    </label>
+                    <input
+                      type="date"
+                      value={rescheduleDate}
                       onChange={(e) => setRescheduleDate(e.target.value)}
                       className="w-full px-4 py-3 rounded-2xl border-2 border-orange-100 focus:border-orange-300 focus:ring-0 outline-none text-sm transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black text-orange-400 uppercase tracking-widest mb-1.5 ml-1">{t.pujas.newTime}</label>
-                    <input 
-                      type="time" 
-                      value={rescheduleTime} 
+                    <label className="block text-[10px] font-black text-orange-400 uppercase tracking-widest mb-1.5 ml-1">
+                      {t.pujas.newTime}
+                    </label>
+                    <input
+                      type="time"
+                      value={rescheduleTime}
                       onChange={(e) => setRescheduleTime(e.target.value)}
                       className="w-full px-4 py-3 rounded-2xl border-2 border-orange-100 focus:border-orange-300 focus:ring-0 outline-none text-sm transition-all"
                     />
                   </div>
                 </div>
                 <div className="mb-6">
-                  <label className="block text-[10px] font-black text-orange-400 uppercase tracking-widest mb-1.5 ml-1">{t.pujas.messageToExpert}</label>
-                  <textarea 
+                  <label className="block text-[10px] font-black text-orange-400 uppercase tracking-widest mb-1.5 ml-1">
+                    {t.pujas.messageToExpert}
+                  </label>
+                  <textarea
                     placeholder={t.pujas.messagePlaceholder}
                     value={rescheduleMessage}
                     onChange={(e) => setRescheduleMessage(e.target.value)}
@@ -338,16 +388,20 @@ const PujaBookingsTab: React.FC<PujaBookingsTabProps> = ({
                 </div>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => handleAction(booking.id, 'pending', { scheduled_date: rescheduleDate, scheduled_time: rescheduleTime, user_message: rescheduleMessage })}
+                    onClick={() =>
+                      handleAction(booking.id, "pending", {
+                        scheduled_date: rescheduleDate,
+                        scheduled_time: rescheduleTime,
+                        user_message: rescheduleMessage,
+                      })
+                    }
                     className="flex-1 bg-orange-600 text-white font-bold py-3 rounded-2xl hover:bg-orange-700 shadow-lg shadow-orange-100 transition-all active:scale-95"
-
                   >
                     {t.pujas.btnSendProposal}
                   </button>
                   <button
                     onClick={() => setShowRescheduleForm(null)}
                     className="flex-1 bg-white text-gray-500 font-bold py-3 rounded-2xl border border-gray-200 hover:bg-gray-50 transition-all"
-
                   >
                     {t.pujas.btnCancel}
                   </button>

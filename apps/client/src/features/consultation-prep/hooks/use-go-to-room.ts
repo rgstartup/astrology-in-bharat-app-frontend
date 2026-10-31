@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { useTranslations } from "next-intl";
 import { type IExpert } from "@repo/lib";
 import { useConsultationPrepStore } from "@/store/consultationPrepStore";

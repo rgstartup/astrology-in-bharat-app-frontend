@@ -6,10 +6,10 @@ import {
   FaArrowRight,
   FaSpinner,
   FaStar,
-} from "react-icons/fa";
+} from "@repo/design/react-icons";
 
-import { TbCrystalBall } from "react-icons/tb";
-import { GiLotus, GiSparkles } from "react-icons/gi";
+import { TbCrystalBall } from "@repo/design/react-icons";
+import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 
 import CalculatorHero from "./common/hero";
 import NameNumerologyForm from "./NameNumerologyForm.component";

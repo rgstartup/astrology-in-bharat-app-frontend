@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ZodiacSignsData } from "@/components/features/services/homePagaData";
 import { CharacteristicsGrid } from "./characteristics-grid";
 import { SidebarStats } from "./sidebar-stats";
-import { TbCrystalBall } from "react-icons/tb";
+import { TbCrystalBall } from "@repo/design/react-icons";
 import HeroSection from "./hero.component";
 import SignSelector from "./sign-selector.component";
 

@@ -5,9 +5,9 @@ import {
   FaPalette,
   FaHashtag,
   FaCalendarAlt,
-} from "react-icons/fa";
-import { TbCrystalBall } from "react-icons/tb";
-import { GiLotus, GiSparkles } from "react-icons/gi";
+} from "@repo/design/react-icons";
+import { TbCrystalBall } from "@repo/design/react-icons";
+import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 import { LuckyVibesResultProps } from "@/lib/types/calculator";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 

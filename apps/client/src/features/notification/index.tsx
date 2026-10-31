@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell } from "lucide-react";
+import { Bell } from "@repo/design/lucide";
 import NotificationCountIndicator from "./notification-indicator";
 import { useNotification } from "@/store/notificationStore";
 import { useCallback, useEffect, useRef, useState } from "react";

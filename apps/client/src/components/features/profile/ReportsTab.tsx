@@ -4,7 +4,7 @@ import { useLanguageStore } from "@repo/store";
 import { useAuthStore } from "@/store/authStore";
 import { profileTranslations } from "../../../lib/translations/profile";
 import { api } from "@/actions";
-import { FaCheckCircle, FaExclamationTriangle, FaShieldAlt, FaFire, FaChevronDown, FaDownload, FaTrash } from "react-icons/fa";
+import { FaCheckCircle, FaExclamationTriangle, FaShieldAlt, FaFire, FaChevronDown, FaDownload, FaTrash } from "@repo/design/react-icons";
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 const GUNA_COLORS = ["#60a5fa","#f97316","#22c55e","#3b82f6","#60a5fa","#4ade80","#22c55e","#1e293b"];

@@ -15,7 +15,7 @@ import {
   Heart,
   Video,
   ExternalLink,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { useMerchantStore } from "@/store/merchantStore";
 import { ProductCard } from "@/components/features/shop/ProductCard";
 import { Product } from "@/lib/types";

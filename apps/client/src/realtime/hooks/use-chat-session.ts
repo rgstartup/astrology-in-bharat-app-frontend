@@ -162,21 +162,16 @@ export const useChat = (
     };
 
     const handleResumed = (payload: ChatResumedPayload) => {
-      if (
-        payload &&
-        Number(payload.consultationId) === id &&
-        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      ) {
-        // RESUMED is a new active lifecycle boundary. A terminal event from
-        // the previous cycle must not keep the timer or RTC cleanup latched.
-        endedRef.current = false;
-        setEnded(null);
-        setPaused(null);
-        setConsultationStatus("active");
-        applyBudget(payload);
-        setSessionRevision((value) => value + 1);
-        setResumeRevision((value) => value + 1);
-      }
+      if (!payload || Number(payload.consultationId) !== id) return;
+      // RESUMED is session-establishing: always process even if local
+      // sessionId is stale.
+      endedRef.current = false;
+      setEnded(null);
+      setPaused(null);
+      setConsultationStatus("active");
+      applyBudget(payload);
+      setSessionRevision((value) => value + 1);
+      setResumeRevision((value) => value + 1);
     };
 
     const handleBudgetTick = (payload: any) => {
@@ -194,41 +189,32 @@ export const useChat = (
     };
 
     const handleAccepted = (payload: any) => {
-      if (
-        payload &&
-        Number(payload.consultationId) === id &&
-        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      ) {
-        // Continue-consultation re-accept: unlatch an ended session and
-        // refresh budget + session history for the new session's timeline.
-        endedRef.current = false;
-        setEnded(null);
-        setPaused(null);
-        applyBudget({
-          maxMinutes: payload.maxMinutes,
-          startedAt: payload.startedAt,
-        } as JoinChatAck);
-        setSessionRevision((value) => value + 1);
-      }
+      if (!payload || Number(payload.consultationId) !== id) return;
+      // ACCEPTED is session-establishing: always process even if local
+      // sessionId is stale.
+      endedRef.current = false;
+      setEnded(null);
+      setPaused(null);
+      applyBudget({
+        maxMinutes: payload.maxMinutes,
+        startedAt: payload.startedAt,
+      } as JoinChatAck);
+      setSessionRevision((value) => value + 1);
     };
 
     const handleStarted = (payload: any) => {
-      if (
-        payload &&
-        Number(payload.consultationId) === id &&
-        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      ) {
-        // Consultation started (both sides media ready): update budget and unlatch ended
-        endedRef.current = false;
-        setEnded(null);
-        setPaused(null);
-        applyBudget({
-          maxMinutes: payload.maxMinutes,
-          startedAt: payload.startedAt,
-          elapsedSeconds: payload.elapsedSeconds ?? 0,
-        } as JoinChatAck);
-        setSessionRevision((value) => value + 1);
-      }
+      if (!payload || Number(payload.consultationId) !== id) return;
+      // STARTED is session-establishing: always process even if local
+      // sessionId is stale.
+      endedRef.current = false;
+      setEnded(null);
+      setPaused(null);
+      applyBudget({
+        maxMinutes: payload.maxMinutes,
+        startedAt: payload.startedAt,
+        elapsedSeconds: payload.elapsedSeconds ?? 0,
+      } as JoinChatAck);
+      setSessionRevision((value) => value + 1);
     };
 
     const handleBudgetRestored = (payload: any) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import {
   fetchStates,
   fetchDistricts,

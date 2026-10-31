@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Lock, Clock } from "lucide-react";
+import { Lock, Clock } from "@repo/design/lucide";
 import { TrustFooterProps } from "./types";
 
 export const ProfileTrustFooter: React.FC<TrustFooterProps> = ({

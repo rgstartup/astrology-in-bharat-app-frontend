@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { FaMars, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
-import { GiMeditation } from "react-icons/gi";
+import { FaMars, FaCheckCircle, FaExclamationTriangle } from "@repo/design/react-icons";
+import { GiMeditation } from "@repo/design/react-icons";
 
 type Props = {
   resultsRef: React.RefObject<HTMLDivElement | null>;

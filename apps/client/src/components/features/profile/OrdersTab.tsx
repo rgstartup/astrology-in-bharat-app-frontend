@@ -6,9 +6,9 @@ import { getProductImageUrl } from "@/utils/image-utils";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
 import { cancelMyOrder } from "@/libs/api-profile";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import ReviewModal from "../../ui/modals/ReviewModal";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 
 const NextLink = Link as any;
 
@@ -45,7 +45,9 @@ function OrderStatusBadge({ status, t }: { status?: string; t: any }) {
       : "bg-blue-50 text-blue-600 border-blue-100";
 
   return (
-    <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border shrink-0 ${colorClass}`}>
+    <span
+      className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border shrink-0 ${colorClass}`}
+    >
       {t.statusMap?.[s as keyof typeof t.statusMap] || status || t.pending}
     </span>
   );
@@ -104,7 +106,8 @@ function MerchantGroupView({
 
       <div className="space-y-2 pl-2">
         {group.items.map((item: any, itemIdx: number) => {
-          const productImg = item.image && item.image !== "" ? item.image : FALLBACK_IMG;
+          const productImg =
+            item.image && item.image !== "" ? item.image : FALLBACK_IMG;
           return (
             <div
               key={item.id || itemIdx}
@@ -127,7 +130,9 @@ function MerchantGroupView({
                   <h6 className="font-bold text-gray-900 m-0 truncate text-sm">
                     {item.name || t.productName}
                   </h6>
-                  <span className="font-bold text-gray-900">₹{item.price || 0}</span>
+                  <span className="font-bold text-gray-900">
+                    ₹{item.price || 0}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-slate-500 text-xs font-medium">
@@ -135,7 +140,12 @@ function MerchantGroupView({
                   </span>
                   {order.status?.toLowerCase() === "delivered" && (
                     <button
-                      onClick={() => onOpenReviewModal(order.merchantId || group.merchant_id, order.id)}
+                      onClick={() =>
+                        onOpenReviewModal(
+                          order.merchantId || group.merchant_id,
+                          order.id,
+                        )
+                      }
                       className="text-orange font-black text-xs no-underline hover:underline bg-transparent border-0 p-0 cursor-pointer"
                     >
                       {t.writeReview}
@@ -167,7 +177,9 @@ function OrderSummaryCard({ order, t }: { order: any; t: any }) {
       <div className="space-y-3 relative z-10">
         <div className="flex justify-between items-center text-sm">
           <span className="text-gray-300">{t.subtotal}</span>
-          <span className="text-white font-bold tracking-tight">₹{subtotal}</span>
+          <span className="text-white font-bold tracking-tight">
+            ₹{subtotal}
+          </span>
         </div>
 
         {(order.platform_fee || 0) > 0 && (
@@ -182,7 +194,9 @@ function OrderSummaryCard({ order, t }: { order: any; t: any }) {
           <span
             className={`${(order.shipping_charge || 0) > 0 ? "text-white" : "text-emerald-400"} font-black uppercase tracking-widest text-[12px]`}
           >
-            {(order.shipping_charge || 0) > 0 ? `₹${order.shipping_charge}` : t.free}
+            {(order.shipping_charge || 0) > 0
+              ? `₹${order.shipping_charge}`
+              : t.free}
           </span>
         </div>
 
@@ -196,7 +210,9 @@ function OrderSummaryCard({ order, t }: { order: any; t: any }) {
                 </span>
               )}
             </span>
-            <span className="text-emerald-400 font-black">- ₹{order.discount_amount}</span>
+            <span className="text-emerald-400 font-black">
+              - ₹{order.discount_amount}
+            </span>
           </div>
         )}
 
@@ -252,7 +268,8 @@ function CancelOrderModal({
 
         <div className="p-6">
           <p className="text-sm text-gray-600 mb-4">
-            Are you sure you want to cancel this order? Please provide a reason for cancellation below. This action cannot be undone.
+            Are you sure you want to cancel this order? Please provide a reason
+            for cancellation below. This action cannot be undone.
           </p>
 
           <div className="space-y-2">
@@ -308,9 +325,14 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
   onLoadMore,
 }) => {
   const { lang } = useLanguageStore();
-  const t = (profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en).orders;
+  const t = (
+    profileTranslations[lang as keyof typeof profileTranslations] ||
+    profileTranslations.en
+  ).orders;
 
-  const [cancellingOrderId, setCancellingOrderId] = React.useState<string | null>(null);
+  const [cancellingOrderId, setCancellingOrderId] = React.useState<
+    string | null
+  >(null);
   const [cancelModalOpen, setCancelModalOpen] = React.useState(false);
   const [cancelOrderId, setCancelOrderId] = React.useState<string | null>(null);
   const [cancelReason, setCancelReason] = React.useState("");
@@ -360,7 +382,10 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
         {loadingOrders ? (
           <div className="space-y-6">
             {[1, 2].map((i) => (
-              <div key={i} className="border border-gray-100 rounded-3xl p-6 bg-white shadow-sm">
+              <div
+                key={i}
+                className="border border-gray-100 rounded-3xl p-6 bg-white shadow-sm"
+              >
                 <div className="flex justify-between items-center mb-6">
                   <div className="flex gap-8">
                     <div className="space-y-2">
@@ -386,8 +411,12 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
             <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mb-6 border border-gray-100 shadow-inner">
               <i className="fa-solid fa-box-open text-3xl text-gray-300"></i>
             </div>
-            <h6 className="font-bold text-gray-900 text-lg mb-2">{t.noOrders}</h6>
-            <p className="text-gray-500 text-sm mb-8 max-w-xs">{t.noOrdersHint}</p>
+            <h6 className="font-bold text-gray-900 text-lg mb-2">
+              {t.noOrders}
+            </h6>
+            <p className="text-gray-500 text-sm mb-8 max-w-xs">
+              {t.noOrdersHint}
+            </p>
             <NextLink
               href={PATHS.BUY_PRODUCTS}
               className="px-8 py-3 bg-orange text-white font-bold rounded-2xl shadow-lg shadow-orange/20 hover:bg-orange/90 transition-all no-underline"
@@ -398,15 +427,23 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
         ) : (
           <div className="space-y-4 sm:space-y-6">
             {orders.filter(Boolean).map((order: any, idx: number) => {
-              const orderKey = order.tracking_id || order.trackingId || order.id || idx;
-              const isExpanded = Boolean(expandedOrders[order.tracking_id || order.trackingId || order.id]);
+              const orderKey =
+                order.tracking_id || order.trackingId || order.id || idx;
+              const isExpanded = Boolean(
+                expandedOrders[
+                  order.tracking_id || order.trackingId || order.id
+                ],
+              );
               const dateVal = order.date || order.createdAt || order.created_at;
               const formattedDate = dateVal
-                ? new Date(dateVal).toLocaleDateString(lang === "hi" ? "hi-IN" : "en-IN", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })
+                ? new Date(dateVal).toLocaleDateString(
+                    lang === "hi" ? "hi-IN" : "en-IN",
+                    {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    },
+                  )
                 : t.na;
 
               return (
@@ -416,7 +453,11 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                 >
                   <div
                     className="bg-gray-50/50 p-4 sm:p-6 flex flex-wrap gap-6 items-center justify-between border-b border-gray-100 cursor-pointer hover:bg-gray-100/30 transition-colors"
-                    onClick={() => toggleOrder(order.tracking_id || order.trackingId || order.id)}
+                    onClick={() =>
+                      toggleOrder(
+                        order.tracking_id || order.trackingId || order.id,
+                      )
+                    }
                   >
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-8 items-center flex-1">
                       <div>
@@ -424,21 +465,30 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                           {t.orderId}
                         </span>
                         <span className="font-bold text-gray-900">
-                          {order.tracking_id || order.trackingId || order.orderId || order.id}
+                          {order.tracking_id ||
+                            order.trackingId ||
+                            order.orderId ||
+                            order.id}
                         </span>
                       </div>
                       <div>
                         <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                           {t.date}
                         </span>
-                        <span className="font-bold text-gray-900">{formattedDate}</span>
+                        <span className="font-bold text-gray-900">
+                          {formattedDate}
+                        </span>
                       </div>
                       <div>
                         <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                           {t.totalAmount}
                         </span>
                         <span className="font-bold text-orange text-lg">
-                          ₹{order.amount || order.totalAmount || order.total_amount || 0}
+                          ₹
+                          {order.amount ||
+                            order.totalAmount ||
+                            order.total_amount ||
+                            0}
                         </span>
                       </div>
                     </div>
@@ -474,69 +524,79 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                               </span>
                             </div>
                             <p className="text-slate-500 font-medium text-sm leading-relaxed max-w-lg">
-                              Your personal consultation and puja session scheduled. Our experts will connect with you shortly for the rituals and process.
+                              Your personal consultation and puja session
+                              scheduled. Our experts will connect with you
+                              shortly for the rituals and process.
                             </p>
                           </div>
                           <div className="px-8 py-4 bg-white rounded-2xl border border-orange/10 shadow-sm flex flex-col items-center justify-center">
                             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
                               Ritual Value
                             </span>
-                            <span className="text-xl md:text-2xl font-black text-orange">₹{order.amount}</span>
+                            <span className="text-xl md:text-2xl font-black text-orange">
+                              ₹{order.amount}
+                            </span>
                           </div>
                         </div>
                       ) : (
                         <div className="space-y-4">
-                          {order.merchant_groups && order.merchant_groups.length > 0 ? (
-                            order.merchant_groups.map((group: any, gIdx: number) => (
-                              <MerchantGroupView
-                                key={group.merchant_id || gIdx}
-                                group={group}
-                                order={order}
-                                onOpenReviewModal={onOpenReviewModal}
-                                t={t}
-                              />
-                            ))
-                          ) : (
-                            (order.items || order.OrderItems || []).filter(Boolean).map((item: any, itemIdx: number) => {
-                              const product = item.product || item.Product;
-                              const productImg =
-                                getProductImageUrl(product) !== FALLBACK_IMG
-                                  ? getProductImageUrl(product)
-                                  : getProductImageUrl(item);
-                              return (
-                                <div
-                                  key={item.id || itemIdx}
-                                  className="flex items-center gap-6 p-4 rounded-2xl bg-gray-50/50 border border-orange-200 transition-colors"
-                                >
-                                  <div className="w-16 h-16 rounded-2xl border border-gray-100 overflow-hidden bg-white shadow-sm shrink-0">
-                                    <Image
-                                      src={productImg}
-                                      alt={product?.name || t.productName}
-                                      width={64}
-                                      height={64}
-                                      className="object-cover w-full h-full"
-                                      onError={(e) => {
-                                        (e.target as any).src = FALLBACK_IMG;
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex justify-between items-start gap-4 mb-1">
-                                      <h6 className="font-bold text-gray-900 m-0 truncate">
-                                        {product?.name || t.productName}
-                                      </h6>
-                                      <span className="font-bold text-gray-900 text-lg">₹{item.price || 0}</span>
+                          {order.merchant_groups &&
+                          order.merchant_groups.length > 0
+                            ? order.merchant_groups.map(
+                                (group: any, gIdx: number) => (
+                                  <MerchantGroupView
+                                    key={group.merchant_id || gIdx}
+                                    group={group}
+                                    order={order}
+                                    onOpenReviewModal={onOpenReviewModal}
+                                    t={t}
+                                  />
+                                ),
+                              )
+                            : (order.items || order.OrderItems || [])
+                                .filter(Boolean)
+                                .map((item: any, itemIdx: number) => {
+                                  const product = item.product || item.Product;
+                                  const productImg =
+                                    getProductImageUrl(product) !== FALLBACK_IMG
+                                      ? getProductImageUrl(product)
+                                      : getProductImageUrl(item);
+                                  return (
+                                    <div
+                                      key={item.id || itemIdx}
+                                      className="flex items-center gap-6 p-4 rounded-2xl bg-gray-50/50 border border-orange-200 transition-colors"
+                                    >
+                                      <div className="w-16 h-16 rounded-2xl border border-gray-100 overflow-hidden bg-white shadow-sm shrink-0">
+                                        <Image
+                                          src={productImg}
+                                          alt={product?.name || t.productName}
+                                          width={64}
+                                          height={64}
+                                          className="object-cover w-full h-full"
+                                          onError={(e) => {
+                                            (e.target as any).src =
+                                              FALLBACK_IMG;
+                                          }}
+                                        />
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex justify-between items-start gap-4 mb-1">
+                                          <h6 className="font-bold text-gray-900 m-0 truncate">
+                                            {product?.name || t.productName}
+                                          </h6>
+                                          <span className="font-bold text-gray-900 text-lg">
+                                            ₹{item.price || 0}
+                                          </span>
+                                        </div>
+                                        <div className="flex justify-between items-center mt-2">
+                                          <span className="text-slate-500 text-xs font-medium">
+                                            {t.qty}: {item.quantity || 1}
+                                          </span>
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div className="flex justify-between items-center mt-2">
-                                      <span className="text-slate-500 text-xs font-medium">
-                                        {t.qty}: {item.quantity || 1}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })
-                          )}
+                                  );
+                                })}
                         </div>
                       )}
 
@@ -547,8 +607,19 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                               <i className="fa-solid fa-location-dot"></i>
                             </div>
                             <span className="max-w-[200px] truncate">
-                              {(order.shippingAddress || order.shipping_address).city},{" "}
-                              {(order.shippingAddress || order.shipping_address).state}
+                              {
+                                (
+                                  order.shippingAddress ||
+                                  order.shipping_address
+                                ).city
+                              }
+                              ,{" "}
+                              {
+                                (
+                                  order.shippingAddress ||
+                                  order.shipping_address
+                                ).state
+                              }
                             </span>
                           </div>
                         )}
@@ -559,14 +630,24 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                               disabled={cancellingOrderId === order.id}
                               className="flex-1 md:flex-none px-6 py-2 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100 transition-colors disabled:opacity-50"
                             >
-                              {cancellingOrderId === order.id ? "Cancelling..." : t.cancelOrder}
+                              {cancellingOrderId === order.id
+                                ? "Cancelling..."
+                                : t.cancelOrder}
                             </button>
                           )}
 
-                          {orderDisputes[order.tracking_id || order.trackingId || order.id] ? (
+                          {orderDisputes[
+                            order.tracking_id || order.trackingId || order.id
+                          ] ? (
                             <button
                               onClick={() =>
-                                onViewChat(orderDisputes[order.tracking_id || order.trackingId || order.id])
+                                onViewChat(
+                                  orderDisputes[
+                                    order.tracking_id ||
+                                      order.trackingId ||
+                                      order.id
+                                  ],
+                                )
                               }
                               className="flex-1 md:flex-none relative px-6 py-2 bg-orange text-white font-bold text-xs rounded-xl hover:bg-orange/90 transition-all shadow-md flex items-center justify-center gap-2"
                             >
@@ -597,29 +678,72 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                             {order.shippingAddress || order.shipping_address ? (
                               <div className="relative z-10">
                                 <p className="font-bold text-gray-900 mb-2">
-                                  {(order.shippingAddress || order.shipping_address).full_name || userName}
+                                  {(
+                                    order.shippingAddress ||
+                                    order.shipping_address
+                                  ).full_name || userName}
                                 </p>
                                 <div className="space-y-1 text-sm text-slate-600 font-medium">
-                                  <p className="m-0">{(order.shippingAddress || order.shipping_address).line1}</p>
-                                  {(order.shippingAddress || order.shipping_address).line2 && (
-                                    <p className="m-0">{(order.shippingAddress || order.shipping_address).line2}</p>
+                                  <p className="m-0">
+                                    {
+                                      (
+                                        order.shippingAddress ||
+                                        order.shipping_address
+                                      ).line1
+                                    }
+                                  </p>
+                                  {(
+                                    order.shippingAddress ||
+                                    order.shipping_address
+                                  ).line2 && (
+                                    <p className="m-0">
+                                      {
+                                        (
+                                          order.shippingAddress ||
+                                          order.shipping_address
+                                        ).line2
+                                      }
+                                    </p>
                                   )}
                                   <p className="m-0">
-                                    {(order.shippingAddress || order.shipping_address).city},{" "}
-                                    {(order.shippingAddress || order.shipping_address).state} -{" "}
-                                    {(order.shippingAddress || order.shipping_address).zip_code ||
-                                      (order.shippingAddress || order.shipping_address).zipCode}
+                                    {
+                                      (
+                                        order.shippingAddress ||
+                                        order.shipping_address
+                                      ).city
+                                    }
+                                    ,{" "}
+                                    {
+                                      (
+                                        order.shippingAddress ||
+                                        order.shipping_address
+                                      ).state
+                                    }{" "}
+                                    -{" "}
+                                    {(
+                                      order.shippingAddress ||
+                                      order.shipping_address
+                                    ).zip_code ||
+                                      (
+                                        order.shippingAddress ||
+                                        order.shipping_address
+                                      ).zipCode}
                                   </p>
                                   <div className="pt-3 mt-3 border-t border-orange/40 flex flex-col gap-2">
                                     <div className="flex items-center">
                                       <i className="fa-solid fa-phone text-[10px] mr-2 text-gray-300"></i>
-                                      {(order.shippingAddress || order.shipping_address).phone || userPhone}
+                                      {(
+                                        order.shippingAddress ||
+                                        order.shipping_address
+                                      ).phone || userPhone}
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             ) : (
-                              <p className="text-sm text-slate-500 italic m-0">{t.noShippingAddress}</p>
+                              <p className="text-sm text-slate-500 italic m-0">
+                                {t.noShippingAddress}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -642,12 +766,20 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                   {loadingMore ? (
                     <>
                       <i className="fa-solid fa-circle-notch fa-spin"></i>
-                      <span>{lang === "hi" ? "और लोड हो रहा है..." : "Loading More..."}</span>
+                      <span>
+                        {lang === "hi"
+                          ? "और लोड हो रहा है..."
+                          : "Loading More..."}
+                      </span>
                     </>
                   ) : (
                     <>
                       <i className="fa-solid fa-arrow-down-long"></i>
-                      <span>{lang === "hi" ? "और ऑर्डर लोड करें" : "Load More Orders"}</span>
+                      <span>
+                        {lang === "hi"
+                          ? "और ऑर्डर लोड करें"
+                          : "Load More Orders"}
+                      </span>
                     </>
                   )}
                 </button>
@@ -659,7 +791,9 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
                     <i className="fa-solid fa-check"></i>
                   </div>
                   <p className="text-gray-400 text-sm font-medium">
-                    {lang === "hi" ? "आपने अपने सभी ऑर्डर देख लिए हैं" : "You've viewed all your orders"}
+                    {lang === "hi"
+                      ? "आपने अपने सभी ऑर्डर देख लिए हैं"
+                      : "You've viewed all your orders"}
                   </p>
                 </div>
               )

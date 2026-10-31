@@ -13,7 +13,7 @@ import {
   ChevronUp,
   Headphones,
   Info,
-} from "lucide-react";
+} from "@repo/design/lucide";
 
 function getErrorCategory(message: string): {
   badge: string;

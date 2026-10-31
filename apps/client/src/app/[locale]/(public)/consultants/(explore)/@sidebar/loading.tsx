@@ -1,6 +1,6 @@
 import React from "react";
-import { Skeleton } from "@/components/ui/Skeleton";
-import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@repo/design/shadcn";
+import { Separator } from "@repo/design/shadcn";
 
 export default function SidebarLoading() {
   return (

@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
-import { FaHome, FaSkullCrossbones } from "react-icons/fa";
-import { HiOutlineSparkles } from "react-icons/hi";
+import { FaHome, FaSkullCrossbones } from "@repo/design/react-icons";
+import { HiOutlineSparkles } from "@repo/design/react-icons";
 import Header from "@/features/header";
 import { Footer } from "@repo/ui";
 

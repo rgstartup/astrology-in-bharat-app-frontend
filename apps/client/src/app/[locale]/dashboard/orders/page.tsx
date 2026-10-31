@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
 import { Card, Button, Skeleton } from "@/features/dashboard";
 import { api } from "@/actions";
-import { ShoppingBag, Calendar, Package, ArrowRight } from "lucide-react";
+import { ShoppingBag, Calendar, Package, ArrowRight } from "@repo/design/lucide";
 
 export default function MyOrdersDashboardPage() {
   const [orders, setOrders] = useState<any[]>([]);

@@ -8,7 +8,7 @@ import {
   Loader2,
   Sparkles,
   MessageCircle,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import OnlinePujaSeoContent from "./online-puja-seo.component";
 import { api, API_ROUTES } from "@/actions";
 import { ExpertPuja } from "@/lib/types/puja";

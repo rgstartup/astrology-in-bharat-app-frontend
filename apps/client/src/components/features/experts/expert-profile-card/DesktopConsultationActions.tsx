@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Phone, Video, MessageSquare } from "lucide-react";
+import { Phone, Video, MessageSquare } from "@repo/design/lucide";
 import { ConsultationActionsProps } from "./types";
 
 export const DesktopConsultationActions: React.FC<ConsultationActionsProps> = ({

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/cn";
 import type { ChatIncomingPayload } from "@/realtime/types/chat";
-import type { ExpertSessionKind } from "@/components/consultation/types";
+import type { ExpertSessionKind } from "@/features/consultation/session";
 
 /** Fallback when the payload carries no explicit expiry (backend default). */
 export const CHAT_REQUEST_TTL_SEC = 120;

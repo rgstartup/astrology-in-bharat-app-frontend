@@ -1,6 +1,6 @@
 import React from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { History } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@repo/design/shadcn";
+import { History } from "@repo/design/lucide";
 import type { TabFilterType } from "../../hooks/useWalletTransactions";
 
 interface WalletTransactionHistoryHeaderProps {

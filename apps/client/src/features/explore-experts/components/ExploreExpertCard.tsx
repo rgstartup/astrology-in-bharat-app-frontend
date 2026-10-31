@@ -13,13 +13,13 @@ import {
   Globe,
   Sparkles,
   Award,
-} from "lucide-react";
-import { Card } from "@/components/ui/card";
+} from "@repo/design/lucide";
+import { Card } from "@repo/design/shadcn";
 import { useAuthStore } from "@/store/authStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useExpertListStore } from "@/store/expertListStore";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import type { IExpert } from "@repo/lib";
 import { extractSpecializationNames } from "@/utils/expert-utils";
 import { useExpertPresence } from "@/hooks/useExpertPresence";

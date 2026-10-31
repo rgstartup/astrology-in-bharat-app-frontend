@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sparkles, RotateCcw, Loader2 } from "lucide-react";
+import { Sparkles, RotateCcw, Loader2 } from "@repo/design/lucide";
 import type { IExpert } from "@repo/lib";
 import { ExploreExpertCard } from "./ExploreExpertCard";
 

@@ -7,7 +7,7 @@ import {
 } from "@/realtime/topics/consultation";
 import { realtimeSocket } from "@/realtime/socket";
 import type { ConsultationDecisionPayload } from "@/realtime/types/chat";
-import type { ConsultationVerdict, WaitOutcome } from "../types";
+import type { ConsultationVerdict, WaitOutcome } from "../../types";
 
 export interface VerdictWaitResult {
   verdict: ConsultationVerdict;

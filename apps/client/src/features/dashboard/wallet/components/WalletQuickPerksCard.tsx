@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card } from "@/features/dashboard";
-import { ShieldCheck, Zap, RefreshCcw, HelpCircle } from "lucide-react";
+import { ShieldCheck, Zap, RefreshCcw, HelpCircle } from "@repo/design/lucide";
 
 export function WalletQuickPerksCard() {
   return (

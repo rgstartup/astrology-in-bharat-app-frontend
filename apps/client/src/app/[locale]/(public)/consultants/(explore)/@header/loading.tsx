@@ -1,5 +1,5 @@
 import React from "react";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Skeleton } from "@repo/design/shadcn";
 
 export default function HeaderLoading() {
   return (

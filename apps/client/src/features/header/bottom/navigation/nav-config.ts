@@ -19,7 +19,7 @@ import {
   Palette,
   Calculator,
   type LucideIcon,
-} from "lucide-react";
+} from "@repo/design/lucide";
 
 export interface NavSubItemConfig {
   id: string;

@@ -7,10 +7,10 @@ import {
   ExternalLink,
   Store as StoreIcon,
   Star,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { Store } from "@/lib/types/shop";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "@repo/design/swiper";
+import { Autoplay } from "@repo/design/swiper";
 import { useMerchantProducts } from "@/hooks/useMerchantProducts";
 import { useMemo } from "react";
 import { useMerchantStore } from "@/store/merchantStore";
@@ -18,7 +18,7 @@ import { useWishlistStore } from "@/store/wishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter, usePathname, Link } from "@/i18n/navigation";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";

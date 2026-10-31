@@ -27,7 +27,7 @@ import {
   FileText,
   Sparkles,
   CheckCircle2,
-} from "lucide-react";
+} from "@repo/design/lucide";
 
 type KundliTab =
   | "chart"

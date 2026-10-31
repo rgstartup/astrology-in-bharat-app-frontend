@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { Link } from "@/i18n/navigation";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "@repo/design/lucide";
 import { useAuth } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import { PATHS } from "@repo/routes";

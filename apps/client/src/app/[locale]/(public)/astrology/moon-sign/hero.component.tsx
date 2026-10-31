@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { FaMoon } from "react-icons/fa";
+import { FaMoon } from "@repo/design/react-icons";
 
 const HeroSection = () => {
   return (

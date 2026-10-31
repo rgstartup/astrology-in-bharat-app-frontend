@@ -12,9 +12,9 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+} from "@repo/design/shadcn";
+import { Button } from "@repo/design/shadcn";
+import { ArrowLeft, ArrowRight } from "@repo/design/lucide";
 
 interface StepTwoPreferencesProps {
   onBack: () => void;

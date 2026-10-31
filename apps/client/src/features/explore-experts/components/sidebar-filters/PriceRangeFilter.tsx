@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Slider } from "@/components/ui/slider";
+import { Slider } from "@repo/design/shadcn";
 import { useExploreExpertsContext } from "../../context/ExploreExpertsContext";
 
 const PRICE_PRESETS = [

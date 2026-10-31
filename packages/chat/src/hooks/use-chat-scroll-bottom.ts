@@ -10,11 +10,13 @@ function isNearBottom(element: HTMLElement): boolean {
 }
 
 function scrollToEnd(element: HTMLElement | null, anchor: HTMLElement | null): void {
-  if (anchor) {
-    anchor.scrollIntoView({ behavior: "smooth", block: "end" });
+  if (element) {
+    element.scrollTo({ top: element.scrollHeight, behavior: "smooth" });
     return;
   }
-  element?.scrollTo({ top: element.scrollHeight, behavior: "smooth" });
+  if (anchor) {
+    anchor.scrollIntoView({ behavior: "smooth", block: "end" });
+  }
 }
 
 interface UseChatScrollBottomOptions {

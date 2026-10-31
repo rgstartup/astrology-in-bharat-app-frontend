@@ -4,11 +4,11 @@ import {
   FaSpinner,
   FaRegCalendarAlt as FaCalendar,
   FaRegClock as FaClock,
-} from "react-icons/fa";
-import { TbCrystalBall } from "react-icons/tb";
-import { GiLotus } from "react-icons/gi";
+} from "@repo/design/react-icons";
+import { TbCrystalBall } from "@repo/design/react-icons";
+import { GiLotus } from "@repo/design/react-icons";
 import { NakshatraFinderFormProps } from "@/lib/types/calculator";
-import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
+import LocationAutocomplete from "@/components/calculators-charts/LocationAutocomplete";
 
 const NakshatraFinderForm: React.FC<NakshatraFinderFormProps> = ({
   dob,

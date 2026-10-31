@@ -7,7 +7,7 @@ import {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-} from "@/components/ui/carousel";
+} from "@repo/design/shadcn";
 import { ExploreExpertCard } from "@/features/explore-experts/components/ExploreExpertCard";
 import { useExpertListStore } from "@/store/expertListStore";
 

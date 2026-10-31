@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Check } from "@repo/design/lucide";
+import { cn } from "@repo/design/cn";
 
 export const AVAILABLE_LANGUAGES = [
   { id: "English", label: "English", native: "English" },

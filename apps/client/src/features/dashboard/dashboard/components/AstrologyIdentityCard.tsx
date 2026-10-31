@@ -24,7 +24,7 @@ import {
   Sparkles,
   ArrowRight,
   PlusCircle,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import {
   useDashboardOverview,
   BirthAstrologyDetails,

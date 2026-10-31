@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import ProductCarousel from "./ProductCarousel";
-import { Search, X } from "lucide-react";
+import { Search, X } from "@repo/design/lucide";
 
 import { useProductListStore } from "@/store/productListStore";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";

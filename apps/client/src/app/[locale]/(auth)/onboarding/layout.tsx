@@ -6,7 +6,7 @@ import { redirect } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { OnboardHero } from "@/features/onboard/components/OnboardHero";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@repo/design/shadcn";
 
 export const metadata: Metadata = {
   title: "Complete Your Profile - Astrology in Bharat",

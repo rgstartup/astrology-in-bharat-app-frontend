@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@repo/design/shadcn";
 import { DashboardSidebar } from "./dashboard-sidebar.root";
 import { DashboardHeader } from "./dashboard-header.root";
 

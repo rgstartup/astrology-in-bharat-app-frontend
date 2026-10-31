@@ -20,7 +20,7 @@ import {
   Activity,
   ArrowRight,
   Sparkles,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { usePersonalHoroscope } from "../hooks/usePersonalHoroscope";
 import { DEFAULT_HOROSCOPE_SCORES } from "../data/horoscope.data";
 

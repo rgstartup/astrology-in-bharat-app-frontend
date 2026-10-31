@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Search, X, SlidersHorizontal, ArrowUpDown } from "lucide-react";
+import { Search, X, SlidersHorizontal, ArrowUpDown } from "@repo/design/lucide";
 import { ExploreFilterState, SortOption } from "../types";
 
 interface ExploreHeaderProps {

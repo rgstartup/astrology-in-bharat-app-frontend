@@ -1,4 +1,4 @@
-import GuidanceCTA from "@/components/ui/GuidanceCTA";
+import GuidanceCTA from "@/components/features/home/GuidanceCTA";
 import { getTranslations } from "next-intl/server";
 
 const CTA = async () => {

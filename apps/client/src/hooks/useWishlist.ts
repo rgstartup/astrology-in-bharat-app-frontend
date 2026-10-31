@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { WishlistService } from "../services/wishlist.service";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 
 export type WishlistType = "expert" | "product" | "puja" | "merchant";
 

@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Check, ChevronDown, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Check, ChevronDown, Loader2 } from "@repo/design/lucide";
+import { cn } from "@repo/design/cn";
 import { getSpecializationsAction } from "@/actions/specialization";
 import { type Specialization, type PaginationMeta } from "@repo/lib";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/design/shadcn";
 
 interface ExpertCategorySelectorProps {
   selected?: (string | number)[];

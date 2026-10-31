@@ -1,5 +1,5 @@
 import React from "react";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 
 export const StoreSkeletonCard = () => {
   return (

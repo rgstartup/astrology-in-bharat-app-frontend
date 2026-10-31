@@ -4,13 +4,13 @@ import React from "react";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { ProductCard } from "@/components/features/shop/ProductCard";
 import ExpertCard from "@/components/features/experts/ExpertCard";
-import { FaHeart, FaGift, FaUserAstronaut, FaSpinner } from "react-icons/fa";
-import { HiOutlineSparkles } from "react-icons/hi";
-import { MdStars } from "react-icons/md";
+import { FaHeart, FaGift, FaUserAstronaut, FaSpinner } from "@repo/design/react-icons";
+import { HiOutlineSparkles } from "@repo/design/react-icons";
+import { MdStars } from "@repo/design/react-icons";
 import { PujaCard } from "@/components/features/puja/PujaCard";
 import { getProductImageUrl } from "@/utils/image-utils";
 import { formatSpecializationsString } from "@/utils/expert-utils";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 import { useTranslations } from "next-intl";
 
 const WishlistGrid: React.FC = () => {

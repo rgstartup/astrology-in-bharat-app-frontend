@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FaChevronRight, FaComments, FaPhoneAlt, FaUser, FaStar } from "react-icons/fa";
+import { FaChevronRight, FaComments, FaPhoneAlt, FaUser, FaStar } from "@repo/design/react-icons";
 
 const ExpertConsultationSection = () => {
   return (

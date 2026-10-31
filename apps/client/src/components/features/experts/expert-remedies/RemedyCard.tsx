@@ -11,7 +11,7 @@ import {
   Clock,
   ArrowRight,
   Star,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import {
   RemedyCardProps,
   RemedyItem,

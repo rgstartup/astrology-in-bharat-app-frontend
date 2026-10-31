@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { HiOutlineSparkles } from "react-icons/hi";
+import { HiOutlineSparkles } from "@repo/design/react-icons";
 
 const sarpTypes = [
   { id: 1, name: "Anant", desc: "Affects personality and general health." },

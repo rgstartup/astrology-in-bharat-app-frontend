@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from 'react';
+import React, { useRef } from "react";
 
 const specializations = [
   { id: 1, name: "Numerology", icon: "🔢" },
@@ -19,21 +19,21 @@ interface SpecializationCarouselProps {
   onSpecializationChange: (specialization: string) => void;
 }
 
-const SpecializationCarousel: React.FC<SpecializationCarouselProps> = ({ 
-  selectedSpecialization, 
-  onSpecializationChange 
+const SpecializationCarousel: React.FC<SpecializationCarouselProps> = ({
+  selectedSpecialization,
+  onSpecializationChange,
 }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const scrollLeft = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: -300, behavior: "smooth" });
     }
   };
 
   const scrollRight = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
     }
   };
 
@@ -48,15 +48,18 @@ const SpecializationCarousel: React.FC<SpecializationCarouselProps> = ({
 
   return (
     <div className="specialization-carousel-container">
-      <button className="carousel-arrow carousel-arrow-left" onClick={scrollLeft}>
+      <button
+        className="carousel-arrow carousel-arrow-left"
+        onClick={scrollLeft}
+      >
         <i className="fa-solid fa-chevron-left"></i>
       </button>
-      
+
       <div className="specialization-carousel" ref={carouselRef}>
         {specializations.map((spec) => (
-          <button 
-            key={spec.id} 
-            className={`specialization-btn ${selectedSpecialization === spec.name ? 'active' : ''}`}
+          <button
+            key={spec.id}
+            className={`specialization-btn ${selectedSpecialization === spec.name ? "active" : ""}`}
             onClick={() => handleSpecializationClick(spec.name)}
           >
             <span className="spec-icon">{spec.icon}</span>
@@ -65,7 +68,10 @@ const SpecializationCarousel: React.FC<SpecializationCarouselProps> = ({
         ))}
       </div>
 
-      <button className="carousel-arrow carousel-arrow-right" onClick={scrollRight}>
+      <button
+        className="carousel-arrow carousel-arrow-right"
+        onClick={scrollRight}
+      >
         <i className="fa-solid fa-chevron-right"></i>
       </button>
     </div>
@@ -73,5 +79,3 @@ const SpecializationCarousel: React.FC<SpecializationCarouselProps> = ({
 };
 
 export default SpecializationCarousel;
-
-

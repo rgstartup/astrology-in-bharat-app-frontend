@@ -312,6 +312,7 @@ export function createRtcSession(adapter: RtcAdapter): RtcSession {
       setPhase("ended");
       setPhase("idle");
     },
+
     async mute(): Promise<void> {
       await adapter.setMicrophoneMuted(true);
       localMedia = { ...localMedia, microphoneEnabled: false };

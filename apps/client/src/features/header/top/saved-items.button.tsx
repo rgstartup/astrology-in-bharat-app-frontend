@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { Link } from "@/i18n/navigation";
-import { Heart } from "lucide-react";
+import { Heart } from "@repo/design/lucide";
 import { useAuth } from "@/store/authStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { PATHS } from "@repo/routes";

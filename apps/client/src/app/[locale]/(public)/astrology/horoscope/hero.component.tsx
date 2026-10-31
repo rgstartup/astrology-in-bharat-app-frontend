@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Target, User, Calendar, Moon } from "lucide-react";
+import { Target, User, Calendar, Moon } from "@repo/design/lucide";
 import { useLocale, useTranslations } from "next-intl";
 
 const features = [

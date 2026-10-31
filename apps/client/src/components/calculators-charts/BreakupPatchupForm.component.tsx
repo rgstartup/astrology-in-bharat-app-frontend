@@ -1,7 +1,7 @@
 import React from "react";
-import { FaUser, FaSpinner, FaArrowRight } from "react-icons/fa";
-import { TbCrystalBall } from "react-icons/tb";
-import { GiLotus } from "react-icons/gi";
+import { FaUser, FaSpinner, FaArrowRight } from "@repo/design/react-icons";
+import { TbCrystalBall } from "@repo/design/react-icons";
+import { GiLotus } from "@repo/design/react-icons";
 import { BreakupPatchupFormProps } from "@/lib/types/calculator";
 
 const BreakupPatchupForm: React.FC<BreakupPatchupFormProps> = ({

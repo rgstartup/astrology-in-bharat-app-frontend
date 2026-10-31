@@ -16,12 +16,11 @@ import { WishlistInitializer } from "@/components/layout/WishlistInitializer";
 import { RealtimeProvider } from "@/realtime/socket-provider";
 import MerchantStatusProvider from "@/providers/MerchantStatusProvider";
 import NotificationProvider from "@/providers/NotificationProvider";
-import SmoothScroll from "@/components/layout/SmoothScroll";
-import ToastProvider from "@/components/layout/ToastProvider";
+import { SmoothScroll, ToastProvider } from "@repo/design/components";
 import PlatformReviewModal from "@/components/features/reviews";
-import ConsultationPrepHost from "@/features/consultation-prep/ConsultationPrepHost";
+import { ConsultationPrepHost } from "@/features/consultation-prep";
 import { ConsultationPrepProvider } from "@/store/consultationPrepStore";
-import ConsultationTrackerHost from "@/features/active-consultation/consultation-tracker-host.component";
+import ConsultationTrackerHost from "@/features/consultation-tracker/consultation-tracker-host.component";
 import QueryProvider from "@/providers/QueryProvider";
 import { getMeAction } from "@/actions/auth";
 
@@ -46,6 +45,9 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
+  /**
+   * get user data, and seed the auth store
+   */
   const userResult = await getMeAction();
   const initialUser = userResult.ok ? userResult.data : null;
 

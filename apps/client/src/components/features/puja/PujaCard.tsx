@@ -3,12 +3,12 @@
 import React from "react";
 import Image from "next/image";
 import { Link, useRouter, usePathname } from "@/i18n/navigation";
-import { Heart, Sparkles, Star } from "lucide-react";
+import { Heart, Sparkles, Star } from "@repo/design/lucide";
 import { ExpertPuja } from "@/lib/types/puja";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuthStore } from "@/store/authStore";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { useTranslations } from "next-intl";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";

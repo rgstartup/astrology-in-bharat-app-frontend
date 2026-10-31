@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
 import { Card, Button, Skeleton } from "@/features/dashboard";
 import { api } from "@/actions";
-import { MessageSquare, Calendar, Clock, ArrowRight, UserCheck } from "lucide-react";
+import { MessageSquare, Calendar, Clock, ArrowRight, UserCheck } from "@repo/design/lucide";
 
 export default function MyConsultationsPage() {
   const [consultations, setConsultations] = useState<any[]>([]);

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@repo/design/lucide";
 import { useFormatter } from "next-intl";
 
 export interface GreetingCardProps {

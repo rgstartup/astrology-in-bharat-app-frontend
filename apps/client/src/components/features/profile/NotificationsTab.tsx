@@ -1,7 +1,7 @@
 import React from "react";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 
 interface NotificationsTabProps {
   loadingNotifications: boolean;
@@ -24,23 +24,26 @@ function NotificationItem({
   lang: string;
   t: any;
 }) {
-  const formattedDate = notif.createdAt || notif.created_at
-    ? new Date(notif.createdAt || notif.created_at).toLocaleString(
-        lang === "hi" ? "hi-IN" : "en-IN",
-        {
-          day: "numeric",
-          month: "short",
-          hour: "numeric",
-          minute: "numeric",
-        },
-      )
-    : t.na || "N/A";
+  const formattedDate =
+    notif.createdAt || notif.created_at
+      ? new Date(notif.createdAt || notif.created_at).toLocaleString(
+          lang === "hi" ? "hi-IN" : "en-IN",
+          {
+            day: "numeric",
+            month: "short",
+            hour: "numeric",
+            minute: "numeric",
+          },
+        )
+      : t.na || "N/A";
 
   const containerClass = notif.isRead
     ? "bg-white border-gray-100 opacity-70 hover:opacity-100"
     : "bg-orange/5 border-orange/10 sm:shadow-sm hover:shadow-md hover:bg-orange/10";
 
-  const iconBgClass = notif.isRead ? "bg-gray-100 text-gray-400" : "bg-orange text-white";
+  const iconBgClass = notif.isRead
+    ? "bg-gray-100 text-gray-400"
+    : "bg-orange text-white";
   const iconName = notif.isRead ? "fa-envelope-open" : "fa-envelope";
 
   return (
@@ -50,14 +53,21 @@ function NotificationItem({
     >
       <div className="flex justify-between items-start gap-4">
         <div className="flex gap-4">
-          <div className={`w-10 h-10 md:w-12 md:h-12 shrink-0 flex items-center justify-center rounded-xl transition-transform group-hover:scale-110 ${iconBgClass}`}>
+          <div
+            className={`w-10 h-10 md:w-12 md:h-12 shrink-0 flex items-center justify-center rounded-xl transition-transform group-hover:scale-110 ${iconBgClass}`}
+          >
             <i className={`fa-solid ${iconName} text-lg`}></i>
           </div>
           <div className="flex-1 min-w-0">
-            <h6 className={`text-sm md:text-base mb-1 truncate ${notif.isRead ? "text-gray-600" : "text-gray-900 font-bold"}`}>
+            <h6
+              className={`text-sm md:text-base mb-1 truncate ${notif.isRead ? "text-gray-600" : "text-gray-900 font-bold"}`}
+            >
               {notif.title}
             </h6>
-            <p className="text-xs md:text-sm text-gray-500 mb-2 md:mb-3 leading-relaxed line-clamp-2" style={{ lineHeight: "1.5" }}>
+            <p
+              className="text-xs md:text-sm text-gray-500 mb-2 md:mb-3 leading-relaxed line-clamp-2"
+              style={{ lineHeight: "1.5" }}
+            >
               {notif.message}
             </p>
             <span className="flex items-center gap-2 text-[10px] text-orange font-bold uppercase tracking-widest">
@@ -88,7 +98,10 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
   onLoadMore,
 }) => {
   const { lang } = useLanguageStore();
-  const t = (profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en).notifications;
+  const t = (
+    profileTranslations[lang as keyof typeof profileTranslations] ||
+    profileTranslations.en
+  ).notifications;
 
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden">
@@ -113,7 +126,10 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
         {loadingNotifications ? (
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="p-5 rounded-2xl border border-gray-100 bg-white">
+              <div
+                key={i}
+                className="p-5 rounded-2xl border border-gray-100 bg-white"
+              >
                 <div className="flex gap-4">
                   <Skeleton width={48} height={48} className="rounded-xl" />
                   <div className="flex-1 space-y-2">
@@ -130,8 +146,12 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
             <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mb-6 border border-gray-100 shadow-inner">
               <i className="fa-solid fa-bell-slash text-3xl text-gray-300"></i>
             </div>
-            <h6 className="font-bold text-gray-900 text-lg mb-2">{t.noNotifications}</h6>
-            <p className="text-gray-500 text-sm max-w-xs m-0">{t.noNotificationsHint}</p>
+            <h6 className="font-bold text-gray-900 text-lg mb-2">
+              {t.noNotifications}
+            </h6>
+            <p className="text-gray-500 text-sm max-w-xs m-0">
+              {t.noNotificationsHint}
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -155,12 +175,20 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                   {loadingMore ? (
                     <>
                       <i className="fa-solid fa-circle-notch fa-spin"></i>
-                      <span>{lang === "hi" ? "और लोड हो रहा है..." : "Loading More..."}</span>
+                      <span>
+                        {lang === "hi"
+                          ? "और लोड हो रहा है..."
+                          : "Loading More..."}
+                      </span>
                     </>
                   ) : (
                     <>
                       <i className="fa-solid fa-arrow-down-long"></i>
-                      <span>{lang === "hi" ? "और नोटिफिकेशन लोड करें" : "Load More Notifications"}</span>
+                      <span>
+                        {lang === "hi"
+                          ? "और नोटिफिकेशन लोड करें"
+                          : "Load More Notifications"}
+                      </span>
                     </>
                   )}
                 </button>
@@ -172,7 +200,9 @@ const NotificationsTab: React.FC<NotificationsTabProps> = ({
                     <i className="fa-solid fa-check"></i>
                   </div>
                   <p className="text-gray-400 text-sm font-medium">
-                    {lang === "hi" ? "आपने सभी नोटिफिकेशन देख लिए हैं" : "You've viewed all notifications"}
+                    {lang === "hi"
+                      ? "आपने सभी नोटिफिकेशन देख लिए हैं"
+                      : "You've viewed all notifications"}
                   </p>
                 </div>
               )

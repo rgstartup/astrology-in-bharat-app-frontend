@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Sparkles, XCircle, AlertCircle, ShieldCheck, X } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Sparkles, XCircle, AlertCircle, ShieldCheck, X } from "@repo/design/lucide";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/design/shadcn";
 import type { ConsultationMode } from "@/store/consultationPrepStore";
 import {
   ConsultationModeIcon,
@@ -22,15 +22,11 @@ export interface ConsultationWaitingModalProps {
   step?: ConsultationWaitStep;
   micGranted?: boolean;
   onGrantMic?: () => void;
-  countdown?: number | null;
   voiceRate?: number;
   rejected?: boolean;
   timedOut?: boolean;
   micDenied?: boolean;
   onRetryMic?: () => void;
-  mediaFailed?: boolean;
-  mediaError?: string | null;
-  onRetryMedia?: () => void;
   onCancel: () => void;
   onClose: () => void;
 }
@@ -358,7 +354,6 @@ function MediaWaitingState({
   step = "waiting_acceptance",
   micGranted = false,
   onGrantMic,
-  countdown,
   voiceRate,
   onCancel,
 }: {
@@ -368,7 +363,6 @@ function MediaWaitingState({
   step?: ConsultationWaitStep;
   micGranted?: boolean;
   onGrantMic?: () => void;
-  countdown?: number | null;
   voiceRate?: number;
   onCancel: () => void;
 }) {
@@ -379,9 +373,7 @@ function MediaWaitingState({
 
   if (isConnecting) {
     const subtitle =
-      typeof countdown === "number" && countdown > 0
-        ? `Redirecting to consultation room in ${countdown}s…`
-        : "Generating secure token and connecting…";
+      "Generating secure token and connecting…";
 
     return (
       <div className="flex flex-col items-center text-center">
@@ -432,7 +424,6 @@ function MediaWaitingState({
           expertName={expertName}
           micGranted={micGranted}
           onGrantMic={onGrantMic}
-          countdown={countdown}
           rate={voiceRate}
         />
       </div>
@@ -475,17 +466,6 @@ function WaitingModalContent(props: ConsultationWaitingModalProps) {
     );
   }
 
-  if (props.mediaFailed) {
-    return (
-      <MediaConnectionFailedState
-        expertName={props.expertName}
-        error={props.mediaError}
-        onRetry={props.onRetryMedia}
-        onClose={props.onClose}
-      />
-    );
-  }
-
   if (props.mode === "voice" || props.mode === "video") {
     return (
       <MediaWaitingState
@@ -495,7 +475,6 @@ function WaitingModalContent(props: ConsultationWaitingModalProps) {
         step={props.step}
         micGranted={props.micGranted}
         onGrantMic={props.onGrantMic}
-        countdown={props.countdown}
         voiceRate={props.voiceRate}
         onCancel={props.onCancel}
       />
@@ -526,7 +505,6 @@ export function ConsultationWaitingModal(props: ConsultationWaitingModalProps) {
     rejected = false,
     timedOut = false,
     micDenied = false,
-    mediaFailed = false,
     onClose,
   } = props;
   const [mounted, setMounted] = useState(false);
@@ -536,7 +514,7 @@ export function ConsultationWaitingModal(props: ConsultationWaitingModalProps) {
   }, []);
 
   const autoDismiss = rejected || timedOut;
-  const settled = rejected || timedOut || micDenied || mediaFailed;
+  const settled = rejected || timedOut || micDenied;
 
   useEffect(() => {
     if (!open) return;

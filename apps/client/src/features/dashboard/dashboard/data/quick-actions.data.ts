@@ -5,7 +5,7 @@ import {
   HeartHandshake,
   Sun,
   type LucideIcon,
-} from "lucide-react";
+} from "@repo/design/lucide";
 
 export interface QuickActionItem {
   title: string;

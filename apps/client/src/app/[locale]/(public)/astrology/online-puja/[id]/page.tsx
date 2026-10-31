@@ -19,7 +19,7 @@ import {
   Package,
   Users,
   Video,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { api, API_ROUTES } from "@/actions";
 import { ExpertPuja } from "@/lib/types/puja";
 import Image from "next/image";
@@ -27,7 +27,7 @@ import PujaDetailSeoContent from "./puja-detail-seo.component";
 import { Loading } from "@repo/ui";
 import { useAuthStore } from "@/store/authStore";
 import { useTranslations } from "next-intl";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { getErrorMessage } from "@repo/lib";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";

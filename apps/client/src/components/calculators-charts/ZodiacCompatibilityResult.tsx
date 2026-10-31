@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { FaChevronRight } from "react-icons/fa";
-import { TbCrystalBall } from "react-icons/tb";
-import { GiLotus, GiSparkles } from "react-icons/gi";
+import { FaChevronRight } from "@repo/design/react-icons";
+import { TbCrystalBall } from "@repo/design/react-icons";
+import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 import { ZodiacCompatibilityResultProps } from "@/lib/types/calculator";
 
 const ZodiacCompatibilityResult: React.FC<ZodiacCompatibilityResultProps> = ({

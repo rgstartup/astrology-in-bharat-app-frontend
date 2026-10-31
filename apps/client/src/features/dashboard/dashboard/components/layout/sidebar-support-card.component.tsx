@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { HelpCircle, ArrowUpRight } from "lucide-react";
+import { HelpCircle, ArrowUpRight } from "@repo/design/lucide";
 import { Link } from "@/i18n/navigation";
 
 export interface SidebarSupportCardProps {

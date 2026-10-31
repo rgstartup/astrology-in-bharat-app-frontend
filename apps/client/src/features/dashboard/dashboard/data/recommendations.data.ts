@@ -1,6 +1,6 @@
 import React from "react";
 import { PATHS } from "@repo/routes";
-import { HeartHandshake, Scroll } from "lucide-react";
+import { HeartHandshake, Scroll } from "@repo/design/lucide";
 
 export interface RecItem {
   title: string;

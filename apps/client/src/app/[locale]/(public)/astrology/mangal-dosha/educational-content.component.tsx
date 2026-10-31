@@ -9,8 +9,8 @@ import {
   FaUser,
   FaComments,
   FaPhoneAlt,
-} from "react-icons/fa";
-import { GiMeditation } from "react-icons/gi";
+} from "@repo/design/react-icons";
+import { GiMeditation } from "@repo/design/react-icons";
 
 const EducationalContent = () => {
   return (

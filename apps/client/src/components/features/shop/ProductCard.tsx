@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { useAuthStore } from "@/store/authStore"; // Changed import
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { useWishlistStore } from "@/store/wishlistStore";

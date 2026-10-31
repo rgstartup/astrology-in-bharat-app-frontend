@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Flower2, Landmark, Sparkles, ShieldCheck } from "lucide-react";
+import { Flower2, Landmark, Sparkles, ShieldCheck } from "@repo/design/lucide";
 import { useLocale } from "next-intl";
 
 const FamousPlacesHero = () => {

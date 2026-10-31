@@ -12,7 +12,7 @@ import {
   LogIn,
   ChevronDown,
   ArrowUpRight,
-} from "lucide-react";
+} from "@repo/design/lucide";
 
 import { useAuth } from "@/store/authStore";
 import { PATHS } from "@repo/routes";
@@ -22,8 +22,8 @@ import { formatCompactNumber } from "@repo/ui";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/design/shadcn";
+import { Badge } from "@repo/design/shadcn";
 
 const UserProfileDropdown = () => {
   const { user, isAuthenticated, logout, balance, loading } = useAuth();

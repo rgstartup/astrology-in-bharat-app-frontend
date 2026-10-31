@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "@/i18n/navigation";
 import { SignUpForm, ShowcaseCard } from "@/features/auth";
-import BackButton from "@/components/ui/BackButton";
+import BackButton from "@/components/common/BackButton";
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
 import { PATHS } from "@repo/routes";

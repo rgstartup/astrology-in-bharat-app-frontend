@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronRight, Compass } from "lucide-react";
+import { ChevronRight, Compass } from "@repo/design/lucide";
 import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
 

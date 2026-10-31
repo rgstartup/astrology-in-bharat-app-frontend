@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Link, usePathname } from "@/i18n/navigation";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight, Home } from "@repo/design/lucide";
 import { useConsultantBreadcrumbStore } from "@/store/consultantBreadcrumbStore";
 
 export function ConsultantsBreadcrumb() {

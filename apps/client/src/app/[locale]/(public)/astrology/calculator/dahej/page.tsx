@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
-import GuidanceCTA from "@/components/ui/GuidanceCTA";
+import PersonalGuidanceCard from "@/components/features/home/PersonalGuidanceCard";
+import GuidanceCTA from "@/components/features/home/GuidanceCTA";
 import DahejSeoContent from "./dahej-seo.component";
 import {
   EDUCATION_OPTIONS,

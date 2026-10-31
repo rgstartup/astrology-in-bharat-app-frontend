@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { WishlistService } from "../services/wishlist.service";
 
 export interface WishlistItem {

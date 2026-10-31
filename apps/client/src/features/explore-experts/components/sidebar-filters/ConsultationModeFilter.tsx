@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sparkles, MessageSquare, Phone, Video } from "lucide-react";
+import { Sparkles, MessageSquare, Phone, Video } from "@repo/design/lucide";
 import { ConsultationMode } from "../../types";
 import { useExploreExpertsContext } from "../../context/ExploreExpertsContext";
 

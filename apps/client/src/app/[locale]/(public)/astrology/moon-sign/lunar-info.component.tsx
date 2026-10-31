@@ -1,5 +1,5 @@
 import React from "react";
-import { HiOutlineSparkles } from "react-icons/hi";
+import { HiOutlineSparkles } from "@repo/design/react-icons";
 import {
   FaBriefcase,
   FaCheck,
@@ -7,7 +7,7 @@ import {
   FaHeart,
   FaPhoneAlt,
   FaUserFriends,
-} from "react-icons/fa";
+} from "@repo/design/react-icons";
 
 const LunarInfoSection = () => {
   return (

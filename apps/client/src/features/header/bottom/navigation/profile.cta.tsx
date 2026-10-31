@@ -3,11 +3,11 @@
 import React from "react";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { User, Wallet, LogOut, ChevronRight, Sparkles } from "lucide-react";
+import { User, Wallet, LogOut, ChevronRight, Sparkles } from "@repo/design/lucide";
 import { useAuth } from "@/store/authStore";
 import { PATHS } from "@repo/routes";
 import { formatCompactNumber } from "@repo/ui";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/design/shadcn";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 
 interface ProfileCTAProps {

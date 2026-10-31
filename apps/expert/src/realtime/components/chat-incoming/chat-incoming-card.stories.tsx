@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
 import { ChatIncomingCard } from "./chat-incoming-card";
-import { ExpertCallWaitingModal, type ExpertWaitStep } from "@/components/consultation/expert-call-waiting-modal.component";
+import { ExpertCallWaitingModal, type ExpertWaitStep } from "@/features/consultation/session/components/expert-call-waiting-modal.component";
 import type { ChatIncomingPayload } from "@/realtime/types/chat";
-import type { ClientIntakeProfile, ExpertSessionKind } from "@/components/consultation/types";
+import type { ClientIntakeProfile, ExpertSessionKind } from "@/features/consultation/session";
 
 const MOCK_CHAT_REQUEST: ChatIncomingPayload = {
   consultationId: 401,

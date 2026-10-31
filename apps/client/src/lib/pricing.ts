@@ -69,7 +69,7 @@ export const resolveChatRate = (
  * Resolves the per-minute voice rate from expert data.
  * No hardcoded default: returns 0 when pricing is absent so the UI
  * never displays a rate the backend would not bill. While a voice
- * upgrade is active the backend-quoted price (see `useVoiceUpgrade`)
+ * upgrade is active the backend-quoted price (see `useSwitchToVoice`)
  * takes precedence over this static value.
  *
  * @param expert - The expert object.

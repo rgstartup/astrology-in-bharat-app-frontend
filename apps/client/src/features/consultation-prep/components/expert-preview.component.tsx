@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import type { IExpert } from "@repo/lib";
 import type { SomeoneElseData } from "@/actions/chat";
 import { useTranslations } from "next-intl";
-import { Wallet, AlertCircle, ArrowLeft, Pencil } from "lucide-react";
+import { Wallet, AlertCircle, ArrowLeft, Pencil } from "@repo/design/lucide";
 import type { ConsultationMode } from "@/store/consultationPrepStore";
 import { resolveModePrice } from "@/lib/pricing";
 import { type DeviceHintKind } from "../hooks/use-device-preflight";

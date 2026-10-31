@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { FaBolt, FaCheck, FaFileAlt, FaGlobe, FaTheaterMasks, FaTimes, FaArrowRight, FaStar } from "react-icons/fa";
-import { GiHorseHead } from "react-icons/gi";
-import { HiOutlineSparkles } from "react-icons/hi";
+import { FaBolt, FaCheck, FaFileAlt, FaGlobe, FaTheaterMasks, FaTimes, FaArrowRight, FaStar } from "@repo/design/react-icons";
+import { GiHorseHead } from "@repo/design/react-icons";
+import { HiOutlineSparkles } from "@repo/design/react-icons";
 
 const NakshatraDetailSection = () => {
   return (

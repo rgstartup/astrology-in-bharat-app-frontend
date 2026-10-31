@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "@repo/design/swiper";
+import { Navigation, Autoplay } from "@repo/design/swiper";
 import { getProducts } from "@/libs/api-products";
 import { ProductCard } from "./ProductCard";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "@repo/design/react-icons";
 import { useProductListStore } from "@/store/productListStore";
 
 const ProductsCarousel = () => {

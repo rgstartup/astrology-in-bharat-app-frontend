@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "@/i18n/navigation";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { PATHS } from "@repo/routes";
 import { OnboardingFormData } from "@/lib/types";
 import { saveOnboardingAction } from "@/actions/onboard";
 import { useAuth } from "@/store/authStore";
 import { useOnboardStore } from "@/store/onboardStore";
-import { Form } from "@/components/ui/form";
-import { Badge } from "@/components/ui/badge";
+import { Form } from "@repo/design/shadcn";
+import { Badge } from "@repo/design/shadcn";
 import { StepThreeSpecialization } from "@/features/onboard/components/StepThreeSpecialization";
 import { OnboardingStepTransition } from "@/features/onboard/components/OnboardingStepTransition";
 

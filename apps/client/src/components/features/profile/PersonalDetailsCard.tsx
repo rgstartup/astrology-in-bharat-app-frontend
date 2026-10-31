@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Button, Loading } from "@repo/ui";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 
 interface PersonalDetailsCardProps {
   lang: string;
@@ -67,7 +67,9 @@ function UserIdBlock({
             {displayUid && (
               <button
                 type="button"
-                title={copied ? t.personalDetails.copied : t.personalDetails.copyId}
+                title={
+                  copied ? t.personalDetails.copied : t.personalDetails.copyId
+                }
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
                   copied
                     ? "bg-green-100 text-green-700 border-green-200"
@@ -75,7 +77,9 @@ function UserIdBlock({
                 } border`}
                 onClick={handleCopy}
               >
-                <i className={`fa-${copied ? "solid fa-check" : "regular fa-copy"}`}></i>
+                <i
+                  className={`fa-${copied ? "solid fa-check" : "regular fa-copy"}`}
+                ></i>
                 {copied && <span>{t.personalDetails.copied}</span>}
               </button>
             )}
@@ -120,17 +124,31 @@ function PersonalFieldItem({
             {field.key === "gender" ? (
               <>
                 <option value="male">{t.personalDetails.genders.male}</option>
-                <option value="female">{t.personalDetails.genders.female}</option>
+                <option value="female">
+                  {t.personalDetails.genders.female}
+                </option>
                 <option value="other">{t.personalDetails.genders.other}</option>
               </>
             ) : (
               <>
-                <option value="">{t.personalDetails.maritalStatuses.select}</option>
-                <option value="single">{t.personalDetails.maritalStatuses.single}</option>
-                <option value="married">{t.personalDetails.maritalStatuses.married}</option>
-                <option value="divorced">{t.personalDetails.maritalStatuses.divorced}</option>
-                <option value="widowed">{t.personalDetails.maritalStatuses.widowed}</option>
-                <option value="other">{t.personalDetails.maritalStatuses.other}</option>
+                <option value="">
+                  {t.personalDetails.maritalStatuses.select}
+                </option>
+                <option value="single">
+                  {t.personalDetails.maritalStatuses.single}
+                </option>
+                <option value="married">
+                  {t.personalDetails.maritalStatuses.married}
+                </option>
+                <option value="divorced">
+                  {t.personalDetails.maritalStatuses.divorced}
+                </option>
+                <option value="widowed">
+                  {t.personalDetails.maritalStatuses.widowed}
+                </option>
+                <option value="other">
+                  {t.personalDetails.maritalStatuses.other}
+                </option>
               </>
             )}
           </select>
@@ -144,7 +162,9 @@ function PersonalFieldItem({
         )
       ) : (
         <div className="flex items-center gap-3">
-          <p className={`font-bold text-gray-900 m-0 ${field.key === "email" ? "" : "capitalize"}`}>
+          <p
+            className={`font-bold text-gray-900 m-0 ${field.key === "email" ? "" : "capitalize"}`}
+          >
             {field.isSelect
               ? field.value
                 ? field.key === "gender"
@@ -164,7 +184,8 @@ function PersonalFieldItem({
           )}
           {field.isPhone && field.value && isPhoneVerified && (
             <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-green-50 text-green-600 text-[9px] font-bold">
-              <i className="fa-solid fa-circle-check"></i> {t.personalDetails.verified}
+              <i className="fa-solid fa-circle-check"></i>{" "}
+              {t.personalDetails.verified}
             </span>
           )}
         </div>

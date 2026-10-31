@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { MessageSquare, X } from "lucide-react";
+import { MessageSquare, X } from "@repo/design/lucide";
 import { apiV2 } from "@/actions";
 import { useAuthStore } from "@/store/authStore";
 

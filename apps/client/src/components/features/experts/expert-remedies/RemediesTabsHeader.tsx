@@ -8,9 +8,9 @@ import {
   BookOpen,
   Clock,
   Sparkles,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { RemedyTabConfig, RemedyTabKey } from "./types";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/design/cn";
 import { useDraggableScroll } from "@/hooks/useDraggableScroll";
 
 interface RemediesTabsHeaderProps {

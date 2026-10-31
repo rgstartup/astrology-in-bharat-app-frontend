@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { CheckCircle2, Mic, Phone, ShieldCheck, Sparkles, Video } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { CheckCircle2, Mic, Phone, ShieldCheck, Sparkles, Video } from "@repo/design/lucide";
+import { Button } from "@repo/design/shadcn";
+import { cn } from "@repo/design/cn";
 import type { ConsultationMode } from "@/store/consultationPrepStore";
 
 export type ConsultationWaitStep =

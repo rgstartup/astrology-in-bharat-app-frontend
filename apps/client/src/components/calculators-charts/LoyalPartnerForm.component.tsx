@@ -1,6 +1,6 @@
 import React from "react";
-import { FaUser, FaArrowRight, FaSpinner, FaRegCalendarAlt as FaCalendar, FaShieldAlt } from "react-icons/fa";
-import { GiLotus } from "react-icons/gi";
+import { FaUser, FaArrowRight, FaSpinner, FaRegCalendarAlt as FaCalendar, FaShieldAlt } from "@repo/design/react-icons";
+import { GiLotus } from "@repo/design/react-icons";
 import { LoyalPartnerFormProps } from "@/lib/types/calculator";
 
 const LoyalPartnerForm: React.FC<LoyalPartnerFormProps> = ({

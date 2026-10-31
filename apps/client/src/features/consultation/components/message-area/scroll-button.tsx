@@ -1,0 +1,27 @@
+"use client";
+
+import { ArrowDown } from "@repo/design/lucide";
+
+type ScrollButtonProps = {
+  visible: boolean;
+  onScrollToBottom: () => void;
+};
+
+/**
+ * Floating scroll-to-bottom button for the client timeline.
+ * Waterfall: silent unless the user has scrolled up.
+ */
+export default function ScrollButton({ visible, onScrollToBottom }: ScrollButtonProps) {
+  if (!visible) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={onScrollToBottom}
+      aria-label="Scroll to latest messages"
+      className="absolute bottom-4 left-1/2 z-10 flex size-9 -translate-x-1/2 items-center justify-center rounded-full border border-[#d3cec6] bg-white text-[#111111] shadow-md transition-colors hover:bg-[#f5f1ec]"
+    >
+      <ArrowDown className="size-4" />
+    </button>
+  );
+}

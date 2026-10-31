@@ -13,7 +13,8 @@ import type { JoinChatAck } from "@/realtime/types/chat";
  */
 let activeConsultationId: number | null = null;
 
-export const getActiveConsultationId = (): number | null => activeConsultationId;
+export const getActiveConsultationId = (): number | null =>
+  activeConsultationId;
 
 export const CONSULTATION_EVENTS = {
   COMMANDS: {
@@ -26,6 +27,9 @@ export const CONSULTATION_EVENTS = {
     LEAVE: "consultation:leave",
     PAUSE: "consultation:pause",
     RESUME: "consultation:resume",
+    RESUME_CHAT: "consultation:resume:chat",
+    RESUME_VOICE: "consultation:resume:voice",
+    RESUME_VIDEO: "consultation:resume:video",
     DISCONNECT: "consultation:disconnect",
     END: "consultation:end",
     GET_STATUS: "consultation:get_status",
@@ -43,6 +47,9 @@ export const CONSULTATION_EVENTS = {
     MEDIA_READY: "consultation:media_ready",
     PAUSED: "consultation:paused",
     RESUMED: "consultation:resumed",
+    RESUMED_CHAT: "consultation:resumed:chat",
+    RESUMED_VOICE: "consultation:resumed:voice",
+    RESUMED_VIDEO: "consultation:resumed:video",
     DISCONNECTED: "consultation:disconnected",
     ENDED: "consultation:ended",
   },
@@ -55,9 +62,9 @@ export const CONSULTATION_EVENTS = {
 } as const;
 
 /**
-  * Consultation room membership: one room covers chat + call.
-  * `mode` only selects the billing rate (and a voice token for voice/video).
-  */
+ * Consultation room membership: one room covers chat + call.
+ * `mode` only selects the billing rate (and a voice token for voice/video).
+ */
 export const joinRoom = (
   consultationId: number,
   mode: ConsultationMode = "chat",
@@ -78,7 +85,7 @@ export const leaveRoom = (consultationId: number): Promise<JoinChatAck> => {
 
 export const joinConsultationRooms = async (
   consultationId: number,
-  mode: ConsultationModeType = "chat",
+  mode: ConsultationMode = "chat",
 ): Promise<ConsultationRoomsResult> => {
   const room = await joinRoom(consultationId, mode);
   return { consultationId, room };
@@ -148,10 +155,39 @@ export const pauseConsultation = (
 
 export const resumeConsultation = (
   consultationId: number,
+  mode?: ConsultationMode,
 ): Promise<ConsultationActionAck> =>
   emitWithAck<ConsultationActionAck>(CONSULTATION_EVENTS.COMMANDS.RESUME, {
     consultationId,
+    mode,
   });
+
+export const resumeConsultationChat = (
+  consultationId: number,
+): Promise<ConsultationActionAck> =>
+  emitWithAck<ConsultationActionAck>(CONSULTATION_EVENTS.COMMANDS.RESUME_CHAT, {
+    consultationId,
+  });
+
+export const resumeConsultationVoice = (
+  consultationId: number,
+): Promise<ConsultationActionAck> =>
+  emitWithAck<ConsultationActionAck>(
+    CONSULTATION_EVENTS.COMMANDS.RESUME_VOICE,
+    {
+      consultationId,
+    },
+  );
+
+export const resumeConsultationVideo = (
+  consultationId: number,
+): Promise<ConsultationActionAck> =>
+  emitWithAck<ConsultationActionAck>(
+    CONSULTATION_EVENTS.COMMANDS.RESUME_VIDEO,
+    {
+      consultationId,
+    },
+  );
 
 export const endConsultation = (
   consultationId: number,

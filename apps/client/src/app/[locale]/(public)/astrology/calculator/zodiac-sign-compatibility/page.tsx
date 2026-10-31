@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
+import PersonalGuidanceCard from "@/components/features/home/PersonalGuidanceCard";
 import ZodiacCompatibilitySeoContent from "./zodiac-compatibility-seo.component";
 import ChooseYourZodiac from "@/features/home/ChooseYourZodiac";
 import {

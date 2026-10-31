@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/store/authStore";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { api as baseApi } from "@/actions";
 
 // --- Refresh Token Logic ---

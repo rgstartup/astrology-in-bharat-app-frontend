@@ -1,4 +1,4 @@
-import { FaBriefcase, FaHeart, FaHospital, FaUser } from "react-icons/fa";
+import { FaBriefcase, FaHeart, FaHospital, FaUser } from "@repo/design/react-icons";
 
 type options = {
   icon: React.JSX.Element;

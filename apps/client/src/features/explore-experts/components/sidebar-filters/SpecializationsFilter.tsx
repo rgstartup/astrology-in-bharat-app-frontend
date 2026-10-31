@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Search, Check } from "lucide-react";
+import { Search, Check } from "@repo/design/lucide";
 import { useExploreExpertsContext } from "../../context/ExploreExpertsContext";
 
 const DEFAULT_SPECIALIZATIONS = [

@@ -27,7 +27,7 @@ import {
   Clock,
   Palette,
   Hash,
-} from "lucide-react";
+} from "@repo/design/lucide";
 
 export default function MyHoroscopePage() {
   const [selectedDay, setSelectedDay] = useState<"yesterday" | "today" | "tomorrow">(

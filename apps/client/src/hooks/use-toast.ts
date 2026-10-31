@@ -15,4 +15,4 @@ export {
   type ToastType,
   type ToastVariant,
   type CustomToastData,
-} from "@/components/ui/toast";
+} from "@repo/design/shadcn";

@@ -13,11 +13,11 @@ import { ChatIncomingCard } from "./chat-incoming-card";
 import {
   ExpertCallWaitingModal,
   type ExpertWaitStep,
-} from "@/components/consultation/expert-call-waiting-modal.component";
+} from "@/features/consultation/session/components/expert-call-waiting-modal.component";
 import type {
   ClientIntakeProfile,
   ExpertSessionKind,
-} from "@/components/consultation/types";
+} from "@/features/consultation/session";
 import type { ChatIncomingPayload } from "@/realtime/types/chat";
 
 /**

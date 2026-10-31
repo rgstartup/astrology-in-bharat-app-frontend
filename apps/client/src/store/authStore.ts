@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { apiV2, API_ROUTES } from "@/actions";
 import { getMeAction, getWalletBalanceAction } from "@/actions/auth";
-import { useConsultationRoomStore } from "@/features/consultation/root/stores/consultation-room.store";
+import { useConsultationRoomStore } from "@/features/consultation/stores/consultation-room.store";
 import { endConsultation } from "@/realtime/topics/consultation";
 import type { Client, ClientWallet } from "@repo/lib";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Sparkles, Star, ShieldCheck, Zap } from "lucide-react";
+import { Sparkles, Star, ShieldCheck, Zap } from "@repo/design/lucide";
 
 const HeroComponent = async () => {
   return (

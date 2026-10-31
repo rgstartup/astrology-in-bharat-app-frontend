@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { SlidersHorizontal, RotateCcw } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { SlidersHorizontal, RotateCcw } from "@repo/design/lucide";
+import { Badge } from "@repo/design/shadcn";
 import { useExploreExpertsContext } from "../../context/ExploreExpertsContext";
 
 export function FilterHeader() {

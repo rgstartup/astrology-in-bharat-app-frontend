@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { FaMars, FaVenus, FaSpinner, FaChevronRight } from "react-icons/fa";
-import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
+import { FaMars, FaVenus, FaSpinner, FaChevronRight } from "@repo/design/react-icons";
+import LocationAutocomplete from "@/components/calculators-charts/LocationAutocomplete";
 
 import { MatchFormProps } from "@/lib/types";
 

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { FaStar } from "react-icons/fa";
+import { FaStar } from "@repo/design/react-icons";
 
 const HeroSection = () => {
   return (

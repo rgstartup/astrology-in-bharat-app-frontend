@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Link } from "@/i18n/navigation";
-import { FaRedoAlt, FaHome } from "react-icons/fa";
+import { FaRedoAlt, FaHome } from "@repo/design/react-icons";
 
 export default function Error({
   error,

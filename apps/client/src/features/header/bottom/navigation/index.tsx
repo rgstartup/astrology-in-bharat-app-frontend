@@ -11,14 +11,14 @@ import {
   NavigationMenuItem,
   NavigationMenuTrigger,
   NavigationMenuContent,
-} from "@/components/ui/navigation-menu";
+} from "@repo/design/shadcn";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetDescription,
-} from "@/components/ui/sheet";
+} from "@repo/design/shadcn";
 import { NAV_ITEMS_CONFIG } from "./nav-config";
 import MobileSubMenu from "./mobile/sub-menu";
 import ProfileCTA from "./profile.cta";
@@ -27,8 +27,8 @@ import {
   ChevronRight,
   ShoppingBag,
   Sparkles,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+} from "@repo/design/lucide";
+import { cn } from "@repo/design/cn";
 
 interface INavigationMenuProps {
   isMobileMenuOpen: boolean;

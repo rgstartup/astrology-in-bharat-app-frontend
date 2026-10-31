@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { GiSnake } from "react-icons/gi";
+import { GiSnake } from "@repo/design/react-icons";
 
 const HeroComponent = () => {
   return (

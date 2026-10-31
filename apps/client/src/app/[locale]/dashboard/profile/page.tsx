@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useAuthStore } from "@/store/authStore";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { ProfileUpdateForm, type ProfileFormValues } from "@/features/dashboard/profile";
 import { updateCurrentUser } from "@/features/dashboard/profile/actions/update-account";
 import type { Client, Media } from "@repo/lib";

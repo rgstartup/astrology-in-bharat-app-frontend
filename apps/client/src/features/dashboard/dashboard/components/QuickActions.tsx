@@ -3,7 +3,7 @@
 import React from "react";
 import { Link } from "@/i18n/navigation";
 import { Card } from "./ui/card";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "@repo/design/lucide";
 import { DASHBOARD_QUICK_ACTIONS } from "../data/quick-actions.data";
 
 /**

@@ -339,18 +339,15 @@ importers:
 
   apps/client:
     dependencies:
-      '@base-ui/react':
-        specifier: ^1.8.0
-        version: 1.8.0(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@fortawesome/fontawesome-free':
-        specifier: ^7.3.1
-        version: 7.3.1
       '@hookform/resolvers':
         specifier: ^5.9.1
         version: 5.9.1(@standard-schema/spec@1.1.0)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(react-hook-form@7.89.0(@types/react@19.3.0)(react@19.3.0))(zod@4.6.5)
       '@repo/chat':
         specifier: workspace:*
         version: link:../../packages/chat
+      '@repo/design':
+        specifier: workspace:*
+        version: link:../../packages/design
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -375,9 +372,6 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@shadcn/react':
-        specifier: ^0.3.1
-        version: 0.3.1(@types/react@19.3.0)(react@19.3.0)
       '@tanstack/react-query':
         specifier: ^5.104.0
         version: 5.104.0(react@19.3.0)
@@ -390,36 +384,12 @@ importers:
       chart.js:
         specifier: ^4.5.1
         version: 4.5.1
-      class-variance-authority:
-        specifier: ^0.7.1
-        version: 0.7.1
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      cn:
-        specifier: ^0.4.0
-        version: 0.4.0
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
-      embla-carousel-autoplay:
-        specifier: ^8.6.0
-        version: 8.6.0(embla-carousel@8.6.0)
-      embla-carousel-react:
-        specifier: ^8.6.0
-        version: 8.6.0(react@19.3.0)
-      input-otp:
-        specifier: ^1.5.0
-        version: 1.5.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       jwt-decode:
         specifier: ^4.0.0
         version: 4.0.0
-      lenis:
-        specifier: ^1.3.26
-        version: 1.3.26(react@19.3.0)
-      lucide-react:
-        specifier: ^1.48.0
-        version: 1.49.0(@types/react@19.3.0)(react@19.3.0)
       next:
         specifier: ^16.3.7
         version: 16.3.7(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@26.6.3)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -438,24 +408,12 @@ importers:
       react-hook-form:
         specifier: ^7.89.0
         version: 7.89.0(@types/react@19.3.0)(react@19.3.0)
-      react-icons:
-        specifier: ^5.7.0
-        version: 5.7.0(react@19.3.0)
-      shadcn:
-        specifier: ^4.21.0
-        version: 4.21.0(supports-color@7.2.0)(typescript@7.0.2)
       socket.io-client:
         specifier: ^4.8.4
         version: 4.8.4(supports-color@7.2.0)
       swiper:
         specifier: ^14.3.0
         version: 14.3.0
-      tailwind-merge:
-        specifier: ^3.7.0
-        version: 3.7.0
-      tw-animate-css:
-        specifier: ^1.4.0
-        version: 1.4.0
       twilio-video:
         specifier: ^2.36.0
         version: 2.36.0
@@ -787,6 +745,79 @@ importers:
       typescript:
         specifier: 5.8.3
         version: 5.8.3
+
+  packages/design:
+    dependencies:
+      '@base-ui/react':
+        specifier: ^1.8.0
+        version: 1.8.0(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@fortawesome/fontawesome-free':
+        specifier: ^7.3.1
+        version: 7.3.1
+      '@shadcn/react':
+        specifier: ^0.3.1
+        version: 0.3.1(@types/react@19.3.0)(react@19.3.0)
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      embla-carousel-autoplay:
+        specifier: ^8.6.0
+        version: 8.6.0(embla-carousel@8.6.0)
+      embla-carousel-react:
+        specifier: ^8.6.0
+        version: 8.6.0(react@19.3.0)
+      input-otp:
+        specifier: ^1.5.0
+        version: 1.5.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      lenis:
+        specifier: ^1.3.26
+        version: 1.3.26(react@19.3.0)
+      lucide-react:
+        specifier: ^1.48.0
+        version: 1.49.0(@types/react@19.3.0)(react@19.3.0)
+      react:
+        specifier: ^18.3.1 || ^19.0.0-0 || ^19.3.0
+        version: 19.3.0
+      react-dom:
+        specifier: ^18.3.1 || ^19.0.0-0 || ^19.3.0
+        version: 19.3.0(react@19.3.0)
+      react-hook-form:
+        specifier: ^7.89.0
+        version: 7.89.0(@types/react@19.3.0)(react@19.3.0)
+      react-icons:
+        specifier: ^5.7.0
+        version: 5.7.0(react@19.3.0)
+      swiper:
+        specifier: ^14.3.0
+        version: 14.3.0
+      tailwind-merge:
+        specifier: ^3.7.0
+        version: 3.7.0
+      tw-animate-css:
+        specifier: ^1.4.0
+        version: 1.4.0
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^26.6.3
+        version: 26.6.4
+      '@types/react':
+        specifier: ^19.3.0
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: ^19.3.0
+        version: 19.3.0(@types/react@19.3.0)
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
 
   packages/eslint-config:
     devDependencies:

@@ -9,7 +9,7 @@ import {
   FaCertificate,
   FaUsers,
   FaCheckCircle,
-} from "react-icons/fa";
+} from "@repo/design/react-icons";
 import { useTranslations } from "next-intl";
 
 const EducationalContent = () => {

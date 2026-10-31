@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { GiCrystalBall } from "react-icons/gi";
+import { GiCrystalBall } from "@repo/design/react-icons";
 
 const HeroSection = () => {
   return (

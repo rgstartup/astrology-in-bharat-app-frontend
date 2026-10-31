@@ -3,13 +3,13 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "@/i18n/navigation";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { PATHS } from "@repo/routes";
 import { OnboardingFormData } from "@/lib/types";
 import { useAuth } from "@/store/authStore";
 import { useOnboardStore } from "@/store/onboardStore";
-import { Form } from "@/components/ui/form";
-import { Badge } from "@/components/ui/badge";
+import { Form } from "@repo/design/shadcn";
+import { Badge } from "@repo/design/shadcn";
 import { StepOnePersonalDetails } from "@/features/onboard/components/StepOnePersonalDetails";
 import { OnboardingStepTransition } from "@/features/onboard/components/OnboardingStepTransition";
 

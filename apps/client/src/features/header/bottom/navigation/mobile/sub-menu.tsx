@@ -3,9 +3,9 @@
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import type { NavSubItemConfig } from "../nav-config";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/design/cn";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight } from "@repo/design/lucide";
 
 interface MobileSubMenuProps {
   items: NavSubItemConfig[];

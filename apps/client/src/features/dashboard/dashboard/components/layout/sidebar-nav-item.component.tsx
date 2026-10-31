@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight } from "@repo/design/lucide";
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/design/cn";
 import type { NavItem } from "../../data/navigation.data";
 
 export interface SidebarNavItemProps {

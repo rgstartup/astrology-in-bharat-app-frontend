@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useCallback } from "react";
 import { Link } from "@/i18n/navigation";
-import { Sparkles, ArrowRight, ShieldCheck, Lock } from "lucide-react";
+import { Sparkles, ArrowRight, ShieldCheck, Lock } from "@repo/design/lucide";
 import {
   ProductGroup,
   ProductType,
@@ -14,7 +14,7 @@ import {
 import { getProductImageUrl } from "@/utils/image-utils";
 import { fetchExpertProducts } from "@/actions/expert-products";
 import { useHeaderScroll } from "@/hooks/use-header-scroll";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/design/cn";
 import { RemedyItem, RemedyTabConfig, RemedyTabKey } from "./types";
 import { REMEDY_TABS_CONFIG } from "./remedies.data";
 import { RemediesTabsHeader } from "./RemediesTabsHeader";

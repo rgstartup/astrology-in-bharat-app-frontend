@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Link } from "@/i18n/navigation";
-import { Sparkles, ArrowRight, PackageOpen } from "lucide-react";
+import { Sparkles, ArrowRight, PackageOpen } from "@repo/design/lucide";
 import { RemedyItem, RemedyTabConfig } from "./types";
 import { RemedyCard } from "./RemedyCard";
 

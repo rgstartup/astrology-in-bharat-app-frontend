@@ -2,13 +2,20 @@ import React from "react";
 import Image from "next/image";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 
 /** Session kind across the legacy (`AUDIO_CALL`) and current (`voice`) vocabularies. */
 function sessionKind(session: any): "chat" | "voice" | "video" {
   const raw = String(session.type ?? session.session_type ?? "").toLowerCase();
-  if (raw === "video" || raw === "video_call" || raw === "video-call") return "video";
-  if (raw === "voice" || raw === "audio" || raw === "audio_call" || raw === "audio-call" || raw === "call") {
+  if (raw === "video" || raw === "video_call" || raw === "video-call")
+    return "video";
+  if (
+    raw === "voice" ||
+    raw === "audio" ||
+    raw === "audio_call" ||
+    raw === "audio-call" ||
+    raw === "call"
+  ) {
     return "voice";
   }
   return "chat";
@@ -53,10 +60,14 @@ function SessionStatusBadge({
   const label =
     terminatedBy === "admin"
       ? t.terminatedByAdmin
-      : t.statusMap?.[status as keyof typeof t.statusMap] || status || t.scheduled;
+      : t.statusMap?.[status as keyof typeof t.statusMap] ||
+        status ||
+        t.scheduled;
 
   return (
-    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${colorClass}`}>
+    <span
+      className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${colorClass}`}
+    >
       {label}
     </span>
   );
@@ -82,7 +93,11 @@ function SessionExpandedDetails({
   const isAudio = kind === "voice";
   const typeIcon = isVideo ? "fa-video" : isAudio ? "fa-phone" : "fa-message";
   const typeLabel = isVideo ? "Video Call" : isAudio ? "Audio Call" : "Chat";
-  const viewActionLabel = isVideo ? t.viewVideo : isAudio ? t.viewCall : t.viewChat;
+  const viewActionLabel = isVideo
+    ? t.viewVideo
+    : isAudio
+      ? t.viewCall
+      : t.viewChat;
 
   return (
     <div className="p-6 md:p-8 animate-in fade-in slide-in-from-top-4 duration-300 bg-white">
@@ -152,7 +167,9 @@ function SessionExpandedDetails({
                 <i className="fa-solid fa-star"></i>
               </div>
               <span className="text-sm font-bold text-gray-700">
-                {session.rating > 0 ? `${session.rating} ${t.rating}` : `N/A ${t.rating}`}
+                {session.rating > 0
+                  ? `${session.rating} ${t.rating}`
+                  : `N/A ${t.rating}`}
               </span>
             </div>
           </div>
@@ -163,7 +180,12 @@ function SessionExpandedDetails({
         <button
           onClick={() => onViewDetails(session)}
           className="w-full sm:w-auto rounded-full px-6 py-2.5 text-sm font-bold border-2 border-[#fd6410] text-[#fd6410] bg-white hover:bg-[#fd6410]/5 flex items-center justify-center gap-2.5 transition-all shadow-sm active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-          disabled={session.type !== "CHAT" && session.type !== "chat" && session.session_type !== "chat" && session.session_type !== undefined}
+          disabled={
+            session.type !== "CHAT" &&
+            session.type !== "chat" &&
+            session.session_type !== "chat" &&
+            session.session_type !== undefined
+          }
         >
           <i className={`fa-solid ${typeIcon} text-base`}></i>
           {viewActionLabel}
@@ -171,13 +193,16 @@ function SessionExpandedDetails({
 
         {consultationDisputes[session.id] ? (
           <button
-            onClick={() => onViewDispute && onViewDispute(consultationDisputes[session.id])}
+            onClick={() =>
+              onViewDispute && onViewDispute(consultationDisputes[session.id])
+            }
             className="w-full sm:w-auto px-8 py-3 bg-orange text-white font-bold rounded-2xl hover:bg-orange/90 shadow-lg shadow-orange/20 transition-all flex items-center justify-center gap-3"
           >
             <i className="fa-solid fa-comments text-lg"></i>
             {t.reportIssueDiscussion}
           </button>
-        ) : session.status === "issue_reported" || session.status === "dispute_raised" ? (
+        ) : session.status === "issue_reported" ||
+          session.status === "dispute_raised" ? (
           <div className="w-full sm:w-auto px-6 py-3 bg-red-50 text-red-600 font-bold rounded-2xl border border-red-100 flex items-center justify-center gap-3">
             <i className="fa-solid fa-triangle-exclamation"></i>
             {t.issueReported}
@@ -220,7 +245,11 @@ function SessionHistoryRow({
   const kind = sessionKind(session);
   const isVideo = kind === "video";
   const isAudio = kind === "voice";
-  const typeIcon = isVideo ? "fa-video text-purple-600" : isAudio ? "fa-phone text-blue-600" : "fa-message text-blue-500";
+  const typeIcon = isVideo
+    ? "fa-video text-purple-600"
+    : isAudio
+      ? "fa-phone text-blue-600"
+      : "fa-message text-blue-500";
   const typeText = isVideo
     ? t.viewVideo
     : isAudio
@@ -323,7 +352,10 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
   onLoadMore,
 }) => {
   const { lang } = useLanguageStore();
-  const t = (profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en).history;
+  const t = (
+    profileTranslations[lang as keyof typeof profileTranslations] ||
+    profileTranslations.en
+  ).history;
 
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden">
@@ -339,7 +371,10 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
         {loadingHistory ? (
           <div className="space-y-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="border border-gray-100 rounded-3xl p-6 bg-white shadow-sm">
+              <div
+                key={i}
+                className="border border-gray-100 rounded-3xl p-6 bg-white shadow-sm"
+              >
                 <div className="flex justify-between items-center mb-6">
                   <div className="flex gap-8">
                     <div className="space-y-2">
@@ -365,25 +400,31 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
             <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mb-6 border border-gray-100 shadow-inner">
               <i className="fa-solid fa-calendar-check text-3xl text-gray-300"></i>
             </div>
-            <h6 className="font-bold text-gray-900 text-lg mb-2">{t.noHistory}</h6>
-            <p className="text-gray-500 text-sm max-w-xs m-0">{t.noHistoryHint}</p>
+            <h6 className="font-bold text-gray-900 text-lg mb-2">
+              {t.noHistory}
+            </h6>
+            <p className="text-gray-500 text-sm max-w-xs m-0">
+              {t.noHistoryHint}
+            </p>
           </div>
         ) : (
           <div className="space-y-4 sm:space-y-6">
-            {consultationHistory.filter(Boolean).map((session: any, idx: number) => (
-              <SessionHistoryRow
-                key={session.id || idx}
-                session={session}
-                isExpanded={Boolean(expandedSessions[session.id])}
-                onToggle={() => toggleSession(session.id)}
-                onViewDetails={onViewDetails}
-                onViewDispute={onViewDispute}
-                onReportIssue={onReportIssue}
-                consultationDisputes={consultationDisputes}
-                lang={lang}
-                t={t}
-              />
-            ))}
+            {consultationHistory
+              .filter(Boolean)
+              .map((session: any, idx: number) => (
+                <SessionHistoryRow
+                  key={session.id || idx}
+                  session={session}
+                  isExpanded={Boolean(expandedSessions[session.id])}
+                  onToggle={() => toggleSession(session.id)}
+                  onViewDetails={onViewDetails}
+                  onViewDispute={onViewDispute}
+                  onReportIssue={onReportIssue}
+                  consultationDisputes={consultationDisputes}
+                  lang={lang}
+                  t={t}
+                />
+              ))}
 
             {hasMore ? (
               <div className="flex justify-center mt-10">
@@ -395,12 +436,18 @@ const HistoryTab: React.FC<HistoryTabProps> = ({
                   {loadingMore ? (
                     <>
                       <i className="fa-solid fa-circle-notch fa-spin"></i>
-                      <span>{lang === "hi" ? "और लोड हो रहा है..." : "Loading More..."}</span>
+                      <span>
+                        {lang === "hi"
+                          ? "और लोड हो रहा है..."
+                          : "Loading More..."}
+                      </span>
                     </>
                   ) : (
                     <>
                       <i className="fa-solid fa-arrow-down-long"></i>
-                      <span>{lang === "hi" ? "और लोड करें" : "Load More History"}</span>
+                      <span>
+                        {lang === "hi" ? "और लोड करें" : "Load More History"}
+                      </span>
                     </>
                   )}
                 </button>

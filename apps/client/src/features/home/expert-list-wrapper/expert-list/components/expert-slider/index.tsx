@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "@repo/design/swiper";
+import { Navigation, Autoplay } from "@repo/design/swiper";
 
 import ExpertCard from "./expert-card";
 import { SkeletonCard } from "./SkeletonCard";

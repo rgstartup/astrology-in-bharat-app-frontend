@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { Swiper, SwiperSlide, type SwiperClass } from "swiper/react";
-import { Autoplay, Navigation, Mousewheel } from "swiper/modules";
+import { Swiper, SwiperSlide, type SwiperClass } from "@repo/design/swiper";
+import { Autoplay, Navigation, Mousewheel } from "@repo/design/swiper";
 import { ProductCard } from "./ProductCard";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@repo/design/lucide";
 import {
   useProductListStore,
   type ProductItem,

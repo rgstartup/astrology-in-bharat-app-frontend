@@ -7,6 +7,7 @@ module.exports = {
     "./src/features/**/*.{js,ts,jsx,tsx}",
     "./src/libs/**/*.{js,ts,jsx,tsx}",
     "../../packages/ui/src/**/*.{js,ts,jsx,tsx}", // Point to packages/ui
+    "../../packages/design/src/**/*.{js,ts,jsx,tsx}", // Point to packages/design
   ],
   darkMode: "class",
   theme: {

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import Featured4Cards from "@/components/ui/common/Featured4Cards";
+import Featured4Cards from "@/components/features/home/Featured4Cards";
 import { getTranslations } from "next-intl/server";
 import type HomeMessages from "@messages/en/home.json";
 

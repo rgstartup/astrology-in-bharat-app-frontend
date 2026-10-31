@@ -4,7 +4,7 @@ import React from "react";
 import { RecommendedExperts, Button } from "@/features/dashboard";
 import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@repo/design/lucide";
 
 export default function DashboardExpertsPage() {
   return (

@@ -2,7 +2,7 @@
 
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import React, { useEffect, useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import type { IExpert } from "@repo/lib";
 import { useAuthStore } from "@/store/authStore";
 import { usePreloadExpertStore } from "@/store/preloadExpertStore";

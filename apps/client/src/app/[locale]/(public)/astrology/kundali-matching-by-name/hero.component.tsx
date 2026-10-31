@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Flower2, Sparkles, ClipboardCheck } from "lucide-react";
+import { Flower2, Sparkles, ClipboardCheck } from "@repo/design/lucide";
 
 const HeroComponent = () => {
   const t = useTranslations("Matching");

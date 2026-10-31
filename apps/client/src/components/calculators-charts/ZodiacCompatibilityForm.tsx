@@ -5,9 +5,9 @@ import {
   FaArrowRight,
   FaSpinner,
   FaExchangeAlt,
-} from "react-icons/fa";
-import { TbCrystalBall } from "react-icons/tb";
-import { GiLotus } from "react-icons/gi";
+} from "@repo/design/react-icons";
+import { TbCrystalBall } from "@repo/design/react-icons";
+import { GiLotus } from "@repo/design/react-icons";
 import { ZodiacCompatibilityFormProps, ZodiacSign } from "@/lib/types/calculator";
 import { SIGNS, signToElement } from "./useZodiacCompatibility";
 

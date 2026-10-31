@@ -7,8 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { CreditCard } from "lucide-react";
+} from "@repo/design/shadcn";
+import { CreditCard } from "@repo/design/lucide";
 import { WalletRechargeForm } from "./WalletRechargeForm";
 
 interface WalletRechargeModalProps {

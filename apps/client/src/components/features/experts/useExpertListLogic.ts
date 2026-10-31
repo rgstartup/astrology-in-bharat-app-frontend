@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { api, API_ROUTES } from "@/actions";
 import { usePresenceStore } from "@/store/presenceStore";
 import { ExpertProfile } from "@/lib/types";

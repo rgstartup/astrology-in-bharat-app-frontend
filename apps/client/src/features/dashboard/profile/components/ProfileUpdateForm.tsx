@@ -10,10 +10,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+} from "@repo/design/shadcn";
+import { Input } from "@repo/design/shadcn";
+import { Button } from "@repo/design/shadcn";
+import { Separator } from "@repo/design/shadcn";
 import { ProfilePicUpload } from "@/features/onboard/components/ProfilePicUpload";
 import {
   User,
@@ -28,8 +28,8 @@ import {
   Venus,
   CircleDot,
   Check,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+} from "@repo/design/lucide";
+import { cn } from "@repo/design/cn";
 import type { Media } from "@repo/lib";
 import {
   profileSchema,

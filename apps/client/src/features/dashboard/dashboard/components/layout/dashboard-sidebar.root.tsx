@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Compass } from "lucide-react";
+import { Compass } from "@repo/design/lucide";
 import { PATHS } from "@repo/routes";
 import { usePathname } from "@/i18n/navigation";
 import { SidebarBrand } from "./sidebar-brand.component";

@@ -6,8 +6,8 @@ import { useAuthStore } from "@/store/authStore";
 import { api, API_ROUTES } from "@/actions";
 import { loadRazorpay } from "@/libs/razorpay";
 import { getErrorMessage, IClientRechargeInitiateResponse } from "@repo/lib";
-import { PlusCircle, ShieldCheck, Sparkles } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { PlusCircle, ShieldCheck, Sparkles } from "@repo/design/lucide";
+import { toast } from "@repo/design/shadcn";
 
 interface WalletRechargeFormProps {
   defaultAmount?: number;

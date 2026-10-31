@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "@/i18n/navigation";
 import { Card } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowRight, Clock } from "@repo/design/lucide";
 import { useRecentActivity, type ActivityItem } from "../hooks/useRecentActivity";
 
 /** Section header shared by every activity state. */

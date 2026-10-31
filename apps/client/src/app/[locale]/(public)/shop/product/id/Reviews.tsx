@@ -2,8 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "@repo/design/swiper";
+import { Navigation, Autoplay } from "@repo/design/swiper";
 
 interface ReviewStat {
   stars: number;

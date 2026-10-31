@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Star, Check } from "lucide-react";
+import { Star, Check } from "@repo/design/lucide";
 import { useExploreExpertsContext } from "../../context/ExploreExpertsContext";
 
 const RATING_OPTIONS = [

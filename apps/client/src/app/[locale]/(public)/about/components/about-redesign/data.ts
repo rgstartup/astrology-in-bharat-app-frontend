@@ -15,7 +15,7 @@ import {
   Target,
   UserCheck,
   Users,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import type { IPlatformStat } from "@repo/lib/src/types/platform-status";
 
 export const storyHighlights = [

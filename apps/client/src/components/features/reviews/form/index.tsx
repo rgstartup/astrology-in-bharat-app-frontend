@@ -5,7 +5,7 @@ import PlatformReviewHeader from "./header";
 import PlatformReviewRating from "./rating";
 import QuickTag from "./quick-tag";
 import { api } from "@/actions";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { getErrorMessage } from "@repo/lib";
 
 interface IReviewFormProps {

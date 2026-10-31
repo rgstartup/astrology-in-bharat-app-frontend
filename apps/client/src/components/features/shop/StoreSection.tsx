@@ -8,9 +8,9 @@ import {
   ChevronRight,
   Search,
   ChevronDown,
-} from "lucide-react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay, Mousewheel } from "swiper/modules";
+} from "@repo/design/lucide";
+import { Swiper, SwiperSlide } from "@repo/design/swiper";
+import { Navigation, Autoplay, Mousewheel } from "@repo/design/swiper";
 import { useAllMerchants } from "@/hooks/useAllMerchants";
 import { useMerchantCities } from "@/hooks/useMerchantCities";
 import { useDebounceValue } from "@/hooks/external-hooks";

@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaComments, FaPhone, FaVideo, FaStar, FaArrowRight, FaCalendarTimes, FaCircle } from "react-icons/fa";
-import { HiOutlineSparkles } from "react-icons/hi";
+import { FaComments, FaPhone, FaVideo, FaStar, FaArrowRight, FaCalendarTimes, FaCircle } from "@repo/design/react-icons";
+import { HiOutlineSparkles } from "@repo/design/react-icons";
 import { api } from "@/actions";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { getErrorMessage } from "@repo/lib";
 
 function formatDateTime(dateStr: string) {

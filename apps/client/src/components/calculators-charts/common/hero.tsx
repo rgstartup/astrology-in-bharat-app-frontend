@@ -5,7 +5,7 @@ import {
   GiLotus,
   GiFlowerEmblem,
   GiStarShuriken,
-} from "react-icons/gi";
+} from "@repo/design/react-icons";
 
 type CalculatorHeroProps = {
   badgeText: string;

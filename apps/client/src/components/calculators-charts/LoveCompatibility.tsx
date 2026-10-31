@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useMemo, useRef, useState } from "react";
-import { FaHeart, FaArrowRight, FaStar, FaBalanceScale } from "react-icons/fa";
+import { FaHeart, FaArrowRight, FaStar, FaBalanceScale } from "@repo/design/react-icons";
 
-import { GiLotus, GiSparkles } from "react-icons/gi";
+import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 
 import CalculatorHero from "./common/hero";
 import LoveCompatibilityForm from "./LoveCompatibilityForm.component";

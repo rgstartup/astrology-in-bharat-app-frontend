@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCartStore } from "@/store/cartStore";
 import { CartService } from "../services/cart.service";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { getErrorMessage } from "@repo/lib";
 
 export const useCart = () => {

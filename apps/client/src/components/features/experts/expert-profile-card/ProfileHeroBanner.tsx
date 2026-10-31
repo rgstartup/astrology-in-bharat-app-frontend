@@ -2,14 +2,14 @@
 
 import React, { useOptimistic, useTransition } from "react";
 import Image from "next/image";
-import { Award, CheckCircle2, Play, Heart } from "lucide-react";
+import { Award, CheckCircle2, Play, Heart } from "@repo/design/lucide";
 import { ProfileHeroBannerProps } from "./types";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuthStore } from "@/store/__authStore";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
-import { Toggle } from "@/components/ui/toggle";
+import { cn } from "@repo/design/cn";
+import { Toggle } from "@repo/design/shadcn";
 import { toggleExpertFavoriteAction } from "@/actions";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";

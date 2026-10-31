@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import ReviewModal from "@/components/ui/modals/ReviewModal";
+import ReviewModal from "@/components/features/reviews/";
 import ExpertProfileCard from "./ExpertProfileCard";
 import ExpertContentSection from "./ExpertContentSection";
 import ExpertMediaModals from "./ExpertMediaModals";

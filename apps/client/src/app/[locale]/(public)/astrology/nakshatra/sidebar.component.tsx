@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FaChevronRight, FaSearch } from "react-icons/fa";
+import { FaChevronRight, FaSearch } from "@repo/design/react-icons";
 
 const nakshatras = [
   "1. Ashwini",

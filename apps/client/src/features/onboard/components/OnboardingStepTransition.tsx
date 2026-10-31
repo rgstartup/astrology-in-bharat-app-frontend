@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/design/cn";
 import { useOnboardStore } from "@/store/onboardStore";
 
 interface OnboardingStepTransitionProps {

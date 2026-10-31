@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import PersonalGuidanceCard from "@/components/ui/PersonalGuidanceCard";
+import PersonalGuidanceCard from "@/components/features/home/PersonalGuidanceCard";
 import LoveCompatibilitySeoContent from "./love-compatibility-seo.component";
 import {
   MEANING_DATA,

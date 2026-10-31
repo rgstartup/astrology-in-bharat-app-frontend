@@ -1,53 +1,24 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
-import { useAuthStore } from "@/store/authStore";
-import { Empty, EmptyTitle } from "@/components/ui/empty";
-import { Spinner } from "@/components/ui/spinner";
-import { ChatRoomContent, RoomErrorState, RoomLoadingState } from "@/features/consultation/room";
-import { useRoomSeed } from "@/features/consultation/room/hooks/use-room-seed";
+import React, { Suspense } from "react";
+import { Empty, EmptyTitle } from "@repo/design/shadcn";
+import { Spinner } from "@repo/design/shadcn";
+import { RoomContent, useRoomLifecycle } from "@/features/consultation";
+import { toRoomMessages } from "@/features/consultation/utils/message-keys";
 
 /**
- * Route shell: owns search params + the initial REST seed
- * (`getChatPrepExpertAction`, `getChatHistoryAction` via `useRoomSeed`),
- * then hands fully-loaded props to the room. Stays inside Suspense because
- * `useSearchParams` requires it.
+ * Route shell: reads the server-seeded consultation data from
+ * `RoomLifecycleProvider` (populated by layout.tsx) and hands it to the room.
+ * Stays inside Suspense for the initial route loading fallback.
  *
  * Route contract: `/consultation/[id]` where `id` is the consultation id
- * (set by the chat prep modal). `expertId` travels as a query param — no
- * consultation-detail endpoint exists yet to resolve expert-from-consultation.
+ * (set by the chat prep modal).
  */
 function ChatRoomBootstrap() {
-  const params = useParams();
-  const searchParams = useSearchParams();
-  const consultationIdParam = params.id as string;
-  const consultationId = consultationIdParam ? Number(consultationIdParam) : NaN;
-  const roomConsultationId = consultationIdParam && !isNaN(consultationId) ? consultationId : null;
-  const expertId = searchParams.get("expertId");
+  const { sessions } = useRoomLifecycle();
+  const initialMessages = toRoomMessages(sessions);
 
-  const { isAuthenticated } = useAuthStore();
-  const { seed } = useRoomSeed(expertId, roomConsultationId, isAuthenticated);
-  const [loadError, setLoadError] = useState(false);
-
-  useEffect(() => {
-    if (seed) return;
-    const timer = setTimeout(() => setLoadError(true), 10000); // 10 second timeout
-    return () => clearTimeout(timer);
-  }, [seed]);
-
-  if (loadError) return <RoomErrorState />;
-
-  if (!seed) return <RoomLoadingState />;
-
-  return (
-    <ChatRoomContent
-      roomConsultationId={roomConsultationId}
-      expertData={seed.expertData}
-      initialMessages={seed.messages}
-      initialSessions={seed.sessions}
-    />
-  );
+  return <RoomContent initialMessages={initialMessages} />;
 }
 
 export default function ChatRoom() {

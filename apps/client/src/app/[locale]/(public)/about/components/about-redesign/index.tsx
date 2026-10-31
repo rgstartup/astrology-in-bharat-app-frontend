@@ -2,8 +2,8 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Suspense } from "react";
 import AboutSeoContent from "./about-seo.component";
-import GuidanceCTA from "@/components/ui/GuidanceCTA";
-import { ArrowRight, MessageSquare } from "lucide-react";
+import GuidanceCTA from "@/components/features/home/GuidanceCTA";
+import { ArrowRight, MessageSquare } from "@repo/design/lucide";
 import { api } from "@/actions";
 import { platformStats } from "./data";
 import type {

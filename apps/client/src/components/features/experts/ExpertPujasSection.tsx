@@ -1,7 +1,7 @@
 import React from "react";
 import { api, API_ROUTES } from "@/actions";
 import { PujaCard } from "@/components/features/puja/PujaCard";
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@repo/design/lucide";
 
 export interface ExpertPujasSectionProps {
   expertId: string;

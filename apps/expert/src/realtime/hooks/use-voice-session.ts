@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { RtcSession, RtcSnapshot } from "@repo/rtc";
-import type { ExpertSessionPhase } from "@/components/consultation/types";
+import type { ExpertSessionPhase } from "@/features/consultation/session";
 import { joinCall } from "@/realtime/topics/call";
 import { mediaReady } from "@/realtime/topics/consultation";
 

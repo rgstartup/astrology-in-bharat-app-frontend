@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/features/dashboard";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw } from "@repo/design/lucide";
 
 interface WalletTransactionLoadMoreProps {
   hasMore: boolean;

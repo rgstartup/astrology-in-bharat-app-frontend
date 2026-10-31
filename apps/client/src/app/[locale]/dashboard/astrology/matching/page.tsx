@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
 import { Card, CardContent, Button, useDashboardOverview } from "@/features/dashboard";
-import { HeartHandshake, Sparkles, ArrowRight, UserCheck } from "lucide-react";
+import { HeartHandshake, Sparkles, ArrowRight, UserCheck } from "@repo/design/lucide";
 
 export default function KundliMatchingDashboardPage() {
   const { user, astrologyDetails, hasBirthDetails } = useDashboardOverview();

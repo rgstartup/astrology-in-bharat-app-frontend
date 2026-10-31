@@ -1,7 +1,7 @@
 import React from "react";
-import { FaUser, FaHeart, FaArrowRight, FaSpinner, FaFire } from "react-icons/fa";
-import { TbCrystalBall } from "react-icons/tb";
-import { GiLotus } from "react-icons/gi";
+import { FaUser, FaHeart, FaArrowRight, FaSpinner, FaFire } from "@repo/design/react-icons";
+import { TbCrystalBall } from "@repo/design/react-icons";
+import { GiLotus } from "@repo/design/react-icons";
 import { FlamesFormProps } from "@/lib/types/calculator";
 
 const FlamesForm: React.FC<FlamesFormProps> = ({

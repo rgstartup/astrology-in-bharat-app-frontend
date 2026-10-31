@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { X } from "@repo/design/lucide";
 import { Button } from "@repo/ui";
 import { PATHS } from "@repo/routes";
 import { Link } from "@/i18n/navigation";

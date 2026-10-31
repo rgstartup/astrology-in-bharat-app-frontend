@@ -8,7 +8,7 @@ import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 import { fetchRecommendedExperts } from "../api/dashboard.api";
 import { SAMPLE_RECOMMENDED_EXPERTS } from "../data";
-import { Star, MessageSquare, ArrowRight, ShieldCheck } from "lucide-react";
+import { Star, MessageSquare, ArrowRight, ShieldCheck } from "@repo/design/lucide";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 import { usePresenceStore } from "@/store/presenceStore";
 import Image from "next/image";

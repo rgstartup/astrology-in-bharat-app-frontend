@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { Menu } from "lucide-react";
+import { Menu } from "@repo/design/lucide";
 import { usePathname } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
 import { useAuthStore } from "@/store/authStore";
 import { useNotification } from "@/store/notificationStore";
-import { SheetTrigger } from "@/components/ui/sheet";
+import { SheetTrigger } from "@repo/design/shadcn";
 import { HeaderBreadcrumb } from "./header-breadcrumb.component";
 import { HeaderActions } from "./header-actions.component";
 import {

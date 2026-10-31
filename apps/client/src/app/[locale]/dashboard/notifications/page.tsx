@@ -9,7 +9,7 @@ import {
   MessageSquare,
   ShoppingBag,
   Trash2,
-} from "lucide-react";
+} from "@repo/design/lucide";
 
 type NotificationCategory =
   "all" | "consultations" | "astrology" | "orders" | "system";

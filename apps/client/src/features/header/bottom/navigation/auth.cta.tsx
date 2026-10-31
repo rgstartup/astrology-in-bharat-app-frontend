@@ -3,7 +3,7 @@
 import { PATHS } from "@repo/routes";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { LogIn, UserPlus } from "lucide-react";
+import { LogIn, UserPlus } from "@repo/design/lucide";
 
 interface AuthCTAProps {
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;

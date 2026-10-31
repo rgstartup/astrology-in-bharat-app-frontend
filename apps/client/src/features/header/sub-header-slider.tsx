@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "@repo/design/swiper";
+import { Navigation, Autoplay } from "@repo/design/swiper";
 import { useRouter } from "@/i18n/navigation";
 import ServiceDataKeys from "./service-data-key";
 

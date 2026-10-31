@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { FaCalendarAlt, FaChevronRight, FaMapMarkerAlt, FaPhoneAlt, FaClock, FaUser } from "react-icons/fa";
-import { HiOutlineSparkles } from "react-icons/hi";
+import { FaCalendarAlt, FaChevronRight, FaMapMarkerAlt, FaPhoneAlt, FaClock, FaUser } from "@repo/design/react-icons";
+import { HiOutlineSparkles } from "@repo/design/react-icons";
 
 const InputFormSection = () => {
   return (

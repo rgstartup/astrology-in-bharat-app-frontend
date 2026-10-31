@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { Link } from "@/i18n/navigation";
-import { RotateCw, Home, AlertCircle } from "lucide-react";
+import { RotateCw, Home, AlertCircle } from "@repo/design/lucide";
 
 export default function ConsultantsRootError({
   error,

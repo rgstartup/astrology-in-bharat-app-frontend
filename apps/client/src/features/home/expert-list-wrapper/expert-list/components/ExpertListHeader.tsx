@@ -15,7 +15,7 @@ import {
   IndianRupee,
   Sparkles,
   Zap,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { useSpecializationScroll } from "../hooks/useSpecializationScroll";
 import { useExpertListStore } from "@/store/expertListStore";
 import { Specialization } from "@repo/lib";
@@ -34,7 +34,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
-} from "@/components/ui/dropdown-menu";
+} from "@repo/design/shadcn";
 
 export interface ExpertListHeaderProps {
   title?: string;

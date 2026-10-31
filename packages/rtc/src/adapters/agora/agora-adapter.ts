@@ -4,10 +4,7 @@ import AgoraRTC, {
   type IMicrophoneAudioTrack,
 } from "agora-rtc-sdk-ng";
 import { resolveAgoraConfig } from "../../core/config";
-import type {
-  AgoraAdapterConfig,
-  RtcAdapterConfig,
-} from "../../core/config";
+import type { AgoraAdapterConfig, RtcAdapterConfig } from "../../core/config";
 import { RtcError } from "../../core/errors";
 import {
   assertAdapterConfigured,
@@ -69,7 +66,7 @@ export class AgoraAdapter implements RtcAdapter {
    */
   async connect(options: RtcConnectOptions): Promise<void> {
     assertAdapterConfigured(this);
-    
+
     // Create abort controller for in-flight cancellation
     this.connectingAbortController = new AbortController();
     const { signal } = this.connectingAbortController;
@@ -90,20 +87,35 @@ export class AgoraAdapter implements RtcAdapter {
       } else {
         this.audioTrack = await AgoraRTC.createMicrophoneAudioTrack();
       }
-      
+
       // Check for abort before join
       if (signal.aborted) {
-        throw new RtcError("CONNECT_ABORTED", "Connection aborted", "agora", false);
+        throw new RtcError(
+          "CONNECT_ABORTED",
+          "Connection aborted",
+          "agora",
+          false,
+        );
       }
-      
-      await client.join(this.options?.appId ?? "", options.roomName, options.token, null);
-      
+
+      await client.join(
+        this.options?.appId ?? "",
+        options.roomName,
+        options.token,
+        null,
+      );
+
       // Check for abort after join
       if (signal.aborted) {
         await this.teardown();
-        throw new RtcError("CONNECT_ABORTED", "Connection aborted", "agora", false);
+        throw new RtcError(
+          "CONNECT_ABORTED",
+          "Connection aborted",
+          "agora",
+          false,
+        );
       }
-      
+
       const tracks =
         this.videoTrack === null
           ? [this.audioTrack]
@@ -120,7 +132,8 @@ export class AgoraAdapter implements RtcAdapter {
       });
     } catch (error: unknown) {
       await this.teardown();
-      const message = error instanceof Error ? error.message : "Agora join failed";
+      const message =
+        error instanceof Error ? error.message : "Agora join failed";
       throw new RtcError("CONNECT_FAILED", message, "agora", true);
     } finally {
       this.connectingAbortController = null;
@@ -134,13 +147,14 @@ export class AgoraAdapter implements RtcAdapter {
    */
   async disconnect(): Promise<void> {
     assertAdapterConfigured(this);
-    
+
     // Abort in-flight connection if one is in progress
     if (this.connectingAbortController) {
       this.connectingAbortController.abort();
     }
-    
+
     await this.teardown();
+    console.log(`[Agora]: tear down running`);
     this.refresh();
   }
 
@@ -171,7 +185,7 @@ export class AgoraAdapter implements RtcAdapter {
     for (const user of client.remoteUsers) {
       const audioTrack = user.audioTrack;
       if (audioTrack) {
-        await audioTrack.setVolume(volume);
+        audioTrack.setVolume(volume);
       }
     }
     this.refresh();
@@ -185,7 +199,12 @@ export class AgoraAdapter implements RtcAdapter {
   async setCameraEnabled(enabled: boolean): Promise<void> {
     assertAdapterConfigured(this);
     if (this.videoTrack === null) {
-      throw new RtcError("UNSUPPORTED", "Camera unavailable in voice session", "agora", false);
+      throw new RtcError(
+        "UNSUPPORTED",
+        "Camera unavailable in voice session",
+        "agora",
+        false,
+      );
     }
     await this.videoTrack.setEnabled(enabled);
     this.refresh();
@@ -243,7 +262,7 @@ export class AgoraAdapter implements RtcAdapter {
         try {
           await client.subscribe(user, mediaType);
           if (mediaType === "audio") {
-            await user.audioTrack?.play();
+            user.audioTrack?.play();
             console.info("[AgoraRTC] remote audio playback requested", {
               roomName,
               localUid: client.uid,
@@ -252,7 +271,7 @@ export class AgoraAdapter implements RtcAdapter {
             });
             // Honor the current speaker-muted state for late-joining peers.
             if (this.speakerMuted && user.audioTrack) {
-              await user.audioTrack.setVolume(0);
+              user.audioTrack.setVolume(0);
             }
           }
           this.refresh();
@@ -286,7 +305,10 @@ export class AgoraAdapter implements RtcAdapter {
       }
     });
     client.on("network-quality", (stats) => {
-      const quality = mapAgoraQuality(stats.uplinkNetworkQuality, stats.downlinkNetworkQuality);
+      const quality = mapAgoraQuality(
+        stats.uplinkNetworkQuality,
+        stats.downlinkNetworkQuality,
+      );
       for (const listener of this.listeners.get("network-quality") ?? []) {
         listener({ quality });
       }
@@ -316,7 +338,7 @@ export class AgoraAdapter implements RtcAdapter {
   private async teardown(): Promise<void> {
     const client = this.client;
     this.client = null;
-    
+
     // Explicitly stop and close audio track to release hardware microphone
     const audioTrack = this.audioTrack;
     this.audioTrack = null;
@@ -346,7 +368,7 @@ export class AgoraAdapter implements RtcAdapter {
         readyState: mediaTrack?.readyState ?? "unavailable",
       });
     }
-    
+
     // Explicitly stop and close video track
     const videoTrack = this.videoTrack;
     this.videoTrack = null;
@@ -373,7 +395,7 @@ export class AgoraAdapter implements RtcAdapter {
         // Best effort - the browser track has already been stopped above.
       }
     }
-    
+
     if (client !== null) {
       client.removeAllListeners();
       try {

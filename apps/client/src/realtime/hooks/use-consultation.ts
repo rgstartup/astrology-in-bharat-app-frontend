@@ -75,45 +75,37 @@ export const useConsultation = (
     const socket = realtimeSocket();
 
     const handleState = (payload: ConsultationStatePayload) => {
-      if (payload && Number(payload.consultationId) === id) {
-        // When a sessionId is known, only process events for that session so
-        // a re-initiated session (same consultationId, new sessionId) doesn't
-        // get dropped by the previous session's terminal latch.
-        if (
-          isValidSessionId &&
-          payload.sessionId != null &&
-          Number(payload.sessionId) !== sessionIdNum
-        ) {
-          return;
-        }
-        // A backend-confirmed active state restarts the lifecycle after a
-        // prior end (e.g. re-initiated "continue" session). Clear the
-        // terminal latch so the new startedAt anchor and budget apply; a
-        // late pause/budget event on a still-ended consultation is ignored.
-        if (payload.state === "active") {
-          endedRef.current = false;
-          setEnded(null);
-        } else if (endedRef.current) {
-          return;
-        }
+      if (!payload || Number(payload.consultationId) !== id) return;
+      // 'active' (STARTED / STATE active) always restarts the lifecycle —
+      // even for a session we haven't synced to local state yet (local
+      // sessionId lags behind until chat history refreshes).
+      if (payload.state === "active") {
+        endedRef.current = false;
+        setEnded(null);
         setState(payload);
-        if (payload.state === "active") {
-          setBudgetHold(null);
-        }
-        if (payload.state === "budget_hold") {
-          setBudgetHold(payload as unknown as ConsultationBudgetHoldPayload);
-        }
+        setBudgetHold(null);
+        return;
+      }
+      // Non-active state events belong to a specific session; ignore late
+      // events from a previous session (same consultationId, new sessionId).
+      if (
+        isValidSessionId &&
+        payload.sessionId != null &&
+        Number(payload.sessionId) !== sessionIdNum
+      ) {
+        return;
+      }
+      if (endedRef.current) return;
+      setState(payload);
+      if (payload.state === "budget_hold") {
+        setBudgetHold(payload as unknown as ConsultationBudgetHoldPayload);
       }
     };
 
     const handleResumed = (payload: ConsultationStatePayload) => {
-      if (
-        !payload ||
-        Number(payload.consultationId) !== id ||
-        (isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      ) {
-        return;
-      }
+      if (!payload || Number(payload.consultationId) !== id) return;
+      // RESUMED is a session-establishing event: always process so a
+      // re-initiated session restarts even if local sessionId is stale.
       endedRef.current = false;
       setEnded(null);
       setDecision("accepted");
@@ -189,7 +181,8 @@ export const useConsultation = (
 
     const onAccepted = (p: ConsultationDecisionPayload) => {
       if (!matchDecision(p)) return;
-      if (isValidSessionId && p.sessionId != null && Number(p.sessionId) !== sessionIdNum) return;
+      // ACCEPTED is session-establishing: always process even if local
+      // sessionId is stale (it lags behind until chat history refreshes).
       // Continue-consultation re-accept: clear the ENDED terminal latch so
       // subsequent state/budget events the new session emits still apply.
       endedRef.current = false;

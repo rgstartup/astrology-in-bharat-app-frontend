@@ -1,5 +1,8 @@
-import { createSafeFetchInstance, createSafeFetchResultInstance } from "@repo/safe-fetch";
-export type { Result, ApiErrorBody } from "@repo/safe-fetch";
+import {
+  createSafeFetchInstance,
+  createSafeFetchResultInstance,
+} from "@repo/safe-fetch";
+export { type Result, type ApiErrorBody, ApiError } from "@repo/safe-fetch";
 export { API_ROUTES } from "@/lib/api-routes";
 export { AUTH_COOKIE_NAMES } from "@/lib/constants/auth";
 export type { AuthTokens, AuthCookieName } from "@/lib/constants/auth";

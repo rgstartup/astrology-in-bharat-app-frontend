@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { FaUser, FaSpinner } from "react-icons/fa";
-import { HiOutlineSwitchHorizontal } from "react-icons/hi";
-import { BsCheckCircleFill } from "react-icons/bs";
-import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
+import { FaUser, FaSpinner } from "@repo/design/react-icons";
+import { HiOutlineSwitchHorizontal } from "@repo/design/react-icons";
+import { BsCheckCircleFill } from "@repo/design/react-icons";
+import LocationAutocomplete from "@/components/calculators-charts/LocationAutocomplete";
 import { useTranslations } from "next-intl";
 import { MatchFormProps } from "@/lib/types";
 

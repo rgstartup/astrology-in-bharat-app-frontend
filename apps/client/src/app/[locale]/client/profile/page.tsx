@@ -17,7 +17,7 @@ import UserDisputeChatModal from "@/components/features/user/UserDisputeChatModa
 import DisputesTab from "@/components/features/profile/DisputesTab";
 import PujaBookingsTab from "@/components/features/profile/PujaBookingsTab";
 import { useProfileLogic } from "@/components/features/profile/useProfileLogic";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 import { Loading } from "@repo/ui";
 import { useAuth } from "@/store/authStore";
 import { useTranslations } from "next-intl";
@@ -254,7 +254,9 @@ const ProfileContent: React.FC = () => {
                   role="alert"
                 >
                   <i className="fa-solid fa-check-circle mr-3"></i>
-                  <span className="font-medium">{profileLogic.successMessage}</span>
+                  <span className="font-medium">
+                    {profileLogic.successMessage}
+                  </span>
                 </div>
               )}
               {profileLogic.errorMessage && (
@@ -263,7 +265,9 @@ const ProfileContent: React.FC = () => {
                   role="alert"
                 >
                   <i className="fa-solid fa-exclamation-circle mr-3"></i>
-                  <span className="font-medium">{profileLogic.errorMessage}</span>
+                  <span className="font-medium">
+                    {profileLogic.errorMessage}
+                  </span>
                 </div>
               )}
 
@@ -282,7 +286,10 @@ const ProfileContent: React.FC = () => {
             onClose={() => profileLogic.setShowChatModal(false)}
             selectedSession={profileLogic.selectedSession}
             chatMessages={profileLogic.chatMessages}
-            userAvatar={profileLogic.profileData?.profile_picture || profileLogic.imagePreview}
+            userAvatar={
+              profileLogic.profileData?.profile_picture ||
+              profileLogic.imagePreview
+            }
           />
 
           <ReportIssueModal

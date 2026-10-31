@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { getMyPujaAppointments, updatePujaAppointmentStatus } from "@/libs/api-profile";
 import { getErrorMessage } from "@repo/lib";
 

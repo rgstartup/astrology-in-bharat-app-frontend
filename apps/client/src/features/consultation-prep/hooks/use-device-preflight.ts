@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { withPreflight, type PreflightDevice } from "@repo/rtc/devices";
 import { RtcError } from "@repo/rtc";
 import type { ConsultationMode } from "@/store/consultationPrepStore";

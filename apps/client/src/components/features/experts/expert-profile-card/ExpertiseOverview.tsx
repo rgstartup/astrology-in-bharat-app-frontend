@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ShieldCheck, Sparkles, TrendingUp, Languages } from "lucide-react";
+import { ShieldCheck, Sparkles, TrendingUp, Languages } from "@repo/design/lucide";
 import { ExpertiseOverviewProps } from "./types";
 
 export const ExpertiseOverview: React.FC<ExpertiseOverviewProps> = ({

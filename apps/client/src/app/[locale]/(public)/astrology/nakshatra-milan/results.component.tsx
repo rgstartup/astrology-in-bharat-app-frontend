@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FaMars, FaVenus } from "react-icons/fa";
+import { FaMars, FaVenus } from "@repo/design/react-icons";
 
 import { ResultsSectionProps } from "@/lib/types";
 

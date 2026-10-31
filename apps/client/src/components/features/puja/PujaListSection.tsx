@@ -15,9 +15,9 @@ import {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-} from "@/components/ui/carousel";
+} from "@repo/design/shadcn";
 import { PujaSkeletonCard } from "./PujaSkeletonCard";
-import { ChevronDown, Search, Sparkles } from "lucide-react";
+import { ChevronDown, Search, Sparkles } from "@repo/design/lucide";
 
 const DUMMY_RITUALS: DevotionalRitualItem[] = [
   {

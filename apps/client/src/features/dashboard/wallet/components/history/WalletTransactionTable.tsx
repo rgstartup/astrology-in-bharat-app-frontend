@@ -5,7 +5,7 @@ import {
   TableBody,
   TableHead,
   TableRow,
-} from "@/components/ui/table";
+} from "@repo/design/shadcn";
 import { ClientWalletTransaction } from "@repo/lib";
 import { WalletTransactionTableRow } from "./WalletTransactionTableRow";
 

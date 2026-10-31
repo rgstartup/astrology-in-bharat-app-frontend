@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { X, SlidersHorizontal, RotateCcw } from "lucide-react";
+import { X, SlidersHorizontal, RotateCcw } from "@repo/design/lucide";
 import { useExploreExpertsContext } from "../context/ExploreExpertsContext";
 import { ExploreSidebarFilters } from "./sidebar-filters";
 

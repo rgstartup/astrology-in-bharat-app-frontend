@@ -11,9 +11,9 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Sparkles, Loader2 } from "lucide-react";
+} from "@repo/design/shadcn";
+import { Button } from "@repo/design/shadcn";
+import { ArrowLeft, Sparkles, Loader2 } from "@repo/design/lucide";
 
 interface StepThreeSpecializationProps {
   onBack: () => void;

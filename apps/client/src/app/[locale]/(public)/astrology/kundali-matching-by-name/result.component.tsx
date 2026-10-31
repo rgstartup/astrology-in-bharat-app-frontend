@@ -6,8 +6,8 @@ import {
   FaExclamationTriangle,
   FaShieldAlt,
   FaFire,
-} from "react-icons/fa";
-import { FiShare2, FiFileText } from "react-icons/fi";
+} from "@repo/design/react-icons";
+import { FiShare2, FiFileText } from "@repo/design/react-icons";
 import { useTranslations } from "next-intl";
 
 import { AdvancedResultsComponentProps } from "@/lib/types";

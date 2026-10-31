@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/design/cn";
 
 /**
  * Loading placeholder block in the Intercom surface tone (#ebe7e1)

@@ -2,9 +2,9 @@
 
 import React, { useState, FormEvent, Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { useTranslations } from "next-intl";
-import { RiLockPasswordFill, RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import { RiLockPasswordFill, RiEyeLine, RiEyeOffLine } from "@repo/design/react-icons";
 
 import { api } from "@/actions";
 import { Link, useRouter } from "@/i18n/navigation";

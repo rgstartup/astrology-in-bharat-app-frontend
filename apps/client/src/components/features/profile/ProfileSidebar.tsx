@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 
 interface ProfileSidebarProps {
   profileData: any;
@@ -110,20 +110,53 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const menuItems = [
-    { icon: "fa-regular fa-user", label: t.sidebar.tabs.profile, id: "profile" },
+    {
+      icon: "fa-regular fa-user",
+      label: t.sidebar.tabs.profile,
+      id: "profile",
+    },
     { icon: "fa-solid fa-wallet", label: t.sidebar.tabs.wallet, id: "wallet" },
     { icon: "fa-solid fa-gift", label: t.sidebar.tabs.rewards, id: "rewards" },
-    { icon: "fa-regular fa-heart", label: t.sidebar.tabs.wishlist, id: "wishlist" },
-    { icon: "fa-solid fa-clock-rotate-left", label: t.sidebar.tabs.history, id: "history" },
-    { icon: "fa-solid fa-bag-shopping", label: t.sidebar.tabs.orders, id: "orders" },
-    { icon: "fa-solid fa-scroll", label: t.sidebar.tabs.reports, id: "reports" },
-    { icon: "fa-solid fa-circle-question", label: t.sidebar.tabs.disputes, id: "disputes" },
-    { icon: "fa-solid fa-bell", label: t.sidebar.tabs.notifications, id: "notifications" },
+    {
+      icon: "fa-regular fa-heart",
+      label: t.sidebar.tabs.wishlist,
+      id: "wishlist",
+    },
+    {
+      icon: "fa-solid fa-clock-rotate-left",
+      label: t.sidebar.tabs.history,
+      id: "history",
+    },
+    {
+      icon: "fa-solid fa-bag-shopping",
+      label: t.sidebar.tabs.orders,
+      id: "orders",
+    },
+    {
+      icon: "fa-solid fa-scroll",
+      label: t.sidebar.tabs.reports,
+      id: "reports",
+    },
+    {
+      icon: "fa-solid fa-circle-question",
+      label: t.sidebar.tabs.disputes,
+      id: "disputes",
+    },
+    {
+      icon: "fa-solid fa-bell",
+      label: t.sidebar.tabs.notifications,
+      id: "notifications",
+    },
     { icon: "fa-solid fa-om", label: t.sidebar.tabs.pujas, id: "pujas" },
-    { icon: "fa-solid fa-headset", label: t.sidebar.tabs.support, id: "support" },
+    {
+      icon: "fa-solid fa-headset",
+      label: t.sidebar.tabs.support,
+      id: "support",
+    },
   ];
 
-  const activeMenuItem = menuItems.find((item) => item.id === activeTab) || menuItems[0];
+  const activeMenuItem =
+    menuItems.find((item) => item.id === activeTab) || menuItems[0];
 
   return (
     <div className="flex flex-col gap-0 lg:sticky lg:top-[140px] z-30 self-start w-full">
@@ -146,7 +179,9 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
             ) : (
               <>
                 <h6 className="font-bold text-gray-900 text-base md:text-lg truncate flex items-center gap-1.5 m-0">
-                  {profileData.full_name || profileData.username || t.sidebar.userNameFallback}
+                  {profileData.full_name ||
+                    profileData.username ||
+                    t.sidebar.userNameFallback}
                   <i className="fa-solid fa-check-circle text-orange/80 text-[12px] md:text-sm"></i>
                 </h6>
                 <p className="text-xs md:text-sm text-gray-500 mt-0.5 truncate">
@@ -165,8 +200,12 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
           className="w-full bg-brown text-white p-4 rounded-2xl flex items-center justify-between shadow-premium border-0 cursor-pointer hover:cursor-pointer"
         >
           <div className="flex items-center gap-3">
-            <i className={`${activeMenuItem?.icon || ""} text-xl text-orange`}></i>
-            <span className="font-bold text-base">{activeMenuItem?.label || ""}</span>
+            <i
+              className={`${activeMenuItem?.icon || ""} text-xl text-orange`}
+            ></i>
+            <span className="font-bold text-base">
+              {activeMenuItem?.label || ""}
+            </span>
           </div>
           <i
             className={`fa-solid fa-chevron-down transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`}

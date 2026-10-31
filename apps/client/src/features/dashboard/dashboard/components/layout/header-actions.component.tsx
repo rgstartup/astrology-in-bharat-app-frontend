@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Globe, Wallet, Bell } from "lucide-react";
+import { Globe, Wallet, Bell } from "@repo/design/lucide";
 import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
 import { HeaderUnreadBadge } from "./header-unread-badge.component";

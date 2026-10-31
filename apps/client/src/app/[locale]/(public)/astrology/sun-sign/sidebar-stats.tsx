@@ -7,7 +7,7 @@ import {
   FaGem,
   FaPalette,
   FaTimes,
-} from "react-icons/fa";
+} from "@repo/design/react-icons";
 
 type Options = {
   icon: React.JSX.Element;

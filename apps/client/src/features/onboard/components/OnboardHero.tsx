@@ -2,9 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
-import { Check, ShieldCheck } from "lucide-react";
+import { Check, ShieldCheck } from "@repo/design/lucide";
 import { PATHS } from "@repo/routes";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/design/cn";
 import { usePathname } from "@/i18n/navigation";
 
 interface OnboardHeroProps {

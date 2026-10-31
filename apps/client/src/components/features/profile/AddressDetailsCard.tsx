@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Button, Loading } from "@repo/ui";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 
 interface AddressDetailsCardProps {
   lang: string;
@@ -124,7 +124,9 @@ function AddressDisplayView({
       <div>
         <p className="font-bold text-gray-900 mb-1">{first?.line1}</p>
         {first?.line2 && (
-          <p className="text-gray-500 text-sm mb-1 font-medium">{first?.line2}</p>
+          <p className="text-gray-500 text-sm mb-1 font-medium">
+            {first?.line2}
+          </p>
         )}
         <p className="text-gray-600 font-medium text-sm m-0 leading-relaxed">
           {first?.city}, {first?.state}, {first?.country} - {first?.zip_code}

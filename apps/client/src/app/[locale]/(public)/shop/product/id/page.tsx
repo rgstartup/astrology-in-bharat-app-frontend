@@ -12,7 +12,7 @@ import Features from "./Features";
 import { useRouter } from "@/i18n/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { useCart } from "@/hooks/useCart";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 
 const Page = () => {
   const [isSticky, setIsSticky] = useState(false);

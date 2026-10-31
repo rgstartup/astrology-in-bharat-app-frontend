@@ -1,6 +1,6 @@
 import React from "react";
-import { Calendar, Compass, Loader2 } from "lucide-react";
-import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
+import { Calendar, Compass, Loader2 } from "@repo/design/lucide";
+import LocationAutocomplete from "@/components/calculators-charts/LocationAutocomplete";
 
 import { PlanetFormProps } from "@/lib/types/calculator";
 

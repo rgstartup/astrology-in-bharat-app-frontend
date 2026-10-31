@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { SignInForm } from "@/features/auth";
 import { Suspense } from "react";
 import ShowcaseCard from "./ShowcaseCard";
-import BackButton from "@/components/ui/BackButton";
+import BackButton from "@/components/common/BackButton";
 
 export const metadata: Metadata = {
   title: "Login - Astrology Bharat",

@@ -2,8 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
-import { FaCalendarAlt, FaChevronRight, FaSpinner, FaCheck } from "react-icons/fa";
-import LocationAutocomplete from "@/components/ui/LocationAutocomplete";
+import { FaCalendarAlt, FaChevronRight, FaSpinner, FaCheck } from "@repo/design/react-icons";
+import LocationAutocomplete from "@/components/calculators-charts/LocationAutocomplete";
 
 type Props = {
   details: any;

@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { Clock, Sparkles, ArrowRight } from "lucide-react";
+import { Clock, Sparkles, ArrowRight } from "@repo/design/lucide";
 import { DevotionalRitualItem } from "@repo/lib";
 import {
   Card,
@@ -12,7 +12,7 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
+} from "@repo/design/shadcn";
 
 interface DevotionalRitualCardProps {
   ritual: DevotionalRitualItem;

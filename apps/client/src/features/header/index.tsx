@@ -5,7 +5,7 @@ import ProfileImagePreviewModal from "./profile-image-preview.modal";
 import BottomHeader from "./bottom";
 import TopHeader from "./top";
 import { useHeaderScroll } from "@/hooks/use-header-scroll";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/design/cn";
 
 const Header: React.FC<{ show: boolean }> = ({ show }) => {
   const headerRef = useRef<HTMLDivElement>(null);

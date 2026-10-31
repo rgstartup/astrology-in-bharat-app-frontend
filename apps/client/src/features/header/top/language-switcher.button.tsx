@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { useLocale } from "next-intl";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from "@repo/design/lucide";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { useScrollClose } from "@/hooks/use-scroll-close";
 import type { AppLocale } from "@/i18n/routing";

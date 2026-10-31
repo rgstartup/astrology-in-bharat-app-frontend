@@ -12,7 +12,7 @@ import {
   Clock,
   BookOpen,
   Compass,
-} from "lucide-react";
+} from "@repo/design/lucide";
 
 export default function ExpertSeoContent({
   expertName,

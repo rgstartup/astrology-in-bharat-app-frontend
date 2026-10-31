@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { CartService } from "../services/cart.service";
 import { getErrorMessage, type CartItem } from "@repo/lib";
 import { authStore } from "./authStore";

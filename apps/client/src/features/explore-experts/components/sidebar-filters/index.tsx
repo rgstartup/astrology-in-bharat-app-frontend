@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@repo/design/shadcn";
 import { FilterHeader } from "./FilterHeader";
 import { AvailabilityFilter } from "./AvailabilityFilter";
 import { SpecializationsFilter } from "./SpecializationsFilter";

@@ -6,8 +6,8 @@ import {
   FaSpinner,
   FaCalendarAlt,
   FaChevronDown,
-} from "react-icons/fa";
-import { TbCrystalBall } from "react-icons/tb";
+} from "@repo/design/react-icons";
+import { TbCrystalBall } from "@repo/design/react-icons";
 import { ZodiacSign, SIGNS, elementBySign } from "./useLuckyVibes";
 import { LuckyVibesFormProps } from "@/lib/types/calculator";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";

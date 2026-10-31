@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card, Button } from "@/features/dashboard";
-import { Wallet, PlusCircle, ShieldCheck, Zap } from "lucide-react";
+import { Wallet, PlusCircle, ShieldCheck, Zap } from "@repo/design/lucide";
 
 interface WalletBalanceCardProps {
   balance?: number;

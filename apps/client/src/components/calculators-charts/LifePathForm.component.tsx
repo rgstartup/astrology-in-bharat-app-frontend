@@ -1,7 +1,7 @@
 import React from "react";
-import { FaArrowRight, FaSpinner, FaRegCalendarAlt as FaCalendar } from "react-icons/fa";
-import { TbCrystalBall } from "react-icons/tb";
-import { GiLotus } from "react-icons/gi";
+import { FaArrowRight, FaSpinner, FaRegCalendarAlt as FaCalendar } from "@repo/design/react-icons";
+import { TbCrystalBall } from "@repo/design/react-icons";
+import { GiLotus } from "@repo/design/react-icons";
 
 import { LifePathFormProps } from "@/lib/types/calculator";
 

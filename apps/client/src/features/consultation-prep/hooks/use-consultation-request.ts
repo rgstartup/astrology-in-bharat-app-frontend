@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import type { IExpert } from "@repo/lib";
 import { ConsultationErrorCode } from "@repo/lib";
 import { apiV2, API_ROUTES } from "@/actions";
@@ -12,16 +12,12 @@ import {
   type SomeoneElseData,
 } from "@/actions/chat";
 import type { ConsultationMode } from "@/store/consultationPrepStore";
-import {
-  requestConsultation,
-  mediaReady,
-} from "@/realtime/topics/consultation";
+import { requestConsultation } from "@/realtime/topics/consultation";
 import { CHAT_STATUS } from "@/realtime/types/chat";
 import type { ConsultationWaitStep } from "../components/consultation-wait-stepper.component";
 import { useVerdictWait } from "./use-verdict-wait";
 import { useGoToRoom } from "./use-go-to-room";
 import { useAuthStore } from "@/store/authStore";
-import { useConsultationRoomStore } from "@/features/consultation/root/stores/consultation-room.store";
 
 export interface ConsultationRequestOptions {
   expertId: string;
@@ -62,23 +58,12 @@ export function useConsultationRequest({
     useState<ConsultationWaitStep>("waiting_acceptance");
   const [micGranted, setMicGranted] = useState(false);
   const [micDenied, setMicDenied] = useState(false);
-  const [mediaFailed, setMediaFailed] = useState(false);
-  const [mediaError, setMediaError] = useState<string | null>(null);
-  const [redirectCountdown, setRedirectCountdown] = useState<number | null>(
-    null,
-  );
   const [existingChatDetails, setExistingChatDetails] = useState<{
     consultationId: number;
     expertId: string;
   } | null>(null);
 
   const pendingMetadataRef = useRef<SomeoneElseData | null>(null);
-  const pendingCredentialsRef = useRef<{
-    consultationId: number;
-    sessionId: number;
-    token?: string;
-    channelName?: string;
-  } | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const verdictWait = useVerdictWait();
@@ -112,92 +97,6 @@ export function useConsultationRequest({
   }, []);
 
   /**
-   * Step 3: Join Agora RTC channel using @repo/rtc createDefaultRtcSession().
-   *
-   * @param consultationId - ID of consultation room.
-   * @param sessionId - Session ID.
-   * @param token - Agora RTC voice token.
-   * @param channelName - Target channel name.
-   */
-  const connectMediaAndEnterRoom = useCallback(
-    async (
-      consultationId: number,
-      sessionId: number,
-      token?: string,
-      channelName?: string,
-    ) => {
-      setWaitStep("connecting_media");
-      setMediaFailed(false);
-      setMediaError(null);
-
-      try {
-        const { createDefaultRtcSession } = await import("@repo/rtc");
-        const session = createDefaultRtcSession();
-        const identity = user?.id
-          ? `client_${user.id}_consult_${consultationId}`
-          : `client_${consultationId}`;
-        const roomName = channelName || `consultation_${consultationId}`;
-
-        let tokenValue = token;
-        let finalChannel = roomName;
-
-        if (!tokenValue) {
-          const { joinCall } = await import("@/realtime/topics/call");
-          const ack = await joinCall(consultationId);
-          tokenValue = ack.token ?? undefined;
-          finalChannel = ack.channelName ?? roomName;
-        }
-
-        if (!tokenValue) {
-          throw new Error("Could not acquire media connection token.");
-        }
-
-        await session.join({
-          roomName: finalChannel,
-          identity,
-          kind: mode === "video" ? "video" : "voice",
-          token: tokenValue,
-        });
-
-        // Store active session in consultationRoomStore to bridge route transition
-        useConsultationRoomStore
-          .getState()
-          .setVoiceSession(session, finalChannel, tokenValue);
-
-        // Tell backend media is ready so billing starts once peer is ready
-        mediaReady(consultationId);
-
-        // Step 3 ready: start 3s countdown
-        setWaitStep("ready");
-        setRedirectCountdown(3);
-
-        await new Promise<void>((resolve) => {
-          let count = 3;
-          const interval = setInterval(() => {
-            count -= 1;
-            if (count <= 0) {
-              clearInterval(interval);
-              setRedirectCountdown(0);
-              resolve();
-            } else {
-              setRedirectCountdown(count);
-            }
-          }, 1000);
-        });
-
-        goToRoom(expertId, sessionId, consultationId);
-      } catch (err) {
-        setMediaFailed(true);
-        setMediaError(
-          err instanceof Error ? err.message : "Media connection failed.",
-        );
-        useConsultationRoomStore.getState().clearVoiceSession();
-      }
-    },
-    [expertId, goToRoom, mode, user?.id],
-  );
-
-  /**
    * Step 2: Emit consultation:request and wait for expert accept verdict.
    *
    * @param consultationId - ID of created consultation.
@@ -213,7 +112,6 @@ export function useConsultationRequest({
       maxMinutes?: number,
     ) => {
       setWaitStep("waiting_acceptance");
-      setRedirectCountdown(null);
 
       if (abortControllerRef.current?.signal.aborted) {
         setIsWaiting(false);
@@ -261,23 +159,12 @@ export function useConsultationRequest({
         const token = res.payload?.token;
         const channelName = res.payload?.channelName;
 
-        pendingCredentialsRef.current = {
-          consultationId,
-          sessionId,
-          token,
-          channelName,
-        };
-
         if (mode === "voice" || mode === "video") {
-          // Close before attempting media: on failure the retry UI lives in
-          // the ModalPopups layer, which renders outside the prep Dialog.
+          // Skip media setup in prep: both parties go straight to the room,
+          // where the voice dock stages "connecting" and the RTC session
+          // starts billing once both sides report media-ready.
           onVerdictResolved?.();
-          await connectMediaAndEnterRoom(
-            consultationId,
-            sessionId,
-            token,
-            channelName,
-          );
+          goToRoom(expertId, sessionId, consultationId);
         } else {
           goToRoom(expertId, sessionId, consultationId);
         }
@@ -290,7 +177,7 @@ export function useConsultationRequest({
         setIsWaiting(false);
       }
     },
-    [connectMediaAndEnterRoom, expertId, goToRoom, mode, verdictWait],
+    [expertId, goToRoom, mode, verdictWait],
   );
 
   /**
@@ -476,8 +363,6 @@ export function useConsultationRequest({
     async (metadata: SomeoneElseData | null) => {
       pendingMetadataRef.current = metadata;
       setMicDenied(false);
-      setMediaFailed(false);
-      setMediaError(null);
       setIsWaiting(true);
       abortControllerRef.current = new AbortController();
 
@@ -514,21 +399,6 @@ export function useConsultationRequest({
     }
   }, [checkMicPermission, executeInitiate]);
 
-  /**
-   * User tapped "Retry Connection" after media join failure.
-   */
-  const handleRetryMedia = useCallback(async () => {
-    const creds = pendingCredentialsRef.current;
-    if (creds) {
-      await connectMediaAndEnterRoom(
-        creds.consultationId,
-        creds.sessionId,
-        creds.token,
-        creds.channelName,
-      );
-    }
-  }, [connectMediaAndEnterRoom]);
-
   const cancelWaiting = useCallback(() => {
     abortControllerRef.current?.abort();
     abortControllerRef.current = null;
@@ -537,9 +407,6 @@ export function useConsultationRequest({
     setActionLoading(false);
     setWaitStep("waiting_acceptance");
     setMicDenied(false);
-    setMediaFailed(false);
-    setMediaError(null);
-    useConsultationRoomStore.getState().clearVoiceSession();
   }, [verdictWait]);
 
   const clearWaiting = useCallback(() => {
@@ -547,8 +414,6 @@ export function useConsultationRequest({
     setIsWaiting(false);
     setWaitStep("waiting_acceptance");
     setMicDenied(false);
-    setMediaFailed(false);
-    setMediaError(null);
   }, [verdictWait]);
 
   return {
@@ -561,12 +426,8 @@ export function useConsultationRequest({
     setWaitStep,
     micGranted,
     micDenied,
-    mediaFailed,
-    mediaError,
     onGrantMic: handleGrantMic,
     onRetryMic: handleGrantMic,
-    onRetryMedia: handleRetryMedia,
-    redirectCountdown,
     existingChatDetails,
     setExistingChatDetails,
     initiate,

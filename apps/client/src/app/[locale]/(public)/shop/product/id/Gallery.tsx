@@ -2,8 +2,8 @@
 
 import React from "react";
 import NextImage from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Thumbs, FreeMode } from "swiper/modules";
+import { Swiper, SwiperSlide } from "@repo/design/swiper";
+import { Navigation, Thumbs, FreeMode } from "@repo/design/swiper";
 
 interface GalleryProps {
   images: string[];

@@ -9,9 +9,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { MapPin, ChevronDown } from "lucide-react";
+} from "@repo/design/shadcn";
+import { Input } from "@repo/design/shadcn";
+import { MapPin, ChevronDown } from "@repo/design/lucide";
 
 export const AddressFields: React.FC = () => {
   const { control } = useFormContext<OnboardingFormData>();

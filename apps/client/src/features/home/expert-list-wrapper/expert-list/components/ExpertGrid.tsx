@@ -3,8 +3,8 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { ExploreExpertCard } from "@/features/explore-experts/components/ExploreExpertCard";
 import { SkeletonCard } from "./expert-slider/SkeletonCard";
-import { HiOutlineSparkles } from "react-icons/hi";
-import { FaSpinner } from "react-icons/fa";
+import { HiOutlineSparkles } from "@repo/design/react-icons";
+import { FaSpinner } from "@repo/design/react-icons";
 import { useTranslations } from "next-intl";
 import { useExpertListStore } from "@/store/expertListStore";
 import { usePresenceStore } from "@/store/presenceStore";

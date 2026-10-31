@@ -7,7 +7,7 @@ import { CloseButton } from "@repo/ui";
 import { useRouter, usePathname, Link } from "@/i18n/navigation";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuthStore } from "@/store/__authStore";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { useWishlist } from "@/hooks/useWishlist";
 import { ExpertCardProps } from "@/lib/types";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";

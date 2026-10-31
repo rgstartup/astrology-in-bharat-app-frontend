@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Clock, FileText, Video } from "lucide-react";
+import { Clock, FileText, Video } from "@repo/design/lucide";
 
 export interface ServiceCardProps {
   imageSrc?: string | null;

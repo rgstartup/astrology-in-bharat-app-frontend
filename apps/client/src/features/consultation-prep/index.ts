@@ -1,13 +1,9 @@
-export { default as ConsultationPrepHost } from "./ConsultationPrepHost";
-export {
-  default as ConsultationPrepModal,
-} from "./components/consultation-prep-modal";
+export { default as ConsultationPrepHost } from "./components/root/consultation-prep-host.component";
+export { default as ConsultationPrepModal } from "./components/modal";
 export { useConsultationPrep } from "./hooks/use-consultation-prep";
 export { resolveModePrice } from "@/lib/pricing";
-export {
-  requestConsultationPrep,
-} from "./request-consultation";
-export type { RequestConsultationDeps } from "./request-consultation";
+export { requestConsultationPrep } from "./api";
+export type { RequestConsultationDeps } from "./api";
 export {
   ConsultationModeIcon,
   ConsultationModeBadge,

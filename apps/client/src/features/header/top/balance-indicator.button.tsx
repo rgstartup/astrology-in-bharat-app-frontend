@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
-import { Wallet, ArrowRight, PlusCircle, History, LogIn } from "lucide-react";
+import { Wallet, ArrowRight, PlusCircle, History, LogIn } from "@repo/design/lucide";
 import { useAuth } from "@/store/authStore";
 import { formatCompactNumber } from "@repo/ui";
 import { PATHS } from "@repo/routes";

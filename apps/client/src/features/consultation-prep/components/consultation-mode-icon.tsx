@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { MessageSquare, Phone, Video } from "lucide-react";
+import { MessageSquare, Phone, Video } from "@repo/design/lucide";
 import type { ConsultationMode } from "@/store/consultationPrepStore";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/design/cn";
 
 export interface ConsultationModeIconProps {
   mode: ConsultationMode;

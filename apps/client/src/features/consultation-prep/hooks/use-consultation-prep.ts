@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { PATHS } from "@repo/routes";
 import { useTranslations } from "next-intl";
 import type { ConsultationMode } from "@/store/consultationPrepStore";
@@ -136,14 +136,10 @@ export function useConsultationPrep(
     waitOutcome: request.waitOutcome,
     clearWaiting: request.clearWaiting,
     waitStep: request.waitStep,
-    countdown: request.redirectCountdown,
     micGranted: request.micGranted,
     micDenied: request.micDenied,
-    mediaFailed: request.mediaFailed,
-    mediaError: request.mediaError,
     onGrantMic: request.onGrantMic,
     onRetryMic: request.onRetryMic,
-    onRetryMedia: request.onRetryMedia,
     askSomeoneElse,
     setAskSomeoneElse,
     someoneElseData,

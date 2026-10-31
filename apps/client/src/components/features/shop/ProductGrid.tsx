@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Search, X } from "lucide-react";
+import { Search, X } from "@repo/design/lucide";
 import { ProductCard } from "./ProductCard";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { useProductListStore } from "@/store/productListStore";

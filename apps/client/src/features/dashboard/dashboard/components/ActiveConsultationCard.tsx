@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "@/i18n/navigation";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
-import { MessageSquare, ArrowRight } from "lucide-react";
+import { MessageSquare, ArrowRight } from "@repo/design/lucide";
 import { useDashboardOverview } from "../hooks/useDashboardOverview";
 
 export interface ActiveConsultationCardProps {

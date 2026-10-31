@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Loading } from "@repo/ui";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 
 interface WalletTabProps {
   walletBalance: number;

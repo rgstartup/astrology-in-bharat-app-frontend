@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FaRegCheckCircle, FaStar, FaChevronDown } from "react-icons/fa";
+import { FaRegCheckCircle, FaStar, FaChevronDown } from "@repo/design/react-icons";
 
 const EducationalContent = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);

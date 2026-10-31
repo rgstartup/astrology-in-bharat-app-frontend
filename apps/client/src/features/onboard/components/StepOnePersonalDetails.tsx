@@ -15,9 +15,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "@repo/design/shadcn";
+import { Input } from "@repo/design/shadcn";
+import { Button } from "@repo/design/shadcn";
 import {
   Cake,
   ArrowRight,
@@ -26,8 +26,8 @@ import {
   Venus,
   CircleDot,
   Check,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+} from "@repo/design/lucide";
+import { cn } from "@repo/design/cn";
 
 interface StepOnePersonalDetailsProps {
   onNext: () => void;

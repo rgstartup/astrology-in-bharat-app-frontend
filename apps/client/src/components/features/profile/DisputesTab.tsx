@@ -1,39 +1,68 @@
 import React from "react";
 import { useLanguageStore } from "@repo/store";
 import { profileTranslations } from "@/lib/translations/profile";
-import Skeleton from "@/components/ui/Skeleton";
+import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 
 interface DisputesTabProps {
-    disputes: any[];
-    loading: boolean;
-    onViewChat: (dispute: any) => void;
+  disputes: any[];
+  loading: boolean;
+  onViewChat: (dispute: any) => void;
 }
 
-const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat }) => {
-    const { lang } = useLanguageStore();
-    const t = (profileTranslations[lang as keyof typeof profileTranslations] || profileTranslations.en).disputes;
+const DisputesTab: React.FC<DisputesTabProps> = ({
+  disputes,
+  loading,
+  onViewChat,
+}) => {
+  const { lang } = useLanguageStore();
+  const t = (
+    profileTranslations[lang as keyof typeof profileTranslations] ||
+    profileTranslations.en
+  ).disputes;
 
   if (loading) {
     return (
       <div className="bg-white border-0 shadow-premium rounded-2xl overflow-hidden">
         <div className="px-6 py-5 bg-white border-b border-gray-100 flex justify-between items-center">
-            <Skeleton width={150} height={24} />
+          <Skeleton width={150} height={24} />
         </div>
         <div className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="bg-gray-50/50">
-                   {[1, 2, 3, 4].map(i => <th key={i} className="px-6 py-4"><Skeleton width={60} height={12} /></th>)}
+                  {[1, 2, 3, 4].map((i) => (
+                    <th key={i} className="px-6 py-4">
+                      <Skeleton width={60} height={12} />
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {[1, 2, 3].map(i => (
+                {[1, 2, 3].map((i) => (
                   <tr key={i}>
-                    <td className="px-6 py-5"><Skeleton width={80} height={20} className="mb-1" /><Skeleton width={100} height={12} /></td>
-                    <td className="px-6 py-5"><Skeleton width={100} height={16} className="mb-2" /><Skeleton width={200} height={14} /></td>
-                    <td className="px-6 py-5"><Skeleton width={80} height={24} className="rounded-full" /></td>
-                    <td className="px-6 py-5 text-right"><Skeleton width={100} height={40} className="ml-auto rounded-xl" /></td>
+                    <td className="px-6 py-5">
+                      <Skeleton width={80} height={20} className="mb-1" />
+                      <Skeleton width={100} height={12} />
+                    </td>
+                    <td className="px-6 py-5">
+                      <Skeleton width={100} height={16} className="mb-2" />
+                      <Skeleton width={200} height={14} />
+                    </td>
+                    <td className="px-6 py-5">
+                      <Skeleton
+                        width={80}
+                        height={24}
+                        className="rounded-full"
+                      />
+                    </td>
+                    <td className="px-6 py-5 text-right">
+                      <Skeleton
+                        width={100}
+                        height={40}
+                        className="ml-auto rounded-xl"
+                      />
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -47,9 +76,7 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
   return (
     <div className="bg-white border-0 shadow-premium rounded-2xl mb-6 overflow-hidden">
       <div className="px-6 py-5 bg-white border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h5
-          className="text-lg font-bold text-gray-900 mb-0 flex items-center"
-        >
+        <h5 className="text-lg font-bold text-gray-900 mb-0 flex items-center">
           <span className="w-10 h-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mr-3 flex-shrink-0">
             <i className="fa-solid fa-headset"></i>
           </span>
@@ -75,24 +102,16 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="bg-gray-50/50">
-                    <th
-                      className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400"
-                    >
+                    <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">
                       {t.ticketId}
                     </th>
-                    <th
-                      className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400"
-                    >
+                    <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">
                       {t.category}
                     </th>
-                    <th
-                      className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400"
-                    >
+                    <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400">
                       {t.status}
                     </th>
-                    <th
-                      className="px-6 py-4 text-right text-[10px] font-black uppercase tracking-widest text-gray-400"
-                    >
+                    <th className="px-6 py-4 text-right text-[10px] font-black uppercase tracking-widest text-gray-400">
                       {t.action}
                     </th>
                   </tr>
@@ -110,20 +129,23 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
                         <span className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                           {dispute.createdAt || dispute.created_at
                             ? new Date(
-                                dispute.createdAt || dispute.created_at
-                              ).toLocaleDateString(lang === "hi" ? "hi-IN" : "en-IN", {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric"
-                              })
+                                dispute.createdAt || dispute.created_at,
+                              ).toLocaleDateString(
+                                lang === "hi" ? "hi-IN" : "en-IN",
+                                {
+                                  day: "numeric",
+                                  month: "short",
+                                  year: "numeric",
+                                },
+                              )
                             : t.na}
                         </span>
                       </td>
                       <td className="px-6 py-5">
-                        <span
-                          className="inline-block px-3 py-1 mb-2 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700 shadow-sm"
-                        >
-                          {dispute.category || dispute.subject || t.defaultCategory}
+                        <span className="inline-block px-3 py-1 mb-2 bg-white border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700 shadow-sm">
+                          {dispute.category ||
+                            dispute.subject ||
+                            t.defaultCategory}
                         </span>
                         <div className="text-sm text-gray-500 font-medium max-w-[200px] truncate group-hover:text-gray-700 transition-colors">
                           {dispute.description}
@@ -141,7 +163,9 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
                                   : "bg-gray-50 text-gray-600 border-gray-100 shadow-sm"
                           }`}
                         >
-                          {t.statusMap?.[dispute.status?.toLowerCase() as keyof typeof t.statusMap] || dispute.status}
+                          {t.statusMap?.[
+                            dispute.status?.toLowerCase() as keyof typeof t.statusMap
+                          ] || dispute.status}
                         </span>
                       </td>
                       <td className="px-6 py-5 whitespace-nowrap text-right">
@@ -162,7 +186,10 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
             {/* Mobile Cards */}
             <div className="md:hidden flex flex-col gap-4 py-4">
               {disputes.filter(Boolean).map((dispute) => (
-                <div key={dispute.id} className="border-y sm:border border-gray-100 sm:rounded-2xl p-5 bg-white">
+                <div
+                  key={dispute.id}
+                  className="border-y sm:border border-gray-100 sm:rounded-2xl p-5 bg-white"
+                >
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <span className="block font-black text-gray-900 mb-1">
@@ -171,12 +198,15 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
                       <span className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                         {dispute.createdAt || dispute.created_at
                           ? new Date(
-                              dispute.createdAt || dispute.created_at
-                            ).toLocaleDateString(lang === "hi" ? "hi-IN" : "en-IN", {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric"
-                            })
+                              dispute.createdAt || dispute.created_at,
+                            ).toLocaleDateString(
+                              lang === "hi" ? "hi-IN" : "en-IN",
+                              {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              },
+                            )
                           : t.na}
                       </span>
                     </div>
@@ -191,13 +221,13 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
                               : "bg-gray-50 text-gray-600 border-gray-100"
                       }`}
                     >
-                      {t.statusMap?.[dispute.status?.toLowerCase() as keyof typeof t.statusMap] || dispute.status}
+                      {t.statusMap?.[
+                        dispute.status?.toLowerCase() as keyof typeof t.statusMap
+                      ] || dispute.status}
                     </span>
                   </div>
                   <div className="mb-4">
-                    <span
-                      className="inline-block px-3 py-1 mb-2 bg-gray-50 border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700"
-                    >
+                    <span className="inline-block px-3 py-1 mb-2 bg-gray-50 border border-gray-200 rounded-lg text-[10px] font-bold text-gray-700">
                       {dispute.category || dispute.subject || t.defaultCategory}
                     </span>
                     <div className="text-sm text-gray-500 font-medium">
@@ -222,4 +252,3 @@ const DisputesTab: React.FC<DisputesTabProps> = ({ disputes, loading, onViewChat
 };
 
 export default DisputesTab;
-

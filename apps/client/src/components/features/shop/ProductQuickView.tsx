@@ -12,9 +12,9 @@ import {
   Heart,
   Share2,
   Info,
-} from "lucide-react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Thumbs, FreeMode } from "swiper/modules";
+} from "@repo/design/lucide";
+import { Swiper, SwiperSlide } from "@repo/design/swiper";
+import { Navigation, Thumbs, FreeMode } from "@repo/design/swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
@@ -25,7 +25,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/hooks/useCart";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@repo/design/shadcn";
 import { normalizeImagePath } from "@/utils/image-utils";
 
 interface ProductQuickViewProps {

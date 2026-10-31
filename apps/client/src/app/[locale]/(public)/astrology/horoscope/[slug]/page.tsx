@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { ZodiacSignsData } from "@/components/features/services/zodiac";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight } from "@repo/design/react-icons";
 import { api } from "@/actions";
 
 import ZodiacHeaderProfile from "./header-profile.component";
@@ -17,7 +17,7 @@ import {
   ThingsToAvoid,
 } from "./bottom-cards.component";
 import ZodiacDetailsSidebar from "./sidebar.component";
-import GuidanceCTA from "@/components/ui/GuidanceCTA";
+import GuidanceCTA from "@/components/features/home/GuidanceCTA";
 import ZodiacSignSeoContent from "./zodiac-seo-content.component";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 

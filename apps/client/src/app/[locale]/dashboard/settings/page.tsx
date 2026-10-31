@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { Card, Button } from "@/features/dashboard";
-import { Shield, Bell, Globe, Moon, Lock } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { Shield, Bell, Globe, Moon, Lock } from "@repo/design/lucide";
+import { toast } from "@repo/design/shadcn";
 
 export default function SettingsDashboardPage() {
   const [dailyNotifications, setDailyNotifications] = useState(true);

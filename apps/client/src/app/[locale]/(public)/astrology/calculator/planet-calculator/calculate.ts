@@ -1,6 +1,6 @@
 import {
   Sun, Moon, Zap, MessageCircle, Globe, Compass, Star, Skull, Ghost, MapPin
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { getErrorMessage } from "@repo/lib";
 
 export interface PlanetFormData {

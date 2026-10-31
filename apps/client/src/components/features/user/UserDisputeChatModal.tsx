@@ -11,8 +11,8 @@ import {
   FileText,
   Download,
   AlertCircle,
-} from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+} from "@repo/design/lucide";
+import { toast } from "@repo/design/shadcn";
 import { getErrorMessage } from "@repo/lib";
 import { getSupportSocket } from "@repo/ui/sockets";
 import { useAuthStore } from "@/store/__authStore"; // Changed import

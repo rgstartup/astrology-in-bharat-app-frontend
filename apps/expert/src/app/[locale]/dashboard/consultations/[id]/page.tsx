@@ -3,7 +3,7 @@
 import { Suspense, useEffect } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { Loading } from "@repo/ui";
-import { ChatRoomContent } from "./chat-room";
+import { ChatRoomContent } from "@/features/consultation/room";
 
 function ExpertChatRoomBootstrap() {
   const params = useParams();

@@ -2,14 +2,11 @@
 
 import { useTranslations } from "next-intl";
 import type { IExpert } from "@repo/lib";
-import { BadgeCheck, Star } from "lucide-react";
+import { BadgeCheck, Star } from "@repo/design/lucide";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 import type { ConsultationMode } from "@/store/consultationPrepStore";
 import { resolveModePrice } from "@/lib/pricing";
-import {
-  ConsultationModeIcon,
-  getConsultationModeLabel,
-} from "./consultation-mode-icon";
+import { getConsultationModeLabel } from "./consultation-mode-icon";
 
 export interface ExpertHeaderProps {
   expert: (Partial<IExpert> & { expertise?: string }) | null;
