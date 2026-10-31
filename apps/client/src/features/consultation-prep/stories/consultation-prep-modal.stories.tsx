@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
 import DetailsStep from "../components/modal/details-step.component";
 import type { PrepExpert } from "../components/modal/types";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import type { SomeoneElseData } from "@/actions/chat";
 
 const mockExpert: PrepExpert = {
@@ -46,7 +46,8 @@ function PrepModalDemo({
   initialAskSomeoneElse = true,
 }: PrepModalDemoProps) {
   const [askSomeoneElse, setAskSomeoneElse] = useState(initialAskSomeoneElse);
-  const [someoneElseData, setSomeoneElseData] = useState<SomeoneElseData>(defaultMember);
+  const [someoneElseData, setSomeoneElseData] =
+    useState<SomeoneElseData>(defaultMember);
   const [loading, setLoading] = useState(false);
 
   const priceMap: Record<ConsultationMode, number> = {
@@ -129,7 +130,9 @@ export const RequestingVideo: Story = {
  * Highlights shortfall alert and switches primary CTA to Recharge action.
  */
 export const LowBalanceRecharge: Story = {
-  render: () => <PrepModalDemo mode="video" balance={40} showLowBalance={true} />,
+  render: () => (
+    <PrepModalDemo mode="video" balance={40} showLowBalance={true} />
+  ),
 };
 
 /**

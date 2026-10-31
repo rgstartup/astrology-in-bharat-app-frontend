@@ -3,10 +3,8 @@
 import { useEffect } from "react";
 import type { IExpert } from "@repo/lib";
 import type { ConsultationMode } from "@/realtime/types/consultation";
-import type {
-  ChatEndedPayload,
-  ChatPausedPayload,
-} from "@/realtime/types/chat";
+import type { ConsultationEndedPayload } from "@/realtime/types/consultation";
+import type { useConsultation } from "@/realtime/hooks/use-consultation";
 import type { RoomSessionStatus } from "../hooks/use-room-verdict";
 import { useConsultationRoomStore } from "../stores/consultation-room.store";
 
@@ -17,8 +15,8 @@ interface RoomStoreSyncParams {
   expertData: IExpert;
   sessionStatus: RoomSessionStatus;
   maxMinutes: number | null;
-  pausedState: ChatPausedPayload | null;
-  endedVerdict: ChatEndedPayload | null;
+  pausedState: ReturnType<typeof useConsultation>["paused"];
+  endedVerdict: ConsultationEndedPayload | null;
   displayElapsedTime: number;
   displayTimeLeft: number;
 }

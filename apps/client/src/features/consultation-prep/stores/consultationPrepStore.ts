@@ -1,6 +1,6 @@
 "use client";
 
-import { createScopedStore } from "./utils/create-scoped-store";
+import { createScopedStore } from "@/store/utils";
 
 export type ConsultationMode = "chat" | "voice" | "video";
 

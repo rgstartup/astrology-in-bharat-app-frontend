@@ -1,16 +1,20 @@
 "use client";
 
 import React from "react";
-import { CheckCircle2, Mic, Phone, ShieldCheck, Sparkles, Video } from "@repo/design/lucide";
+import {
+  CheckCircle2,
+  Mic,
+  Phone,
+  ShieldCheck,
+  Sparkles,
+  Video,
+} from "@repo/design/lucide";
 import { Button } from "@repo/design/shadcn";
 import { cn } from "@repo/design/cn";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 
 export type ConsultationWaitStep =
-  | "mic_access"
-  | "waiting_acceptance"
-  | "connecting_media"
-  | "ready";
+  "mic_access" | "waiting_acceptance" | "connecting_media" | "ready";
 
 export interface ConsultationWaitStepperProps {
   mode: ConsultationMode;
@@ -84,7 +88,9 @@ function MicStepRow({
       <div className="flex items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50/50 p-3 text-left">
         <StepIndicator isCompleted={true} isActive={false} stepNumber={1} />
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold text-emerald-950">Microphone access</p>
+          <p className="text-xs font-semibold text-emerald-950">
+            Microphone access
+          </p>
           <p className="text-[11px] text-emerald-700">Microphone ready</p>
         </div>
       </div>
@@ -96,8 +102,12 @@ function MicStepRow({
       <div className="flex items-center gap-3">
         <StepIndicator isCompleted={false} isActive={isActive} stepNumber={1} />
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold text-slate-900">Microphone access</p>
-          <p className="text-[11px] text-slate-600">Permission required for audio</p>
+          <p className="text-xs font-semibold text-slate-900">
+            Microphone access
+          </p>
+          <p className="text-[11px] text-slate-600">
+            Permission required for audio
+          </p>
         </div>
       </div>
       <Button
@@ -145,7 +155,9 @@ function AcceptStepRow({
         <StepIndicator isCompleted={false} isActive={true} stepNumber={2} />
         <div className="min-w-0 flex-1">
           <p className="text-xs font-semibold text-slate-900">Join request</p>
-          <p className="text-[11px] text-orange-700">Waiting for {expertName} to accept…</p>
+          <p className="text-[11px] text-orange-700">
+            Waiting for {expertName} to accept…
+          </p>
         </div>
       </div>
     );

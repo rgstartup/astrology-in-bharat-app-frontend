@@ -1,5 +1,5 @@
 import { type IExpert } from "@repo/lib";
-import { type ConsultationMode } from "@/store/consultationPrepStore";
+import { type ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 
 /**
  * Resolves per-minute price for the specified consultation mode.
@@ -47,9 +47,7 @@ export function resolveModePrice(
  * @param expert - The expert object.
  * @returns Rate per minute in INR.
  */
-export const resolveChatRate = (
-  expert: IExpert | null | undefined,
-): number => {
+export const resolveChatRate = (expert: IExpert | null | undefined): number => {
   if (!expert) return 0;
   if (expert.pricing?.chat_price !== undefined) {
     return Number(expert.pricing.chat_price) || 0;

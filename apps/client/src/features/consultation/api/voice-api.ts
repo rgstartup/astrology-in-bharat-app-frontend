@@ -1,7 +1,7 @@
 "use client";
 
 import { apiV2, API_ROUTES } from "@/actions";
-import { ConsultationMode } from "@/store/consultationPrepStore";
+import { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 /** Check if the expert is eligible for a voice consultation. */
 export async function checkVoiceEligibilityAction(expertId: number | string) {
   return apiV2.post<{

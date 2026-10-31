@@ -2,13 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { realtimeSocket } from "@/realtime/socket";
+import { useChat } from "@/realtime/hooks/use-chat-session";
 import {
   CONSULTATION_EVENTS,
   cancelConsultation,
   endConsultation,
   getConsultationStatus,
-  joinConsultationRooms,
-  leaveConsultationRooms,
   pauseConsultation,
   resumeConsultation,
   resumeConsultationChat,
@@ -16,14 +15,14 @@ import {
   resumeConsultationVideo,
   startConsultation,
 } from "@/realtime/topics/consultation";
-import type { ConsultationDecisionPayload } from "@/realtime/types/chat";
 import type {
-  ConsultationBudgetHoldPayload,
-  ConsultationBudgetTickPayload,
-  ConsultationBudgetWarningPayload,
+  ConsultationDecisionPayload,
+} from "@/realtime/types/chat";
+import type {
   ConsultationEndedPayload,
   ConsultationMode,
   ConsultationStatePayload,
+  ConsultationStatePausedPayload,
 } from "@/realtime/types/consultation";
 
 /**
@@ -55,20 +54,23 @@ export const useConsultation = (
 
   const [state, setState] = useState<ConsultationStatePayload | null>(null);
   const [ended, setEnded] = useState<ConsultationEndedPayload | null>(null);
-  const [budgetTick, setBudgetTick] =
-    useState<ConsultationBudgetTickPayload | null>(null);
-  const [budgetWarning, setBudgetWarning] =
-    useState<ConsultationBudgetWarningPayload | null>(null);
-  const [budgetHold, setBudgetHold] =
-    useState<ConsultationBudgetHoldPayload | null>(null);
+  const [paused, setPaused] = useState<ConsultationStatePausedPayload | null>(null);
   const [decision, setDecision] = useState<ConsultationDecision>("waiting");
   const [voiceToken, setVoiceToken] = useState<{
     token: string | null;
     tokenExpiresAt: string | null;
     channelName: string | null;
   }>({ token: null, tokenExpiresAt: null, channelName: null });
+  /** Bumped on pause/resume/end so the room can re-seed session history. */
+  const [sessionRevision, setSessionRevision] = useState(0);
+  /** Bumped only for backend resume events so the room store can reset once per resume. */
+  const [resumeRevision, setResumeRevision] = useState(0);
   // Terminal latch (see docblock): refs stay current inside socket handlers.
   const endedRef = useRef(false);
+
+  // Delegates chat room membership + message/typing streaming to useChat.
+  // useChat owns the socket connect/join/leave for chat events only.
+  const chat = useChat(consultationId, sessionId);
 
   useEffect(() => {
     if (!isValidId) return;
@@ -76,6 +78,7 @@ export const useConsultation = (
 
     const handleState = (payload: ConsultationStatePayload) => {
       if (!payload || Number(payload.consultationId) !== id) return;
+
       // 'active' (STARTED / STATE active) always restarts the lifecycle —
       // even for a session we haven't synced to local state yet (local
       // sessionId lags behind until chat history refreshes).
@@ -83,7 +86,6 @@ export const useConsultation = (
         endedRef.current = false;
         setEnded(null);
         setState(payload);
-        setBudgetHold(null);
         return;
       }
       // Non-active state events belong to a specific session; ignore late
@@ -97,8 +99,9 @@ export const useConsultation = (
       }
       if (endedRef.current) return;
       setState(payload);
-      if (payload.state === "budget_hold") {
-        setBudgetHold(payload as unknown as ConsultationBudgetHoldPayload);
+      if (payload.state === "paused") {
+        setPaused(payload);
+        setSessionRevision((value) => value + 1);
       }
     };
 
@@ -117,62 +120,24 @@ export const useConsultation = (
           channelName: payload.channelName ?? null,
         });
       }
-      setBudgetHold(null);
-      setBudgetWarning(null);
+      setSessionRevision((value) => value + 1);
+      setResumeRevision((value) => value + 1);
     };
 
     const handleEnded = (payload: ConsultationEndedPayload) => {
       if (
         payload &&
         Number(payload.consultationId) === id &&
-        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
+        !(
+          isValidSessionId &&
+          payload.sessionId != null &&
+          Number(payload.sessionId) !== sessionIdNum
+        )
       ) {
         endedRef.current = true;
         setEnded(payload);
         setState((prev) => (prev ? { ...prev, state: "completed" } : null));
-        setBudgetHold(null);
-      }
-    };
-
-    const handleBudgetTick = (payload: ConsultationBudgetTickPayload) => {
-      if (
-        payload &&
-        Number(payload.consultationId) === id &&
-        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      ) {
-        setBudgetTick(payload);
-      }
-    };
-
-    const handleBudgetWarning = (payload: ConsultationBudgetWarningPayload) => {
-      if (
-        payload &&
-        Number(payload.consultationId) === id &&
-        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      ) {
-        setBudgetWarning(payload);
-      }
-    };
-
-    const handleBudgetExhausted = (payload: ConsultationBudgetHoldPayload) => {
-      if (
-        payload &&
-        Number(payload.consultationId) === id &&
-        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      ) {
-        setBudgetHold(payload);
-      }
-    };
-
-    const handleBudgetRestored = (payload: ConsultationStatePayload) => {
-      if (
-        payload &&
-        Number(payload.consultationId) === id &&
-        !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
-      ) {
-        setBudgetHold(null);
-        setBudgetWarning(null);
-        setState(payload);
+        setSessionRevision((value) => value + 1);
       }
     };
 
@@ -201,12 +166,17 @@ export const useConsultation = (
         maxMinutes: p.maxMinutes ?? prev?.maxMinutes,
         timestamp: p.timestamp,
       }));
-      setBudgetHold(null);
+      setSessionRevision((value) => value + 1);
     };
 
     const onRejected = (p: ConsultationDecisionPayload) => {
       if (!matchDecision(p)) return;
-      if (isValidSessionId && p.sessionId != null && Number(p.sessionId) !== sessionIdNum) return;
+      if (
+        isValidSessionId &&
+        p.sessionId != null &&
+        Number(p.sessionId) !== sessionIdNum
+      )
+        return;
       setDecision("rejected");
       setState((prev) => ({
         consultationId: p.consultationId,
@@ -218,7 +188,12 @@ export const useConsultation = (
 
     const onCancelled = (p: ConsultationDecisionPayload) => {
       if (!matchDecision(p)) return;
-      if (isValidSessionId && p.sessionId != null && Number(p.sessionId) !== sessionIdNum) return;
+      if (
+        isValidSessionId &&
+        p.sessionId != null &&
+        Number(p.sessionId) !== sessionIdNum
+      )
+        return;
       setDecision("cancelled");
       setState((prev) => ({
         consultationId: p.consultationId,
@@ -230,7 +205,12 @@ export const useConsultation = (
 
     const onDisconnected = (p: ConsultationDecisionPayload) => {
       if (!matchDecision(p)) return;
-      if (isValidSessionId && p.sessionId != null && Number(p.sessionId) !== sessionIdNum) return;
+      if (
+        isValidSessionId &&
+        p.sessionId != null &&
+        Number(p.sessionId) !== sessionIdNum
+      )
+        return;
       setState((prev) => ({
         consultationId: p.consultationId,
         mode: prev?.mode ?? "chat",
@@ -239,10 +219,9 @@ export const useConsultation = (
       }));
     };
 
-    /** Rejoin rooms + refresh state; safe to run on every (re)connect. */
+    /** Refresh status on (re)connect; room join is delegated to useChat. */
     const handleConnect = () => {
-      joinConsultationRooms(id)
-        .then(() => getConsultationStatus(id))
+      getConsultationStatus(id)
         .then((status) => {
           if (status) setState(status);
         })
@@ -267,10 +246,6 @@ export const useConsultation = (
     socket.on(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
     socket.on(CONSULTATION_EVENTS.EVENTS.CANCELLED, onCancelled);
     socket.on(CONSULTATION_EVENTS.EVENTS.DISCONNECTED, onDisconnected);
-    socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
-    socket.on(CONSULTATION_EVENTS.BUDGET.WARNING, handleBudgetWarning);
-    socket.on(CONSULTATION_EVENTS.BUDGET.EXHAUSTED, handleBudgetExhausted);
-    socket.on(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
     socket.on("connect", handleConnect);
 
     return () => {
@@ -286,12 +261,7 @@ export const useConsultation = (
       socket.off(CONSULTATION_EVENTS.EVENTS.REJECTED, onRejected);
       socket.off(CONSULTATION_EVENTS.EVENTS.CANCELLED, onCancelled);
       socket.off(CONSULTATION_EVENTS.EVENTS.DISCONNECTED, onDisconnected);
-      socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
-      socket.off(CONSULTATION_EVENTS.BUDGET.WARNING, handleBudgetWarning);
-      socket.off(CONSULTATION_EVENTS.BUDGET.EXHAUSTED, handleBudgetExhausted);
-      socket.off(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
       socket.off("connect", handleConnect);
-      leaveConsultationRooms(id).catch(() => undefined);
     };
   }, [id, isValidId, sessionId, sessionIdNum]);
 
@@ -349,11 +319,14 @@ export const useConsultation = (
     decision,
     voiceToken,
     ended,
-    budgetTick,
-    budgetWarning,
-    budgetHold,
-    isBudgetExhausted: budgetHold !== null,
-    isWarning: budgetWarning !== null,
+    paused,
+    // Chat (delegated to useChat)
+    messages: chat.messages,
+    send: chat.send,
+    typing: chat.typing,
+    remoteTyping: chat.remoteTyping,
+    sessionRevision,
+    resumeRevision,
     cancel,
     start,
     pause,

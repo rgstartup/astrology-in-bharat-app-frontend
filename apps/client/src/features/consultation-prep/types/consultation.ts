@@ -1,5 +1,5 @@
 import type { SomeoneElseData } from "@/actions/chat";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 
 export type { ConsultationMode };
 
@@ -7,11 +7,7 @@ export type { ConsultationMode };
  * Outcome verdict from the expert response to a consultation request.
  */
 export type ConsultationVerdict =
-  | "accepted"
-  | "rejected"
-  | "expired"
-  | "timeout"
-  | "cancelled";
+  "accepted" | "rejected" | "expired" | "timeout" | "cancelled";
 
 /**
  * Terminal negative outcome surfaced in the waiting modal.

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
 import { ConsultationWaitingModal } from "../components/consultation-waiting-modal.component";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import type { ConsultationWaitStep } from "../components/consultation-wait-stepper.component";
 
 interface WaitingModalDemoProps {
@@ -115,7 +115,9 @@ function InteractiveFullSimulatorDemo() {
         <span className="flex size-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mb-3 text-lg font-bold">
           ✓
         </span>
-        <h4 className="text-base font-bold text-slate-900">Entered Consultation Room</h4>
+        <h4 className="text-base font-bold text-slate-900">
+          Entered Consultation Room
+        </h4>
         <p className="text-xs text-slate-500 mt-1">
           Handshake complete. Voice session pre-connected via voiceSessionStore.
         </p>

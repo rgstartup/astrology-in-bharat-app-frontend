@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { usePathname } from "@/i18n/navigation";
 import ConsultationPrepModal from "../modal";
-import { useConsultationPrepStore } from "@/store/consultationPrepStore";
+import { useConsultationPrepStore } from "@/features/consultation-prep/stores/consultationPrepStore";
 import { useAuthStore } from "@/store/authStore";
 
 /**

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "@repo/design/shadcn";
 import { withPreflight, type PreflightDevice } from "@repo/rtc/devices";
 import { RtcError } from "@repo/rtc";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 
 /**
  * Inline recovery hint shown when device access fails before a

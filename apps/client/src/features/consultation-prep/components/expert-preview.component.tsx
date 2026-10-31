@@ -7,7 +7,7 @@ import type { IExpert } from "@repo/lib";
 import type { SomeoneElseData } from "@/actions/chat";
 import { useTranslations } from "next-intl";
 import { Wallet, AlertCircle, ArrowLeft, Pencil } from "@repo/design/lucide";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import { resolveModePrice } from "@/lib/pricing";
 import { type DeviceHintKind } from "../hooks/use-device-preflight";
 import ExpertHeader from "./expert-header";
@@ -59,7 +59,9 @@ function BalanceRow({
         <Wallet className="w-4 h-4 text-emerald-600 shrink-0" />
         {label}
       </span>
-      <span className="font-black text-slate-900 shrink-0">₹{balance.toFixed(2)}</span>
+      <span className="font-black text-slate-900 shrink-0">
+        ₹{balance.toFixed(2)}
+      </span>
     </div>
   );
 }
@@ -175,7 +177,11 @@ function DeviceHintNotice({
           <span className="font-bold">{tx(copy.titleKey)}. </span>
           {tx(copy.descKey, { devices })}
         </p>
-        <DeviceHintRetry hint={hint} onRetry={onRetry} label={tx("deviceTryAgain")} />
+        <DeviceHintRetry
+          hint={hint}
+          onRetry={onRetry}
+          label={tx("deviceTryAgain")}
+        />
       </div>
     </div>
   );
@@ -184,13 +190,7 @@ function DeviceHintNotice({
 /**
  * Offline notice banner displayed when the expert is unavailable.
  */
-function OfflineNotice({
-  show,
-  message,
-}: {
-  show: boolean;
-  message: string;
-}) {
+function OfflineNotice({ show, message }: { show: boolean; message: string }) {
   if (!show) return null;
 
   return (
@@ -239,7 +239,10 @@ function ActionButton({
         aria-disabled="true"
         className="flex-1 min-w-0 py-3 bg-slate-100 text-slate-400 rounded-full font-bold text-sm border border-slate-200 cursor-not-allowed flex items-center justify-center gap-2 px-3 truncate"
       >
-        <ConsultationModeIcon mode={mode} className="w-4 h-4 shrink-0 text-slate-400" />
+        <ConsultationModeIcon
+          mode={mode}
+          className="w-4 h-4 shrink-0 text-slate-400"
+        />
         <span className="truncate">{offlineLabel}</span>
       </button>
     );
@@ -263,14 +266,21 @@ function ActionButton({
   if (actionLoading) {
     return (
       <button type="button" disabled className={ctaClass}>
-        <ConsultationModeIcon mode={mode} className="w-4 h-4 animate-pulse shrink-0" />
+        <ConsultationModeIcon
+          mode={mode}
+          className="w-4 h-4 animate-pulse shrink-0"
+        />
         <span className="truncate">{connectingLabel}</span>
       </button>
     );
   }
 
   return (
-    <button type="button" onClick={handleStartConsultation} className={ctaClass}>
+    <button
+      type="button"
+      onClick={handleStartConsultation}
+      className={ctaClass}
+    >
       <ConsultationModeIcon mode={mode} className="w-4 h-4 shrink-0" />
       <span className="truncate">{startLabel}</span>
     </button>
@@ -366,7 +376,9 @@ const ExpertPreview = ({
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <h3 className="text-sm font-bold text-slate-900 truncate">{tx("someoneElse")}</h3>
+          <h3 className="text-sm font-bold text-slate-900 truncate">
+            {tx("someoneElse")}
+          </h3>
         </div>
 
         <MemberDetailsForm
@@ -390,17 +402,26 @@ const ExpertPreview = ({
       <div className="rounded-lg border border-slate-200 divide-y divide-slate-100 overflow-hidden">
         <div className="flex items-center justify-between gap-2 px-4 py-2 text-sm">
           <span className="flex items-center gap-1.5 text-slate-600 truncate">
-            <ConsultationModeIcon mode={mode} className="w-4 h-4 text-orange-500 shrink-0" />
-            <span>₹{price} {tx("perMin")}</span>
+            <ConsultationModeIcon
+              mode={mode}
+              className="w-4 h-4 text-orange-500 shrink-0"
+            />
+            <span>
+              ₹{price} {tx("perMin")}
+            </span>
           </span>
-          <span className="font-semibold text-slate-900 shrink-0">₹{price}</span>
+          <span className="font-semibold text-slate-900 shrink-0">
+            ₹{price}
+          </span>
         </div>
 
         <div className="flex items-center justify-between gap-2 px-4 py-2 text-sm">
           <span className="text-slate-600 truncate">
             {tx("minSession", { price: minBalanceRequired || 0 })}
           </span>
-          <span className="font-semibold text-slate-900 shrink-0">₹{minBalanceRequired || 0}</span>
+          <span className="font-semibold text-slate-900 shrink-0">
+            ₹{minBalanceRequired || 0}
+          </span>
         </div>
 
         <BalanceRow
@@ -417,12 +438,13 @@ const ExpertPreview = ({
         desc={tx("lowBalanceDesc", { price: minBalanceRequired || 0 })}
       />
 
-      <OfflineNotice
-        show={!isAvailable}
-        message={tx("expertOffline")}
-      />
+      <OfflineNotice show={!isAvailable} message={tx("expertOffline")} />
 
-      <DeviceHintNotice hint={deviceHint} mode={mode} onRetry={onRetryDevices} />
+      <DeviceHintNotice
+        hint={deviceHint}
+        mode={mode}
+        onRetry={onRetryDevices}
+      />
 
       <div className="flex gap-2 max-w-full">
         <ConsultingForSelect

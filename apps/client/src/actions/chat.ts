@@ -7,7 +7,7 @@ import {
   type ApiErrorBody,
 } from "@/actions";
 import { getAccessToken } from "@/actions/cookie";
-import { ConsultationMode } from "@/store/consultationPrepStore";
+import { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import { type IExpert } from "@repo/lib";
 
 export interface SomeoneElseData {

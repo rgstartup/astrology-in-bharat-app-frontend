@@ -15,10 +15,10 @@ import {
 } from "@repo/design/lucide";
 import { Swiper, SwiperSlide } from "@repo/design/swiper";
 import { Navigation, Thumbs, FreeMode } from "@repo/design/swiper";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
-import "swiper/css/free-mode";
+import "@repo/design/swiper/css";
+import "@repo/design/swiper/css/navigation";
+import "@repo/design/swiper/css/thumbs";
+import "@repo/design/swiper/css/free-mode";
 import { Product } from "@/lib/types";
 import { useRouter } from "@/i18n/navigation";
 import { useAuthStore } from "@/store/authStore";

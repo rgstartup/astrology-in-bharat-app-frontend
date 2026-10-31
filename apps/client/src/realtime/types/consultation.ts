@@ -6,11 +6,15 @@ export interface ConsultationRoomsResult {
 export type ConsultationMode = "chat" | "voice" | "video";
 export type ConsultationState = "requested" | "accepted" | "active" | "paused" | "budget_hold" | "reconnecting" | "completed" | "rejected" | "cancelled" | "expired";
 
-export interface ConsultationStatePayload {
+export type ConsultationStateBaseState = Exclude<
+  ConsultationState,
+  "budget_hold" | "paused"
+>;
+
+export interface ConsultationStateCommon {
   consultationId: number;
   sessionId?: number | null;
   mode: ConsultationMode;
-  state: ConsultationState;
   reason?: string;
   startedAt?: string | null;
   elapsedSeconds?: number;
@@ -21,6 +25,33 @@ export interface ConsultationStatePayload {
   tokenExpiresAt?: string;
   channelName?: string;
 }
+
+export interface ConsultationStateBudgetHoldPayload extends ConsultationStateCommon {
+  state: "budget_hold";
+  reason: "insufficient_balance";
+  graceDeadline: string;
+  graceDurationSeconds: number;
+  rechargeRequired?: boolean;
+  minRechargeAmount?: number;
+  waitingForClient?: boolean;
+}
+
+export interface ConsultationStatePausedPayload extends ConsultationStateCommon {
+  state: "paused";
+  elapsedSeconds: number;
+  consumedAmount: number;
+  maxMinutes: number;
+  pauseExpiresInSec: number;
+}
+
+export interface ConsultationStateBasePayload extends ConsultationStateCommon {
+  state: ConsultationStateBaseState;
+}
+
+export type ConsultationStatePayload =
+  | ConsultationStateBudgetHoldPayload
+  | ConsultationStatePausedPayload
+  | ConsultationStateBasePayload;
 
 export interface ConsultationEndedPayload {
   consultationId: number;

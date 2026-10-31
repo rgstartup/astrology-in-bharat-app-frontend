@@ -5,7 +5,7 @@ import { X } from "@repo/design/lucide";
 import ExpertPreview from "../expert-preview.component";
 import type { PrepExpert, ConsultationPrepController } from "./types";
 import type { SomeoneElseData } from "@/actions/chat";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import {
   ConsultationModeIcon,
   getConsultationModeLabel,
@@ -80,7 +80,10 @@ const DetailsStep = ({
     <div>
       {/* Header band — avatar and mode pill straddle the divider */}
       <div className="relative h-24 bg-slate-900">
-        <div aria-hidden className="absolute inset-0 overflow-hidden rounded-t-3xl">
+        <div
+          aria-hidden
+          className="absolute inset-0 overflow-hidden rounded-t-3xl"
+        >
           <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/5" />
           <div className="absolute -bottom-14 left-1/3 w-48 h-48 rounded-full bg-white/5" />
         </div>
@@ -115,7 +118,10 @@ const DetailsStep = ({
           </div>
 
           <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-white shadow-md border border-slate-200 flex items-center justify-center z-10">
-            <ConsultationModeIcon mode={mode} className="w-3.5 h-3.5 text-orange-600" />
+            <ConsultationModeIcon
+              mode={mode}
+              className="w-3.5 h-3.5 text-orange-600"
+            />
           </div>
         </div>
       </div>

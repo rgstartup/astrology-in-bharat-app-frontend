@@ -5,12 +5,12 @@ import { useRouter } from "@/i18n/navigation";
 import { toast } from "@repo/design/shadcn";
 import { useTranslations } from "next-intl";
 import { type IExpert } from "@repo/lib";
-import { useConsultationPrepStore } from "@/store/consultationPrepStore";
+import { useConsultationPrepStore } from "@/features/consultation-prep/stores/consultationPrepStore";
 
 /**
  * Terminal step of a successful request: toast, close the prep modal,
  * and push the room deep link.
- * 
+ *
  * NOTE: The consultation tracker is NOT set here. It is set by
  * `useRoomTrackerSync` when the consultation becomes ACTIVE (expert accepted),
  * not at initiation. This prevents the tracker from showing a running timer

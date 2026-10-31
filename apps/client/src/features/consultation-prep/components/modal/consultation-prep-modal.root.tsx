@@ -13,7 +13,7 @@ import { useAuthStore } from "@/store/authStore";
 import {
   useConsultationPrepStore,
   type ConsultationMode,
-} from "@/store/consultationPrepStore";
+} from "@/features/consultation-prep/stores/consultationPrepStore";
 import { useConsultationPrep } from "../../hooks/use-consultation-prep";
 import ModalBody from "./modal-body.component";
 import ModalPopups from "./modal-popups.component";
@@ -43,7 +43,9 @@ export function ConsultationPrepModal({
 }: ConsultationPrepModalProps) {
   const tm = useTranslations("Chat.modal");
   // Manual nav between details/recharge; needsRecharge (below) overrides it.
-  const [detailsStep, setDetailsStep] = useState<"details" | "recharge">("details");
+  const [detailsStep, setDetailsStep] = useState<"details" | "recharge">(
+    "details",
+  );
 
   const close = () => onOpenChange(false);
 
@@ -79,8 +81,6 @@ export function ConsultationPrepModal({
     onRetryMic,
   } = useConsultationPrep(expertId, mode, consultationId, close, open);
 
-
-
   const balance = useAuthStore((s) => s.balance);
   const refreshBalance = useAuthStore((s) => s.refreshBalance);
 
@@ -115,7 +115,9 @@ export function ConsultationPrepModal({
         >
           <DialogHeader className="sr-only">
             <DialogTitle>{expertDisplayName}</DialogTitle>
-            <DialogDescription>{tm("rechargeDesc", { price: 0 })}</DialogDescription>
+            <DialogDescription>
+              {tm("rechargeDesc", { price: 0 })}
+            </DialogDescription>
           </DialogHeader>
 
           <ModalBody
@@ -147,7 +149,9 @@ export function ConsultationPrepModal({
 
       <ModalPopups
         expertName={expertDisplayName}
-        expertAvatar={expert?.avatar || (expert as any)?.avatar_url || undefined}
+        expertAvatar={
+          expert?.avatar || (expert as any)?.avatar_url || undefined
+        }
         mode={mode}
         step={waitStep}
         voiceRate={currentPrice}
@@ -165,7 +169,9 @@ export function ConsultationPrepModal({
         onCloseExistingChat={() => setExistingChatDetails(null)}
         onGoToExistingChat={(consultationId, targetExpertId) => {
           useConsultationPrepStore.getState().closeConsultationPrep();
-          router.push(`/consultation/${consultationId}?expertId=${targetExpertId}`);
+          router.push(
+            `/consultation/${consultationId}?expertId=${targetExpertId}`,
+          );
         }}
       />
     </>

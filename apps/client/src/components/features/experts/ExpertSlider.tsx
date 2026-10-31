@@ -3,8 +3,8 @@
 import React from "react";
 import { Swiper as SwiperComp, SwiperSlide as SwiperSlideComp } from "@repo/design/swiper";
 import { Navigation, Autoplay } from "@repo/design/swiper";
-import "swiper/css";
-import "swiper/css/navigation";
+import "@repo/design/swiper/css";
+import "@repo/design/swiper/css/navigation";
 import ExpertCard from "./ExpertCard";
 import { SkeletonCard } from "./SkeletonCard";
 import { ClientExpertProfile } from "@/lib/types";

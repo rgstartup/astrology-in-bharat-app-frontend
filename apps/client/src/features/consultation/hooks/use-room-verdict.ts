@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { toast } from "@repo/design/shadcn";
-import type { ChatEndedPayload } from "@/realtime/types/chat";
+import type { ConsultationEndedPayload } from "@/realtime/types/consultation";
 
 export type RoomSessionStatus = "pending" | "active" | "completed";
 
@@ -13,7 +13,7 @@ const COMPLETED_STATES = ["completed"];
 
 type VerdictDeps = {
   decision: string | null;
-  endedVerdict: ChatEndedPayload | null;
+  endedVerdict: ConsultationEndedPayload | null;
   joinedStatus: string | null;
   endLiveChat: () => Promise<unknown>;
 };

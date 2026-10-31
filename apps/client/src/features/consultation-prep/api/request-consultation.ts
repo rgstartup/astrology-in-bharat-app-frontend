@@ -7,7 +7,7 @@ import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import {
   useConsultationPrepStore,
   type ConsultationMode,
-} from "@/store/consultationPrepStore";
+} from "@/features/consultation-prep/stores/consultationPrepStore";
 
 export interface RequestConsultationDeps {
   isAuthenticated: boolean;

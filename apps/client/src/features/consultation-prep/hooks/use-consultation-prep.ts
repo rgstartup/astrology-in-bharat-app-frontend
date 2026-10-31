@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "@/i18n/navigation";
 import { toast } from "@repo/design/shadcn";
 import { PATHS } from "@repo/routes";
 import { useTranslations } from "next-intl";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { resolveModePrice } from "@/lib/pricing";
 import { usePrepExpert } from "./use-prep-expert";
@@ -35,12 +35,8 @@ export function useConsultationPrep(
   const pathname = usePathname();
   const t = useTranslations("Chat.page");
 
-  const {
-    expert,
-    loading,
-    isExpertAvailable,
-    fetchExpert,
-  } = usePrepExpert(expertId);
+  const { expert, loading, isExpertAvailable, fetchExpert } =
+    usePrepExpert(expertId);
   const {
     isAuthenticated,
     needsRecharge,

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { getExpertReviews, Review } from "@/libs/api-experts";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { useConsultationPrepStore } from "@/store/consultationPrepStore";
+import { useConsultationPrepStore } from "@/features/consultation-prep/stores/consultationPrepStore";
 import type { IExpert } from "@repo/lib";
 
 export const useExpertDetails = (
@@ -24,14 +24,19 @@ export const useExpertDetails = (
   const [loadingReviews, setLoadingReviews] = useState(false);
   const [totalReviews, setTotalReviews] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
-  const openConsultationPrep = useConsultationPrepStore((s) => s.openConsultationPrep);
+  const openConsultationPrep = useConsultationPrepStore(
+    (s) => s.openConsultationPrep,
+  );
   const router = useRouter();
 
   // Real-time status sync via centralized presence hook with room subscription
-  const { isAvailableForConsultation, isBusy } = useExpertPresence(Number(expertId), {
-    initialStatus: toExpertStatus(initialAvailable),
-    autoSubscribe: true,
-  });
+  const { isAvailableForConsultation, isBusy } = useExpertPresence(
+    Number(expertId),
+    {
+      initialStatus: toExpertStatus(initialAvailable),
+      autoSubscribe: true,
+    },
+  );
 
   const handleChatClick = () => {
     openConsultationPrep(String(expertId), "chat");

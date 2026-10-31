@@ -2,9 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Sparkles, XCircle, AlertCircle, ShieldCheck, X } from "@repo/design/lucide";
+import {
+  Sparkles,
+  XCircle,
+  AlertCircle,
+  ShieldCheck,
+  X,
+} from "@repo/design/lucide";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/design/shadcn";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import {
   ConsultationModeIcon,
   getConsultationModeLabel,
@@ -74,7 +80,10 @@ function WaitingVisual({
 
         {/* Orbiting mode badge */}
         <div className="absolute -bottom-1 -right-1 size-6 rounded-full bg-white shadow-md border border-slate-100 flex items-center justify-center">
-          <ConsultationModeIcon mode={mode} className="size-3 text-orange-600" />
+          <ConsultationModeIcon
+            mode={mode}
+            className="size-3 text-orange-600"
+          />
         </div>
       </div>
     </div>
@@ -129,7 +138,9 @@ function RejectedState({
       </h3>
 
       <p className="mt-1.5 text-xs text-slate-500 leading-relaxed max-w-[260px]">
-        <span className="font-semibold text-slate-800">{expertName}</span> cannot take new consultation requests right now. No charges were deducted from your wallet balance.
+        <span className="font-semibold text-slate-800">{expertName}</span>{" "}
+        cannot take new consultation requests right now. No charges were
+        deducted from your wallet balance.
       </p>
 
       <button
@@ -170,7 +181,9 @@ function TimedOutState({
       </h3>
 
       <p className="mt-1.5 text-xs text-slate-500 leading-relaxed max-w-[260px]">
-        <span className="font-semibold text-slate-800">{expertName}</span> did not accept within the waiting window. Your wallet balance remains completely untouched.
+        <span className="font-semibold text-slate-800">{expertName}</span> did
+        not accept within the waiting window. Your wallet balance remains
+        completely untouched.
       </p>
 
       <button
@@ -213,7 +226,9 @@ function MicPermissionDeniedState({
       </h3>
 
       <p className="mt-1.5 max-w-[270px] text-xs leading-relaxed text-slate-500">
-        Microphone permission is required to start a consultation with <span className="font-semibold text-slate-800">{expertName}</span>. Please allow microphone access in your browser site settings.
+        Microphone permission is required to start a consultation with{" "}
+        <span className="font-semibold text-slate-800">{expertName}</span>.
+        Please allow microphone access in your browser site settings.
       </p>
 
       <div className="mt-6 flex w-full flex-col gap-2">
@@ -267,7 +282,9 @@ function MediaConnectionFailedState({
       </h3>
 
       <p className="mt-1.5 max-w-[270px] text-xs leading-relaxed text-slate-500">
-        Unable to establish audio connection with <span className="font-semibold text-slate-800">{expertName}</span>. {error || "Please verify your network connection and retry."}
+        Unable to establish audio connection with{" "}
+        <span className="font-semibold text-slate-800">{expertName}</span>.{" "}
+        {error || "Please verify your network connection and retry."}
       </p>
 
       <div className="mt-6 flex w-full flex-col gap-2">
@@ -304,7 +321,11 @@ function ChatWaitingState({
 }) {
   return (
     <div className="flex flex-col items-center text-center">
-      <WaitingVisual expertName={expertName} expertAvatar={expertAvatar} mode="chat" />
+      <WaitingVisual
+        expertName={expertName}
+        expertAvatar={expertAvatar}
+        mode="chat"
+      />
 
       <div className="mt-2">
         <WaveDots />
@@ -320,7 +341,8 @@ function ChatWaitingState({
       </h3>
 
       <p className="mt-1 text-xs text-slate-500 leading-relaxed max-w-[270px]">
-        Your consultation request has been notified to the expert. You will enter the chat room automatically once accepted.
+        Your consultation request has been notified to the expert. You will
+        enter the chat room automatically once accepted.
       </p>
 
       <div className="mt-4 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-full bg-slate-50 border border-slate-100 text-[11px] text-slate-500 font-medium">
@@ -368,16 +390,18 @@ function MediaWaitingState({
 }) {
   const modeLabel = getConsultationModeLabel(mode);
 
-  const isConnecting =
-    step === "connecting_media" || step === "ready";
+  const isConnecting = step === "connecting_media" || step === "ready";
 
   if (isConnecting) {
-    const subtitle =
-      "Generating secure token and connecting…";
+    const subtitle = "Generating secure token and connecting…";
 
     return (
       <div className="flex flex-col items-center text-center">
-        <WaitingVisual expertName={expertName} expertAvatar={expertAvatar} mode={mode} />
+        <WaitingVisual
+          expertName={expertName}
+          expertAvatar={expertAvatar}
+          mode={mode}
+        />
 
         <div className="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-orange-50 border border-orange-200/60 text-orange-700 text-[11px] font-bold tracking-wide uppercase">
           <ConsultationModeIcon mode={mode} className="w-3 h-3" />
@@ -406,7 +430,11 @@ function MediaWaitingState({
 
   return (
     <div className="flex flex-col items-center text-center">
-      <WaitingVisual expertName={expertName} expertAvatar={expertAvatar} mode={mode} />
+      <WaitingVisual
+        expertName={expertName}
+        expertAvatar={expertAvatar}
+        mode={mode}
+      />
 
       <div className="mt-1 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-orange-50 border border-orange-200/60 text-orange-700 text-[11px] font-bold tracking-wide uppercase">
         <ConsultationModeIcon mode={mode} className="w-3 h-3" />
@@ -449,11 +477,15 @@ function MediaWaitingState({
  */
 function WaitingModalContent(props: ConsultationWaitingModalProps) {
   if (props.rejected) {
-    return <RejectedState expertName={props.expertName} onClose={props.onClose} />;
+    return (
+      <RejectedState expertName={props.expertName} onClose={props.onClose} />
+    );
   }
 
   if (props.timedOut) {
-    return <TimedOutState expertName={props.expertName} onClose={props.onClose} />;
+    return (
+      <TimedOutState expertName={props.expertName} onClose={props.onClose} />
+    );
   }
 
   if (props.micDenied) {

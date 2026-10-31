@@ -1,21 +1,31 @@
 "use client";
 
-import React, { createContext, useContext, useState, useMemo, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useEffect,
+} from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useAuthStore } from "@/store/authStore";
-import { useChat } from "@/realtime/hooks/use-chat-session";
 import { useConsultation } from "@/realtime/hooks/use-consultation";
 import { useRoomVerdict } from "../hooks/use-room-verdict";
 import { useRoomTimer } from "../hooks/use-room-timer";
-import { useRoomBudget } from "../hooks/use-room-budget";
+import { useRoomBudget } from "../../../realtime/hooks/use-room-budget";
 import { useRoomSessionSummary } from "../hooks/use-room-session-summary";
 import { resolveRoomMode } from "../utils/session-mode";
 import { useRoomStoreSync } from "./use-room-store-sync";
 import { useRoomSessionTiming } from "./use-room-session-timing";
 import { useRoomSessions } from "./use-room-sessions";
-import type { RoomLifecycleContextValue, RoomLifecycleProviderProps } from "./room-lifecycle.types";
+import type {
+  RoomLifecycleContextValue,
+  RoomLifecycleProviderProps,
+} from "./room-lifecycle.types";
 
-const RoomLifecycleContext = createContext<RoomLifecycleContextValue | null>(null);
+const RoomLifecycleContext = createContext<RoomLifecycleContextValue | null>(
+  null,
+);
 
 /**
  * Provider wrapping consultation lifecycle state: sockets, session revisions,
@@ -44,26 +54,21 @@ export function RoomLifecycleProvider({
   });
 
   const {
+    decision,
+    voiceToken: acceptedVoiceToken,
+    state: consultationState,
+    ended,
+    paused,
+    pause: pauseLiveChat,
+    resume: resumeLiveChat,
+    end: endLiveChat,
+    // Chat delegated to useConsultation (which wraps useChat)
     messages: liveMessages,
     send: sendLiveMessage,
     typing: sendLiveTyping,
     remoteTyping,
-    ended: endedVerdict,
-    end: endLiveChat,
-    consultationStatus: joinedStatus,
-    budget: liveBudget,
-    paused: pausedState,
-    pause: pauseLiveChat,
-    resume: resumeLiveChat,
     sessionRevision,
     resumeRevision,
-  } = useChat(roomConsultationId, sessionId);
-
-  const {
-    decision,
-    voiceToken: acceptedVoiceToken,
-    isWarning,
-    state: consultationState,
   } = useConsultation(roomConsultationId, sessionId);
 
   // Refresh sessions when the chat hook bumps sessionRevision (e.g. new
@@ -81,35 +86,36 @@ export function RoomLifecycleProvider({
     [consultationState?.maxMinutes, consultationState?.startedAt],
   );
 
-  const { sessionStatus, showModal, setShowModal, handleEndChat } = useRoomVerdict({
-    decision,
-    endedVerdict,
-    joinedStatus,
-    endLiveChat,
-  });
+  const { sessionStatus, showModal, setShowModal, handleEndChat } =
+    useRoomVerdict({
+      decision,
+      endedVerdict: ended,
+      joinedStatus: consultationState?.state ?? null,
+      endLiveChat,
+    });
 
-  const { pendingExpiresAt, maxMinutes, startedAt, baseSeconds } = useRoomBudget({
-    consultationId: roomConsultationId,
-    decision,
-    joinStatus: joinedStatus,
-    liveBudget,
-    acceptedBudget,
-    consultationState,
-  });
+  const { pendingExpiresAt, maxMinutes, startedAt, baseSeconds, isWarning } =
+    useRoomBudget({
+      consultationId: roomConsultationId,
+      decision,
+      joinStatus: consultationState?.state ?? null,
+      acceptedBudget,
+      consultationState,
+    });
 
   const { elapsedTime, timeLeft } = useRoomTimer({
     maxMinutes,
     startedAt,
     baseSeconds,
     sessionStatus,
-    paused: pausedState !== null,
+    paused: paused !== null,
     voiceLive,
   });
 
   const { chatRate, sessionSummary } = useRoomSessionSummary({
     expertData,
-    endedVerdict,
-    pausedState,
+    endedVerdict: ended,
+    pausedState: paused,
     elapsedTime,
     balance,
     isFree: false,
@@ -118,15 +124,16 @@ export function RoomLifecycleProvider({
 
   const roomMode = resolveRoomMode(initialSessions, consultationState?.mode);
 
-  const { isSessionEnded, displayElapsedTime, displayTimeLeft } = useRoomSessionTiming({
-    sessions,
-    consultationState,
-    decision,
-    joinedStatus,
-    endedVerdict,
-    elapsedTime,
-    timeLeft,
-  });
+  const { isSessionEnded, displayElapsedTime, displayTimeLeft } =
+    useRoomSessionTiming({
+      sessions,
+      consultationState,
+      decision,
+      joinedStatus: consultationState?.state ?? null,
+      endedVerdict: ended,
+      elapsedTime,
+      timeLeft,
+    });
 
   useRoomStoreSync({
     roomConsultationId,
@@ -135,8 +142,8 @@ export function RoomLifecycleProvider({
     expertData,
     sessionStatus,
     maxMinutes,
-    pausedState,
-    endedVerdict,
+    pausedState: paused,
+    endedVerdict: ended,
     displayElapsedTime,
     displayTimeLeft,
   });
@@ -169,8 +176,8 @@ export function RoomLifecycleProvider({
       acceptedVoiceToken,
       isWarning,
       consultationState,
-      endedVerdict,
-      pausedState,
+      endedVerdict: ended,
+      pausedState: paused,
       pauseLiveChat,
       resumeLiveChat,
       endLiveChat,
@@ -216,8 +223,8 @@ export function RoomLifecycleProvider({
       acceptedVoiceToken,
       isWarning,
       consultationState,
-      endedVerdict,
-      pausedState,
+      ended,
+      paused,
       pauseLiveChat,
       resumeLiveChat,
       endLiveChat,
@@ -250,7 +257,9 @@ export function RoomLifecycleProvider({
 export function useRoomLifecycle(): RoomLifecycleContextValue {
   const context = useContext(RoomLifecycleContext);
   if (!context) {
-    throw new Error("useRoomLifecycle must be used within a RoomLifecycleProvider");
+    throw new Error(
+      "useRoomLifecycle must be used within a RoomLifecycleProvider",
+    );
   }
   return context;
 }

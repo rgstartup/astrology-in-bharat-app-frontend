@@ -99,7 +99,7 @@ export { Input } from "./input";
 export { Label } from "./label";
 export { Marker, MarkerContent, MarkerIcon } from "./marker";
 export { MessageScroller } from "./message-scroller";
-export { Message, MessageAvatar, MessageContent } from "./message";
+export { Message, MessageAvatar, MessageContent, MessageFooter, MessageHeader, MessageGroup } from "./message";
 export {
   NavigationMenu,
   NavigationMenuList,

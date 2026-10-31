@@ -11,7 +11,7 @@ import {
   type InitiateConsultationResult,
   type SomeoneElseData,
 } from "@/actions/chat";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import { requestConsultation } from "@/realtime/topics/consultation";
 import { CHAT_STATUS } from "@/realtime/types/chat";
 import type { ConsultationWaitStep } from "../components/consultation-wait-stepper.component";

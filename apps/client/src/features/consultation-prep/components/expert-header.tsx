@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import type { IExpert } from "@repo/lib";
 import { BadgeCheck, Star } from "@repo/design/lucide";
 import { formatSpecializationsString } from "@/utils/expert-utils";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import { resolveModePrice } from "@/lib/pricing";
 import { getConsultationModeLabel } from "./consultation-mode-icon";
 

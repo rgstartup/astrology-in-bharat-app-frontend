@@ -3,7 +3,7 @@
 import React from "react";
 import { Clock } from "@repo/design/lucide";
 import { cn } from "@repo/design/cn";
-import { useRoomRevision } from "../../hooks/use-room-revision";
+import { useRoomRevision } from "../../../../realtime/hooks/use-room-revision";
 
 type SessionTimersSectionProps = {
   formatTime: (time: number) => string;

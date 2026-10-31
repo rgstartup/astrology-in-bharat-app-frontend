@@ -2,7 +2,7 @@
 
 import React from "react";
 import { MessageSquare, Phone, Video } from "@repo/design/lucide";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import { cn } from "@repo/design/cn";
 
 export interface ConsultationModeIconProps {

@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import "swiper/css";
-import "swiper/css/navigation";
+import "@repo/design/fontawesome.css";
+import "@repo/design/swiper/css";
+import "@repo/design/swiper/css/navigation";
 
 import "@repo/ui/styles/index.css";
 import { Metadata } from "next";
@@ -19,7 +19,7 @@ import NotificationProvider from "@/providers/NotificationProvider";
 import { SmoothScroll, ToastProvider } from "@repo/design/components";
 import PlatformReviewModal from "@/components/features/reviews";
 import { ConsultationPrepHost } from "@/features/consultation-prep";
-import { ConsultationPrepProvider } from "@/store/consultationPrepStore";
+import { ConsultationPrepProvider } from "@/features/consultation-prep/stores/consultationPrepStore";
 import ConsultationTrackerHost from "@/features/consultation-tracker/consultation-tracker-host.component";
 import QueryProvider from "@/providers/QueryProvider";
 import { getMeAction } from "@/actions/auth";

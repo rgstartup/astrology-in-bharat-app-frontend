@@ -4,7 +4,10 @@ import { useEffect } from "react";
 import { getSocketTokenAction } from "@/actions/auth";
 import { connectRealtimeSocket, realtimeSocket } from "@/realtime/socket";
 import { PRESENCE_EVENTS } from "@/realtime/topics/presence";
-import { ExpertClientStatus, type PresenceChangedEventPayload } from "@/realtime/types/presence";
+import {
+  ExpertClientStatus,
+  type PresenceChangedEventPayload,
+} from "@/realtime/types/presence";
 import { usePresenceStore } from "@/store/presenceStore";
 import { useExpertListStore } from "@/store/expertListStore";
 import { useAuthStore } from "@/store/authStore";
@@ -32,7 +35,9 @@ const DEAD_MAN_INTERVAL_MS = 30_000;
 
 export function RealtimeProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const userId = useAuthStore((state) => state.user?.id ?? state.user?.public_id);
+  const userId = useAuthStore(
+    (state) => state.user?.id ?? state.user?.public_id,
+  );
 
   useEffect(() => {
     const socket = realtimeSocket();
@@ -57,25 +62,31 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
     const handlePresenceChanged = (payload: PresenceChangedEventPayload) => {
       usePresenceStore
         .getState()
-        .setExpertStatus(payload.expertId, payload.status, payload.timestamp, payload.lastSeenAt);
+        .setExpertStatus(
+          payload.expertId,
+          payload.status,
+          payload.timestamp,
+          payload.lastSeenAt,
+        );
 
       useExpertListStore
         .getState()
-        .updateExpertAvailability(payload.expertId, payload.status !== ExpertClientStatus.OFFLINE);
+        .updateExpertAvailability(
+          payload.expertId,
+          payload.status !== ExpertClientStatus.OFFLINE,
+        );
     };
 
     const connectWithAuth = () => {
-      if (isAuthenticated) {
-        getSocketTokenAction()
-          .then((token) => {
-            if (!cancelled) connectRealtimeSocket(token);
-          })
-          .catch(() => {
-            if (!cancelled) connectRealtimeSocket();
-          });
-      } else {
-        connectRealtimeSocket();
-      }
+      if (!isAuthenticated) connectRealtimeSocket();
+
+      getSocketTokenAction()
+        .then((token) => {
+          if (!cancelled) connectRealtimeSocket(token);
+        })
+        .catch(() => {
+          if (!cancelled) connectRealtimeSocket();
+        });
     };
 
     const handleConnect = () => {

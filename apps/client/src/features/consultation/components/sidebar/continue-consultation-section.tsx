@@ -5,8 +5,8 @@ import { MessageCircle, Phone, Video } from "@repo/design/lucide";
 import type { IExpert } from "@repo/lib";
 import { cn } from "@repo/design/cn";
 import { resolveModePrice } from "@/lib/pricing";
-import { useConsultationPrepStore } from "@/store/consultationPrepStore";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import { useConsultationPrepStore } from "@/features/consultation-prep/stores/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 
 type ContinueConsultationSectionProps = {
   expertData: IExpert;
@@ -35,9 +35,24 @@ export function ContinueConsultationSection({
     icon: React.ElementType;
     rate: number;
   }[] = [
-    { mode: "chat", label: "Continue via chat", icon: MessageCircle, rate: rates.chat },
-    { mode: "voice", label: "Continue via voice", icon: Phone, rate: rates.voice },
-    { mode: "video", label: "Continue via video", icon: Video, rate: rates.video },
+    {
+      mode: "chat",
+      label: "Continue via chat",
+      icon: MessageCircle,
+      rate: rates.chat,
+    },
+    {
+      mode: "voice",
+      label: "Continue via voice",
+      icon: Phone,
+      rate: rates.voice,
+    },
+    {
+      mode: "video",
+      label: "Continue via video",
+      icon: Video,
+      rate: rates.video,
+    },
   ];
 
   return (
@@ -56,7 +71,11 @@ export function ContinueConsultationSection({
               key={opt.mode}
               type="button"
               onClick={() =>
-                openConsultationPrep(String(expertData.id), opt.mode, consultationId)
+                openConsultationPrep(
+                  String(expertData.id),
+                  opt.mode,
+                  consultationId,
+                )
               }
               className="group flex items-center justify-between rounded-xl border border-[#d3cec6] bg-white p-3 text-left transition-all hover:border-neutral-400 hover:shadow-xs"
             >

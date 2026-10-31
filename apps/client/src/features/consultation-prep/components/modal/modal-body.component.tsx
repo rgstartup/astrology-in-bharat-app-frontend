@@ -7,7 +7,7 @@ import InsufficientFundsStep from "./insufficient-funds-step.component";
 import DetailsStep from "./details-step.component";
 import type { PrepExpert, ConsultationPrepController } from "./types";
 import type { SomeoneElseData } from "@/actions/chat";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 
 export interface ModalBodyProps {
   loading: boolean;

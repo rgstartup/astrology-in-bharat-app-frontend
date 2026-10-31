@@ -10,7 +10,7 @@ import type { TimelineItem } from "@repo/chat";
 import ChatFooter from "../chat/chat-footer";
 import { cn } from "@repo/design/cn";
 import RoomSecureStrip from "./room-secure-strip";
-import { useRoomRevision } from "../../hooks/use-room-revision";
+import { useRoomRevision } from "../../../../realtime/hooks/use-room-revision";
 import type { PendingAttachment } from "@repo/chat";
 import { SessionDock, type SessionDockProps } from "../session/session-dock";
 

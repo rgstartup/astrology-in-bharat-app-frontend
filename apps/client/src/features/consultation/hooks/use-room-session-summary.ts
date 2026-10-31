@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { type IExpert } from "@repo/lib";
 import type { ChatSession } from "@/lib/types";
-import type { ChatEndedPayload, ChatPausedPayload } from "@/realtime/types/chat";
+import type { ConsultationEndedPayload } from "@/realtime/types/consultation";
+import type { useConsultation } from "@/realtime/hooks/use-consultation";
 import { resolveChatRate, resolveModePrice } from "@/lib/pricing";
 
 /**
@@ -57,8 +58,8 @@ const calculateRemainingBalance = (
 
 type RoomSessionSummaryParams = {
   expertData: IExpert;
-  endedVerdict: ChatEndedPayload | null;
-  pausedState: ChatPausedPayload | null;
+  endedVerdict: ConsultationEndedPayload | null;
+  pausedState: ReturnType<typeof useConsultation>["paused"];
   elapsedTime: number;
   balance: number;
   isFree: boolean;

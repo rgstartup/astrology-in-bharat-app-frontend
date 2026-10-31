@@ -5,7 +5,7 @@ import { MessageCircle } from "@repo/design/lucide";
 import { useTranslations } from "next-intl";
 import { ConsultationWaitingModal } from "../consultation-waiting-modal.component";
 import type { ConsultationPrepController } from "./types";
-import type { ConsultationMode } from "@/store/consultationPrepStore";
+import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 
 export interface ModalPopupsProps {
   expertName: string;

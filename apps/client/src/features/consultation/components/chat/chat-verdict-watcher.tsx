@@ -26,7 +26,7 @@ function VerdictCard({ onDismiss }: { onDismiss: () => void }) {
 /**
  * Safety net for a reject that lands after room entry: routes the client out.
  * `decision` is passed in — the room already owns the single consultation
- * subscription, and useChat already joins the chat room on mount/reconnect.
+ * subscription (useConsultation owns lifecycle; useChat joins the chat room only).
  */
 export function ChatVerdictWatcher({
   consultationId,

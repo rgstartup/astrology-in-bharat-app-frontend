@@ -12,7 +12,6 @@
 //   root/          – root-level components
 //   stories/       – Storybook stories (not exported)
 
-export type { RoomSeed } from "./components/room/room-seed-provider";
 export { default as RoomContent } from "./components/root/content";
 export { default as RoomBody } from "./components/room/room-body";
 export { default as MainArea } from "./components/root/main-area";
@@ -58,8 +57,7 @@ export {
 export { useDirectVoice } from "./hooks/use-direct-voice";
 export { useRoomComposer } from "./hooks/use-room-composer";
 export type { PendingAttachment } from "./hooks/use-room-composer";
-export { useRoomRevision } from "./hooks/use-room-revision";
-export { useRoomSeed } from "./hooks/use-room-seed";
+export { useRoomRevision } from "../../realtime/hooks/use-room-revision";
 export { useRoomSessionSummary } from "./hooks/use-room-session-summary";
 export { useRoomTimer } from "./hooks/use-room-timer";
 export type { RoomSessionStatus } from "./hooks/use-room-verdict";

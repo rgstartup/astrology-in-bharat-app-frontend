@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "@repo/design/swiper";
 import { Autoplay, Navigation } from "@repo/design/swiper";
-import "swiper/css";
-import "swiper/css/navigation";
+import "@repo/design/swiper/css";
+import "@repo/design/swiper/css/navigation";
 
 export interface TestimonialReview {
   id?: string;

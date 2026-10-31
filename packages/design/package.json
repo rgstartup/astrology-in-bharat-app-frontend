@@ -11,14 +11,30 @@
     "./components": "./src/components/index.ts",
     "./components/*": "./src/components/*.tsx",
     "./swiper": "./src/swiper.ts",
-    "./swiper/*": "swiper/*",
+    "./swiper/css": {
+      "types": "./src/styles/swiper/index.d.ts",
+      "default": "./src/styles/swiper/index.css"
+    },
+    "./swiper/css/*": {
+      "types": "./src/styles/swiper/*.d.ts",
+      "default": "./src/styles/swiper/*.css"
+    },
+    "./swiper.css": {
+      "types": "./src/styles/swiper/index.d.ts",
+      "default": "./src/styles/swiper/index.css"
+    },
+    "./fontawesome.css": {
+      "types": "./src/styles/fontawesome.d.ts",
+      "default": "./src/styles/fontawesome.css"
+    },
     "./lucide": "./src/icons/lucide.ts",
     "./react-icons": "./src/icons/react-icons.ts",
     "./icons": "./src/icons/index.ts",
     "./icons/*": "./src/icons/*.ts",
     "./lenis": "./src/lenis.ts",
     "./lib/*": "./src/lib/*.ts",
-    "./cn": "./src/lib/utils.ts"
+    "./cn": "./src/lib/utils.ts",
+    "./swiper/css/bundle": "./node_modules/swiper/swiper-bundle.css"
   },
   "scripts": {
     "lint": "eslint .",
