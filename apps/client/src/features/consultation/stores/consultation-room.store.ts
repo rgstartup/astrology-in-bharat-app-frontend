@@ -78,7 +78,7 @@ const initialState: Omit<ConsultationRoomState, keyof { setConsultation: any; se
   voiceActive: false,
 };
 
-export const useConsultationRoomStore = create<ConsultationRoomState>((set) => ({
+export const useConsultationRoomStore = create<ConsultationRoomState>((set, get) => ({
   ...initialState,
   
   setConsultation: (data) => set((state) => ({ ...state, ...data })),
@@ -112,7 +112,17 @@ export const useConsultationRoomStore = create<ConsultationRoomState>((set) => (
       voiceActive: false,
     }),
   
-  clear: () => set(initialState),
+  clear: () => {
+    const before = get();
+    console.log("[VoiceConsultation] store clear BEFORE", {
+      sessionStatus: before.sessionStatus,
+      voiceSession: Boolean(before.voiceSession),
+      voiceActive: before.voiceActive,
+      elapsedSeconds: before.elapsedSeconds,
+    });
+    set(initialState);
+    console.log("[VoiceConsultation] store clear AFTER — all fields reset to initialState");
+  },
 }));
 
 /**

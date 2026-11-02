@@ -284,6 +284,9 @@ export const VoiceConnecting: Story = {
         onToggleSpeaker: () => undefined,
         onEnd: () => undefined,
         onCancelRequest: () => undefined,
+        onSwitchToChat: () => undefined,
+        onUpgradeToVideo: () => undefined,
+        onSwitchToVoice: () => undefined,
       }}
     />
   ),
@@ -310,6 +313,9 @@ export const VoiceLive: Story = {
         onToggleSpeaker: () => undefined,
         onEnd: () => undefined,
         onCancelRequest: () => undefined,
+        onSwitchToChat: () => undefined,
+        onUpgradeToVideo: () => undefined,
+        onSwitchToVoice: () => undefined,
       }}
     />
   ),

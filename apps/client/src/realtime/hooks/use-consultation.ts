@@ -62,6 +62,11 @@ export const useConsultation = (
   const [resumeRevision, setResumeRevision] = useState(0);
   // Terminal latch (see docblock): refs stay current inside socket handlers.
   const endedRef = useRef(false);
+  // GET_STATUS can fail on hard refresh if the socket hasn't finished
+  // authenticating yet (RealtimeProvider connects anonymously first, then
+  // re-authenticates once the JWT arrives). Retry a few times so the room
+  // still recovers even if the first GET_STATUS ack is lost.
+  const getStatusRetryRef = useRef(0);
 
   // Delegates chat room membership + message/typing streaming to useChat.
   // useChat owns the socket connect/join/leave for chat events only.
@@ -206,11 +211,50 @@ export const useConsultation = (
 
     /** Refresh status on (re)connect; room join is delegated to useChat. */
     const handleConnect = () => {
+      // Reset retry counter on each connection attempt so a fresh connect
+      // (e.g. after JWT auth resolves and socket reconnects) gets full retries.
+      getStatusRetryRef.current = 0;
+      const attempt = ++getStatusRetryRef.current;
+      console.info("[VoiceConsultation] handleConnect: GET_STATUS", {
+        consultationId: id,
+        attempt,
+        endedRef: endedRef.current,
+      });
       getConsultationStatus(id)
         .then((status) => {
-          if (status) setState(status);
+          // Only accept a valid ConsultationStatePayload; an auth error ack
+          // (e.g. {code: "UNAUTHENTICATED", ...}) resolves truthy but is not
+          // a status payload — treat it as a failure and retry.
+          if (status && typeof status.state === "string") {
+            getStatusRetryRef.current = 0;
+            console.info("[VoiceConsultation] handleConnect: GET_STATUS ack", {
+              consultationId: id,
+              hasStatus: Boolean(status),
+              state: status?.state ?? null,
+              startedAt: status?.startedAt ?? null,
+              elapsedSeconds: status?.elapsedSeconds ?? null,
+            });
+            setState(status);
+            return;
+          }
+          throw new Error(
+            `Invalid GET_STATUS payload: ${JSON.stringify(status)?.slice(0, 200)}`,
+          );
         })
-        .catch(() => undefined);
+        .catch((err) => {
+          console.error("[VoiceConsultation] handleConnect: GET_STATUS failed", {
+            consultationId: id,
+            attempt,
+            error: err instanceof Error ? err.message : String(err),
+          });
+          if (attempt < 3) {
+            console.info("[VoiceConsultation] handleConnect: retrying GET_STATUS", {
+              consultationId: id,
+              nextAttempt: attempt + 1,
+            });
+            setTimeout(() => handleConnect(), 1000);
+          }
+        });
     };
 
     if (!socket.connected) {

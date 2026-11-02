@@ -83,22 +83,31 @@ export const useRoomVerdict = ({
   }, [endedVerdict]);
 
   const handleEndChat = (force = false) => {
+    console.log("[VoiceConsultation] handleEndChat BEFORE", { force });
     void force;
     endLiveChat()
       .then((ack) => {
         const status = (ack as { status?: string } | undefined)?.status;
+        console.log("[VoiceConsultation] handleEndChat endLiveChat ack received", {
+          status,
+        });
         if (status && status !== "ended" && status !== "ignored") {
           toast.error("Failed to end chat. Please try again.");
           return;
         }
         setSessionStatus("completed");
         setShowModal(true);
+        console.log("[VoiceConsultation] handleEndChat calling clearConsultationRoom() + resetVoiceSession()");
         // Tear down RTC session and clear cached voice tokens so a
         // subsequent restart starts with a clean slate.
         void clearConsultationRoom();
         void resetVoiceSession();
+        console.log("[VoiceConsultation] handleEndChat cleanup dispatched — AFTER state changes will be logged by store actions");
       })
-      .catch(() => toast.error("Failed to end chat. Please try again."));
+      .catch(() => {
+        console.log("[VoiceConsultation] handleEndChat endLiveChat threw");
+        toast.error("Failed to end chat. Please try again.");
+      });
   };
 
   return { sessionStatus, showModal, setShowModal, handleEndChat };

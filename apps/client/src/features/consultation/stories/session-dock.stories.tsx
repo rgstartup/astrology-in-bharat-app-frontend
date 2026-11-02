@@ -125,6 +125,9 @@ function DockHarness({ kind, phase }: DockHarnessProps) {
         onToggleExpand={toggle}
         onEnd={noop}
         onCancelRequest={noop}
+        onSwitchToChat={noop}
+        onUpgradeToVideo={noop}
+        onSwitchToVoice={noop}
       />
     </div>
   );
@@ -267,6 +270,9 @@ function WholeRoomAddon({
           onToggleExpand={toggleExpand}
           onEnd={noop}
           onCancelRequest={noop}
+          onSwitchToChat={noop}
+          onUpgradeToVideo={noop}
+          onSwitchToVoice={noop}
         />
         <WholeRoomExpandedPanel
           kind={kind}

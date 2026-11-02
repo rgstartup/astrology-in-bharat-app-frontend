@@ -53,6 +53,10 @@ export const useConsultation = (
   const [budgetHold, setBudgetHold] = useState<ConsultationBudgetHoldPayload | null>(null);
   // Terminal latch (see docblock): refs stay current inside socket handlers.
   const endedRef = useRef(false);
+  // joinConsultationRooms + getConsultationStatus can fail on hard refresh if
+  // the socket hasn't finished authenticating yet. Retry a few times so the
+  // room still recovers even if the first round trips are lost.
+  const consultStatusRetryRef = useRef(0);
 
   useEffect(() => {
     if (!isValidId) return;
@@ -166,12 +170,50 @@ export const useConsultation = (
 
     /** Rejoin rooms + refresh state; safe to run on every (re)connect. */
     const handleConnect = () => {
+      // Reset retry counter on each connection attempt so a fresh connect
+      // (e.g. after JWT auth resolves and socket reconnects) gets full retries.
+      consultStatusRetryRef.current = 0;
+      const attempt = ++consultStatusRetryRef.current;
+      console.info("[ExpertVoice] handleConnect: joinConsultationRooms+GET_STATUS", {
+        consultationId: id,
+        attempt,
+      });
       joinConsultationRooms(id)
         .then(() => getConsultationStatus(id))
         .then((status) => {
-          if (status) setState(status);
+          // Only accept a valid ConsultationStatePayload; an auth error ack
+          // (e.g. {code: "UNAUTHENTICATED", ...}) resolves truthy but is not
+          // a status payload — treat it as a failure and retry.
+          if (status && typeof status.state === "string") {
+            consultStatusRetryRef.current = 0;
+            console.info("[ExpertVoice] handleConnect: GET_STATUS ack", {
+              consultationId: id,
+              hasStatus: Boolean(status),
+              state: status?.state ?? null,
+              startedAt: status?.startedAt ?? null,
+              elapsedSeconds: status?.elapsedSeconds ?? null,
+            });
+            setState(status);
+            return;
+          }
+          throw new Error(
+            `Invalid GET_STATUS payload: ${JSON.stringify(status)?.slice(0, 200)}`,
+          );
         })
-        .catch(() => undefined);
+        .catch((err) => {
+          console.error("[ExpertVoice] handleConnect: joinConsultationRooms+GET_STATUS failed", {
+            consultationId: id,
+            attempt,
+            error: err instanceof Error ? err.message : String(err),
+          });
+          if (attempt < 3) {
+            console.info("[ExpertVoice] handleConnect: retrying consult status fetch", {
+              consultationId: id,
+              nextAttempt: attempt + 1,
+            });
+            setTimeout(() => handleConnect(), 1000);
+          }
+        });
     };
 
     if (!socket.connected) {

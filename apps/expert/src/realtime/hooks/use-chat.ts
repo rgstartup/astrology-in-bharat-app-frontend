@@ -55,6 +55,9 @@ export const useChat = (
   // Terminal latch: ENDED is final. Late PAUSED / RESUMED / RESTORED racing
   // the end commit must never revive the paused banner post-end.
   const endedRef = useRef(false);
+  // joinChat can fail on hard refresh if the socket hasn't finished
+  // authenticating yet. Retry a few times so the room still recovers.
+  const joinChatRetryRef = useRef(0);
 
   useEffect(() => {
     if (!isValidId) return;
@@ -207,22 +210,61 @@ export const useChat = (
     };
 
     const handleConnect = () => {
+      // Reset retry counter on each connection attempt so a fresh connect
+      // (e.g. after JWT auth resolves and socket reconnects) gets full retries.
+      joinChatRetryRef.current = 0;
+      const attempt = ++joinChatRetryRef.current;
+      console.info("[ExpertVoice] handleConnect: joinChat", {
+        consultationId: id,
+        mode,
+        attempt,
+        endedRef: endedRef.current,
+      });
       joinChat(id, mode)
         .then((ack) => {
-          if (ack) applyBudget(ack);
-          if (ack && typeof ack.clientName === "string" && ack.clientName) {
-            setClientName(ack.clientName);
-          }
-          if (ack?.consultationStatus) setConsultationStatus(ack.consultationStatus);
-          if (ack?.token) {
-            setVoiceToken({
-              token: ack.token,
-              tokenExpiresAt: ack.tokenExpiresAt ?? null,
-              channelName: ack.channelName ?? null,
+          // Only accept a valid joinChat ack; an auth error resolves truthy
+          // but lacks consultationStatus — treat as failure and retry.
+          if (ack && typeof ack.consultationStatus === "string") {
+            joinChatRetryRef.current = 0;
+            console.info("[ExpertVoice] handleConnect: joinChat ack", {
+              consultationId: id,
+              hasAck: Boolean(ack),
+              consultationStatus: ack?.consultationStatus ?? null,
+              hasVoiceToken: Boolean(ack?.token),
+              channelName: ack?.channelName ?? null,
             });
+            applyBudget(ack);
+            if (ack && typeof ack.clientName === "string" && ack.clientName) {
+              setClientName(ack.clientName);
+            }
+            if (ack?.consultationStatus) setConsultationStatus(ack.consultationStatus);
+            if (ack?.token) {
+              setVoiceToken({
+                token: ack.token,
+                tokenExpiresAt: ack.tokenExpiresAt ?? null,
+                channelName: ack.channelName ?? null,
+              });
+            }
+            return;
           }
+          throw new Error(
+            `Invalid joinChat ack: ${JSON.stringify(ack)?.slice(0, 200)}`,
+          );
         })
-        .catch(() => undefined);
+        .catch((err) => {
+          console.error("[ExpertVoice] handleConnect: joinChat failed", {
+            consultationId: id,
+            attempt,
+            error: err instanceof Error ? err.message : String(err),
+          });
+          if (attempt < 3) {
+            console.info("[ExpertVoice] handleConnect: retrying joinChat", {
+              consultationId: id,
+              nextAttempt: attempt + 1,
+            });
+            setTimeout(() => handleConnect(), 1000);
+          }
+        });
     };
 
     if (!socket.connected) {

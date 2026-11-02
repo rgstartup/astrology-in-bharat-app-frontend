@@ -145,6 +145,11 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
           tokenValue = token.token;
         } else {
           const ack = await joinCall(consultationId);
+          console.log("[ExpertVoice] joinCall ack", {
+            consultationId,
+            hasToken: Boolean(ack?.token),
+            channelName: ack?.channelName ?? null,
+          });
           if (!ack.token || !ack.channelName) {
             throw new Error(
               "Voice is unavailable right now. Please try again shortly.",

@@ -131,13 +131,20 @@ export const useVoiceSessionStore = create<VoiceSessionStoreState>(
     },
     reset: async () => {
       const current = get().session;
+      console.log("[VoiceConsultation] store reset called", {
+        hasSession: Boolean(current),
+        consultationId: get().consultationId,
+      });
       if (current) {
         await current.leave().catch(() => undefined);
       }
       set({ session: null, consultationId: null, voiceTokensByConsultationId: {} });
+      console.log("[VoiceConsultation] store reset completed — session=null, tokens cleared");
     },
     clearVoiceTokens: () => {
+      console.log("[VoiceConsultation] store clearVoiceTokens called");
       set({ voiceTokensByConsultationId: {} });
+      console.log("[VoiceConsultation] store clearVoiceTokens completed");
     },
   }),
 );

@@ -206,17 +206,37 @@ export function useDirectVoice(
   }, [enabled, consultationId, userId]);
 
   const endVoice = useCallback(async (): Promise<void> => {
+    console.log("[VoiceConsultation] endVoice called", {
+      consultationId,
+      joinedRef: joinedRef.current,
+      voicePhase: rtc.voicePhase,
+    });
     joinedRef.current = null;
     joinAbortedRef.current = true;
+    console.log("[VoiceConsultation] endVoice calling rtc.leave()");
     await rtc.leave();
+    console.log("[VoiceConsultation] endVoice rtc.leave() completed");
+    console.log("[VoiceConsultation] endVoice calling clearConsultationRoom()");
     void clearConsultationRoom();
+    console.log("[VoiceConsultation] endVoice calling resetVoiceSession()");
     void resetVoiceSession();
     if (consultationId !== null) {
+      console.log("[VoiceConsultation] endVoice calling endConsultation()", {
+        consultationId,
+      });
       await endConsultation(consultationId).catch(() => undefined);
+      console.log("[VoiceConsultation] endVoice endConsultation() completed", {
+        consultationId,
+      });
     }
+    console.log("[VoiceConsultation] endVoice finished", { consultationId });
   }, [rtc, consultationId, clearConsultationRoom, resetVoiceSession]);
 
   const cancelVoice = useCallback(async (): Promise<void> => {
+    console.log("[VoiceConsultation] cancelVoice called", {
+      consultationId,
+      joinedRef: joinedRef.current,
+    });
     joinedRef.current = null;
     joinAbortedRef.current = true;
     await rtc.leave();

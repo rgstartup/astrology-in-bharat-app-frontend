@@ -4,6 +4,7 @@ import React from "react";
 import {
   ChevronDown,
   ChevronUp,
+  Menu,
   Mic,
   MicOff,
   Phone,
@@ -13,7 +14,13 @@ import {
   Volume2,
   VolumeX,
 } from "@repo/design/lucide";
-import { Button } from "@repo/design/shadcn";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@repo/design/shadcn";
 import { cn } from "@repo/design/cn";
 import type { SessionKind, SessionPhase } from "../../types/session-phase";
 import { getSessionPhaseLabel } from "../../types/session-phase";
@@ -36,6 +43,10 @@ export type SessionDockProps = {
   onToggleExpand?: () => void;
   onEnd: () => void;
   onCancelRequest?: () => void;
+  /** Optional session-mode switch handlers surfaced via the dock dropdown. */
+  onSwitchToChat?: () => void;
+  onUpgradeToVideo?: () => void;
+  onSwitchToVoice?: () => void;
   className?: string;
 };
 
@@ -270,6 +281,57 @@ function ExpandToggle({
 }
 
 /**
+ * Session-mode dropdown on the dock. Lets the user switch to chat or
+ * toggle between voice/video from the compact dock strip.
+ *
+ * @param props - Active kind and optional switch handlers.
+ * @returns Dropdown menu element.
+ */
+function SessionModeDropdown({
+  kind,
+  onSwitchToChat,
+  onUpgradeToVideo,
+  onSwitchToVoice,
+}: {
+  kind: SessionKind;
+  onSwitchToChat?: () => void;
+  onUpgradeToVideo?: () => void;
+  onSwitchToVoice?: () => void;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          size="icon"
+          variant="outline"
+          aria-label="Session options"
+          className="size-9 shrink-0 rounded-full border-[#d3cec6] bg-white text-[#111111] hover:bg-[#f5f1ec]"
+        >
+          <Menu className="size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem onSelect={onSwitchToChat} disabled={!onSwitchToChat}>
+          Switch to chat
+        </DropdownMenuItem>
+        {kind === "voice" ? (
+          <DropdownMenuItem
+            onSelect={onUpgradeToVideo}
+            disabled={!onUpgradeToVideo}
+          >
+            Upgrade to video
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem onSelect={onSwitchToVoice} disabled={!onSwitchToVoice}>
+            Switch to voice
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+/**
  * Requesting-phase dock actions: cancel only.
  *
  * @param props - Cancel handler.
@@ -310,6 +372,9 @@ export function SessionDock({
   onToggleExpand,
   onEnd,
   onCancelRequest,
+  onSwitchToChat,
+  onUpgradeToVideo,
+  onSwitchToVoice,
   className,
 }: SessionDockProps) {
   if (phase === "ended") {
@@ -372,6 +437,12 @@ export function SessionDock({
         <DockSpeakerToggle
           speakerMuted={speakerMuted}
           onToggle={onToggleSpeaker}
+        />
+        <SessionModeDropdown
+          kind={kind}
+          onSwitchToChat={onSwitchToChat}
+          onUpgradeToVideo={onUpgradeToVideo}
+          onSwitchToVoice={onSwitchToVoice}
         />
         <ExpandToggle
           expanded={expanded}

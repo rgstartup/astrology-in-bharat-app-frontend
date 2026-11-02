@@ -89,13 +89,20 @@ export function useVoiceCancelActions({
   }, [directVoice, refreshSessions]);
 
   const handleVoiceEndSession = useCallback(async () => {
+    console.log("[VoiceConsultation] handleVoiceEndSession called", {
+      voiceCancelOpen,
+      voiceCancelBusy,
+      voiceHoldActive: voiceHoldActive.current,
+    });
     setVoiceCancelOpen(false);
     await voiceHoldChain.current.catch(() => undefined);
     voiceHoldActive.current = false;
+    console.log("[VoiceConsultation] handleVoiceEndSession hold chain complete, calling directVoice.endVoice()");
     // Tear down RTC (clears sessionRef.current), clear stores, and end
     // the server session — all via directVoice.endVoice(). The server
     // ENDED event then sets sessionStatus="completed" and showModal=true.
     await directVoice.endVoice();
+    console.log("[VoiceConsultation] handleVoiceEndSession directVoice.endVoice() completed");
   }, [directVoice]);
 
   return {
