@@ -1,6 +1,12 @@
 import { create } from "zustand";
 import type { RtcSession } from "@repo/rtc";
 
+export interface AcceptTimeVoiceToken {
+  token: string | null;
+  tokenExpiresAt: string | null;
+  channelName: string | null;
+}
+
 /**
  * State and actions for bridging an active RTC voice session across navigation boundaries.
  */
@@ -9,6 +15,15 @@ export interface VoiceSessionStoreState {
   session: RtcSession | null;
   /** Consultation ID associated with the active session. */
   consultationId: number | null;
+  /** Accept-time Agora credentials keyed by consultation until the RTC join consumes them. */
+  voiceTokensByConsultationId: Record<number, AcceptTimeVoiceToken>;
+  /** Retain an accept-time token for the RTC session responsible for consuming it. */
+  setVoiceToken: (
+    consultationId: number,
+    token: AcceptTimeVoiceToken,
+  ) => void;
+  /** Return and remove a consultation token so it can be used for one RTC join. */
+  takeVoiceToken: (consultationId: number) => AcceptTimeVoiceToken | null;
   /**
    * Registers an active RTC session and its consultation ID in the global store.
    *
@@ -47,6 +62,27 @@ export const useVoiceSessionStore = create<VoiceSessionStoreState>(
   (set, get) => ({
     session: null,
     consultationId: null,
+    voiceTokensByConsultationId: {},
+    setVoiceToken: (consultationId, token) =>
+      set((state) => ({
+        voiceTokensByConsultationId: {
+          ...state.voiceTokensByConsultationId,
+          [consultationId]: token,
+        },
+      })),
+    takeVoiceToken: (consultationId) => {
+      const token = get().voiceTokensByConsultationId[consultationId] ?? null;
+      if (token) {
+        set((state) => {
+          const voiceTokensByConsultationId = {
+            ...state.voiceTokensByConsultationId,
+          };
+          delete voiceTokensByConsultationId[consultationId];
+          return { voiceTokensByConsultationId };
+        });
+      }
+      return token;
+    },
     setSession: (session, consultationId = null) =>
       set({ session, consultationId }),
     clearSession: () => {

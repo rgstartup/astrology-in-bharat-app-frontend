@@ -84,8 +84,11 @@ export function ConsultationPrepModal({
   const balance = useAuthStore((s) => s.balance);
   const refreshBalance = useAuthStore((s) => s.refreshBalance);
 
-  // Upfront minimum balance calculation: 5 minutes × mode rate
-  const minBalanceRequired = currentPrice * 5;
+  // Minimum balance from backend reservation_requirements; falls back to
+  const reservationReq =
+    expert?.reservation_requirements?.[mode as "chat" | "voice"];
+  const minBalanceRequired =
+    reservationReq?.min_balance_required ?? currentPrice * 5;
   const shortfall = Math.max(minBalanceRequired - (balance ?? 0), 0);
   const rechargeDefaultAmount = needsRecharge
     ? Math.max(Math.ceil(shortfall), 50)

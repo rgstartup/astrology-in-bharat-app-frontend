@@ -4,7 +4,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { RtcSession, RtcSnapshot } from "@repo/rtc";
 import type { VoicePhase } from "../types/voice-phase";
 import { joinCall } from "@/realtime/topics/call";
-import { mediaReady } from "@/realtime/topics/consultation";
+import {
+  CONSULTATION_EVENTS,
+  mediaReady,
+} from "@/realtime/topics/consultation";
+import { realtimeSocket } from "@/realtime/socket";
+import type {
+  ConsultationStatePayload,
+} from "@/realtime/types/consultation";
+import type { ConsultationDecisionPayload } from "@/realtime/types/chat";
 import { useVoiceSessionStore } from "../stores/voice-session.store";
 
 /**
@@ -38,11 +46,6 @@ export interface VoiceRtcControls {
   join: (
     consultationId: number,
     identity: string,
-    token?: {
-      token: string | null;
-      channelName: string | null;
-      tokenExpiresAt?: string | null;
-    },
   ) => Promise<void>;
   leave: () => Promise<void>;
   toggleMic: () => Promise<void>;
@@ -65,7 +68,9 @@ export interface VoiceRtcControls {
  * in useVoiceSessionStore. This hook subscribes to that store so the session
  * is automatically picked up when entering the room.
  */
-export function useVoiceSession(): VoiceRtcControls {
+export function useVoiceSession(
+  consultationId: number | null = null,
+): VoiceRtcControls {
   const sessionRef = useRef<RtcSession | null>(null);
   const mountedRef = useRef(true);
   const [snapshot, setSnapshot] = useState<RtcSnapshot | null>(null);
@@ -80,6 +85,51 @@ export function useVoiceSession(): VoiceRtcControls {
   const storeLeaveAndClear = useVoiceSessionStore(
     (s) => s.leaveAndClearSession,
   );
+  const storeSetVoiceToken = useVoiceSessionStore((s) => s.setVoiceToken);
+  const storeTakeVoiceToken = useVoiceSessionStore((s) => s.takeVoiceToken);
+
+  // Voice credentials belong to the RTC lifecycle, not the consultation state hook.
+  useEffect(() => {
+    if (consultationId === null) return;
+    const socket = realtimeSocket();
+    const captureVoiceToken = (payload: {
+      consultationId: number | string;
+      token?: string | null;
+      tokenExpiresAt?: string | null;
+      channelName?: string | null;
+    }) => {
+      if (
+        !payload ||
+        Number(payload.consultationId) !== consultationId ||
+        (!payload.token && !payload.channelName)
+      ) {
+        return;
+      }
+      storeSetVoiceToken(consultationId, {
+        token: payload.token ?? null,
+        tokenExpiresAt: payload.tokenExpiresAt ?? null,
+        channelName: payload.channelName ?? null,
+      });
+    };
+    const captureAccepted = (payload: ConsultationDecisionPayload) =>
+      captureVoiceToken(payload);
+    const captureResumed = (payload: ConsultationStatePayload) =>
+      captureVoiceToken(payload);
+
+    socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, captureAccepted);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, captureResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, captureResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, captureResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, captureResumed);
+
+    return () => {
+      socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, captureAccepted);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, captureResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, captureResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, captureResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, captureResumed);
+    };
+  }, [consultationId, storeSetVoiceToken]);
 
   // Sync local ref with store on mount and when store session changes
   useEffect(() => {
@@ -128,12 +178,8 @@ export function useVoiceSession(): VoiceRtcControls {
     async (
       consultationId: number,
       identity: string,
-      token?: {
-        token: string | null;
-        channelName: string | null;
-        tokenExpiresAt?: string | null;
-      } | null,
     ): Promise<void> => {
+      const token = storeTakeVoiceToken(consultationId);
       console.log("[VoiceConsultation] join() called", {
         consultationId,
         identity,
@@ -224,7 +270,12 @@ export function useVoiceSession(): VoiceRtcControls {
         if (mountedRef.current) setBusy(false);
       }
     },
-    [ensureSession, storeSetSession, storeLeaveAndClear],
+    [
+      ensureSession,
+      storeSetSession,
+      storeLeaveAndClear,
+      storeTakeVoiceToken,
+    ],
   );
 
   const leave = useCallback(async (): Promise<void> => {

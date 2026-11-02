@@ -6,6 +6,7 @@ import { toast } from "@repo/design/shadcn";
 import { useTranslations } from "next-intl";
 import { type IExpert } from "@repo/lib";
 import { useConsultationPrepStore } from "@/features/consultation-prep/stores/consultationPrepStore";
+import { useConsultationRequestStore } from "@/features/consultation-prep/stores/consultation-request-state.store";
 
 /**
  * Terminal step of a successful request: toast, close the prep modal,
@@ -21,6 +22,9 @@ import { useConsultationPrepStore } from "@/features/consultation-prep/stores/co
 export function useGoToRoom(expert: Partial<IExpert> | null) {
   const router = useRouter();
   const t = useTranslations("Chat.page");
+  const clearPendingExpiry = useConsultationRequestStore(
+    (state) => state.clearPendingExpiry,
+  );
 
   const goToRoom = useCallback(
     (
@@ -36,11 +40,9 @@ export function useGoToRoom(expert: Partial<IExpert> | null) {
       // spoofable, and ignored.
       router.push(`/consultation/${consultationId}?expertId=${targetExpertId}`);
 
-      if (typeof window !== "undefined") {
-        window.sessionStorage.removeItem(`chat:pending:${consultationId}`);
-      }
+      clearPendingExpiry(consultationId);
     },
-    [router, t, expert],
+    [router, t, expert, clearPendingExpiry],
   );
 
   return goToRoom;

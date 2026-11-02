@@ -56,11 +56,6 @@ export const useConsultation = (
   const [ended, setEnded] = useState<ConsultationEndedPayload | null>(null);
   const [paused, setPaused] = useState<ConsultationStatePausedPayload | null>(null);
   const [decision, setDecision] = useState<ConsultationDecision>("waiting");
-  const [voiceToken, setVoiceToken] = useState<{
-    token: string | null;
-    tokenExpiresAt: string | null;
-    channelName: string | null;
-  }>({ token: null, tokenExpiresAt: null, channelName: null });
   /** Bumped on pause/resume/end so the room can re-seed session history. */
   const [sessionRevision, setSessionRevision] = useState(0);
   /** Bumped only for backend resume events so the room store can reset once per resume. */
@@ -113,13 +108,6 @@ export const useConsultation = (
       setEnded(null);
       setDecision("accepted");
       setState({ ...payload, state: "active" });
-      if (payload.token || payload.channelName) {
-        setVoiceToken({
-          token: payload.token ?? null,
-          tokenExpiresAt: payload.tokenExpiresAt ?? null,
-          channelName: payload.channelName ?? null,
-        });
-      }
       setSessionRevision((value) => value + 1);
       setResumeRevision((value) => value + 1);
     };
@@ -153,11 +141,6 @@ export const useConsultation = (
       endedRef.current = false;
       setEnded(null);
       setDecision("accepted");
-      setVoiceToken({
-        token: p.token ?? null,
-        tokenExpiresAt: p.tokenExpiresAt ?? null,
-        channelName: p.channelName ?? null,
-      });
       setState((prev) => ({
         consultationId: p.consultationId,
         mode: prev?.mode ?? "chat",
@@ -317,7 +300,6 @@ export const useConsultation = (
     state,
     consultationStatus: state?.state ?? null,
     decision,
-    voiceToken,
     ended,
     paused,
     // Chat (delegated to useChat)

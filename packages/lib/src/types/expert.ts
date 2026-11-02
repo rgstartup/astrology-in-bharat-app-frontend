@@ -40,6 +40,18 @@ export interface IExpert {
   professions?: ExpertProfession[];
   specializations?: ExpertSpecialization[];
   pricing?: Pricing;
+  reservation_requirements?: {
+    chat?: {
+      price_per_minute: number | null;
+      min_minutes_required: number;
+      min_balance_required: number | null;
+    };
+    voice?: {
+      price_per_minute: number | null;
+      min_minutes_required: number;
+      min_balance_required: number | null;
+    };
+  };
   // Runtime / status fields
   status?: string;
   isAvailableForConsultation?: boolean;

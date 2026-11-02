@@ -45,7 +45,6 @@ export function DirectVoiceProvider({ children }: DirectVoiceProviderProps) {
     user,
     sessionStatus,
     decision,
-    acceptedVoiceToken,
     isSessionEnded,
     pausedState,
     roomMode,
@@ -77,7 +76,6 @@ export function DirectVoiceProvider({ children }: DirectVoiceProviderProps) {
       micConfirmed &&
       !isSessionEnded &&
       (pausedState === null || pausedState.reason === "billing_hold"),
-    voiceToken: acceptedVoiceToken,
     onLocalReady: media.setLocalReady,
     ended: isSessionEnded,
   });

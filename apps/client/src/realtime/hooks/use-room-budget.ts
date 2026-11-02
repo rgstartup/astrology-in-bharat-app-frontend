@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { realtimeSocket } from "@/realtime/socket";
 import { CONSULTATION_EVENTS } from "@/realtime/topics/consultation";
 import type { ConsultationDecision } from "@/realtime/hooks/use-consultation";
@@ -10,14 +10,7 @@ import type {
   ConsultationBudgetWarningPayload,
   ConsultationStatePayload,
 } from "@/realtime/types/consultation";
-
-/** sessionStorage fallback seeded at request time when the socket budget is unavailable. */
-const readStoredBudget = (consultationId: number | null): number | null => {
-  if (consultationId === null || typeof window === "undefined") return null;
-  const raw = window.sessionStorage.getItem(`chat:budget:${consultationId}`);
-  const mins = raw === null ? NaN : Number(raw);
-  return Number.isFinite(mins) && mins > 0 ? mins : null;
-};
+import { useConsultationRequestStore } from "@/features/consultation-prep/stores/consultation-request-state.store";
 
 type RoomBudgetParams = {
   consultationId: number | null;
@@ -42,17 +35,49 @@ export function useRoomBudget({
   acceptedBudget,
   consultationState,
 }: RoomBudgetParams) {
-  const storedMinutes = useMemo(
-    () => readStoredBudget(consultationId),
-    [consultationId],
+  const storedRequest = useConsultationRequestStore((state) =>
+    consultationId === null
+      ? null
+      : (state.requestsByConsultationId[consultationId] ?? null),
   );
+  const clearPendingExpiry = useConsultationRequestStore(
+    (state) => state.clearPendingExpiry,
+  );
+  const storedMinutes = storedRequest?.maxMinutes ?? null;
 
-  const [budgetTick, setBudgetTick] =
-    useState<ConsultationBudgetTickPayload | null>(null);
-  const [budgetWarning, setBudgetWarning] =
-    useState<ConsultationBudgetWarningPayload | null>(null);
-  const [budgetHold, setBudgetHold] =
-    useState<ConsultationBudgetHoldPayload | null>(null);
+  const budgetTick = useConsultationRequestStore((state) =>
+    consultationId === null
+      ? null
+      : (state.budgetEventsByConsultationId[consultationId]?.budgetTick ??
+        null),
+  );
+  const budgetWarning = useConsultationRequestStore((state) =>
+    consultationId === null
+      ? null
+      : (state.budgetEventsByConsultationId[consultationId]?.budgetWarning ??
+        null),
+  );
+  const budgetHold = useConsultationRequestStore((state) =>
+    consultationId === null
+      ? null
+      : (state.budgetEventsByConsultationId[consultationId]?.budgetHold ??
+        null),
+  );
+  const setBudgetTick = useConsultationRequestStore(
+    (state) => state.setBudgetTick,
+  );
+  const setBudgetWarning = useConsultationRequestStore(
+    (state) => state.setBudgetWarning,
+  );
+  const setBudgetHold = useConsultationRequestStore(
+    (state) => state.setBudgetHold,
+  );
+  const clearBudgetEvents = useConsultationRequestStore(
+    (state) => state.clearBudgetEvents,
+  );
+  const clearBudgetWarningAndHold = useConsultationRequestStore(
+    (state) => state.clearBudgetWarningAndHold,
+  );
 
   /**
    * True once the consultation is live by any signal (fresh accept verdict,
@@ -66,20 +91,14 @@ export function useRoomBudget({
   }, [decision, joinStatus, consultationState?.startedAt]);
 
   useEffect(() => {
-    if (
-      !consultationActive ||
-      consultationId === null ||
-      typeof window === "undefined"
-    )
-      return;
-    window.sessionStorage.removeItem(`chat:pending:${consultationId}`);
-  }, [consultationActive, consultationId]);
+    if (!consultationActive || consultationId === null) return;
+    clearPendingExpiry(consultationId);
+  }, [clearPendingExpiry, consultationActive, consultationId]);
 
   const pendingExpiresAt = useMemo(() => {
-    if (consultationId === null || typeof window === "undefined") return null;
     if (consultationActive) return null;
-    return window.sessionStorage.getItem(`chat:pending:${consultationId}`);
-  }, [consultationId, consultationActive]);
+    return storedRequest?.pendingExpiresAt ?? null;
+  }, [consultationActive, storedRequest?.pendingExpiresAt]);
 
   const maxMinutes = acceptedBudget.maxMinutes ?? storedMinutes;
 
@@ -96,29 +115,29 @@ export function useRoomBudget({
     if (!consultationId) return;
 
     const socket = realtimeSocket();
+    clearBudgetEvents(consultationId);
 
     const handleBudgetTick = (payload: ConsultationBudgetTickPayload) => {
       if (payload && Number(payload.consultationId) === consultationId) {
-        setBudgetTick(payload);
+        setBudgetTick(consultationId, payload);
       }
     };
 
     const handleBudgetWarning = (payload: ConsultationBudgetWarningPayload) => {
       if (payload && Number(payload.consultationId) === consultationId) {
-        setBudgetWarning(payload);
+        setBudgetWarning(consultationId, payload);
       }
     };
 
     const handleBudgetExhausted = (payload: ConsultationBudgetHoldPayload) => {
       if (payload && Number(payload.consultationId) === consultationId) {
-        setBudgetHold(payload);
+        setBudgetHold(consultationId, payload);
       }
     };
 
     const handleBudgetRestored = (payload: ConsultationStatePayload) => {
       if (payload && Number(payload.consultationId) === consultationId) {
-        setBudgetHold(null);
-        setBudgetWarning(null);
+        clearBudgetWarningAndHold(consultationId);
       }
     };
 
@@ -133,7 +152,14 @@ export function useRoomBudget({
       socket.off(CONSULTATION_EVENTS.BUDGET.EXHAUSTED, handleBudgetExhausted);
       socket.off(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
     };
-  }, [consultationId]);
+  }, [
+    clearBudgetEvents,
+    clearBudgetWarningAndHold,
+    consultationId,
+    setBudgetHold,
+    setBudgetTick,
+    setBudgetWarning,
+  ]);
 
   const isBudgetExhausted = budgetHold !== null;
 

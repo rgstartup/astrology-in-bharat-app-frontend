@@ -15,7 +15,7 @@ import {
   InputOTPSlot,
   InputOTPSeparator,
 } from "@repo/design/shadcn";
-import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { REGEXP_ONLY_DIGITS } from "@repo/design/shadcn/input-otp";
 import { MailCheck, Loader2 } from "@repo/design/lucide";
 import { Button } from "@repo/design/shadcn";
 import { AuthHeader } from "./AuthHeader";

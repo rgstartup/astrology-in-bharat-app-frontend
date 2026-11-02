@@ -55,7 +55,6 @@ export function RoomLifecycleProvider({
 
   const {
     decision,
-    voiceToken: acceptedVoiceToken,
     state: consultationState,
     ended,
     paused,
@@ -173,7 +172,6 @@ export function RoomLifecycleProvider({
       chatRate,
       sessionSummary,
       decision,
-      acceptedVoiceToken,
       isWarning,
       consultationState,
       endedVerdict: ended,
@@ -220,7 +218,6 @@ export function RoomLifecycleProvider({
       chatRate,
       sessionSummary,
       decision,
-      acceptedVoiceToken,
       isWarning,
       consultationState,
       ended,

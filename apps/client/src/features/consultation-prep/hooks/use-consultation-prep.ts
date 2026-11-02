@@ -37,12 +37,14 @@ export function useConsultationPrep(
 
   const { expert, loading, isExpertAvailable, fetchExpert } =
     usePrepExpert(expertId);
+
   const {
     isAuthenticated,
     needsRecharge,
     setNeedsRecharge,
     refreshBalanceNow,
   } = useBalanceGate();
+
   const { deviceHint, clearDeviceHint, runPreflight, resetDevices } =
     useDevicePreflight();
   const {

@@ -20,6 +20,7 @@ import { SmoothScroll, ToastProvider } from "@repo/design/components";
 import PlatformReviewModal from "@/components/features/reviews";
 import { ConsultationPrepHost } from "@/features/consultation-prep";
 import { ConsultationPrepProvider } from "@/features/consultation-prep/stores/consultationPrepStore";
+import { ConsultationRequestStateProvider } from "@/features/consultation-prep/stores/consultation-request-state.store";
 import ConsultationTrackerHost from "@/features/consultation-tracker/consultation-tracker-host.component";
 import QueryProvider from "@/providers/QueryProvider";
 import { getMeAction } from "@/actions/auth";
@@ -74,10 +75,12 @@ export default async function LocaleLayout({ children, params }: Props) {
                   <CartInitializer>
                     <WishlistInitializer>
                       <ConsultationPrepProvider>
-                        <SmoothScroll>{children}</SmoothScroll>
-                        <PlatformReviewModal />
-                        <ConsultationPrepHost />
-                        <ConsultationTrackerHost />
+                        <ConsultationRequestStateProvider>
+                          <SmoothScroll>{children}</SmoothScroll>
+                          <PlatformReviewModal />
+                          <ConsultationPrepHost />
+                          <ConsultationTrackerHost />
+                        </ConsultationRequestStateProvider>
                       </ConsultationPrepProvider>
                     </WishlistInitializer>
                   </CartInitializer>

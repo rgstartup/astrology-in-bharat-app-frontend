@@ -6,6 +6,8 @@ import { Dot } from "lucide-react";
 
 import { cn } from "../lib/utils";
 
+export { REGEXP_ONLY_DIGITS } from "input-otp";
+
 const InputOTP = forwardRef<
   ElementRef<typeof OTPInput>,
   ComponentPropsWithoutRef<typeof OTPInput>

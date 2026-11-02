@@ -41,7 +41,6 @@ export interface RoomLifecycleContextValue {
   chatRate: number;
   sessionSummary: ReturnType<typeof useRoomSessionSummary>["sessionSummary"];
   decision: ConsultationDecision;
-  acceptedVoiceToken: ReturnType<typeof useConsultation>["voiceToken"];
   isWarning: ReturnType<typeof useRoomBudget>["isWarning"];
   consultationState: ConsultationStatePayload | null;
   endedVerdict: ConsultationEndedPayload | null;

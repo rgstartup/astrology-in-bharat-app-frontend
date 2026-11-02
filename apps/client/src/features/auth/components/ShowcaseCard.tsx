@@ -16,7 +16,7 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@repo/design/shadcn";
-import Autoplay from "embla-carousel-autoplay";
+import { ShadcnAutoplay } from "@repo/design/shadcn";
 
 const TOP_EXPERT_AVATARS = [
   { src: "/images/Expert.png", name: "Swami Krishnadev", fallback: "SK" },
@@ -84,7 +84,11 @@ export const ShowcaseCard: React.FC = () => {
   const [count, setCount] = useState(0);
 
   const autoplayPlugin = useRef(
-    Autoplay({ delay: 4500, stopOnInteraction: false, stopOnMouseEnter: true }),
+    ShadcnAutoplay({
+      delay: 4500,
+      stopOnInteraction: false,
+      stopOnMouseEnter: true,
+    }),
   );
 
   useEffect(() => {
