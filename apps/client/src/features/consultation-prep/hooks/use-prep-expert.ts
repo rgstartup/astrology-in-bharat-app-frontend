@@ -38,19 +38,23 @@ export function usePrepExpert(expertId: string) {
     expertIdRef.current = expertId;
   }, [expertId]);
 
-  const fetchExpert = useCallback(async (): Promise<Partial<IExpert> | null> => {
-    if (!expertId) return null;
-    setLoading(true);
-    const res = await getChatPrepExpertAction(expertId);
-    if (expertIdRef.current !== expertId) return null;
-    setLoading(false);
-    if (!res.ok) {
-      toast.error(res.error.message || "Failed to fetch expert");
-      return null;
-    }
-    setExpert(res.data);
-    return res.data;
-  }, [expertId]);
+  const fetchExpert =
+    useCallback(async (): Promise<Partial<IExpert> | null> => {
+      if (!expertId) return null;
+
+      setLoading(true);
+      const res = await getChatPrepExpertAction(expertId).finally(() =>
+        setLoading(false),
+      );
+
+      if (expertIdRef.current !== expertId) return null;
+      if (!res.ok) {
+        toast.error(res.error.message || "Failed to fetch expert");
+        return null;
+      }
+      setExpert(res.data);
+      return res.data;
+    }, [expertId]);
 
   // Fetch is on-demand; the composition root fires it when the dialog opens.
   return { expert, loading, isExpertAvailable, fetchExpert };
