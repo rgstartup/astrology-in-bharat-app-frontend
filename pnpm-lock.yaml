@@ -411,9 +411,6 @@ importers:
       socket.io-client:
         specifier: ^4.8.4
         version: 4.8.4(supports-color@7.2.0)
-      swiper:
-        specifier: ^14.3.0
-        version: 14.3.0
       twilio-video:
         specifier: ^2.36.0
         version: 2.36.0
