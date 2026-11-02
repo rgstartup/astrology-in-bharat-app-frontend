@@ -1,9 +1,20 @@
 "use client";
 
-import { type ComponentProps, type HTMLAttributes, type KeyboardEvent, createContext, forwardRef, useCallback, useContext, useEffect, useState } from "react";
+import {
+  type ComponentProps,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  createContext,
+  forwardRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { cn } from "../lib/utils";
@@ -163,90 +174,129 @@ const CarouselContent = forwardRef<
 });
 CarouselContent.displayName = "CarouselContent";
 
-const CarouselItem = forwardRef<
-  HTMLDivElement,
-  HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  const { orientation } = useCarousel();
+const CarouselItem = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const { orientation } = useCarousel();
 
-  return (
-    <div
-      ref={ref}
-      role="group"
-      aria-roledescription="slide"
-      className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
-        className,
-      )}
-      {...props}
-    />
-  );
-});
+    return (
+      <div
+        ref={ref}
+        role="group"
+        aria-roledescription="slide"
+        className={cn(
+          "min-w-0 shrink-0 grow-0 basis-full",
+          orientation === "horizontal" ? "pl-4" : "pt-4",
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
 CarouselItem.displayName = "CarouselItem";
 
 const CarouselPrevious = forwardRef<
   HTMLButtonElement,
   ComponentProps<"button"> & {
-    variant?: "default" | "outline" | "secondary" | "ghost" | "destructive" | "link";
-    size?: "default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg";
+    variant?:
+      "default" | "outline" | "secondary" | "ghost" | "destructive" | "link";
+    size?:
+      | "default"
+      | "xs"
+      | "sm"
+      | "lg"
+      | "icon"
+      | "icon-xs"
+      | "icon-sm"
+      | "icon-lg";
   }
->(({ className, variant = "outline", size = "icon", type = "button", ...props }, ref) => {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel();
+>(
+  (
+    {
+      className,
+      variant = "outline",
+      size = "icon",
+      type = "button",
+      ...props
+    },
+    ref,
+  ) => {
+    const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
-  return (
-    <button
-      ref={ref}
-      type={type}
-      className={cn(
-        buttonVariants({ variant, size }),
-        "absolute size-8 rounded-full",
-        orientation === "horizontal"
-          ? "-left-12 top-1/2 -translate-y-1/2"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
-        className,
-      )}
-      disabled={!canScrollPrev}
-      onClick={scrollPrev}
-      {...props}
-    >
-      <ChevronLeft className="size-4" />
-      <span className="sr-only">Previous slide</span>
-    </button>
-  );
-});
+    return (
+      <button
+        ref={ref}
+        type={type}
+        className={cn(
+          buttonVariants({ variant, size }),
+          "absolute size-8 rounded-full",
+          orientation === "horizontal"
+            ? "-left-12 top-1/2 -translate-y-1/2"
+            : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+          className,
+        )}
+        disabled={!canScrollPrev}
+        onClick={scrollPrev}
+        {...props}
+      >
+        <ChevronLeft className="size-4" />
+        <span className="sr-only">Previous slide</span>
+      </button>
+    );
+  },
+);
 CarouselPrevious.displayName = "CarouselPrevious";
 
 const CarouselNext = forwardRef<
   HTMLButtonElement,
   ComponentProps<"button"> & {
-    variant?: "default" | "outline" | "secondary" | "ghost" | "destructive" | "link";
-    size?: "default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg";
+    variant?:
+      "default" | "outline" | "secondary" | "ghost" | "destructive" | "link";
+    size?:
+      | "default"
+      | "xs"
+      | "sm"
+      | "lg"
+      | "icon"
+      | "icon-xs"
+      | "icon-sm"
+      | "icon-lg";
   }
->(({ className, variant = "outline", size = "icon", type = "button", ...props }, ref) => {
-  const { orientation, scrollNext, canScrollNext } = useCarousel();
+>(
+  (
+    {
+      className,
+      variant = "outline",
+      size = "icon",
+      type = "button",
+      ...props
+    },
+    ref,
+  ) => {
+    const { orientation, scrollNext, canScrollNext } = useCarousel();
 
-  return (
-    <button
-      ref={ref}
-      type={type}
-      className={cn(
-        buttonVariants({ variant, size }),
-        "absolute size-8 rounded-full",
-        orientation === "horizontal"
-          ? "-right-12 top-1/2 -translate-y-1/2"
-          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
-        className,
-      )}
-      disabled={!canScrollNext}
-      onClick={scrollNext}
-      {...props}
-    >
-      <ChevronRight className="size-4" />
-      <span className="sr-only">Next slide</span>
-    </button>
-  );
-});
+    return (
+      <button
+        ref={ref}
+        type={type}
+        className={cn(
+          buttonVariants({ variant, size }),
+          "absolute size-8 rounded-full",
+          orientation === "horizontal"
+            ? "-right-12 top-1/2 -translate-y-1/2"
+            : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+          className,
+        )}
+        disabled={!canScrollNext}
+        onClick={scrollNext}
+        {...props}
+      >
+        <ChevronRight className="size-4" />
+        <span className="sr-only">Next slide</span>
+      </button>
+    );
+  },
+);
 CarouselNext.displayName = "CarouselNext";
 
 export {

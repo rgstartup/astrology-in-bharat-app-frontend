@@ -37,6 +37,7 @@ export {
   CarouselNext,
   type CarouselApi,
 } from "./carousel";
+export { ShadcnAutoplay, type ShadcnAutoplayOptions } from "./autoplay";
 export { Checkbox } from "./checkbox";
 export {
   Dialog,
@@ -99,7 +100,14 @@ export { Input } from "./input";
 export { Label } from "./label";
 export { Marker, MarkerContent, MarkerIcon } from "./marker";
 export { MessageScroller } from "./message-scroller";
-export { Message, MessageAvatar, MessageContent, MessageFooter, MessageHeader, MessageGroup } from "./message";
+export {
+  Message,
+  MessageAvatar,
+  MessageContent,
+  MessageFooter,
+  MessageHeader,
+  MessageGroup,
+} from "./message";
 export {
   NavigationMenu,
   NavigationMenuList,
