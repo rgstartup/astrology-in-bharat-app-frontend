@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@repo/storybook";
-import { EndSessionButton } from "@/features/consultation/header";
+import { EndSessionButton } from "@/features/consultation";
 
 const meta: Meta<typeof EndSessionButton> = {
   title: "Chat/Header/EndSessionButton",

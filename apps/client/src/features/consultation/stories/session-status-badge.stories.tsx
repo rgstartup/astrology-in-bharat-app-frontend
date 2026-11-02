@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@repo/storybook";
-import { SessionStatusBadge } from "@/features/consultation/header";
+import { SessionStatusBadge } from "@/features/consultation";
 
 const meta: Meta<typeof SessionStatusBadge> = {
   title: "Chat/Header/SessionStatusBadge",

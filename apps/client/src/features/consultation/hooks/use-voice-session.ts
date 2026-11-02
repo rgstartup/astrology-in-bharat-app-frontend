@@ -9,9 +9,7 @@ import {
   mediaReady,
 } from "@/realtime/topics/consultation";
 import { realtimeSocket } from "@/realtime/socket";
-import type {
-  ConsultationStatePayload,
-} from "@/realtime/types/consultation";
+import type { ConsultationStatePayload } from "@/realtime/types/consultation";
 import type { ConsultationDecisionPayload } from "@/realtime/types/chat";
 import { useVoiceSessionStore } from "../stores/voice-session.store";
 
@@ -43,10 +41,7 @@ export interface VoiceRtcControls {
   busy: boolean;
   error: string | null;
   active: boolean;
-  join: (
-    consultationId: number,
-    identity: string,
-  ) => Promise<void>;
+  join: (consultationId: number, identity: string) => Promise<void>;
   leave: () => Promise<void>;
   toggleMic: () => Promise<void>;
   toggleSpeaker: () => Promise<void>;
@@ -80,10 +75,12 @@ export function useVoiceSession(
 
   // Subscribe to the global store for sessions created externally (e.g., prep modal)
   const storeSession = useVoiceSessionStore((s) => s.session);
-  const storeConsultationId = useVoiceSessionStore((s) => s.consultationId);
   const storeSetSession = useVoiceSessionStore((s) => s.setSession);
   const storeLeaveAndClear = useVoiceSessionStore(
     (s) => s.leaveAndClearSession,
+  );
+  const storeClearVoiceTokens = useVoiceSessionStore(
+    (s) => s.clearVoiceTokens,
   );
   const storeSetVoiceToken = useVoiceSessionStore((s) => s.setVoiceToken);
   const storeTakeVoiceToken = useVoiceSessionStore((s) => s.takeVoiceToken);
@@ -175,10 +172,7 @@ export function useVoiceSession(
   }, [storeSession, storeSetSession]);
 
   const join = useCallback(
-    async (
-      consultationId: number,
-      identity: string,
-    ): Promise<void> => {
+    async (consultationId: number, identity: string): Promise<void> => {
       const token = storeTakeVoiceToken(consultationId);
       console.log("[VoiceConsultation] join() called", {
         consultationId,
@@ -270,12 +264,7 @@ export function useVoiceSession(
         if (mountedRef.current) setBusy(false);
       }
     },
-    [
-      ensureSession,
-      storeSetSession,
-      storeLeaveAndClear,
-      storeTakeVoiceToken,
-    ],
+    [ensureSession, storeSetSession, storeLeaveAndClear, storeTakeVoiceToken],
   );
 
   const leave = useCallback(async (): Promise<void> => {
@@ -298,6 +287,7 @@ export function useVoiceSession(
       }
     } finally {
       sessionRef.current = null;
+      storeClearVoiceTokens();
       if (mountedRef.current) {
         setSnapshot(null);
         setActive(false);

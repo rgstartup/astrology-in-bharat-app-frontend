@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@repo/storybook";
-import { BackAffordance } from "@/features/consultation/header";
+import { BackAffordance } from "@/features/consultation";
 
 const router = {
   back: () => undefined,

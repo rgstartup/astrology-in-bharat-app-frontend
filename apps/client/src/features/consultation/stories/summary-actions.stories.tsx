@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@repo/storybook";
-import { SummaryActions } from "@/features/consultation/components/session-summary";
+import SummaryActions from "@/features/consultation/components/session-summary/summary-actions";
 
 const router = { push: (_path: string) => undefined };
 

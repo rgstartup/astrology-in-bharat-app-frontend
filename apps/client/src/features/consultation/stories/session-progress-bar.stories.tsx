@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@repo/storybook";
-import { SessionProgressBar } from "@/features/consultation/header";
+import { SessionProgressBar } from "@/features/consultation";
 
 const meta: Meta<typeof SessionProgressBar> = {
   title: "Chat/Header/SessionProgressBar",

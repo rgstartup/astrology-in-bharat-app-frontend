@@ -2,8 +2,8 @@
 
 import { useRef, useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
-import { ChatFooter } from "@/features/consultation/components/root";
-import type { PendingAttachment } from "@/features/consultation/components/room/hooks/use-room-composer";
+import { ChatFooter } from "@/features/consultation";
+import type { PendingAttachment } from "@/features/consultation";
 
 function ActiveComposerStory() {
   const [inputValue, setInputValue] = useState(

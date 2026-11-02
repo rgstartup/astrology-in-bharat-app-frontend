@@ -1,8 +1,8 @@
 "use client";
 
 import type { Meta, StoryObj } from "@repo/storybook";
-import { SessionEventCard } from "@/features/consultation/message-area";
-import type { SessionMeta } from "@/features/consultation/message-area/types/timeline";
+import { SessionEventCard } from "@/features/consultation";
+import type { SessionMeta } from "@/features/consultation/types/timeline";
 
 const meta: Meta<typeof SessionEventCard> = {
   title: "Chat/Room/SessionEventCard",

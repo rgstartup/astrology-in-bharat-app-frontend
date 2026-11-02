@@ -53,6 +53,7 @@ export function DirectVoiceProvider({ children }: DirectVoiceProviderProps) {
     resumeLiveChat,
     refreshSessions,
     setVoiceLive,
+    handleEndChat,
   } = useRoomLifecycle();
 
   const { voice, displayVoiceRate } = useSwitchToVoiceContext();
@@ -103,6 +104,7 @@ export function DirectVoiceProvider({ children }: DirectVoiceProviderProps) {
     resumeLiveChat,
     refreshSessions,
     directVoice,
+    handleEndChat,
   });
 
   const showVoiceStage =

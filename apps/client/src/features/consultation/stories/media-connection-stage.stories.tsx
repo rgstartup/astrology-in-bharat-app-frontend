@@ -3,12 +3,11 @@
 import React from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
 import type { IExpert } from "@repo/lib";
-import { ConsultationSidebar } from "@/features/consultation/components/sidebar";
-import { MediaConnectionStage } from "@/features/consultation/components/media-staging";
+import { ConsultationSidebar, MediaConnectionStage } from "@/features/consultation";
 import type {
   MediaConnectionStep,
   MediaKind,
-} from "@/features/consultation/components/media-staging/types/media-connection-types";
+} from "@/features/consultation/types/media-connection-types";
 
 /** Wireframe expert: Pandit Rahul Sharma, Vedic Astrologer. */
 const rahulSharmaExpert = {

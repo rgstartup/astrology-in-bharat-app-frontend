@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
-import { SessionSummaryModal } from "@/features/consultation/components/session-summary";
-import type { BillingSummary } from "@/features/consultation/components/session-summary";
-import type { SessionThankYouExpert } from "@/features/consultation/components/session-summary";
+import { SessionSummaryModal } from "@/features/consultation";
+import type { BillingSummary } from "@/features/consultation/components/session-summary/billing-breakdown";
+import type { SessionThankYouExpert } from "@/features/consultation/components/session-summary/session-thank-you";
 
 type StorySummary = BillingSummary & {
   reason?: string;

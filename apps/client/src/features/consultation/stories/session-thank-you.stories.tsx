@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from "@repo/storybook";
-import {
-  SessionThankYou,
-  type SessionThankYouExpert,
-} from "@/features/consultation/components/session-summary";
+import { SessionThankYou } from "@/features/consultation";
+import type { SessionThankYouExpert } from "@/features/consultation/components/session-summary/session-thank-you";
 
 const router = { push: (_path: string) => undefined };
 

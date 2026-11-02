@@ -5,6 +5,8 @@ import type { RtcSession, RtcSnapshot } from "@repo/rtc";
 import type { ExpertSessionPhase } from "@/features/consultation/session";
 import { joinCall } from "@/realtime/topics/call";
 import { mediaReady } from "@/realtime/topics/consultation";
+import { realtimeSocket } from "@/realtime/socket";
+import { CONSULTATION_EVENTS } from "@/realtime/topics/consultation";
 
 export interface ExpertVoiceRtcControls {
   snapshot: RtcSnapshot | null;
@@ -206,6 +208,32 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
       notifySubscribers();
     }
   }, []);
+
+  // Tear down the shared RTC session when the consultation ends or resumes
+  // under voice. Without this, globals (globalSession, globalActive,
+  // globalConsultationId) persist across consultation boundaries, and join()
+  // early-returns on restart instead of connecting to the new Agora channel.
+  useEffect(() => {
+    const socket = realtimeSocket();
+    const onEndedOrResumed = (payload: { consultationId?: number }) => {
+      if (
+        payload &&
+        payload.consultationId !== undefined &&
+        Number(payload.consultationId) !== globalConsultationId
+      ) {
+        return;
+      }
+      void leave();
+    };
+    socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, onEndedOrResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, onEndedOrResumed);
+    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, onEndedOrResumed);
+    return () => {
+      socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, onEndedOrResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, onEndedOrResumed);
+      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, onEndedOrResumed);
+    };
+  }, [leave, globalConsultationId]);
 
   const toggleMic = useCallback(async (): Promise<void> => {
     if (!globalSession) return;

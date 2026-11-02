@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@repo/storybook";
-import { BillingBreakdown } from "@/features/consultation/components/session-summary";
+import BillingBreakdown from "@/features/consultation/components/session-summary/billing-breakdown";
 
 const meta: Meta<typeof BillingBreakdown> = {
   title: "Chat/SessionSummary/BillingBreakdown",

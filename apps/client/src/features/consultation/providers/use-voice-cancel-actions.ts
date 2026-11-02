@@ -10,6 +10,7 @@ interface UseVoiceCancelActionsParams {
   resumeLiveChat: (mode?: "chat" | "voice" | "video") => Promise<unknown>;
   refreshSessions: () => Promise<void>;
   directVoice: ReturnType<typeof useDirectVoice>;
+  handleEndChat: (force?: boolean) => void;
 }
 
 interface UseVoiceCancelActionsReturn {
@@ -33,6 +34,7 @@ export function useVoiceCancelActions({
   resumeLiveChat,
   refreshSessions,
   directVoice,
+  handleEndChat,
 }: UseVoiceCancelActionsParams): UseVoiceCancelActionsReturn {
   const [voiceCancelOpen, setVoiceCancelOpen] = useState(false);
   const [voiceCancelBusy, setVoiceCancelBusy] = useState(false);
@@ -90,12 +92,11 @@ export function useVoiceCancelActions({
     setVoiceCancelOpen(false);
     await voiceHoldChain.current.catch(() => undefined);
     voiceHoldActive.current = false;
-    if (sessionStatus === "active") {
-      await directVoice.endVoice();
-      return;
-    }
-    await directVoice.cancelVoice();
-  }, [directVoice, sessionStatus]);
+    // Tear down RTC (clears sessionRef.current), clear stores, and end
+    // the server session — all via directVoice.endVoice(). The server
+    // ENDED event then sets sessionStatus="completed" and showModal=true.
+    await directVoice.endVoice();
+  }, [directVoice]);
 
   return {
     voiceCancelOpen,

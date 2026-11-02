@@ -51,6 +51,19 @@ export interface VoiceSessionStoreState {
    * Use when tracks may be orphaned (e.g., page unload, abnormal termination).
    */
   emergencyCleanup: () => void;
+  /**
+   * Full reset for consultation restart: leaves the active RTC session,
+   * detaches it from the store, and clears all cached accept-time tokens so
+   * the next restart creates a fresh session with fresh tokens.
+   *
+   * @returns Promise resolving when teardown completes.
+   */
+  reset: () => Promise<void>;
+  /**
+   * Clears all cached accept-time voice tokens without touching the session.
+   * Use when ending a voice session so the next restart fetches fresh tokens.
+   */
+  clearVoiceTokens: () => void;
 }
 
 /**
@@ -115,6 +128,16 @@ export const useVoiceSessionStore = create<VoiceSessionStoreState>(
         current.leave().catch(() => undefined);
       }
       set({ session: null, consultationId: null });
+    },
+    reset: async () => {
+      const current = get().session;
+      if (current) {
+        await current.leave().catch(() => undefined);
+      }
+      set({ session: null, consultationId: null, voiceTokensByConsultationId: {} });
+    },
+    clearVoiceTokens: () => {
+      set({ voiceTokensByConsultationId: {} });
     },
   }),
 );

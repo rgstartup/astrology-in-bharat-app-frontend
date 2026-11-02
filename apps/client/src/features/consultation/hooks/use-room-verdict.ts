@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { toast } from "@repo/design/shadcn";
+import { useConsultationRoomStore } from "@/features/consultation/stores/consultation-room.store";
+import { useVoiceSessionStore } from "@/features/consultation/stores/voice-session.store";
 import type { ConsultationEndedPayload } from "@/realtime/types/consultation";
 
 export type RoomSessionStatus = "pending" | "active" | "completed";
@@ -31,6 +33,8 @@ export const useRoomVerdict = ({
   endLiveChat,
 }: VerdictDeps) => {
   const router = useRouter();
+  const clearConsultationRoom = useConsultationRoomStore((s) => s.clear);
+  const resetVoiceSession = useVoiceSessionStore((s) => s.reset);
   const [sessionStatus, setSessionStatus] =
     useState<RoomSessionStatus>("pending");
   const [showModal, setShowModal] = useState(false);
@@ -89,6 +93,10 @@ export const useRoomVerdict = ({
         }
         setSessionStatus("completed");
         setShowModal(true);
+        // Tear down RTC session and clear cached voice tokens so a
+        // subsequent restart starts with a clean slate.
+        void clearConsultationRoom();
+        void resetVoiceSession();
       })
       .catch(() => toast.error("Failed to end chat. Please try again."));
   };

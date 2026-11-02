@@ -3,12 +3,8 @@
 import React from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
 import type { IExpert } from "@repo/lib";
-import { VoiceLobby } from "@/features/consultation/voice";
-import { VoiceStage } from "@/features/consultation/voice";
-import { ExpertProfileSection } from "@/features/consultation/sidebar";
-import { SessionTimersSection } from "@/features/consultation/sidebar";
-import { VoiceSessionSection } from "@/features/consultation/sidebar";
-import { EndConsultationAction } from "@/features/consultation/sidebar";
+import { VoiceLobby, VoiceStage } from "@/features/consultation";
+import { ExpertProfileSection, SessionTimersSection, VoiceSessionSection, EndConsultationAction } from "@/features/consultation";
 
 /** Wireframe expert: Pandit Rahul Sharma, Vedic Astrologer. */
 const rahulSharmaExpert = {

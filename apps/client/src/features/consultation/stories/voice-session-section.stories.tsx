@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
-import { VoiceSessionSection } from "@/features/consultation/components/sidebar";
+import { VoiceSessionSection } from "@/features/consultation";
 
 function noop() {
   return undefined;

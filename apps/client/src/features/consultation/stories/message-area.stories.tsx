@@ -3,9 +3,8 @@
 import { useRef, useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
 import type { ChatMessage } from "@/lib/types";
-import { MessageArea } from "@/features/consultation/message-area";
-import { ChatFooter } from "@/features/consultation/components/root";
-import type { TimelineItem } from "@/features/consultation/message-area/types/timeline";
+import { MessageArea, ChatFooter } from "@/features/consultation";
+import type { TimelineItem } from "@/features/consultation/types/timeline";
 
 function userMessage(
   id: string,

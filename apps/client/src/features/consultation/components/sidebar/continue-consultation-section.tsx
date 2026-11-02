@@ -7,6 +7,7 @@ import { cn } from "@repo/design/cn";
 import { resolveModePrice } from "@/lib/pricing";
 import { useConsultationPrepStore } from "@/features/consultation-prep/stores/consultationPrepStore";
 import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
+import { useConsultationRoomStore } from "@/features/consultation/stores/consultation-room.store";
 
 type ContinueConsultationSectionProps = {
   expertData: IExpert;
@@ -22,6 +23,7 @@ export function ContinueConsultationSection({
   const openConsultationPrep = useConsultationPrepStore(
     (s) => s.openConsultationPrep,
   );
+  const clearConsultationRoom = useConsultationRoomStore((s) => s.clear);
 
   const rates = {
     chat: resolveModePrice(expertData, "chat") || 25,
@@ -70,13 +72,14 @@ export function ContinueConsultationSection({
             <button
               key={opt.mode}
               type="button"
-              onClick={() =>
+              onClick={() => {
+                clearConsultationRoom();
                 openConsultationPrep(
                   String(expertData.id),
                   opt.mode,
                   consultationId,
-                )
-              }
+                );
+              }}
               className="group flex items-center justify-between rounded-xl border border-[#d3cec6] bg-white p-3 text-left transition-all hover:border-neutral-400 hover:shadow-xs"
             >
               <div className="flex items-center gap-3">

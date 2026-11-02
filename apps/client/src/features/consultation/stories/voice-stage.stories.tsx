@@ -4,9 +4,8 @@ import React from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
 import type { IExpert } from "@repo/lib";
 import type { ChatMessage } from "@/lib/types";
-import { ConsultationSidebar } from "@/features/consultation/sidebar";
-import { VoiceStage } from "@/features/consultation/voice";
-import type { VoicePhase } from "@/features/consultation/voice/types/voice-phase";
+import { ConsultationSidebar, VoiceStage } from "@/features/consultation";
+import type { VoicePhase } from "@/features/consultation";
 
 /** Wireframe expert: Pandit Rahul Sharma, Vedic Astrologer. */
 const rahulSharmaExpert = {

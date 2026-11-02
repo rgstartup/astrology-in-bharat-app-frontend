@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
-import { VoiceCancelDialog } from "@/features/consultation/components/session";
+import { VoiceCancelDialog } from "@/features/consultation";
 
 type CancelHarnessProps = {
   busy?: boolean;

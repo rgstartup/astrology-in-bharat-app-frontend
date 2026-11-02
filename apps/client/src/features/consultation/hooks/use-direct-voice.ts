@@ -9,6 +9,8 @@ import {
   switchConsultationToChat,
 } from "@/realtime/topics/consultation";
 import { toast } from "@repo/design/shadcn";
+import { useConsultationRoomStore } from "@/features/consultation/stores/consultation-room.store";
+import { useVoiceSessionStore } from "@/features/consultation/stores/voice-session.store";
 
 type UseDirectVoiceOptions = {
   consultationId: number | null;
@@ -78,6 +80,8 @@ export function useDirectVoice(
     ended,
   } = options;
   const rtc = useVoiceSession();
+  const clearConsultationRoom = useConsultationRoomStore((s) => s.clear);
+  const resetVoiceSession = useVoiceSessionStore((s) => s.reset);
   const joinedRef = useRef<number | null>(null);
   const joinAbortedRef = useRef(false);
 
@@ -168,7 +172,7 @@ export function useDirectVoice(
     });
 
     void rtcRef.current
-      .join(consultationId, identity, fastToken)
+      .join(consultationId, identity)
       .then(() => {
         console.log("[VoiceConsultation] Agora join succeeded", {
           consultationId,
@@ -205,19 +209,23 @@ export function useDirectVoice(
     joinedRef.current = null;
     joinAbortedRef.current = true;
     await rtc.leave();
+    void clearConsultationRoom();
+    void resetVoiceSession();
     if (consultationId !== null) {
       await endConsultation(consultationId).catch(() => undefined);
     }
-  }, [rtc, consultationId]);
+  }, [rtc, consultationId, clearConsultationRoom, resetVoiceSession]);
 
   const cancelVoice = useCallback(async (): Promise<void> => {
     joinedRef.current = null;
     joinAbortedRef.current = true;
     await rtc.leave();
+    void clearConsultationRoom();
+    void resetVoiceSession();
     if (consultationId !== null) {
       await cancelConsultation(consultationId).catch(() => undefined);
     }
-  }, [rtc, consultationId]);
+  }, [rtc, consultationId, clearConsultationRoom, resetVoiceSession]);
 
   const switchToChat = useCallback(async (): Promise<boolean> => {
     if (consultationId === null) return false;
@@ -231,8 +239,10 @@ export function useDirectVoice(
     joinedRef.current = null;
     joinAbortedRef.current = true;
     await rtc.leave();
+    void clearConsultationRoom();
+    void resetVoiceSession();
     return true;
-  }, [rtc, consultationId]);
+  }, [rtc, consultationId, clearConsultationRoom, resetVoiceSession]);
 
   // Leave the Agora RTC session when the consultation ends
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
-import { ReviewForm } from "@/features/consultation/components/session-summary";
+import ReviewForm from "@/features/consultation/components/session-summary/review-form";
 
 type ReviewStoryProps = {
   initialRating?: number;

@@ -52,7 +52,7 @@ export function RoomContentRoot() {
 
   const { messages, timeline, typingStatus, composer } = useRoomChat();
   const { voice, displayVoiceRate, handleUpgrade } = useSwitchToVoiceContext();
-  const { showVoiceStage, dockProps } = useDirectVoiceContext();
+  const { showVoiceStage, dockProps, openVoiceCancel } = useDirectVoiceContext();
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
@@ -64,10 +64,10 @@ export function RoomContentRoot() {
       onToggleMute: () => void voice.toggleMic(),
       speakerMuted: voice.speakerMuted,
       onToggleSpeaker: () => void voice.toggleSpeaker(),
-      onEndVoice: () => void voice.endVoice(),
+      onEndVoice: () => void openVoiceCancel(),
       onCancelRequest: () => void voice.cancelVoice(),
     };
-  }, [showVoiceStage, voice]);
+  }, [showVoiceStage, voice, openVoiceCancel]);
 
   const sidebarProps = useMemo(
     () => ({

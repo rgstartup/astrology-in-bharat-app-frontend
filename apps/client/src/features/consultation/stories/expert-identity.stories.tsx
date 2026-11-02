@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@repo/storybook";
 import type { IExpert } from "@repo/lib";
-import { ExpertIdentity } from "@/features/consultation/header";
+import { ExpertIdentity } from "@/features/consultation";
 
 const fixtureExpert = {
   id: 1,

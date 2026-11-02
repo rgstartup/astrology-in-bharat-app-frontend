@@ -25,6 +25,7 @@ export default function RoomPausedDialog({ paused, onResume, onExit }: RoomPause
   const [now, setNow] = useState(() => Date.now());
   const rechargedRef = useRef(false);
   const deadlineRef = useRef(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!paused) {
@@ -43,11 +44,14 @@ export default function RoomPausedDialog({ paused, onResume, onExit }: RoomPause
 
   useEffect(() => {
     if (!paused) return;
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
+    timerRef.current = setInterval(() => setNow(Date.now()), 1000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      timerRef.current = null;
+    };
   }, [paused]);
 
-  if (!paused) return null;
+  if (!paused || rechargedRef.current) return null;
 
   const rawWait = Math.floor((deadlineRef.current - now) / 1000);
   const waitLeft = isNaN(rawWait) || rawWait < 0 ? 0 : rawWait;
@@ -75,7 +79,7 @@ export default function RoomPausedDialog({ paused, onResume, onExit }: RoomPause
 
   return (
     <WalletRechargeModal
-      isOpen={Boolean(paused)}
+      isOpen={Boolean(paused && !rechargedRef.current)}
       onOpenChange={handleOpenChange}
       title="Balance exhausted"
       subtitle="Your consultation is paused. Recharge to resume immediately."
@@ -83,6 +87,10 @@ export default function RoomPausedDialog({ paused, onResume, onExit }: RoomPause
       defaultAmount={100}
       onSuccess={() => {
         rechargedRef.current = true;
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
         onResume();
       }}
     />

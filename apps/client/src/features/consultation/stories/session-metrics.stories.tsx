@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@repo/storybook";
-import { SessionMetrics } from "@/features/consultation/header";
+import { SessionMetrics } from "@/features/consultation";
 
 function formatTime(time: number): string {
   const mins = Math.floor(time / 60);

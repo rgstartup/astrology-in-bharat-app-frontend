@@ -15,9 +15,7 @@ import {
   resumeConsultationVideo,
   startConsultation,
 } from "@/realtime/topics/consultation";
-import type {
-  ConsultationDecisionPayload,
-} from "@/realtime/types/chat";
+import type { ConsultationDecisionPayload } from "@/realtime/types/chat";
 import type {
   ConsultationEndedPayload,
   ConsultationMode,
@@ -54,7 +52,9 @@ export const useConsultation = (
 
   const [state, setState] = useState<ConsultationStatePayload | null>(null);
   const [ended, setEnded] = useState<ConsultationEndedPayload | null>(null);
-  const [paused, setPaused] = useState<ConsultationStatePausedPayload | null>(null);
+  const [paused, setPaused] = useState<ConsultationStatePausedPayload | null>(
+    null,
+  );
   const [decision, setDecision] = useState<ConsultationDecision>("waiting");
   /** Bumped on pause/resume/end so the room can re-seed session history. */
   const [sessionRevision, setSessionRevision] = useState(0);
@@ -93,7 +93,9 @@ export const useConsultation = (
         return;
       }
       if (endedRef.current) return;
+
       setState(payload);
+
       if (payload.state === "paused") {
         setPaused(payload);
         setSessionRevision((value) => value + 1);

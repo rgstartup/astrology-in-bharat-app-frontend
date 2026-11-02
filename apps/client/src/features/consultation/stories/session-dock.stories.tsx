@@ -5,22 +5,16 @@ import type { Meta, StoryObj } from "@repo/storybook";
 import type { IExpert } from "@repo/lib";
 import type { ChatMessage } from "@/lib/types";
 import type { IAuthUser } from "@/store/authStore";
-import { ChatColumnHeader } from "@/features/consultation/root";
-import { RoomBody } from "@/features/consultation/components/room";
-import type { TimelineItem } from "@/features/consultation/message-area/types/timeline";
-import { ExpertProfileSection } from "@/features/consultation/sidebar";
-import { SessionTimersSection } from "@/features/consultation/sidebar";
-import { VoiceSessionSection } from "@/features/consultation/sidebar";
-import { EndConsultationAction } from "@/features/consultation/sidebar";
-import { VoiceControls } from "@/features/consultation/voice";
-import { VoiceHero } from "@/features/consultation/voice";
-import { SessionDock } from "@/features/consultation/session";
-import { VideoPanel } from "@/features/consultation/session";
-import { getRoomModeLabel } from "@/features/consultation/session/types/session-phase";
+import { ChatColumnHeader, RoomBody } from "@/features/consultation";
+import type { TimelineItem } from "@/features/consultation/types/timeline";
+import { ExpertProfileSection, SessionTimersSection, VoiceSessionSection, EndConsultationAction } from "@/features/consultation";
+import { VoiceControls, VoiceHero } from "@/features/consultation";
+import { SessionDock, VideoPanel } from "@/features/consultation";
+import { getRoomModeLabel } from "@/features/consultation";
 import type {
   SessionKind,
   SessionPhase,
-} from "@/features/consultation/session/types/session-phase";
+} from "@/features/consultation";
 
 /** Wireframe expert: Pandit Rahul Sharma, Vedic Astrologer. */
 const rahulSharmaExpert = {

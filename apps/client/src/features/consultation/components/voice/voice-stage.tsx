@@ -4,7 +4,7 @@ import React from "react";
 import { Phone } from "@repo/design/lucide";
 import { cn } from "@repo/design/cn";
 import type { ChatMessage } from "@/lib/types";
-import type { VoicePhase } from "../types/voice-phase";
+import type { VoicePhase } from "../../types/voice-phase";
 import { VoiceHero } from "./voice-hero";
 import { VoiceControls } from "./voice-controls";
 import { VoiceTranscriptStrip } from "./voice-transcript-strip";
@@ -43,7 +43,9 @@ function VoiceSecureStrip() {
     <div className="flex items-center justify-center gap-1.5 border-b border-[#d3cec6] bg-white px-4 py-2">
       <span className="size-2 rounded-full bg-[#0bdf50]" />
       <Phone className="size-3 text-[#7b7b78]" />
-      <span className="text-xs font-medium text-[#626260]">Voice secured end to end</span>
+      <span className="text-xs font-medium text-[#626260]">
+        Voice secured end to end
+      </span>
     </div>
   );
 }
@@ -57,9 +59,12 @@ function VoiceSecureStrip() {
 function VoiceEndedPanel({ onBackToChat }: { onBackToChat: () => void }) {
   return (
     <div className="flex flex-col items-center gap-2 px-6 py-6 text-center">
-      <p className="font-sans text-base font-medium text-[#111111]">Voice session ended</p>
+      <p className="font-sans text-base font-medium text-[#111111]">
+        Voice session ended
+      </p>
       <p className="max-w-sm text-[13px] text-[#626260]">
-        Your chat history and remaining time are intact. Continue in chat whenever ready.
+        Your chat history and remaining time are intact. Continue in chat
+        whenever ready.
       </p>
       <button
         type="button"
@@ -131,7 +136,11 @@ function LiveBody(props: VoiceStageProps) {
         onToggleSpeaker={props.onToggleSpeaker}
       />
       <div className="px-4 pb-3 md:px-8">
-        <VoiceRateNote chatRate={props.chatRate} voiceRate={props.voiceRate} entry={entry} />
+        <VoiceRateNote
+          chatRate={props.chatRate}
+          voiceRate={props.voiceRate}
+          entry={entry}
+        />
       </div>
       <VoiceTranscriptStrip
         messages={props.messages}
@@ -179,7 +188,12 @@ function EndedBody(props: VoiceStageProps) {
 export function VoiceStage(props: VoiceStageProps) {
   if (props.phase === "requesting" || props.phase === "connecting") {
     return (
-      <div className={cn("flex min-h-0 flex-1 flex-col bg-[#f5f1ec]", props.className)}>
+      <div
+        className={cn(
+          "flex min-h-0 flex-1 flex-col bg-[#f5f1ec]",
+          props.className,
+        )}
+      >
         <VoiceSecureStrip />
         <RequestingBody {...props} />
       </div>
@@ -187,14 +201,24 @@ export function VoiceStage(props: VoiceStageProps) {
   }
   if (props.phase === "ended") {
     return (
-      <div className={cn("flex min-h-0 flex-1 flex-col bg-[#f5f1ec]", props.className)}>
+      <div
+        className={cn(
+          "flex min-h-0 flex-1 flex-col bg-[#f5f1ec]",
+          props.className,
+        )}
+      >
         <VoiceSecureStrip />
         <EndedBody {...props} />
       </div>
     );
   }
   return (
-    <div className={cn("flex min-h-0 flex-1 flex-col bg-[#f5f1ec]", props.className)}>
+    <div
+      className={cn(
+        "flex min-h-0 flex-1 flex-col bg-[#f5f1ec]",
+        props.className,
+      )}
+    >
       <VoiceSecureStrip />
       <LiveBody {...props} />
     </div>

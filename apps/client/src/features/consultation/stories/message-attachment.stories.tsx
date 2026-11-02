@@ -1,7 +1,7 @@
 "use client";
 
 import type { Meta, StoryObj } from "@repo/storybook";
-import { MessageAttachment } from "@/features/consultation/message-area";
+import { MessageAttachment } from "@/features/consultation";
 
 const SAMPLE_IMAGE =
   "https://images.unsplash.com/photo-1532968961962-8a0cb3a2d4f5?w=800";

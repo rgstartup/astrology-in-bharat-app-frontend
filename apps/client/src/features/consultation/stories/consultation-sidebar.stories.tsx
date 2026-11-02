@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@repo/storybook";
 import type { IExpert } from "@repo/lib";
 import type { useRouter } from "@/i18n/navigation";
-import { ConsultationSidebar } from "@/features/consultation/components/sidebar";
+import { ConsultationSidebar } from "@/features/consultation";
 
 type Router = ReturnType<typeof useRouter>;
 
