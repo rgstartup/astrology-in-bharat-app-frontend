@@ -170,6 +170,17 @@ export const useConsultation = (
 
     /** Rejoin rooms + refresh state; safe to run on every (re)connect. */
     const handleConnect = () => {
+      const socket = realtimeSocket();
+      const auth = socket.auth as { token?: string } | undefined;
+      if (!auth?.token) {
+        // Socket is anonymous — JWT auth hasn't been applied yet.
+        // connectRealtimeSocket(token) will reconnect with auth and fire
+        // another 'connect' event; skip until then.
+        console.info("[ExpertVoice] handleConnect: anonymous socket, skipping consult status fetch", {
+          consultationId: id,
+        });
+        return;
+      }
       // Reset retry counter on each connection attempt so a fresh connect
       // (e.g. after JWT auth resolves and socket reconnects) gets full retries.
       consultStatusRetryRef.current = 0;

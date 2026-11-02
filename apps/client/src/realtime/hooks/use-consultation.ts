@@ -211,8 +211,21 @@ export const useConsultation = (
 
     /** Refresh status on (re)connect; room join is delegated to useChat. */
     const handleConnect = () => {
-      // Reset retry counter on each connection attempt so a fresh connect
-      // (e.g. after JWT auth resolves and socket reconnects) gets full retries.
+      const socket = realtimeSocket();
+      const auth = socket.auth as { token?: string } | undefined;
+      if (!auth?.token) {
+        // Socket is anonymous — JWT auth hasn't been applied yet.
+        // connectRealtimeSocket(token) will reconnect with auth and fire
+        // another 'connect' event; skip GET_STATUS until then so retries
+        // aren't burned on an unauthenticated socket.
+        console.info("[VoiceConsultation] handleConnect: anonymous socket, skipping GET_STATUS", {
+          consultationId: id,
+        });
+        return;
+      }
+      // Reset retry counter on each authenticated connection attempt so a
+      // fresh connect (e.g. after JWT auth resolves and socket reconnects)
+      // gets full retries.
       getStatusRetryRef.current = 0;
       const attempt = ++getStatusRetryRef.current;
       console.info("[VoiceConsultation] handleConnect: GET_STATUS", {
