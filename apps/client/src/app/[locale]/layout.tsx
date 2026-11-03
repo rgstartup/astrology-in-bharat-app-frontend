@@ -13,7 +13,7 @@ import { routing } from "@/i18n/routing";
 import { AuthInitializer } from "@/components/layout/AuthInitializer";
 import { CartInitializer } from "@/components/layout/CartInitializer";
 import { WishlistInitializer } from "@/components/layout/WishlistInitializer";
-import { RealtimeProvider } from "@/realtime/socket-provider";
+import { RealtimeProvider } from "@/realtime/socket.provider";
 import MerchantStatusProvider from "@/providers/MerchantStatusProvider";
 import NotificationProvider from "@/providers/NotificationProvider";
 import { SmoothScroll, ToastProvider } from "@repo/design/components";

@@ -3,13 +3,8 @@
 import { useEffect } from "react";
 import { getSocketTokenAction } from "@/actions/auth";
 import { connectRealtimeSocket, realtimeSocket } from "@/realtime/socket";
-import { PRESENCE_EVENTS } from "@/realtime/topics/presence";
-import {
-  ExpertClientStatus,
-  type PresenceChangedEventPayload,
-} from "@/realtime/types/presence";
+import { usePresenceSync } from "@/realtime/hooks/use-presence";
 import { usePresenceStore } from "@/store/presenceStore";
-import { useExpertListStore } from "@/store/expertListStore";
 import { useAuthStore } from "@/store/authStore";
 
 /**
@@ -39,6 +34,11 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
     (state) => state.user?.id ?? state.user?.public_id,
   );
 
+  // Delegate the `presence:updated` callback to a dedicated hook so this
+  // provider owns only the connection lifecycle (connect / disconnect /
+  // connect_error) and re-driving a dead socket.
+  usePresenceSync();
+
   useEffect(() => {
     const socket = realtimeSocket();
     let cancelled = false;
@@ -57,24 +57,6 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
         staleTimer = null;
         usePresenceStore.getState().setLive(false);
       }, STALE_AFTER_MS);
-    };
-
-    const handlePresenceChanged = (payload: PresenceChangedEventPayload) => {
-      usePresenceStore
-        .getState()
-        .setExpertStatus(
-          payload.expertId,
-          payload.status,
-          payload.timestamp,
-          payload.lastSeenAt,
-        );
-
-      useExpertListStore
-        .getState()
-        .updateExpertAvailability(
-          payload.expertId,
-          payload.status !== ExpertClientStatus.OFFLINE,
-        );
     };
 
     const connectWithAuth = () => {
@@ -126,7 +108,6 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
       console.error("[realtime] connect_error:", err.message);
     };
 
-    socket.on(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
     // socket.io re-fires "connect" on every reconnection.
     socket.on("connect", handleConnect);
     socket.on("disconnect", handleDisconnect);
@@ -147,7 +128,6 @@ export function RealtimeProvider({ children }: { children: React.ReactNode }) {
       cancelled = true;
       clearStaleTimer();
       clearInterval(deadManTimer);
-      socket.off(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
       socket.off("connect_error", handleConnectError);

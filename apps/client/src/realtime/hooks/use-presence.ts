@@ -1,8 +1,14 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { ExpertClientStatus } from "@/realtime/types/presence";
+import { realtimeSocket } from "@/realtime/socket";
+import { PRESENCE_EVENTS } from "@/realtime/topics/presence";
+import {
+  ExpertClientStatus,
+  type PresenceChangedEventPayload,
+} from "@/realtime/types/presence";
 import { usePresenceStore } from "@/store/presenceStore";
+import { useExpertListStore } from "@/store/expertListStore";
 
 export interface UseExpertPresenceOptions {
   initialStatus?: ExpertClientStatus;
@@ -72,4 +78,39 @@ export const useExpertPresence = (
       lastSeenAt: presenceRecord?.lastSeenAt ?? initialLastSeenAt,
     };
   }, [isLive, presenceRecord?.status, presenceRecord?.lastSeenAt, initialStatus, initialLastSeenAt]);
+};
+
+/**
+ * Stream `presence:updated` from the `/realtime` socket into the presence
+ * and expert-list stores. Delegated from RealtimeProvider so the provider
+ * owns only the connection lifecycle (connect / disconnect / connect_error).
+ */
+export const usePresenceSync = () => {
+  useEffect(() => {
+    const socket = realtimeSocket();
+
+    const handlePresenceChanged = (payload: PresenceChangedEventPayload) => {
+      usePresenceStore
+        .getState()
+        .setExpertStatus(
+          payload.expertId,
+          payload.status,
+          payload.timestamp,
+          payload.lastSeenAt,
+        );
+
+      useExpertListStore
+        .getState()
+        .updateExpertAvailability(
+          payload.expertId,
+          payload.status !== ExpertClientStatus.OFFLINE,
+        );
+    };
+
+    socket.on(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
+
+    return () => {
+      socket.off(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
+    };
+  }, []);
 };

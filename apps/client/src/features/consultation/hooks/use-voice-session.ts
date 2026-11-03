@@ -79,9 +79,7 @@ export function useVoiceSession(
   const storeLeaveAndClear = useVoiceSessionStore(
     (s) => s.leaveAndClearSession,
   );
-  const storeClearVoiceTokens = useVoiceSessionStore(
-    (s) => s.clearVoiceTokens,
-  );
+  const storeClearVoiceTokens = useVoiceSessionStore((s) => s.clearVoiceTokens);
   const storeSetVoiceToken = useVoiceSessionStore((s) => s.setVoiceToken);
   const storeTakeVoiceToken = useVoiceSessionStore((s) => s.takeVoiceToken);
 
@@ -108,6 +106,7 @@ export function useVoiceSession(
         channelName: payload.channelName ?? null,
       });
     };
+
     const captureAccepted = (payload: ConsultationDecisionPayload) =>
       captureVoiceToken(payload);
     const captureResumed = (payload: ConsultationStatePayload) =>
@@ -285,9 +284,12 @@ export function useVoiceSession(
       // owns teardown. Calling both paths leaves the same Agora session twice
       // and can strand the next resume between leave/join.
       if (session && session !== storeSession) {
-        console.log("[VoiceConsultation] leave calling session.leave() directly", {
-          sessionRef: Boolean(session),
-        });
+        console.log(
+          "[VoiceConsultation] leave calling session.leave() directly",
+          {
+            sessionRef: Boolean(session),
+          },
+        );
         await session.leave().catch(() => undefined);
       } else {
         console.log("[VoiceConsultation] leave calling storeLeaveAndClear()");
@@ -297,18 +299,24 @@ export function useVoiceSession(
     } catch {
       // Leave is best-effort; the snapshot reset below is what the UI reads.
       if (!session || session === storeSession) {
-        console.log("[VoiceConsultation] leave catch path calling storeLeaveAndClear()");
+        console.log(
+          "[VoiceConsultation] leave catch path calling storeLeaveAndClear()",
+        );
         await storeLeaveAndClear(session ?? undefined).catch(() => undefined);
       }
     } finally {
       sessionRef.current = null;
       storeClearVoiceTokens();
-      console.log("[VoiceConsultation] leave finally: sessionRef=null, voiceTokens cleared");
+      console.log(
+        "[VoiceConsultation] leave finally: sessionRef=null, voiceTokens cleared",
+      );
       if (mountedRef.current) {
         setSnapshot(null);
         setActive(false);
         setBusy(false);
-        console.log("[VoiceConsultation] leave snapshot cleared, active=false, busy=false");
+        console.log(
+          "[VoiceConsultation] leave snapshot cleared, active=false, busy=false",
+        );
       }
     }
   }, [storeLeaveAndClear, storeSession]);
