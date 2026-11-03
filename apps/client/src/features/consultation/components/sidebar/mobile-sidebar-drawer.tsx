@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import type { IExpert } from "@repo/lib";
 import {
   Sheet,
   SheetContent,
@@ -13,11 +12,10 @@ import { ExpertProfileSection } from "./expert-profile-section";
 import { ConsultationModeSection } from "./consultation-mode-section";
 import { SessionTimersSection } from "./session-timers-section";
 import { UpgradeConsultationSection } from "./upgrade-consultation-section";
-import { EndConsultationAction } from "./end-consultation-action";
+import { EndConsultationAction } from "../dialog/end-consultation-action.dialog";
 import { ContinueConsultationSection } from "./continue-consultation-section";
-import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
-import { useRoomSession } from "../../providers/room-lifecycle.provider";
-import { useRoomActions } from "../../providers/room-lifecycle.provider";
+import { useRoomIdentity } from "../../providers/room-lifecycle";
+import { useRoomSession } from "../../providers/room-lifecycle";
 import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
 import { formatTime } from "../../utils/format-time";
 
@@ -36,7 +34,6 @@ export function MobileSidebarDrawer({
 }) {
   const { expertData, roomConsultationId } = useRoomIdentity();
   const { elapsedTime, timeLeft, isSessionEnded } = useRoomSession();
-  const { handleEndChat } = useRoomActions();
   const { handleUpgrade } = useSwitchToVoiceContext();
 
   if (!expertData) return null;
@@ -52,7 +49,7 @@ export function MobileSidebarDrawer({
         </SheetHeader>
 
         <div className="flex flex-col gap-4">
-          <SidebarHeader router={require("@/i18n/navigation").useRouter()} />
+          <SidebarHeader />
 
           <ExpertProfileSection expertData={expertData} />
 
@@ -61,7 +58,7 @@ export function MobileSidebarDrawer({
           <SessionTimersSection
             formatTime={formatTime}
             elapsedTime={elapsedTime}
-            timeLeft={timeLeft}
+            timeLeft={timeLeft ?? 0}
           />
 
           {isSessionEnded ? (
@@ -77,12 +74,7 @@ export function MobileSidebarDrawer({
               />
 
               <div className="pt-4 border-t border-[#f0ebe3]">
-                <EndConsultationAction
-                  handleEndChat={(force) => {
-                    onOpenChange(false);
-                    handleEndChat(force);
-                  }}
-                />
+                <EndConsultationAction />
               </div>
             </>
           )}

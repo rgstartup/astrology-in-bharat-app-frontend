@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@repo/design/shadcn";
 import { cn } from "@repo/design/cn";
-import { useRoomActions } from "../../providers/room-lifecycle.provider";
+import { useRoomActions } from "../../providers/room-lifecycle";
 
 type EndConsultationActionProps = {
   className?: string;
@@ -23,7 +23,9 @@ type EndConsultationActionProps = {
  * The dialog closes itself on confirm so the review modal opens cleanly
  * on top — closing the review never reveals a stale confirm behind it.
  */
-export function EndConsultationAction({ className }: EndConsultationActionProps) {
+export function EndConsultationAction({
+  className,
+}: EndConsultationActionProps) {
   const [open, setOpen] = useState(false);
   const { handleEndChat } = useRoomActions();
 

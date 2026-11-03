@@ -6,7 +6,6 @@ import { useRouter } from "@/i18n/navigation";
 import { cn } from "@repo/design/cn";
 
 type SidebarHeaderProps = {
-  router: ReturnType<typeof useRouter>;
   className?: string;
 };
 
@@ -16,7 +15,9 @@ type SidebarHeaderProps = {
  * @param props - Router instance and optional styling class.
  * @returns Sidebar header element.
  */
-export function SidebarHeader({ router, className }: SidebarHeaderProps) {
+export function SidebarHeader({ className }: SidebarHeaderProps) {
+  const router = useRouter();
+
   return (
     <div
       className={cn(

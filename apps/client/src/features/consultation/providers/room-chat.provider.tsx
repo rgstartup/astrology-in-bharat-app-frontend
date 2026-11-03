@@ -5,7 +5,7 @@ import type { ChatMessage } from "@/lib/types";
 import { useChatMessages, useChatTypingDisplay, useChatTimeline, type TypingStatus } from "@repo/chat";
 import { useRoomComposer } from "../hooks/use-room-composer";
 import { liveMessageKey, toChatMessage } from "../utils/message-keys";
-import { useRoomLifecycle } from "./room-lifecycle.provider";
+import { useRoomLifecycle } from "./room-lifecycle";
 
 export interface RoomChatContextValue {
   messages: ChatMessage[];

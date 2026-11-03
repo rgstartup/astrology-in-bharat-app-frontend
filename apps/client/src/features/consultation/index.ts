@@ -108,7 +108,7 @@ export { ConsultationModeSection } from "./components/sidebar/consultation-mode-
 export { SessionTimersSection } from "./components/sidebar/session-timers-section";
 export { UpgradeConsultationSection } from "./components/sidebar/upgrade-consultation-section";
 export { VoiceSessionSection } from "./components/sidebar/voice-session-section";
-export { EndConsultationAction } from "./components/sidebar/end-consultation-action";
+export { EndConsultationAction } from "./components/dialog/end-consultation-action.dialog";
 
 // Header domain – explicit named exports (tree-shake friendly)
 export type { HeaderProps } from "./components/header/header";
@@ -128,8 +128,8 @@ export {
 export { SessionDock } from "./components/session/session-dock";
 export type { SessionDockProps } from "./components/session/session-dock";
 export { VideoPanel } from "./components/video/video-panel";
-export { VoiceCancelDialog } from "./components/voice/voice-cancel-dialog";
-export type { VoiceCancelDialogProps } from "./components/voice/voice-cancel-dialog";
+export { VoiceCancelDialog } from "./components/dialog/voice-cancel-dialog";
+export type { VoiceCancelDialogProps } from "./components/dialog/voice-cancel-dialog";
 export type { SessionKind } from "./types/session-phase";
 export type { SessionPhase } from "./types/session-phase";
 export { getRoomModeLabel, getSessionPhaseLabel } from "./types/session-phase";

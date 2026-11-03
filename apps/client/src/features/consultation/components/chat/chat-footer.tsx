@@ -20,7 +20,7 @@ import {
   TooltipTrigger,
 } from "@repo/design/shadcn";
 import type { PendingAttachment } from "@repo/chat";
-import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomSession } from "../../providers/room-lifecycle";
 import { useRoomChat } from "../../providers/room-chat.provider";
 
 type ComposerProps = {

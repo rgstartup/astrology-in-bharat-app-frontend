@@ -11,7 +11,7 @@ import React, {
 import { useSwitchToVoice } from "../hooks/use-switch-to-voice";
 import { resolveVoiceRate } from "@/lib/pricing";
 import { useConsultationRoomStore } from "../stores/consultation-room.store";
-import { useRoomLifecycle } from "./room-lifecycle.provider";
+import { useRoomLifecycle } from "./room-lifecycle";
 
 export interface SwitchToVoiceContextValue {
   voice: ReturnType<typeof useSwitchToVoice>;

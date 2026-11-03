@@ -13,7 +13,7 @@ import { useConsultationMicrophone } from "./use-consultation-microphone";
  * Coordinates consultation request state, microphone access, API initiation, and verdict dispatch.
  *
  * Thin React glue over the application layer (`executeConsultationRequest`).
- * All business rules (mic gate, API retry, socket request, verdict wait,
+ * All business rules (mic gate, API initiation, socket request, verdict wait,
  * room routing) live in the plain orchestration function.
  *
  * @param options - Expert, mode, and callbacks for balance and verdict outcomes.

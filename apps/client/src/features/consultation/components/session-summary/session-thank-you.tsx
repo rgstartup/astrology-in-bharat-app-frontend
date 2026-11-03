@@ -1,7 +1,13 @@
 "use client";
 
 import React from "react";
-import { CheckCircle2, ShieldCheck, Sparkles, AlertCircle, Clock } from "@repo/design/lucide";
+import {
+  CheckCircle2,
+  ShieldCheck,
+  Sparkles,
+  AlertCircle,
+  Clock,
+} from "@repo/design/lucide";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/design/shadcn";
 import { Badge } from "@repo/design/shadcn";
 import { Button } from "@repo/design/shadcn";
@@ -96,7 +102,10 @@ export function StatusBadge({ status }: { status?: string }) {
   }
   if (status === "expired") {
     return (
-      <Badge variant="secondary" className="gap-1.5 bg-[#ebe7e1] text-[#626260] px-3 py-1 font-medium">
+      <Badge
+        variant="secondary"
+        className="gap-1.5 bg-[#ebe7e1] text-[#626260] px-3 py-1 font-medium"
+      >
         <Clock className="size-3.5" />
         Request Missed
       </Badge>
@@ -125,7 +134,11 @@ export function getHeadingText(status?: string): string {
 /**
  * Derives explanatory subtitle using waterfall guard clauses.
  */
-export function getSubtitleText(status?: string, reason?: string, message?: string): string {
+export function getSubtitleText(
+  status?: string,
+  reason?: string,
+  message?: string,
+): string {
   if (status === "terminated") {
     if (message) return message;
     return "This session was ended by an administrator for policy or safety reasons.";
@@ -172,11 +185,7 @@ export default function SessionThankYou({
   const professionLabel = getProfessionLabel(expertData);
 
   const handleClose = () => {
-    if (onClose) {
-      onClose();
-      return;
-    }
-    router.push("/");
+    onClose?.();
   };
 
   return (
@@ -208,7 +217,9 @@ export default function SessionThankYou({
             </Avatar>
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex items-center justify-between gap-2">
-                <span className="truncate text-sm font-semibold text-[#111111]">{expertName}</span>
+                <span className="truncate text-sm font-semibold text-[#111111]">
+                  {expertName}
+                </span>
                 {expertData.rating && (
                   <span className="flex shrink-0 items-center gap-1 text-xs font-medium text-[#111111]">
                     <Sparkles className="size-3 text-amber-500 fill-amber-500" />
@@ -216,7 +227,9 @@ export default function SessionThankYou({
                   </span>
                 )}
               </div>
-              <span className="truncate text-xs text-[#626260]">{professionLabel}</span>
+              <span className="truncate text-xs text-[#626260]">
+                {professionLabel}
+              </span>
             </div>
           </div>
         )}
@@ -228,7 +241,8 @@ export default function SessionThankYou({
             <span>Transcript Saved Securely</span>
           </div>
           <p className="leading-normal">
-            Your chat transcript and consultation record are permanently preserved in your consultation history.
+            Your chat transcript and consultation record are permanently
+            preserved in your consultation history.
           </p>
           {sessionId && (
             <div className="mt-1 flex items-center justify-between border-t border-[#ece8e1] pt-2 font-mono text-[11px] text-[#9c9fa5]">

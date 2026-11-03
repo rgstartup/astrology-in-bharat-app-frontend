@@ -1,7 +1,6 @@
 "use client";
 
 import React, {
-  createContext,
   useContext,
   useState,
   useMemo,
@@ -10,87 +9,26 @@ import React, {
 import { useRouter } from "@/i18n/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { useConsultation } from "@/realtime/hooks/use-consultation";
-import { useRoomVerdict } from "../hooks/use-room-verdict";
-import { useRoomTimer } from "../hooks/use-room-timer";
-import { useRoomBudget } from "../../../realtime/hooks/use-room-budget";
-import { useRoomSessionSummary } from "../hooks/use-room-session-summary";
-import { resolveRoomMode } from "../application/use-consultation-mode";
-import { useRoomStoreSync } from "./use-room-store-sync";
-import { useRoomSessionTiming } from "./use-room-session-timing";
-import { useRoomSessions } from "./use-room-sessions";
+import { useRoomVerdict } from "../../hooks/use-room-verdict";
+import { useRoomTimer } from "../../hooks/use-room-timer";
+import { useRoomBudget } from "../../../../realtime/hooks/use-room-budget";
+import { useRoomSessionSummary } from "../../hooks/use-room-session-summary";
+import { resolveRoomMode } from "../../application/use-consultation-mode";
+import { useRoomStoreSync } from "../use-room-store-sync";
+import { useRoomSessionTiming } from "../use-room-session-timing";
+import { useRoomSessions } from "../use-room-sessions";
+import {
+  RoomIdentityContext,
+  RoomSessionContext,
+  RoomBillingContext,
+  RoomReviewContext,
+  RoomActionsContext,
+  RoomLifecycleContext,
+} from "./contexts";
 import type {
   RoomLifecycleContextValue,
   RoomLifecycleProviderProps,
-} from "./room-lifecycle.types";
-
-/** Identity: auth-derived values + expert + router. */
-const RoomIdentityContext = createContext<{
-  user: RoomLifecycleContextValue["user"];
-  balance: RoomLifecycleContextValue["balance"];
-  expertData: RoomLifecycleContextValue["expertData"];
-  roomConsultationId: RoomLifecycleContextValue["roomConsultationId"];
-  router: RoomLifecycleContextValue["router"];
-} | null>(null);
-
-/** Session: room timing, status, mode, and session list. */
-const RoomSessionContext = createContext<{
-  sessions: RoomLifecycleContextValue["sessions"];
-  refreshSessions: RoomLifecycleContextValue["refreshSessions"];
-  sessionId: RoomLifecycleContextValue["sessionId"];
-  sessionStatus: RoomLifecycleContextValue["sessionStatus"];
-  roomMode: RoomLifecycleContextValue["roomMode"];
-  maxMinutes: RoomLifecycleContextValue["maxMinutes"];
-  elapsedTime: RoomLifecycleContextValue["elapsedTime"];
-  timeLeft: RoomLifecycleContextValue["timeLeft"];
-  displayElapsedTime: RoomLifecycleContextValue["displayElapsedTime"];
-  displayTimeLeft: RoomLifecycleContextValue["displayTimeLeft"];
-  isSessionEnded: RoomLifecycleContextValue["isSessionEnded"];
-  pendingExpiresAt: RoomLifecycleContextValue["pendingExpiresAt"];
-  voiceLive: RoomLifecycleContextValue["voiceLive"];
-  setVoiceLive: RoomLifecycleContextValue["setVoiceLive"];
-  voiceConnecting: RoomLifecycleContextValue["voiceConnecting"];
-} | null>(null);
-
-/** Billing: chat rate, session summary, warning. */
-const RoomBillingContext = createContext<{
-  chatRate: RoomLifecycleContextValue["chatRate"];
-  sessionSummary: RoomLifecycleContextValue["sessionSummary"];
-  isWarning: RoomLifecycleContextValue["isWarning"];
-} | null>(null);
-
-/** Review: local review draft state. */
-const RoomReviewContext = createContext<{
-  reviewRating: RoomLifecycleContextValue["reviewRating"];
-  setReviewRating: RoomLifecycleContextValue["setReviewRating"];
-  reviewComment: RoomLifecycleContextValue["reviewComment"];
-  setReviewComment: RoomLifecycleContextValue["setReviewComment"];
-  reviewSubmitted: RoomLifecycleContextValue["reviewSubmitted"];
-  setReviewSubmitted: RoomLifecycleContextValue["setReviewSubmitted"];
-} | null>(null);
-
-/** Actions: modal, end chat, and live chat control. */
-const RoomActionsContext = createContext<{
-  showModal: RoomLifecycleContextValue["showModal"];
-  setShowModal: RoomLifecycleContextValue["setShowModal"];
-  handleEndChat: RoomLifecycleContextValue["handleEndChat"];
-  decision: RoomLifecycleContextValue["decision"];
-  consultationState: RoomLifecycleContextValue["consultationState"];
-  endedVerdict: RoomLifecycleContextValue["endedVerdict"];
-  pausedState: RoomLifecycleContextValue["pausedState"];
-  pauseLiveChat: RoomLifecycleContextValue["pauseLiveChat"];
-  resumeLiveChat: RoomLifecycleContextValue["resumeLiveChat"];
-  endLiveChat: RoomLifecycleContextValue["endLiveChat"];
-  liveMessages: RoomLifecycleContextValue["liveMessages"];
-  sendLiveMessage: RoomLifecycleContextValue["sendLiveMessage"];
-  sendLiveTyping: RoomLifecycleContextValue["sendLiveTyping"];
-  remoteTyping: RoomLifecycleContextValue["remoteTyping"];
-  sessionRevision: RoomLifecycleContextValue["sessionRevision"];
-  resumeRevision: RoomLifecycleContextValue["resumeRevision"];
-} | null>(null);
-
-const RoomLifecycleContext = createContext<RoomLifecycleContextValue | null>(
-  null,
-);
+} from "./types";
 
 /**
  * Provider wrapping consultation lifecycle state: sockets, session revisions,
@@ -251,6 +189,7 @@ export function RoomLifecycleProvider({
       sendLiveMessage,
       sendLiveTyping,
       remoteTyping,
+      sessionRevision,
       resumeRevision,
       reviewRating,
       setReviewRating,
@@ -296,6 +235,7 @@ export function RoomLifecycleProvider({
       sendLiveMessage,
       sendLiveTyping,
       remoteTyping,
+      sessionRevision,
       resumeRevision,
       reviewRating,
       reviewComment,
@@ -422,91 +362,4 @@ export function RoomLifecycleProvider({
       </RoomSessionContext.Provider>
     </RoomIdentityContext.Provider>
   );
-}
-
-/**
- * Hook to access the consultation room lifecycle context.
- *
- * @returns RoomLifecycleContextValue
- * @throws Error if used outside RoomLifecycleProvider
- */
-export function useRoomLifecycle(): RoomLifecycleContextValue {
-  const context = useContext(RoomLifecycleContext);
-  if (!context) {
-    throw new Error(
-      "useRoomLifecycle must be used within a RoomLifecycleProvider",
-    );
-  }
-  return context;
-}
-
-/**
- * Hook to access identity slice (user, balance, expertData, roomConsultationId, router).
- */
-export function useRoomIdentity() {
-  const context = useContext(RoomIdentityContext);
-  if (!context) {
-    throw new Error(
-      "useRoomIdentity must be used within a RoomLifecycleProvider",
-    );
-  }
-  return context;
-}
-
-/**
- * Hook to access session slice (sessions, sessionId, sessionStatus, roomMode,
- * maxMinutes, elapsedTime, timeLeft, displayElapsedTime, displayTimeLeft,
- * isSessionEnded, pendingExpiresAt, voiceLive, setVoiceLive, voiceConnecting).
- */
-export function useRoomSession() {
-  const context = useContext(RoomSessionContext);
-  if (!context) {
-    throw new Error(
-      "useRoomSession must be used within a RoomLifecycleProvider",
-    );
-  }
-  return context;
-}
-
-/**
- * Hook to access billing slice (chatRate, sessionSummary, isWarning).
- */
-export function useRoomBilling() {
-  const context = useContext(RoomBillingContext);
-  if (!context) {
-    throw new Error(
-      "useRoomBilling must be used within a RoomLifecycleProvider",
-    );
-  }
-  return context;
-}
-
-/**
- * Hook to access review slice (reviewRating, setReviewRating, reviewComment,
- * setReviewComment, reviewSubmitted, setReviewSubmitted).
- */
-export function useRoomReview() {
-  const context = useContext(RoomReviewContext);
-  if (!context) {
-    throw new Error(
-      "useRoomReview must be used within a RoomLifecycleProvider",
-    );
-  }
-  return context;
-}
-
-/**
- * Hook to access actions slice (showModal, setShowModal, handleEndChat,
- * decision, consultationState, endedVerdict, pausedState, pauseLiveChat,
- * resumeLiveChat, endLiveChat, liveMessages, sendLiveMessage, sendLiveTyping,
- * remoteTyping, sessionRevision, resumeRevision).
- */
-export function useRoomActions() {
-  const context = useContext(RoomActionsContext);
-  if (!context) {
-    throw new Error(
-      "useRoomActions must be used within a RoomLifecycleProvider",
-    );
-  }
-  return context;
 }

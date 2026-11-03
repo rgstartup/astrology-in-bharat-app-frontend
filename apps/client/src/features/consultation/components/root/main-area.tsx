@@ -3,7 +3,7 @@ import { VoiceStage } from "../voice/voice-stage";
 import VoiceReturnBanner from "../voice/voice-return-banner";
 import { MobileSidebarDrawer } from "../sidebar/mobile-sidebar-drawer";
 import { formatTime } from "../../utils/format-time";
-import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomSession } from "../../providers/room-lifecycle";
 import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
 import { useDirectVoiceContext } from "../../providers/direct-voice.provider";
 

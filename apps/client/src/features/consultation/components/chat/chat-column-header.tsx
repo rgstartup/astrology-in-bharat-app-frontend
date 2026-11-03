@@ -6,9 +6,9 @@ import { useRouter } from "@/i18n/navigation";
 import { Button } from "@repo/design/shadcn";
 import { Separator } from "@repo/design/shadcn";
 import { EndSessionButton } from "../header/end-session-button";
-import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
-import { useRoomSession } from "../../providers/room-lifecycle.provider";
-import { useRoomActions } from "../../providers/room-lifecycle.provider";
+import { useRoomIdentity } from "../../providers/room-lifecycle";
+import { useRoomSession } from "../../providers/room-lifecycle";
+import { useRoomActions } from "../../providers/room-lifecycle";
 
 /**
  * Top bar for the 75% chat area.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useVoiceSession } from "./use-voice-session";
 import type { VoicePhase } from "../types/voice-phase";
 import {
@@ -85,6 +85,11 @@ export function useDirectVoice(
   const clearVoiceSession = useVoiceSessionStore((s) => s.setSession);
   const joinedRef = useRef<number | null>(null);
   const joinAbortedRef = useRef(false);
+  /** Locally set to true when endVoice() is called, so the timer and phase
+   *  transition to ended immediately without waiting for the server ENDED
+   *  event. The server event will also set ended=true via the `ended` prop,
+   *  but we must not block the UI on it. */
+  const [localEnded, setLocalEnded] = useState(false);
 
   // Latest values for effects that must not re-run on object identity changes.
   // `useVoiceSession()` returns a fresh object every render, so depending on it
@@ -105,13 +110,10 @@ export function useDirectVoice(
     (sessionStatus === "active" || decision === "accepted"),
   );
 
-  console.log("[VoiceConsultation] useDirectVoice enabled check", {
-    consultationId,
-    sessionStatus,
-    decision,
-    hasAcceptTimeToken: Boolean(voiceToken?.token && voiceToken?.channelName),
-    enabled,
-  });
+  // Track previous enabled value to only trigger join on false → true transition.
+  // Prevents re-running join logic on every re-render where enabled stays true
+  // (e.g., budget timer updates elapsedTime every second).
+  const prevEnabledRef = useRef(false);
 
   // Toast on error transitions only
   useEffect(() => {
@@ -120,38 +122,19 @@ export function useDirectVoice(
     rtc.clearError();
   }, [rtc.error, rtc.clearError]);
 
-  // Join exactly once per enabled consultation. Dependencies are primitives:
-  // `rtc` is a new object every render, so including it (or the token object)
-  // re-ran this effect's cleanup and left Agora on every render.
+  // Join effect: only fires when `enabled` transitions from false → true.
+  // No cleanup returned → RTC connection is NOT torn down when enabled
+  // toggles (billing hold, pause). Separate cleanup effect handles leave()
+  // on navigation (consultationId change) and ended effect handles leave()
+  // on consultation termination.
   useEffect(() => {
-    console.log("[VoiceConsultation] join effect evaluated", {
-      consultationId,
-      enabled,
-      joinedConsultationId: joinedRef.current,
-    });
-    if (consultationId === null || !enabled) {
-      console.log("[VoiceConsultation] join skipped", {
-        reason:
-          consultationId === null ? "missing consultation id" : "disabled",
-        consultationId,
-        enabled,
-      });
-      // Only tear down a session this hook started. A session created by the
-      // prep modal must survive the route transition while acceptance lands.
-      if (joinedRef.current !== null) {
-        joinAbortedRef.current = true;
-        joinedRef.current = null;
-        void rtcRef.current.leave().catch(() => undefined);
-      }
-      return;
-    }
-    if (joinedRef.current === consultationId) {
-      console.log("[VoiceConsultation] join skipped", {
-        reason: "consultation already started by this hook",
-        consultationId,
-      });
-      return;
-    }
+    const wasEnabled = prevEnabledRef.current;
+    prevEnabledRef.current = enabled;
+
+    // Only trigger join on false → true transition
+    if (wasEnabled || !enabled) return;
+    if (consultationId === null) return;
+    if (joinedRef.current === consultationId) return;
 
     joinAbortedRef.current = false;
     joinedRef.current = consultationId;
@@ -165,79 +148,46 @@ export function useDirectVoice(
         ? acceptTimeToken
         : undefined;
 
-    console.log("[VoiceConsultation] joining Agora", {
-      consultationId,
-      identity,
-      hasAcceptTimeToken: Boolean(fastToken),
-      channelName: fastToken?.channelName ?? null,
-    });
-
     void rtcRef.current
       .join(consultationId, identity)
       .then(() => {
-        console.log("[VoiceConsultation] Agora join succeeded", {
-          consultationId,
-        });
         if (joinAbortedRef.current) {
-          console.info(
-            "[VoiceConsultation] join completed after cancellation; releasing RTC session",
-            {
-              consultationId,
-            },
-          );
           void rtcRef.current.leave().catch(() => undefined);
           return;
         }
         onLocalReadyRef.current?.();
       })
       .catch((err) => {
-        console.log("[VoiceConsultation] Agora join failed", {
-          consultationId,
-          error: err instanceof Error ? err.message : String(err),
-        });
         // Error already handled by toast effect
       });
+  }, [enabled, consultationId, userId]);
 
+  // Cleanup effect: only leaves RTC when consultationId changes (navigation away).
+  // Does NOT run on enabled/sessionStatus/decision/ended changes, so temporary
+  // pauses (billing hold) and the consultation-end flow (handled by ended effect)
+  // don't tear down the connection prematurely.
+  useEffect(() => {
     return () => {
-      if (joinedRef.current !== consultationId) return;
+      if (joinedRef.current === null) return;
       joinAbortedRef.current = true;
       joinedRef.current = null;
       void rtcRef.current.leave().catch(() => undefined);
     };
-  }, [enabled, consultationId, userId]);
+  }, [consultationId]);
 
   const endVoice = useCallback(async (): Promise<void> => {
-    console.log("[VoiceConsultation] endVoice called", {
-      consultationId,
-      joinedRef: joinedRef.current,
-      voicePhase: rtc.voicePhase,
-    });
+    setLocalEnded(true);
     joinedRef.current = null;
     joinAbortedRef.current = true;
-    console.log("[VoiceConsultation] endVoice calling rtc.leave()");
     await rtc.leave();
-    console.log("[VoiceConsultation] endVoice rtc.leave() completed");
-    console.log("[VoiceConsultation] endVoice calling clearConsultationRoom()");
     void clearConsultationRoom();
-    console.log("[VoiceConsultation] endVoice calling resetVoiceSession()");
     void resetVoiceSession();
     if (consultationId !== null) {
-      console.log("[VoiceConsultation] endVoice calling endConsultation()", {
-        consultationId,
-      });
       await endConsultation(consultationId).catch(() => undefined);
-      console.log("[VoiceConsultation] endVoice endConsultation() completed", {
-        consultationId,
-      });
     }
-    console.log("[VoiceConsultation] endVoice finished", { consultationId });
-  }, [rtc, consultationId, clearConsultationRoom, resetVoiceSession]);
+  }, [rtc, consultationId, clearConsultationRoom, resetVoiceSession, setLocalEnded]);
 
   const cancelVoice = useCallback(async (): Promise<void> => {
-    console.log("[VoiceConsultation] cancelVoice called", {
-      consultationId,
-      joinedRef: joinedRef.current,
-    });
     joinedRef.current = null;
     joinAbortedRef.current = true;
     await rtc.leave();
@@ -267,7 +217,8 @@ export function useDirectVoice(
 
   // Leave the Agora RTC session when the consultation ends
   useEffect(() => {
-    if (!ended) return;
+    const isEnded = ended || localEnded;
+    if (!isEnded) return;
     const shouldLeave = joinedRef.current !== null || !joinAbortedRef.current;
     joinedRef.current = null;
     joinAbortedRef.current = true;
@@ -276,12 +227,12 @@ export function useDirectVoice(
     void clearVoiceSession(null, null, null);
     if (!shouldLeave) return;
     void rtcRef.current.leave().catch(() => undefined);
-  }, [ended]);
+  }, [ended, localEnded]);
 
-  const phase: VoicePhase = ended ? "ended" : (rtc.voicePhase ?? "requesting");
+  const phase: VoicePhase = (ended || localEnded) ? "ended" : (rtc.voicePhase ?? "requesting");
 
   return {
-    active: ended ? false : rtc.active,
+    active: (ended || localEnded) ? false : rtc.active,
     phase,
     muted: rtc.muted,
     speakerMuted: rtc.speakerMuted,

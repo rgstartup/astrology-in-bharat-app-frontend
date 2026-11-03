@@ -7,7 +7,7 @@ import { cn } from "@repo/design/cn";
 import RoomSecureStrip from "./room-secure-strip";
 import { useRoomRevision } from "../../../../realtime/hooks/use-room-revision";
 import { SessionDock, type SessionDockProps } from "../session/session-dock";
-import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomSession } from "../../providers/room-lifecycle";
 import { useDirectVoiceContext } from "../../providers/direct-voice.provider";
 import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
 

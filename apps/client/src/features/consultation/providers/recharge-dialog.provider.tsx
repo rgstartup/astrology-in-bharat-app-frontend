@@ -2,8 +2,8 @@
 
 import React, { createContext, useContext, useMemo } from "react";
 import type { ChatPausedPayload } from "@/realtime/types/chat";
-import RoomPausedDialog from "../components/room/room-paused-dialog";
-import { useRoomLifecycle } from "./room-lifecycle.provider";
+import RoomPausedDialog from "../components/dialog/recharge-action.dialog";
+import { useRoomLifecycle } from "./room-lifecycle";
 
 export interface RechargeDialogContextValue {
   isRechargePause: boolean;

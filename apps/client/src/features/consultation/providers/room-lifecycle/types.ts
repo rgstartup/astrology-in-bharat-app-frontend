@@ -3,7 +3,7 @@ import type { useRouter } from "@/i18n/navigation";
 import type { IExpert } from "@repo/lib";
 import type { IAuthUser } from "@/store/authStore";
 import type { ChatHistorySessionDto } from "@/actions/chat";
-import type { ConsultationSessionStatus } from "../application/consultation-verdict";
+import type { ConsultationSessionStatus } from "../../application/consultation-verdict";
 import type { ChatSession } from "@/lib/types";
 import type {
   ConsultationMode,
@@ -15,7 +15,7 @@ import type {
   ConsultationDecision,
   useConsultation,
 } from "@/realtime/hooks/use-consultation";
-import type { useRoomBudget } from "../../../realtime/hooks/use-room-budget";
+import type { useRoomBudget } from "../../../../realtime/hooks/use-room-budget";
 
 export interface RoomLifecycleContextValue {
   roomConsultationId: number | null;
@@ -57,6 +57,7 @@ export interface RoomLifecycleContextValue {
   sendLiveMessage: ReturnType<typeof useConsultation>["send"];
   sendLiveTyping: ReturnType<typeof useConsultation>["typing"];
   remoteTyping: boolean;
+  sessionRevision: number;
   resumeRevision: number;
   reviewRating: number;
   setReviewRating: React.Dispatch<React.SetStateAction<number>>;

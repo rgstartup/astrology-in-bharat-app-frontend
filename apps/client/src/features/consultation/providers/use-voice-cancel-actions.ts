@@ -11,6 +11,14 @@ interface UseVoiceCancelActionsParams {
   refreshSessions: () => Promise<void>;
   directVoice: ReturnType<typeof useDirectVoice>;
   handleEndChat: (force?: boolean) => void;
+  /** Mute state owned by the RTC session — never a local copy. */
+  muted: boolean;
+  /** Speaker state owned by the RTC session — never a local copy. */
+  speakerMuted: boolean;
+  /** Toggles microphone on/off. */
+  toggleMic: () => Promise<void>;
+  /** Toggles speaker on/off. */
+  toggleSpeaker: () => Promise<void>;
 }
 
 interface UseVoiceCancelActionsReturn {
@@ -35,11 +43,17 @@ export function useVoiceCancelActions({
   refreshSessions,
   directVoice,
   handleEndChat,
+  muted,
+  speakerMuted,
+  toggleMic,
+  toggleSpeaker,
 }: UseVoiceCancelActionsParams): UseVoiceCancelActionsReturn {
   const [voiceCancelOpen, setVoiceCancelOpen] = useState(false);
   const [voiceCancelBusy, setVoiceCancelBusy] = useState(false);
   const voiceHoldActive = useRef(false);
   const voiceHoldChain = useRef<Promise<unknown>>(Promise.resolve());
+  const micMutedBeforeOpen = useRef(false);
+  const speakerMutedBeforeOpen = useRef(false);
 
   const queueVoiceHold = useCallback(
     async (command: "hold" | "release") => {
@@ -56,22 +70,38 @@ export function useVoiceCancelActions({
     [pauseLiveChat, resumeLiveChat],
   );
 
-  const openVoiceCancel = useCallback(() => {
+  const openVoiceCancel = useCallback(async () => {
     setVoiceCancelOpen(true);
     if (sessionStatus !== "active") return;
     voiceHoldActive.current = true;
     void queueVoiceHold("hold");
-  }, [queueVoiceHold, sessionStatus]);
+    // Mute both speaker and mic when the dialog opens.
+    micMutedBeforeOpen.current = muted;
+    speakerMutedBeforeOpen.current = speakerMuted;
+    if (!muted) {
+      await toggleMic().catch(() => undefined);
+    }
+    if (!speakerMuted) {
+      await toggleSpeaker().catch(() => undefined);
+    }
+  }, [queueVoiceHold, sessionStatus, muted, speakerMuted, toggleMic, toggleSpeaker]);
 
   const handleVoiceCancelOpenChange = useCallback(
-    (open: boolean) => {
+    async (open: boolean) => {
       if (!open && voiceCancelBusy) return;
       setVoiceCancelOpen(open);
       if (open || !voiceHoldActive.current) return;
       voiceHoldActive.current = false;
       void queueVoiceHold("release");
+      // Undo mute on both speaker and mic when closing without action.
+      if (!micMutedBeforeOpen.current) {
+        await toggleMic().catch(() => undefined);
+      }
+      if (!speakerMutedBeforeOpen.current) {
+        await toggleSpeaker().catch(() => undefined);
+      }
     },
-    [queueVoiceHold, voiceCancelBusy],
+    [queueVoiceHold, voiceCancelBusy, toggleMic, toggleSpeaker],
   );
 
   const handleVoiceContinueOverChat = useCallback(async () => {
@@ -82,11 +112,13 @@ export function useVoiceCancelActions({
     setVoiceCancelBusy(false);
     if (switched) {
       setVoiceCancelOpen(false);
+      // Re-arm timer with chat mode pricing after switching to chat.
+      await resumeLiveChat("chat");
       await refreshSessions();
       return;
     }
     voiceHoldActive.current = true;
-  }, [directVoice, refreshSessions]);
+  }, [directVoice, refreshSessions, resumeLiveChat]);
 
   const handleVoiceEndSession = useCallback(async () => {
     console.log("[VoiceConsultation] handleVoiceEndSession called", {

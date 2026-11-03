@@ -10,11 +10,12 @@ import { VoiceControls } from "./voice-controls";
 import { VoiceTranscriptStrip } from "./voice-transcript-strip";
 import { VoiceRateNote } from "./voice-rate-note";
 import { formatTime } from "../../utils/format-time";
-import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
-import { useRoomSession } from "../../providers/room-lifecycle.provider";
-import { useRoomBilling } from "../../providers/room-lifecycle.provider";
+import { useRoomIdentity } from "../../providers/room-lifecycle";
+import { useRoomSession } from "../../providers/room-lifecycle";
+import { useRoomBilling } from "../../providers/room-lifecycle";
 import { useRoomChat } from "../../providers/room-chat.provider";
 import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
+import { useDirectVoiceContext } from "../../providers/direct-voice.provider";
 
 export type VoiceStageProps = {
   phase: VoicePhase;
@@ -195,25 +196,60 @@ export function VoiceStage({ className }: { className?: string } = {}) {
   const { elapsedTime } = useRoomSession();
   const { chatRate } = useRoomBilling();
   const { messages } = useRoomChat();
+
+  // Detect which voice mode we're in and use the appropriate context
+  let isDirectVoice = false;
+  let directVoice: ReturnType<typeof import("../../hooks/use-direct-voice").useDirectVoice> | null = null;
+  let openVoiceCancel: (() => void) | undefined;
+
+  try {
+    const ctx = useDirectVoiceContext();
+    isDirectVoice = ctx.isDirectVoice;
+    directVoice = ctx.directVoice;
+    openVoiceCancel = ctx.openVoiceCancel;
+  } catch {
+    // Direct voice provider not active — switch-to-voice mode.
+  }
+
   const { voice, displayVoiceRate } = useSwitchToVoiceContext();
 
+  // Use direct-voice context props when in direct voice mode, otherwise switch-to-voice
+  const phase = isDirectVoice && directVoice ? directVoice.phase : voice.voicePhase;
+  const active = isDirectVoice && directVoice ? directVoice.active : voice.voiceActive;
+  const backToChat = isDirectVoice && directVoice
+    ? () => void directVoice.switchToChat()
+    : voice.backToChat;
+  const cancelVoice = isDirectVoice && directVoice ? directVoice.cancelVoice : voice.cancelVoice;
+  const endVoice = openVoiceCancel ?? cancelVoice;
+  const muted = isDirectVoice && directVoice ? directVoice.muted : voice.muted;
+  const speakerMuted = isDirectVoice && directVoice ? directVoice.speakerMuted : voice.speakerMuted;
+  const toggleMute = isDirectVoice && directVoice
+    ? () => void directVoice.toggleMic()
+    : () => void voice.toggleMic();
+  const toggleSpeaker = isDirectVoice && directVoice
+    ? () => void directVoice.toggleSpeaker()
+    : () => void voice.toggleSpeaker();
+  const voiceRate = isDirectVoice && directVoice
+    ? displayVoiceRate // direct voice uses the same display rate from switch-to-voice context
+    : displayVoiceRate;
+
   const props: VoiceStageProps = {
-    phase: voice.voicePhase,
+    phase,
     expertName: expertData?.name ?? "Expert",
     expertAvatar: expertData?.avatar ?? null,
     elapsedText: formatTime(elapsedTime),
     chatRate,
-    voiceRate: displayVoiceRate,
+    voiceRate,
     messages,
-    entry: "upgrade",
-    onBackToChat: voice.backToChat,
-    onEndVoice: voice.cancelVoice,
-    onCancelRequest: voice.cancelVoice,
-    onExpandChat: voice.backToChat,
-    muted: voice.muted,
-    onToggleMute: () => void voice.toggleMic(),
-    speakerMuted: voice.speakerMuted,
-    onToggleSpeaker: () => void voice.toggleSpeaker(),
+    entry: isDirectVoice ? "direct" : "upgrade",
+    onBackToChat: backToChat,
+    onEndVoice: endVoice,
+    onCancelRequest: cancelVoice,
+    onExpandChat: backToChat,
+    muted,
+    onToggleMute: toggleMute,
+    speakerMuted,
+    onToggleSpeaker: toggleSpeaker,
     className,
   };
 

@@ -9,11 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@repo/design/shadcn";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@repo/design/shadcn";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/design/shadcn";
 import { Button } from "@repo/design/shadcn";
 import SessionThankYou, {
   type SessionThankYouExpert,
@@ -26,11 +22,11 @@ import BillingBreakdown, { type BillingSummary } from "./billing-breakdown";
 import ReviewForm from "./review-form";
 import SummaryActions from "./summary-actions";
 import TerminationNotice from "./termination-notice";
-import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
-import { useRoomSession } from "../../providers/room-lifecycle.provider";
-import { useRoomBilling } from "../../providers/room-lifecycle.provider";
-import { useRoomReview } from "../../providers/room-lifecycle.provider";
-import { useRoomActions } from "../../providers/room-lifecycle.provider";
+import { useRoomIdentity } from "../../providers/room-lifecycle";
+import { useRoomSession } from "../../providers/room-lifecycle";
+import { useRoomBilling } from "../../providers/room-lifecycle";
+import { useRoomReview } from "../../providers/room-lifecycle";
+import { useRoomActions } from "../../providers/room-lifecycle";
 
 export type SessionSummary = BillingSummary & {
   reason?: string;
@@ -77,7 +73,12 @@ function ModalRightPanel({
     return (
       <div className="flex flex-col gap-4">
         <TerminationNotice reason={reason} message={sessionSummary?.message} />
-        <SummaryActions status={status} router={router} onClose={handleClose} isDarkMode={false} />
+        <SummaryActions
+          status={status}
+          router={router}
+          onClose={handleClose}
+          isDarkMode={false}
+        />
       </div>
     );
   }
@@ -86,9 +87,15 @@ function ModalRightPanel({
     return (
       <div className="flex flex-col gap-4">
         <div className="rounded-xl border border-[#ece8e1] bg-[#faf8f5] p-4 text-sm text-[#626260]">
-          Your astrologer could not join this session. No amount was deducted from your wallet balance.
+          Your astrologer could not join this session. No amount was deducted
+          from your wallet balance.
         </div>
-        <SummaryActions status={status} router={router} onClose={handleClose} isDarkMode={false} />
+        <SummaryActions
+          status={status}
+          router={router}
+          onClose={handleClose}
+          isDarkMode={false}
+        />
       </div>
     );
   }
@@ -126,7 +133,11 @@ function ModalRightPanel({
 /**
  * Compact chip displaying expert info on mobile without overflowing.
  */
-function MobileExpertChip({ expertData }: { expertData?: SessionThankYouExpert }) {
+function MobileExpertChip({
+  expertData,
+}: {
+  expertData?: SessionThankYouExpert;
+}) {
   if (!expertData) return null;
   const expertName = expertData.name || "Expert";
   const avatarSrc = expertData.avatar || expertData.avatar_url || undefined;
@@ -206,9 +217,16 @@ function MobileSummaryFooter({
  * @returns Dialog modal JSX.
  */
 export default function SessionSummaryModal() {
-  const { showModal } = useRoomActions();
+  const { showModal, setShowModal } = useRoomActions();
   const { sessionSummary } = useRoomBilling();
-  const { reviewRating, setReviewRating, reviewComment, setReviewComment, reviewSubmitted, setReviewSubmitted } = useRoomReview();
+  const {
+    reviewRating,
+    setReviewRating,
+    reviewComment,
+    setReviewComment,
+    reviewSubmitted,
+    setReviewSubmitted,
+  } = useRoomReview();
   const { sessionId } = useRoomSession();
   const { expertData, router } = useRoomIdentity();
 
@@ -216,7 +234,7 @@ export default function SessionSummaryModal() {
   const reason = sessionSummary?.reason;
 
   const handleClose = () => {
-    router.push("/");
+    setShowModal(false);
   };
 
   return (
@@ -231,7 +249,8 @@ export default function SessionSummaryModal() {
         <DialogHeader className="sr-only">
           <DialogTitle>Consultation Session Summary</DialogTitle>
           <DialogDescription>
-            Review consultation duration, billing breakdown, and share your rating and feedback.
+            Review consultation duration, billing breakdown, and share your
+            rating and feedback.
           </DialogDescription>
         </DialogHeader>
 

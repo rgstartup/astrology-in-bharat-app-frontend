@@ -9,7 +9,7 @@ import {
   EmptyDescription,
   EmptyTitle,
 } from "@repo/design/shadcn";
-import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomSession } from "../../providers/room-lifecycle";
 
 /** Waterfall: only the pending-with-expiry state renders a banner. */
 export default function RoomPendingBanner() {

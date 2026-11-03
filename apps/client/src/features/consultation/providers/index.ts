@@ -1,11 +1,11 @@
 export {
   RoomLifecycleProvider,
   useRoomLifecycle,
-} from "./room-lifecycle.provider";
+} from "./room-lifecycle";
 export type {
   RoomLifecycleContextValue,
   RoomLifecycleProviderProps,
-} from "./room-lifecycle.types";
+} from "./room-lifecycle";
 
 export {
   RoomChatProvider,

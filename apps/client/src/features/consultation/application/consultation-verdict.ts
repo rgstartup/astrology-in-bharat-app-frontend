@@ -22,6 +22,11 @@ export function determineSessionStatus({
   endedVerdict,
   joinedStatus,
 }: DetermineStatusParams): ConsultationSessionStatus {
+  // A completed/ended consultation must win over an accepted verdict.
+  // Otherwise ending a live call leaves sessionStatus stuck at "active",
+  // which keeps the timer running and resurrects the cancel-request button.
+  if (endedVerdict) return "completed";
+  if (joinedStatus && COMPLETED_STATES.includes(joinedStatus)) return "completed";
   if (
     decision === "accepted" ||
     (joinedStatus &&
@@ -29,8 +34,6 @@ export function determineSessionStatus({
   ) {
     return "active";
   }
-  if (endedVerdict) return "completed";
-  if (joinedStatus && COMPLETED_STATES.includes(joinedStatus)) return "completed";
   return "pending";
 }
 

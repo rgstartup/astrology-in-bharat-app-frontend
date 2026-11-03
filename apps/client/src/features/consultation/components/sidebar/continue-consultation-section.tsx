@@ -26,9 +26,9 @@ export function ContinueConsultationSection({
   const clearConsultationRoom = useConsultationRoomStore((s) => s.clear);
 
   const rates = {
-    chat: resolveModePrice(expertData, "chat") || 25,
-    voice: resolveModePrice(expertData, "voice") || 30,
-    video: resolveModePrice(expertData, "video") || 50,
+    chat: resolveModePrice(expertData, "chat"),
+    voice: resolveModePrice(expertData, "voice"),
+    video: resolveModePrice(expertData, "video"),
   };
 
   const options: {

@@ -8,10 +8,10 @@ import { ExpertProfileSection } from "./expert-profile-section";
 import { ConsultationModeSection } from "./consultation-mode-section";
 import { SessionTimersSection } from "./session-timers-section";
 import { UpgradeConsultationSection } from "./upgrade-consultation-section";
-import { EndConsultationAction } from "./end-consultation-action";
+import { EndConsultationAction } from "../dialog/end-consultation-action.dialog";
 import { ContinueConsultationSection } from "./continue-consultation-section";
-import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
-import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomIdentity } from "../../providers/room-lifecycle";
+import { useRoomSession } from "../../providers/room-lifecycle";
 import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
 import { formatTime } from "../../utils/format-time";
 
@@ -21,7 +21,9 @@ import { formatTime } from "../../utils/format-time";
  *
  * @returns Desktop sidebar element.
  */
-export function ConsultationSidebar({ className }: { className?: string } = {}) {
+export function ConsultationSidebar({
+  className,
+}: { className?: string } = {}) {
   const { expertData, roomConsultationId } = useRoomIdentity();
   const { elapsedTime, timeLeft, isSessionEnded } = useRoomSession();
   const { handleUpgrade } = useSwitchToVoiceContext();

@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@repo/design/shadcn";
 import { cn } from "@repo/design/cn";
-import { useRoomActions } from "../../providers/room-lifecycle.provider";
+import { useRoomActions } from "../../providers/room-lifecycle";
 
 /**
  * End session affordance with confirmation dialog. Same visual language as

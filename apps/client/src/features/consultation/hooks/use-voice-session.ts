@@ -189,7 +189,6 @@ export function useVoiceSession(
       setSnapshot(existing.getSnapshot());
       return existing;
     }
-    console.log("[VoiceConsultation] creating new RTC session");
     const { createDefaultRtcSession } = await import("@repo/rtc");
     const session = createDefaultRtcSession();
     session.subscribe((next) => {
@@ -207,25 +206,14 @@ export function useVoiceSession(
         currentStore.session !== null &&
         currentStore.session.getSnapshot().phase === "live"
       ) {
-        console.log("[VoiceConsultation] join skipped — session already active", {
-          consultationId,
-        });
         return;
       }
       if (currentStore.joiningConsultationId === consultationId) {
-        console.log("[VoiceConsultation] join skipped — join already in flight", {
-          consultationId,
-        });
         return;
       }
       storeSetJoiningId(consultationId);
 
       const token = storeTakeVoiceToken(consultationId);
-      console.log("[VoiceConsultation] join() called", {
-        consultationId,
-        identity,
-        hasAcceptTimeToken: Boolean(token?.token),
-      });
       setBusy(true);
       setError(null);
       setActive(false);
@@ -239,11 +227,6 @@ export function useVoiceSession(
           tokenValue = token.token;
         } else {
           const ack = await joinCall(consultationId);
-          console.log("[VoiceConsultation] joinCall ack", {
-            consultationId,
-            hasToken: Boolean(ack?.token),
-            channelName: ack?.channelName ?? null,
-          });
           if (!ack.token || !ack.channelName) {
             throw new Error(
               "Voice is unavailable right now. Please try again shortly.",
@@ -264,38 +247,17 @@ export function useVoiceSession(
           currentSnapshot.phase !== "live" ||
           currentSnapshot.roomName !== channelName
         ) {
-          console.log("[VoiceConsultation] calling session.join()", {
-            consultationId,
-            roomName: channelName,
-            kind: "voice",
-          });
           await session.join({
             roomName: channelName,
             identity,
             kind: "voice",
             token: tokenValue,
           });
-          console.log("[VoiceConsultation] session.join() succeeded", {
-            consultationId,
-            roomName: channelName,
-          });
-          const postJoinSnapshot = session.getSnapshot();
-          console.log("[VoiceConsultation] post-join RTC snapshot", {
-            phase: postJoinSnapshot.phase,
-            roomName: postJoinSnapshot.roomName,
-            participantIdentities: postJoinSnapshot.participants.map(
-              (participant) => participant.identity,
-            ),
-            microphoneEnabled: postJoinSnapshot.localMedia.microphoneEnabled,
-          });
         }
         storeSetSession(session, consultationId, identity);
         setActive(true);
         // Local side is inside Agora — tell the backend so billing can start
         // once the peer also reports media_ready. Fire-and-forget.
-        console.log("[VoiceConsultation] emitting mediaReady", {
-          consultationId,
-        });
         mediaReady(consultationId);
       } catch (err) {
         console.log("[VoiceConsultation] join failed", {
@@ -403,51 +365,28 @@ export function useVoiceSession(
   }, [storeConsultationId, storeIdentity, join, storeSetSession, waitForSocket]);
 
   const leave = useCallback(async (): Promise<void> => {
-    console.log("[VoiceConsultation] leave called", {
-      sessionRef: Boolean(sessionRef.current),
-      storeSession: Boolean(storeSession),
-      mountedRef: mountedRef.current,
-    });
-    setBusy(true);
     const session = sessionRef.current;
     try {
       // If the active RTC session is in the bridge store, that store action
       // owns teardown. Calling both paths leaves the same Agora session twice
       // and can strand the next resume between leave/join.
       if (session && session !== storeSession) {
-        console.log(
-          "[VoiceConsultation] leave calling session.leave() directly",
-          {
-            sessionRef: Boolean(session),
-          },
-        );
         await session.leave().catch(() => undefined);
       } else {
-        console.log("[VoiceConsultation] leave calling storeLeaveAndClear()");
         await storeLeaveAndClear(session ?? undefined);
       }
-      console.log("[VoiceConsultation] leave RTC teardown completed");
     } catch {
       // Leave is best-effort; the snapshot reset below is what the UI reads.
       if (!session || session === storeSession) {
-        console.log(
-          "[VoiceConsultation] leave catch path calling storeLeaveAndClear()",
-        );
         await storeLeaveAndClear(session ?? undefined).catch(() => undefined);
       }
     } finally {
       sessionRef.current = null;
       storeClearVoiceTokens();
-      console.log(
-        "[VoiceConsultation] leave finally: sessionRef=null, voiceTokens cleared",
-      );
       if (mountedRef.current) {
         setSnapshot(null);
         setActive(false);
         setBusy(false);
-        console.log(
-          "[VoiceConsultation] leave snapshot cleared, active=false, busy=false",
-        );
       }
     }
   }, [storeLeaveAndClear, storeSession]);

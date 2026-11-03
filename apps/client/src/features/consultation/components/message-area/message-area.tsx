@@ -20,9 +20,9 @@ import {
 import MessageList, { StatusCenterRow } from "./message-list";
 import TypingIndicator from "./typing-indicator";
 import type { TimelineItem } from "../../types/timeline";
-import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
-import { useRoomSession } from "../../providers/room-lifecycle.provider";
-import { useRoomBilling } from "../../providers/room-lifecycle.provider";
+import { useRoomIdentity } from "../../providers/room-lifecycle";
+import { useRoomSession } from "../../providers/room-lifecycle";
+import { useRoomBilling } from "../../providers/room-lifecycle";
 import { useRoomChat } from "../../providers/room-chat.provider";
 
 type MessageAreaProps = {

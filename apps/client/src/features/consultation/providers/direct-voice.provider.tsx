@@ -10,12 +10,12 @@ import React, {
 import { useDirectVoice } from "../hooks/use-direct-voice";
 import { useConsultationMedia } from "../hooks/use-consultation-media";
 
-import { VoiceCancelDialog } from "../components/voice/voice-cancel-dialog";
+import { VoiceCancelDialog } from "../components/dialog/voice-cancel-dialog";
 import type { SessionDockProps } from "../components/session/session-dock";
 import type { SessionPhase } from "../types/session-phase";
 
 import { formatTime } from "../utils/format-time";
-import { useRoomLifecycle } from "./room-lifecycle.provider";
+import { useRoomLifecycle } from "./room-lifecycle";
 import { useSwitchToVoiceContext } from "./switch-to-voice.provider";
 import { useVoiceCancelActions } from "./use-voice-cancel-actions";
 
@@ -105,13 +105,17 @@ export function DirectVoiceProvider({ children }: DirectVoiceProviderProps) {
     refreshSessions,
     directVoice,
     handleEndChat,
+    muted: directVoice.muted,
+    speakerMuted: directVoice.speakerMuted,
+    toggleMic: directVoice.toggleMic,
+    toggleSpeaker: directVoice.toggleSpeaker,
   });
 
   const showVoiceStage =
     !isSessionEnded &&
-    !voice.minimized &&
-    (voice.voiceActive ||
-      (isDirectVoice && directVoice.active && directVoice.phase !== "ended"));
+    (isDirectVoice
+      ? directVoice.active && directVoice.phase !== "ended"
+      : !voice.minimized && voice.voiceActive);
 
   const dockProps: SessionDockProps | null = useMemo(() => {
     if (

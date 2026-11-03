@@ -193,7 +193,6 @@ export default function ReviewForm({
       const errMsg = res.error.message;
       if (errMsg?.toLowerCase().includes("already reviewed")) {
         setReviewSubmitted(true);
-        setTimeout(() => router.push("/"), 1500);
         return;
       }
       toast.error(errMsg || "Failed to submit review. Please try again.");
@@ -202,7 +201,6 @@ export default function ReviewForm({
 
     setReviewSubmitted(true);
     toast.success("Thank you for your feedback!");
-    setTimeout(() => router.push("/"), 1500);
   };
 
   if (reviewSubmitted) {
@@ -213,7 +211,7 @@ export default function ReviewForm({
           Review Submitted
         </h4>
         <p className="text-xs text-emerald-700">
-          Thank you for sharing your feedback. Redirecting you home...
+          Thank you for sharing your feedback.
         </p>
       </div>
     );

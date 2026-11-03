@@ -23,7 +23,7 @@ interface ConsultationRequestApiOptions {
 }
 
 /**
- * Initiates a consultation through apiV2 and handles retry and domain errors.
+ * Initiates a consultation through apiV2 and handles domain errors.
  * Returns consultation metadata on success; returns null on failure/abort so
  * the application layer can decide whether to proceed to the socket request.
  *
@@ -41,7 +41,9 @@ export function useConsultationRequestApi({
   getAbortController,
 }: ConsultationRequestApiOptions) {
   return useCallback(
-    async (metadata: SomeoneElseData | null): Promise<{
+    async (
+      metadata: SomeoneElseData | null,
+    ): Promise<{
       consultationId: number;
       sessionId: number;
       requestExpiresInSec: number;
@@ -86,59 +88,12 @@ export function useConsultationRequestApi({
           result.code === ConsultationErrorCode.ACTIVE_CONSULTATION_EXISTS &&
           result.body?.existingConsultationId != null
         ) {
-          const existingId = result.body.existingConsultationId;
           setExistingChatDetails({
-            consultationId: existingId,
+            consultationId: result.body.existingConsultationId,
             expertId: String(result.body.existingExpertId ?? expertId),
           });
-
-          const retryRes = await apiV2.post<
-            InitiateConsultationData,
-            InitiateConsultationErrorBody
-          >(
-            API_ROUTES.CONSULTATION.INITIATE,
-            {
-              expert_id: Number(expertId),
-              mode,
-              consultation_id: existingId,
-              ...(metadata ? { metadata } : {}),
-            },
-            { controller },
-          );
-          if (controller.signal.aborted) {
-            setIsWaiting(false);
-            return null;
-          }
-
-          const retry: InitiateConsultationResult = retryRes.ok
-            ? { ok: true, data: retryRes.data }
-            : {
-                ok: false,
-                code:
-                  retryRes.error?.errorCode ?? retryRes.error?.body?.errorCode,
-                message:
-                  retryRes.error?.message ??
-                  "Failed to start consultation. Please try again.",
-                body: retryRes.error?.body,
-              };
-          if (!retry.ok) {
-            if (retry.code === ConsultationErrorCode.INSUFFICIENT_BALANCE)
-              onInsufficientBalance();
-            else toast.error(retry.message);
-            setIsWaiting(false);
-            return null;
-          }
-
-          if (controller.signal.aborted) {
-            setIsWaiting(false);
-            return null;
-          }
-          return {
-            consultationId: retry.data.consultationId,
-            sessionId: retry.data.sessionId,
-            requestExpiresInSec: retry.data.requestExpiresInSec,
-            maxMinutes: retry.data.maxMinutes,
-          };
+          setIsWaiting(false);
+          return null;
         }
 
         if (!result.ok) {

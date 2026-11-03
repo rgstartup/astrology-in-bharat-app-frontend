@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
-import { useRoomActions } from "../../providers/room-lifecycle.provider";
+import { useRoomIdentity } from "../../providers/room-lifecycle";
+import { useRoomActions } from "../../providers/room-lifecycle";
 
 type ConsultationDecision = "waiting" | "accepted" | "rejected" | "cancelled";
 
