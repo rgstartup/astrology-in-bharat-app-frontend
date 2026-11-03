@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import type { RoomSessionStatus } from "../hooks/use-room-verdict";
+import type { ConsultationSessionStatus } from "../application/consultation-verdict";
 import type { useDirectVoice } from "../hooks/use-direct-voice";
 
 interface UseVoiceCancelActionsParams {
-  sessionStatus: RoomSessionStatus;
+  sessionStatus: ConsultationSessionStatus;
   pauseLiveChat: (reason?: string) => Promise<unknown>;
   resumeLiveChat: (mode?: "chat" | "voice" | "video") => Promise<unknown>;
   refreshSessions: () => Promise<void>;

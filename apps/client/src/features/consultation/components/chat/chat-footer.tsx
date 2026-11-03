@@ -20,11 +20,10 @@ import {
   TooltipTrigger,
 } from "@repo/design/shadcn";
 import type { PendingAttachment } from "@repo/chat";
+import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomChat } from "../../providers/room-chat.provider";
 
-type ChatFooterProps = {
-  sessionStatus: string;
-  /** When true, composer is disabled regardless of session status (e.g. voice connecting). */
-  disabled?: boolean;
+type ComposerProps = {
   pendingAttachment: PendingAttachment | null;
   removePendingAttachment: () => void;
   handleFileUpload: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -35,9 +34,6 @@ type ChatFooterProps = {
   setInputValue: (val: string) => void;
   handleSendMessage: () => void;
   handleInputTyping?: () => void;
-};
-
-type ComposerProps = Omit<ChatFooterProps, "sessionStatus"> & {
   disabled: boolean;
 };
 
@@ -198,7 +194,7 @@ function Composer({
   );
 }
 
-function ActiveFooter(props: Omit<ComposerProps, "disabled">) {
+function ActiveFooter(props: ComposerProps) {
   return (
     <footer className="shrink-0 border-t border-[#d3cec6]/60 bg-[#f5f1ec]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center gap-2 px-3 py-3 md:gap-4 md:px-12 md:py-6">
@@ -208,7 +204,7 @@ function ActiveFooter(props: Omit<ComposerProps, "disabled">) {
   );
 }
 
-function InactiveFooter(props: Omit<ComposerProps, "disabled">) {
+function InactiveFooter(props: ComposerProps) {
   return (
     <footer className="shrink-0 border-t border-[#d3cec6]/60 bg-[#f5f1ec]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl flex-col gap-2 px-3 py-3 md:px-12 md:py-6">
@@ -226,12 +222,13 @@ function InactiveFooter(props: Omit<ComposerProps, "disabled">) {
   );
 }
 
-export default function ChatFooter({
-  sessionStatus,
-  disabled = false,
-  ...rest
-}: ChatFooterProps) {
-  if (sessionStatus !== "active" || disabled)
-    return <InactiveFooter {...rest} />;
-  return <ActiveFooter {...rest} />;
+export default function ChatFooter() {
+  const { sessionStatus, voiceConnecting } = useRoomSession();
+  const composer = useRoomChat().composer;
+
+  const disabled = sessionStatus !== "active" || voiceConnecting;
+
+  if (disabled) return <InactiveFooter {...composer} disabled />;
+
+  return <ActiveFooter {...composer} disabled={false} />;
 }

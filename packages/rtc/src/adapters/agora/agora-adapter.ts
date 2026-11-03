@@ -1,5 +1,6 @@
 import AgoraRTC, {
   type IAgoraRTCClient,
+  type IAgoraRTCRemoteUser,
   type ICameraVideoTrack,
   type IMicrophoneAudioTrack,
 } from "agora-rtc-sdk-ng";
@@ -53,8 +54,29 @@ export class AgoraAdapter implements RtcAdapter {
     this.configured = true;
     AgoraRTC.onAutoplayFailed = () => {
       console.warn(
-        "[AgoraRTC] Browser blocked audio autoplay; a user gesture is required to resume playback.",
+        "[AgoraRTC] Browser blocked audio autoplay; attaching one-time interaction listener to resume playback.",
       );
+      if (typeof window === "undefined") return;
+      const resume = () => {
+        window.removeEventListener("click", resume);
+        window.removeEventListener("touchstart", resume);
+        window.removeEventListener("keydown", resume);
+        for (const user of this.client?.remoteUsers ?? []) {
+          if (user.audioTrack && !user.audioTrack.isPlaying) {
+            try {
+              user.audioTrack.play();
+              console.info("[AgoraRTC] resumed audio track on user gesture", {
+                remoteUid: user.uid,
+              });
+            } catch (err) {
+              console.warn("[AgoraRTC] autoplay resume error:", err);
+            }
+          }
+        }
+      };
+      window.addEventListener("click", resume, { once: true });
+      window.addEventListener("touchstart", resume, { once: true });
+      window.addEventListener("keydown", resume, { once: true });
     };
   }
 
@@ -130,6 +152,26 @@ export class AgoraAdapter implements RtcAdapter {
         ],
         microphoneEnabled: localAudioTrack?.enabled ?? false,
       });
+
+      // Subscribe to any remote users already in the channel before this client joined
+      for (const remoteUser of client.remoteUsers) {
+        if (remoteUser.hasAudio) {
+          void this.subscribeRemoteTrack(
+            client,
+            remoteUser,
+            "audio",
+            options.roomName,
+          );
+        }
+        if (remoteUser.hasVideo && options.kind === "video") {
+          void this.subscribeRemoteTrack(
+            client,
+            remoteUser,
+            "video",
+            options.roomName,
+          );
+        }
+      }
     } catch (error: unknown) {
       await this.teardown();
       const message =
@@ -250,41 +292,53 @@ export class AgoraAdapter implements RtcAdapter {
     }
   }
 
-  private watchClient(client: IAgoraRTCClient, roomName: string): void {
-    client.on("user-published", (user, mediaType) => {
-      void (async () => {
-        console.info("[AgoraRTC] remote media published", {
-          roomName,
-          localUid: client.uid,
-          remoteUid: user.uid,
-          mediaType,
-        });
+  private async subscribeRemoteTrack(
+    client: IAgoraRTCClient,
+    user: IAgoraRTCRemoteUser,
+    mediaType: "audio" | "video" | "datachannel",
+    roomName: string,
+  ): Promise<void> {
+    if (mediaType !== "audio" && mediaType !== "video") return;
+    console.info("[AgoraRTC] remote media published/existing", {
+      roomName,
+      localUid: client.uid,
+      remoteUid: user.uid,
+      mediaType,
+    });
+    try {
+      await client.subscribe(user, mediaType);
+      if (mediaType === "audio") {
         try {
-          await client.subscribe(user, mediaType);
-          if (mediaType === "audio") {
-            user.audioTrack?.play();
-            console.info("[AgoraRTC] remote audio playback requested", {
-              roomName,
-              localUid: client.uid,
-              remoteUid: user.uid,
-              hasAudioTrack: Boolean(user.audioTrack),
-            });
-            // Honor the current speaker-muted state for late-joining peers.
-            if (this.speakerMuted && user.audioTrack) {
-              user.audioTrack.setVolume(0);
-            }
-          }
-          this.refresh();
-        } catch (error: unknown) {
-          console.error("[AgoraRTC] remote subscribe/playback failed", {
+          user.audioTrack?.play();
+          console.info("[AgoraRTC] remote audio playback requested", {
             roomName,
             localUid: client.uid,
             remoteUid: user.uid,
-            mediaType,
-            error: error instanceof Error ? error.message : String(error),
+            hasAudioTrack: Boolean(user.audioTrack),
           });
+        } catch (playErr) {
+          console.warn("[AgoraRTC] remote audio playback error:", playErr);
         }
-      })();
+        // Honor the current speaker-muted state for late-joining peers.
+        if (this.speakerMuted && user.audioTrack) {
+          user.audioTrack.setVolume(0);
+        }
+      }
+      this.refresh();
+    } catch (error: unknown) {
+      console.error("[AgoraRTC] remote subscribe/playback failed", {
+        roomName,
+        localUid: client.uid,
+        remoteUid: user.uid,
+        mediaType,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  private watchClient(client: IAgoraRTCClient, roomName: string): void {
+    client.on("user-published", (user, mediaType) => {
+      void this.subscribeRemoteTrack(client, user, mediaType, roomName);
     });
     client.on("user-unpublished", () => this.refresh());
     client.on("user-joined", (user) => {

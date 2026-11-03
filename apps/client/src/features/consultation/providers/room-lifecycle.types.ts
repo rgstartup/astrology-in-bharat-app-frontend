@@ -3,8 +3,8 @@ import type { useRouter } from "@/i18n/navigation";
 import type { IExpert } from "@repo/lib";
 import type { IAuthUser } from "@/store/authStore";
 import type { ChatHistorySessionDto } from "@/actions/chat";
-import type { RoomSessionStatus } from "../hooks/use-room-verdict";
-import type { useRoomSessionSummary } from "../hooks/use-room-session-summary";
+import type { ConsultationSessionStatus } from "../application/consultation-verdict";
+import type { ChatSession } from "@/lib/types";
 import type {
   ConsultationMode,
   ConsultationStatePayload,
@@ -27,7 +27,7 @@ export interface RoomLifecycleContextValue {
   sessions: ChatHistorySessionDto[];
   refreshSessions: () => Promise<void>;
   sessionId: string | null;
-  sessionStatus: RoomSessionStatus;
+  sessionStatus: ConsultationSessionStatus;
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   handleEndChat: (force?: boolean) => void;
@@ -39,7 +39,7 @@ export interface RoomLifecycleContextValue {
   displayTimeLeft: number;
   isSessionEnded: boolean;
   chatRate: number;
-  sessionSummary: ReturnType<typeof useRoomSessionSummary>["sessionSummary"];
+  sessionSummary: ChatSession | null;
   decision: ConsultationDecision;
   isWarning: ReturnType<typeof useRoomBudget>["isWarning"];
   consultationState: ConsultationStatePayload | null;

@@ -1,52 +1,16 @@
 "use client";
 
 import React from "react";
-import type { RefObject } from "react";
-import type { IAuthUser } from "@/store/authStore";
-import type { ChatMessage, ChatSession } from "@/lib/types";
-import type { IExpert } from "@repo/lib";
 import MessageArea from "../message-area/message-area";
-import type { TimelineItem } from "@repo/chat";
 import ChatFooter from "../chat/chat-footer";
 import { cn } from "@repo/design/cn";
 import RoomSecureStrip from "./room-secure-strip";
 import { useRoomRevision } from "../../../../realtime/hooks/use-room-revision";
-import type { PendingAttachment } from "@repo/chat";
 import { SessionDock, type SessionDockProps } from "../session/session-dock";
+import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useDirectVoiceContext } from "../../providers/direct-voice.provider";
+import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
 
-type RoomBodyProps = {
-  sessionStatus: string;
-  sessionSummary: ChatSession | null;
-  messages: ChatMessage[];
-  timeline: TimelineItem[];
-  expertData: IExpert;
-  typingStatus: { senderName: string; isTyping: boolean } | null;
-  user: IAuthUser | null;
-  pendingAttachment: PendingAttachment | null;
-  removePendingAttachment: () => void;
-  handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
-  fileInputRef: RefObject<HTMLInputElement | null>;
-  uploading: boolean;
-  uploadProgress: number | null;
-  inputValue: string;
-  setInputValue: (val: string) => void;
-  handleSendMessage: () => void;
-  handleInputTyping: () => void;
-  /** Active session dock controls and status, or null when chat-only. */
-  dock?: SessionDockProps | null;
-  /** When true, disables the composer (voice/video session active). */
-  voiceDisabled?: boolean;
-  /** When true, blurs the message area (RTC connecting/setup phase only). */
-  voiceConnecting?: boolean;
-};
-
-/**
- * Pinned session dock strip mounted above the message area.
- * Renders only when an active voice/video session exists.
- *
- * @param props - Session dock properties or null.
- * @returns Dock element or null.
- */
 function RoomSessionDock({ dock }: { dock?: SessionDockProps | null }) {
   const revision = useRoomRevision();
   if (!dock) return null;
@@ -69,35 +33,16 @@ function RoomSessionDock({ dock }: { dock?: SessionDockProps | null }) {
   );
 }
 
-/** Main column (secure strip + messages + composer) beside the sidebar. */
-export default function RoomBody({
-  sessionStatus,
-  sessionSummary,
-  messages,
-  timeline,
-  expertData,
-  typingStatus,
-  user,
-  pendingAttachment,
-  removePendingAttachment,
-  handleFileUpload,
-  fileInputRef,
-  uploading,
-  uploadProgress,
-  inputValue,
-  setInputValue,
-  handleSendMessage,
-  handleInputTyping,
-  dock,
-  voiceDisabled = false,
-  voiceConnecting = false,
-}: RoomBodyProps) {
+export default function RoomBody() {
+  const { sessionStatus, voiceConnecting } = useRoomSession();
+  const { dockProps } = useDirectVoiceContext();
+
   return (
     <div className="relative flex min-h-0 flex-1 overflow-hidden bg-[#f5f1ec]">
       <div className="relative flex min-h-0 flex-1 flex-col bg-[#f5f1ec]">
         <RoomSecureStrip sessionStatus={sessionStatus} />
 
-        <RoomSessionDock dock={dock} />
+        <RoomSessionDock dock={dockProps} />
 
         <div
           className={cn(
@@ -105,34 +50,11 @@ export default function RoomBody({
             voiceConnecting && "blur-sm",
           )}
         >
-          <MessageArea
-            sessionStatus={sessionStatus}
-            sessionSummary={sessionSummary}
-            messages={messages}
-            timeline={timeline}
-            expertData={expertData}
-            typingStatus={typingStatus}
-            user={user}
-          />
+          <MessageArea />
         </div>
 
-        <ChatFooter
-          sessionStatus={sessionStatus}
-          disabled={voiceDisabled}
-          pendingAttachment={pendingAttachment}
-          removePendingAttachment={removePendingAttachment}
-          handleFileUpload={handleFileUpload}
-          fileInputRef={fileInputRef}
-          uploading={uploading}
-          uploadProgress={uploadProgress}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-          handleSendMessage={handleSendMessage}
-          handleInputTyping={handleInputTyping}
-        />
+        <ChatFooter />
       </div>
-
-      {/* <Sidebar expertData={expertData} /> */}
     </div>
   );
 }

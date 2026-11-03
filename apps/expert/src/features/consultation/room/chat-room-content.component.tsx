@@ -163,23 +163,22 @@ export function ChatRoomContent({
       sessionStatus === "completed" ||
       consultationState?.state === "completed"
     ) return;
-    if (paused && paused.reason !== "billing_hold") return;
+    if (paused && (paused.reason === "billing_hold" || paused.reason === "insufficient_balance")) return;
     if (!isVoiceMode) return;
     if (voiceActive || voiceBusy) return;
     if (!identity) return;
     if (!newFlowId) return;
     if (!micConfirmed) return;
     const flowId = newFlowId;
-    if (!voiceToken?.token || !voiceToken?.channelName) return;
     console.info("[ExpertVoice] requesting Agora join", {
       consultationId: flowId,
       identity,
-      roomName: voiceToken.channelName,
+      roomName: voiceToken?.channelName ?? `consultation:voice:${flowId}`,
     });
     void voiceJoin(flowId, identity, voiceToken, () => {
       console.info("[ExpertVoice] Agora join succeeded", {
         consultationId: flowId,
-        roomName: voiceToken.channelName,
+        roomName: voiceToken?.channelName ?? `consultation:voice:${flowId}`,
       });
       media.setLocalReady();
     });
@@ -216,8 +215,7 @@ export function ChatRoomContent({
     const shouldLeave =
       sessionStatus === "completed" ||
       consultationState?.state === "completed" ||
-      !isVoiceMode ||
-      (paused !== null && paused.reason !== "billing_hold");
+      !isVoiceMode;
     if (shouldLeave) {
       if (!hasLeftVoiceRef.current) {
         hasLeftVoiceRef.current = true;
@@ -226,7 +224,7 @@ export function ChatRoomContent({
     } else {
       hasLeftVoiceRef.current = false;
     }
-  }, [sessionStatus, consultationState?.state, isVoiceMode, paused, voiceLeave]);
+  }, [sessionStatus, consultationState?.state, isVoiceMode, voiceLeave]);
 
   const resolvedRatePerMinute = consultationState?.ratePerMinute || 30;
   const dockKind: ExpertSessionKind = mode === "video" ? "video" : "voice";

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "@/i18n/navigation";
 import type { IExpert } from "@repo/lib";
 import { cn } from "@repo/design/cn";
 import { SidebarHeader } from "./sidebar-header";
@@ -11,40 +10,22 @@ import { SessionTimersSection } from "./session-timers-section";
 import { UpgradeConsultationSection } from "./upgrade-consultation-section";
 import { EndConsultationAction } from "./end-consultation-action";
 import { ContinueConsultationSection } from "./continue-consultation-section";
-
-export type ConsultationSidebarProps = {
-  expertData: IExpert;
-  sessionStatus?: string;
-  formatTime: (time: number) => string;
-  elapsedTime: number;
-  timeLeft: number;
-  handleEndChat: (force?: boolean) => void;
-  isWarning?: boolean;
-  onUpgrade?: (mode: "voice" | "video") => void;
-  isSessionEnded?: boolean;
-  consultationId: number | null;
-  className?: string;
-};
+import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
+import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
+import { formatTime } from "../../utils/format-time";
 
 /**
  * 25% (280-320px) persistent desktop sidebar for expert details, consultation controls,
  * grouped session timers, mode upgrade actions, and end consultation button.
  *
- * @param props - ConsultationSidebarProps
  * @returns Desktop sidebar element.
  */
-export function ConsultationSidebar({
-  expertData,
-  formatTime,
-  elapsedTime,
-  timeLeft,
-  handleEndChat,
-  isWarning = false,
-  onUpgrade,
-  isSessionEnded = false,
-  consultationId,
-  className,
-}: ConsultationSidebarProps) {
+export function ConsultationSidebar({ className }: { className?: string } = {}) {
+  const { expertData, roomConsultationId } = useRoomIdentity();
+  const { elapsedTime, timeLeft, isSessionEnded } = useRoomSession();
+  const { handleUpgrade } = useSwitchToVoiceContext();
+
   if (!expertData) return null;
 
   return (
@@ -64,20 +45,22 @@ export function ConsultationSidebar({
         formatTime={formatTime}
         elapsedTime={elapsedTime}
         timeLeft={timeLeft}
-        isWarning={isWarning}
       />
 
       {isSessionEnded ? (
         <ContinueConsultationSection
           expertData={expertData}
-          consultationId={consultationId}
+          consultationId={roomConsultationId}
         />
       ) : (
         <>
-          <UpgradeConsultationSection expertData={expertData} onUpgrade={onUpgrade} />
+          <UpgradeConsultationSection
+            expertData={expertData}
+            onUpgrade={handleUpgrade}
+          />
 
           <div className="mt-auto pt-4 border-t border-[#f0ebe3]">
-            <EndConsultationAction handleEndChat={handleEndChat} />
+            <EndConsultationAction />
           </div>
         </>
       )}

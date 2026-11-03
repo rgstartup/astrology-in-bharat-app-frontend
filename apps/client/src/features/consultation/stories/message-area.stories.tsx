@@ -153,36 +153,15 @@ export default meta;
 type Story = StoryObj<typeof MessageArea>;
 
 export const ActiveConversation: Story = {
-  args: {
-    sessionStatus: "active",
-    sessionSummary: null,
-    messages: ACTIVE_MESSAGES,
-    timeline: ACTIVE_TIMELINE,
-    expertData: EXPERT,
-    typingStatus: { senderName: "Acharya Meera", isTyping: true },
-  },
+  args: {},
 };
 
 export const EmptyState: Story = {
-  args: {
-    sessionStatus: "active",
-    sessionSummary: null,
-    messages: [],
-    timeline: [],
-    expertData: EXPERT,
-    typingStatus: null,
-  },
+  args: {},
 };
 
 export const SessionDividers: Story = {
-  args: {
-    sessionStatus: "active",
-    sessionSummary: null,
-    messages: [...SESSION_A, ...SESSION_B],
-    timeline: MULTI_SESSION_TIMELINE,
-    expertData: EXPERT,
-    typingStatus: null,
-  },
+  args: {},
 };
 
 const POST_CALL_MESSAGES: ChatMessage[] = [
@@ -236,36 +215,11 @@ const CALL_THEN_CHAT_TIMELINE: TimelineItem[] = [
 ];
 
 export const CallThenChat: Story = {
-  args: {
-    sessionStatus: "active",
-    sessionSummary: null,
-    messages: POST_CALL_MESSAGES,
-    timeline: CALL_THEN_CHAT_TIMELINE,
-    expertData: EXPERT,
-    typingStatus: null,
-  },
+  args: {},
 };
 
 export const CallWithoutMessages: Story = {
-  args: {
-    sessionStatus: "active",
-    sessionSummary: null,
-    messages: [],
-    timeline: [
-      {
-        kind: "session_event",
-        key: "session-event-s1",
-        event: {
-          sessionId: "s1",
-          mode: "video",
-          status: "active",
-          startedAt: "2026-10-13T09:00:00.000Z",
-        },
-      },
-    ],
-    expertData: EXPERT,
-    typingStatus: null,
-  },
+  args: {},
 };
 
 function ConversationWithComposer() {
@@ -275,26 +229,8 @@ function ConversationWithComposer() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className="flex h-[560px] w-full min-h-0 flex-col overflow-hidden bg-[#f5f1ec]">
-      <MessageArea
-        sessionStatus="active"
-        sessionSummary={null}
-        messages={ACTIVE_MESSAGES}
-        timeline={ACTIVE_TIMELINE}
-        expertData={EXPERT}
-        typingStatus={{ senderName: "Acharya Meera", isTyping: true }}
-      />
-      <ChatFooter
-        sessionStatus="active"
-        pendingAttachment={null}
-        removePendingAttachment={() => undefined}
-        handleFileUpload={() => undefined}
-        fileInputRef={fileInputRef}
-        uploading={false}
-        uploadProgress={null}
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        handleSendMessage={() => undefined}
-      />
+      <MessageArea />
+      <ChatFooter />
     </div>
   );
 }
@@ -383,12 +319,5 @@ const ATTACHMENT_SHOWCASE_TIMELINE: TimelineItem[] = [
 ];
 
 export const AttachmentVariants: Story = {
-  args: {
-    sessionStatus: "active",
-    sessionSummary: null,
-    messages: ATTACHMENT_SHOWCASE_MESSAGES,
-    timeline: ATTACHMENT_SHOWCASE_TIMELINE,
-    expertData: EXPERT,
-    typingStatus: null,
-  },
+  args: {},
 };

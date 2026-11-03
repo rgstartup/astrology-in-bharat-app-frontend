@@ -4,12 +4,17 @@ import { useCallback, useRef, useState } from "react";
 import type { SomeoneElseData } from "@/actions/chat";
 import type { ConsultationWaitStep } from "../../components/consultation-wait-stepper.component";
 import type { ConsultationRequestOptions } from "./types";
+import { executeConsultationRequest } from "../../application";
 import { useConsultationRequestApi } from "./use-consultation-request-api";
 import { useConsultationRequestDispatch } from "./use-consultation-request-dispatch";
 import { useConsultationMicrophone } from "./use-consultation-microphone";
 
 /**
  * Coordinates consultation request state, microphone access, API initiation, and verdict dispatch.
+ *
+ * Thin React glue over the application layer (`executeConsultationRequest`).
+ * All business rules (mic gate, API retry, socket request, verdict wait,
+ * room routing) live in the plain orchestration function.
  *
  * @param options - Expert, mode, and callbacks for balance and verdict outcomes.
  * @returns Request state and handlers consumed by the consultation prep flow.
@@ -65,7 +70,7 @@ export function useConsultationRequest({
       onVerdictResolved,
     });
 
-  const executeInitiate = useConsultationRequestApi({
+  const initiateApi = useConsultationRequestApi({
     expertId,
     mode,
     consultationId,
@@ -74,8 +79,18 @@ export function useConsultationRequest({
     setActionLoading,
     setExistingChatDetails,
     getAbortController,
-    sendConsultationRequest,
   });
+
+  const deps = {
+    checkMicPermission,
+    clearMicDenied,
+    isAborted: isRequestAborted,
+    beginAbort: () => {
+      abortControllerRef.current = new AbortController();
+    },
+    initiateApi,
+    sendRequestAndWaitVerdict: sendConsultationRequest,
+  };
 
   const initiate = useCallback(
     async (metadata: SomeoneElseData | null) => {
@@ -97,17 +112,23 @@ export function useConsultationRequest({
         setIsWaiting(false);
         return;
       }
-      await executeInitiate(metadata);
+
+      const result = await executeConsultationRequest(deps, metadata, mode);
+      setIsWaiting(false);
+      if (result?.verdict === "accepted") {
+        // Room routing already handled inside sendRequestAndWaitVerdict.
+        return;
+      }
     },
-    [checkMicPermission, clearMicDenied, executeInitiate, mode],
+    [checkMicPermission, deps, mode],
   );
 
   const handleGrantMic = useCallback(async () => {
     setWaitStep("mic_access");
     clearMicDenied();
     const granted = await checkMicPermission();
-    if (granted) await executeInitiate(pendingMetadataRef.current);
-  }, [checkMicPermission, clearMicDenied, executeInitiate]);
+    if (granted) await initiate(pendingMetadataRef.current);
+  }, [checkMicPermission, clearMicDenied, initiate]);
 
   const cancelWaiting = useCallback(() => {
     abortControllerRef.current?.abort();

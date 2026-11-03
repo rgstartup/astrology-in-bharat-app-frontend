@@ -20,19 +20,15 @@ interface ConsultationRequestApiOptions {
   setActionLoading: (loading: boolean) => void;
   setExistingChatDetails: (details: ExistingConsultationDetails) => void;
   getAbortController: () => AbortController;
-  sendConsultationRequest: (
-    consultationId: number,
-    sessionId: number,
-    expiresInSec: number,
-    maxMinutes?: number,
-  ) => Promise<void>;
 }
 
 /**
  * Initiates a consultation through apiV2 and handles retry and domain errors.
+ * Returns consultation metadata on success; returns null on failure/abort so
+ * the application layer can decide whether to proceed to the socket request.
  *
  * @param options - Consultation inputs and state/request callbacks.
- * @returns A callback that starts the API portion of the request protocol.
+ * @returns A callback that runs the API initiation and returns metadata.
  */
 export function useConsultationRequestApi({
   expertId,
@@ -43,10 +39,14 @@ export function useConsultationRequestApi({
   setActionLoading,
   setExistingChatDetails,
   getAbortController,
-  sendConsultationRequest,
 }: ConsultationRequestApiOptions) {
   return useCallback(
-    async (metadata: SomeoneElseData | null) => {
+    async (metadata: SomeoneElseData | null): Promise<{
+      consultationId: number;
+      sessionId: number;
+      requestExpiresInSec: number;
+      maxMinutes?: number;
+    } | null> => {
       const controller = getAbortController();
       setActionLoading(true);
       try {
@@ -67,7 +67,7 @@ export function useConsultationRequestApi({
         );
         if (controller.signal.aborted) {
           setIsWaiting(false);
-          return;
+          return null;
         }
 
         const result: InitiateConsultationResult = apiRes.ok
@@ -107,7 +107,7 @@ export function useConsultationRequestApi({
           );
           if (controller.signal.aborted) {
             setIsWaiting(false);
-            return;
+            return null;
           }
 
           const retry: InitiateConsultationResult = retryRes.ok
@@ -126,20 +126,19 @@ export function useConsultationRequestApi({
               onInsufficientBalance();
             else toast.error(retry.message);
             setIsWaiting(false);
-            return;
+            return null;
           }
 
           if (controller.signal.aborted) {
             setIsWaiting(false);
-            return;
+            return null;
           }
-          await sendConsultationRequest(
-            retry.data.consultationId,
-            retry.data.sessionId,
-            retry.data.requestExpiresInSec,
-            retry.data.maxMinutes,
-          );
-          return;
+          return {
+            consultationId: retry.data.consultationId,
+            sessionId: retry.data.sessionId,
+            requestExpiresInSec: retry.data.requestExpiresInSec,
+            maxMinutes: retry.data.maxMinutes,
+          };
         }
 
         if (!result.ok) {
@@ -150,40 +149,40 @@ export function useConsultationRequestApi({
             toast.error(
               "Expert is busy in a consultation. Please try again later.",
             );
-            return;
+            return null;
           }
           if (result.code === ConsultationErrorCode.INSUFFICIENT_BALANCE) {
             onInsufficientBalance();
-            return;
+            return null;
           }
           if (result.code === ConsultationErrorCode.PRICE_NOT_FOUND) {
             const label =
               mode === "voice" ? "voice consultations" : "chat consultations";
             toast.error(`This expert does not offer ${label}.`);
-            return;
+            return null;
           }
           if (result.code === ConsultationErrorCode.EXPERT_UNAVAILABLE) {
             toast.error(
               "This expert is currently unavailable. Please try again later.",
             );
-            return;
+            return null;
           }
           toast.error(
             result.message || "Failed to start consultation. Please try again.",
           );
-          return;
+          return null;
         }
 
         if (controller.signal.aborted) {
           setIsWaiting(false);
-          return;
+          return null;
         }
-        await sendConsultationRequest(
-          result.data.consultationId,
-          result.data.sessionId,
-          result.data.requestExpiresInSec,
-          result.data.maxMinutes,
-        );
+        return {
+          consultationId: result.data.consultationId,
+          sessionId: result.data.sessionId,
+          requestExpiresInSec: result.data.requestExpiresInSec,
+          maxMinutes: result.data.maxMinutes,
+        };
       } finally {
         setActionLoading(false);
       }
@@ -197,7 +196,6 @@ export function useConsultationRequestApi({
       setActionLoading,
       setExistingChatDetails,
       getAbortController,
-      sendConsultationRequest,
     ],
   );
 }

@@ -9,21 +9,15 @@ import {
   EmptyDescription,
   EmptyTitle,
 } from "@repo/design/shadcn";
-
-type RoomPendingBannerProps = {
-  sessionStatus: string;
-  expiresAt: string | null;
-};
+import { useRoomSession } from "../../providers/room-lifecycle.provider";
 
 /** Waterfall: only the pending-with-expiry state renders a banner. */
-export default function RoomPendingBanner({
-  sessionStatus,
-  expiresAt,
-}: RoomPendingBannerProps) {
+export default function RoomPendingBanner() {
+  const { sessionStatus, pendingExpiresAt } = useRoomSession();
   const router = useRouter();
 
   if (sessionStatus !== "pending") return null;
-  if (!expiresAt) return null;
+  if (!pendingExpiresAt) return null;
 
   return (
     <div className="flex shrink-0 justify-center bg-[#f5f1ec] px-4 pt-3">
@@ -34,7 +28,7 @@ export default function RoomPendingBanner({
         </EmptyDescription>
         <EmptyContent>
           <WaitingCountdown
-            expiresAt={expiresAt}
+            expiresAt={pendingExpiresAt}
             onExpire={() => router.push("/")}
           />
           <Button

@@ -9,6 +9,12 @@ import { VoiceHero } from "./voice-hero";
 import { VoiceControls } from "./voice-controls";
 import { VoiceTranscriptStrip } from "./voice-transcript-strip";
 import { VoiceRateNote } from "./voice-rate-note";
+import { formatTime } from "../../utils/format-time";
+import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
+import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomBilling } from "../../providers/room-lifecycle.provider";
+import { useRoomChat } from "../../providers/room-chat.provider";
+import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
 
 export type VoiceStageProps = {
   phase: VoicePhase;
@@ -182,10 +188,35 @@ function EndedBody(props: VoiceStageProps) {
  * - Right sidebar (timers, expert card, end action) is untouched; only
  *   its mode + upgrade sections flip to voice-active variants.
  *
- * @param props - Phase, expert identity, billing, transcript, and callbacks.
- * @returns Voice stage element.
+ * @returns Voice stage element (all values read from context).
  */
-export function VoiceStage(props: VoiceStageProps) {
+export function VoiceStage({ className }: { className?: string } = {}) {
+  const { expertData } = useRoomIdentity();
+  const { elapsedTime } = useRoomSession();
+  const { chatRate } = useRoomBilling();
+  const { messages } = useRoomChat();
+  const { voice, displayVoiceRate } = useSwitchToVoiceContext();
+
+  const props: VoiceStageProps = {
+    phase: voice.voicePhase,
+    expertName: expertData?.name ?? "Expert",
+    expertAvatar: expertData?.avatar ?? null,
+    elapsedText: formatTime(elapsedTime),
+    chatRate,
+    voiceRate: displayVoiceRate,
+    messages,
+    entry: "upgrade",
+    onBackToChat: voice.backToChat,
+    onEndVoice: voice.cancelVoice,
+    onCancelRequest: voice.cancelVoice,
+    onExpandChat: voice.backToChat,
+    muted: voice.muted,
+    onToggleMute: () => void voice.toggleMic(),
+    speakerMuted: voice.speakerMuted,
+    onToggleSpeaker: () => void voice.toggleSpeaker(),
+    className,
+  };
+
   if (props.phase === "requesting" || props.phase === "connecting") {
     return (
       <div

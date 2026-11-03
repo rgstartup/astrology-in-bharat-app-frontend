@@ -22,6 +22,11 @@ export { default as RoomLoadingState } from "./components/room/room-loading-stat
 export {
   RoomLifecycleProvider,
   useRoomLifecycle,
+  useRoomIdentity,
+  useRoomSession,
+  useRoomBilling,
+  useRoomReview,
+  useRoomActions,
   RoomChatProvider,
   useRoomChat,
   RechargeDialogProvider,
@@ -69,7 +74,7 @@ export {
   toChatMessage,
   toRoomMessages,
 } from "./utils/message-keys";
-export { resolveRoomMode } from "./utils/session-mode";
+export { resolveRoomMode } from "./application/use-consultation-mode";
 export { formatTime } from "./utils/format-time";
 
 // Voice domain – API functions and key components

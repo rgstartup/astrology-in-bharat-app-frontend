@@ -5,6 +5,13 @@ export { resolveModePrice } from "@/lib/pricing";
 export { requestConsultationPrep } from "./api";
 export type { RequestConsultationDeps } from "./api";
 export {
+  executeConsultationRequest,
+} from "./application";
+export type {
+  ExecuteConsultationRequestDeps,
+  ExecuteConsultationRequestResult,
+} from "./application";
+export {
   ConsultationModeIcon,
   ConsultationModeBadge,
   getConsultationModeLabel,

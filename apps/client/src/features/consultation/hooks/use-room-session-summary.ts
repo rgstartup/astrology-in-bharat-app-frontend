@@ -1,60 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { type IExpert } from "@repo/lib";
 import type { ChatSession } from "@/lib/types";
 import type { ConsultationEndedPayload } from "@/realtime/types/consultation";
 import type { useConsultation } from "@/realtime/hooks/use-consultation";
-import { resolveChatRate, resolveModePrice } from "@/lib/pricing";
-
-/**
- * Normalizes backend end reasons into client summary keys.
- *
- * @param reason - Raw reason string from socket or server.
- * @returns Clean reason token.
- */
-const normalizeEndReason = (reason: string | undefined): string | undefined => {
-  if (!reason) return undefined;
-  if (reason === "balance_exhausted") return "insufficient_balance";
-  return reason;
-};
-
-/**
- * Computes session total cost using consumed amount or elapsed duration.
- *
- * @param consumed - Consumed amount reported by socket pause/verdict.
- * @param elapsedSecs - Total elapsed seconds from timer.
- * @param ratePerMin - Per-minute rate.
- * @returns Total charged amount.
- */
-const calculateSessionCost = (
-  consumed: number,
-  elapsedSecs: number,
-  ratePerMin: number,
-): number => {
-  if (consumed > 0) return Math.round(consumed);
-  if (elapsedSecs > 0 && ratePerMin > 0) {
-    const minutes = Math.ceil(elapsedSecs / 60);
-    return Math.round(minutes * ratePerMin);
-  }
-  return 0;
-};
-
-/**
- * Computes remaining wallet balance after deducting session cost.
- *
- * @param currentBalance - Starting wallet balance from authStore.
- * @param sessionCost - Total session cost.
- * @returns Net remaining balance.
- */
-const calculateRemainingBalance = (
-  currentBalance: number,
-  sessionCost: number,
-): number => {
-  const net = currentBalance - sessionCost;
-  if (net < 0) return 0;
-  return net;
-};
+import { buildSessionSummary } from "../application/consultation-billing";
 
 type RoomSessionSummaryParams = {
   expertData: IExpert;
@@ -81,65 +32,20 @@ export function useRoomSessionSummary({
   isFree,
   freeMinutes,
 }: RoomSessionSummaryParams) {
-  const chatRate = useMemo(() => resolveChatRate(expertData), [expertData]);
-
-  // Summary bills at the ended mode's rate (a voice call ends → voice rate),
-  // not chat; `chatRate` stays chat-only for the voice-stage rate note.
-  const endedMode = endedVerdict?.mode;
-  const summaryRate = useMemo(
-    () =>
-      endedMode === "voice" || endedMode === "video"
-        ? resolveModePrice(expertData, endedMode)
-        : chatRate,
-    [expertData, endedMode, chatRate],
-  );
-
   const [consumedAmount, setConsumedAmount] = useState(0);
   useEffect(() => {
     if (pausedState) setConsumedAmount(Number(pausedState.consumedAmount) || 0);
   }, [pausedState]);
 
-  const sessionSummary = useMemo(() => {
-    if (!endedVerdict) return null;
-    const reason = normalizeEndReason(endedVerdict.reason);
-    let finalDuration = elapsedTime;
-    if (
-      typeof endedVerdict.totalDurationSeconds === "number" &&
-      endedVerdict.totalDurationSeconds > 0
-    ) {
-      finalDuration = endedVerdict.totalDurationSeconds;
-    }
-    const totalCost = calculateSessionCost(
-      consumedAmount,
-      finalDuration,
-      summaryRate,
-    );
-    const remainingBalance = calculateRemainingBalance(balance, totalCost);
-    const durationMinutes = finalDuration > 0 ? finalDuration / 60 : 0;
-
-    return {
-      status: "completed",
-      reason,
-      duration_seconds: finalDuration,
-      durationMins: durationMinutes,
-      pricePerMinute: summaryRate,
-      price_per_minute: summaryRate,
-      totalCost,
-      total_cost: totalCost,
-      remainingBalance,
-      isFree,
-      is_free: isFree,
-      freeMinutes,
-    } as unknown as ChatSession;
-  }, [
+  const { chatRate, sessionSummary } = buildSessionSummary({
+    expertData,
     endedVerdict,
-    consumedAmount,
+    pausedState,
     elapsedTime,
-    summaryRate,
     balance,
     isFree,
     freeMinutes,
-  ]);
+  });
 
   return { chatRate, sessionSummary };
 }

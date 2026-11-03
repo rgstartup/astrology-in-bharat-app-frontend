@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "@/i18n/navigation";
 import type { IExpert } from "@repo/lib";
 import {
   Sheet,
@@ -16,43 +15,30 @@ import { SessionTimersSection } from "./session-timers-section";
 import { UpgradeConsultationSection } from "./upgrade-consultation-section";
 import { EndConsultationAction } from "./end-consultation-action";
 import { ContinueConsultationSection } from "./continue-consultation-section";
-
-export type MobileSidebarDrawerProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  expertData: IExpert;
-  sessionStatus?: string;
-  formatTime: (time: number) => string;
-  elapsedTime: number;
-  timeLeft: number;
-  handleEndChat: (force?: boolean) => void;
-  isWarning?: boolean;
-  router: ReturnType<typeof useRouter>;
-  onUpgrade?: (mode: "voice" | "video") => void;
-  isSessionEnded?: boolean;
-  consultationId: number | null;
-};
+import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
+import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomActions } from "../../providers/room-lifecycle.provider";
+import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
+import { formatTime } from "../../utils/format-time";
 
 /**
  * Mobile drawer for the consultation sidebar, expanding from left sheet on viewports < 768px.
  *
- * @param props - MobileSidebarDrawerProps
+ * @param props - Drawer open state and toggle handler.
  * @returns Slide-over drawer element.
  */
 export function MobileSidebarDrawer({
   open,
   onOpenChange,
-  expertData,
-  formatTime,
-  elapsedTime,
-  timeLeft,
-  handleEndChat,
-  isWarning = false,
-  router,
-  onUpgrade,
-  isSessionEnded = false,
-  consultationId,
-}: MobileSidebarDrawerProps) {
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { expertData, roomConsultationId } = useRoomIdentity();
+  const { elapsedTime, timeLeft, isSessionEnded } = useRoomSession();
+  const { handleEndChat } = useRoomActions();
+  const { handleUpgrade } = useSwitchToVoiceContext();
+
   if (!expertData) return null;
 
   return (
@@ -66,7 +52,7 @@ export function MobileSidebarDrawer({
         </SheetHeader>
 
         <div className="flex flex-col gap-4">
-          <SidebarHeader router={router} />
+          <SidebarHeader router={require("@/i18n/navigation").useRouter()} />
 
           <ExpertProfileSection expertData={expertData} />
 
@@ -76,19 +62,18 @@ export function MobileSidebarDrawer({
             formatTime={formatTime}
             elapsedTime={elapsedTime}
             timeLeft={timeLeft}
-            isWarning={isWarning}
           />
 
           {isSessionEnded ? (
             <ContinueConsultationSection
               expertData={expertData}
-              consultationId={consultationId}
+              consultationId={roomConsultationId}
             />
           ) : (
             <>
               <UpgradeConsultationSection
                 expertData={expertData}
-                onUpgrade={onUpgrade}
+                onUpgrade={handleUpgrade}
               />
 
               <div className="pt-4 border-t border-[#f0ebe3]">

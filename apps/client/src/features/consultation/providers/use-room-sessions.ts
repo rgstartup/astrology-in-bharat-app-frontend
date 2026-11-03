@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { getChatHistoryAction, type ChatHistorySessionDto } from "@/actions/chat";
+import { computeSessionId } from "../application/consultation-sessions";
 
 interface UseRoomSessionsParams {
   roomConsultationId: number | null;
@@ -28,12 +29,10 @@ export function useRoomSessions({
 }: UseRoomSessionsParams): UseRoomSessionsReturn {
   const [sessions, setSessions] = useState<ChatHistorySessionDto[]>(initialSessions);
 
-  const sessionId = useMemo<string | null>(() => {
-    const source = sessions.length > 0 ? sessions : initialSessions;
-    const active = source.find((s) => s.status === "active");
-    const latest = active ?? source[source.length - 1];
-    return latest ? String(latest.sessionId) : null;
-  }, [sessions, initialSessions]);
+  const sessionId = useCallback(
+    () => computeSessionId({ sessions, initialSessions }),
+    [sessions, initialSessions],
+  )();
 
   const refreshSessions = useCallback(async () => {
     if (!roomConsultationId) return;

@@ -82,6 +82,7 @@ export function useDirectVoice(
   const rtc = useVoiceSession();
   const clearConsultationRoom = useConsultationRoomStore((s) => s.clear);
   const resetVoiceSession = useVoiceSessionStore((s) => s.reset);
+  const clearVoiceSession = useVoiceSessionStore((s) => s.setSession);
   const joinedRef = useRef<number | null>(null);
   const joinAbortedRef = useRef(false);
 
@@ -270,6 +271,9 @@ export function useDirectVoice(
     const shouldLeave = joinedRef.current !== null || !joinAbortedRef.current;
     joinedRef.current = null;
     joinAbortedRef.current = true;
+    // Clear the persisted rejoin intent so a hard refresh doesn't try to
+    // rejoin a consultation that has already ended.
+    void clearVoiceSession(null, null, null);
     if (!shouldLeave) return;
     void rtcRef.current.leave().catch(() => undefined);
   }, [ended]);

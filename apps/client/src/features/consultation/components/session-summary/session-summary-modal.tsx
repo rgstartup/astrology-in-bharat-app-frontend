@@ -9,7 +9,11 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@repo/design/shadcn";
-import { Avatar, AvatarFallback, AvatarImage } from "@repo/design/shadcn";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@repo/design/shadcn";
 import { Button } from "@repo/design/shadcn";
 import SessionThankYou, {
   type SessionThankYouExpert,
@@ -22,27 +26,15 @@ import BillingBreakdown, { type BillingSummary } from "./billing-breakdown";
 import ReviewForm from "./review-form";
 import SummaryActions from "./summary-actions";
 import TerminationNotice from "./termination-notice";
+import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
+import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomBilling } from "../../providers/room-lifecycle.provider";
+import { useRoomReview } from "../../providers/room-lifecycle.provider";
+import { useRoomActions } from "../../providers/room-lifecycle.provider";
 
 export type SessionSummary = BillingSummary & {
   reason?: string;
   message?: string;
-};
-
-export type SessionSummaryModalProps = {
-  showModal: boolean;
-  onClose?: () => void;
-  isDarkMode?: boolean;
-  sessionSummary: SessionSummary | null;
-  freeMinutes: number;
-  reviewRating: number;
-  setReviewRating: (val: number) => void;
-  reviewComment: string;
-  setReviewComment: (val: string) => void;
-  reviewSubmitted: boolean;
-  setReviewSubmitted: (val: boolean) => void;
-  sessionId: string | null;
-  expertData: SessionThankYouExpert;
-  router: { push: (path: string) => void };
 };
 
 type ModalRightPanelProps = {
@@ -209,34 +201,21 @@ function MobileSummaryFooter({
  *
  * Responsive behavior:
  * - Desktop: 2-column split (Left: Thank You & details, Right: Billing receipt & review form).
- * - Mobile: Top-of-fold prioritized presentation: Compact status header $\rightarrow$ Immediate Session Summary $\rightarrow$ Review Form $\rightarrow$ Exit action.
+ * - Mobile: Top-of-fold prioritized presentation: Compact status header → Immediate Session Summary → Review Form → Exit action.
  *
- * @param props - Modal properties and review callbacks.
  * @returns Dialog modal JSX.
  */
-export default function SessionSummaryModal({
-  showModal,
-  onClose,
-  sessionSummary,
-  freeMinutes,
-  reviewRating,
-  setReviewRating,
-  reviewComment,
-  setReviewComment,
-  reviewSubmitted,
-  setReviewSubmitted,
-  sessionId,
-  expertData,
-  router,
-}: SessionSummaryModalProps) {
+export default function SessionSummaryModal() {
+  const { showModal } = useRoomActions();
+  const { sessionSummary } = useRoomBilling();
+  const { reviewRating, setReviewRating, reviewComment, setReviewComment, reviewSubmitted, setReviewSubmitted } = useRoomReview();
+  const { sessionId } = useRoomSession();
+  const { expertData, router } = useRoomIdentity();
+
   const status = sessionSummary?.status;
   const reason = sessionSummary?.reason;
 
   const handleClose = () => {
-    if (onClose) {
-      onClose();
-      return;
-    }
     router.push("/");
   };
 
@@ -265,9 +244,9 @@ export default function SessionSummaryModal({
               reason={reason}
               message={sessionSummary?.message}
               sessionId={sessionId}
-              expertData={expertData}
+              expertData={expertData as SessionThankYouExpert}
               onClose={handleClose}
-              router={router}
+              router={router as { push: (path: string) => void }}
             />
           </div>
 
@@ -277,15 +256,15 @@ export default function SessionSummaryModal({
               {/* Mobile compact header */}
               <MobileSummaryHeader
                 status={status}
-                expertData={expertData}
+                expertData={expertData as SessionThankYouExpert}
               />
 
               {/* Session breakdown & review */}
               <ModalRightPanel
                 status={status}
                 reason={reason}
-                sessionSummary={sessionSummary}
-                freeMinutes={freeMinutes}
+                sessionSummary={sessionSummary as SessionSummary | null}
+                freeMinutes={0}
                 reviewRating={reviewRating}
                 setReviewRating={setReviewRating}
                 reviewComment={reviewComment}
@@ -293,8 +272,8 @@ export default function SessionSummaryModal({
                 reviewSubmitted={reviewSubmitted}
                 setReviewSubmitted={setReviewSubmitted}
                 sessionId={sessionId}
-                expertData={expertData}
-                router={router}
+                expertData={expertData as SessionThankYouExpert}
+                router={router as { push: (path: string) => void }}
                 handleClose={handleClose}
               />
 

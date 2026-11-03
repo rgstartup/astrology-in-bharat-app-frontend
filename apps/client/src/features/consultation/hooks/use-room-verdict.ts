@@ -6,11 +6,10 @@ import { toast } from "@repo/design/shadcn";
 import { useConsultationRoomStore } from "@/features/consultation/stores/consultation-room.store";
 import { useVoiceSessionStore } from "@/features/consultation/stores/voice-session.store";
 import type { ConsultationEndedPayload } from "@/realtime/types/consultation";
+import { determineSessionStatus, shouldRedirect } from "../application/consultation-verdict";
 
 export type RoomSessionStatus = "pending" | "active" | "completed";
 
-const TERMINAL_REDIRECT = ["rejected", "cancelled", "expired", "missed"];
-// Completed is NOT a redirect - user should see history/summary
 const COMPLETED_STATES = ["completed"];
 
 type VerdictDeps = {
@@ -44,11 +43,8 @@ export const useRoomVerdict = ({
       decision,
       joinedStatus,
     });
-    if (
-      decision === "accepted" ||
-      (joinedStatus &&
-        (joinedStatus === "accepted" || joinedStatus === "active"))
-    ) {
+    const next = determineSessionStatus({ decision, endedVerdict, joinedStatus });
+    if (next === "active") {
       console.log("[VoiceConsultation] sessionStatus -> active", {
         reason:
           decision === "accepted"
@@ -58,8 +54,11 @@ export const useRoomVerdict = ({
       setSessionStatus("active");
       // Continue-consultation re-accept clears a prior ended-state dialog.
       setShowModal(false);
+    } else if (next === "completed") {
+      setSessionStatus("completed");
+      setShowModal(true);
     }
-  }, [decision, joinedStatus]);
+  }, [decision, endedVerdict, joinedStatus]);
 
   useEffect(() => {
     if (!joinedStatus) return;
@@ -73,7 +72,7 @@ export const useRoomVerdict = ({
       return;
     }
     // Only redirect for truly terminal states where there's no history to view
-    if (TERMINAL_REDIRECT.includes(joinedStatus)) router.push("/");
+    if (shouldRedirect(joinedStatus)) router.push("/");
   }, [joinedStatus, router]);
 
   useEffect(() => {

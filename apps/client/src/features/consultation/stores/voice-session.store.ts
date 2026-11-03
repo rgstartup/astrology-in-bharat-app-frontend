@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import type { RtcSession } from "@repo/rtc";
 
 export interface AcceptTimeVoiceToken {
@@ -13,10 +14,16 @@ export interface AcceptTimeVoiceToken {
 export interface VoiceSessionStoreState {
   /** Active WebRTC session instantiated via @repo/rtc. */
   session: RtcSession | null;
-  /** Consultation ID associated with the active session. */
+  /** Consultation ID associated with the active session (persisted for hard-refresh rejoin). */
   consultationId: number | null;
+  /** Client identity used to join the Agora channel (persisted for hard-refresh rejoin). */
+  identity: string | null;
   /** Accept-time Agora credentials keyed by consultation until the RTC join consumes them. */
   voiceTokensByConsultationId: Record<number, AcceptTimeVoiceToken>;
+  /** ID of the consultation currently in the process of joining, to prevent race conditions. */
+  joiningConsultationId: number | null;
+  /** Sets or clears the in-flight joining consultation ID. */
+  setJoiningConsultationId: (id: number | null) => void;
   /** Retain an accept-time token for the RTC session responsible for consuming it. */
   setVoiceToken: (
     consultationId: number,
@@ -33,6 +40,7 @@ export interface VoiceSessionStoreState {
   setSession: (
     session: RtcSession | null,
     consultationId?: number | null,
+    identity?: string | null,
   ) => void;
   /**
    * Detaches the session reference without disconnecting network media.
@@ -71,10 +79,14 @@ export interface VoiceSessionStoreState {
  * Prevents WebRTC media teardown and renegotiation when navigating from
  * the waiting lobby modal into `/consultation/[id]`.
  */
-export const useVoiceSessionStore = create<VoiceSessionStoreState>(
-  (set, get) => ({
+export const useVoiceSessionStore = create<VoiceSessionStoreState>()(
+  persist(
+    (set, get) => ({
     session: null,
     consultationId: null,
+    identity: null,
+    joiningConsultationId: null,
+    setJoiningConsultationId: (joiningConsultationId) => set({ joiningConsultationId }),
     voiceTokensByConsultationId: {},
     setVoiceToken: (consultationId, token) =>
       set((state) => ({
@@ -96,8 +108,8 @@ export const useVoiceSessionStore = create<VoiceSessionStoreState>(
       }
       return token;
     },
-    setSession: (session, consultationId = null) =>
-      set({ session, consultationId }),
+    setSession: (session, consultationId = null, identity = null) =>
+      set({ session, consultationId, identity }),
     clearSession: () => {
       // Always delegate to leaveAndClearSession to ensure track teardown
       // We fire-and-forget here; callers needing completion should use leaveAndClearSession directly
@@ -107,11 +119,12 @@ export const useVoiceSessionStore = create<VoiceSessionStoreState>(
     },
     leaveAndClearSession: async (expectedSession) => {
       const current = get().session;
+      if (!current && !expectedSession) return;
       if (expectedSession !== undefined && current !== expectedSession) {
         await expectedSession?.leave().catch(() => undefined);
         return;
       }
-      set({ session: null, consultationId: null });
+      set({ session: null, consultationId: null, joiningConsultationId: null });
       const session = expectedSession ?? current;
       if (session) {
         await session.leave().catch(() => undefined);
@@ -127,7 +140,7 @@ export const useVoiceSessionStore = create<VoiceSessionStoreState>(
         // adapter-level access. This is a safety net.
         current.leave().catch(() => undefined);
       }
-      set({ session: null, consultationId: null });
+      set({ session: null, consultationId: null, identity: null, joiningConsultationId: null });
     },
     reset: async () => {
       const current = get().session;
@@ -138,7 +151,13 @@ export const useVoiceSessionStore = create<VoiceSessionStoreState>(
       if (current) {
         await current.leave().catch(() => undefined);
       }
-      set({ session: null, consultationId: null, voiceTokensByConsultationId: {} });
+      set({
+          session: null,
+          consultationId: null,
+          identity: null,
+          joiningConsultationId: null,
+          voiceTokensByConsultationId: {},
+        });
       console.log("[VoiceConsultation] store reset completed — session=null, tokens cleared");
     },
     clearVoiceTokens: () => {
@@ -146,5 +165,15 @@ export const useVoiceSessionStore = create<VoiceSessionStoreState>(
       set({ voiceTokensByConsultationId: {} });
       console.log("[VoiceConsultation] store clearVoiceTokens completed");
     },
-  }),
+    }),
+    {
+      name: "astrology-voice-session-storage",
+      storage: createJSONStorage(() => sessionStorage),
+      partialize: (state) => ({
+        consultationId: state.consultationId,
+        identity: state.identity,
+      }),
+    }
+  )
 );
+

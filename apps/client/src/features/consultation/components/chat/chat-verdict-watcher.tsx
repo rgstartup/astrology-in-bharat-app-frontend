@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
+import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
+import { useRoomActions } from "../../providers/room-lifecycle.provider";
 
 type ConsultationDecision = "waiting" | "accepted" | "rejected" | "cancelled";
 
@@ -28,13 +30,9 @@ function VerdictCard({ onDismiss }: { onDismiss: () => void }) {
  * `decision` is passed in — the room already owns the single consultation
  * subscription (useConsultation owns lifecycle; useChat joins the chat room only).
  */
-export function ChatVerdictWatcher({
-  consultationId,
-  decision,
-}: {
-  consultationId: number | null;
-  decision: ConsultationDecision;
-}) {
+export function ChatVerdictWatcher() {
+  const { roomConsultationId } = useRoomIdentity();
+  const { decision } = useRoomActions();
   const router = useRouter();
   const [dismissed, setDismissed] = useState(false);
 
@@ -46,7 +44,7 @@ export function ChatVerdictWatcher({
     return () => clearTimeout(timer);
   }, [decision, dismissed, router]);
 
-  if (!consultationId || decision !== "rejected" || dismissed) return null;
+  if (!roomConsultationId || decision !== "rejected" || dismissed) return null;
 
   const handleDismiss = () => {
     setDismissed(true);

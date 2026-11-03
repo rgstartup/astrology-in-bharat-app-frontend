@@ -287,49 +287,52 @@ function ExpandToggle({
  * @param props - Active kind and optional switch handlers.
  * @returns Dropdown menu element.
  */
-function SessionModeDropdown({
-  kind,
-  onSwitchToChat,
-  onUpgradeToVideo,
-  onSwitchToVoice,
-}: {
-  kind: SessionKind;
-  onSwitchToChat?: () => void;
-  onUpgradeToVideo?: () => void;
-  onSwitchToVoice?: () => void;
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          size="icon"
-          variant="outline"
-          aria-label="Session options"
-          className="size-9 shrink-0 rounded-full border-[#d3cec6] bg-white text-[#111111] hover:bg-[#f5f1ec]"
-        >
-          <Menu className="size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem onSelect={onSwitchToChat} disabled={!onSwitchToChat}>
-          Switch to chat
-        </DropdownMenuItem>
-        {kind === "voice" ? (
-          <DropdownMenuItem
-            onSelect={onUpgradeToVideo}
-            disabled={!onUpgradeToVideo}
-          >
-            Upgrade to video
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem onSelect={onSwitchToVoice} disabled={!onSwitchToVoice}>
-            Switch to voice
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
+// function SessionModeDropdown({
+//   kind,
+//   onSwitchToChat,
+//   onUpgradeToVideo,
+//   onSwitchToVoice,
+// }: {
+//   kind: SessionKind;
+//   onSwitchToChat?: () => void;
+//   onUpgradeToVideo?: () => void;
+//   onSwitchToVoice?: () => void;
+// }) {
+//   return (
+//     <DropdownMenu>
+//       <DropdownMenuTrigger asChild>
+//         <Button
+//           size="icon"
+//           variant="outline"
+//           aria-label="Session options"
+//           className="size-9 shrink-0 rounded-full border-[#d3cec6] bg-white text-[#111111] hover:bg-[#f5f1ec]"
+//         >
+//           <Menu className="size-4" />
+//         </Button>
+//       </DropdownMenuTrigger>
+//       <DropdownMenuContent>
+//         <DropdownMenuItem onSelect={onSwitchToChat} disabled={!onSwitchToChat}>
+//           Switch to chat
+//         </DropdownMenuItem>
+//         {kind === "voice" ? (
+//           <DropdownMenuItem
+//             onSelect={onUpgradeToVideo}
+//             disabled={!onUpgradeToVideo}
+//           >
+//             Upgrade to video
+//           </DropdownMenuItem>
+//         ) : (
+//           <DropdownMenuItem
+//             onSelect={onSwitchToVoice}
+//             disabled={!onSwitchToVoice}
+//           >
+//             Switch to voice
+//           </DropdownMenuItem>
+//         )}
+//       </DropdownMenuContent>
+//     </DropdownMenu>
+//   );
+// }
 
 /**
  * Requesting-phase dock actions: cancel only.
@@ -438,12 +441,12 @@ export function SessionDock({
           speakerMuted={speakerMuted}
           onToggle={onToggleSpeaker}
         />
-        <SessionModeDropdown
+        {/* <SessionModeDropdown
           kind={kind}
           onSwitchToChat={onSwitchToChat}
           onUpgradeToVideo={onUpgradeToVideo}
           onSwitchToVoice={onSwitchToVoice}
-        />
+        /> */}
         <ExpandToggle
           expanded={expanded}
           onToggle={onToggleExpand}

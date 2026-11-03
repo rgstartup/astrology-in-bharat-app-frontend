@@ -20,17 +20,14 @@ import {
 import MessageList, { StatusCenterRow } from "./message-list";
 import TypingIndicator from "./typing-indicator";
 import type { TimelineItem } from "../../types/timeline";
+import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
+import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomBilling } from "../../providers/room-lifecycle.provider";
+import { useRoomChat } from "../../providers/room-chat.provider";
 
 type MessageAreaProps = {
   /** Light-only canvas. Accepted for orchestrator compatibility, never used for styling. */
   isDarkMode?: boolean;
-  sessionStatus: string;
-  sessionSummary: { status?: string } | null;
-  messages: ChatMessage[];
-  timeline?: TimelineItem[];
-  expertData: { image?: string; name?: string } | null;
-  typingStatus: { senderName: string; isTyping: boolean } | null;
-  user?: IAuthUser | null;
 };
 
 function isTerminated(sessionSummary: { status?: string } | null): boolean {
@@ -39,9 +36,6 @@ function isTerminated(sessionSummary: { status?: string } | null): boolean {
   return false;
 }
 
-/**
- * Renders full size preview image inside dialog with early return.
- */
 function PreviewImageContent({ image }: { image: string | null }) {
   if (!image) return null;
   return (
@@ -101,7 +95,7 @@ function EmptyConversation({
         <Empty className="rounded-xl border border-[#d3cec6] bg-[#ffffff]">
           <EmptyHeader>
             <EmptyMedia
-              variant="icon"
+              variant="default"
               className="rounded-full border border-[#d3cec6] bg-[#ffffff] text-[#626260]"
             >
               <MessageCircle />
@@ -173,16 +167,7 @@ function PopulatedConversation({
   );
 }
 
-export default function MessageArea({
-  isDarkMode,
-  sessionStatus,
-  sessionSummary,
-  messages,
-  timeline,
-  expertData,
-  typingStatus,
-  user,
-}: MessageAreaProps) {
+export default function MessageArea({ isDarkMode }: MessageAreaProps) {
   void isDarkMode;
   const [mounted, setMounted] = React.useState(false);
   const [previewImage, setPreviewImage] = React.useState<string | null>(null);
@@ -192,6 +177,10 @@ export default function MessageArea({
   }, []);
 
   const closePreview = () => setPreviewImage(null);
+  const { sessionStatus } = useRoomSession();
+  const { sessionSummary } = useRoomBilling();
+  const { messages, timeline, typingStatus } = useRoomChat();
+  const { expertData, user } = useRoomIdentity();
   const items: TimelineItem[] = buildItems(messages, timeline);
 
   if (items.length === 0) {

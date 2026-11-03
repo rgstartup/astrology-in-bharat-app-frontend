@@ -47,12 +47,14 @@ export function useConsultationPrep(
 
   const { deviceHint, clearDeviceHint, runPreflight, resetDevices } =
     useDevicePreflight();
+
   const {
     askSomeoneElse,
     setAskSomeoneElse,
     someoneElseData,
     setSomeoneElseData,
   } = useSomeoneElseForm();
+
   const [showOfflinePopup, setShowOfflinePopup] = useState(false);
 
   // On modal open: latest expert data + wallet balance, fetched in parallel

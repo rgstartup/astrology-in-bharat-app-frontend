@@ -12,19 +12,7 @@ function ActiveComposerStory() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className="w-full max-w-3xl bg-[#f5f1ec] p-4">
-      <ChatFooter
-        sessionStatus="active"
-        pendingAttachment={null}
-        removePendingAttachment={() => undefined}
-        handleFileUpload={() => undefined}
-        fileInputRef={fileInputRef}
-        uploading={false}
-        uploadProgress={null}
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        handleSendMessage={() => undefined}
-        handleInputTyping={() => undefined}
-      />
+      <ChatFooter />
     </div>
   );
 }
@@ -42,19 +30,7 @@ function UploadingAttachmentStory() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className="w-full max-w-3xl bg-[#f5f1ec] p-4">
-      <ChatFooter
-        sessionStatus="active"
-        pendingAttachment={uploadingAttachment}
-        removePendingAttachment={() => undefined}
-        handleFileUpload={() => undefined}
-        fileInputRef={fileInputRef}
-        uploading
-        uploadProgress={45}
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        handleSendMessage={() => undefined}
-        handleInputTyping={() => undefined}
-      />
+      <ChatFooter />
     </div>
   );
 }
@@ -64,19 +40,7 @@ function InactiveSessionStory() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className="w-full max-w-3xl bg-[#f5f1ec] p-4">
-      <ChatFooter
-        sessionStatus="ended"
-        pendingAttachment={null}
-        removePendingAttachment={() => undefined}
-        handleFileUpload={() => undefined}
-        fileInputRef={fileInputRef}
-        uploading={false}
-        uploadProgress={null}
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        handleSendMessage={() => undefined}
-        handleInputTyping={() => undefined}
-      />
+      <ChatFooter />
     </div>
   );
 }

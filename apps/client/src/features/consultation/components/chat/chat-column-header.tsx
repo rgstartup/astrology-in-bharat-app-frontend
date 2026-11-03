@@ -6,27 +6,26 @@ import { useRouter } from "@/i18n/navigation";
 import { Button } from "@repo/design/shadcn";
 import { Separator } from "@repo/design/shadcn";
 import { EndSessionButton } from "../header/end-session-button";
-
-type ChatColumnHeaderProps = {
-  router: ReturnType<typeof useRouter>;
-  onOpenMobileSidebar: () => void;
-  handleEndChat: (force?: boolean) => void;
-  isSessionEnded?: boolean;
-};
+import { useRoomIdentity } from "../../providers/room-lifecycle.provider";
+import { useRoomSession } from "../../providers/room-lifecycle.provider";
+import { useRoomActions } from "../../providers/room-lifecycle.provider";
 
 /**
  * Top bar for the 75% chat area.
  * Displays back button, chat icon with title, and secure connection indicator.
  *
- * @param props - Navigation router, mobile toggle handler, and end chat callback.
+ * @param props - Mobile toggle handler.
  * @returns Chat column header element.
  */
 export function ChatColumnHeader({
-  router,
   onOpenMobileSidebar,
-  handleEndChat,
-  isSessionEnded = false,
-}: ChatColumnHeaderProps) {
+}: {
+  onOpenMobileSidebar: () => void;
+}) {
+  const { router } = useRoomIdentity();
+  const { isSessionEnded } = useRoomSession();
+  const { handleEndChat } = useRoomActions();
+
   return (
     <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between border-b border-[#d3cec6] bg-white px-3 md:px-6">
       <div className="flex items-center gap-2 md:gap-3">
@@ -59,7 +58,7 @@ export function ChatColumnHeader({
 
         {!isSessionEnded && (
           <div className="md:hidden">
-            <EndSessionButton handleEndChat={handleEndChat} />
+            <EndSessionButton />
           </div>
         )}
 

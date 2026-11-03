@@ -82,6 +82,35 @@ export function useVoiceSession(
   const storeClearVoiceTokens = useVoiceSessionStore((s) => s.clearVoiceTokens);
   const storeSetVoiceToken = useVoiceSessionStore((s) => s.setVoiceToken);
   const storeTakeVoiceToken = useVoiceSessionStore((s) => s.takeVoiceToken);
+  const storeSetJoiningId = useVoiceSessionStore(
+    (s) => s.setJoiningConsultationId,
+  );
+
+  /** Wait for the realtime socket to connect (with auth), with a timeout. */
+  const waitForSocket = useCallback(
+    (socket: ReturnType<typeof realtimeSocket>, timeoutMs = 10_000): Promise<boolean> => {
+      const isSocketAuthenticatedWithToken = (s: ReturnType<typeof realtimeSocket>) =>
+        s.connected && Boolean((s.auth as { token?: string } | undefined)?.token);
+
+      if (isSocketAuthenticatedWithToken(socket)) return Promise.resolve(true);
+      return new Promise((resolve) => {
+        let timer: ReturnType<typeof setTimeout>;
+        const onConnect = () => {
+          if (isSocketAuthenticatedWithToken(socket)) {
+            socket.off("connect", onConnect);
+            clearTimeout(timer);
+            resolve(true);
+          }
+        };
+        timer = setTimeout(() => {
+          socket.off("connect", onConnect);
+          resolve(false);
+        }, timeoutMs);
+        socket.on("connect", onConnect);
+      });
+    },
+    [],
+  );
 
   // Voice credentials belong to the RTC lifecycle, not the consultation state hook.
   useEffect(() => {
@@ -140,6 +169,7 @@ export function useVoiceSession(
     }
   }, [storeSession]);
 
+
   // Cleanup on unmount
   useEffect(() => {
     mountedRef.current = true;
@@ -172,6 +202,24 @@ export function useVoiceSession(
 
   const join = useCallback(
     async (consultationId: number, identity: string): Promise<void> => {
+      const currentStore = useVoiceSessionStore.getState();
+      if (
+        currentStore.session !== null &&
+        currentStore.session.getSnapshot().phase === "live"
+      ) {
+        console.log("[VoiceConsultation] join skipped — session already active", {
+          consultationId,
+        });
+        return;
+      }
+      if (currentStore.joiningConsultationId === consultationId) {
+        console.log("[VoiceConsultation] join skipped — join already in flight", {
+          consultationId,
+        });
+        return;
+      }
+      storeSetJoiningId(consultationId);
+
       const token = storeTakeVoiceToken(consultationId);
       console.log("[VoiceConsultation] join() called", {
         consultationId,
@@ -181,6 +229,7 @@ export function useVoiceSession(
       setBusy(true);
       setError(null);
       setActive(false);
+      let tentativeSession: RtcSession | null = null;
       try {
         let channelName: string | null = null;
         let tokenValue: string | null = null;
@@ -209,6 +258,7 @@ export function useVoiceSession(
           );
         }
         const session = await ensureSession();
+        tentativeSession = session;
         const currentSnapshot = session.getSnapshot();
         if (
           currentSnapshot.phase !== "live" ||
@@ -239,7 +289,7 @@ export function useVoiceSession(
             microphoneEnabled: postJoinSnapshot.localMedia.microphoneEnabled,
           });
         }
-        storeSetSession(session, consultationId);
+        storeSetSession(session, consultationId, identity);
         setActive(true);
         // Local side is inside Agora — tell the backend so billing can start
         // once the peer also reports media_ready. Fire-and-forget.
@@ -253,23 +303,104 @@ export function useVoiceSession(
           error: err instanceof Error ? err.message : String(err),
         });
         if (mountedRef.current) {
-          // Tear down the Agora client so a failed join doesn't leave a
-          // dangling XHR/polling connection to the Agora edge.
-          void storeLeaveAndClear(sessionRef.current).catch(() => undefined);
-          sessionRef.current = null;
-          setError(
-            err instanceof Error ? err.message : "Could not join voice.",
-          );
-          setActive(false);
-          setSnapshot(null);
+          const refreshedStore = useVoiceSessionStore.getState();
+          // Tear down tentative session ONLY if it is not the active store session
+          if (tentativeSession && tentativeSession !== refreshedStore.session) {
+            void tentativeSession.leave().catch(() => undefined);
+          }
+          // Do not overwrite sessionRef.current or set error if another caller has established a live session
+          if (refreshedStore.session === null) {
+            sessionRef.current = null;
+            setError(
+              err instanceof Error ? err.message : "Could not join voice.",
+            );
+            setActive(false);
+            setSnapshot(null);
+          }
         }
         throw err;
       } finally {
+        if (useVoiceSessionStore.getState().joiningConsultationId === consultationId) {
+          storeSetJoiningId(null);
+        }
         if (mountedRef.current) setBusy(false);
       }
     },
-    [ensureSession, storeSetSession, storeLeaveAndClear, storeTakeVoiceToken],
+    [ensureSession, storeSetSession, storeSetJoiningId, storeTakeVoiceToken],
   );
+  // Hard-refresh survival: rejoin the persisted voice session on mount.
+  // Only { consultationId, identity } survive a hard refresh (sessionStorage).
+  // The non-serializable RtcSession is gone; we rebuild it via joinCall + ensureSession.
+  const storeConsultationId = useVoiceSessionStore((s) => s.consultationId);
+  const storeIdentity = useVoiceSessionStore((s) => s.identity);
+
+  useEffect(() => {
+    let cancelled = false;
+    const rejoinPersisted = async () => {
+      if (storeConsultationId === null || storeIdentity === null) return;
+      if (sessionRef.current !== null) return; // already live
+
+      const socket = realtimeSocket();
+      let retries = 0;
+      const maxRetries = 3;
+      let connected = false;
+      while (retries < maxRetries && !cancelled) {
+        connected = await waitForSocket(socket);
+        if (connected) break;
+        retries++;
+        if (retries < maxRetries && !cancelled) {
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+      }
+      if (cancelled || !connected) return;
+
+      try {
+        // Re-read live store state: intent may have been cleared while waiting
+        // for the socket (e.g. consultation ended during reconnect). Reading
+        // the closure values here could rejoin a terminated call.
+        const current = useVoiceSessionStore.getState();
+        if (current.consultationId === null || current.identity === null) return;
+
+        // If the store already holds an active session or a join is already in flight,
+        // don't touch it — the mount rejoin effect must never tear down or duplicate
+        // a session it didn't create.
+        if (current.session !== null || current.joiningConsultationId === current.consultationId) return;
+        // Another caller (e.g. useDirectVoice) may have already joined while
+        // we waited for the socket. Don't start a duplicate join.
+        if (sessionRef.current !== null) return;
+
+        // On hard refresh the socket may still be authenticating (the
+        // RealtimeProvider's getSocketTokenAction() is an async Server Action).
+        // joinCall() → emitWithAck times out if the socket isn't yet
+        // authenticated. Retry a few times so the auth flow can complete
+        // before we give up and clear the stale intent.
+        let joinAttempt = 0;
+        const maxJoinAttempts = 3;
+        while (joinAttempt < maxJoinAttempts && !cancelled) {
+          joinAttempt++;
+          try {
+            await join(current.consultationId, current.identity);
+            return; // success — rejoin complete
+          } catch {
+            if (joinAttempt >= maxJoinAttempts) break;
+            if (cancelled) break;
+            await new Promise((r) => setTimeout(r, 3000));
+            // Re-read intent before retrying — it may have been cleared.
+            const refreshed = useVoiceSessionStore.getState();
+            if (refreshed.consultationId === null || refreshed.identity === null) return;
+            if (sessionRef.current !== null) return;
+          }
+        }
+      } catch {
+        // join() already set error and cleared sessionRef; drop the stale intent
+        storeSetSession(null, null, null);
+      }
+    };
+    rejoinPersisted();
+    return () => {
+      cancelled = true;
+    };
+  }, [storeConsultationId, storeIdentity, join, storeSetSession, waitForSocket]);
 
   const leave = useCallback(async (): Promise<void> => {
     console.log("[VoiceConsultation] leave called", {

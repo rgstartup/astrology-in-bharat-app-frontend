@@ -10,11 +10,7 @@ import {
   DialogTitle,
 } from "@repo/design/shadcn";
 import { cn } from "@repo/design/cn";
-
-type EndSessionButtonProps = {
-  handleEndChat: (force?: boolean) => void;
-  className?: string;
-};
+import { useRoomActions } from "../../providers/room-lifecycle.provider";
 
 /**
  * End session affordance with confirmation dialog. Same visual language as
@@ -22,10 +18,8 @@ type EndSessionButtonProps = {
  * no header/footer hairlines. Closes itself on confirm so the review modal
  * opens cleanly on top.
  */
-export function EndSessionButton({
-  handleEndChat,
-  className,
-}: EndSessionButtonProps) {
+export function EndSessionButton({ className }: { className?: string } = {}) {
+  const { handleEndChat } = useRoomActions();
   const [open, setOpen] = useState(false);
 
   function handleConfirm() {

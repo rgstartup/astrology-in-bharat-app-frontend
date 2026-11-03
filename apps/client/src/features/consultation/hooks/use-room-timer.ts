@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { calculateTimer } from "../application/consultation-timer";
 
 interface UseRoomTimerInput {
   maxMinutes: number | null;
@@ -29,29 +30,37 @@ export const useRoomTimer = ({
 }: UseRoomTimerInput) => {
   const [now, setNow] = useState(() => Date.now());
 
-  const anchorMs = startedAt ? new Date(startedAt).getTime() : NaN;
-  const hasAnchor = startedAt !== null && !isNaN(anchorMs);
-  const active = sessionStatus === "active" && !paused && voiceLive;
-  const base = typeof baseSeconds === "number" && !isNaN(baseSeconds) ? Math.max(0, Math.floor(baseSeconds)) : 0;
-
+  // Rebase the display clock immediately when the anchor or base changes.
   useEffect(() => {
-    // A backend resume provides a new anchor and carried elapsed base. Rebase
-    // the display clock immediately instead of waiting for the next interval.
     setNow(Date.now());
-  }, [startedAt, base]);
+  }, [startedAt, baseSeconds]);
 
+  const { active } = calculateTimer({
+    maxMinutes,
+    startedAt,
+    baseSeconds,
+    now,
+    sessionStatus,
+    paused,
+    voiceLive,
+  });
+
+  // Tick the clock every second while the timer is active.
   useEffect(() => {
     if (!active) return;
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
   }, [active]);
 
-  const elapsedSeconds = hasAnchor
-    ? base + Math.max(0, Math.floor((now - anchorMs) / 1000))
-    : 0;
-  const totalSeconds = typeof maxMinutes === "number" ? maxMinutes * 60 : null;
-  const timeLeft =
-    totalSeconds === null || !hasAnchor ? null : Math.max(0, totalSeconds - elapsedSeconds);
+  const { elapsedTime, timeLeft } = calculateTimer({
+    maxMinutes,
+    startedAt,
+    baseSeconds,
+    now,
+    sessionStatus,
+    paused,
+    voiceLive,
+  });
 
-  return { elapsedTime: elapsedSeconds, timeLeft };
+  return { elapsedTime, timeLeft };
 };

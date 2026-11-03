@@ -72,23 +72,7 @@ function noop() {
 function StageHarness({ phase, elapsedText = "12:34" }: StageHarnessProps) {
   return (
     <div className="flex h-[720px] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-[#d3cec6] bg-[#f5f1ec]">
-      <VoiceStage
-        phase={phase}
-        expertName={rahulSharmaExpert.name}
-        expertAvatar={rahulSharmaExpert.avatar}
-        elapsedText={elapsedText}
-        chatRate={25}
-        voiceRate={30}
-        messages={PREVIEW_MESSAGES}
-        onBackToChat={noop}
-        onEndVoice={noop}
-        onCancelRequest={noop}
-        onExpandChat={noop}
-        muted={false}
-        onToggleMute={noop}
-        speakerMuted={false}
-        onToggleSpeaker={noop}
-      />
+      <VoiceStage />
     </div>
   );
 }
@@ -111,34 +95,9 @@ function WholeRoomVoice({ phase }: WholeRoomVoiceProps) {
         <div className="flex h-14 shrink-0 items-center border-b border-[#d3cec6] bg-white px-4">
           <p className="text-sm font-semibold text-[#111111]">Voice consultation</p>
         </div>
-        <VoiceStage
-          phase={phase}
-          expertName={rahulSharmaExpert.name}
-          expertAvatar={rahulSharmaExpert.avatar}
-          elapsedText={formatTime(754)}
-          chatRate={25}
-          voiceRate={30}
-          messages={PREVIEW_MESSAGES}
-          onBackToChat={noop}
-          onEndVoice={noop}
-          onCancelRequest={noop}
-          onExpandChat={noop}
-          muted={false}
-          onToggleMute={noop}
-          speakerMuted={false}
-          onToggleSpeaker={noop}
-        />
+        <VoiceStage />
       </div>
-      <ConsultationSidebar
-        expertData={rahulSharmaExpert}
-        sessionStatus="active"
-        formatTime={formatTime}
-        elapsedTime={754}
-        timeLeft={522}
-        handleEndChat={noop}
-        isWarning={false}
-        consultationId={null}
-      />
+      <ConsultationSidebar />
     </div>
   );
 }
@@ -154,39 +113,32 @@ const meta: Meta<typeof StageHarness> = {
 export default meta;
 type Story = StoryObj<typeof StageHarness>;
 
-/** Dialing state right after confirming the upgrade. Chat is dimmed behind. */
 export const Requesting: Story = {
   render: () => <StageHarness phase="requesting" elapsedText="12:34" />,
 };
 
-/** Audio channel securing state. */
 export const Connecting: Story = {
   render: () => <StageHarness phase="connecting" elapsedText="12:36" />,
 };
 
-/** Live voice: orb ripple, timer, controls, rate note, transcript strip. */
 export const Live: Story = {
   render: () => <StageHarness phase="live" elapsedText="14:02" />,
 };
 
-/** Network drop: timer held, expert avatar dimmed, reconnect affordance. */
 export const Reconnecting: Story = {
   render: () => <StageHarness phase="reconnecting" elapsedText="14:20" />,
 };
 
-/** Voice ended: return-to-chat panel with transcript intact. */
 export const Ended: Story = {
   render: () => <StageHarness phase="ended" elapsedText="16:45" />,
 };
 
 type RoomStory = StoryObj<typeof WholeRoomVoice>;
 
-/** Complete room: voice stage left, existing details sidebar right. */
 export const WholeRoomVoiceLive: RoomStory = {
   render: () => <WholeRoomVoice phase="live" />,
 };
 
-/** Complete room during dialing: cancel path visible, sidebar untouched. */
 export const WholeRoomVoiceRequesting: RoomStory = {
   render: () => <WholeRoomVoice phase="requesting" />,
 };

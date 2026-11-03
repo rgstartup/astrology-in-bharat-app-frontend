@@ -45,19 +45,23 @@ export function useConsultationRequestDispatch({
       sessionId: number,
       expiresInSec: number,
       maxMinutes?: number,
-    ) => {
+    ): Promise<{
+      verdict: "accepted" | "rejected" | "expired" | "timeout" | "cancelled";
+      consultationId: number;
+      sessionId: number;
+    } | null> => {
       setWaitStep("waiting_acceptance");
 
       if (isAborted()) {
         setIsWaiting(false);
-        return;
+        return null;
       }
 
       try {
         const ack = await requestConsultation(consultationId, Number(expertId));
         if (isAborted()) {
           setIsWaiting(false);
-          return;
+          return null;
         }
 
         if (
@@ -66,19 +70,19 @@ export function useConsultationRequestDispatch({
         ) {
           toast.error("Expert did not receive your request. Please try again.");
           setIsWaiting(false);
-          return;
+          return null;
         }
       } catch {
         toast.error(
           "Could not reach the expert. Please check your connection and try again.",
         );
         setIsWaiting(false);
-        return;
+        return null;
       }
 
       if (isAborted()) {
         setIsWaiting(false);
-        return;
+        return null;
       }
 
       const affordableMinutes =
@@ -95,11 +99,20 @@ export function useConsultationRequestDispatch({
       if (result.verdict === "accepted") {
         if (mode === "voice" || mode === "video") onVerdictResolved?.();
         goToRoom(expertId, sessionId, consultationId);
-        return;
+        return {
+          verdict: "accepted",
+          consultationId,
+          sessionId,
+        };
       }
 
       if (result.verdict !== "cancelled") onVerdictResolved?.();
       setIsWaiting(false);
+      return {
+        verdict: result.verdict,
+        consultationId,
+        sessionId,
+      };
     },
     [
       expertId,

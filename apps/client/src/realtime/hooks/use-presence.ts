@@ -114,3 +114,60 @@ export const usePresenceSync = () => {
     };
   }, []);
 };
+
+/**
+ * Grace period before a dead socket marks presence stale. Covers transient
+ * blips / fast backend restarts (reconnect clears the timer, no flicker);
+ * a genuinely down backend flips every card to Offline after this delay.
+ */
+const STALE_AFTER_MS = 8000;
+
+/**
+ * Manage presence lifecycle state (isLive flag, subscription rehydration,
+ * stale marking) driven by socket connection events. Delegated from
+ * RealtimeProvider so the provider owns only connection events.
+ */
+export const usePresenceLifecycle = () => {
+  useEffect(() => {
+    const socket = realtimeSocket();
+    let staleTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const clearStaleTimer = () => {
+      if (staleTimer !== null) {
+        clearTimeout(staleTimer);
+        staleTimer = null;
+      }
+    };
+
+    const scheduleStale = () => {
+      clearStaleTimer();
+      staleTimer = setTimeout(() => {
+        staleTimer = null;
+        usePresenceStore.getState().setLive(false);
+      }, STALE_AFTER_MS);
+    };
+
+    const handleConnect = () => {
+      clearStaleTimer();
+      usePresenceStore.getState().setLive(true);
+      usePresenceStore.getState().rehydrateSubscriptions();
+    };
+
+    // No `connect` also means no `disconnect` will fire (e.g. backend down
+    // at page load), so arm the stale timer whenever we aren't connected.
+    const handleDisconnect = () => {
+      scheduleStale();
+    };
+
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
+
+    if (!socket.connected) scheduleStale();
+
+    return () => {
+      clearStaleTimer();
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
+    };
+  }, []);
+};
