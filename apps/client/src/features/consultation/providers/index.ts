@@ -40,6 +40,17 @@ export type {
 } from "./switch-to-voice.provider";
 
 export {
+  VoiceProvider,
+  useVoiceContext,
+  VoiceContext,
+} from "./voice.provider";
+export type {
+  VoiceContextValue,
+  VoiceMode,
+  VoiceProviderProps,
+} from "./voice.provider";
+
+export {
   DirectVoiceProvider,
   useDirectVoiceContext,
 } from "./direct-voice.provider";

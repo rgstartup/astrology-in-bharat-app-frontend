@@ -5,7 +5,8 @@ import type { Meta, StoryObj } from "@repo/storybook";
 import type { IExpert } from "@repo/lib";
 import type { ChatMessage } from "@/lib/types";
 import type { IAuthUser } from "@/store/authStore";
-import { ChatColumnHeader, RoomBody } from "@/features/consultation";
+import { ChatColumnHeader, RoomBody, RoomChatProvider, RoomLifecycleProvider, VoiceContext, VoiceStage, type VoiceContextValue } from "@/features/consultation";
+import { ConsultationRequestStateProvider } from "@/features/consultation-prep/stores/consultation-request-state.store";
 import type { TimelineItem } from "@/features/consultation/types/timeline";
 import { ExpertProfileSection, SessionTimersSection, VoiceSessionSection, EndConsultationAction } from "@/features/consultation";
 import { VoiceControls, VoiceHero } from "@/features/consultation";
@@ -73,6 +74,36 @@ function formatTime(seconds: number): string {
 
 function noop() {
   return undefined;
+}
+
+/** Mock voice context driving SessionDock into a live direct-voice state. */
+const mockVoiceLive: VoiceContextValue = {
+  mode: "direct",
+  active: true,
+  phase: "live",
+  muted: false,
+  speakerMuted: false,
+  cameraEnabled: true,
+  showVoiceStage: true,
+  isPanelExpanded: false,
+  toggleMic: noop,
+  toggleSpeaker: noop,
+  toggleCamera: noop,
+  endVoice: noop,
+  cancelVoice: noop,
+  pauseVoice: noop,
+  openVoiceCancel: noop,
+  togglePanelExpanded: noop,
+  switchToChat: noop,
+  returnToVoice: noop,
+  handleUpgrade: noop,
+  elapsedText: "14:02",
+  rate: 30,
+  voiceRate: 30,
+};
+
+function MockVoiceProvider({ children }: { children: React.ReactNode }) {
+  return <VoiceContext.Provider value={mockVoiceLive}>{children}</VoiceContext.Provider>;
 }
 
 /**
@@ -424,4 +455,36 @@ export const HeaderReference: RoomStory = {
       />
     </div>
   ),
+};
+
+/** Voice dock expanded: SessionDock at top, VoiceStage panel below. Click ExpandToggle to collapse (voice stays alive). */
+export const DockVoiceLiveExpanded: Story = {
+  render: () => {
+    const [minimized, setMinimized] = useState(false);
+    const voice = {
+      ...mockVoiceLive,
+      minimized,
+      showVoiceStage: !minimized,
+      minimizeVoice: () => setMinimized(true),
+      returnToVoice: () => setMinimized(false),
+    };
+    return (
+      <ConsultationRequestStateProvider>
+        <RoomLifecycleProvider roomConsultationId={null} expertData={rahulSharmaExpert}>
+          <RoomChatProvider initialMessages={PREVIEW_MESSAGES}>
+            <VoiceContext.Provider value={voice}>
+              <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-[#d3cec6] bg-[#f5f1ec]">
+                <SessionDock kind="voice" />
+                {!minimized && (
+                  <div className="border-t border-[#d3cec6] bg-[#f5f1ec] p-4">
+                    <VoiceStage />
+                  </div>
+                )}
+              </div>
+            </VoiceContext.Provider>
+          </RoomChatProvider>
+        </RoomLifecycleProvider>
+      </ConsultationRequestStateProvider>
+    );
+  },
 };

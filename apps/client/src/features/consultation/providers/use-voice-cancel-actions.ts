@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import { pauseTimer, resumeTimer } from "@/realtime/topics/media-control";
 import type { ConsultationSessionStatus } from "../application/consultation-verdict";
 import type { useDirectVoice } from "../hooks/use-direct-voice";
 
 interface UseVoiceCancelActionsParams {
+  /** Active consultation id; null disables the media-control hold chain. */
+  consultationId: number | null;
   sessionStatus: ConsultationSessionStatus;
-  pauseLiveChat: (reason?: string) => Promise<unknown>;
   resumeLiveChat: (mode?: "chat" | "voice" | "video") => Promise<unknown>;
   refreshSessions: () => Promise<void>;
   directVoice: ReturnType<typeof useDirectVoice>;
@@ -25,12 +27,16 @@ interface UseVoiceCancelActionsReturn {
 /**
  * Manages voice cancellation dialog state and serialized billing-hold chain.
  *
- * @param params - Session status, pause/resume sockets, and direct voice handle
+ * Hold/release go through the media-control PAUSE_TIMER/RESUME_TIMER commands
+ * so the backend pauses billing AND broadcasts mic-off/speaker-off (open) and
+ * mic-on/speaker-on (release) to both participants.
+ *
+ * @param params - Consultation id, session status, chat resume socket, and direct voice handle
  * @returns Dialog visibility, busy state, and action handlers
  */
 export function useVoiceCancelActions({
+  consultationId,
   sessionStatus,
-  pauseLiveChat,
   resumeLiveChat,
   refreshSessions,
   directVoice,
@@ -43,17 +49,18 @@ export function useVoiceCancelActions({
 
   const queueVoiceHold = useCallback(
     async (command: "hold" | "release") => {
+      if (consultationId === null) return;
       const next = voiceHoldChain.current
         .catch(() => undefined)
         .then(() =>
           command === "hold"
-            ? pauseLiveChat("billing_hold")
-            : resumeLiveChat("voice"),
+            ? pauseTimer(consultationId)
+            : resumeTimer(consultationId),
         );
       voiceHoldChain.current = next;
       return next.catch(() => undefined);
     },
-    [pauseLiveChat, resumeLiveChat],
+    [consultationId],
   );
 
   const openVoiceCancel = useCallback(async () => {

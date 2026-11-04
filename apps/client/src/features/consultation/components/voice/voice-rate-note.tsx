@@ -4,11 +4,13 @@ import React from "react";
 import { Info } from "@repo/design/lucide";
 import { cn } from "@repo/design/cn";
 
+import type { VoiceMode } from "../../providers/voice.provider";
+
 type VoiceRateNoteProps = {
   chatRate: number;
   voiceRate: number;
-  /** Direct voice bills at the voice rate from join; upgrade switches mid-session. */
-  entry?: "upgrade" | "direct";
+  /** Direct voice bills at the voice rate from join; switch mode upgrades mid-session. */
+  entry?: VoiceMode;
   className?: string;
 };
 
@@ -57,7 +59,7 @@ function RateNoteBody({
 }: {
   chatRate: number;
   voiceRate: number;
-  entry: "upgrade" | "direct";
+  entry: VoiceMode;
 }) {
   if (entry === "direct") return <DirectRateCopy voiceRate={voiceRate} />;
   return <UpgradeRateCopy chatRate={chatRate} voiceRate={voiceRate} />;
@@ -70,7 +72,7 @@ function RateNoteBody({
  * @param props - Chat and voice per-minute rates.
  * @returns Rate note element.
  */
-export function VoiceRateNote({ chatRate, voiceRate, entry = "upgrade", className }: VoiceRateNoteProps) {
+export function VoiceRateNote({ chatRate, voiceRate, entry = "switch", className }: VoiceRateNoteProps) {
   return (
     <div
       className={cn(

@@ -96,7 +96,7 @@ export function RoomLifecycleProvider({
       endLiveChat,
     });
 
-  const { pendingExpiresAt, maxMinutes, startedAt, baseSeconds, isWarning } =
+  const { pendingExpiresAt, maxMinutes, startedAt, baseSeconds, isWarning, budgetTick } =
     useRoomBudget({
       consultationId: roomConsultationId,
       decision,
@@ -112,6 +112,7 @@ export function RoomLifecycleProvider({
     sessionStatus,
     paused: paused !== null,
     voiceLive,
+    budgetTick,
   });
 
   const { chatRate, sessionSummary } = useRoomSessionSummary({

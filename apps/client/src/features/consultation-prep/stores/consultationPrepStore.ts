@@ -1,10 +1,28 @@
 "use client";
 
 import { createScopedStore } from "@/store/utils";
+import { isVideoConsultationEnabled } from "@/lib/feature-flags";
 
 export type ConsultationMode = "chat" | "voice" | "video";
 
 const PENDING_STORAGE_KEY = "consultation-prep-pending";
+
+/**
+ * Coerces a requested consultation mode against the video feature flag.
+ *
+ * While video is flag-disabled, any `"video"` request (deep link, stale
+ * sessionStorage entry, future caller) falls back to `"chat"` instead of
+ * opening an unusable video prep flow.
+ *
+ * @param mode - Requested consultation mode, may be undefined.
+ * @returns A mode that is safe to open under the current flag state.
+ */
+function coerceMode(mode?: ConsultationMode): ConsultationMode {
+  if (mode === "video" && !isVideoConsultationEnabled()) {
+    return "chat";
+  }
+  return mode ?? "chat";
+}
 
 /**
  * Reads pending expert and mode from sessionStorage (used when user selected an expert while unauthenticated).
@@ -24,7 +42,7 @@ function readPendingSession(): {
       const parsed = JSON.parse(raw);
       return {
         pendingExpertId: parsed.pendingExpertId ?? null,
-        pendingMode: parsed.pendingMode ?? "chat",
+        pendingMode: coerceMode(parsed.pendingMode),
       };
     }
   } catch {
@@ -116,14 +134,15 @@ export const {
         mode = "chat",
         consultationId = null,
       ) => {
+        const safeMode = coerceMode(mode);
         writePendingSession(null, "chat");
         set({
           expertId,
-          mode,
+          mode: safeMode,
           isOpen: true,
           consultationId,
           pendingExpertId: null,
-          pendingMode: mode,
+          pendingMode: safeMode,
         });
       },
       closeConsultationPrep: () =>
@@ -135,10 +154,11 @@ export const {
       setConsultationPrepOpen: (open) =>
         set(open ? { isOpen: true } : { isOpen: false }),
       setPendingExpert: (pendingExpertId, mode = "chat") => {
-        writePendingSession(pendingExpertId, mode);
-        set({ pendingExpertId, pendingMode: mode });
+        const safeMode = coerceMode(mode);
+        writePendingSession(pendingExpertId, safeMode);
+        set({ pendingExpertId, pendingMode: safeMode });
       },
-      setMode: (mode) => set({ mode }),
+      setMode: (mode) => set({ mode: coerceMode(mode) }),
     };
   },
 );

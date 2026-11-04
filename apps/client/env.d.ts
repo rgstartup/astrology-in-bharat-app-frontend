@@ -9,5 +9,6 @@ declare namespace NodeJS {
         NEXT_PUBLIC_MAIN_URL: string;
 
         // add your custom vars here
+        NEXT_PUBLIC_ENABLE_VIDEO_CONSULTATION?: "true" | "false";
     }
 }

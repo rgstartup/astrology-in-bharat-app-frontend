@@ -5,8 +5,7 @@ import type { ChatMessage } from "@/lib/types";
 import {
   RoomChatProvider,
   RechargeDialogProvider,
-  SwitchToVoiceProvider,
-  DirectVoiceProvider,
+  VoiceProvider,
   MediaControlProvider,
 } from "../../providers";
 import { RoomContentRoot } from "../room/room-content.root";
@@ -29,13 +28,11 @@ export default function RoomContent({
   return (
     <RoomChatProvider initialMessages={initialMessages}>
       <RechargeDialogProvider>
-        <SwitchToVoiceProvider>
-          <DirectVoiceProvider>
-            <MediaControlProvider>
-              <RoomContentRoot />
-            </MediaControlProvider>
-          </DirectVoiceProvider>
-        </SwitchToVoiceProvider>
+        <VoiceProvider>
+          <MediaControlProvider>
+            <RoomContentRoot />
+          </MediaControlProvider>
+        </VoiceProvider>
       </RechargeDialogProvider>
     </RoomChatProvider>
   );

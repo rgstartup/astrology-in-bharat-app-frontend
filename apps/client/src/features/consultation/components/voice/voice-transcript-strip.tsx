@@ -4,13 +4,12 @@ import React from "react";
 import { Lock } from "@repo/design/lucide";
 import { cn } from "@repo/design/cn";
 import type { ChatMessage } from "@/lib/types";
-import { useDirectVoiceContext } from "../../providers/direct-voice.provider";
-import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
+import { useVoiceContext, VoiceMode } from "../../providers/voice.provider";
 
 type VoiceTranscriptStripProps = {
   messages: ChatMessage[];
   /** Upgrade keeps saved chat; direct opens chat for sharing details. Defaults to upgrade. */
-  entry?: "upgrade" | "direct";
+  entry?: "switch" | "direct";
   className?: string;
 };
 
@@ -36,7 +35,7 @@ function TranscriptPreview({ message }: { message: ChatMessage }) {
  * @param props - Entry path for tailored copy.
  * @returns Empty transcript element.
  */
-function EmptyTranscript({ entry }: { entry: "upgrade" | "direct" }) {
+function EmptyTranscript({ entry }: { entry: VoiceMode }) {
   if (entry === "direct") {
     return (
       <p className="text-[13px] text-[#7b7b78]">
@@ -44,7 +43,11 @@ function EmptyTranscript({ entry }: { entry: "upgrade" | "direct" }) {
       </p>
     );
   }
-  return <p className="text-[13px] text-[#7b7b78]">No messages yet. Your chat starts here.</p>;
+  return (
+    <p className="text-[13px] text-[#7b7b78]">
+      No messages yet. Your chat starts here.
+    </p>
+  );
 }
 
 /**
@@ -58,7 +61,7 @@ function TranscriptBody({
   entry,
 }: {
   messages: ChatMessage[];
-  entry: "upgrade" | "direct";
+  entry: VoiceMode;
 }) {
   const last = messages[messages.length - 1];
   if (!last) return <EmptyTranscript entry={entry} />;
@@ -71,7 +74,7 @@ function TranscriptBody({
  * @param props - Entry path.
  * @returns Header element.
  */
-function StripHeader({ entry }: { entry: "upgrade" | "direct" }) {
+function StripHeader({ entry }: { entry: VoiceMode }) {
   if (entry === "direct") {
     return <span>Chat is open for sharing details.</span>;
   }
@@ -91,14 +94,12 @@ function StripHeader({ entry }: { entry: "upgrade" | "direct" }) {
  */
 export function VoiceTranscriptStrip({
   messages,
-  entry = "upgrade",
+  entry = "switch",
   className,
 }: VoiceTranscriptStripProps) {
-  const directVoice = useDirectVoiceContext();
-  const switchToVoice = useSwitchToVoiceContext();
+  const voice = useVoiceContext();
 
-  const isDirectVoice = directVoice.isDirectVoice;
-  const onExpandChat = isDirectVoice ? directVoice.switchToChat : switchToVoice.minimizeVoice;
+  const onExpandChat = voice.togglePanelExpanded;
 
   return (
     <div className={cn("px-4 pb-3 md:px-8", className)}>

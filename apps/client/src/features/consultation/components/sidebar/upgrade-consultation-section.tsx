@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@repo/design/shadcn";
 import { cn } from "@repo/design/cn";
+import UpgradeSessionDialog from "../dialog/upgrade-session-dialog";
 
 type UpgradeConsultationSectionProps = {
   expertData: IExpert;
@@ -35,7 +36,9 @@ function resolveUpgradeRates(expert: IExpert) {
     (typeof dynamic.call_price === "number" ? dynamic.call_price : 30);
   const videoRate =
     expert.pricing?.video_call_price ??
-    (typeof dynamic.video_call_price === "number" ? dynamic.video_call_price : 50);
+    (typeof dynamic.video_call_price === "number"
+      ? dynamic.video_call_price
+      : 50);
   const chatRate =
     expert.pricing?.chat_price ??
     (typeof dynamic.chat_price === "number" ? dynamic.chat_price : 25);
@@ -78,7 +81,10 @@ function getModalDescription(mode: UpgradeMode, expertName: string): string {
  * @param rates - Resolved rates.
  * @returns Rate in INR.
  */
-function getTargetRate(mode: UpgradeMode, rates: { voiceRate: number; videoRate: number }): number {
+function getTargetRate(
+  mode: UpgradeMode,
+  rates: { voiceRate: number; videoRate: number },
+): number {
   if (mode === "voice") return rates.voiceRate;
   return rates.videoRate;
 }
@@ -175,48 +181,16 @@ export function UpgradeConsultationSection({
       </div>
 
       {/* Confirmation Dialog with pricing details */}
-      <Dialog open={isDialogOpen} onOpenChange={(open) => !open && setSelectedMode(null)}>
-        <DialogContent className="rounded-xl border border-[#d3cec6] bg-white">
-          <DialogHeader>
-            <DialogTitle className="font-sans text-[#111111]">
-              {getModalTitle(selectedMode)}
-            </DialogTitle>
-            <DialogDescription className="font-sans text-[#626260]">
-              {getModalDescription(selectedMode, expertData.name)}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="rounded-lg border border-[#f0ebe3] bg-[#fdfbf9] p-4 text-xs">
-            <div className="flex items-center justify-between py-1">
-              <span className="text-[#7b7b78]">Current chat rate:</span>
-              <span className="font-semibold text-[#111111]">₹{rates.chatRate} / min</span>
-            </div>
-            <div className="flex items-center justify-between border-t border-[#f0ebe3] py-1.5 font-bold">
-              <span className="text-[#111111]">New upgraded rate:</span>
-              <span className="text-sm font-bold text-emerald-700">₹{targetRate} / min</span>
-            </div>
-            <p className="mt-2 text-[11px] text-[#7b7b78]">
-              Your session time will continue seamlessly without interruption. The new per-minute rate takes effect upon connection.
-            </p>
-          </div>
-
-          <DialogFooter className="gap-2 sm:gap-0">
-            <Button
-              variant="ghost"
-              className="rounded-lg text-[#626260] hover:bg-[#f5f1ec] hover:text-[#111111]"
-              onClick={() => setSelectedMode(null)}
-            >
-              Keep in chat
-            </Button>
-            <Button
-              className="rounded-lg bg-[#111111] font-medium text-white hover:bg-[#111111]/90"
-              onClick={handleConfirmUpgrade}
-            >
-              Confirm upgrade
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <UpgradeSessionDialog
+        rates={rates}
+        targetRate={targetRate}
+        open={isDialogOpen}
+        onOpenChange={(open) => !open && setSelectedMode(null)}
+        onReject={() => setSelectedMode(null)}
+        onConfirmUpgrade={handleConfirmUpgrade}
+        modalTitle={getModalTitle(selectedMode)}
+        modalDescription={getModalDescription(selectedMode, expertData.name)}
+      />
     </div>
   );
 }

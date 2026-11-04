@@ -12,7 +12,7 @@ import { EndConsultationAction } from "../dialog/end-consultation-action.dialog"
 import { ContinueConsultationSection } from "./continue-consultation-section";
 import { useRoomIdentity } from "../../providers/room-lifecycle";
 import { useRoomSession } from "../../providers/room-lifecycle";
-import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
+import { useVoiceContext } from "../../providers/voice.provider";
 import { formatTime } from "../../utils/format-time";
 
 /**
@@ -26,7 +26,7 @@ export function ConsultationSidebar({
 }: { className?: string } = {}) {
   const { expertData, roomConsultationId } = useRoomIdentity();
   const { elapsedTime, timeLeft, isSessionEnded } = useRoomSession();
-  const { handleUpgrade } = useSwitchToVoiceContext();
+  const voice = useVoiceContext();
 
   if (!expertData) return null;
 
@@ -58,7 +58,7 @@ export function ConsultationSidebar({
         <>
           <UpgradeConsultationSection
             expertData={expertData}
-            onUpgrade={handleUpgrade}
+            onUpgrade={voice.handleUpgrade}
           />
 
           <div className="mt-auto pt-4 border-t border-[#f0ebe3]">

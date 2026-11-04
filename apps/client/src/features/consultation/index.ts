@@ -33,6 +33,9 @@ export {
   useRechargeDialog,
   SwitchToVoiceProvider,
   useSwitchToVoiceContext,
+  VoiceProvider,
+  useVoiceContext,
+  VoiceContext,
   DirectVoiceProvider,
   useDirectVoiceContext,
 } from "./providers";
@@ -45,6 +48,9 @@ export type {
   RechargeDialogProviderProps,
   SwitchToVoiceContextValue,
   SwitchToVoiceProviderProps,
+  VoiceContextValue,
+  VoiceMode,
+  VoiceProviderProps,
   DirectVoiceContextValue,
   DirectVoiceProviderProps,
 } from "./providers";

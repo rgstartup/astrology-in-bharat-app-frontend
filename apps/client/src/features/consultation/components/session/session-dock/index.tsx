@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   ChevronDown,
   ChevronUp,
@@ -19,8 +19,7 @@ import { cn } from "@repo/design/cn";
 import { DockCameraToggle } from "./dock-camera-toggle";
 import type { SessionKind, SessionPhase } from "../../../types/session-phase";
 import { getSessionPhaseLabel } from "../../../types/session-phase";
-import { useDirectVoiceContext } from "../../../providers/direct-voice.provider";
-import { useSwitchToVoiceContext } from "../../../providers/switch-to-voice.provider";
+import { useVoiceContext } from "../../../providers/voice.provider";
 import DockKindIcon from "./dock-kind-icon";
 import { DockStatusDot } from "./dock-status-dot";
 import { DockMicToggle } from "./dock-mic-toggle";
@@ -87,60 +86,29 @@ function RequestingActions({ onCancel }: { onCancel: () => void }) {
  * @returns Session dock element.
  */
 export function SessionDock({ className, kind }: SessionDockProps) {
-  // Local expand state (UI-only, not synced to RTC)
-  const [expanded, setExpanded] = useState(false);
-
-  // Context hooks - only one will be active based on session mode
-  const directVoice = useDirectVoiceContext();
-  const switchToVoice = useSwitchToVoiceContext();
-
-  // Determine which context is active
-  const isDirectVoice = directVoice.isDirectVoice;
+  const voice = useVoiceContext();
 
   // Select state and callbacks based on active mode
-  const dv = directVoice.directVoice;
-  const sv = switchToVoice.voice;
+  const muted = voice.muted;
+  const speakerMuted = voice.speakerMuted;
+  const cameraEnabled = voice.cameraEnabled;
+  const currentPhase = voice.phase as SessionPhase;
+  const active = voice.active;
+  const elapsedText = voice.elapsedText;
+  const rate = voice.rate;
+  const isPanelExpanded = voice.isPanelExpanded;
 
-  const muted = isDirectVoice ? dv.muted : sv.muted;
-  const speakerMuted = isDirectVoice ? dv.speakerMuted : sv.speakerMuted;
-  const cameraEnabled = isDirectVoice ? dv.cameraEnabled : sv.cameraEnabled;
-  const currentPhase = isDirectVoice ? dv.phase : sv.voicePhase;
-  const active = isDirectVoice ? dv.active : sv.voiceActive;
-  const elapsedText = isDirectVoice ? directVoice.elapsedText : switchToVoice.elapsedText;
-  const rate = isDirectVoice ? directVoice.rate : switchToVoice.rate;
+  // Callbacks from unified voice context
+  const toggleMic = voice.toggleMic;
+  const toggleSpeaker = voice.toggleSpeaker;
+  const toggleCamera = voice.toggleCamera;
+  const switchToChat = voice.switchToChat;
+  const toggleExpand = voice.togglePanelExpanded;
 
-  // Select callbacks based on active mode
-  const toggleMic = isDirectVoice
-    ? directVoice.toggleMic
-    : switchToVoice.toggleMic;
-  const toggleSpeaker = isDirectVoice
-    ? directVoice.toggleSpeaker
-    : switchToVoice.toggleSpeaker;
-  const toggleCamera = isDirectVoice
-    ? directVoice.toggleCamera
-    : switchToVoice.toggleCamera;
-  const endVoice = isDirectVoice
-    ? directVoice.endVoice
-    : switchToVoice.endVoice;
-  const cancelVoice = isDirectVoice
-    ? directVoice.cancelVoice
-    : switchToVoice.cancelVoice;
-  const switchToChat = isDirectVoice
-    ? directVoice.switchToChat
-    : switchToVoice.minimizeVoice;
-
-  const toggleExpand = () => setExpanded((prev) => !prev);
-
-  // For direct voice mode, PhoneOff / end action opens the voice cancel dialog
-  // which pauses billing timer and allows user to continue over chat or end session.
-  // For switch-to-voice mode, endVoice properly ends the voice consultation
-  // while keeping chat alive. backToChat just minimizes the voice stage.
-  const onEnd = isDirectVoice
-    ? directVoice.openVoiceCancel
-    : () => void switchToVoice.endVoice();
-  const onCancelRequest = isDirectVoice
-    ? directVoice.openVoiceCancel
-    : () => void switchToVoice.endVoice();
+  // PhoneOff opens the voice cancel dialog (continue-over-chat or end) and
+  // pauses billing while the dialog is open — it never ends the call directly.
+  const onEnd = voice.openVoiceCancel;
+  const onCancelRequest = voice.cancelVoice;
 
   if (currentPhase === "ended") {
     return null;
@@ -203,13 +171,11 @@ export function SessionDock({ className, kind }: SessionDockProps) {
           speakerMuted={speakerMuted}
           onToggle={toggleSpeaker}
         />
-        <SessionModeDropdown
+        <ExpandToggle
+          expanded={isPanelExpanded}
+          onToggle={toggleExpand}
           kind={kind}
-          onSwitchToChat={switchToChat}
-          onUpgradeToVideo={kind === "voice" ? undefined : undefined}
-          onSwitchToVoice={kind === "video" ? undefined : undefined}
         />
-        <ExpandToggle expanded={expanded} onToggle={toggleExpand} kind={kind} />
         <Button
           size="icon"
           aria-label={kind === "voice" ? "End voice" : "End video"}

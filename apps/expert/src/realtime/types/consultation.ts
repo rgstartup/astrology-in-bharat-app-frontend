@@ -66,6 +66,8 @@ export interface ConsultationBudgetTickPayload {
   maxMinutes: number;
   ratePerMinute: number;
   timestamp: string;
+  startedAt?: string | null;
+  baseSeconds?: number | null;
 }
 
 export interface ConsultationBudgetWarningPayload {

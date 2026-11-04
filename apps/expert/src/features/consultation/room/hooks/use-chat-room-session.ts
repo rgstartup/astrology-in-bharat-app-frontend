@@ -67,6 +67,7 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
     end: endLiveChat,
     consultationStatus: joinedStatus,
     budget: liveBudget,
+    budgetTick: liveBudgetTick,
     paused: pausedState,
     voiceToken,
   } = useChat(newFlowId, mode);
@@ -84,6 +85,13 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
   const [typingStatus, setTypingStatus] = useState<TypingStatus | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const tickReceivedAtRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (liveBudgetTick) {
+      tickReceivedAtRef.current = Date.now();
+    }
+  }, [liveBudgetTick]);
 
   // New-stack (consultation room) budget wins over the legacy REST seed.
   const newStackBudget = newFlowId != null ? liveBudget : null;
@@ -231,6 +239,25 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
       setNow(nowMs);
       // A pause freezes the meter; `now` keeps ticking for the recharge wait.
       if (pausedState) return;
+
+      // Authoritative 30s budget tick reconciliation from server
+      if (liveBudgetTick && typeof liveBudgetTick.elapsedSeconds === "number") {
+        const tickBaseTime = tickReceivedAtRef.current ?? nowMs;
+        const elapsedSinceTick = Math.max(0, Math.floor((nowMs - tickBaseTime) / 1000));
+        const elapsed = liveBudgetTick.elapsedSeconds + elapsedSinceTick;
+        const budgetMinutes = liveBudgetTick.maxMinutes ?? newStackBudget?.maxMinutes;
+        const left =
+          typeof budgetMinutes === "number"
+            ? Math.max(0, budgetMinutes * 60 - elapsed)
+            : typeof liveBudgetTick.remainingSeconds === "number"
+              ? Math.max(0, liveBudgetTick.remainingSeconds - elapsedSinceTick)
+              : 0;
+
+        setElapsedTime(elapsed);
+        setTimeLeft(left);
+        return;
+      }
+
       const budgetMinutes = newStackBudget?.maxMinutes;
       const budgetAnchor = newStackBudget?.startedAt;
       if (
@@ -266,7 +293,7 @@ export function useChatRoomSession(sessionId: string, newFlowId: number | null, 
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [sessionStatus, pausedState, startedAt, expiresAt, newStackBudget?.maxMinutes, newStackBudget?.startedAt, newStackBudget?.baseSeconds]);
+  }, [sessionStatus, pausedState, startedAt, expiresAt, liveBudgetTick, newStackBudget?.maxMinutes, newStackBudget?.startedAt, newStackBudget?.baseSeconds]);
 
   // Auto scroll to bottom, unless the expert has scrolled up to read history.
   useEffect(() => {

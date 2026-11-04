@@ -14,6 +14,7 @@ import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { useTranslations } from "next-intl";
 import { getYoutubeId, getYoutubeEmbedUrl } from "@/utils/video-utils";
 import { usePreloadExpertStore } from "@/store/preloadExpertStore";
+import { isVideoConsultationEnabled } from "@/lib/feature-flags";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
 import { extractSpecializationNames } from "@/utils/expert-utils";
@@ -189,19 +190,22 @@ function ExpertActionButtons({
         </button>
       </div>
 
-      <button
-        onClick={onVideoCallClick}
-        aria-label={`Start video call with ${name}`}
-        className="w-full flex items-center justify-center gap-1.5 py-2 min-h-[38px] bg-[#ff6b00] text-white rounded-xl shadow-[0_4px_10px_rgba(255,107,0,0.2)] hover:shadow-[0_6px_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 transition-all duration-300 border-0 overflow-hidden cursor-pointer"
-      >
-        <i className="fa-solid fa-video text-[10px] sm:text-sm shrink-0" />
-        <span className="text-[12px] sm:text-[14px] font-bold shrink-0">
-          {t.expertCard.videoCall}
-        </span>
-        <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate">
-          {videoCallPrice > 0 ? `₹${videoCallPrice}${t.expertCard.perMin}` : "(Online)"}
-        </span>
-      </button>
+      {/* Video call button (feature-flagged) */}
+      {isVideoConsultationEnabled() && (
+        <button
+          onClick={onVideoCallClick}
+          aria-label={`Start video call with ${name}`}
+          className="w-full flex items-center justify-center gap-1.5 py-2 min-h-[38px] bg-[#ff6b00] text-white rounded-xl shadow-[0_4px_10px_rgba(255,107,0,0.2)] hover:shadow-[0_6px_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 transition-all duration-300 border-0 overflow-hidden cursor-pointer"
+        >
+          <i className="fa-solid fa-video text-[10px] sm:text-sm shrink-0" />
+          <span className="text-[12px] sm:text-[14px] font-bold shrink-0">
+            {t.expertCard.videoCall}
+          </span>
+          <span className="text-[9px] sm:text-[11px] font-semibold opacity-95 truncate">
+            {videoCallPrice > 0 ? `₹${videoCallPrice}${t.expertCard.perMin}` : "(Online)"}
+          </span>
+        </button>
+      )}
     </div>
   );
 }

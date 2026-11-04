@@ -210,7 +210,7 @@ export const useConsultation = (
     };
 
     /** Refresh status on (re)connect; room join is delegated to useChat. */
-    const handleConnect = () => {
+    const handleConnect = (isRetry = false) => {
       const socket = realtimeSocket();
       const auth = socket.auth as { token?: string } | undefined;
       if (!auth?.token) {
@@ -223,10 +223,19 @@ export const useConsultation = (
         });
         return;
       }
-      // Reset retry counter on each authenticated connection attempt so a
-      // fresh connect (e.g. after JWT auth resolves and socket reconnects)
-      // gets full retries.
-      getStatusRetryRef.current = 0;
+
+      // Skip status refresh if consultation is already ended / completed
+      if (endedRef.current || ended !== null || state?.state === "completed") {
+        console.info("[VoiceConsultation] handleConnect: consultation already ended, skipping GET_STATUS", {
+          consultationId: id,
+        });
+        return;
+      }
+
+      // Reset retry counter on fresh connect, preserve across retries
+      if (!isRetry) {
+        getStatusRetryRef.current = 0;
+      }
       const attempt = ++getStatusRetryRef.current;
       console.info("[VoiceConsultation] handleConnect: GET_STATUS", {
         consultationId: id,
@@ -240,6 +249,14 @@ export const useConsultation = (
           // a status payload — treat it as a failure and retry.
           if (status && typeof status.state === "string") {
             getStatusRetryRef.current = 0;
+            if (
+              status.state === "completed" ||
+              status.state === "cancelled" ||
+              status.state === "rejected" ||
+              status.state === "expired"
+            ) {
+              endedRef.current = true;
+            }
             console.info("[VoiceConsultation] handleConnect: GET_STATUS ack", {
               consultationId: id,
               hasStatus: Boolean(status),
@@ -255,17 +272,20 @@ export const useConsultation = (
           );
         })
         .catch((err) => {
-          console.error("[VoiceConsultation] handleConnect: GET_STATUS failed", {
-            consultationId: id,
-            attempt,
-            error: err instanceof Error ? err.message : String(err),
-          });
           if (attempt < 3) {
-            console.info("[VoiceConsultation] handleConnect: retrying GET_STATUS", {
+            console.warn("[VoiceConsultation] handleConnect: GET_STATUS transient failure, retrying", {
               consultationId: id,
+              attempt,
               nextAttempt: attempt + 1,
+              error: err instanceof Error ? err.message : String(err),
             });
-            setTimeout(() => handleConnect(), 1000);
+            setTimeout(() => handleConnect(true), 1000);
+          } else {
+            console.error("[VoiceConsultation] handleConnect: GET_STATUS failed", {
+              consultationId: id,
+              attempt,
+              error: err instanceof Error ? err.message : String(err),
+            });
           }
         });
     };

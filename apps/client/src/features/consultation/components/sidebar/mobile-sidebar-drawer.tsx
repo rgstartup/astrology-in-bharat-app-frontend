@@ -16,7 +16,7 @@ import { EndConsultationAction } from "../dialog/end-consultation-action.dialog"
 import { ContinueConsultationSection } from "./continue-consultation-section";
 import { useRoomIdentity } from "../../providers/room-lifecycle";
 import { useRoomSession } from "../../providers/room-lifecycle";
-import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
+import { useVoiceContext } from "../../providers/voice.provider";
 import { formatTime } from "../../utils/format-time";
 
 export type MobileSidebarDrawerProps = {
@@ -36,7 +36,7 @@ export function MobileSidebarDrawer({
 }: MobileSidebarDrawerProps) {
   const { expertData, roomConsultationId } = useRoomIdentity();
   const { elapsedTime, timeLeft, isSessionEnded } = useRoomSession();
-  const { handleUpgrade } = useSwitchToVoiceContext();
+  const voice = useVoiceContext();
 
   if (!expertData) return null;
 
@@ -72,7 +72,7 @@ export function MobileSidebarDrawer({
             <>
               <UpgradeConsultationSection
                 expertData={expertData}
-                onUpgrade={handleUpgrade}
+                onUpgrade={voice.handleUpgrade}
               />
 
               <div className="pt-4 border-t border-[#f0ebe3]">

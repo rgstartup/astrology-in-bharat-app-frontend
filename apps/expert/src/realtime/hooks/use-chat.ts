@@ -21,7 +21,10 @@ import type {
   ChatResumedPayload,
   ChatTypingPayload,
 } from "@/realtime/types/chat";
-import type { ConsultationMode } from "@/realtime/types/consultation";
+import type {
+  ConsultationBudgetTickPayload,
+  ConsultationMode,
+} from "@/realtime/types/consultation";
 
 /**
  * Join a consultation's chat room for its lifetime. Failures are silent —
@@ -47,6 +50,7 @@ export const useChat = (
     startedAt: null,
     baseSeconds: null,
   });
+  const [budgetTick, setBudgetTick] = useState<ConsultationBudgetTickPayload | null>(null);
   const [voiceToken, setVoiceToken] = useState<{ token: string | null; tokenExpiresAt: string | null; channelName: string | null }>({
     token: null,
     tokenExpiresAt: null,
@@ -189,6 +193,7 @@ export const useChat = (
         Number(payload.consultationId) === id &&
         !(isValidSessionId && payload.sessionId != null && Number(payload.sessionId) !== sessionIdNum)
       ) {
+        setBudgetTick(payload as ConsultationBudgetTickPayload);
         setBudget((prev) => ({
           maxMinutes: typeof payload.maxMinutes === "number" ? payload.maxMinutes : prev.maxMinutes,
           startedAt: prev.startedAt,
@@ -337,7 +342,7 @@ export const useChat = (
     return endConsultation(id, "manual");
   }, [id, isValidId]);
 
-  return { messages, send, typing, remoteTyping, clientName, ended, end, consultationStatus, budget, paused, voiceToken };
+  return { messages, send, typing, remoteTyping, clientName, ended, end, consultationStatus, budget, budgetTick, paused, voiceToken };
 };
 
 

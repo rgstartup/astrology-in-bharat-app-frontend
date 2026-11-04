@@ -116,8 +116,8 @@ export function DirectVoiceProvider({ children }: DirectVoiceProviderProps) {
     handleVoiceContinueOverChat,
     handleVoiceEndSession,
   } = useVoiceCancelActions({
+    consultationId: roomConsultationId,
     sessionStatus,
-    pauseLiveChat,
     resumeLiveChat,
     refreshSessions,
     directVoice,

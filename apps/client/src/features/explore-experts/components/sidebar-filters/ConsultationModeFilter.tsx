@@ -4,6 +4,7 @@ import React from "react";
 import { Sparkles, MessageSquare, Phone, Video } from "@repo/design/lucide";
 import { ConsultationMode } from "../../types";
 import { useExploreExpertsContext } from "../../context/ExploreExpertsContext";
+import { isVideoConsultationEnabled } from "@/lib/feature-flags";
 
 const MODES = [
   { id: "all", label: "All Modes", icon: Sparkles },
@@ -12,8 +13,17 @@ const MODES = [
   { id: "video", label: "Video Call", icon: Video },
 ] as const;
 
+/** Mode entries shown in the filter grid; video is removed while the flag is off. */
+function getAvailableModes(): (typeof MODES)[number][] {
+  if (!isVideoConsultationEnabled()) {
+    return MODES.filter((mode) => mode.id !== "video");
+  }
+  return [...MODES];
+}
+
 export function ConsultationModeFilter() {
   const { filters, setServiceType } = useExploreExpertsContext();
+  const modes = getAvailableModes();
 
   return (
     <div>
@@ -21,7 +31,7 @@ export function ConsultationModeFilter() {
         Consultation Type
       </label>
       <div className="grid grid-cols-2 gap-2">
-        {MODES.map(({ id, label, icon: Icon }) => {
+        {modes.map(({ id, label, icon: Icon }) => {
           const active = filters.serviceType === id;
           return (
             <button

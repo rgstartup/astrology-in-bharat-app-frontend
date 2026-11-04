@@ -19,6 +19,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useExpertListStore } from "@/store/expertListStore";
+import { isVideoConsultationEnabled } from "@/lib/feature-flags";
 import { toast } from "@repo/design/shadcn";
 import type { IExpert } from "@repo/lib";
 import { extractSpecializationNames } from "@/utils/expert-utils";
@@ -285,7 +286,13 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
         </div>
 
         {/* Bold Direct Action CTA Buttons */}
-        <div className="grid grid-cols-3 gap-2">
+        <div
+          className={
+            isVideoConsultationEnabled()
+              ? "grid grid-cols-3 gap-2"
+              : "grid grid-cols-2 gap-2"
+          }
+        >
           {/* Chat Button */}
           <button
             type="button"
@@ -316,20 +323,22 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
             </span>
           </button>
 
-          {/* Video Call Button */}
-          <button
-            type="button"
-            onClick={(e) => handleConsult(e, "video")}
-            className="flex flex-col items-center justify-center py-2.5 px-1 rounded-xl bg-linear-to-r from-orange to-amber-500 hover:from-[#e65100] hover:to-amber-600 text-white font-black shadow-md shadow-orange/20 transition-all active:scale-95 cursor-pointer"
-          >
-            <div className="flex items-center gap-1 text-white">
-              <Video className="size-3.5 stroke-[2.5]" />
-              <span className="text-xs font-black">Video</span>
-            </div>
-            <span className="text-[11px] font-extrabold text-white mt-0.5 tracking-tight drop-shadow-xs">
-              ₹{videoPrice}/min
-            </span>
-          </button>
+          {/* Video Call Button (feature-flagged) */}
+          {isVideoConsultationEnabled() && (
+            <button
+              type="button"
+              onClick={(e) => handleConsult(e, "video")}
+              className="flex flex-col items-center justify-center py-2.5 px-1 rounded-xl bg-linear-to-r from-orange to-amber-500 hover:from-[#e65100] hover:to-amber-600 text-white font-black shadow-md shadow-orange/20 transition-all active:scale-95 cursor-pointer"
+            >
+              <div className="flex items-center gap-1 text-white">
+                <Video className="size-3.5 stroke-[2.5]" />
+                <span className="text-xs font-black">Video</span>
+              </div>
+              <span className="text-[11px] font-extrabold text-white mt-0.5 tracking-tight drop-shadow-xs">
+                ₹{videoPrice}/min
+              </span>
+            </button>
+          )}
         </div>
       </div>
     </Card>
