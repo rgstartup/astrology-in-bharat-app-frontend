@@ -46,7 +46,7 @@ export function ConsultationSidebar({
       <SessionTimersSection
         formatTime={formatTime}
         elapsedTime={elapsedTime}
-        timeLeft={timeLeft}
+        timeLeft={timeLeft ?? 0}
       />
 
       {isSessionEnded ? (

@@ -12,12 +12,27 @@ import { useSwitchToVoice } from "../hooks/use-switch-to-voice";
 import { resolveVoiceRate } from "@/lib/pricing";
 import { useConsultationRoomStore } from "../stores/consultation-room.store";
 import { useRoomLifecycle } from "./room-lifecycle";
+import { formatTime } from "../utils/format-time";
 
 export interface SwitchToVoiceContextValue {
   voice: ReturnType<typeof useSwitchToVoice>;
   voiceRate: number;
   displayVoiceRate: number;
   handleUpgrade: (mode: "voice" | "video") => void;
+
+  // Direct method exposure for consumers (VoiceStage, VoiceControls, VoiceHero)
+  // These delegate to voice.* but provide a stable API
+  minimizeVoice: () => void;
+  cancelVoice: () => void;
+  toggleMic: () => void;
+  toggleSpeaker: () => void;
+  toggleCamera: () => void;
+  endVoice: () => void;
+  returnToVoice: () => void;
+
+  // Derived state for SessionDock
+  elapsedText: string;
+  rate: number;
 }
 
 const SwitchToVoiceContext = createContext<SwitchToVoiceContextValue | null>(
@@ -99,8 +114,19 @@ export function SwitchToVoiceProvider({
       voiceRate,
       displayVoiceRate,
       handleUpgrade,
+      // Direct method exposure for consumers (VoiceStage, VoiceControls, VoiceHero)
+      minimizeVoice: () => void voice.backToChat(),
+      cancelVoice: () => void voice.cancelVoice(),
+      toggleMic: () => void voice.toggleMic(),
+      toggleSpeaker: () => void voice.toggleSpeaker(),
+      toggleCamera: () => void voice.toggleCamera(),
+      endVoice: () => void voice.endVoice(),
+      returnToVoice: () => void voice.returnToVoice(),
+      // Derived state for SessionDock
+      elapsedText: formatTime(elapsedTime),
+      rate: displayVoiceRate,
     }),
-    [voice, voiceRate, displayVoiceRate, handleUpgrade],
+    [voice, voiceRate, displayVoiceRate, handleUpgrade, elapsedTime],
   );
 
   return (

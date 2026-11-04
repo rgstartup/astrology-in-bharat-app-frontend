@@ -1,7 +1,12 @@
 "use client";
 
 import { createScopedStore } from "@/store/utils/create-scoped-store";
-import type { RoomSeed } from "../../hooks/use-room-seed";
+
+export type RoomSeed = {
+  roomConsultationId: number | null;
+  seed: unknown | null;
+  seedKey: string | null;
+};
 
 export type RoomSeedState = {
   roomConsultationId: number | null;
@@ -21,4 +26,4 @@ export const { Provider: RoomSeedProvider, useStore: useRoomSeedContext } =
     setSeed: (next) => set((state) => ({ ...state, ...next })),
   }));
 
-export type { RoomSeed };
+

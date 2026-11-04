@@ -7,6 +7,7 @@ import {
   RechargeDialogProvider,
   SwitchToVoiceProvider,
   DirectVoiceProvider,
+  MediaControlProvider,
 } from "../../providers";
 import { RoomContentRoot } from "../room/room-content.root";
 
@@ -30,7 +31,9 @@ export default function RoomContent({
       <RechargeDialogProvider>
         <SwitchToVoiceProvider>
           <DirectVoiceProvider>
-            <RoomContentRoot />
+            <MediaControlProvider>
+              <RoomContentRoot />
+            </MediaControlProvider>
           </DirectVoiceProvider>
         </SwitchToVoiceProvider>
       </RechargeDialogProvider>

@@ -60,7 +60,7 @@ export default function Header({
               className="min-w-0 flex-1"
             />
             <div className="flex shrink-0 items-center sm:hidden">
-              <EndSessionButton handleEndChat={handleEndChat} />
+              <EndSessionButton />
             </div>
           </div>
 
@@ -74,7 +74,7 @@ export default function Header({
               isWarning={isWarning}
             />
             <div className="hidden shrink-0 items-center sm:flex">
-              <EndSessionButton handleEndChat={handleEndChat} />
+              <EndSessionButton />
             </div>
           </div>
         </div>

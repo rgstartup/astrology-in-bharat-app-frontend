@@ -4,10 +4,11 @@ import React from "react";
 import { Lock } from "@repo/design/lucide";
 import { cn } from "@repo/design/cn";
 import type { ChatMessage } from "@/lib/types";
+import { useDirectVoiceContext } from "../../providers/direct-voice.provider";
+import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
 
 type VoiceTranscriptStripProps = {
   messages: ChatMessage[];
-  onExpandChat: () => void;
   /** Upgrade keeps saved chat; direct opens chat for sharing details. Defaults to upgrade. */
   entry?: "upgrade" | "direct";
   className?: string;
@@ -81,15 +82,24 @@ function StripHeader({ entry }: { entry: "upgrade" | "direct" }) {
  * Collapsed chat-continuity strip pinned under the voice stage.
  * Reassures the user the chat history survives the switch to voice.
  *
- * @param props - Recent messages and expand handler.
+ * Consumes expand handler from context based on session mode:
+ * - Direct voice (voice-first): uses `useDirectVoiceContext` (switchToChat)
+ * - Switch-to-voice (chat upgrade): uses `useSwitchToVoiceContext` (backToChat)
+ *
+ * @param props - Recent messages and entry path.
  * @returns Transcript strip element.
  */
 export function VoiceTranscriptStrip({
   messages,
-  onExpandChat,
   entry = "upgrade",
   className,
 }: VoiceTranscriptStripProps) {
+  const directVoice = useDirectVoiceContext();
+  const switchToVoice = useSwitchToVoiceContext();
+
+  const isDirectVoice = directVoice.isDirectVoice;
+  const onExpandChat = isDirectVoice ? directVoice.switchToChat : switchToVoice.minimizeVoice;
+
   return (
     <div className={cn("px-4 pb-3 md:px-8", className)}>
       <button

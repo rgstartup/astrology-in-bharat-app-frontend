@@ -18,25 +18,7 @@ import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provide
 import { useDirectVoiceContext } from "../../providers/direct-voice.provider";
 
 export type VoiceStageProps = {
-  phase: VoicePhase;
-  expertName: string;
-  expertAvatar?: string | null;
-  elapsedText: string;
-  chatRate: number;
-  voiceRate: number;
-  messages: ChatMessage[];
-  /** Upgrade preserves chat history; direct starts voice-first with chat as fallback. */
-  entry?: "upgrade" | "direct";
-  onBackToChat: () => void;
-  onEndVoice: () => void;
-  onCancelRequest: () => void;
-  onExpandChat: () => void;
-  /** Mute state owned by the RTC session. */
-  muted: boolean;
-  onToggleMute: () => void;
-  /** Speaker state owned by the RTC session. */
-  speakerMuted: boolean;
-  onToggleSpeaker: () => void;
+  /** Optional className for styling overrides. */
   className?: string;
 };
 
@@ -60,10 +42,15 @@ function VoiceSecureStrip() {
 /**
  * Ended-phase panel shown after voice finishes.
  *
- * @param props - Back-to-chat handler.
  * @returns Ended panel element.
  */
-function VoiceEndedPanel({ onBackToChat }: { onBackToChat: () => void }) {
+function VoiceEndedPanel() {
+  const directVoice = useDirectVoiceContext();
+  const switchToVoice = useSwitchToVoiceContext();
+
+  const isDirectVoice = directVoice.isDirectVoice;
+  const onMinimizeVoice = isDirectVoice ? directVoice.switchToChat : switchToVoice.minimizeVoice;
+
   return (
     <div className="flex flex-col items-center gap-2 px-6 py-6 text-center">
       <p className="font-sans text-base font-medium text-[#111111]">
@@ -75,7 +62,7 @@ function VoiceEndedPanel({ onBackToChat }: { onBackToChat: () => void }) {
       </p>
       <button
         type="button"
-        onClick={onBackToChat}
+        onClick={onMinimizeVoice}
         className="mt-1 h-12 rounded-full bg-[#111111] px-7 text-base font-medium text-white hover:bg-black"
       >
         Return to chat
@@ -87,31 +74,39 @@ function VoiceEndedPanel({ onBackToChat }: { onBackToChat: () => void }) {
 /**
  * Requesting-phase body: hero plus cancel-oriented controls.
  *
- * @param props - Full stage props.
  * @returns Requesting body element.
  */
-function RequestingBody(props: VoiceStageProps) {
+function RequestingBody({
+  expertName,
+  expertAvatar,
+  phase,
+  elapsedText,
+  voiceRate,
+  chatRate,
+  muted,
+  speakerMuted,
+}: {
+  expertName: string;
+  expertAvatar: string | null;
+  phase: VoicePhase;
+  elapsedText: string;
+  voiceRate: number;
+  chatRate: number;
+  muted: boolean;
+  speakerMuted: boolean;
+}) {
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
       <VoiceHero
-        expertName={props.expertName}
-        expertAvatar={props.expertAvatar}
-        phase={props.phase}
-        elapsedText={props.elapsedText}
-        voiceRate={props.voiceRate}
+        expertName={expertName}
+        expertAvatar={expertAvatar}
+        phase={phase}
+        elapsedText={elapsedText}
+        voiceRate={voiceRate}
       />
-      <VoiceControls
-        isRequesting
-        onBackToChat={props.onBackToChat}
-        onEndVoice={props.onEndVoice}
-        onCancelRequest={props.onCancelRequest}
-        muted={props.muted}
-        onToggleMute={props.onToggleMute}
-        speakerMuted={props.speakerMuted}
-        onToggleSpeaker={props.onToggleSpeaker}
-      />
+      <VoiceControls isRequesting muted={muted} speakerMuted={speakerMuted} />
       <div className="px-4 pb-4 md:px-8">
-        <VoiceRateNote chatRate={props.chatRate} voiceRate={props.voiceRate} />
+        <VoiceRateNote chatRate={chatRate} voiceRate={voiceRate} entry="direct" />
       </div>
     </div>
   );
@@ -120,40 +115,45 @@ function RequestingBody(props: VoiceStageProps) {
 /**
  * Live-phase body: hero, controls, rate note, and transcript strip.
  *
- * @param props - Full stage props.
  * @returns Live body element.
  */
-function LiveBody(props: VoiceStageProps) {
-  const entry = props.entry ?? "upgrade";
+function LiveBody({
+  expertName,
+  expertAvatar,
+  phase,
+  elapsedText,
+  voiceRate,
+  chatRate,
+  messages,
+  entry,
+  muted,
+  speakerMuted,
+}: {
+  expertName: string;
+  expertAvatar: string | null;
+  phase: VoicePhase;
+  elapsedText: string;
+  voiceRate: number;
+  chatRate: number;
+  messages: ChatMessage[];
+  entry: "upgrade" | "direct";
+  muted: boolean;
+  speakerMuted: boolean;
+}) {
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
       <VoiceHero
-        expertName={props.expertName}
-        expertAvatar={props.expertAvatar}
-        phase={props.phase}
-        elapsedText={props.elapsedText}
-        voiceRate={props.voiceRate}
+        expertName={expertName}
+        expertAvatar={expertAvatar}
+        phase={phase}
+        elapsedText={elapsedText}
+        voiceRate={voiceRate}
       />
-      <VoiceControls
-        onBackToChat={props.onBackToChat}
-        onEndVoice={props.onEndVoice}
-        muted={props.muted}
-        onToggleMute={props.onToggleMute}
-        speakerMuted={props.speakerMuted}
-        onToggleSpeaker={props.onToggleSpeaker}
-      />
+      <VoiceControls muted={muted} speakerMuted={speakerMuted} />
       <div className="px-4 pb-3 md:px-8">
-        <VoiceRateNote
-          chatRate={props.chatRate}
-          voiceRate={props.voiceRate}
-          entry={entry}
-        />
+        <VoiceRateNote chatRate={chatRate} voiceRate={voiceRate} entry={entry} />
       </div>
-      <VoiceTranscriptStrip
-        messages={props.messages}
-        onExpandChat={props.onExpandChat}
-        entry={entry}
-      />
+      <VoiceTranscriptStrip messages={messages} entry={entry} />
     </div>
   );
 }
@@ -161,19 +161,19 @@ function LiveBody(props: VoiceStageProps) {
 /**
  * Ended-phase body: summary panel plus transcript strip.
  *
- * @param props - Full stage props.
  * @returns Ended body element.
  */
-function EndedBody(props: VoiceStageProps) {
-  const entry = props.entry ?? "upgrade";
+function EndedBody({
+  messages,
+  entry,
+}: {
+  messages: ChatMessage[];
+  entry: "upgrade" | "direct";
+}) {
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-      <VoiceEndedPanel onBackToChat={props.onBackToChat} />
-      <VoiceTranscriptStrip
-        messages={props.messages}
-        onExpandChat={props.onExpandChat}
-        entry={entry}
-      />
+      <VoiceEndedPanel />
+      <VoiceTranscriptStrip messages={messages} entry={entry} />
     </div>
   );
 }
@@ -189,6 +189,10 @@ function EndedBody(props: VoiceStageProps) {
  * - Right sidebar (timers, expert card, end action) is untouched; only
  *   its mode + upgrade sections flip to voice-active variants.
  *
+ * All callbacks consumed from context based on session mode:
+ * - Direct voice (voice-first): uses `useDirectVoiceContext`
+ * - Switch-to-voice (chat upgrade): uses `useSwitchToVoiceContext` + `useRoomActions`
+ *
  * @returns Voice stage element (all values read from context).
  */
 export function VoiceStage({ className }: { className?: string } = {}) {
@@ -198,96 +202,62 @@ export function VoiceStage({ className }: { className?: string } = {}) {
   const { messages } = useRoomChat();
 
   // Detect which voice mode we're in and use the appropriate context
-  let isDirectVoice = false;
-  let directVoice: ReturnType<typeof import("../../hooks/use-direct-voice").useDirectVoice> | null = null;
-  let openVoiceCancel: (() => void) | undefined;
+  const directVoice = useDirectVoiceContext();
+  const switchToVoice = useSwitchToVoiceContext();
 
-  try {
-    const ctx = useDirectVoiceContext();
-    isDirectVoice = ctx.isDirectVoice;
-    directVoice = ctx.directVoice;
-    openVoiceCancel = ctx.openVoiceCancel;
-  } catch {
-    // Direct voice provider not active — switch-to-voice mode.
-  }
-
-  const { voice, displayVoiceRate } = useSwitchToVoiceContext();
+  const isDirectVoice = directVoice.isDirectVoice;
+  const voice = switchToVoice.voice;
+  const displayVoiceRate = switchToVoice.displayVoiceRate;
 
   // Use direct-voice context props when in direct voice mode, otherwise switch-to-voice
-  const phase = isDirectVoice && directVoice ? directVoice.phase : voice.voicePhase;
-  const active = isDirectVoice && directVoice ? directVoice.active : voice.voiceActive;
-  const backToChat = isDirectVoice && directVoice
-    ? () => void directVoice.switchToChat()
-    : voice.backToChat;
-  const cancelVoice = isDirectVoice && directVoice ? directVoice.cancelVoice : voice.cancelVoice;
-  const endVoice = openVoiceCancel ?? cancelVoice;
-  const muted = isDirectVoice && directVoice ? directVoice.muted : voice.muted;
-  const speakerMuted = isDirectVoice && directVoice ? directVoice.speakerMuted : voice.speakerMuted;
-  const toggleMute = isDirectVoice && directVoice
-    ? () => void directVoice.toggleMic()
-    : () => void voice.toggleMic();
-  const toggleSpeaker = isDirectVoice && directVoice
-    ? () => void directVoice.toggleSpeaker()
-    : () => void voice.toggleSpeaker();
-  const voiceRate = isDirectVoice && directVoice
-    ? displayVoiceRate // direct voice uses the same display rate from switch-to-voice context
-    : displayVoiceRate;
+  const phase = isDirectVoice ? directVoice.directVoice.phase : voice.voicePhase;
+  const active = isDirectVoice ? directVoice.directVoice.active : voice.voiceActive;
+  const muted = isDirectVoice ? directVoice.directVoice.muted : voice.muted;
+  const speakerMuted = isDirectVoice ? directVoice.directVoice.speakerMuted : voice.speakerMuted;
+  const voiceRate = displayVoiceRate; // both modes use the same display rate from switch-to-voice context
 
-  const props: VoiceStageProps = {
-    phase,
-    expertName: expertData?.name ?? "Expert",
-    expertAvatar: expertData?.avatar ?? null,
-    elapsedText: formatTime(elapsedTime),
-    chatRate,
-    voiceRate,
-    messages,
-    entry: isDirectVoice ? "direct" : "upgrade",
-    onBackToChat: backToChat,
-    onEndVoice: endVoice,
-    onCancelRequest: cancelVoice,
-    onExpandChat: backToChat,
-    muted,
-    onToggleMute: toggleMute,
-    speakerMuted,
-    onToggleSpeaker: toggleSpeaker,
-    className,
-  };
+  const entry = (isDirectVoice ? "direct" : "upgrade") as "direct" | "upgrade";
 
-  if (props.phase === "requesting" || props.phase === "connecting") {
+  if (!active || phase === "requesting" || phase === "connecting") {
     return (
-      <div
-        className={cn(
-          "flex min-h-0 flex-1 flex-col bg-[#f5f1ec]",
-          props.className,
-        )}
-      >
+      <div className={cn("flex min-h-0 flex-1 flex-col bg-[#f5f1ec]", className)}>
         <VoiceSecureStrip />
-        <RequestingBody {...props} />
+        <RequestingBody
+          expertName={expertData?.name ?? "Expert"}
+          expertAvatar={expertData?.avatar ?? null}
+          phase={phase}
+          elapsedText={formatTime(elapsedTime)}
+          voiceRate={voiceRate}
+          chatRate={chatRate}
+          muted={muted}
+          speakerMuted={speakerMuted}
+        />
       </div>
     );
   }
-  if (props.phase === "ended") {
+  if (phase === "ended") {
     return (
-      <div
-        className={cn(
-          "flex min-h-0 flex-1 flex-col bg-[#f5f1ec]",
-          props.className,
-        )}
-      >
+      <div className={cn("flex min-h-0 flex-1 flex-col bg-[#f5f1ec]", className)}>
         <VoiceSecureStrip />
-        <EndedBody {...props} />
+        <EndedBody messages={messages} entry={entry} />
       </div>
     );
   }
   return (
-    <div
-      className={cn(
-        "flex min-h-0 flex-1 flex-col bg-[#f5f1ec]",
-        props.className,
-      )}
-    >
+    <div className={cn("flex min-h-0 flex-1 flex-col bg-[#f5f1ec]", className)}>
       <VoiceSecureStrip />
-      <LiveBody {...props} />
+      <LiveBody
+        expertName={expertData?.name ?? "Expert"}
+        expertAvatar={expertData?.avatar ?? null}
+        phase={phase}
+        elapsedText={formatTime(elapsedTime)}
+        voiceRate={voiceRate}
+        chatRate={chatRate}
+        messages={messages}
+        entry={entry}
+        muted={muted}
+        speakerMuted={speakerMuted}
+      />
     </div>
   );
 }

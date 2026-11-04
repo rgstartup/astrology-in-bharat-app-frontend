@@ -62,7 +62,11 @@ export const useRoomVerdict = ({
 
   useEffect(() => {
     if (!joinedStatus) return;
-    if (joinedStatus === "accepted" || joinedStatus === "active") {
+    if (
+      joinedStatus === "accepted" ||
+      joinedStatus === "active" ||
+      joinedStatus === "paused"
+    ) {
       setSessionStatus("active");
       return;
     }

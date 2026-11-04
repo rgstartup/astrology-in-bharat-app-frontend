@@ -1,6 +1,11 @@
 export {
   RoomLifecycleProvider,
   useRoomLifecycle,
+  useRoomIdentity,
+  useRoomSession,
+  useRoomBilling,
+  useRoomReview,
+  useRoomActions,
 } from "./room-lifecycle";
 export type {
   RoomLifecycleContextValue,
@@ -42,3 +47,10 @@ export type {
   DirectVoiceContextValue,
   DirectVoiceProviderProps,
 } from "./direct-voice.provider";
+
+export {
+  MediaControlProvider,
+} from "./media-control.provider";
+export type {
+  MediaControlProviderProps,
+} from "./media-control.provider";

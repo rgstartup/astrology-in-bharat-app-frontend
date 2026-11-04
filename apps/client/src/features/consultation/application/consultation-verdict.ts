@@ -30,7 +30,9 @@ export function determineSessionStatus({
   if (
     decision === "accepted" ||
     (joinedStatus &&
-      (joinedStatus === "accepted" || joinedStatus === "active"))
+      (joinedStatus === "accepted" ||
+        joinedStatus === "active" ||
+        joinedStatus === "paused"))
   ) {
     return "active";
   }

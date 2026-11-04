@@ -13,6 +13,7 @@ import { useChatRoomComposer } from "./hooks/use-chat-room-composer";
 import { useConsultation } from "@/realtime/hooks/use-consultation";
 import { useVoiceSession } from "@/realtime/hooks/use-voice-session";
 import { useConsultationMedia } from "@/realtime/hooks/use-consultation-media";
+import { MediaControlProvider } from "@/realtime/hooks/media-control.provider";
 import { ExpertSessionDock } from "@/features/consultation/session";
 import type {
   ClientIntakeProfile,
@@ -245,24 +246,26 @@ export function ChatRoomContent({
       />
 
       {isVoiceMode && (
-        <ExpertSessionDock
-          client={{
-            name: clientName || "Client",
-            avatar: clientAvatar ?? undefined,
-          }}
-          kind={dockKind}
-          phase={(voice.voicePhase ?? "connecting") as ExpertSessionPhase}
-          metrics={{
-            elapsedSeconds: elapsedTime,
-            remainingSeconds,
-            ratePerMinute: resolvedRatePerMinute,
-          }}
-          muted={voice.muted}
-          onToggleMute={voice.toggleMic}
-          speakerMuted={voice.speakerMuted}
-          onToggleSpeaker={voice.toggleSpeaker}
-          onEndCall={handleEndChat}
-        />
+        <MediaControlProvider consultationId={newFlowId ?? null}>
+          <ExpertSessionDock
+            client={{
+              name: clientName || "Client",
+              avatar: clientAvatar ?? undefined,
+            }}
+            kind={dockKind}
+            phase={(voice.voicePhase ?? "connecting") as ExpertSessionPhase}
+            metrics={{
+              elapsedSeconds: elapsedTime,
+              remainingSeconds,
+              ratePerMinute: resolvedRatePerMinute,
+            }}
+            muted={voice.muted}
+            onToggleMute={voice.toggleMic}
+            speakerMuted={voice.speakerMuted}
+            onToggleSpeaker={voice.toggleSpeaker}
+            onEndCall={handleEndChat}
+          />
+        </MediaControlProvider>
       )}
 
       {paused && pauseWaitSeconds !== null && (

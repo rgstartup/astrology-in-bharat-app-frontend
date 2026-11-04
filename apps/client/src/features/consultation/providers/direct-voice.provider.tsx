@@ -3,6 +3,7 @@
 import React, {
   createContext,
   useContext,
+  useCallback,
   useState,
   useMemo,
   useEffect,
@@ -23,8 +24,24 @@ export interface DirectVoiceContextValue {
   directVoice: ReturnType<typeof useDirectVoice>;
   isDirectVoice: boolean;
   showVoiceStage: boolean;
+  /** @deprecated Use context methods directly instead of dockProps */
   dockProps: SessionDockProps | null;
   openVoiceCancel: () => void;
+
+  // Direct method exposure for consumers (SessionDock, VoiceStage, VoiceControls)
+  toggleMic: () => void;
+  toggleSpeaker: () => void;
+  toggleCamera: () => void;
+  endVoice: () => void;
+  cancelVoice: () => void;
+  switchToChat: () => void;
+  toggleExpand: () => void;
+  /** Pauses the billing timer and mutes mic + speaker without ending the call. */
+  pauseVoice: () => void;
+
+  // Derived state for SessionDock
+  elapsedText: string;
+  rate: number;
 }
 
 const DirectVoiceContext = createContext<DirectVoiceContextValue | null>(null);
@@ -105,11 +122,20 @@ export function DirectVoiceProvider({ children }: DirectVoiceProviderProps) {
     refreshSessions,
     directVoice,
     handleEndChat,
-    muted: directVoice.muted,
-    speakerMuted: directVoice.speakerMuted,
-    toggleMic: directVoice.toggleMic,
-    toggleSpeaker: directVoice.toggleSpeaker,
   });
+
+  // Pauses the billing timer and mutes local media without ending the call.
+  // Used by the PhoneOff button in direct voice mode so the consultation
+  // stays alive while the client is muted/on hold.
+  const pauseVoice = useCallback(async (): Promise<void> => {
+    await pauseLiveChat().catch(() => undefined);
+    if (!directVoice.muted) {
+      await directVoice.toggleMic().catch(() => undefined);
+    }
+    if (!directVoice.speakerMuted) {
+      await directVoice.toggleSpeaker().catch(() => undefined);
+    }
+  }, [pauseLiveChat, directVoice]);
 
   const showVoiceStage =
     !isSessionEnded &&
@@ -156,8 +182,25 @@ export function DirectVoiceProvider({ children }: DirectVoiceProviderProps) {
       showVoiceStage,
       dockProps,
       openVoiceCancel,
+      // Direct method exposure for consumers (SessionDock, VoiceStage, VoiceControls)
+      toggleMic: () => void directVoice.toggleMic(),
+      toggleSpeaker: () => void directVoice.toggleSpeaker(),
+      toggleCamera: () => void directVoice.toggleCamera(),
+      endVoice: () => void directVoice.endVoice(),
+      cancelVoice: () => void directVoice.cancelVoice(),
+      switchToChat: () => void directVoice.switchToChat(),
+      // toggleExpand is managed by SessionDock local state, not by directVoice
+      // Consumers should use their own local state for expand/collapse
+      toggleExpand: () => {
+        // no-op: expand is local UI state in SessionDock
+      },
+      // Pause billing timer + mute mic/speaker without ending the call.
+      pauseVoice: () => void pauseVoice(),
+      // Derived state for SessionDock
+      elapsedText: formatTime(elapsedTime),
+      rate: displayVoiceRate,
     }),
-    [directVoice, isDirectVoice, showVoiceStage, dockProps, openVoiceCancel],
+    [directVoice, isDirectVoice, showVoiceStage, dockProps, openVoiceCancel, pauseVoice, elapsedTime, displayVoiceRate],
   );
 
   return (

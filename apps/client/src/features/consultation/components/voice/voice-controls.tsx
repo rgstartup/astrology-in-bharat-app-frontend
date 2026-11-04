@@ -1,21 +1,26 @@
 "use client";
 
 import React from "react";
-import { MessageSquareText, Mic, MicOff, PhoneOff, Volume2, VolumeX } from "@repo/design/lucide";
+import {
+  MessageSquareText,
+  Mic,
+  MicOff,
+  PhoneOff,
+  Volume2,
+  VolumeX,
+} from "@repo/design/lucide";
 import { Button } from "@repo/design/shadcn";
 import { cn } from "@repo/design/cn";
+import { useDirectVoiceContext } from "../../providers/direct-voice.provider";
+import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
+import { useVoiceCancelActions } from "../../providers/use-voice-cancel-actions";
 
 type VoiceControlsProps = {
-  onBackToChat: () => void;
-  onEndVoice: () => void;
-  onCancelRequest?: () => void;
   isRequesting?: boolean;
   /** Mute state owned by the RTC session — never a local copy. */
   muted: boolean;
-  onToggleMute: () => void;
   /** Speaker state owned by the RTC session — never a local copy. */
   speakerMuted: boolean;
-  onToggleSpeaker: () => void;
   className?: string;
 };
 
@@ -84,7 +89,11 @@ function MicToggle({
     );
   }
   return (
-    <ControlButton pressed={false} label="Mute microphone" onToggle={onToggleMute}>
+    <ControlButton
+      pressed={false}
+      label="Mute microphone"
+      onToggle={onToggleMute}
+    >
       <Mic className="size-5" />
     </ControlButton>
   );
@@ -111,7 +120,11 @@ function SpeakerToggle({
     );
   }
   return (
-    <ControlButton pressed={false} label="Turn speaker off" onToggle={onToggleSpeaker}>
+    <ControlButton
+      pressed={false}
+      label="Turn speaker off"
+      onToggle={onToggleSpeaker}
+    >
       <Volume2 className="size-5" />
     </ControlButton>
   );
@@ -141,7 +154,13 @@ function CancelRequest({ onCancel }: { onCancel: () => void }) {
  * @param props - Navigation and end handlers.
  * @returns Live actions element.
  */
-function LiveActions({ onBackToChat, onEndVoice }: Pick<VoiceControlsProps, "onBackToChat" | "onEndVoice">) {
+function LiveActions({
+  onBackToChat,
+  onEndVoice,
+}: {
+  onBackToChat: () => void;
+  onEndVoice: () => void;
+}) {
   return (
     <div className="flex items-center justify-center gap-3">
       <Button
@@ -167,36 +186,72 @@ function LiveActions({ onBackToChat, onEndVoice }: Pick<VoiceControlsProps, "onB
  * Voice control cluster: mute, speaker, and phase-appropriate primary actions.
  * All targets are 48px per the Intercom-Airbnb touch-target rule.
  *
- * @param props - Callbacks and requesting flag.
+ * Consumes callbacks from context based on session mode:
+ * - Direct voice (voice-first): uses `useDirectVoiceContext`
+ * - Switch-to-voice (chat upgrade): uses `useSwitchToVoiceContext`
+ *
+ * @param props - State flags (no callbacks).
  * @returns Voice controls element.
  */
 export function VoiceControls({
-  onBackToChat,
-  onEndVoice,
-  onCancelRequest,
   isRequesting = false,
   muted,
-  onToggleMute,
   speakerMuted,
-  onToggleSpeaker,
   className,
 }: VoiceControlsProps) {
+  // Context hooks - only one will be active based on session mode
+  const directVoice = useDirectVoiceContext();
+  const switchToVoice = useSwitchToVoiceContext();
+
+  // Determine which context is active
+  const isDirectVoice = directVoice.isDirectVoice;
+
+  // Select callbacks based on active mode
+  const toggleMic = isDirectVoice
+    ? directVoice.toggleMic
+    : switchToVoice.toggleMic;
+  const toggleSpeaker = isDirectVoice
+    ? directVoice.toggleSpeaker
+    : switchToVoice.toggleSpeaker;
+  const cancelVoice = isDirectVoice
+    ? directVoice.cancelVoice
+    : switchToVoice.cancelVoice;
+  const minimizeVoice = isDirectVoice
+    ? directVoice.switchToChat
+    : switchToVoice.minimizeVoice;
+  const endVoice = isDirectVoice
+    ? directVoice.openVoiceCancel
+    : switchToVoice.endVoice;
+
   if (isRequesting) {
     return (
-      <div className={cn("flex items-center justify-center gap-3 px-6 py-4", className)}>
-        <MicToggle muted={muted} onToggleMute={onToggleMute} />
-        <SpeakerToggle speakerMuted={speakerMuted} onToggleSpeaker={onToggleSpeaker} />
-        <CancelRequest onCancel={onCancelRequest ?? onEndVoice} />
+      <div
+        className={cn(
+          "flex items-center justify-center gap-3 px-6 py-4",
+          className,
+        )}
+      >
+        <MicToggle muted={muted} onToggleMute={toggleMic} />
+        <SpeakerToggle
+          speakerMuted={speakerMuted}
+          onToggleSpeaker={toggleSpeaker}
+        />
+        <CancelRequest onCancel={cancelVoice} />
       </div>
     );
   }
   return (
-    <div className={cn("flex flex-col items-center gap-4 px-6 py-4", className)}>
+    <div
+      className={cn("flex flex-col items-center gap-4 px-6 py-4", className)}
+    >
       <div className="flex items-center justify-center gap-4">
-        <MicToggle muted={muted} onToggleMute={onToggleMute} />
-        <SpeakerToggle speakerMuted={speakerMuted} onToggleSpeaker={onToggleSpeaker} />
+        <MicToggle muted={muted} onToggleMute={toggleMic} />
+        <SpeakerToggle
+          speakerMuted={speakerMuted}
+          onToggleSpeaker={toggleSpeaker}
+        />
       </div>
-      <LiveActions onBackToChat={onBackToChat} onEndVoice={onEndVoice} />
+      <LiveActions onBackToChat={minimizeVoice} onEndVoice={endVoice} />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Check, Loader2 } from "@repo/design/lucide";
 import { cn } from "@repo/design/cn";
-import type { MediaConnectionStep, MediaKind } from "../types/media-connection-types";
+import type { MediaConnectionStep, MediaKind } from "../../types/media-connection-types";
 
 type MediaConnectionBadgeProps = {
   kind: MediaKind;

@@ -45,8 +45,10 @@ export function calculateSessionTiming({
     decision === "accepted" ||
     joinedStatus === "accepted" ||
     joinedStatus === "active" ||
+    joinedStatus === "paused" ||
     consultationState?.state === "accepted" ||
-    consultationState?.state === "active";
+    consultationState?.state === "active" ||
+    consultationState?.state === "paused";
 
   const isHistoryEnded =
     sessions.length > 0 &&

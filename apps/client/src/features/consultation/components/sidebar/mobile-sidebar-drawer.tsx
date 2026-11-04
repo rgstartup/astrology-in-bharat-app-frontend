@@ -19,6 +19,11 @@ import { useRoomSession } from "../../providers/room-lifecycle";
 import { useSwitchToVoiceContext } from "../../providers/switch-to-voice.provider";
 import { formatTime } from "../../utils/format-time";
 
+export type MobileSidebarDrawerProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
 /**
  * Mobile drawer for the consultation sidebar, expanding from left sheet on viewports < 768px.
  *
@@ -28,10 +33,7 @@ import { formatTime } from "../../utils/format-time";
 export function MobileSidebarDrawer({
   open,
   onOpenChange,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) {
+}: MobileSidebarDrawerProps) {
   const { expertData, roomConsultationId } = useRoomIdentity();
   const { elapsedTime, timeLeft, isSessionEnded } = useRoomSession();
   const { handleUpgrade } = useSwitchToVoiceContext();

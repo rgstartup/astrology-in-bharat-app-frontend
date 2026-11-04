@@ -2,7 +2,7 @@ import React from "react";
 import { Mic, MicOff, Video, VideoOff } from "@repo/design/lucide";
 import { Button } from "@repo/design/shadcn";
 import { cn } from "@repo/design/cn";
-import type { MediaKind } from "../types/media-connection-types";
+import type { MediaKind } from "../../types/media-connection-types";
 
 type MediaControlsPreviewProps = {
   kind: MediaKind;
