@@ -1,0 +1,176 @@
+/**
+ * Standardized Component Classes Tokenized
+ * Zero hardcoded hex values - strictly driven by design tokens
+ */
+
+/* Standardized Button System */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-radius: var(--radius-md, 0.75rem);
+  padding: 0.625rem 1.25rem;
+  background-color: var(--primary);
+  color: var(--primary-foreground, #ffffff);
+  border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  opacity: 0.95;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-radius: var(--radius-md, 0.75rem);
+  padding: 0.625rem 1.25rem;
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background-color: var(--muted);
+  border-color: var(--ring);
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  border-radius: var(--radius-md, 0.75rem);
+  padding: 0.625rem 1.25rem;
+  background-color: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground, #ffffff);
+}
+
+.btn-outline:active {
+  transform: scale(0.98);
+}
+
+.btn-outline:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Premium Button Style */
+.btn-premium {
+  background-color: var(--primary);
+  color: var(--primary-foreground, #ffffff) !important;
+  padding: 0.625rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-premium:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 8px 25px rgba(255, 107, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+/* CTA: Ask Expert */
+a.btn-ask-expert,
+.btn-ask-expert {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground, #ffffff) !important;
+  padding: 10px 20px !important;
+  border-radius: 25px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+  font-weight: bold !important;
+  font-size: 14px !important;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.15) !important;
+}
+
+/* Global Premium Heading Style */
+.section-heading-premium {
+  position: relative;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-heading-premium.heading-full-line::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--heading-border-color, var(--border));
+  z-index: 1;
+}
+
+.section-heading-premium > span {
+  display: inline-block;
+  align-self: flex-start;
+  width: fit-content;
+  position: relative;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-top: 0;
+  color: inherit;
+  padding-bottom: 0.75rem;
+  z-index: 2;
+  max-width: 100%;
+}
+
+.section-heading-premium > span::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary);
+}

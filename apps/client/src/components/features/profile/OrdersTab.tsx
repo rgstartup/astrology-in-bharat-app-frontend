@@ -418,7 +418,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({
               {t.noOrdersHint}
             </p>
             <NextLink
-              href={PATHS.BUY_PRODUCTS}
+              href={PATHS.SHOP.ROOT}
               className="px-8 py-3 bg-orange text-white font-bold rounded-2xl shadow-lg shadow-orange/20 hover:bg-orange/90 transition-all no-underline"
             >
               {t.shopNow}

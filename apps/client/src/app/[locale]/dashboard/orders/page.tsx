@@ -45,7 +45,7 @@ export default function MyOrdersDashboardPage() {
           </p>
         </div>
 
-        <Link href={PATHS.BUY_PRODUCTS} className="no-underline">
+        <Link href={PATHS.SHOP.ROOT} className="no-underline">
           <Button variant="default" size="sm" className="font-bold">
             <ShoppingBag className="w-3.5 h-3.5 mr-1.5" />
             <span>Explore Astro Shop</span>
@@ -73,7 +73,7 @@ export default function MyOrdersDashboardPage() {
           <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto mb-6">
             Find energized rudraksha beads, yantras, certified gemstones, and puja samagri in our store.
           </p>
-          <Link href={PATHS.BUY_PRODUCTS} className="no-underline">
+          <Link href={PATHS.SHOP.ROOT} className="no-underline">
             <Button variant="default" className="font-bold">
               <span>Visit Astrology Store</span>
             </Button>

@@ -1,0 +1,69 @@
+/**
+ * Base Typography, Resets & Global Element Styles
+ * Part of @repo/design
+ */
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Hindi Typography Override (when lang="hi") */
+html[lang="hi"] {
+  --font-poppins: "Noto Sans Devanagari", sans-serif !important;
+  --font-outfit: "Noto Sans Devanagari", sans-serif !important;
+  --font-sans: "Noto Sans Devanagari", sans-serif !important;
+  --font-display: "Noto Sans Devanagari", sans-serif !important;
+}
+
+html[lang="hi"],
+html[lang="hi"] body,
+html[lang="hi"] h1,
+html[lang="hi"] h2,
+html[lang="hi"] h3,
+html[lang="hi"] h4,
+html[lang="hi"] h5,
+html[lang="hi"] h6,
+html[lang="hi"] p,
+html[lang="hi"] span,
+html[lang="hi"] a,
+html[lang="hi"] button,
+html[lang="hi"] input,
+html[lang="hi"] select,
+html[lang="hi"] textarea,
+html[lang="hi"] label,
+html[lang="hi"] .font-display,
+html[lang="hi"] .font-sans,
+html[lang="hi"] .font-serif {
+  font-family: "Noto Sans Devanagari", sans-serif !important;
+}

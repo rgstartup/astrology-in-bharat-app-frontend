@@ -224,7 +224,7 @@ export const NAV_ITEMS_CONFIG: NavMenuSectionConfig[] = [
     id: "products",
     titleKey: "products.title",
     descKey: "products.description",
-    href: PATHS.PRODUCTS,
+    href: PATHS.SHOP.ROOT,
     icon: ShoppingBag,
     iconColor: "text-emerald-600",
     iconBg: "bg-emerald-50",

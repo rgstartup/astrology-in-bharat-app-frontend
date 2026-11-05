@@ -55,33 +55,10 @@ export const useCheckout = () => {
 
   useEffect(() => {
     if (isOrder) {
-      const urlProductId = searchParams.get("productId");
-      const urlQuantity = searchParams.get("quantity");
-
-      if (urlProductId) {
-        console.log("[CHECKOUT] Setting buyNowInfo from URL:", urlProductId, urlQuantity);
-        setBuyNowInfo({
-          productId: urlProductId,
-          quantity: parseInt(urlQuantity || "1"),
-        });
-      } else {
-        const stored = sessionStorage.getItem("buyNowItem");
-        if (stored) {
-          try {
-            const parsed = JSON.parse(stored);
-            console.log("[CHECKOUT] Setting buyNowInfo from Storage:", parsed);
-            setBuyNowInfo(parsed);
-          } catch (e) {
-            console.error("Error parsing buyNowItem:", e);
-          }
-        }
-      }
-    } else {
-      // Not a product order (maybe consultation), clear buyNowItem
-      sessionStorage.removeItem("buyNowItem");
-      setBuyNowInfo(null);
+      const q = searchParams.toString();
+      router.replace(`/shop/checkout${q ? `?${q}` : ""}`);
     }
-  }, [isOrder, searchParams]);
+  }, [isOrder, searchParams, router]);
 
   useEffect(() => {
     const fetchRewards = async () => {
@@ -103,7 +80,7 @@ export const useCheckout = () => {
   const shippingCharge = useMemo(() => {
     if (!isOrder) return 0;
     if (buyNowInfo && directProduct) {
-      return directProduct.is_shipping_chargeable ? Number(directProduct.shipping_charge) || 0 : 0;
+      return (directProduct as any).is_shipping_chargeable ? Number((directProduct as any).shipping_charge) || 0 : 0;
     }
 
     // Calculate shipping per merchant for cart

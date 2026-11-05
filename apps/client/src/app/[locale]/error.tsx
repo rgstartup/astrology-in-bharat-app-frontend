@@ -30,8 +30,8 @@ export default function Error({
 
         {/* Description */}
         <p className="mb-6 text-sm leading-relaxed text-gray-500">
-          We couldn’t complete your request right now. Please try again or go
-          back to the homepage.
+          We couldn&apos;t complete your request right now. Please try again or
+          go back to the homepage.
         </p>
 
         {/* Actions */}

@@ -8,7 +8,6 @@ import UserProfileDropdown from "@/features/profile";
 
 import LanguageSwitcherDropdown from "./language-switcher.button";
 import BalanceIndicator from "./balance-indicator.button";
-import CartComponent from "./cart";
 
 const TopHeader = () => {
   const t = useTranslations("Header");
@@ -44,9 +43,6 @@ const TopHeader = () => {
 
             {/* Wallet Balance Indicator */}
             <BalanceIndicator />
-
-            {/* Cart */}
-            <CartComponent />
 
             {/* Notifications (renders when authenticated) */}
             <NotificationComponent />

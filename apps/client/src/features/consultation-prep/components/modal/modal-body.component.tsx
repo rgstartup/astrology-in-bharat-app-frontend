@@ -44,21 +44,7 @@ const ModalBody = ({
   onRecharge,
   onRechargeSuccess,
 }: ModalBodyProps) => {
-  const {
-    loading,
-    expert,
-    isExpertAvailable,
-    isAuthenticated,
-    askSomeoneElse,
-    setAskSomeoneElse,
-    someoneElseData,
-    setSomeoneElseData,
-    handleStartConsultation,
-    actionLoading,
-    deviceHint,
-    retryDeviceProbe,
-    needsRecharge,
-  } = useConsultationPrepController();
+  const { loading, expert, needsRecharge } = useConsultationPrepController();
 
   if (loading) return <PrepSkeleton />;
 

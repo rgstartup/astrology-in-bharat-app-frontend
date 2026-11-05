@@ -2,7 +2,27 @@
   "name": "@repo/design",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "exports": {
+    "./tailwind": "./src/tailwind/index.ts",
+    "./tokens": "./src/tokens/index.ts",
+    "./themes": "./src/themes/index.ts",
+    "./styles": {
+      "types": "./styles/index.d.ts",
+      "default": "./styles/index.css"
+    },
+    "./styles.css": {
+      "types": "./styles/index.d.ts",
+      "default": "./styles/index.css"
+    },
+    "./styles/index.css": {
+      "types": "./styles/index.d.ts",
+      "default": "./styles/index.css"
+    },
+    "./styles/*": {
+      "types": "./styles/index.d.ts",
+      "default": "./styles/*.css"
+    },
     "./shadcn": "./src/shadcn/index.ts",
     "./shadcn/*": "./src/shadcn/*.tsx",
     "./components": "./src/components/index.ts",

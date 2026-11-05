@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useWishlistStore } from "@/store/wishlistStore";
-import { ProductCard } from "@/components/features/shop/ProductCard";
+import { ProductCard } from "@/features/shop";
 import { ExpertCard } from "@/features/experts";
 import { FaHeart, FaGift, FaUserAstronaut, FaSpinner } from "@repo/design/react-icons";
 import { HiOutlineSparkles } from "@repo/design/react-icons";

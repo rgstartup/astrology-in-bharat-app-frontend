@@ -5,6 +5,9 @@ declare module "*.module.css" {
   export default classes;
 }
 
+declare module "@repo/design/styles";
+declare module "@repo/design/styles/*";
+
 declare module "swiper/css";
 declare module "swiper/css/navigation";
 declare module "swiper/css/pagination";

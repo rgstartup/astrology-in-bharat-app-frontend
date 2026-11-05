@@ -4,8 +4,6 @@ import { isAppLocale } from "@/i18n/routing";
 export async function POST(request: NextRequest) {
   const { locale } = await request.json().catch(() => ({}));
 
-  console.log({ locale });
-
   if (!isAppLocale(locale)) {
     return NextResponse.json({ error: "Unsupported locale" }, { status: 400 });
   }
