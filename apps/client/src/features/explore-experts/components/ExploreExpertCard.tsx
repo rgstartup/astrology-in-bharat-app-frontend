@@ -18,7 +18,7 @@ import { Card } from "@repo/design/shadcn";
 import { useAuthStore } from "@/store/authStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useWishlist } from "@/hooks/useWishlist";
-import { useExpertListStore } from "@/store/expertListStore";
+import { usePreloadExpertStore } from "@/store/preloadExpertStore";
 import { isVideoConsultationEnabled } from "@/lib/feature-flags";
 import { toast } from "@repo/design/shadcn";
 import type { IExpert } from "@repo/lib";
@@ -39,7 +39,7 @@ export function ExploreExpertCard({ expert }: ExploreExpertCardProps) {
   const { isAuthenticated } = useAuthStore();
   const { isExpertInWishlist } = useWishlistStore();
   const { toggleLike } = useWishlist();
-  const { setPreloadedExpert } = useExpertListStore();
+  const { setPreloadedExpert } = usePreloadExpertStore();
 
   const [currentLikes, setCurrentLikes] = useState(expert.total_likes || 0);
 

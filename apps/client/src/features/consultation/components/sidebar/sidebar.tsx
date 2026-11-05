@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@repo/design/shadcn";
-import ExpertCard from "@/components/features/experts/ExpertCard";
+import { ExpertCard } from "@/features/experts";
 import { IExpert } from "@repo/lib";
 
 type SidebarProps = {

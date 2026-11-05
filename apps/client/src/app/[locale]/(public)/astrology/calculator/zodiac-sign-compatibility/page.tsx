@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import PersonalGuidanceCard from "@/components/features/home/PersonalGuidanceCard";
 import ZodiacCompatibilitySeoContent from "./zodiac-compatibility-seo.component";
-import ChooseYourZodiac from "@/features/home/ChooseYourZodiac";
+import ChooseYourZodiac from "@/features/home/components/choose-your-zodiac.component";
 import {
   ZODIAC_SIGNS,
   ELEMENT_COLORS,

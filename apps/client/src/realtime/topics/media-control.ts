@@ -71,12 +71,17 @@ export const unmuteSpeaker = (consultationId: number): Promise<MediaControlAck> 
 /**
  * Pause the consultation billing timer (goes through orchestrator.pause with billing_hold reason).
  * Budget-critical operation requiring ACK.
+ *
+ * @param intent - 'cancel_dialog' asks the server to arm the cancel-dialog
+ *   grace window; the ack then carries the server-granted `graceDeadline`.
  */
 export const pauseTimer = (
   consultationId: number,
+  intent?: "cancel_dialog",
 ): Promise<MediaControlAck> =>
   emitWithAck<MediaControlAck>(MEDIA_CONTROL_EVENTS.COMMANDS.PAUSE_TIMER, {
     consultationId,
+    ...(intent ? { intent } : {}),
   });
 
 /**

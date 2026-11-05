@@ -5,8 +5,8 @@ import { api, API_ROUTES } from "@/actions";
 import { usePresenceStore } from "@/store/presenceStore";
 import { ExpertClientStatus, toExpertStatus } from "@/realtime/types/presence";
 import type { IExpert, Specialization } from "@repo/lib";
-import { fetchSpecializations } from "@/features/home/expert-list-wrapper/expert-list/api/fetch-specializations";
-import dummyExperts from "@/features/home/expert-list-wrapper/expert-list/data/dummy-experts.json";
+import { fetchSpecializations } from "../api/fetch-specializations";
+import dummyExperts from "../data/dummy-experts.json";
 import { ExploreFilterState, SortOption, ConsultationMode } from "../types";
 
 export const defaultFilters: ExploreFilterState = {
@@ -122,9 +122,11 @@ export function useExploreExperts(initialExperts?: Expert[]) {
 
   // Fetch available specializations on mount
   useEffect(() => {
-    fetchSpecializations().then(([res]) => {
-      if (res?.data && res.data.length > 0) {
-        setSpecializationsList(res.data);
+    fetchSpecializations().then((result) => {
+      if (!result.ok) return;
+      const list = result.data.data;
+      if (list && list.length > 0) {
+        setSpecializationsList(list);
       }
     });
   }, []);

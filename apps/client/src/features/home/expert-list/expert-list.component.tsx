@@ -1,0 +1,209 @@
+"use client";
+
+import React, { useEffect, useMemo, useRef, useCallback } from "react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import ExpertListHeader from "./components/expert-list-header.component";
+import ExpertSlider from "./components/expert-slider.component";
+import { useExpertListStore } from "@/store/expertListStore";
+import { useDebounceValue } from "@/hooks/external-hooks";
+import { apiV2, API_ROUTES } from "@/actions";
+import { usePresenceStore } from "@/store/presenceStore";
+import { toExpertStatus } from "@/realtime/types/presence";
+import { toast } from "@repo/design/shadcn";
+import { IExpert, PaginationMeta } from "@repo/lib";
+import { IFetchExpertsResponse } from "./api/fetch-expert";
+
+export interface ExpertListDataProps {
+  initialExperts: IExpert[];
+  initialPagination?: PaginationMeta;
+  initialError?: string;
+  title?: string;
+}
+
+const ExpertList: React.FC<ExpertListDataProps> = ({
+  initialExperts,
+  initialPagination,
+  initialError,
+  title,
+}) => {
+  const t = useTranslations("Home");
+  const store = useExpertListStore();
+  const { filterState, setExperts, setHasMore, setLoading, buildFetchParams } =
+    store;
+
+  const [debouncedSearch] = useDebounceValue(store.searchQuery, 400);
+
+  const querySignature = JSON.stringify({
+    search: debouncedSearch,
+    specialization: store.selectedSpecialization,
+    filters: filterState,
+  });
+  const previousQuerySignature = useRef<string | null>(null);
+
+  const isFiltered = useMemo(() => {
+    return (
+      store.searchQuery.trim() !== "" ||
+      store.selectedSpecialization !== "" ||
+      filterState.language !== "" ||
+      filterState.minPrice !== 0 ||
+      filterState.maxPrice !== 1000 ||
+      filterState.minRating !== 0 ||
+      filterState.onlyOnline !== false ||
+      filterState.sortBy !== "newest"
+    );
+  }, [filterState, store.searchQuery, store.selectedSpecialization]);
+
+  const defaultList = useMemo(() => initialExperts, [initialExperts]);
+
+  // Live filter / fetch handler
+  const fetchFilteredExperts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = buildFetchParams(1, debouncedSearch);
+      const query = new URLSearchParams(params).toString();
+
+      const result = await apiV2
+        .get<IFetchExpertsResponse>(`${API_ROUTES.EXPERTS.LIST}?${query}`)
+        .finally(() => setLoading(false));
+
+      if (!result.ok) {
+        // If API fails or backend is unreachable, filter fallback locally
+        let filtered = [...defaultList];
+        if (debouncedSearch) {
+          filtered = filtered.filter((e) =>
+            e.name.toLowerCase().includes(debouncedSearch.toLowerCase()),
+          );
+        }
+        if (filterState.onlyOnline) {
+          filtered = filtered.filter(
+            (e) => e.isAvailableForConsultation ?? e.status === "online",
+          );
+        }
+        if (filterState.minRating > 0) {
+          filtered = filtered.filter(
+            (e) => (e.rating || 5) >= filterState.minRating,
+          );
+        }
+        if (filterState.language) {
+          filtered = filtered.filter((e) =>
+            String(e.languages)
+              .toLowerCase()
+              .includes(filterState.language.toLowerCase()),
+          );
+        }
+        setExperts(filtered.length > 0 ? filtered : defaultList);
+        return;
+      }
+
+      const list = result.data.data || [];
+      setExperts(list.length > 0 ? list : defaultList);
+      setHasMore(Boolean(result.data.meta?.hasNextPage));
+    } catch {
+      setLoading(false);
+      setExperts(defaultList);
+    }
+  }, [
+    buildFetchParams,
+    debouncedSearch,
+    defaultList,
+    filterState,
+    setExperts,
+    setHasMore,
+    setLoading,
+  ]);
+
+  // Handle live search / filter changes
+  useEffect(() => {
+    if (previousQuerySignature.current === null) {
+      // First mount: set initial experts
+      previousQuerySignature.current = querySignature;
+      setExperts(defaultList);
+      setHasMore(initialPagination?.hasNextPage ?? false);
+      return;
+    }
+
+    if (previousQuerySignature.current === querySignature) return;
+    previousQuerySignature.current = querySignature;
+
+    if (!isFiltered) {
+      setExperts(defaultList);
+      return;
+    }
+
+    void fetchFilteredExperts();
+  }, [
+    defaultList,
+    fetchFilteredExperts,
+    initialPagination?.hasNextPage,
+    isFiltered,
+    querySignature,
+    setExperts,
+    setHasMore,
+  ]);
+
+  useEffect(() => {
+    if (!initialError) return;
+    toast.error(initialError, {
+      toastId: `expert-list-${initialError}`,
+    });
+  }, [initialError]);
+
+  // The SSR snapshot seeds the store but joins no presence rooms; without
+  // this the cards never receive `presence:updated` (the backend fans out
+  // room-only) and stay stale until a reload or profile visit.
+  useEffect(() => {
+    if (initialExperts.length === 0) return;
+    const presenceStore = usePresenceStore.getState();
+    presenceStore.batchSetExpertStatus(
+      initialExperts.map((item) => ({
+        expertId: Number(item.id),
+        status: toExpertStatus(
+          item.status ?? item.isAvailableForConsultation ?? item.is_available,
+        ),
+        lastSeenAt: item.lastSeenAt ?? item.last_seen_at ?? null,
+      })),
+    );
+    presenceStore.subscribeManyToExperts(
+      initialExperts.map((item) => Number(item.id)),
+    );
+  }, [initialExperts]);
+
+  return (
+    <section
+      id="our-experts"
+      className="pt-6 pb-12 relative overflow-hidden"
+      style={{
+        backgroundColor: "#301118",
+        backgroundImage: "url(/images/bg-dark.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div className="max-w-[1360px] mx-auto px-4 md:px-8 lg:px-12">
+        {/* Redesigned Top Filter Menu */}
+        <ExpertListHeader title={title} />
+
+        {/* Carousel Content */}
+        <ExpertSlider />
+
+        {/* View all link */}
+        <div className="view-all mt-6 md:mt-8 text-center">
+          <Link
+            href="/consultants"
+            className="btn-primary rounded-full px-8 py-3.5 text-sm font-bold shadow-xl shadow-orange/20 transition-all inline-flex items-center gap-2.5"
+          >
+            <i className="fa-regular fa-user" />
+            <span>
+              {t("expertSection.viewAllExperts") || "Explore All Experts"}
+            </span>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ExpertList;

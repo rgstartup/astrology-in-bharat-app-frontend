@@ -142,6 +142,7 @@ export function VoiceProvider({ children }: VoiceProviderProps) {
   const {
     voiceCancelOpen,
     voiceCancelBusy,
+    voiceGraceSeconds,
     openVoiceCancel,
     handleVoiceCancelOpenChange,
     handleVoiceContinueOverChat,
@@ -242,6 +243,7 @@ export function VoiceProvider({ children }: VoiceProviderProps) {
             void handleVoiceEndSession();
           }}
           busy={voiceCancelBusy}
+          graceSeconds={voiceGraceSeconds}
         />
       )}
       {children}

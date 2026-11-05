@@ -1,5 +1,5 @@
 import React from "react";
-import ExpertProductsSection from "@/components/features/experts/ExpertProductsSection";
+import { ExpertProductsSection } from "@/features/experts";
 import { fetchExpertProducts } from "@/actions/expert-products";
 import { ProductGroup } from "@repo/lib";
 

@@ -1,9 +1,9 @@
 import React from "react";
-import HeroSection from "@/features/home/HeroSection";
-import ExpertConsultant from "@/features/home/ExpertConsultant";
-import ChooseYourZodiac from "@/features/home/ChooseYourZodiac";
-import WhyChooseUs from "@/features/home/WhyChooseUs";
-import CTA from "@/features/home/CTA";
+import HeroSection from "@/features/home/components/hero-section.component";
+import ExpertConsultant from "@/features/home/components/expert-consultant.component";
+import ChooseYourZodiac from "@/features/home/components/choose-your-zodiac.component";
+import WhyChooseUs from "@/features/home/components/why-choose-us.component";
+import CTA from "@/features/home/components/cta.component";
 import ClientLayout from "@/components/layout/ClientLayout";
 
 export default function HomeLayout({

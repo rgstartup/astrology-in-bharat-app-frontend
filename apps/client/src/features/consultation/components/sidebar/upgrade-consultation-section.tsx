@@ -1,18 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { cn } from "@repo/design/cn";
 import { ArrowUpRight, Phone, Sparkles, Video } from "@repo/design/lucide";
 import type { IExpert } from "@repo/lib";
-import { Button } from "@repo/design/shadcn";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@repo/design/shadcn";
-import { cn } from "@repo/design/cn";
 import UpgradeSessionDialog from "../dialog/upgrade-session-dialog";
 
 type UpgradeConsultationSectionProps = {

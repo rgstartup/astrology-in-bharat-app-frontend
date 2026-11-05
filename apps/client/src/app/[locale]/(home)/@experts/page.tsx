@@ -1,4 +1,4 @@
-import { ExpertSliderList } from "@/features/home/expert-list-wrapper";
+import { ExpertSliderList } from "@/features/home/expert-list";
 
 export default async function ExpertsSlot({
   searchParams,

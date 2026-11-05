@@ -1,60 +1,74 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
 import { VoiceCancelDialog } from "@/features/consultation";
 
-type CancelHarnessProps = {
-  busy?: boolean;
-};
-
-/**
- * Harness for the leave-voice warning: the trigger mirrors the dock button
- * that opens the popup.
- *
- * @param props - Busy flag of the switch request.
- * @returns Trigger button and the warning popup.
- */
-function CancelHarness({ busy = false }: CancelHarnessProps) {
-  const [open, setOpen] = useState(true);
-
-  return (
-    <div className="w-full max-w-sm rounded-2xl border border-[#d3cec6] bg-[#f5f1ec] p-6">
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="rounded-full bg-[#111111] px-4 py-2 text-sm font-medium text-white hover:bg-black"
-      >
-        Leave the voice call
-      </button>
-      <VoiceCancelDialog
-        open={open}
-        onOpenChange={setOpen}
-        onContinueOverChat={() => setOpen(false)}
-        onEndSession={() => setOpen(false)}
-        busy={busy}
-      />
-    </div>
-  );
+function noop() {
+  return undefined;
 }
 
-const meta: Meta<typeof CancelHarness> = {
-  title: "Chat/Room/VoiceCancelWarning",
-  component: CancelHarness,
+const baseArgs = {
+  open: true,
+  onOpenChange: noop,
+  onContinueOverChat: noop,
+  onEndSession: noop,
+} as const;
+
+const meta: Meta<typeof VoiceCancelDialog> = {
+  title: "Chat/Room/VoiceCancelDialog",
+  component: VoiceCancelDialog,
   parameters: {
     layout: "centered",
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof CancelHarness>;
+type Story = StoryObj<typeof VoiceCancelDialog>;
 
-/** Warning popup: continue the consultation over chat or end it entirely. */
-export const Warning: Story = {
-  render: () => <CancelHarness />,
+/** Default warning: no grace countdown (pause ack carried no deadline). */
+export const NoGrace: Story = {
+  render: () => <VoiceCancelDialog {...baseArgs} busy={false} graceSeconds={null} />,
 };
 
-/** Busy state while the backend opens the new chat session. */
-export const Switching: Story = {
-  render: () => <CancelHarness busy />,
+/** Grace just granted: full server window, amber countdown. */
+export const GraceFresh: Story = {
+  render: () => <VoiceCancelDialog {...baseArgs} graceSeconds={30} />,
+};
+
+/** Grace nearly lapsed: red countdown, consultation ends automatically at zero. */
+export const GraceCritical: Story = {
+  render: () => <VoiceCancelDialog {...baseArgs} graceSeconds={5} />,
+};
+
+/** Switch-to-chat request in flight: buttons disabled, countdown frozen. */
+export const SwitchingBusy: Story = {
+  render: () => <VoiceCancelDialog {...baseArgs} busy graceSeconds={17} />,
+};
+
+/**
+ * Live countdown harness: ticks down exactly like the real flow where the
+ * remaining seconds are derived from the server-granted graceDeadline.
+ *
+ * @returns Live-ticking dialog element.
+ */
+function TickingHarness() {
+  const [graceSeconds, setGraceSeconds] = useState(30);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setGraceSeconds((current) => Math.max(0, current - 1));
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <VoiceCancelDialog
+      {...baseArgs}
+      graceSeconds={graceSeconds}
+    />
+  );
+}
+
+/** Animated case: countdown ticks from 30 to 0, turning red past 10 seconds. */
+export const GraceTicking: Story = {
+  render: () => <TickingHarness />,
 };

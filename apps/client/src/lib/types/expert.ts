@@ -83,19 +83,6 @@ export interface ExpertSortModalProps {
   applySort: () => void;
 }
 
-export interface ExpertListHeaderProps {
-  title?: string;
-  hasActiveFilters: boolean;
-  onOpenFilter: () => void;
-  onOpenSort: () => void;
-}
-
-export interface ExpertListWrapperProps {
-  searchParams: Record<string, string | string[] | undefined>;
-  layout?: "slider" | "grid";
-  title?: string;
-}
-
 export interface ExpertSectionProps {
   team: TeamMember[];
 }

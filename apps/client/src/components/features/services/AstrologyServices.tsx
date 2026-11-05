@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
+import NextLink from "next/link";
 import homepageData from "../../../../public/data/homepage.json";
 import ServiceCard from "./ServiceCard";
-import NextLink from "next/link";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 
 const Link = NextLink as any;
@@ -20,19 +20,21 @@ const AstrologyServices = () => {
           <div className="overflow-hidden">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-1 pb-1">
               {homepageData.astrologyServices.map((service) => (
-                  <div key={service.id} className="mb-4">
-                    <Link
-                      href="/our-experts"
-                      className="block h-full no-underline hover:text-inherit"
-                    >
-                      <ServiceCard item={{ ...service, id: String(service.id) }} />
-                    </Link>
-                  </div>
-                ))}
-              </div>
+                <div key={service.id} className="mb-4">
+                  <Link
+                    href="/our-experts"
+                    className="block h-full no-underline hover:text-inherit"
+                  >
+                    <ServiceCard
+                      item={{ ...service, id: String(service.id) }}
+                    />
+                  </Link>
+                </div>
+              ))}
             </div>
           </div>
         </div>
+      </div>
     </section>
   );
 };

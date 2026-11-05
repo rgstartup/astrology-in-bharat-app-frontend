@@ -19,6 +19,8 @@ export type VoiceCancelDialogProps = {
   onEndSession: () => void;
   /** True while the switch request is in flight. */
   busy?: boolean;
+  /** Seconds left before the consultation auto-ends; null hides the countdown. */
+  graceSeconds?: number | null;
 };
 
 /**
@@ -32,6 +34,7 @@ export function VoiceCancelDialog({
   onContinueOverChat,
   onEndSession,
   busy = false,
+  graceSeconds = null,
 }: VoiceCancelDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -45,6 +48,17 @@ export function VoiceCancelDialog({
         <DialogDescription className="mt-1.5 font-sans text-sm text-[#626260]">
           Continue this consultation over chat, or end the session entirely.
         </DialogDescription>
+        {typeof graceSeconds === "number" && (
+          <p
+            className={`mt-3 font-sans text-xs font-medium ${
+              graceSeconds <= 10 ? "text-red-600" : "text-amber-600"
+            }`}
+            aria-live="polite"
+          >
+            The consultation will end automatically in {graceSeconds}{" "}
+            {graceSeconds === 1 ? "second" : "seconds"}.
+          </p>
+        )}
         <div className="mt-5 flex flex-col gap-2">
           <Button
             className="w-full gap-2 rounded-full bg-[#111111] font-sans text-sm font-medium text-white hover:bg-black"

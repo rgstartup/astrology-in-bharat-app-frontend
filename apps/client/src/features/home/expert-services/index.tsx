@@ -1,7 +1,7 @@
 import React from "react";
 import { getTranslations } from "next-intl/server";
 import homepageData from "../data/services.data.json";
-import ServiceCard from "./service-card";
+import ServiceCard from "./service-card.component";
 import { Link } from "@/i18n/navigation";
 import { api, API_ROUTES } from "@/actions";
 import {

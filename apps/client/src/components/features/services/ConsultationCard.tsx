@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import type HomeMessages from "../../../../messages/en/home.json";
+import type HomeMessages from "@messages/en/home.json";
 
 type ConsultationTitle = keyof typeof HomeMessages.consultant.items;
 

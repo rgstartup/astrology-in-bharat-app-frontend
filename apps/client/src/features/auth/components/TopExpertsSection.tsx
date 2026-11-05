@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { IExpert } from "@repo/lib";
-import { useExpertListStore } from "@/store/expertListStore";
 import { usePresenceStore } from "@/store/presenceStore";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
@@ -40,7 +39,10 @@ const FALLBACK_EXPERT_AVATARS = [
 ];
 
 const TopExpertsSection: React.FC = () => {
-  const { experts, loading, setLoading, setExperts } = useExpertListStore();
+  // Local state: this widget fetches its own top-3 list; no shared store
+  // (seeding the global list from here collided with the home expert list).
+  const [experts, setExperts] = useState<IExpert[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTopExperts = async () => {

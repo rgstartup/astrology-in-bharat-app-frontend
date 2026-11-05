@@ -6,7 +6,7 @@ import { api } from "@/actions";
 
 import TestimonialCarousel, {
   type TestimonialReview,
-} from "./TestimonialCarousel";
+} from "./testimonial-carousel.component";
 
 function TestimonialSkeleton() {
   return (

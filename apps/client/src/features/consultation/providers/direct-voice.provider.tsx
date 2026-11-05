@@ -111,6 +111,7 @@ export function DirectVoiceProvider({ children }: DirectVoiceProviderProps) {
   const {
     voiceCancelOpen,
     voiceCancelBusy,
+    voiceGraceSeconds,
     openVoiceCancel,
     handleVoiceCancelOpenChange,
     handleVoiceContinueOverChat,
@@ -215,6 +216,7 @@ export function DirectVoiceProvider({ children }: DirectVoiceProviderProps) {
           void handleVoiceEndSession();
         }}
         busy={voiceCancelBusy}
+        graceSeconds={voiceGraceSeconds}
       />
       {children}
     </DirectVoiceContext.Provider>

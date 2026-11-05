@@ -1,5 +1,5 @@
 import React from "react";
-import ExpertDetailsClient from "@/components/features/experts/ExpertDetailsClient";
+import { ExpertDetailsClient } from "@/features/experts";
 import { apiV2, API_ROUTES } from "@/actions";
 import { IExpert } from "@repo/lib";
 

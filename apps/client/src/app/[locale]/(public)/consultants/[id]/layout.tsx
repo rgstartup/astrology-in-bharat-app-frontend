@@ -9,7 +9,6 @@ interface ConsultantLayoutProps {
 export default function ConsultantLayout({
   children,
   profile,
-  products,
 }: ConsultantLayoutProps) {
   return (
     <main className="min-h-screen bg-slate-50">

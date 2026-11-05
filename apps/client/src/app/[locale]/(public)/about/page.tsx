@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { ExpertSliderList } from "@/features/home/expert-list-wrapper";
+import { ExpertSliderList } from "@/features/home/expert-list";
 import AboutRedesign from "./components/about-redesign";
 
 export const metadata: Metadata = {

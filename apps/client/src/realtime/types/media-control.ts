@@ -2,6 +2,13 @@ export interface MediaControlAck {
   status: string;
   consultationId: number;
   message?: string;
+  /**
+   * Present on pauseTimer acks when the pause carries a grace window
+   * (cancel-dialog hold): server-granted absolute deadline and duration.
+   */
+  state?: string;
+  graceDeadline?: string | null;
+  graceDurationSeconds?: number | null;
 }
 
 export interface MediaControlPayload {
