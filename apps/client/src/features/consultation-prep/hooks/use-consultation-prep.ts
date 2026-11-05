@@ -55,8 +55,6 @@ export function useConsultationPrep(
     setSomeoneElseData,
   } = useSomeoneElseForm();
 
-  const [showOfflinePopup, setShowOfflinePopup] = useState(false);
-
   // On modal open: latest expert data + wallet balance, fetched in parallel
   // so the rate and the recharge gate reflect both before the CTA is used.
   // Effect is the single fetch site — usePrepExpert no longer fetches on
@@ -144,8 +142,6 @@ export function useConsultationPrep(
     setAskSomeoneElse,
     someoneElseData,
     setSomeoneElseData,
-    showOfflinePopup,
-    setShowOfflinePopup,
     existingChatDetails: request.existingChatDetails,
     setExistingChatDetails: request.setExistingChatDetails,
     needsRecharge,

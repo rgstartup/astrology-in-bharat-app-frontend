@@ -5,29 +5,17 @@ import NotFoundStep from "./not-found-step.component";
 import RechargeStep from "./recharge-step.component";
 import InsufficientFundsStep from "./insufficient-funds-step.component";
 import DetailsStep from "./details-step.component";
-import type { PrepExpert, ConsultationPrepController } from "./types";
-import type { SomeoneElseData } from "@/actions/chat";
+import { useConsultationPrepController } from "./consultation-prep-controller.provider";
 import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 
 export interface ModalBodyProps {
-  loading: boolean;
-  expert: PrepExpert | null;
   mode?: ConsultationMode;
+  /** Manual nav step owned by the root; forced recharge overrides it. */
   step: "details" | "recharge";
   minBalanceRequired: number;
-  isExpertAvailable: boolean;
-  askSomeoneElse: ConsultationPrepController["askSomeoneElse"];
-  setAskSomeoneElse: ConsultationPrepController["setAskSomeoneElse"];
-  someoneElseData: SomeoneElseData;
-  setSomeoneElseData: ConsultationPrepController["setSomeoneElseData"];
-  handleStartConsultation: ConsultationPrepController["handleStartConsultation"];
-  actionLoading: boolean;
-  balance: number | null;
-  showLowBalance: boolean;
-  deviceHint?: ConsultationPrepController["deviceHint"];
-  onRetryDevices?: ConsultationPrepController["retryDeviceProbe"];
   rechargeDefaultAmount: number;
-  isAuthenticated: boolean;
+  /** Auth-gated wallet balance; null when the user is signed out. */
+  balance: number | null;
   onClose: () => void;
   onBackToDetails: () => void;
   onRecharge: () => void;
@@ -38,39 +26,46 @@ export interface ModalBodyProps {
  * Body switcher component rendering appropriate step based on loading,
  * expert presence, step selection, and balance threshold.
  *
+ * Controller state/actions (loading, expert, form state, device hint,
+ * CTA actions) come from context; navigation and recharge values stay
+ * as props since the root owns them.
+ *
  * @param props - Component properties.
  * @returns Step body element.
  */
 const ModalBody = ({
-  loading,
-  expert,
   mode = "chat",
   step,
   minBalanceRequired,
-  isExpertAvailable,
-  askSomeoneElse,
-  setAskSomeoneElse,
-  someoneElseData,
-  setSomeoneElseData,
-  handleStartConsultation,
-  actionLoading,
-  balance,
-  showLowBalance,
-  deviceHint,
-  onRetryDevices,
   rechargeDefaultAmount,
-  isAuthenticated,
+  balance,
   onClose,
   onBackToDetails,
   onRecharge,
   onRechargeSuccess,
 }: ModalBodyProps) => {
+  const {
+    loading,
+    expert,
+    isExpertAvailable,
+    isAuthenticated,
+    askSomeoneElse,
+    setAskSomeoneElse,
+    someoneElseData,
+    setSomeoneElseData,
+    handleStartConsultation,
+    actionLoading,
+    deviceHint,
+    retryDeviceProbe,
+    needsRecharge,
+  } = useConsultationPrepController();
+
   if (loading) return <PrepSkeleton />;
 
   if (!expert) return <NotFoundStep onClose={onClose} />;
 
   if (step === "recharge") {
-    if (showLowBalance) {
+    if (needsRecharge) {
       return (
         <InsufficientFundsStep
           currentBalance={balance ?? 0}
@@ -93,21 +88,8 @@ const ModalBody = ({
 
   return (
     <DetailsStep
-      expert={expert}
       mode={mode}
-      isExpertAvailable={isExpertAvailable}
-      askSomeoneElse={askSomeoneElse}
-      setAskSomeoneElse={setAskSomeoneElse}
-      someoneElseData={someoneElseData}
-      setSomeoneElseData={setSomeoneElseData}
-      handleStartConsultation={handleStartConsultation}
-      actionLoading={actionLoading}
-      balance={balance}
-      showLowBalance={showLowBalance}
-      deviceHint={deviceHint}
-      onRetryDevices={onRetryDevices}
       minBalanceRequired={minBalanceRequired}
-      isAuthenticated={isAuthenticated}
       onClose={onClose}
       onRecharge={onRecharge}
     />

@@ -3,8 +3,7 @@
 import Image from "next/image";
 import { X } from "@repo/design/lucide";
 import ExpertPreview from "../expert-preview.component";
-import type { PrepExpert, ConsultationPrepController } from "./types";
-import type { SomeoneElseData } from "@/actions/chat";
+import { useConsultationPrepController } from "./consultation-prep-controller.provider";
 import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import {
   ConsultationModeIcon,
@@ -12,21 +11,8 @@ import {
 } from "../consultation-mode-icon";
 
 export interface DetailsStepProps {
-  expert: PrepExpert;
   mode?: ConsultationMode;
-  isExpertAvailable: boolean;
-  askSomeoneElse: ConsultationPrepController["askSomeoneElse"];
-  setAskSomeoneElse: ConsultationPrepController["setAskSomeoneElse"];
-  someoneElseData: SomeoneElseData;
-  setSomeoneElseData: ConsultationPrepController["setSomeoneElseData"];
-  handleStartConsultation: ConsultationPrepController["handleStartConsultation"];
-  actionLoading: boolean;
-  balance: number | null;
-  showLowBalance: boolean;
-  deviceHint?: ConsultationPrepController["deviceHint"];
-  onRetryDevices?: ConsultationPrepController["retryDeviceProbe"];
   minBalanceRequired: number;
-  isAuthenticated: boolean;
   onClose: () => void;
   onRecharge: () => void;
 }
@@ -54,28 +40,20 @@ function AvailabilityBadge({ isAvailable }: { isAvailable: boolean }) {
  * Details view inside ConsultationPrepModal showing avatar, mode icon, availability,
  * and embedding the expert preview.
  *
+ * Controller state comes from context; only navigation-relevant props are
+ * passed through.
+ *
  * @param props - Component properties.
  * @returns Details step element.
  */
 const DetailsStep = ({
-  expert,
   mode = "chat",
-  isExpertAvailable,
-  askSomeoneElse,
-  setAskSomeoneElse,
-  someoneElseData,
-  setSomeoneElseData,
-  handleStartConsultation,
-  actionLoading,
-  balance,
-  showLowBalance,
-  deviceHint,
-  onRetryDevices,
   minBalanceRequired,
-  isAuthenticated,
   onClose,
   onRecharge,
 }: DetailsStepProps) => {
+  const { expert, isExpertAvailable } = useConsultationPrepController();
+
   return (
     <div>
       {/* Header band — avatar and mode pill straddle the divider */}
@@ -127,21 +105,8 @@ const DetailsStep = ({
       </div>
 
       <ExpertPreview
-        expert={expert ? { ...expert, is_available: isExpertAvailable } : null}
         mode={mode}
-        isExpertAvailable={isExpertAvailable}
-        askSomeoneElse={askSomeoneElse}
-        setAskSomeoneElse={setAskSomeoneElse}
-        someoneElseData={someoneElseData}
-        setSomeoneElseData={setSomeoneElseData}
-        handleStartConsultation={handleStartConsultation}
-        actionLoading={actionLoading}
-        balance={balance}
-        showLowBalance={showLowBalance}
-        deviceHint={deviceHint}
-        onRetryDevices={onRetryDevices}
         minBalanceRequired={minBalanceRequired}
-        isAuthenticated={isAuthenticated}
         onRecharge={onRecharge}
       />
     </div>

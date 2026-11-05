@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@repo/storybook";
 import DetailsStep from "../components/modal/details-step.component";
+import {
+  ConsultationPrepControllerProvider,
+} from "../components/modal/consultation-prep-controller.provider";
+import type { ConsultationPrepController } from "../components/modal/types";
 import type { PrepExpert } from "../components/modal/types";
 import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import type { SomeoneElseData } from "@/actions/chat";
+import { useAuthStore } from "@/store/authStore";
 
 const mockExpert: PrepExpert = {
   id: 101,
@@ -62,26 +67,34 @@ function PrepModalDemo({
     setTimeout(() => setLoading(false), 2000);
   };
 
+  useAuthStore.setState({ balance });
+
+  const mockController = {
+    expert: mockExpert,
+    isExpertAvailable: isAvailable,
+    isAuthenticated: true,
+    askSomeoneElse,
+    setAskSomeoneElse,
+    someoneElseData,
+    setSomeoneElseData,
+    handleStartConsultation: handleStart,
+    actionLoading: loading,
+    deviceHint: null,
+    retryDeviceProbe: () => {},
+    needsRecharge: showLowBalance,
+  } as unknown as ConsultationPrepController;
+
   return (
     <div className="min-h-[640px] flex items-center justify-center bg-slate-100/70 p-4">
       <div className="w-full max-w-[440px] rounded-3xl bg-white border border-slate-200 shadow-2xl overflow-hidden">
-        <DetailsStep
-          expert={mockExpert}
-          mode={mode}
-          isExpertAvailable={isAvailable}
-          askSomeoneElse={askSomeoneElse}
-          setAskSomeoneElse={setAskSomeoneElse}
-          someoneElseData={someoneElseData}
-          setSomeoneElseData={setSomeoneElseData}
-          handleStartConsultation={handleStart}
-          actionLoading={loading}
-          balance={balance}
-          showLowBalance={showLowBalance}
-          minBalanceRequired={minRequired}
-          isAuthenticated={true}
-          onClose={() => alert("Close clicked")}
-          onRecharge={() => alert("Recharge clicked")}
-        />
+        <ConsultationPrepControllerProvider value={mockController}>
+          <DetailsStep
+            mode={mode}
+            minBalanceRequired={minRequired}
+            onClose={() => alert("Close clicked")}
+            onRecharge={() => alert("Recharge clicked")}
+          />
+        </ConsultationPrepControllerProvider>
       </div>
     </div>
   );
@@ -118,7 +131,7 @@ export const RequestingVoice: Story = {
 
 /**
  * Video Call consultation prep case:
- * Displays video mode pill in header band, video icon badge on avatar,
+ * Displays video mode pill in header band, phone icon badge on avatar,
  * video rate per minute (₹60/min), and Start Video Call CTA.
  */
 export const RequestingVideo: Story = {

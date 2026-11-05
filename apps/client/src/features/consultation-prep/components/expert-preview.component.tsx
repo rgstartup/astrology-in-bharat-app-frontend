@@ -3,12 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
-import type { IExpert } from "@repo/lib";
-import type { SomeoneElseData } from "@/actions/chat";
 import { useTranslations } from "next-intl";
 import { Wallet, AlertCircle, ArrowLeft, Pencil } from "@repo/design/lucide";
 import type { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import { resolveModePrice } from "@/lib/pricing";
+import { useAuthStore } from "@/store/authStore";
 import { type DeviceHintKind } from "../hooks/use-device-preflight";
 import ExpertHeader from "./expert-header";
 import { ConsultingForSelect, MemberDetailsForm } from "./consulting-for";
@@ -16,25 +15,12 @@ import {
   ConsultationModeIcon,
   getConsultationModeLabel,
 } from "./consultation-mode-icon";
+import { useConsultationPrepController } from "./modal/consultation-prep-controller.provider";
 
 export interface ExpertPreviewProps {
-  expert: (Partial<IExpert> & { expertise?: string }) | null;
   mode?: ConsultationMode;
-  askSomeoneElse: boolean;
-  setAskSomeoneElse: (val: boolean) => void;
-  someoneElseData: SomeoneElseData;
-  setSomeoneElseData: (val: SomeoneElseData) => void;
-  handleStartConsultation: () => void;
-  actionLoading: boolean;
-  balance?: number | null;
-  showLowBalance?: boolean;
+  /** Derived in the root from reservation requirements; 0 hides the row. */
   minBalanceRequired?: number;
-  isAuthenticated?: boolean;
-  isExpertAvailable?: boolean;
-  /** Inline device-access recovery hint; null when devices are fine. */
-  deviceHint?: DeviceHintKind | null;
-  /** Retry probe after unblocking devices; shown only for the blocked hint. */
-  onRetryDevices?: () => void;
   /** When provided, low-balance CTA enters an embedded recharge step instead of redirecting. */
   onRecharge?: () => void;
 }
@@ -328,33 +314,32 @@ function SomeoneElseChip({
  * @returns Expert preview element.
  */
 const ExpertPreview = ({
-  expert,
   mode = "chat",
-  askSomeoneElse,
-  setAskSomeoneElse,
-  someoneElseData,
-  setSomeoneElseData,
-  handleStartConsultation,
-  actionLoading,
-  balance = null,
-  showLowBalance = false,
   minBalanceRequired = 0,
-  isAuthenticated = false,
-  isExpertAvailable: isExpertAvailableProp,
   onRecharge,
-  deviceHint = null,
-  onRetryDevices,
 }: ExpertPreviewProps) => {
+  const {
+    expert,
+    isExpertAvailable,
+    isAuthenticated,
+    askSomeoneElse,
+    setAskSomeoneElse,
+    someoneElseData,
+    setSomeoneElseData,
+    handleStartConsultation,
+    actionLoading,
+    deviceHint,
+    retryDeviceProbe: onRetryDevices,
+    needsRecharge: showLowBalance,
+  } = useConsultationPrepController();
   const router = useRouter();
   const tx = useTranslations("Chat.expertPreview");
+  const balance = useAuthStore((s) => s.balance);
   const price = resolveModePrice(expert, mode);
   const modeLabel = getConsultationModeLabel(mode);
   const [view, setView] = useState<"details" | "member">("details");
 
-  let isAvailable = expert?.is_available !== false;
-  if (typeof isExpertAvailableProp === "boolean") {
-    isAvailable = isExpertAvailableProp;
-  }
+  const isAvailable = isExpertAvailable;
 
   const pickConsultingFor = (val: boolean) => {
     setAskSomeoneElse(val);

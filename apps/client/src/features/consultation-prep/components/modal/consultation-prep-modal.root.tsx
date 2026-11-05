@@ -17,6 +17,7 @@ import {
 import { useConsultationPrep } from "../../hooks/use-consultation-prep";
 import ModalBody from "./modal-body.component";
 import ModalPopups from "./modal-popups.component";
+import { ConsultationPrepControllerProvider } from "./consultation-prep-controller.provider";
 
 export interface ConsultationPrepModalProps {
   expertId: string;
@@ -30,6 +31,9 @@ export interface ConsultationPrepModalProps {
 /**
  * Root orchestrator dialog component for preparing a consultation across
  * chat, voice, and video modes.
+ *
+ * Owns manual navigation step state and recharge orchestration; the
+ * controller (state/actions) goes to consumers via context.
  *
  * @param props - Component properties.
  * @returns Dialog tree element.
@@ -49,37 +53,15 @@ export function ConsultationPrepModal({
 
   const close = () => onOpenChange(false);
 
+  const controller = useConsultationPrep(expertId, mode, consultationId, close, open);
   const {
-    router,
     expert,
-    loading,
-    actionLoading,
-    isWaitingForExpert,
-    cancelWaiting,
-    waitOutcome,
-    clearWaiting,
-    askSomeoneElse,
-    setAskSomeoneElse,
-    someoneElseData,
-    setSomeoneElseData,
-    showOfflinePopup,
-    setShowOfflinePopup,
-    existingChatDetails,
-    setExistingChatDetails,
     needsRecharge,
-    setNeedsRecharge,
-    deviceHint,
-    retryDeviceProbe,
-    isAuthenticated,
-    isExpertAvailable,
     currentPrice,
+    isAuthenticated,
     handleStartConsultation,
-    waitStep,
-    micGranted,
-    micDenied,
-    onGrantMic,
-    onRetryMic,
-  } = useConsultationPrep(expertId, mode, consultationId, close, open);
+    setNeedsRecharge,
+  } = controller;
 
   const balance = useAuthStore((s) => s.balance);
   const refreshBalance = useAuthStore((s) => s.refreshBalance);
@@ -110,7 +92,7 @@ export function ConsultationPrepModal({
   const expertDisplayName = expert?.name || "Consultation";
 
   return (
-    <>
+    <ConsultationPrepControllerProvider value={controller}>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
           showCloseButton={false}
@@ -124,24 +106,11 @@ export function ConsultationPrepModal({
           </DialogHeader>
 
           <ModalBody
-            loading={loading}
-            expert={expert}
             mode={mode}
             step={step}
             minBalanceRequired={minBalanceRequired}
-            isExpertAvailable={isExpertAvailable}
-            askSomeoneElse={askSomeoneElse}
-            setAskSomeoneElse={setAskSomeoneElse}
-            someoneElseData={someoneElseData}
-            setSomeoneElseData={setSomeoneElseData}
-            handleStartConsultation={handleStartConsultation}
-            actionLoading={actionLoading}
-            balance={isAuthenticated ? balance : null}
-            showLowBalance={needsRecharge}
-            deviceHint={deviceHint}
-            onRetryDevices={retryDeviceProbe}
             rechargeDefaultAmount={rechargeDefaultAmount}
-            isAuthenticated={isAuthenticated}
+            balance={isAuthenticated ? balance : null}
             onClose={close}
             onBackToDetails={() => setDetailsStep("details")}
             onRecharge={() => setDetailsStep("recharge")}
@@ -150,34 +119,8 @@ export function ConsultationPrepModal({
         </DialogContent>
       </Dialog>
 
-      <ModalPopups
-        expertName={expertDisplayName}
-        expertAvatar={
-          expert?.avatar || (expert as any)?.avatar_url || undefined
-        }
-        mode={mode}
-        step={waitStep}
-        voiceRate={currentPrice}
-        micGranted={micGranted}
-        onGrantMic={onGrantMic}
-        micDenied={micDenied}
-        onRetryMic={onRetryMic}
-        isWaitingForExpert={isWaitingForExpert}
-        waitOutcome={waitOutcome}
-        onCancelWaiting={cancelWaiting}
-        onClearWaiting={clearWaiting}
-        showOfflinePopup={showOfflinePopup}
-        onCloseOfflinePopup={() => setShowOfflinePopup(false)}
-        existingChatDetails={existingChatDetails}
-        onCloseExistingChat={() => setExistingChatDetails(null)}
-        onGoToExistingChat={(consultationId, targetExpertId) => {
-          useConsultationPrepStore.getState().closeConsultationPrep();
-          router.push(
-            `/consultation/${consultationId}?expertId=${targetExpertId}`,
-          );
-        }}
-      />
-    </>
+      <ModalPopups mode={mode} />
+    </ConsultationPrepControllerProvider>
   );
 }
 
