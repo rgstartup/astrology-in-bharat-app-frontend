@@ -15,8 +15,14 @@ import { useShopStore } from "@/features/shop";
 import { ShopProductService } from "@/features/shop/services/shop-product.service";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "@repo/design/shadcn";
-import { getProductImageUrl } from "@/utils/image-utils";
-import type { ShopProduct } from "@/features/shop/types/shop.types";
+import type { Product } from "@repo/lib";
+import {
+  getProductPrice,
+  getProductOriginalPrice,
+  getProductImage,
+  getProductImages,
+  getProductCategory,
+} from "@/features/shop/utils/product-adapter";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -28,7 +34,7 @@ export default function ShopProductDetailPage({ params }: ProductPageProps) {
   const { isAuthenticated } = useAuthStore();
   const { addToCart, isInWishlist, toggleWishlist } = useShopStore();
 
-  const [product, setProduct] = useState<ShopProduct | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState<string>("");
@@ -40,52 +46,8 @@ export default function ShopProductDetailPage({ params }: ProductPageProps) {
       if (!isMounted) return;
       if (data) {
         setProduct(data);
-        const img =
-          data.imageUrl ||
-          data.image ||
-          (data.images && data.images[0]) ||
-          getProductImageUrl(data as any);
+        const img = getProductImage(data);
         setSelectedImage(img);
-      } else {
-        // Fallback demo product if endpoint returns null for test id
-        const fallback: ShopProduct = {
-          id,
-          name: "Vedic Sacred Energized Gemstone",
-          description:
-            "Natural certified stone energized through traditional Vedic ceremonies for positive life alignment, serenity, and fortune.",
-          price: 999,
-          sale_price: 749,
-          original_price: 1499,
-          category: "Gemstones",
-          avgRating: 4.8,
-          images: [
-            "/images/product-5.jpg",
-            "/images/product-4.jpg",
-            "/images/product-3.jpg",
-          ],
-          details: [
-            { title: "Material", text: "100% Natural Certified Mineral" },
-            { title: "Origin", text: "Himalayan Region, India" },
-            { title: "Purification", text: "Prana Pratishtha ritual charged" },
-            { title: "Packaging", text: "Tamper-evident velvet protective pouch" },
-          ],
-          faqs: [
-            {
-              q: "Is this item authentic and certified?",
-              a: "Yes, every gemstone and sacred item comes with lab certification verifying purity.",
-            },
-            {
-              q: "Can I wear this daily?",
-              a: "Yes, once worn after recommended muhurat, it can be kept for continuous spiritual benefit.",
-            },
-          ],
-        };
-        setProduct(fallback);
-        setSelectedImage(
-          fallback.images && fallback.images[0]
-            ? fallback.images[0]
-            : "/images/product-5.jpg",
-        );
       }
       setLoading(false);
     });
@@ -122,9 +84,10 @@ export default function ShopProductDetailPage({ params }: ProductPageProps) {
 
   const productId = String(product.id);
   const isLiked = isInWishlist(productId);
-  const price = Number(product.sale_price || product.price || 0);
-  const originalPrice = Number(product.original_price || 0);
-  const images = product.images && product.images.length > 0 ? product.images : [selectedImage];
+  const price = getProductPrice(product);
+  const originalPrice = getProductOriginalPrice(product);
+  const images = getProductImages(product);
+  const category = getProductCategory(product);
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
@@ -225,11 +188,11 @@ export default function ShopProductDetailPage({ params }: ProductPageProps) {
         <div className="lg:col-span-5 bg-[#f5f1ec] border border-[#e8e4de] rounded-2xl p-6 sm:p-8 space-y-6">
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs text-neutral-500">
-              <span className="capitalize">{product.category || "Vedic Product"}</span>
+              <span className="capitalize">{category}</span>
               <div className="flex items-center gap-1 font-medium text-neutral-900">
                 <Star className="w-3.5 h-3.5 fill-neutral-900 text-neutral-900" />
-                <span>{product.avgRating ? Number(product.avgRating).toFixed(1) : "4.8"}</span>
-                <span className="text-neutral-400">({product.totalRatings || 48})</span>
+                <span>{4.8}</span>
+                <span className="text-neutral-400">(48)</span>
               </div>
             </div>
 
@@ -251,7 +214,7 @@ export default function ShopProductDetailPage({ params }: ProductPageProps) {
           </div>
 
           <p className="text-sm text-neutral-600 leading-relaxed">
-            {product.description}
+            {product.description || ""}
           </p>
 
           {/* Quantity selector */}
@@ -317,28 +280,25 @@ export default function ShopProductDetailPage({ params }: ProductPageProps) {
       </div>
 
       {/* Specifications & FAQs in Cream Floating Cards */}
-      {product.details && product.details.length > 0 && (
+      {product.variants && product.variants[0]?.description && (
         <div className="bg-[#f5f1ec] border border-[#e8e4de] rounded-2xl p-6 sm:p-8 space-y-4">
           <h2 className="text-base font-semibold text-neutral-900">Specifications</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            {product.details.map((d, i) => (
-              <div key={i} className="p-3.5 rounded-xl bg-white border border-[#e8e4de]">
-                <span className="font-semibold text-neutral-900 block mb-0.5">{d.title}</span>
-                <span className="text-neutral-600">{d.text}</span>
-              </div>
-            ))}
+            <div className="p-3.5 rounded-xl bg-white border border-[#e8e4de]">
+              <span className="font-semibold text-neutral-900 block mb-0.5">Description</span>
+              <span className="text-neutral-600">{product.variants[0].description}</span>
+            </div>
           </div>
         </div>
       )}
 
-      {product.faqs && product.faqs.length > 0 && (
+      {product.variants && product.variants[0]?.promotions && product.variants[0].promotions.length > 0 && (
         <div className="bg-[#f5f1ec] border border-[#e8e4de] rounded-2xl p-6 sm:p-8 space-y-4">
-          <h2 className="text-base font-semibold text-neutral-900">Frequently Asked Questions</h2>
+          <h2 className="text-base font-semibold text-neutral-900">Offers</h2>
           <div className="space-y-3">
-            {product.faqs.map((f, i) => (
+            {product.variants[0].promotions.map((f, i) => (
               <div key={i} className="border-b border-[#e8e4de] pb-3 last:border-0">
-                <p className="text-sm font-medium text-neutral-900">{f.q}</p>
-                <p className="text-xs text-neutral-500 mt-1 leading-relaxed">{f.a}</p>
+                <p className="text-sm font-medium text-neutral-900">{f.name}: {f.discount_value}{f.discount_type === "percentage" ? "%" : "₹"} off</p>
               </div>
             ))}
           </div>

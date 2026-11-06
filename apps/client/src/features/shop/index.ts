@@ -19,6 +19,7 @@ export { ShopFooter } from "./components/shop-footer.component";
 export { ShopCartButton } from "./components/shop-cart-button.component";
 export { ProductCard } from "./components/product-card.component";
 export { ProductGrid } from "./components/product-grid.component";
+export { ShopPagination } from "./components/shop-pagination.component";
 export { ShopShippingForm } from "./components/checkout/shop-shipping-form.component";
 export { ShopOrderSummary } from "./components/checkout/shop-order-summary.component";
 export { ShopPaymentMethod } from "./components/checkout/shop-payment-method.component";

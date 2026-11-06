@@ -9,6 +9,7 @@ import {
   ShopOrderSummary,
   ShopPaymentMethod,
 } from "@/features/shop";
+import { getProductPrice } from "@/features/shop/utils/product-adapter";
 
 function CheckoutContent() {
   const {
@@ -33,11 +34,11 @@ function CheckoutContent() {
   } = useShopCheckout();
 
   const subtotal = buyNowInfo
-    ? Number(directProduct?.sale_price || directProduct?.price || 0) * buyNowInfo.quantity
+    ? Number(getProductPrice(directProduct!) || 0) * buyNowInfo.quantity
     : cartItems.reduce(
         (acc: number, item: any) =>
           acc +
-          Number(item.product?.sale_price || item.product?.price || 0) *
+          Number(getProductPrice(item.product) || 0) *
             item.quantity,
         0,
       );

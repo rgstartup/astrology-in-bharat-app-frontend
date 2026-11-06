@@ -117,6 +117,16 @@ export {
   NavigationMenuLink,
   NavigationMenuIndicator,
 } from "./navigation-menu";
+export {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+  type PaginationLinkProps,
+} from "./pagination";
 export { Popover, PopoverTrigger, PopoverContent } from "./popover";
 export { Progress } from "./progress";
 export { ScrollArea, ScrollBar } from "./scroll-area";

@@ -10,8 +10,20 @@ import { useAuthStore } from "@/store/authStore";
 import { useShopStore } from "../stores/shop.store";
 import { ShopOrderService } from "../services/shop-order.service";
 import { ShopProductService } from "../services/shop-product.service";
-import type { ShopProduct, ShopShippingAddress } from "../types/shop.types";
-import { getErrorMessage } from "@repo/lib";
+import type { Product } from "@repo/lib";
+import { getErrorMessage, type CartItem } from "@repo/lib";
+import { getProductPrice } from "../utils/product-adapter";
+
+interface ShopShippingAddress {
+  line1: string;
+  line2: string;
+  city: string;
+  state: string;
+  country: string;
+  zip_code: string;
+  phone: string;
+  alternate_phone?: string;
+}
 
 export const useShopCheckout = () => {
   const router = useRouter();
@@ -20,7 +32,7 @@ export const useShopCheckout = () => {
   const { cartItems, cartTotal, platformFee, resetCart } = useShopStore();
 
   const [isProcessing, setIsProcessing] = useState(false);
-  const [directProduct, setDirectProduct] = useState<ShopProduct | null>(null);
+  const [directProduct, setDirectProduct] = useState<Product | null>(null);
   const [loadingProduct, setLoadingProduct] = useState(false);
 
   const [couponCode, setCouponCode] = useState("");
@@ -98,7 +110,7 @@ export const useShopCheckout = () => {
             alternate_phone: defaultAddr.alternate_phone || "",
           });
         } else {
-          setAddress((prev) => ({
+          setAddress((prev: ShopShippingAddress) => ({
             ...prev,
             phone: profile.phone || "",
           }));
@@ -111,20 +123,20 @@ export const useShopCheckout = () => {
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setAddress((prev) => ({ ...prev, [name]: value }));
+    setAddress((prev: ShopShippingAddress) => ({ ...prev, [name]: value }));
   };
 
   // Calculations
   const baseTotal = buyNowInfo
-    ? (Number(directProduct?.sale_price || directProduct?.price || 0) *
+    ? (Number(getProductPrice(directProduct!) || 0) *
         buyNowInfo.quantity)
     : cartTotal;
 
   const shippingCharge = useMemo(() => {
     if (buyNowInfo && directProduct) {
-      return directProduct.is_shipping_chargeable
-        ? Number(directProduct.shipping_charge) || 0
-        : 0;
+      const variant = directProduct.variants?.[0];
+      const fulfillment = variant?.fulfillment;
+      return fulfillment?.shipping_fee || 0;
     }
 
     let shipping = 0;

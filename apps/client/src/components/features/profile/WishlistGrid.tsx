@@ -12,6 +12,7 @@ import { getProductImageUrl } from "@/utils/image-utils";
 import { formatSpecializationsString } from "@/utils/expert-utils";
 import { SkeletonPulse as Skeleton } from "@repo/design/shadcn";
 import { useTranslations } from "next-intl";
+import { createMinimalProduct } from "@/features/shop/utils/product-adapter";
 
 const WishlistGrid: React.FC = () => {
   const { wishlistItems, expertWishlistItems, pujaWishlistItems, isLoading } =
@@ -86,28 +87,29 @@ const WishlistGrid: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {wishlistItems
               .filter((item) => item.product)
-              .map((item, idx) => (
-                <div
-                  key={item.id}
-                  className="w-full animate-in fade-in slide-in-from-bottom-4 duration-700"
-                  style={{ animationDelay: `${idx * 100}ms` }}
-                >
-                  <ProductCard
-                    product={
-                      {
-                        id: String(item.product?.id || item.productId),
-                        imageUrl: getProductImageUrl(item.product),
-                        name: item.product?.name || "Product",
-                        description: item.product?.description || "",
-                        price: item.product?.price || 0,
-                        originalPrice:
-                          item.product?.sale_price ||
-                          (item.product as any)?.original_price,
-                      } as any
-                    }
-                  />
-                </div>
-              ))}
+              .map((item, idx) => {
+                const product = createMinimalProduct({
+                  id: String(item.product?.id || item.productId),
+                  imageUrl: getProductImageUrl(item.product),
+                  image: item.product?.image || item.product?.image_url,
+                  name: item.product?.name || "Product",
+                  description: item.product?.description || "",
+                  price: item.product?.price || 0,
+                  originalPrice:
+                    item.product?.sale_price ||
+                    (item.product as any)?.original_price,
+                  category: (item.product as any)?.category,
+                });
+                return (
+                  <div
+                    key={item.id}
+                    className="w-full animate-in fade-in slide-in-from-bottom-4 duration-700"
+                    style={{ animationDelay: `${idx * 100}ms` }}
+                  >
+                    <ProductCard product={product} />
+                  </div>
+                );
+              })}
           </div>
         </section>
       )}

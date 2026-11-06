@@ -7,12 +7,18 @@ import { Heart, Star } from "@repo/design/lucide";
 import { useShopStore } from "../stores/shop.store";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "@repo/design/shadcn";
-import { getProductImageUrl } from "@/utils/image-utils";
-import type { ShopProduct } from "../types/shop.types";
+import type { Product } from "@repo/lib";
+import {
+  getProductPrice,
+  getProductOriginalPrice,
+  getProductImage,
+  getProductCategory,
+  getProductImages,
+} from "../utils/product-adapter";
 
 interface ProductCardProps {
-  product: ShopProduct;
-  onView?: (product: ShopProduct) => void;
+  product: Product;
+  onView?: (product: Product) => void;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -27,14 +33,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const productId = String(product.id);
   const isLiked = isInWishlist(productId);
 
-  const imageUrl =
-    product.imageUrl ||
-    product.image ||
-    (product.images && product.images[0]) ||
-    getProductImageUrl(product as any);
-
-  const price = Number(product.sale_price || product.price || 0);
-  const originalPrice = Number(product.original_price || 0);
+  const imageUrl = getProductImage(product);
+  const price = getProductPrice(product);
+  const originalPrice = getProductOriginalPrice(product);
+  const category = getProductCategory(product);
 
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -79,14 +81,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       onClick={() => (onView ? onView(product) : router.push(`/shop/product/${productId}`))}
       className="group bg-[#f5f1ec] border border-[#e8e4de] rounded-2xl p-5 hover:border-[#111111] transition-all flex flex-col cursor-pointer select-none"
     >
-      {/* Crisp White Photo Plate (14px radius inside Cream Card) */}
-      <div className="relative w-full aspect-[4/3] rounded-[14px] bg-white border border-[#e8e4de] overflow-hidden flex items-center justify-center p-3">
+      {/* Crisp White Photo Plate (14px radius inside Cream Card) — image covers the full section */}
+      <div className="relative w-full aspect-[4/3] rounded-[14px] bg-white border border-[#e8e4de] overflow-hidden">
         <Image
           src={imageUrl}
           alt={product.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
 
         {/* Wishlist Button */}
@@ -108,10 +110,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <div className="flex flex-col flex-1 pt-4">
         {/* Rating & Category */}
         <div className="flex items-center justify-between text-xs text-neutral-500 mb-1">
-          <span className="capitalize">{product.category || "Vedic Item"}</span>
+          <span className="capitalize">{category}</span>
           <div className="flex items-center gap-1 font-medium text-neutral-900">
             <Star className="w-3.5 h-3.5 fill-neutral-900 text-neutral-900" />
-            <span>{product.avgRating ? Number(product.avgRating).toFixed(1) : "4.8"}</span>
+            <span>{4.8}</span>
           </div>
         </div>
 
