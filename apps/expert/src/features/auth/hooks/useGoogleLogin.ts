@@ -49,7 +49,7 @@ export function useGoogleLogin(options: UseGoogleLoginOptions = {}) {
   }, [searchParams, router, pathname, onError]);
 
   const handleGoogleLogin = useCallback(() => {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
     const redirectUri =
       typeof window !== "undefined"
         ? `${window.location.origin}${callback_url.startsWith("/") ? callback_url : `/${callback_url}`}`

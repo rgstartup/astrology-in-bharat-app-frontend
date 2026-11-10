@@ -16,7 +16,7 @@ export const AuthFooter: React.FC<AuthFooterProps> = ({ className }) => {
     <div
       className={
         className ||
-        "w-full mt-5 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-400"
+        "w-full mt-3 sm:mt-5 pt-2 sm:pt-3 border-t border-stone-100 flex items-center justify-between text-xs text-stone-400"
       }
     >
       <span>Copyright © {new Date().getFullYear()} Astrology in Bharat</span>

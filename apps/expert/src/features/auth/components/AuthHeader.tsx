@@ -13,8 +13,8 @@ interface AuthHeaderProps {
  * Displays brand emblem alongside platform title and dark amber subtitle.
  */
 export const AuthHeader: React.FC<AuthHeaderProps> = ({
-  subtitle = "EXPERT PORTAL",
-  title = "Astrology in Bharat",
+  subtitle = "Astrology in Bharat",
+  title = "EXPERT PORTAL",
 }) => {
   return (
     <div className="flex items-center gap-3">
@@ -32,10 +32,10 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
 
       {/* Right: Text on top, Subtitle text on bottom */}
       <div className="flex flex-col justify-between h-10 sm:h-11 py-0.5">
-        <span className="text-base sm:text-lg font-bold text-stone-900 tracking-tight leading-none">
+        <span className="text-lg sm:text-xl md:text-xl font-bold text-amber-700 tracking-tight leading-none">
           {title}
         </span>
-        <span className="text-[10px] sm:text-[11px] font-bold text-amber-800 uppercase tracking-wider leading-none">
+        <span className="text-xs sm:text-[11px] font-bold text-stone-900 tracking-wide leading-none">
           {subtitle}
         </span>
       </div>

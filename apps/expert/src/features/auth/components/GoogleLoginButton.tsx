@@ -40,11 +40,11 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
       <Image
         src="/images/google-color-svgrepo-com.svg"
         alt="Google"
-        height={18}
-        width={18}
-        className="group-hover:scale-105 transition-transform"
+        height={20}
+        width={20}
+        className="size-5 lg:size-4 group-hover:scale-105 transition-transform"
       />
-      <span className="font-semibold text-stone-900 text-xs sm:text-sm">
+      <span className="font-semibold text-stone-900 text-base lg:text-sm">
         {text}
       </span>
     </button>

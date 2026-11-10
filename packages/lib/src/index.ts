@@ -3,7 +3,12 @@ export { getErrorMessage } from "./utils/error";
 export { uuidv7 } from "./utils/uuid";
 export { ValidationError } from "./utils/validation.error";
 export { decodeToken, type IBaseJWT } from "./utils/jwt-decode";
-export { ConsultationErrorCode, isConsultationErrorCode } from "./contracts";
+export {
+  ConsultationErrorCode,
+  isConsultationErrorCode,
+  ExpertAuthErrorCode,
+  isExpertAuthErrorCode,
+} from "./contracts";
 export { AddressTag } from "./enums/address-tag.enum";
 export {
   ClientWalletTransactionPurpose,

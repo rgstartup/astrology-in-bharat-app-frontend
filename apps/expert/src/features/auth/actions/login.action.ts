@@ -1,9 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { ApiError, type Result } from "@repo/safe-fetch";
-
-import { ValidationError } from "@repo/lib";
+import { ExpertAuthErrorCode, ValidationError } from "@repo/lib";
 import { setAccessToken, setRefreshToken } from "@/actions/cookie";
 import { API_ROUTES } from "@/utils/api.routes";
 import { captureSetCookies, mirrorSetCookies } from "@/utils/forwarded-cookies";
@@ -16,11 +14,44 @@ export type ILoginResponse = {
   refreshToken: string;
 };
 
-export async function loginAction(formData: LoginFormData): Promise<Result<ILoginResponse>> {
+export type LoginActionError = {
+  message: string;
+  errorCode?: string;
+  status?: number;
+};
+
+export type LoginActionResult =
+  | {
+      ok: true;
+      data: ILoginResponse;
+    }
+  | {
+      ok: false;
+      error: LoginActionError;
+      isUnverified?: boolean;
+    };
+
+/**
+ * Server action to authenticate an expert via email and password (and optional OTP).
+ * Handles unverified email responses (409 / EMAIL_NOT_VERIFIED) by signalling `isUnverified: true`.
+ * Mirrored session cookies are set on successful authentication.
+ *
+ * @param formData - The submitted login form data (email, password, optional OTP)
+ * @returns Serialized result indicating success with session tokens or failure with error details and verification flags
+ */
+export async function loginAction(formData: LoginFormData): Promise<LoginActionResult> {
   const safeParseResult = LoginSchema.safeParse(formData);
 
   if (!safeParseResult.success) {
-    return { ok: false, error: ValidationError.fromZod(safeParseResult.error) };
+    const valError = ValidationError.fromZod(safeParseResult.error);
+    return {
+      ok: false,
+      error: {
+        message: valError.message,
+        errorCode: "VALIDATION_ERROR",
+        status: 422,
+      },
+    };
   }
 
   let backendSetCookies: string[] = [];
@@ -33,7 +64,22 @@ export async function loginAction(formData: LoginFormData): Promise<Result<ILogi
     .post<ILoginResponse>(API_ROUTES.AUTH.LOGIN.EMAIL, safeParseResult.data);
 
   if (!result.ok) {
-    return result;
+    const status = result.error.status;
+    const errorCode =
+      result.error.errorCode ?? (result.error as any).body?.errorCode;
+    const isUnverified =
+      status === 409 ||
+      errorCode === ExpertAuthErrorCode.EMAIL_NOT_VERIFIED;
+
+    return {
+      ok: false,
+      error: {
+        message: result.error.message,
+        errorCode,
+        status,
+      },
+      isUnverified,
+    };
   }
 
   const { data } = result;
@@ -42,7 +88,10 @@ export async function loginAction(formData: LoginFormData): Promise<Result<ILogi
   if (!data?.accessToken) {
     return {
       ok: false,
-      error: new ApiError({ status: 500, message: "Something went wrong, contact support" }),
+      error: {
+        message: "Something went wrong, contact support",
+        status: 500,
+      },
     };
   }
 
@@ -54,5 +103,9 @@ export async function loginAction(formData: LoginFormData): Promise<Result<ILogi
     setRefreshToken(cookieStore, data.refreshToken);
   }
 
-  return result;
+  return {
+    ok: true,
+    data,
+  };
 }
+
