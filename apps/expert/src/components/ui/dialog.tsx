@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use Dialog components from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 "use client";
 
 import type { ComponentProps } from "react";

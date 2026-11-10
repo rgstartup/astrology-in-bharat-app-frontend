@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use Card components from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 import * as React from "react"
 import { cn } from "cn"
 

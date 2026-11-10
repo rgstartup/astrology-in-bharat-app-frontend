@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use Form components from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 "use client";
 
 import * as React from "react";

@@ -12,6 +12,7 @@
     "@base-ui/react": "^1.8.0",
     "@hookform/resolvers": "^5.9.1",
     "@repo/chat": "workspace:*",
+    "@repo/design": "workspace:*",
     "@repo/lib": "workspace:*",
     "@repo/rtc": "workspace:*",
     "@repo/safe-fetch": "workspace:*",

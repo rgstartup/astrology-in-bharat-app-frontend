@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use Empty components from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 import type { ComponentProps } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/cn";

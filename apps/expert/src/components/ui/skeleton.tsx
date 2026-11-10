@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use `Skeleton` from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 import { cn } from "cn"
 
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {

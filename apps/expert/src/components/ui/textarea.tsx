@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use `Textarea` from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 

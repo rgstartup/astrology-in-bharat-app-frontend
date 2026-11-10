@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use ScrollArea components from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 "use client";
 
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";

@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use `Input` from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 import * as React from "react"
 import { Input as InputPrimitive } from "@base-ui/react/input"
 import { cn } from "cn"

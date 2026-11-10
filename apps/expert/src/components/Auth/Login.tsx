@@ -1,6 +1,6 @@
 "use client";
 
-import { LoginView } from "@/features/auth";
+import { LoginForm } from "@/features/auth";
 
-export const Login = LoginView;
-export default LoginView;
+export const Login = LoginForm;
+export default LoginForm;

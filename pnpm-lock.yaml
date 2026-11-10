@@ -584,6 +584,9 @@ importers:
       '@repo/chat':
         specifier: workspace:*
         version: link:../../packages/chat
+      '@repo/design':
+        specifier: workspace:*
+        version: link:../../packages/design
       '@repo/lib':
         specifier: workspace:*
         version: link:../../packages/lib

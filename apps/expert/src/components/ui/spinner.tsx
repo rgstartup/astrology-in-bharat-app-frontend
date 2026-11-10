@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use `Spinner` from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 import { cn } from "cn"
 import { Loader2Icon } from "lucide-react"
 

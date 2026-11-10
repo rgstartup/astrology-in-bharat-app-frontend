@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use `Separator` from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 "use client"
 
 import { Separator as SeparatorPrimitive } from "@base-ui/react/separator"

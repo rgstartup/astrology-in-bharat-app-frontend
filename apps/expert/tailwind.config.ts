@@ -5,6 +5,7 @@ const config: Config = {
   content: [
     "./src/**/*.{ts,tsx}",
     "../../packages/ui/src/**/*.{ts,tsx}",
+    "../../packages/design/src/**/*.{ts,tsx}",
     "../shared/components/**/*.{ts,tsx}",
   ],
   theme: {
@@ -26,7 +27,8 @@ const config: Config = {
         "astro-bg": "#fcfbf5",
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["var(--font-geist-sans)", "var(--font-sans)", "Inter", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "var(--font-mono)", "monospace"],
         display: ["Outfit", "sans-serif"],
       },
       keyframes: {

@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
     },
     useTypeScriptCli: true,
   },
-  transpilePackages: ["@repo/ui", "@repo/routes", "@repo/safe-fetch"],
+  transpilePackages: ["@repo/ui", "@repo/routes", "@repo/safe-fetch", "@repo/design"],
   images: {
     remotePatterns: [
       {

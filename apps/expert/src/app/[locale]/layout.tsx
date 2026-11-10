@@ -1,4 +1,4 @@
-import { Geist } from "next/font/google";
+import localFont from "next/font/local";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 
@@ -8,16 +8,31 @@ import { AuthProvider, ReactQueryProvider } from "@/providers";
 import { RealtimeProvider } from "@/realtime/socket-provider";
 import { cn } from "@/lib/cn";
 
+import "@repo/design/styles";
 import "react-toastify/dist/ReactToastify.css";
 import "@/styles/index.css";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+const geistSans = localFont({
+  src: "../../styles/fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+});
+
+const geistMono = localFont({
+  src: "../../styles/fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+});
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
 
   return (
-    <html lang={locale} suppressHydrationWarning className={cn("font-sans", geist.variable)}>
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className={cn("font-sans", geistSans.variable, geistMono.variable)}
+    >
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

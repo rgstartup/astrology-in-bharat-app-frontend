@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use `Button` from '@repo/design/shadcn' instead. Scheduled for removal.
+ */
 import * as React from "react";
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";

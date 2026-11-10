@@ -1,25 +1,27 @@
 "use client";
 
-import Image from "next/image";
 import React, { useState } from "react";
-import { useRouter, Link } from "@/i18n/navigation";
-import { Lock, Mail, Eye, EyeOff, LogIn, ShieldCheck } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  Loader2,
+  ShieldCheck,
+  LogIn,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useGoogleLogin } from "../hooks/useGoogleLogin";
+  Button,
+  Label,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupButton,
+} from "@repo/design/shadcn";
+import { GoogleLoginButton } from "./GoogleLoginButton";
 import { loginAction } from "../actions/login.action";
 import { LoginSchema, type LoginFormData } from "../schemas/login.schema";
 import { useAuthStore } from "@/store";
@@ -28,25 +30,30 @@ export interface LoginFormProps {
   onLoadingChange?: (loading: boolean) => void;
 }
 
+/**
+ * LoginForm component for Expert Portal.
+ * Clean, compact authentication form calibrated to fit within single viewport height.
+ */
 export const LoginForm: React.FC<LoginFormProps> = ({ onLoadingChange }) => {
-  const router = useRouter();
+  // const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [serverError, setServerError] = useState("");
 
   const initAuth = useAuthStore((state) => state.init);
 
-  const { handleGoogleLogin } = useGoogleLogin({
-    callback_url: "/dashboard",
-    onError: (err) => setServerError(err),
-  });
-
-  const form = useForm<LoginFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
+    mode: "onBlur",
   });
 
   const updateLoading = (val: boolean) => {
@@ -75,151 +82,183 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoadingChange }) => {
   };
 
   return (
-    <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-white min-h-fit">
-      <div className="mb-10 flex items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Login</h2>
-        </div>
-        <Link href="/register" className="shrink-0">
-          <Button type="button" variant="secondary" size="sm">
-            Sign Up
-          </Button>
-        </Link>
+    <div className="w-full">
+      <div className="mb-4 sm:mb-5 text-center">
+        <h1 className="text-xl sm:text-2xl font-semibold text-stone-800 tracking-tight mb-1">
+          Welcome Back
+        </h1>
+        <p className="text-xs text-stone-500">
+          Enter your email and password to access your account.
+        </p>
       </div>
 
       {serverError && (
-        <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
-          <ShieldCheck className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-          <p className="text-xs text-red-700 font-bold">{serverError}</p>
+        <div className="mb-3 p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-2 animate-in fade-in slide-in-from-top-2">
+          <ShieldCheck className="size-4 text-red-500 shrink-0 mt-0.5" />
+          <p className="text-xs text-red-700 font-semibold">{serverError}</p>
         </div>
       )}
 
-      <Form {...form}>
-        <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)} noValidate>
-          {/* Email FormField */}
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Mail
-                        className={`h-5 w-5 transition-colors ${
-                          fieldState.error
-                            ? "text-red-400"
-                            : "text-gray-400 group-focus-within:text-orange-600"
-                        }`}
-                      />
-                    </div>
-                    <Input
-                      {...field}
-                      id="email"
-                      type="email"
-                      className={`pl-12 ${
-                        fieldState.error ? "border-red-300 focus-visible:border-red-500" : ""
-                      }`}
-                      placeholder="expert@example.com"
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Password FormField */}
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field, fieldState }) => (
-              <FormItem>
-                <div className="flex items-center justify-between ml-1">
-                  <FormLabel className="ml-0">Password</FormLabel>
-                  <Link
-                    href="/forgot-password"
-                    className="text-[10px] font-black uppercase tracking-widest text-orange-600 hover:text-orange-700 transition-colors"
-                  >
-                    Forgot?
-                  </Link>
-                </div>
-                <FormControl>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Lock
-                        className={`h-5 w-5 transition-colors ${
-                          fieldState.error
-                            ? "text-red-400"
-                            : "text-gray-400 group-focus-within:text-orange-600"
-                        }`}
-                      />
-                    </div>
-                    <Input
-                      {...field}
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      className={`pl-12 pr-12 ${
-                        fieldState.error ? "border-red-300 focus-visible:border-red-500" : ""
-                      }`}
-                      placeholder="••••••••"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-orange-600 transition-colors"
-                    >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="pt-4 space-y-4">
-            <Button
-              type="submit"
-              disabled={loading}
-              fullWidth
-              variant="default"
-              size="lg"
-              className="flex items-center justify-center gap-2 group shadow-xl shadow-orange-600/20"
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-1.5"
+        noValidate
+      >
+        {/* Email */}
+        <div>
+          <Label
+            htmlFor="email"
+            className="block text-[11px] font-semibold text-stone-700 mb-1"
+          >
+            Email Address
+          </Label>
+          <InputGroup
+            error={!!errors.email}
+            className="h-10 rounded-xl border-stone-200 hover:border-stone-300 focus-within:border-stone-400 focus-within:ring-2 focus-within:ring-stone-100"
+          >
+            <InputGroupAddon
+              align="start"
+              className="text-stone-400 group-focus-within:text-stone-700"
             >
-              {loading ? "Signing In..." : "Sign In to Dashboard"}
-              {!loading && (
-                <LogIn className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              )}
-            </Button>
-
-            <div className="relative flex items-center justify-center py-2">
-              <Separator className="absolute inset-0 my-auto" />
-              <span className="relative px-4 bg-white text-[10px] font-black uppercase tracking-widest text-gray-500">
-                Or continue with
-              </span>
-            </div>
-
-            <Button
-              type="button"
-              variant="outline"
-              fullWidth
-              size="lg"
-              onClick={handleGoogleLogin}
-              className="flex items-center justify-center gap-3 font-black text-xs"
-            >
-              <Image
-                src="/images/google-color-svgrepo-com.svg"
-                alt="Google"
-                height={18}
-                width={18}
-              />
-              Sign in with Google
-            </Button>
+              <Mail className="size-3.5" />
+            </InputGroupAddon>
+            <InputGroupInput
+              type="email"
+              id="email"
+              autoComplete="email"
+              placeholder="expert@example.com"
+              className="text-xs sm:text-sm"
+              {...register("email")}
+            />
+          </InputGroup>
+          <div className="h-4.5 mt-1 flex items-center">
+            {errors.email && (
+              <p className="text-red-500 text-[11px] font-medium leading-none animate-in fade-in duration-150">
+                {errors.email.message}
+              </p>
+            )}
           </div>
-        </form>
-      </Form>
+        </div>
+
+        {/* Password */}
+        <div>
+          <Label
+            htmlFor="password"
+            className="block text-[11px] font-semibold text-stone-700 mb-1"
+          >
+            Password
+          </Label>
+          <InputGroup
+            error={!!errors.password}
+            className="h-10 rounded-xl border-stone-200 hover:border-stone-300 focus-within:border-stone-400 focus-within:ring-2 focus-within:ring-stone-100"
+          >
+            <InputGroupAddon
+              align="start"
+              className="text-stone-400 group-focus-within:text-stone-700"
+            >
+              <Lock className="size-3.5" />
+            </InputGroupAddon>
+            <InputGroupInput
+              type={showPassword ? "text" : "password"}
+              id="password"
+              autoComplete="current-password"
+              placeholder="••••••••"
+              className="text-xs sm:text-sm"
+              {...register("password")}
+            />
+            <InputGroupAddon align="end">
+              <InputGroupButton
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-stone-400 hover:text-stone-700 rounded-lg"
+              >
+                {showPassword ? (
+                  <EyeOff className="size-3.5" />
+                ) : (
+                  <Eye className="size-3.5" />
+                )}
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
+          <div className="h-4.5 mt-1 flex items-center">
+            {errors.password && (
+              <p className="text-red-500 text-[11px] font-medium leading-none animate-in fade-in duration-150">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Remember Me & Forgot Password Row */}
+        <div className="flex items-center justify-between pt-0.5">
+          <label className="flex items-center gap-1.5 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="size-3.5 rounded border-stone-300 text-amber-600 focus:ring-stone-400 cursor-pointer accent-amber-600"
+            />
+            <span className="text-[11px] font-medium text-stone-600">
+              Remember Me
+            </span>
+          </label>
+          <Link
+            href="/forgot-password"
+            className="text-[11px] font-medium text-amber-600 hover:text-amber-700 hover:underline transition-colors focus-visible:ring-2 focus-visible:ring-stone-400 rounded-sm"
+          >
+            Forgot Password?
+          </Link>
+        </div>
+
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full h-10 rounded-xl bg-linear-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white text-xs sm:text-sm font-bold shadow-sm shadow-amber-600/20 hover:shadow-md hover:shadow-amber-600/25 active:scale-[0.99] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer mt-1 flex items-center justify-center gap-2"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="size-3.5 animate-spin text-white" />
+              <span>Signing In...</span>
+            </>
+          ) : (
+            <>
+              <span>Log In</span>
+              <LogIn className="size-3.5" />
+            </>
+          )}
+        </Button>
+
+        {/* Divider */}
+        <div className="relative my-2.5 text-center">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-stone-200"></div>
+          </div>
+          <span className="relative px-3 text-[11px] font-medium text-stone-400 bg-white">
+            Or Login With
+          </span>
+        </div>
+
+        {/* Google Login Button */}
+        <GoogleLoginButton
+          callback_url="/dashboard"
+          onError={(err) => setServerError(err)}
+          text="Google"
+          className="flex items-center justify-center gap-2 w-full border border-stone-200 hover:border-stone-300 rounded-xl h-10 px-4 bg-white hover:bg-stone-50 active:bg-stone-100 transition-all duration-200 cursor-pointer text-xs shadow-2xs hover:shadow-xs"
+        />
+
+        {/* Register Prompt */}
+        <div className="text-center pt-1.5 text-xs text-stone-600">
+          <span>Don&apos;t Have An Account? </span>
+          <Link
+            href="/register"
+            className="font-bold text-amber-600 hover:text-amber-700 underline-offset-2 hover:underline transition-colors"
+          >
+            Register Now.
+          </Link>
+        </div>
+      </form>
     </div>
   );
 };
