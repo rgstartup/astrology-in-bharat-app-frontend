@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   CalendarCheck,
   CheckCircle,
@@ -14,84 +14,37 @@ import { ConsultationRatings } from "@/components/dashboard/ConsultationRating";
 import { ReviewsList } from "@/components/dashboard/ReviewsList";
 import { ReviewsModal } from "@/components/dashboard/ReviewsModal";
 import { useAuthStore } from "@/store/useAuthStore";
-import { getReviewStats, getReviews, Review } from "@/lib/reviews";
-import { getDashboardStats, DashboardStats } from "@/lib/dashboard";
-import { ReviewStats } from "@/types/expert";
+import { useDashboardStore } from "@/store/dashboard.store";
 import {
   StatsSkeleton,
   ActivitySkeleton,
   TableSkeleton,
 } from "@/components/dashboard/DashboardSkeletons";
+
 const Page = () => {
   const { user } = useAuthStore();
-  const [ratingStats, setRatingStats] = useState<ReviewStats | null>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [reviewsTotal, setReviewsTotal] = useState(0);
-  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(
-    null,
-  );
-  const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    ratingStats,
+    reviews,
+    reviewsTotal,
+    dashboardStats,
+    loading,
+    isModalOpen,
+    fetchDashboardData,
+    setIsModalOpen,
+  } = useDashboardStore();
 
   useEffect(() => {
-    const fetchData = async () => {
-      console.log({ user });
-
-      // Use profileId if available, fallback to user.id
-      const expertId = user?.profileId || user?.id;
-      if (!expertId) {
-        console.warn(
-          "[Dashboard] No expertId found on user object:",
-          JSON.stringify(user),
-        );
-        setLoading(false);
-        return;
-      }
-
-      console.log(
-        "[Dashboard] Fetching data for expertId:",
-        expertId,
-        "| profileId:",
-        user?.profileId,
-        "| id:",
-        user?.id,
+    const expertId = user?.profileId || user?.id;
+    if (expertId) {
+      fetchDashboardData(expertId);
+    } else {
+      console.warn(
+        "[Dashboard] No expertId found on user object:",
+        JSON.stringify(user),
       );
-
-      const [
-        [stats, statsErr],
-        [reviewsData, reviewsErr],
-        [dStats, dStatsErr],
-      ] = await Promise.all([
-        getReviewStats(expertId),
-        getReviews(expertId, 1, 10),
-        getDashboardStats("total"),
-      ]);
-
-      if (statsErr)
-        console.error("[Dashboard] Review stats fetch failed:", statsErr);
-      if (reviewsErr)
-        console.error("[Dashboard] Reviews fetch failed:", reviewsErr);
-      if (dStatsErr)
-        console.error("[Dashboard] Dashboard stats fetch failed:", dStatsErr);
-
-      if (stats) {
-        console.log(
-          "[Dashboard] Rating stats received:",
-          JSON.stringify(stats),
-        );
-        setRatingStats(stats);
-      }
-      if (reviewsData) {
-        setReviews(reviewsData.reviews || []);
-        setReviewsTotal(reviewsData.total || 0);
-      }
-      if (dStats) setDashboardStats(dStats);
-
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [user?.profileId, user?.id]);
+    }
+  }, [user?.profileId, user?.id, fetchDashboardData]);
 
   const statsData = [
     {
@@ -136,8 +89,6 @@ const Page = () => {
     },
   ];
 
-  // Use real distribution from stats if available, otherwise fallback to zeros
-  // Use real distribution from backend stats
   const distribution = [
     { stars: 5, count: ratingStats?.counts?.[5] || 0 },
     { stars: 4, count: ratingStats?.counts?.[4] || 0 },
