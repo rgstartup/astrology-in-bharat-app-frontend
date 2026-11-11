@@ -1,11 +1,11 @@
 import { api, ApiError } from "./api";
 
 export interface DashboardStats {
-  totalChatSessions: number;
-  totalEarnings: number;
-  averageRating: number;
-  totalReviews: number;
-  walletBalance: number;
+  total_chat_sessions: number;
+  total_earnings: number;
+  average_rating: number;
+  total_reviews: number;
+  wallet_balance: number;
   // New fields for Appointments page compatibility
   today_appointments?: number;
   completed_today?: number;
@@ -14,7 +14,6 @@ export interface DashboardStats {
   total_appointments?: number;
   total_completed?: number;
   total_expired?: number;
-  total_earnings?: number;
   trends: {
     sessions: string;
     earnings: string;
@@ -36,11 +35,11 @@ export const getDashboardStats = async (
   return [
     {
       ...data, // Spread all raw data first (today_appointments, etc.)
-      totalChatSessions: data.total_chat_sessions || 0,
-      totalEarnings: data.total_earnings || data.today_earnings || 0,
-      walletBalance: data.wallet_balance || 0,
-      averageRating: data.average_rating || 0,
-      totalReviews: data.total_reviews || 0,
+      total_chat_sessions: data.total_chat_sessions || 0,
+      total_earnings: data.total_earnings || data.today_earnings || 0,
+      wallet_balance: data.wallet_balance || 0,
+      average_rating: data.average_rating || 0,
+      total_reviews: data.total_reviews || 0,
       trends: {
         sessions: data.trends?.sessions || "+0%",
         earnings: data.trends?.earnings || "+0%",

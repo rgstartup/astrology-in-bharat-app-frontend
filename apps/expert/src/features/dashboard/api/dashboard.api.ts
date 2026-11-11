@@ -16,32 +16,36 @@ import type {
  * @deprecated Import from {@link features/dashboard/api} instead of {@link @/lib/dashboard}.
  */
 export async function getDashboardStats(
-  params: GetDashboardStatsParams | string = {}
+  params: GetDashboardStatsParams | string = {},
 ): Promise<Result<DashboardStats>> {
   // Backward-compat: accept a period string (e.g. "monthly" | "total")
   const periodStr = typeof params === "string" ? params : undefined;
-  const { period = periodStr || "monthly", startDate, endDate } =
-    typeof params === "string" ? {} : params;
+  const {
+    period = periodStr || "monthly",
+    startDate,
+    endDate,
+  } = typeof params === "string" ? {} : params;
+
   const query = new URLSearchParams();
   if (period) query.set("period", period);
   if (startDate) query.set("startDate", startDate);
   if (endDate) query.set("endDate", endDate);
 
   const result = await api.get<DashboardStatsResponse>(
-    `expert-dashboard/stats?${query.toString()}`
+    `expert-dashboard/stats?${query.toString()}`,
   );
   if (!result.ok) return result;
 
-  const data = result.data?.data || result.data;
+  const data = result.data.data;
   return {
     ok: true,
     data: {
       ...data,
-      totalChatSessions: data.total_chat_sessions || 0,
-      totalEarnings: data.total_earnings || data.today_earnings || 0,
-      walletBalance: data.wallet_balance || 0,
-      averageRating: data.average_rating || 0,
-      totalReviews: data.total_reviews || 0,
+      total_chat_sessions: data.total_chat_sessions || 0,
+      total_earnings: data.total_earnings || data.today_earnings || 0,
+      wallet_balance: data.wallet_balance || 0,
+      average_rating: data.average_rating || 0,
+      total_reviews: data.total_reviews || 0,
       trends: {
         sessions: data.trends?.sessions || "+0%",
         earnings: data.trends?.earnings || "+0%",
@@ -88,13 +92,17 @@ export async function getRecentAppointments(): Promise<Result<any[]>> {
       allSessions.map((item) => {
         const typePrefix = (item as any).type ? "call" : "chat";
         return [`${typePrefix}_${item.id}`, item];
-      })
-    ).values()
+      }),
+    ).values(),
   );
 
   const sortedSessions = uniqueSessions.sort((a: any, b: any) => {
-    const dateA = new Date(a.created_at || a.createdAt || a.start_time || 0).getTime();
-    const dateB = new Date(b.created_at || b.createdAt || b.start_time || 0).getTime();
+    const dateA = new Date(
+      a.created_at || a.createdAt || a.start_time || 0,
+    ).getTime();
+    const dateB = new Date(
+      b.created_at || b.createdAt || b.start_time || 0,
+    ).getTime();
     return dateB - dateA;
   });
 

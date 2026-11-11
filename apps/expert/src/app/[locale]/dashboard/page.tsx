@@ -49,7 +49,7 @@ const Page = () => {
   const statsData = [
     {
       title: "Total Sessions",
-      value: (dashboardStats?.totalChatSessions || 0).toString(),
+      value: (dashboardStats?.total_chat_sessions || 0).toString(),
       trend: {
         value: dashboardStats?.trends?.sessions || "All Time",
         isPositive: true,
@@ -61,7 +61,7 @@ const Page = () => {
     },
     {
       title: "Reviews",
-      value: (reviewsTotal || dashboardStats?.totalReviews || 0).toString(),
+      value: (reviewsTotal || dashboardStats?.total_reviews || 0).toString(),
       trend: { value: "Feedback", isPositive: true, period: "total" },
       icon: CheckCircle,
       iconBgColor: "bg-green-100",
@@ -69,7 +69,7 @@ const Page = () => {
     },
     {
       title: "Wallet Balance",
-      value: `₹${(dashboardStats?.walletBalance || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      value: `₹${(dashboardStats?.wallet_balance || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       trend: { value: "Withdrawable", isPositive: true, period: "current" },
       icon: Wallet,
       iconBgColor: "bg-green-100",
@@ -77,7 +77,7 @@ const Page = () => {
     },
     {
       title: "Total Earnings",
-      value: `₹${(dashboardStats?.totalEarnings || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      value: `₹${(dashboardStats?.total_earnings || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       trend: {
         value: dashboardStats?.trends?.earnings || "Lifetime",
         isPositive: true,

@@ -34,10 +34,10 @@ export type KycStatus = "pending" | "active" | "approved" | "rejected";
 // ─── Dashboard Stats ──────────────────────────────────────────────────────────
 
 export interface DashboardStats {
-  totalChatSessions: number;
-  totalEarnings: number;
-  averageRating: number;
-  totalReviews: number;
+  total_chat_sessions: number;
+  total_earnings: number;
+  average_rating: number;
+  total_reviews: number;
   today_appointments?: number;
   completed_today?: number;
   expired_today?: number;
@@ -45,7 +45,6 @@ export interface DashboardStats {
   total_appointments?: number;
   total_completed?: number;
   total_expired?: number;
-  total_earnings?: number;
   trends: {
     sessions: string;
     earnings: string;
