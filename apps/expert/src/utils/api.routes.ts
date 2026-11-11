@@ -18,4 +18,17 @@ export const API_ROUTES = {
   CHAT: {
     ATTACHMENTS: "/expert/chat/attachments",
   },
+  DASHBOARD: {
+    STATS: "/expert-dashboard/stats",
+    APPOINTMENTS_PENDING: "/chat/sessions/appointments/pending",
+    APPOINTMENTS_COMPLETED: "/chat/sessions/appointments/completed",
+    CALLS_PENDING: "/call/sessions/appointments/pending",
+    CALLS_COMPLETED: "/call/sessions/appointments/completed",
+    PUJA_APPOINTMENTS: "/puja-appointments/expert",
+  },
+  REVIEWS: {
+    LIST: (expertId: string) => `/reviews/expert/${expertId}`,
+    STATS: (expertId: string) => `/reviews/expert/${expertId}/stats`,
+    REPLY: (id: string) => `/expert/reviews/${id}/reply`,
+  },
 } as const;

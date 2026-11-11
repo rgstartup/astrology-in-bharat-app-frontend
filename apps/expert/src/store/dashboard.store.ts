@@ -38,7 +38,7 @@ const initialState = {
 export const useDashboardStore = create<DashboardState>()((set, get) => ({
   ...initialState,
 
-  fetchDashboardData: async (expertId: number) => {
+  fetchDashboardData: async (expertId: string) => {
     set({ loading: true });
 
     try {

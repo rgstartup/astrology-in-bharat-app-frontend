@@ -2,11 +2,8 @@
 
 import api from "@/actions/api";
 import type { Result } from "@repo/safe-fetch";
-import type {
-  ExpertReview,
-  ExpertReviewsResponse,
-  ExpertReviewsStats,
-} from "@repo/lib";
+import type { ExpertReviewsResponse, ExpertReviewsStats } from "@repo/lib";
+import { API_ROUTES } from "@/utils/api.routes";
 
 export interface Review {
   id: number;
@@ -31,7 +28,7 @@ export async function getReviews(
   limit: number = 10,
 ): Promise<Result<ExpertReviewsResponse>> {
   return api.get<ExpertReviewsResponse>(
-    `/reviews/expert/${expertId}?page=${page}&limit=${limit}`,
+    `${API_ROUTES.REVIEWS.LIST(expertId)}?page=${page}&limit=${limit}`,
   );
 }
 
@@ -42,7 +39,7 @@ export async function getReviews(
 export async function getReviewStats(
   expertId: string,
 ): Promise<Result<ExpertReviewsStats>> {
-  return api.get<ExpertReviewsStats>(`/reviews/expert/${expertId}/stats`);
+  return api.get<ExpertReviewsStats>(API_ROUTES.REVIEWS.STATS(expertId));
 }
 
 /**
@@ -53,5 +50,5 @@ export async function replyToReview(
   id: string,
   reply: string,
 ): Promise<Result<any>> {
-  return api.post(`/expert/reviews/${id}/reply`, { reply });
+  return api.post(API_ROUTES.REVIEWS.REPLY(id), { reply });
 }

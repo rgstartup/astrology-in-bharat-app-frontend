@@ -7,6 +7,7 @@ import type {
   DashboardStatsResponse,
   GetDashboardStatsParams,
 } from "@repo/lib";
+import { API_ROUTES } from "@/utils/api.routes";
 
 /**
  * Fetch expert dashboard stats for a given period / date range.
@@ -32,7 +33,7 @@ export async function getDashboardStats(
   if (endDate) query.set("endDate", endDate);
 
   const result = await api.get<DashboardStatsResponse>(
-    `expert-dashboard/stats?${query.toString()}`,
+    `${API_ROUTES.DASHBOARD.STATS}?${query.toString()}`
   );
   if (!result.ok) return result;
 
@@ -66,11 +67,11 @@ export async function getRecentAppointments(): Promise<Result<any[]>> {
     completedCallRes,
     pujaRes,
   ] = await Promise.all([
-    api.get<any>("/chat/sessions/appointments/pending"),
-    api.get<any>("/chat/sessions/appointments/completed"),
-    api.get<any>("/call/sessions/appointments/pending"),
-    api.get<any>("/call/sessions/appointments/completed"),
-    api.get<any>("/puja-appointments/expert"),
+    api.get<any>(API_ROUTES.DASHBOARD.APPOINTMENTS_PENDING),
+    api.get<any>(API_ROUTES.DASHBOARD.APPOINTMENTS_COMPLETED),
+    api.get<any>(API_ROUTES.DASHBOARD.CALLS_PENDING),
+    api.get<any>(API_ROUTES.DASHBOARD.CALLS_COMPLETED),
+    api.get<any>(API_ROUTES.DASHBOARD.PUJA_APPOINTMENTS),
   ]);
 
   const extractData = (result: Result<any>) => {
