@@ -21,7 +21,7 @@ export const RecentActivity: React.FC = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const [sessions] = await getRecentSessions();
+        const sessions = await getRecentSessions();
         if (!sessions) return;
         
         const recent5 = sessions.slice(0, 5).map(session => {
