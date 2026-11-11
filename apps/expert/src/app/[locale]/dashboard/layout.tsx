@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
+import { DashboardBanners } from "@/components/dashboard/DashboardBanners";
 import "react-calendar/dist/Calendar.css";
 import { LayoutProps } from "@/types/expert";
 
@@ -27,7 +28,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Header toggleSidebar={toggleSidebar} />
           </header>
 
-          <main className="p-4 sm:p-6 text-black flex-1"> {children}</main>
+          <main className="p-4 sm:p-6 text-black flex-1">
+            {/* Dashboard Status Banners (KYC/Approval) */}
+            <DashboardBanners />
+            {children}
+          </main>
         </div>
       </div>
     </>

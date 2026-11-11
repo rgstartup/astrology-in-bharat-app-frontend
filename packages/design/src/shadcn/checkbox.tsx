@@ -25,7 +25,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         <label
           htmlFor={id}
           className={cn(
-            "size-4 shrink-0 rounded-md border border-input shadow-xs transition-all cursor-pointer flex items-center justify-center",
+            "size-4 shrink-0 rounded-[4px] border border-input shadow-xs transition-all cursor-pointer flex items-center justify-center",
             "peer-focus-visible:ring-2 peer-focus-visible:ring-orange/50 peer-focus-visible:border-orange",
             "peer-checked:bg-orange peer-checked:border-orange peer-checked:text-white",
             "peer-disabled:cursor-not-allowed peer-disabled:opacity-50",

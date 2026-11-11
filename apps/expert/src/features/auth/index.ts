@@ -2,7 +2,14 @@
 export { AuthHeader } from "./components/AuthHeader";
 export { AuthFooter, type AuthFooterProps } from "./components/AuthFooter";
 export { GoogleLoginButton, type GoogleLoginButtonProps } from "./components/GoogleLoginButton";
-export { ExpertShowcaseCard } from "./components/ExpertShowcaseCard";
+export {
+  ExpertShowcaseCard,
+  type ExpertShowcaseCardProps,
+} from "./components/ExpertShowcaseCard";
+export {
+  LoginShowcaseCard,
+  type LoginShowcaseCardProps,
+} from "./components/LoginShowcaseCard";
 export {
   BrandingStats,
   BrandingStatsSkeleton,
