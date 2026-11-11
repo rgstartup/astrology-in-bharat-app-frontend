@@ -21,6 +21,9 @@ export interface DashboardStats {
   };
 }
 
+/**
+ * @deprecated Use {@link getDashboardStats} from {@link @/features/dashboard/api} instead.
+ */
 export const getDashboardStats = async (
   type: string = "monthly",
 ): Promise<[DashboardStats | null, ApiError | null]> => {
@@ -47,6 +50,9 @@ export const getDashboardStats = async (
   ];
 };
 
+/**
+ * @deprecated Use {@link getRecentAppointments} from {@link @/features/dashboard/api} instead.
+ */
 export const getRecentAppointments = async (): Promise<[any[] | null, ApiError | null]> => {
   const [pendingChatRes, completedChatRes, pendingCallRes, completedCallRes, pujaRes] =
     await Promise.all([

@@ -90,3 +90,19 @@ export type {
   Specialization,
   IPaginatedSpecializationResponse,
 } from "./types/specializations";
+
+export type {
+  ExpertReviewClient,
+  ExpertReview,
+  ExpertReviewsResponse,
+  ExpertReviewsStats,
+  GetExpertReviewsParams,
+  GetExpertReviewsByDateParams,
+  ExpertReviewsByDateResponse,
+} from "./contracts/expert/reviews-api";
+
+export type {
+  DashboardStats,
+  DashboardStatsResponse,
+  GetDashboardStatsParams,
+} from "./contracts/expert/dashboard-api";

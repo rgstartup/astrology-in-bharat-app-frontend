@@ -9,8 +9,8 @@ import RescheduleModal from "./RescheduleModal";
 import { Appointment } from "./types";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
-import { getReviews } from "@/lib/reviews";
-import { getDashboardStats, DashboardStats } from "@/lib/dashboard";
+import { getReviews } from "@/features/dashboard/api";
+import { getDashboardStats, DashboardStats } from "@/features/dashboard/api";
 import { TableSkeleton, StatsSkeleton } from "../dashboard/DashboardSkeletons";
 
 export default function AppointmentsPage() {

@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { getReviewStats, getReviews, Review } from "@/lib/reviews";
-import { getDashboardStats, DashboardStats } from "@/lib/dashboard";
+import { getReviewStats, getReviews, Review } from "@/features/dashboard/api";
+import { getDashboardStats, DashboardStats } from "@/features/dashboard/api";
 import { ReviewStats } from "@/types/expert";
 
 interface DashboardState {

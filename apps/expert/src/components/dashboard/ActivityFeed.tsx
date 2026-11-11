@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { User as UserIcon, Clock as ClockIcon } from 'lucide-react';
 const User = UserIcon as any;
 const Clock = ClockIcon as any;
-import { getRecentAppointments as getRecentSessions } from '@/lib/dashboard';
+import { getRecentAppointments as getRecentSessions } from '@/features/dashboard/api';
 import { format, formatDistanceToNow } from 'date-fns';
 import { ActivitySkeleton } from './DashboardSkeletons';
 

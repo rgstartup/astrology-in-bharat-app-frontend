@@ -12,6 +12,10 @@ export interface Review {
     reply?: string;
 }
 
+/**
+ * @deprecated Use {@link getReviews} from {@link @/features/dashboard/api} instead.
+ * This module will be removed in a future release.
+ */
 export const getReviews = async (expertId: string, page: number = 1, limit: number = 10): Promise<[{ reviews: Review[], total: number } | null, ApiError | null]> => {
     const [res, error] = await api.get(`/reviews/expert/${expertId}?page=${page}&limit=${limit}`);
     if (error) return [null, error];
@@ -33,8 +37,7 @@ export const getReviews = async (expertId: string, page: number = 1, limit: numb
 };
 
 /**
- * Compatibility wrapper for getReviews used by some components
- * that expect data directly instead of a tuple.
+ * @deprecated Use {@link getExpertReviews} from {@link @/features/dashboard/api} instead.
  */
 export const getExpertReviews = async (expertId: string, page: number = 1, limit: number = 10) => {
     const [res, error] = await getReviews(expertId, page, limit);
@@ -48,6 +51,9 @@ export const getExpertReviews = async (expertId: string, page: number = 1, limit
     };
 };
 
+/**
+ * @deprecated Use {@link getReviewStats} from {@link @/features/dashboard/api} instead.
+ */
 export const getReviewStats = async (expertId: string): Promise<[any | null, ApiError | null]> => {
 
     const [res, error] = await api.get(`/reviews/expert/${expertId}/stats`);
@@ -56,6 +62,9 @@ export const getReviewStats = async (expertId: string): Promise<[any | null, Api
     return [data, null];
 };
 
+/**
+ * @deprecated Use {@link replyToReview} from {@link @/features/dashboard/api} instead.
+ */
 export const replyToReview = async (id: string, reply: string): Promise<[any | null, ApiError | null]> => {
     return api.post(`/expert/reviews/${id}/reply`, { reply });
 };

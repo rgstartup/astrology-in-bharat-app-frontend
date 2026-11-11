@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { Star, User, ChevronDown } from "lucide-react";
-import { Review, getReviews } from "@/lib/reviews";
+import { Review, getReviews } from "@/features/dashboard/api";
 import { getErrorMessage } from "@repo/lib";
 import { Loading } from "@repo/ui";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Calendar, CheckCircle, XCircle, Wallet } from "lucide-react";
 import { StatsCards } from "@repo/ui";
-import { DashboardStats } from "@/lib/dashboard";
+import { DashboardStats } from "@/features/dashboard/api";
 
 interface AppointmentStatsProps {
     stats: DashboardStats | null;

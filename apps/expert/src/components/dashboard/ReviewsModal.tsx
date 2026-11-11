@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { X, Star, User } from "lucide-react";
 import { Loading } from "@repo/ui";
-import { getReviews, Review } from "@/lib/reviews";
+import { getReviews, Review } from "@/features/dashboard/api";
 import { getErrorMessage } from "@repo/lib";
 import { Button } from "../ui/button";
 
