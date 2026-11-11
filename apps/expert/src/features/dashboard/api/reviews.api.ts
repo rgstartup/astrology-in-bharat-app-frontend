@@ -1,6 +1,7 @@
 "use client";
 
 import api from "@/actions/api";
+import type { Result } from "@repo/safe-fetch";
 import type {
   ExpertReview,
   ExpertReviewsResponse,
@@ -20,7 +21,7 @@ export interface Review {
  * Fetch paginated reviews for an expert.
  *
  * Uses the actions api instance (@/actions/api) and response contracts from @repo/lib.
- * Returns the raw {@link ExpertReviewsResponse} from the API instead of a legacy array.
+ * Returns {@link Result} discriminated union ({ ok: true, data } | { ok: false, error }).
  *
  * @deprecated Import from {@link features/dashboard/api} instead of {@link @/lib/reviews}.
  */
@@ -28,12 +29,10 @@ export async function getReviews(
   expertId: string,
   page: number = 1,
   limit: number = 10,
-): Promise<[ExpertReviewsResponse | null, any | null]> {
-  const result = await api.get<ExpertReviewsResponse>(
+): Promise<Result<ExpertReviewsResponse>> {
+  return api.get<ExpertReviewsResponse>(
     `/reviews/expert/${expertId}?page=${page}&limit=${limit}`,
   );
-  if (!result.ok) return [null, result.error];
-  return [result.data, null];
 }
 
 /**
@@ -42,12 +41,8 @@ export async function getReviews(
  */
 export async function getReviewStats(
   expertId: string,
-): Promise<[ExpertReviewsStats | null, any | null]> {
-  const result = await api.get<ExpertReviewsStats>(
-    `/reviews/expert/${expertId}/stats`,
-  );
-  if (!result.ok) return [null, result.error];
-  return [result.data, null];
+): Promise<Result<ExpertReviewsStats>> {
+  return api.get<ExpertReviewsStats>(`/reviews/expert/${expertId}/stats`);
 }
 
 /**
@@ -57,6 +52,6 @@ export async function getReviewStats(
 export async function replyToReview(
   id: string,
   reply: string,
-): Promise<[any | null, any | null]> {
+): Promise<Result<any>> {
   return api.post(`/expert/reviews/${id}/reply`, { reply });
 }

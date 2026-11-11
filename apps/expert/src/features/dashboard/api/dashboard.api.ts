@@ -1,6 +1,7 @@
 "use client";
 
 import api from "@/actions/api";
+import type { Result } from "@repo/safe-fetch";
 import type {
   DashboardStats,
   DashboardStatsResponse,
@@ -11,11 +12,12 @@ import type {
  * Fetch expert dashboard stats for a given period / date range.
  *
  * Uses the actions api instance (@/actions/api) and response contracts from @repo/lib.
+ * Returns {@link Result} discriminated union ({ ok: true, data } | { ok: false, error }).
  * @deprecated Import from {@link features/dashboard/api} instead of {@link @/lib/dashboard}.
  */
 export async function getDashboardStats(
   params: GetDashboardStatsParams | string = {}
-): Promise<[DashboardStats | null, any | null]> {
+): Promise<Result<DashboardStats>> {
   // Backward-compat: accept a period string (e.g. "monthly" | "total")
   const periodStr = typeof params === "string" ? params : undefined;
   const { period = periodStr || "monthly", startDate, endDate } =
@@ -28,11 +30,12 @@ export async function getDashboardStats(
   const result = await api.get<DashboardStatsResponse>(
     `expert-dashboard/stats?${query.toString()}`
   );
-  if (!result.ok) return [null, result.error];
+  if (!result.ok) return result;
 
   const data = result.data?.data || result.data;
-  return [
-    {
+  return {
+    ok: true,
+    data: {
       ...data,
       totalChatSessions: data.total_chat_sessions || 0,
       totalEarnings: data.total_earnings || data.today_earnings || 0,
@@ -44,15 +47,14 @@ export async function getDashboardStats(
         earnings: data.trends?.earnings || "+0%",
       },
     },
-    null,
-  ];
+  };
 }
 
 /**
  * Fetch recent appointments across chat, call, and puja sessions.
  * @deprecated Import from {@link features/dashboard/api} instead of {@link @/lib/dashboard}.
  */
-export async function getRecentAppointments(): Promise<[any[] | null, any | null]> {
+export async function getRecentAppointments(): Promise<Result<any[]>> {
   const [
     pendingChatRes,
     completedChatRes,
@@ -67,10 +69,9 @@ export async function getRecentAppointments(): Promise<[any[] | null, any | null
     api.get<any>("/puja-appointments/expert"),
   ]);
 
-  const extractData = (result: [any | null, any | null]) => {
-    const [res, error] = result;
-    if (error || !res) return [];
-    const data = res?.data?.data || res?.data || res;
+  const extractData = (result: Result<any>) => {
+    if (!result.ok) return [];
+    const data = result.data?.data?.data || result.data?.data || result.data;
     return Array.isArray(data) ? data : [];
   };
 
@@ -97,7 +98,7 @@ export async function getRecentAppointments(): Promise<[any[] | null, any | null
     return dateB - dateA;
   });
 
-  return [sortedSessions.slice(0, 5), null];
+  return { ok: true, data: sortedSessions.slice(0, 5) };
 }
 
 /**
@@ -106,10 +107,10 @@ export async function getRecentAppointments(): Promise<[any[] | null, any | null
  * @deprecated Import from {@link features/dashboard/api} instead of {@link @/lib/dashboard}.
  */
 export async function getRecentSessions(): Promise<any[]> {
-  const [sessions, error] = await getRecentAppointments();
-  if (error) {
-    console.error("Error fetching recent sessions:", error);
+  const result = await getRecentAppointments();
+  if (!result.ok) {
+    console.error("Error fetching recent sessions:", result.error);
     return [];
   }
-  return sessions || [];
+  return result.data || [];
 }

@@ -4,7 +4,6 @@ import React, { useState, useCallback } from "react";
 import { Star, User, ChevronDown } from "@repo/design/lucide";
 import { Review, getReviews } from "@/features/dashboard/api";
 import type { ExpertReview, ExpertReviewsResponse } from "@repo/lib";
-import { getErrorMessage } from "@repo/lib";
 import { Loading } from "@repo/ui";
 
 const PAGE_SIZE = 10;
@@ -32,10 +31,10 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
         setLoadingMore(true);
         try {
             const nextPage = page + 1;
-            const [res, error] = await getReviews(expertId, nextPage, PAGE_SIZE);
-            if (error) throw new Error(getErrorMessage(error));
+            const result = await getReviews(expertId, nextPage, PAGE_SIZE);
+            if (!result.ok) throw new Error(result.error.message);
             
-            const expertReviews: ExpertReview[] = res?.data?.data || [];
+            const expertReviews: ExpertReview[] = result.data.data || [];
             const newReviews: Review[] = expertReviews.map((r: ExpertReview) => ({
               id: r.id,
               rating: r.rating,
@@ -51,7 +50,7 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
                 const unique = newReviews.filter(r => !existingIds.has(r.id));
                 return [...prev, ...unique];
             });
-            setTotal(res?.data?.meta.total ?? total);
+            setTotal(result.data.meta.total ?? total);
             setPage(nextPage);
         } catch (err) {
             console.error("Failed to load more reviews", err);

@@ -42,48 +42,55 @@ export const useDashboardStore = create<DashboardState>()((set, get) => ({
     set({ loading: true });
 
     try {
-      const [
-        [stats, statsErr],
-        [reviewsData, reviewsErr],
-        [dStats, dStatsErr],
-      ] = await Promise.all([
+      const [statsResult, reviewsResult, dStatsResult] = await Promise.all([
         getReviewStats(expertId),
         getReviews(expertId, 1, 10),
         getDashboardStats("total"),
       ]);
 
-      if (statsErr)
-        console.error("[Dashboard] Review stats fetch failed:", statsErr);
-      if (reviewsErr)
-        console.error("[Dashboard] Reviews fetch failed:", reviewsErr);
-      if (dStatsErr)
-        console.error("[Dashboard] Dashboard stats fetch failed:", dStatsErr);
+      if (!statsResult.ok)
+        console.error(
+          "[Dashboard] Review stats fetch failed:",
+          statsResult.error.message,
+        );
+      if (!reviewsResult.ok)
+        console.error(
+          "[Dashboard] Reviews fetch failed:",
+          reviewsResult.error.message,
+        );
+      if (!dStatsResult.ok)
+        console.error(
+          "[Dashboard] Dashboard stats fetch failed:",
+          dStatsResult.error.message,
+        );
 
-      if (stats) {
+      if (statsResult.ok) {
         console.log(
           "[Dashboard] Rating stats received:",
-          JSON.stringify(stats),
+          JSON.stringify(statsResult.data),
         );
-        set({ ratingStats: stats });
+        set({ ratingStats: statsResult.data });
       }
-      if (reviewsData) {
-        const expertReviews: ExpertReview[] = reviewsData.data?.data || [];
-        const mappedReviews: Review[] = expertReviews.map((r: ExpertReview) => ({
-          id: r.id,
-          rating: r.rating,
-          comment: r.comment,
-          user: {
-            name: r.client?.full_name || "Anonymous",
-            avatar: undefined,
-          },
-          created_at: r.created_at,
-        }));
+      if (reviewsResult.ok) {
+        const expertReviews: ExpertReview[] = reviewsResult.data.data || [];
+        const mappedReviews: Review[] = expertReviews.map(
+          (r: ExpertReview) => ({
+            id: r.id,
+            rating: r.rating,
+            comment: r.comment,
+            user: {
+              name: r.client?.full_name || "Anonymous",
+              avatar: undefined,
+            },
+            created_at: r.created_at,
+          }),
+        );
         set({
           reviews: mappedReviews,
-          reviewsTotal: reviewsData.data?.meta.total || 0,
+          reviewsTotal: reviewsResult.data.meta.total || 0,
         });
       }
-      if (dStats) set({ dashboardStats: dStats });
+      if (dStatsResult.ok) set({ dashboardStats: dStatsResult.data });
     } catch (error) {
       console.error("[Dashboard] Fetch error:", error);
     } finally {

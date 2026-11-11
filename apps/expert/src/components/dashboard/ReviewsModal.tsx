@@ -5,7 +5,6 @@ import { X, Star, User } from "@repo/design/lucide";
 import { Loading } from "@repo/ui";
 import { getReviews, Review } from "@/features/dashboard/api";
 import type { ExpertReview, ExpertReviewsResponse } from "@repo/lib";
-import { getErrorMessage } from "@repo/lib";
 import { Button } from "../ui/button";
 
 interface ReviewsModalProps {
@@ -29,10 +28,10 @@ export const ReviewsModal: React.FC<ReviewsModalProps> = ({ isOpen, onClose, exp
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const [data, error] = await getReviews(expertId, page, 10);
-      if (error) throw new Error(getErrorMessage(error));
+      const result = await getReviews(expertId, page, 10);
+      if (!result.ok) throw new Error(result.error.message);
 
-      const expertReviews: ExpertReview[] = data?.data?.data || [];
+      const expertReviews: ExpertReview[] = result.data.data || [];
       const mappedReviews: Review[] = expertReviews.map((r: ExpertReview) => ({
         id: r.id,
         rating: r.rating,
@@ -44,7 +43,7 @@ export const ReviewsModal: React.FC<ReviewsModalProps> = ({ isOpen, onClose, exp
         created_at: r.created_at,
       }));
       setReviews(mappedReviews);
-      setTotal(data?.data?.meta.total || 0);
+      setTotal(result.data.meta.total || 0);
     } catch (error) {
       console.error("Error fetching reviews list:", error);
     } finally {

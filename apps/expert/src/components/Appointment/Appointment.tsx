@@ -49,7 +49,9 @@ export default function AppointmentsPage() {
         api.get<any>("/call/sessions/appointments/pending"),
         api.get<any>("/call/sessions/appointments/completed"),
         api.get<any>("/puja-appointments/expert"),
-        expertUser?.profileId ? getReviews(expertUser.profileId, 1, 50) : Promise.resolve([null, null] as [any, any]),
+        expertUser?.profileId
+          ? getReviews(expertUser.profileId, 1, 50)
+          : Promise.resolve({ ok: true, data: null } as any),
         getDashboardStats('today')
       ]);
 
@@ -68,8 +70,8 @@ export default function AppointmentsPage() {
 
       const allSessions: any[] = [...chatPending, ...chatCompleted, ...callPending, ...callCompleted, ...pujaSessions];
       
-      const [reviewsData, reviewsError] = reviewsRes;
-      const reviews: ExpertReview[] = reviewsData?.data?.data || [];
+      const reviews: ExpertReview[] =
+        reviewsRes.ok && reviewsRes.data ? reviewsRes.data.data : [];
 
       // Deduplicate sessions by ID and Source (since IDs might overlap between chat and call)
       const uniqueSessionsMap = new Map();
@@ -177,9 +179,8 @@ export default function AppointmentsPage() {
       }));
 
       // Stats Logic
-      const [statsData, statsError] = statsRes;
-      if (statsData) {
-        setStats(statsData);
+      if (statsRes.ok) {
+        setStats(statsRes.data);
       }
 
       setAppointments(mappedAppointments);
