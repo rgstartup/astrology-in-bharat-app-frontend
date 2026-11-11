@@ -8,7 +8,7 @@ import {
   Trash2,
   Plus,
   CheckCircle2,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { toast } from "react-toastify";
 import { Profile } from "@/types/profile";
 import {

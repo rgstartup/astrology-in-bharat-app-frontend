@@ -5,7 +5,7 @@ import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@repo/lib";
-import { CheckCircle, AlertCircle } from "lucide-react";
+import { CheckCircle, AlertCircle } from "@repo/design/lucide";
 import { Loading } from "@repo/ui";
 
 const CheckCircleIcon = CheckCircle as any;

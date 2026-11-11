@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Landmark, ArrowRight, ShieldCheck, AlertCircle, Info } from "lucide-react";
+import { Landmark, ArrowRight, ShieldCheck, AlertCircle, Info } from "@repo/design/lucide";
 import { BankAccount } from "@/types/wallet";
 import Button from "../ui/button";
 

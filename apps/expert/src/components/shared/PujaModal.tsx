@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Info, Upload, Image as ImageIcon } from 'lucide-react';
+import { X, Plus, Trash2, Info, Upload, Image as ImageIcon } from "@repo/design/lucide";
 import { PujaService, SamagriItem } from '../ProfileManagement/types';
 import { upsertPujaApi } from '@/lib/profile';
 import { toast } from 'react-toastify';

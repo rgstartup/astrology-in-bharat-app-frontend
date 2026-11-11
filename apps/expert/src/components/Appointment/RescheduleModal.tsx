@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { XCircle } from "lucide-react";
+import { XCircle } from "@repo/design/lucide";
 import Calendar from "react-calendar";
 import { format } from "date-fns";
 import { Appointment } from "./types";

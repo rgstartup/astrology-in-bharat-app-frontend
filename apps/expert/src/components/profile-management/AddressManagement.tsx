@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MapPin, Plus, X, Edit3, Save, Trash2 } from "lucide-react";
+import { MapPin, Plus, X, Edit3, Save, Trash2 } from "@repo/design/lucide";
 import { Profile, Address } from "@/types/profile";
 import Button from "@/components/ui/button";
 

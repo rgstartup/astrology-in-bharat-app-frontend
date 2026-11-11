@@ -9,7 +9,7 @@ import {
   Check,
   Ban,
   Pause,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { format } from "date-fns";
 import { Appointment } from "./types";
 import Button from "../ui/button";

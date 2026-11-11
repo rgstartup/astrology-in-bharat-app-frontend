@@ -1,4 +1,4 @@
-import { X, FileText } from "lucide-react";
+import { X, FileText } from "@repo/design/lucide";
 import { Button } from "@/components/ui/button";
 import type { PendingAttachment } from  "../../types";
 

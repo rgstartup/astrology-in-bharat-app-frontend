@@ -9,7 +9,7 @@ import {
   Plus,
   Edit3,
   Trash2,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { getProfile, updateProfile } from "@/lib/profile";
 import { Profile } from "@/components/profile-management/types";
 import { ServiceModal, ServiceModalService } from "@/components/shared/ServiceModal";

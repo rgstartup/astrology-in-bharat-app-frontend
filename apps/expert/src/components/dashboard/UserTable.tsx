@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from "react";
-import { Search, CalendarDays } from "lucide-react";
+import { Search, CalendarDays } from "@repo/design/lucide";
 import { cn } from "@/lib/cn";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";

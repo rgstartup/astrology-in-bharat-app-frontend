@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@repo/design/lucide";
 
 export interface ExpertShowcaseCardProps {
   /** Optional badge text displayed above the welcome headline */

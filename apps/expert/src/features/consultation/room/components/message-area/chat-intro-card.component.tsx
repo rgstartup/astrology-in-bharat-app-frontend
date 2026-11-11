@@ -1,4 +1,4 @@
-import { User, MapPin, Calendar, Clock } from "lucide-react";
+import { User, MapPin, Calendar, Clock } from "@repo/design/lucide";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { IntroCardData } from "@/types/chat";

@@ -1,4 +1,4 @@
-import { AlertCircle } from "lucide-react";
+import { AlertCircle } from "@repo/design/lucide";
 import { isAttachmentFallbackText } from "@repo/chat";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {

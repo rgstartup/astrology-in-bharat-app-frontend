@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, Package, Search, X } from "lucide-react";
+import { Plus, Package, Search, X } from "@repo/design/lucide";
 import { Product } from "@/types/product";
 import { useProducts } from "@/hooks/useProducts";
 import { ProductForm } from "./ProductForm";

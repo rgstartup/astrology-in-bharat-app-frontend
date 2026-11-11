@@ -10,7 +10,7 @@ import {
   PhoneOff,
   Volume2,
   VolumeX,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { ExpertSessionPhase } from  "@/features/consultation/session";

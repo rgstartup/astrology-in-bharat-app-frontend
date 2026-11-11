@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Calendar as CalendarIcon, Plus, X } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, X } from "@repo/design/lucide";
 import { LeaveDate } from "@/types/profile";
 import Button from "@/components/ui/button";
 

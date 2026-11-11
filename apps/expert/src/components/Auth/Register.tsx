@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useCallback, FormEvent } from "react";
 import Head from "next/head";
-import { Lock, User, Mail, Eye, EyeOff } from "lucide-react";
+import { Lock, User, Mail, Eye, EyeOff } from "@repo/design/lucide";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";

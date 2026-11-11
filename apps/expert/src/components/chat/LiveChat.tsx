@@ -1,4 +1,4 @@
-import { MessageSquare, Sparkles } from "lucide-react";
+import { MessageSquare, Sparkles } from "@repo/design/lucide";
 import { Card, CardContent } from "@/components/ui/card";
 import { Empty, EmptyDescription, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";

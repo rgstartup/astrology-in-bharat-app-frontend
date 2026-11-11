@@ -1,5 +1,5 @@
 import type { ChangeEvent, KeyboardEvent, RefObject } from "react";
-import { Paperclip, Send } from "lucide-react";
+import { Paperclip, Send } from "@repo/design/lucide";
 import { Button } from "@/components/ui/button";
 import { ChatAttachmentPreview } from "./chat-attachment-preview.component";
 import type { PendingAttachment } from  "../../types";

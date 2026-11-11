@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Star, Edit3, Gift, Trash2, Plus, MessageSquare, Phone, Video, Sparkles } from "lucide-react";
+import { Star, Edit3, Gift, Trash2, Plus, MessageSquare, Phone, Video, Sparkles } from "@repo/design/lucide";
 import { getProfile, updateProfile, deletePujaApi } from "@/lib/profile";
 import { Profile, PujaService } from "@/components/profile-management/types";
 import { PujaModal } from "@/components/shared/PujaModal";
 import { toast } from "react-toastify";
 import { ServiceModal, ServiceModalService } from "@/components/shared/ServiceModal";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from "@repo/design/lucide";
 import { PricingSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import { getErrorMessage } from "@repo/lib";
 

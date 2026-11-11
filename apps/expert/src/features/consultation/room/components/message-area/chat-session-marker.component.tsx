@@ -1,5 +1,5 @@
 import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
-import { MessageCircle, Phone, RefreshCw, Video } from "lucide-react";
+import { MessageCircle, Phone, RefreshCw, Video } from "@repo/design/lucide";
 
 /**
  * Session boundary rule rendered as a shadcn marker (separator variant).

@@ -1,5 +1,5 @@
 import React from "react";
-import { Star } from "lucide-react";
+import { Star } from "@repo/design/lucide";
 import { Button } from "../ui/button";
 import { RatingSkeleton } from "./DashboardSkeletons";
 

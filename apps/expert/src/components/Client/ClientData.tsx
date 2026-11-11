@@ -7,7 +7,7 @@ import ClientMobileList from "./ClientMobileList";
 import { Client, SortConfig, SortKey } from "./types";
 import { api } from "@/lib/api";
 import { toast } from "react-toastify";
-import * as LucideIcons from "lucide-react";
+import * as LucideIcons from "@repo/design/lucide";
 import { useAuthStore } from "@/store/useAuthStore";
 import { getReviews } from "@/features/dashboard/api";
 import Button from "../ui/button";

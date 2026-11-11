@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronDown, Plus } from "lucide-react";
+import { ChevronDown, Plus } from "@repo/design/lucide";
 import Button from "../ui/button";
 
 export const ProductsGrid: React.FC = () => {

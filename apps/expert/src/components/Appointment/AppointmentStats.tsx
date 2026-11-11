@@ -1,5 +1,5 @@
 import React from "react";
-import { Calendar, CheckCircle, XCircle, Wallet } from "lucide-react";
+import { Calendar, CheckCircle, XCircle, Wallet } from "@repo/design/lucide";
 import { StatsCards } from "@repo/ui";
 import { DashboardStats } from "@/features/dashboard/api";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import * as LucideIcons from "lucide-react";
+import * as LucideIcons from "@repo/design/lucide";
 import { useRouter } from "next/navigation";
 
 interface SummaryModalProps {

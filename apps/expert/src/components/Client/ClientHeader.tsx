@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, History } from "lucide-react";
+import { Search, History } from "@repo/design/lucide";
 
 interface ClientHeaderProps {
     searchTerm: string;

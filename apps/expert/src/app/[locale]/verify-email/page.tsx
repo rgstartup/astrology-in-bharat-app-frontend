@@ -4,7 +4,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, XCircle, ArrowRight } from "lucide-react";
+import { CheckCircle2, XCircle, ArrowRight } from "@repo/design/lucide";
 import { toast } from "react-toastify";
 import { expertVerifyEmailAction } from "@/actions/auth";
 import { useAuthStore } from "@/store/useAuthStore";

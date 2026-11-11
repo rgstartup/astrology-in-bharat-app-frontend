@@ -10,7 +10,7 @@ import {
   Loader2,
   AlertCircle,
   ArrowRight,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {

@@ -4,7 +4,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Lock, Eye, EyeOff, CheckCircle, ShieldCheck } from "lucide-react";
+import { Lock, Eye, EyeOff, CheckCircle, ShieldCheck } from "@repo/design/lucide";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";

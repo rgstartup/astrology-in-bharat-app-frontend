@@ -2,7 +2,7 @@
 
 import type { RefObject } from "react";
 import { useRef } from "react";
-import { Info } from "lucide-react";
+import { Info } from "@repo/design/lucide";
 import { ChatMessageRow } from "./chat-message-row.component";
 import { ChatTypingIndicator } from "./chat-typing-indicator.component";
 import { ChatEmptyState } from "./chat-empty-state.component";

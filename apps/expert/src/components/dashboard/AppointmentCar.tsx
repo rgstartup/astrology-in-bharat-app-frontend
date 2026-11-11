@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { XCircle, CheckCircle, Clock } from "lucide-react";
+import { XCircle, CheckCircle, Clock } from "@repo/design/lucide";
 
 interface AppointmentCardProps {
   name: string;

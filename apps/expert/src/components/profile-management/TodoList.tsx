@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ListTodo, Plus, CheckCircle2, Circle, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { ListTodo, Plus, CheckCircle2, Circle, Trash2, ChevronDown, ChevronUp } from "@repo/design/lucide";
 import { Todo } from "./types";
 import Button from "@/components/ui/button";
 

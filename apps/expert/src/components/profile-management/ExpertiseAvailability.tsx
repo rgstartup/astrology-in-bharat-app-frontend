@@ -10,7 +10,7 @@ import {
   Briefcase,
   ChevronDown,
   ChevronUp,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { Profile } from "@/types/profile";
 import Button from "@/components/ui/button";
 

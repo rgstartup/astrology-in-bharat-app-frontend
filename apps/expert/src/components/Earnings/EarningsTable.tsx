@@ -1,6 +1,6 @@
 import React from "react";
 import { Transaction } from "./types";
-import { ArrowUpRight, ArrowDownLeft, Clock, CheckCircle, XCircle } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, Clock, CheckCircle, XCircle } from "@repo/design/lucide";
 import Button from "../ui/Button";
 
 interface EarningsTableProps {

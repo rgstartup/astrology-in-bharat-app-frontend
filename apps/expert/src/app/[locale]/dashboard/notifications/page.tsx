@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Bell, BellOff, Trash2 } from "lucide-react";
+import { Bell, BellOff, Trash2 } from "@repo/design/lucide";
 import { AnimatePresence } from "framer-motion";
 import { useNotifications } from "@/hooks/useNotifications";
 import { NotificationItem } from "@/components/notifications/NotificationItem";

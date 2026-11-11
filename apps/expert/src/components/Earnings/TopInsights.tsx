@@ -1,5 +1,5 @@
 import React from "react";
-import { User, Target, TrendingUp, Users } from "lucide-react";
+import { User, Target, TrendingUp, Users } from "@repo/design/lucide";
 import { TopUser, TopService } from "./types";
 
 interface TopInsightsProps {

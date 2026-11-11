@@ -13,7 +13,7 @@ import {
   VideoOff,
   Volume2,
   VolumeX,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";

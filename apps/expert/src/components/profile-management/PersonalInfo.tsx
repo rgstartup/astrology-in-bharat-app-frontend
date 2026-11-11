@@ -1,5 +1,5 @@
 import React from "react";
-import { Edit3, Save, ChevronDown, ChevronUp, X, Plus } from "lucide-react";
+import { Edit3, Save, ChevronDown, ChevronUp, X, Plus } from "@repo/design/lucide";
 import { Profile, Gender } from "@/types/profile";
 import Button from "@/components/ui/button";
 import { Avatar } from "@repo/ui";

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC, useState } from "react";
-import { X, Upload, Link as LinkIcon, Image as ImageIcon, ToggleLeft, ToggleRight } from "lucide-react";
+import { X, Upload, Link as LinkIcon, Image as ImageIcon, ToggleLeft, ToggleRight } from "@repo/design/lucide";
 import { Product } from "@/types/product";
 import { Loading } from "@repo/ui";
 import { toast } from "react-toastify";

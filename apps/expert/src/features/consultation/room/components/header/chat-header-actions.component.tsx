@@ -1,4 +1,4 @@
-import { Power, AlertCircle } from "lucide-react";
+import { Power, AlertCircle } from "@repo/design/lucide";
 import { Button } from "@/components/ui/button";
 import type { ChatSessionStatus } from  "../../types";
 

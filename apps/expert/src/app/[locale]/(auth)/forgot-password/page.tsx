@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
+import { Mail, ArrowLeft, CheckCircle } from "@repo/design/lucide";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";

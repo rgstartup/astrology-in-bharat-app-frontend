@@ -11,12 +11,12 @@ import {
   ChevronDown,
   ChevronUp,
   CreditCard,
-  UserSquare2,
+  User,
   X,
   FileCheck,
   ShieldAlert,
   Plus,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { DocumentItem } from "@/types/profile";
 import Button from "@/components/ui/button";
 
@@ -176,7 +176,7 @@ export default function VerificationAndDocuments({
               <div className="md:col-span-2">
                 <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center">
                   {/* @ts-ignore */}
-                  <UserSquare2 className="w-4 h-4 mr-2 text-orange-600" />
+                  <User className="w-4 h-4 mr-2 text-orange-600" />
                   Aadhar Card
                 </h4>
 

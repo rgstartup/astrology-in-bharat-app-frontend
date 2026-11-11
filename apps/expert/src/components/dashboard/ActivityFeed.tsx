@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { User as UserIcon, Clock as ClockIcon } from 'lucide-react';
+import { User as UserIcon, Clock as ClockIcon } from "@repo/design/lucide";
 const User = UserIcon as any;
 const Clock = ClockIcon as any;
 import { getRecentAppointments as getRecentSessions } from '@/features/dashboard/api';

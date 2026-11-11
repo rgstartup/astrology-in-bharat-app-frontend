@@ -1,4 +1,4 @@
-import { Wallet, Landmark, Clock, RefreshCw } from "lucide-react";
+import { Wallet, Landmark, Clock, RefreshCw } from "@repo/design/lucide";
 import { StatsCards } from "@repo/ui";
 import { WalletStatsData } from "@/types/wallet";
 

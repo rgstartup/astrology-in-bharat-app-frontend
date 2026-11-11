@@ -25,10 +25,10 @@ export interface Review {
 export async function getReviews(
   expertId: string,
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<[{ reviews: Review[]; total: number } | null, any | null]> {
   const result = await api.get<ExpertReviewsResponse>(
-    `/reviews/expert/${expertId}?page=${page}&limit=${limit}`
+    `/reviews/expert/${expertId}?page=${page}&limit=${limit}`,
   );
   if (!result.ok) return [null, result.error];
 
@@ -52,10 +52,10 @@ export async function getReviews(
  * @deprecated Import from {@link features/dashboard/api} instead of {@link @/lib/reviews}.
  */
 export async function getReviewStats(
-  expertId: string
+  expertId: string,
 ): Promise<[ExpertReviewsStats | null, any | null]> {
   const result = await api.get<ExpertReviewsStats>(
-    `/reviews/expert/${expertId}/stats`
+    `/reviews/expert/${expertId}/stats`,
   );
   if (!result.ok) return [null, result.error];
   return [result.data, null];
@@ -67,7 +67,7 @@ export async function getReviewStats(
  */
 export async function replyToReview(
   id: string,
-  reply: string
+  reply: string,
 ): Promise<[any | null, any | null]> {
   return api.post(`/expert/reviews/${id}/reply`, { reply });
 }

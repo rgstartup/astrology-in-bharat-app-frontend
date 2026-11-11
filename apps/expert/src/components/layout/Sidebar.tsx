@@ -16,7 +16,7 @@ import {
   LogOut,
   Wallet,
   Bell,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { cn } from "@/lib/cn";
 import { useAuthStore } from "@/store/useAuthStore";
 import expertMenu from "../../../public/data/expert_menu.json";

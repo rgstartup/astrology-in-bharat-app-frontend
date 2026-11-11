@@ -1,5 +1,5 @@
 import React from "react";
-import { Search } from "lucide-react";
+import { Search } from "@repo/design/lucide";
 import Button from "../ui/button";
 
 interface AppointmentFiltersProps {

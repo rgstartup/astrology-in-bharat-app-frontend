@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { AlertTriangle, User, Briefcase, Image as ImageIcon, CreditCard, Shield, ListTodo, Award, ChevronRight } from "lucide-react";
+import { AlertTriangle, User, Briefcase, Image as ImageIcon, CreditCard, Shield, ListTodo, Award, ChevronRight } from "@repo/design/lucide";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@repo/lib";
 import PersonalInfo from "./PersonalInfo";

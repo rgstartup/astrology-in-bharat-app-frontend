@@ -1,5 +1,5 @@
 import React from "react";
-import * as LucideIcons from "lucide-react";
+import * as LucideIcons from "@repo/design/lucide";
 import { Client, SortConfig, SortKey } from "./types";
 
 import Button from "../ui/button";

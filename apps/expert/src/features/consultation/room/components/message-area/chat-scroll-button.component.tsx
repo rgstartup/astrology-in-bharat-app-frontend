@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown } from "lucide-react";
+import { ArrowDown } from "@repo/design/lucide";
 
 interface ChatScrollButtonProps {
   visible: boolean;

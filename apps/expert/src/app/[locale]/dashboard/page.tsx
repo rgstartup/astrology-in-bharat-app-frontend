@@ -5,7 +5,7 @@ import {
   CheckCircle,
   Wallet,
   Coins,
-} from "lucide-react";
+} from "@repo/design/lucide";
 import { StatsCards } from "@repo/ui";
 import { RecentActivity } from "@/components/dashboard/ActivityFeed";
 import { UpcomingAppointments } from "@/components/dashboard/UserTable";

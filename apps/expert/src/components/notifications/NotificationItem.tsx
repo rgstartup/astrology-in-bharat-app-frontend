@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC } from "react";
-import { Clock, Mail, MailOpen, Trash2 } from "lucide-react";
+import { Clock, Mail, Trash2 } from "@repo/design/lucide";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { AppNotification } from "@/types/notification";
@@ -41,7 +41,7 @@ export const NotificationItem: FC<NotificationItemProps> = ({
                     )}
                 >
                     {notification.read ? (
-                        <MailOpen className="w-5 h-5" />
+                        <Mail className="w-5 h-5" />
                     ) : (
                         <Mail className="w-5 h-5" />
                     )}

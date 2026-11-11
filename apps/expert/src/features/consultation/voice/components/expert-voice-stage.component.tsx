@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckCircle2, Phone, ShieldCheck, Sparkles } from "lucide-react";
+import { CheckCircle2, Phone, ShieldCheck, Sparkles } from "@repo/design/lucide";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type {

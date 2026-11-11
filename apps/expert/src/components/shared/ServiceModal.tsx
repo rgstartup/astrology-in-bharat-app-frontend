@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { X, Sparkles, Save } from "lucide-react";
+import { X, Sparkles, Save } from "@repo/design/lucide";
 import { toast } from "react-toastify";
 import { getProfile, updateProfile, updatePricing } from "@/lib/profile";
 import { Loading } from "@repo/ui";

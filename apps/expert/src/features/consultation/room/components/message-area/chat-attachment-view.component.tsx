@@ -1,4 +1,4 @@
-import { FileText, Download } from "lucide-react";
+import { FileText, Download } from "@repo/design/lucide";
 import {
   Attachment,
   AttachmentContent,

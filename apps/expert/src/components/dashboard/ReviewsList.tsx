@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { Star, User, ChevronDown } from "lucide-react";
+import { Star, User, ChevronDown } from "@repo/design/lucide";
 import { Review, getReviews } from "@/features/dashboard/api";
 import { getErrorMessage } from "@repo/lib";
 import { Loading } from "@repo/ui";

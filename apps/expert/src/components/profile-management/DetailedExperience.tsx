@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Briefcase, Plus, Trash2, Calendar, Building } from "lucide-react";
+import { Briefcase, Plus, Trash2, Calendar, Building } from "@repo/design/lucide";
 import { ExperienceItem } from "@/types/profile";
 import Button from "@/components/ui/button";
 

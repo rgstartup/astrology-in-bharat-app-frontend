@@ -2,7 +2,7 @@
  * @deprecated Use `Spinner` from '@repo/design/shadcn' instead. Scheduled for removal.
  */
 import { cn } from "cn"
-import { Loader2Icon } from "lucide-react"
+import { Loader2Icon } from "@repo/design/lucide"
 
 function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
   return (

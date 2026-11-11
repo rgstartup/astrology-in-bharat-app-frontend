@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sparkles, User, Volume2 } from "lucide-react";
+import { Sparkles, User, Volume2 } from "@repo/design/lucide";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import type { ClientIntakeProfile, ExpertConsultationMetrics, ExpertSessionPhase } from  "@/features/consultation/session";

@@ -1,5 +1,5 @@
 import React from "react";
-import { Landmark, Wallet, ArrowUpRight, TrendingUp } from "lucide-react";
+import { Landmark, Wallet, ArrowUpRight, TrendingUp } from "@repo/design/lucide";
 import { StatsCards } from "@repo/ui";
 import { EarningsStatsData } from "./types";
 

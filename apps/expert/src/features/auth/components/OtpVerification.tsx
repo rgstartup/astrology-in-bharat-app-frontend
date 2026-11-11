@@ -8,7 +8,7 @@ import {
   InputOTPSeparator,
   Button,
 } from "@repo/design/shadcn";
-import { MailCheck, Loader2, ShieldAlert, ArrowLeft } from "lucide-react";
+import { MailCheck, Loader2, ShieldAlert, ArrowLeft } from "@repo/design/lucide";
 
 const REGEXP_ONLY_DIGITS = "^[0-9]+$";
 

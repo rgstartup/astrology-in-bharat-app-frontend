@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC } from "react";
-import { Heart, Pencil, Trash2 } from "lucide-react";
+import { Heart, Pencil, Trash2 } from "@repo/design/lucide";
 import { Product } from "@/types/product";
 
 interface ProductCardProps {

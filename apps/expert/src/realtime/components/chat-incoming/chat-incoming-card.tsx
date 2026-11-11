@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Clock, MessageSquare, Phone, Video, X, ChevronRight } from "lucide-react";
+import { Clock, MessageSquare, Phone, Video, X, ChevronRight } from "@repo/design/lucide";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";

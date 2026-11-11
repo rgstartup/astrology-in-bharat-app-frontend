@@ -1,6 +1,6 @@
 "use client";
 
-import { Phone, X } from "lucide-react";
+import { Phone, X } from "@repo/design/lucide";
 import { cn } from "@/lib/utils";
 
 export type ExpertVoiceWaitingLobbyProps = {

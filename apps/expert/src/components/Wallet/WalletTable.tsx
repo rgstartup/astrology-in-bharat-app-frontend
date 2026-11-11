@@ -1,5 +1,5 @@
 import React from "react";
-import { Clock, CheckCircle2, XCircle } from "lucide-react";
+import { Clock, CheckCircle2, XCircle } from "@repo/design/lucide";
 
 interface Transaction {
     id: string;
