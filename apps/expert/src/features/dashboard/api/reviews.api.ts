@@ -23,23 +23,25 @@ export interface Review {
  * @deprecated Import from {@link features/dashboard/api} instead of {@link @/lib/reviews}.
  */
 export async function getReviews(
-  expertId: string,
   page: number = 1,
   limit: number = 10,
+  startDate?: string,
+  endDate?: string,
 ): Promise<Result<ExpertReviewsResponse>> {
+  const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+  if (startDate) params.set("startDate", startDate);
+  if (endDate) params.set("endDate", endDate);
   return api.get<ExpertReviewsResponse>(
-    `${API_ROUTES.REVIEWS.LIST(expertId)}?page=${page}&limit=${limit}`,
+    `${API_ROUTES.REVIEWS.LIST}?${params.toString()}`,
   );
 }
 
 /**
- * Fetch review statistics (rating distribution) for an expert.
+ * Fetch review statistics (rating distribution) for the current expert.
  * @deprecated Import from {@link features/dashboard/api} instead of {@link @/lib/reviews}.
  */
-export async function getReviewStats(
-  expertId: string,
-): Promise<Result<ExpertReviewsStats>> {
-  return api.get<ExpertReviewsStats>(API_ROUTES.REVIEWS.STATS(expertId));
+export async function getReviewStats(): Promise<Result<ExpertReviewsStats>> {
+  return api.get<ExpertReviewsStats>(API_ROUTES.REVIEWS.STATS);
 }
 
 /**
