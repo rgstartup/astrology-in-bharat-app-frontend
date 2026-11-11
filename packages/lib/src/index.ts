@@ -97,8 +97,6 @@ export type {
   ExpertReviewsResponse,
   ExpertReviewsStats,
   GetExpertReviewsParams,
-  GetExpertReviewsByDateParams,
-  ExpertReviewsByDateResponse,
 } from "./contracts/expert/reviews-api";
 
 export type {

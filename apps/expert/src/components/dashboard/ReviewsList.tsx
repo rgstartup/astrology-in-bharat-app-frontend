@@ -9,13 +9,11 @@ import { Loading } from "@repo/ui";
 const PAGE_SIZE = 10;
 
 interface ReviewsListProps {
-    expertId: string;
     initialReviews?: Review[];
     initialTotal?: number;
 }
 
 export const ReviewsList: React.FC<ReviewsListProps> = ({
-    expertId,
     initialReviews = [],
     initialTotal = 0,
 }) => {
@@ -31,7 +29,7 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
         setLoadingMore(true);
         try {
             const nextPage = page + 1;
-            const result = await getReviews(expertId, nextPage, PAGE_SIZE);
+            const result = await getReviews(nextPage, PAGE_SIZE);
             if (!result.ok) throw new Error(result.error.message);
             
             const expertReviews: ExpertReview[] = result.data.data || [];
@@ -57,7 +55,7 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
         } finally {
             setLoadingMore(false);
         }
-    }, [expertId, page, loadingMore, total]);
+    }, [page, loadingMore, total]);
 
     if (reviews.length === 0) {
         return (

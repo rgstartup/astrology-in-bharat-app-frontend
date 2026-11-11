@@ -38,13 +38,13 @@ const initialState = {
 export const useDashboardStore = create<DashboardState>()((set, get) => ({
   ...initialState,
 
-  fetchDashboardData: async (expertId: string) => {
+  fetchDashboardData: async () => {
     set({ loading: true });
 
     try {
       const [statsResult, reviewsResult, dStatsResult] = await Promise.all([
-        getReviewStats(expertId),
-        getReviews(expertId, 1, 10),
+        getReviewStats(),
+        getReviews(1, 10),
         getDashboardStats("total"),
       ]);
 

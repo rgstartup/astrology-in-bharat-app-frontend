@@ -53,16 +53,6 @@ export interface GetExpertReviewsParams {
   status?: string;
   type?: string;
   role?: string;
-}
-
-export interface GetExpertReviewsByDateParams extends GetExpertReviewsParams {
-  startDate: string; // ISO date string
-  endDate: string;   // ISO date string
-}
-
-export interface ExpertReviewsByDateResponse {
-  success: boolean;
-  data: ExpertReview[];
-  meta: PaginationMeta;
-  message?: string;
+  startDate?: string; // ISO date string
+  endDate?: string;   // ISO date string
 }

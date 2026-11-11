@@ -7,8 +7,6 @@ export type {
   ExpertReviewsResponse,
   ExpertReviewsStats,
   GetExpertReviewsParams,
-  GetExpertReviewsByDateParams,
-  ExpertReviewsByDateResponse,
 } from "./expert/reviews-api";
 
 export type {

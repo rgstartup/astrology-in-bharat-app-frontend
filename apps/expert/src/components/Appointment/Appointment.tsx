@@ -49,9 +49,7 @@ export default function AppointmentsPage() {
         api.get<any>("/call/sessions/appointments/pending"),
         api.get<any>("/call/sessions/appointments/completed"),
         api.get<any>("/puja-appointments/expert"),
-        expertUser?.profileId
-          ? getReviews(expertUser.profileId, 1, 50)
-          : Promise.resolve({ ok: true, data: null } as any),
+        getReviews(1, 50),
         getDashboardStats('today')
       ]);
 

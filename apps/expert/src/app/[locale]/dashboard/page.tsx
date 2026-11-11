@@ -35,16 +35,8 @@ const Page = () => {
   } = useDashboardStore();
 
   useEffect(() => {
-    const expertId = user?.profileId || user?.id;
-    if (expertId) {
-      fetchDashboardData(expertId);
-    } else {
-      console.warn(
-        "[Dashboard] No expertId found on user object:",
-        JSON.stringify(user),
-      );
-    }
-  }, [user?.profileId, user?.id, fetchDashboardData]);
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   const statsData = [
     {
@@ -147,10 +139,9 @@ const Page = () => {
             loading={loading}
             onViewAllClick={() => setIsModalOpen(true)}
           />
-          {!loading && reviews.length > 0 && user?.profileId && (
+          {!loading && reviews.length > 0 && (
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-orange-500">
               <ReviewsList
-                expertId={user.profileId}
                 initialReviews={reviews}
                 initialTotal={reviewsTotal}
               />
@@ -160,13 +151,10 @@ const Page = () => {
         <ManageConsultations />
       </section>
 
-      {user?.profileId && (
-        <ReviewsModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          expertId={user.profileId}
-        />
-      )}
+      <ReviewsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </main>
   );
 };

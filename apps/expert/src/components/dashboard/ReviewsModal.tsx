@@ -10,25 +10,24 @@ import { Button } from "../ui/button";
 interface ReviewsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  expertId: string;
 }
 
-export const ReviewsModal: React.FC<ReviewsModalProps> = ({ isOpen, onClose, expertId }) => {
+export const ReviewsModal: React.FC<ReviewsModalProps> = ({ isOpen, onClose }) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    if (isOpen && expertId) {
+    if (isOpen) {
       fetchReviews();
     }
-  }, [isOpen, expertId, page]);
+  }, [isOpen, page]);
 
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const result = await getReviews(expertId, page, 10);
+      const result = await getReviews(page, 10);
       if (!result.ok) throw new Error(result.error.message);
 
       const expertReviews: ExpertReview[] = result.data.data || [];

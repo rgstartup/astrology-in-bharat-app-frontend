@@ -9,7 +9,6 @@ import { api } from "@/lib/api";
 import { toast } from "react-toastify";
 import * as LucideIcons from "@repo/design/lucide";
 import { useAuthStore } from "@/store/useAuthStore";
-import { getReviews } from "@/features/dashboard/api";
 import Button from "../ui/button";
 import { HistorySkeleton } from "../dashboard/DashboardSkeletons";
 import { Loading } from "@repo/ui";
