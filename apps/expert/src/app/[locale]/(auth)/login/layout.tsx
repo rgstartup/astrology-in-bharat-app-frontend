@@ -1,5 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
+import { AuthFooter } from "@/features/auth";
 
 export const metadata: Metadata = {
   title: "Expert Login | Astrology in Bharat",
@@ -14,26 +15,35 @@ export interface LoginLayoutProps {
 
 /**
  * LoginLayout for Expert Portal.
- * Distinct warm canvas with ambient illumination and 2-column grid.
- * Mobile: full viewport height coverage (min-h-dvh) with top header and bottom footer.
- * Desktop: centered 2-column layout with Amber showcase card.
+ * Clean, modern 2-column layout with Amber showcase card and standalone full-width footer.
  */
 export default function LoginLayout({ branding, form }: LoginLayoutProps) {
   return (
-    <section className="relative flex-1 flex flex-col lg:flex-row items-stretch lg:items-center justify-between lg:justify-center w-full min-h-screen min-h-dvh lg:h-screen lg:max-h-screen bg-white font-sans py-2.5 sm:py-6 lg:py-8 overflow-y-auto lg:overflow-hidden">
-      <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 relative z-10 flex-1 flex flex-col justify-between lg:block">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 xl:gap-24 2xl:gap-28 items-stretch flex-1 flex flex-col justify-between lg:grid">
-          {/* Left Column: Form & Brand */}
-          <div className="lg:col-span-6 xl:col-span-6 flex flex-col justify-between flex-1 lg:flex-initial h-full w-full">
-            {form}
-          </div>
+    <div className="relative min-h-dvh flex flex-col justify-between w-full bg-white font-sans overflow-y-auto">
+      {/* Main Content Area */}
+      <main className="w-full flex-1 flex flex-col justify-center py-6 sm:py-8 lg:py-10">
+        <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 relative z-10">
+          {/* Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 items-start gap-8 lg:gap-12 xl:gap-16">
+            {/* Left Column: Form */}
+            <section className="min-w-0 flex flex-col w-full">
+              {form}
+            </section>
 
-          {/* Right Column: Embedded Showcase Card matching left side height */}
-          <div className="hidden lg:flex lg:col-span-6 xl:col-span-6 w-full justify-end items-stretch h-full">
-            {branding}
+            {/* Right Column: Embedded Showcase Card */}
+            <aside className="hidden lg:flex min-w-0 lg:sticky lg:top-8 w-full justify-end">
+              {branding}
+            </aside>
           </div>
         </div>
-      </div>
-    </section>
+      </main>
+
+      {/* Full-width Footer */}
+      <footer className="w-full border-t border-stone-200 bg-white shrink-0">
+        <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-4">
+          <AuthFooter className="w-full flex items-center justify-between text-xs text-stone-500" />
+        </div>
+      </footer>
+    </div>
   );
 }
