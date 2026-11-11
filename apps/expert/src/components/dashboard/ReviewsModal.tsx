@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { X, Star, User } from "@repo/design/lucide";
 import { Loading } from "@repo/ui";
 import { getReviews, Review } from "@/features/dashboard/api";
+import type { ExpertReview, ExpertReviewsResponse } from "@repo/lib";
 import { getErrorMessage } from "@repo/lib";
 import { Button } from "../ui/button";
 
@@ -31,8 +32,19 @@ export const ReviewsModal: React.FC<ReviewsModalProps> = ({ isOpen, onClose, exp
       const [data, error] = await getReviews(expertId, page, 10);
       if (error) throw new Error(getErrorMessage(error));
 
-      setReviews(data?.reviews || []);
-      setTotal(data?.total || 0);
+      const expertReviews: ExpertReview[] = data?.data?.data || [];
+      const mappedReviews: Review[] = expertReviews.map((r: ExpertReview) => ({
+        id: r.id,
+        rating: r.rating,
+        comment: r.comment,
+        user: {
+          name: r.client?.full_name || "Anonymous",
+          avatar: undefined,
+        },
+        created_at: r.created_at,
+      }));
+      setReviews(mappedReviews);
+      setTotal(data?.data?.meta.total || 0);
     } catch (error) {
       console.error("Error fetching reviews list:", error);
     } finally {

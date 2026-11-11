@@ -20,31 +20,20 @@ export interface Review {
  * Fetch paginated reviews for an expert.
  *
  * Uses the actions api instance (@/actions/api) and response contracts from @repo/lib.
+ * Returns the raw {@link ExpertReviewsResponse} from the API instead of a legacy array.
+ *
  * @deprecated Import from {@link features/dashboard/api} instead of {@link @/lib/reviews}.
  */
 export async function getReviews(
   expertId: string,
   page: number = 1,
   limit: number = 10,
-): Promise<[{ reviews: Review[]; total: number } | null, any | null]> {
+): Promise<[ExpertReviewsResponse | null, any | null]> {
   const result = await api.get<ExpertReviewsResponse>(
     `/reviews/expert/${expertId}?page=${page}&limit=${limit}`,
   );
   if (!result.ok) return [null, result.error];
-
-  const data = result.data;
-  const reviews: Review[] = (data.data || []).map((r: ExpertReview) => ({
-    id: r.id,
-    rating: r.rating,
-    comment: r.comment,
-    user: {
-      name: r.client?.full_name || "Anonymous",
-      avatar: undefined,
-    },
-    created_at: r.created_at,
-  }));
-
-  return [{ reviews, total: data.meta.total }, null];
+  return [result.data, null];
 }
 
 /**

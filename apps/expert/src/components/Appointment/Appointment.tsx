@@ -11,6 +11,7 @@ import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { getReviews } from "@/features/dashboard/api";
 import { getDashboardStats, DashboardStats } from "@/features/dashboard/api";
+import type { ExpertReview } from "@repo/lib";
 import { TableSkeleton, StatsSkeleton } from "../dashboard/DashboardSkeletons";
 
 export default function AppointmentsPage() {
@@ -68,7 +69,7 @@ export default function AppointmentsPage() {
       const allSessions: any[] = [...chatPending, ...chatCompleted, ...callPending, ...callCompleted, ...pujaSessions];
       
       const [reviewsData, reviewsError] = reviewsRes;
-      const reviews = (reviewsData as any)?.reviews || (reviewsData as any)?.data || reviewsData || [];
+      const reviews: ExpertReview[] = reviewsData?.data?.data || [];
 
       // Deduplicate sessions by ID and Source (since IDs might overlap between chat and call)
       const uniqueSessionsMap = new Map();

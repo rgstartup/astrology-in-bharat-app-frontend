@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { getReviewStats, getReviews, Review } from "@/features/dashboard/api";
 import { getDashboardStats, DashboardStats } from "@/features/dashboard/api";
+import type { ExpertReview, ExpertReviewsResponse } from "@repo/lib";
 import { ReviewStats } from "@/types/expert";
 
 interface DashboardState {
@@ -66,9 +67,20 @@ export const useDashboardStore = create<DashboardState>()((set, get) => ({
         set({ ratingStats: stats });
       }
       if (reviewsData) {
+        const expertReviews: ExpertReview[] = reviewsData.data?.data || [];
+        const mappedReviews: Review[] = expertReviews.map((r: ExpertReview) => ({
+          id: r.id,
+          rating: r.rating,
+          comment: r.comment,
+          user: {
+            name: r.client?.full_name || "Anonymous",
+            avatar: undefined,
+          },
+          created_at: r.created_at,
+        }));
         set({
-          reviews: reviewsData.reviews || [],
-          reviewsTotal: reviewsData.total || 0,
+          reviews: mappedReviews,
+          reviewsTotal: reviewsData.data?.meta.total || 0,
         });
       }
       if (dStats) set({ dashboardStats: dStats });
