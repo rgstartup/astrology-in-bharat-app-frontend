@@ -5,13 +5,18 @@ import { useRouter } from "@/i18n/navigation";
 import { toast } from "react-toastify";
 import api from "@/api/api";
 import { API_ROUTES } from "@/utils/api.routes";
-import { completeOnboarding, getProfessions } from "../../api";
+import {
+  completeOnboarding,
+  getAvailableSpecializations,
+  getProfessions,
+} from "../../api";
 import { useOnboarding } from "../../hooks";
+import { unwrap } from "../../utils";
 import { ProfessionsStep } from "./professions-step.component";
 import { SpecializationsStep } from "./specializations-step.component";
 import { ProfileStep } from "./profile-step.component";
 import { WizardFrame } from "./wizard-frame.component";
-import type { Specialization } from "../../types";
+import type { ProfessionItem, SpecializationItem } from "@repo/lib/contracts/expert/account-api";
 
 const PRIMARY_BTN =
   "inline-flex h-12 items-center justify-center rounded-full bg-[#111111] px-7 text-base font-medium text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:bg-[#ebe7e1] disabled:text-[#9c9fa5]";
@@ -28,10 +33,12 @@ export function OnboardingWizard() {
   const [submitting, setSubmitting] = useState(false);
   const [skipping, setSkipping] = useState(false);
 
-  const [professions, setProfessions] = useState<Profession[]>([]);
+  const [professions, setProfessions] = useState<ProfessionItem[]>([]);
   const [selectedProfessions, setSelectedProfessions] = useState<number[]>([]);
 
-  const [specializations, setSpecializations] = useState<Specialization[]>([]);
+  const [specializations, setSpecializations] = useState<
+    SpecializationItem[]
+  >([]);
   const [selectedSpecializations, setSelectedSpecializations] = useState<
     number[]
   >([]);
@@ -125,11 +132,9 @@ export function OnboardingWizard() {
       setSubmitting(false);
       return;
     }
-    const specResult = await api.get<{ data: Specialization[] }>(
-      API_ROUTES.SPECIALIZATIONS.AVAILABLE,
-    );
-    if (specResult.ok && specResult.data) {
-      setSpecializations(unwrap<Specialization[]>(specResult.data));
+    const specResult = await getAvailableSpecializations();
+    if (specResult) {
+      setSpecializations(specResult);
     }
     setSubmitting(false);
     setStep(1);

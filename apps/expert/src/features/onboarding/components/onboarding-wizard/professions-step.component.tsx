@@ -2,10 +2,10 @@
 
 import { cn } from "@/lib/cn";
 import { Check } from "lucide-react";
-import type { Profession } from "../../types";
+import type { ProfessionItem } from "@repo/lib/contracts/expert/account-api";
 
 interface ProfessionsStepProps {
-  professions: Profession[];
+  professions: ProfessionItem[];
   selected: number[];
   onToggle: (id: number) => void;
   disabled?: boolean;

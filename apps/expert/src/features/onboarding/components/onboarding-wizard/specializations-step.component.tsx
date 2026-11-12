@@ -2,10 +2,10 @@
 
 import { cn } from "@/lib/cn";
 import { Check } from "lucide-react";
-import type { Specialization } from "../../types";
+import type { SpecializationItem } from "@repo/lib/contracts/expert/account-api";
 
 interface SpecializationsStepProps {
-  specializations: Specialization[];
+  specializations: SpecializationItem[];
   selected: number[];
   onToggle: (id: number) => void;
   disabled?: boolean;

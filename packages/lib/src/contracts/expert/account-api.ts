@@ -32,6 +32,28 @@ export interface ExpertSpecializationItem {
   slug: string;
 }
 
+/** Profession available for selection (from GET /professions list). */
+export interface ProfessionItem {
+  id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  icon: string | null;
+  is_active: boolean;
+  sort_order: number;
+}
+
+/** Specialization available for selection (from GET /expert/specializations/available). */
+export interface SpecializationItem {
+  id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  icon: string | null;
+  is_active: boolean;
+  sort_order: number;
+}
+
 export interface ExpertConsultationPricing {
   id: string;
   call_price: number | null;
