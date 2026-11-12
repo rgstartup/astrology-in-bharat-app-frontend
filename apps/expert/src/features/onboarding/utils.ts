@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/actions/api";
+import api from "@/api/api";
 import { getOnboardingStatus } from "./api";
 import type { OnboardingStatus } from "./types";
 

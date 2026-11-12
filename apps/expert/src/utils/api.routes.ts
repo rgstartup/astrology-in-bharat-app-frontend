@@ -12,8 +12,21 @@ export const API_ROUTES = {
   },
   ACCOUNT: {
     ROOT: "/expert/account",
+    PERSONAL_INFO: "/expert/account/personal-info",
     AVAILABILITY: "/expert/availability",
     AVAILABILITY_ME: "/expert/availability/me",
+  },
+  ONBOARDING: {
+    STATUS: "/expert/onboarding/status",
+    COMPLETE: "/expert/onboarding/complete",
+  },
+  PROFESSIONS: {
+    LIST: "/professions?limit=100&is_active=true",
+    SYNC_ME: "/expert/professions/me",
+  },
+  SPECIALIZATIONS: {
+    AVAILABLE: "/expert/specializations/available",
+    SYNC_ME: "/expert/specializations/me",
   },
   CHAT: {
     ATTACHMENTS: "/expert/chat/attachments",

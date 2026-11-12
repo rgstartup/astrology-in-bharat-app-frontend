@@ -3,15 +3,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { toast } from "react-toastify";
-import api from "@/actions/api";
-import { completeOnboarding } from "../../api";
+import api from "@/api/api";
+import { API_ROUTES } from "@/utils/api.routes";
+import { completeOnboarding, getProfessions } from "../../api";
 import { useOnboarding } from "../../hooks";
-import { unwrap } from "../../utils";
 import { ProfessionsStep } from "./professions-step.component";
 import { SpecializationsStep } from "./specializations-step.component";
 import { ProfileStep } from "./profile-step.component";
 import { WizardFrame } from "./wizard-frame.component";
-import type { Profession, Specialization } from "../../types";
+import type { Specialization } from "../../types";
 
 const PRIMARY_BTN =
   "inline-flex h-12 items-center justify-center rounded-full bg-[#111111] px-7 text-base font-medium text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:bg-[#ebe7e1] disabled:text-[#9c9fa5]";
@@ -46,12 +46,10 @@ export function OnboardingWizard() {
     let cancelled = false;
 
     const init = async () => {
-      const result = await api.get<{ data: Profession[] }>(
-        "/professions?limit=100&is_active=true",
-      );
+      const result = await getProfessions();
       if (cancelled) return;
-      if (result.ok && result.data) {
-        setProfessions(unwrap<Profession[]>(result.data));
+      if (result) {
+        setProfessions(result);
       }
     };
 
@@ -86,7 +84,7 @@ export function OnboardingWizard() {
     }
 
     if (!skip) {
-      const personalResult = await api.patch("/expert/account/personal-info", {
+      const personalResult = await api.patch(API_ROUTES.ACCOUNT.PERSONAL_INFO, {
         full_name: fullName.trim() || undefined,
         phone: phone.trim() || undefined,
         about_me: aboutMe.trim() || undefined,
@@ -119,7 +117,7 @@ export function OnboardingWizard() {
       return;
     }
     setSubmitting(true);
-    const syncResult = await api.put("/expert/professions/me", {
+    const syncResult = await api.put(API_ROUTES.PROFESSIONS.SYNC_ME, {
       profession_ids: selectedProfessions,
     });
     if (!syncResult.ok) {
@@ -128,7 +126,7 @@ export function OnboardingWizard() {
       return;
     }
     const specResult = await api.get<{ data: Specialization[] }>(
-      "/expert/specializations/available",
+      API_ROUTES.SPECIALIZATIONS.AVAILABLE,
     );
     if (specResult.ok && specResult.data) {
       setSpecializations(unwrap<Specialization[]>(specResult.data));
@@ -140,7 +138,7 @@ export function OnboardingWizard() {
   const goSpecializations = async () => {
     setSubmitting(true);
     if (selectedSpecializations.length > 0) {
-      const syncResult = await api.put("/expert/specializations/me", {
+      const syncResult = await api.put(API_ROUTES.SPECIALIZATIONS.SYNC_ME, {
         specialization_ids: selectedSpecializations,
       });
       if (!syncResult.ok) {

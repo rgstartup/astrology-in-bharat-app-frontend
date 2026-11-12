@@ -1,4 +1,5 @@
-import api from "@/actions/api";
+import api from "@/api/api";
+import { API_ROUTES } from "@/utils/api.routes";
 import type { OnboardingStatus } from "../types";
 
 function unwrap<T>(res: unknown): T {
@@ -20,7 +21,7 @@ export async function getOnboardingStatus(): Promise<{
   error?: unknown;
 }> {
   const result = await api.get<{ data: OnboardingStatus }>(
-    "/expert/onboarding/status",
+    API_ROUTES.ONBOARDING.STATUS,
   );
   if (!result.ok) return { ok: false, error: result.error };
   return { ok: true, data: unwrap<OnboardingStatus>(result.data) };
@@ -31,7 +32,7 @@ export async function completeOnboarding(): Promise<{
   error?: unknown;
 }> {
   const result = await api.post<{ data: OnboardingStatus }>(
-    "/expert/onboarding/complete",
+    API_ROUTES.ONBOARDING.COMPLETE,
   );
   if (!result.ok) return { ok: false, error: result.error };
   return { ok: true };
