@@ -14,3 +14,13 @@ export type {
   DashboardStatsResponse,
   GetDashboardStatsParams,
 } from "./expert/dashboard-api";
+
+export type {
+  ExpertAccount,
+  ExpertAccountResponse,
+  ExpertAvatarMedia,
+  ExpertIntroVideoMedia,
+  ExpertProfessionItem,
+  ExpertSpecializationItem,
+  ExpertConsultationPricing,
+} from "./expert/account-api";

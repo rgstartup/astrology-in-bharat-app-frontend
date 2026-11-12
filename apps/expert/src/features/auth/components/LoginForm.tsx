@@ -28,6 +28,7 @@ import {
   Checkbox,
 } from "@repo/design/shadcn";
 import { ExpertAuthErrorCode } from "@repo/lib";
+import { resolvePostAuthDestination } from "@/features/onboarding/utils";
 import { GoogleLoginButton } from "./GoogleLoginButton";
 import { OtpVerification } from "./OtpVerification";
 import { loginAction } from "../actions/login.action";
@@ -96,7 +97,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoadingChange }) => {
 
       await initAuth(true);
 
-      window.location.href = "/dashboard";
+      window.location.href = await resolvePostAuthDestination();
     } finally {
       updateLoading(false);
     }
@@ -119,7 +120,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoadingChange }) => {
       }
 
       await initAuth(true);
-      window.location.href = "/dashboard";
+      window.location.href = await resolvePostAuthDestination();
     } finally {
       updateLoading(false);
     }

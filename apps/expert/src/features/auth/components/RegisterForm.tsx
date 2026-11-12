@@ -28,6 +28,7 @@ import {
   InputGroupButton,
 } from "@repo/design/shadcn";
 import { GoogleLoginButton } from "./GoogleLoginButton";
+import { resolvePostAuthDestination } from "@/features/onboarding/utils";
 import { OtpVerification } from "./OtpVerification";
 import { registerAction } from "../actions/register.action";
 import {
@@ -116,7 +117,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       }
 
       await initAuth(true);
-      window.location.href = "/dashboard";
+      window.location.href = await resolvePostAuthDestination();
     } finally {
       updateLoading(false);
     }
