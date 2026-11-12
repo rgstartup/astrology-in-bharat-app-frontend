@@ -13,6 +13,11 @@ export {
   createSafeFetchResultInstance,
 } from "./safeFetch";
 
+// Retry plugin (opt-in). Importing augments SafeFetchInit / SafeFetchInstanceConfig
+// with retry / retryIntervalMs / retryOn fields.
+export type { RetryConfig } from "./retry";
+export { withRetry, withRetryResult } from "./retry";
+
 export {
   ApiError,
   type ApiErrorBody,
