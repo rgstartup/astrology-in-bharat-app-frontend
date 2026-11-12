@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { toast } from "react-toastify";
 import api from "@/api/api";
@@ -10,13 +10,11 @@ import {
   getAvailableSpecializations,
   getProfessions,
 } from "../../api";
-import { useOnboarding } from "../../hooks";
-import { unwrap } from "../../utils";
+import { useOnboardingStore } from "../../store";
 import { ProfessionsStep } from "./professions-step.component";
 import { SpecializationsStep } from "./specializations-step.component";
 import { ProfileStep } from "./profile-step.component";
 import { WizardFrame } from "./wizard-frame.component";
-import type { ProfessionItem, SpecializationItem } from "@repo/lib/contracts/expert/account-api";
 
 const PRIMARY_BTN =
   "inline-flex h-12 items-center justify-center rounded-full bg-[#111111] px-7 text-base font-medium text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:bg-[#ebe7e1] disabled:text-[#9c9fa5]";
@@ -27,26 +25,22 @@ const SKIP_BTN =
 
 export function OnboardingWizard() {
   const router = useRouter();
-  const { status, account, loading: onboardingLoading } = useOnboarding();
+  const store = useOnboardingStore();
 
-  const [step, setStep] = useState(0);
-  const [submitting, setSubmitting] = useState(false);
-  const [skipping, setSkipping] = useState(false);
-
-  const [professions, setProfessions] = useState<ProfessionItem[]>([]);
-  const [selectedProfessions, setSelectedProfessions] = useState<number[]>([]);
-
-  const [specializations, setSpecializations] = useState<
-    SpecializationItem[]
-  >([]);
-  const [selectedSpecializations, setSelectedSpecializations] = useState<
-    number[]
-  >([]);
-
-  const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [aboutMe, setAboutMe] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const { status, account, loading: onboardingLoading } = store;
+  const {
+    setProfessions,
+    toggleProfession,
+    setSpecializations,
+    toggleSpecialization,
+    setFullName,
+    setPhone,
+    setAboutMe,
+    setAvatarUrl,
+    setStep,
+    setSubmitting,
+    setSkipping,
+  } = store;
 
   // Fetch professions (step 0 data)
   useEffect(() => {
@@ -64,7 +58,7 @@ export function OnboardingWizard() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [setProfessions]);
 
   // Redirect if already completed; prefill from account (/expert/account)
   useEffect(() => {
@@ -81,7 +75,7 @@ export function OnboardingWizard() {
       const photoUrl = account.avatar_media?.url || account.avatar || null;
       if (photoUrl) setAvatarUrl(photoUrl);
     }
-  }, [onboardingLoading, status, account, router]);
+  }, [onboardingLoading, status, account, setFullName, setAboutMe, setAvatarUrl]);
 
   const finish = async (skip: boolean) => {
     if (skip) {
@@ -92,9 +86,9 @@ export function OnboardingWizard() {
 
     if (!skip) {
       const personalResult = await api.patch(API_ROUTES.ACCOUNT.PERSONAL_INFO, {
-        full_name: fullName.trim() || undefined,
-        phone: phone.trim() || undefined,
-        about_me: aboutMe.trim() || undefined,
+        full_name: store.fullName.trim() || undefined,
+        phone: store.phone.trim() || undefined,
+        about_me: store.aboutMe.trim() || undefined,
       });
       if (!personalResult.ok) {
         toast.error(
@@ -119,13 +113,13 @@ export function OnboardingWizard() {
   };
 
   const goProfessions = async () => {
-    if (selectedProfessions.length === 0) {
+    if (store.selectedProfessions.length === 0) {
       toast.error("Pick at least one profession, or skip this step.");
       return;
     }
     setSubmitting(true);
     const syncResult = await api.put(API_ROUTES.PROFESSIONS.SYNC_ME, {
-      profession_ids: selectedProfessions,
+      profession_ids: store.selectedProfessions,
     });
     if (!syncResult.ok) {
       toast.error(syncResult.error?.message || "Failed to save professions");
@@ -142,9 +136,9 @@ export function OnboardingWizard() {
 
   const goSpecializations = async () => {
     setSubmitting(true);
-    if (selectedSpecializations.length > 0) {
+    if (store.selectedSpecializations.length > 0) {
       const syncResult = await api.put(API_ROUTES.SPECIALIZATIONS.SYNC_ME, {
-        specialization_ids: selectedSpecializations,
+        specialization_ids: store.selectedSpecializations,
       });
       if (!syncResult.ok) {
         toast.error(
@@ -190,9 +184,9 @@ export function OnboardingWizard() {
     );
   }
 
-  const busy = submitting || skipping;
+  const busy = store.submitting || store.skipping;
 
-  if (step === 0) {
+  if (store.step === 0) {
     return (
       <WizardFrame
         title="What do you do?"
@@ -204,13 +198,9 @@ export function OnboardingWizard() {
         onBack={undefined}
       >
         <ProfessionsStep
-          professions={professions}
-          selected={selectedProfessions}
-          onToggle={(id) =>
-            setSelectedProfessions((prev) =>
-              prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id],
-            )
-          }
+          professions={store.professions}
+          selected={store.selectedProfessions}
+          onToggle={toggleProfession}
           disabled={busy}
         />
         <div className="mt-8 flex items-center justify-between gap-4">
@@ -220,7 +210,7 @@ export function OnboardingWizard() {
             onClick={() => void finish(true)}
             className={SKIP_BTN}
           >
-            {skipping ? "Skipping…" : "Skip for now"}
+            {store.skipping ? "Skipping…" : "Skip for now"}
           </button>
           <button
             type="button"
@@ -228,14 +218,14 @@ export function OnboardingWizard() {
             onClick={() => void goProfessions()}
             className={PRIMARY_BTN}
           >
-            {submitting ? "Saving…" : "Continue"}
+            {store.submitting ? "Saving…" : "Continue"}
           </button>
         </div>
       </WizardFrame>
     );
   }
 
-  if (step === 1) {
+  if (store.step === 1) {
     return (
       <WizardFrame
         title="What are your specializations?"
@@ -247,15 +237,9 @@ export function OnboardingWizard() {
         onBack={() => setStep(0)}
       >
         <SpecializationsStep
-          specializations={specializations}
-          selected={selectedSpecializations}
-          onToggle={(id) =>
-            setSelectedSpecializations((prev) =>
-              prev.includes(id)
-                ? prev.filter((sid) => sid !== id)
-                : [...prev, id],
-            )
-          }
+          specializations={store.specializations}
+          selected={store.selectedSpecializations}
+          onToggle={toggleSpecialization}
           disabled={busy}
         />
         <div className="mt-8 flex items-center justify-between gap-4">
@@ -274,7 +258,7 @@ export function OnboardingWizard() {
               onClick={() => void finish(true)}
               className={SKIP_BTN}
             >
-              {skipping ? "Skipping…" : "Skip for now"}
+              {store.skipping ? "Skipping…" : "Skip for now"}
             </button>
           </div>
           <button
@@ -283,7 +267,7 @@ export function OnboardingWizard() {
             onClick={() => void goSpecializations()}
             className={PRIMARY_BTN}
           >
-            {submitting ? "Saving…" : "Continue"}
+            {store.submitting ? "Saving…" : "Continue"}
           </button>
         </div>
       </WizardFrame>
@@ -301,15 +285,15 @@ export function OnboardingWizard() {
       onBack={() => setStep(1)}
     >
       <ProfileStep
-        fullName={fullName}
-        phone={phone}
-        aboutMe={aboutMe}
+        fullName={store.fullName}
+        phone={store.phone}
+        aboutMe={store.aboutMe}
         onChange={(field, value) => {
           if (field === "full_name") setFullName(value);
           else if (field === "phone") setPhone(value);
           else setAboutMe(value);
         }}
-        avatarUrl={avatarUrl}
+        avatarUrl={store.avatarUrl}
         onAvatarUploaded={setAvatarUrl}
         disabled={busy}
       />
@@ -329,7 +313,7 @@ export function OnboardingWizard() {
             onClick={() => void finish(true)}
             className={SKIP_BTN}
           >
-            {skipping ? "Skipping…" : "Skip for now"}
+            {store.skipping ? "Skipping…" : "Skip for now"}
           </button>
         </div>
         <button
@@ -338,7 +322,7 @@ export function OnboardingWizard() {
           onClick={() => void finish(false)}
           className={PRIMARY_BTN}
         >
-          {submitting ? "Finishing…" : "Finish"}
+          {store.submitting ? "Finishing…" : "Finish"}
         </button>
       </div>
     </WizardFrame>

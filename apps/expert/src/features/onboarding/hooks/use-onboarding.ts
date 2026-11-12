@@ -1,21 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getAccount, getOnboardingStatus } from "../api";
+import { useOnboardingStore } from "../store";
 import type { OnboardingStatus } from "../types";
-import type { ExpertAccount } from "@repo/lib/contracts/expert/account-api";
 
 export function useOnboarding() {
-  const [status, setStatus] = useState<OnboardingStatus | null>(null);
-  const [account, setAccount] = useState<ExpertAccount | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<unknown>(null);
+  const store = useOnboardingStore();
+
+  const { status, account, loading, error } = store;
+  const { setStatus, setAccount, setLoading, setError } = store;
 
   useEffect(() => {
     let cancelled = false;
 
     const init = async () => {
       try {
+        setLoading(true);
         const [statusResult, accountResult] = await Promise.all([
           getOnboardingStatus(),
           getAccount(),
@@ -28,7 +29,7 @@ export function useOnboarding() {
       } catch (err) {
         setError(err);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
@@ -36,7 +37,7 @@ export function useOnboarding() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [setStatus, setAccount, setLoading, setError]);
 
   return { status, account, loading, error };
 }
