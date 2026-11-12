@@ -26,6 +26,7 @@ const SKIP_BTN =
 export function OnboardingWizard() {
   const router = useRouter();
   const store = useOnboardingStore();
+  useOnboarding(); // triggers fetch effect that sets loading: false
 
   const { status, account, loading: onboardingLoading } = store;
   const {
@@ -75,7 +76,14 @@ export function OnboardingWizard() {
       const photoUrl = account.avatar_media?.url || account.avatar || null;
       if (photoUrl) setAvatarUrl(photoUrl);
     }
-  }, [onboardingLoading, status, account, setFullName, setAboutMe, setAvatarUrl]);
+  }, [
+    onboardingLoading,
+    status,
+    account,
+    setFullName,
+    setAboutMe,
+    setAvatarUrl,
+  ]);
 
   const finish = async (skip: boolean) => {
     if (skip) {
