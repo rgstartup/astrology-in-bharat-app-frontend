@@ -4,7 +4,9 @@ import { useRef, useState } from "react";
 import { Camera, Loader2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Input } from "@repo/design/shadcn";
-import api from "@/actions/api";
+import { Progress } from "@repo/design/shadcn/progress";
+import uploadApi from "@/api/upload.api";
+import type { UploadProgress } from "@repo/safe-fetch";
 
 interface ProfileStepProps {
   fullName: string;
@@ -27,6 +29,7 @@ export function ProfileStep({
 }: ProfileStepProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [uploadError, setUploadError] = useState("");
 
   const handleFile = async (file: File | undefined) => {
@@ -40,11 +43,16 @@ export function ProfileStep({
       return;
     }
     setUploadError("");
+    setUploadProgress(0);
     setUploading(true);
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const result = await api.patch("/expert/account/avatar", formData);
+      const result = await uploadApi.upload("/expert/account/avatar", formData, {
+        onUploadProgress: (progress: UploadProgress) => {
+          setUploadProgress(progress.percent ?? null);
+        },
+      });
       if (!result.ok) {
         setUploadError(result.error?.message || "Upload failed");
         onAvatarUploaded(null);
@@ -53,6 +61,7 @@ export function ProfileStep({
       onAvatarUploaded(URL.createObjectURL(file));
     } finally {
       setUploading(false);
+      setUploadProgress(null);
     }
   };
 
@@ -97,6 +106,21 @@ export function ProfileStep({
           <p className="mt-1 text-[13px] text-[#7b7b78]">
             JPG, PNG, WEBP or AVIF · up to 5MB
           </p>
+          {uploadProgress !== null && uploadProgress < 100 && (
+            <div className="mt-2">
+              <div className="flex justify-between mb-1">
+                <span className="text-[12px] text-[#7b7b78]">Uploading</span>
+                <span className="text-[12px] font-medium text-[#111111]">
+                  {uploadProgress}%
+                </span>
+              </div>
+              <Progress
+                value={uploadProgress}
+                className="h-1.5 bg-[#111111]"
+                indicatorClassName="bg-amber-500"
+              />
+            </div>
+          )}
           {uploadError && (
             <p className="mt-1 text-[13px] text-[#c13515]" role="alert">
               {uploadError}

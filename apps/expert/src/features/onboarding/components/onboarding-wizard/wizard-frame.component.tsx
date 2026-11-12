@@ -1,4 +1,3 @@
-import { cn } from "@/lib/cn";
 import type { ReactNode } from "react";
 import { StepProgress } from "./step-progress.component";
 import type { OnboardingStatus } from "../../types";
@@ -44,6 +43,7 @@ export function WizardFrame({
         <p className="mt-1 text-sm text-[#626260]">{subtitle}</p>
         <div className="mt-6">{children}</div>
       </div>
+
       {status && !status.onboarding_completed && (
         <p className="mt-4 text-center text-[13px] text-[#7b7b78]">
           You can finish this anytime from your dashboard.

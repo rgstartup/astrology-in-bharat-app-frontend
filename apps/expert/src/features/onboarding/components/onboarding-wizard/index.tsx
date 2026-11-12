@@ -1,18 +1,17 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { toast } from "react-toastify";
 import api from "@/actions/api";
 import { completeOnboarding } from "../../api";
 import { useOnboarding } from "../../hooks";
 import { unwrap } from "../../utils";
-import { StepProgress } from "./step-progress.component";
 import { ProfessionsStep } from "./professions-step.component";
 import { SpecializationsStep } from "./specializations-step.component";
 import { ProfileStep } from "./profile-step.component";
 import { WizardFrame } from "./wizard-frame.component";
-import type { OnboardingStatus, Profession, Specialization } from "../../types";
+import type { Profession, Specialization } from "../../types";
 
 const PRIMARY_BTN =
   "inline-flex h-12 items-center justify-center rounded-full bg-[#111111] px-7 text-base font-medium text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:bg-[#ebe7e1] disabled:text-[#9c9fa5]";
@@ -72,12 +71,9 @@ export function OnboardingWizard() {
     }
 
     if (account) {
-      setFullName(
-        typeof account.name === "string" ? account.name : "",
-      );
+      setFullName(typeof account.name === "string" ? account.name : "");
       if (typeof account.about === "string") setAboutMe(account.about);
-      const photoUrl =
-        account.avatar_media?.url || account.avatar || null;
+      const photoUrl = account.avatar_media?.url || account.avatar || null;
       if (photoUrl) setAvatarUrl(photoUrl);
     }
   }, [onboardingLoading, status, account, router]);
@@ -90,14 +86,11 @@ export function OnboardingWizard() {
     }
 
     if (!skip) {
-      const personalResult = await api.patch(
-        "/expert/account/personal-info",
-        {
-          full_name: fullName.trim() || undefined,
-          phone: phone.trim() || undefined,
-          about_me: aboutMe.trim() || undefined,
-        },
-      );
+      const personalResult = await api.patch("/expert/account/personal-info", {
+        full_name: fullName.trim() || undefined,
+        phone: phone.trim() || undefined,
+        about_me: aboutMe.trim() || undefined,
+      });
       if (!personalResult.ok) {
         toast.error(
           personalResult.error?.message || "Failed to update profile",
@@ -212,9 +205,7 @@ export function OnboardingWizard() {
           selected={selectedProfessions}
           onToggle={(id) =>
             setSelectedProfessions((prev) =>
-              prev.includes(id)
-                ? prev.filter((p) => p !== id)
-                : [...prev, id],
+              prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id],
             )
           }
           disabled={busy}
