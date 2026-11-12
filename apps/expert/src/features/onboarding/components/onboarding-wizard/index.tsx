@@ -11,6 +11,7 @@ import {
   getProfessions,
 } from "../../api";
 import { useOnboardingStore } from "../../store";
+import { useOnboarding } from "../../hooks";
 import { ProfessionsStep } from "./professions-step.component";
 import { SpecializationsStep } from "./specializations-step.component";
 import { ProfileStep } from "./profile-step.component";
