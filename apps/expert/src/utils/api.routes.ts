@@ -16,6 +16,10 @@ export const API_ROUTES = {
     AVAILABILITY: "/expert/availability",
     AVAILABILITY_ME: "/expert/availability/me",
   },
+  AVATAR: {
+    UPLOAD_SIGNATURE: "/expert/account/avatar/upload-signature",
+    VERIFY: "/expert/account/avatar/verify",
+  },
   ONBOARDING: {
     STATUS: "/expert/onboarding/status",
     COMPLETE: "/expert/onboarding/complete",

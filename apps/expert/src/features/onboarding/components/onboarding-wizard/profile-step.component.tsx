@@ -5,21 +5,35 @@ import { Camera, Loader2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Input } from "@repo/design/shadcn";
 import { Progress } from "@repo/design/shadcn/progress";
-import uploadApi from "@/api/upload.api";
-import type { UploadProgress } from "@repo/safe-fetch";
+import {
+    getAvatarUploadSignature,
+    uploadDirectToCloud,
+    verifyAvatarUpload,
+    type SignedUploadParams,
+    type VerifiedUpload,
+} from "@/actions/avatar.api";
+import { unwrap } from "../../utils";
 
 interface ProfileStepProps {
   fullName: string;
+  gender: string;
   phone: string;
   aboutMe: string;
-  onChange: (field: "full_name" | "phone" | "about_me", value: string) => void;
+  onChange: (field: "full_name" | "gender" | "phone" | "about_me", value: string) => void;
   avatarUrl: string | null;
   onAvatarUploaded: (url: string | null) => void;
   disabled?: boolean;
 }
 
+const GENDER_OPTIONS = [
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+  { value: "other", label: "Other" },
+] as const;
+
 export function ProfileStep({
   fullName,
+  gender,
   phone,
   aboutMe,
   onChange,
@@ -34,35 +48,64 @@ export function ProfileStep({
 
   const handleFile = async (file: File | undefined) => {
     if (!file) return;
-    if (!/^image\/(jpeg|jpg|png|webp|avif)$/.test(file.type)) {
-      setUploadError("Use a JPG, PNG, WEBP or AVIF image.");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError("Image must be smaller than 5MB.");
-      return;
-    }
     setUploadError("");
     setUploadProgress(0);
     setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const result = await uploadApi.upload("/expert/account/avatar", formData, {
-        onUploadProgress: (progress: UploadProgress) => {
-          setUploadProgress(progress.percent ?? null);
-        },
-      });
-      if (!result.ok) {
-        setUploadError(result.error?.message || "Upload failed");
-        onAvatarUploaded(null);
-        return;
-      }
-      onAvatarUploaded(URL.createObjectURL(file));
-    } finally {
+
+    // Step 1: Get signed upload params from backend (includes validation constraints)
+    const sigRes = await getAvatarUploadSignature("avatars");
+    if (!sigRes.ok) {
+      setUploadError(sigRes.error?.message || "Failed to start upload");
       setUploading(false);
       setUploadProgress(null);
+      onAvatarUploaded(null);
+      return;
     }
+    const params = unwrap<SignedUploadParams>(sigRes.data);
+
+    // Validate file against constraints returned with the signed params
+    if (params.allowedMimeTypes && !params.allowedMimeTypes.includes(file.type)) {
+      setUploadError(`Use one of: ${params.allowedMimeTypes.join(", ")}.`);
+      setUploading(false);
+      setUploadProgress(null);
+      onAvatarUploaded(null);
+      return;
+    }
+    if (params.maxSizeBytes && file.size > params.maxSizeBytes) {
+      setUploadError(`Image must be smaller than ${(params.maxSizeBytes / (1024 * 1024)).toFixed(0)}MB.`);
+      setUploading(false);
+      setUploadProgress(null);
+      onAvatarUploaded(null);
+      return;
+    }
+
+    // Step 2: Upload file directly to storage
+    const uploadRes = await uploadDirectToCloud(file, params, (percent) => {
+      setUploadProgress(percent);
+    });
+    if (!uploadRes.ok || !uploadRes.data) {
+      setUploadError(uploadRes.error?.message || "Upload failed");
+      setUploading(false);
+      setUploadProgress(null);
+      onAvatarUploaded(null);
+      return;
+    }
+
+    // Step 3: Verify asset from storage (source of truth) + persist to backend
+    const verifyRes = await verifyAvatarUpload(uploadRes.data.public_id);
+    if (!verifyRes.ok) {
+      setUploadError(verifyRes.error?.message || "Avatar verification failed");
+      setUploading(false);
+      setUploadProgress(null);
+      onAvatarUploaded(null);
+      return;
+    }
+    const verified = unwrap<VerifiedUpload>(verifyRes.data);
+
+    // Persist verified URL as the avatar
+    onAvatarUploaded(verified.secureUrl);
+    setUploading(false);
+    setUploadProgress(null);
   };
 
   return (
@@ -155,6 +198,27 @@ export function ProfileStep({
             placeholder="Your name"
             className="h-12 rounded-lg border-[#d3cec6] bg-white text-base focus-visible:border-amber-500 focus-visible:ring-amber-500/50"
           />
+        </div>
+        <div>
+          <label
+            htmlFor="onboarding-gender"
+            className="mb-1.5 block text-sm font-medium text-[#626260]"
+          >
+            Gender
+          </label>
+          <select
+            id="onboarding-gender"
+            value={gender}
+            disabled={disabled}
+            onChange={(e) => onChange("gender", e.target.value)}
+            className="h-12 rounded-lg border-[#d3cec6] bg-white text-base focus-visible:border-amber-500 focus-visible:ring-amber-500/50"
+          >
+            {GENDER_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label
