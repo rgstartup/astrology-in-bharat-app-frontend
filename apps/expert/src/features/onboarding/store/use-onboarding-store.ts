@@ -30,6 +30,7 @@ export interface OnboardingWizardStore {
 
   // Step 2: Profile
   fullName: string;
+  gender: string;
   phone: string;
   aboutMe: string;
   avatarUrl: string | null;
@@ -55,6 +56,7 @@ export interface OnboardingWizardStore {
 
   // Actions — step 2
   setFullName: (value: string) => void;
+  setGender: (value: string) => void;
   setPhone: (value: string) => void;
   setAboutMe: (value: string) => void;
   setAvatarUrl: (url: string | null) => void;
@@ -85,6 +87,7 @@ export const useOnboardingStore = create<OnboardingWizardStore>((set) => ({
 
   // Step 2: Profile
   fullName: "",
+  gender: "",
   phone: "",
   aboutMe: "",
   avatarUrl: null,
@@ -120,6 +123,7 @@ export const useOnboardingStore = create<OnboardingWizardStore>((set) => ({
 
   // Actions — step 2
   setFullName: (fullName) => set({ fullName }),
+  setGender: (gender) => set({ gender }),
   setPhone: (phone) => set({ phone }),
   setAboutMe: (aboutMe) => set({ aboutMe }),
   setAvatarUrl: (avatarUrl) => set({ avatarUrl }),
@@ -139,6 +143,7 @@ export const useOnboardingStore = create<OnboardingWizardStore>((set) => ({
       specializations: [],
       selectedSpecializations: [],
       fullName: "",
+      gender: "",
       phone: "",
       aboutMe: "",
       avatarUrl: null,

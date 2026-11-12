@@ -9,7 +9,7 @@
 // consumer code (`if (!res.ok) ... res.error ... else res.data`) is unchanged.
 
 import { ApiError, type ApiErrorBody, type FieldErrors } from "./error";
-import type { Result, SafeFetchInstanceConfig } from "./safeFetch";
+import type { Result, SafeFetchInstanceConfig } from "./";
 
 export interface UploadProgress {
   loaded: number;
@@ -24,6 +24,7 @@ export interface SafeUploadInit {
   onUploadProgress?: (progress: UploadProgress) => void;
   params?: Record<string, string | number | boolean | null | undefined>;
   withCredentials?: boolean;
+  method?: "POST" | "PUT" | "PATCH";
 }
 
 export interface SafeFetchUploadInstance {
@@ -82,7 +83,11 @@ function extractErrorDetail(data: unknown): {
 } {
   if (data && typeof data === "object") {
     const record = data as Record<string, unknown>;
-    const detail: { message?: string; errorCode?: string; fieldErrors?: FieldErrors } = {};
+    const detail: {
+      message?: string;
+      errorCode?: string;
+      fieldErrors?: FieldErrors;
+    } = {};
     if ("message" in record && record.message !== undefined) {
       detail.message = Array.isArray(record.message)
         ? String(record.message[0])
@@ -103,10 +108,15 @@ function extractErrorDetail(data: unknown): {
   return {};
 }
 
-function getUploadCallSite(caller?: (...args: never[]) => unknown): string | undefined {
+function getUploadCallSite(
+  caller?: (...args: never[]) => unknown,
+): string | undefined {
   const err: { stack?: string } = {};
   const v8 = Error as unknown as {
-    captureStackTrace?: (target: object, fn?: (...args: never[]) => unknown) => void;
+    captureStackTrace?: (
+      target: object,
+      fn?: (...args: never[]) => unknown,
+    ) => void;
   };
   if (typeof v8.captureStackTrace === "function" && caller) {
     v8.captureStackTrace(err, caller);
@@ -152,7 +162,8 @@ export function createSafeFetchUploadInstance(
         mergedHeaders.delete("Content-Type");
       }
       const withCredentials =
-        init?.withCredentials ?? (config.credentials ?? "include") === "include";
+        init?.withCredentials ??
+        (config.credentials ?? "include") === "include";
 
       if (typeof XMLHttpRequest === "undefined") {
         const error = new ApiError<TErrorBody>(
@@ -165,10 +176,12 @@ export function createSafeFetchUploadInstance(
         return Promise.resolve({ ok: false, error });
       }
 
+      const httpMethod = init?.method ?? "POST";
+
       const runInterceptors = async (): Promise<void> => {
         if (config.onRequest) {
           await config.onRequest(resolvedUrl, {
-            method: "POST",
+            method: httpMethod,
             headers: mergedHeaders,
             credentials: withCredentials ? "include" : "same-origin",
             signal: init?.signal,
@@ -180,7 +193,7 @@ export function createSafeFetchUploadInstance(
         () =>
           new Promise<Result<T, TErrorBody>>((resolve) => {
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", resolvedUrl, true);
+            xhr.open(httpMethod, resolvedUrl, true);
             xhr.withCredentials = withCredentials;
             xhr.timeout = timeoutMs;
             mergedHeaders.forEach((value, key) => {
@@ -191,9 +204,15 @@ export function createSafeFetchUploadInstance(
             const abortListener = (): void => xhr.abort();
             if (signal) {
               if (signal.aborted) {
-                const error = new ApiError<TErrorBody>(0, "Request aborted or timeout", undefined, undefined, {
-                  callSiteStack: callSite,
-                });
+                const error = new ApiError<TErrorBody>(
+                  0,
+                  "Request aborted or timeout",
+                  undefined,
+                  undefined,
+                  {
+                    callSiteStack: callSite,
+                  },
+                );
                 resolve({ ok: false, error });
                 return;
               }
@@ -209,17 +228,25 @@ export function createSafeFetchUploadInstance(
                 init.onUploadProgress?.({
                   loaded: event.loaded,
                   total,
-                  percent: total ? Math.round((event.loaded / total) * 100) : null,
+                  percent: total
+                    ? Math.round((event.loaded / total) * 100)
+                    : null,
                 });
               };
             }
 
             const fail = (message: string, cause?: unknown): void => {
               cleanup();
-              const error = new ApiError<TErrorBody>(0, message, undefined, undefined, {
-                cause,
-                callSiteStack: callSite,
-              });
+              const error = new ApiError<TErrorBody>(
+                0,
+                message,
+                undefined,
+                undefined,
+                {
+                  cause,
+                  callSiteStack: callSite,
+                },
+              );
               if (config.onError) {
                 void Promise.resolve(config.onError(error)).then(() =>
                   resolve({ ok: false, error }),
@@ -232,7 +259,9 @@ export function createSafeFetchUploadInstance(
             xhr.onload = () => {
               cleanup();
               const data = parseXhrBody(xhr.responseText);
-              const responseHeaders = parseXhrHeaders(xhr.getAllResponseHeaders());
+              const responseHeaders = parseXhrHeaders(
+                xhr.getAllResponseHeaders(),
+              );
               if (xhr.status >= 200 && xhr.status < 300) {
                 const respond = async (): Promise<void> => {
                   if (config.onResponse) {

@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/actions/api";
+import api from "@/api/api";
 import type { Result } from "@repo/safe-fetch";
 import type {
   DashboardStats,
@@ -33,7 +33,7 @@ export async function getDashboardStats(
   if (endDate) query.set("endDate", endDate);
 
   const result = await api.get<DashboardStatsResponse>(
-    `${API_ROUTES.DASHBOARD.STATS}?${query.toString()}`
+    `${API_ROUTES.DASHBOARD.STATS}?${query.toString()}`,
   );
   if (!result.ok) return result;
 

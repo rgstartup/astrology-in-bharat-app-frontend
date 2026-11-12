@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import api from "@/actions/api";
+import api from "@/api/api";
 import { getErrorMessage } from "@repo/lib";
 
 export async function expertLoginAction(formData: any) {
@@ -137,8 +137,14 @@ export async function expertVerifyEmailAction(token: string) {
   return { success: true, user: data?.user, message: data?.message };
 }
 
-export async function expertForgotPasswordAction(email: string, origin: string) {
-  const result = await api.post<any>("/auth/forgot/password", { email, origin });
+export async function expertForgotPasswordAction(
+  email: string,
+  origin: string,
+) {
+  const result = await api.post<any>("/auth/forgot/password", {
+    email,
+    origin,
+  });
 
   if (!result.ok) {
     return { error: result.error?.message || "Failed to send reset link" };

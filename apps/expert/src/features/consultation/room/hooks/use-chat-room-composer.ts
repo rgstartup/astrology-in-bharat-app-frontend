@@ -1,8 +1,14 @@
 "use client";
 
-import { useState, useRef, type ChangeEvent, type Dispatch, type SetStateAction } from "react";
+import {
+  useState,
+  useRef,
+  type ChangeEvent,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { toast } from "react-toastify";
-import api from "@/actions/api";
+import api from "@/api/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import {
   getChatAttachmentError,
@@ -16,7 +22,11 @@ interface UseChatRoomComposerProps {
   sessionId: string;
   newFlowId: number | null;
   setMessages: Dispatch<SetStateAction<ChatMessage[]>>;
-  sendLiveMessage: (payload: { content: string; attachmentUrl?: string; attachmentType?: string }) => Promise<unknown>;
+  sendLiveMessage: (payload: {
+    content: string;
+    attachmentUrl?: string;
+    attachmentType?: string;
+  }) => Promise<unknown>;
   sendLiveTyping: (isTyping: boolean) => void;
 }
 
@@ -31,7 +41,8 @@ export function useChatRoomComposer({
   const [inputValue, setInputValue] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const [pendingAttachment, setPendingAttachment] = useState<PendingAttachment | null>(null);
+  const [pendingAttachment, setPendingAttachment] =
+    useState<PendingAttachment | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -54,7 +65,8 @@ export function useChatRoomComposer({
   };
 
   const handleSendMessage = async () => {
-    if ((!inputValue.trim() && !pendingAttachment) || !sessionId || !user) return;
+    if ((!inputValue.trim() && !pendingAttachment) || !sessionId || !user)
+      return;
 
     // New flow with a locally staged file: single HTTP call carrying the
     // text + file + idempotency key. The server persists message + media +
@@ -79,7 +91,10 @@ export function useChatRoomComposer({
       setUploadProgress(null);
 
       if (!res.ok) {
-        toast.error(getErrorMessage(res.error) || "Failed to send attachment. Tap send to retry.");
+        toast.error(
+          getErrorMessage(res.error) ||
+            "Failed to send attachment. Tap send to retry.",
+        );
         return;
       }
 
@@ -94,7 +109,9 @@ export function useChatRoomComposer({
 
     const textContent =
       inputValue.trim() ||
-      (pendingAttachment?.type === "image" ? "Sent an image" : "Sent an attachment");
+      (pendingAttachment?.type === "image"
+        ? "Sent an image"
+        : "Sent an attachment");
 
     if (newFlowId != null) {
       sendLiveMessage({

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
-import api from "@/actions/api";
+import api from "@/api/api";
 import { realtimeSocket } from "@/realtime/socket";
 import { PRESENCE_EVENTS } from "@/realtime/topics/presence";
 import {
@@ -80,7 +80,10 @@ export function useExpertAvailability(): UseExpertAvailabilityResult {
     const newStatus = !isOnline;
     const mode = newStatus ? "available" : "unavailable";
 
-    const result = await api.patch<{ mode: string }>(API_ROUTES.ACCOUNT.AVAILABILITY, { mode });
+    const result = await api.patch<{ mode: string }>(
+      API_ROUTES.ACCOUNT.AVAILABILITY,
+      { mode },
+    );
 
     if (!result.ok) {
       toast.error(result.error?.message || "Failed to update availability");

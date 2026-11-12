@@ -19,7 +19,10 @@ import {
 } from "@/types/profile";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProfile, constructProfilePayload } from "@/hooks/useProfile";
-import { uploadDocument, uploadVideo } from "@/lib/profile";
+import { 
+    uploadDocument, 
+    uploadVideo,
+} from "@/lib/profile";
 import { ProfileSkeleton } from "../dashboard/DashboardSkeletons";
 import { Loading } from "@repo/ui";
 
@@ -38,7 +41,6 @@ const ProfileManagement = () => {
     const [tempProfile, setTempProfile] = useState<Profile | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [loadingText, setLoadingText] = useState("Please wait...");
-    const [pendingProfilePicFile, setPendingProfilePicFile] = useState<File | null>(null);
     const [activeTab, setActiveTab] = useState("about-expert");
 
     const navigationItems = [
@@ -92,7 +94,6 @@ const ProfileManagement = () => {
         if (tempProfile?.profilePic?.startsWith('blob:')) {
             URL.revokeObjectURL(tempProfile.profilePic);
         }
-        setPendingProfilePicFile(null);
         setTempProfile(fetchedProfile || null);
     };
 
@@ -112,14 +113,6 @@ const ProfileManagement = () => {
         try {
             const dataToSave = updatedData ? { ...tempProfile, ...updatedData } : tempProfile;
             let finalProfilePic = dataToSave.profilePic;
-
-            // Handle pending profile pic upload
-            if (section === 'personal' && pendingProfilePicFile) {
-                const [uploadRes, uploadError] = await uploadDocument(pendingProfilePicFile);
-                if (uploadError) throw uploadError;
-                finalProfilePic = uploadRes.fileUrl || uploadRes.url || uploadRes.path;
-                setPendingProfilePicFile(null);
-            }
 
             const payload = constructProfilePayload({ ...dataToSave, profilePic: finalProfilePic || "" });
             
@@ -164,11 +157,9 @@ const ProfileManagement = () => {
         handleSave("documents", { documents: updatedDocs });
     };
 
-    const handleProfilePicUpdate = (file: File) => {
+    const handleProfilePicUpdate = async (file: File) => {
         const previewUrl = URL.createObjectURL(file);
         setTempProfile(prev => prev ? ({ ...prev, profilePic: previewUrl }) : null);
-        setPendingProfilePicFile(file);
-        toast.info("Preview updated. Click 'Save' to upload.");
     };
 
     if (isLoading || !fetchedProfile || !tempProfile) {

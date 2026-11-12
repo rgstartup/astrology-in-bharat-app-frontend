@@ -64,6 +64,7 @@ export interface ExpertConsultationPricing {
 export interface ExpertAccount {
   id: string;
   name: string | null;
+  gender: string | null;
   about: string | null;
   languages: string | null;
   avatar: string | null;

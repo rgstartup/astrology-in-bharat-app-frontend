@@ -1,11 +1,13 @@
 "use client";
 
-import api from "@/actions/api";
+import api from "@/api/api";
 import type { ChatMessage, ChatSessionData } from "../types";
 
 /** Fetch a legacy chat session (status, client info, timers). */
 export async function getChatSession(sessionId: string) {
-  return api.get<ChatSessionData>(`/chat/session/${sessionId}?_t=${Date.now()}`);
+  return api.get<ChatSessionData>(
+    `/chat/session/${sessionId}?_t=${Date.now()}`,
+  );
 }
 
 /** Fetch message history for a legacy chat session. */

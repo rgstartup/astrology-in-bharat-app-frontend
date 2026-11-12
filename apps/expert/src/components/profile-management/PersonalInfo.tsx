@@ -1,5 +1,5 @@
 import React from "react";
-import { Edit3, Save, ChevronDown, ChevronUp, X, Plus } from "@repo/design/lucide";
+import { Edit3, Save, ChevronDown, ChevronUp, X, Plus, Loader2 } from "@repo/design/lucide";
 import { Profile, Gender } from "@/types/profile";
 import Button from "@/components/ui/button";
 import { Avatar } from "@repo/ui";
@@ -17,6 +17,7 @@ interface PersonalInfoProps {
     onProfilePicUpdate?: (file: File) => void;
     onLanguageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     isActive?: boolean;
+    isUploadingAvatar?: boolean;
 }
 
 export default function PersonalInfo({
@@ -29,7 +30,8 @@ export default function PersonalInfo({
     onChange,
     onProfilePicUpdate,
     onLanguageChange,
-    isActive
+    isActive,
+    isUploadingAvatar = false
 }: PersonalInfoProps) {
     const fileInputRef = React.useRef<HTMLInputElement>(null);
     const [showAddress, setShowAddress] = React.useState(false);
@@ -79,7 +81,12 @@ export default function PersonalInfo({
                         size="xl"
                         className="w-20 h-20 sm:w-24 sm:h-24 border-2 border-orange-500 shadow-md"
                     />
-                    {onProfilePicUpdate && isExpanded && isEditing && (
+                    {isUploadingAvatar && (
+                        <div className="absolute inset-0 bg-black/30 rounded-full flex items-center justify-center z-10">
+                            <Loader2 className="w-6 h-6 text-white animate-spin" />
+                        </div>
+                    )}
+                    {onProfilePicUpdate && isExpanded && isEditing && !isUploadingAvatar && (
                         <>
                             <div
                                 onClick={(e) => {

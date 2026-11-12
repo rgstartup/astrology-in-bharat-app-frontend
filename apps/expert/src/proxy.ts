@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { decodeToken } from "@repo/lib";
-import api from "@/actions/api";
+import api from "@/api/api";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
 import {
@@ -34,7 +34,7 @@ function withI18nCookies(response: NextResponse, request: NextRequest) {
   return response;
 }
 
-const PROTECTED_ROUTES = ["/dashboard"];
+const PROTECTED_ROUTES = ["/dashboard", "/onboarding"];
 const isProtectedRoute = (pathname: string) =>
   PROTECTED_ROUTES.some((prefix) => pathname.startsWith(prefix));
 
@@ -196,7 +196,10 @@ const isBackgroundRequest = (request: NextRequest): boolean =>
 
 const sessionExpiredResponse = (request: NextRequest): NextResponse => {
   const response = NextResponse.json(
-    { code: "SESSION_EXPIRED", message: "Session expired. Please login again." },
+    {
+      code: "SESSION_EXPIRED",
+      message: "Session expired. Please login again.",
+    },
     { status: 401 },
   );
   clearAuthCookies(response.cookies);
@@ -351,7 +354,9 @@ export async function proxy(request: NextRequest) {
       }
 
       // Expired accessToken and no refreshToken -> clear cookies and allow viewing auth page
-      console.log(`[Proxy:authRoute] expired access, no refresh → clear + pass`);
+      console.log(
+        `[Proxy:authRoute] expired access, no refresh → clear + pass`,
+      );
       const response = handleI18nRouting(request);
       clearAuthCookies(response.cookies);
       return response;

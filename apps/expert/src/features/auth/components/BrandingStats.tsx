@@ -1,4 +1,4 @@
-import api from "@/actions/api";
+import api from "@/api/api";
 
 export interface BrandingStatsData {
   totalExperts: string;
@@ -20,7 +20,9 @@ export const BrandingStatsSkeleton: React.FC = () => {
   );
 };
 
-export const BrandingStatsView: React.FC<{ stats: BrandingStatsData }> = ({ stats }) => {
+export const BrandingStatsView: React.FC<{ stats: BrandingStatsData }> = ({
+  stats,
+}) => {
   return (
     <div className="mt-12 grid grid-cols-2 gap-4 w-full max-w-xs">
       <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/10 hover:bg-white/20 hover:scale-105 transition-all duration-300 cursor-default group">
@@ -40,12 +42,13 @@ export const BrandingStatsView: React.FC<{ stats: BrandingStatsData }> = ({ stat
 };
 
 async function getExpertHubStats(): Promise<BrandingStatsData> {
-  const res = await api.get<{ total_experts: number; totalServices: number; totalExperts: number }>(
-    `/public/stats/expert-hub`,
-    {
-      next: { revalidate: 60 },
-    },
-  );
+  const res = await api.get<{
+    total_experts: number;
+    totalServices: number;
+    totalExperts: number;
+  }>(`/public/stats/expert-hub`, {
+    next: { revalidate: 60 },
+  });
   if (!res.ok) {
     return { totalExperts: "0+", totalServices: "0+" };
   }

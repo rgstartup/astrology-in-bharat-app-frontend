@@ -5,7 +5,7 @@ import { ValidationError } from "@repo/lib";
 import { setAccessToken, setRefreshToken } from "@/actions/cookie";
 import { API_ROUTES } from "@/utils/api.routes";
 import { captureSetCookies, mirrorSetCookies } from "@/utils/forwarded-cookies";
-import api from "@/actions/api";
+import api from "@/api/api";
 
 import { RegisterFormData, RegisterSchema } from "../schemas/register.schema";
 
@@ -42,7 +42,9 @@ export type RegisterActionResult =
  * @param formData - Form data containing firstName, optional lastName, email, password, and optional otp
  * @returns Serialized result indicating whether OTP is required or registration completed with session tokens
  */
-export async function registerAction(formData: RegisterFormData): Promise<RegisterActionResult> {
+export async function registerAction(
+  formData: RegisterFormData,
+): Promise<RegisterActionResult> {
   const safeParseResult = RegisterSchema.safeParse(formData);
 
   if (!safeParseResult.success) {
@@ -61,16 +63,17 @@ export async function registerAction(formData: RegisterFormData): Promise<Regist
 
   // Phase 1: No OTP provided -> Initiate registration
   if (!otp) {
-    const initiateResult = await api.post<{ success: boolean; message: string }>(
-      API_ROUTES.AUTH.REGISTER_INITIATE,
-      { email },
-    );
+    const initiateResult = await api.post<{
+      success: boolean;
+      message: string;
+    }>(API_ROUTES.AUTH.REGISTER_INITIATE, { email });
 
     if (!initiateResult.ok) {
       return {
         ok: false,
         error: {
-          message: initiateResult.error.message || "Failed to initiate registration",
+          message:
+            initiateResult.error.message || "Failed to initiate registration",
           errorCode: initiateResult.error.errorCode,
           status: initiateResult.error.status,
         },
@@ -80,7 +83,8 @@ export async function registerAction(formData: RegisterFormData): Promise<Regist
     return {
       ok: true,
       requiresOtp: true,
-      message: initiateResult.data?.message || "OTP sent successfully to your email.",
+      message:
+        initiateResult.data?.message || "OTP sent successfully to your email.",
     };
   }
 
@@ -105,7 +109,8 @@ export async function registerAction(formData: RegisterFormData): Promise<Regist
     return {
       ok: false,
       error: {
-        message: completeResult.error.message || "Failed to complete registration",
+        message:
+          completeResult.error.message || "Failed to complete registration",
         errorCode: completeResult.error.errorCode,
         status: completeResult.error.status,
       },

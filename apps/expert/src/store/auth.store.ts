@@ -1,10 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import api from "@/actions/api";
+import api from "@/api/api";
 import { expertLogoutAction } from "@/actions/auth";
 import { type IExpert } from "@repo/lib";
 import { API_ROUTES } from "@/utils/api.routes";
-import { getActiveConsultationId, endConsultation } from "@/realtime/topics/consultation";
+import {
+  getActiveConsultationId,
+  endConsultation,
+} from "@/realtime/topics/consultation";
 
 export interface AuthState {
   user: IExpert | null;
@@ -75,18 +78,20 @@ export const useAuthStore = create<AuthState>()(
         // server-side before the auth state resets and redirects away.
         const consultationId = getActiveConsultationId();
         if (consultationId) {
-          endConsultation(consultationId, "expert_disconnected").catch(() => undefined);
+          endConsultation(consultationId, "expert_disconnected").catch(
+            () => undefined,
+          );
         }
 
         const user = get().user;
         const actualUserId = user?.userId || user?.id;
 
         try {
-          const { stopPresenceHeartbeat } = await import("@/realtime/topics/presence");
-          const { disconnectRealtimeSocket } = await import("@/realtime/socket");
-          const {
-            disconnectNotificationSocket,
-          } = await import("@/lib/socket");
+          const { stopPresenceHeartbeat } =
+            await import("@/realtime/topics/presence");
+          const { disconnectRealtimeSocket } =
+            await import("@/realtime/socket");
+          const { disconnectNotificationSocket } = await import("@/lib/socket");
           stopPresenceHeartbeat();
           disconnectRealtimeSocket();
           disconnectNotificationSocket();

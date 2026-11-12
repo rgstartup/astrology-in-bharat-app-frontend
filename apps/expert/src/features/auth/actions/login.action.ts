@@ -5,7 +5,7 @@ import { ExpertAuthErrorCode, ValidationError } from "@repo/lib";
 import { setAccessToken, setRefreshToken } from "@/actions/cookie";
 import { API_ROUTES } from "@/utils/api.routes";
 import { captureSetCookies, mirrorSetCookies } from "@/utils/forwarded-cookies";
-import api from "@/actions/api";
+import api from "@/api/api";
 
 import { LoginFormData, LoginSchema } from "../schemas/login.schema";
 
@@ -39,7 +39,9 @@ export type LoginActionResult =
  * @param formData - The submitted login form data (email, password, optional OTP)
  * @returns Serialized result indicating success with session tokens or failure with error details and verification flags
  */
-export async function loginAction(formData: LoginFormData): Promise<LoginActionResult> {
+export async function loginAction(
+  formData: LoginFormData,
+): Promise<LoginActionResult> {
   const safeParseResult = LoginSchema.safeParse(formData);
 
   if (!safeParseResult.success) {
@@ -68,8 +70,7 @@ export async function loginAction(formData: LoginFormData): Promise<LoginActionR
     const errorCode =
       result.error.errorCode ?? (result.error as any).body?.errorCode;
     const isUnverified =
-      status === 409 ||
-      errorCode === ExpertAuthErrorCode.EMAIL_NOT_VERIFIED;
+      status === 409 || errorCode === ExpertAuthErrorCode.EMAIL_NOT_VERIFIED;
 
     return {
       ok: false,
@@ -108,4 +109,3 @@ export async function loginAction(formData: LoginFormData): Promise<LoginActionR
     data,
   };
 }
-

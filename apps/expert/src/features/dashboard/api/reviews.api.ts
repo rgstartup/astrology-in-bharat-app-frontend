@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/actions/api";
+import api from "@/api/api";
 import type { Result } from "@repo/safe-fetch";
 import type { ExpertReviewsResponse, ExpertReviewsStats } from "@repo/lib";
 import { API_ROUTES } from "@/utils/api.routes";
@@ -28,7 +28,10 @@ export async function getReviews(
   startDate?: string,
   endDate?: string,
 ): Promise<Result<ExpertReviewsResponse>> {
-  const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  });
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
   return api.get<ExpertReviewsResponse>(

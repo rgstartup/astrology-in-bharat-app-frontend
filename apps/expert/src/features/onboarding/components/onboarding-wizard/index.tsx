@@ -36,6 +36,7 @@ export function OnboardingWizard() {
     setSpecializations,
     toggleSpecialization,
     setFullName,
+    setGender,
     setPhone,
     setAboutMe,
     setAvatarUrl,
@@ -73,6 +74,7 @@ export function OnboardingWizard() {
 
     if (account) {
       setFullName(typeof account.name === "string" ? account.name : "");
+      if (typeof account.gender === "string") setGender(account.gender);
       if (typeof account.about === "string") setAboutMe(account.about);
       const photoUrl = account.avatar_media?.url || account.avatar || null;
       if (photoUrl) setAvatarUrl(photoUrl);
@@ -96,6 +98,7 @@ export function OnboardingWizard() {
     if (!skip) {
       const personalResult = await api.patch(API_ROUTES.ACCOUNT.PERSONAL_INFO, {
         full_name: store.fullName.trim() || undefined,
+        gender: store.gender || undefined,
         phone: store.phone.trim() || undefined,
         about_me: store.aboutMe.trim() || undefined,
       });
@@ -295,10 +298,12 @@ export function OnboardingWizard() {
     >
       <ProfileStep
         fullName={store.fullName}
+        gender={store.gender}
         phone={store.phone}
         aboutMe={store.aboutMe}
         onChange={(field, value) => {
           if (field === "full_name") setFullName(value);
+          else if (field === "gender") setGender(value);
           else if (field === "phone") setPhone(value);
           else setAboutMe(value);
         }}
